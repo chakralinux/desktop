@@ -1,0 +1,17 @@
+pre_install() {
+  mv /usr/lib/pkgconfig/mozilla-js.pc.bak \
+    /usr/lib/pkgconfig/mozilla-js.pc
+}
+
+post_install() {
+  echo
+  echo -n "==> Updating desktop and mime database..."
+  update-desktop-database -q
+  echo "done"
+}
+
+post_remove() {
+  post_install
+}
+
+# vim:set ts=2 sw=2 et:

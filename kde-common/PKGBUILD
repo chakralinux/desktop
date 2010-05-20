@@ -1,0 +1,154 @@
+#
+# KDE SC Packages for Chakra, part of chakra-project.org
+#
+# maintainer (i686): Phil Miller <philm[at]chakra-project[dog]org>
+# maintainer (x86_64): Manuel Tortosa <manutortosa[at]chakra-project[dot]org>
+
+# include global config
+source ../_buildscripts/${current_repo}-${_arch}-cfg.conf
+
+
+
+# original name (used for the source and pkgnames)
+_origname=common
+
+
+
+#
+# package info
+#
+pkgname=kde-${_origname}
+arch=(i686 x86_64)
+pkgver=${_kdever}
+pkgrel=1
+
+pkgdesc="KDE SC - Common Configuration Files, Scripts and Artwork"
+url="http://www.kde.org"
+license=('GPL')
+options=('!splitdbg' '!splithdr' 'strip')
+
+provides=("kde-${_origname}=${_kdever}" "kde-agent=${_kdever}")
+replaces=('kdemod-kde-common')
+
+groups=("kde" "kde-minimal" "kde-complete" "kde-uninstall")
+
+# also add some obvious dependencies here, as there are users out there who dont update such stuff
+depends=("${_qtpkg}>=${_qtver}" 'pinentry' 'openssh' 'bash>=4.0.035' 'glibc>=2.11')
+
+install=kde-common.install
+
+source=(http://www.kde-apps.org/CONTENT/content-files/48411-rootactions_servicemenu_2.4.10.tar.gz
+	servicemenu-copy-path.desktop
+	http://www.kde-apps.org/CONTENT/content-files/102825-compressattach.desktop.bz2
+	servicemenu-rootactions.patch
+	Chakra-Bugs.desktop
+	Chakra-ChangeLog.desktop
+	Chakra-Code.desktop
+	Chakra-Documentation.desktop
+	Chakra-Donate.desktop
+	Chakra-Forum.desktop
+	Chakra-Homepage.desktop
+	Chakra.directory
+	kdm.daemon
+	chakra-config-updater.sh
+	chakra-fix-configs.sh
+	chakra-update-icons.sh
+	chakra-update-mime.sh
+	chakra-update-sycoca.sh
+	chakra-update-user-sycoca.sh
+	chakra-sysinfo.sh
+	chakra-backup.sh
+	Chakra-backup.desktop
+	updates.conf
+	chakra-icons.tar.gz
+	agent-startup.sh
+	agent-shutdown.sh)
+
+md5sums=('2afd86671ad0db31718157aecd46d528'  # 48411-rootactions_servicemenu_2.4.10.tar.gz
+         '170a7675d1ee15d9d9d622de3eaa42a3'  # servicemenu-copy-path.desktop
+         '630ffe7118eef8608a9e5e393a0b1e12'  # 102825-compressattach.desktop.bz2
+         '75a91d82f262a2ad4625c55996ec5b82'  # servicemenu-rootactions.patch
+         '9486595675ee8515087bd1070311c27f'  # Chakra-Bugs.desktop
+         '84de5f3e68d8b243cc67ae66c7b7f136'  # Chakra-ChangeLog.desktop
+         '965f72cfb2b3f84bfec7169c3223f678'  # Chakra-Code.desktop
+         '49fb58a2dcade94ca64fb989dd22d945'  # Chakra-Documentation.desktop
+         'ba744b01666cd57f3f52e2e901cb2daa'  # Chakra-Donate.desktop
+         'a0bc4362b842cdceb738051d2c97deca'  # Chakra-Forum.desktop
+         '4529267d694bec8229375def916d6560'  # Chakra-Homepage.desktop
+         'd314d4b658c7664efa407af3317ae0cd'  # Chakra.directory
+         '0688a20010ad27e35755e77c26c94d2c'  # kdm.daemon
+         '03702f4ee8bf92878cb5f75e669cb65b'  # chakra-config-updater.sh
+         '7438367ba92e4984cc7d33ade4b0f3a8'  # chakra-fix-configs.sh
+         '78a20a4ccaf943f5a2089f4d436fdf32'  # chakra-update-icons.sh
+         'd3fcef1c7affa098683a09f26415d8ef'  # chakra-update-mime.sh
+         'aaa1958b14518e9b0193afe497da830e'  # chakra-update-sycoca.sh
+         '76a3149fc2a666ce22c206c7bc3719b4'  # chakra-update-user-sycoca.sh
+         '46ab0c942ee98a155740303a577cfe0d'  # chakra-sysinfo.sh
+         '7c21b642084838a6ebd57174cfaea417'  # chakra-backup.sh
+         '8a4edb56ff98ae87d2031eae326df256'  # Chakra-backup.desktop
+         '0f9a021b30fad70ddf77c470edbfb943'  # updates.conf
+         '1c85260174e58fc6efaa8d2cac947761'  # chakra-icons.tar.gz
+         '7daec96c125e1e238a35f31ea4a476f0'  # agent-startup.sh
+         '18e8d01124b19f7df2937c06e177bf7f') # agent-shutdown.sh
+
+#
+# build and install
+#
+build()
+{
+	# install scripts for gpg/ssh-agent
+	install -D -m 755 -o root -g root $srcdir/agent-startup.sh $pkgdir/etc/kde/env/agent-startup.sh
+	install -D -m 755 -o root -g root $srcdir/agent-shutdown.sh $pkgdir/etc/kde/shutdown/agent-shutdown.sh
+
+	# install kdm rc script
+	install -D -m755 -o root -g root ${srcdir}/kdm.daemon ${pkgdir}/etc/rc.d/kdm
+
+	# install config updater scripts
+	install -D -m755 -o root -g root ${srcdir}/chakra-config-updater.sh ${pkgdir}/usr/bin/chakra-config-updater
+	install -D -m755 -o root -g root ${srcdir}/chakra-fix-configs.sh ${pkgdir}/usr/bin/chakra-fix-configs
+	install -D -m755 -o root -g root ${srcdir}/chakra-update-icons.sh ${pkgdir}/usr/bin/chakra-update-icons
+	install -D -m755 -o root -g root ${srcdir}/chakra-update-mime.sh ${pkgdir}/usr/bin/chakra-update-mime
+	install -D -m755 -o root -g root ${srcdir}/chakra-update-sycoca.sh ${pkgdir}/usr/bin/chakra-update-sycoca
+	install -D -m755 -o root -g root ${srcdir}/chakra-update-user-sycoca.sh ${pkgdir}/usr/bin/chakra-update-user-sycoca
+	
+	# install sysinfo script
+	install -D -m755 -o root -g root ${srcdir}/chakra-sysinfo.sh ${pkgdir}/usr/bin/chakra-sysinfo
+
+	# install backup script
+	install -D -m755 -o root -g root ${srcdir}/chakra-backup.sh ${pkgdir}/usr/bin/chakra-backup
+	install -D -m644 -o root -g root ${srcdir}/Chakra-backup.desktop ${pkgdir}/usr/share/applications/kde4/Chakra-backup.desktop
+
+	# install config file for updates
+	install -D -m755 -o root -g root ${srcdir}/updates.conf ${pkgdir}/etc/kdemod/updates.conf
+
+	# install root actions service menu
+	cd ${srcdir}/rootactions_servicemenu_2.4.10/Root_Actions_2.4.10/dolphin-KDE4/
+	mkdir -p ${pkgdir}/usr/share/kde4/services/ServiceMenus/
+	install -m755 *.desktop ${pkgdir}/usr/share/kde4/services/ServiceMenus/
+        cd ${srcdir}/rootactions_servicemenu_2.4.10/Root_Actions_2.4.10
+        patch -p0 < ${srcdir}/servicemenu-rootactions.patch      
+	install -Dm755 rootactions-servicemenu.pl ${pkgdir}/usr/bin/rootactions-servicemenu.pl
+
+	# install all other service menus
+	install -m755 ${srcdir}/servicemenu-copy-path.desktop ${pkgdir}/usr/share/kde4/services/ServiceMenus/copy-path.desktop
+	install -m755 ${srcdir}/102825-compressattach.desktop ${pkgdir}/usr/share/kde4/services/ServiceMenus/compress-attach.desktop
+
+	# install chakra icons
+	cd ${srcdir}/chakra-icons/
+	mkdir -p ${pkgdir}/usr/share/icons/hicolor/scalable/apps/
+	for n in flat shiny smooth; do
+		for i in 128 64 48 32 22 16; do
+			mkdir -p ${pkgdir}/usr/share/icons/hicolor/${i}x${i}/apps/
+			install -D -m755 chakra-${n}-${i}.png ${pkgdir}/usr/share/icons/hicolor/${i}x${i}/apps/chakra-${n}.png
+		done
+		install -D -m755 chakra-${n}.svgz ${pkgdir}/usr/share/icons/hicolor/scalable/apps/chakra-${n}.svgz
+	done
+	
+	# install menu entries
+	cd ${srcdir}
+	install -m755 -d ${pkgdir}/usr/share/desktop-directories
+	install -m755 -d ${pkgdir}/usr/share/applications/kde4
+	install -m755 -d ${pkgdir}/usr/share/pixmaps
+	install -m644 Chakra*.desktop ${pkgdir}/usr/share/applications/kde4
+	install -m644 Chakra.directory ${pkgdir}/usr/share/desktop-directories/
+}

@@ -1,0 +1,61 @@
+#
+# KDE SC Packages for Chakra, part of chakra-project.org
+#
+# maintainer (i686): Phil Miller <philm[at]chakra-project[dog]org>
+# maintainer (x86_64): Manuel Tortosa <manutortosa[at]chakra-project[dot]org>
+
+# include global config
+source ../_buildscripts/${current_repo}-${_arch}-cfg.conf
+
+
+
+# original name (used for the source and pkgnames)
+_origname=qzion
+
+
+
+pkgname=${_origname}
+pkgver=20100520
+pkgrel=1
+
+pkgdesc="A canvas abstraction used by and made for QEdje."
+url="http://dev.openbossa.org/trac/qedje"
+license=('GPL')
+
+source=()
+md5sums=()
+
+arch=('i686' 'x86_64')
+
+depends=("${_qtpkg}>=${_qtver}" 'eet-svn' 'python' 'pyqt' 'sip')
+groups=("kde-uninstall" "kde-support")
+options=('!splitdbg' '!splithdr')
+makedepends=('gcc' 'make')
+
+_gitroot="git://code.openbossa.org/qzion/mainline.git"
+_gitname="qzion"
+
+build()
+{
+	# Get the source
+	if [ -d ${_gitname}/.git ]; then
+		( cd ${_gitname} && git pull )
+	else
+		git clone ${_gitroot} ${_gitname}
+	fi
+
+	# Create the build directory
+	mkdir -p ${_gitname}-build
+	cd ${_gitname}-build
+
+	cmake ../$_gitname -DCMAKE_BUILD_TYPE=${_build_type} \
+			-DCMAKE_INSTALL_PREFIX=${_installprefix} \
+			-DCMAKE_SKIP_RPATH=ON \
+			-DCMAKE_{SHARED,MODULE,EXE}_LINKER_FLAGS='-Wl,--no-undefined -Wl,--as-needed'
+
+	# workaround, fix build issue
+	cp src/qzion.pc qzion.pc
+
+	# Make and install the package
+	make DESTDIR=${pkgdir} install || return 1
+}

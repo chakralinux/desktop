@@ -1,0 +1,37 @@
+#
+# KDE SC Packages for Chakra, part of chakra-project.org
+#
+# maintainer (i686): Phil Miller <philm[at]chakra-project[dog]org>
+# maintainer (x86_64): Manuel Tortosa <manutortosa[at]chakra-project[dot]org>
+
+# include global config
+source ../_buildscripts/${current_repo}-${_arch}-cfg.conf
+
+
+# original name (used for the source and pkgnames)
+_origname=mediastreamer
+
+pkgname=${_origname}
+pkgver=2.3.0
+pkgrel=1
+pkgdesc='A powerful and lightweighted streaming engine specialized for voice/video telephony applications'
+arch=('i686' 'x86_64')
+url="http://www.linphone.org/index.php/eng/code_review/mediastreamer2"
+license=('GPL')
+depends=('ortp>=0.15.0' 'sdl>=1.2.14' 'libv4l>=0.6.3' 'speex' 'libtheora>=1.1.1' "ffmpeg>=0.5")
+makedepends=()
+groups=("kde-uninstall" "kde-support")
+options=('!splitdbg' '!splithdr')
+
+provides=("${_origname}=$pkgver")
+conflicts=("${_origname}")
+
+source=(http://mirror.cinquix.com/pub/savannah/linphone/mediastreamer/${_origname}-$pkgver.tar.gz)
+md5sums=('867d539cf11e942dcbfd08d4b3182397') # mediastreamer-2.3.0.tar.gz
+
+build() {
+  cd "$srcdir"/${_origname}-$pkgver
+  ./configure --prefix=/usr || return 1
+  make || return 1
+  make DESTDIR="$pkgdir" install || return 1
+}
