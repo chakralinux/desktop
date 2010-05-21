@@ -115,7 +115,7 @@ package_kdelibs()
 		    'hspell           : Hebrew spell checking')
 
 	provides=("${_origname}=${_kdever}")
-	conflicts=("${_origname}" "kde-meta-${_origname}")
+	conflicts=("kdemod-${_origname}")
 	replaces=('kdelibs-devel' 'kdelibs-experimental')
 	groups=("kde" "kde-minimal" "kde-complete" "kde-uninstall")
 	install=${_origname}.install
@@ -129,18 +129,18 @@ package_kdelibs()
 	ln -sf /etc/ssl/certs/ca-certificates.crt ${pkgdir}/usr/share/apps/kssl/ca-bundle.crt
 
 	# put docu into separate package
-	mv ${pkgdir}/usr/share/doc ${srcdir}/
-	mv ${pkgdir}/usr/share/man ${srcdir}/
+	mv -v ${pkgdir}/usr/share/doc ${srcdir}/
+	mv -v ${pkgdir}/usr/share/man ${srcdir}/
 
 	# include our patches into the package
 	ls -1 ${startdir}/*.patch &>/dev/null 2>&1
 	if [ "$?" = "0" ]; then
 		warning "incuding patches into package"
 		rm -rf ${startdir}/*experimental*.patch
-		mkdir -p ${pkgdir}/usr/share/kdemod/patches/${_origname} &>/dev/null
+		mkdir -p ${pkgdir}/usr/share/chakra/patches/${_origname} &>/dev/null
 		for i in ${startdir}/*.patch; do
 			msg "$i"
-			cp $i ${pkgdir}/usr/share/kdemod/patches/${_origname}/ &>/dev/null
+			cp $i ${pkgdir}/usr/share/chakra/patches/${_origname}/ &>/dev/null
 		done
 	else
 		warning "no patches found, skipping to include them into the package..."

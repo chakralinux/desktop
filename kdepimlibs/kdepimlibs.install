@@ -1,20 +1,7 @@
 post_install() {
-		echo " "
-		echo " > ATTENTION:"
-		echo "   Install aspell and the appropriate language package"
-		echo "   to enable spell-checking in KDE ..."
-		echo " "
-		echo "   If you experience problems with missing icons or menu"
-		echo "   entries, run the following commands and restart KDE:"
-		echo "   sudo chakra-config-updater"
-		echo "   kbuildsycoca4"
-		echo " "
-
 		if [ -e "/etc/chakra/updates.conf" ] ; then
 
 			. /etc/chakra/updates.conf
-
-			/usr/bin/chakra-update-mime
 
 			if [ "$UPDATE_XDG_ICON_DB" = "yes" ]; then
 				/usr/bin/chakra-update-icons
@@ -23,7 +10,7 @@ post_install() {
 			if [ "$UPDATE_GLOBAL_CONFIG" = "yes" ]; then
 				/usr/bin/chakra-update-sycoca
 			fi
-			
+
 			if [ "$UPDATE_USER_CONFIG" = "yes" ]; then
 				/usr/bin/chakra-update-user-sycoca
 			fi
@@ -44,8 +31,6 @@ post_upgrade() {
 
 			. /etc/chakra/updates.conf
 
-			/usr/bin/chakra-update-mime
-
 			if [ "$UPDATE_XDG_ICON_DB" = "yes" ]; then
 				/usr/bin/chakra-update-icons
 			fi
@@ -53,7 +38,7 @@ post_upgrade() {
 			if [ "$UPDATE_GLOBAL_CONFIG" = "yes" ]; then
 				/usr/bin/chakra-update-sycoca
 			fi
-			
+
 			if [ "$UPDATE_USER_CONFIG" = "yes" ]; then
 				/usr/bin/chakra-update-user-sycoca
 			fi
@@ -74,12 +59,17 @@ post_remove() {
 
 			. /etc/chakra/updates.conf
 
-			/usr/bin/chakra-update-mime
-
 			if [ "$UPDATE_XDG_ICON_DB" = "yes" ]; then
 				/usr/bin/chakra-update-icons
 			fi
 
+			if [ "$UPDATE_GLOBAL_CONFIG" = "yes" ]; then
+				/usr/bin/chakra-update-sycoca
+			fi
+
+			if [ "$UPDATE_USER_CONFIG" = "yes" ]; then
+				/usr/bin/chakra-update-user-sycoca
+			fi
 		else
 			echo " > WARNING"
 			echo "   The package kde-common seems not to be installed,"
