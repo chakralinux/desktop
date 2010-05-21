@@ -1,0 +1,161 @@
+#
+# KDE SC Packages for Chakra, part of chakra-project.org
+#
+# maintainer (i686): Phil Miller <philm[at]chakra-project[dog]org>
+# maintainer (x86_64): Manuel Tortosa <manutortosa[at]chakra-project[dot]org>
+
+# include global config
+source ../_buildscripts/${current_repo}-${_arch}-cfg.conf
+
+
+
+# original name (used for the source and pkgnames)
+_origname=kdelibs
+
+
+
+#
+# package info
+#
+pkgbase=('kdelibs')
+pkgname=('kdelibs'
+         'kdelibs-doc')
+
+arch=('i686' 'x86_64')
+pkgver=${_kdever}
+pkgrel=1
+
+pkgdesc="split package"
+url="http://www.kde.org"
+license=('GPL' 'LGPL' 'FDL')
+
+options=('docs' '!splithdr')
+
+makedepends=("${_qtpkg}>=${_qtver}"
+	"kde-common>=${_kdever}"
+	"oxygen-icons>=${_kdever}"
+	'pkgconfig' 'cmake' 'automoc4' 'intltool' 'avahi' 'libgl' 'hspell' 'libxslt'
+	'shared-mime-info' 'hal' 'xz-utils' 'enchant' 'jasper' 'openexr' 'giflib'
+	'strigi' 'libxtst' 'soprano' 'ca-certificates' 'xdg-utils' 'qca' 'polkit-qt'
+	'libxss' 'phonon' 'shared-desktop-ontologies' 'attica' 'heimdal' 'libxcursor'
+	'hicolor-icon-theme')
+
+replaces=('arts' "kdelibs-experimental")
+
+source=($_mirror/${_origname}-$_kdever.tar.bz2
+	01_chakra_tag.patch
+	02_kde_applications_menu.patch
+	03_chakra_menu.patch
+	04_add_arch_filetypes_to_kate_syntax_highlighting.patch
+	05_useragent-branding.patch)
+
+md5sums=('bd2122af41660bfff642bd077ef798a2'  # kdelibs-4.4.3.tar.bz2
+         '40ba51f0c50ced94dfffe667ec856950'  # 01_kdemod_tag.patch
+         'e94450ba5430ea9c1e33bad9ae38ca2d'  # 02_kde_applications_menu.patch
+         '53b85403e4dd8f9146933c52ca23243e'  # 03_chakra_menu.patch
+         'b125c42a85f1b265b7aa31fb7950b690'  # 04_add_arch_filetypes_to_kate_syntax_highlighting.patch
+         '116715c07effa490e24f946693b3ecf7') # 05_useragent-branding.patch
+
+
+#
+# build function
+#
+build()
+{
+	cd ${srcdir}/${_origname}-${pkgver}
+
+	# main patches
+	msg "applying main patchset ..."
+	patch -Np1 -i ${srcdir}/01_chakra_tag.patch || return 1
+	patch -Np1 -i ${srcdir}/02_kde_applications_menu.patch || return 1
+	patch -Np1 -i ${srcdir}/03_chakra_menu.patch || return 1
+	patch -Np1 -i ${srcdir}/04_add_arch_filetypes_to_kate_syntax_highlighting.patch || return 1
+	patch -Np0 -i ${srcdir}/05_useragent-branding.patch || return 1
+
+	# fixes
+	# msg "applying fixes ..."
+
+	cd ..
+
+	msg "starting build ..."
+	mkdir -p build
+	cd build
+
+	cmake ../${_origname}-${pkgver} \
+		-DCMAKE_BUILD_TYPE=${_build_type} \
+		-DCMAKE_INSTALL_PREFIX=${_installprefix} \
+		-DSYSCONF_INSTALL_DIR=/etc \
+		-DHTML_INSTALL_DIR=/usr/share/doc/kde/html \
+		-DKDE_DISTRIBUTION_TEXT='Chakra' \
+		-DKDE_DEFAULT_HOME='.kde4' \
+		-DWITH_FAM=OFF \
+                -DKAUTH_BACKEND=PolkitQt-1 \
+		-DCMAKE_SKIP_RPATH=ON \
+		-DCMAKE_{SHARED,MODULE,EXE}_LINKER_FLAGS='-Wl,--no-undefined -Wl,--as-needed'
+
+	make VERBOSE=1 || return 1
+}
+
+
+package_kdelibs()
+{
+	pkgdesc="KDE Core Libraries"
+	depends=("${_qtpkg}>=${_qtver}" "kde-common>=${_kdever}" "oxygen-icons>=${_kdever}"
+		 'shared-mime-info' 'hal' 'xz-utils' 'enchant' 'jasper' 'openexr' 'giflib'
+		 'strigi' 'libxtst' 'soprano' 'ca-certificates' 'xdg-utils' 'qca' 'polkit-qt'
+		 'libxss' 'phonon' 'shared-desktop-ontologies' 'attica' 'heimdal' 'libxcursor'
+		 'hicolor-icon-theme')
+
+	optdepends=('phonon-xine      : Xine Phonon backend (default)' 
+		    'phonon-gstreamer : GStreamer Phonon backend'
+		    'phonon-mplayer   : MPlayer Phonon backend'
+		    'phonon-vlc       : VLC Phonon backend'
+		    'avahi            : Service discovery on your local network'
+		    'aspell           : Spell checking'
+		    'hspell           : Hebrew spell checking')
+
+	provides=("${_origname}=${_kdever}")
+	conflicts=("${_origname}" "kde-meta-${_origname}")
+	replaces=('kdelibs-devel' 'kdelibs-experimental')
+	groups=("kde" "kde-minimal" "kde-complete" "kde-uninstall")
+	install=${_origname}.install
+
+	cd ${srcdir}/build
+
+	make DESTDIR=${pkgdir} install || return 1
+
+	# link cert bundle to the one from ca-certificates
+	rm -f ${pkgdir}/usr/share/apps/kssl/ca-bundle.crt
+	ln -sf /etc/ssl/certs/ca-certificates.crt ${pkgdir}/usr/share/apps/kssl/ca-bundle.crt
+
+	# put docu into separate package
+	mv ${pkgdir}/usr/share/doc ${srcdir}/
+	mv ${pkgdir}/usr/share/man ${srcdir}/
+
+	# include our patches into the package
+	ls -1 ${startdir}/*.patch &>/dev/null 2>&1
+	if [ "$?" = "0" ]; then
+		warning "incuding patches into package"
+		rm -rf ${startdir}/*experimental*.patch
+		mkdir -p ${pkgdir}/usr/share/kdemod/patches/${_origname} &>/dev/null
+		for i in ${startdir}/*.patch; do
+			msg "$i"
+			cp $i ${pkgdir}/usr/share/kdemod/patches/${_origname}/ &>/dev/null
+		done
+	else
+		warning "no patches found, skipping to include them into the package..."
+	fi
+}
+
+package_kdelibs-doc()
+{
+	pkgdesc="KDE Core Libraries - Documentation"
+	depends=("${_origname}>=${_kdever}")
+	groups=("kde-complete" "kde-doc" "kde-uninstall")
+
+	mkdir -p ${pkgdir}/usr/share
+	mv ${srcdir}/doc ${pkgdir}/usr/share
+	mv ${srcdir}/man ${pkgdir}/usr/share
+}
+
+
