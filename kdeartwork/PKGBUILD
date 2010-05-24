@@ -1,0 +1,253 @@
+#
+# KDE SC Packages for Chakra, part of chakra-project.org
+#
+# maintainer (i686): Phil Miller <philm[at]chakra-project[dog]org>
+# maintainer (x86_64): Manuel Tortosa <manutortosa[at]chakra-project[dot]org>
+
+# include global config
+source ../_buildscripts/${current_repo}-${_arch}-cfg.conf
+
+
+
+# original name (used for the source and pkgnames)
+_origname=kdeartwork
+
+
+
+#
+# package info
+#
+pkgbase=('kdeartwork')
+pkgname=('kdeartwork-common'
+         'kdeartwork-colorschemes'
+         'kdeartwork-desktopthemes'
+         'kdeartwork-emoticons'
+         'kdeartwork-iconthemes'
+         'kdeartwork-screensavers'
+         'kdeartwork-sounds'
+         'kdeartwork-styles'
+         'kdeartwork-wallpapers'
+	 'kdeartwork-weatherwallpapers')
+
+arch=('i686' 'x86_64')
+pkgver=${_kdever}
+pkgrel=1
+
+pkgdesc="split package"
+url="http://www.kde.org/"
+license=('GPL' 'LGPL' 'FDL')
+
+install=${_origname}.install
+
+makedepends=('pkgconfig' 'cmake' 'automoc4' 'xscreensaver' 'eigen' "kdebase-workspace>=${_kdever}")
+
+source=($_mirror/${_origname}-$_kdever.tar.bz2
+	http://www.kde-look.org/CONTENT/content-files/92545-xscreensaver.tar.bz2)
+
+md5sums=('52f055c299afeca2f076629217f5f6a4'  # kdeartwork-4.4.3.tar.bz2
+         'e44e5e6ff9dd2fe66aba7313f7ff1d22') # 92545-xscreensaver.tar.bz2
+
+
+
+#
+# build function
+#
+build() 
+{
+	cd ${srcdir}/${_origname}-${pkgver}
+
+	# branch update
+	if [ "$_branchupdate" = "yes" ] ; then
+		msg "applying branch update ..."
+		patch -p0 -i $startdir/branch-update-r*.patch || return 1
+	else
+		warning "branch updates disabled ..."
+		warning "if you want to make use of it, run branch_updater.sh"
+		warning "and enable branch updates in _/buildsystem/kdemod.conf"
+	fi
+
+	msg "starting build ..."
+	cmake . -DCMAKE_BUILD_TYPE=${_build_type} \
+		-DCMAKE_INSTALL_PREFIX=${_installprefix} \
+		-DCMAKE_SKIP_RPATH=ON \
+		-DCMAKE_{SHARED,MODULE,EXE}_LINKER_FLAGS='-Wl,--no-undefined -Wl,--as-needed'
+
+	make || return 1
+}
+
+
+
+#
+# split-install functions
+#
+package_kdeartwork-common()
+{
+	pkgdesc="KDE Artwork - Common files and libraries"
+	depends=("kdebase-workspace>=${_kdever}")
+	conflicts=("kdemod-${_origname}")
+        groups=("kde-${_origname}" "kde-complete" "kde-uninstall")
+
+	# include our patches into the package
+	ls -1 ${startdir}/*.patch &>/dev/null 2>&1
+	if [ "$?" = "0" ]; then
+		warning "incuding patches into package"
+		mkdir -p ${pkgdir}/usr/share/kdemod/patches/${_origname} &>/dev/null
+		for i in ${startdir}/*.patch; do
+			msg "$i"
+			cp $i ${pkgdir}/usr/share/kdemod/patches/${_origname}/ &>/dev/null
+		done
+	else
+		warning "no patches found, skipping to include them into the package..."
+	fi
+}
+
+package_kdeartwork-colorschemes() 
+{
+	pkgdesc="KDE Artwork - Color Schemes"
+        depends=("${_origname}-common>=${_kdever}")
+	conflicts=("kdemod-${_origname}-kcron")
+        groups=("kde-${_origname}" "kde-complete" "kde-uninstall")
+
+	splitdirs="ColorSchemes"
+		for i in ${splitdirs} ; do
+			cd ${srcdir}/${_origname}-${pkgver}/${i}
+			make DESTDIR=${pkgdir} install || return 1
+		done
+}
+
+package_kdeartwork-desktopthemes()
+{
+	pkgdesc="KDE Artwork - Additional Desktop Themes"
+        depends=("${_origname}-common>=${_kdever}")
+	conflicts=("kdemod-${_origname}-desktopthemes")
+        groups=("kde-${_origname}" "kde-complete" "kde-uninstall")
+
+	splitdirs="desktopthemes"
+		for i in ${splitdirs} ; do
+			cd ${srcdir}/${_origname}-${pkgver}/${i}
+			make DESTDIR=${pkgdir} install || return 1
+		done
+
+	# use transparent panel svg's everywhere
+	for n in Aya Clean-Blend Elegance heron Silicon slim-glow; do
+		cp -fv ${pkgdir}/usr/share/apps/desktoptheme/$n/widgets/panel-background.svgz ${pkgdir}/usr/share/apps/desktoptheme/$n/opaque/widgets/panel-background.svgz
+	done
+}
+
+package_kdeartwork-emoticons()
+{
+	pkgdesc="KDE Artwork - Additional Emoticons"
+        depends=("${_origname}-common>=${_kdever}")
+	conflicts=("kdemod-${_origname}-emoticons")
+        groups=("kde-${_origname}" "kde-complete" "kde-uninstall")
+
+	splitdirs="emoticons"
+		for i in ${splitdirs} ; do
+			cd ${srcdir}/${_origname}-${pkgver}/${i}
+			make DESTDIR=${pkgdir} install || return 1
+		done
+}
+
+package_kdeartwork-iconthemes()
+{
+	pkgdesc="KDE Artwork - Additional Icon Themes"
+        depends=("${_origname}-common>=${_kdever}")
+	conflicts=("kdemod-${_origname}-iconthemes")
+        groups=("kde-${_origname}" "kde-complete" "kde-uninstall")
+
+	splitdirs="IconThemes"
+		for i in ${splitdirs} ; do
+			cd ${srcdir}/${_origname}-${pkgver}/${i}
+			make DESTDIR=${pkgdir} install || return 1
+		done
+}
+
+package_kdeartwork-screensavers()
+{
+	pkgdesc="KDE Artwork - Screen Savers"
+        depends=("${_origname}-common>=${_kdever}" 'eigen>=2.0')
+	conflicts=("kdemod-${_origname}-kscreensaver")
+        groups=("kde-${_origname}" "kde-complete" "kde-uninstall")
+	optdepends=('xscreensaver: More screensavers')
+
+	splitdirs="kscreensaver"
+		for i in ${splitdirs} ; do
+			cd ${srcdir}/${_origname}-${pkgver}/${i}
+			make DESTDIR=${pkgdir} install || return 1
+		done
+
+	pushd $srcdir/xscreensaver
+	mkdir -p ${pkgdir}/usr/share/kde4/services/ScreenSavers
+	cp -f *.desktop ${pkgdir}/usr/share/kde4/services/ScreenSavers
+	popd
+}
+
+package_kdeartwork-kwinstyles()
+{
+	pkgdesc="KDE Artwork - Window Decoration Styles for KWin"
+        depends=("${_origname}-common>=${_kdever}")
+	conflicts=("kdemod-${_origname}-kwin-styles")
+        groups=("kde-${_origname}" "kde-complete" "kde-uninstall")
+
+	splitdirs="kwin-styles"
+		for i in ${splitdirs} ; do
+			cd ${srcdir}/${_origname}-${pkgver}/${i}
+			make DESTDIR=${pkgdir} install || return 1
+		done
+}
+
+package_kdeartwork-sounds()
+{
+	pkgdesc="KDE Artwork - Sounds"
+        depends=("${_origname}-common>=${_kdever}")
+	conflicts=("kdemod-${_origname}-sounds")
+        groups=("kde-${_origname}" "kde-complete" "kde-uninstall")
+
+	splitdirs="sounds"
+		for i in ${splitdirs} ; do
+			cd ${srcdir}/${_origname}-${pkgver}/${i}
+			make DESTDIR=${pkgdir} install || return 1
+		done
+}
+
+package_kdeartwork-styles()
+{
+	pkgdesc="KDE Artwork - Additional Widget Styles"
+        depends=("${_origname}-common>=${_kdever}")
+	conflicts=("kdemod-${_origname}-styles")
+        groups=("kde-${_origname}" "kde-complete" "kde-uninstall")
+
+	splitdirs="styles"
+		for i in ${splitdirs} ; do
+			cd ${srcdir}/${_origname}-${pkgver}/${i}
+			make DESTDIR=${pkgdir} install || return 1
+		done
+}
+
+package_kdeartwork-wallpapers()
+{
+	pkgdesc="KDE Artwork - Additional Wallpapers"
+	depends=("${_origname}-common>=${_kdever}")
+	conflicts=("kdemod-${_origname}-wallpapers")
+	groups=("kde-${_origname}" "kde-complete" "kde-uninstall")
+
+	splitdirs="wallpapers"
+		for i in ${splitdirs} ; do
+			cd ${srcdir}/${_origname}-${pkgver}/${i}
+			make DESTDIR=${pkgdir} install || return 1
+		done
+}
+
+package_kdeartwork-weatherwallpapers()
+{
+	pkgdesc="KDE Artwork - Additional Wallpapers for the Plasma weather plugin"
+	depends=("${_origname}-common>=${_kdever}")
+	conflicts=("kdemod-${_origname}-weatherwallpapers")
+	groups=("kde-${_origname}" "kde-complete" "kde-uninstall")
+
+	splitdirs="WeatherWallpapers"
+		for i in ${splitdirs} ; do
+			cd ${srcdir}/${_origname}-${pkgver}/${i}
+			make DESTDIR=${pkgdir} install || return 1
+		done
+}

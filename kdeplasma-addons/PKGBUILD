@@ -1,0 +1,81 @@
+#
+# KDE SC Packages for Chakra, part of chakra-project.org
+#
+# maintainer (i686): Phil Miller <philm[at]chakra-project[dog]org>
+# maintainer (x86_64): Manuel Tortosa <manutortosa[at]chakra-project[dot]org>
+
+# include global config
+source ../_buildscripts/${current_repo}-${_arch}-cfg.conf
+
+
+
+# original name (used for the source and pkgnames)
+_origname=kdeplasma-addons
+
+
+
+#
+# package info
+#
+pkgname=${_origname}
+arch=('i686' 'x86_64')
+pkgver=${_kdever}
+pkgrel=1
+
+pkgdesc="KDE Plasma Addons"
+url="http://www.kde.org/"
+license=('GPL' 'LGPL' 'FDL')
+
+conflicts=("kdemod-${_origname}")
+
+install=${_origname}.install
+options=('docs' '!splithdr')
+
+depends=("kdebase-workspace>=${_kdever}" 'libqalculate' "kdeedu-marble>=${_kdever}" 'qwt')
+
+makedepends=('pkgconfig' 'cmake' 'automoc4' "kdebase-workspace>=${_kdever}" 'libqalculate'
+             "kdegraphics-common>=${_kdever}" "kdeedu-marble>=${_kdever}" 'eigen' 'scim' 'qwt')
+
+groups=("kde-complete" "kde-uninstall")
+
+source=($_mirror/${_origname}-$_kdever.tar.bz2)
+md5sums=('e347d1ca1f1e3100e838287365de43e4') # kdeplasma-addons-4.4.3.tar.bz2
+
+
+#
+# build and install
+#
+build()
+{
+	cd ${srcdir}
+
+	msg "starting build ..."
+	mkdir build
+	cd build
+
+	cmake ../${_origname}-${pkgver} \
+		-DCMAKE_BUILD_TYPE=${_build_type} \
+		-DCMAKE_INSTALL_PREFIX=${_installprefix} \
+		-DCMAKE_SKIP_RPATH=ON \
+		-DCMAKE_{SHARED,MODULE,EXE}_LINKER_FLAGS='-Wl,--no-undefined -Wl,--as-needed'
+
+	make || return 1
+
+	make DESTDIR=${pkgdir} install || return 1
+
+	# include our patches into the package
+	ls -1 ${startdir}/*.patch &>/dev/null 2>&1
+	if [ "$?" = "0" ]; then
+		warning "incuding patches into package"
+		mkdir -p ${pkgdir}/usr/share/kdemod/patches/${_origname} &>/dev/null
+		for i in ${startdir}/*.patch; do
+			msg "$i"
+			cp $i ${pkgdir}/usr/share/kdemod/patches/${_origname}/ &>/dev/null
+		done
+	else
+		warning "no patches found, skipping to include them into the package..."
+	fi
+	
+	# WORKAROUND, also in oxygen-icons
+	rm -rf $pkgdir/usr/share/icons/oxygen/scalable/apps/accessories-dictionary.svgz
+}
