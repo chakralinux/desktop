@@ -1,5 +1,5 @@
 #
-# Chakra Packages for Chakra, part of chakra-project.org
+# KDE SC Packages for Chakra, part of chakra-project.org
 #
 # maintainer (i686): Phil Miller <philm[at]chakra-project[dog]org>
 # maintainer (x86_64): Manuel Tortosa <manutortosa[at]chakra-project[dot]org>
@@ -7,28 +7,28 @@
 # include global config
 source ../_buildscripts/${current_repo}-${_arch}-cfg.conf
 
-pkgname=kdevplatform
-pkgver=1.0.0
-pkgrel=2
-pkgdesc="A C/C++ development platform for KDE"
+pkgname=knemo
+pkgver=0.6.2
+pkgrel=1
+pkgdesc="The KDE Network Monitor"
 arch=('i686' 'x86_64')
-url="http://www.kdevelop.org/"
+url="http://www.kde-apps.org/content/show.php?content=12956"
 license=('GPL')
-depends=('kdelibs' 'boost' 'subversion' 'commoncpp2')
-optdepends=("kdesdk-kompare: difference checking")
+depends=('kdebase-workspace' 'wireless_tools' 'iw' 'networkmanager>=0.8')
 makedepends=('cmake' 'automoc4')
 install=${pkgname}.install
-source=("http://download.kde.org/stable/kdevelop/4.0.0/src/${pkgname}-${pkgver}.tar.bz2")
-md5sums=('0aa7a6d207d5675ed31ceeacfdda7a69')
+options=('libtool')
+source=(http://www.kde-apps.org/CONTENT/content-files/12956-$pkgname-$pkgver.tar.bz2)
+md5sums=('9a4662c5a4f82d913684465c25db0f50')
 
 build() {
   cd ${srcdir}
   mkdir build
-  cd build 
+  cd build
   cmake ../${pkgname}-${pkgver} \
-    -DCMAKE_INSTALL_PREFIX=/usr \
     -DCMAKE_BUILD_TYPE=Release \
-    -DCMAKE_SKIP_RPATH=ON
+    -DCMAKE_SKIP_RPATH=ON \
+    -DCMAKE_INSTALL_PREFIX=/usr    
   make || return 1
 }
 
