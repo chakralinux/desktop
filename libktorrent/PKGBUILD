@@ -1,21 +1,21 @@
 # Maintainer: Manuel Tortosa <manutortosa@gmail.com>
 
-pkgname=ktorrent
-pkgver=4.0.0
+pkgname=libktorrent
+pkgver=1.0.0
 pkgrel=1
 ktorver=4.0
 pkgdesc="A BitTorrent program for KDE"
 arch=('i686' 'x86_64')
 url="http://ktorrent.org"
 license=('GPL2')
-depends=('kdelibs' 'kdebase-runtime' 'kdepimlibs' 'qca' 'gmp' 'taglib' 'libktorrent')
-makedepends=('cmake' 'automoc4')
-source=(http://ktorrent.org/downloads/${ktorver}/ktorrent-${pkgver}.tar.bz2)
+depends=('kdelibs')
+makedepends=('autoconf' 'perl' 'automoc4' 'cmake' 'kdepimlibs' 'kdebase-workspace')
+source=(http://ktorrent.org/downloads/${ktorver}/libktorrent-${pkgver}.tar.bz2)
 options=('libtool')
-md5sums=('7862b09dfc1282053c7304f98f3ce0cf')
+md5sums=('b409ef0381343d998abce8c85073f7d3')
 
 build() {
-	cd ${srcdir}/ktorrent-4.0.0
+	cd ${srcdir}/libktorrent-1.0.0
 
 	cmake .	-DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=/usr
 	make || return 1
