@@ -1,0 +1,27 @@
+#
+# Chakra Packages for Chakra, part of chakra-project.org
+#
+# maintainer (i686): Phil Miller <philm[at]chakra-project[dog]org>
+# maintainer (x86_64): Manuel Tortosa <manutortosa[at]chakra-project[dot]org>
+
+pkgname=akonadi-googledata
+pkgver=1.0.1
+pkgrel=1
+pkgdesc="Akonadi GoogleData Plugin"
+arch=('i686' 'x86_64')
+url="http://pim.kde.org/akonadi/"
+license=('GPL')
+depends=('libgcal>=0.9.0' 'kdepimlibs>=4.2.0' 'libxslt')
+makedepends=('cmake' 'automoc4')
+source=(http://libgcal.googlecode.com/files/$pkgname-$pkgver.tar.bz2)
+
+md5sums=('d6150a30587bf05fc2ff909a5f4f8fd7')
+
+build() {
+	mkdir -p ${srcdir}/build
+	cd ${srcdir}/build
+	cmake ../${pkgname}-${pkgver} -DCMAKE_INSTALL_PREFIX=/usr -DCMAKE_BUILD_TYPE=RELEASE
+	make || return 1
+	make DESTDIR=${pkgdir} install || return 1
+}
+
