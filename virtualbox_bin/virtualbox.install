@@ -1,21 +1,3 @@
-_install_notes() {
-  echo
-  echo '---------------------------------------------------------------------------'
-  echo ' IMPORTANT NOTES:'
-  echo 
-  echo '- Run "vbox_build_module" as root every time your kernel is upgraded, to'
-  echo '  compile the module for the new kernel version.'
-  echo '- Add your user to the vboxusers group:'
-  echo '     gpasswd -a USERNAME vboxusers'
-  echo '- Add "vboxdrv" to the MODULES array in your "/etc/rc.conf"'
-  echo '- Add "vboxnetflt" to MODULES if you want Host Interface networking.'
-  echo '- Add "vboxnetadp" to MODULES if you want Host-Only networking.'
-  echo '- If USB does not work for you out-of-the-box, add the following line'
-  echo '  to "/etc/fstab":'
-  echo '     none /proc/bus/usb usbfs auto,busgid=108,busmode=0775,devgid=108,devmode=0664 0 0'
-  echo "---------------------------------------------------------------------------"
-}
-
 # $1: The new package version
 post_install() {
   # Unload modules (if any)
@@ -24,8 +6,7 @@ post_install() {
   done
 
   # Build new module
-  echo "Building VirtualBox modules..."
-  /usr/bin/vbox_build_module &> /dev/null
+  /etc/rc.d/vboxdrv setup
 
   # Add vboxusers group, GID 108 is reserved (http://wiki.archlinux.org/index.php/UID_and_GID_list),
   # but in some systems it may be being used - please replace if needed.
@@ -38,17 +19,39 @@ post_install() {
   udevadm control --reload-rules
 
   # Show the license
-  echo '---------------------------------------------------------------------------' >&2
-  echo ' You must agree to the following license in order to use this program:' >&2
+  echo >&2
+  echo '==> You must agree to the following license in order to use this program:' >&2
+  echo '------------------------------------------------------------------------' >&2
   echo >&2
   cat "/opt/VirtualBox/LICENSE" >&2
   echo >&2
-  echo '---------------------------------------------------------------------------' >&2
+  echo '------------------------------------------------------------------------' >&2
 
-  # Load the new module
-  modprobe vboxdrv
+  /bin/cat <<EOF
 
-  _install_notes
+==> Add your user to the vboxusers group:
+==> # gpasswd -a USERNAME vboxusers
+==>
+==> You must load vboxdrv module before starting VirtualBox:
+==> # modprobe vboxdrv
+==>
+==> Yout must load vboxnetflt for Host Interface Networking:
+==> # modprobe vboxnetflt
+==>
+==> Yout must load vboxnetadp for Host-Only networking:
+==> # modprobe vboxnetadp
+==>
+==> To load it automatically, add vboxdrv module to the "MODULES" array
+==> "/etc/rc.conf".
+==>
+==> Run \`/etc/rc.d/vboxdrv setup\` as root every time your kernel is
+==> upgraded, to compile the module for the new kernel version.
+==>
+==> If USB does not work for you out-of-the-box, add the following line
+==> to "/etc/fstab":
+==> "none /proc/bus/usb usbfs auto,busgid=108,busmode=0775,devgid=108,devmode=0664 0 0"
+
+EOF
 }
 
 # $1: The new package version
@@ -70,18 +73,43 @@ post_upgrade() {
   if [ "$1" != "$2" ]; then
     rm -Rf "/opt/virtualbox" &> /dev/null
   fi
+  
+  # Build new module
+  /etc/rc.d/vboxdrv setup
 
   # Create the directory below if it doesn't exist
   mkdir -p "/var/run/VirtualBox"
 
-  # Build new module
-  echo "Building VirtualBox modules..."
-  /usr/bin/vbox_build_module &> /dev/null
-  
-  # Load the new module
-  modprobe vboxdrv
+  /bin/cat <<EOF
 
-  _install_notes
+==> You must load vboxdrv module before starting VirtualBox:
+==> # modprobe vboxdrv
+==>
+==> Yout must load vboxnetflt for Host Interface Networking:
+==> # modprobe vboxnetflt
+==>
+==> Yout must load vboxnetadp for Host-Only networking:
+==> # modprobe vboxnetadp
+==>
+==> To load it automatically, add vboxdrv module to the "MODULES" array
+==> "/etc/rc.conf".
+==>
+==> Run \`/etc/rc.d/vboxdrv setup\` as root every time your kernel is
+==> upgraded, to compile the module for the new kernel version.
+==>
+==> If USB does not work for you out-of-the-box, add the following line
+==> to "/etc/fstab":
+==> "none /proc/bus/usb usbfs auto,busgid=108,busmode=0775,devgid=108,devmode=0664 0 0"
+
+EOF
+
+  if [ "`vercmp $_OLDVERSION 3.2.2`" -lt 0 ]; then
+    /bin/cat <<EOF
+==> IMPORTANT: This package now uses \`/etc/rc.d/vboxdrv setup\` instead
+==>            of the old "vbox_build_module" script.
+
+EOF
+  fi
 }
 
 # $1: The old package version
