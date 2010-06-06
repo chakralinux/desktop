@@ -80,7 +80,7 @@ pkgname=('kde-l10n-ar'
 
 arch=('any')
 pkgver=${_kdever}
-pkgrel=1 
+pkgrel=2
          
 pkgdesc="split package"
 url="http://www.kde.org"
@@ -1038,6 +1038,12 @@ package_kde-l10n-sr()
 	pushd ${srcdir}/kde-l10n-sr-${pkgver}
 		make DESTDIR=${pkgdir} install || return 1
 	popd
+
+
+	#fix translation issues with ktorrent 4.0
+	rm -v ${pkgdir}/usr/share/locale/sr@ijekavian/LC_MESSAGES/ktorrent.mo
+	rm -v ${pkgdir}/usr/share/locale/sr@ijekavianlatin/LC_MESSAGES/ktorrent.mo
+	rm -v ${pkgdir}/usr/share/locale/sr@latin/LC_MESSAGES/ktorrent.mo
 }
 
 package_kde-l10n-sr@ijekavian()
