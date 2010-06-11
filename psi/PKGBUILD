@@ -19,11 +19,11 @@ install='psi.install'
 source=("http://downloads.sourceforge.net/psi/psi-${pkgver}.tar.bz2"
         'chakralinux.patch')
 md5sums=('9d7dcce3bcab53b741a712199bd986be'
-         'cf9c1cc0557a41a1bc12b7c102fbbded')
+         '4f41758f1ddff5cb2ac3396895da3530')
 
 build() {
 	cd $srcdir/psi-${pkgver}
-	patch -p1 -i $srcdir/archlinux.patch
+	patch -p1 -i $srcdir/chakralinux.patch
 	./configure --prefix=/usr --disable-bundled-qca || return 1
 	make || return 1
 }
