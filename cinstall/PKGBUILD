@@ -1,0 +1,36 @@
+#
+# Chakra Packages for Chakra, part of chakra-project.org
+#
+# maintainer (i686): Phil Miller <philm[at]chakra-project[dog]org>
+# maintainer (x86_64): Manuel Tortosa <manutortosa[at]chakra-project[dot]org>
+# (c) 2010 Drake Justice
+
+# include global config
+source ../_buildscripts/${current_repo}-${_arch}-cfg.conf
+
+pkgname=cinstall
+pkgver=0.1
+pkgrel=1
+depends=('kdelibs' 'qt' )
+pkgdesc="Drake Justice's Bundle Creator/Launcher"
+arch=("i686" "x86_64")
+license=('GPL')
+#install=$pkgname.install
+source=(http://chakra-project.org/sources/${pkgname}-${pkgver}.tar.bz2)
+url="http://chakra-project.org/"
+optdepends=('akabei: for akabei support'
+            'pacman: for pacman support')
+
+md5sums=('75b19f60893628ba68a71557e959e1e7') # cinstall-0.1.tar.bz2
+
+build() {
+  cd ${srcdir}/
+  mkdir build
+  cd build
+  cmake ../${pkgname} \
+    -DCMAKE_INSTALL_PREFIX=/usr \
+    -DCMAKE_BUILD_TYPE=Release
+  make || return 1
+  make DESTDIR=${pkgdir} install || return 1
+}
+
