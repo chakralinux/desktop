@@ -9,28 +9,49 @@
 source ../_buildscripts/${current_repo}-${_arch}-cfg.conf
 
 pkgname=cinstall
-pkgver=0.1
-pkgrel=1
+pkgver=20100618
+pkgrel=5
 depends=('kdelibs' 'qt' )
-pkgdesc="Drake Justice's Bundle Creator/Launcher"
+pkgdesc="Drake Justice's Bundle Creator/Launcher and Package-Manager"
 arch=("i686" "x86_64")
 license=('GPL')
 #install=$pkgname.install
-source=(http://chakra-project.org/sources/${pkgname}/${pkgname}-${pkgver}.tar.bz2)
 url="http://chakra-project.org/"
 optdepends=('akabei: for akabei support'
             'pacman: for pacman support')
 
-md5sums=('75b19f60893628ba68a71557e959e1e7') # cinstall-0.1.tar.bz2
+source=(CInstall.desktop)
+md5sums=(b5577b88ef826b00156d7e8b21d9f79e)
+
+
+_gitroot="git://gitorious.org/cinstall/cinstall.git"
+_gitname="cinstall"
 
 build() {
-  cd ${srcdir}/
-  mkdir build
-  cd build
-  cmake ../${pkgname} \
-    -DCMAKE_INSTALL_PREFIX=/usr \
-    -DCMAKE_BUILD_TYPE=Release
-  make || return 1
-  make DESTDIR=${pkgdir} install || return 1
+cd "${srcdir}"
+        msg "Connecting to GIT server...."
+
+        if [ -d $_gitname ] ; then
+        cd $_gitname && git pull
+        msg "The local files are updated."
+        else
+	      git clone $_gitroot
+	      cd $_gitname && git checkout
+        fi
+        msg "GIT checkout done or server timeout"
+
+        msg "Starting make..."
+
+        rm -rf "${srcdir}/$_gitname-build"
+
+        cp -r "${srcdir}/$_gitname" "${srcdir}/$_gitname-build"
+        cd "${srcdir}/$_gitname-build/"
+        cmake ../${pkgname} \
+          -DCMAKE_INSTALL_PREFIX=/usr \
+          -DCMAKE_BUILD_TYPE=Release
+        make || return 1
+        make DESTDIR=${pkgdir} install || return 1
+        mkdir -p "$pkgdir/usr/share/applications/kde4"
+        cp -v "${srcdir}/CInstall.desktop" "$pkgdir/usr/share/applications/kde4/CInstall.desktop"
 }
 
