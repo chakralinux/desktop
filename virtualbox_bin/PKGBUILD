@@ -25,9 +25,9 @@ optdepends=("qt: for VirtualBox GUI"
 provides=("virtualbox=${pkgver}")
 conflicts=('virtualbox-ose' 'virtualbox-modules')
 install='virtualbox.install'
-_architect='x86'
-[ "$CARCH" = "x86_64" ] && _architect='amd64'
-source=("VirtualBox-${pkgver}-${_build}-Linux_${_architect}.run::http://download.virtualbox.org/virtualbox/${pkgver}/VirtualBox-${pkgver}-${_build}-Linux_${_architect}.run"
+_tbarch='x86'
+[ "$CARCH" = "x86_64" ] && _tbarch='amd64'
+source=("VirtualBox-${pkgver}-${_build}-Linux_${_tbarch}.run::http://download.virtualbox.org/virtualbox/${pkgver}/VirtualBox-${pkgver}-${_build}-Linux_${_tbarch}.run"
         '10-vboxdrv.rules'
         'vboxdrv')
 md5sums=('6118699c63d39eb4ddf11dd91d394ab8'
@@ -37,8 +37,8 @@ md5sums=('6118699c63d39eb4ddf11dd91d394ab8'
 
 build() {
   # Check and unpack the run package via sh(1)
-  sh "VirtualBox-${pkgver}-${_build}-Linux_${_architect}.run" --check || return 1
-  echo yes | sh "VirtualBox-${pkgver}-${_build}-Linux_${_architect}.run" --target "$srcdir" \
+  sh "VirtualBox-${pkgver}-${_build}-Linux_${_tbarch}.run" --check || return 1
+  echo yes | sh "VirtualBox-${pkgver}-${_build}-Linux_${_tbarch}.run" --target "$srcdir" \
     --nox11 --noexec &> /dev/null || return 1
 
   # Unpack bundled files
