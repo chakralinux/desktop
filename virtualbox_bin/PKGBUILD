@@ -8,8 +8,8 @@
 source ../_buildscripts/${current_repo}-${_arch}-cfg.conf
 
 pkgname="virtualbox_bin"
-pkgver="3.2.2"
-_build="62298"
+pkgver="3.2.4"
+_build="62467"
 pkgrel=1
 pkgdesc="Powerful x86 virtualization (Personal Use Binaries Edition)."
 arch=('i686' 'x86_64')
@@ -30,10 +30,10 @@ _tbarch='x86'
 source=("VirtualBox-${pkgver}-${_build}-Linux_${_tbarch}.run::http://download.virtualbox.org/virtualbox/${pkgver}/VirtualBox-${pkgver}-${_build}-Linux_${_tbarch}.run"
         '10-vboxdrv.rules'
         'vboxdrv')
-md5sums=('6118699c63d39eb4ddf11dd91d394ab8'
+md5sums=('86a9ece7dddfdf02785cce33d6083364'
          '98859bfca9ef2ebf2ea43eb9123316fc'
          '160fc08a43cd9a719d306b5f023dea42')
-[ "$CARCH" = "x86_64" ] && md5sums[0]='768449abbc4b9c44a817d2f773f8a975'
+[ "$CARCH" = "x86_64" ] && md5sums[0]='4314e3ccb3aedca842aab8233bf3cf13'
 
 build() {
   # Check and unpack the run package via sh(1)
@@ -42,11 +42,11 @@ build() {
     --nox11 --noexec &> /dev/null || return 1
 
   # Unpack bundled files
-  mkdir -p "$pkgdir/opt/VirtualBox" || return 1
+  install -d "$pkgdir/opt/VirtualBox" || return 1
   cd "$pkgdir/opt/VirtualBox"
   tar -xjf "$srcdir/VirtualBox.tar.bz2" || return 1
 
-  mkdir -p "$pkgdir/usr/"{bin,share/applications,share/pixmaps} || return 1
+  install -d "$pkgdir/usr/"{bin,share/applications,share/pixmaps} || return 1
 
   # Hardened build: Mark binaries suid root, create symlinks for working around
   #                 unsupported $ORIGIN/.. in VBoxC.so and make sure the
@@ -97,10 +97,10 @@ build() {
   ln -s "/opt/VirtualBox/virtualbox.desktop" "$pkgdir/usr/share/applications/VirtualBox.desktop"
 
   # Symlink the license
-  mkdir -p "$pkgdir/usr/share/licenses/$pkgname" || return 1
+  install -d "$pkgdir/usr/share/licenses/$pkgname" || return 1
   ln -s "/opt/VirtualBox/LICENSE" "$pkgdir/usr/share/licenses/$pkgname/PUEL"
 
   # Setup configuration
-  mkdir -p "$pkgdir/etc/vbox" || return 1
+  install -d "$pkgdir/etc/vbox" || return 1
   echo 'INSTALL_DIR="/opt/VirtualBox"' > "$pkgdir/etc/vbox/vbox.cfg"
 }
