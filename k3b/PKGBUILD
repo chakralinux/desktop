@@ -8,7 +8,7 @@
 source ../_buildscripts/${current_repo}-${_arch}-cfg.conf
 
 pkgname=k3b
-pkgver=1.92.0rc3
+pkgver=1.93.0rc4
 pkgrel=1
 depends=('kdebase-runtime' 'kdemultimedia-common' 'libsamplerate' 'libmad'
          'ffmpeg>=0.5' 'taglib>=1.4' 'libmpcdec>=1.2.5' 'libdvdread>=4.1.3'
@@ -25,18 +25,18 @@ optdepends=('dvd+rw-tools: for dvd burning support'
             'transcode:    for advanced mpeg conversion support'
             'emovix:       for bootable multimedia cd/dvd support')
 options=(!libtool)
-md5sums=('65372e9f2826165071b24c9f1d17882b')
 
 build() {
   # fix build
-  export CXXFLAGS="-march=i686 -mtune=generic -O2 -pipe -D__STDC_CONSTANT_MACROS"
-
+  [ "${CARCH}" = "i686" ] && export CXXFLAGS="-march=i686 -mtune=generic -O2 -pipe -D__STDC_CONSTANT_MACROS"
+  
   cd ${srcdir}/
   mkdir build
   cd build
-  cmake ../${pkgname}-1.92.0 \
+  cmake ../${pkgname}-1.93.0 \
     -DCMAKE_INSTALL_PREFIX=/usr \
     -DCMAKE_BUILD_TYPE=Release
   make || return 1
   make DESTDIR=${pkgdir} install || return 1
 }
+md5sums=('78ce03b8a7d4f9872b4dd0963b77307c')
