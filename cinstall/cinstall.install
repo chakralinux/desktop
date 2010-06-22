@@ -1,0 +1,115 @@
+post_install() {
+		if [ -e "/etc/chakra/updates.conf" ] ; then
+
+			. /etc/chakra/updates.conf
+
+			if [ "$UPDATE_XDG_ICON_DB" = "yes" ]; then
+				/usr/bin/chakra-update-icons
+			fi
+
+		else
+			echo " > WARNING"
+			echo "   The package kde-common seems not to be installed,"
+			echo "   this can possibly break the installation. Just install it"
+			echo "   manually after this installation/update, run the following"
+			echo "   commands and restart KDE afterwards:"
+			echo "   sudo chakra-config-updater"
+			echo "   kbuildsycoca4"
+			echo " "
+		fi
+
+		echo "Create group bundle"
+
+		if [ "Group: `grep bundle /etc/group`" = "Group: " ] ; then
+			groupadd bundle
+		else
+			echo "Group bundle already exists"
+		fi
+
+		echo "Adding all existing users to group bundle"
+
+		for i in `cat /etc/passwd | grep /home | cut -d: -f1` ;  do
+			echo " - adding user $i"
+			usermod -a -G bundle $i
+		done
+
+		echo "Mod sudoers file"
+		if [ "sudoers: `grep bundle /etc/sudoers`" = "sudoers: " ] ; then
+			echo "%bundle ALL=(ALL) NOPASSWD: /sbin/mount -o loop -t squashfs" >> /etc/sudoers
+			echo "ensure correct sudoers permissions"
+			chmod -v 0440 /etc/sudoers
+		else
+			echo "sudoers file already modded"
+		fi
+}
+
+post_upgrade() {
+		if [ -e "/etc/chakra/updates.conf" ] ; then
+
+			. /etc/chakra/updates.conf
+
+			if [ "$UPDATE_XDG_ICON_DB" = "yes" ]; then
+				/usr/bin/chakra-update-icons
+			fi
+
+		else
+			echo " > WARNING"
+			echo "   The package kde-common seems not to be installed,"
+			echo "   this can possibly break the installation. Just install it"
+			echo "   manually after this installation/update, run the following"
+			echo "   commands and restart KDE afterwards:"
+			echo "   sudo chakra-config-updater"
+			echo "   kbuildsycoca4"
+			echo " "
+		fi
+
+		echo "Create group bundle"
+
+		if [ "Group: `grep bundle /etc/group`" = "Group: " ] ; then
+			groupadd bundle
+		else
+			echo "Group bundle already exists"
+		fi
+
+		echo "Adding all existing users to group bundle"
+
+		for i in `cat /etc/passwd | grep /home | cut -d: -f1` ;  do
+			echo " - adding user $i"
+			usermod -a -G bundle $i
+		done
+
+		echo "Mod sudoers file"
+		if [ "sudoers: `grep bundle /etc/sudoers`" = "sudoers: " ] ; then
+			echo "%bundle ALL=(ALL) NOPASSWD: /sbin/mount -o loop -t squashfs" >> /etc/sudoers
+			echo "ensure correct sudoers permissions"
+			chmod -v 0440 /etc/sudoers
+		else
+			echo "sudoers file already modded"
+		fi
+}
+
+post_remove() {
+		if [ -e "/etc/chakra/updates.conf" ] ; then
+
+			. /etc/chakra/updates.conf
+
+			if [ "$UPDATE_XDG_ICON_DB" = "yes" ]; then
+				/usr/bin/chakra-update-icons
+			fi
+
+		else
+			echo " > WARNING"
+			echo "   The package kde-common seems not to be installed,"
+			echo "   this can possibly break the installation. Just install it"
+			echo "   manually after this installation/update, run the following"
+			echo "   commands and restart KDE afterwards:"
+			echo "   sudo chakra-config-updater"
+			echo "   kbuildsycoca4"
+			echo " "
+		fi
+}
+
+op=$1
+shift
+
+$op $*
