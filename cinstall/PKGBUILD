@@ -9,8 +9,8 @@
 source ../_buildscripts/${current_repo}-${_arch}-cfg.conf
 
 pkgname=cinstall
-pkgver=20100622
-pkgrel=1
+pkgver=20100623
+pkgrel=2
 depends=('kdelibs' 'qt' )
 pkgdesc="Drake Justice's Bundle Creator/Launcher and Package-Manager"
 arch=("i686" "x86_64")
@@ -19,9 +19,6 @@ install=$pkgname.install
 url="http://chakra-project.org/"
 optdepends=('akabei: for akabei support'
             'pacman: for pacman support')
-
-source=(CInstall.desktop)
-md5sums=(b5577b88ef826b00156d7e8b21d9f79e)
 
 
 _gitroot="git://gitorious.org/cinstall/cinstall.git"
@@ -51,7 +48,5 @@ cd "${srcdir}"
           -DCMAKE_BUILD_TYPE=Release
         make || return 1
         make DESTDIR=${pkgdir} install || return 1
-        mkdir -p "$pkgdir/usr/share/applications/kde4"
-        cp -v "${srcdir}/CInstall.desktop" "$pkgdir/usr/share/applications/kde4/CInstall.desktop"
 }
 
