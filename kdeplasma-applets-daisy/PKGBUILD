@@ -1,0 +1,38 @@
+#
+# KDEPlasma Packages for Chakra, part of chakra-project.org
+#
+# maintainer (i686): Phil Miller <philm[at]chakra-project[dog]org>
+# maintainer (x86_64): Manuel Tortosa <manutortosa[at]chakra-project[dot]org>
+
+# include global config
+source ../_buildscripts/${current_repo}-${_arch}-cfg.conf
+
+pkgname=kdeplasma-applets-daisy
+pkgver=0.0.4.22
+pkgrel=1
+pkgdesc="A simple application launcher for Plasma."
+arch=('i686' 'x86_64')
+url="http://lechio.freehostia.com/daisy.html"
+license=('GPL')
+depends=('kdebase-workspace')
+makedepends=('gcc' 'cmake' 'automoc4')
+conflicts=('kde-extragear-plasmoids')
+replaces=('plasma-daisy-plasmoid')
+install=daisy.install
+source=("http://daisyplasma.freehostia.com/downloads/plasma-applet-daisy-$pkgver.tar.gz"
+        "daisy-compile-fix.patch")
+md5sums=('ef1bc3dd2e47d04d5a21b6a54dcbd7e9'
+         '01fcd94404c3cc46ae517ad10b9b5c52')
+
+build() {
+  cd $srcdir/plasma-applet-daisy-${pkgver}
+
+  # Fix compile errors, introduced with GCC 4.5
+  patch -p1 < $srcdir/daisy-compile-fix.patch
+
+  mkdir build && cd build
+  cmake -DCMAKE_INSTALL_PREFIX=/usr .. || return 1
+  make || return 1
+  make DESTDIR="$pkgdir/" install || return 1
+}
+
