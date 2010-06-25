@@ -35,7 +35,7 @@ post_install() {
 
 		echo "Mod sudoers file"
 		if [ "sudoers: `grep bundle /etc/sudoers`" = "sudoers: " ] ; then
-			echo "%bundle ALL=(ALL) NOPASSWD: /sbin/mount -o loop -t squashfs *" >> /etc/sudoers
+			echo "%bundle ALL=NOPASSWD: /bin/mount -o loop -t squashfs *" >> /etc/sudoers
 			echo "ensure correct sudoers permissions"
 			chmod -v 0440 /etc/sudoers
 		else
