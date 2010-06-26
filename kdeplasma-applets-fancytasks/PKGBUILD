@@ -1,0 +1,29 @@
+#
+# KDEPlasma Packages for Chakra, part of chakra-project.org
+#
+# maintainer (i686): Phil Miller <philm[at]chakra-project[dog]org>
+# maintainer (x86_64): Manuel Tortosa <manutortosa[at]chakra-project[dot]org>
+
+# include global config
+source ../_buildscripts/${current_repo}-${_arch}-cfg.conf
+
+pkgname=kdeplasma-applets-fancytasks
+pkgver=1.0.93
+pkgrel=1
+pkgdesc="Plasmoid Binary"
+arch=('i686' 'x86_64')
+url="http://www.kde-look.org/content/show.php/Fancy+Tasks?content=99737"
+license=('GPL')
+depends=('kdebase-workspace')
+makedepends=('cmake' 'automoc4' 'kdebase')
+source=(http://www.kde-look.org/CONTENT/content-files/99737-fancytasks-${pkgver}.tar.bz2)
+md5sums=('3487d44ec6e0594e0f34160508d5a615')
+
+build() {
+	cd $startdir/src/fancytasks-${pkgver}
+        mkdir build
+        cd build
+	cmake ../ -DCMAKE_INSTALL_PREFIX=`kde4-config --prefix`
+	make || return 1
+        make DESTDIR=$startdir/pkg install || return 1
+}
