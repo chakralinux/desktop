@@ -8,8 +8,8 @@
 source ../_buildscripts/${current_repo}-${_arch}-cfg.conf
 
 pkgname="virtualbox_bin"
-pkgver="3.2.4"
-_build="62467"
+pkgver="3.2.6"
+_build="63112"
 pkgrel=1
 pkgdesc="Powerful x86 virtualization (Personal Use Binaries Edition)."
 arch=('i686' 'x86_64')
@@ -25,20 +25,20 @@ optdepends=("qt: for VirtualBox GUI"
 provides=("virtualbox=${pkgver}")
 conflicts=('virtualbox-ose' 'virtualbox-modules')
 install='virtualbox.install'
-_tbarch='x86'
-[ "$CARCH" = "x86_64" ] && _tbarch='amd64'
-source=("VirtualBox-${pkgver}-${_build}-Linux_${_tbarch}.run::http://download.virtualbox.org/virtualbox/${pkgver}/VirtualBox-${pkgver}-${_build}-Linux_${_tbarch}.run"
+_barch='x86'
+[ "$CARCH" = "x86_64" ] && _barch='amd64'
+source=("VirtualBox-${pkgver}-${_build}-Linux_${_barch}.run::http://download.virtualbox.org/virtualbox/${pkgver}/VirtualBox-${pkgver}-${_build}-Linux_${_barch}.run"
         '10-vboxdrv.rules'
         'vboxdrv')
-md5sums=('86a9ece7dddfdf02785cce33d6083364'
+md5sums=('a32de974d0e06196e7fd4581d93535b1'
          '98859bfca9ef2ebf2ea43eb9123316fc'
          '160fc08a43cd9a719d306b5f023dea42')
-[ "$CARCH" = "x86_64" ] && md5sums[0]='4314e3ccb3aedca842aab8233bf3cf13'
+[ "$CARCH" = "x86_64" ] && md5sums[0]='c88939c097f9e077b3941f5752b9e6d7'
 
 build() {
   # Check and unpack the run package via sh(1)
-  sh "VirtualBox-${pkgver}-${_build}-Linux_${_tbarch}.run" --check || return 1
-  echo yes | sh "VirtualBox-${pkgver}-${_build}-Linux_${_tbarch}.run" --target "$srcdir" \
+  sh "VirtualBox-${pkgver}-${_build}-Linux_${_barch}.run" --check || return 1
+  echo yes | sh "VirtualBox-${pkgver}-${_build}-Linux_${_barch}.run" --target "$srcdir" \
     --nox11 --noexec &> /dev/null || return 1
 
   # Unpack bundled files
