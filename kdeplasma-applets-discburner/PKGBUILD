@@ -1,0 +1,30 @@
+#
+# KDEPlasma Packages for Chakra, part of chakra-project.org
+#
+# maintainer (i686): Phil Miller <philm[at]chakra-project[dot]org>
+# maintainer (x86_64): Drake Justice <djustice[at]chakra-project[dot]org>
+
+# include global config
+#source ../_buildscripts/${current_repo}-${_arch}-cfg.conf
+
+pkgname=kdeplasma-applets-discburner
+pkgver=0.0.12
+pkgrel=1
+pkgdesc="A disc burning plasmoid."
+arch=('i686' 'x86_64')
+url="http://kde-look.org/content/show.php/DiscBurner?content=122179"
+license=('GPL')
+depends=('kdebase-workspace')
+makedepends=('gcc' 'cmake' 'automoc4')
+source=("http://ftp.heanet.ie/mirrors/sourceforge/d/project/di/discburner/discburner-a12.tar.bz2")
+md5sums=('ba6cf98e76530b856b8e4e0f681ef9b0')
+
+build() {
+  cd $srcdir/discburner
+
+  mkdir build && cd build
+  cmake -DCMAKE_INSTALL_PREFIX=/usr .. || return 1
+  make || return 1
+  make DESTDIR="$pkgdir/" install || return 1
+}
+
