@@ -82,7 +82,7 @@ pkgname=('kdeplasma-addons-common'
          'kdeplasma-addons-wallpapers-weather')
 arch=('i686' 'x86_64')
 pkgver=${_kdever}
-pkgrel=1
+pkgrel=1.1
 
 pkgdesc="KDE Plasma Addons"
 url="http://www.kde.org/"
@@ -117,6 +117,8 @@ package_kdeplasma-addons-common() {
 	pkgdesc='Plasma Addon Library'
 	depends=('kdebase-workspace')
 	groups=("kde-complete" "kde-uninstall" "kdeplasma-addons")
+	conflicts=("kdeplasma-addons")
+	replaces=("kdeplasma-addons")
 	# include our patches into the package
 	ls -1 ${startdir}/*.patch &>/dev/null 2>&1
 	if [ "$?" = "0" ]; then
