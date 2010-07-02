@@ -8,35 +8,66 @@
 source ../_buildscripts/${current_repo}-${_arch}-cfg.conf
 
 pkgname=opera
-pkgver=10.11
-_buildver=4791
+pkgver=10.60
+_buildver=6386
 pkgrel=1
-pkgdesc="The Opera web browser"
-url="http://www.opera.com"
-depends=('qt')
+pkgdesc="A fast and secure web browser and Internet suite."
+url="http://www.opera.com/browser/"
+depends=('gcc-libs' 'gstreamer0.10-good' 'libxt' 'freetype2' 'libxext')
+optdepends=('gtk2: GTK integration' \
+	    'kdebase-runtime: KDE4 integration' \
+	    'gstreamer0.10-ffmpeg: HTML5 H.264 support' \
+	    'gstreamer0.10-bad-plugins: HTML5 H.264 support')
+install=${pkgname}.install
+options=(!strip)
 license=('custom:opera')
 arch=('i686' 'x86_64')
-source=(http://ftp.opera.com/pub/opera/linux/${pkgver/./}/final/en/i386/opera-${pkgver}.gcc4-qt4.i386.tar.bz2 opera.desktop)
-md5sums=('825f39f6653fca37dc04b4d0b92797ec'
-         '43331f6889a24c55274968bb47ae824d')
+_barch=i386
+[ "$CARCH" = "x86_64" ] && _barch=x86_64
+source=(http://ftp.opera.com/pub/opera/linux/${pkgver/./}/opera-${pkgver}-${_buildver}.${_barch}.linux.tar.bz2)
+md5sums=('e86d604b2f9397a618e8ecf357748f55')
+[ "$CARCH" = "x86_64" ] && md5sums=('6415f21430bade3193d0d6c174e3bfb1')
 
-[ "$CARCH" = "x86_64" ] && source=(http://ftp.opera.com/pub/opera/linux/${pkgver/./}/final/en/x86_64/opera-${pkgver}.gcc4-qt4.x86_64.tar.bz2 opera.desktop)
-[ "$CARCH" = "x86_64" ] && md5sums=('1b9ae201cb1df43d3ca291a51d7c7e6c'
-         '43331f6889a24c55274968bb47ae824d')
 build() {
-if [ "$CARCH" = "x86_64" ]; then
-       cd ${srcdir}/opera-${pkgver}-${_buildver}.gcc4-qt4.x86_64
-  else cd ${srcdir}/opera-${pkgver}-${_buildver}.gcc4-qt4.i386
-fi
+cd opera-${pkgver}-${_buildver}.${_barch}.linux
 
-   ./install.sh DESTDIR=${pkgdir}
+# Create initial directory structure
 
-   install -D -m 644 ${srcdir}/opera.desktop ${pkgdir}/usr/share/applications/opera.desktop
-   install -D -m 644 LICENSE ${pkgdir}/usr/share/licenses/opera/license.txt
+mkdir -p ${pkgdir}/usr/bin
 
-   if [ "$CARCH" = "x86_64" ]; then
-      install -D -m 644 ${srcdir}/opera-${pkgver}-${_buildver}.gcc4-qt4.x86_64/usr/share/pixmaps/opera.xpm ${pkgdir}/usr/share/pixmaps/opera.xpm
-   else
-      install -D -m 644 ${srcdir}/opera-${pkgver}-${_buildver}.gcc4-qt4.i386/usr/share/pixmaps/opera.xpm ${pkgdir}/usr/share/pixmaps/opera.xpm
-   fi
+# Create 'opera' and 'opera-widget-manager' wrapper scripts and make them executable
+
+cat <<EOF > ${pkgdir}/usr/bin/opera
+#!/bin/sh 
+export OPERA_DIR=\${OPERA_DIR:-/usr/share/opera} 
+exec /usr/lib/opera/opera "\$@"
+EOF
+
+cat <<EOF > ${pkgdir}/usr/bin/opera-widget-manager
+#!/bin/sh 
+exec /usr/bin/opera --widgetmanager "\$@"
+EOF
+
+chmod 755 ${pkgdir}/usr/bin/opera*
+
+# Copy over 'lib/' and 'share/'
+
+cp -R lib ${pkgdir}/usr/
+cp -R share ${pkgdir}/usr/
+
+# Patch variables in the *.desktop, MIME and man files to reflect the final install location.
+
+sed -i ${pkgdir}/usr/share/applications/opera-browser.desktop -e "s|@@{PREFIX}|/usr|" -e "s|@@{[U_]*SUFFIX}||"
+sed -i ${pkgdir}/usr/share/applications/opera-widget-manager.desktop -e "s|@@{PREFIX}|/usr|" -e "s|@@{[U_]*SUFFIX}||"
+sed -i ${pkgdir}/usr/share/applications/opera-widget-installer.desktop -e "s|@@{PREFIX}|/usr|" -e "s|@@{[U_]*SUFFIX}||"
+sed -i ${pkgdir}/usr/share/mime/packages/opera-widget.xml -e "s|@@{[U_]*SUFFIX}||"
+sed -i ${pkgdir}/usr/share/mime/packages/opera-unite-application.xml -e "s|@@{[U_]*SUFFIX}||"
+gzip -d ${pkgdir}/usr/share/man/man1/opera.1.gz
+sed -i ${pkgdir}/usr/share/man/man1/opera.1 -e "s|@@{PREFIX}|/usr|" -e "s|@@{[U_]*SUFFIX}||"
+gzip -d ${pkgdir}/usr/share/man/man1/opera-widget-manager.1.gz
+sed -i ${pkgdir}/usr/share/man/man1/opera-widget-manager.1 -e "s|@@{PREFIX}|/usr|" -e "s|@@{[U_]*SUFFIX}||"
+
+# Place the license in the standard Arch location.
+
+install -D -m 644 ${pkgdir}/usr/share/opera/defaults/license.txt ${pkgdir}/usr/share/licenses/${pkgname}/license.txt
 }
