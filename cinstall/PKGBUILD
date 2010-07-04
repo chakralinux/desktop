@@ -9,8 +9,8 @@
 source ../_buildscripts/${current_repo}-${_arch}-cfg.conf
 
 pkgname=cinstall
-pkgver=20100703
-pkgrel=1
+pkgver=20100704
+pkgrel=4
 depends=('kdelibs' 'qt' 'squashfs-tools' 'xz-utils')
 pkgdesc="Drake Justice's Bundle Creator/Launcher and Package-Manager"
 arch=("i686" "x86_64")
@@ -19,6 +19,9 @@ install=$pkgname.install
 url="http://chakra-project.org/"
 optdepends=('akabei: for akabei support'
             'pacman: for pacman support')
+
+#sources=("cinstall-0704-3-fixdesktopfile.patch")
+#md5sums=("decf4d7e9a091e07e954062df7211f9a")
 
 
 _gitroot="git://gitorious.org/cinstall/cinstall.git"
@@ -43,7 +46,11 @@ cd "${srcdir}"
 
         cp -r "${srcdir}/$_gitname" "${srcdir}/$_gitname-build"
         cd "${srcdir}/$_gitname-build/"
-        cmake ../${pkgname} \
+
+#        msg "patch source"
+#	patch -Np1 -i ${startdir}/cinstall-0704-3-fixdesktopfile.patch || return 1
+
+        cmake ../$_gitname-build \
           -DCMAKE_INSTALL_PREFIX=/usr \
           -DCMAKE_BUILD_TYPE=Release
         make || return 1
