@@ -8,28 +8,31 @@
 source ../_buildscripts/${current_repo}-${_arch}-cfg.conf
 
 pkgname=gtk-integration
-pkgver=1.0
+pkgver=1.1
 pkgrel=1
 iconspkgver=2.4.0
 widgetpkgver=3.2
+chthemever=0.3.1
 _kdever=44
 _colors=3.0
 
 pkgdesc="A bundles and gtk apps integration package for Chakra GNU/Linux"
 arch=('i686' 'x86_64')
 
-url="http://www.nanolx.org/home/item/75-oxygen-refit / http://kde-look.org/content/show.php/Oxygen-Molecule+KDE+%26+GTK%2B+unified+theme?content=103741"
+url="http://www.nanolx.org/home/item/75-oxygen-refit / http://de-look.org/content/show.php/Oxygen-Molecule+KDE+%26+GTK%2B+unified+theme?content=103741 / http://plasmasturm.org/programs/gtk-chtheme/"
 license=('LGPL3' 'GPL')
 
 depends=('qt' 'oxygen-icons')
 makedepends=('findutils' 'imagemagick' 'liblqr')
-provides=('gtk-integration' 'oxygenrefit2-icon-theme' 'oxygen-molecule-theme')
-replaces=('oxygenrefit2-icon-theme' 'oxygen-molecule-theme')
+provides=('gtk-integration' 'oxygenrefit2-icon-theme' 'oxygen-molecule-theme' 'gtk-chtheme')
+replaces=('oxygenrefit2-icon-theme' 'oxygen-molecule-theme' 'gtk-chtheme')
 
 source=("http://www.nanolx.org/free/Artwork/OxygenRefit2-$iconspkgver.tar.bz2"
-        "http://kde-look.org/CONTENT/content-files/103741-Oxygen-Molecule_${widgetpkgver}_theme.tar.gz")
+        "http://kde-look.org/CONTENT/content-files/103741-Oxygen-Molecule_${widgetpkgver}_theme.tar.gz"
+	"http://plasmasturm.org/programs/gtk-chtheme/gtk-chtheme-$chthemever.tar.bz2")
 md5sums=('f7f05922489e5e6d6c677d26b29cd251'
-	 'def46dbdf629f6d7daddf7536aa36ce9')
+	 'def46dbdf629f6d7daddf7536aa36ce9'
+	 'f688053bf26dd6c4f1cd0bf2ee33de2a')
 
 function create_install() {
 cat > "${startdir}/${pkgname}.install" <<EOF
@@ -51,6 +54,8 @@ post_install() {
 		gtk-theme-name="kde${_kdever}-oxygen-molecule"
 		gtk-font-name="Sans Serif 10"
                 gtk-icon-theme-name="oxygenrefit2"
+
+		You can alternativelly use the gtk-chtheme app included in this package.
 
 		################################################################################
 		#  If you want GTK+ apps run with root privileges to be themed as well, copy
@@ -88,18 +93,25 @@ function build() {
 	cp -rf "oxygen-refit-2" ${pkgdir}/usr/share/icons/ || return 1
 	find -type f -print0 | xargs -0 chmod 644
 
-
         # Widget theme
 	mkdir -p "${pkgdir}/usr/bin"
 	mkdir -p "${pkgdir}/usr/share/themes"
 	mkdir -p "${pkgdir}/usr/share/apps/color-schemes"
+
+	# Gtk-ChTheme
+	cd ${srcdir}/gtk-chtheme-$chthemever
+	make || return 1
+	install -m 755 gtk-chtheme "${pkgdir}/usr/bin/" || return 1
+	
+
 }
 
 function package() {
+
+	# Widget theme
 	tar -xzf kde${_kdever}-oxygen-molecule.tar.gz -C "${pkgdir}/usr/share/themes"
 	cp Oxygen-Molecule_${_colors}.colors "${pkgdir}/usr/share/apps/color-schemes"
 	install -m 755 flatmolecule "${pkgdir}/usr/bin/"
-	
 	# Create the install file
 	create_install
 	export install="${pkgname}.install"
