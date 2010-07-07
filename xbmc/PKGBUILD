@@ -45,13 +45,21 @@ md5sums=('9a68ac1e2f44a54cc3803fcdb1265767'
          '4b9f89e5ade45142dfb001fbc563b5a6')
 
 build() {
+  # one core only
+  export MAKEFLAGS="-j2"
+
   # fix build
-  export MAKEFLAGS="-j1"
+  if [ "${_arch}" = "i686" ]; then
+    export CXXFLAGS="-march=i686 -mtune=generic -O2 -pipe -D__STDC_CONSTANT_MACROS"
+  else
+    export CXXFLAGS="-march=x86-64 -mtune=generic -O2 -pipe -D__STDC_CONSTANT_MACROS"
+  fi
+
   cd "${srcdir}/xbmc-${pkgver/_/-}"
 
   # dash the next two lines if U use intel cpu for compiling
-  msg "Applying patch for old SSE"
-  patch xbmc/lib/libsquish/Makefile.in < ${srcdir}/../sse1.patch
+  #msg "Applying patch for old SSE"
+  #patch xbmc/lib/libsquish/Makefile.in < ${srcdir}/../sse1.patch
 
   msg "fix libcdio faults"
   patch -N -p1 -i  ${srcdir}/use_cdio_system_headers_on_non_win32.patch || return 1
