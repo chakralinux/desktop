@@ -36,10 +36,10 @@ license=('GPL' 'LGPL' 'FDL')
 options=('docs' '!splithdr')
 
 makedepends=('pkgconfig' 'cmake' 'automoc4' 'ruby' "kdepimlibs>=${_kdever}"
-             "kdebase-runtime>=${_kdever}" 'tidyhtml' "kdepim-runtime>=${_kdever}")
+             "kdebase-runtime>=${_kdever}" 'tidyhtml') # "kdepim-runtime>=${_kdever}"
 
 source=($_mirror/${_origname}-$_kdever.tar.bz2)
-md5sums=('3a8fe2d5e8f13721c631f9cdc3e7c66d') # kdewebdev-4.4.5.tar.bz2
+md5sums=('682f719db87476f33d706147cdd8a7cd') #  kdewebdev-4.4.92.tar.bz2
 
 
 
@@ -72,18 +72,18 @@ package_kdewebdev-common()
 	groups=("kde-complete" "${_origname}" "kde-uninstall")
 	install=${_origname}.install
 
-	# include our patches into the package
-	ls -1 ${startdir}/*.patch &>/dev/null 2>&1
-	if [ "$?" = "0" ]; then
-		warning "incuding patches into package"
-		mkdir -p ${pkgdir}/usr/share/kdemod/patches/${_origname} &>/dev/null
-		for i in ${startdir}/*.patch; do
-			msg "$i"
-			cp $i ${pkgdir}/usr/share/kdemod/patches/${_origname}/ &>/dev/null
-		done
-	else
-		warning "no patches found, skipping to include them into the package..."
-	fi
+#	# include our patches into the package
+#	ls -1 ${startdir}/*.patch &>/dev/null 2>&1
+#	if [ "$?" = "0" ]; then
+#		warning "incuding patches into package"
+#		mkdir -p ${pkgdir}/usr/share/kdemod/patches/${_origname} &>/dev/null
+#		for i in ${startdir}/*.patch; do
+#			msg "$i"
+#			cp $i ${pkgdir}/usr/share/kdemod/patches/${_origname}/ &>/dev/null
+#		done
+#	else
+#		warning "no patches found, skipping to include them into the package..."
+#	fi
 }
 
 package_kdewebdev-doc()
@@ -153,7 +153,7 @@ package_kdewebdev-klinkstatus()
 {
 	pkgdesc="A Link checker utility"
 	depends=("${_origname}-common>=${_kdever}" "kdebase-runtime>=${_kdever}"
-		 "kdelibs>=${_kdever}" 'tidyhtml' "kdepim-runtime>=${_kdever}")
+		 "kdelibs>=${_kdever}" 'tidyhtml' "kdepimlibs>=${_kdever}") # "kdepim-runtime>=${_kdever}"
 	conflicts=("kdemod-${_origname}-klinkstatus")
 	groups=("kde-complete" "${_origname}" "kde-uninstall")
 	install=${_origname}.install

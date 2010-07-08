@@ -47,8 +47,8 @@ pkgname=('kdeplasma-addons-common'
          'kdeplasma-addons-applets-news'
          'kdeplasma-addons-applets-notes'
          'kdeplasma-addons-applets-nowplaying'
-         'kdeplasma-addons-applets-opendesktop'
-         'kdeplasma-addons-applets-opendesktop-activities'
+#         'kdeplasma-addons-applets-opendesktop'
+#         'kdeplasma-addons-applets-opendesktop-activities'
          'kdeplasma-addons-applets-paste'
          'kdeplasma-addons-applets-pastebin'
          'kdeplasma-addons-applets-plasmaboard'
@@ -98,12 +98,12 @@ makedepends=('pkgconfig' 'cmake' 'automoc4' "kdebase-workspace>=${_kdever}" 'lib
              "kdegraphics-common>=${_kdever}" "kdeedu-marble>=${_kdever}" 'eigen' 'scim' 'qwt')
 
 source=($_mirror/${_origname}-$_kdever.tar.bz2)
-md5sums=('cdc027b3dfdcc588f253006baa970638') # kdeplasma-addons-4.4.5.tar.bz2
+md5sums=('bc968232f8e83bf2e8a5a18bc2cf0388') #  kdeplasma-addons-4.4.92.tar.bz2
 
 
 build() {
 	cd $srcdir
-	mkdir build
+	mkdir -p build
 	cd build
 	cmake ../${pkgbase}-${pkgver} \
 		-DCMAKE_BUILD_TYPE=Release \
@@ -119,18 +119,18 @@ package_kdeplasma-addons-common() {
 	groups=("kde-complete" "kde-uninstall" "kdeplasma-addons")
 	conflicts=("kdeplasma-addons")
 	replaces=("kdeplasma-addons")
-	# include our patches into the package
-	ls -1 ${startdir}/*.patch &>/dev/null 2>&1
-	if [ "$?" = "0" ]; then
-		warning "incuding patches into package"
-		mkdir -p ${pkgdir}/usr/share/kdemod/patches/${_origname} &>/dev/null
-		for i in ${startdir}/*.patch; do
-			msg "$i"
-			cp $i ${pkgdir}/usr/share/kdemod/patches/${_origname}/ &>/dev/null
-		done
-	else
-		warning "no patches found, skipping to include them into the package..."
-	fi
+#	# include our patches into the package
+#	ls -1 ${startdir}/*.patch &>/dev/null 2>&1
+#	if [ "$?" = "0" ]; then
+#		warning "incuding patches into package"
+#		mkdir -p ${pkgdir}/usr/share/kdemod/patches/${_origname} &>/dev/null
+#		for i in ${startdir}/*.patch; do
+#			msg "$i"
+#			cp $i ${pkgdir}/usr/share/kdemod/patches/${_origname}/ &>/dev/null
+#		done
+#	else
+#		warning "no patches found, skipping to include them into the package..."
+#	fi
 	cd $srcdir/build/libs
 	make DESTDIR=$pkgdir install
 	cd $srcdir/build/dataengines
