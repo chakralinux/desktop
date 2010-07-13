@@ -42,6 +42,10 @@ post_install() {
 			echo "sudoers file already modded"
 		fi
 
+		echo "change folder rights"  
+		chmod 775 /etc/gre.d
+		chown root:bundle /etc/gre.d
+
 		echo "update mime-database"      
 		update-mime-database /usr/share/mime &>/dev/null
 }
@@ -90,6 +94,10 @@ post_upgrade() {
 			echo "sudoers file already modded"
 		fi
 
+		echo "change folder rights"  
+		chmod 775 /etc/gre.d
+		chown root:bundle /etc/gre.d
+
 		echo "update mime-database"      
 		update-mime-database /usr/share/mime &>/dev/null
 }
@@ -102,6 +110,10 @@ post_remove() {
 			if [ "$UPDATE_XDG_ICON_DB" = "yes" ]; then
 				/usr/bin/chakra-update-icons
 			fi
+
+		echo "change folder rights"  
+		chmod 755 /etc/gre.d
+		chown root:root /etc/gre.d
 
 		else
 			echo " > WARNING"
