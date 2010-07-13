@@ -44,7 +44,7 @@ post_install() {
 
 		echo "change folder rights"  
 		chmod 775 /etc/gre.d
-		chown root:bundle /etc/gre.d
+		chown -R root:bundle /etc/gre.d
 
 		echo "update mime-database"      
 		update-mime-database /usr/share/mime &>/dev/null
@@ -96,7 +96,7 @@ post_upgrade() {
 
 		echo "change folder rights"  
 		chmod 775 /etc/gre.d
-		chown root:bundle /etc/gre.d
+		chown -R root:bundle /etc/gre.d
 
 		echo "update mime-database"      
 		update-mime-database /usr/share/mime &>/dev/null
@@ -111,9 +111,9 @@ post_remove() {
 				/usr/bin/chakra-update-icons
 			fi
 
-		echo "change folder rights"  
+		echo "restore folder rights"  
 		chmod 755 /etc/gre.d
-		chown root:root /etc/gre.d
+		chown -R root:root /etc/gre.d
 
 		else
 			echo " > WARNING"
