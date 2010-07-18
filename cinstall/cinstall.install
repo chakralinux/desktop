@@ -43,7 +43,8 @@ post_install() {
 		fi
 
 		mkdir /etc/gre.d &>/dev/null
-		chown -R $USER:users /etc/gre.d &>/dev/null
+		chmod 775 /etc/gre.d &>/dev/null
+		chown -R root:bundle /etc/gre.d &>/dev/null
 
 		echo "update mime-database"      
 		update-mime-database /usr/share/mime &>/dev/null
@@ -94,7 +95,8 @@ post_upgrade() {
 		fi
 
                 mkdir /etc/gre.d &>/dev/null
-                chown -R $USER:users /etc/gre.d &>/dev/null
+                chmod 775 /etc/gre.d &>/dev/null
+                chown -R root:bundle /etc/gre.d &>/dev/null
 
 		echo "update mime-database"      
 		update-mime-database /usr/share/mime &>/dev/null
@@ -109,7 +111,6 @@ post_remove() {
 				/usr/bin/chakra-update-icons
 			fi
 
-		echo "Remove unused gre dir"  
 		rm /etc/gre.d -r
 
 		else
