@@ -42,6 +42,9 @@ post_install() {
 			echo "sudoers file already modded"
 		fi
 
+		mkdir /etc/cb.conf.d &>/dev/null
+		chown -R $USER:bundle /etc/cb.conf.d &>/dev/null
+
 		echo "update mime-database"      
 		update-mime-database /usr/share/mime &>/dev/null
 }
@@ -90,6 +93,9 @@ post_upgrade() {
 			echo "sudoers file already modded"
 		fi
 
+                mkdir /etc/cb.conf.d &>/dev/null
+                chown -R $USER:bundle /etc/cb.conf.d &>/dev/null
+
 		echo "update mime-database"      
 		update-mime-database /usr/share/mime &>/dev/null
 }
@@ -102,6 +108,9 @@ post_remove() {
 			if [ "$UPDATE_XDG_ICON_DB" = "yes" ]; then
 				/usr/bin/chakra-update-icons
 			fi
+
+		echo "Remove unused gre dir"  
+		rm /etc/gre.d -r
 
 		else
 			echo " > WARNING"
