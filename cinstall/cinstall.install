@@ -46,6 +46,10 @@ post_install() {
 		chmod 775 /etc/gre.d &>/dev/null
 		chown -R root:bundle /etc/gre.d &>/dev/null
 
+		mkdir /etc/cb.conf.d &>/dev/null
+		chmod 775 /etc/cb.conf.d &>/dev/null
+		chown -R root:bundle /etc/cb.conf.d &>/dev/null
+
 		echo "update mime-database"      
 		update-mime-database /usr/share/mime &>/dev/null
 }
@@ -98,6 +102,10 @@ post_upgrade() {
                 chmod 775 /etc/gre.d &>/dev/null
                 chown -R root:bundle /etc/gre.d &>/dev/null
 
+                mkdir /etc/cb.conf.d &>/dev/null
+                chmod 775 /etc/cb.conf.d &>/dev/null
+                chown -R root:bundle /etc/cb.conf.d &>/dev/null
+
 		echo "update mime-database"      
 		update-mime-database /usr/share/mime &>/dev/null
 }
@@ -112,6 +120,7 @@ post_remove() {
 			fi
 
 		rm /etc/gre.d -r
+		rm /etc/cb.conf.d -r
 
 		else
 			echo " > WARNING"
