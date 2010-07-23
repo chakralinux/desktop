@@ -1,0 +1,31 @@
+#
+# Chakra Packages for Chakra, part of chakra-project.org
+#
+# maintainer (i686): Phil Miller <philm[at]chakra-project[dog]org>
+# maintainer (x86_64): Manuel Tortosa <manutortosa[at]chakra-project[dot]org>
+# (c) 2010 Drake Justice
+
+# include global config
+source ../_buildscripts/${current_repo}-${_arch}-cfg.conf
+
+pkgname=kvirc
+pkgver=4.0.0
+pkgrel=1
+pkgdesc="Qt-based IRC client"
+url="http://www.kvirc.net"
+depends=(python esound qt)
+optdepends=('esound: needed for snd plugin')
+arch=(i686 x86_64)
+makedepends=()
+license=('GPL')
+options=("!libtool" "!makeflags")
+source=(ftp://ftp.kvirc.de/pub/kvirc/$pkgver/source/kvirc-$pkgver.tar.bz2)
+md5sums=('8fafe420551c273e684236fd4e396af5')
+
+build() {
+  cd $srcdir/kvirc-$pkgver
+
+  cmake -DWANT_KDE4=OFF -DWANT_PERL=ON -DWANT_PHONON=OFF -DCMAKE_INSTALL_PREFIX=/usr .
+  make || return 1
+  make DESTDIR=$pkgdir install || return 1
+}

@@ -1,0 +1,32 @@
+# $Id: PKGBUILD 72154 2010-03-13 00:42:20Z andrea $
+# Maintainer:
+# Contributor: Tobias Kieslich <tobias@archlinux.org>
+
+pkgname=qjackctl
+pkgver=0.3.6
+pkgrel=1
+pkgdesc="A qt based frontend to the jack server (jack-audio-connection-kit)"
+url="http://qjackctl.sourceforge.net/"
+arch=('i686' 'x86_64')
+license=('GPL2')
+depends=('jack' 'qt')
+options=('!libtool')
+source=("http://downloads.sourceforge.net/${pkgname}/${pkgname}-${pkgver}.tar.gz"
+        "qjackctl_es.ts"
+        "qjackctl_ru.ts")
+md5sums=('a2f7423124b52c8a7e03e60845f3e2f8'
+         'de66b7767206bcf294f3b645b5d063e3'
+         'c342179105dc8915bfd4698db484e65d')
+
+build() {
+  cd ${srcdir}/${pkgname}-${pkgver}
+  cp ../qjackctl_es.ts ./translations -fv
+  cp ../qjackctl_ru.ts ./translations -fv
+  ./configure --prefix=/usr
+  make || return 1
+}
+
+package() {
+  cd ${srcdir}/${pkgname}-${pkgver}
+  make prefix=${pkgdir}/usr install || return 1
+}
