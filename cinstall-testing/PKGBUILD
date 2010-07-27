@@ -1,0 +1,52 @@
+#
+# Chakra Packages for Chakra, part of chakra-project.org
+#
+# maintainer (i686): Phil Miller <philm[at]chakra-project[dog]org>
+# maintainer (x86_64): Manuel Tortosa <manutortosa[at]chakra-project[dot]org>
+# (c) 2010 Drake Justice
+
+# include global config
+source ../_buildscripts/${current_repo}-${_arch}-cfg.conf
+
+pkgname=cinstall-testing
+pkgver=20100722
+pkgrel=1
+depends=('kdelibs' 'qt' 'squashfs-tools' 'xz-utils')
+pkgdesc="Bundle Creator/Launcher and Package-Manager"
+arch=("i686" "x86_64")
+license=('GPL')
+install=$pkgname.install
+url="http://chakra-project.org/"
+optdepends=('akabei: for akabei support'
+            'pacman: for pacman support')
+
+_gitroot="git://gitorious.org/cinstall/cinstall.git"
+_gitname="cinstall"
+
+build() {
+cd "${srcdir}"
+        msg "Connecting to GIT server...."
+
+        if [ -d $_gitname ] ; then
+        cd $_gitname && git pull
+        msg "The local files are updated."
+        else
+	      git clone $_gitroot
+	      cd $_gitname && git checkout
+        fi
+        msg "GIT checkout done or server timeout"
+
+        msg "Starting make..."
+
+        rm -rf "${srcdir}/$_gitname-build"
+
+        cp -r "${srcdir}/$_gitname" "${srcdir}/$_gitname-build"
+        cd "${srcdir}/$_gitname-build/"
+
+        cmake ../$_gitname-build \
+          -DCMAKE_INSTALL_PREFIX=/usr \
+          -DCMAKE_BUILD_TYPE=Release
+        make || return 1
+        make DESTDIR=${pkgdir} install || return 1
+}
+
