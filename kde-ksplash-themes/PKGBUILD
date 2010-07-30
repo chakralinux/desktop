@@ -1,0 +1,98 @@
+#
+# Chakra Packages for Chakra, part of chakra-project.org
+#
+# maintainer (i686): Phil Miller <philm[at]chakra-project[dog]org>
+# maintainer (x86_64): Manuel Tortosa <manutortosa[at]chakra-project[dot]org>
+
+# include global config
+source ../_buildscripts/${current_repo}-${_arch}-cfg.conf
+
+
+
+#
+# package info
+#
+pkgname=kde-ksplash-themes
+pkgver=1.0
+pkgrel=1
+
+#pkgbase="${_pkgprefix}-ksplash-themes"
+pkgname=("${_pkgprefix}-ksplash-themes-crunchy-branch-blue")
+
+pkgdesc="KDE KSplash-Themes for Chakra"
+url="http://chakra-project.org"
+license="GPL"
+arch=('any')
+options=('!splithdr' 'splitdbg')
+makedepends=('kde-wallpapers-crunchy-branch-blue')
+
+groups=("${_pkgprefix}" "${_pkgprefix}-complete" "${_pkgprefix}-uninstall" "${_pkgprefix}-minimal")
+
+source=("http://chakra-project.org/sources/ksplash-themes/kde-ksplash-theme-crunchy-branch-blue-1.0.tar.gz")
+md5sums=("4ec93630694ae6195d0ec0f4067fa2d6") #  kde-ksplash-theme-crunchy-branch-blue-1.0.tar.gz
+
+#_gitroot="git://git.chakra-project.org/artwork/ksplash-themes.git"
+#_gitname="ksplash-themes"
+
+#
+# build function
+#
+build() {
+
+	echo "Let's go"
+	# Smart hack here, cool :)
+
+#        cd "${srcdir}"
+#        msg "Connecting to GIT server...."
+
+#        if [ -d $_gitname ] ; then
+#        cd $_gitname && git pull
+#        msg "The local files are updated."
+#        else
+#	      git clone $_gitroot
+#        fi
+#        msg "GIT checkout done or server timeout"
+#        msg "Starting make..."
+#
+#        rm -rf "${srcdir}/$_gitname-build"
+
+#        cp -r "${srcdir}/$_gitname" "${srcdir}/$_gitname-build"
+
+# put it later to the split-section
+
+	pkgdesc="Crunchy branch KSplash-Theme"
+	groups=("${_pkgprefix}" "${_pkgprefix}-complete" "${_pkgprefix}-uninstall" "${_pkgprefix}-minimal" "${_pkgprefix}-ksplash-themes")
+	depends=('kde-wallpapers-crunchy-branch-blue')
+	_THEME="crunchy-branch-blue"
+	
+	cd ${srcdir}/$_THEME
+
+	msg "fix background.png"
+	ln -sfv /usr/share/wallpapers/crunchy-branch-blue/contents/images/1024x600.jpg 1024x600/background.png
+	ln -sfv /usr/share/wallpapers/crunchy-branch-blue/contents/images/1024x768.jpg 1024x768/background.png
+	ln -sfv /usr/share/wallpapers/crunchy-branch-blue/contents/images/1152x864.jpg 1152x864/background.png
+	ln -sfv /usr/share/wallpapers/crunchy-branch-blue/contents/images/1280x1024.jpg 1280x1024/background.png
+	ln -sfv /usr/share/wallpapers/crunchy-branch-blue/contents/images/1280x800.jpg 1280x800/background.png
+	ln -sfv /usr/share/wallpapers/crunchy-branch-blue/contents/images/1360x768.jpg 1360x768/background.png
+	ln -sfv /usr/share/wallpapers/crunchy-branch-blue/contents/images/1400x1050.jpg 1400x1050/background.png
+	ln -sfv /usr/share/wallpapers/crunchy-branch-blue/contents/images/1440x900.jpg 1440x900/background.png
+	ln -sfv /usr/share/wallpapers/crunchy-branch-blue/contents/images/1600x1200.jpg 1600x1200/background.png
+	ln -sfv /usr/share/wallpapers/crunchy-branch-blue/contents/images/1680x1050.jpg 1680x1050/background.png
+	ln -sfv /usr/share/wallpapers/crunchy-branch-blue/contents/images/1920x1080.jpg 1920x1080/background.png
+	ln -sfv /usr/share/wallpapers/crunchy-branch-blue/contents/images/1920x1200.jpg 1920x1200/background.png
+	ln -sfv /usr/share/wallpapers/crunchy-branch-blue/contents/images/800x600.jpg 800x600/background.png
+	
+	msg "Install theme"
+	mkdir -pv $pkgdir/usr/share/apps/ksplash/Themes/$_THEME
+	cp -Rv * $pkgdir/usr/share/apps/ksplash/Themes/$_THEME
+}
+
+#
+# split-install functions
+#
+
+
+#package_kde-ksplash-themes-crunchy-branch-blue()
+#{
+#
+#}
