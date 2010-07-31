@@ -1,0 +1,23 @@
+# Contributor: Alois Nespor <Alois.Nespor@gmail.com>
+
+pkgname=bibletime-kde4
+origname=bibletime
+pkgver=2.7
+pkgrel=1
+pkgdesc="Bible software that uses the Sword Engine for KDE4"
+arch=('i686' 'x86_64')
+url=("http://www.blog.bibletime.info")
+license=('GPL2')
+depends=('qt>=4.5' 'sword' 'openssl')
+makedepends=('cmake' 'boost')
+source=(http://downloads.sourceforge.net/bibletime/bibletime-$pkgver.tar.gz)
+
+build() {
+  cd $srcdir/bibletime-$pkgver
+  cmake -DCMAKE_INSTALL_PREFIX=/usr \
+	-DCMAKE_BUILD_TYPE=Release ${srcdir}/$origname-$pkgver || return 1
+  make || return 1
+  make DESTDIR="${pkgdir}" install || return 1
+
+}
+md5sums=('ae22d2ac1d86588b5583d169100e9a71')
