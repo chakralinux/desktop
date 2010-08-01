@@ -40,6 +40,11 @@ post_install() {
 			echo "%bundle ALL=NOPASSWD: /bin/umount *" >> /etc/sudoers
 			echo "ensure correct sudoers permissions"
 			chmod -v 0440 /etc/sudoers
+		elif [ "sudoers: `grep "%bundle ALL=NOPASSWD: /bin/umount" /etc/sudoers`" = "sudoers: " ] ; then
+			echo "%bundle ALL=NOPASSWD: /bin/mount -o loop -t ext4 *" >> /etc/sudoers
+			echo "%bundle ALL=NOPASSWD: /bin/umount *" >> /etc/sudoers
+			echo "ensure correct sudoers permissions"
+			chmod -v 0440 /etc/sudoers
 		else
 			echo "sudoers file already modded"
 		fi
@@ -86,6 +91,11 @@ post_upgrade() {
 		echo "Mod sudoers file"
 		if [ "sudoers: `grep bundle /etc/sudoers`" = "sudoers: " ] ; then
 			echo "%bundle ALL=NOPASSWD: /bin/mount -o loop -t squashfs *" >> /etc/sudoers
+			echo "%bundle ALL=NOPASSWD: /bin/mount -o loop -t ext4 *" >> /etc/sudoers
+			echo "%bundle ALL=NOPASSWD: /bin/umount *" >> /etc/sudoers
+			echo "ensure correct sudoers permissions"
+			chmod -v 0440 /etc/sudoers
+		elif [ "sudoers: `grep "%bundle ALL=NOPASSWD: /bin/umount" /etc/sudoers`" = "sudoers: " ] ; then
 			echo "%bundle ALL=NOPASSWD: /bin/mount -o loop -t ext4 *" >> /etc/sudoers
 			echo "%bundle ALL=NOPASSWD: /bin/umount *" >> /etc/sudoers
 			echo "ensure correct sudoers permissions"
