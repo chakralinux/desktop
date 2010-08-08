@@ -1,0 +1,29 @@
+#
+# Chakra Packages for Chakra, part of chakra-project.org
+#
+# maintainer (i686): Phil Miller <philm[at]chakra-project[dog]org>
+# maintainer (x86_64): Manuel Tortosa <manutortosa[at]chakra-project[dot]org>
+
+# include global config
+source ../_buildscripts/${current_repo}-${_arch}-cfg.conf
+
+pkgname=kmid2
+pkgver=2.3.1
+pkgrel=1
+pkgdesc="MIDI/Karaoke player for KDE4"
+url="http://userbase.kde.org/KMid2"
+license="GPL"
+arch=('i686' 'x86_64')
+depends=('kdelibs' 'alsa-lib' 'drumstick')
+makedepends=('cmake' 'automoc4')
+optdepends=('fluidsynth' 'timidity++')
+conflicts=('kmid-svn')
+source=(http://downloads.sourceforge.net/${pkgname}/${pkgver}/kmid-${pkgver}.tar.bz2)
+md5sums=('71170acdd7bd82fb224a148d8ba8a9af')
+
+build() {
+	  cd ${srcdir}/kmid-$pkgver
+	  cmake . -DCMAKE_INSTALL_PREFIX=/usr -DCMAKE_BUILD_TYPE=Release
+	  make || return 1
+	  make DESTDIR=${pkgdir} install || return 1
+	}
