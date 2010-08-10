@@ -8,7 +8,7 @@
 source ../_buildscripts/${current_repo}-${_arch}-cfg.conf
 
 pkgname=bluedevil-git
-pkgver=20100731
+pkgver=20100808
 pkgrel=1
 pkgdesc='The new bluetooth stack for KDE, it’s composed of: KCM, KDED, KIO, Library and some other small applications'
 arch=('i686' 'x86_64')
@@ -18,12 +18,6 @@ depends=('kdelibs' 'libbluedevil' 'obex-data-server' 'obexd-client') # kdebase-w
 makedepends=('cmake' 'automoc4' 'git')
 provides=(bluedevil)
 conflicts=(bluedevil)
-source=(01_no_useless_linking.diff
-	02_no_useless_dependencies.diff
-	03_libbluedevilaction_is_private.diff)
-md5sums=(9af5eb3f58177e2c59b99c47e27446f4 #  01_no_useless_linking.diff
-	 be69420695ae4c3f8846b764e461c428 #  02_no_useless_dependencies.diff
-	 a02ae32a177ed53bcb445771e831995a) # 03_libbluedevilaction_is_private.diff
 
 
 _gitroot="git://gitorious.org/bluedevil/bluedevil.git"
@@ -40,12 +34,7 @@ build(){
   mkdir -p $_gitname-build
   cp -R $_gitname/* $_gitname-build
   cd $_gitname-build
-
-  msg "add patches (it is stupied to patch git ...)"
-  patch -Np1 -i ${startdir}/01_no_useless_linking.diff
-  patch -Np1 -i ${startdir}/02_no_useless_dependencies.diff
-  patch -Np1 -i ${startdir}/03_libbluedevilaction_is_private.diff
-   
+ 
   cmake -DCMAKE_BUILD_TYPE=Release \
         -DCMAKE_SKIP_RPATH=ON \
         -DCMAKE_INSTALL_PREFIX=/usr
