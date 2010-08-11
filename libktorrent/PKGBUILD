@@ -6,7 +6,7 @@
 
 pkgname=libktorrent
 pkgver=1.0.2
-pkgrel=1
+pkgrel=2
 ktorver=4.0.2
 pkgdesc="A BitTorrent program for KDE"
 arch=('i686' 'x86_64')
@@ -24,4 +24,9 @@ build() {
 	cmake .	-DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=/usr
 	make || return 1
 	make DESTDIR=${pkgdir} install 
+
+        # fix kde-l10n-sr - fixed in 4.5.0
+        rm -v ${pkgdir}/usr/share/locale/sr@ijekavian/LC_MESSAGES/libktorrent.mo
+        rm -v ${pkgdir}/usr/share/locale/sr@ijekavianlatin/LC_MESSAGES/libktorrent.mo
+        rm -v ${pkgdir}/usr/share/locale/sr@latin/LC_MESSAGES/libktorrent.mo
 }
