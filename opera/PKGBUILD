@@ -8,8 +8,8 @@
 source ../_buildscripts/${current_repo}-${_arch}-cfg.conf
 
 pkgname=opera
-pkgver=10.60
-_buildver=6386
+pkgver=10.61
+_buildver=6430
 pkgrel=1
 pkgdesc="A fast and secure web browser and Internet suite."
 url="http://www.opera.com/browser/"
@@ -25,8 +25,8 @@ arch=('i686' 'x86_64')
 _barch=i386
 [ "$CARCH" = "x86_64" ] && _barch=x86_64
 source=(http://ftp.opera.com/pub/opera/linux/${pkgver/./}/opera-${pkgver}-${_buildver}.${_barch}.linux.tar.bz2)
-md5sums=('e86d604b2f9397a618e8ecf357748f55')
-[ "$CARCH" = "x86_64" ] && md5sums=('6415f21430bade3193d0d6c174e3bfb1')
+md5sums=('e91b9bd1ddbb3c85d7bdd7991b56add8')
+[ "$CARCH" = "x86_64" ] && md5sums=('have_to_enter')
 
 build() {
 cd opera-${pkgver}-${_buildver}.${_barch}.linux
@@ -67,7 +67,7 @@ sed -i ${pkgdir}/usr/share/man/man1/opera.1 -e "s|@@{PREFIX}|/usr|" -e "s|@@{[U_
 gzip -d ${pkgdir}/usr/share/man/man1/opera-widget-manager.1.gz
 sed -i ${pkgdir}/usr/share/man/man1/opera-widget-manager.1 -e "s|@@{PREFIX}|/usr|" -e "s|@@{[U_]*SUFFIX}||"
 
-# Place the license in the standard Arch location.
+# Place the license in the standard Chakra location.
 
 install -D -m 644 ${pkgdir}/usr/share/opera/defaults/license.txt ${pkgdir}/usr/share/licenses/${pkgname}/license.txt
 }
