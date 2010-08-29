@@ -7,36 +7,27 @@
 # include global config
 source ../_buildscripts/${current_repo}-${_arch}-cfg.conf
 
-pkgname=libbluedevil-git
-pkgver=20100817
+pkgname=libbluedevil
+pkgver=0.9.0829
 pkgrel=1
 pkgdesc='A Qt wrapper for bluez used in the new KDE bluetooth stack'
 arch=('i686' 'x86_64')
 url="http://gitorious.org/libbluedevil"
 license=('GPL')
 depends=('qt' 'bluez')
-makedepends=('cmake' 'git')
+makedepends=('cmake')
 provides=("libbluedevil")
-conflicts=("libbluedevil")
-source=()
-md5sums=()
-
-_gitroot="git://gitorious.org/libbluedevil/libbluedevil.git"
-_gitname="libbluedevil"
+conflicts=("libbluedevil-git")
+source=("http://chakra-project.org/sources/$pkgname/$pkgname-$pkgver.tar.gz")
+md5sums=('50e8665b92b6c90bae890beb4612d4f2')
 
 build(){
   cd ${srcdir}
 
-  if [[ -d $_gitname ]]; then
-	(cd $_gitname && git pull origin)
-  else
-	git clone $_gitroot $_gitname
-  fi
-  
-  mkdir build
+  mkdir -p build
   cd build
   
-  cmake ../${_gitname} \
+  cmake ../$pkgname-$pkgver \
     -DCMAKE_BUILD_TYPE=Release \
     -DCMAKE_SKIP_RPATH=ON \
     -DCMAKE_INSTALL_PREFIX=/usr
