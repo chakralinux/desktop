@@ -9,10 +9,10 @@
 source ../_buildscripts/${current_repo}-${_arch}-cfg.conf
 
 pkgname=cinstall
-pkgver=20100703
+pkgver=0.0.2.1
 pkgrel=1
 depends=('kdelibs' 'qt' 'squashfs-tools' 'xz-utils')
-pkgdesc="Drake Justice's Bundle Creator/Launcher and Package-Manager"
+pkgdesc="Bundle Creator/Launcher and Package-Manager"
 arch=("i686" "x86_64")
 license=('GPL')
 install=$pkgname.install
@@ -20,30 +20,14 @@ url="http://chakra-project.org/"
 optdepends=('akabei: for akabei support'
             'pacman: for pacman support')
 
-
-_gitroot="git://gitorious.org/cinstall/cinstall.git"
-_gitname="cinstall"
+source=("http://chakra-project.org/sources/cinstall/cinstall-$pkgver.tar.bz2")
+md5sums=('0273a4bde31ed052f6f6638e23c0cb5f')
 
 build() {
-cd "${srcdir}"
-        msg "Connecting to GIT server...."
+        mkdir -p $srcdir/build
+        cd $srcdir/build
 
-        if [ -d $_gitname ] ; then
-        cd $_gitname && git pull
-        msg "The local files are updated."
-        else
-	      git clone $_gitroot
-	      cd $_gitname && git checkout
-        fi
-        msg "GIT checkout done or server timeout"
-
-        msg "Starting make..."
-
-        rm -rf "${srcdir}/$_gitname-build"
-
-        cp -r "${srcdir}/$_gitname" "${srcdir}/$_gitname-build"
-        cd "${srcdir}/$_gitname-build/"
-        cmake ../${pkgname} \
+        cmake ../cinstall \
           -DCMAKE_INSTALL_PREFIX=/usr \
           -DCMAKE_BUILD_TYPE=Release
         make || return 1

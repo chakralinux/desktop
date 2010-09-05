@@ -1,0 +1,38 @@
+#
+# Chakra Packages for Chakra, part of chakra-project.org
+#
+# maintainer (i686): Phil Miller <philm[at]chakra-project[dog]org>
+# maintainer (x86_64): Manuel Tortosa <manutortosa[at]chakra-project[dot]org>
+
+# include global config
+source ../_buildscripts/${current_repo}-${_arch}-cfg.conf
+
+pkgname=kstreamripper
+pkgver=0.7.1
+pkgrel=1
+pkgdesc='A program for recording Internet radios and other streams.'
+arch=('i686' 'x86_64')
+license=('GPL')
+url='http://www.kde-apps.org/content/show.php?content=78068'
+depends=('kdelibs' 'streamripper' 'libproxy')
+makedepends=('cmake' 'automoc4')
+source=("http://downloads.sourceforge.net/$pkgname/$pkgname-$pkgver.tar.bz2")
+md5sums=('67157834797d7bd170c8e372fa0e0b45')
+
+build() {
+  mkdir build
+  cd build
+
+  cmake ../$pkgname \
+    -DCMAKE_INSTALL_PREFIX=`kde4-config --prefix` \
+    -DCMAKE_BUILD_TYPE=Release \
+    || return 1
+
+  make || return 1
+}
+
+package() {
+  cd "$srcdir/build"
+
+  make DESTDIR="$pkgdir" install || return 1
+} 

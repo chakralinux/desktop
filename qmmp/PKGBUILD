@@ -1,0 +1,36 @@
+#
+# Chakra Packages for Chakra, part of chakra-project.org
+#
+# maintainer (i686): Phil Miller <philm[at]chakra-project[dog]org>
+# maintainer (x86_64): Manuel Tortosa <manutortosa[at]chakra-project[dot]org>
+# (c) 2010 Drake Justice
+
+# include global config
+source ../_buildscripts/${current_repo}-${_arch}-cfg.conf
+
+pkgname=qmmp
+pkgver=0.4.1
+pkgrel=1
+pkgdesc="Qt4 based audio-player"
+arch=('i686' 'x86_64')
+url="http://qmmp.ylsoftware.com/"
+license=('GPL')
+depends=('alsa-lib' 'curl' 'hicolor-icon-theme' 'libmad' 'libvorbis' 'libogg'  'qt>=4.3' 'taglib' 'xdg-utils')
+makedepends=('cmake'  'flac' 'jack' 'libmpcdec' 'ffmpeg' 'libsamplerate' 'libmodplug' 'libsndfile' 'wavpack')
+optdepends=('flac: native FLAC support'
+            'jack: JACK sound output'
+            'libmpcdec: Musepack support'
+            'libmodplug: MOD playing library'
+            'libsndfile: sampled sound support'
+            'ffmpeg' 'libsamplerate' 'wavpack')
+install=$pkgname.install
+source=(http://qmmp.ylsoftware.com/files/$pkgname-$pkgver.tar.bz2)
+md5sums=('b05ffff2c1e26585b2af144eacd8cd08')
+
+build() {
+  cd ${srcdir}/$pkgname-$pkgver
+
+  cmake . -DCMAKE_INSTALL_PREFIX=/usr || return 1
+  make || return 1
+  make DESTDIR=${pkgdir} install
+}
