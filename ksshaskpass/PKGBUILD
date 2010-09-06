@@ -1,0 +1,44 @@
+#
+# Apps Packages for Chakra, part of chakra-project.org
+#
+# maintainer (i686): Phil Miller <philm[at]chakra-project[dot]org>
+# maintainer (x86_64): Nistor Andrei <coder[dot]tux[at]ceata[dot]org>
+
+# include global config
+source ../_buildscripts/${current_repo}-${_arch}-cfg.conf
+
+pkgname=ksshaskpass
+pkgver=0.5.3
+pkgrel=1
+pkgdesc="A KDE 4 version of ssh-askpass with KWallet support."
+arch=('i686' 'x86_64')
+url="http://kde-apps.org/content/show.php/Ksshaskpass?content=50971"
+license=('GPL')
+groups=()
+depends=(kdelibs openssh)
+makedepends=(cmake)
+options=()
+source=("http://kde-apps.org/CONTENT/content-files/50971-${pkgname}-${pkgver}.tar.gz")
+md5sums=('05dad7745e9d92b08bd86e7ab7a9540d')
+
+build() {
+  cd "${srcdir}"
+  pushd "${pkgname}-${pkgver}"
+  patch -p1 < ../../autostart.patch
+  popd
+
+  mkdir build
+  cd build
+  export XDG_CONFIG_DIRS=/etc/xdg/
+  cmake ../"${pkgname}-${pkgver}" \
+        -DCMAKE_INSTALL_PREFIX=/usr
+
+  make
+}
+
+package() {
+  cd "${srcdir}"/build
+
+  make DESTDIR="$pkgdir/" install
+}
+
