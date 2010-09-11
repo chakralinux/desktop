@@ -39,7 +39,8 @@ pkgname=('kdepim-common'
 
         
 arch=('i686' 'x86_64')
-pkgver=${_kdever}
+#pkgver=${_kdever}
+pkgver=4.4.6
 pkgrel=1
 
 pkgdesc="split package"
@@ -49,12 +50,13 @@ license=('GPL' 'LGPL' 'FDL')
 options=('docs' '!splithdr')
 
 makedepends=('pkgconfig' 'cmake' 'automoc4' 'boost' "kdelibs>=${_kdever}" "kdepimlibs>=${_kdever}"
-             "kdepim-runtime>=${_kdever}" 'gnokii' 'libxss' "kdebase-runtime>=${_kdever}" 'pilot-link' 
+             "kdepim-runtime>=${pkgver}" 'gnokii' 'libxss' "kdebase-runtime>=${_kdever}" 'pilot-link' 
 	     'kde-agent' 'libindicate-qt>=0.2.2')
 
-source=("$_mirror/${_origname}-$_kdever.tar.bz2")
+#source=("$_mirror/${_origname}-$_kdever.tar.bz2")
+source=("ftp://ftp.gwdg.de/pub/x11/kde/stable/kdepim-$pkgver/src/${_origname}-$pkgver.tar.bz2")
 
-md5sums=('340f47acf0244530ba885cebbc941f6f') # kdepim-4.4.5.tar.bz2
+md5sums=('dab253004c2660c75b61a3caeb117ed1') # kdepim-4.4.6.tar.bz2
 
 #
 # build function
