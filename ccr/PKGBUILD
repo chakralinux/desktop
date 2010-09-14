@@ -1,0 +1,45 @@
+#
+# Apps Packages for Chakra, part of chakra-project.org
+#
+# maintainer (i686): Phil Miller <philm[at]chakra-project[dog]org>
+# maintainer (x86_64): Manuel Tortosa <manutortosa[at]chakra-project[dot]org>
+
+# include global config
+source ../_buildscripts/${current_repo}-${_arch}-cfg.conf
+
+pkgname=ccr
+pkgver=20100914
+pkgrel=1
+pkgdesc="Bash wrapper for pacman and the CCR"
+url="http://github.com/bruenig/packer"
+license="GPL"
+arch=('any')
+makedepends=('git')
+depends=('grep' 'sed' 'coreutils' 'bash' 'wget' 'pacman')
+optdepends=('sudo: install and update packages as non-root'
+            'pacman-color: colorized output'
+	    'base-devel: for building packages from the ccr')
+_gitroot='git://github.com/bruenig/packer.git'
+_gitname='packer'
+
+build() {
+    cd "$startdir/src"
+  
+    msg "Connecting to github GIT server...."
+    
+    if [ -d "$startdir/src/$_gitname" ] ; then
+        cd $_gitname && git pull origin
+    else
+        git clone "$_gitroot"
+        cd $_gitname
+    fi
+
+    # Change all the server references from http://aur.archlinux.org to http://chakra-project.org/ccr
+    cat packer | sed "s/aur\.archlinux\.org/chakra\-project\.org\/ccr/g" > step1
+    # Change all the aur references to ccr
+    cat step1 | sed "s/aur/ccr/g" > step2
+    # Change all the Aur references to Ccr
+    cat step2 | sed "s/Aur/Ccr/g" > ccr
+      
+    install -m 755 -D ccr "$startdir/pkg/usr/bin/ccr"
+}
