@@ -20,14 +20,14 @@ url="http://chakra-project.org/"
 optdepends=('akabei: for akabei support'
             'pacman: for pacman support')
 
-source=("http://chakra-project.org/sources/cinstall/cinstall-$pkgver.tar.bz2")
-md5sums=('6217cccf2d5c3b0ec1c9d725cb632127')
+source=("http://chakra-project.org/sources/cinstall/cinstall-$pkgver.tar.xz")
+md5sums=('c30a57166663344021ef47fa32692b77')
 
 build() {
         mkdir -p $srcdir/build
         cd $srcdir/build
 
-        cmake ../cinstall \
+        cmake ../cinstall-$pkgver \
           -DCMAKE_INSTALL_PREFIX=/usr \
           -DCMAKE_BUILD_TYPE=Release
         make || return 1
