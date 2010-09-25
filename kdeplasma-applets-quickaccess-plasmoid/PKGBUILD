@@ -1,0 +1,32 @@
+#
+# Chakra Packages for Chakra, part of chakra-project.org
+#
+# maintainer (i686): Phil Miller <philm[at]chakra-project[dog]org>
+# maintainer (x86_64): Manuel Tortosa <manutortosa[at]chakra-project[dot]org>
+
+# from AUR package http://aur.archlinux.org/packages.php?ID=18854
+
+# include global config
+source ../_buildscripts/${current_repo}-${_arch}-cfg.conf
+
+pkgname=kdeplasma-applets-quickaccess-plasmoid
+pkgver=0.8.1
+pkgrel=1
+pkgdesc="Kdeplasma plasmoid for quick access to folders."
+arch=('i686' 'x86_64')
+url="http://www.kde-look.org/content/show.php/QuickAccess+(maintenance+fork)?content=101968"
+install=$pkgname.install
+license=('GPL')
+depends=('kdebase-workspace' 'kdebase')
+makedepends=('make' 'cmake' 'automoc4')
+conflicts=(kde-extragear-plasmoids)
+source=(http://www.kde-look.org/CONTENT/content-files/101968-plasma-widget-quickaccess_$pkgver.orig.tar.gz)
+md5sums=('744f7d85662808869bf22eae53ca4660')
+build() {
+    cd $srcdir/plasma-widget-quickaccess-$pkgver
+    mkdir build
+    cd build
+    cmake ../ -DCMAKE_INSTALL_PREFIX=`kde4-config --prefix` || return 1
+    make VERBOSE=1 || return 1
+    make DESTDIR=$pkgdir install || return 1
+}
