@@ -7,10 +7,10 @@
 # include global config
 source ../_buildscripts/${current_repo}-${_arch}-cfg.conf
 
-pkgname=packer
-pkgver=20100908
+pkgname=ccr
+pkgver=20100921
 pkgrel=1
-pkgdesc="Bash wrapper for pacman and aur"
+pkgdesc="Bash wrapper for pacman and the CCR"
 url="http://github.com/bruenig/packer"
 license="GPL"
 arch=('any')
@@ -18,7 +18,7 @@ makedepends=('git')
 depends=('grep' 'sed' 'coreutils' 'bash' 'wget' 'pacman')
 optdepends=('sudo: install and update packages as non-root'
             'pacman-color: colorized output'
-            'base-devel: for building packages')
+	    'base-devel: for building packages from the ccr')
 _gitroot='git://github.com/bruenig/packer.git'
 _gitname='packer'
 
@@ -33,7 +33,13 @@ build() {
         git clone "$_gitroot"
         cd $_gitname
     fi
+
+    # Change all the server references from http://aur.archlinux.org to http://chakra-project.org/ccr
+    cat packer | sed "s/aur\.archlinux\.org/chakra\-project\.org\/ccr/g" > step1
+    # Change all the aur references to ccr
+    cat step1 | sed "s/aur/ccr/g" > step2
+    # Change all the Aur references to Ccr
+    cat step2 | sed "s/Aur/Ccr/g" > ccr
       
-    install -m 755 -D packer "$startdir/pkg/usr/bin/packer"
-    install -m 644 -D packer.8 "$startdir/pkg/usr/share/man/man8/packer.8"
+    install -m 755 -D ccr "$startdir/pkg/usr/bin/ccr"
 }
