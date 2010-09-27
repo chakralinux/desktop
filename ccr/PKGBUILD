@@ -4,14 +4,11 @@
 # maintainer (i686): Phil Miller <philm[at]chakra-project[dog]org>
 # maintainer (x86_64): Manuel Tortosa <manutortosa[at]chakra-project[dot]org>
 
-# include global config
-source ../_buildscripts/${current_repo}-${_arch}-cfg.conf
-
 pkgname=ccr
-pkgver=20100921
+pkgver=20100927
 pkgrel=1
 pkgdesc="Bash wrapper for pacman and the CCR"
-url="http://github.com/bruenig/packer"
+url="http://github.com/bruenig/ccr"
 license="GPL"
 arch=('any')
 makedepends=('git')
@@ -19,20 +16,20 @@ depends=('grep' 'sed' 'coreutils' 'bash' 'wget' 'pacman')
 optdepends=('sudo: install and update packages as non-root'
             'pacman-color: colorized output'
 	    'base-devel: for building packages from the ccr')
-_gitroot='git://github.com/bruenig/packer.git'
-_gitname='packer'
+source=(http://chakra-project.org/sources/ccr/ccr-$pkgver-$pkgrel.tar.xz)
+md5sums=(3b831830867ef58f186f8c1a97c59147)
+
+# source PKGBUILD && _create-tarball
+_create-tarball() {
+    mkdir -p "ccr"
+    git clone git://github.com/bruenig/packer.git "ccr"
+    tar -cJf ccr-$pkgver-$pkgrel.tar.xz "ccr"
+    md5sum "ccr-$pkgver-$pkgrel.tar.xz"
+    rm -rf "ccr"
+}
 
 build() {
-    cd "$startdir/src"
-  
-    msg "Connecting to github GIT server...."
-    
-    if [ -d "$startdir/src/$_gitname" ] ; then
-        cd $_gitname && git pull origin
-    else
-        git clone "$_gitroot"
-        cd $_gitname
-    fi
+    cd "$startdir/src/ccr"
 
     # Change all the server references from http://aur.archlinux.org to http://chakra-project.org/ccr
     cat packer | sed "s/aur\.archlinux\.org/chakra\-project\.org\/ccr/g" > step1
@@ -42,4 +39,13 @@ build() {
     cat step2 | sed "s/Aur/Ccr/g" > ccr
       
     install -m 755 -D ccr "$startdir/pkg/usr/bin/ccr"
+
+    # Do some sed-magic
+    sed -i -e "s~AUR~CCR~g" packer.8
+    sed -i -e "s~aur~ccr~g" packer.8
+    sed -i -e "s~packer~ccr~g" packer.8
+    sed -i -e "s~Packer~CCR~g" packer.8
+    sed -i -e "s~PACKER~CCR~g" packer.8
+
+    install -m 644 -D packer.8 "$startdir/pkg/usr/share/man/man8/ccr.8"
 }
