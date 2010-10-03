@@ -23,10 +23,10 @@ optdepends=('libxml2: mod_webdav'
 backup=('etc/lighttpd/lighttpd.conf' 'etc/logrotate.d/lighttpd')
 options=('!libtool' 'emptydirs')
 source=("http://download.lighttpd.net/lighttpd/releases-1.4.x/lighttpd-${pkgver}.tar.bz2"
-        'lighttpd.rc.d' 'lighttpd.logrotate.d' 'lighttpd.conf')
+        'lighttpd.rc.d' 'lighttpd.conf')
 md5sums=('586eb535d31ac299652495b058dd87c4'
          '701141f42df90097bbfc5c7f1f63beb9'
-         '913e2157fa78d990c32146f387d44c2b'
+         #'913e2157fa78d990c32146f387d44c2b'
          '2803a9ee7f20409c69f1566d2d90720e')
 
 build() {
@@ -54,7 +54,7 @@ package() {
 	make DESTDIR=$pkgdir install
 
 	install -D -m755 $srcdir/lighttpd.rc.d $pkgdir/etc/rc.d/lighttpd
-	install -D -m644 $srcdir/lighttpd.logrotate.d $pkgdir/etc/logrotate.d/lighttpd
+	#install -D -m644 $srcdir/lighttpd.logrotate.d $pkgdir/etc/logrotate.d/lighttpd
 	install -D -m644 $srcdir/lighttpd.conf $pkgdir/etc/lighttpd/lighttpd.conf
 	install -d -m755 -o http -g http $pkgdir/var/{run,log,cache}/lighttpd/
 
