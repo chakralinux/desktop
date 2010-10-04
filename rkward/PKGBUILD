@@ -1,0 +1,44 @@
+#
+# Chakra Packages for Chakra, part of chakra-project.org
+#
+# maintainer (i686): Phil Miller <philm[at]chakra-project[dog]org>
+# maintainer (x86_64): Manuel Tortosa <manutortosa[at]chakra-project[dot]org>
+
+# from AUR package http://aur.archlinux.org/packages.php?ID=4277
+
+# include global config
+source ../_buildscripts/${current_repo}-${_arch}-cfg.conf
+
+pkgname=rkward
+pkgver=0.5.3
+pkgrel=1
+pkgdesc="Easy to use transparent frontend to R for KDE4"
+arch=('i686' 'x86_64')
+url="http://rkward.sourceforge.net/"
+license=('GPL')
+depends=('kdelibs>=4.0.0' 'qt>=4.3' 'r>=2.8.0' 'docbook-xml')
+makedepends=('cmake' 'automoc4')
+conflicts=('kdemod-rkward<0.5.0')
+source=(http://downloads.sourceforge.net/sourceforge/${pkgname}/${pkgname}-${pkgver}.tar.gz
+	${pkgname}-kde-4-5.patch)
+md5sums=('1a1fb29b5f59b6150a3fd08bb51672b7'
+	 '7b92988b62939107cdfd5281f8e28ebc')
+
+build() {
+	cd "${srcdir}/${pkgname}-${pkgver}"
+	# Patch to build with KDE 4.5.x thanx to Rex Dieter
+	patch -Np1 -i "${srcdir}/${pkgname}-kde-4-5.patch"
+	cmake -DCMAKE_INSTALL_PREFIX="${pkgdir}/usr"
+	make 
+}
+
+package(){
+	cd "${srcdir}/${pkgname}-${pkgver}"
+	make install
+
+	# Install the rkward R package to installation directory
+	mkdir -p "${pkgdir}/usr/lib/R/library"
+	R CMD INSTALL -l "${pkgdir}/usr/lib/R/library" "${srcdir}/${pkgname}-${pkgver}/${pkgname}/rbackend/rpackages/${pkgname}"
+	rm -vf "${pkgdir}/usr/lib/R/library/R.css"
+	rm -vf "${pkgdir}/usr/share/apps/katepart/syntax/r.xml"
+}

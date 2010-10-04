@@ -1,0 +1,38 @@
+#
+# Chakra Packages for Chakra, part of chakra-project.org
+#
+# maintainer (i686): Phil Miller <philm[at]chakra-project[dog]org>
+# maintainer (x86_64): Manuel Tortosa <manutortosa[at]chakra-project[dot]org>
+
+# include global config
+source ../_buildscripts/${current_repo}-${_arch}-cfg.conf
+
+pkgname=kradio
+_pkgname=kradio4
+pkgver=4.0.1
+_pkgver=4.0.1-rc1
+pkgrel=1
+arch=('i686' 'x86_64')
+license=('GPL2')
+pkgdesc="KRadio is a comfortable KDE radio application"
+url="http://kradio.sourceforge.net/"
+depends=('lame' 'kdelibs' 'libsndfile' 'lirc-utils' 'libmms')
+makedepends=('automoc4' 'cmake')
+#options=(!libtool)
+source=(http://downloads.sourceforge.net/sourceforge/$pkgname/$_pkgname-$_pkgver.tar.bz2)
+md5sums=('a5ae4dd6b95a595ff71571e39f8acd94')
+
+build() {
+  cd $srcdir/$_pkgname-$_pkgver
+  mkdir build && cd build
+  cmake -DCMAKE_SKIP_RPATH=ON -DCMAKE_INSTALL_PREFIX=/usr -DCMAKE_BUILD_TYPE=RelWithDebInfo ..
+  make || return 1
+}
+
+package() {
+  cd $srcdir/$_pkgname-$_pkgver/build
+  make DESTDIR=$pkgdir install
+
+  # Changing executable name.
+  mv $pkgdir/usr/bin/$_pkgname $pkgdir/usr/bin/$pkgname
+}
