@@ -58,11 +58,11 @@ pkgname=('kde-l10n-ar'
 	 'kde-l10n-nb'
 	 'kde-l10n-nds'
 	 'kde-l10n-nn'
-	 'kde-l10n-nl'
+#	 'kde-l10n-nl'
 	 'kde-l10n-pa'
 	 'kde-l10n-pl'
 	 'kde-l10n-pt'
-	 'kde-l10n-pt_br'
+#	 'kde-l10n-pt_br'
 	 'kde-l10n-ro'
 	 'kde-l10n-ru'
 #	 'kde-l10n-si'
@@ -81,7 +81,7 @@ pkgname=('kde-l10n-ar'
 
 arch=('any')
 pkgver=${_kdever}
-pkgrel=1
+pkgrel=2
          
 pkgdesc="split package"
 url="http://www.kde.org"
@@ -150,7 +150,8 @@ source=(${_mirror}/kde-l10n/kde-l10n-ar-${pkgver}.tar.bz2
 	${_mirror}/kde-l10n/kde-l10n-uk-${pkgver}.tar.bz2
 	${_mirror}/kde-l10n/kde-l10n-wa-${pkgver}.tar.bz2
 	${_mirror}/kde-l10n/kde-l10n-zh_CN-${pkgver}.tar.bz2
-	${_mirror}/kde-l10n/kde-l10n-zh_TW-${pkgver}.tar.bz2)
+	${_mirror}/kde-l10n/kde-l10n-zh_TW-${pkgver}.tar.bz2
+	http://chakra-project.org/sources/kde-l10n/kdepim-4.4.5-l10n.tar.xz)
 
 md5sums=(`grep kde-l10n-ar-${pkgver}.tar.bz2 ../kde-sc.md5 | cut -d" " -f1`
 	`grep kde-l10n-bg-${pkgver}.tar.bz2 ../kde-sc.md5 | cut -d" " -f1`
@@ -211,7 +212,8 @@ md5sums=(`grep kde-l10n-ar-${pkgver}.tar.bz2 ../kde-sc.md5 | cut -d" " -f1`
 	`grep kde-l10n-uk-${pkgver}.tar.bz2 ../kde-sc.md5 | cut -d" " -f1`
 	`grep kde-l10n-wa-${pkgver}.tar.bz2 ../kde-sc.md5 | cut -d" " -f1`
 	`grep kde-l10n-zh_CN-${pkgver}.tar.bz2 ../kde-sc.md5 | cut -d" " -f1`
-	`grep kde-l10n-zh_TW-${pkgver}.tar.bz2 ../kde-sc.md5 | cut -d" " -f1`)
+	`grep kde-l10n-zh_TW-${pkgver}.tar.bz2 ../kde-sc.md5 | cut -d" " -f1`
+	"d018134b1f2eed859624f3014b12bed6")
 
 #
 # build function
@@ -291,6 +293,9 @@ packs=('ar'
 
  	for it in ${packs[@]} ; do
  		pushd "kde-l10n-$it-$pkgver"
+		# add kdepim-4.4.5 translations
+		[ -d ${srcdir}/kde-l10n-$it-$pkgver/docs/kdepim ] && sed -i '2i add_subdirectory( kdepim )' ${srcdir}/kde-l10n-$it-$pkgver/docs/CMakeLists.txt
+		[ -d ${srcdir}/kde-l10n-$it-$pkgver/messages/kdepim ] && sed -i '2i add_subdirectory( kdepim )' ${srcdir}/kde-l10n-$it-$pkgver/messages/CMakeLists.txt
  		cmake -DCMAKE_INSTALL_PREFIX=${_installprefix} -DCMAKE_BUILD_TYPE=Release
  		make || return 1
  		#make DESTDIR=${pkgdir} install
