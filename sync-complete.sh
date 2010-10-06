@@ -52,6 +52,8 @@ check_files()
 	# Get the file list in _repo/remote
 	local_files=`ls -a _repo/remote/* | cut -d "/" -f 3`
 	remove_list=""
+	repo_total=0
+	local_total=0
 	for parse_file in $local_files
 	do
 		file_exist="false"
@@ -60,10 +62,12 @@ check_files()
 			if [ "$parse_file" = "$compare_file" ] ; then
 				file_exist="true"
 			fi
+			(($repo_total++))
 		done
 		if [ "$file_exist" = "false" ] ; then
 			remove_list="$remove_list $parse_file"
 		fi
+		(($local_total++))
 	done
 	if [ "$remove_list" != "" ] ; then
 		title2 "The following packages in _repo/remote don't exist in the sever:"
@@ -84,6 +88,26 @@ check_files()
 					title "The files will be keeped..." ; 
 					newline ;
 					break 
+				;;
+				* ) 
+					echo "Enter yes or no" 
+				;;
+			esac
+		done
+	fi
+	if [ $repo_total > $local_total ] ; then
+		title2 "Warning: the number of files in the server is bigger, check if there was a problem syncing down!"
+		newline
+		question "Do you want to continue? (y/n)"
+		while true; do
+			read yn
+			case $yn in
+				y* | Y* ) 
+					break
+				;;
+				[nN]* )   
+					title "Aborting...." ;
+					exit
 				;;
 				* ) 
 					echo "Enter yes or no" 
