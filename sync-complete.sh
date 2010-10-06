@@ -48,12 +48,13 @@ check_files()
 {
 	export RSYNC_PASSWORD=`echo $_rsync_pass`
 	# Get the file list in the server
-	repo_files=`rsync -avh --list-only $_rsync_user@$_rsync_server::$_rsync_dir/* | cut -d ":" -f 3 | cut -d " " -f 2`
+	repo_files=`rsync -avh --list-only $_rsync_user@$_rsync_server::$_rsync_dir/* | cut -d ":" -f 3 | cut -d " " -f 2 | grep -e ".pkg.tar."`
 	# Get the file list in _repo/remote
-	local_files=`ls -a _repo/remote/* | cut -d "/" -f 3`
+	local_files=`ls -a _repo/remote/* | cut -d "/" -f 3 | grep -e ".pkg.tar."`
 	remove_list=""
-	repo_total=0
+   	repo_total=0
 	local_total=0
+        pass="0"
 	for parse_file in $local_files
 	do
 		file_exist="false"
@@ -62,12 +63,17 @@ check_files()
 			if [ "$parse_file" = "$compare_file" ] ; then
 				file_exist="true"
 			fi
-			(($repo_total++))
+                        if [ "$pass" = "0" ] ; then
+				((repo_total++))
+			fi
 		done
 		if [ "$file_exist" = "false" ] ; then
 			remove_list="$remove_list $parse_file"
 		fi
-		(($local_total++))
+		if [ "$pass" = "0" ] ; then
+			pass="1"
+		fi
+		((local_total++))
 	done
 	if [ "$remove_list" != "" ] ; then
 		title2 "The following packages in _repo/remote don't exist in the sever:"
@@ -95,7 +101,9 @@ check_files()
 			esac
 		done
 	fi
-	if [ $repo_total > $local_total ] ; then
+	echo "Total repo files : ${repo_total} | Total local files: ${local_total}"
+	newline
+	if [ $repo_total -gt $local_total ] ; then
 		title2 "Warning: the number of files in the server is bigger, check if there was a problem syncing down!"
 		newline
 		question "Do you want to continue? (y/n)"
