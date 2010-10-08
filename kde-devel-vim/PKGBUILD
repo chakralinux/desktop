@@ -1,0 +1,32 @@
+#
+# Apps Packages for Chakra, part of chakra-project.org
+#
+# maintainer (i686): Phil Miller <philm[at]chakra-project[dog]org>
+# maintainer (x86_64): Manuel Tortosa <manutortosa[at]chakra-project[dot]org>
+# maintainer: Giuseppe Calà <jiveaxe@gmail.com>
+
+# include global config
+source ../_buildscripts/${current_repo}-${_arch}-cfg.conf
+
+
+pkgname=kde-devel-vim
+pkgver=0.1
+pkgrel=1
+pkgdesc="Vim syntax file for kde developers."
+arch=(any)
+url="http://websvn.kde.org/*checkout*/trunk/KDE/kdesdk/scripts/kde-devel-vim.vim"
+license=('custom:vim')
+groups=('')
+depends=('vim')
+install=vimdoc.install
+source=(http://websvn.kde.org/*checkout*/trunk/KDE/kdesdk/scripts/${pkgname}.vim)
+#	license.txt)
+md5sums=('d5f53ae1f7345d2960dea33fb0bc858a')
+#	 'efbd5986e691ce8c876fb86e8f5961ea')
+
+build() {
+  cd $srcdir
+
+  mkdir -p $pkgdir/usr/share/vim/vimfiles/plugin
+  cp -L ${pkgname}.vim $pkgdir/usr/share/vim/vimfiles/plugin/${pkgname}.vim
+}
