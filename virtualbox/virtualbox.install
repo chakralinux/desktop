@@ -1,14 +1,9 @@
 # $1: The new package version
 post_install() {
-  # Unload modules (if any)
-  for _mod in vbox{drv,netadp,netflt}; do
-    modprobe -r $_mod &> /dev/null
-  done
-
   # Build new module
   /etc/rc.d/vboxdrv setup
 
-  # Add vboxusers group, GID 108 is reserved (http://wiki.archlinux.org/index.php/UID_and_GID_list),
+  # Add vboxusers group, GID 108 is reserved,
   # but in some systems it may be being used - please replace if needed.
   groupadd -f -g 108 vboxusers
 
@@ -59,11 +54,6 @@ EOF
 post_upgrade() {
   _NEWVERSION=`echo $1 | cut -f-1 -d '-'`
   _OLDVERSION=`echo $2 | cut -f-1 -d '-'`
-
-  # Unload modules (if any)
-  for _mod in vbox{drv,netadp,netflt}; do
-    modprobe -r $_mod &> /dev/null
-  done
 
   # Remove any stuff (e.g. module compilation files) from an old installation - old versions used
   # to use these directories.
