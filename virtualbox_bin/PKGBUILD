@@ -3,14 +3,15 @@
 #
 # maintainer (i686): Phil Miller <philm[at]chakra-project[dog]org>
 # maintainer (x86_64): Manuel Tortosa <manutortosa[at]chakra-project[dot]org>
+# contributor (x86_64): Giuseppe Calà <jiveaxe@gmail.com>
 
 # include global config
 source ../_buildscripts/${current_repo}-${_arch}-cfg.conf
 
 pkgname="virtualbox_bin"
-pkgver="3.2.8"
-_build="64453"
-pkgrel=1
+pkgver="3.2.10"
+_build="66523"
+pkgrel=2
 pkgdesc="Powerful x86 virtualization (Personal Use Binaries Edition)."
 arch=('i686' 'x86_64')
 url="http://virtualbox.org"
@@ -30,10 +31,10 @@ _barch='x86'
 source=("VirtualBox-${pkgver}-${_build}-Linux_${_barch}.run::http://download.virtualbox.org/virtualbox/${pkgver}/VirtualBox-${pkgver}-${_build}-Linux_${_barch}.run"
         '10-vboxdrv.rules'
         'vboxdrv')
-md5sums=('6bb3ab562162c3d6150f5183010ac5e2'
+md5sums=('a72291e91d521f879338559954ac8b08'
          '98859bfca9ef2ebf2ea43eb9123316fc'
          '160fc08a43cd9a719d306b5f023dea42')
-[ "$CARCH" = "x86_64" ] && md5sums[0]='9b85875277ef728527e421b7f69f5b55'
+[ "$CARCH" = "x86_64" ] && md5sums[0]='4f6303fe7680bd70f49bc96a770c2bf4'
 
 build() {
   # Check and unpack the run package via sh(1)
