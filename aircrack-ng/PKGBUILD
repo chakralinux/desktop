@@ -1,0 +1,25 @@
+#
+# Apps Packages for Chakra, part of chakra-project.org
+#
+# maintainer (i686): Phil Miller <philm[at]chakra-project[dog]org>
+# maintainer (x86_64): Manuel Tortosa <manutortosa[at]chakra-project[dot]org>
+
+# include global config
+source ../_buildscripts/${current_repo}-${_arch}-cfg.conf
+ 
+pkgname=aircrack-ng
+pkgver=1.1
+pkgrel=1
+pkgdesc="A key cracker for the 802.11 WEP and WPA-PSK protocols"
+arch=('i686' 'x86_64')
+url="http://www.aircrack-ng.org"
+license=('GPL2')
+depends=('openssl' 'sqlite3' 'iw')
+source=("http://download.aircrack-ng.org/${pkgname}-${pkgver}.tar.gz")
+md5sums=('f7a24ed8fad122c4187d06bfd6f998b4')
+
+build() {
+  cd ${srcdir}/${pkgname}-${pkgver}
+  make SQLITE=true unstable=true || return 1
+  make DESTDIR=${pkgdir} SQLITE=true unstable=true bindir=/usr/bin mandir=/usr/share/man/man1 sbindir=/usr/sbin install || return 1
+}
