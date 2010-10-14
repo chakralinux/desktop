@@ -3,22 +3,23 @@
 #
 # maintainer (i686): Phil Miller <philm[at]chakra-project[dog]org>
 # maintainer (x86_64): Manuel Tortosa <manutortosa[at]chakra-project[dot]org>
+# contributor (x86_64): Giuseppe calà <jiveaxe@gmail.com>
 
 # include global config
 source ../_buildscripts/${current_repo}-${_arch}-cfg.conf
 
 pkgname=akonadi-googledata
-pkgver=1.0.1
-pkgrel=2
+pkgver=1.2.0
+pkgrel=1
 pkgdesc="Akonadi GoogleData Plugin"
 arch=('i686' 'x86_64')
 url="http://pim.kde.org/akonadi/"
 license=('GPL')
-depends=('libgcal>=0.9.0' 'kdepimlibs>=4.2.0' 'libxslt')
-makedepends=('cmake' 'automoc4')
+depends=('libgcal>=0.9.6' 'kdepimlibs>=4.5.0' 'libxslt')
+makedepends=('cmake' 'automoc4' 'boost')
 source=(http://libgcal.googlecode.com/files/$pkgname-$pkgver.tar.bz2)
 
-md5sums=('d6150a30587bf05fc2ff909a5f4f8fd7')
+md5sums=('483bb82d4492ff20edb64d3d4edc02eb')
 
 build() {
 	mkdir -p ${srcdir}/build
