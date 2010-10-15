@@ -1,0 +1,48 @@
+#
+# Apps Packages for Chakra, part of chakra-project.org
+#
+# maintainer (x86_64): Giuseppe Calà <jiveaxe@gmail.com>
+
+# include global config
+source ../_buildscripts/${current_repo}-${_arch}-cfg.conf
+
+pkgname=kfilebox
+pkgver=0.4.5
+pkgrel=1
+pkgdesc="KDE4 Dropbox client (with own daemon)"
+arch=(i686 x86_64)
+url="http://kdropbox.deuteros.es"
+license=('GPL')
+depends=(kdebase-workspace)
+replaces=(kdropbox)
+source=(http://downloads.sourceforge.net/project/kdropbox/Kfilebox-${pkgver}/Source/${pkgname}-${pkgver}.tar.gz kfilebox.pro)
+install=$pkgname.install
+md5sums=('409f44fc37e51cbe6938d962f0780e28'
+         '69ddadaccfb4ac5a7d062ee3251ea42b')
+
+build() {
+    cp -r kfilebox.pro ${srcdir}/${pkgname}-${pkgver}/kfilebox.pro
+    cd "${srcdir}/${pkgname}-${pkgver}"
+    qmake
+    make || return 1
+    make INSTALL_ROOT=${pkgdir} install || return 1
+#ugly hack to install binnary
+    install -m 755 -p -D $srcdir/$pkgname-$pkgver/bin/kfilebox $pkgdir/usr/bin/kfilebox
+#(again an) ugly hack to install translations
+    install -m 644 -p -D ${srcdir}/${pkgname}-${pkgver}/locale/ar/kfilebox.mo ${pkgdir}/usr/share/locale/ar/LC_MESSAGES/kfilebox.mo
+    install -m 644 -p -D ${srcdir}/${pkgname}-${pkgver}/locale/br/kfilebox.mo ${pkgdir}/usr/share/locale/br/LC_MESSAGES/kfilebox.mo
+    install -m 644 -p -D ${srcdir}/${pkgname}-${pkgver}/locale/de/kfilebox.mo ${pkgdir}/usr/share/locale/de/LC_MESSAGES/kfilebox.mo
+    install -m 644 -p -D ${srcdir}/${pkgname}-${pkgver}/locale/es/kfilebox.mo ${pkgdir}/usr/share/locale/es/LC_MESSAGES/kfilebox.mo
+    install -m 644 -p -D ${srcdir}/${pkgname}-${pkgver}/locale/fr/kfilebox.mo ${pkgdir}/usr/share/locale/fr/LC_MESSAGES/kfilebox.mo
+    install -m 644 -p -D ${srcdir}/${pkgname}-${pkgver}/locale/gl/kfilebox.mo ${pkgdir}/usr/share/locale/gl/LC_MESSAGES/kfilebox.mo
+    install -m 644 -p -D ${srcdir}/${pkgname}-${pkgver}/locale/tr/kfilebox.mo ${pkgdir}/usr/share/locale/tr/LC_MESSAGES/kfilebox.mo
+    install -m 644 -p -D ${srcdir}/${pkgname}-${pkgver}/locale/ru/kfilebox.mo ${pkgdir}/usr/share/locale/ru/LC_MESSAGES/kfilebox.mo
+    install -m 644 -p -D ${srcdir}/${pkgname}-${pkgver}/locale/pl/kfilebox.mo ${pkgdir}/usr/share/locale/pl/LC_MESSAGES/kfilebox.mo
+    install -m 644 -p -D ${srcdir}/${pkgname}-${pkgver}/locale/cs/kfilebox.mo ${pkgdir}/usr/share/locale/cs/LC_MESSAGES/kfilebox.mo
+    install -m 644 -p -D ${srcdir}/${pkgname}-${pkgver}/locale/it/kfilebox.mo ${pkgdir}/usr/share/locale/it/LC_MESSAGES/kfilebox.mo
+    install -m 644 -p -D ${srcdir}/${pkgname}-${pkgver}/locale/lt/kfilebox.mo ${pkgdir}/usr/share/locale/lt/LC_MESSAGES/kfilebox.mo
+    install -m 644 -p -D ${srcdir}/${pkgname}-${pkgver}/locale/nl/kfilebox.mo ${pkgdir}/usr/share/locale/nl/LC_MESSAGES/kfilebox.mo
+    install -m 644 -p -D ${srcdir}/${pkgname}-${pkgver}/locale/pt/kfilebox.mo ${pkgdir}/usr/share/locale/pt/LC_MESSAGES/kfilebox.mo
+    install -m 644 -p -D ${srcdir}/${pkgname}-${pkgver}/locale/si/kfilebox.mo ${pkgdir}/usr/share/locale/si/LC_MESSAGES/kfilebox.mo
+    install -m 644 -p -D ${srcdir}/${pkgname}-${pkgver}/locale/zh/kfilebox.mo ${pkgdir}/usr/share/locale/zh/LC_MESSAGES/kfilebox.mo
+}
