@@ -8,7 +8,7 @@
 source ../_buildscripts/${current_repo}-${_arch}-cfg.conf
 
 pkgname=bluedevil-git
-pkgver=20100808
+pkgver=20101018
 pkgrel=1
 pkgdesc='The new bluetooth stack for KDE, it’s composed of: KCM, KDED, KIO, Library and some other small applications'
 arch=('i686' 'x86_64')
@@ -18,22 +18,25 @@ depends=('kdelibs' 'libbluedevil' 'obex-data-server' 'obexd-client') # kdebase-w
 makedepends=('cmake' 'automoc4' 'git')
 provides=(bluedevil)
 conflicts=(bluedevil)
+source=("http://chakra-project.org/sources/bluedevil/bluedevil-$pkgver.tar.xz")
+md5sums=('4dfb05c0ecb4d8c0c55d7cd01f54198b') #  bluedevil-20101018.tar.xz
 
+# create tarball: source PKGBUILD && mksource
 
-_gitroot="git://gitorious.org/bluedevil/bluedevil.git"
-_gitname="bluedevil"
+mksource() {
+  git clone git://gitorious.org/bluedevil/bluedevil.git
+  pushd bluedevil
+  popd
+  tar -cvJf bluedevil-${pkgver}.tar.xz bluedevil/*
+  md5sum bluedevil-${pkgver}.tar.xz
+}
 
 build(){
   cd ${srcdir}
 
-  if [[ -d $_gitname ]]; then
-	(cd $_gitname && git pull origin)
-  else
-	git clone $_gitroot $_gitname
-  fi
-  mkdir -p $_gitname-build
-  cp -R $_gitname/* $_gitname-build
-  cd $_gitname-build
+  mkdir -p bluedevil-build
+  cp -R bluedevil/* bluedevil-build
+  cd bluedevil-build
  
   cmake -DCMAKE_BUILD_TYPE=Release \
         -DCMAKE_SKIP_RPATH=ON \
@@ -42,7 +45,7 @@ build(){
 }
 
 package() {
-  cd ${srcdir}/$_gitname-build
+  cd ${srcdir}/bluedevil-build
   make DESTDIR=${pkgdir} install
-  rm -R ${srcdir}/$_gitname-build
+  rm -R ${srcdir}/bluedevil-build
 }

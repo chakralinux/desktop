@@ -8,7 +8,7 @@
 source ../_buildscripts/${current_repo}-${_arch}-cfg.conf
 
 pkgname=libbluedevil-git
-pkgver=20100731
+pkgver=20101018
 pkgrel=1
 pkgdesc='A Qt wrapper for bluez used in the new KDE bluetooth stack'
 arch=('i686' 'x86_64')
@@ -18,32 +18,34 @@ depends=('qt' 'bluez')
 makedepends=('cmake' 'git')
 provides=("libbluedevil")
 conflicts=("libbluedevil")
-source=()
-md5sums=()
+source=("http://chakra-project.org/sources/libbluedevil/libbluedevil-$pkgver.tar.xz")
+md5sums=('1d2377b5805d50728b9a2f6211ad351c') #  libbluedevil-20101018.tar.xz
 
-_gitroot="git://gitorious.org/libbluedevil/libbluedevil.git"
-_gitname="libbluedevil"
+# create tarball: source PKGBUILD && mksource
+
+mksource() {
+  git clone git://gitorious.org/libbluedevil/libbluedevil.git
+  pushd libbluedevil
+  popd
+  tar -cvJf libbluedevil-${pkgver}.tar.xz libbluedevil/*
+  md5sum libbluedevil-${pkgver}.tar.xz
+}
 
 build(){
   cd ${srcdir}
 
-  if [[ -d $_gitname ]]; then
-	(cd $_gitname && git pull origin)
-  else
-	git clone $_gitroot $_gitname
-  fi
-  
-  mkdir build
-  cd build
-  
-  cmake ../${_gitname} \
-    -DCMAKE_BUILD_TYPE=Release \
-    -DCMAKE_SKIP_RPATH=ON \
-    -DCMAKE_INSTALL_PREFIX=/usr
+  mkdir -p libbluedevil-build
+  cp -R libbluedevil/* libbluedevil-build
+  cd libbluedevil-build
+ 
+  cmake -DCMAKE_BUILD_TYPE=Release \
+        -DCMAKE_SKIP_RPATH=ON \
+        -DCMAKE_INSTALL_PREFIX=/usr
   make
 }
 
 package() {
-  cd ${srcdir}/build
+  cd ${srcdir}/libbluedevil-build
   make DESTDIR=${pkgdir} install
+  rm -R ${srcdir}/libbluedevil-build
 }
