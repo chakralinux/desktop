@@ -16,7 +16,7 @@
 #along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 echo "Search for your current screen resolution (this may flicker)"
-xhost + && export DISPLAY=:0
+
 CURRENT_RES=`xrandr  | grep '*' | cut -b -16 | sed 's/ //g'`
 
 # Fix resolution
