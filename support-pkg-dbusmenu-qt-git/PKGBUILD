@@ -4,11 +4,8 @@
 # maintainer (i686): Phil Miller <philm[at]chakra-project[dog]org>
 # maintainer (x86_64): Manuel Tortosa <manutortosa[at]chakra-project[dot]org>
 
-# include global config
-source ../_buildscripts/${current_repo}-${_arch}-cfg.conf
-
 pkgname=dbusmenu-qt-git
-pkgver=20100707
+pkgver=20101019
 pkgrel=1
 pkgdesc="A standalone library providing a way to import and export QMenu instances using the DBusMenu protocol."
 arch=('i686' 'x86_64')
@@ -18,36 +15,30 @@ makedepends=('git' 'cmake')
 url="http://gitorious.org/dbusmenu/"
 conflicts=('dbusmenu-qt')
 provides=('dbusmenu-qt')
-source=()
-md5sums=()
+source=(http://chakra-project.org/sources/${pkgname}/${pkgname}-${pkgver}.tar.xz)
+md5sums=(a4fa14066609b87935800f7a0d5077f4)
 
-_gitroot="git://gitorious.org/dbusmenu/dbusmenu-qt.git"
-_gitname="dbusmenu-qt"
+# create tarball: source PKGBUILD && mksource
+
+mksource() {
+  git clone git://gitorious.org/dbusmenu/dbusmenu-qt.git
+  pushd dbusmenu-qt
+  popd
+  tar -cvJf ${pkgname}-${pkgver}.tar.xz dbusmenu-qt/*
+  md5sum ${pkgname}-${pkgver}.tar.xz
+}
 
 build() {
   cd $srcdir
-  msg "Connecting to the GIT server...."
+ 
+  mkdir $srcdir/dbusmenu-qt-build
   
-  if [[ -d $srcdir/$_gitname ]] ; then
-    cd $_gitname
-    git pull origin
-    msg "The local files are updated."
-  else
-    git clone $_gitroot
-  fi
-  
-  msg "GIT checkout done"
-  msg "Starting make..."
-  
-  
-  mkdir $srcdir/$_gitname-build
-  
-  cd $srcdir/$_gitname-build
+  cd $srcdir/dbusmenu-qt-build
 
-  cmake $startdir/src/$_gitname -DCMAKE_BUILD_TYPE=Release \
+  cmake $startdir/src/dbusmenu-qt -DCMAKE_BUILD_TYPE=Release \
                 -DCMAKE_INSTALL_PREFIX=/usr 
   make || return 1
   make DESTDIR=$pkgdir install || return 1
   
-  rm -rf $srcdir/$_gitname-build
+  rm -rf $srcdir/dbusmenu-qt-build
 }
