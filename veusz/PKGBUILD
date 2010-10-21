@@ -1,0 +1,37 @@
+#
+# Apps Packages for Chakra, part of chakra-project.org
+#
+# maintainer (x86_64): Giuseppe Calà <jiveaxe@gmail.com>
+
+# include global config
+source ../_buildscripts/${current_repo}-${_arch}-cfg.conf
+
+pkgname=veusz
+pkgver=1.9
+pkgrel=1
+pkgdesc="A scientific plotting package, designed to create publication-ready Postscript output"
+arch=('i686' 'x86_64')
+url="http://home.gna.org/$pkgname/"
+license=('GPL')
+depends=('pyqt>=4.3' 'python-numpy>=1.0' 'lapack' 'hicolor-icon-theme')
+optdepends=('python-pyfits: for reading files in FITS format')
+source=(http://download.gna.org/$pkgname/$pkgname-$pkgver.tar.gz
+        veusz.desktop)
+md5sums=('826214e68d49b49de65a5ea21c76f85b'
+         '1e526306463d2212e56290c9994a41a6')
+install=veusz.install
+
+build() {
+  cd "$srcdir"/$pkgname-$pkgver
+  python setup.py build || return 1
+}
+package() {
+  cd "$srcdir"/$pkgname-$pkgver
+  python setup.py install --root="$pkgdir" --prefix=/usr || return 1
+  for _i in 16 32 48 64 128; do
+    install -D -m644 windows/icons/veusz_$_i.png \
+        "$pkgdir"/usr/share/icons/hicolor/${_i}x${_i}/apps/veusz.png
+  done
+  install -D -m644 "$srcdir"/veusz.desktop \
+      "$pkgdir"/usr/share/applications/veusz.desktop
+}
