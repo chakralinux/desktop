@@ -5,13 +5,12 @@
 # maintainer (x86_64): Manuel Tortosa <manutortosa[at]chakra-project[dot]org>
 
 pkgname=wine
-pkgver=1.3.3
+pkgver=1.3.6
 pkgrel=1
 
 _pkgbasever=${pkgver/rc/-rc}
 
 source=(http://ibiblio.org/pub/linux/system/emulators/$pkgname/$pkgname-$_pkgbasever.tar.bz2)
-md5sums=('36fe53f4db6d5d98b01f5d5f2cd24d11')
 
 pkgdesc="A compatibility layer for running Windows programs"
 url="http://www.winehq.com"
@@ -95,13 +94,7 @@ build() {
 
     make
 
-    # Wine32 build needs a patched ldd
-    # Do it here until it's patched in glibc
-    cp /usr/bin/ldd "$srcdir/ldd"
-    sed -i '/^RTLDLIST=/s:"$: /lib/ld-linux.so.2&:' "$srcdir/ldd"
-
     _wine32opts=(
-      LDD="$srcdir/ldd"
       --libdir=/usr/lib32
       --with-wine64="$srcdir/$pkgname-64-build"
     )
@@ -138,4 +131,7 @@ package() {
       dlldir="$pkgdir/usr/lib/wine" install
   fi
 }
+
+# vim:set ts=8 sts=2 sw=2 et:
+md5sums=('3db0941aafa23e4fd340326a104e2762')
 
