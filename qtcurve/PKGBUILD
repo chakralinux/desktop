@@ -8,7 +8,7 @@ source ../_buildscripts/${current_repo}-${_arch}-cfg.conf
 
 pkgname=qtcurve
 pkgver=1.6.4
-pkgrel=1
+pkgrel=2
 arch=('i686' 'x86_64')
 license=('GPL')
 pkgdesc='A configurable set of widget styles for KDE'
@@ -32,7 +32,6 @@ build() {
 	cmake ../QtCurve-KDE4-${pkgver} \
 		-DCMAKE_BUILD_TYPE=Release \
 		-DCMAKE_INSTALL_PREFIX=/usr \
-		-DQTC_QT_ONLY=true \
 		-DQTC_STYLE_SUPPORT=true
 	make
 }
