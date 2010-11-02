@@ -1,0 +1,35 @@
+#
+# Apps Packages for Chakra, part of chakra-project.org
+#
+# maintainer (x86_64): Giuseppe Calà <jiveaxe@gmail.com>
+
+# include global config
+source ../_buildscripts/${current_repo}-${_arch}-cfg.conf
+
+pkgname=avogadro
+pkgver=1.0.1
+pkgrel=1
+pkgdesc="An advanced molecular editor based on Qt"
+arch=('i686' 'x86_64')
+url="http://avogadro.openmolecules.net/wiki/Main_Page"
+license=('GPL2')
+depends=('eigen' 'openbabel' 'pyqt' 'boost' 'glew' 'python-numpy')
+makedepends=('cmake' 'boost')
+source=("http://downloads.sourceforge.net/${pkgname}/${pkgname}-${pkgver}.tar.bz2")
+md5sums=('0d5c391197101f0aab7be6b59f81e6fd')
+
+build() {
+  cd ${srcdir}
+  mkdir build
+  cd build
+
+  cmake ../${pkgname}-${pkgver} \
+    -DCMAKE_BUILD_TYPE=Release \
+    -DCMAKE_INSTALL_PREFIX=/usr
+  make
+}
+
+package() {
+  cd ${srcdir}/build
+  make DESTDIR=${pkgdir} install
+}
