@@ -1,0 +1,98 @@
+#
+# Apps Packages for Chakra, part of chakra-project.org
+#
+# maintainer (x86_64): Giuseppe Calà <jiveaxe@gmail.com>
+
+# include global config
+source ../_buildscripts/${current_repo}-${_arch}-cfg.conf
+
+pkgname=mysqloader
+pkgver=0.3.3
+pkgrel=1
+pkgdesc="A small application for the systray to start and stop the MySQL-Server and launch the MySQL-Tools."
+arch=('i686' 'x86_64')
+url="http://www.eleven-67.net/"
+license=('GPL')
+depends=('qt' 'kdelibs')
+source=(http://www.eleven-67.net/phocadownload/${pkgname}-${pkgver}.tar.gz)
+md5sums=('446036455395884575d24655666e2ab8')
+
+build() {
+    cd ${srcdir}/$pkgname-$pkgver/
+    qmake mysqloader.pro
+    make  || return 1
+}
+
+package() {
+
+    cd ${srcdir}/$pkgname-$pkgver
+
+    install -D -m755 mysqloader ${pkgdir}/usr/bin/mysqloader || return 1
+
+    # Installing icons
+    install -D -m644 images/48x48/mysqloader.png $pkgdir/usr/share/pixmaps/mysqloader.png
+    install -D -m644 images/48x48/mysqloader_off.png $pkgdir/usr/share/pixmaps/mysqloader_off.png
+    install -D -m644 images/48x48/mysqloader_on.png $pkgdir/usr/share/pixmaps/mysqloader_on.png
+
+    # Creating menu item
+    install -D -m644 src/mysqloader.desktop $pkgdir/usr/share/applications/mysqloader.desktop
+
+    # Installing translations
+    install -D -m644 translations/${pkgname}_de.qm $pkgdir/usr/share/locale/de/LC_MESSAGES/${pkgname}_de.qm
+    install -D -m644 translations/${pkgname}_en.qm $pkgdir/usr/share/locale/en/LC_MESSAGES/${pkgname}_en.qm
+    install -D -m644 translations/${pkgname}_es.qm $pkgdir/usr/share/locale/es/LC_MESSAGES/${pkgname}_es.qm
+    install -D -m644 translations/${pkgname}_nl.qm $pkgdir/usr/share/locale/nl/LC_MESSAGES/${pkgname}_nl.qm
+    install -D -m644 translations/${pkgname}_pt_BR.qm $pkgdir/usr/share/locale/pt_BR/LC_MESSAGES/${pkgname}_pt_BR.qm
+    install -D -m644 translations/${pkgname}_pt.qm $pkgdir/usr/share/locale/pt/LC_MESSAGES/${pkgname}_pt.qm
+    install -D -m644 translations/${pkgname}_it.qm $pkgdir/usr/share/locale/it/LC_MESSAGES/${pkgname}_it.qm
+
+    # Installing documentation
+    install -D -m644 doc/de/index.cache.bz2 $pkgdir/usr/share/doc/kde/html/de/${pkgname}/index.cache.bz2
+    install -D -m644 doc/de/index.docbook $pkgdir/usr/share/doc/kde/html/de/${pkgname}/index.docbook
+    install -D -m644 doc/de/images/ml_01.png $pkgdir/usr/share/doc/kde/html/de/${pkgname}/images/ml_01.png
+    install -D -m644 doc/de/images/ml_01.png $pkgdir/usr/share/doc/kde/html/de/${pkgname}/images/ml_02.png
+    install -D -m644 doc/de/images/ml_01.png $pkgdir/usr/share/doc/kde/html/de/${pkgname}/images/ml_03.png
+    install -D -m644 doc/de/images/ml_01.png $pkgdir/usr/share/doc/kde/html/de/${pkgname}/images/ml_04.png
+    install -D -m644 doc/de/images/ml_01.png $pkgdir/usr/share/doc/kde/html/de/${pkgname}/images/ml_05.png
+    
+    install -D -m644 doc/en/index.cache.bz2 $pkgdir/usr/share/doc/kde/html/en/${pkgname}/index.cache.bz2
+    install -D -m644 doc/en/index.docbook $pkgdir/usr/share/doc/kde/html/en/${pkgname}/index.docbook
+    install -D -m644 doc/en/images/ml_01.png $pkgdir/usr/share/doc/kde/html/en/${pkgname}/images/ml_01.png
+    install -D -m644 doc/en/images/ml_01.png $pkgdir/usr/share/doc/kde/html/en/${pkgname}/images/ml_02.png
+    install -D -m644 doc/en/images/ml_01.png $pkgdir/usr/share/doc/kde/html/en/${pkgname}/images/ml_03.png
+    install -D -m644 doc/en/images/ml_01.png $pkgdir/usr/share/doc/kde/html/en/${pkgname}/images/ml_04.png
+    install -D -m644 doc/en/images/ml_01.png $pkgdir/usr/share/doc/kde/html/en/${pkgname}/images/ml_05.png
+
+    # Installing documentation
+    install -D -m644 doc/es/index.cache.bz2 $pkgdir/usr/share/doc/kde/html/es/${pkgname}/index.cache.bz2
+    install -D -m644 doc/es/index.docbook $pkgdir/usr/share/doc/kde/html/es/${pkgname}/index.docbook
+    install -D -m644 doc/es/images/ml_01.png $pkgdir/usr/share/doc/kde/html/es/${pkgname}/images/ml_01.png
+    install -D -m644 doc/es/images/ml_01.png $pkgdir/usr/share/doc/kde/html/es/${pkgname}/images/ml_02.png
+    install -D -m644 doc/es/images/ml_01.png $pkgdir/usr/share/doc/kde/html/es/${pkgname}/images/ml_03.png
+    install -D -m644 doc/es/images/ml_01.png $pkgdir/usr/share/doc/kde/html/es/${pkgname}/images/ml_04.png
+    install -D -m644 doc/es/images/ml_01.png $pkgdir/usr/share/doc/kde/html/es/${pkgname}/images/ml_05.png
+
+    install -D -m644 doc/nl/index.cache.bz2 $pkgdir/usr/share/doc/kde/html/nl/${pkgname}/index.cache.bz2
+    install -D -m644 doc/nl/index.docbook $pkgdir/usr/share/doc/kde/html/nl/${pkgname}/index.docbook
+    install -D -m644 doc/nl/images/ml_01.png $pkgdir/usr/share/doc/kde/html/nl/${pkgname}/images/ml_01.png
+    install -D -m644 doc/nl/images/ml_01.png $pkgdir/usr/share/doc/kde/html/nl/${pkgname}/images/ml_02.png
+    install -D -m644 doc/nl/images/ml_01.png $pkgdir/usr/share/doc/kde/html/nl/${pkgname}/images/ml_03.png
+    install -D -m644 doc/nl/images/ml_01.png $pkgdir/usr/share/doc/kde/html/nl/${pkgname}/images/ml_04.png
+    install -D -m644 doc/nl/images/ml_01.png $pkgdir/usr/share/doc/kde/html/nl/${pkgname}/images/ml_05.png
+
+    install -D -m644 doc/pt/index.cache.bz2 $pkgdir/usr/share/doc/kde/html/pt/${pkgname}/index.cache.bz2
+    install -D -m644 doc/pt/index.docbook $pkgdir/usr/share/doc/kde/html/pt/${pkgname}/index.docbook
+    install -D -m644 doc/pt/images/ml_01.png $pkgdir/usr/share/doc/kde/html/pt/${pkgname}/images/ml_01.png
+    install -D -m644 doc/pt/images/ml_01.png $pkgdir/usr/share/doc/kde/html/pt/${pkgname}/images/ml_02.png
+    install -D -m644 doc/pt/images/ml_01.png $pkgdir/usr/share/doc/kde/html/pt/${pkgname}/images/ml_03.png
+    install -D -m644 doc/pt/images/ml_01.png $pkgdir/usr/share/doc/kde/html/pt/${pkgname}/images/ml_04.png
+    install -D -m644 doc/pt/images/ml_01.png $pkgdir/usr/share/doc/kde/html/pt/${pkgname}/images/ml_05.png
+
+    install -D -m644 doc/it/index.cache.bz2 $pkgdir/usr/share/doc/kde/html/it/${pkgname}/index.cache.bz2
+    install -D -m644 doc/it/index.docbook $pkgdir/usr/share/doc/kde/html/it/${pkgname}/index.docbook
+    install -D -m644 doc/it/images/ml_01.png $pkgdir/usr/share/doc/kde/html/it/${pkgname}/images/ml_01.png
+    install -D -m644 doc/it/images/ml_01.png $pkgdir/usr/share/doc/kde/html/it/${pkgname}/images/ml_02.png
+    install -D -m644 doc/it/images/ml_01.png $pkgdir/usr/share/doc/kde/html/it/${pkgname}/images/ml_03.png
+    install -D -m644 doc/it/images/ml_01.png $pkgdir/usr/share/doc/kde/html/it/${pkgname}/images/ml_04.png
+    install -D -m644 doc/it/images/ml_01.png $pkgdir/usr/share/doc/kde/html/it/${pkgname}/images/ml_05.png
+}
