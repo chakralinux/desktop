@@ -1,0 +1,30 @@
+#
+# Apps Packages for Chakra, part of chakra-project.org
+#
+# maintainer (x86_64): Giuseppe Calà <jiveaxe@gmail.com>
+
+# include global config
+source ../_buildscripts/${current_repo}-${_arch}-cfg.conf
+
+pkgname=socnetv
+pkgver=0.90
+pkgrel=1
+pkgdesc="Social Networks Analysis and Visualisation"
+arch=('i686' 'x86_64')
+url="http://socnetv.sourceforge.net/"
+license=('GPL3')
+depends=( 'qt')
+makedepends=('pkgconfig')
+options=(docs)
+source=(http://downloads.sourceforge.net/socnetv/SocNetV-$pkgver.tar.gz)
+md5sums=('ddc40a80abf3b0325d2de5741b3bdf03')
+
+build() {
+  cd ${srcdir}/$pkgname-$pkgver
+
+  ./configure --prefix=/usr
+
+  make
+
+  make install DESTDIR=${pkgdir}/  || return 1
+}
