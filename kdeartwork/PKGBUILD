@@ -19,6 +19,7 @@ _origname=kdeartwork
 #
 pkgbase=('kdeartwork')
 pkgname=('kdeartwork-common'
+         'kdeartwork-aurorae'
          'kdeartwork-colorschemes'
          'kdeartwork-desktopthemes'
          'kdeartwork-emoticons'
@@ -99,6 +100,18 @@ package_kdeartwork-common()
 #	else
 #		warning "no patches found, skipping to include them into the package..."
 #	fi
+}
+
+package_kdeartwork-aurorae() {
+        pkgdesc='An Aurorae theme based on the Oxygen plasma theme'
+        depends=("${_origname}-common>=${_kdever}")
+        groups=("${_origname}" "kde-complete" "kde-uninstall")
+
+	splitdirs="aurorae"
+		for i in ${splitdirs} ; do
+			cd ${srcdir}/${_origname}-${pkgver}/${i}
+			make DESTDIR=${pkgdir} install || return 1
+		done
 }
 
 package_kdeartwork-colorschemes() 
