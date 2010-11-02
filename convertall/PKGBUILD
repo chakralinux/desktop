@@ -1,0 +1,46 @@
+#
+# Apps Packages for Chakra, part of chakra-project.org
+#
+# maintainer (x86_64): Giuseppe Calà <jiveaxe@gmail.com>
+
+# include global config
+source ../_buildscripts/${current_repo}-${_arch}-cfg.conf
+
+pkgname=convertall
+pkgver=0.5.0
+pkgrel=1
+pkgdesc="Unit conversion program (Qt)"
+arch=('i686' 'x86_64')
+url="http://convertall.bellz.org/"
+license=('GPL')
+depends=('pyqt')
+source=(http://download.berlios.de/$pkgname/$pkgname-$pkgver.tar.gz \
+	correctpaths.patch convertall.desktop)
+md5sums=('96ea0910af63d2056fe87cee3aa7031e'
+         'e4f5c5d58f728b292f625c38771d2779'
+         'aae44cb1f36847340411d77b1a6d00cd')
+
+build() {
+# patch executable to have the correct paths
+patch -Np0 < $srcdir/correctpaths.patch || return 1
+
+# create install directories
+  install -d $pkgdir/usr/{bin,share/pixmaps}
+
+# copy files manually
+cp -rf $srcdir/ConvertAll/source $pkgdir/usr/share/$pkgname
+cp -rf $srcdir/ConvertAll/icons $pkgdir/usr/share/$pkgname
+cp -rf $srcdir/ConvertAll/doc $pkgdir/usr/share/$pkgname/help
+cp -rf $srcdir/ConvertAll/data $pkgdir/usr/share/$pkgname
+
+# create symlink in /usr/bin
+ln -s /usr/share/$pkgname/$pkgname.py $pkgdir/usr/bin/$pkgname
+
+# install desktop file
+install -Dm644 $srcdir/$pkgname.desktop \
+	$pkgdir/usr/share/applications/$pkgname.desktop
+
+# symlink icon in /usr/share/pixmaps
+ln -s /usr/share/$pkgname/icons/$pkgname.svg \
+	$pkgdir/usr/share/pixmaps/$pkgname.svg
+}
