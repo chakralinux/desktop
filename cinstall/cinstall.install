@@ -33,29 +33,24 @@ post_install() {
 			usermod -a -G bundle $i
 		done
 
-		echo "Mod sudoers file"
-		if [ "sudoers: `grep bundle /etc/sudoers`" = "sudoers: " ] ; then
+		echo "Configuring sudoers file"
+		if [ "`grep '/bin/mount -o loop -t squashfs' /etc/sudoers`" = "" ] ; then
 			echo "%bundle ALL=NOPASSWD: /bin/mount -o loop -t squashfs *" >> /etc/sudoers
+		elif [ "`grep '/bin/mount -o loop -t ext4' /etc/sudoers`" = "" ] ; then
 			echo "%bundle ALL=NOPASSWD: /bin/mount -o loop -t ext4 *" >> /etc/sudoers
+		elif [ "`grep '/bin/umount *' /etc/sudoers`" = "" ] ; then
 			echo "%bundle ALL=NOPASSWD: /bin/umount *" >> /etc/sudoers
-			echo "ensure correct sudoers permissions"
-			chmod -v 0440 /etc/sudoers
-		elif [ "sudoers: `grep "%bundle ALL=NOPASSWD: /bin/umount" /etc/sudoers`" = "sudoers: " ] ; then
-			echo "%bundle ALL=NOPASSWD: /bin/mount -o loop -t ext4 *" >> /etc/sudoers
-			echo "%bundle ALL=NOPASSWD: /bin/umount *" >> /etc/sudoers
-			echo "ensure correct sudoers permissions"
-			chmod -v 0440 /etc/sudoers
+		elif [ "`grep '/bin/chmod a+w *' /etc/sudoers`" = "" ] ; then
+			echo "%bundle ALL=NOPASSWD: /bin/chmod a+w *" >> /etc/sudoers
 		else
 			echo "sudoers file already modded"
 		fi
 
-                mkdir -p /etc/gre.d &>/dev/null
-                chmod 775 /etc/gre.d &>/dev/null
-                chown -R root:bundle /etc/gre.d &>/dev/null
+		chmod -v 0440 /etc/sudoers
 
-                mkdir -p /etc/cb.conf.d &>/dev/null
-                chmod 775 /etc/cb.conf.d &>/dev/null
-                chown -R root:bundle /etc/cb.conf.d &>/dev/null
+		mkdir -p /etc/cb.conf.d &>/dev/null
+		chmod 775 /etc/cb.conf.d &>/dev/null
+		chown -R root:bundle /etc/cb.conf.d &>/dev/null
 
 		echo "update mime-database"      
 		update-mime-database /usr/share/mime &>/dev/null
@@ -96,34 +91,24 @@ post_upgrade() {
 			usermod -a -G bundle $i
 		done
 
-		echo "Mod sudoers file"
-		if [ "sudoers: `grep bundle /etc/sudoers`" = "sudoers: " ] ; then
+		echo "Configuring sudoers file"
+		if [ "`grep '/bin/mount -o loop -t squashfs' /etc/sudoers`" = "" ] ; then
 			echo "%bundle ALL=NOPASSWD: /bin/mount -o loop -t squashfs *" >> /etc/sudoers
+		elif [ "`grep '/bin/mount -o loop -t ext4' /etc/sudoers`" = "" ] ; then
 			echo "%bundle ALL=NOPASSWD: /bin/mount -o loop -t ext4 *" >> /etc/sudoers
+		elif [ "`grep '/bin/umount *' /etc/sudoers`" = "" ] ; then
 			echo "%bundle ALL=NOPASSWD: /bin/umount *" >> /etc/sudoers
-			echo "ensure correct sudoers permissions"
-			chmod -v 0440 /etc/sudoers
-		elif [ "sudoers: `grep "%bundle ALL=NOPASSWD: /bin/umount" /etc/sudoers`" = "sudoers: " ] ; then
-			echo "%bundle ALL=NOPASSWD: /bin/mount -o loop -t ext4 *" >> /etc/sudoers
-			echo "%bundle ALL=NOPASSWD: /bin/umount *" >> /etc/sudoers
-			echo "ensure correct sudoers permissions"
-			chmod -v 0440 /etc/sudoers
+		elif [ "`grep '/bin/chmod a+w *' /etc/sudoers`" = "" ] ; then
+			echo "%bundle ALL=NOPASSWD: /bin/chmod a+w *" >> /etc/sudoers
 		else
 			echo "sudoers file already modded"
 		fi
 
-                mkdir -p /etc/gre.d &>/dev/null
-                chmod 775 /etc/gre.d &>/dev/null
-                chown -R root:bundle /etc/gre.d &>/dev/null
+		chmod -v 0440 /etc/sudoers
 
-		echo "clean /etc/gre.d"
-		rm /etc/gre.d/* -rv
-
-                mkdir -p /etc/cb.conf.d &>/dev/null
-                chmod 775 /etc/cb.conf.d &>/dev/null
-                chown -R root:bundle /etc/cb.conf.d &>/dev/null
-
-		echo "clean /etc/cb.conf.d"
+		mkdir -p /etc/cb.conf.d &>/dev/null
+		chmod 775 /etc/cb.conf.d &>/dev/null
+		chown -R root:bundle /etc/cb.conf.d &>/dev/null
 		rm /etc/cb.conf.d/* -rv
 
 		echo "update mime-database"      
@@ -150,7 +135,6 @@ post_remove() {
 			echo " "
 		fi
 
-                rm /etc/gre.d -r
                 rm /etc/cb.conf.d -r
 
 }
