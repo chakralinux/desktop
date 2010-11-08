@@ -1,0 +1,32 @@
+#
+# Chakra Packages for Chakra, part of chakra-project.org
+#
+# contributor (x86_64): Giuseppe Calà <jiveaxe@gmail.com>
+
+# include global config
+source ../_buildscripts/${current_repo}-${_arch}-cfg.conf
+
+pkgname=plasma-widget-menubar
+pkgver=0.1.13
+pkgrel=1
+pkgdesc="Plasmoid to display menubar of application windows"
+url="https://launchpad.net/plasma-widget-menubar"
+arch=('i686' 'x86_64')
+license=('GPL')
+depends=('kdebase-workspace>=4.4' 'qt-appmenu' 'qjson')
+makedepends=('cmake' 'automoc4')
+conflicts=()
+provides=()
+optdepends=('appmenu-gtk: Showing GTK+ Apps menus')
+source=("http://launchpad.net/plasma-widget-menubar/trunk/${pkgver}/+download/plasma-widget-menubar-${pkgver}.tar.bz2")
+md5sums=('d66bb5811233ce07c20b3ac04233f780')
+
+build() {
+  cd ${srcdir}/plasma-widget-menubar-${pkgver}
+
+  cmake -DCMAKE_INSTALL_PREFIX=`kde4-config --prefix`
+
+  make || return 1
+  make DESTDIR=${pkgdir} install || return 1
+}
+
