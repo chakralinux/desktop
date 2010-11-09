@@ -1,0 +1,37 @@
+#
+# Chakra Packages for Chakra, part of chakra-project.org
+#
+# Maintainer: Giuseppe Calà <jiveaxe@gmail.com>
+#
+
+pkgname=traverso
+pkgver=0.49.2
+pkgrel=1
+pkgdesc="Digital Audio Workstation with an innovative User Interface"
+arch=('i686' 'x86_64')
+url="http://traverso-daw.org/"
+license=('GPL')
+depends=('jack' 'fftw' 'wavpack' 'slv2' 'lame' 'libmad' 'qt')
+makedepends=('cmake')
+options=('!libtool')
+source=(http://traverso-daw.org/download/releases/current/${pkgname}-${pkgver}.tar.gz)
+install=(traverso.install)
+md5sums=('1acc46e2fa17e9a77f069b00307478a0')
+
+build() {
+  cd "${srcdir}/${pkgname}-${pkgver}"
+  
+  cmake .	-DCMAKE_INSTALL_PREFIX="/usr" \
+		-DWANT_MP3_ENCODE=ON \
+		-DUSE_SYSTEM_SLV2_LIBRARY=ON || return 1
+
+  make || return 1
+  make DESTDIR="${pkgdir}" install || return 1
+  install -dm 755 ${pkgdir}/usr/share/icons/hicolor/
+  cp -a resources/freedesktop/icons/* ${pkgdir}/usr/share/icons/hicolor/
+  install -m 644 -D resources/$pkgname.desktop ${pkgdir}/usr/share/applications/$pkgname.desktop
+  install -dm 755 ${pkgdir}/usr/share/mime/packages/
+  install -pm 644 resources/x-$pkgname.xml ${pkgdir}/usr/share/mime/packages/
+  
+}
+
