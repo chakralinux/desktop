@@ -1,0 +1,25 @@
+#
+# Chakra Packages for Chakra, part of chakra-project.org
+#
+# maintainer (i686): Phil Miller <philm[at]chakra-project[dog]org>
+# maintainer (x86_64): Manuel Tortosa <manutortosa[at]chakra-project[dot]org>
+# contributor: Adrián Chaves Fernández (Gallaecio) <adriyetichaves[at]gmail[dot]com>
+
+# include global config
+source ../_buildscripts/${current_repo}-${_arch}-cfg.conf
+
+pkgname=jdownloader
+pkgver=latest
+pkgrel=1
+pkgdesc='Download manager, written in Java, for one-click hosting sites like Rapidshare and Megaupload. Uses its own updater.'
+arch=('any')
+url='http://jdownloader.org/'
+license=('GPL')
+depends=('java-runtime>=1.5' 'wget' 'bash')
+install='jdownloader.install'
+source=('http://212.117.163.148/jd.sh')
+md5sums=('5be66194f939c9c060db6c061c09b421')
+
+build() {
+    install -Dm 755 $srcdir/jd.sh $pkgdir/usr/bin/$pkgname || return 1
+}
