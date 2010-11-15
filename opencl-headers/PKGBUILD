@@ -1,0 +1,45 @@
+#
+# Chakra Packages for Chakra, part of chakra-project.org
+#
+# contributor (x86_64): Giuseppe Calà <jiveaxe@gmail.com>
+
+#from AUR package http://aur.archlinux.org/packages.php?ID=26724
+
+# include global config
+source ../_buildscripts/${current_repo}-${_arch}-cfg.conf
+
+pkgname=opencl-headers
+pkgver=1.1
+pkgrel=1
+pkgdesc='OpenCL headers from Khronos.org'
+arch=('any')
+url='http://www.khronos.org/'
+license=('GPL')
+depends=()
+optdepends=()
+makedepends=()
+source=("http://www.khronos.org/registry/cl/api/${pkgver}/opencl.h"
+        "http://www.khronos.org/registry/cl/api/${pkgver}/cl_platform.h"
+        "http://www.khronos.org/registry/cl/api/${pkgver}/cl.h"
+        "http://www.khronos.org/registry/cl/api/${pkgver}/cl_ext.h"
+        "http://www.khronos.org/registry/cl/api/${pkgver}/cl_gl.h"
+        "http://www.khronos.org/registry/cl/api/${pkgver}/cl_gl_ext.h"
+        "http://www.khronos.org/registry/cl/api/${pkgver}/cl.hpp")
+md5sums=('8bc589e602246900e4435694d5bc4379'
+      '8a7fe4abbcab1b56683b23713da75601'
+      '00b0e17089ff618ad727c8e0328c22ca'
+      '1e9627453c1760b9d918f63848b4fbea'
+      '502d9509e7331c8fef68ee4fe843775f'
+      '3a34c61be65bf98a0d5f0cc74237dfd3'
+      '801cd16dda62704b450865d4e752a9c5')
+
+build() {
+   mkdir -p $pkgdir/usr/include/CL
+   install -m 644 $srcdir/opencl.h $pkgdir/usr/include/CL/
+   install -m 644 $srcdir/cl_platform.h $pkgdir/usr/include/CL/
+   install -m 644 $srcdir/cl.h $pkgdir/usr/include/CL/
+   install -m 644 $srcdir/cl_ext.h $pkgdir/usr/include/CL/
+   install -m 644 $srcdir/cl_gl.h $pkgdir/usr/include/CL/
+   install -m 644 $srcdir/cl_gl_ext.h $pkgdir/usr/include/CL/
+   install -m 644 $srcdir/cl.hpp $pkgdir/usr/include/CL/
+}
