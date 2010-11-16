@@ -1,0 +1,38 @@
+#
+# Chakra Packages for Chakra, part of chakra-project.org
+#
+# maintainer (i686): Phil Miller <philm[at]chakra-project[dog]org>
+# maintainer (x86_64): Manuel Tortosa <manutortosa[at]chakra-project[dot]org>
+
+# include global config
+
+pkgname=imagewriter
+pkgver=1.8
+pkgrel=1
+pkgrelsuse=1.11
+pkgdesc="SUSE Studio Imagewriter"
+arch=('i686' 'x86_64')
+url="http://kiwi.berlios.de"
+license=('GPLv2')
+depends=('coreutils' 'syslinux')
+makedepends=('rpmextract')
+provides=('imagewriter')
+source=(http://download.opensuse.org/distribution/11.3/repo/oss/suse/i586/$pkgname-$pkgver-$pkgrelsuse.i586.rpm)
+md5sums=('559e2a4bd84efac657ea618f3ac39ad0')
+
+[ "$CARCH" = "x86_64" ] && source=(http://download.opensuse.org/distribution/11.3/repo/oss/suse/x86_64/$pkgname-$pkgver-$pkgrelsuse.x86_64.rpm)
+[ "$CARCH" = "x86_64" ] && md5sums=('0b68baf0e8065fa7cabd593fe0b65f98')
+
+build() {
+    cd $startdir/pkg/
+
+    if [ "$CARCH" = "x86_64" ]; then
+        rpmextract.sh ${startdir}/src/$pkgname-$pkgver-$pkgrelsuse.x86_64.rpm
+    else
+        rpmextract.sh ${startdir}/src/$pkgname-$pkgver-$pkgrelsuse.i586.rpm
+    fi
+
+    chmod a+rx -R *
+    find . -type f -exec chmod -x \{\} \;
+    chmod +x usr/bin/imagewriter
+}
