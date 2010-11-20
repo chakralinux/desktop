@@ -1,0 +1,29 @@
+#
+# Chakra Packages for Chakra, part of chakra-project.org
+#
+# contributor (x86_64): Giuseppe Calà <jiveaxe@gmail.com>
+
+# include global config
+source ../_buildscripts/${current_repo}-${_arch}-cfg.conf
+
+pkgname=texi2html
+pkgver=1.82
+pkgrel=1
+pkgdesc="Converts texinfo documents to HTML"
+arch=('i686' 'x86_64')
+url="http://www.nongnu.org/texi2html/"
+license=('GPL')
+depends=('perl')
+
+source=(http://download.savannah.gnu.org/releases/texi2html/$pkgname-$pkgver.tar.gz)
+md5sums=('7ea537a8c81ffbf5421b39c0333e91df')
+
+build() {
+  cd $startdir/src/$pkgname-$pkgver
+  ./configure --prefix=/usr
+  sed -i "s|mandir = /usr/man|mandir = \${prefix}/share/man|g" Makefile
+  make || return 1
+  make prefix=$startdir/pkg/usr install
+  rm -r $startdir/pkg/usr/share/texinfo
+  rm -r $startdir/pkg/usr/share/info
+}
