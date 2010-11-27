@@ -23,22 +23,22 @@ pkgname=('kdelibs'
 
 arch=('i686' 'x86_64')
 pkgver=${_kdever}
-pkgrel=2
+pkgrel=1
 
 pkgdesc="split package"
 url="http://www.kde.org"
 license=('GPL' 'LGPL' 'FDL')
 
-options=('docs' '!splithdr')
+options=('docs' '!splithdr' 'splitdbg')
 
 makedepends=("${_qtpkg}>=${_qtver}"
 	"kde-common>=${_kdever}"
 	"oxygen-icons>=${_kdever}"
-	'pkgconfig' 'cmake' 'automoc4' 'intltool' 'avahi' 'libgl' 'hspell' 'libxslt'
+	'pkgconfig' 'cmake' 'automoc4' 'intltool' 'avahi' 'libgl' 'aspell' 'hspell' 'libxslt'
 	'shared-mime-info' 'hal' 'xz>=5.0.0' 'enchant' 'jasper' 'openexr' 'giflib'
-	'strigi' 'libxtst' 'soprano' 'ca-certificates' 'xdg-utils' 'qca' 'polkit-qt'
-	'libxss' 'phonon' 'shared-desktop-ontologies' 'attica' 'heimdal' 'libxcursor'
-	'hicolor-icon-theme')
+	'strigi' 'libxtst' 'soprano>=2.5.2' 'ca-certificates' 'xdg-utils' 'qca' 'polkit-qt>=0.96.1'
+	'libxss' 'phonon' 'shared-desktop-ontologies>=0.5' 'attica>=0.1.4' 'heimdal' 'libxcursor'
+	'hicolor-icon-theme' 'docbook-xsl' 'docbook-xml' 'dbusmenu-qt-git' 'grantlee-git')
 
 replaces=('arts' "kdelibs-experimental")
 
@@ -49,7 +49,7 @@ source=($_mirror/${_origname}-$_kdever.tar.bz2
 	04_add_arch_filetypes_to_kate_syntax_highlighting.patch
 	05_useragent-branding.patch)
 
-md5sums=('42813c549777b5b3d6440ef719ef8588'  # kdelibs-4.4.5.tar.bz2
+md5sums=(`grep ${_origname}-$_kdever.tar.bz2 ../kde-sc.md5 | cut -d" " -f1`
          '40ba51f0c50ced94dfffe667ec856950'  # 01_kdemod_tag.patch
          'e94450ba5430ea9c1e33bad9ae38ca2d'  # 02_kde_applications_menu.patch
          '53b85403e4dd8f9146933c52ca23243e'  # 03_chakra_menu.patch
@@ -102,9 +102,9 @@ package_kdelibs()
 	pkgdesc="KDE Core Libraries"
 	depends=("${_qtpkg}>=${_qtver}" "kde-common>=${_kdever}" "oxygen-icons>=${_kdever}"
 		 'shared-mime-info' 'hal' 'xz>=5.0.0' 'enchant' 'jasper' 'openexr' 'giflib'
-		 'strigi' 'libxtst' 'soprano' 'ca-certificates' 'xdg-utils' 'qca' 'polkit-qt'
-		 'libxss' 'phonon' 'shared-desktop-ontologies' 'attica' 'heimdal' 'libxcursor'
-		 'hicolor-icon-theme')
+		 'strigi' 'libxtst' 'soprano>=2.5.2' 'ca-certificates' 'xdg-utils' 'qca' 'polkit-qt>=0.96.1'
+		 'libxss' 'phonon' 'shared-desktop-ontologies>=0.5' 'attica>=0.1.4' 'heimdal' 'libxcursor'
+		 'hicolor-icon-theme' 'dbusmenu-qt-git' 'grantlee-git')
 
 	optdepends=('phonon-xine      : Xine Phonon backend (default)' 
 		    'phonon-gstreamer : GStreamer Phonon backend'
@@ -116,7 +116,7 @@ package_kdelibs()
 
 	provides=("${_origname}=${_kdever}")
 	conflicts=("kdemod-${_origname}")
-	replaces=('kdelibs-devel' 'kdelibs-experimental')
+	replaces=('kdelibs-experimental')
 	groups=("kde" "kde-minimal" "kde-complete" "kde-uninstall")
 	install=${_origname}.install
 
