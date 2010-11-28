@@ -52,15 +52,16 @@ makedepends=('pkgconfig' 'cmake' 'automoc4' 'boost' "kdelibs>=${_kdever}" "kdepi
              "kdepim-runtime>=4.4.7" 'gnokii' 'libxss' "kdebase-runtime>=${_kdever}" 'pilot-link' 
 	     'kde-agent' 'libindicate-qt>=0.2.2' 'docbook-xml')
 
-source=("ftp://ftp.gwdg.de/pub/x11/kde/stable/kdepim-4.4.7/src/${_origname}-4.4.7.tar.bz2")
-md5sums=('d70c71189fc6831dce473b7019e9097e') #  kdepim-4.4.7.tar.bz2
+source=("$_mirror/${_origname}-$_kdever.tar.bz2")
+
+md5sums=(`grep ${_origname}-$_kdever.tar.bz2 ../kde-sc.md5 | cut -d" " -f1`)
 
 #
 # build function
 #
 build()
 {
-	cd ${srcdir}/${_origname}-4.4.7
+	cd ${srcdir}/${_origname}-${_kdever}
 
 	msg "starting build ..."
 	cmake . -DCMAKE_BUILD_TYPE=${_build_type} \

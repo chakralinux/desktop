@@ -37,8 +37,9 @@ makedepends=('pkgconfig' 'cmake' 'automoc4')
 
 groups=("kde" "kde-complete" "kde-uninstall" "kde-minimal")
 
-source=("ftp://ftp.gwdg.de/pub/x11/kde/stable/kdepim-4.4.7/src/${_origname}-4.4.7.tar.bz2")
-md5sums=('c408db0e6b9531e68cfac041aaaaa1e4') #  kdepim-runtime-4.4.7.tar.bz2
+source=("$_mirror/${_origname}-$_kdever.tar.bz2")
+
+md5sums=(`grep ${_origname}-$_kdever.tar.bz2 ../kde-sc.md5 | cut -d" " -f1`)
 
 
 
@@ -52,13 +53,18 @@ build()
 	mkdir -p build
 	cd build
 
-	cmake ../${_origname}-4.4.7 \
+	cmake ../${_origname}-${_kdever} \
 		-DCMAKE_BUILD_TYPE=${_build_type} \
 		-DCMAKE_INSTALL_PREFIX=${_installprefix} \
 		-DCMAKE_SKIP_RPATH=ON \
 		-DCMAKE_{SHARED,MODULE,EXE}_LINKER_FLAGS='-Wl,--no-undefined -Wl,--as-needed'
 
 	make || return 1
+}
+
+package()
+{
+	cd ${srcdir}/${_origname}-${_kdever}
 
 	make DESTDIR=${pkgdir} install || return 1
 
