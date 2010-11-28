@@ -49,7 +49,7 @@ license=('GPL' 'LGPL' 'FDL')
 options=('docs' '!splithdr' 'splitdbg')
 
 makedepends=('pkgconfig' 'cmake' 'automoc4' 'boost' "kdelibs>=${_kdever}" "kdepimlibs>=${_kdever}"
-             "kdepim-runtime>=4.4.7" 'gnokii' 'libxss' "kdebase-runtime>=${_kdever}" 'pilot-link' 
+             "kdepim-runtime>=${pkgver}" 'gnokii' 'libxss' "kdebase-runtime>=${_kdever}" 'pilot-link' 
 	     'kde-agent' 'libindicate-qt>=0.2.2' 'docbook-xml')
 
 source=("$_mirror/${_origname}-$_kdever.tar.bz2")
@@ -89,9 +89,9 @@ package_kdepim-common()
 
 	# FIXME nepomuk_email_feeder disabled
 	#splitdirs="akonadi icons console kdgantt1 kleopatra kresources ksendemail libkdepim libkleo libkpgp libksieve messagecore messagelist messageviewer mimelib nepomuk_email_feeder ontologies plugins strigi-analyzer"
-	splitdirs="akonadi icons console kdgantt1 kleopatra kresources ksendemail libkdepim libkleo libkpgp libksieve messagecore messagelist messageviewer mimelib ontologies plugins strigi-analyzer"
+	splitdirs="akonadi_next icons console kdgantt2 kleopatra kresources ksendemail libkdepim libkleo libkpgp libksieve messagecore messagelist messageviewer ontologies plugins strigi-analyzer"
 		for i in ${splitdirs} ; do
-			cd ${srcdir}/${_origname}-4.4.7/${i}
+			cd ${srcdir}/${_origname}-${pkgver}/${i}
 			make DESTDIR=${pkgdir} install || return 1
 		done
 
@@ -121,7 +121,7 @@ package_kdepim-doc()
 
 	splitdirs="doc"
 		for i in ${splitdirs} ; do
-			cd ${srcdir}/${_origname}-4.4.7/${i}
+			cd ${srcdir}/${_origname}-${pkgver}/${i}
 			make DESTDIR=${pkgdir} install || return 1
 		done
 }
@@ -136,7 +136,7 @@ package_kdepim-akonadiconsole()
 
 	splitdirs="akonadiconsole"
 		for i in ${splitdirs} ; do
-			cd ${srcdir}/${_origname}-4.4.7/${i}
+			cd ${srcdir}/${_origname}-${pkgver}/${i}
 			make DESTDIR=${pkgdir} install || return 1
 		done
 }
@@ -151,7 +151,7 @@ package_kdepim-akregator()
 
 	splitdirs="akregator"
 		for i in ${splitdirs} ; do
-			cd ${srcdir}/${_origname}-4.4.7/${i}
+			cd ${srcdir}/${_origname}-${pkgver}/${i}
 			make DESTDIR=${pkgdir} install || return 1
 		done
 }
@@ -166,7 +166,7 @@ package_kdepim-blogilo()
 
 	splitdirs="blogilo"
 		for i in ${splitdirs} ; do
-			cd ${srcdir}/${_origname}-4.4.7/${i}
+			cd ${srcdir}/${_origname}-${pkgver}/${i}
 			make DESTDIR=${pkgdir} install || return 1
 		done
 }
@@ -181,7 +181,7 @@ package_kdepim-kaddressbook()
 
 	splitdirs="kaddressbook"
 		for i in ${splitdirs} ; do
-			cd ${srcdir}/${_origname}-4.4.7/${i}
+			cd ${srcdir}/${_origname}-${pkgver}/${i}
 			make DESTDIR=${pkgdir} install || return 1
 		done
 }
@@ -196,7 +196,7 @@ package_kdepim-kalarm()
 
 	splitdirs="kalarm"
 		for i in ${splitdirs} ; do
-			cd ${srcdir}/${_origname}-4.4.7/${i}
+			cd ${srcdir}/${_origname}-${pkgver}/${i}
 			make DESTDIR=${pkgdir} install || return 1
 		done
 }
@@ -211,7 +211,7 @@ package_kdepim-kitchensync()
 
 	splitdirs="kitchensync"
 		for i in ${splitdirs} ; do
-			cd ${srcdir}/${_origname}-4.4.7/${i}
+			cd ${srcdir}/${_origname}-${pkgver}/${i}
 			make DESTDIR=${pkgdir} install || return 1
 		done
 }
@@ -226,7 +226,7 @@ package_kdepim-kjots()
 
 	splitdirs="kjots"
 		for i in ${splitdirs} ; do
-			cd ${srcdir}/${_origname}-4.4.7/${i}
+			cd ${srcdir}/${_origname}-${pkgver}/${i}
 			make DESTDIR=${pkgdir} install || return 1
 		done
 }
@@ -241,7 +241,7 @@ package_kdepim-kmail()
 
 	splitdirs="kmail kmailcvt"
 		for i in ${splitdirs} ; do
-			cd ${srcdir}/${_origname}-4.4.7/${i}
+			cd ${srcdir}/${_origname}-${pkgver}/${i}
 			make DESTDIR=${pkgdir} install || return 1
 		done
 }
@@ -256,7 +256,7 @@ package_kdepim-kmobiletools()
 
 	splitdirs="kmobiletools"
 		for i in ${splitdirs} ; do
-			cd ${srcdir}/${_origname}-4.4.7/${i}
+			cd ${srcdir}/${_origname}-${pkgver}/${i}
 			make DESTDIR=${pkgdir} install || return 1
 		done
 }
@@ -271,7 +271,7 @@ package_kdepim-knode()
 
 	splitdirs="knode"
 		for i in ${splitdirs} ; do
-			cd ${srcdir}/${_origname}-4.4.7/${i}
+			cd ${srcdir}/${_origname}-${pkgver}/${i}
 			make DESTDIR=${pkgdir} install || return 1
 		done
 }
@@ -286,7 +286,7 @@ package_kdepim-knotes()
 
 	splitdirs="knotes"
 		for i in ${splitdirs} ; do
-			cd ${srcdir}/${_origname}-4.4.7/${i}
+			cd ${srcdir}/${_origname}-${pkgver}/${i}
 			make DESTDIR=${pkgdir} install || return 1
 		done
 }
@@ -301,7 +301,7 @@ package_kdepim-kontact()
 
 	splitdirs="kontact"
 		for i in ${splitdirs} ; do
-			cd ${srcdir}/${_origname}-4.4.7/${i}
+			cd ${srcdir}/${_origname}-${pkgver}/${i}
 			make DESTDIR=${pkgdir} install || return 1
 		done
 }
@@ -316,7 +316,7 @@ package_kdepim-korganizer()
 
 	splitdirs="korganizer"
 		for i in ${splitdirs} ; do
-			cd ${srcdir}/${_origname}-4.4.7/${i}
+			cd ${srcdir}/${_origname}-${pkgver}/${i}
 			make DESTDIR=${pkgdir} install || return 1
 		done
 
@@ -334,7 +334,7 @@ package_kdepim-ktimetracker()
 
 	splitdirs="ktimetracker"
 		for i in ${splitdirs} ; do
-			cd ${srcdir}/${_origname}-4.4.7/${i}
+			cd ${srcdir}/${_origname}-${pkgver}/${i}
 			make DESTDIR=${pkgdir} install || return 1
 		done
 }
@@ -349,7 +349,7 @@ package_kdepim-wizards()
 
 	splitdirs="wizards"
 		for i in ${splitdirs} ; do
-			cd ${srcdir}/${_origname}-4.4.7/${i}
+			cd ${srcdir}/${_origname}-${pkgver}/${i}
 			make DESTDIR=${pkgdir} install || return 1
 		done
 }
