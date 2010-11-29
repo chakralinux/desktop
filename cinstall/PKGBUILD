@@ -5,11 +5,8 @@
 # maintainer (x86_64): Manuel Tortosa <manutortosa[at]chakra-project[dot]org>
 # (c) 2010 Drake Justice
 
-# include global config
-source ../_buildscripts/${current_repo}-${_arch}-cfg.conf
-
 pkgname=cinstall
-pkgver=20101105
+pkgver=20101129
 pkgrel=1
 depends=('kdelibs' 'qt' 'squashfs-tools' 'xz-utils' 'fakechroot' 'unionfs-fuse')
 pkgdesc="Bundle Creator/Launcher and Package-Manager"
@@ -20,30 +17,23 @@ url="http://chakra-project.org/"
 optdepends=('akabei: for akabei support'
             'pacman: for pacman support')
 
-_gitroot="git://gitorious.org/cinstall/cinstall.git"
-_gitname="cinstall"
+source=(http://chakra-project.org/sources/${pkgname}/${pkgname}-${pkgver}.tar.xz)
+md5sums=(bf12c6cc241a297e8c367407c0032964)
+
+# create tarball: source PKGBUILD && mksource
+
+mksource() {
+  git clone git://gitorious.org/cinstall/cinstall.git
+  pushd cinstall
+  popd
+  tar -cvJf ${pkgname}-${pkgver}.tar.xz cinstall/*
+  md5sum ${pkgname}-${pkgver}.tar.xz
+}
 
 build() {
-cd "${srcdir}"
-        msg "Connecting to GIT server...."
+        cd "${srcdir}/cinstall"
 
-        if [ -d $_gitname ] ; then
-        cd $_gitname && git pull
-        msg "The local files are updated."
-        else
-	      git clone $_gitroot
-	      cd $_gitname && git checkout
-        fi
-        msg "GIT checkout done or server timeout"
-
-        msg "Starting make..."
-
-        rm -rf "${srcdir}/$_gitname-build"
-
-        cp -r "${srcdir}/$_gitname" "${srcdir}/$_gitname-build"
-        cd "${srcdir}/$_gitname-build/"
-
-        cmake ../$_gitname-build \
+        cmake  \
           -DCMAKE_INSTALL_PREFIX=/usr \
           -DCMAKE_BUILD_TYPE=Release
         make || return 1
