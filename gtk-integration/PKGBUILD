@@ -8,7 +8,7 @@
 source ../_buildscripts/${current_repo}-${_arch}-cfg.conf
 
 pkgname=gtk-integration
-pkgver=1.2
+pkgver=1.3
 pkgrel=1
 iconspkgver=2.5.0
 widgetpkgver=3.2
@@ -19,20 +19,22 @@ _colors=3.0
 pkgdesc="A bundles and gtk apps integration package for Chakra GNU/Linux"
 arch=('i686' 'x86_64')
 
-url="http://www.nanolx.org/home/item/75-oxygen-refit / http://de-look.org/content/show.php/Oxygen-Molecule+KDE+%26+GTK%2B+unified+theme?content=103741 / http://plasmasturm.org/programs/gtk-chtheme/"
+url="http://www.nanolx.org/home/item/75-oxygen-refit - http://kde-look.org/content/show.php/Oxygen-Molecule+KDE+%26+GTK%2B+unified+theme?content=103741 - 
+http://plasmasturm.org/programs/gtk-chtheme/ - http://code.google.com/p/princeamds-code/"
 license=('LGPL3' 'GPL')
 
-depends=('qt' 'oxygen-icons')
+depends=('qt' 'oxygen-icons' 'python2')
 makedepends=('findutils' 'imagemagick' 'liblqr')
-provides=('gtk-integration' 'oxygenrefit2-icon-theme' 'oxygen-molecule-theme' 'gtk-chtheme')
-replaces=('oxygenrefit2-icon-theme' 'oxygen-molecule-theme' 'gtk-chtheme')
+provides=('gtk-integration' 'oxygenrefit2-icon-theme' 'oxygen-molecule-theme' 'gtk-chtheme' 'gtk-icon-theme-changer')
 
 source=("http://download.tuxfamily.org/oxygenrefit2/oxygen-refit-2-$iconspkgver.tar.bz2"
         "http://kde-look.org/CONTENT/content-files/103741-Oxygen-Molecule_${widgetpkgver}_theme.tar.gz"
-	"http://plasmasturm.org/programs/gtk-chtheme/gtk-chtheme-$chthemever.tar.bz2")
+	"http://plasmasturm.org/programs/gtk-chtheme/gtk-chtheme-$chthemever.tar.bz2"
+	"http://chakra-project.org/sources/gtk-integration/gtk-icon-theme-changer.tar.gz")
 md5sums=('60f32f98d8d33d82db79b6bb934f0580'
          '90e852de1ab202fa0dafb038b829846d'
-	 'f688053bf26dd6c4f1cd0bf2ee33de2a')
+         'f688053bf26dd6c4f1cd0bf2ee33de2a'
+         'fb9519061e9cf26577d34b02171c256b')
 
 function create_install() {
 cat > "${startdir}/${pkgname}.install" <<EOF
@@ -70,7 +72,7 @@ EOF
 
 function build() {
 
-        # Icon theme
+	# Icon theme
 	cd ${srcdir}
 	install -d ${pkgdir}/usr/share/icons/
 	cp -rf "oxygen-refit-2-${iconspkgver}" ${pkgdir}/usr/share/icons/ || return 1
@@ -81,23 +83,31 @@ function build() {
 	mkdir -p "${pkgdir}/usr/bin"
 	mkdir -p "${pkgdir}/usr/share/themes"
 	mkdir -p "${pkgdir}/usr/share/apps/color-schemes"
+	tar -xzf kde${_kdever}-oxygen-molecule.tar.gz -C "${pkgdir}/usr/share/themes"
+	cp Oxygen-Molecule_${_colors}.colors "${pkgdir}/usr/share/apps/color-schemes"
+	install -m 755 flatmolecule "${pkgdir}/usr/bin/"
 
 	# Gtk-ChTheme
 	cd ${srcdir}/gtk-chtheme-$chthemever
-	make || return 1
-	install -m 755 gtk-chtheme "${pkgdir}/usr/bin/" || return 1
+        sed -i 's|-DGTK.*||' Makefile
+        sed -i 's|theme_list(g_.*|&\n\tread_theme_list(g_strconcat(g_get_user_data_dir(), "/themes", NULL));|' main.c
+        make || return 1
+	install -Dm755 gtk-chtheme ${pkgdir}/usr/bin/gtk-chtheme || return 1
+	
+	#Gtk-Icon-Theme-Changer
+	cd ${srcdir}
+	cp -a gtk-icon-theme-changer/gtk-icon-themes.py ${pkgdir}/usr/bin/gtk-icon-theme-changer
+	chmod -R 755 "$pkgdir"
+	
+	# Additional desktop files
 	cd ${startdir}
 	install -Dm 644 gtk-chtheme.desktop ${pkgdir}/usr/share/applications/gtk-chtheme.desktop || return 1
-	
+	install -Dm 644 gtk-icon-theme-changer.desktop ${pkgdir}/usr/share/applications/gtk-icon-theme-changer.desktop || return 1
 
 }
 
 function package() {
 
-	# Widget theme
-	tar -xzf kde${_kdever}-oxygen-molecule.tar.gz -C "${pkgdir}/usr/share/themes"
-	cp Oxygen-Molecule_${_colors}.colors "${pkgdir}/usr/share/apps/color-schemes"
-	install -m 755 flatmolecule "${pkgdir}/usr/bin/"
 	# Create the install file
 	create_install
 	export install="${pkgname}.install"
