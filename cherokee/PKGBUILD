@@ -7,7 +7,7 @@
 # include global config
 
 pkgname=cherokee
-pkgver=1.0.9
+pkgver=1.0.12
 pkgrel=1
 pkgdesc="A very fast, flexible and easy to configure Web Server"
 arch=('i686' 'x86_64')
@@ -27,13 +27,11 @@ backup=('etc/cherokee/cherokee.conf'
         'etc/logrotate.d/cherokee')
 source=(http://www.cherokee-project.com/download/1.0/$pkgver/cherokee-$pkgver.tar.gz
         cherokee.rc
-        cherokee.logrotate
-        r5734-get-rid-of-package-py.patch)
+        cherokee.logrotate)        
 options=('!libtool')
-md5sums=('d32c71c41845a41fcb7767e8e44bddc7'
+md5sums=('40a95ac6184641230ea1aea9892a1ea3'
          'a2d2b69c6220fab57cda4f531b680f9f'
-         '213069423f1c4a6abbb6e13a5b261bcf'
-         '9cf21a2d088d2f9be47759c7da9fc012')
+         '8d69341bd4002bffd69c6e82ff6c905f')
 
 build() {
   cd "$srcdir/$pkgname-$pkgver"
@@ -42,13 +40,13 @@ build() {
   sed -i -r 's|(%localstatedir%/log)|\1/cherokee|' cherokee.conf.sample.pre
 
   # http://code.google.com/p/cherokee/issues/detail?id=1034
-  patch -Np3 -E -i "$srcdir/r5734-get-rid-of-package-py.patch"
-  autoreconf -v
+  #patch -Np3 -E -i "$srcdir/r5734-get-rid-of-package-py.patch"
+  #autoreconf -v
 
   ./configure --prefix=/usr --sysconfdir=/etc --localstatedir=/var \
               --with-wwwroot=/srv/http --disable-static \
               --with-wwwuser=http --with-wwwgroup=http \
-              --enable-os-string="Arch Linux"
+              --enable-os-string="Chakra Linux"
   make
   make -j1 DESTDIR="$pkgdir" install
 
