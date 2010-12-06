@@ -41,13 +41,13 @@ pkgname=('kdepim-common'
 arch=('i686' 'x86_64')
 #pkgver=${_kdever}
 pkgver=4.4.8
-pkgrel=1
+pkgrel=2
 
 pkgdesc="split package"
 url="http://www.kde.org"
 license=('GPL' 'LGPL' 'FDL')
 
-options=('docs' '!splithdr' 'splitdbg' 'log')
+options=('docs' '!splithdr' 'splitdbg')
 
 makedepends=('pkgconfig' 'cmake' 'automoc4' 'boost' "kdelibs>=${_kdever}" "kdepimlibs>=${_kdever}"
              "kdepim-runtime>=${pkgver}" 'gnokii' 'libxss' "kdebase-runtime>=${_kdever}" 'pilot-link' 
@@ -119,7 +119,7 @@ package_kdepim-doc()
 	pkgdesc="KDE PIM - Documentation"
 	groups=("${_origname}" "kde-complete" "kde-doc" "kde-uninstall")
 	conflicts=("kdmeod-${_origname}-doc")
-	depends=("${_origname}-common>=${_kdever}")
+	depends=("${_origname}-common>=${pkgver}")
 
 	splitdirs="doc"
 		for i in ${splitdirs} ; do
@@ -132,7 +132,7 @@ package_kdepim-akonadiconsole()
 {
 	pkgdesc="Akonadi console"
 	groups=("kde-complete" "${_origname}" "kde-uninstall")
-	depends=("${_origname}-common>=${_kdever}")
+	depends=("${_origname}-common>=${pkgver}")
 	conflicts=("kdemod-${_origname}-akonadiconsole")
 	replaces=("kdepim-akonadiconsole-devel")
 	install=${_origname}.install
@@ -148,7 +148,7 @@ package_kdepim-akregator()
 {
 	pkgdesc="Newsfeed client"
 	groups=("kde" "kde-complete" "${_origname}" "kde-uninstall")
-	depends=("${_origname}-common>=${_kdever}")
+	depends=("${_origname}-common>=${pkgver}")
 	conflicts=("kdemod-${_origname}-akregator")
 	replaces=("kdepim-akregator-devel")
 	install=${_origname}.install
@@ -164,7 +164,7 @@ package_kdepim-blogilo()
 {
 	pkgdesc="Blogilo is a free/Open Source Blogging application, focused on simplicity and usability."
 	groups=("kde" "kde-complete" "${_origname}" "kde-uninstall")
-	depends=("${_origname}-common>=${_kdever}")
+	depends=("${_origname}-common>=${pkgver}")
 	conflicts=("kdemod-${_origname}-blogilo")
 	replaces=("kdepim-blogilo-devel")
 	install=${_origname}.install
@@ -180,7 +180,7 @@ package_kdepim-kaddressbook()
 {
 	pkgdesc="Addressbook"
 	groups=("kde" "${_origname}" "kde-complete" "kde-uninstall")
-	depends=("${_origname}-common>=${_kdever}")
+	depends=("${_origname}-common>=${pkgver}")
 	conflicts=("kdemod-${_origname}-kaddressbook")
 	replaces=('kdepim-kaddressbook-devel')
 	install=${_origname}.install
@@ -196,7 +196,7 @@ package_kdepim-kalarm()
 {
 	pkgdesc="Alarm App + Daemon"
 	groups=("kde-complete" "${_origname}" "kde-uninstall")
-	depends=("${_origname}-common>=${_kdever}")
+	depends=("${_origname}-common>=${pkgver}")
 	conflicts=("kdemod-${_origname}-kalarm")
 	install=${_origname}.install
 
@@ -211,7 +211,7 @@ package_kdepim-kitchensync()
 {
 	pkgdesc="Opensync synchronization gui"
 	groups=("kde-complete" "${_origname}" "kde-uninstall")
-	depends=("${_origname}-common>=${_kdever}" 'libopensync')
+	depends=("${_origname}-common>=${pkgver}" 'libopensync')
 	conflicts=("kdemod-${_origname}-kitchensync")
 	install=${_origname}.install
 
@@ -226,7 +226,7 @@ package_kdepim-kjots()
 {
 	pkgdesc="A small, handy program for keeping miscellaneous notes"
 	groups=("kde-complete" "${_origname}" "kde-uninstall")
-	depends=("${_origname}-common>=${_kdever}")
+	depends=("${_origname}-common>=${pkgver}")
 	conflicts=("kdemod-${_origname}-kjots")
 	install=${_origname}.install
 
@@ -241,7 +241,7 @@ package_kdepim-kmail()
 {
 	pkgdesc="A full-featured E-Mail client"
 	groups=("kde" "${_origname}" "kde-complete" "kde-uninstall")
-	depends=("${_origname}-common>=${_kdever}")
+	depends=("${_origname}-common>=${pkgver}")
 	conflicts=("kdemod-${_origname}-kmail")
 	replaces=('kdepim-kmail-devel')
 	install=${_origname}.install
@@ -257,7 +257,7 @@ package_kdepim-kmobiletools()
 {
 	pkgdesc="Sync your mobile phone"
 	groups=("kde-complete" "${_origname}" "kde-uninstall")
-	depends=("${_origname}-common>=${_kdever}" 'gnokii>=0.6.14')
+	depends=("${_origname}-common>=${pkgver}" 'gnokii>=0.6.14')
 	conflicts=("kdemod-${_origname}-kmobiletools")
 	install=${_origname}.install
 
@@ -272,7 +272,7 @@ package_kdepim-knode()
 {
 	pkgdesc="NNTP client"
 	groups=("kde-complete" "${_origname}" "kde-uninstall")
-	depends=("${_origname}-common>=${_kdever}")
+	depends=("${_origname}-common>=${pkgver}")
 	conflicts=("kdemod-${_origname}-knode")
 	install=${_origname}.install
 
@@ -287,7 +287,7 @@ package_kdepim-knotes()
 {
 	pkgdesc="Sticky notes for your Desktop"
 	groups=("kde" "${_origname}" "kde-complete" "kde-uninstall")
-	depends=("${_origname}-common>=${_kdever}")
+	depends=("${_origname}-common>=${pkgver}")
 	conflicts=("kdemod-${_origname}-knotes")
 	install=${_origname}.install
 
@@ -302,7 +302,7 @@ package_kdepim-kontact()
 {
 	pkgdesc="Groupware client and shell for other PIM applications"
 	groups=("${_origname}" "kde-complete" "kde-uninstall")
-	depends=("${_origname}-common>=${_kdever}" "${_origname}-kmail>=${_kdever}" "${_origname}-akregator>=${_kdever}" "${_origname}-kaddressbook>=${_kdever}" "${_origname}-kjots>=${_kdever}" "${_origname}-knotes>=${_kdever}" "${_origname}-korganizer>=${_kdever}" "${_origname}-ktimetracker>=${_kdever}" "${_origname}-wizards>=${_kdever}")
+	depends=("${_origname}-common>=${pkgver}" "${_origname}-kmail>=${pkgver}" "${_origname}-akregator>=${pkgver}" "${_origname}-kaddressbook>=${pkgver}" "${_origname}-kjots>=${pkgver}" "${_origname}-knotes>=${pkgver}" "${_origname}-korganizer>=${pkgver}" "${_origname}-ktimetracker>=${pkgver}" "${_origname}-wizards>=${pkgver}")
 	conflicts=("kdemod-${_origname}-kontact")
 	install=${_origname}.install
 
@@ -317,7 +317,7 @@ package_kdepim-korganizer()
 {
 	pkgdesc="Organizer and Planner"
 	groups=("kde" "${_origname}" "kde-complete" "kde-uninstall")
-	depends=("${_origname}-common>=${_kdever}")
+	depends=("${_origname}-common>=${pkgver}")
 	conflicts=("kdemod-${_origname}-korganizer")
 	install=${_origname}.install
 
@@ -335,7 +335,7 @@ package_kdepim-ktimetracker()
 {
 	pkgdesc="Time tracking software"
 	groups=("kde-complete" "${_origname}" "kde-uninstall")
-	depends=("${_origname}-common>=${_kdever}")
+	depends=("${_origname}-common>=${pkgver}")
 	conflicts=("kdemod-${_origname}-ktimetracker")
 	install=${_origname}.install
 
@@ -350,7 +350,7 @@ package_kdepim-wizards()
 {
 	pkgdesc="KDE groupware wizards"
 	groups=("kde-complete" "${_origname}" "kde-uninstall")
-	depends=("${_origname}-common>=${_kdever}")
+	depends=("${_origname}-common>=${pkgver}")
 	conflicts=("kdemod-${_origname}-wizards")
 	install=${_origname}.install
 
