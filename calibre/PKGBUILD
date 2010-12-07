@@ -1,0 +1,96 @@
+#
+# Apps Packages for Chakra, part of chakra-project.org
+#
+# contributor (x86_64): Giuseppe Calà <jiveaxe@gmail.com>
+
+# include global config
+source ../_buildscripts/${current_repo}-${_arch}-cfg.conf
+
+pkgname=calibre
+pkgver=0.7.32
+pkgrel=1
+pkgdesc="E-book library management application"
+arch=('i686' 'x86_64') 
+url="http://calibre.kovidgoyal.net/"
+license=('GPL3')
+
+depends=('python' 'python-distribute' 'python-imaging' 'libusb' 'pyqt' 'python-mechanize'
+         'imagemagick' 'dbus-python' 'python-lxml' 'beautiful-soup' 'python-dateutil'
+         'python-cssutils-beta' 'desktop-file-utils' 'shared-mime-info' 'python-dnspython' 
+         'podofo>=0.8.1-6' 'xdg-utils' 'cherrypy' 'python-pypdf' 'unrar' 'chmlib' 'poppler' 'poppler-qt' 'liblqr')
+
+install=calibre.install
+
+source=(http://downloads.sourceforge.net/project/calibre/${pkgver}/${pkgname}-${pkgver}.tar.gz
+	calibre-viewer.desktop
+	calibre-gui.desktop
+	calibre-mimetypes
+	calibre-viewer.png
+	calibre-gui.png)
+
+md5sums=('e76974f8e17f3083b2438a7a1bf5db12'
+	 '48cbd475bba57fab189f2892b41b4eab'
+	 'ce1cbcac605c478674186fbf764f3871'
+	 'd843e183b0b70a2f6fb029b2debe1b25'
+	 'b09cb48ec063e22eafd19e91c14d9466'
+	 '62bec48b2c4fae651590b420f02c0f8e')
+
+build() {
+	cd "${pkgname}"
+
+	rm -rf src/{cherrypy,pyPdf} || return 1
+
+	# Larryhaja patches
+	sed -ie "/self.setup_desktop_integration()/,/os.rmdir(config_dir)/d" src/calibre/linux.py || return 1
+	sed -ie "s|self.opts.staging_sharedir, 'man/man1'|self.opts.staging_root, 'usr/share/man/man1'|" src/calibre/linux.py || return 1
+	sed -ie "s|manpath, prog+'.1'+__appname__+'.bz2'|manpath, prog+'.1'+'.bz2'|" src/calibre/linux.py || return 1
+	sed -ie "s/ldflags = shlex.split(ldflags)/ldflags = shlex.split(ldflags) + ['-fPIC']/" setup/extensions.py || return 1
+	
+	sed -e "s:old_udev = '/etc:old_udev = '${pkgdir}/etc:" -i src/calibre/linux.py || return 1
+    
+	# Temp
+	perl -pe 'undef $/; s/if islinux:\n\n/\n/' src/calibre/linux.py > src/calibre/linux.py.tmp
+	mv -f src/calibre/linux.py.tmp src/calibre/linux.py
+
+	# Disable unnecessary privilege dropping
+	sed -e "s:if os.geteuid() == 0:if False and os.geteuid() == 0:" -i setup/install.py || return 1
+	
+	python2 setup.py build || return 1
+	#python setup.py install --root=${pkgdir} --prefix=/usr || return 1
+}
+
+package() {
+	cd ${pkgname}
+
+	mkdir -p ${pkgdir}/lib/python2.6/site-packages
+	python2 setup.py install --root=${pkgdir} --prefix=/usr \
+		--staging-bindir=${pkgdir}/usr/bin \
+		--staging-libdir=${pkgdir}/usr/lib \
+		--staging-sharedir=${pkgdir}/usr/share || return 1
+
+	find ${pkgdir} -type d -empty -delete
+
+
+	# Desktop integration
+	for de in calibre-viewer calibre-gui ; do
+		install -D -m644 "${srcdir}/${de}.desktop" "${pkgdir}/usr/share/applications/${de}.desktop"
+	done
+
+	# Correct icons
+	for icon in calibre-gui.png calibre-viewer.png ; do
+		install -D -m644 "${srcdir}/${icon}" "${pkgdir}/usr/share/pixmaps/${icon}"
+	done
+
+	# Decompress the man pages so makepkg will do it for us.
+	for decom in ${pkgdir}/usr/share/man/man1/*.bz2; do
+		bzip2 -d ${decom}
+	done
+
+	install -D -m644 "${srcdir}/calibre-mimetypes" "${pkgdir}/usr/share/mime/packages/calibre.xml"
+
+	sed -i -e "s|#![ ]*/usr/bin/python$|#!/usr/bin/python2|" \
+		-e "s|#![ ]*/usr/bin/env *python$|#!/usr/bin/env python2|" \
+		$( find "${pkgdir}" -type f -name "*.py" )
+
+	find "${pkgdir}/usr/bin" -type f -exec sed -i -e "s|#![ ]*/usr/bin/env *python$|#!/usr/bin/env python2|" {} +
+}
