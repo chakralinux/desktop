@@ -1,41 +1,66 @@
 #
-# Chakra Packages for Chakra, part of chakra-project.org
+# Games Packages for Chakra, part of chakra-project.org
 #
-# maintainer (i686): Phil Miller <philm[at]chakra-project[dog]org>
-# maintainer (x86_64): Manuel Tortosa <manutortosa[at]chakra-project[dot]org>
+# Maintainer: Adrián Chaves Fernández (Gallaecio) <adriyetichaves gmail.com>
 
 pkgname=openttd
-pkgver=1.0.4
-pkgrel=1
-pkgdesc='An engine for running Transport Tycoon Deluxe.'
+pkgver=1.0.5
+_gfxver=0.3.1
+_sfxver=0.2.3
+pkgrel=2
+pkgdesc="An engine for running Transport Tycoon Deluxe."
 arch=('i686' 'x86_64')
 url='http://www.openttd.org'
 license=('GPL')
-depends=('libpng' 'sdl' 'icu' 'fontconfig' 'hicolor-icon-theme' 'desktop-file-utils')
-install=openttd.install
-optdepends=('openttd-opengfx: free graphics' 
-            'openttd-opensfx: free soundset')
-source=("http://binaries.openttd.org/releases/${pkgver}/${pkgname}-${pkgver}-source.tar.bz2")
+depends=('desktop-file-utils' 'fontconfig' 'hicolor-icon-theme' 'icu' 'libpng' 'sdl')
+install=$pkgname.install
+source=("http://binaries.openttd.org/releases/$pkgver/$pkgname-$pkgver-source.tar.bz2"
+	"http://bundles.openttdcoop.org/opengfx/releases/$_gfxver/opengfx-$_gfxver.zip"
+	"http://bundles.openttdcoop.org/opensfx/releases/$_sfxver/opensfx-$_sfxver.zip")
+md5sums=('fc79f788e2be140948b972c32b0f1eec'
+         '47ebb29cfc43ae945eaa0fe17698551d'
+         '6e3a5cf97fe69e3a351c3e0615a14b04')
 
 build() {
-  cd ${pkgname}-${pkgver} 
+  cd $srcdir/$pkgname-$pkgver 
 
  ./configure \
     --prefix-dir=/usr \
-    --binary-name=${pkgname} \
+    --binary-name=$pkgname \
     --binary-dir=bin \
-    --data-dir=share/${pkgname} \
-    --install-dir=${pkgdir} \
-    --doc-dir=share/doc/${pkgname} \
+    --data-dir=share/$pkgname \
+    --install-dir=$pkgdir \
+    --doc-dir=share/doc/$pkgname \
     --menu-name="OpenTTD" \
-    --personal-dir=.${pkgname}    
+    --personal-dir=.$pkgname    
 
   make
 }
 
 package() {
-  cd ${pkgname}-${pkgver} 
+  cd $srcdir/$pkgname-$pkgver 
 
+  # Core.
   make install
+
+  # Graphics.
+  cd $srcdir/opengfx-$_gfxver
+
+        chmod 0644 *
+
+        mkdir -pm0755 $pkgdir/usr/share/$pkgname/data   
+
+        cp *.grf $pkgdir/usr/share/$pkgname/data/
+        cp *.obg $pkgdir/usr/share/$pkgname/data/
+
+  # Sounds.
+  cd $srcdir/opensfx-$_sfxver
+
+	chmod 0644 *
+
+        mkdir -pm0755 $pkgdir/usr/share/openttd/data   
+
+        cp opensfx.* $pkgdir/usr/share/openttd/data/
+        install -Dm644 license.txt $pkgdir/usr/share/licenses/${pkgname}/license
+        install -Dm644 readme.txt $pkgdir/usr/share/licenses/${pkgname}/readme
 }
-md5sums=('e11e81bee589c04abd3cc4f3fafcb2b1')
