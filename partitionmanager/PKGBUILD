@@ -15,23 +15,24 @@ url="https://sourceforge.net/projects/partitionman"
 license=('GPL2')
 depends=('kdebase-runtime' 'parted' 'libatasmart')
 makedepends=('cmake' 'automoc4' 'pkgconfig')
+conflicts=("tribe-partitionmanager")
 optdepends=('e2fsprogs: ext2/3/4 support'
 	    'xfsprogs: XFS support'
 	    'jfsutils: JFS support'
 	    'reiserfsprogs: Reiser support'
 	    'ntfsprogs: NTFS support'
 	    'dosfstools: FAT32 support')
-install=partitionmanager.install
+install=partitionmanager.install	    
 source=(tribe.patch)
 md5sums=('eaa8f712da2aaf3c4ee519b2bf97c6c7')
 
-_svntrunk=svn://anonsvn.kde.org/home/kde/trunk/extragear/sysadmin/partitionmanager
+#_svntrunk=svn://anonsvn.kde.org/home/kde/trunk/extragear/sysadmin/partitionmanager
 _svnmod=partitionmanager-svn
 
 build() {
   cd "${srcdir}"
 
-  svn co $_svntrunk $_svnmod
+  svn co svn://anonsvn.kde.org/home/kde/trunk/extragear/sysadmin/partitionmanager -r $pkgver $_svnmod
 
   msg "SVN checkout done or server timeout"
   msg "Starting make..."
@@ -44,8 +45,10 @@ build() {
   cmake -DCMAKE_INSTALL_PREFIX=/usr -DCMAKE_BUILD_TYPE=Release
 
   make || return 1
-  make DESTDIR="${pkgdir}" install || return 1
+}
 
-  rm -rf ${srcdir}/$_svnmod-build
+package() {
+  cd "${srcdir}/$_svnmod-build"
+  make DESTDIR="${pkgdir}" install || return 1
 }
 
