@@ -24,7 +24,7 @@ optdepends=('e2fsprogs: ext2/3/4 support'
 	    'dosfstools: FAT32 support')
 install=partitionmanager.install	    
 source=(tribe.patch)
-md5sums=('f897c9f163e8f9763abcf07fca6ceb4f')
+md5sums=('eaa8f712da2aaf3c4ee519b2bf97c6c7')
 
 #_svntrunk=svn://anonsvn.kde.org/home/kde/trunk/extragear/sysadmin/partitionmanager
 _svnmod=partitionmanager-svn
@@ -42,11 +42,13 @@ build() {
 
   patch -p1 < ${srcdir}/tribe.patch
 
-  cmake -DCMAKE_INSTALL_PREFIX=/usr -DCMAKE_BUILD_TYPE=RelWithDebInfo
+  cmake -DCMAKE_INSTALL_PREFIX=/usr -DCMAKE_BUILD_TYPE=Release
 
   make || return 1
-  make DESTDIR="${pkgdir}" install || return 1
+}
 
-  rm -rf ${srcdir}/$_svnmod-build
+package() {
+  cd "${srcdir}/$_svnmod-build"
+  make DESTDIR="${pkgdir}" install || return 1
 }
 
