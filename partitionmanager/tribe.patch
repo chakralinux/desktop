@@ -78,9 +78,28 @@ diff -aur partitionmanager_/src/backend/corebackendmanager.h partitionmanagerA/s
  	private:
  		CoreBackend* m_Backend;
 diff -aur partitionmanager_/src/CMakeLists.txt partitionmanagerA/src/CMakeLists.txt
---- partitionmanager_/src/CMakeLists.txt	2010-12-10 22:17:52.000000000 -0500
+--- partitionmanager_/src/CMakeLists.txt	2010-12-10 21:25:51.910000185 -0500
 +++ partitionmanagerA/src/CMakeLists.txt	2010-12-10 22:24:19.306666670 -0500
-@@ -47,28 +47,32 @@
+@@ -28,34 +28,51 @@
+ 	config/*.cpp
+ )
+ 
++file(GLOB partitionmanagerprivate_core_HDRS
++    core/*.h
++)
++file(GLOB partitionmanagerprivate_fs_HDRS
++    fs/*.h
++)
++file(GLOB partitionmanagerprivate_util_HDRS
++    util/*.h
++)
++file(GLOB partitionmanagerprivate_ops_HDRS
++    ops/*.h
++)
++
+ file(GLOB partitionmanagerprivate_UIFILES config/*.ui gui/*.ui)
+ 
+ kde4_add_ui_files(partitionmanagerprivate_SRCS ${partitionmanagerprivate_UIFILES})
  
  kde4_add_kcfg_files(partitionmanagerprivate_SRCS config.kcfgc)
  
@@ -109,6 +128,10 @@ diff -aur partitionmanager_/src/CMakeLists.txt partitionmanagerA/src/CMakeLists.
  
 -target_link_libraries(partitionmanager-bin partitionmanagerprivate ${KDE4_KDECORE_LIBS} ${KDE4_KDEUI_LIBS})
 +target_link_libraries(partitionmanager-bin tribepartitionmanager ${KDE4_KDECORE_LIBS} ${KDE4_KDEUI_LIBS})
++
++add_custom_target(partitionmanager ALL
++        COMMAND sed -e 's,@INSTALL_PATH@,${BIN_INSTALL_DIR},g' < ${CMAKE_CURRENT_SOURCE_DIR}/partitionmanager.in > ${CMAKE_CURRENT_BINARY_DIR}/partitionmanager
++)
  
 -if(UNIX)
 -	add_custom_target(partitionmanager ALL
@@ -116,10 +139,6 @@ diff -aur partitionmanager_/src/CMakeLists.txt partitionmanagerA/src/CMakeLists.
 -	)
 -	install(PROGRAMS ${CMAKE_CURRENT_BINARY_DIR}/partitionmanager DESTINATION ${BIN_INSTALL_DIR})
 -endif(UNIX)
-+add_custom_target(partitionmanager ALL
-+        COMMAND sed -e 's,@INSTALL_PATH@,${BIN_INSTALL_DIR},g' < ${CMAKE_CURRENT_SOURCE_DIR}/partitionmanager.in > ${CMAKE_CURRENT_BINARY_DIR}/partitionmanager
-+)
-+
 +install(PROGRAMS ${CMAKE_CURRENT_BINARY_DIR}/partitionmanager DESTINATION ${BIN_INSTALL_DIR})
  install(TARGETS partitionmanager-bin ${INSTALL_TARGETS_DEFAULT_ARGS})
  install(FILES gui/partitionmanagerui.rc DESTINATION ${DATA_INSTALL_DIR}/partitionmanager)
