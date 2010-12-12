@@ -9,7 +9,7 @@ source ../_buildscripts/${current_repo}-${_arch}-cfg.conf
 
 pkgname=skanlite
 pkgver=0.7
-pkgrel=1
+pkgrel=2
 pkgdesc="Image Scanning Application for KDE"
 arch=('i686' 'x86_64')
 url='http://www.kde.org'
@@ -28,4 +28,9 @@ build() {
     -DCMAKE_BUILD_TYPE=Release \
     -DCMAKE_INSTALL_PREFIX=/usr
   make || return 1
+}
+
+package() {
+  cd ${srcdir}/build
+  make DESTDIR=${pkgdir} install
 }
