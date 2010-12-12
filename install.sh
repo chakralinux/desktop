@@ -1,2 +1,2 @@
 #!/bin/bash
-pacman -U ./_repo/local/$1*
+sudo pacman -U ./_repo/local/$1*

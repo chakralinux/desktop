@@ -1,0 +1,46 @@
+#
+# Games Packages for Chakra, part of chakra-project.org
+#
+# Maintainer: Adrián Chaves Fernández (Gallaecio) <adriyetichaves gmail.com>
+
+# include global config
+source ../_buildscripts/${current_repo}-${_arch}-cfg.conf
+
+pkgname=0ad
+pkgver=alpha_3
+_pkgver=r08832-alpha
+pkgrel=1
+pkgdesc="Cross-platform, 3D and historically-based real-time strategy game."
+arch=('i686' 'x86_64')
+url="http://wildfiregames.com/0ad"
+license=('GPL2' 'CCPL')
+depends=('binutils' 'boost' 'crypto++' 'devil' 'enet-old' 'fam' 'libogg' 'libpng' 'libvorbis' 'libxml2' 'mesa' 'nasm' 'openal' 'python2' 'sdl' 'zip' 'zlib')
+makedepends=('cmake')
+changelog=ChangeLog
+source=("http://releases.wildfiregames.com/$pkgname-$_pkgver-unix-build.tar.xz"
+	"http://releases.wildfiregames.com/$pkgname-$_pkgver-unix-data.tar.xz"
+	"$pkgname.install"
+	"$pkgname.sh"
+	"$pkgname-nogtk.patch")
+md5sums=('b9df52751596633d9aab4cc3b253cb82'
+         '38abc29fc714946ed17ac86ac67fb614'
+         '92575ff82bd29369b7b0ee0ce307b39e'
+         'a86da49bf1ccc564997ece02b055fc7e'
+	 '7bb8119a4d611cdffa05177ea2603151')
+
+build(){
+  cd $srcdir/$pkgname-$_pkgver/build/workspaces || return 1
+  patch -uN update-workspaces.sh $srcdir/$pkgname-nogtk.patch || return 1
+  ./update-workspaces.sh || return 1
+
+  cd $srcdir/$pkgname-$_pkgver/build/workspaces/gcc || return 1
+
+  CONFIG=Debug make || return 1
+}
+
+package(){  
+  install -d $pkgdir/opt/$pkgname || return 1
+  cp -r $srcdir/$pkgname-$_pkgver/binaries/* $pkgdir/opt/$pkgname || return 1
+ 
+  install -D -m755 $srcdir/$pkgname.sh $pkgdir/usr/bin/$pkgname || return 1
+}
