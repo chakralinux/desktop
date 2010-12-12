@@ -1,2 +1,10 @@
 #!/bin/bash
-sudo pacman -U ./_repo/local/$1*
+
+PACKAGE_LIST=""
+
+for i in $*
+do
+  PACKAGE_LIST=$PACKAGE_LIST" ./_repo/local/"$i"*"
+done
+
+sudo pacman -U $PACKAGE_LIST
