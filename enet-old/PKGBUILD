@@ -1,0 +1,40 @@
+#
+# Games Packages for Chakra, part of chakra-project.org
+#
+# Maintainer: Adrián Chaves Fernández (Gallaecio) <adriyetichaves gmail.com>
+
+# include global config
+source ../_buildscripts/${current_repo}-${_arch}-cfg.conf
+
+pkgname=enet-old
+_pkgname=enet
+pkgver=1.2.2
+pkgrel=1
+pkgdesc='A relatively thin, simple and robust network communication layer on top of UDP. (Old Version)'
+arch=('i686' 'x86_64')
+provides=('enet')
+conflicts=('enet')
+url='http://enet.bespin.org/'
+license=('custom')
+changelog=ChangeLog
+source=("http://$_pkgname.bespin.org/download/$_pkgname-$pkgver.tar.gz")
+md5sums=('bae05cb752649e8c692944d5480fb861')
+
+build() {
+  cd $_pkgname-$pkgver
+
+  CFLAGS="-fPIC" ./configure --prefix=/usr
+  make
+  gcc -Wl,-soname,libenet.so.2 -shared -o libenet.so.2 *.o
+}
+
+package() {
+  cd $_pkgname-$pkgver
+
+  make prefix=$pkgdir/usr install
+
+  install -m 755 libenet.so.2 $pkgdir/usr/lib
+
+  # License:
+  install -D -m644 LICENSE $pkgdir/usr/share/licenses/$_pkgname/LICENSE
+}

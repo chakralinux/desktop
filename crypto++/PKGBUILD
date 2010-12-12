@@ -1,0 +1,29 @@
+#
+# Games Packages for Chakra, part of chakra-project.org
+#
+# Maintainer: Adrián Chaves Fernández (Gallaecio) <adriyetichaves gmail.com>
+
+# include global config
+source ../_buildscripts/${current_repo}-${_arch}-cfg.conf
+
+pkgname=crypto++
+pkgver=5.6.0
+_srcver=560
+pkgrel=1
+pkgdesc="A free C++ class library of cryptographic schemes."
+arch=('i686' 'x86_64')
+license=('custom')
+makedepends=('unzip')
+url="http://www.cryptopp.com/"
+source=(http://www.cryptopp.com/cryptopp${_srcver}.zip)
+md5sums=('36f35789ad60489d58003d3c849807e8')
+
+build() {
+  cd ${srcdir}
+  sed -i -e 's/^CXXFLAGS/#CXXFLAGS/' GNUmakefile
+  make -f GNUmakefile || return 1
+  install -d ${pkgdir}/usr/{lib,include/cryptopp}
+  install -m644 *.h ${pkgdir}/usr/include/cryptopp/
+  install -m644 libcryptopp.a ${pkgdir}/usr/lib/
+  install -D -m644 License.txt ${pkgdir}/usr/share/licenses/${pkgname}/LICENSE
+}
