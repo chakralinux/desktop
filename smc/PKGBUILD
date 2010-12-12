@@ -8,13 +8,12 @@ source ../_buildscripts/${current_repo}-${_arch}-cfg.conf
 
 pkgname=smc
 pkgver=1.9
-pkgrel=1
+pkgrel=2
 pkgdesc="Secret Maryo Chronicles"
 arch=('i686' 'x86_64')
 url="http://www.secretmaryo.org/"
 license=('GPL3')
-depends=('sdl_image' 'sdl_ttf' 'sdl_mixer' 'cegui' 'boost' 'libpng')
-makedepends=('autoconf' 'automake' 'boost')
+depends=('boost' 'cegui' 'gettext' 'glew' 'libogg' 'libpng' 'libvorbis' 'mesa' 'sdl' 'sdl_image' 'sdl_mixer' 'sdl_ttf')
 source=(http://downloads.sourceforge.net/smclone/$pkgname-$pkgver.tar.bz2
         http://downloads.sourceforge.net/smclone/SMC_Music_4.1_high.zip
         smc.desktop
@@ -33,6 +32,7 @@ build() {
 package() {
   cd $srcdir/$pkgname-$pkgver
   make install LDADD=-lpng DESTDIR=$pkgdir
+
   # install some freedesktop.org compatibility
   install -Dm644 $srcdir/$pkgname.desktop $pkgdir/usr/share/applications/$pkgname.desktop
   install -Dm644 $srcdir/$pkgname.png $pkgdir/usr/share/pixmaps/$pkgname.png
