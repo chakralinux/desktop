@@ -7,23 +7,30 @@
 source ../_buildscripts/${current_repo}-${_arch}-cfg.conf
 
 pkgname=crypto++
-pkgver=5.6.0
-_srcver=560
+_pkgname=cryptopp
+pkgver=5.6.1
+_pkgver=561
 pkgrel=1
-pkgdesc="A free C++ class library of cryptographic schemes."
+pkgdesc="C++ class library of cryptographic schemes."
 arch=('i686' 'x86_64')
+url="http://www.cryptopp.com"
 license=('custom')
 makedepends=('unzip')
-url="http://www.cryptopp.com/"
-source=(http://www.cryptopp.com/cryptopp${_srcver}.zip)
-md5sums=('36f35789ad60489d58003d3c849807e8')
+source=($url/$_pkgname$_pkgver.zip)
+md5sums=('96cbeba0907562b077e26bcffb483828')
 
 build() {
-  cd ${srcdir}
+  cd $srcdir
+
   sed -i -e 's/^CXXFLAGS/#CXXFLAGS/' GNUmakefile
   make -f GNUmakefile || return 1
-  install -d ${pkgdir}/usr/{lib,include/cryptopp}
-  install -m644 *.h ${pkgdir}/usr/include/cryptopp/
-  install -m644 libcryptopp.a ${pkgdir}/usr/lib/
-  install -D -m644 License.txt ${pkgdir}/usr/share/licenses/${pkgname}/LICENSE
+}
+
+package() {
+  install -d $pkgdir/usr/{lib,include/cryptopp}
+  install -m644 *.h $pkgdir/usr/include/$_pkgname/
+  install -m644 libcryptopp.a $pkgdir/usr/lib/
+
+  # License:
+  install -D -m644 License.txt $pkgdir/usr/share/licenses/$pkgname/LICENSE
 }
