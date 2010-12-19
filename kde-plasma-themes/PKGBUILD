@@ -1,0 +1,27 @@
+#
+# Chakra Packages for Chakra, part of chakra-project.org
+#
+# maintainer (i686): Phil Miller <philm[at]chakra-project[dog]org>
+# maintainer (x86_64): Manuel Tortosa <manutortosa[at]chakra-project[dot]org>
+
+# include global config
+source ../_buildscripts/${current_repo}-${_arch}-cfg.conf
+
+
+
+pkgname=kde-plasma-themes-neda
+pkgver=1.0
+pkgrel=1
+pkgdesc="Chakra NEDA Plasma theme"
+arch=('any')
+url="http://www.chakra-project.org"
+license=('GPL')
+source=('http://chakra-project.org/sources/neda/NEDA.tar.gz')
+md5sums=('81417a60f22584e6f8c1bbbad1f191a2')
+
+build() {
+  mkdir -p $startdir/pkg/usr/share/apps/desktoptheme
+  cd $startdir/src/NEDA/Plasma
+  cp -R NEDA $startdir/pkg/usr/share/apps/desktoptheme
+
+}

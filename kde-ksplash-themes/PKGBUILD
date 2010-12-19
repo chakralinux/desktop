@@ -18,7 +18,8 @@ pkgrel=2
 
 pkgbase="${_pkgprefix}-ksplash-themes"
 pkgname=("${_pkgprefix}-ksplash-themes-crunchy-branch-blue"
-	 "${_pkgprefix}-ksplash-themes-ashoc")
+	 "${_pkgprefix}-ksplash-themes-ashoc"
+	 "${_pkgprefix}-ksplash-themes-neda")
 
 pkgdesc="KDE KSplash-Themes for Chakra"
 url="http://chakra-project.org"
@@ -31,12 +32,14 @@ groups=("${_pkgprefix}" "${_pkgprefix}-complete" "${_pkgprefix}-uninstall" "${_p
 source=("http://chakra-project.org/sources/kde-ksplash-themes/kde-ksplash-themes-crunchy-branch-blue-1.0.tar.gz"
 	"http://chakra-project.org/sources/kde-ksplash-themes/kde-ksplash-themes-ashoc-1.0.tar.gz"
 	"http://chakra-project.org/sources/kde-ksplash-themes/ashoc-1.0-2-png.tar.gz"
-	"http://chakra-project.org/sources/kde-ksplash-themes/crunchy-branch-blue-1.0-png.tar.gz")
+	"http://chakra-project.org/sources/kde-ksplash-themes/crunchy-branch-blue-1.0-png.tar.gz"
+	'http://chakra-project.org/sources/neda/NEDA.tar.gz')
 
 md5sums=("0b10bc1f2e671aa895fae88f53f3c583"  #  kde-ksplash-themes-crunchy-branch-blue-1.0.tar.gz
 	 "d8ce77dd251138a9ef5a107542a086d6"  #  kde-ksplash-themes-ashoc-1.0.tar.gz
 	 "e9e16e1c6bc2661d922763b1fc76ffa8"  #  ashoc-1.0-2-png.tar.gz
-	 "b91f6203d846ba171771259d7689346d") #  crunchy-branch-blue-1.0-png.tar.gz
+	 "b91f6203d846ba171771259d7689346d"  #  crunchy-branch-blue-1.0-png.tar.gz
+	 '81417a60f22584e6f8c1bbbad1f191a2') #  NEDA.tar.gz
 
 
 #_gitroot="git://git.chakra-project.org/artwork/ksplash-themes.git"
@@ -130,5 +133,23 @@ package_kde-ksplash-themes-ashoc()
 	msg "Install theme"
 	mkdir -pv $pkgdir/usr/share/apps/ksplash/Themes/$_THEME
 	cp -Rv * $pkgdir/usr/share/apps/ksplash/Themes/$_THEME
+
+}
+
+package_kde-ksplash-themes-neda()
+{
+
+	pkgdesc="Chakra NEDA KSplash-Theme"
+	groups=("${_pkgprefix}" "${_pkgprefix}-complete" "${_pkgprefix}-uninstall" "${_pkgprefix}-minimal" "${_pkgprefix}-ksplash-themes")
+	_THEME="NEDA"
+	pkgrel=1
+	
+	cd ${srcdir}/$_THEME/Ksplash
+	
+	msg "Install theme"
+	mkdir -pv $pkgdir/usr/share/apps/ksplash/Themes/$_THEME
+	cp -Rv * $pkgdir/usr/share/apps/ksplash/Themes/$_THEME
+	# fix rc file
+	sed -i -e "s~KStarboard~$_THEME~g" $pkgdir/usr/share/apps/ksplash/Themes/$_THEME/Theme.rc
 
 }
