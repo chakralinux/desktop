@@ -1,0 +1,38 @@
+#
+# Games Packages for Chakra, part of chakra-project.org
+#
+# Contributor: Giuseppe Calà <jiveaxe@gmail.com>
+
+# include global config
+source ../_buildscripts/${current_repo}-${_arch}-cfg.conf
+
+pkgname=alienarena
+pkgver=7.50
+pkgrel=1
+_verdate=20101214
+pkgdesc="Multiplayer retro sci-fi deathmatch game"
+arch=('i686' 'x86_64')
+url='http://icculus.org/alienarena/rpa/'
+license=('GPL')
+depends=('curl' 'freetype2' 'libgl' 'libjpeg' 'libvorbis' 'libxxf86dga' 'libxxf86vm' 'mesa' 'ode' 'sdl' 'openal')
+source=(http://icculus.org/alienarena/Files/alienarena-7_50-linux${_verdate}.tar.gz
+	'alienarena.desktop')
+
+md5sums=('40e44cb49f5bc6ff6c8abcead897b29a' 
+         '7bc3fba786eb379fbcb3c9aecf106811')
+ 
+build() {
+  cd "$srcdir/$pkgname-$pkgver"
+
+  ./configure --prefix=/usr
+  make
+}
+
+package() {
+  cd "$srcdir/$pkgname-$pkgver"
+
+  make DESTDIR="$pkgdir" install
+  mv -f "$pkgdir/usr/bin/crx" "$pkgdir/usr/bin/$pkgname"
+  mv -f "$pkgdir/usr/bin/crx-ded" "$pkgdir/usr/bin/$pkgname-ded"
+  install -D -m644 "$srcdir/alienarena.desktop" "${pkgdir}/usr/share/applications/alienarena.desktop"
+}
