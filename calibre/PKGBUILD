@@ -13,27 +13,13 @@ pkgdesc="E-book library management application"
 arch=('i686' 'x86_64') 
 url="http://calibre.kovidgoyal.net/"
 license=('GPL3')
-
 depends=('python2' 'python-distribute' 'python-imaging' 'libusb' 'pyqt' 'python-mechanize'
          'imagemagick' 'dbus-python' 'python-lxml' 'beautiful-soup' 'python-dateutil'
          'python-cssutils-beta' 'desktop-file-utils' 'shared-mime-info' 'python-dnspython' 
          'podofo>=0.8.1-6' 'xdg-utils' 'cherrypy' 'python-pypdf' 'unrar' 'chmlib' 'poppler' 'poppler-qt' 'liblqr' 'icu' 'sip')
-
 install=calibre.install
-
-source=(http://downloads.sourceforge.net/project/calibre/${pkgver}/${pkgname}-${pkgver}.tar.gz
-	calibre-viewer.desktop
-	calibre-gui.desktop
-	calibre-mimetypes
-	calibre-viewer.png
-	calibre-gui.png)
-
-md5sums=('9b7557f8aed4538e59dff6a811b9eb7f'
-	 '48cbd475bba57fab189f2892b41b4eab'
-	 'ce1cbcac605c478674186fbf764f3871'
-	 'd843e183b0b70a2f6fb029b2debe1b25'
-	 'b09cb48ec063e22eafd19e91c14d9466'
-	 '62bec48b2c4fae651590b420f02c0f8e')
+source=(http://downloads.sourceforge.net/project/calibre/${pkgver}/${pkgname}-${pkgver}.tar.gz)
+md5sums=('9b7557f8aed4538e59dff6a811b9eb7f')
 
 build() {
 	cd "${pkgname}"
@@ -71,22 +57,10 @@ package() {
 	find ${pkgdir} -type d -empty -delete
 
 
-	# Desktop integration
-	for de in calibre-viewer calibre-gui ; do
-		install -D -m644 "${srcdir}/${de}.desktop" "${pkgdir}/usr/share/applications/${de}.desktop"
-	done
-
-	# Correct icons
-	for icon in calibre-gui.png calibre-viewer.png ; do
-		install -D -m644 "${srcdir}/${icon}" "${pkgdir}/usr/share/pixmaps/${icon}"
-	done
-
 	# Decompress the man pages so makepkg will do it for us.
 	for decom in ${pkgdir}/usr/share/man/man1/*.bz2; do
 		bzip2 -d ${decom}
 	done
-
-	install -D -m644 "${srcdir}/calibre-mimetypes" "${pkgdir}/usr/share/mime/packages/calibre.xml"
 
 	sed -i -e "s|#![ ]*/usr/bin/python$|#!/usr/bin/python2|" \
 		-e "s|#![ ]*/usr/bin/env *python$|#!/usr/bin/env python2|" \
