@@ -19,7 +19,7 @@ depends=( 'bzip2' 'curl' 'enca' 'faac' 'faad2' 'fontconfig' 'fribidi'
           'glew' 'hal' 'jasper' 'libcdio' 'libgl' 'libmad' 'libmms'
 	  'libmpeg2' 'libmysqlclient' 'libsamplerate' 'libxinerama'
 	  'libxrandr' 'libxtst' 'lzo2' 'sdl_image' 'sdl_mixer'
-	  'smbclient' 'wavpack' 'mesa-demos' 'xorg-utils' 'libmicrohttpd'
+	  'smbclient' 'wavpack' 'mesa' 'xorg-utils' 'libmicrohttpd'
 	  'libssh' 'libva' 'libmodplug')
 if [ "$_ext_python" != "disable" ]; then
   depends=( '${depends[@]}' 'python2' )
@@ -38,6 +38,9 @@ md5sums=('728fb514e5f43f27bb880305061b4e72'
 
 build() {
     cd "${srcdir}/xbmc-$pkgver"
+
+    # one core only
+    export MAKEFLAGS="-j2"
 
     # remove "--as-needed" from LDFLAGS
     unset LDFLAGS; LDFLAGS="-Wl,--hash-style=gnu"
@@ -77,8 +80,8 @@ package() {
     sed -i -e 's/^python \(.*\)FEH.py \(.*\)$/\1FEH.sh \2/' "${pkgdir}${_prefix}/bin/xbmc"
 
     # lsb_release fix
-    sed -i -e 's/which lsb_release &> \/dev\/null/\[ -f \/etc\/arch-release ]/g' "${pkgdir}${_prefix}/bin/xbmc"
-    sed -i -e "s/lsb_release -a 2> \/dev\/null | sed -e 's\/\^\/    \/'/cat \/etc\/arch-release/g" "${pkgdir}${_prefix}/bin/xbmc"
+    sed -i -e 's/which lsb_release &> \/dev\/null/\[ -f \/etc\/chakra-release ]/g' "${pkgdir}${_prefix}/bin/xbmc"
+    sed -i -e "s/lsb_release -a 2> \/dev\/null | sed -e 's\/\^\/    \/'/cat \/etc\/chakra-release/g" "${pkgdir}${_prefix}/bin/xbmc"
 
     # .desktop files
     install -D -m 0644 "${srcdir}/xbmc-$pkgver/tools/Linux/xbmc.desktop" "${pkgdir}${_prefix}/share/applications/xbmc.desktop"
