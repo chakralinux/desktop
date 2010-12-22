@@ -1,0 +1,41 @@
+# Maintainer: Adrián Chaves Fernández (Gallaecio) <adriyetichaves gmail.com>
+
+pkgname=supertuxkart-addons-tracks
+pkgver=0.7
+pkgrel=1
+pkgdesc="Additional tracks for SuperTuxKart."
+url="http://supertuxkart.sourceforge.net/"
+arch=('any')
+license=('GPL3' 'GPL2' 'CCPL-by' 'CCPL-by-sa' 'custom:Creative Commons Sampling Plus 1.0' 'custom:FreeArt License' 'custom:SoundSnap license' 'custom:Public Domain')
+depends=('supertuxkart>=0.7')
+makedepends=('unzip')
+conflicts=('supertuxkart-svn')
+source=() # No track supported yet.
+md5sums=()
+
+_addondir=$pkgdir/usr/share/games/supertuxkart/data/tracks
+
+build() {
+  cd $srcdir
+}
+
+package() {
+  cd $srcdir
+
+  IFS=$'\n' # Needed for 'find' to work properly, don't know why.
+  for addonfile in $(find -type l -printf "%f\n")
+  do
+    addon=${addonfile:0:${#addonfile}-4}
+    install -d $_addondir/$addon
+    cd $_addondir/$addon
+    cp $srcdir/$addonfile $_addondir/$addon/
+    unzip $addonfile
+    rm $addonfile
+
+    if [ $(find -maxdepth 1 -type f -printf "%f\n" | wc -l) == 0 ] ; then 
+      # Content was in a subfolder.
+      mv * ../
+      rmdir $_addondir/$addon
+    fi
+  done
+}

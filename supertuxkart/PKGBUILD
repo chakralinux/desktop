@@ -1,0 +1,30 @@
+# Maintainer: Adrián Chaves Fernández (Gallaecio) <adriyetichaves gmail.com>
+
+pkgname=supertuxkart
+_pkgname=SuperTuxKart
+pkgver=0.7
+pkgrel=1
+pkgdesc="Kart racing game featuring Tux and friends."
+url="http://supertuxkart.sourceforge.net/"
+arch=('i686' 'x86_64')
+license=('GPL3' 'GPL2' 'CCPL-by' 'CCPL-by-sa' 'custom:Creative Commons Sampling Plus 1.0' 'custom:FreeArt License' 'custom:SoundSnap license' 'custom:Public Domain')
+depends=('irrlicht>=1.7' 'libgl' 'openal')
+conflicts=('supertuxkart-svn')
+changelog=ChangeLog
+source=(http://downloads.sourceforge.net/project/$pkgname/$_pkgname/$pkgver/$pkgname-$pkgver-src.tar.bz2)
+md5sums=('2806f271e4d37fee5ad8ca166e1ad489')
+
+build() {
+  cd $srcdir/$pkgname-$pkgver
+  
+  ./configure \
+    --prefix=/usr
+
+  make
+}
+
+package() {
+  cd $srcdir/$pkgname-$pkgver
+  
+  make DESTDIR=$pkgdir install
+}
