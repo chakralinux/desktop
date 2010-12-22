@@ -20,7 +20,7 @@ optdepends=('vorbis-tools: OGG encoder'
 	'flac: FLAC encoder'
 	'lame: MP3 encoder')
 install=${pkgname}.install
-source=("http://kde.maniatek.de/${pkgname}/files/${pkgname}-${pkgver}.tar.bz2"
+source=("ftp://ftp.archlinux.org/other/${pkgname}/${pkgname}-${pkgver}.tar.bz2"
 	'useless-include.patch'
 	'gcc4.5.patch'
 	'vorbis1.4.patch')
@@ -39,7 +39,7 @@ build() {
   mkdir build
   cd build
   cmake ../${pkgname} \
-    -DCMAKE_BUILD_TYPE=Release \
+    -DCMAKE_BUILD_TYPE=Debug \
     -DCMAKE_INSTALL_PREFIX=/usr
   make
 }
