@@ -1,0 +1,25 @@
+#
+# Games Packages for Chakra, part of chakra-project.org
+#
+# Maintainer: Daniele Cocca <daniele.cocca [at] gmail.com>
+
+# include global config
+source ../_buildscripts/${current_repo}-${_arch}-cfg.conf
+
+pkgname=python-pyxml
+_pkgname=PyXML
+_unix_pkgname=pyxml
+pkgver=0.8.4
+pkgrel=1
+pkgdesc="Python DOM implementation for XML documents."
+arch=('any')
+license=('MIT' 'Python' 'ZPL' 'BSD')
+url="http://pyxml.sourceforge.net/"
+depends=('python2' 'python-pygame')
+source=(https://downloads.sourceforge.net/project/${_unix_pkgname}/${_unix_pkgname}/${pkgver}/${_pkgname}-${pkgver}.tar.gz)
+md5sums=('1f7655050cebbb664db976405fdba209')
+
+package() {
+  cd "${srcdir}/${_pkgname}-${pkgver}"
+  python setup.py install --root="${pkgdir}"
+}
