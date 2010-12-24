@@ -1,0 +1,68 @@
+#
+# Games Packages for Chakra, part of chakra-project.org
+#
+# Maintainer: Adrián Chaves Fernández (Gallaecio) <adriyetichaves gmail.com>
+
+# include global config
+source ../_buildscripts/${current_repo}-${_arch}-cfg.conf
+
+pkgname=supertuxkart-addons-karts
+pkgver=0.7
+pkgrel=1
+pkgdesc="Additional karts for SuperTuxKart."
+url="http://supertuxkart.sourceforge.net/"
+arch=('any')
+license=('custom:Unknown')
+depends=('supertuxkart>=0.7')
+makedepends=('unzip')
+conflicts=('supertuxkart-svn')
+source=("http://download.tuxfamily.org/stkaddons/file/karts/0.7 AUDAcity.zip"
+	"http://download.tuxfamily.org/stkaddons/file/karts/0.7 Frankie.zip"
+	"http://download.tuxfamily.org/stkaddons/file/karts/0.7 Penny.zip"
+	"http://download.tuxfamily.org/stkaddons/file/karts/Bigbuckbunny [Irrlicht-0.7].zip"
+	"http://download.tuxfamily.org/stkaddons/file/karts/Chinchila [Irrlicht-0.7].zip"
+	"http://download.tuxfamily.org/stkaddons/file/karts/Chuck [Irrlicht-0.7].zip"
+	"http://download.tuxfamily.org/stkaddons/file/karts/Mr Ice Block.zip"
+	"http://download.tuxfamily.org/stkaddons/file/karts/NEW Skirpy.zip"
+	"http://download.tuxfamily.org/stkaddons/file/karts/Plee the bear.zip"
+	"http://download.tuxfamily.org/stkaddons/file/karts/Python Kart.zip")
+md5sums=('6e727dc7eb56072499d9ef6725b6fa5b'
+         'ee4c7fa8d8bdaf37f82976a68bc7cbea'
+         '5354afe4469735f08eb37c7e12a34d7d'
+         '08c1171bf5b464eb97b25ba68abd823c'
+         '23337abc531889124ab3f8104d450cc8'
+         '570d2debf448ba3db8fffe9c5688e170'
+         '81aeb61dc4bc453c50d9048b4377e171'
+         '6182deac8c13e35837f36dbfa586d3ee'
+         '815767328f87201adea377564280832c'
+         '8954dba7ce6300db3eb1da00e049fc9f')
+
+_addondir=$pkgdir/usr/share/games/supertuxkart/data/karts
+
+build() {
+  cd $srcdir
+}
+
+package() {
+  cd $srcdir
+
+  IFS=$'\n' # Needed for 'find' to work properly, don't know why.
+  for addonfile in $(find -type l -printf "%f\n")
+  do
+    addon=${addonfile:0:${#addonfile}-4}
+    install -d $_addondir/$addon
+    cd $_addondir/$addon
+    cp $srcdir/$addonfile $_addondir/$addon/
+    unzip $addonfile
+    rm $addonfile
+
+    if [ $(find -maxdepth 1 -type f -printf "%f\n" | wc -l) == 0 ] ; then 
+      # Content was in a subfolder.
+      mv * ../
+      rmdir $_addondir/$addon
+    fi
+  done
+  
+  # Revome folders which are not actual add-ons:
+  rm -rf $_addondir/_*
+}
