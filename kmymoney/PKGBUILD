@@ -8,18 +8,20 @@
 source ../_buildscripts/${current_repo}-${_arch}-cfg.conf
 
 pkgname=kmymoney
-pkgver=4.5.1
+pkgver=4.5.2
 pkgrel=1
 pkgdesc="An finance manager for KDE4 with HBCI support"
 arch=('i686' 'x86_64')
 url="http://kmymoney2.sourceforge.net"
 license=('GPL')
-depends=('kdebase-workspace' 'aqbanking-qt4' 'boost' 'docbook-xml')
-makedepends=('cmake' 'automoc4' 'libofx' 'gwenhywfar')
+depends=('kdebase-workspace' 'aqbanking-qt4' 'boost' 'libpulse' 'libofx')
+makedepends=('cmake' 'automoc4' 'gwenhywfar' 'docbook-xsl')
 provides=()
 conflicts=(kmymoney2)
 replaces=(kmymoney2)
+
 source=(http://downloads.sourceforge.net/project/kmymoney2/KMyMoney-KDE4/$pkgver/$pkgname-$pkgver.tar.bz2)
+md5sums=('c4b46a3e111e90802add05c8c0ae2d03')
 
 build() {
   cd "$srcdir/$pkgname-$pkgver"
@@ -28,4 +30,3 @@ build() {
   make || return 1
   make DESTDIR="$pkgdir/" install
 }
-md5sums=('b84e4871019a7f44848e65702c4ce3a2') 
