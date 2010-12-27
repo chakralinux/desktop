@@ -1,0 +1,33 @@
+#
+# Games Packages for Chakra, part of chakra-project.org
+#
+# Maintainer: Daniele Cocca <daniele.cocca [at] gmail.com>
+
+# include global config
+source ../_buildscripts/${current_repo}-${_arch}-cfg.conf
+
+pkgname=ardentryst
+pkgver=1.7.1
+_pkgver=1.71
+pkgrel=1
+pkgdesc="Ardentryst is an action/RPG sidescroller, focused not just on fighting, but on story, and character development."
+arch=('any')
+license=('GPL' 'CCPL:by')
+url="http://jordan.trudgett.com/"
+depends=('python2' 'python-pygame' 'python-pyxml')
+source=(http://downloads.sourceforge.net/project/ardentryst/ardentryst/1.71%20Comet/${pkgname}${_pkgver}.tar.gz)
+md5sums=('eccdea0817ebb5996535834b842a5046')
+
+package() {
+  cd "${srcdir}/${pkgname}${_pkgver}"
+
+  # Create the needed directories
+  install -d "${pkgdir}/usr/bin" "${pkgdir}/usr/share/games" "${pkgdir}/usr/share/pixmaps"
+
+  # Actually copy the needed files
+  install icon.png "${pkgdir}/usr/share/pixmaps/ardentryst.png"
+  install -m 0755 ardentryst "${pkgdir}/usr/bin"
+
+  # Maybe replace this with coreutils' "install"?
+  cp -r . "${pkgdir}/usr/share/games/ardentryst"
+}
