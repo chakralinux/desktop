@@ -1,0 +1,31 @@
+#
+# Apps Packages for Chakra, part of chakra-project.org
+#
+# Maintainer: Adrián Chaves Fernández (Gallaecio) <adriyetichaves gmail.com>
+
+# include global config
+source ../_buildscripts/${current_repo}-${_arch}-cfg.conf
+
+pkgname=phppgadmin
+_pkgname=phpPgAdmin
+pkgver=5.0.2
+pkgrel=1
+pkgdesc="Web-based administration tool for PostgreSQL."
+arch=('any')
+url="http://sourceforge.net/projects/phppgadmin"
+license=('GPL2')
+depends=('php' 'postgresql')
+backup=('srv/http/phppgadmin/conf/config.inc.php'
+	'srv/http/phppgadmin/.htaccess')
+changelog=ChangeLog
+source=(http://downloads.sourceforge.net/sourceforge/$pkgname/$_pkgname-$pkgver.tar.gz)
+md5sums=('dfdbb5860847123413596292931a44f9')
+
+build() {
+  mkdir -p $pkgdir/srv/http/phppgadmin
+  cd $pkgdir/srv/http/phppgadmin
+
+  cp -ra $srcdir/$_pkgname-$pkgver/* . && \
+  cp ./conf/config.inc.php-dist ./conf/config.inc.php && \
+  echo "deny from all" >> .htaccess
+}
