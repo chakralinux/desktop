@@ -1,0 +1,38 @@
+#
+# Games Packages for Chakra, part of chakra-project.org
+#
+# Maintainer: Adrián Chaves Fernández (Gallaecio) <adriyetichaves gmail.com>
+
+# include global config
+source ../_buildscripts/${current_repo}-${_arch}-cfg.conf
+
+pkgname=perl-archive-zip
+_pkgname=Archive-Zip
+pkgver=1.30
+pkgrel=1
+pkgdesc="Perl module to create, manipulate, read, and write Zip archive files."
+arch=('i686' 'x86_64')
+license=('PerlArtistic' 'GPL')
+options=('!emptydirs')
+depends=('perl')
+url='http://search.cpan.org/~adamk/Archive-Zip/'
+source=("http://search.cpan.org/CPAN/authors/id/A/AD/ADAMK/$_pkgname-$pkgver.tar.gz")
+md5sums=('40153666e7538b410e001aa8a810e702')
+
+build() {
+  cd $srcdir/$_pkgname-$pkgver
+
+  PERL_MM_USE_DEFAULT=1 perl Makefile.PL INSTALLDIRS=vendor
+  make
+
+}
+
+package() {
+  cd $srcdir/$_pkgname-$pkgver
+
+  make install DESTDIR="$pkgdir/"
+
+  # Remove perllocal.pod and .packlist:
+  find "$pkgdir" -name perllocal.pod -delete
+  find "$pkgdir" -name .packlist -delete
+}

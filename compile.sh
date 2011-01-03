@@ -1,5 +1,5 @@
 #!/bin/bash
 cd $1
-../makepkg -sr
-rm -r pkg src *.pkg.*
+../makepkg -frs
+sudo rm -rf pkg src *.pkg.*
 cd ..

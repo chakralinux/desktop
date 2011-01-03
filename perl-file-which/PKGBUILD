@@ -1,0 +1,38 @@
+#
+# Games Packages for Chakra, part of chakra-project.org
+#
+# Maintainer: Adrián Chaves Fernández (Gallaecio) <adriyetichaves gmail.com>
+
+# include global config
+source ../_buildscripts/${current_repo}-${_arch}-cfg.conf
+
+pkgname=perl-file-sharedir
+_pkgname=File-ShareDir
+pkgver=1.02
+pkgrel=1
+pkgdesc="Perl module to locate per-dist and per-module shared files."
+arch=('i686' 'x86_64')
+license=('PerlArtistic' 'GPL')
+options=('!emptydirs')
+depends=('perl' 'perl-class-inspector')
+url='http://search.cpan.org/~adamk/File-ShareDir/'
+source=("http://search.cpan.org/CPAN/authors/id/A/AD/ADAMK/$_pkgname-$pkgver.tar.gz")
+md5sums=('edb4b9d418a03bf9b0cf6d0fa9585c3f')
+
+build() {
+  cd $srcdir/$_pkgname-$pkgver
+
+  PERL_MM_USE_DEFAULT=1 perl Makefile.PL INSTALLDIRS=vendor
+  make
+
+}
+
+package() {
+  cd $srcdir/$_pkgname-$pkgver
+
+  make install DESTDIR="$pkgdir/"
+
+  # Remove perllocal.pod and .packlist:
+  find "$pkgdir" -name perllocal.pod -delete
+  find "$pkgdir" -name .packlist -delete
+}
