@@ -1,0 +1,30 @@
+#
+# Games Packages for Chakra, part of chakra-project.org
+#
+# Maintainer: Adrián Chaves Fernández (Gallaecio) <adriyetichaves gmail.com>
+
+# include global config
+source ../_buildscripts/${current_repo}-${_arch}-cfg.conf
+
+pkgname=dunelegacy
+pkgver=0.96.1
+pkgrel=1
+pkgdesc="Updated clone of Westood Studios' Dune2."
+arch=('i686' 'x86_64')
+url="http://dunelegacy.sourceforge.net"
+license=('GPL2')
+depends=('gcc-libs' 'sdl_mixer')
+source=(http://downloads.sourceforge.net/sourceforge/$pkgname/$pkgname-$pkgver-src.tar.bz2)
+md5sums=('afe35eb859c8cd769535b3a37f4b803b')
+
+build() {
+  cd $srcdir/$pkgname-$pkgver
+  ./configure \
+    --prefix=/usr
+  make
+}
+
+package() {
+  cd $srcdir/$pkgname-$pkgver
+  make prefix=$pkgdir/usr install
+}
