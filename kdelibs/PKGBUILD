@@ -47,16 +47,14 @@ source=($_mirror/${_origname}-$_kdever.tar.bz2
 	02_kde_applications_menu.patch
 	03_chakra_menu.patch
 	04_add_arch_filetypes_to_kate_syntax_highlighting.patch
-	05_useragent-branding.patch
-	kde-l10n-el.patch)
+	05_useragent-branding.patch)
 
 md5sums=(`grep ${_origname}-$_kdever.tar.bz2 ../kde-sc.md5 | cut -d" " -f1`
          '40ba51f0c50ced94dfffe667ec856950'  # 01_kdemod_tag.patch
          'e94450ba5430ea9c1e33bad9ae38ca2d'  # 02_kde_applications_menu.patch
          '53b85403e4dd8f9146933c52ca23243e'  # 03_chakra_menu.patch
          'b125c42a85f1b265b7aa31fb7950b690'  # 04_add_arch_filetypes_to_kate_syntax_highlighting.patch
-         '116715c07effa490e24f946693b3ecf7'  # 05_useragent-branding.patch
-         '4270085af2c814b92a8afbf0ad14bcbe') # kde-l10n-el.patch
+         '116715c07effa490e24f946693b3ecf7')  # 05_useragent-branding.patch
 
 
 #
@@ -73,11 +71,6 @@ build()
 	patch -Np1 -i ${srcdir}/03_chakra_menu.patch || return 1
 	patch -Np1 -i ${srcdir}/04_add_arch_filetypes_to_kate_syntax_highlighting.patch || return 1
 	patch -Np0 -i ${srcdir}/05_useragent-branding.patch || return 1
-
-	# fixes
-	msg "applying fixes ..."
-	# will be fixed in 4.5.5
-	patch -Np4 -i ${srcdir}/kde-l10n-el.patch || return 1
 
 	cd ..
 
