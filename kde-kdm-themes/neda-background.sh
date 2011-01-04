@@ -19,15 +19,6 @@ echo "Search for your current screen resolution (this may flicker)"
 
 CURRENT_RES=`xrandr  | grep '*' | cut -b -16 | sed 's/ //g'`
 
-# Fix resolution
-if [ $CURRENT_RES = "1360x768" ];
-then
-  CURRENT_RES="1366x768"
-elif [ $CURRENT_RES = "1920x1080" ];
-then
-  CURRENT_RES="1920x1050"
-fi
-
 echo "Your current screen resolution is: $CURRENT_RES"
 echo "Try to link right backround ..."
 
