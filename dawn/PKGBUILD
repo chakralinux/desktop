@@ -6,9 +6,9 @@
 # include global config
 source ../_buildscripts/${current_repo}-${_arch}-cfg.conf
 
-pkgname=dawn-rpg
-_pkgname=dawn
-pkgver=0.0.37
+pkgname=dawn
+_pkgname=dawn-rpg
+pkgver=0.0.38
 pkgrel=1
 pkgdesc="2D RPG set in a fantasy world."
 arch=('i686' 'x86_64')
@@ -16,12 +16,13 @@ license=('GPL3')
 url="http://dawn-rpg.sourceforge.net/wiki"
 depends=('sdl' 'sdl_image' 'sdl_mixer' 'libgl' 'mesa' 'freeglut' 'freetype2' 'lua' 'toluapp')
 makedepends=('autoconf' 'automake')
+replaces=('dawn-rpg')
 changelog=ChangeLog
-source=("http://downloads.sourceforge.net/project/$pkgname/$pkgname/$_pkgname-$pkgver.tar.gz")
-md5sums=('a10a4eeee697be792fd9a4b06a9872d5')
+source=("http://downloads.sourceforge.net/project/$_pkgname/$_pkgname/$pkgname-$pkgver.tar.gz")
+md5sums=('ab07f03f2b8f04b00218f98153f29810')
 
 build() {
-  cd $srcdir/$_pkgname-$pkgver
+  cd $srcdir/$pkgname-$pkgver
 
 # Emptied for this configuration  
   LDFLAGS="" \
@@ -30,11 +31,11 @@ build() {
 }
 
 package() {
-  cd $srcdir/$_pkgname-$pkgver
+  cd $srcdir/$pkgname-$pkgver
 #   make DESTDIR=$pkgdir install
 
-  install -Dm 755 $srcdir/$_pkgname-$pkgver/$pkgname $pkgdir/usr/share/$pkgname/$pkgname
-  cp -R $srcdir/$_pkgname-$pkgver/data $pkgdir/usr/share/$pkgname/data
+  install -Dm 755 $srcdir/$pkgname-$pkgver/$_pkgname $pkgdir/usr/share/$pkgname/$pkgname
+  cp -R $srcdir/$pkgname-$pkgver/data $pkgdir/usr/share/$pkgname/data
 
   # Temporal launcher:
   mkdir -p $pkgdir/usr/bin
