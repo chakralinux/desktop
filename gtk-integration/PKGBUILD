@@ -9,9 +9,9 @@ source ../_buildscripts/${current_repo}-${_arch}-cfg.conf
 
 pkgname=gtk-integration
 pkgver=1.4
-pkgrel=1
+pkgrel=2
 iconspkgver=2.5.0
-widgetpkgver=0.7.7
+widgetpkgver=1.0.0
 chthemever=0.3.1
 _colors=3.0
 
@@ -31,11 +31,11 @@ provides=('gtk-integration' 'oxygenrefit2-icon-theme' 'gtk-oxygen-engine' 'gtk-c
 conflicts=('oxygenrefit2-icon-theme' 'gtk-oxygen-engine' 'gtk-oxygen-engine-git' 'gtk-chtheme' 'gtk-icon-theme-changer')
 
 source=("http://download.tuxfamily.org/oxygenrefit2/oxygen-refit-2-$iconspkgver.tar.bz2"
-        "http://kde-look.org/CONTENT/content-files/129715-gtk-oxygen-engine-$widgetpkgver.tgz"
+        "ftp://ftp.caliu.cat/pub/mirrors/kde/stable/oxygen-gtk/1.0.0/src/oxygen-gtk-$widgetpkgver.tar.bz2"
 	"http://plasmasturm.org/programs/gtk-chtheme/gtk-chtheme-$chthemever.tar.bz2"
 	"http://chakra-project.org/sources/gtk-integration/gtk-icon-theme-changer.tar.gz")
 md5sums=('60f32f98d8d33d82db79b6bb934f0580'
-	 'bc034cd906d67bc461e5fcb19971aff2'
+         '441398b4569ce0282c39e5c21cb16dfc'
          'f688053bf26dd6c4f1cd0bf2ee33de2a'
          'fb9519061e9cf26577d34b02171c256b')
 
@@ -71,7 +71,7 @@ function build() {
 	find -type f -print0 | xargs -0 chmod 644
 
         # Widget theme
-	cd $srcdir/gtk-oxygen-engine-$widgetpkgver
+	cd $srcdir/oxygen-gtk-$widgetpkgver
 	rm -rf build
 	mkdir build && cd build
 	cmake -DCMAKE_BUILD_TYPE=Release \
