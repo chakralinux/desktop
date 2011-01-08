@@ -1,5 +1,5 @@
 #!/bin/bash
 cd $1
-../makepkg -sr
+../makepkg -sr --noconfirm
 rm -r pkg src *.pkg.*
 cd ..
