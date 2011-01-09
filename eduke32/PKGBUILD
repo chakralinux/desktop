@@ -11,12 +11,12 @@ pkgname=eduke32
 _pkgdate=20100705
 _pkgsvnnum=1671
 pkgver=${_pkgdate}.${_pkgsvnnum}
-pkgrel=1
+pkgrel=2
 pkgdesc='An advanced port of the classic FPS "Duke Nukem 3D" by 3D Realms'
 arch=('i686' 'x86_64')
 url="http://eduke32.com/"
 license=('GPL' 'custom:BUILDLIC')
-depends=('sdl_mixer' 'gtk2')
+depends=('sdl_mixer' 'gtk2' 'libvorbis' 'timidity++')
 optdepends=('eduke32-hrp' 'eduke32-dukeplus')
 makedepends=('nasm')
 source=(http://dukeworld.duke4.net/${pkgname}/synthesis/${_pkgdate}-${_pkgsvnnum}/${pkgname}_src_${_pkgdate}-${_pkgsvnnum}.tar.bz2
@@ -27,15 +27,19 @@ md5sums=('a23eb30e9f30c3d7eb8a0718c90258f5'
          'a7273a79d30de8f3ee2e1df2441ed856')
 
 build() {
-    cd $srcdir/${pkgname}_${_pkgdate}-${_pkgsvnnum}
+    cd "${srcdir}/${pkgname}_${_pkgdate}-${_pkgsvnnum}"
    
     # Compile
     make debug="${CXXFLAGS}"
+}
+
+package() {
+    cd "${srcdir}/${pkgname}_${_pkgdate}-${_pkgsvnnum}"
 
     # Install bin, license, icon and desktop files
-    install -d ${pkgdir}/usr/bin
-    install -m 755 {eduke,mapster}32 ${pkgdir}/usr/bin/
-    install -Dm 644 buildlic.txt ${pkgdir}/usr/share/licenses/${pkgname}/BUILDLIC
-    install -Dm 644 $srcdir/${pkgname}.png ${pkgdir}/usr/share/pixmaps/${pkgname}.png
-    install -Dm 644 $srcdir/${pkgname}.desktop ${pkgdir}/usr/share/applications/${pkgname}.desktop
+    install -d "${pkgdir}/usr/bin"
+    install -m 755 {eduke,mapster}32 "${pkgdir}/usr/bin/"
+    install -Dm 644 buildlic.txt "${pkgdir}/usr/share/licenses/${pkgname}/BUILDLIC"
+    install -Dm 644 "${srcdir}/${pkgname}.png" "${pkgdir}/usr/share/pixmaps/${pkgname}.png"
+    install -Dm 644 "${srcdir}/${pkgname}.desktop" "${pkgdir}/usr/share/applications/${pkgname}.desktop"
 }
