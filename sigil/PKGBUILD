@@ -1,0 +1,47 @@
+#
+# Chakra Packages for Chakra, part of chakra-project.org
+#
+# contributor (x86_64): Giuseppe Calà <jiveaxe@gmail.com>
+
+# include global config
+source ../_buildscripts/${current_repo}-${_arch}-cfg.conf
+
+pkgname=sigil
+_pkgname=Sigil
+pkgver=0.3.3
+pkgrel=1
+pkgdesc="A multi-platform WYSIWYG ebook editor. It is designed to edit books in ePub format. "
+arch=('i686' 'x86_64') 
+url="http://code.google.com/p/sigil/"
+license=('GPL3')
+depends=('qt>=4.6.0')
+makedepends=('cmake')
+install=sigil.install
+source=(http://${pkgname}.googlecode.com/files/${_pkgname}-${pkgver}-Code.zip
+        ${pkgname}.desktop)
+md5sums=('a8573e877f3bcf250ee29bd934939e35'
+         '3034d3948eb01804db7a71f89a3eba7d')
+
+build() {
+  cd ${_pkgname}-${pkgver}-Code || return 1
+
+  mkdir build || return 1
+  cd build || return 1
+    cmake -G "Unix Makefiles" \
+      -DCMAKE_INSTALL_PREFIX=/usr \
+      -DCMAKE_C_FLAGS:STRING="${CFLAGS}" \
+      -DCMAKE_CXX_FLAGS:STRING="${CXXFLAGS}" \
+      -DCMAKE_BUILD_TYPE=Release .. || return 1
+
+    make VERBOSE=1 || return 1
+    make install DESTDIR="${pkgdir}" || return 1
+  cd ..
+
+  install -d -m 0755 ${pkgdir}/usr/share/applications || return 1
+  install -m 0644 ${srcdir}/${pkgname}.desktop ${pkgdir}/usr/share/applications || return 1
+
+  for _pic in 16 32 48 128 256; do
+    install -D -m 0644 src/Sigil/Resource_Files/icon/app_icon_${_pic}.png \
+      ${pkgdir}/usr/share/icons/hicolor/${_pic}x${_pic}/apps/${pkgname}.png || return 1
+  done
+}
