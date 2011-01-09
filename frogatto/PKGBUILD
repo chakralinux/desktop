@@ -1,0 +1,55 @@
+#
+# Games Packages for Chakra, part of chakra-project.org
+#
+# Maintainer: Adrián Chaves Fernández (Gallaecio) <adriyetichaves gmail.com>
+
+# include global config
+source ../_buildscripts/${current_repo}-${_arch}-cfg.conf
+
+pkgname=frogatto
+pkgver=1.0.3
+pkgrel=1
+pkgdesc="An old-school 2D platformer game, starring a certain quixotic frog."
+arch=('i686' 'x86_64')
+url="http://www.frogatto.com"
+license=("custom: GPL3 code, non-free data")
+depends=('boost' 'glew' 'libgl' 'libpng' 'mesa' 'sdl' 'sdl_image' 'sdl_mixer' 'sdl_ttf')
+source=("http://www.frogatto.com/files/$pkgname-$pkgver.tar.bz2"
+        "$pkgname.sh"
+        "$pkgname.desktop")
+md5sums=('1e9ffe729c78c88d1e29147694299531'
+         '9ed2c9ea59e95fe3c0b3ad49e58f8890'
+         'e31563b04748a39292a59aaad633ff58')
+
+build() {
+  cd $srcdir/$pkgname-$pkgver
+
+  sed -i 's/ccache //g' Makefile
+  sed -i 's/-lprofiler//g' Makefile
+  make game server
+}
+
+package() {
+  cd $srcdir/$pkgname-$pkgver
+
+  # Binaries:
+  install -Dm755 game $pkgdir/opt/$pkgname/game
+  install -Dm755 server $pkgdir/opt/$pkgname/server
+  
+  # Data:
+  mkdir -p $pkgdir/opt/frogatto/
+  cp -r data $pkgdir/opt/frogatto/
+  cp -r images $pkgdir/opt/frogatto/
+  cp -r music $pkgdir/opt/frogatto/
+  cp -r sounds $pkgdir/opt/frogatto/
+  install -D -m644 FreeMono.ttf $pkgdir/opt/frogatto/FreeMono.ttf
+  install -D -m644 DejaVuSans.ttf $pkgdir/opt/frogatto/DejaVuSans.ttf
+
+  # License: 
+  install -Dm644 LICENSE $pkgdir/usr/share/licenses/$pkgname/LICENSE
+
+  # Desktop integration and execution script:
+  cd $srcdir
+  install -DT -m755 $pkgname.sh $pkgdir/usr/bin/$pkgname
+  install -Dm644 $pkgname.desktop $pkgdir/usr/share/applications/$pkgname.desktop
+}
