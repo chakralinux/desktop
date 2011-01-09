@@ -3,26 +3,34 @@
 #
 # Maintainer: Adrián Chaves Fernández (Gallaecio) <adriyetichaves gmail.com>
 
+# include global config
+source ../_buildscripts/${current_repo}-${_arch}-cfg.conf
+
 pkgname=openttd
-pkgver=1.0.5
-_gfxver=0.3.1
+pkgver=1.1.0_beta3
+_pkgver=1.1.0-beta3
+_gfxver=0.3.2
 _sfxver=0.2.3
-pkgrel=2
-pkgdesc="An engine for running Transport Tycoon Deluxe."
+_msxver=0.3.1
+pkgrel=1
+pkgdesc="An engine for running Transport Tycoon Deluxe or alternative data files (FOSS ones included)."
 arch=('i686' 'x86_64')
 url='http://www.openttd.org'
-license=('GPL')
+license=('custom: Engine and graphics: GPLv2 or later. Sounds: some public domain, some Sampling Plus License. Music: both GPLv2 and Sampling Plus 
+License (dual licensing).')
 depends=('desktop-file-utils' 'fontconfig' 'hicolor-icon-theme' 'icu' 'libpng' 'sdl')
 install=$pkgname.install
-source=("http://binaries.openttd.org/releases/$pkgver/$pkgname-$pkgver-source.tar.bz2"
+source=("http://binaries.openttd.org/releases/$_pkgver/$pkgname-$_pkgver-source.tar.xz"
 	"http://bundles.openttdcoop.org/opengfx/releases/$_gfxver/opengfx-$_gfxver.zip"
-	"http://bundles.openttdcoop.org/opensfx/releases/$_sfxver/opensfx-$_sfxver.zip")
-md5sums=('fc79f788e2be140948b972c32b0f1eec'
-         '47ebb29cfc43ae945eaa0fe17698551d'
-         '6e3a5cf97fe69e3a351c3e0615a14b04')
+	"http://bundles.openttdcoop.org/opensfx/releases/$_sfxver/opensfx-$_sfxver.zip"
+	"http://bundles.openttdcoop.org/openmsx/releases/$_msxver/openmsx-$_msxver.zip")
+md5sums=('b403e7fbd49f127e14a3ab6f9b58ef0a'
+         '70a09cf9df7938a3c3f184d18fc4f0f1'
+         '6e3a5cf97fe69e3a351c3e0615a14b04'
+         '858b79d44aea6de5e15d9d1439e86cc3')
 
 build() {
-  cd $srcdir/$pkgname-$pkgver 
+  cd $srcdir/$pkgname-$_pkgver 
 
  ./configure \
     --prefix-dir=/usr \
@@ -38,29 +46,30 @@ build() {
 }
 
 package() {
-  cd $srcdir/$pkgname-$pkgver 
 
-  # Core.
+  # Engine.
+  cd $srcdir/$pkgname-$_pkgver 
   make install
 
   # Graphics.
   cd $srcdir/opengfx-$_gfxver
-
-        chmod 0644 *
-
-        mkdir -pm0755 $pkgdir/usr/share/$pkgname/data   
-
-        cp *.grf $pkgdir/usr/share/$pkgname/data/
-        cp *.obg $pkgdir/usr/share/$pkgname/data/
+  mkdir -pm0755 $pkgdir/usr/share/$pkgname/data   
+  chmod 0644 *
+  cp *.grf $pkgdir/usr/share/$pkgname/data/
+  cp *.obg $pkgdir/usr/share/$pkgname/data/
 
   # Sounds.
   cd $srcdir/opensfx-$_sfxver
+  mkdir -pm0755 $pkgdir/usr/share/$pkgname/data   
+  cp opensfx.* $pkgdir/usr/share/$pkgname/data/
 
-	chmod 0644 *
+    # Sounds license.
+    install -Dm644 license.txt $pkgdir/usr/share/licenses/$pkgname/"Sounds license.txt"
+    install -Dm644 readme.txt $pkgdir/usr/share/licenses/$pkgname/"Sounds readme.txt"
 
-        mkdir -pm0755 $pkgdir/usr/share/openttd/data   
-
-        cp opensfx.* $pkgdir/usr/share/openttd/data/
-        install -Dm644 license.txt $pkgdir/usr/share/licenses/${pkgname}/license
-        install -Dm644 readme.txt $pkgdir/usr/share/licenses/${pkgname}/readme
+  # Music.
+  cd $srcdir/openmsx-$_msxver
+  mkdir -pm0755 $pkgdir/usr/share/$pkgname/gm
+  cp openmsx.* $pkgdir/usr/share/$pkgname/gm/
+  cp *.mid $pkgdir/usr/share/$pkgname/gm/
 }
