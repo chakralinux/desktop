@@ -7,4 +7,4 @@ do
   PACKAGE_LIST=$PACKAGE_LIST" ./_repo/local/"$i"*"
 done
 
-sudo pacman -U $PACKAGE_LIST
+sudo pacman -U --noconfirm $PACKAGE_LIST
