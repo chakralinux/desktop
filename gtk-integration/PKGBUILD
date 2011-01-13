@@ -5,12 +5,12 @@
 # maintainer (x86_64): Manuel Tortosa <manutortosa[at]chakra-project[dot]org>
 
 pkgname=gtk-integration
-pkgver=2.0
+pkgver=2.1
 pkgrel=1
 iconspkgver=2.5.0
-widgetpkgver=1.0.0
+widgetpkgver=1.0.1
 _colors=3.0
-cgcver=1.0
+cgcver=1.1
 
 pkgdesc="A bundles and Gtk apps integration package for Chakra GNU/Linux"
 arch=('i686' 'x86_64')
@@ -20,18 +20,18 @@ url=("http://www.nanolx.org/home/item/75-oxygen-refit"
 
 license=('LGPL3' 'GPL')
 
-depends=('kdelibs' 'qt' 'oxygen-icons')
+depends=('kdelibs' 'qt' 'oxygen-icons' 'cairo')
 makedepends=('gcc' 'cmake' 'findutils' 'imagemagick' 'liblqr' 'gtk2')
-provides=('gtk-integration' 'oxygenrefit2-icon-theme' 'gtk-oxygen-engine' 'oxygen-gtk')
-conflicts=('oxygenrefit2-icon-theme' 'gtk-oxygen-engine' 'gtk-oxygen-engine-git' 'oxygen-gtk')
+provides=('gtk-integration' 'oxygenrefit2-icon-theme' 'oxygen-gtk')
+conflicts=('oxygenrefit2-icon-theme' 'oxygen-gtk')
 
 source=("http://download.tuxfamily.org/oxygenrefit2/oxygen-refit-2-$iconspkgver.tar.bz2"
-        "ftp://ftp.caliu.cat/pub/mirrors/kde/stable/oxygen-gtk/1.0.0/src/oxygen-gtk-$widgetpkgver.tar.bz2"
+        "ftp://ftp.caliu.cat/pub/mirrors/kde/stable/oxygen-gtk/$widgetpkgver/src/oxygen-gtk-$widgetpkgver.tar.bz2"
 	"http://chakra-project.org/sources/gtk-integration/chakra-gtk-config-${cgcver}.tar.gz")
 
 md5sums=('60f32f98d8d33d82db79b6bb934f0580'
-         '441398b4569ce0282c39e5c21cb16dfc'
-         '1eeebdee9afda81b462e909b7979886e')
+         '39b3b951e6adfb5aebeebb23c073d42c'
+         'cefdee8f6b696f5829c6566a375a4da0')
 
 function create_install() {
 cat > "${startdir}/${pkgname}.install" <<EOF
