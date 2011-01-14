@@ -1,0 +1,35 @@
+#
+# Apps Packages for Chakra, part of chakra-project.org
+#
+# contributor (x86_64): Giuseppe Calà <jiveaxe@gmail.com>
+
+# include global config
+source ../_buildscripts/${current_repo}-${_arch}-cfg.conf
+
+pkgname=kgraphviewer
+pkgver=2.1.1
+pkgrel=1
+pkgdesc="A Graphviz dot graph file viewer for KDE"
+arch=('i686' 'x86_64')
+url='http://opendesktop.org/content/show.php?content=23999'
+license=('GPL' 'FDL')
+depends=('kdebase-runtime' 'kdepimlibs' 'graphviz')
+makedepends=('cmake' 'automoc4' 'boost' 'docbook-xsl')
+install=${pkgname}.install
+source=("https://api.opensuse.org/public/source/home:milianw:kdeapps/${pkgname}/${pkgname}-${pkgver}.tar.gz")
+md5sums=('6cc548221d8a741d13929993615c00f3')
+
+build(){
+  cd ${srcdir}
+  mkdir build
+  cd build
+  cmake ../${pkgname}-${pkgver} \
+    -DCMAKE_BUILD_TYPE=Release \
+    -DCMAKE_INSTALL_PREFIX=/usr
+  make
+}
+
+package() {
+  cd ${srcdir}/build
+  make DESTDIR=${pkgdir} install
+}
