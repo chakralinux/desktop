@@ -4,51 +4,47 @@
 # maintainer (i686): Phil Miller <philm[at]chakra-project[dog]org>
 # maintainer (x86_64): Manuel Tortosa <manutortosa[at]chakra-project[dot]org>
 
-# include global config
-source ../_buildscripts/${current_repo}-${_arch}-cfg.conf
-
 pkgname=gtk-integration
-pkgver=1.4
-pkgrel=2
+pkgver=2.1
+pkgrel=1
 iconspkgver=2.5.0
-widgetpkgver=1.0.0
-chthemever=0.3.1
+widgetpkgver=1.0.1
 _colors=3.0
+cgcver=1.1
 
-pkgdesc="A bundles and gtk apps integration package for Chakra GNU/Linux"
+pkgdesc="A bundles and Gtk apps integration package for Chakra GNU/Linux"
 arch=('i686' 'x86_64')
 
 url=("http://www.nanolx.org/home/item/75-oxygen-refit"
-     "http://kde-look.org/content/show.php/gtk-oxygen-engine?content=129715"
-     "http://plasmasturm.org/programs/gtk-chtheme/"
-     "http://code.google.com/p/princeamds-code/")
+     "http://kde-look.org/content/show.php/gtk-oxygen-engine?content=129715")
 
 license=('LGPL3' 'GPL')
 
-depends=('kdelibs' 'qt' 'oxygen-icons' 'python2' 'gtk2' 'pygtk')
-makedepends=('gcc' 'cmake' 'findutils' 'imagemagick' 'liblqr')
-provides=('gtk-integration' 'oxygenrefit2-icon-theme' 'gtk-oxygen-engine' 'gtk-chtheme' 'gtk-icon-theme-changer')
-conflicts=('oxygenrefit2-icon-theme' 'gtk-oxygen-engine' 'gtk-oxygen-engine-git' 'gtk-chtheme' 'gtk-icon-theme-changer')
+depends=('kdelibs' 'qt' 'oxygen-icons' 'cairo')
+makedepends=('gcc' 'cmake' 'findutils' 'imagemagick' 'liblqr' 'gtk2')
+provides=('gtk-integration' 'oxygenrefit2-icon-theme' 'oxygen-gtk')
+conflicts=('oxygenrefit2-icon-theme' 'oxygen-gtk')
 
 source=("http://download.tuxfamily.org/oxygenrefit2/oxygen-refit-2-$iconspkgver.tar.bz2"
-        "ftp://ftp.caliu.cat/pub/mirrors/kde/stable/oxygen-gtk/1.0.0/src/oxygen-gtk-$widgetpkgver.tar.bz2"
-	"http://plasmasturm.org/programs/gtk-chtheme/gtk-chtheme-$chthemever.tar.bz2"
-	"http://chakra-project.org/sources/gtk-integration/gtk-icon-theme-changer.tar.gz")
+        "ftp://ftp.caliu.cat/pub/mirrors/kde/stable/oxygen-gtk/$widgetpkgver/src/oxygen-gtk-$widgetpkgver.tar.bz2"
+	"http://chakra-project.org/sources/gtk-integration/chakra-gtk-config-${cgcver}.tar.gz")
+
 md5sums=('60f32f98d8d33d82db79b6bb934f0580'
-         '441398b4569ce0282c39e5c21cb16dfc'
-         'f688053bf26dd6c4f1cd0bf2ee33de2a'
-         'fb9519061e9cf26577d34b02171c256b')
+         '39b3b951e6adfb5aebeebb23c073d42c'
+         'cefdee8f6b696f5829c6566a375a4da0')
 
 function create_install() {
 cat > "${startdir}/${pkgname}.install" <<EOF
 post_install() {
 	cat <<-'EOF'
-		#   GTK - Integration v$pkgver-$pkgrel
-		#  
-		#   If you want GTK+ apps or bundles run with root privileges to be themed as well
-		#   copy your \`~/.gtkrc-2.0-kde4' file to \`/root/gtkrc-2.0'
-		#
-		#   sudo cp ~/.gtkrc-2.0-kde4 /root/.gtkrc-2.0
+
+GTK - Integration v$pkgver-$pkgrel
+
+You can install our aditional engines:
+--------------------------------------
+gtk-integration-engine-molecule
+gtk-integration-engine-qtcurve
+               
 	EOF
 }
 
@@ -80,24 +76,13 @@ function build() {
 	make || return 1
 	make DESTDIR=${pkgdir} install
 
-	# Gtk-ChTheme
-	cd ${srcdir}/gtk-chtheme-$chthemever
-        sed -i 's|-DGTK.*||' Makefile
-        sed -i 's|theme_list(g_.*|&\n\tread_theme_list(g_strconcat(g_get_user_data_dir(), "/themes", NULL));|' main.c
-        make || return 1
-	install -Dm755 gtk-chtheme ${pkgdir}/usr/bin/gtk-chtheme || return 1
-	
-	#Gtk-Icon-Theme-Changer
-	cd ${srcdir}
-	cp -a gtk-icon-theme-changer/gtk-icon-themes.py ${pkgdir}/usr/bin/gtk-icon-theme-changer
-	chmod -R 755 "$pkgdir"
-}
-
-function package() {
-	# Additional desktop files
-	cd ${startdir}
-	install -Dm 644 gtk-chtheme.desktop ${pkgdir}/usr/share/applications/gtk-chtheme.desktop || return 1
-	install -Dm 644 gtk-icon-theme-changer.desktop ${pkgdir}/usr/share/applications/gtk-icon-theme-changer.desktop || return 1
+	# Chakra-Gtk-Config
+	cd ${srcdir}/chakra-gtk-config-${cgcver}
+	rm -rf build
+	mkdir build && cd build
+	cmake -DCMAKE_INSTALL_PREFIX=/usr .. || return 1
+	make || return 1
+	make DESTDIR=${pkgdir} install
 
 	# Create the install file
 	create_install
