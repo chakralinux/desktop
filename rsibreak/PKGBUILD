@@ -1,0 +1,35 @@
+#
+# Apps Packages for Chakra, part of chakra-project.org
+#
+# Maintainer: Adrián Chaves Fernández (Gallaecio) <adriyetichaves gmail.com>
+
+# include global config
+source ../_buildscripts/${current_repo}-${_arch}-cfg.conf
+
+pkgname=rsibreak
+pkgver=0.11
+pkgrel=1
+pkgdesc="A small utility to help prevent Repetive Strain Injury."
+arch=('i686' 'x86_64')
+url="http://www.rsibreak.org/"
+license=('GPL2')
+depends=('libxss' 'kdelibs' 'oxygen-icons')
+makedepends=('automoc4' 'cmake' 'docbook-xsl')
+# options=('libtool')
+changelog=ChangeLog
+source=("http://www.rsibreak.org/files/$pkgname-$pkgver.tar.bz2")
+md5sums=('d5dd540efd18900aa508eee381bcaafd')
+
+build() {
+  cd $srcdir/$pkgname-$pkgver
+  mkdir build && cd build
+  cmake -DCMAKE_INSTALL_PREFIX=/usr \
+        -DCMAKE_BUILD_TYPE=RelWithDebInfo \
+        ..
+  make
+}
+ 
+package() {
+  cd $srcdir/$pkgname-$pkgver/build
+  make DESTDIR=$pkgdir install
+}
