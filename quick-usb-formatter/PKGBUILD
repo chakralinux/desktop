@@ -1,0 +1,25 @@
+#
+# Apps for Chakra, part of chakra-project.org
+#
+# maintainer (i686): Phil Miller <philm[at]chakra-project[dog]org>
+# maintainer (x86_64): Manuel Tortosa <manutortosa[at]chakra-project[dot]org>
+
+pkgname=quick-usb-formatter
+pkgver=0.2
+pkgrel=1
+pkgdesc='A Quick and simple addon for format usb sticks using the device notifier for Chakra GNU/Linux'
+url='http://www.chakra-project.org'
+license=('GPL')
+arch=('i686' 'x86_64')
+depends=('qt' 'kdelibs')
+source=("http://chakra-project.org/sources/${pkgname}/${pkgname}-${pkgver}.tar.gz")
+md5sums=('94762d1498d0b82e3d1cecd8b70db19d')
+
+build() {
+	cd ${srcdir}/${pkgname}-${pkgver}
+	rm -rf build
+	mkdir build && cd build
+		cmake -DCMAKE_INSTALL_PREFIX=/usr .. || return 1
+		make || return 1
+		make DESTDIR=${pkgdir} install
+}
