@@ -1,0 +1,38 @@
+#
+# Games Packages for Chakra, part of chakra-project.org
+#
+# Maintainer: Adrián Chaves Fernández (Gallaecio) <adriyetichaves gmail.com>
+
+# include global config
+source ../_buildscripts/${current_repo}-${_arch}-cfg.conf
+
+pkgname=perl-algorithm-diff
+_pkgname=Algorithm-Diff
+pkgver=1.1902
+pkgrel=1
+pkgdesc="Perl module to Compute 'intelligent' differences between two files / lists."
+arch=('i686' 'x86_64')
+license=('PerlArtistic' 'GPL')
+options=('!emptydirs')
+depends=('perl')
+url='http://search.cpan.org/~tyemq/Algorithm-Diff/'
+source=("http://search.cpan.org/CPAN/authors/id/T/TY/TYEMQ/$_pkgname-$pkgver.tar.gz")
+md5sums=('ff3e17ae485f8adfb8857b183991fbce')
+
+build() {
+  cd $srcdir/$_pkgname-$pkgver
+
+  PERL_MM_USE_DEFAULT=1 perl Makefile.PL INSTALLDIRS=vendor
+  make
+
+}
+
+package() {
+  cd $srcdir/$_pkgname-$pkgver
+
+  make install DESTDIR="$pkgdir/"
+
+  # Remove perllocal.pod and .packlist:
+  find "$pkgdir" -name perllocal.pod -delete
+  find "$pkgdir" -name .packlist -delete
+}

@@ -1,0 +1,38 @@
+#
+# Games Packages for Chakra, part of chakra-project.org
+#
+# Maintainer: Adrián Chaves Fernández (Gallaecio) <adriyetichaves gmail.com>
+
+# include global config
+source ../_buildscripts/${current_repo}-${_arch}-cfg.conf
+
+pkgname=perl-probe-perl
+_pkgname=Probe-Perl
+pkgver=0.01
+pkgrel=1
+pkgdesc="Perl module to obtain information about the currently running perl interpreter."
+arch=('i686' 'x86_64')
+license=('PerlArtistic' 'GPL')
+options=('!emptydirs')
+depends=('perl')
+url='http://search.cpan.org/~kwilliams/Probe-Perl/'
+source=("http://search.cpan.org/CPAN/authors/id/K/KW/KWILLIAMS/$_pkgname-$pkgver.tar.gz")
+md5sums=('b6f613a7d07dde568a0d4b9570de47c3')
+
+build() {
+  cd $srcdir/$_pkgname-$pkgver
+
+  perl Build.PL installdirs=vendor destdir="$pkgdir/"
+  perl Build
+
+}
+
+package() {
+  cd $srcdir/$_pkgname-$pkgver
+
+  perl Build install
+
+  # Remove perllocal.pod and .packlist:
+  find "$pkgdir" -name perllocal.pod -delete
+  find "$pkgdir" -name .packlist -delete
+}

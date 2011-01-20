@@ -1,0 +1,34 @@
+#
+# Games Packages for Chakra, part of chakra-project.org
+#
+# Maintainer: Adrián Chaves Fernández (Gallaecio) <adriyetichaves gmail.com>
+
+# include global config
+source ../_buildscripts/${current_repo}-${_arch}-cfg.conf
+
+pkgname=kastling
+pkgver=0.9.0
+_pkgver=0.9.0~alpha
+pkgrel=1
+pkgdesc="Chess interface with Fics support."
+arch=('i686' 'x86_64')
+url="http://kde-apps.org/content/show.php?content=132703"
+license=('GPL3')
+makedepends=('kdelibs' 'qt')
+changelog=$pkgname.changelog
+source=(http://downloads.sourceforge.net/project/$pkgname/$pkgname-$_pkgver.tar.gz)
+md5sums=('ee8bb420fe50b9aebf0cf9ce42284214')
+
+build() {
+  cd $srcdir/$pkgname-$_pkgver
+  qmake
+  make
+}
+
+package() {
+  cd $srcdir/$pkgname-$_pkgver
+#  make DESTDIR=$pkgdir install
+
+  # Manual installation...
+  install -Dm 755 $srcdir/$pkgname-$_pkgver/$pkgname $pkgdir/usr/bin/$pkgname
+} 

@@ -1,0 +1,50 @@
+#
+# Games Packages for Chakra, part of chakra-project.org
+#
+# Maintainer: Adrián Chaves Fernández (Gallaecio) <adriyetichaves gmail.com>
+
+# include global config
+source ../_buildscripts/${current_repo}-${_arch}-cfg.conf
+
+pkgname=corsix-th
+_pkgname=CorsixTH
+pkgver=beta5
+_pkgver=Beta5
+pkgrel=1
+pkgdesc='Reimplementation of the game engine of Theme Hospital.'
+arch=('i686' 'x86_64')
+url='http://corsix-th.googlecode.com'
+license=('MIT')
+depends=('lua' 'sdl_mixer' 'timidity++')
+makedepends=('cmake')
+install=$pkgname.install
+source=("$url/files/$_pkgname-$_pkgver-Source.tar.gz"
+        "$pkgname.sh")
+sha1sums=('12c4793cca853db2f0b99722e67b57bbad163fb1'
+          '7fd6ae8db366b7f9c4671708e8ea7beb48f1bea3')
+
+build() {
+  cd $srcdir/$_pkgname-$_pkgver-Source
+
+  mkdir build && cd build
+  cmake -DCMAKE_INSTALL_PREFIX=/usr/share \
+        -DCMAKE_BUILD_TYPE=RelWithDebInfo \
+        ..
+  make
+# 	cmake \
+# 		-D CMAKE_INSTALL_PREFIX=/usr/share/ \
+# 		-D CMAKE_BUILD_TYPE=Release \
+# 		-Wno-dev .
+}
+
+package() {
+  cd $srcdir/$_pkgname-$_pkgver-Source/build
+
+  make DESTDIR=$pkgdir install
+
+  # “Link” to de actual executable:
+  install -Dm755 $srcdir/$pkgname.sh $pkgdir/usr/bin/$pkgname
+
+  # License:
+  install -Dm644 $srcdir/$_pkgname-$_pkgver-Source/CorsixTH/LICENSE.txt $pkgdir/usr/share/licenses/$pkgname/License.txt
+}
