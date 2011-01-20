@@ -1,0 +1,52 @@
+#
+# Chakra Packages for Chakra, part of chakra-project.org
+#
+# contributor (x86_64): Giuseppe Calà <jiveaxe@gmail.com>
+
+# include global config
+source ../_buildscripts/${current_repo}-${_arch}-cfg.conf
+
+pkgname=lilypond
+pkgver=2.12.3
+pkgrel=1
+pkgdesc="A music engraving program, devoted to producing the highest-quality sheet music possible."
+arch=('i686' 'x86_64')
+url="http://lilypond.org/"
+license=('GPL')
+depends=('fontconfig' 'freetype2' 'ghostscript'
+         'guile' 'pango' 'python')
+makedepends=('bison' 'flex' 'fontforge' 'gettext' 'gsfonts'
+             'perl' 'texinfo' 't1utils' 'texlive-core' 'netpbm')
+optdepends=('netpbm: building HTML documentation'
+            'imagemagick: building HTML documentation'
+            'ttf-kochi-substitute: building HTML documentation'
+            'texi2html>=1.82: building HTML documentation'
+            'rsync: installing HTML documentation')
+
+install=$pkgname.install
+source=(http://download.linuxaudio.org/${pkgname}/sources/v2.12/${pkgname}-${pkgver}.tar.gz
+	spacing-spanner-fix.patch)
+md5sums=('2303bf5f2ea8d4628f33a68f016f3866'
+	 'a8fb1950f4b4a13eb7e74660e0015756')
+
+
+build() {
+  cd "$srcdir/lilypond-$pkgver"
+
+  # Applying patch to spacing-spanner.cc
+  patch -Np1 -i ${srcdir}/spacing-spanner-fix.patch
+
+  # python2 fix
+  for file in $(find . -name '*.py' -print); do
+    sed -i 's_^#!.*/usr/bin/python_#!/usr/bin/python2_' $file
+    sed -i 's_^#!.*/usr/bin/env.*python_#!/usr/bin/env python2_' $file
+  done
+
+  ./configure --prefix=/usr
+  make all
+}
+
+package() {
+  cd "$srcdir/lilypond-$pkgver"
+  make DESTDIR="$pkgdir/" install
+}

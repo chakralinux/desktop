@@ -1,0 +1,43 @@
+#
+# Apps Packages for Chakra, part of chakra-project.org
+#
+# maintainer (x86_64): Giuseppe Calà <jiveaxe@gmail.com>
+
+# include global config
+source ../_buildscripts/${current_repo}-${_arch}-cfg.conf
+
+
+pkgname=qlandkartegt
+pkgver=0.20.2
+pkgrel=1
+pkgdesc="Use your GPS with Linux"
+arch=('i686' 'x86_64')
+url="http://www.qlandkarte.org"
+license=('GPL')
+depends=('proj>=4.6' 'gdal>1.5.0' 'qt>=4.4' 'xerces-c' 'mesa')
+optdepends=('garmindev: to connect garmin devices')
+makedepends=('cmake>=2.6')
+source=("http://downloads.sourceforge.net/$pkgname/$pkgname-$pkgver.tar.gz" 'qlandkartegt.desktop' 'qlandkartegt.menu')
+md5sums=('ac02b00e2bb7fa99fe9e315726f3f10e'
+         'ebc7b91d04557802ff4c28910d8b23c9'
+         'b82cab9c878d0d090b12e84cdbdb1705')
+
+
+build() {
+  mkdir -p $srcdir/build
+
+  cd $srcdir/build
+
+  cmake -DCMAKE_INSTALL_PREFIX=/usr -DCMAKE_BUILD_TYPE=Release ../$pkgname-$pkgver
+  make
+}
+
+package(){
+  cd $srcdir/build
+
+  make DESTDIR=$pkgdir install
+
+  install -D -m 755 $srcdir/$pkgname-$pkgver/src/icons/orig.backGlobe128x128.png $pkgdir/usr/share/pixmaps/$pkgname.png
+  install -D -m 755 $srcdir/$pkgname.desktop $pkgdir/usr/share/applications/$pkgname.desktop
+  install -D -m 755 $srcdir/$pkgname.menu $pkgdir/usr/share/menu/$pkgname.menu
+}

@@ -17,11 +17,15 @@ license=('GPL')
 depends=('kdebase-workspace')
 depends=('taglib')
 makedepends=('gcc' 'cmake' 'automoc4')
-source=("http://ftp.heanet.ie/mirrors/sourceforge/d/project/di/discburner/discburner-a12.tar.bz2")
-md5sums=('ba6cf98e76530b856b8e4e0f681ef9b0')
+source=("http://ftp.heanet.ie/mirrors/sourceforge/d/project/di/discburner/discburner-a12.tar.bz2"
+        "discburner_4.6.patch")
+md5sums=('ba6cf98e76530b856b8e4e0f681ef9b0'
+         'b703492eeb9c9fa5bb5e6437ed631f6b')
 
 build() {
   cd $srcdir/discburner
+
+  patch -p1 < ${srcdir}/*.patch
 
   mkdir -p build && cd build
   cmake -DCMAKE_INSTALL_PREFIX=/usr .. || return 1

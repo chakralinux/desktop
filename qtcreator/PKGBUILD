@@ -13,18 +13,19 @@ arch=('i686' 'x86_64')
 url="http://trolltech.com/developer/qt-creator"
 license=('LGPL')
 makedepends=()
-depends=('qt>=4.7')
+depends=('qt>=4.7.')
 optdepends=('qt-doc: for the integrated Qt documentation'
             'gdb: for the debugger')
 options=(docs)
 source=("http://get.qt.nokia.com/qtcreator/qt-creator-${pkgver}-src.zip"
 	"ftp://ftp.qt.nokia.com/qt/source/qt-everywhere-opensource-src-${_qtver}.tar.gz"
         qtcreator.desktop)
-        
+
 md5sums=('7b670968ec80d2d413ff22605a31a77d'
 	 '3a2f25b9b115037277f4fb759194a7a5'
          '2c3ffbd66845b37be9804f2966815a10')
          
+
 build() {
 
   export QTDIR="${srcdir}/qt-everywhere-opensource-src-${_qtver}"
@@ -51,4 +52,6 @@ package() {
   install -Dm644 ${srcdir}/qt-creator-${pkgver}-src/LGPL_EXCEPTION.TXT \
     ${pkgdir}/usr/share/licenses/qtcreator/LGPL_EXCEPTION.TXT
 }
+
+
 

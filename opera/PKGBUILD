@@ -1,33 +1,70 @@
-# Maintainer: ruario <ruario AT opera DOT com>
-# Contributor: BlackEagle < ike DOT devolder AT gmail DOT com >
-# Contributor: Daniel Isenmann <daniel AT archlinux DOT org>
-# Contributor: dorphell <dorphell AT archlinux DOT org>
-# Contributor: Sigitas Mazaliauskas <sigis AT gmail DOT com>
+#
+# Chakra Packages for Chakra, part of chakra-project.org
+#
+# maintainer (i686): Phil Miller <philm[at]chakra-project[dog]org>
+# maintainer (x86_64): Manuel Tortosa <manutortosa[at]chakra-project[dot]org>
+
 pkgname=opera
 pkgver=11.00
 _buildver=1156
 pkgrel=1
 pkgdesc="A fast and secure web browser and Internet suite."
 url="http://www.opera.com/browser/"
-depends=('gcc-libs' 'libxt' 'freetype2' 'libxext')
-optdepends=('gtk2: GTK integration'
-	    'kdebase-runtime: KDE4 integration'
-	    'gstreamer0.10-base-plugins: HTML5 open codecs support'
-	    'gstreamer0.10-good: HTML5 open codecs support'
-	    'gstreamer0.10-ffmpeg: HTML5 not so open codecs support'
-	    'gstreamer0.10-bad-plugins: HTML5 not so open codecs support')
+depends=('gcc-libs' 'gstreamer0.10-good' 'libxt' 'freetype2' 'libxext')
+optdepends=('gtk2: GTK integration' \
+	    'kdebase-runtime: KDE4 integration' \
+	    'gstreamer0.10-ffmpeg: HTML5 H.264 support' \
+	    'gstreamer0.10-bad-plugins: HTML5 H.264 support')
 install=${pkgname}.install
-options=(!strip !zipman)
+options=(!strip)
 license=('custom:opera')
 arch=('i686' 'x86_64')
-_opera=i386
-[ "$CARCH" = "x86_64" ] && _opera=x86_64
-source=(http://ftp.opera.com/pub/opera/linux/${pkgver/./}/opera-${pkgver}-${_buildver}.${_opera}.linux.tar.xz)
-sha256sums=('c49a97d68569f63c543fd66a340c4719c0ea2fd5703c5b3f2ec0e4ff0dcb60ed')
-[ "$CARCH" = "x86_64" ] && sha256sums=('5b3a9a1c5cf54e5e28313e8b0b4238857a166232674688e888ca9bf52e0a9aed')
+_barch=i386
+[ "$CARCH" = "x86_64" ] && _barch=x86_64
+source=(http://ftp.opera.com/pub/opera/linux/${pkgver/./}/opera-${pkgver}-${_buildver}.${_barch}.linux.tar.bz2)
+md5sums=('5a52a8fad55eb281975dfacee25221e6')
+[ "$CARCH" = "x86_64" ] && md5sums=('a91579341ae8eb66bd0b6a60947a0fab')
 
 build() {
-	opera-${pkgver}-${_buildver}.${_opera}.linux/install --prefix /usr --repackage ${pkgdir}/usr
-	install -D -m 644 ${pkgdir}/usr/share/${pkgname}/defaults/license.txt ${pkgdir}/usr/share/licenses/${pkgname}/license.txt
-}
+cd opera-${pkgver}-${_buildver}.${_barch}.linux
 
+# Create initial directory structure
+
+mkdir -p ${pkgdir}/usr/bin
+
+# Create 'opera' and 'opera-widget-manager' wrapper scripts and make them executable
+
+cat <<EOF > ${pkgdir}/usr/bin/opera
+#!/bin/sh 
+export OPERA_DIR=\${OPERA_DIR:-/usr/share/opera} 
+exec /usr/lib/opera/opera "\$@"
+EOF
+
+cat <<EOF > ${pkgdir}/usr/bin/opera-widget-manager
+#!/bin/sh 
+exec /usr/bin/opera --widgetmanager "\$@"
+EOF
+
+chmod 755 ${pkgdir}/usr/bin/opera*
+
+# Copy over 'lib/' and 'share/'
+
+cp -R lib ${pkgdir}/usr/
+cp -R share ${pkgdir}/usr/
+
+# Patch variables in the *.desktop, MIME and man files to reflect the final install location.
+
+sed -i ${pkgdir}/usr/share/applications/opera-browser.desktop -e "s|@@{PREFIX}|/usr|" -e "s|@@{[U_]*SUFFIX}||"
+sed -i ${pkgdir}/usr/share/applications/opera-widget-manager.desktop -e "s|@@{PREFIX}|/usr|" -e "s|@@{[U_]*SUFFIX}||"
+sed -i ${pkgdir}/usr/share/applications/opera-widget-installer.desktop -e "s|@@{PREFIX}|/usr|" -e "s|@@{[U_]*SUFFIX}||"
+sed -i ${pkgdir}/usr/share/mime/packages/opera-widget.xml -e "s|@@{[U_]*SUFFIX}||"
+sed -i ${pkgdir}/usr/share/mime/packages/opera-unite-application.xml -e "s|@@{[U_]*SUFFIX}||"
+gzip -d ${pkgdir}/usr/share/man/man1/opera.1.gz
+sed -i ${pkgdir}/usr/share/man/man1/opera.1 -e "s|@@{PREFIX}|/usr|" -e "s|@@{[U_]*SUFFIX}||"
+gzip -d ${pkgdir}/usr/share/man/man1/opera-widget-manager.1.gz
+sed -i ${pkgdir}/usr/share/man/man1/opera-widget-manager.1 -e "s|@@{PREFIX}|/usr|" -e "s|@@{[U_]*SUFFIX}||"
+
+# Place the license in the standard Chakra location.
+
+install -D -m 644 ${pkgdir}/usr/share/opera/defaults/license.txt ${pkgdir}/usr/share/licenses/${pkgname}/license.txt
+}

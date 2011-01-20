@@ -1,0 +1,44 @@
+#
+# Apps Packages for Chakra, part of chakra-project.org
+#
+# Maintainer: Adrián Chaves Fernández (Gallaecio) <adriyetichaves gmail.com>
+
+# include global config
+source ../_buildscripts/${current_repo}-${_arch}-cfg.conf
+
+pkgname=watchvideo
+_pkgname=WatchVideo
+pkgver=2.0.3
+pkgrel=1
+pkgdesc="Small application to play, download, convert to OGG or rip videos from Youtube-like sites."
+arch=('i686' 'x86_64')
+url="http://www.nongnu.org/watchvideo/"
+license=('custom:AGPLv3')
+depends=('pyqt' 'python2' 'python-getmediumurl' 'python-lxml')
+makedepends=('setuptools')
+optdepends=('ffmpeg: needed for all operations related with video conversion or ripping.'
+	    'ffmpeg2theora: needed to convert videos to Ogg Vorbis or Theora, but not for ripping audio.'
+	    'python-notify: uses the system’s default mechanism to show notification messages.')
+install=$pkgname.install
+changelog=ChangeLog
+source=("http://kde-apps.org/CONTENT/content-files/133133-$_pkgname-$pkgver.tar.gz")
+md5sums=('c5bf8845e3e578eb4ff184365a32e10e')
+
+build() {
+  cd $srcdir/$_pkgname-$pkgver
+}
+
+package() {
+  cd $srcdir/$_pkgname-$pkgver
+  
+  # Installation:
+  python2 setup.py install --root=$pkgdir/ --optimize=1
+
+  # Icon, .desktop entry and license:
+  install -Dm 644 $srcdir/$_pkgname-$pkgver/media/watchvideo.svg \
+		  $pkgdir/usr/share/pixmaps/watchvideo.svg
+  install -Dm 755 $srcdir/$_pkgname-$pkgver/watchvideo.desktop \
+		  $pkgdir/usr/share/applications/watchvideo.desktop
+  install -Dm 644 $srcdir/$_pkgname-$pkgver/COPYING \
+		  $pkgdir/usr/share/licenses/$pkgname/COPYING
+}

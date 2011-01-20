@@ -9,13 +9,13 @@ source ../_buildscripts/${current_repo}-${_arch}-cfg.conf
 
 pkgname=kid3
 pkgver=1.5
-pkgrel=1
+pkgrel=2
 pkgdesc="An MP3, Ogg/Vorbis and FLAC tag editor for KDE"
 arch=('i686' 'x86_64')
 url="http://kid3.sourceforge.net/"
 license=('GPL')
-depends=('id3lib' 'kdelibs' 'tunepimp')
-makedepends=('automoc4' 'cmake')
+depends=('id3lib' 'kdelibs' 'libmp4v2')
+makedepends=('automoc4' 'cmake' 'taglib' 'docbook-xsl')
 install=${pkgname}.install
 source=("http://downloads.sourceforge.net/$pkgname/$pkgname-$pkgver.tar.gz")
 md5sums=('a36b570cf981ab15595db50a67d4fd0f')
@@ -26,7 +26,8 @@ build() {
   cd build
   cmake ../${pkgname}-${pkgver} \
     -DCMAKE_INSTALL_PREFIX=/usr \
-    -DCMAKE_BUILD_TYPE=Release
+    -DCMAKE_BUILD_TYPE=Release \
+    -DWITH_TUNEPIMP=OFF
   make || return 1
 }
 

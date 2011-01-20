@@ -5,21 +5,21 @@
 # maintainer (x86_64): Manuel Tortosa <manutortosa[at]chakra-project[dot]org>
 
 pkgname=ktorrent
-pkgver=4.0.4
+pkgver=4.0.5
 pkgrel=1
-ktorver=4.0.4
+ktorver=4.0.5
 pkgdesc="A BitTorrent program for KDE"
 arch=('i686' 'x86_64')
 url="http://ktorrent.org"
 license=('GPL2')
-depends=('kdelibs' 'kdebase-runtime' 'kdepimlibs' 'qca' 'gmp' 'taglib' 'libktorrent>=1.0.4')
+depends=('kdelibs' 'kdebase-runtime' 'kdepimlibs' 'qca' 'gmp' 'taglib' 'libktorrent>=1.0.5')
 makedepends=('cmake' 'automoc4')
 source=(http://ktorrent.org/downloads/${ktorver}/ktorrent-${pkgver}.tar.bz2)
 options=('libtool')
-md5sums=('bbd5f1419d9ec1411f4191c871c57101')
+md5sums=('3a2e9a92d3a30d44b98ded0e4984ae8a')
 
 build() {
-	cd ${srcdir}/ktorrent-4.0.4
+	cd ${srcdir}/ktorrent-${ktorver}
 
 	cmake .	-DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=/usr
 	make || return 1
