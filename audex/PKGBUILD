@@ -20,31 +20,22 @@ optdepends=('vorbis-tools: OGG encoder'
 	'flac: FLAC encoder'
 	'lame: MP3 encoder')
 install=${pkgname}.install
-source=("http://kde.maniatek.com/audex/files/${pkgname}-${pkgver}.tar.xz"
-	'useless-include.patch'
-	'gcc4.5.patch'
-	'vorbis1.4.patch')
-md5sums=('20fdf9a0f89c08f44a151b6bdaab8782'
-	'1dd969a16dfd2434fac0e7700f954985'
-	'30fb51a1861e2ed77a5531fb23b76c1a'
-	'418b95d4cdfb99d3ce0a3c5f2c9b83a2')
+source=("http://kde.maniatek.com/audex/files/${pkgname}-${pkgver}.tar.xz")
+md5sums=('20fdf9a0f89c08f44a151b6bdaab8782')
 
 build() {
-  cd ${srcdir}/${pkgname}
-  patch -Np1 -i ${srcdir}/useless-include.patch
-  patch -Np1 -i ${srcdir}/gcc4.5.patch
-  patch -Np1 -i ${srcdir}/vorbis1.4.patch
-
   cd ${srcdir}
   mkdir build
   cd build
-  cmake ../${pkgname} \
-    -DCMAKE_BUILD_TYPE=Debug \
+
+  cmake ../${pkgname}-${pkgver} \
+    -DCMAKE_BUILD_TYPE=Release \
     -DCMAKE_INSTALL_PREFIX=/usr
   make
 }
 
 package() {
   cd ${srcdir}/build
+
   make DESTDIR=${pkgdir} install
 }
