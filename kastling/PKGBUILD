@@ -7,8 +7,7 @@
 source ../_buildscripts/${current_repo}-${_arch}-cfg.conf
 
 pkgname=kastling
-pkgver=0.9.0
-_pkgver=0.9.0~alpha
+pkgver=0.9.5
 pkgrel=1
 pkgdesc="Chess interface with Fics support."
 arch=('i686' 'x86_64')
@@ -16,19 +15,19 @@ url="http://kde-apps.org/content/show.php?content=132703"
 license=('GPL3')
 makedepends=('kdelibs' 'qt')
 changelog=$pkgname.changelog
-source=(http://downloads.sourceforge.net/project/$pkgname/$pkgname-$_pkgver.tar.gz)
-md5sums=('ee8bb420fe50b9aebf0cf9ce42284214')
+source=(http://downloads.sourceforge.net/project/$pkgname/$pkgname-$pkgver-src.tar.gz)
+md5sums=('81a7dc7b9dc81984c0d97de74022c401')
 
 build() {
-  cd $srcdir/$pkgname-$_pkgver
+  cd $srcdir/$pkgname-$pkgver-src
   qmake
   make
 }
 
 package() {
-  cd $srcdir/$pkgname-$_pkgver
+  cd $srcdir/$pkgname-$pkgver-src
 #  make DESTDIR=$pkgdir install
 
   # Manual installation...
-  install -Dm 755 $srcdir/$pkgname-$_pkgver/$pkgname $pkgdir/usr/bin/$pkgname
+  install -Dm 755 $srcdir/$pkgname-$pkgver-src/$pkgname $pkgdir/usr/bin/$pkgname
 } 

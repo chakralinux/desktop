@@ -7,27 +7,29 @@
 source ../_buildscripts/${current_repo}-${_arch}-cfg.conf
 
 pkgname=wesnoth
-pkgver=1.9.4
+pkgver=1.8.5
 pkgrel=1
 pkgdesc="A turn-based strategy game on a fantasy world."
 arch=('i686' 'x86_64')
-license=('GPL2')
+license=('GPL')
 url="http://www.wesnoth.org/"
-depends=('boost' 'freetype2' 'fribidi' 'gcc-libs' 'libvorbis' 'lua' 'pango' 'sdl_image' 'sdl_mixer' 'sdl_net' 'sdl_ttf')
-makedepends=('cmake')
-source=("http://downloads.sourceforge.net/sourceforge/$pkgname/$pkgname-$pkgver.tar.bz2")
-md5sums=('1dea34208d96b5cd0c7f77e6e8610e51')
+depends=('freetype2' 'fribidi' 'gcc-libs' 'libvorbis' 'lua' 'pango' 'sdl_image' 'sdl_mixer' 'sdl_net' 'sdl_ttf')
+makedepends=('boost')
+install=wesnoth.install
+source=(http://downloads.sourceforge.net/sourceforge/$pkgname/$pkgname-$pkgver.tar.bz2
+        wesnoth-libpng-1.4.0.patch)
+md5sums=('a800285d1406690755dd0ea22b98b6df'
+         'ca7412ffc4682ef55ddf82d56b0e2f08')
 
 build() {
   cd $srcdir/$pkgname-$pkgver
-  mkdir build && cd build
-  cmake -DCMAKE_INSTALL_PREFIX=/usr \
-        -DCMAKE_BUILD_TYPE=RelWithDebInfo \
-        ..
-  make
+  patch -Np1 -i ../wesnoth-libpng-1.4.0.patch || return 1
+  ./autogen.sh || return 1
+  ./configure --prefix=/usr --localstatedir=/var --enable-tools --enable-editor --enable-server
+  make || return 1
 }
- 
+
 package() {
-  cd $srcdir/$pkgname-$pkgver/build
+  cd $srcdir/$pkgname-$pkgver
   make DESTDIR=$pkgdir install
 }
