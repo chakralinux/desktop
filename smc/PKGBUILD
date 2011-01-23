@@ -1,5 +1,5 @@
 #
-# Chakra Packages for Chakra, part of chakra-project.org
+# Games Packages for Chakra, part of chakra-project.org
 #
 # contributor (x86_64): Giuseppe Calà <jiveaxe@gmail.com>
 
@@ -8,29 +8,38 @@ source ../_buildscripts/${current_repo}-${_arch}-cfg.conf
 
 pkgname=smc
 pkgver=1.9
-pkgrel=2
+_musicver=5.0
+pkgrel=3
 pkgdesc="Secret Maryo Chronicles"
 arch=('i686' 'x86_64')
 url="http://www.secretmaryo.org/"
 license=('GPL3')
-depends=('boost' 'cegui' 'gettext' 'glew' 'libogg' 'libpng' 'libvorbis' 'mesa' 'sdl' 'sdl_image' 'sdl_mixer' 'sdl_ttf')
+depends=('sdl_image' 'sdl_ttf' 'sdl_mixer' 'cegui>=0.7' 'boost' 'libpng')
+makedepends=('autoconf' 'automake')
 source=(http://downloads.sourceforge.net/smclone/$pkgname-$pkgver.tar.bz2
-        http://downloads.sourceforge.net/smclone/SMC_Music_4.1_high.zip
+        http://downloads.sourceforge.net/smclone/SMC_Music_${_musicver}_high.zip
+        smc-for-cegui-v0-7.diff
         smc.desktop
         smc.png)
 md5sums=('75ab7826303c49aec25b052a8b90287f'
-         'f0d5fad6f1d0387bd909c93226698ba9'
-         '0a681420afc9227e8fe975972dbf6226'
+         '0bccac29052d3eed93e88535312eaaa2'
+         '51dfea21b741ad19df14e738df52f1cf'
+         '80fe208132ff41dd7677a53ee429ecdb'
          'efca7580e28748625eb676c9d24ee122')
 
 build() {
   cd $srcdir/$pkgname-$pkgver
+
+  # to remove when smc will be compatible with cegui-0.7.x
+  patch -Np1 -i ${srcdir}/smc-for-cegui-v0-7.diff
+
   ./autogen.sh
   ./configure --prefix=/usr
 }
 
 package() {
   cd $srcdir/$pkgname-$pkgver
+
   make install LDADD=-lpng DESTDIR=$pkgdir
 
   # install some freedesktop.org compatibility
