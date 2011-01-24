@@ -25,6 +25,7 @@ md5sums=(a54dbf2e10cd88d683d0d34565d29378)
 
 build() {
 	cd ${srcdir}
+        sed -i 's|#!/usr/bin/python|#!/usr/bin/python2|' ${pkgname}-${pkgver}/scribus/plugins/scriptplugin/scripts/ColorChart.py
 	mkdir build
 	cd build
 	cmake ../${pkgname}-${pkgver} \
