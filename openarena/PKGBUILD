@@ -1,0 +1,59 @@
+#
+# Games Packages for Chakra, part of chakra-project.org
+#
+# Maintainer: Adrián Chaves Fernández (Gallaecio) <adriyetichaves gmail.com>
+
+# include global config
+source ../_buildscripts/${current_repo}-${_arch}-cfg.conf
+
+pkgname=openarena
+pkgver=0.8.5
+_oldver=0.8.1
+pkgrel=1
+pkgdesc="A violent, sexy, multiplayer first person shooter based on the ioquake3 engine"
+arch=('i686' 'x86_64')
+url="http://openarena.ws/"
+license=('GPL2')
+depends=('sdl' 'libvorbis' 'curl')
+makedepends=('openal' 'mesa')
+source=(http://download.tuxfamily.org/$pkgname/rel/081/oa081.zip
+        http://download.tuxfamily.org/$pkgname/rel/085/oa085p.zip
+        $url/svn/source/081/$pkgname-engine-$_oldver-1.tar.bz2)
+md5sums=('49006bcb02b4e8ea3d06749e8f4e4887'
+         'b2a0437da751cd50dd2351ed9e0c4e9d'
+         '4ee696eacc4b0350f9dbb5588dcd74a2')
+
+build() {
+    # uncomment to disable semi-nude models:
+    # 	rm -f $pkgname-$_oldver/baseoa/pak2-players-mature.pk3
+    # (resulting version won't work with most servers!!)
+
+    cd $srcdir/$pkgname-engine-$_oldver
+
+    make DEFAULT_BASEDIR=/usr/share/$pkgname \
+        BUILD_CLIENT_SMP=0 \
+        USE_LOCAL_HEADERS=0 \
+        GENERATE_DEPENDENCIES=0 \
+        OPTIMIZE=
+}
+
+package() {
+    cd $srcdir/$pkgname-engine-$_oldver
+
+    install -d $pkgdir/usr/{bin,share/{$pkgname,applications,pixmaps}}
+
+    make COPYDIR=$pkgdir/usr/share/$pkgname copyfiles
+
+    [ "$CARCH" = "x86_64" ] && {
+        mv -f $pkgdir/usr/share/$pkgname/$pkgname.$CARCH $pkgdir/usr/bin/$pkgname
+        mv -f $pkgdir/usr/share/$pkgname/oa_ded.$CARCH $pkgdir/usr/bin/$pkgname-server
+    } || {
+        mv -f $pkgdir/usr/share/$pkgname/$pkgname.i386 $pkgdir/usr/bin/$pkgname
+        mv -f $pkgdir/usr/share/$pkgname/oa_ded.i386 $pkgdir/usr/bin/$pkgname-server
+    }
+
+    # Data:
+    cp -rf $srcdir/$pkgname-$_oldver/{baseoa,missionpack}/ $pkgdir/usr/share/$pkgname/
+
+    find $pkgdir/usr/share -type f -exec chmod 644 {} +
+}
