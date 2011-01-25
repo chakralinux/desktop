@@ -1,0 +1,29 @@
+#
+# Chakra Packages for Chakra, part of chakra-project.org
+#
+# maintainer (i686): Phil Miller <philm[at]chakra-project[dog]org>
+# maintainer (x86_64): Manuel Tortosa <manutortosa[at]chakra-project[dot]org>
+# Contributor: cruznick <cruznick@archlinux.us>
+# include global config
+source ../_buildscripts/${current_repo}-${_arch}-cfg.conf
+
+
+pkgname=burg-manager
+pkgver=1.1.0
+pkgrel=1
+pkgdesc="Graphical manager for Burg bootloader"
+arch=('i686' 'x86_64')
+url="http://www.sourceslist.eu/burg-manager/"
+license=('GPL')
+install=$pkgname.install
+depends=('buc' 'kdebase' 'xorg-server-utils')
+source=(http://dl.dropbox.com/u/11529444/$pkgname/chakra/chakra-$pkgname-$pkgver.tar.gz)
+md5sums=(c08ded555c641b5b44c4aaa9c83c60d4)
+package() {
+  cp -Rv $srcdir/chakra-$pkgname-$pkgver/* $pkgdir/
+  mkdir -p $pkgdir/etc/burg-manager
+
+}
+
+
+
