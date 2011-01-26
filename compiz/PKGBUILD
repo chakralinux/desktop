@@ -1,0 +1,83 @@
+#
+# Apps Packages for Chakra, part of chakra-project.org
+#
+# maintainer (i686): Phil Miller <philm[at]chakra-project[dog]org>
+# maintainer (x86_64): Manuel Tortosa <manutortosa[at]chakra-project[dot]org>
+
+# include global config
+source ../_buildscripts/${current_repo}-${_arch}-cfg.conf
+
+pkgbase=compiz
+pkgname=('compiz-core'
+	 'compiz-decorator-kde')
+pkgver=0.8.6
+pkgrel=1
+pkgdesc="Composite manager for Aiglx and Xgl"
+url="http://www.go-compiz.org/"
+license=('GPL' 'LGPL' 'MIT')
+arch=('i686' 'x86_64')
+groups=('compiz' 'compiz-kde' 'compiz-gtk' 'compiz-fusion')
+makedepends=('intltool' 'kdebase-workspace'
+ 'startup-notification' 'librsvg' 'libgl' 'dbus' 'mesa' 'libxslt' 'fuse')
+options=(!libtool !emptydirs)
+conflicts=('compiz' 'compiz-core-git' 'compiz-git')
+replaces=('compiz')
+source=(http://releases.compiz.org/0.8.6/compiz-$pkgver.tar.gz)
+md5sums=('af0586557e0291c47b924e33bccacc60')
+
+build()
+{
+  cd $srcdir/compiz-$pkgver
+
+  ./configure   --prefix=/usr \
+	    --disable-gnome \
+	    --disable-gtk \
+	    --enable-metacity \
+	    --disable-gconf \
+            --enable-dbus \
+	    --enable-librsvg \
+	    --disable-kde \
+	    --enable-kde4
+
+  make || return 1
+}
+
+package_compiz-core()
+{
+
+  pkgdesc="Composite manager for Aiglx and Xgl"
+  depends=('startup-notification' 'librsvg' \
+         'libgl' 'dbus' 'mesa' 'libxslt' 'fuse')
+
+  cd $srcdir/compiz-$pkgver
+  make DESTDIR=$pkgdir install
+
+  # remove stuff which is in one of the decorations
+   rm -rf $pkgdir/usr/bin/{gtk-window-decorator,kde4-window-decorator}
+   #rm -rf ${pkgdir}/usr/share/{applications,gnome,gnome-control-center}
+   rm -rf ${pkgdir}/usr/lib/{window-manager-settings,pkgconfig/compiz-gconf.pc,compiz/libgconf*}
+   rm -rf ${pkgdir}/etc
+
+  # install MIT license
+  install -Dm644 $srcdir/compiz-$pkgver/COPYING.MIT \
+	$pkgdir/usr/share/licenses/compiz-core/COPYING.MIT
+}
+
+package_compiz-decorator-kde()
+{
+  pkgdesc="Compiz decorator for KDE"
+  depends=('kdebase-workspace' 'compiz-core')
+
+  cd $srcdir/compiz-$pkgver
+  make DESTDIR=$pkgdir install
+
+  # Let's remove stuff that are in compiz-core package or gtk decorator
+  rm -rf $pkgdir/usr/{include,lib}
+  #rm -rf $pkgdir/usr/bin/{compiz,gtk-window-decorator}
+  rm -rf ${pkgdir}/etc
+  #rm -rf ${pkgdir}/usr/share/{applications,gnome,gnome-control-center,locale,compiz}
+
+  # install MIT license
+  install -Dm644 $srcdir/compiz-$pkgver/COPYING.MIT \
+        $pkgdir/usr/share/licenses/compiz-decorator-kde/COPYING.MIT
+}
