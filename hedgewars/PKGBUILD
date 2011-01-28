@@ -1,0 +1,39 @@
+#
+# Games Packages for Chakra, part of chakra-project.org
+#
+# Maintainer: Adrián Chaves Fernández (Gallaecio)
+
+# include global config
+source ../_buildscripts/${current_repo}-${_arch}-cfg.conf
+
+pkgname=hedgewars
+pkgver=0.9.15
+pkgrel=1
+pkgdesc="Free turn based strategy game similar to Worms™."
+arch=('i686' 'x86_64')
+url="http://hedgewars.org"
+license=('GPL2' 'custom:DejaVu Fonts are under the terms of the Bitstream Vera Fonts Copyright; Google Droid is under the terms of the Apache License.')
+depends=('qt' 'sdl' 'sdl_mixer' 'sdl_image' 'sdl_net' 'sdl_ttf' 'lua')
+makedepends=('fpc' 'cmake' 'ghc'
+	     'haskell-utf8-string' 'haskell-dataenc' 'haskell-network'
+	     'haskell-hslogger')
+source=(http://download.gna.org/$pkgname/$pkgname-src-$pkgver.tar.bz2)
+md5sums=('a7d5e9082d3377dba573b7fee4bc833d')
+
+build() {
+  cd $srcdir/$pkgname-src-$pkgver
+  mkdir build && cd build
+  cmake -DCMAKE_INSTALL_PREFIX=/usr \
+        -DCMAKE_BUILD_TYPE=RelWithDebInfo \
+        ..
+  make
+}
+ 
+package() {
+  cd $srcdir/$pkgname-src-$pkgver/build
+  make DESTDIR=$pkgdir install
+
+  # Fonts Licenses:
+  install -D -m644 $srcdir/$pkgname-src-$pkgver/Fonts_LICENSE.txt \
+		    $pkgdir/usr/share/licenses/$pkgname/Fonts_LICENSE.txt
+}
