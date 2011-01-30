@@ -1,0 +1,36 @@
+#
+# Games Packages for Chakra, part of chakra-project.org
+#
+# Maintainer: Adrián Chaves Fernández (Gallaecio)
+
+# include global config
+source ../_buildscripts/${current_repo}-${_arch}-cfg.conf
+
+pkgname=ruby-builder
+_pkgname=builder
+pkgver=2.1.2
+pkgrel=1
+pkgdesc="A simple Ruby library to create XML markup and data structures."
+arch=('any')
+url="http://rubyforge.org/projects/builder/"
+license=('MIT')
+depends=('ruby')
+source=(http://files.rubyforge.vm.bytemark.co.uk/$_pkgname/$_pkgname-$pkgver.gem
+        COPYING)
+md5sums=('e96a525d9e0b42a2e2d5e77cbd02eb72'
+         '0104f56a052f3a18d4a97b55cc443dee')
+
+build() {
+  cd $srcdir
+}
+
+package() {
+  cd $srcdir
+
+  local _gemdir=$(ruby -rubygems -e 'puts Gem.default_dir')
+  gem install \
+    --ignore-dependencies -i $pkgdir$_gemdir \
+    $_pkgname-$pkgver.gem
+
+  install -Dm644 COPYING $pkgdir/usr/share/licenses/$pkgname/LICENSE
+}
