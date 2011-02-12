@@ -8,7 +8,7 @@ source ../_buildscripts/${current_repo}-${_arch}-cfg.conf
 
 pkgname=dawn
 _pkgname=dawn-rpg
-pkgver=0.0.39
+pkgver=0.0.40
 pkgrel=1
 pkgdesc="2D RPG set in a fantasy world."
 arch=('i686' 'x86_64')
@@ -19,15 +19,16 @@ makedepends=('autoconf' 'automake')
 replaces=('dawn-rpg')
 changelog=ChangeLog
 source=("http://downloads.sourceforge.net/project/$_pkgname/$_pkgname/$pkgname-$pkgver.tar.gz")
-md5sums=('a422931d120cd06c9852f6bf6dc9d7f9')
+md5sums=('098b890e8172b883d25d770b6f048530')
 
 build() {
   cd $srcdir/$pkgname-$pkgver
 
-# Emptied for this configuration  
+# Emptied for this configuration (else you get a tolua++ fail):
   LDFLAGS="" \
-  ./configure --prefix=/usr
-  make || return 1
+  ./configure \
+    --prefix=/usr
+  make
 }
 
 package() {
