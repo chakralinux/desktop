@@ -23,7 +23,7 @@ source=(http://downloads.sourceforge.net/$pkgname/$pkgname-$pkgver.tar.gz)
 build() {
   cd "$srcdir/$pkgname-$pkgver"
 
-  ./configure --prefix=/usr
+  ./configure --prefix=/usr --disable-lv2-gtk-ui
   make || return 1
   make DESTDIR="$pkgdir/" install
 }
