@@ -1,3 +1,3 @@
 #!/bin/sh
-cd /opt/0ad/system
+cd /usr/share/0ad/system
 ./pyrogenesis_dbg $*
