@@ -9,7 +9,7 @@ source ../_buildscripts/${current_repo}-${_arch}-cfg.conf
 pkgname=dawn
 _pkgname=dawn-rpg
 pkgver=0.0.40
-pkgrel=1
+pkgrel=2
 pkgdesc="2D RPG set in a fantasy world."
 arch=('i686' 'x86_64')
 license=('GPL3')
@@ -35,7 +35,7 @@ package() {
   cd $srcdir/$pkgname-$pkgver
 #   make DESTDIR=$pkgdir install
 
-  install -Dm 755 $srcdir/$pkgname-$pkgver/$_pkgname $pkgdir/usr/share/$pkgname/$pkgname
+  install -Dm 775 $srcdir/$pkgname-$pkgver/$_pkgname $pkgdir/usr/share/$pkgname/$pkgname
   cp -R $srcdir/$pkgname-$pkgver/data $pkgdir/usr/share/$pkgname/data
 
   # Temporal launcher:
@@ -44,4 +44,8 @@ package() {
   echo "cd /usr/share/$pkgname"			>> $pkgdir/usr/bin/$pkgname
   echo "./$pkgname"				>> $pkgdir/usr/bin/$pkgname
   chmod +x $pkgdir/usr/bin/$pkgname
+
+  # Change permissions so all users in "games" group can save games.
+  chown :games $pkgdir/usr/share/$pkgname/
+  chmod 775 $pkgdir/usr/share/$pkgname/ -R
 }
