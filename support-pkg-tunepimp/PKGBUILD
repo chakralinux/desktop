@@ -1,8 +1,5 @@
-#
-# KDE SC Packages for Chakra, part of chakra-project.org
-#
-# maintainer (i686): Phil Miller <philm[at]chakra-project[dog]org>
-# maintainer (x86_64): Manuel Tortosa <manutortosa[at]chakra-project[dot]org>
+# $Id: PKGBUILD 71345 2010-03-06 18:45:26Z andrea $
+# Maintainer: Tobias Powalowski <tpowa@archlinux.org>
 
 pkgname=tunepimp
 pkgver=0.5.3
@@ -12,7 +9,7 @@ url="http://www.musicbrainz.org/products/tunepimp/"
 arch=('i686' 'x86_64')
 license=('GPL')
 options=('!libtool' '!makeflags')
-makedepends=('python')
+makedepends=('python2')
 depends=('curl' 'musicbrainz' 'zlib' 'libmad' 'flac' 'libvorbis' 'readline' 'libmpcdec' 'libofa' 'taglib' 'libmp4v2')
 replaces=('trm')
 source=(ftp://ftp.musicbrainz.org/pub/musicbrainz/lib${pkgname}-${pkgver}.tar.gz
@@ -32,7 +29,7 @@ source=(ftp://ftp.musicbrainz.org/pub/musicbrainz/lib${pkgname}-${pkgver}.tar.gz
   make DESTDIR=${pkgdir} install
   # install python bindings
   cd python
-  python setup.py install --root=${pkgdir}
+  python2 setup.py install --root=${pkgdir}
 
   # fix includes for kdemultimedia
   cd ${pkgdir}/usr/include

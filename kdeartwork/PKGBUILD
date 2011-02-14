@@ -32,14 +32,13 @@ pkgname=('kdeartwork-common'
 
 arch=('i686' 'x86_64')
 pkgver=${_kdever}
-pkgrel=2
+pkgrel=1
 
 pkgdesc="split package"
 url="http://www.kde.org/"
 license=('GPL' 'LGPL' 'FDL')
 
 install=${_origname}.install
-options=('log')
 
 makedepends=('pkgconfig' 'cmake' 'automoc4' 'xscreensaver' 'eigen' "kdebase-workspace>=${_kdever}")
 
@@ -143,8 +142,8 @@ package_kdeartwork-desktopthemes()
 		done
 
 	# use transparent panel svg's everywhere
-	# FIXME Elegance Silicon
-	for n in Aya Clean-Blend heron slim-glow; do
+	# FIXME Elegance Silicon Clean-Blend Aya heron
+	for n in slim-glow; do
 		echo "Debug: We are in theme $n"
 		cp -fv ${pkgdir}/usr/share/apps/desktoptheme/$n/widgets/panel-background.svgz ${pkgdir}/usr/share/apps/desktoptheme/$n/opaque/widgets/panel-background.svgz
 	done
