@@ -1,0 +1,30 @@
+#
+# Apps Packages for Chakra, part of chakra-project.org
+#
+# maintainer (i686): Phil Miller <philm[at]chakra-project[dog]org>
+# maintainer (x86_64): Manuel Tortosa <manutortosa[at]chakra-project[dot]org>
+
+# include global config
+source ../_buildscripts/${current_repo}-${_arch}-cfg.conf
+
+pkgname=yapan
+pkgver=0.3
+pkgrel=1
+pkgdesc="Yet Another Package mAnager Notifier."
+arch=('i686' 'x86_64')
+url="https://bitbucket.org/otsug/yapan/wiki/Home"
+license=('GPL')
+depends=('qt' 'phonon' 'sudo')
+source=(https://bitbucket.org/otsug/$pkgname/downloads/$pkgname-$pkgver.tar.bz2)
+sha256sums=('6a69d0c97766de6b518983a1d12fff9fb0a3ed67309045520578c1f9b1a5eb53')
+
+build() {
+  cd "$srcdir/$pkgname-$pkgver/"
+  qmake || return 1
+  make || return 1
+}
+
+package() {
+  cd "$srcdir/$pkgname-$pkgver"
+  make INSTALL_ROOT="$pkgdir" install || return 1
+}
