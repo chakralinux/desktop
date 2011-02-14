@@ -10,17 +10,17 @@ _prefix=/usr
 
 pkgname=xbmc
 pkgver=10.0
-pkgrel=2
+pkgrel=3
 pkgdesc="XBMC Media Center"
 arch=('i686' 'x86_64')
 url="http://xbmc.org"
 license=('GPL' 'custom')
 depends=( 'bzip2' 'curl' 'enca' 'faac' 'faad2' 'fontconfig' 'fribidi'
-          'glew' 'hal' 'jasper' 'libcdio' 'libgl' 'libmad' 'libmms'
+          'glew' 'jasper' 'libcdio' 'libgl' 'libmad' 'libmms'
 	  'libmpeg2' 'libmysqlclient' 'libsamplerate' 'libxinerama'
 	  'libxrandr' 'libxtst' 'lzo2' 'sdl_image' 'sdl_mixer'
-	  'smbclient' 'wavpack' 'mesa' 'xorg-utils' 'libmicrohttpd'
-	  'libssh' 'libva' 'libmodplug' 'cvs')
+	  'smbclient' 'wavpack' 'mesa-demos' 'xorg-utils' 'libmicrohttpd'
+	  'libssh' 'libva' 'libmodplug' 'rtmpdump' 'lsb-release')
 if [ "$_ext_python" != "disable" ]; then
   depends=( '${depends[@]}' 'python2' )
 fi
@@ -28,12 +28,16 @@ makedepends=('boost' 'cmake' 'gperf' 'nasm' 'libvdpau' 'unzip' 'zip')
 optdepends=('lirc: remote controller support'
 	    'unrar: access compressed files without unpacking them'
 	    'devicekit-power: used to trigger suspend functionality'
-	    'libvdpau: for nvidia hardware acceleration')
+	    'udisks: automount external drives'
+	    'upower: used to trigger suspend functionality'
+	    'libvdpau: for nvidia hardware acceleration'
+	    'lcms'
+	    'tk')
 install=("${pkgname}.install")
 options=(makeflags)
 source=("http://mirrors.xbmc.org/releases/source/xbmc-$pkgver.tar.gz"
-	"http://chakra-project.org/sources/xbmc/xbmc-10.0-skin.confluence-Textures.xbt"
-	"FEH.sh")
+        "http://chakra-project.org/sources/xbmc/xbmc-10.0-skin.confluence-Textures.xbt"
+        "FEH.sh")
 md5sums=('728fb514e5f43f27bb880305061b4e72'
          '327d954676126eacfda28b1316f0ff7c'
          'c3e2ab79b9965f1a4a048275d5f222c4')
@@ -41,8 +45,7 @@ md5sums=('728fb514e5f43f27bb880305061b4e72'
 build() {
     cd "${srcdir}/xbmc-$pkgver"
 
-    # one core only
-    export MAKEFLAGS="-j2"
+    pacman -Q libass && { msg "Remove libass"; return 1; }
 
     # remove "--as-needed" from LDFLAGS
     unset LDFLAGS; LDFLAGS="-Wl,--hash-style=gnu"
@@ -54,6 +57,7 @@ build() {
     ./configure --prefix=/usr \
 	--enable-vdpau \
 	--disable-pulse \
+	--disable-hal \
 	--disable-avahi \
 	--disable-external-liba52 \
 	--disable-external-libdts \
@@ -62,16 +66,19 @@ build() {
 	--enable-external-libwavpack \
 	--disable-external-libass \
 	--disable-external-ffmpeg \
+	--enable-rtmp \
 	--${_ext_python}-external-python \
 	--disable-debug
 
     # Fix textures bug in i686
     if [ "${CARCH}" = "i686" ]; then
-        msg "Fixing Textures.xbt in i686"
-        cp -v ${srcdir}/xbmc-10.0-skin.confluence-Textures.xbt ${srcdir}/xbmc-${pkgver}/addons/skin.confluence/media/Textures.xbt
-        sed -i -e 's~$(MAKE) -C $(CONFLUENCE_MEDIA)~echo "SKIPPING Textures.xbt"~g' ${srcdir}/xbmc-${pkgver}/Makefile.in
-        sed -i -e 's~$(MAKE) -C $(CONFLUENCE_MEDIA)~echo "SKIPPING Textures.xbt"~g' ${srcdir}/xbmc-${pkgver}/Makefile
+        msg "Fixing Textures.xbt in i686"	
+        cp -v ${srcdir}/xbmc-10.0-skin.confluence-Textures.xbt ${srcdir}/xbmc-${pkgver}/addons/skin.confluence/media/Textures.xbt	
+        sed -i -e 's~$(MAKE) -C $(CONFLUENCE_MEDIA)~echo "SKIPPING Textures.xbt"~g' ${srcdir}/xbmc-${pkgver}/Makefile.in	
+        sed -i -e 's~$(MAKE) -C $(CONFLUENCE_MEDIA)~echo "SKIPPING Textures.xbt"~g' ${srcdir}/xbmc-${pkgver}/Makefile	
     fi
+	
+
 
     # Now (finally) build
     msg "Running make"
@@ -90,8 +97,8 @@ package() {
     sed -i -e 's/^python \(.*\)FEH.py \(.*\)$/\1FEH.sh \2/' "${pkgdir}${_prefix}/bin/xbmc"
 
     # lsb_release fix
-    sed -i -e 's/which lsb_release &> \/dev\/null/\[ -f \/etc\/chakra-release ]/g' "${pkgdir}${_prefix}/bin/xbmc"
-    sed -i -e "s/lsb_release -a 2> \/dev\/null | sed -e 's\/\^\/    \/'/cat \/etc\/chakra-release/g" "${pkgdir}${_prefix}/bin/xbmc"
+    sed -i -e 's/which lsb_release &> \/dev\/null/\[ -f \/etc\/arch-release ]/g' "${pkgdir}${_prefix}/bin/xbmc"
+    sed -i -e "s/lsb_release -a 2> \/dev\/null | sed -e 's\/\^\/    \/'/cat \/etc\/arch-release/g" "${pkgdir}${_prefix}/bin/xbmc"
 
     # .desktop files
     install -D -m 0644 "${srcdir}/xbmc-$pkgver/tools/Linux/xbmc.desktop" "${pkgdir}${_prefix}/share/applications/xbmc.desktop"
