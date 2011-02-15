@@ -5,12 +5,12 @@
 # maintainer (x86_64): Manuel Tortosa <manutortosa[at]chakra-project[dot]org>
 
 pkgname=gtk-integration
-pkgver=2.2
+pkgver=2.3
 pkgrel=1
 iconspkgver=2.5.0
-widgetpkgver=1.0.1
+widgetpkgver=1.0.2
 _colors=3.0
-cgcver=1.2
+cgcver=1.3
 
 pkgdesc="A bundles and Gtk apps integration package for Chakra GNU/Linux"
 arch=('i686' 'x86_64')
@@ -22,7 +22,7 @@ license=('LGPL3' 'GPL')
 
 depends=('kdelibs' 'qt' 'oxygen-icons' 'cairo')
 makedepends=('gcc' 'cmake' 'findutils' 'imagemagick' 'liblqr' 'gtk2')
-provides=('gtk-integration' 'oxygenrefit2-icon-theme' 'oxygen-gtk')
+provides=('gtk-integration' 'oxygenrefit2-icon-theme' 'oxygen-gtk' 'chakra-gtk-config')
 conflicts=('oxygenrefit2-icon-theme' 'oxygen-gtk')
 
 source=("http://download.tuxfamily.org/oxygenrefit2/oxygen-refit-2-$iconspkgver.tar.bz2"
@@ -30,8 +30,8 @@ source=("http://download.tuxfamily.org/oxygenrefit2/oxygen-refit-2-$iconspkgver.
 	"http://chakra-project.org/sources/gtk-integration/chakra-gtk-config-${cgcver}.tar.gz")
 
 md5sums=('60f32f98d8d33d82db79b6bb934f0580'
-         '39b3b951e6adfb5aebeebb23c073d42c'
-         '8c1942d6b57dc691996a3728bce3d115')
+         '6a4f2e648d5cf7f381f0187777c9003d'
+         '8e3b983319110425dd3a9af000b6666a')
 
 function create_install() {
 cat > "${startdir}/${pkgname}.install" <<EOF
@@ -40,8 +40,8 @@ post_install() {
 
 GTK - Integration v$pkgver-$pkgrel
 
-You can install our aditional engines:
---------------------------------------
+You can install aditional engines:
+----------------------------------
 gtk-integration-engine-molecule
 gtk-integration-engine-qtcurve
                
