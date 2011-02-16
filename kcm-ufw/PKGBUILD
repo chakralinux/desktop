@@ -25,10 +25,10 @@ build() {
 package() {
   cd "$srcdir/kcm_ufw-$pkgver"
   # hacks to get it into pkg-dir
-  sed -i -e 's~"/usr~"/home/phil/apps/kcm-ufw/pkg/usr~g' cmake_install.cmake
-  sed -i -e 's~"/usr~"/home/phil/apps/kcm-ufw/pkg/usr~g' helper/cmake_install.cmake
-  sed -i -e 's~"/etc~"/home/phil/apps/kcm-ufw/pkg/etc~g' helper/cmake_install.cmake
-  sed -i -e 's~"/usr~"/home/phil/apps/kcm-ufw/pkg/usr~g' kcm/cmake_install.cmake
-  sed -i -e 's~"/usr~"/home/phil/apps/kcm-ufw/pkg/usr~g' po/cmake_install.cmake
+  sed -i -e 's~"/usr~"../../pkg/usr~g' cmake_install.cmake
+  sed -i -e 's~"/usr~"../../pkg/usr~g' helper/cmake_install.cmake
+  sed -i -e 's~"/etc~"../../pkg/etc~g' helper/cmake_install.cmake
+  sed -i -e 's~"/usr~"../../pkg/usr~g' kcm/cmake_install.cmake
+  sed -i -e 's~"/usr~"../../pkg/usr~g' po/cmake_install.cmake
   make install || return 1
 }
