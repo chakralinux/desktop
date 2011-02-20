@@ -5,17 +5,19 @@
 # maintainer (x86_64): Manuel Tortosa <manutortosa[at]chakra-project[dot]org>
 
 pkgname=wine
-pkgver=1.3.10
+pkgver=1.3.14
 pkgrel=1
 
 _pkgbasever=${pkgver/rc/-rc}
 
 source=(http://ibiblio.org/pub/linux/system/emulators/$pkgname/$pkgname-$_pkgbasever.tar.bz2)
+md5sums=('c99c8f518d3b2a13a739dfbd6c417e80')
 
 pkgdesc="A compatibility layer for running Windows programs"
 url="http://www.winehq.com"
 arch=(i686 x86_64)
 license=(LGPL)
+install=wine.install
 
 depends=(
   fontconfig      lib32-fontconfig
@@ -25,6 +27,7 @@ depends=(
   libxdamage      lib32-libxdamage
   libxxf86dga     lib32-libxxf86dga
   alsa-lib        lib32-alsa-lib
+  desktop-file-utils
 )
 
 makedepends=(autoconf ncurses bison perl fontforge flex prelink
@@ -45,7 +48,7 @@ makedepends=(autoconf ncurses bison perl fontforge flex prelink
   jack            lib32-jack
   libcups         lib32-libcups
   gnutls          lib32-gnutls
-  v4l-utils       lib32-4vl-utils
+  v4l-utils       lib32-v4l-utils
 )
   
 optdepends=(
@@ -54,11 +57,12 @@ optdepends=(
   libldap         lib32-libldap
   lcms            lib32-lcms
   libxml2         lib32-libxml2
+  mpg123          lib32-mpg123
   openal          lib32-openal
   jack            lib32-jack
   libcups         lib32-libcups
   gnutls          lib32-gnutls
-  v4l-utils       lib32-4vl-utils
+  v4l-utils       lib32-v4l-utils
 )
 
 if [[ $CARCH == i686 ]]; then
@@ -134,7 +138,3 @@ package() {
       dlldir="$pkgdir/usr/lib/wine" install
   fi
 }
-
-# vim:set ts=8 sts=2 sw=2 et:
-md5sums=('a9f616cdcfb07a832c25623d3a971c3c')
-
