@@ -1,0 +1,35 @@
+# $Id: PKGBUILD 84760 2010-07-04 06:05:09Z eric $
+# Contributor: Giovanni Scafora <giovanni@archlinux.org>
+# Contributor: Sebastien Piccand <sebcactus gmail com>
+
+pkgbase=handbrake
+pkgname=('handbrake-cli')
+pkgver=0.9.5
+pkgrel=1
+arch=('i686' 'x86_64')
+url="http://handbrake.fr/"
+license=('GPL')
+makedepends=('intltool' 'python2' 'yasm' 'wget' 'bzip2' 'gcc-libs')
+source=(http://downloads.sourceforge.net/project/handbrake/$pkgver/HandBrake-$pkgver.tar.bz2)
+md5sums=('e17d3663fc36a985fe43e188695e3196')
+
+build() {
+  cd "$srcdir/HandBrake-$pkgver"
+
+  # Use Python 2
+  #sed -i 's/python /python2 /' gtk/src/Makefile.am
+
+  ./configure --prefix=/usr --force --disable-gtk --disable-gtk-update-checks
+  cd build
+  make
+}
+
+
+package_handbrake-cli() {
+  pkgdesc="Multithreaded video transcoder (CLI)"
+  depends=('bzip2' 'gcc-libs' 'zlib')
+
+  cd "$srcdir/HandBrake-$pkgver/build"
+  install -D HandBrakeCLI "$pkgdir/usr/bin/HandBrakeCLI"
+}
+
