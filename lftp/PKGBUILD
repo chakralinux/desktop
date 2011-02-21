@@ -1,0 +1,43 @@
+#
+# Apps Packages for Chakra, part of chakra-project.org
+#
+# maintainer (i686): Phil Miller <philm[at]chakra-project[dog]org>
+# maintainer (x86_64): Manuel Tortosa <manutortosa[at]chakra-project[dot]org>
+
+# contributor: mornik <mornik@gmail.com>
+
+pkgname=lftp
+pkgver=4.1.3
+pkgrel=1
+pkgdesc="Sophisticated command line based FTP client with openssl"
+arch=('i686' 'x86_64')
+url="http://lftp.yar.ru/"
+license=('GPL3')
+depends=('gcc-libs' 'readline' "gnutls>=2.6.8" "expat>=2.0.1" 'perl')
+makedepends=('make')
+source=(http://ftp.yars.free.net/pub/source/lftp/${pkgname}-${pkgver}.tar.bz2)
+md5sums=('dd769dcef10296271bff05d283680f9a')
+install=lftp.install
+
+build() {
+  cd ${srcdir}/${pkgname}-${pkgver}
+
+# Run configure
+  
+  ./configure
+
+  make || return 1
+}	
+
+package(){
+  cd ${srcdir}/${pkgname}-${pkgver}
+
+  make DESTDIR=$pkgdir install
+}
+
+
+package() {
+  cd ${srcdir}/${pkgname}-${pkgver}
+  make DESTDIR=${pkgdir} install
+  rm -rf ${pkgdir}/usr/lib
+}

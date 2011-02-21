@@ -1,6 +1,8 @@
-# $Id: PKGBUILD 84760 2010-07-04 06:05:09Z eric $
-# Contributor: Giovanni Scafora <giovanni@archlinux.org>
-# Contributor: Sebastien Piccand <sebcactus gmail com>
+#
+# Apps Packages for Chakra, part of chakra-project.org
+#
+# maintainer (i686): Phil Miller <philm[at]chakra-project[dog]org>
+# maintainer (x86_64): Manuel Tortosa <manutortosa[at]chakra-project[dot]org>
 
 pkgbase=handbrake
 pkgname=('handbrake-cli')
@@ -15,9 +17,6 @@ md5sums=('e17d3663fc36a985fe43e188695e3196')
 
 build() {
   cd "$srcdir/HandBrake-$pkgver"
-
-  # Use Python 2
-  #sed -i 's/python /python2 /' gtk/src/Makefile.am
 
   ./configure --prefix=/usr --force --disable-gtk --disable-gtk-update-checks
   cd build
