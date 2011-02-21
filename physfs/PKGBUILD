@@ -7,36 +7,46 @@
 source ../_buildscripts/${current_repo}-${_arch}-cfg.conf
 
 pkgname=physfs
-pkgver=2.0.1
+pkgver=2.0.2
 pkgrel=1
-pkgdesc="A library to provide abstract access to various archives"
+pkgdesc="A library to provide abstract access to various archives."
 arch=('i686' 'x86_64')
 url="http://icculus.org/physfs/"
-license=('zlib')
+license=('ZLIB')
 depends=('zlib' 'readline')
 makedepends=('cmake' 'doxygen' 'man')
 changelog=ChangeLog
-source=(http://icculus.org/physfs/downloads/${pkgname}-${pkgver}.tar.gz)
-md5sums=('df00465fcfa80e87f718961c6dd6b928')
+source=(http://icculus.org/$pkgname/downloads/$pkgname-$pkgver.tar.gz)
+md5sums=('4e8927c3d30279b03e2592106eb9184a')
 
 build() {
-  cd "${srcdir}/${pkgname}-${pkgver}"
+  cd $srcdir/$pkgname-$pkgver
+
   export CFLAGS="$CFLAGS -fno-strict-aliasing"
   export CXXFLAGS="$CXXFLAGS -fno-strict-aliasing"
-  cmake . -DCMAKE_INSTALL_PREFIX=/usr
+  
+  cmake \
+    -DCMAKE_INSTALL_PREFIX=/usr \
+    -DCMAKE_BUILD_TYPE=RelWithDebInfo \
+    -DPHYSFS_BUILD_TEST=OFF \
+    -DPHYSFS_BUILD_WX_TEST=OFF \
+    .
   make all docs
 }
 
 package() {
-  cd "${srcdir}/${pkgname}-${pkgver}"
-  make DESTDIR="${pkgdir}" install
-  install -d "${pkgdir}"/usr/share/{doc/physfs,man/man3}
-  install -m644 docs/html/* "${pkgdir}/usr/share/doc/physfs"
-  install -m644 docs/man/man3/* "${pkgdir}/usr/share/man/man3"
+  cd $srcdir/$pkgname-$pkgver
+  make DESTDIR=$pkgdir install docs
+
+  # Documentation:
+  install -d $pkgdir/usr/share/{doc/physfs,man/man3}
+  install -m644 docs/html/* $pkgdir/usr/share/doc/physfs
+  install -m644 docs/man/man3/* $pkgdir/usr/share/man/man3
 
   for i in author Deinit description extension Free Init major Malloc minor opaque patch Realloc url ; do
-    mv "${pkgdir}/usr/share/man/man3/_$i.3" "${pkgdir}/usr/share/man/man3/PHYSFS_$i.3"
+    mv $pkgdir/usr/share/man/man3/_$i.3 $pkgdir/usr/share/man/man3/PHYSFS_$i.3
   done
 
-  install -D -m644 LICENSE.txt "${pkgdir}/usr/share/licenses/${pkgname}/LICENSE"
+  # License:
+  install -D -m644 $srcdir/$pkgname-$pkgver/LICENSE.txt $pkgdir/usr/share/licenses/$pkgname/LICENSE
 }
