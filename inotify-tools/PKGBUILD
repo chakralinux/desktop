@@ -1,0 +1,31 @@
+#
+# Games Packages for Chakra, part of chakra-project.org
+#
+# Maintainer: Adrián Chaves Fernández (Gallaecio) <adriyetichaves gmail.com>
+
+# include global config
+source ../_buildscripts/${current_repo}-${_arch}-cfg.conf
+
+pkgname=inotify-tools
+pkgver=3.14
+pkgrel=1
+pkgdesc="A C library and a set of command-line programs providing a simple interface to inotify."
+arch=('i686' 'x86_64')
+url="http://inotify-tools.sourceforge.net/"
+license=('GPL2')
+depends=('glibc')
+source=(http://github.com/downloads/rvoicilas/$pkgname/$pkgname-$pkgver.tar.gz)
+md5sums=('b43d95a0fa8c45f8bab3aec9672cf30c')
+
+build() {
+  cd $srcdir/$pkgname-$pkgver
+
+  ./configure \
+    --prefix=/usr
+  make
+}
+
+package() {
+  cd $srcdir/$pkgname-$pkgver
+  make DESTDIR=$pkgdir install
+} 
