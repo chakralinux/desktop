@@ -1,0 +1,64 @@
+#
+# Games Packages for Chakra, part of chakra-project.org
+#
+# Maintainer: Adrián Chaves Fernández (Gallaecio) <adriyetichaves gmail.com>
+
+# include global config
+source ../_buildscripts/${current_repo}-${_arch}-cfg.conf
+
+pkgname=bullet
+pkgver=2.77
+pkgrel=1
+pkgdesc="A 3D Collision Detection and Rigid Body Dynamics Library for games and animation."
+arch=('i686' 'x86_64')
+url="http://www.bulletphysics.com/Bullet/"
+license=('ZLIB')
+depends=('freeglut')
+makedepends=('cmake' 'doxygen' 'graphviz' 'ttf-dejavu')
+changelog=ChangeLog
+source=("http://$pkgname.googlecode.com/files/$pkgname-$pkgver.tgz"
+        "$pkgname.pc")
+md5sums=('2f5074a1a29b618c672f1da4748e374b'
+         'd1da06deba3b08b884d2212f6838905c')
+
+build() {
+  cd $srcdir/$pkgname-$pkgver
+
+  # Get a clean build directory.
+  [[ -d build ]] && rm -rf build
+  mkdir build && cd build 
+
+  # Generate CMake Makefile.
+  cmake .. \
+       -DCMAKE_INSTALL_PREFIX=/usr \
+       -DBUILD_SHARED_LIBS=1 \
+       -DBUILD_DEMOS=0 \
+       -DBUILD_EXTRAS=0 \
+       -DINSTALL_LIBS=1 \
+       -DINSTALL_EXTRA_LIBS=1 \
+       -DCMAKE_BUILD_TYPE=Debug
+
+  make
+
+  # Generate documentation:
+  cd ..
+  sed -i 's/GENERATE_HTMLHELP.*//g' Doxyfile
+  doxygen
+}
+
+package() {
+  cd $srcdir/$pkgname-$pkgver/build
+
+  make DESTDIR=$pkgdir install
+
+  # Manually handle pkgconfig file:
+  mkdir -p $pkgdir/usr/lib/pkgconfig
+  sed "s|VERSION|$pkgver|g" $srcdir/$pkgname.pc > $pkgdir/usr/lib/pkgconfig/$pkgname.pc
+
+  # Documentation:
+  install -Dm644 ../Bullet_User_Manual.pdf $pkgdir/usr/share/doc/$pkgname/Bullet_User_Manual.pdf
+  cp -r ../html $pkgdir/usr/share/doc/$pkgname/html
+
+  # License:
+  install -Dm644 ../BulletLicense.txt $pkgdir/usr/share/licenses/$pkgname/LICENSE
+}
