@@ -1,0 +1,36 @@
+#
+# Games Packages for Chakra, part of chakra-project.org
+#
+# Maintainer: Adrián Chaves Fernández (Gallaecio) <adriyetichaves gmail.com>
+
+# include global config
+source ../_buildscripts/${current_repo}-${_arch}-cfg.conf
+
+pkgname=lipsofsuna
+pkgver=0.2.1
+pkgrel=1
+pkgdesc="Tongue-in-cheek dungeon crawl game that takes place in the chaotic dungeons of Suna."
+arch=('i686' 'x86_64')
+url="http://lipsofsuna.org/"
+license=('LGPL3' 'CCPL:by-sa' 'CCPL:by' 'custom:CC0')
+depends=('bullet' 'enet' 'flac' 'inotify-tools' 'libogg' 'libvorbis' 'lua' 'openal' 'sdl' 'sdl_ttf' 'sqlite3')
+changelog=ChangeLog
+source=("http://downloads.sourceforge.net/project/$pkgname/$pkgname/$pkgver/$pkgname-$pkgver.tar.gz")
+md5sums=('57a95119e2e796e398049ee09c85bea3')
+
+build() {
+  cd $srcdir/$pkgname-$pkgver
+
+  ./waf configure \
+    --prefix=/usr \
+    --relpath=false \
+    --optimize=true
+  ./waf build
+}
+
+package() {
+  cd $srcdir/$pkgname-$pkgver
+
+  ./waf install \
+    --destdir=$pkgdir
+}
