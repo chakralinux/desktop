@@ -23,7 +23,7 @@ pkgname=('kdelibs'
 
 arch=('i686' 'x86_64')
 pkgver=${_kdever}
-pkgrel=2
+pkgrel=3
 
 pkgdesc="split package"
 url="http://www.kde.org"
@@ -48,7 +48,8 @@ source=($_mirror/${_origname}-$_kdever.tar.bz2
 	03_chakra_menu.patch
 	04_add_arch_filetypes_to_kate_syntax_highlighting.patch
 	05_useragent-branding.patch
-	fix-crash-in-plasma.patch)
+	fix-crash-in-plasma.patch
+	vlc-hang.patch)
 
 md5sums=(`grep ${_origname}-$_kdever.tar.bz2 ../kde-sc.md5 | cut -d" " -f1`
          '40ba51f0c50ced94dfffe667ec856950'  # 01_kdemod_tag.patch
@@ -56,7 +57,8 @@ md5sums=(`grep ${_origname}-$_kdever.tar.bz2 ../kde-sc.md5 | cut -d" " -f1`
          '53b85403e4dd8f9146933c52ca23243e'  # 03_chakra_menu.patch
          'b125c42a85f1b265b7aa31fb7950b690'  # 04_add_arch_filetypes_to_kate_syntax_highlighting.patch
          '11635b2d2315c7ed6e7746f0d882efcf'  # 05_useragent-branding.patch
-	 'b21f9b2c0f9af0f658ceaf2f8dcc334d') # fix-crash-in-plasma.patch
+	 'b21f9b2c0f9af0f658ceaf2f8dcc334d'  # fix-crash-in-plasma.patch
+	 'afd839d3df7eec487d647a73cde2e9cf') # vlc-hang.patch
 
 #
 # build function
@@ -77,6 +79,7 @@ build()
 	msg "applying fixes ..."
 	# Already fixed upstream
         patch -Np1 -i ${srcdir}/fix-crash-in-plasma.patch
+        patch -Np1 -i ${srcdir}/vlc-hang.patch
 
 	cd ..
 
