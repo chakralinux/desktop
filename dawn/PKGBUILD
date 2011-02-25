@@ -8,8 +8,8 @@ source ../_buildscripts/${current_repo}-${_arch}-cfg.conf
 
 pkgname=dawn
 _pkgname=dawn-rpg
-pkgver=0.0.40
-pkgrel=2
+pkgver=0.0.41
+pkgrel=1
 pkgdesc="2D RPG set in a fantasy world."
 arch=('i686' 'x86_64')
 license=('GPL3')
@@ -19,7 +19,7 @@ makedepends=('autoconf' 'automake')
 replaces=('dawn-rpg')
 changelog=ChangeLog
 source=("http://downloads.sourceforge.net/project/$_pkgname/$_pkgname/$pkgname-$pkgver.tar.gz")
-md5sums=('098b890e8172b883d25d770b6f048530')
+md5sums=('123d288c699df619384e28cd9f691fe6')
 
 build() {
   cd $srcdir/$pkgname-$pkgver
@@ -37,6 +37,7 @@ package() {
 
   install -Dm 775 $srcdir/$pkgname-$pkgver/$_pkgname $pkgdir/usr/share/$pkgname/$pkgname
   cp -R $srcdir/$pkgname-$pkgver/data $pkgdir/usr/share/$pkgname/data
+  install $srcdir/$pkgname-$pkgver/settings.lua $pkgdir/usr/share/$pkgname/settings.lua
 
   # Temporal launcher:
   mkdir -p $pkgdir/usr/bin
@@ -46,6 +47,6 @@ package() {
   chmod +x $pkgdir/usr/bin/$pkgname
 
   # Change permissions so all users in "games" group can save games.
-  chown :games $pkgdir/usr/share/$pkgname/
+  chown :games $pkgdir/usr/share/$pkgname/ -R
   chmod 775 $pkgdir/usr/share/$pkgname/ -R
 }
