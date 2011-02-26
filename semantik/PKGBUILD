@@ -1,0 +1,20 @@
+pkgname=semantik
+pkgver=0.7.4
+pkgrel=1
+pkgdesc="A mind-mapping tool that helps creating documents such as reports or presentions."
+arch=('i686' 'x86_64')
+url="http://kde-apps.org/content/show.php/Semantik?content=55242"
+license=('GPL')
+depends=('kdelibs>=4.1' 'python>=2.3' 'qt>=4.4')
+makedepends=("kdelibs" "python2" "ocaml" "kdebase-workspace")
+optdepends=()
+provides=('Semantik')
+source=('http://semantik.googlecode.com/files/semantik-snapshot.tar.bz2')
+sha1sums='7c1f48e013c1e0e9cd94bf011facd49e24a11703'
+
+build() {
+  cd "$srcdir/$pkgname-$pkgver"
+  ./waf --prefix=/usr configure || return 1
+  ./waf || return 1
+  ./waf --destdir="$pkgdir" install
+}
