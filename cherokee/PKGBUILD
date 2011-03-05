@@ -7,7 +7,7 @@
 # include global config
 
 pkgname=cherokee
-pkgver=1.0.16
+pkgver=1.2.1
 pkgrel=1
 pkgdesc="A very fast, flexible and easy to configure Web Server"
 arch=('i686' 'x86_64')
@@ -25,11 +25,11 @@ optdepends=('python2: cherokee-admin (administrative web interface)'
             'rrdtool: RRDtool based information collector')
 backup=('etc/cherokee/cherokee.conf'
         'etc/logrotate.d/cherokee')
-source=(http://www.cherokee-project.com/download/1.0/$pkgver/cherokee-$pkgver.tar.gz
+source=(http://www.cherokee-project.com/download/1.2/$pkgver/cherokee-$pkgver.tar.gz
         cherokee.rc
         cherokee.logrotate)        
 options=('!libtool')
-md5sums=('d9ace1e79237ea60198dafe52cb172d1'
+md5sums=('2204b9da5b910a8fe251f5dee4506155'
          'a2d2b69c6220fab57cda4f531b680f9f'
          '8d69341bd4002bffd69c6e82ff6c905f')
 
@@ -38,10 +38,6 @@ build() {
 
   # Use subdirectory for logs
   sed -i -r 's|(%localstatedir%/log)|\1/cherokee|' cherokee.conf.sample.pre
-
-  # http://code.google.com/p/cherokee/issues/detail?id=1034
-  #patch -Np3 -E -i "$srcdir/r5734-get-rid-of-package-py.patch"
-  #autoreconf -v
 
   ./configure --prefix=/usr --sysconfdir=/etc --localstatedir=/var \
               --with-wwwroot=/srv/http --disable-static \
