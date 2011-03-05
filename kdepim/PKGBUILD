@@ -42,39 +42,29 @@ packs=('ar'
        'ca'
        'ca@valencia'
        'cs'
-#       'csb'
        'da'
        'de'
        'el'
        'en_GB'
-#       'eo'
        'es'
        'et'
        'eu'
        'fi'
        'fr'
-#       'fy'
        'ga'
        'gl'
-       'gu'
        'he'
        'hi'
        'hr'
        'hu'
-       'ia'
-       'id'
        'is'
        'it'
        'ja'
        'kk'
        'km'
-       'kn'
        'ko'
        'lt'
        'lv'
-       'mai'
-#       'mk'
-#       'ml'
        'nb'
        'nds'
        'nl'
@@ -85,13 +75,10 @@ packs=('ar'
        'pt_BR'
        'ro'
        'ru'
-#       'si'
        'sk'
        'sl'
        'sr'
        'sv'
-#       'tg'
-       'th'
        'tr'
        'uk'
        'wa'
@@ -116,9 +103,9 @@ makedepends=('pkgconfig' 'cmake' 'automoc4' 'boost' "kdelibs>=${_kdever}" "kdepi
 
 #source=("$_mirror/${_origname}-$_kdever.tar.bz2")
 source=("ftp://ftp.gwdg.de/pub/x11/kde/stable/kdepim-$pkgver/src/${_origname}-$pkgver.tar.bz2"
-        "http://chakra-project.org/sources/kde-l10n/kdepim-4.4.5-l10n-4.5.4.tar.xz")
+        "http://chakra-project.org/sources/kde-l10n/kdepim-l10n-4.4.10.tar.xz")
 sha1sums=('b9c45e80dddc3bff201df6ddd76fdf4f1f18d5c3'
-          '37b18dffb081fc601b2bc41ae29fd6950da398c1')
+          'ce16a0cbd172376bc999b5bcbf29733273cc866c')
 
 #
 # build function
@@ -178,10 +165,10 @@ package_kdepim-common()
 
 	msg "Starting translations"
 	FILES="*.po"
-	cd ${srcdir}/kdepim-4.4.5-l10n-4.5.4
+	cd ${srcdir}
 	for it in ${packs[@]} ; do
 	      msg "creating translation: $it"
-	      pushd "kde-l10n-$it-4.5.4/messages/kdepim"
+	      pushd "kdepim-l10n-$it-4.4.10/messages/kdepim"
 	      mkdir -pv $pkgdir/usr/share/locale/$it/LC_MESSAGES
 	      for f in $FILES
 	      do
