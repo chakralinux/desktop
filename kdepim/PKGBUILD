@@ -37,11 +37,59 @@ pkgname=('kdepim-common'
          # disabled for now because of outdated/unfinished opensync:
          # kitchensync kmobiletools
 
+packs=('ar'
+       'bg'
+       'ca'
+       'ca@valencia'
+       'cs'
+       'da'
+       'de'
+       'el'
+       'en_GB'
+       'es'
+       'et'
+       'eu'
+       'fi'
+       'fr'
+       'ga'
+       'gl'
+       'he'
+       'hi'
+       'hr'
+       'hu'
+       'is'
+       'it'
+       'ja'
+       'kk'
+       'km'
+       'ko'
+       'lt'
+       'lv'
+       'nb'
+       'nds'
+       'nl'
+       'nn'
+       'pa'
+       'pl'
+       'pt'
+       'pt_BR'
+       'ro'
+       'ru'
+       'sk'
+       'sl'
+       'sr'
+       'sv'
+       'tr'
+       'uk'
+       'wa'
+       'zh_CN'
+       'zh_TW')
+
         
 arch=('i686' 'x86_64')
 #pkgver=${_kdever}
 pkgver=4.4.10
-pkgrel=2
+pkgrel=3
 
 pkgdesc="split package"
 url="http://www.kde.org"
@@ -50,12 +98,14 @@ license=('GPL' 'LGPL' 'FDL')
 options=('docs' '!splithdr' 'splitdbg' 'log')
 
 makedepends=('pkgconfig' 'cmake' 'automoc4' 'boost' "kdelibs>=${_kdever}" "kdepimlibs>=${_kdever}"
-             "kdepim-runtime>=${pkgver}" 'gnokii' 'libxss' "kdebase-runtime>=${_kdever}" 'pilot-link' 
+             "kdepim-runtime>=${pkgver}-${pkgrel}" 'gnokii' 'libxss' "kdebase-runtime>=${_kdever}" 'pilot-link' 
 	     'kde-agent' 'libindicate-qt>=0.2.2' 'docbook-xsl')
 
 #source=("$_mirror/${_origname}-$_kdever.tar.bz2")
-source=("ftp://ftp.gwdg.de/pub/x11/kde/stable/kdepim-$pkgver/src/${_origname}-$pkgver.tar.bz2")
-sha1sums=('b9c45e80dddc3bff201df6ddd76fdf4f1f18d5c3')
+source=("ftp://ftp.gwdg.de/pub/x11/kde/stable/kdepim-$pkgver/src/${_origname}-$pkgver.tar.bz2"
+        "http://chakra-project.org/sources/kde-l10n/kdepim-l10n-4.4.10.tar.xz")
+sha1sums=('b9c45e80dddc3bff201df6ddd76fdf4f1f18d5c3'
+          'ce16a0cbd172376bc999b5bcbf29733273cc866c')
 
 #
 # build function
@@ -81,7 +131,7 @@ build()
 package_kdepim-common()
 {
 	pkgdesc="KDE PIM - Common files and libraries"
-	depends=("kdepimlibs>=${_kdever}" 'gnokii' 'libxss' "kdebase-runtime>=${_kdever}" 'pilot-link' 'kde-agent'
+	depends=("kdepimlibs>=${_kdever}" 'gnokii' 'libxss' "kdebase-runtime>=${_kdever}" "kdepim-runtime>=${pkgver}-${pkgrel}" 'pilot-link' 'kde-agent'
                  'libxss' 'libindicate-qt>=0.2.2')
 
 	conflicts=("kdmeod-${_origname}-common")
@@ -112,6 +162,22 @@ package_kdepim-common()
 #		
 	# FIXME: also exists in oxygen-icons
 	rm -rf $pkgdir/usr/share/icons/oxygen/16x16/status/meeting-organizer.png
+
+	msg "Starting translations"
+	FILES="*.po"
+	cd ${srcdir}
+	for it in ${packs[@]} ; do
+	      msg "creating translation: $it"
+	      pushd "kdepim-l10n-$it-4.4.10/messages/kdepim"
+	      mkdir -pv $pkgdir/usr/share/locale/$it/LC_MESSAGES
+	      for f in $FILES
+	      do
+		  f=`echo "$f" | cut -d. -f1`
+		  msgfmt -o $f.mo $f.po
+		  cp -v $f.mo $pkgdir/usr/share/locale/$it/LC_MESSAGES/$f.mo
+	      done
+	      popd
+	done
 }
 
 package_kdepim-doc()
