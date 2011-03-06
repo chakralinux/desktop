@@ -8,36 +8,36 @@ source ../_buildscripts/${current_repo}-${_arch}-cfg.conf
 
 
 pkgname=qlandkartegt
-pkgver=0.20.2
+pkgver=1.1.0
 pkgrel=1
 pkgdesc="Use your GPS with Linux"
 arch=('i686' 'x86_64')
 url="http://www.qlandkarte.org"
 license=('GPL')
-depends=('proj>=4.6' 'gdal>1.5.0' 'qt>=4.4' 'xerces-c' 'mesa')
+depends=('gdal' 'gpsd' 'libdmtx' 'libexif' 'libmysqlclient' 'mesa' 'postgresql-libs' 'qt' 'shared-mime-info')
 optdepends=('garmindev: to connect garmin devices')
-makedepends=('cmake>=2.6')
-source=("http://downloads.sourceforge.net/$pkgname/$pkgname-$pkgver.tar.gz" 'qlandkartegt.desktop' 'qlandkartegt.menu')
-md5sums=('ac02b00e2bb7fa99fe9e315726f3f10e'
-         'ebc7b91d04557802ff4c28910d8b23c9'
-         'b82cab9c878d0d090b12e84cdbdb1705')
+makedepends=('cmake>=2.6' 'garmindev')
+source=(http://downloads.sourceforge.net/$pkgname/$pkgname-$pkgver.tar.gz \
+        $pkgname-mimetypes.xml)
+sha256sums=('95dda0cbb1b92defa43d0fcd13c42a5bd20f4e350b51b6fd78ce4106230041d3'
+            'e8d33948831f8a66edd752c71c653085d6c4d9f1969e70dd8c40b9c7ca37fba0')
 
 
 build() {
-  mkdir -p $srcdir/build
+  cd ${srcdir}/$pkgname-$pkgver
 
-  cd $srcdir/build
+  install -d ${srcdir}/$pkgname-$pkgver/build
+  cd ${srcdir}/$pkgname-$pkgver/build
 
-  cmake -DCMAKE_INSTALL_PREFIX=/usr -DCMAKE_BUILD_TYPE=Release ../$pkgname-$pkgver
+  cmake -DCMAKE_INSTALL_PREFIX=/usr -DCMAKE_BUILD_TYPE=Release ..
   make
 }
 
 package(){
-  cd $srcdir/build
+  cd ${srcdir}/$pkgname-$pkgver/build
 
-  make DESTDIR=$pkgdir install
+  make DESTDIR=${pkgdir} install
 
-  install -D -m 755 $srcdir/$pkgname-$pkgver/src/icons/orig.backGlobe128x128.png $pkgdir/usr/share/pixmaps/$pkgname.png
-  install -D -m 755 $srcdir/$pkgname.desktop $pkgdir/usr/share/applications/$pkgname.desktop
-  install -D -m 755 $srcdir/$pkgname.menu $pkgdir/usr/share/menu/$pkgname.menu
+  install -D -m644 ${srcdir}/$pkgname-mimetypes.xml \
+    ${pkgdir}/usr/share/mime/packages/$pkgname-mimetypes.xml
 }
