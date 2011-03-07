@@ -9,26 +9,31 @@ source ../_buildscripts/${current_repo}-${_arch}-cfg.conf
 pkgname=cegui
 _pkgname=CEGUI
 pkgver=0.7.5
-pkgrel=2
+pkgrel=3
 pkgdesc="A free library providing windowing and widgets for graphics APIs/engines."
 arch=(i686 x86_64)
 url="http://crayzedsgui.sourceforge.net"
 options=('!libtool')
 license=("MIT")
-depends=('pcre' 'python' 'expat' 'freetype2' 'libxml2' 'devil' 'freeglut' 'lua' 'silly')
+depends=('devil' 'expat' 'freeglut' 'freetype2' 'libxml2' 'lua' 'pcre' 'python2' 'silly')
+makedepends=('ogre') # Needed during build for OGRE support.
 source=(http://downloads.sourceforge.net/crayzedsgui/$_pkgname-$pkgver.tar.gz)
 md5sums=('38c79d1fdfaaa10f481c99a2ac479516')
 
 build() {
   cd $srcdir/$_pkgname-$pkgver
     
-  ./configure --prefix=/usr \
-    --sysconfdir=/etc \
-    --enable-devil \
-    --enable-silly \
+  ./configure \
+    --prefix=/usr \
     --disable-xerces-c \
-    --with-default-image-codec=SILLYImageCodec \
-    --enable-lua
+    --enable-null-renderer \
+    --sysconfdir=/etc
+  make
+
+  cd $srcdir/$_pkgname-$pkgver/$pkgname/src/RendererModules/Null
+  make
+
+  cd $srcdir/$_pkgname-$pkgver/$pkgname/include/RendererModules/Null
   make
 }
 
@@ -36,5 +41,12 @@ package() {
   cd $srcdir/$_pkgname-$pkgver
   make DESTDIR=$pkgdir install
 
-  install -D -m644 doc/COPYING $pkgdir/usr/share/licenses/$pkgname/LICENSE
+  cd $srcdir/$_pkgname-$pkgver/$pkgname/src/RendererModules/Null
+  make DESTDIR=$pkgdir install
+
+  cd $srcdir/$_pkgname-$pkgver/$pkgname/include/RendererModules/Null
+  make DESTDIR=$pkgdir install
+
+  # License:
+  install -D -m644 $srcdir/$_pkgname-$pkgver/doc/COPYING $pkgdir/usr/share/licenses/$pkgname/LICENSE
 }
