@@ -1,0 +1,65 @@
+#
+# Games Packages for Chakra, part of chakra-project.org
+#
+# Maintainer: Adrián Chaves Fernández (Gallaecio) <adriyetichaves@gmail.com>
+
+# include global config
+source ../_buildscripts/${current_repo}-${_arch}-cfg.conf
+
+pkgname=sumwars
+pkgver=0.5.4
+_pkgver=0-5-4
+pkgrel=1
+pkgdesc="Summoning Wars is a role-playing game, featuring both a single-player and a multiplayer mode for about 2 to 8 players."
+arch=('i686' 'x86_64')
+url="http://sumwars.org/"
+license=('GPL3')
+depends=('cegui>=0.7.0' 'freealut' 'libogg' 'libvorbis' 'lua>=5.1.0' 'ogre>=1.7.0' 'ois' 'openal')
+source=("http://downloads.sourceforge.net/project/$pkgname/$pkgver/${pkgname}_${_pkgver}_src.tgz")
+md5sums=('98fe18a749614b5a640f2b36fa819f47')
+
+build() {
+  cd $srcdir/${pkgname}_${_pkgver}_src
+  mkdir build && cd build
+  cmake \
+    -DCMAKE_INSTALL_PREFIX=/usr \
+    -DCMAKE_BUILD_TYPE=RelWithDebInfo \
+    ..
+  make
+}
+ 
+package() {
+  cd $srcdir/${pkgname}_${_pkgver}_src/build
+
+  #make install is broken
+  #make DESTDIR=$pkgdir install
+
+  install -dm 775 $pkgdir/usr/share/$pkgname/save
+  chown :games $pkgdir/usr/share/$pkgname/save
+
+  install -dm 755 $pkgdir/usr/{bin,share/pixmaps}
+
+  install -m755 $pkgname $pkgdir/usr/share/$pkgname/$pkgname
+
+  cd $srcdir/${pkgname}_${_pkgver}_src/
+
+  for filename in authors.txt ogre.cfg plugins.cfg resources.cfg
+  do
+    install -m644 $filename $pkgdir/usr/share/$pkgname/$filename
+  done
+
+  install -m644 resources/itempictures/shield.png $pkgdir/usr/share/pixmaps/sumwars.png
+
+  cp -r data $pkgdir/usr/share/$pkgname/
+  cp -r resources $pkgdir/usr/share/$pkgname
+  touch $pkgdir/usr/share/$pkgname/CEGUI.log
+  touch $pkgdir/usr/share/$pkgname/Ogre.log
+  touch $pkgdir/usr/share/$pkgname/sumwars.log
+  chmod 777 $pkgdir/usr/share/$pkgname/*.log
+
+  # Execution script.
+  echo "#!/bin/bash"		>  $pkgdir/usr/bin/$pkgname
+  echo "cd /usr/share/$pkgname"	>> $pkgdir/usr/bin/$pkgname
+  echo "./$pkgname"		>> $pkgdir/usr/bin/$pkgname
+  chmod 775 $pkgdir/usr/bin/$pkgname
+}
