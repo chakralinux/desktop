@@ -66,6 +66,7 @@ pkgname=('kdeplasma-addons-applets-bball'
          'kdeplasma-addons-applets-weatherstation'
          'kdeplasma-addons-applets-webslice'
          'kdeplasma-addons-common'
+         'kdeplasma-addons-containments'
          'kdeplasma-addons-runners-audioplayercontrol'
          'kdeplasma-addons-runners-browserhistory'
          'kdeplasma-addons-runners-characters'
@@ -85,7 +86,7 @@ pkgname=('kdeplasma-addons-applets-bball'
          'kdeplasma-addons-wallpapers-weather')
 arch=('i686' 'x86_64')
 pkgver=${_kdever}
-pkgrel=1
+pkgrel=2
 
 pkgdesc="KDE Plasma Addons"
 url="http://www.kde.org/"
@@ -546,6 +547,13 @@ package_kdeplasma-addons-applets-webslice() {
         groups=("kde-complete" "kde-uninstall" "kdeplasma-addons")
         cd $srcdir/build/applets/webslice
         make DESTDIR=$pkgdir install
+}
+
+package_kdeplasma-addons-containments() {
+    pkgdesc='Activities types for Plasma shells'
+    depends=('kdebase-workspace')
+    cd $srcdir/build/containments
+    make DESTDIR=$pkgdir install
 }
 
 package_kdeplasma-addons-runners-audioplayercontrol() {
