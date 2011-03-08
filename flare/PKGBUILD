@@ -1,0 +1,47 @@
+#
+# Games Packages for Chakra, part of chakra-project.org
+#
+# Maintainer: Adrián Chaves Fernández (Gallaecio) <adriyetichaves@gmail.com>
+
+# include global config
+source ../_buildscripts/${current_repo}-${_arch}-cfg.conf
+
+pkgname=flare
+pkgver=0.11
+_pkgver=011
+pkgrel=1
+pkgdesc="Action roleplaying game from an isometric perspective."
+arch=('i686' 'x86_64')
+url="http://clintbellanger.net/rpg/"
+license=('GPL2' 'CCPL-by-sa')
+depends=('sdl' 'sdl_image' 'sdl_mixer')
+replaces=('osare')
+changelog=ChangeLog
+source=("http://$pkgname-engine.googlecode.com/files/${pkgname}_src_v$_pkgver.zip")
+md5sums=('db1a7a7e446c06230380762399d114ae')
+
+build() {
+  cd $srcdir/${pkgname}_v$_pkgver/src
+
+  g++ *.cpp -o $pkgname.bin -I/usr/include/SDL -lSDL -lSDL_image -lSDL_mixer
+}
+
+package() {
+  cd $srcdir/${pkgname}_v$_pkgver/src
+
+  install -m755 -d $pkgdir/usr/{bin,share/$pkgname/saves}
+  install -m755 $pkgname.bin $pkgdir/usr/share/$pkgname/$pkgname
+
+  cd $srcdir/${pkgname}_v$_pkgver/resources
+  cp -r * $pkgdir/usr/share/$pkgname
+
+  cat > $pkgdir/usr/bin/$pkgname << EOF
+#!/bin/sh
+cd /usr/share/$pkgname/
+./$pkgname
+EOF
+
+  chmod +x $pkgdir/usr/bin/$pkgname
+  chmod 775 $pkgdir/usr/share/$pkgname/saves
+  chown root:games $pkgdir/usr/share/$pkgname/saves
+}
