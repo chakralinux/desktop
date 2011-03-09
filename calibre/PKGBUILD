@@ -8,7 +8,7 @@ source ../_buildscripts/${current_repo}-${_arch}-cfg.conf
 
 pkgname=calibre
 pkgver=0.7.48
-pkgrel=1
+pkgrel=2
 pkgdesc="E-book library management application"
 arch=('i686' 'x86_64') 
 url="http://calibre.kovidgoyal.net/"
@@ -19,68 +19,49 @@ depends=('python2' 'python-imaging' 'libusb' 'pyqt' 'python-mechanize'
          'podofo>=0.8.1-6' 'xdg-utils' 'cherrypy' 'python-pypdf' 'unrar' 'chmlib' 'poppler' 'poppler-qt' 'liblqr' 'icu' 'sip' 'libffi')
 makedepends=('python-distribute')
 install=calibre.install
-source=(http://sourceforge.net/projects/calibre/files/${pkgver}/${pkgname}-${pkgver}.tar.gz)
-md5sums=('559d5fd1c0402cf673167d679d006e67')
+source=(http://calibre-ebook.googlecode.com/files/${pkgname}-${pkgver}.tar.gz
+        desktop_integration.patch)
+md5sums=('559d5fd1c0402cf673167d679d006e67'
+         'bcc538a3b004429bf8f5a0ac1d89a37f')
 
 build() {
-	cd "${pkgname}"
+  cd "${pkgname}"
 
-	rm -rf src/{cherrypy,pyPdf}
+  rm -rf src/{cherrypy,pyPdf}
+  sed -i -e "s/ldflags = shlex.split(ldflags)/ldflags = shlex.split(ldflags) + ['-fPIC']/" setup/extensions.py
+  sed -i -e 's:\(#!/usr/bin/env[ ]\+python$\|#!/usr/bin/python$\):\12:g' \
+    $(find . -regex ".*.py\|.*.recipe")
 
-	# Hador patches
-	sed -e "/render_img('mimetypes\/lrf.png', 'calibre-lrf.png')/,/self.icon_resources.append(('apps', 'calibre-viewer', '128'))/c \ \
-                   dir = os.path.join(self.opts.staging_sharedir,'../pixmaps')\n \
-                   os.mkdir(dir)\n \
-                   render_img('mimetypes/lrf.png', os.path.join(dir,'calibre-lrf.png'))\n \
-                   render_img('lt.png', os.path.join(dir, 'calibre-gui.png'))\n \
-                   render_img('viewer.png', os.path.join(dir, 'calibre-viewer.png'))" \
-		-e "/f = open('calibre-lrfviewer.desktop', 'wb')/c \ \
-                   dir = os.path.join(self.opts.staging_sharedir,'../applications')\n \
-                   os.mkdir(dir)\n \
-                   f = open(os.path.join(dir, 'calibre-lrfviewer.desktop'), 'wb')" \
-		-e "s/if mt and 'chemical' not in mt:/if mt and 'chemical' not in mt and 'text' not in mt and 'pdf' not in mt and 'xhtml' not in mt:/g" \
-		-e "s/f = open('calibre-ebook-viewer.desktop', 'wb')/f = open(os.path.join(dir, 'calibre-ebook-viewer.desktop'), 'wb')/g" \
-		-e "s/f = open('calibre-gui.desktop', 'wb')/f = open(os.path.join(dir, 'calibre-gui.desktop'), 'wb')/g" \
-		-e "/des = ('calibre-gui.desktop', 'calibre-lrfviewer.desktop',/,/f = open('calibre-mimetypes', 'wb')/c \ \
-                   dir = os.path.join(self.opts.staging_sharedir,'../mime/packages/')\n \
-                   os.makedirs(dir)\n \
-                   f = open(os.path.join(dir, 'calibre.xml'), 'wb')" \
-		-e "/self.mime_resources.append('calibre-mimetypes')/,/check_call('xdg-mime install .\/calibre-mimetypes', shell=True)/d" \
-		-i src/calibre/linux.py
-
-	# Larryhaja patches
-	sed -e "/self.create_uninstaller()/,/os.rmdir(config_dir)/d" \
-		-e "s|self.opts.staging_sharedir, 'man/man1'|self.opts.staging_root, 'usr/share/man/man1'|" \
-		-e "s|manpath, prog+'.1'+__appname__+'.bz2'|manpath, prog+'.1'+'.bz2'|" \
-		-e "s:old_udev = '/etc:old_udev = '${pkgdir}/etc:" -i src/calibre/linux.py
-
-	sed -e "s/ldflags = shlex.split(ldflags)/ldflags = shlex.split(ldflags) + ['-fPIC']/" -i setup/extensions.py
-
-	# Disable unnecessary privilege dropping
-	sed -e "s:if os.geteuid() == 0:if False and os.geteuid() == 0:" -i setup/install.py
-	
-	python2 setup.py build
+  python2 setup.py build || return 1
+  python2 setup.py resources || return 1
+  python2 setup.py translations || return 1
 }
 
 package() {
-	cd ${pkgname}
+  cd ${pkgname}
+  
+  patch -Np1 -i $srcdir/desktop_integration.patch || return 1
 
-	mkdir -p ${pkgdir}/lib/python2.7/site-packages
-	python2 setup.py install --root=${pkgdir} --prefix=/usr \
-		--staging-bindir=${pkgdir}/usr/bin \
-		--staging-libdir=${pkgdir}/usr/lib \
-		--staging-sharedir=${pkgdir}/usr/share
+  # More on desktop integration (e.g. enforce arch defaults)
+  sed -i -e "/self.create_uninstaller()/,/os.rmdir(config_dir)/d" \
+      -e "s|self.opts.staging_sharedir, 'man/man1'|self.opts.staging_root, 'usr/share/man/man1'|" \
+      -e "s|manpath, prog+'.1'+__appname__+'.bz2'|manpath, prog+'.1'+'.bz2'|" \
+      -e "s|old_udev = '/etc|old_udev = '${pkgdir}/etc|" \
+      -e "s/^Name=calibre/Name=Calibre/g" src/calibre/linux.py
 
-	find ${pkgdir} -type d -empty -delete
+  # Fix the environment module location
+  sed -i -e "s|(prefix=.*)|(prefix='$pkgdir/usr')|g" setup/install.py
 
-	sed -i -e "s|#![ ]*/usr/bin/python$|#!/usr/bin/python2|" \
-		-e "s|#![ ]*/usr/bin/env *python$|#!/usr/bin/env python2|" \
-		$( find "${pkgdir}" -type f -regex ".+\.py\|.+\.recipe" )
+  mkdir -p ${pkgdir}/usr/lib/python2.7/site-packages
+  python2 setup.py install --root=${pkgdir}/ --prefix=/usr \
+    --staging-bindir=${pkgdir}/usr/bin \
+    --staging-libdir=${pkgdir}/usr/lib \
+    --staging-sharedir=${pkgdir}/usr/share
 
-	# Decompress the man pages so makepkg will do it for us.
-	for decom in ${pkgdir}/usr/share/man/man1/*.bz2; do
-		bzip2 -d ${decom}
-	done
+  find ${pkgdir} -type d -empty -delete
 
-	find "${pkgdir}/usr/bin" -type f -exec sed -i -e "s|#![ ]*/usr/bin/env *python$|#!/usr/bin/env python2|" {} +
+  # Decompress the man pages so makepkg will do it for us.
+  for decom in ${pkgdir}/usr/share/man/man1/*.bz2; do
+    bzip2 -d ${decom}
+  done
 }
