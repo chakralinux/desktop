@@ -1,14 +1,14 @@
 #
 # Games Packages for Chakra, part of chakra-project.org
 #
-# Maintainer: Adrián Chaves Fernández (Gallaecio) <adriyetichaves gmail.com>
+# Maintainer: Adrián Chaves Fernández (Gallaecio) <adriyetichav@gmail.com>
 
 # include global config
 source ../_buildscripts/${current_repo}-${_arch}-cfg.conf
 
 pkgname=knights
 _pkgname=Knights
-pkgver=2.2.0
+pkgver=2.3.0
 pkgrel=1
 pkgdesc="Chess board with XBoard protocol support."
 arch=('i686' 'x86_64')
@@ -19,9 +19,10 @@ optdepends=('gnuchess: for playing against the computer.')
 makedepends=('automoc4' 'cmake' 'docbook-xsl')
 changelog=ChangeLog
 source=("http://dl.dropbox.com/u/2888238/$_pkgname/$pkgname-$pkgver.tar.bz2")
-md5sums=('6196e8ef8d2e7c16e38307469708f7cf')
+md5sums=('abbaee90b69d1522d2b75e391c99b946')
 
-build() {
+build()
+{
   cd $srcdir/$pkgname-$pkgver
   mkdir build && cd build
   cmake -DCMAKE_INSTALL_PREFIX=`kde4-config --prefix` \
@@ -30,7 +31,8 @@ build() {
   make
 }
  
-package() {
+package()
+{
   cd $srcdir/$pkgname-$pkgver/build
   make DESTDIR=$pkgdir install
 }
