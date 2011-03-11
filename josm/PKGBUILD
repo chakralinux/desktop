@@ -11,12 +11,12 @@ source ../_buildscripts/${current_repo}-${_arch}-cfg.conf
 
 pkgname=josm
 pkgver=3966
-pkgrel=1
+pkgrel=2
 pkgdesc="An editor for OpenStreetMap written in Java."
 arch=('i686' 'x86_64')
 url="http://josm.openstreetmap.de/"
 license=('GPL')
-depends=('jre' 'intltool')
+depends=('java-runtime' 'intltool')
 source=(http://josm.openstreetmap.de/download/$pkgname-tested.jar \
 	$pkgname.desktop)
 md5sums=('bf374e0279719aef29857b8e66c9ef15'
@@ -35,7 +35,7 @@ build() {
   install -d ${pkgdir}/usr/bin
   echo "#!/bin/sh" > ${pkgdir}/usr/bin/$pkgname
   echo CLASSPATH="/usr/share/java/josm/josm.jar" >> ${pkgdir}/usr/bin/$pkgname
-  echo /opt/java/jre/bin/java -cp \"\${CLASSPATH}\" org.openstreetmap.josm.gui.MainApplication \"\$@\" \
+  echo java -cp \"\${CLASSPATH}\" org.openstreetmap.josm.gui.MainApplication \"\$@\" \
     >> ${pkgdir}/usr/bin/$pkgname
   chmod 755 ${pkgdir}/usr/bin/$pkgname
 }
