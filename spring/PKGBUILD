@@ -28,17 +28,17 @@ build() {
   sed -i '1i\
 	  #include <list>' rts/lib/lobby/Connection.h
 
-  mkdir build && cd build
+  cmake \
+  -DCMAKE_INSTALL_PREFIX=/usr \
+  -DCMAKE_BUILD_TYPE=RelWithDebInfo \
+  -DDATADIR=share/spring \
+  .
 
-  cmake -DCMAKE_INSTALL_PREFIX=`kde4-config --prefix` \
-        -DCMAKE_BUILD_TYPE=RelWithDebInfo \
-	-DDATADIR=share/spring \
-	..	
   make
 }
 
 package() {
-  cd ${pkgname}_$pkgver/build
+  cd ${pkgname}_$pkgver
   make DESTDIR=$pkgdir install
 
   install -d $pkgdir/etc/spring
