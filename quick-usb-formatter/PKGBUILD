@@ -5,18 +5,19 @@
 # maintainer (x86_64): Manuel Tortosa <manutortosa[at]chakra-project[dot]org>
 
 pkgname=quick-usb-formatter
-pkgver=0.3
-pkgrel=2
+pkgver=0.4.1
+pkgrel=1
 pkgdesc='A Quick and simple addon for format usb sticks using the device notifier for Chakra GNU/Linux'
 url='http://www.chakra-project.org'
 license=('GPL')
 arch=('i686' 'x86_64')
 depends=('qt' 'kdelibs')
+makedepends=('automoc4')
 source=("http://chakra-project.org/sources/${pkgname}/${pkgname}-${pkgver}.tar.gz")
-md5sums=('9480d6189031d93831c19d81ff74175c')
+md5sums=('fe724d8e4a392bb20caf245acb4bf9ad')
 
 build() {
-	cd ${srcdir}/${pkgname}-${pkgver}
+	cd ${srcdir}/chakra-quick-usb-formatter
 	rm -rf build
 	mkdir build && cd build
 		cmake -DCMAKE_INSTALL_PREFIX=/usr .. || return 1
