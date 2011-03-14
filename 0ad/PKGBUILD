@@ -7,28 +7,33 @@
 source ../_buildscripts/${current_repo}-${_arch}-cfg.conf
 
 pkgname=0ad
-pkgver=alpha_3
-_pkgver=r08832-alpha
-pkgrel=4
+pkgver=alpha_4
+_pkgver=r09049-alpha
+pkgrel=1
 pkgdesc="Cross-platform, 3D and historically-based real-time strategy game."
 arch=('i686' 'x86_64')
 url="http://wildfiregames.com/0ad"
 license=('GPL2' 'CCPL')
-depends=('binutils' 'boost' 'crypto++' 'devil' 'enet' 'fam' 'libogg' 'libpng' 'libvorbis' 'libxml2' 'mesa' 'nasm' 'openal' 'python2' 'sdl' 'zip' 'zlib')
+depends=('binutils' 'boost' 'crypto++' 'curl' 'devil' 'enet' 'fam' 'libogg' 'libpng' 'libvorbis' 'libxml2' 'mesa' 'nasm' 'openal' 'python2' 'sdl' 'zip' 'zlib')
 makedepends=('cmake')
 changelog=ChangeLog
 source=("http://releases.wildfiregames.com/$pkgname-$_pkgver-unix-build.tar.xz"
 	"http://releases.wildfiregames.com/$pkgname-$_pkgver-unix-data.tar.xz"
 	"$pkgname.sh"
 	"$pkgname-nogtk.patch")
-md5sums=('b9df52751596633d9aab4cc3b253cb82'
-         '38abc29fc714946ed17ac86ac67fb614'
+md5sums=('3ebb1b322cd947c855da75828ebcd539'
+         '30c289cdbffd552cc29e62778cd718d4'
          '27c6ee0a240c3ea481d08aa7e8e5158b'
          '7bb8119a4d611cdffa05177ea2603151')
 
-build(){
+build()
+{
   cd $srcdir/$pkgname-$_pkgver/build/workspaces
+
   patch -uN update-workspaces.sh $srcdir/$pkgname-nogtk.patch
+
+  export CHOST="$CARCH-pc-linux-gnu"
+
   ./update-workspaces.sh
 
   cd $srcdir/$pkgname-$_pkgver/build/workspaces/gcc
@@ -36,7 +41,8 @@ build(){
   CONFIG=Debug make
 }
 
-package(){  
+package()
+{  
   install -d $pkgdir/usr/share/$pkgname
   cp -r $srcdir/$pkgname-$_pkgver/binaries/* $pkgdir/usr/share/$pkgname
  
