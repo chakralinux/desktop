@@ -1,0 +1,52 @@
+#
+# Games Packages for Chakra, part of chakra-project.org
+#
+# Maintainer: Adrián Chaves Fernández (Gallaecio) <adriyetichaves@gmail.com>
+
+# include global config
+source ../_buildscripts/${current_repo}-${_arch}-cfg.conf
+
+pkgname=libsquish
+_pkgname=squish
+pkgver=1.10
+pkgrel=1
+pkgdesc="DXT compression library."
+arch=('i686' 'x86_64')
+url="http://code.google.com/p/libsquish"
+license=('MIT')
+depends=('gcc-libs')
+makedepends=('cmake')
+source=(http://$pkgname.googlecode.com/files/$_pkgname-$pkgver.tar.gz
+        gcc440.patch
+        LICENSE
+        CMakeLists.txt)
+md5sums=('53b171007aaaaf96ee277e833bb756eb'
+         '6c3d8e3651bcfaf36fc48504f97a0ca4'
+         '513ad70d68b1d1ca771814f77d57b310'
+         '68e0819b97ebf6ea108a0d6914d1e8a0')
+
+build()
+{
+  cp CMakeLists.txt $srcdir/$_pkgname-$pkgver
+
+  cd $srcdir/$_pkgname-$pkgver
+
+  patch -Np0 -i $srcdir/gcc440.patch
+
+  mkdir build && cd build
+  cmake \
+    -DCMAKE_INSTALL_PREFIX=$pkgdir/usr \
+    -DCMAKE_BUILD_TYPE=RelWithDebInfo \
+    ..
+
+  make
+}
+
+package()
+{
+  cd $srcdir/$_pkgname-$pkgver/build
+  make install
+
+  # License.
+  install -Dm 644 $srcdir/LICENSE $pkgdir/usr/share/licenses/$pkgname/LICENSE
+}
