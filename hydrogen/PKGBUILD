@@ -1,0 +1,36 @@
+#
+# <Repo> Packages for Chakra, part of chakra-project.org
+#
+# Maintainer: Adrián Chaves Fernández (Gallaecio) <adriyetichaves@gmail.com>
+
+# include global config
+source ../_buildscripts/${current_repo}-${_arch}-cfg.conf
+
+pkgname=hydrogen
+pkgver=0.9.5
+pkgrel=1
+pkgdesc="Advanced drum machine."
+arch=('i686' 'x86_64')
+license=('GPL2')
+url="http://www.hydrogen-music.org/"
+depends=('alsa-lib' 'flac' 'jack' 'libarchive' 'liblrdf' 'libsndfile' 'qt' 'tar' 'zlib')
+makedepends=('scons')
+changelog=ChangeLog
+source=(http://downloads.sourceforge.net/$pkgname/$pkgname-$pkgver.tar.gz)
+md5sums=('e96f291d60e58f5d62fe616cee577dc0')
+
+build() {
+  cd $srcdir/$pkgname-$pkgver
+
+msg "Compiling..."
+  export QTDIR=/usr
+  scons \
+    prefix=/usr \
+    libarchive=1
+}
+
+package() {
+  cd $srcdir/$pkgname-$pkgver
+
+  scons DESTDIR="$pkgdir" install
+}
