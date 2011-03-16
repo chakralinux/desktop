@@ -1,0 +1,37 @@
+#
+# Games Packages for Chakra, part of chakra-project.org
+#
+# Maintainer: Adrián Chaves Fernández (Gallaecio) <adriyetichaves@gmail.com>
+
+# include global config
+source ../_buildscripts/${current_repo}-${_arch}-cfg.conf
+
+pkgname=soil
+pkgver=0708
+pkgrel=1
+pkgdesc="tiny C lib primarily for loading textures into OpenGL"
+arch=('i686' 'x86_64')
+url="http://www.lonesock.net/soil.html"
+license=('custom:Public Domain')
+makedepends=('unzip')
+depends=('freeglut')
+source=("http://www.lonesock.net/files/$pkgname.zip")
+md5sums=('4736ac4f34fd9a41fa0197eac23bbc24')
+
+build() {
+  cd $srcdir/"Simple OpenGL Image Library/projects/makefile"
+  [[ -d obj ]] && rm -r obj/
+  mkdir obj/
+
+  sed "s|LOCAL = /usr/local|LOCAL = $pkgdir/usr|g" -i makefile
+  sed "s|CXXFLAGS = |CXXFLAGS = -fPIC |g" -i makefile
+  mkdir -p $pkgdir/usr/{lib,include}
+  make
+}
+
+package() {
+  cd $srcdir/"Simple OpenGL Image Library/projects/makefile"
+
+  make install
+  chmod 644 $pkgdir/usr/lib/libSOIL.a
+}
