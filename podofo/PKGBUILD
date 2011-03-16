@@ -7,8 +7,8 @@
 source ../_buildscripts/${current_repo}-${_arch}-cfg.conf
 
 pkgname=podofo
-pkgver=0.8.4
-pkgrel=2
+pkgver=0.9.0
+pkgrel=1
 pkgdesc="PoDoFo is a library to work with the PDF file format."
 arch=('i686' 'x86_64')
 url="http://podofo.sourceforge.net"
@@ -18,24 +18,24 @@ makedepends=( 'cmake' )
 optdepends=( 'cppunit' 'lua')
 
 source=("http://downloads.sourceforge.net/${pkgname}/${pkgname}-${pkgver}.tar.gz")
-md5sums=('7c366656928cb7919d75bdfdf903d5d5')
+md5sums=('2a9ac8cbb5e6575dbc00f083ad8996fb')
 
 build() {
-    cd ${pkgname}-${pkgver}
-    if [ -d build ]; then
-	rm -Rf build
-    fi
+  cd ${pkgname}-${pkgver}
 
-    mkdir build
-    cd build
+  mkdir build
+  cd build
+  cmake -DCMAKE_INSTALL_PREFIX=/usr .. \
+        -DPODOFO_BUILD_SHARED=1 \
+        -DPODOFO_HAVE_JPEG_LIB=1 \
+        -DPODOFO_HAVE_PNG_LIB=1 \
+        -DPODOFO_HAVE_TIFF_LIB=1
+  make
+}
 
-    cmake -DCMAKE_INSTALL_PREFIX=/usr .. \
-    -DPODOFO_BUILD_SHARED=1 \
-    -DPODOFO_HAVE_JPEG_LIB=1 \
-    -DPODOFO_HAVE_PNG_LIB=1 \
-    -DPODOFO_HAVE_TIFF_LIB=1 || return 1
-
-    make || return 1
+package() {
+  cd ${pkgname}-${pkgver}/build
+  make DESTDIR=$pkgdir install
 }
 
 package() {
