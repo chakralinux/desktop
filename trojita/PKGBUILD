@@ -1,0 +1,36 @@
+#
+# Chakra Packages for Chakra, part of chakra-project.org
+#
+# maintainer (i686): Phil Miller <philm[at]chakra-project[dog]org>
+# maintainer (x86_64): Manuel Tortosa <manutortosa[at]chakra-project[dot]org>
+# contributor Neo Kolokotronis <tetris4@gmail.com>
+
+pkgname=trojita
+pkgver=0.2.9.3
+pkgrel=1
+pkgdesc="A QT IMAP email client"
+arch=(i686 x86_64)
+url="http://trojita.flaska.net"
+license=('GPL')
+depends=('qt')
+makedepends=('make')
+source=('http://sourceforge.net/projects/trojita/files/src/trojita-0.2.9.3.tar.bz2/download'
+	'trojita.desktop')
+md5sums=('755a3ba0e43a088bd2c14db4dd601c76'
+         'd39e10d321e369dc853fd242472aee91')
+
+build() {
+	cd $srcdir/trojita-$pkgver/
+	qmake PREFIX="$(kde4-config --prefix)"
+        make
+}
+package() {
+	cd $srcdir/trojita-$pkgver/
+        install -D -m755 $srcdir/trojita-$pkgver/src/Gui/trojita "$pkgdir/usr/bin/trojita"
+    
+        #Desktop Icon
+	cd $srcdir/trojita-$pkgver/src/icons/
+	install -Dm644 trojita.png $pkgdir/usr/share/pixmaps/trojita.png
+        install -Dm644 $startdir/trojita.desktop $pkgdir/usr/share/applications/trojita.desktop
+
+}
