@@ -9,7 +9,7 @@ source ../_buildscripts/${current_repo}-${_arch}-cfg.conf
 
 pkgname=blender-beta
 pkgver=2.56a
-pkgrel=2
+pkgrel=3
 pkgdesc="Blender beta version build from source"
 arch=('i686' 'x86_64')
 url="http://blender.org/"
@@ -34,7 +34,7 @@ build() {
   ##########
   [ -e "$srcdir"/blender-$pkgver-beta-build ] || mkdir -p "$srcdir"/blender-$pkgver-beta-build
   cd "$srcdir"/blender-$pkgver-beta-build
-  cmake -DWITH_CODEC_SNDFILE:BOOL=ON -DWITH_CODEC_FFMPEG:BOOL=ON -DCMAKE_INSTALL_PREFIX=/usr "$srcdir"/$extractedSrcDir
+  cmake -DWITH_CODEC_SNDFILE:BOOL=ON -DWITH_CODEC_FFMPEG:BOOL=ON -DWITH_PLAYER:BOOL=ON -DWITH_FFTW3:BOOL=ON -DCMAKE_INSTALL_PREFIX=/usr "$srcdir"/$extractedSrcDir
   make
   ##########
   # now compile some plugins
