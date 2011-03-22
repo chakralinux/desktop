@@ -1,0 +1,36 @@
+#
+# Apps Packages for Chakra, part of chakra-project.org
+#
+# maintainer (i686): Phil Miller <philm[at]chakra-project[dog]org>
+# maintainer (x86_64): Manuel Tortosa <manutortosa[at]chakra-project[dot]org>
+# contributor Neo Kolokotronis <tetris4@gmail.com>
+
+pkgname=dropbox-servicemenu-gtkfree
+pkgver=0.15.3
+pkgrel=1
+pkgdesc="A servicemenu for KDE4 which allows easy access to most of Dropbox features - Stripped from gtk dependencies. It uses Dropbox CLI to generate public urls, and pyndexer to allow sharing directories in public directory."
+url="http://kde-apps.org/content/show.php?content=124416"
+license=('GPL')
+arch=('i686' 'x86_64')
+depends=('kfilebox-gtkfree' 'python' 'kdebase' 'python-m2crypto' 'libdmtx')
+source=(http://kde-look.org/CONTENT/content-files/124416-DropboxServiceMenu-${pkgver}.tar.gz)
+md5sums=('6da9275821ac95c888ee76d90e0a9de5')
+build() {
+	cd "$srcdir/DropboxServiceMenu-${pkgver}/"
+
+  sed -i 's/#!\/usr\/bin\/python/#!\/usr\/bin\/python2/' dropbox-scripts/dropbox.py
+  sed -i 's/#!\/usr\/bin\/python/#!\/usr\/bin\/python2/' dropbox-scripts/dropbox-notify.py
+  sed -i 's/#!\/usr\/bin\/env python/#!\/usr\/bin\/env python2/' dropbox-scripts/pyndexer.py
+  sed -i 's/python/python2/' dropbox-scripts/dropbox_menu.sh
+
+	mkdir -p ${pkgdir}/"`kde4-config --prefix`/share/kde4/services/ServiceMenus/"
+	mkdir -p ${pkgdir}/"/usr/bin/"
+	install -m 755 dropbox-scripts/dropbox.py ${pkgdir}/"/usr/bin/"
+	install -m 755 dropbox-scripts/dropbox-notify.py ${pkgdir}/"/usr/bin/"
+	install -m 755 dropbox-scripts/dropbox_menu.sh ${pkgdir}/"/usr/bin/"
+	install -m 755 dropbox-scripts/dropbox_menu_translations.sh ${pkgdir}/"/usr/bin/"
+	install -m 755 dropbox-scripts/pyndexer.py ${pkgdir}/"/usr/bin/"
+	install -m 644 dropbox_all.desktop ${pkgdir}/"`kde4-config --prefix`/share/kde4/services/ServiceMenus/"
+	install -m 644 dropbox_files.desktop ${pkgdir}/"`kde4-config --prefix`/share/kde4/services/ServiceMenus/"
+	install -m 644 dropbox_directories.desktop ${pkgdir}/"`kde4-config --prefix`/share/kde4/services/ServiceMenus/"
+} 
