@@ -17,7 +17,7 @@ arch=('any')
 source=('http://chakra-project.org/sources/neda/NEDA.tar.gz'
         'http://chakra-project.org/sources/kneda/Kneda-0.4.1.tar.gz')
 md5sums=('83686866b1e7313b77b3cf98c5c4ddc3'
-         'f2578acc8bcee90dc9d302d4cc1d0d7e')
+         'b5bf91e25cd9ee38a25f246e480fdbd7')
 
 package_kde-plasma-themes-neda() {
 pkgver=1.0
@@ -27,7 +27,7 @@ url="http://www.chakra-project.org"
 license=('GPL')
   mkdir -p $pkgdir/usr/share/apps/desktoptheme
   cd $startdir/src/NEDA/Plasma
-  cp -R NEDA $pkgdir/usr/share/apps/desktoptheme
+  cp -Rv NEDA $pkgdir/usr/share/apps/desktoptheme
 }
 
 package_kde-plasma-themes-kneda() {
@@ -39,4 +39,8 @@ license=('GPL')
   mkdir -p $pkgdir/usr/share/apps/desktoptheme
   cd $startdir/src
   cp -R Kneda $pkgdir/usr/share/apps/desktoptheme
+  # fix file rights
+  chmod 755 -R $pkgdir/usr/share/apps/desktoptheme
+  # remove nasty files
+  find $pkgdir/ -name ".directory" -type f -exec rm -fr {} +
 }
