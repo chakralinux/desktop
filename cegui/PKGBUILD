@@ -9,7 +9,7 @@ source ../_buildscripts/${current_repo}-${_arch}-cfg.conf
 pkgname=cegui
 _pkgname=CEGUI
 pkgver=0.7.5
-pkgrel=4
+pkgrel=5
 pkgdesc="A free library providing windowing and widgets for graphics APIs/engines."
 arch=(i686 x86_64)
 url="http://crayzedsgui.sourceforge.net"
@@ -49,4 +49,10 @@ package() {
 
   # License:
   install -D -m644 $srcdir/$_pkgname-$pkgver/doc/COPYING $pkgdir/usr/share/licenses/$pkgname/LICENSE
+
+  # NULL .pc file (see this[1] for additional information).
+  cd $pkgdir/usr/lib/pkgconfig/
+  cat CEGUI-OPENGL.pc | sed 's/OpenGL/Null/' > CEGUI-NULL.pc
 }
+
+# [1] http://www.secretmaryo.org/phpBB3/viewtopic.php?f=2&t=4270
