@@ -7,7 +7,8 @@
 source ../_buildscripts/${current_repo}-${_arch}-cfg.conf
 
 pkgname=kdeplasma-applets-menubar
-pkgver=0.1.14
+pkgver=0.1.15
+_pkgver=0.1.2
 pkgrel=1
 pkgdesc="Plasmoid to display menubar of application windows"
 url="https://launchpad.net/plasma-widget-menubar"
@@ -19,14 +20,23 @@ conflicts=('plasma-widget-menubar')
 replaces=('plasma-widget-menubar')
 provides=('plasma-widget-menubar')
 optdepends=('appmenu-gtk: Showing GTK+ Apps menus')
-source=("http://launchpad.net/plasma-widget-menubar/trunk/${pkgver}/+download/plasma-widget-menubar-${pkgver}.tar.bz2")
-md5sums=('17d57232afd447129a8287dbfce7b5c3')
+source=("http://launchpad.net/appmenu-qt/trunk/${_pkgver}/+download/appmenu-qt-${_pkgver}.tar.bz2"
+        "http://launchpad.net/plasma-widget-menubar/trunk/${pkgver}/+download/plasma-widget-menubar-${pkgver}.tar.bz2")
+sha1sums=('07939d653a036b6676c624a94d53ca327bc3415f'
+          '0ffe1c8f50e4e0ac63fb4a76a9674ab21e7f5f03')
 
 build() {
+  cd "${srcdir}/appmenu-qt-${_pkgver}"
+  cmake . -DCMAKE_INSTALL_PREFIX=`kde4-config --prefix`
+  make
   cd ${srcdir}/plasma-widget-menubar-${pkgver}
+  cmake . -DCMAKE_INSTALL_PREFIX=`kde4-config --prefix`
+  make
+}
 
-  cmake -DCMAKE_INSTALL_PREFIX=`kde4-config --prefix`
-
-  make || return 1
-  make DESTDIR=${pkgdir} install || return 1
+package() {
+   cd "${srcdir}/appmenu-qt-${_pkgver}"
+   make DESTDIR="${pkgdir}" install
+   cd ${srcdir}/plasma-widget-menubar-${pkgver}
+   make DESTDIR="${pkgdir}" install
 }

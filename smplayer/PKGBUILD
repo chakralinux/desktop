@@ -9,18 +9,21 @@ source ../_buildscripts/${current_repo}-${_arch}-cfg.conf
 
 pkgname=smplayer
 pkgver=0.6.9
-pkgrel=3
+pkgrel=4
 pkgdesc="A complete front-end for MPlayer"
 arch=('i686' 'x86_64')
 url="http://smplayer.sourceforge.net/"
 license=('GPL')
-depends=('qt>=4.7.0' 'mplayer>=30526' 'mpg123')
-source=(http://downloads.sourceforge.net/sourceforge/smplayer/${pkgname}-${pkgver}.tar.bz2)
-md5sums=('dfe874b386509de5df78537489f95004')
+depends=('qt>=4.7.2' 'mplayer' 'mpg123')
+source=(http://downloads.sourceforge.net/sourceforge/smplayer/${pkgname}-${pkgver}.tar.bz2
+        seekingfix.diff)
+md5sums=('dfe874b386509de5df78537489f95004'
+         '9cfd4e15e0c307ebeebec349b07aa6f7')
 
 build() {
   cd ${srcdir}/${pkgname}-${pkgver}
-
+  # seeking fix for mplayer2
+  patch -Np2 -i ${srcdir}/seekingfix.diff
   # remove broken translation
   sed -i "s|translations/smplayer_gl.ts|#translations/smplayer_gl.ts|" src/smplayer.pro
 
