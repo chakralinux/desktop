@@ -9,7 +9,7 @@
 source ../_buildscripts/${current_repo}-${_arch}-cfg.conf
 
 pkgname=skrooge
-pkgver=0.7.3
+pkgver=0.8.1
 pkgrel=1
 pkgdesc="Allows you to manage your personal finances in KDE"
 arch=('i686' 'x86_64')
@@ -19,20 +19,19 @@ depends=('kdebase-runtime' 'libofx' 'qca')
 makedepends=('cmake' 'automoc4' 'docbook-xsl')
 install=${pkgname}.install
 source=(http://skrooge.org/files/${pkgname}-${pkgver}.tar.bz2)
-md5sums=('8aeb5d08d2a664fc689f80ed2372b14d')
+md5sums=('417f5668d9ec07b715c8fc7023460c27')
 
 build() {
-  cd ${srcdir}
-  mkdir build
-  cd build
-  cmake ../${pkgname}-${pkgver} \
-    -DCMAKE_BUILD_TYPE=Release \
-    -DCMAKE_SKIP_RPATH=ON \
-    -DCMAKE_INSTALL_PREFIX=/usr
-  make || return 1
+  cd "$srcdir/$pkgname-$pkgver"
+
+  cmake . -DCMAKE_BUILD_TYPE=Release \
+	  -DCMAKE_INSTALL_PREFIX=/usr
+
+  make
 }
 
 package() {
-  cd ${srcdir}/build
-  make DESTDIR=${pkgdir} install || return 1
+  cd "$srcdir/$pkgname-$pkgver"
+
+  make DESTDIR="$pkgdir/" install
 }
