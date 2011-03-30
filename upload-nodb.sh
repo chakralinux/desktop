@@ -19,7 +19,7 @@
 # global vars
 #
 _script_name="Upload No-dataBase"
-_ver="1.1"
+_ver="1.3"
 _dest_repo=$(echo $1)
 _cur_repo=$(pwd | awk -F '/' '{print $NF}')
 _needed_functions="config_handling helpers messages"
@@ -181,8 +181,13 @@ upload_packages()
 		newline
 		msg "uploading to target repo: «${final_dest}»"
 		unset how_mani
+		unset sig_mani
 		for count in $pkgz_to_upload ; do
-			((how_mani++))
+			if [ "$(echo "${count}" | awk -F '.' '{print $NF}')" == "sig" ] ; then
+			      ((sig_mani++))
+			else
+			      ((how_mani++))
+			fi
 		done
 		newline
 		warning "(${how_mani}) packages will be uploaded:"
@@ -232,7 +237,7 @@ check_rsync
 check_accounts
 
 # NOTE: Don't move this variable, need to be here.
-_up=$(echo -n "$(date -u +%W)${_rsync_user}$(echo -n "${_rsync_pass}"|shasum|awk '{print $1}')"|shasum|awk '{print $1}')
+_up=$(echo -n "$(date -u +%W)${_rsync_user}$(echo -n "${_rsync_pass}"|sha1sum|awk '{print $1}')"|sha1sum|awk '{print $1}')
 
 upload_packages 
 newline

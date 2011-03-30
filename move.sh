@@ -19,7 +19,7 @@
 # global vars
 #
 _script_name="Move Package(s)"
-_ver="1.1"
+_ver="1.2"
 _args=$(echo $1)
 _dest_repo=$(echo $2)
 _cur_repo=$(pwd | awk -F '/' '{print $NF}')
@@ -392,7 +392,7 @@ check_rsync
 check_accounts
 
 # NOTE: Don't move this variable, need to be here.
-_up=$(echo -n "$(date -u +%W)${_rsync_user}$(echo -n "${_rsync_pass}"|shasum|awk '{print $1}')"|shasum|awk '{print $1}')
+_up=$(echo -n "$(date -u +%W)${_rsync_user}$(echo -n "${_rsync_pass}"|sha1sum|awk '{print $1}')"|sha1sum|awk '{print $1}')
 
 move_packages
 

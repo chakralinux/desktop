@@ -19,7 +19,7 @@
 # global vars
 #
 _script_name="Recreate Database"
-_ver="0.1"
+_ver="0.2"
 _dest_repo=$(echo $1)
 _cur_repo=$(pwd | awk -F '/' '{print $NF}')
 _needed_functions="config_handling helpers messages"
@@ -172,7 +172,7 @@ check_rsync
 check_accounts
 
 # NOTE: Don't move this variable, need to be here.
-_up=$(echo -n "$(date -u +%W)${_rsync_user}$(echo -n "${_rsync_pass}"|shasum|awk '{print $1}')"|shasum|awk '{print $1}')
+_up=$(echo -n "$(date -u +%W)${_rsync_user}$(echo -n "${_rsync_pass}"|sha1sum|awk '{print $1}')"|sha1sum|awk '{print $1}')
 
 recreate_database
 

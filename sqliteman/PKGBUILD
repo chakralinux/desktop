@@ -1,0 +1,31 @@
+#
+# Apps Packages for Chakra, part of chakra-project.org
+#
+# maintainer (x86_64): Giuseppe calà <jiveaxe@gmail.com>
+
+
+# include global config
+source ../_buildscripts/${current_repo}-${_arch}-cfg.conf
+
+pkgname=sqliteman
+pkgver=1.2.2
+pkgrel=1
+pkgdesc="The best developer's and/or admin's GUI tool for Sqlite3 in the world"
+arch=('i686' 'x86_64')
+url="http://sqliteman.sf.net"
+license=('GPL')
+depends=('qt' 'qscintilla')
+makedepends=('cmake')
+source=("http://downloads.sourceforge.net/${pkgname}/${pkgname}-${pkgver}.tar.gz")
+md5sums=('5ecdf710e23606e1b924f740ea69306d')
+
+build() {
+  cd ${srcdir}/${pkgname}-${pkgver}
+  cmake . -DCMAKE_INSTALL_PREFIX:PATH=/usr
+  make
+}
+
+package() {
+  cd ${srcdir}/${pkgname}-${pkgver}
+  make DESTDIR=${pkgdir} install
+}
