@@ -1,0 +1,36 @@
+#
+# Apps Packages for Chakra, part of chakra-project.org
+#
+# maintainer (i686): Phil Miller <philm[at]chakra-project[dog]org>
+# maintainer (x86_64): Manuel Tortosa <manutortosa[at]chakra-project[dot]org>
+
+# include global config
+source ../_buildscripts/${current_repo}-${_arch}-cfg.conf
+
+pkgname=kdeplasma-applets-flexibletasks
+_pkgname=flexibletasks
+pkgver=0.2
+pkgrel=1
+pkgdesc="A task bar replacement plasmoid with window peeking similar to Windows™ 7."
+arch=('i686' 'x86_64')
+url="http://kde-apps.org/content/show.php?content=129291"
+license=('GPL2')
+depends=('kdebase-workspace>=4.4' 'qt>=4.6')
+makedepends=('automoc4' 'cmake')
+source=("http://kde-apps.org/CONTENT/content-files/129291-$_pkgname-${pkgver}c.zip")
+md5sums=('31f0eae3bbdcd72308e8049e60b66aee')
+
+build() {
+  cd $srcdir/$_pkgname
+  mkdir build && cd build
+  cmake \
+    -DCMAKE_INSTALL_PREFIX=/usr \
+    -DCMAKE_BUILD_TYPE=RelWithDebInfo \
+    ..
+  make
+}
+ 
+package() {
+  cd $srcdir/$_pkgname/build
+  make DESTDIR=$pkgdir install/strip
+}
