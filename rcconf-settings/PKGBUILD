@@ -4,7 +4,7 @@
 # maintainer (x86_64): Manuel Tortosa <manutortosa[at]chakra-project[dot]org>
 
 pkgname=rcconf-settings
-pkgver=0.4
+pkgver=0.5
 pkgrel=1
 pkgdesc='A KCM for manage the Rc.conf file for Chakra GNU/Linux'
 arch=('i686' 'x86_64')
@@ -13,11 +13,12 @@ url='http://gitorious.org/chakra/rcconf-settings'
 groups=('base')
 options=('sign')
 depends=('qt' 'kdebase-workspace')
+makedepends=('automoc4')
 source=("http://chakra-project.org/sources/$pkgname/$pkgname-$pkgver.tar.gz")
-md5sums=('d5b3c1708ae79b4d12b7c243010a397a')
+md5sums=('d4e2094c634a0d404b1870b40bf69f0d')
 
 build() {
-	cd "${srcdir}/$pkgname"
+	cd "${srcdir}/$pkgname-$pkgver"
 
 	cmake . -DCMAKE_INSTALL_PREFIX=/usr \
 		-DCMAKE_BUILD_TYPE=Release \
@@ -27,6 +28,6 @@ build() {
 }
 
 package() {
-	cd "${srcdir}/$pkgname"
+	cd "${srcdir}/$pkgname-$pkgver"
 	make DESTDIR=$startdir/pkg install
 }
