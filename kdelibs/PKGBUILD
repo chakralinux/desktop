@@ -47,10 +47,11 @@ source=($_mirror/${_origname}-$_kdever.tar.bz2
 	02_kde_applications_menu.patch
 	03_chakra_menu.patch
 	04_add_arch_filetypes_to_kate_syntax_highlighting.patch
-	05_useragent-branding.patch
-	CVE-2011-1168.patch
-	fix-empty-dolphin-home.patch
-	)
+	05_useragent-branding.patch)
+
+	#CVE-2011-1168.patch
+	#fix-empty-dolphin-home.patch
+	
 
 md5sums=(`grep ${_origname}-$_kdever.tar.bz2 ../kde-sc.md5 | cut -d" " -f1`
          '40ba51f0c50ced94dfffe667ec856950'  # 01_kdemod_tag.patch
@@ -77,10 +78,10 @@ build()
 	patch -Np0 -i ${srcdir}/05_useragent-branding.patch || return 1
 
 	# fixes
-	msg "applying fixes ..."
+	# msg "applying fixes ..."
         # Already fixed upstream
-        patch -Np1 -i ${srcdir}/CVE-2011-1168.patch
-        patch -Np1 -i ${srcdir}/fix-empty-dolphin-home.patch
+        # patch -Np1 -i ${srcdir}/CVE-2011-1168.patch
+        # patch -Np1 -i ${srcdir}/fix-empty-dolphin-home.patch
 
 	cd ..
 
