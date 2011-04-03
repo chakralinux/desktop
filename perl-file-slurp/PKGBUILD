@@ -1,0 +1,35 @@
+#
+# Games Packages for Chakra, part of chakra-project.org
+#
+# Maintainer: Adrián Chaves Fernández (Gallaecio) <adriyetichaves gmail.com>
+
+# include global config
+source ../_buildscripts/${current_repo}-${_arch}-cfg.conf
+
+pkgname=perl-file-slurp
+pkgver=9999.15
+pkgrel=1
+pkgdesc="Read/write/append files quickly"
+arch=('i686' 'x86_64')
+url="http://search.cpan.org/dist/File-Slurp"
+license=('GPL' 'PerlArtistic')
+depends=('perl>=5.10.0')
+options=('!emptydirs')
+source=("http://www.cpan.org/authors/id/U/UR/URI//File-Slurp-$pkgver.tar.gz")
+md5sums=('5ee5e649bf3dd5d9c100000239092720')
+
+build() {
+  cd  $startdir/src/File-Slurp-$pkgver
+
+  PERL_MM_USE_DEFAULT=1 perl Makefile.PL INSTALLDIRS=vendor 
+  make
+}
+
+package() {
+  cd  $startdir/src/File-Slurp-$pkgver
+
+  make install DESTDIR=$startdir/pkg
+
+  find $startdir/pkg -name '.packlist' -delete
+  find $startdir/pkg -name '*.pod' -delete
+}

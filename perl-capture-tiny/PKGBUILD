@@ -8,7 +8,7 @@ source ../_buildscripts/${current_repo}-${_arch}-cfg.conf
 
 pkgname=perl-capture-tiny
 _pkgname=Capture-Tiny
-pkgver=0.08
+pkgver=0.10
 pkgrel=1
 pkgdesc="Perl module to capture anything sent to STDOUT or STDERR."
 arch=('i686' 'x86_64')
@@ -17,20 +17,20 @@ options=('!emptydirs')
 depends=('perl')
 url='http://search.cpan.org/~dagolden/Capture-Tiny/'
 source=("http://search.cpan.org/CPAN/authors/id/D/DA/DAGOLDEN/$_pkgname-$pkgver.tar.gz")
-md5sums=('dadea406a04a114b31a9248772b8c136')
+md5sums=('d38c6b83f690dfd35b503ccbfade7558')
 
 build() {
   cd $srcdir/$_pkgname-$pkgver
 
-  perl Build.PL installdirs=vendor destdir="$pkgdir/"
-  perl Build
+  PERL_MM_USE_DEFAULT=1 perl Makefile.PL INSTALLDIRS=vendor
+  make
 
 }
 
 package() {
   cd $srcdir/$_pkgname-$pkgver
 
-  perl Build install
+  make install DESTDIR="$pkgdir/"
 
   # Remove perllocal.pod and .packlist:
   find "$pkgdir" -name perllocal.pod -delete
