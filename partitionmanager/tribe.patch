@@ -1,6 +1,6 @@
 Index: partitionmanager/src/plugins/libparted/libpartedbackend.cpp
 ===================================================================
---- partitionmanager/src/plugins/libparted/libpartedbackend.cpp	(revision 1225921)
+--- partitionmanager/src/plugins/libparted/libpartedbackend.cpp	(revision 1226870)
 +++ partitionmanager/src/plugins/libparted/libpartedbackend.cpp	(working copy)
 @@ -20,6 +20,8 @@
  /** @file
@@ -21,7 +21,17 @@ Index: partitionmanager/src/plugins/libparted/libpartedbackend.cpp
  K_PLUGIN_FACTORY(LibPartedBackendFactory, registerPlugin<LibPartedBackend>(); )
  
  static KAboutData createPluginAboutData()
-@@ -364,9 +369,10 @@
+@@ -94,7 +99,8 @@
+ 	{ PED_PARTITION_HPSERVICE, PartitionTable::FlagHpService },
+ 	{ PED_PARTITION_PALO, PartitionTable::FlagPalo },
+ 	{ PED_PARTITION_PREP, PartitionTable::FlagPrep },
+-	{ PED_PARTITION_MSFT_RESERVED, PartitionTable::FlagMsftReserved }
++        { PED_PARTITION_MSFT_RESERVED, PartitionTable::FlagMsftReserved },
++        { PED_PARTITION_BIOS_GRUB, PartitionTable::FlagBiosGrubBoot }
+ };
+ 
+ /** Callback to handle exceptions from libparted
+@@ -364,9 +370,10 @@
  		partitions.append(part);
  	}
  
@@ -35,7 +45,7 @@ Index: partitionmanager/src/plugins/libparted/libpartedbackend.cpp
  	foreach(const Partition* part, partitions)
 Index: partitionmanager/src/plugins/libparted/pmlibpartedbackendplugin.desktop
 ===================================================================
---- partitionmanager/src/plugins/libparted/pmlibpartedbackendplugin.desktop	(revision 1225921)
+--- partitionmanager/src/plugins/libparted/pmlibpartedbackendplugin.desktop	(revision 1226870)
 +++ partitionmanager/src/plugins/libparted/pmlibpartedbackendplugin.desktop	(working copy)
 @@ -60,8 +60,8 @@
  ServiceTypes=PartitionManager/Plugin
@@ -50,7 +60,7 @@ Index: partitionmanager/src/plugins/libparted/pmlibpartedbackendplugin.desktop
  X-KDE-PluginInfo-License=GPL
 Index: partitionmanager/src/plugins/libparted/CMakeLists.txt
 ===================================================================
---- partitionmanager/src/plugins/libparted/CMakeLists.txt	(revision 1225921)
+--- partitionmanager/src/plugins/libparted/CMakeLists.txt	(revision 1226870)
 +++ partitionmanager/src/plugins/libparted/CMakeLists.txt	(working copy)
 @@ -17,9 +17,11 @@
  
@@ -69,7 +79,7 @@ Index: partitionmanager/src/plugins/libparted/CMakeLists.txt
  install(FILES pmlibpartedbackendplugin.desktop DESTINATION ${SERVICES_INSTALL_DIR})
 Index: partitionmanager/src/plugins/dummy/CMakeLists.txt
 ===================================================================
---- partitionmanager/src/plugins/dummy/CMakeLists.txt	(revision 1225921)
+--- partitionmanager/src/plugins/dummy/CMakeLists.txt	(revision 1226870)
 +++ partitionmanager/src/plugins/dummy/CMakeLists.txt	(working copy)
 @@ -19,7 +19,7 @@
  
@@ -82,7 +92,7 @@ Index: partitionmanager/src/plugins/dummy/CMakeLists.txt
  install(FILES pmdummybackendplugin.desktop DESTINATION ${SERVICES_INSTALL_DIR})
 Index: partitionmanager/src/gui/devicepropswidgetbase.ui
 ===================================================================
---- partitionmanager/src/gui/devicepropswidgetbase.ui	(revision 1225921)
+--- partitionmanager/src/gui/devicepropswidgetbase.ui	(revision 1226870)
 +++ partitionmanager/src/gui/devicepropswidgetbase.ui	(working copy)
 @@ -10,6 +10,9 @@
      <height>361</height>
@@ -96,7 +106,7 @@ Index: partitionmanager/src/gui/devicepropswidgetbase.ui
      <widget class="PartTableWidget" name="m_PartTableWidget" native="true">
 Index: partitionmanager/src/gui/sizedialogwidgetbase.ui
 ===================================================================
---- partitionmanager/src/gui/sizedialogwidgetbase.ui	(revision 1225921)
+--- partitionmanager/src/gui/sizedialogwidgetbase.ui	(revision 1226870)
 +++ partitionmanager/src/gui/sizedialogwidgetbase.ui	(working copy)
 @@ -10,6 +10,9 @@
      <height>347</height>
@@ -110,7 +120,7 @@ Index: partitionmanager/src/gui/sizedialogwidgetbase.ui
      <widget class="PartResizerWidget" name="m_PartResizerWidget" native="true">
 Index: partitionmanager/src/gui/partpropswidgetbase.ui
 ===================================================================
---- partitionmanager/src/gui/partpropswidgetbase.ui	(revision 1225921)
+--- partitionmanager/src/gui/partpropswidgetbase.ui	(revision 1226870)
 +++ partitionmanager/src/gui/partpropswidgetbase.ui	(working copy)
 @@ -10,6 +10,9 @@
      <height>502</height>
@@ -124,7 +134,7 @@ Index: partitionmanager/src/gui/partpropswidgetbase.ui
      <widget class="PartWidget" name="m_PartWidget" native="true">
 Index: partitionmanager/src/backend/corebackendmanager.h
 ===================================================================
---- partitionmanager/src/backend/corebackendmanager.h	(revision 1225921)
+--- partitionmanager/src/backend/corebackendmanager.h	(revision 1226870)
 +++ partitionmanager/src/backend/corebackendmanager.h	(working copy)
 @@ -21,6 +21,8 @@
  
@@ -155,7 +165,7 @@ Index: partitionmanager/src/backend/corebackendmanager.h
  		CoreBackend* m_Backend;
 Index: partitionmanager/src/backend/corebackendmanager.cpp
 ===================================================================
---- partitionmanager/src/backend/corebackendmanager.cpp	(revision 1225921)
+--- partitionmanager/src/backend/corebackendmanager.cpp	(revision 1226870)
 +++ partitionmanager/src/backend/corebackendmanager.cpp	(working copy)
 @@ -17,9 +17,6 @@
   *   51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA            *
@@ -192,7 +202,7 @@ Index: partitionmanager/src/backend/corebackendmanager.cpp
  
 Index: partitionmanager/src/core/operationrunner.h
 ===================================================================
---- partitionmanager/src/core/operationrunner.h	(revision 1225921)
+--- partitionmanager/src/core/operationrunner.h	(revision 1226870)
 +++ partitionmanager/src/core/operationrunner.h	(working copy)
 @@ -24,18 +24,19 @@
  #include <QThread>
@@ -218,7 +228,7 @@ Index: partitionmanager/src/core/operationrunner.h
  	Q_DISABLE_COPY(OperationRunner)
 Index: partitionmanager/src/core/devicescanner.h
 ===================================================================
---- partitionmanager/src/core/devicescanner.h	(revision 1225921)
+--- partitionmanager/src/core/devicescanner.h	(revision 1226870)
 +++ partitionmanager/src/core/devicescanner.h	(working copy)
 @@ -22,15 +22,17 @@
  
@@ -240,9 +250,23 @@ Index: partitionmanager/src/core/devicescanner.h
  {
  	Q_OBJECT
  
+Index: partitionmanager/src/core/partitiontable.h
+===================================================================
+--- partitionmanager/src/core/partitiontable.h	(revision 1226870)
++++ partitionmanager/src/core/partitiontable.h	(working copy)
+@@ -83,7 +83,8 @@
+ 			FlagHpService = 128,
+ 			FlagPalo = 256,
+ 			FlagPrep = 512,
+-			FlagMsftReserved = 1024
++                        FlagMsftReserved = 1024,
++                        FlagBiosGrubBoot = 2048
+ 		};
+ 
+ 		Q_DECLARE_FLAGS(Flags, Flag)
 Index: partitionmanager/src/core/operationstack.h
 ===================================================================
---- partitionmanager/src/core/operationstack.h	(revision 1225921)
+--- partitionmanager/src/core/operationstack.h	(revision 1226870)
 +++ partitionmanager/src/core/operationstack.h	(working copy)
 @@ -26,20 +26,21 @@
  #include <QReadWriteLock>
@@ -270,7 +294,7 @@ Index: partitionmanager/src/core/operationstack.h
  	Q_DISABLE_COPY(OperationStack)
 Index: partitionmanager/src/core/devicescanner.cpp
 ===================================================================
---- partitionmanager/src/core/devicescanner.cpp	(revision 1225921)
+--- partitionmanager/src/core/devicescanner.cpp	(revision 1226870)
 +++ partitionmanager/src/core/devicescanner.cpp	(working copy)
 @@ -40,6 +40,7 @@
  
@@ -282,7 +306,7 @@ Index: partitionmanager/src/core/devicescanner.cpp
  
 Index: partitionmanager/src/core/partition.h
 ===================================================================
---- partitionmanager/src/core/partition.h	(revision 1225921)
+--- partitionmanager/src/core/partition.h	(revision 1226870)
 +++ partitionmanager/src/core/partition.h	(working copy)
 @@ -101,6 +101,10 @@
  	friend class SetPartFlagsJob;
@@ -295,9 +319,29 @@ Index: partitionmanager/src/core/partition.h
  	friend QTextStream& operator<<(QTextStream& stream, const Partition& p);
  
  	public:
+Index: partitionmanager/src/core/partitiontable.cpp
+===================================================================
+--- partitionmanager/src/core/partitiontable.cpp	(revision 1226870)
++++ partitionmanager/src/core/partitiontable.cpp	(working copy)
+@@ -166,6 +166,7 @@
+ 		case PartitionTable::FlagPalo: return i18nc("@item partition flag", "palo");
+ 		case PartitionTable::FlagPrep: return i18nc("@item partition flag", "prep");
+ 		case PartitionTable::FlagMsftReserved: return i18nc("@item partition flag", "msft-reserved");
++                case PartitionTable::FlagBiosGrubBoot: return i18nc("@item partition flag", "bios_grub");
+ 
+ 		default:
+ 			break;
+@@ -190,6 +191,7 @@
+ 	rval.append(PartitionTable::FlagPalo);
+ 	rval.append(PartitionTable::FlagPrep);
+ 	rval.append(PartitionTable::FlagMsftReserved);
++        rval.append(PartitionTable::FlagBiosGrubBoot);
+ 
+ 	return rval;
+ }
 Index: partitionmanager/src/ops/createfilesystemoperation.h
 ===================================================================
---- partitionmanager/src/ops/createfilesystemoperation.h	(revision 1225921)
+--- partitionmanager/src/ops/createfilesystemoperation.h	(revision 1226870)
 +++ partitionmanager/src/ops/createfilesystemoperation.h	(working copy)
 @@ -21,6 +21,8 @@
  
@@ -326,7 +370,7 @@ Index: partitionmanager/src/ops/createfilesystemoperation.h
  
 Index: partitionmanager/src/ops/newoperation.h
 ===================================================================
---- partitionmanager/src/ops/newoperation.h	(revision 1225921)
+--- partitionmanager/src/ops/newoperation.h	(revision 1226870)
 +++ partitionmanager/src/ops/newoperation.h	(working copy)
 @@ -22,6 +22,7 @@
  #define NEWOPERATION__H
@@ -354,7 +398,7 @@ Index: partitionmanager/src/ops/newoperation.h
  
 Index: partitionmanager/src/ops/resizeoperation.h
 ===================================================================
---- partitionmanager/src/ops/resizeoperation.h	(revision 1225921)
+--- partitionmanager/src/ops/resizeoperation.h	(revision 1226870)
 +++ partitionmanager/src/ops/resizeoperation.h	(working copy)
 @@ -24,6 +24,7 @@
  #include "ops/operation.h"
@@ -375,7 +419,7 @@ Index: partitionmanager/src/ops/resizeoperation.h
  
 Index: partitionmanager/src/ops/deleteoperation.h
 ===================================================================
---- partitionmanager/src/ops/deleteoperation.h	(revision 1225921)
+--- partitionmanager/src/ops/deleteoperation.h	(revision 1226870)
 +++ partitionmanager/src/ops/deleteoperation.h	(working copy)
 @@ -22,6 +22,7 @@
  #define DELETEOPERATION__H
@@ -396,7 +440,7 @@ Index: partitionmanager/src/ops/deleteoperation.h
  
 Index: partitionmanager/src/config/configurepageadvanced.ui
 ===================================================================
---- partitionmanager/src/config/configurepageadvanced.ui	(revision 1225921)
+--- partitionmanager/src/config/configurepageadvanced.ui	(revision 1226870)
 +++ partitionmanager/src/config/configurepageadvanced.ui	(working copy)
 @@ -10,6 +10,9 @@
      <height>420</height>
@@ -410,7 +454,7 @@ Index: partitionmanager/src/config/configurepageadvanced.ui
      <widget class="QGroupBox" name="groupBox">
 Index: partitionmanager/src/fs/filesystem.h
 ===================================================================
---- partitionmanager/src/fs/filesystem.h	(revision 1225921)
+--- partitionmanager/src/fs/filesystem.h	(revision 1226870)
 +++ partitionmanager/src/fs/filesystem.h	(working copy)
 @@ -27,18 +27,19 @@
  #include <QStringList>
@@ -436,7 +480,7 @@ Index: partitionmanager/src/fs/filesystem.h
  
 Index: partitionmanager/src/util/capacity.h
 ===================================================================
---- partitionmanager/src/util/capacity.h	(revision 1225921)
+--- partitionmanager/src/util/capacity.h	(revision 1226870)
 +++ partitionmanager/src/util/capacity.h	(working copy)
 @@ -25,15 +25,16 @@
  class Device;
@@ -459,7 +503,7 @@ Index: partitionmanager/src/util/capacity.h
  		/** Units we can deal with */
 Index: partitionmanager/src/util/helpers.cpp
 ===================================================================
---- partitionmanager/src/util/helpers.cpp	(revision 1225921)
+--- partitionmanager/src/util/helpers.cpp	(revision 1226870)
 +++ partitionmanager/src/util/helpers.cpp	(working copy)
 @@ -185,14 +185,14 @@
  
@@ -539,7 +583,7 @@ Index: partitionmanager/src/util/helpers.cpp
  	return Solid::Device::listFromQuery(predicate);
 Index: partitionmanager/src/CMakeLists.txt
 ===================================================================
---- partitionmanager/src/CMakeLists.txt	(revision 1225921)
+--- partitionmanager/src/CMakeLists.txt	(revision 1226870)
 +++ partitionmanager/src/CMakeLists.txt	(working copy)
 @@ -28,34 +28,51 @@
  	config/*.cpp
@@ -606,7 +650,7 @@ Index: partitionmanager/src/CMakeLists.txt
  install(PROGRAMS partitionmanager.desktop DESTINATION ${XDG_APPS_INSTALL_DIR})
 Index: partitionmanager/CMakeLists.txt
 ===================================================================
---- partitionmanager/CMakeLists.txt	(revision 1225921)
+--- partitionmanager/CMakeLists.txt	(revision 1226870)
 +++ partitionmanager/CMakeLists.txt	(working copy)
 @@ -46,7 +46,7 @@
  include(KDE4Defaults)
