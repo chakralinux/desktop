@@ -7,22 +7,18 @@
 source ../_buildscripts/${current_repo}-${_arch}-cfg.conf
 
 pkgname=openttd
-pkgver=1.0.5
-_gfxver=0.3.1
-_sfxver=0.2.3
-pkgrel=2
-pkgdesc="An engine for running Transport Tycoon Deluxe."
+pkgver=1.1.0
+pkgrel=1
+pkgdesc="An engine for running Transport Tycoon Deluxe or alternative data files."
 arch=('i686' 'x86_64')
 url='http://www.openttd.org'
-license=('GPL')
+license=('GPL2')
 depends=('desktop-file-utils' 'fontconfig' 'hicolor-icon-theme' 'icu' 'libpng' 'sdl')
+conflicts=('openttd-dev' 'openttd-svn')
 install=$pkgname.install
-source=("http://binaries.openttd.org/releases/$pkgver/$pkgname-$pkgver-source.tar.bz2"
-	"http://bundles.openttdcoop.org/opengfx/releases/$_gfxver/opengfx-$_gfxver.zip"
-	"http://bundles.openttdcoop.org/opensfx/releases/$_sfxver/opensfx-$_sfxver.zip")
-md5sums=('fc79f788e2be140948b972c32b0f1eec'
-         '47ebb29cfc43ae945eaa0fe17698551d'
-         '6e3a5cf97fe69e3a351c3e0615a14b04')
+changelog=ChangeLog
+source=("http://binaries.openttd.org/releases/$pkgver/$pkgname-$pkgver-source.tar.xz")
+md5sums=('b5b1f2ecc7327505e360047236b09d06')
 
 build() {
   cd $srcdir/$pkgname-$pkgver 
@@ -42,28 +38,5 @@ build() {
 
 package() {
   cd $srcdir/$pkgname-$pkgver 
-
-  # Core.
   make install
-
-  # Graphics.
-  cd $srcdir/opengfx-$_gfxver
-
-        chmod 0644 *
-
-        mkdir -pm0755 $pkgdir/usr/share/$pkgname/data   
-
-        cp *.grf $pkgdir/usr/share/$pkgname/data/
-        cp *.obg $pkgdir/usr/share/$pkgname/data/
-
-  # Sounds.
-  cd $srcdir/opensfx-$_sfxver
-
-	chmod 0644 *
-
-        mkdir -pm0755 $pkgdir/usr/share/openttd/data   
-
-        cp opensfx.* $pkgdir/usr/share/openttd/data/
-        install -Dm644 license.txt $pkgdir/usr/share/licenses/${pkgname}/license
-        install -Dm644 readme.txt $pkgdir/usr/share/licenses/${pkgname}/readme
 }
