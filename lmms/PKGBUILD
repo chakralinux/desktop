@@ -1,0 +1,33 @@
+#
+# Chakra Packages for Chakra, part of chakra-project.org
+#
+# Maintainer: Giuseppe Calà <jiveaxe@gmail.com>
+#
+
+pkgname=lmms
+pkgver=0.4.10
+pkgrel=1
+pkgdesc='The Linux MultiMedia Studio.'
+url='http://lmms.sourceforge.net'
+arch=('i686' 'x86_64')
+license=('GPL')
+depends=('glib2' 'qt' 'sdl_sound' 'jack' 'libsamplerate' 'fluidsynth' 'libpng' 'libvorbis' 'libxft' 'libxinerama' 'shared-mime-info')
+optdepends=('wine: VST support (experimental)'
+            'fftw: SpectrumAnalyzer plugin' )
+makedepends=('cmake' 'ladspa' 'libxft' 'freetype2')
+install=lmms.install
+source=(http://sourceforge.net/projects/${pkgname}/files/${pkgname}/${pkgver}/${pkgname}-${pkgver}.tar.bz2)
+md5sums=('dc44dc7bc3f3fa697a78b1719288d762')
+
+build() {
+  cd ${srcdir}
+  mkdir ${srcdir}/build
+  cd ${srcdir}/build
+
+  sed -i 's|lib64|lib|g' ../${pkgname}-${pkgver}/cmake/modules/DetectMachine.cmake
+
+  cmake -DCMAKE_INSTALL_PREFIX=/usr -DCMAKE_BUILD_TYPE=Release ../${pkgname}-${pkgver}
+  make || return 1
+
+  make DESTDIR="$pkgdir/" install
+}
