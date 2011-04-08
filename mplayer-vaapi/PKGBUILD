@@ -9,7 +9,7 @@ source ../_buildscripts/${current_repo}-${_arch}-cfg.conf
 pkgname=mplayer-vaapi
 pkgver=33161
 _vaapi_version=20110127
-pkgrel=2
+pkgrel=3
 pkgdesc="A movie player, compiled with vaapi support"
 arch=('i686' 'x86_64')
 url="http://www.splitted-desktop.com/~gbeauchesne/mplayer-vaapi/"
@@ -18,7 +18,7 @@ depends=('libxxf86dga' 'libxxf86vm' 'libmad' 'cdparanoia' 'libxinerama' 'sdl'
          'lame' 'libtheora' 'xvidcore' 'libmng' 'libxss' 'libgl' 'smbclient'
          'aalib' 'jack' 'libcaca' 'x264' 'faac' 'lirc-utils' 'ttf-dejavu'
          'libxvmc' 'enca' 'opencore-amr' 'libdca' 'a52dec' 'schroedinger'
-         'libvpx' 'libpulse' 'libva'  'directfb')
+         'libvpx' 'libpulse' 'libva'  'directfb' 'rtmpdump')
 makedepends=('unzip' 'mesa' 'live-media>=2010.01.13' 'yasm' 'ladspa')
 provides=("mplayer=$pkgver")
 conflicts=('mplayer')
@@ -70,6 +70,10 @@ build() {
   [ "$CARCH" = "i686" ] &&  sed 's|-march=i486|-march=i686|g' -i config.mak
 
   make
+}
+
+package() {
+  cd "$srcdir/mplayer-$pkgver"
   make -j1 DESTDIR=$pkgdir install
   install -Dm644 etc/{codecs.conf,input.conf,example.conf} "$pkgdir/etc/mplayer/"
   install -dm755 "$pkgdir/usr/share/mplayer/"
