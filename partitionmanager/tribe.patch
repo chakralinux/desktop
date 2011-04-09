@@ -1,19 +1,172 @@
-diff -aur partitionmanager_/CMakeLists.txt partitionmanagerA/CMakeLists.txt
---- partitionmanager_/CMakeLists.txt	2010-09-20 18:36:42.352405831 -0400
-+++ partitionmanagerA/CMakeLists.txt	2010-12-02 06:58:01.376668005 -0500
-@@ -46,7 +46,7 @@
- include(KDE4Defaults)
- include(MacroLibrary)
+Index: partitionmanager/src/plugins/libparted/libpartedbackend.cpp
+===================================================================
+--- partitionmanager/src/plugins/libparted/libpartedbackend.cpp	(revision 1226870)
++++ partitionmanager/src/plugins/libparted/libpartedbackend.cpp	(working copy)
+@@ -20,6 +20,8 @@
+ /** @file
+ */
  
--include_directories(${KDE4_INCLUDES} ${KDE4_INCLUDE_DIR} ${QT_INCLUDES} ${UUID_INCLUDE_DIRS} ${BLKID_INCLUDE_DIRS} lib/ src/)
-+include_directories(${KDE4_INCLUDES} ${KDE4_INCLUDE_DIR} ${QT_INCLUDES} ${UUID_INCLUDE_DIRS} ${BLKID_INCLUDE_DIRS} lib/ src/ build/)
++#include <QDebug>
++
+ #include "plugins/libparted/libpartedbackend.h"
+ #include "plugins/libparted/libparteddevice.h"
  
- add_subdirectory(lib)
- add_subdirectory(src)
-Only in partitionmanagerA/lib/fatlabel/.kdev4: .svn
-diff -aur partitionmanager_/src/backend/corebackendmanager.cpp partitionmanagerA/src/backend/corebackendmanager.cpp
---- partitionmanager_/src/backend/corebackendmanager.cpp	2010-08-21 19:31:28.681280269 -0400
-+++ partitionmanagerA/src/backend/corebackendmanager.cpp	2010-12-09 07:26:07.906669459 -0500
+@@ -57,6 +59,9 @@
+ #include <unistd.h>
+ #include <blkid/blkid.h>
+ 
++#include "../../config.h"
++
++
+ K_PLUGIN_FACTORY(LibPartedBackendFactory, registerPlugin<LibPartedBackend>(); )
+ 
+ static KAboutData createPluginAboutData()
+@@ -94,7 +99,8 @@
+ 	{ PED_PARTITION_HPSERVICE, PartitionTable::FlagHpService },
+ 	{ PED_PARTITION_PALO, PartitionTable::FlagPalo },
+ 	{ PED_PARTITION_PREP, PartitionTable::FlagPrep },
+-	{ PED_PARTITION_MSFT_RESERVED, PartitionTable::FlagMsftReserved }
++        { PED_PARTITION_MSFT_RESERVED, PartitionTable::FlagMsftReserved },
++        { PED_PARTITION_BIOS_GRUB, PartitionTable::FlagBiosGrubBoot }
+ };
+ 
+ /** Callback to handle exceptions from libparted
+@@ -364,9 +370,10 @@
+ 		partitions.append(part);
+ 	}
+ 
++        Config::instance("partitionmanagerrc");
+ 	d.partitionTable()->updateUnallocated(d);
+ 
+-	if (d.partitionTable()->isSectorBased(d))
++    if (d.partitionTable()->isSectorBased(d))
+ 		d.partitionTable()->setType(d, PartitionTable::msdos_sectorbased);
+ 
+ 	foreach(const Partition* part, partitions)
+Index: partitionmanager/src/plugins/libparted/pmlibpartedbackendplugin.desktop
+===================================================================
+--- partitionmanager/src/plugins/libparted/pmlibpartedbackendplugin.desktop	(revision 1226870)
++++ partitionmanager/src/plugins/libparted/pmlibpartedbackendplugin.desktop	(working copy)
+@@ -60,8 +60,8 @@
+ ServiceTypes=PartitionManager/Plugin
+ Icon=preferences-plugin
+ 
+-X-KDE-Library=pmlibpartedbackendplugin
+-X-KDE-PluginInfo-Name=pmlibpartedbackendplugin
++X-KDE-Library=plugintribepmlibparted
++X-KDE-PluginInfo-Name=plugintribepmlibparted
+ X-KDE-PluginInfo-Author=Volker Lanz
+ X-KDE-PluginInfo-Email=vl@fidra.de
+ X-KDE-PluginInfo-License=GPL
+Index: partitionmanager/src/plugins/libparted/CMakeLists.txt
+===================================================================
+--- partitionmanager/src/plugins/libparted/CMakeLists.txt	(revision 1226870)
++++ partitionmanager/src/plugins/libparted/CMakeLists.txt	(working copy)
+@@ -17,9 +17,11 @@
+ 
+ file (GLOB pmlibpartedbackendplugin_SRCS *.cpp)
+ 
+-kde4_add_plugin(pmlibpartedbackendplugin ${pmlibpartedbackendplugin_SRCS})
++kde4_add_library(plugintribepmlibparted SHARED ${pmlibpartedbackendplugin_SRCS})
+ 
+-target_link_libraries(pmlibpartedbackendplugin partitionmanagerprivate ${KDE4_KDECORE_LIBS} ${KDE4_KIO_LIBS} ${LIBPARTED_LIBS} ${BLKID_LIBRARIES} ${KDE4_SOLID_LIBS})
++target_link_libraries(plugintribepmlibparted tribepartitionmanager ${KDE4_KDECORE_LIBS} ${KDE4_KIO_LIBS} ${LIBPARTED_LIBS} ${BLKID_LIBRARIES} ${KDE4_SOLID_LIBS})
+ 
+-install(TARGETS pmlibpartedbackendplugin DESTINATION ${PLUGIN_INSTALL_DIR})
++set_target_properties(plugintribepmlibparted PROPERTIES PREFIX "")
++
++install(TARGETS plugintribepmlibparted DESTINATION ${PLUGIN_INSTALL_DIR})
+ install(FILES pmlibpartedbackendplugin.desktop DESTINATION ${SERVICES_INSTALL_DIR})
+Index: partitionmanager/src/plugins/dummy/CMakeLists.txt
+===================================================================
+--- partitionmanager/src/plugins/dummy/CMakeLists.txt	(revision 1226870)
++++ partitionmanager/src/plugins/dummy/CMakeLists.txt	(working copy)
+@@ -19,7 +19,7 @@
+ 
+ kde4_add_plugin(pmdummybackendplugin ${pmdummybackendplugin_SRCS})
+ 
+-target_link_libraries(pmdummybackendplugin partitionmanagerprivate ${KDE4_KDECORE_LIBS} ${KDE4_KIO_LIBS} ${LIBPARTED_LIBS} ${BLKID_LIBRARIES} ${KDE4_SOLID_LIBS})
++target_link_libraries(pmdummybackendplugin tribepartitionmanager ${KDE4_KDECORE_LIBS} ${KDE4_KIO_LIBS} ${LIBPARTED_LIBS} ${BLKID_LIBRARIES} ${KDE4_SOLID_LIBS})
+ 
+ install(TARGETS pmdummybackendplugin DESTINATION ${PLUGIN_INSTALL_DIR})
+ install(FILES pmdummybackendplugin.desktop DESTINATION ${SERVICES_INSTALL_DIR})
+Index: partitionmanager/src/gui/devicepropswidgetbase.ui
+===================================================================
+--- partitionmanager/src/gui/devicepropswidgetbase.ui	(revision 1226870)
++++ partitionmanager/src/gui/devicepropswidgetbase.ui	(working copy)
+@@ -10,6 +10,9 @@
+     <height>361</height>
+    </rect>
+   </property>
++  <property name="windowTitle">
++   <string>Form</string>
++  </property>
+   <layout class="QGridLayout" name="gridLayout">
+    <item row="0" column="0" colspan="2">
+     <widget class="PartTableWidget" name="m_PartTableWidget" native="true">
+Index: partitionmanager/src/gui/sizedialogwidgetbase.ui
+===================================================================
+--- partitionmanager/src/gui/sizedialogwidgetbase.ui	(revision 1226870)
++++ partitionmanager/src/gui/sizedialogwidgetbase.ui	(working copy)
+@@ -10,6 +10,9 @@
+     <height>347</height>
+    </rect>
+   </property>
++  <property name="windowTitle">
++   <string>Form</string>
++  </property>
+   <layout class="QGridLayout" name="gridLayout">
+    <item row="0" column="0" colspan="2">
+     <widget class="PartResizerWidget" name="m_PartResizerWidget" native="true">
+Index: partitionmanager/src/gui/partpropswidgetbase.ui
+===================================================================
+--- partitionmanager/src/gui/partpropswidgetbase.ui	(revision 1226870)
++++ partitionmanager/src/gui/partpropswidgetbase.ui	(working copy)
+@@ -10,6 +10,9 @@
+     <height>502</height>
+    </rect>
+   </property>
++  <property name="windowTitle">
++   <string>Form</string>
++  </property>
+   <layout class="QGridLayout" name="gridLayout">
+    <item row="0" column="0" colspan="2">
+     <widget class="PartWidget" name="m_PartWidget" native="true">
+Index: partitionmanager/src/backend/corebackendmanager.h
+===================================================================
+--- partitionmanager/src/backend/corebackendmanager.h	(revision 1226870)
++++ partitionmanager/src/backend/corebackendmanager.h	(working copy)
+@@ -21,6 +21,8 @@
+ 
+ #define COREBACKENDMANAGER__H
+ 
++#include <QDebug>
++
+ #include "util/libpartitionmanagerexport.h"
+ 
+ #include <kservice.h>
+@@ -50,7 +52,7 @@
+ 		/**
+ 		  * @return the name of the default backend plugin
+ 		  */
+-		static QString defaultBackendName() { return "pmlibpartedbackendplugin"; }
++		static QString defaultBackendName() { return "plugintribepmlibparted"; }
+ 
+ 		/**
+ 		  * @return a list of available backend plugins
+@@ -72,7 +74,7 @@
+ 		/**
+ 		  * @return a pointer to the currently loaded backend
+ 		  */
+-		CoreBackend* backend() { return m_Backend; }
++        CoreBackend* backend() { return m_Backend; }
+ 
+ 	private:
+ 		CoreBackend* m_Backend;
+Index: partitionmanager/src/backend/corebackendmanager.cpp
+===================================================================
+--- partitionmanager/src/backend/corebackendmanager.cpp	(revision 1226870)
++++ partitionmanager/src/backend/corebackendmanager.cpp	(working copy)
 @@ -17,9 +17,6 @@
   *   51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA            *
   ***************************************************************************/
@@ -47,39 +200,416 @@ diff -aur partitionmanager_/src/backend/corebackendmanager.cpp partitionmanagerA
  	return false;
  }
  
-diff -aur partitionmanager_/src/backend/corebackendmanager.h partitionmanagerA/src/backend/corebackendmanager.h
---- partitionmanager_/src/backend/corebackendmanager.h	2010-08-21 19:31:28.677941627 -0400
-+++ partitionmanagerA/src/backend/corebackendmanager.h	2010-11-22 23:04:07.292705826 -0500
+Index: partitionmanager/src/core/operationrunner.h
+===================================================================
+--- partitionmanager/src/core/operationrunner.h	(revision 1226870)
++++ partitionmanager/src/core/operationrunner.h	(working copy)
+@@ -24,18 +24,19 @@
+ #include <QThread>
+ #include <QMutex>
+ #include <qglobal.h>
++#include "util/libpartitionmanagerexport.h"
+ 
+ class Operation;
+ class OperationStack;
+ class Report;
+ 
+-/** Thread to run the Operations in the OperationStack.
++/** @brief Thread to run the Operations in the OperationStack.
+ 
+ 	Runs the OperationStack when the user applies operations.
+ 
+ 	@author Volker Lanz <vl@fidra.de>
+ */
+-class OperationRunner : public QThread
++class LIBPARTITIONMANAGERPRIVATE_EXPORT OperationRunner : public QThread
+ {
+ 	Q_OBJECT
+ 	Q_DISABLE_COPY(OperationRunner)
+Index: partitionmanager/src/core/devicescanner.h
+===================================================================
+--- partitionmanager/src/core/devicescanner.h	(revision 1226870)
++++ partitionmanager/src/core/devicescanner.h	(working copy)
+@@ -22,15 +22,17 @@
+ 
+ #include <QThread>
+ 
++#include "util/libpartitionmanagerexport.h"
++
+ class OperationStack;
+ 
+-/** Thread to scan for all available Devices on this computer.
++/** @brief Thread to scan for all available Devices on this computer.
+ 
+ 	This class is used to find all Devices on the computer and to create new Device instances for each of them. It's subclassing QThread to run asynchronously.
+ 
+ 	@author Volker Lanz <vl@fidra.de>
+ */
+-class DeviceScanner : public QThread
++class LIBPARTITIONMANAGERPRIVATE_EXPORT DeviceScanner : public QThread
+ {
+ 	Q_OBJECT
+ 
+Index: partitionmanager/src/core/partitiontable.h
+===================================================================
+--- partitionmanager/src/core/partitiontable.h	(revision 1226870)
++++ partitionmanager/src/core/partitiontable.h	(working copy)
+@@ -83,7 +83,8 @@
+ 			FlagHpService = 128,
+ 			FlagPalo = 256,
+ 			FlagPrep = 512,
+-			FlagMsftReserved = 1024
++                        FlagMsftReserved = 1024,
++                        FlagBiosGrubBoot = 2048
+ 		};
+ 
+ 		Q_DECLARE_FLAGS(Flags, Flag)
+Index: partitionmanager/src/core/operationstack.h
+===================================================================
+--- partitionmanager/src/core/operationstack.h	(revision 1226870)
++++ partitionmanager/src/core/operationstack.h	(working copy)
+@@ -26,20 +26,21 @@
+ #include <QReadWriteLock>
+ 
+ #include <qglobal.h>
++#include "util/libpartitionmanagerexport.h"
+ 
+ class Device;
+ class Partition;
+ class Operation;
+ class DeviceScanner;
+ 
+-/** The list of Operations the user wants to have performed.
++/** @brief The list of Operations the user wants to have performed.
+ 
+ 	OperationStack also handles the Devices that were found on this computer and the merging of
+ 	Operations, e.g., when the user first creates a Partition, then deletes it.
+ 
+ 	@author Volker Lanz <vl@fidra.de>
+ */
+-class OperationStack : public QObject
++class LIBPARTITIONMANAGERPRIVATE_EXPORT OperationStack : public QObject
+ {
+ 	Q_OBJECT
+ 	Q_DISABLE_COPY(OperationStack)
+Index: partitionmanager/src/core/devicescanner.cpp
+===================================================================
+--- partitionmanager/src/core/devicescanner.cpp	(revision 1226870)
++++ partitionmanager/src/core/devicescanner.cpp	(working copy)
+@@ -40,6 +40,7 @@
+ 
+ void DeviceScanner::setupConnections()
+ {
++    CoreBackendManager::self()->load("plugintribepmlibparted");
+ 	connect(CoreBackendManager::self()->backend(), SIGNAL(scanProgress(QString,int)), SIGNAL(progress(QString,int)));
+ }
+ 
+Index: partitionmanager/src/core/partition.h
+===================================================================
+--- partitionmanager/src/core/partition.h	(revision 1226870)
++++ partitionmanager/src/core/partition.h	(working copy)
+@@ -101,6 +101,10 @@
+ 	friend class SetPartFlagsJob;
+ 	friend class RestoreFileSystemJob;
+ 
++    friend class PartitionManager;
++    friend class PartitionPage;
++    friend class PMHandler;
++
+ 	friend QTextStream& operator<<(QTextStream& stream, const Partition& p);
+ 
+ 	public:
+Index: partitionmanager/src/core/partitiontable.cpp
+===================================================================
+--- partitionmanager/src/core/partitiontable.cpp	(revision 1226870)
++++ partitionmanager/src/core/partitiontable.cpp	(working copy)
+@@ -166,6 +166,7 @@
+ 		case PartitionTable::FlagPalo: return i18nc("@item partition flag", "palo");
+ 		case PartitionTable::FlagPrep: return i18nc("@item partition flag", "prep");
+ 		case PartitionTable::FlagMsftReserved: return i18nc("@item partition flag", "msft-reserved");
++                case PartitionTable::FlagBiosGrubBoot: return i18nc("@item partition flag", "bios_grub");
+ 
+ 		default:
+ 			break;
+@@ -190,6 +191,7 @@
+ 	rval.append(PartitionTable::FlagPalo);
+ 	rval.append(PartitionTable::FlagPrep);
+ 	rval.append(PartitionTable::FlagMsftReserved);
++        rval.append(PartitionTable::FlagBiosGrubBoot);
+ 
+ 	return rval;
+ }
+Index: partitionmanager/src/ops/createfilesystemoperation.h
+===================================================================
+--- partitionmanager/src/ops/createfilesystemoperation.h	(revision 1226870)
++++ partitionmanager/src/ops/createfilesystemoperation.h	(working copy)
 @@ -21,6 +21,8 @@
  
- #define COREBACKENDMANAGER__H
+ #define CREATEFILESYSTEMOPERATION__H
  
-+#include <QDebug>
++#include "util/libpartitionmanagerexport.h"
 +
- #include "util/libpartitionmanagerexport.h"
+ #include "ops/operation.h"
  
- #include <kservice.h>
-@@ -50,7 +52,7 @@
- 		/**
- 		  * @return the name of the default backend plugin
- 		  */
--		static QString defaultBackendName() { return "pmlibpartedbackendplugin"; }
-+		static QString defaultBackendName() { return "plugintribepmlibparted"; }
+ #include "fs/filesystem.h"
+@@ -34,13 +36,13 @@
+ class CreateFileSystemJob;
+ class CheckFileSystemJob;
  
- 		/**
- 		  * @return a list of available backend plugins
-@@ -72,7 +74,7 @@
- 		/**
- 		  * @return a pointer to the currently loaded backend
- 		  */
--		CoreBackend* backend() { return m_Backend; }
-+        CoreBackend* backend() { return m_Backend; }
+-/** Create a FileSystem.
++/** @brief Create a FileSystem.
  
- 	private:
- 		CoreBackend* m_Backend;
-diff -aur partitionmanager_/src/CMakeLists.txt partitionmanagerA/src/CMakeLists.txt
---- partitionmanager_/src/CMakeLists.txt	2010-12-10 21:25:51.910000185 -0500
-+++ partitionmanagerA/src/CMakeLists.txt	2010-12-10 22:24:19.306666670 -0500
+ 	Creates a FileSystem on a given Partition and Device.
+ 
+ 	@author Volker Lanz <vl@fidra.de>
+ */
+-class CreateFileSystemOperation : public Operation
++class LIBPARTITIONMANAGERPRIVATE_EXPORT CreateFileSystemOperation : public Operation
+ {
+ 	friend class OperationStack;
+ 
+Index: partitionmanager/src/ops/newoperation.h
+===================================================================
+--- partitionmanager/src/ops/newoperation.h	(revision 1226870)
++++ partitionmanager/src/ops/newoperation.h	(working copy)
+@@ -22,6 +22,7 @@
+ #define NEWOPERATION__H
+ 
+ #include "ops/operation.h"
++#include "util/libpartitionmanagerexport.h"
+ 
+ #include <QString>
+ 
+@@ -33,13 +34,13 @@
+ class SetFileSystemLabelJob;
+ class CheckFileSystemJob;
+ 
+-/** Create a Partition.
++/** @brief Create a Partition.
+ 
+ 	Creates the given Partition on the given Device.
+ 
+ 	@author Volker Lanz <vl@fidra.de>
+ */
+-class NewOperation : public Operation
++class LIBPARTITIONMANAGERPRIVATE_EXPORT NewOperation : public Operation
+ {
+ 	friend class OperationStack;
+ 
+Index: partitionmanager/src/ops/resizeoperation.h
+===================================================================
+--- partitionmanager/src/ops/resizeoperation.h	(revision 1226870)
++++ partitionmanager/src/ops/resizeoperation.h	(working copy)
+@@ -24,6 +24,7 @@
+ #include "ops/operation.h"
+ 
+ #include "core/partition.h"
++#include "util/libpartitionmanagerexport.h"
+ 
+ #include <QString>
+ 
+@@ -47,7 +48,7 @@
+ 
+ 	@author Volker Lanz <vl@fidra.de>
+ */
+-class ResizeOperation : public Operation
++class LIBPARTITIONMANAGERPRIVATE_EXPORT ResizeOperation : public Operation
+ {
+ 	friend class OperationStack;
+ 
+Index: partitionmanager/src/ops/deleteoperation.h
+===================================================================
+--- partitionmanager/src/ops/deleteoperation.h	(revision 1226870)
++++ partitionmanager/src/ops/deleteoperation.h	(working copy)
+@@ -22,6 +22,7 @@
+ #define DELETEOPERATION__H
+ 
+ #include "ops/operation.h"
++#include "util/libpartitionmanagerexport.h"
+ 
+ #include <QString>
+ 
+@@ -35,7 +36,7 @@
+ /** Delete a Partition.
+ 	@author Volker Lanz <vl@fidra.de>
+ */
+-class DeleteOperation : public Operation
++class LIBPARTITIONMANAGERPRIVATE_EXPORT DeleteOperation : public Operation
+ {
+ 	friend class OperationStack;
+ 
+Index: partitionmanager/src/config/configurepageadvanced.ui
+===================================================================
+--- partitionmanager/src/config/configurepageadvanced.ui	(revision 1226870)
++++ partitionmanager/src/config/configurepageadvanced.ui	(working copy)
+@@ -10,6 +10,9 @@
+     <height>420</height>
+    </rect>
+   </property>
++  <property name="windowTitle">
++   <string comment="KDE::DoNotExtract">Form</string>
++  </property>
+   <layout class="QVBoxLayout" name="verticalLayout">
+    <item>
+     <widget class="QGroupBox" name="groupBox">
+Index: partitionmanager/src/fs/unformatted.cpp
+===================================================================
+--- partitionmanager/src/fs/unformatted.cpp	(revision 1226870)
++++ partitionmanager/src/fs/unformatted.cpp	(working copy)
+@@ -18,6 +18,7 @@
+  ***************************************************************************/
+ 
+ #include "fs/unformatted.h"
++#include "util/externalcommand.h"
+ 
+ namespace FS
+ {
+@@ -28,8 +29,10 @@
+ 	{
+ 	}
+ 
+-	bool unformatted::create(Report&, const QString&) const
++        bool unformatted::create(Report& report, const QString& deviceNode) const
+ 	{
+-		return true;
++            ExternalCommand cmd(report, "dd", QStringList() << "if=/dev/zero" << QString("of=").append(deviceNode));
++
++            return cmd.run(-1);
+ 	}
+ }
+Index: partitionmanager/src/fs/filesystem.h
+===================================================================
+--- partitionmanager/src/fs/filesystem.h	(revision 1226870)
++++ partitionmanager/src/fs/filesystem.h	(working copy)
+@@ -27,18 +27,19 @@
+ #include <QStringList>
+ #include <QString>
+ #include <QList>
++#include "util/libpartitionmanagerexport.h"
+ 
+ class Device;
+ class Report;
+ 
+-/** Base class for all FileSystems.
++/** @brief Base class for all FileSystems.
+ 
+ 	Represents a file system and handles support for various types of operations that can
+ 	be performed on those.
+ 
+ 	@author Volker Lanz <vl@fidra.de>
+  */
+-class FileSystem
++class LIBPARTITIONMANAGERPRIVATE_EXPORT FileSystem
+ {
+ 	Q_DISABLE_COPY(FileSystem)
+ 
+Index: partitionmanager/src/util/capacity.h
+===================================================================
+--- partitionmanager/src/util/capacity.h	(revision 1226870)
++++ partitionmanager/src/util/capacity.h	(working copy)
+@@ -25,15 +25,16 @@
+ class Device;
+ 
+ #include <qglobal.h>
++#include "util/libpartitionmanagerexport.h"
+ 
+-/** Represent any kind of capacity.
++/** @brief Represent any kind of capacity.
+ 
+ 	Any kind of capacity that can be expressed in units of Byte, KiB, MiB and so on. Also prints
+ 	capacities in nicely formatted ways.
+ 
+ 	@author Volker Lanz <vl@fidra.de>
+ */
+-class Capacity
++class LIBPARTITIONMANAGERPRIVATE_EXPORT Capacity
+ {
+ 	public:
+ 		/** Units we can deal with */
+Index: partitionmanager/src/util/helpers.cpp
+===================================================================
+--- partitionmanager/src/util/helpers.cpp	(revision 1226870)
++++ partitionmanager/src/util/helpers.cpp	(working copy)
+@@ -185,14 +185,14 @@
+ 
+ bool loadBackend()
+ {
+-	if (CoreBackendManager::self()->load(Config::backend()) == false)
++	if (CoreBackendManager::self()->load("plugintribepmlibparted") == false)
+ 	{
+ 		if (CoreBackendManager::self()->load(CoreBackendManager::defaultBackendName()))
+ 		{
+ 			KMessageBox::sorry(NULL,
+ 				i18nc("@info", "<para>The configured backend plugin \"%1\" could not be loaded.</para>"
+ 					"<para>Loading the default backend plugin \"%2\" instead.</para>",
+-				Config::backend(), CoreBackendManager::defaultBackendName()),
++				"tribepmlibparted", CoreBackendManager::defaultBackendName()),
+ 				i18nc("@title:window", "Error: Could Not Load Backend Plugin"));
+ 			Config::setBackend(CoreBackendManager::defaultBackendName());
+ 		}
+@@ -201,7 +201,7 @@
+ 			KMessageBox::error(NULL,
+ 				i18nc("@info", "<para>Neither the configured (\"%1\") nor the default (\"%2\") backend "
+ 					"plugin could be loaded.</para><para>Please check your installation.</para>",
+-				Config::backend(), CoreBackendManager::defaultBackendName()),
++				"tribepmlibparted", CoreBackendManager::defaultBackendName()),
+ 				i18nc("@title:window", "Error: Could Not Load Backend Plugin"));
+ 			return false;
+ 		}
+@@ -214,28 +214,28 @@
+ {
+ 	QString predicate = "StorageDrive.driveType == 'HardDisk'";
+ 
+-	KCmdLineArgs* args = KCmdLineArgs::parsedArgs();
+-	if (args->count() > 0)
+-	{
+-		predicate = " [ " + predicate + " AND ";
++// 	KCmdLineArgs* args = KCmdLineArgs::parsedArgs();
++// 	if (args->count() > 0)
++// 	{
++// 		predicate = " [ " + predicate + " AND ";
++// 
++// 		if (args->count() > 1)
++// 			predicate += "[ ";
++// 
++// 		for (qint32 i = 0; i < args->count(); i++)
++// 		{
++// 			predicate += QString("Block.device == '%1' ").arg(args->arg(i));
++// 
++// 			if (i < args->count() - 1)
++// 				predicate += "OR ";
++// 		}
++// 
++// 		if (args->count() > 1)
++// 			predicate += "] ";
++// 
++// 		predicate += ']';
++// 	}
+ 
+-		if (args->count() > 1)
+-			predicate += "[ ";
+-
+-		for (qint32 i = 0; i < args->count(); i++)
+-		{
+-			predicate += QString("Block.device == '%1' ").arg(args->arg(i));
+-
+-			if (i < args->count() - 1)
+-				predicate += "OR ";
+-		}
+-
+-		if (args->count() > 1)
+-			predicate += "] ";
+-
+-		predicate += ']';
+-	}
+-
+ 	kDebug() << predicate;
+ 
+ 	return Solid::Device::listFromQuery(predicate);
+Index: partitionmanager/src/CMakeLists.txt
+===================================================================
+--- partitionmanager/src/CMakeLists.txt	(revision 1226870)
++++ partitionmanager/src/CMakeLists.txt	(working copy)
 @@ -28,34 +28,51 @@
  	config/*.cpp
  )
@@ -128,10 +658,6 @@ diff -aur partitionmanager_/src/CMakeLists.txt partitionmanagerA/src/CMakeLists.
  
 -target_link_libraries(partitionmanager-bin partitionmanagerprivate ${KDE4_KDECORE_LIBS} ${KDE4_KDEUI_LIBS})
 +target_link_libraries(partitionmanager-bin tribepartitionmanager ${KDE4_KDECORE_LIBS} ${KDE4_KDEUI_LIBS})
-+
-+add_custom_target(partitionmanager ALL
-+        COMMAND sed -e 's,@INSTALL_PATH@,${BIN_INSTALL_DIR},g' < ${CMAKE_CURRENT_SOURCE_DIR}/partitionmanager.in > ${CMAKE_CURRENT_BINARY_DIR}/partitionmanager
-+)
  
 -if(UNIX)
 -	add_custom_target(partitionmanager ALL
@@ -139,456 +665,24 @@ diff -aur partitionmanager_/src/CMakeLists.txt partitionmanagerA/src/CMakeLists.
 -	)
 -	install(PROGRAMS ${CMAKE_CURRENT_BINARY_DIR}/partitionmanager DESTINATION ${BIN_INSTALL_DIR})
 -endif(UNIX)
++add_custom_target(partitionmanager ALL
++        COMMAND sed -e 's,@INSTALL_PATH@,${BIN_INSTALL_DIR},g' < ${CMAKE_CURRENT_SOURCE_DIR}/partitionmanager.in > ${CMAKE_CURRENT_BINARY_DIR}/partitionmanager
++)
++
 +install(PROGRAMS ${CMAKE_CURRENT_BINARY_DIR}/partitionmanager DESTINATION ${BIN_INSTALL_DIR})
  install(TARGETS partitionmanager-bin ${INSTALL_TARGETS_DEFAULT_ARGS})
  install(FILES gui/partitionmanagerui.rc DESTINATION ${DATA_INSTALL_DIR}/partitionmanager)
  install(PROGRAMS partitionmanager.desktop DESTINATION ${XDG_APPS_INSTALL_DIR})
-diff -aur partitionmanager_/src/config/configurepageadvanced.ui partitionmanagerA/src/config/configurepageadvanced.ui
---- partitionmanager_/src/config/configurepageadvanced.ui	2010-12-10 21:25:51.886666851 -0500
-+++ partitionmanagerA/src/config/configurepageadvanced.ui	2010-10-12 19:13:44.834454828 -0400
-@@ -10,6 +10,9 @@
-     <height>420</height>
-    </rect>
-   </property>
-+  <property name="windowTitle">
-+   <string comment="KDE::DoNotExtract">Form</string>
-+  </property>
-   <layout class="QVBoxLayout" name="verticalLayout">
-    <item>
-     <widget class="QGroupBox" name="groupBox">
-diff -aur partitionmanager_/src/core/devicescanner.cpp partitionmanagerA/src/core/devicescanner.cpp
---- partitionmanager_/src/core/devicescanner.cpp	2010-08-21 19:31:28.971274471 -0400
-+++ partitionmanagerA/src/core/devicescanner.cpp	2010-11-22 23:04:07.292705826 -0500
-@@ -40,6 +40,7 @@
- 
- void DeviceScanner::setupConnections()
- {
-+    CoreBackendManager::self()->load("plugintribepmlibparted");
- 	connect(CoreBackendManager::self()->backend(), SIGNAL(scanProgress(QString,int)), SIGNAL(progress(QString,int)));
- }
- 
-diff -aur partitionmanager_/src/core/devicescanner.h partitionmanagerA/src/core/devicescanner.h
---- partitionmanager_/src/core/devicescanner.h	2010-08-21 19:31:28.967117774 -0400
-+++ partitionmanagerA/src/core/devicescanner.h	2010-11-22 23:04:07.292705826 -0500
-@@ -22,15 +22,17 @@
- 
- #include <QThread>
- 
-+#include "util/libpartitionmanagerexport.h"
-+
- class OperationStack;
- 
--/** Thread to scan for all available Devices on this computer.
-+/** @brief Thread to scan for all available Devices on this computer.
- 
- 	This class is used to find all Devices on the computer and to create new Device instances for each of them. It's subclassing QThread to run asynchronously.
- 
- 	@author Volker Lanz <vl@fidra.de>
- */
--class DeviceScanner : public QThread
-+class LIBPARTITIONMANAGERPRIVATE_EXPORT DeviceScanner : public QThread
- {
- 	Q_OBJECT
- 
-diff -aur partitionmanager_/src/core/operationrunner.h partitionmanagerA/src/core/operationrunner.h
---- partitionmanager_/src/core/operationrunner.h	2010-08-21 19:31:28.964686305 -0400
-+++ partitionmanagerA/src/core/operationrunner.h	2010-11-22 23:04:07.292705826 -0500
-@@ -24,18 +24,19 @@
- #include <QThread>
- #include <QMutex>
- #include <qglobal.h>
-+#include "util/libpartitionmanagerexport.h"
- 
- class Operation;
- class OperationStack;
- class Report;
- 
--/** Thread to run the Operations in the OperationStack.
-+/** @brief Thread to run the Operations in the OperationStack.
- 
- 	Runs the OperationStack when the user applies operations.
- 
- 	@author Volker Lanz <vl@fidra.de>
- */
--class OperationRunner : public QThread
-+class LIBPARTITIONMANAGERPRIVATE_EXPORT OperationRunner : public QThread
- {
- 	Q_OBJECT
- 	Q_DISABLE_COPY(OperationRunner)
-diff -aur partitionmanager_/src/core/operationstack.h partitionmanagerA/src/core/operationstack.h
---- partitionmanager_/src/core/operationstack.h	2010-08-21 19:31:28.967117774 -0400
-+++ partitionmanagerA/src/core/operationstack.h	2010-11-22 23:04:07.292705826 -0500
-@@ -26,20 +26,21 @@
- #include <QReadWriteLock>
- 
- #include <qglobal.h>
-+#include "util/libpartitionmanagerexport.h"
- 
- class Device;
- class Partition;
- class Operation;
- class DeviceScanner;
- 
--/** The list of Operations the user wants to have performed.
-+/** @brief The list of Operations the user wants to have performed.
- 
- 	OperationStack also handles the Devices that were found on this computer and the merging of
- 	Operations, e.g., when the user first creates a Partition, then deletes it.
- 
- 	@author Volker Lanz <vl@fidra.de>
- */
--class OperationStack : public QObject
-+class LIBPARTITIONMANAGERPRIVATE_EXPORT OperationStack : public QObject
- {
- 	Q_OBJECT
- 	Q_DISABLE_COPY(OperationStack)
-diff -aur partitionmanager_/src/core/partition.h partitionmanagerA/src/core/partition.h
---- partitionmanager_/src/core/partition.h	2010-08-21 19:31:28.971274471 -0400
-+++ partitionmanagerA/src/core/partition.h	2010-12-02 00:38:47.216668007 -0500
-@@ -101,6 +101,10 @@
- 	friend class SetPartFlagsJob;
- 	friend class RestoreFileSystemJob;
- 
-+    friend class PartitionManager;
-+    friend class PartitionPage;
-+    friend class PMHandler;
-+
- 	friend QTextStream& operator<<(QTextStream& stream, const Partition& p);
- 
- 	public:
-diff -aur partitionmanager_/src/fs/filesystem.h partitionmanagerA/src/fs/filesystem.h
---- partitionmanager_/src/fs/filesystem.h	2010-08-21 19:31:29.553774663 -0400
-+++ partitionmanagerA/src/fs/filesystem.h	2010-11-22 23:04:07.292705826 -0500
-@@ -27,18 +27,19 @@
- #include <QStringList>
- #include <QString>
- #include <QList>
-+#include "util/libpartitionmanagerexport.h"
- 
- class Device;
- class Report;
- 
--/** Base class for all FileSystems.
-+/** @brief Base class for all FileSystems.
- 
- 	Represents a file system and handles support for various types of operations that can
- 	be performed on those.
- 
- 	@author Volker Lanz <vl@fidra.de>
-  */
--class FileSystem
-+class LIBPARTITIONMANAGERPRIVATE_EXPORT FileSystem
- {
- 	Q_DISABLE_COPY(FileSystem)
- 
-diff -aur partitionmanager_/src/gui/devicepropswidgetbase.ui partitionmanagerA/src/gui/devicepropswidgetbase.ui
---- partitionmanager_/src/gui/devicepropswidgetbase.ui	2010-12-10 21:25:51.860000185 -0500
-+++ partitionmanagerA/src/gui/devicepropswidgetbase.ui	2010-10-12 19:13:45.161459811 -0400
-@@ -10,6 +10,9 @@
-     <height>361</height>
-    </rect>
-   </property>
-+  <property name="windowTitle">
-+   <string>Form</string>
-+  </property>
-   <layout class="QGridLayout" name="gridLayout">
-    <item row="0" column="0" colspan="2">
-     <widget class="PartTableWidget" name="m_PartTableWidget" native="true">
-diff -aur partitionmanager_/src/gui/partpropswidgetbase.ui partitionmanagerA/src/gui/partpropswidgetbase.ui
---- partitionmanager_/src/gui/partpropswidgetbase.ui	2010-12-10 21:25:51.863333519 -0500
-+++ partitionmanagerA/src/gui/partpropswidgetbase.ui	2010-10-12 19:13:45.212460589 -0400
-@@ -10,6 +10,9 @@
-     <height>502</height>
-    </rect>
-   </property>
-+  <property name="windowTitle">
-+   <string>Form</string>
-+  </property>
-   <layout class="QGridLayout" name="gridLayout">
-    <item row="0" column="0" colspan="2">
-     <widget class="PartWidget" name="m_PartWidget" native="true">
-diff -aur partitionmanager_/src/gui/sizedialogwidgetbase.ui partitionmanagerA/src/gui/sizedialogwidgetbase.ui
---- partitionmanager_/src/gui/sizedialogwidgetbase.ui	2010-12-10 21:25:51.860000185 -0500
-+++ partitionmanagerA/src/gui/sizedialogwidgetbase.ui	2010-10-12 19:13:45.238460986 -0400
-@@ -10,6 +10,9 @@
-     <height>347</height>
-    </rect>
-   </property>
-+  <property name="windowTitle">
-+   <string>Form</string>
-+  </property>
-   <layout class="QGridLayout" name="gridLayout">
-    <item row="0" column="0" colspan="2">
-     <widget class="PartResizerWidget" name="m_PartResizerWidget" native="true">
-diff -aur partitionmanager_/src/ops/createfilesystemoperation.h partitionmanagerA/src/ops/createfilesystemoperation.h
---- partitionmanager_/src/ops/createfilesystemoperation.h	2010-08-21 19:31:29.170441189 -0400
-+++ partitionmanagerA/src/ops/createfilesystemoperation.h	2010-11-22 23:04:07.292705826 -0500
-@@ -21,6 +21,8 @@
- 
- #define CREATEFILESYSTEMOPERATION__H
- 
-+#include "util/libpartitionmanagerexport.h"
-+
- #include "ops/operation.h"
- 
- #include "fs/filesystem.h"
-@@ -34,13 +36,13 @@
- class CreateFileSystemJob;
- class CheckFileSystemJob;
- 
--/** Create a FileSystem.
-+/** @brief Create a FileSystem.
- 
- 	Creates a FileSystem on a given Partition and Device.
- 
- 	@author Volker Lanz <vl@fidra.de>
- */
--class CreateFileSystemOperation : public Operation
-+class LIBPARTITIONMANAGERPRIVATE_EXPORT CreateFileSystemOperation : public Operation
- {
- 	friend class OperationStack;
- 
-diff -aur partitionmanager_/src/ops/deleteoperation.h partitionmanagerA/src/ops/deleteoperation.h
---- partitionmanager_/src/ops/deleteoperation.h	2010-08-21 19:31:29.173775570 -0400
-+++ partitionmanagerA/src/ops/deleteoperation.h	2010-11-22 23:04:07.292705826 -0500
-@@ -22,6 +22,7 @@
- #define DELETEOPERATION__H
- 
- #include "ops/operation.h"
-+#include "util/libpartitionmanagerexport.h"
- 
- #include <QString>
- 
-@@ -35,7 +36,7 @@
- /** Delete a Partition.
- 	@author Volker Lanz <vl@fidra.de>
- */
--class DeleteOperation : public Operation
-+class LIBPARTITIONMANAGERPRIVATE_EXPORT DeleteOperation : public Operation
- {
- 	friend class OperationStack;
- 
-diff -aur partitionmanager_/src/ops/newoperation.h partitionmanagerA/src/ops/newoperation.h
---- partitionmanager_/src/ops/newoperation.h	2010-08-21 19:31:29.170441189 -0400
-+++ partitionmanagerA/src/ops/newoperation.h	2010-11-22 23:04:07.292705826 -0500
-@@ -22,6 +22,7 @@
- #define NEWOPERATION__H
- 
- #include "ops/operation.h"
-+#include "util/libpartitionmanagerexport.h"
- 
- #include <QString>
- 
-@@ -33,13 +34,13 @@
- class SetFileSystemLabelJob;
- class CheckFileSystemJob;
- 
--/** Create a Partition.
-+/** @brief Create a Partition.
- 
- 	Creates the given Partition on the given Device.
- 
- 	@author Volker Lanz <vl@fidra.de>
- */
--class NewOperation : public Operation
-+class LIBPARTITIONMANAGERPRIVATE_EXPORT NewOperation : public Operation
- {
- 	friend class OperationStack;
- 
-diff -aur partitionmanager_/src/ops/resizeoperation.h partitionmanagerA/src/ops/resizeoperation.h
---- partitionmanager_/src/ops/resizeoperation.h	2010-08-21 19:31:29.173775570 -0400
-+++ partitionmanagerA/src/ops/resizeoperation.h	2010-11-22 23:04:07.292705826 -0500
-@@ -24,6 +24,7 @@
- #include "ops/operation.h"
- 
- #include "core/partition.h"
-+#include "util/libpartitionmanagerexport.h"
- 
- #include <QString>
- 
-@@ -47,7 +48,7 @@
- 
- 	@author Volker Lanz <vl@fidra.de>
- */
--class ResizeOperation : public Operation
-+class LIBPARTITIONMANAGERPRIVATE_EXPORT ResizeOperation : public Operation
- {
- 	friend class OperationStack;
- 
-diff -aur partitionmanager_/src/plugins/dummy/CMakeLists.txt partitionmanagerA/src/plugins/dummy/CMakeLists.txt
---- partitionmanager_/src/plugins/dummy/CMakeLists.txt	2010-08-21 19:31:27.683792194 -0400
-+++ partitionmanagerA/src/plugins/dummy/CMakeLists.txt	2010-10-12 19:13:45.363462889 -0400
-@@ -19,7 +19,7 @@
- 
- kde4_add_plugin(pmdummybackendplugin ${pmdummybackendplugin_SRCS})
- 
--target_link_libraries(pmdummybackendplugin partitionmanagerprivate ${KDE4_KDECORE_LIBS} ${KDE4_KIO_LIBS} ${LIBPARTED_LIBS} ${BLKID_LIBRARIES} ${KDE4_SOLID_LIBS})
-+target_link_libraries(pmdummybackendplugin tribepartitionmanager ${KDE4_KDECORE_LIBS} ${KDE4_KIO_LIBS} ${LIBPARTED_LIBS} ${BLKID_LIBRARIES} ${KDE4_SOLID_LIBS})
- 
- install(TARGETS pmdummybackendplugin DESTINATION ${PLUGIN_INSTALL_DIR})
- install(FILES pmdummybackendplugin.desktop DESTINATION ${SERVICES_INSTALL_DIR})
-diff -aur partitionmanager_/src/plugins/libparted/CMakeLists.txt partitionmanagerA/src/plugins/libparted/CMakeLists.txt
---- partitionmanager_/src/plugins/libparted/CMakeLists.txt	2010-08-21 19:31:27.667108834 -0400
-+++ partitionmanagerA/src/plugins/libparted/CMakeLists.txt	2010-11-22 23:04:07.292705826 -0500
-@@ -17,9 +17,11 @@
- 
- file (GLOB pmlibpartedbackendplugin_SRCS *.cpp)
- 
--kde4_add_plugin(pmlibpartedbackendplugin ${pmlibpartedbackendplugin_SRCS})
-+kde4_add_library(plugintribepmlibparted SHARED ${pmlibpartedbackendplugin_SRCS})
- 
--target_link_libraries(pmlibpartedbackendplugin partitionmanagerprivate ${KDE4_KDECORE_LIBS} ${KDE4_KIO_LIBS} ${LIBPARTED_LIBS} ${BLKID_LIBRARIES} ${KDE4_SOLID_LIBS})
-+target_link_libraries(plugintribepmlibparted tribepartitionmanager ${KDE4_KDECORE_LIBS} ${KDE4_KIO_LIBS} ${LIBPARTED_LIBS} ${BLKID_LIBRARIES} ${KDE4_SOLID_LIBS})
- 
--install(TARGETS pmlibpartedbackendplugin DESTINATION ${PLUGIN_INSTALL_DIR})
-+set_target_properties(plugintribepmlibparted PROPERTIES PREFIX "")
-+
-+install(TARGETS plugintribepmlibparted DESTINATION ${PLUGIN_INSTALL_DIR})
- install(FILES pmlibpartedbackendplugin.desktop DESTINATION ${SERVICES_INSTALL_DIR})
-diff -aur partitionmanager_/src/plugins/libparted/libpartedbackend.cpp partitionmanagerA/src/plugins/libparted/libpartedbackend.cpp
---- partitionmanager_/src/plugins/libparted/libpartedbackend.cpp	2010-08-21 19:31:27.663775990 -0400
-+++ partitionmanagerA/src/plugins/libparted/libpartedbackend.cpp	2010-11-22 23:04:07.292705826 -0500
-@@ -20,6 +20,8 @@
- /** @file
- */
- 
-+#include <QDebug>
-+
- #include "plugins/libparted/libpartedbackend.h"
- #include "plugins/libparted/libparteddevice.h"
- 
-@@ -57,6 +59,9 @@
- #include <unistd.h>
- #include <blkid/blkid.h>
- 
-+#include "../../config.h"
-+
-+
- K_PLUGIN_FACTORY(LibPartedBackendFactory, registerPlugin<LibPartedBackend>(); )
- 
- static KAboutData createPluginAboutData()
-@@ -366,7 +371,9 @@
- 
- 	d.partitionTable()->updateUnallocated(d);
- 
--	if (d.partitionTable()->isSectorBased(d))
-+    Config::instance("partitionmanagerrc");
-+
-+    if (d.partitionTable()->isSectorBased(d))
- 		d.partitionTable()->setType(d, PartitionTable::msdos_sectorbased);
- 
- 	foreach(const Partition* part, partitions)
-diff -aur partitionmanager_/src/plugins/libparted/pmlibpartedbackendplugin.desktop partitionmanagerA/src/plugins/libparted/pmlibpartedbackendplugin.desktop
---- partitionmanager_/src/plugins/libparted/pmlibpartedbackendplugin.desktop	2010-12-10 21:25:51.816666852 -0500
-+++ partitionmanagerA/src/plugins/libparted/pmlibpartedbackendplugin.desktop	2010-10-12 19:13:45.375463074 -0400
-@@ -60,8 +54,8 @@
- ServiceTypes=PartitionManager/Plugin
- Icon=preferences-plugin
- 
--X-KDE-Library=pmlibpartedbackendplugin
--X-KDE-PluginInfo-Name=pmlibpartedbackendplugin
-+X-KDE-Library=plugintribepmlibparted
-+X-KDE-PluginInfo-Name=plugintribepmlibparted
- X-KDE-PluginInfo-Author=Volker Lanz
- X-KDE-PluginInfo-Email=vl@fidra.de
- X-KDE-PluginInfo-License=GPL
-diff -aur partitionmanager_/src/util/capacity.h partitionmanagerA/src/util/capacity.h
---- partitionmanager_/src/util/capacity.h	2010-08-21 19:31:29.660743954 -0400
-+++ partitionmanagerA/src/util/capacity.h	2010-11-22 23:04:07.296039210 -0500
-@@ -25,15 +25,16 @@
- class Device;
- 
- #include <qglobal.h>
-+#include "util/libpartitionmanagerexport.h"
- 
--/** Represent any kind of capacity.
-+/** @brief Represent any kind of capacity.
- 
- 	Any kind of capacity that can be expressed in units of Byte, KiB, MiB and so on. Also prints
- 	capacities in nicely formatted ways.
- 
- 	@author Volker Lanz <vl@fidra.de>
- */
--class Capacity
-+class LIBPARTITIONMANAGERPRIVATE_EXPORT Capacity
- {
- 	public:
- 		/** Units we can deal with */
-diff -aur partitionmanager_/src/util/helpers.cpp partitionmanagerA/src/util/helpers.cpp
---- partitionmanager_/src/util/helpers.cpp	2010-08-21 19:31:29.663783533 -0400
-+++ partitionmanagerA/src/util/helpers.cpp	2010-11-22 23:04:07.296039210 -0500
-@@ -185,14 +185,14 @@
- 
- bool loadBackend()
- {
--	if (CoreBackendManager::self()->load(Config::backend()) == false)
-+	if (CoreBackendManager::self()->load("plugintribepmlibparted") == false)
- 	{
- 		if (CoreBackendManager::self()->load(CoreBackendManager::defaultBackendName()))
- 		{
- 			KMessageBox::sorry(NULL,
- 				i18nc("@info", "<para>The configured backend plugin \"%1\" could not be loaded.</para>"
- 					"<para>Loading the default backend plugin \"%2\" instead.</para>",
--				Config::backend(), CoreBackendManager::defaultBackendName()),
-+				"tribepmlibparted", CoreBackendManager::defaultBackendName()),
- 				i18nc("@title:window", "Error: Could Not Load Backend Plugin"));
- 			Config::setBackend(CoreBackendManager::defaultBackendName());
- 		}
-@@ -201,7 +201,7 @@
- 			KMessageBox::error(NULL,
- 				i18nc("@info", "<para>Neither the configured (\"%1\") nor the default (\"%2\") backend "
- 					"plugin could be loaded.</para><para>Please check your installation.</para>",
--				Config::backend(), CoreBackendManager::defaultBackendName()),
-+				"tribepmlibparted", CoreBackendManager::defaultBackendName()),
- 				i18nc("@title:window", "Error: Could Not Load Backend Plugin"));
- 			return false;
- 		}
-@@ -214,27 +214,27 @@
- {
- 	QString predicate = "StorageDrive.driveType == 'HardDisk'";
- 
--	KCmdLineArgs* args = KCmdLineArgs::parsedArgs();
--	if (args->count() > 0)
--	{
--		predicate = " [ " + predicate + " AND ";
--
--		if (args->count() > 1)
--			predicate += "[ ";
--
--		for (qint32 i = 0; i < args->count(); i++)
--		{
--			predicate += QString("Block.device == '%1' ").arg(args->arg(i));
--
--			if (i < args->count() - 1)
--				predicate += "OR ";
--		}
--
--		if (args->count() > 1)
--			predicate += "] ";
--
--		predicate += ']';
--	}
-+// 	KCmdLineArgs* args = KCmdLineArgs::parsedArgs();
-+// 	if (args->count() > 0)
-+// 	{
-+// 		predicate = " [ " + predicate + " AND ";
-+// 
-+// 		if (args->count() > 1)
-+// 			predicate += "[ ";
-+// 
-+// 		for (qint32 i = 0; i < args->count(); i++)
-+// 		{
-+// 			predicate += QString("Block.device == '%1' ").arg(args->arg(i));
-+// 
-+// 			if (i < args->count() - 1)
-+// 				predicate += "OR ";
-+// 		}
-+// 
-+// 		if (args->count() > 1)
-+// 			predicate += "] ";
-+// 
-+// 		predicate += ']';
-+// 	}
- 
- 	kDebug() << predicate;
- 
+Index: partitionmanager/CMakeLists.txt
+===================================================================
+--- partitionmanager/CMakeLists.txt	(revision 1226870)
++++ partitionmanager/CMakeLists.txt	(working copy)
+@@ -46,7 +46,7 @@
+ include(KDE4Defaults)
+ include(MacroLibrary)
+ 
+-include_directories(${KDE4_INCLUDES} ${KDE4_INCLUDE_DIR} ${QT_INCLUDES} ${UUID_INCLUDE_DIRS} ${BLKID_INCLUDE_DIRS} lib/ src/)
++include_directories(${KDE4_INCLUDES} ${KDE4_INCLUDE_DIR} ${QT_INCLUDES} ${UUID_INCLUDE_DIRS} ${BLKID_INCLUDE_DIRS} lib/ src/ build/)
+ 
+ add_subdirectory(lib)
+ add_subdirectory(src)

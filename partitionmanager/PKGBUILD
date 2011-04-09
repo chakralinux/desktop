@@ -9,12 +9,12 @@ source ../_buildscripts/${current_repo}-${_arch}-cfg.conf
 
 pkgname=partitionmanager
 pkgver=1216949
-pkgrel=1
+pkgrel=4
 arch=('i686' 'x86_64')
 url="https://sourceforge.net/projects/partitionman"
 license=('GPL2')
 depends=('kdebase-runtime' 'parted' 'libatasmart')
-makedepends=('cmake' 'automoc4' 'pkgconfig')
+makedepends=('cmake' 'automoc4' 'pkgconfig' 'svn')
 conflicts=("tribe-partitionmanager")
 optdepends=('e2fsprogs: ext2/3/4 support'
 	    'xfsprogs: XFS support'
@@ -23,8 +23,8 @@ optdepends=('e2fsprogs: ext2/3/4 support'
 	    'ntfsprogs: NTFS support'
 	    'dosfstools: FAT32 support')
 install=partitionmanager.install	    
-source=(tribe.patch)
-md5sums=('9a287077762f5829708a6fa8df495cd7')
+source=(tribe.patch) # disable-gpt.patch)
+md5sums=('315e17fcc5c6e8e64902f0d3385f3c9f') # '30c6cdf25c23c6fc33c21b3b48b28ed0')
 
 #_svntrunk=svn://anonsvn.kde.org/home/kde/trunk/extragear/sysadmin/partitionmanager
 _svnmod=partitionmanager-svn
@@ -41,6 +41,7 @@ build() {
   cd $_svnmod-build
 
   patch -p1 < ${srcdir}/tribe.patch
+  #patch -p1 < ${srcdir}/disable-gpt.patch
 
   cmake -DCMAKE_INSTALL_PREFIX=/usr -DCMAKE_BUILD_TYPE=RelWithDebInfo
 
