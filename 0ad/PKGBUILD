@@ -4,12 +4,12 @@
 # Maintainer: Adrián Chaves Fernández (Gallaecio) <adriyetichaves gmail.com>
 
 # include global config
-source ../_buildscripts/${current_repo}-${_arch}-cfg.conf
+# source ../_buildscripts/${current_repo}-${_arch}-cfg.conf
 
 pkgname=0ad
 pkgver=alpha_4
 _pkgver=r09049-alpha
-pkgrel=3
+pkgrel=4
 pkgdesc="Cross-platform, 3D and historically-based real-time strategy game."
 arch=('i686' 'x86_64')
 url="http://wildfiregames.com/0ad"
@@ -20,14 +20,20 @@ changelog=ChangeLog
 source=("http://releases.wildfiregames.com/$pkgname-$_pkgver-unix-build.tar.xz"
 	"http://releases.wildfiregames.com/$pkgname-$_pkgver-unix-data.tar.xz"
 	"$pkgname.sh"
-	"$pkgname-nogtk.patch")
+	"$pkgname-nogtk.patch"
+	"http://www.wildfiregames.com/forum/index.php?app=core&module=attach&section=attach&attach_id=2797")
 md5sums=('3ebb1b322cd947c855da75828ebcd539'
          '30c289cdbffd552cc29e62778cd718d4'
          '27c6ee0a240c3ea481d08aa7e8e5158b'
-         '7bb8119a4d611cdffa05177ea2603151')
+         '7bb8119a4d611cdffa05177ea2603151'
+         'ee4d5d7bffadbd4985891584f1e021df')
 
 build()
 {
+  cd $srcdir/$pkgname-$_pkgver/source/
+  patch -uN $srcdir/$pkgname-$_pkgver/source/lib/file/file.cpp \
+	    "$srcdir/index.php?app=core&module=attach&section=attach&attach_id=2797" || return 1
+
   cd $srcdir/$pkgname-$_pkgver/build/workspaces
 
   patch -uN update-workspaces.sh $srcdir/$pkgname-nogtk.patch
