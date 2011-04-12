@@ -4,9 +4,6 @@
 # maintainer (i686): Phil Miller <philm[at]chakra-project[dog]org>
 # maintainer (x86_64): Manuel Tortosa <manutortosa[at]chakra-project[dot]org>
 # Contributor: cruznick <cruznick@archlinux.us>
-# include global config
-source ../_buildscripts/${current_repo}-${_arch}-cfg.conf
-
 
 pkgname=buc
 pkgver=0.5.2
@@ -16,21 +13,15 @@ arch=('i686' 'x86_64')
 url="http://buc.billeragroup.net"
 license=('GPL')
 groups=('devel')
-install=buc.install
-if [ "$CARCH" == "x86_64" ];then
- depends=('libpng' 'qt')
-else
- depends=('libpng' 'qt')
-fi
-source=(http://buc.intilinux.com/download/$pkgname-${pkgver}_src_full.tar.gz \
-         'gcc-fixes.patch' 'path-fixes.patch')
+depends=('libpng' 'qt')
+source=(http://buc.intilinux.com/download/$pkgname-${pkgver}_src_full.tar.gz 'gcc-fixes.patch' 'path-fixes.patch')
 md5sums=('0e35e0bf8a447170428ff0e570629813'
 	 '3f33e7e4f143305a8d55b97241254384' # gcc-fixes.patch
-	 '1ad6304b7264063650b860ac4a4f2563') # path-fixes.patch
+	 '88cfeca6c14a3eb4b6dfdd026aaf3357') # path-fixes.patch
 build() {
   cd "$srcdir/zip/"
-     # removing unnecesary stuff
 
+  # removing unnecesary stuff
   rm -v bucd/usr/local/buc/libQtCore.so.4
   rm -v bucd/usr/local/buc/libQtGui.so.4
   rm -v bucd/usr/local/buc/buc
@@ -47,4 +38,4 @@ build() {
   cp -Rv bucd/usr/local/buc/ $pkgdir/usr/share
   cp -Rv bucd/usr/local/bin/ $pkgdir/usr/
   cp -Rv buc $pkgdir/usr/share/buc/
-}
+ }
