@@ -41,6 +41,8 @@ md5sums=('391398126cb86a4f6fbd0b7037997d84'
 build() {
     cd "${srcdir}/xbmc-$pkgver"
 
+    pacman -Q libass && { msg "Remove libass"; return 1; }
+
     # one core only
     export MAKEFLAGS="-j2"
 
