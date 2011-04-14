@@ -7,22 +7,25 @@
 source ../_buildscripts/${current_repo}-${_arch}-cfg.conf
 
 pkgname=convertall
-pkgver=0.5.0
-pkgrel=2
+pkgver=0.5.1
+pkgrel=1
 pkgdesc="Unit conversion program (Qt)"
 arch=('i686' 'x86_64')
 url="http://convertall.bellz.org/"
 license=('GPL')
 depends=('pyqt')
 source=(http://download.berlios.de/$pkgname/$pkgname-$pkgver.tar.gz \
-	correctpaths.patch convertall.desktop)
-md5sums=('96ea0910af63d2056fe87cee3aa7031e'
+	correctpaths.patch use-default-qt-style.patch convertall.desktop)
+md5sums=('4f19e4f027c6cec590f842569b1ae7a0'
          'e4f5c5d58f728b292f625c38771d2779'
+         '595e958ffa448334becf73940d6303d9'
          'aae44cb1f36847340411d77b1a6d00cd')
 
 build() {
 # patch executable to have the correct paths
 patch -Np0 < $srcdir/correctpaths.patch || return 1
+#patch to correct the qt style used
+patch -Np0 < ${srcdir}/use-default-qt-style.patch || return 1
 
 # create install directories
   install -d $pkgdir/usr/{bin,share/pixmaps}
