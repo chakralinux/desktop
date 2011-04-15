@@ -6,16 +6,16 @@
 # contributor Fabien <hcoohb@gmailcom>
 
 pkgname=yate
-pkgver=3.2.0
+pkgver=3.3.2
 pkgrel=1
 pkgdesc="Next-generation telephony engine, qt4 client for VoIP"
 arch=('i686' 'x86_64')
 url="http://yate.null.ro"
 license=('GPL')
-depends=('speex' 'gsm' 'postgresql-libs' 'libmysqlclient' \
+depends=('qt' 'speex' 'gsm' 'postgresql-libs' 'libmysqlclient' \
          'alsa-lib')
 makedepends=('pkgconfig')
-source=(http://yate.null.ro/tarballs/yate3/${pkgname}-${pkgver}-${pkgrel}.tar.gz yate.init)
+source=(http://yate.null.ro/tarballs/yate3/${pkgname}-${pkgver}-1.tar.gz yate.init)
 options=(!makeflags)
 
 build() {
@@ -32,7 +32,8 @@ build() {
   install -D -m755 $srcdir/yate.init $pkgdir/etc/rc.d/yate || return 1
 }
 
-md5sums=('8ef5f0c420cb41ad2b5828fdba28c4ee'
+md5sums=('c0738aa13a2145f7ca76d0dad086697f'
          'c0d344607046c47c1d75ac23d323817a')
+
 
 
