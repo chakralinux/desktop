@@ -8,45 +8,51 @@
 source ../_buildscripts/${current_repo}-${_arch}-cfg.conf
 
 pkgname=blender
-pkgver=2.49b
-pkgrel=2
+pkgver=2.57
+pkgrel=1
 pkgdesc="A fully integrated 3D graphics creation suite (binary version)"
 arch=('i686' 'x86_64')
 url="http://blender.org/"
 license=('GPL')
-depends=('libgl' 'libjpeg6' 'libx11' 'libxau' 'libxcb' 'libxdamage' 'libxdmcp' 'libxext' 'libxfixes' 'libxi' 'libxxf86vm' 'python' 'sdl' 'zlib')
-makedepends=('librsvg')
+depends=('libjpeg6' 'libpng12' 'zlib' 'libsamplerate' 'freetype2' 'sdl' 'libgl' 'mesa')
+#makedepends=('librsvg')
 install=blender.install
-source=('blender.desktop')
-md5sums=('b5b9720b9430b1f5e2aa0b2df533fed8')
+source=('blender.desktop' 'blender.sh')
+md5sums=('b5b9720b9430b1f5e2aa0b2df533fed8'
+         'ee1723515be5a2a88839fe02c1eaf174')
 
 case ${CARCH} in
   i686)
-  source=(${source[@]} 'http://video.blendertestbuilds.de/download.blender.org/release/Blender2.49b/blender-2.49b-linux-glibc236-py26-i386.tar.bz2')
+  source=(${source[@]} 'http://download.blender.org/release/Blender2.57/blender-2.57-linux-glibc27-i686.tar.bz2')
     md5sums=(${md5sums[@]} 'f9157c5142fc0638ab2970033b7a91a0');;
   x86_64)
-  source=(${source[@]} 'http://video.blendertestbuilds.de/download.blender.org/release/Blender2.49b/blender-2.49b-linux-glibc236-py26-x86_64.tar.bz2')
-    md5sums=(${md5sums[@]} '58822737042a0bd220553ac78994722f');;
+  source=(${source[@]} 'http://download.blender.org/release/Blender2.57/blender-2.57-linux-glibc27-x86_64.tar.bz2')
+    md5sums=(${md5sums[@]} '038744df08cdf7a4e279032b7547ed5c');;
 esac
 
 build() {
   mkdir -p $pkgdir/usr/{share/blender,share/icons/hicolor,bin}
   case ${CARCH} in
     i686)
-      cd $srcdir/blender-2.49b-linux-glibc236-py26-i386
+      cd $srcdir/blender-2.57-linux-glibc27-i686
       ;;
     x86_64)
-      cd $srcdir/blender-2.49b-linux-glibc236-py26-x86_64
+      cd $srcdir/blender-2.57-linux-glibc27-x86_64
       ;;
   esac
 
-  cp -r .blender/locale $pkgdir/usr/share
-  cp -r .blender/scripts $pkgdir/usr/share/blender
-  cp -r icons/* $pkgdir/usr/share/icons/hicolor
-  cp blender $pkgdir/usr/bin
-  cp blenderplayer $pkgdir/usr/bin
+  install -d -m755 $pkgdir/usr/share/blender
 
-  # stolen from blender in extra
+  install -Dm755 "$srcdir/blender.sh" "$pkgdir/usr/bin/blender"
+  cp -r blender ${_pkgver} "$pkgdir/usr/share/blender"
+
+  # Icons
+  install -Dm644 icons/scalable/blender.svg "$pkgdir/usr/share/icons/hicolor/scalable/blender.svg"
+  for S in 16 22 32; do
+    install -Dm644 icons/${S}x${S}/blender.png "$pkgdir/usr/share/icons/hicolor/${S}x${S}/blender.png"
+  done
+
+  # Stolen from blender in extra
   install -Dm644 $srcdir/blender.desktop $pkgdir/usr/share/applications/blender.desktop
 }
 

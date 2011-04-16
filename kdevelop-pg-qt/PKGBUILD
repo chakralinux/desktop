@@ -4,22 +4,17 @@
 # maintainer (i686): Phil Miller <philm[at]chakra-project[dog]org>
 # maintainer (x86_64): Manuel Tortosa <manutortosa[at]chakra-project[dot]org>
 
-# include global config
-source ../_buildscripts/${current_repo}-${_arch}-cfg.conf
-
-pkgname=kdevelop
-pkgver=4.2.2
+pkgname=kdevelop-pg-qt
+pkgver=0.9.5
 pkgrel=1
-pkgdesc="A C/C++ development environment for KDE"
+pkgdesc="KDevelop Parser Generator, a LL(1) parser generator used by KDevelop language plugins"
 arch=('i686' 'x86_64')
 url="http://www.kdevelop.org/"
 license=('GPL')
-depends=('kdebase-workspace' 'kdevplatform')
-makedepends=('cmake' 'automoc4' 'perl')
-install=${pkgname}.install
+depends=('kdelibs')
+makedepends=('cmake' 'automoc4')
 source=("http://download.kde.org/stable/${pkgname}/${pkgver}/src/${pkgname}-${pkgver}.tar.bz2")
-         
-md5sums=('4040e71f464b4849539877e750ffab26')
+md5sums=('4818af0deea47d583adff7c134d62e08')
 
 build() {
   cd ${srcdir}
@@ -27,12 +22,11 @@ build() {
   cd build 
   cmake ../${pkgname}-${pkgver} \
     -DCMAKE_INSTALL_PREFIX=/usr \
-    -DCMAKE_BUILD_TYPE=Release \
-    -DCMAKE_SKIP_RPATH=ON
-  make || return 1
+    -DCMAKE_BUILD_TYPE=Release
+  make
 }
 
 package() {
   cd ${srcdir}/build
-  make DESTDIR=${pkgdir} install || return 1
+  make DESTDIR=${pkgdir} install
 }
