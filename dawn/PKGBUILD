@@ -8,7 +8,7 @@ source ../_buildscripts/${current_repo}-${_arch}-cfg.conf
 
 pkgname=dawn
 _pkgname=dawn-rpg
-pkgver=0.0.43
+pkgver=0.0.44
 pkgrel=1
 pkgdesc="2D RPG set in a fantasy world."
 arch=('i686' 'x86_64')
@@ -19,11 +19,11 @@ makedepends=('autoconf' 'automake')
 replaces=('dawn-rpg')
 changelog=ChangeLog
 source=("http://downloads.sourceforge.net/project/$_pkgname/$_pkgname/$pkgname-$pkgver.tar.gz")
-md5sums=('b4b2e12ed5122621ae8fa9622562a99d')
+md5sums=('dac93b36f6d3e9af3aa401042e4f5bbd')
 
 build()
 {
-  cd $srcdir/$pkgname-$pkgver
+  cd $srcdir/$_pkgname
 
 # Emptied for this configuration (else you get a tolua++ fail):
   LDFLAGS="" \
@@ -34,12 +34,12 @@ build()
 
 package()
 {
-  cd $srcdir/$pkgname-$pkgver
+  cd $srcdir/$_pkgname
 #   make DESTDIR=$pkgdir install
 
-  install -Dm 775 $srcdir/$pkgname-$pkgver/$_pkgname $pkgdir/usr/share/$pkgname/$pkgname
-  cp -R $srcdir/$pkgname-$pkgver/data $pkgdir/usr/share/$pkgname/data
-  install $srcdir/$pkgname-$pkgver/settings.lua $pkgdir/usr/share/$pkgname/settings.lua
+  install -Dm 775 $srcdir/$_pkgname/$_pkgname $pkgdir/usr/share/$pkgname/$pkgname
+  cp -R $srcdir/$_pkgname/data $pkgdir/usr/share/$pkgname/data
+  install $srcdir/$_pkgname/settings.lua $pkgdir/usr/share/$pkgname/settings.lua
 
   # Temporal launcher:
   mkdir -p $pkgdir/usr/bin
