@@ -1,0 +1,33 @@
+#
+# Chakra Packages for Chakra, part of chakra-project.org
+#
+# contributor (x86_64): Giuseppe Calà <jiveaxe@gmail.com>
+
+# include global config
+source ../_buildscripts/${current_repo}-${_arch}-cfg.conf
+
+pkgname=silc-toolkit
+pkgver=1.1.10
+pkgrel=1
+pkgdesc="Toolkit for Secure Internet Live Conferencing"
+url="http://www.silcnet.org"
+license=('GPL')
+arch=('i686' 'x86_64')
+depends=('glibc' 'perl' 'libidn')
+source=(http://www.silcnet.org/download/toolkit/sources/$pkgname-$pkgver.tar.bz2)
+options=(!libtool)
+sha256sums=('a76cc364813b2d09dee7a9e99fda77db71b5bf752297176eb8de4fb0466eed76')
+
+build() {
+    cd $srcdir/$pkgname-$pkgver
+    ./configure --prefix=/usr --with-etcdir=/etc/silc \
+        --enable-ipv6 --with-perl=yes \
+        --with-simdir=/usr/lib/silc/modules
+
+    make || return 1
+    make DESTDIR=$pkgdir install
+
+    # remove the crapload of html docs (26MB!)
+    rm -rf $pkgdir/usr/share/doc/$pkgname/toolkit
+}
+
