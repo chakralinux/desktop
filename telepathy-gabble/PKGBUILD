@@ -4,24 +4,25 @@
 # contributor (x86_64): Giuseppe Calà <jiveaxe@gmail.com>
 
 # include global config
-#source ../_buildscripts/${current_repo}-${_arch}-cfg.conf
+source ../_buildscripts/${current_repo}-${_arch}-cfg.conf
 
 pkgname=telepathy-gabble
 pkgver=0.11.10
-pkgrel=1
+pkgrel=2
 pkgdesc="A Jabber/XMPP connection manager that handles single- and multi-user chats and voice/video calls."
 arch=('i686' 'x86_64')
 url="http://telepathy.freedesktop.org/"
 license=('GPL')
-depends=('libglade' 'telepathy-glib' 'libxslt' 'libsoup-gnome' 'libnice')
-makedepends=('pkgconfig>=0.9')
+depends=('telepathy-glib' 'libsoup' 'libnice' 'util-linux' 'sqlite3')
+makedepends=('libxslt' 'python2')
+install=telepathy-gabble.install
 source=(http://telepathy.freedesktop.org/releases/$pkgname/$pkgname-$pkgver.tar.gz)
 md5sums=('2a8ee3038bd1c9ee40c1b8b48becfa16')
 
 build() {
   cd $pkgname-$pkgver
 
-  ./configure	--prefix=/usr --disable-static
+  ./configure --prefix=/usr --libexecdir=/usr/lib/telepathy
 
   make || return 1
   make DESTDIR="$pkgdir" install || return 1
