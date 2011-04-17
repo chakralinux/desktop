@@ -17,15 +17,6 @@ depends=('kdebase-workspace>=4.6')
 makedepends=('cmake' 'automoc4')
 source=("http://kde-apps.org/CONTENT/content-files/140893-browseoperabookmarks.tar.bz2")
 md5sums=('e114e36cbdf7ce682225cd1e70f4747e')
-
-build() {
-  cd ${srcdir}/plasma-widget-menubar-${pkgver}
-
-  cmake -DCMAKE_INSTALL_PREFIX=`kde4-config --prefix`
-
-  make || return 1
-  make DESTDIR=${pkgdir} install || return 1
-}
  
 build() {
   cd ${srcdir}/plasma-runner-browseoperabookmarks/
