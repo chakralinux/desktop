@@ -1,0 +1,27 @@
+#
+# Apps Packages for Chakra, part of chakra-project.org
+#
+# maintainer (x86_64): Giuseppe calà <jiveaxe@gmail.com>
+
+
+# include global config
+source ../_buildscripts/${current_repo}-${_arch}-cfg.conf
+
+pkgname=sofia-sip
+pkgver=1.12.11
+pkgrel=1
+pkgdesc="An open-source SIP User-Agent library"
+arch=('i686' 'x86_64')
+url="http://sofia-sip.sourceforge.net"
+options=('!libtool' 'zipman')
+license=('LGPL')
+depends=('glib2' 'openssl')
+source=(http://downloads.sourceforge.net/sofia-sip/$pkgname-$pkgver.tar.gz)
+md5sums=('f3582c62080eeecd3fa4cd5d4ccb4225')
+
+build() {
+  cd "$srcdir/$pkgname-$pkgver"
+  ./configure --prefix=/usr --with-openssl
+  make || return 1
+  make DESTDIR="$pkgdir" install
+}
