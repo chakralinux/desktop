@@ -1,0 +1,26 @@
+#
+# Chakra Packages for Chakra, part of chakra-project.org
+#
+# contributor (x86_64): Giuseppe Calà <jiveaxe@gmail.com>
+
+# include global config
+source ../_buildscripts/${current_repo}-${_arch}-cfg.conf
+
+pkgname=python-telepathy
+pkgver=0.15.19
+pkgrel=1
+pkgdesc="Python libraries for use in Telepathy clients and connection managers"
+arch=('i686' 'x86_64')
+url="http://telepathy.freedesktop.org"
+license=('LGPL')
+depends=('dbus-python')
+makedepends=('libxslt')
+source=(http://telepathy.freedesktop.org/releases/telepathy-python/telepathy-python-${pkgver}.tar.gz)
+md5sums=('f7ca25ab3c88874015b7e9728f7f3017')
+
+build() {
+    cd "${srcdir}/telepathy-python-${pkgver}"
+    ./configure --prefix=/usr
+    make
+    make DESTDIR="${pkgdir}" install
+}
