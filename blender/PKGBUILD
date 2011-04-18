@@ -8,46 +8,69 @@
 source ../_buildscripts/${current_repo}-${_arch}-cfg.conf
 
 pkgname=blender
-pkgver=2.49b
-pkgrel=2
-pkgdesc="A fully integrated 3D graphics creation suite (binary version)"
+pkgver=2.57
+pkgrel=1
+pkgdesc="A fully integrated 3D graphics creation suite"
 arch=('i686' 'x86_64')
-url="http://blender.org/"
 license=('GPL')
-depends=('libgl' 'libjpeg6' 'libx11' 'libxau' 'libxcb' 'libxdamage' 'libxdmcp' 'libxext' 'libxfixes' 'libxi' 'libxxf86vm' 'python' 'sdl' 'zlib')
-makedepends=('librsvg')
+url="http://www.blender.org"
+depends=('libjpeg' 'libpng' 'openjpeg' 'libtiff' 'openexr' 'sdl' 'python3' 'desktop-file-utils' 'shared-mime-info' 'hicolor-icon-theme' 'xdg-utils' 'gettext' 'libxi' 'libxmu' 'mesa' 'freetype2' 'openal' 'libsndfile' 'libsamplerate' 'ffmpeg')
+makedepends=('cmake' 'cvs')
 install=blender.install
-source=('blender.desktop')
-md5sums=('b5b9720b9430b1f5e2aa0b2df533fed8')
-
-case ${CARCH} in
-  i686)
-  source=(${source[@]} 'http://video.blendertestbuilds.de/download.blender.org/release/Blender2.49b/blender-2.49b-linux-glibc236-py26-i386.tar.bz2')
-    md5sums=(${md5sums[@]} 'f9157c5142fc0638ab2970033b7a91a0');;
-  x86_64)
-  source=(${source[@]} 'http://video.blendertestbuilds.de/download.blender.org/release/Blender2.49b/blender-2.49b-linux-glibc236-py26-x86_64.tar.bz2')
-    md5sums=(${md5sums[@]} '58822737042a0bd220553ac78994722f');;
-esac
+if [ ! $_cvs -o $_cvs = false ]; then
+  makedepends=('cmake')
+  source=(http://download.blender.org/source/$pkgname-$pkgver.tar.gz)
+  md5sums=('e6cb5523323a71c070051e6fe6efe497')
+fi
 
 build() {
-  mkdir -p $pkgdir/usr/{share/blender,share/icons/hicolor,bin}
-  case ${CARCH} in
-    i686)
-      cd $srcdir/blender-2.49b-linux-glibc236-py26-i386
-      ;;
-    x86_64)
-      cd $srcdir/blender-2.49b-linux-glibc236-py26-x86_64
-      ;;
-  esac
+  if [ $_cvs = true ]; then
+    cd "$srcdir/"
+    #cvs -d:pserver:anonymous@cvs.blender.org:/cvsroot/bf-blender login
+    cvs -z3 -d:pserver:anonymous@cvs.blender.org:/cvsroot/bf-blender checkout $pkgname
+    _cvsrel=$pkgname-$(echo $pkgver | sed 's/\./-/')-release
+    cvs -d:pserver:anonymous@cvs.blender.org:/cvsroot/bf-blender update -r $_cvsrel
+    find $pkgname/{bin,release/scripts} -name 'CVS' -exec rm -rf {} \; 2> /dev/null
+    cd $pkgname
+  else
+    cd "$srcdir/$pkgname-$pkgver"
+  fi
 
-  cp -r .blender/locale $pkgdir/usr/share
-  cp -r .blender/scripts $pkgdir/usr/share/blender
-  cp -r icons/* $pkgdir/usr/share/icons/hicolor
-  cp blender $pkgdir/usr/bin
-  cp blenderplayer $pkgdir/usr/bin
+  mkdir build
+  cd build
 
-  # stolen from blender in extra
-  install -Dm644 $srcdir/blender.desktop $pkgdir/usr/share/applications/blender.desktop
+  cmake .. \
+    -DCMAKE_INSTALL_PREFIX:PATH=/usr \
+    -DCMAKE_BUILD_TYPE:STRING=Release \
+    -DWITH_INSTALL_PORTABLE:BOOL=OFF \
+    -DWITH_PYTHON_INSTALL:BOOL=OFF \
+    -DWITH_OPENCOLLADA:BOOL=OFF \
+    -DWITH_GAMEENGINE:BOOL=ON \
+    -DWITH_PLAYER:BOOL=ON \
+    -DPYTHON_VERSION:STRING=3.2 \
+    -DPYTHON_LIBPATH:STRING=/usr/lib \
+    -DPYTHON_LIBRARY:STRING=python3.2mu \
+    -DPYTHON_INCLUDE_DIRS:STRING=/usr/include/python3.2mu
+
+  make $MAKEFLAGS
 }
 
-# vim:set ts=2 sw=2 et:
+package() {
+  if [ $_cvs = true ]; then
+    cd "$srcdir/$pkgname"
+  else
+    cd "$srcdir/$pkgname-$pkgver"
+  fi
+
+  cd build
+  make DESTDIR="${pkgdir}" install
+  python -m compileall "${pkgdir}/usr/share/blender"
+
+  for i in 128 16 192 22 32 48 64 96 ; do
+    install -D -m644 ../release/freedesktop/icons/${i}x${i}/blender.png \
+      "${pkgdir}/usr/share/icons/hicolor/${i}x${i}/apps/blender.png"
+  done
+
+  install -D -m644 ../release/freedesktop/icons/scalable/blender.svg \
+    "${pkgdir}/usr/share/icons/hicolor/scalable/apps/blender.svg"
+}
