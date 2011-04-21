@@ -14,12 +14,13 @@ arch=('i686' 'x86_64')
 url="http://www.kde-apps.org/content/show.php?content=121350"
 license=('GPL')
 depends=('kdebase-konqueror')
+makedepends=('cmake' 'automoc4')
 source=("http://kde-apps.org/CONTENT/content-files/121350-konqueror-plugin-youtubedownload.tar.gz")
 md5sums=('8a8d5131fcc60b0c3fdb21ed75ee55e6')
 
 build() {
   cd ${srcdir}/konqueror-plugin-youtubedownload/
-  mkdir build && cd build
+  mkdir -p build && cd build
   cmake .. -DCMAKE_INSTALL_PREFIX=`kde4-config --prefix` -DCMAKE_BUILD_TYPE=Release
   make || return 1
   make DESTDIR=${pkgdir} install

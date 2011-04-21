@@ -14,12 +14,13 @@ arch=('i686' 'x86_64')
 url="http://kde-apps.org/content/show.php/Read+It+Later?content=124667"
 license=('GPL')
 depends=('kdebase-konqueror')
+makedepends=('cmake' 'automoc4')
 source=("http://kde-apps.org/CONTENT/content-files/124667-konqueror-plugin-readitlater.tar.gz")
 md5sums=('02d722983d2c9efcfbeba46792305471')
 
 build() {
   cd ${srcdir}/konqueror-plugin-readitlater/
-  mkdir build && cd build
+  mkdir -p build && cd build
   cmake .. -DCMAKE_INSTALL_PREFIX=`kde4-config --prefix` -DCMAKE_BUILD_TYPE=Release
   make || return 1
   make DESTDIR=${pkgdir} install
