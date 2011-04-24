@@ -5,32 +5,35 @@
 # maintainer (x86_64): Manuel Tortosa <manutortosa[at]chakra-project[dot]org>
 
 pkgname=kcm-ufw
-pkgver=0.1.0
+pkgver=0.1.1
 pkgrel=1
 pkgdesc="UFW KControl Module"
 arch=('i686' 'x86_64')
 url="http://kde-apps.org/content/show.php/UFW+KControl+Module?content=137789"
 license=('GPL')
-depends=('ufw' 'kdebase-workspace' 'perl' 'openssl' 'polkit-kde-agent')
-makedepends=('automoc4' 'cmake' 'docbook-xml' 'docbook-xsl')
+depends=('ufw' 'kdebase-workspace' 'python2' 'openssl' 'polkit-kde-agent')
+makedepends=('automoc4' 'cmake' 'docbook-xsl')
 source=(http://kde-apps.org/CONTENT/content-files/137789-kcm_ufw-$pkgver.tar.bz2)
-md5sums=('32b3c4715bd051ebb9e97ad14fb33b44')
+md5sums=('2117ba139559ce4ee1bc2eea79539513')
 
 build() {
-  cd "$srcdir/kcm_ufw-$pkgver/"
-  cmake . -DCMAKE_INSTALL_PREFIX=/usr
-  make || return 1
+
+  cd "${srcdir}/kcm_ufw-${pkgver}/"
+
+  if [ -d build ] ; then
+    true
+  else
+    mkdir build
+  fi
+
+  cd build
+
+  cmake  -DCMAKE_INSTALL_PREFIX=/usr ..
+
+  make
 }
 
 package() {
-  cd "$srcdir/kcm_ufw-$pkgver"
-  # hacks to get it into pkg-dir
-  sed -i -e 's~"/usr~"../../pkg/usr~g' cmake_install.cmake
-  sed -i -e 's~"/usr~"../../pkg/usr~g' helper/cmake_install.cmake
-  sed -i -e 's~"/etc~"../../pkg/etc~g' helper/cmake_install.cmake
-  sed -i -e 's~"/usr~"../../pkg/usr~g' kcm/cmake_install.cmake
-  sed -i -e 's~"/usr~"../../pkg/usr~g' po/cmake_install.cmake
-  sed -i -e 's~"/usr~"../../pkg/usr~g' docs/cmake_install.cmake
-  sed -i -e 's~"/usr~"../../pkg/usr~g' docs/es/cmake_install.cmake
-  make install || return 1
+  cd "${srcdir}/kcm_ufw-${pkgver}/build"
+  make DESTDIR="${pkgdir}" install || return 1
 }
