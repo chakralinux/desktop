@@ -7,24 +7,18 @@
 source ../_buildscripts/${current_repo}-${_arch}-cfg.conf
 
 pkgname=avogadro
-pkgver=1.0.1
-pkgrel=3
+pkgver=1.0.2
+pkgrel=1
 pkgdesc="An advanced molecular editor based on Qt"
 arch=('i686' 'x86_64')
 url="http://avogadro.openmolecules.net/wiki/Main_Page"
 license=('GPL2')
 depends=('eigen' 'openbabel' 'pyqt' 'boost' 'glew' 'python-numpy')
 makedepends=('cmake' 'boost')
-source=("http://downloads.sourceforge.net/${pkgname}/${pkgname}-${pkgver}.tar.bz2"
-        'sip-4.11.patch')
-
-md5sums=('0d5c391197101f0aab7be6b59f81e6fd'
-         '9cf01a9523a0e948b25cfa9598b1fdd3')
+source=("http://downloads.sourceforge.net/${pkgname}/${pkgname}-${pkgver}.tar.bz2")
+md5sums=('4fab42df6e2c46db83d3a7d05549eea0')
 
 build() {
-
-  cd ${srcdir}/${pkgname}-${pkgver}
-  patch -Np0 -i ${srcdir}/sip-4.11.patch
 
   cd ${srcdir}
   mkdir build
