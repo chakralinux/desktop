@@ -1,0 +1,27 @@
+#
+# Chakra Packages for Chakra, part of chakra-project.org
+#
+# contributor (x86_64): Giuseppe Calà <jiveaxe@gmail.com>
+
+# include global config
+source ../_buildscripts/${current_repo}-${_arch}-cfg.conf
+
+pkgname=konq-plugins-emailthis
+pkgver=0.1
+pkgrel=1
+pkgdesc="Konqueror plugin to email the current page with GMail (via web) or with Kmail."
+arch=('i686' 'x86_64')
+url="http://kde-apps.org/content/show.php/EmailThis?content=123814"
+license=('GPL')
+depends=('kdebase-konqueror')
+makedepends=('cmake' 'automoc4')
+source=("http://kde-apps.org/CONTENT/content-files/123814-konqueror-plugin-emailthis.tar.gz")
+md5sums=('beb842d80c24bd54fb9cb17088261a05')
+
+build() {
+  cd ${srcdir}/konqueror-plugin-emailthis/
+  mkdir -p build && cd build
+  cmake .. -DCMAKE_INSTALL_PREFIX=`kde4-config --prefix` -DCMAKE_BUILD_TYPE=Release
+  make || return 1
+  make DESTDIR=${pkgdir} install
+}

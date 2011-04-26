@@ -8,7 +8,7 @@
 source ../_buildscripts/${current_repo}-${_arch}-cfg.conf
 
 pkgname=2mandvd
-pkgver=1.5.3
+pkgver=1.5.5
 pkgrel=1
 pkgdesc="DVD Authoring Maker In Linux Environnement"
 url="http://2mandvd.tuxfamily.org/"
@@ -17,17 +17,18 @@ arch=('i686' 'x86_64')
 install=2mandvd.install
 depends=('qt>=4.6' 'sox' 'mplayer' 'perl' 'netpbm' 'transcode' 'ffmpegthumbnailer' 'dvdauthor' 'mjpegtools' 'ttf-dejavu' 'dvd+rw-tools' 'exif')
 optdepends=('xine-ui: to preview the result')
-source=(http://download.tuxfamily.org/2mandvd/2ManDVD-${pkgver}.tar.gz
+source=(http://chakra-project.org/sources/2manDVD/2ManDVD-${pkgver}.zip
 	2mandvd.desktop
 	2mandvd.sh)
-md5sums=('87b00a3cdafd3d360da89c390181acc2'
+
+md5sums=('056f55b650a7282fc53f51ae4d3b3265'
          '1eaaeef9a5e7896482d51d489b781689'
          '0112971f170034aff6efaafb9508b010')
 
 build() {
   cd $srcdir/2ManDVD
   qmake 2ManDVD.pro
-  make || return 1
+  make  || return 1
 
   install -d -m755 $pkgdir/opt/2ManDVD $pkgdir/usr/bin
   cp -R Bibliotheque Interface 2ManDVD fake.pl *.qm README.txt $pkgdir/opt/2ManDVD/

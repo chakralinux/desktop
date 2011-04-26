@@ -1,0 +1,27 @@
+#
+# Chakra Packages for Chakra, part of chakra-project.org
+#
+# contributor (x86_64): Giuseppe Calà <jiveaxe@gmail.com>
+
+# include global config
+source ../_buildscripts/${current_repo}-${_arch}-cfg.conf
+
+pkgname=kdeplasma-addons-runners-browsechromiumbookmarks
+pkgver=0.2
+pkgrel=1
+pkgdesc="A runner that integrates chromium bookmarks into krunner."
+url="http://kde-look.org/content/show.php/Browse+Chromium+Bookmarks?content=137685"
+arch=('i686' 'x86_64')
+license=('GPL')
+depends=('kdebase-workspace>=4.6')
+makedepends=('cmake' 'automoc4' 'qjson')
+source=("http://kde-look.org/CONTENT/content-files/137685-browsechromiumbookmarks.tar.bz2")
+md5sums=('61de92ce6f62affa478e74db77f93aa7')
+
+build() {
+  cd ${srcdir}/plasma-runner-browsechromiumbookmarks/
+  mkdir build && cd build
+  cmake .. -DCMAKE_INSTALL_PREFIX=`kde4-config --prefix` -DCMAKE_BUILD_TYPE=Release
+  make || return 1
+  make DESTDIR=${pkgdir} install
+}

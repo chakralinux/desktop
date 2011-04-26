@@ -1,0 +1,27 @@
+#
+# Chakra Packages for Chakra, part of chakra-project.org
+#
+# contributor (x86_64): Giuseppe Calà <jiveaxe@gmail.com>
+
+# include global config
+source ../_buildscripts/${current_repo}-${_arch}-cfg.conf
+
+pkgname=konq-plugins-readitlater
+pkgver=0.2.1
+pkgrel=1
+pkgdesc="Read It Later is a konqueror plugin that allows to save webpages to Instapaper."
+arch=('i686' 'x86_64')
+url="http://kde-apps.org/content/show.php/Read+It+Later?content=124667"
+license=('GPL')
+depends=('kdebase-konqueror')
+makedepends=('cmake' 'automoc4')
+source=("http://kde-apps.org/CONTENT/content-files/124667-konqueror-plugin-readitlater.tar.gz")
+md5sums=('02d722983d2c9efcfbeba46792305471')
+
+build() {
+  cd ${srcdir}/konqueror-plugin-readitlater/
+  mkdir -p build && cd build
+  cmake .. -DCMAKE_INSTALL_PREFIX=`kde4-config --prefix` -DCMAKE_BUILD_TYPE=Release
+  make || return 1
+  make DESTDIR=${pkgdir} install
+}

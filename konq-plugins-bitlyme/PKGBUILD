@@ -1,0 +1,27 @@
+#
+# Chakra Packages for Chakra, part of chakra-project.org
+#
+# contributor (x86_64): Giuseppe Calà <jiveaxe@gmail.com>
+
+# include global config
+source ../_buildscripts/${current_repo}-${_arch}-cfg.conf
+
+pkgname=konq-plugins-bitlyme
+pkgver=0.1
+pkgrel=1
+pkgdesc="A Konqueror plugin to short and share links with bit.ly"
+arch=('i686' 'x86_64')
+url="http://kde-apps.org/content/show.php/Bit.ly+Me?content=122277"
+license=('GPL')
+depends=('kdebase-konqueror')
+makedepends=('cmake' 'automoc4')
+source=("http://kde-apps.org/CONTENT/content-files/122277-konqueror-plugin-bitlyme.tar.gz")
+md5sums=('39807d645b4b70d2869470380e695d24')
+
+build() {
+  cd ${srcdir}/konqueror-plugin-bitlyme/
+  mkdir -p build && cd build
+  cmake .. -DCMAKE_INSTALL_PREFIX=`kde4-config --prefix` -DCMAKE_BUILD_TYPE=Release
+  make || return 1
+  make DESTDIR=${pkgdir} install
+}

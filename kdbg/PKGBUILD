@@ -1,0 +1,32 @@
+#
+# Apps Packages for Chakra, part of chakra-project.org
+#
+# maintainer (i686): Phil Miller <philm[at]chakra-project[dog]org>
+# maintainer (x86_64): Manuel Tortosa <manutortosa[at]chakra-project[dot]org>
+
+pkgname=kdbg
+pkgver=2.5.0
+pkgrel=1
+pkgdesc="A gdb GUI for KDE."
+arch=('i686' 'x86_64')
+url="http://www.kdbg.org"
+license=("GPL")
+depends=('kdebase-runtime' 'gdb')
+makedepends=('automoc4')
+options=('libtool')
+source=(http://downloads.sourceforge.net/kdbg/$pkgname-$pkgver.tar.gz)
+md5sums=('687f2892a5751d1e7d8708e37ec1a367')
+
+build() {
+  cd $srcdir/$pkgname-$pkgver
+  cmake ../${pkgbase}-${pkgver} \
+    -DCMAKE_BUILD_TYPE=Release \
+    -DCMAKE_INSTALL_PREFIX=/usr
+
+  make || return 1
+}
+
+package() {
+  cd $srcdir/$pkgname-$pkgver
+  make DESTDIR=$startdir/pkg install
+}

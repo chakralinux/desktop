@@ -7,8 +7,8 @@
 source ../_buildscripts/${current_repo}-${_arch}-cfg.conf
 
 pkgname=grass
-pkgver=6.4.0
-pkgrel=3
+pkgver=6.4.1
+pkgrel=1
 pkgdesc='Geographic Information System (GIS) used for geospatial data management and analysis, image processing, graphics/maps production, spatial modeling, and visualization.'
 arch=('i686' 'x86_64')
 url='http://grass.itc.it/index.php'
@@ -27,8 +27,9 @@ source=("http://grass.itc.it/grass64/source/${pkgname}-${pkgver}.tar.gz"
         "${pkgname}.desktop"
         "${pkgname}.sh"
         "${pkgname}.png")
-md5sums=('ac3233aa3351f8e060ea48246aa01c7f'
-         '055e4157bf9713572c16edf9d2af921c'
+
+md5sums=('d8ca83d416b5b0cf2aa9d36c81a77b23'
+         '0323f2533f47cf75f1a0340bef546a11'
          'db93730dd330f1539bd31b4373e1c00e'
          'ae778ed261a40b078a8465994a0eb25e')
 
@@ -36,11 +37,11 @@ build() {
   cd ${pkgname}-${pkgver}
 
   # python2 fix
-  sed -i 's_python $< $(GISBASE) > $@_python2 $< $(GISBASE) > $@_' gui/wxpython/Makefile
-  for file in $(find . -name '*.py' -print) gui/wxpython/scripts/d.rast3d; do
-    sed -i 's_^#!.*/usr/bin/python_#!/usr/bin/python2_' $file
-    sed -i 's_^#!.*/usr/bin/env.*python_#!/usr/bin/env python2_' $file
-  done
+  #sed -i 's_python $< $(GISBASE) > $@_python2 $< $(GISBASE) > $@_' gui/wxpython/Makefile
+  #for file in $(find . -name '*.py' -print) gui/wxpython/scripts/d.rast3d; do
+  #  sed -i 's_^#!.*/usr/bin/python_#!/usr/bin/python2_' $file
+  #  sed -i 's_^#!.*/usr/bin/env.*python_#!/usr/bin/env python2_' $file
+  #done
 
   # see ${srcdir}/grass-6.4.0/REQUIREMENTS.html for options
   ./configure \
