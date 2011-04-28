@@ -9,6 +9,7 @@ pkgname=('libreoffice' 'libreoffice-sdk' 'libreoffice-extension-nlpsolver' 'libr
          'libreoffice-extension-report-builder' 'libreoffice-extension-wiki-publisher' 'libreoffice-extension-ct2n' 'libreoffice-extension-hunart' 'libreoffice-extension-numbertext'
 	 'libreoffice-extension-oooblogger' 'libreoffice-extension-typo' 'libreoffice-extension-watch-window' 'libreoffice-extension-diagram')
 _LOver=3.3.2.2
+_HIver=3.3
 pkgver=3.3.2
 pkgrel=1
 arch=('i686' 'x86_64')
@@ -16,17 +17,17 @@ _LO_tree="3.3"
 _OFFICEUPD="330"
 license=('LGPL3')
 url="http://www.libreoffice.org/"
-makedepends=( # makedepends
-             'boost' 'sane' 'perl-archive-zip' 'zip' 'unzip' 'xulrunner' 'unixodbc' 'hsqldb-java'
-             'apache-ant' 'gperf' 'poppler' 'kdelibs' 'cppunit' 'beanshell'  'vigra' 'libldap' 'lucene' 'libmythes' 'junit' 'libwpg' 'imagemagick'
+makedepends=('boost' 'sane' 'perl-archive-zip' 'zip' 'unzip' 'xulrunner' 'unixodbc' 'hsqldb-java' 'apache-ant' 'gperf'
+             'poppler' 'kdelibs' 'cppunit' 'beanshell'  'vigra' 'libldap' 'lucene' 'libmythes' 'junit' 'libwpg' 'imagemagick'
              # for additional ooo-build features
-             'mesa>=7.5' 'gstreamer0.10-base>=0.10.26'  #'mono>=2.6.1'
+             'mesa>=7.5' 'gstreamer0.10-base>=0.10.26'
              #'saxon' - currently broken 
              # the depends from libreoffice main pkg
              "curl>=7.20.0" "hunspell>=1.2.8" "python2" 'libwpd' 'libxaw' "neon>=0.28.6"
              'pango' 'nspr' 'libjpeg' 'libxrandr' 'libgl' 'dbus-glib' "icu>=4.6" 'libxslt'
              'redland' 'libgraphite' 'hyphen' 'lpsolve' 'gcc-libs' 'sh'
              'hicolor-icon-theme' 'desktop-file-utils' 'shared-mime-info' 'java-runtime' 'libcups')
+
 _mirror="http://download.documentfoundation.org/libreoffice/src"
 _additional_source_url="http://hg.services.openoffice.org/binaries"
 source=(${_mirror}/${pkgbase}-build-${_LOver}.tar.gz
@@ -263,10 +264,13 @@ build() {
 
 	cd ${srcdir}/${pkgbase}-build-${_LOver}
 
-	# our Chakra distribution patch until we go upstream
+	# Chakra Tweaks
 	patch -Np0 -i ${srcdir}/Chakra.patch || return 1
 	cp ${srcdir}/Chakra.conf ${srcdir}/${pkgbase}-build-${_LOver}/distro-configs/
 	cp ${srcdir}/Chakra.conf.in ${srcdir}/${pkgbase}-build-${_LOver}/distro-configs/
+	sed -i -e "s~ArchLinux~Chakra~g" ${srcdir}/${pkgbase}-build-${_LOver}/configure.in
+	# patch -Np0 -1 ${srcdir]/Chakra-cairo-radial-gradient.patch
+	# patch -Np0 -1 ${srcdir]/Chakra-do-nice-menus.patch
 
 	# hotfixes not yet upstream
 	# cp ${srcdir}/*.diff ${srcdir}/${pkgbase}-build-${_LOver}/patches/hotfixes/
@@ -381,7 +385,6 @@ package_libreoffice() {
              'nss:              adds support for signed files/macros'
              'pstoedit:         translates PostScript and PDF graphics into other vector formats'
              'poppler:          for shipped pdfimport extension'
-             'kdelibs:          for kde integration'
              'libmythes:        for use in thesaurus'
              'hsqldb-java:      default database format for OpenOffice.org'
              'beanshell:        interactive java -- good for prototyping /macros'
@@ -397,15 +400,15 @@ package_libreoffice() {
  backup=(etc/libreoffice/sofficerc
          etc/libreoffice/bootstraprc
          etc/libreoffice/psprint.conf)
- provides=('go-openoffice') #'openoffice-base' 
- conflicts=('go-openoffice') #'openoffice-base' 
+ provides=('go-openoffice') 
+ conflicts=('go-openoffice')
  replaces=('go-openoffice')
 
 	cd ${srcdir}/${pkgbase}-build-${_LOver}
 	#bin/ooinstall <path-to-install>
 	LD_PRELOAD="" make DESTDIR=${pkgdir} install
 
-	# move sysui desktop files into place we want to use - javafilter and qstarter, but not unneeded printeradmin
+	# move sysui desktop files into place we want to use - javafilter. but not unneeded printeradmin
 	cp ${pkgdir}/usr/lib/libreoffice/share/xdg/javafilter.desktop ${pkgdir}/usr/share/applications/
 	sed -i -e "s/Exec=oo/Exec=so/g" ${pkgdir}/usr/share/applications/javafilter.desktop
 
@@ -448,6 +451,11 @@ package_libreoffice() {
 
 	mkdir -p ${srcdir}/sdk-install/usr/include/libreoffice
 	mv ${pkgdir}/usr/include/libreoffice ${srcdir}/sdk-install/usr/include/
+
+	# remove unneded icon themes
+	rm -rf  ${pkgdir}/usr/lib/libreoffice/basis${_HIver}/share/config/images_classic.zip
+	rm -rf  ${pkgdir}/usr/lib/libreoffice/basis${_HIver}/share/config/images_tango.zip
+	rm -rf  ${pkgdir}/usr/lib/libreoffice/basis${_HIver}/share/config/images_crystal.zip
 }
 
 package_libreoffice-sdk() {
@@ -462,7 +470,7 @@ package_libreoffice-sdk() {
 	for file in setsdkenv_unix.csh setsdkenv_unix.sh ; do
           chmod 755 $file
 	done
-	#fix permissions
+	# fix permissions
 	find examples -type f -exec chmod -x {} \;
 }
 
