@@ -51,7 +51,7 @@ build() {
 package() {
   cd "$srcdir/$pkgname-$pkgver/build"
   make DESTDIR="${pkgdir}" install
-  python -m compileall "${pkgdir}/usr/share/blender"
+  python3 -m compileall "${pkgdir}/usr/share/blender"
 
 # install plugins
   install -d -m755 "$pkgdir"/usr/share/blender/${pkgver%[a-z]}/plugins/{sequence,texture}
