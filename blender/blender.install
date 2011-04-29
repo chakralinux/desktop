@@ -3,26 +3,25 @@ post_install() {
 
 NOTE
 ----
-This package brings Blender compiled with cmake.
-Features includes:
-	- ffmpeg support
-	- gameengine
-	- verse support
-	- some aditional sequence and texture plugins
-	  are accesible from /usr/share/blender/plugins
+
+We also ship the plugins, but most of these features can be accessed only
+from the users home directory. Therefore, you want to copy everything from
+/usr/share/blender/2.57 to ~/.blender (some are hidden files!). 
 
 EOF
-  echo "update desktop mime database..."
-  update-desktop-database
-  gtk-update-icon-cache -f /usr/share/icons/hicolor/
+  update-desktop-database -q
+  update-mime-database usr/share/mime &> /dev/null
+  xdg-icon-resource forceupdate --theme hicolor &> /dev/null
 }
 
 post_upgrade() {
-  gtk-update-icon-cache -f /usr/share/icons/hicolor/
+  update-desktop-database -q
+  update-mime-database usr/share/mime &> /dev/null
+  xdg-icon-resource forceupdate --theme hicolor &> /dev/null
 }
 
 post_remove() {
-  echo "update desktop mime database..."
-  update-desktop-database
-  gtk-update-icon-cache -f /usr/share/icons/hicolor/
+  update-desktop-database -q
+  update-mime-database usr/share/mime &> /dev/null
+  xdg-icon-resource forceupdate --theme hicolor &> /dev/null
 }

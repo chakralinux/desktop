@@ -8,52 +8,55 @@
 source ../_buildscripts/${current_repo}-${_arch}-cfg.conf
 
 pkgname=blender
-pkgver=2.57
+pkgver=2.57b
 pkgrel=1
-pkgdesc="A fully integrated 3D graphics creation suite (binary version)"
+pkgdesc="A fully integrated 3D graphics creation suite"
 arch=('i686' 'x86_64')
-url="http://blender.org/"
 license=('GPL')
-depends=('libpng' 'mesa' 'openexr' 'python=3.2' 'libsamplerate' 'ffmpeg' 'fftw' 'lcms' 'openal')
-makedepends=('python3')
+url="http://www.blender.org"
+depends=('libjpeg' 'libpng' 'openjpeg' 'libtiff' 'openexr' 'sdl' 'python3' 'desktop-file-utils' 'shared-mime-info' 'hicolor-icon-theme' 'xdg-utils' 'gettext' 'libxi' 'libxmu' 'mesa' 'freetype2' 'openal' 'libsndfile' 'libsamplerate' 'ffmpeg')
+makedepends=('cmake')
 install=blender.install
-source=('blender.desktop' 'blender.sh')
-md5sums=('b5b9720b9430b1f5e2aa0b2df533fed8'
-         'ee1723515be5a2a88839fe02c1eaf174')
-
-case ${CARCH} in
-  i686)
-  source=(${source[@]} 'http://download.blender.org/release/Blender2.57/blender-2.57-linux-glibc27-i686.tar.bz2')
-    md5sums=(${md5sums[@]} 'f9157c5142fc0638ab2970033b7a91a0');;
-  x86_64)
-  source=(${source[@]} 'http://download.blender.org/release/Blender2.57/blender-2.57-linux-glibc27-x86_64.tar.bz2')
-    md5sums=(${md5sums[@]} '038744df08cdf7a4e279032b7547ed5c');;
-esac
+makedepends=('cmake')
+source=(http://download.blender.org/source/$pkgname-$pkgver.tar.gz)
+md5sums=('d5f1083d39545686fe8ec8480546ec3f')
 
 build() {
-  mkdir -p $pkgdir/usr/{share/blender,share/icons/hicolor,bin}
-  case ${CARCH} in
-    i686)
-      cd $srcdir/blender-2.57-linux-glibc27-i686
-      ;;
-    x86_64)
-      cd $srcdir/blender-2.57-linux-glibc27-x86_64
-      ;;
-  esac
+  cd "$srcdir/$pkgname-$pkgver"
+  mkdir build
+  cd build
 
-  install -d -m755 $pkgdir/usr/share/blender
+  cmake .. \
+    -DCMAKE_INSTALL_PREFIX:PATH=/usr \
+    -DCMAKE_BUILD_TYPE:STRING=Release \
+    -DWITH_INSTALL_PORTABLE:BOOL=OFF \
+    -DWITH_PYTHON_INSTALL:BOOL=OFF \
+    -DWITH_OPENCOLLADA:BOOL=OFF \
+    -DWITH_GAMEENGINE:BOOL=ON \
+    -DWITH_PLAYER:BOOL=ON \
+    -DPYTHON_VERSION:STRING=3.2 \
+    -DPYTHON_LIBPATH:STRING=/usr/lib \
+    -DPYTHON_LIBRARY:STRING=python3.2mu \
+    -DPYTHON_INCLUDE_DIRS:STRING=/usr/include/python3.2mu
 
-  install -Dm755 "$srcdir/blender.sh" "$pkgdir/usr/bin/blender"
-  cp -r blender ${_pkgver} "$pkgdir/usr/share/blender"
+  make $MAKEFLAGS
 
-  # Icons
-  install -Dm644 icons/scalable/blender.svg "$pkgdir/usr/share/icons/hicolor/scalable/blender.svg"
-  for S in 16 22 32; do
-    install -Dm644 icons/${S}x${S}/blender.png "$pkgdir/usr/share/icons/hicolor/${S}x${S}/blender.png"
-  done
-
-  # Stolen from blender in extra
-  install -Dm644 $srcdir/blender.desktop $pkgdir/usr/share/applications/blender.desktop
+  cp -rf "$srcdir"/${pkgname}-$pkgver/release/plugins/* \
+    "$srcdir"/${pkgname}-$pkgver/source/blender/blenpluginapi/
+  cd "$srcdir"/${pkgname}-$pkgver/source/blender/blenpluginapi
+  chmod 755 bmake
+  make
 }
 
-# vim:set ts=2 sw=2 et:
+package() {
+  cd "$srcdir/$pkgname-$pkgver/build"
+  make DESTDIR="${pkgdir}" install
+  python -m compileall "${pkgdir}/usr/share/blender"
+
+# install plugins
+  install -d -m755 "$pkgdir"/usr/share/blender/${pkgver%[a-z]}/plugins/{sequence,texture}
+  cp "$srcdir"/${pkgname}-$pkgver/source/blender/blenpluginapi/sequence/*.so \
+    "$pkgdir"/usr/share/blender/${pkgver%[a-z]}/plugins/sequence/
+  cp "$srcdir"/${pkgname}-$pkgver/source/blender/blenpluginapi/texture/*.so \
+    "$pkgdir"/usr/share/blender/${pkgver%[a-z]}/plugins/texture/
+}
