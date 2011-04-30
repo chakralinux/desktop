@@ -7,8 +7,8 @@
 # include global config
 
 pkgname=virtualbox
-pkgver=4.0.4
-_build=70112
+pkgver=4.0.6
+_build=71344
 pkgrel=1
 pkgdesc='Oracle VM VirtualBox Binary Edition'
 arch=('i686' 'x86_64')
@@ -27,20 +27,22 @@ provides=("virtualbox=${pkgver}")
 conflicts=('virtualbox' 'virtualbox-ose' 'virtualbox-modules')
 backup=('etc/vbox/vbox.cfg')
 install='virtualbox.install'
-_arch='x86'
-[ "${CARCH}" = 'x86_64' ] && _arch='amd64'
-source=("VirtualBox-${pkgver}-${_build}-Linux_${_arch}.run::http://download.virtualbox.org/virtualbox/${pkgver}/VirtualBox-${pkgver}-${_build}-Linux_${_arch}.run"
+_sarch='x86'
+[ "${CARCH}" = 'x86_64' ] && _sarch='amd64'
+
+source=("VirtualBox-${pkgver}-${_build}-Linux_${_sarch}.run::http://download.virtualbox.org/virtualbox/${pkgver}/VirtualBox-${pkgver}-${_build}-Linux_${_sarch}.run"
         '10-vboxdrv.rules'
         'vboxdrv')
-md5sums=('2a382c44557d06fa7337b045902baaa0'
+md5sums=('45414b45e5b43e95068b1f3fec71de76'
          '98859bfca9ef2ebf2ea43eb9123316fc'
          '8b3b5fb34d5e8594ee873d7947f3d09b')
-[ "${CARCH}" = 'x86_64' ] #&& md5sums[0]='494de209709e86840ecb6430c9619992'
+
+[ "${CARCH}" = 'x86_64' ] && md5sums[0]='133cfbb8dc11da780b24f1ef5ef06697'
 
 build() {
   # Check and unpack the run package via sh(1)
-  sh "VirtualBox-${pkgver}-${_build}-Linux_${_arch}.run" --check
-  echo yes | sh "VirtualBox-${pkgver}-${_build}-Linux_${_arch}.run" --target "${srcdir}" \
+  sh "VirtualBox-${pkgver}-${_build}-Linux_${_sarch}.run" --check
+  echo yes | sh "VirtualBox-${pkgver}-${_build}-Linux_${_sarch}.run" --target "${srcdir}" \
     --nox11 --noexec &> /dev/null
 
   # Unpack bundled files
