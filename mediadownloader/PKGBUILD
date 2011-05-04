@@ -1,0 +1,35 @@
+# Platform Packages for Chakra, part of chakra-project.org
+#
+# maintainer (i686): Phil Miller <philm[at]chakra-project[dog]org>
+# maintainer (x86_64): Manuel Tortosa <manutortosa[at]chakra-project[dot]org>
+# Maintainer: Adrián Chaves Fernández (Gallaecio) <adriyetichaves gmail.com>
+
+pkgname=mediadownloader
+_pkgname=MediaDownloader
+pkgver=1.5.0_1
+_pkgver=1.5.0-1
+_pkgver2=1.5.0
+pkgrel=1
+pkgdesc="Application for searching images and videos in the Internet."
+arch=('i686' 'x86_64')
+url="http://mediadownloader.cz.cc/"
+license=('GPL3')
+depends=('libxtst' 'qt')
+install=$pkgname.install
+source=("http://downloads.sourceforge.net/project/googleimagedown/project/v$_pkgver2/${pkgname}_v${_pkgver}_src.tar.bz2")
+md5sums=('39cfb1d335587a243bf5ccb5b4ff2cef')
+
+build() {
+  cd $srcdir/$_pkgname
+
+  qmake
+  make
+}
+
+package() {
+  cd $srcdir/$_pkgname
+#   make DESTDIR="$pkgdir" install
+
+  # Manual installation (DESTDIR variable is not working ATM)
+  install -Dm 755 $srcdir/$_pkgname/bin/$pkgname $pkgdir/usr/bin/$pkgname
+}

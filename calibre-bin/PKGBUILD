@@ -1,0 +1,59 @@
+#
+# Apps Packages for Chakra, part of chakra-project.org
+#
+# contributor (x86_64): Daniele Cocca <jmc@chakra-project.org>
+
+# include global config
+source ../_buildscripts/${current_repo}-${_arch}-cfg.conf
+
+pkgname=calibre-bin
+pkgver=0.7.59
+pkgrel=1
+pkgdesc="Ebook management application."
+arch=('i686' 'x86_64') 
+url="http://www.calibre-ebook.com/"
+license=('GPL3')
+depends=('python2')
+makedepends=('python2' 'xdg-utils')
+provides=("calibre=${pkgver}")
+conflicts=('calibre')
+install=calibre.install
+source=('http://status.calibre-ebook.com/linux_installer')
+md5sums=('a648c653b4f9503a4faeaa73e1ecf534')
+noextract=('linux_installer')
+
+package() {
+  cd "${srcdir}"
+
+  #
+  # Create the needed install directories.
+  #
+  install -d "${pkgdir}/opt"
+  install -d "${pkgdir}/usr/bin"
+
+  #
+  # Patch and launch the installer script.
+  #
+  cp -f linux_installer linux_installer.py
+  sed "s~destdir = os.path.abspath(destdir)~originaldir = destdir; destdir = os.path.abspath(destdir) + '/opt'~g" -i linux_installer.py
+  sed "s~subprocess.call(pi, shell=True)~subprocess.call(pi + ' --root="{0}/usr"'.format(originaldir), shell=True)~g" -i linux_installer.py
+  echo "${pkgdir}" | python2 -c "from linux_installer import *; main()"
+
+  #
+  # Remove the symlinks and create wrapper scripts with a correct LD_LIBRARY_PATH.
+  #
+  __to_fix=('fetch-ebook-metadata' 'lrf2lrs' 'ebook-convert' 'ebook-meta' 'pdfmanipulate' 'lrs2lrf' 'lrfviewer' 'calibre' 'markdown-calibre' 'calibre-debug' 'calibre-parallel' 'web2disk' 'calibre-server' 'calibre-customize' 'ebook-viewer' 'calibre-smtp' 'epub-fix' 'ebook-device' 'librarything' 'calibredb')
+
+  for file in ${__to_fix[@]}; do
+    rm -f "${pkgdir}/usr/bin/${file}"
+
+    cat > "${pkgdir}/usr/bin/${file}" <<-EOF
+#!/bin/sh
+LD_LIBRARY_PATH=/opt/calibre/lib /opt/calibre/bin/${file}
+EOF
+
+    chmod +x "${pkgdir}/usr/bin/${file}"
+  done
+}
+
+# vim:set ts=2 sw=2 et:
