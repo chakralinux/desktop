@@ -7,8 +7,8 @@
 source ../_buildscripts/${current_repo}-${_arch}-cfg.conf
 
 pkgname=flare
-pkgver=0.12
-_pkgver=012
+pkgver=0.13
+_pkgver=013
 pkgrel=1
 pkgdesc="Action roleplaying game from an isometric perspective."
 arch=('i686' 'x86_64')
@@ -18,10 +18,10 @@ depends=('sdl' 'sdl_image' 'sdl_mixer')
 replaces=('osare')
 changelog=ChangeLog
 source=("http://$pkgname-engine.googlecode.com/files/${pkgname}_src_v$_pkgver.zip")
-md5sums=('ab90e788518c46064a347cc3e17c7cab')
+md5sums=('a674696506cb316eb7ef98b12c98d06f')
 
 build() {
-  cd $srcdir/${pkgname}_v$_pkgver/build
+  cd $srcdir/${pkgname}_src_v$_pkgver/build
 
   cmake \
     -DCMAKE_INSTALL_PREFIX=/usr \
@@ -31,28 +31,28 @@ build() {
 }
 
 package() {
-  cd $srcdir/${pkgname}_v$_pkgver/
+  cd $srcdir/${pkgname}_src_v$_pkgver/
 
-msg "Installing basic directory structure..."
+  msg "Installing basic directory structure..."
   install -m755 -d $pkgdir/usr/{bin,share/$pkgname}
 
-msg "Installing executable..."
+  msg "Installing executable..."
   install -m755 $pkgname $pkgdir/usr/share/$pkgname/$pkgname
 
-msg "Installing media..."
+  msg "Installing media..."
   for folder in enemies fonts images items maps music npcs powers saves soundfx tilesetdefs
   do
     cp -R $folder $pkgdir/usr/share/$pkgname/
   done
 
-msg "Installing execution script..."
+  msg "Installing execution script..."
   cat > $pkgdir/usr/bin/$pkgname << EOF
 #!/bin/sh
 cd /usr/share/$pkgname/
 ./$pkgname
 EOF
 
-msg "Setting the right permissions..."
+  msg "Setting the right permissions..."
   chmod -R +x $pkgdir/usr/bin/$pkgname
   chmod -R 775 $pkgdir/usr/share/$pkgname/saves
   chown -R :games $pkgdir/usr/share/$pkgname
