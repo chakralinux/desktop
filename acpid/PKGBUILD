@@ -1,0 +1,52 @@
+#
+# Apps Packages for Chakra, part of chakra-project.org
+#
+# Maintainer: Adrián Chaves Fernández (Gallaecio) <adriyetichaves@gmail.com>
+
+# include global config
+source ../_buildscripts/${current_repo}-${_arch}-cfg.conf
+
+pkgname=acpid
+pkgver=1.0.10
+pkgrel=1
+pkgdesc="A daemon for delivering ACPI power management events."
+arch=('i686' 'x86_64')
+url="http://acpid.sourceforge.net"
+license=('GPL2')
+depends=('glibc')
+backup=('etc/acpi/events/anything'
+	'etc/acpi/handler.sh'
+	'etc/conf.d/acpid')
+source=(http://downloads.sourceforge.net/sourceforge/$pkgname/$pkgname-$pkgver.tar.gz
+    acpid
+    acpid.conf.d
+    anything
+    handler.sh)
+md5sums=('61156ef32015c56dc0f2e3317f4ae09e'
+         'd9ca7f71f520238a0448fab105a23fe9'
+         '91fdb3709c878eed757d192a420251a1'
+         '2d37b98d6e74bab815604b8b48c6cfd4'
+         '0e8dd13793b1baa79a745f4034888367')
+
+build() {
+  cd $srcdir/$pkgname-$pkgver
+  make
+  install -d -m0755 $pkgdir/usr/bin
+}
+
+package() {
+  cd $srcdir/$pkgname-$pkgver
+  make \
+    INSTPREFIX=$pkgdir \
+    MAN8DIR=$pkgdir/usr/share/man/man8 \
+    install
+
+  # Install supplementary scripts.
+  install -D -m0755 $srcdir/acpid $pkgdir/etc/rc.d/acpid
+  install -D -m0644 $srcdir/acpid.conf.d $pkgdir/etc/conf.d/acpid
+  install -D -m0644 $srcdir/anything $pkgdir/etc/acpi/events/anything
+  install -D -m0755 $srcdir/handler.sh $pkgdir/etc/acpi/handler.sh
+
+  # Set world readable bit on the acpid binary.
+  chmod 755 $pkgdir/usr/sbin/acpid
+}
