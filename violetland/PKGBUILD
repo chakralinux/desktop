@@ -1,0 +1,36 @@
+#
+# Games Packages for Chakra, part of chakra-project.org
+#
+# Maintainer: Adrián Chaves Fernández (Gallaecio) <adriyetichaves@gmail.com>
+
+# include global config
+source ../_buildscripts/${current_repo}-${_arch}-cfg.conf
+
+pkgname=violetland
+pkgver=0.3.2
+pkgrel=1
+pkgdesc="Game where a girl, Violet, struggles with hordes of monsters."
+arch=('i686' 'x86_64')
+url="http://code.google.com/p/violetland/"
+license=('GPL3' 'CCPL:by-sa')
+depends=('sdl_image' 'sdl_mixer' 'sdl_ttf' 'libgl')
+makedepends=('cmake')
+conflicts=('violetland-dev' 'violetland-svn')
+changelog=ChangeLog
+source=(http://violetland.googlecode.com/files/$pkgname-v$pkgver-src.zip)
+md5sums=('2190b7ee88cc320dcc570548828a67e2')
+
+build() {
+  cd $srcdir/$pkgname-v$pkgver
+  mkdir build && cd build
+  cmake \
+    -DCMAKE_INSTALL_PREFIX=/usr \
+    -DCMAKE_BUILD_TYPE=RelWithDebInfo \
+    ..
+  make
+}
+
+package() {
+  cd $srcdir/$pkgname-v$pkgver/build
+  make DESTDIR=$pkgdir install
+}
