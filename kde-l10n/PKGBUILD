@@ -291,7 +291,14 @@ packs=('ar'
 # 	done
 
  	for it in ${packs[@]} ; do
- 		pushd "kde-l10n-$it-$pkgver"
+
+		# Remove kdepim-runtime translations
+                pushd "kde-l10n-$it-$pkgver/messages/"
+	          	sed -i -e "s~add_subdirectory(kdepim-runtime)~~g" CMakeLists.txt
+	                rm -rfv kdepim-runtime
+		popd
+
+                pushd "kde-l10n-$it-$pkgver"
  		cmake -DCMAKE_INSTALL_PREFIX=${_installprefix} -DCMAKE_BUILD_TYPE=Release
  		make || return 1
  		#make DESTDIR=${pkgdir} install

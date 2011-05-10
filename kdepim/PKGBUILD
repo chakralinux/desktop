@@ -89,7 +89,7 @@ packs=('ar'
 arch=('i686' 'x86_64')
 #pkgver=${_kdever}
 pkgver=4.4.11.1
-pkgrel=1
+pkgrel=2
 
 pkgdesc="split package"
 url="http://www.kde.org"
@@ -102,10 +102,10 @@ makedepends=('pkgconfig' 'cmake' 'automoc4' 'boost' "kdelibs>=${_kdever}" "kdepi
 	     'kde-agent' 'libindicate-qt>=0.2.2' 'docbook-xsl')
 
 #source=("$_mirror/${_origname}-$_kdever.tar.bz2")
-source=("ftp://ftp.gwdg.de/pub/x11/kde/stable/kdepim-$pkgver/src/${_origname}-$pkgver.tar.bz2"
-        "http://chakra-project.org/sources/kde-l10n/kdepim-l10n-4.4.10.tar.xz")
-sha1sums=('49dd6cc8406b0ef4bb681bfc0de6ad9368b4b5b2'
-          'ce16a0cbd172376bc999b5bcbf29733273cc866c')
+source=("ftp://ftp.gwdg.de/pub/x11/kde/stable/kdepim-$pkgver/src/${_origname}-$pkgver.tar.bz2")
+#       "http://chakra-project.org/sources/kde-l10n/kdepim-l10n-4.4.10.tar.xz")
+sha1sums=('49dd6cc8406b0ef4bb681bfc0de6ad9368b4b5b2')
+#         'ce16a0cbd172376bc999b5bcbf29733273cc866c')
 
 #
 # build function
@@ -163,21 +163,21 @@ package_kdepim-common()
 	# FIXME: also exists in oxygen-icons
 	rm -rf $pkgdir/usr/share/icons/oxygen/16x16/status/meeting-organizer.png
 
-	msg "Starting translations"
-	FILES="*.po"
-	cd ${srcdir}
-	for it in ${packs[@]} ; do
-	      msg "creating translation: $it"
-	      pushd "kdepim-l10n-$it-4.4.10/messages/kdepim"
-	      mkdir -pv $pkgdir/usr/share/locale/$it/LC_MESSAGES
-	      for f in $FILES
-	      do
-		  f=`echo "$f" | cut -d. -f1`
-		  msgfmt -o $f.mo $f.po
-		  cp -v $f.mo $pkgdir/usr/share/locale/$it/LC_MESSAGES/$f.mo
-	      done
-	      popd
-	done
+#	msg "Starting translations"
+#	FILES="*.po"
+#	cd ${srcdir}
+#	for it in ${packs[@]} ; do
+#	      msg "creating translation: $it"
+#	      pushd "kdepim-l10n-$it-4.4.10/messages/kdepim"
+#	      mkdir -pv $pkgdir/usr/share/locale/$it/LC_MESSAGES
+#	      for f in $FILES
+#	      do
+#		  f=`echo "$f" | cut -d. -f1`
+#		  msgfmt -o $f.mo $f.po
+#		  cp -v $f.mo $pkgdir/usr/share/locale/$it/LC_MESSAGES/$f.mo
+#	      done
+#	      popd
+#	done
 }
 
 package_kdepim-doc()
