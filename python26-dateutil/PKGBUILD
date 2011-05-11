@@ -1,4 +1,11 @@
+#
+# Apps Packages for Chakra, part of chakra-project.org
+#
 # Maintainer: Daniele Cocca <jmc@chakra-project.org>
+#
+
+# include global config
+source ../_buildscripts/${current_repo}-${_arch}-cfg.conf
 
 _pkgname=python-dateutil
 pkgname=python26-dateutil
@@ -14,8 +21,9 @@ source=("http://labix.org/download/${_pkgname}/${_pkgname}-${pkgver}.tar.gz")
 md5sums=('35f3732db3f2cc4afdc68a8533b60a52')
 
 package() {
-    cd "${srcdir}/${_pkgname}-${pkgver}"
-    python2.6 setup.py install --root="${pkgdir}"
-    install -Dm644 LICENSE \
-      "${pkgdir}/usr/share/licenses/${pkgname}/LICENSE"
+  cd "${srcdir}/${_pkgname}-${pkgver}"
+  python2.6 setup.py install --root="${pkgdir}"
+  install -Dm644 LICENSE "${pkgdir}/usr/share/licenses/${pkgname}/LICENSE"
 }
+
+# vim:set ts=2 sw=2 et:

@@ -1,5 +1,11 @@
-# $Id: PKGBUILD 80342 2010-05-15 15:58:25Z andyrtr $
-# Maintainer: Daniele Cocca <daniele.cocca@gmail.com>
+#
+# Apps Packages for Chakra, part of chakra-project.org
+#
+# Maintainer: Daniele Cocca <jmc@chakra-project.org>
+#
+
+# include global config
+source ../_buildscripts/${current_repo}-${_arch}-cfg.conf
 
 _pkgname=python-greenlet
 pkgname=python26-greenlet
@@ -19,3 +25,5 @@ package() {
   cd "${srcdir}/${_pkgname}-${_pkgver}"
   python2.6 setup.py install --prefix=/usr --root="${pkgdir}" || return 1
 }
+
+# vim:set ts=2 sw=2 et:

@@ -1,4 +1,11 @@
+#
+# Apps Packages for Chakra, part of chakra-project.org
+#
 # Maintainer: Daniele Cocca <jmc@chakra-project.org>
+#
+
+# include global config
+source ../_buildscripts/${current_repo}-${_arch}-cfg.conf
 
 _pkgname=python-cjson
 pkgname=python26-cjson
@@ -16,3 +23,5 @@ package() {
   cd "${srcdir}/${_pkgname}-${pkgver}"
   python2.6 setup.py install --prefix=/usr --root="${pkgdir}" || return 1
 }
+
+# vim:set ts=2 sw=2 et:

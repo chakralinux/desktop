@@ -1,4 +1,11 @@
+#
+# Apps Packages for Chakra, part of chakra-project.org
+#
 # Maintainer: Daniele Cocca <jmc@chakra-project.org>
+#
+
+# include global config
+source ../_buildscripts/${current_repo}-${_arch}-cfg.conf
 
 _pkgname=setuptools
 pkgname=python26-setuptools
@@ -22,3 +29,5 @@ package() {
   python2.6 setup.py install --root="${pkgdir}" || return 1
   echo "/usr/lib/python2.6/site-packages/${pkgname}-${pkgver}-py2.6.egg" > "${pkgdir}/usr/lib/python2.6/site-packages/setuptools.pth"
 }
+
+# vim:set ts=2 sw=2 et:
