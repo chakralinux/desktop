@@ -7,7 +7,7 @@
 source ../_buildscripts/${current_repo}-${_arch}-cfg.conf
 
 pkgname=graphviz
-pkgver=2.26.3
+pkgver=2.28.0
 pkgrel=2
 pkgdesc="Creates acircular graph images"
 arch=('i686' 'x86_64')
@@ -15,9 +15,11 @@ license=('CPL')
 depends=('gd>=2.0.35' 'librsvg>=2.22.3' 'libxaw>=1.0.5' 'ghostscript>=9.00')
 url="http://www.graphviz.org/"
 options=('!libtool')
-source=(${url}/pub/${pkgname}/stable/SOURCES/${pkgname}-${pkgver}.tar.gz)
+source=(${url}/pub/${pkgname}/stable/SOURCES/${pkgname}-${pkgver}.tar.gz
+       'LICENSE')
 install=graphviz.install
-md5sums=('6f45946fa622770c45609778c0a982ee')
+sha1sums=('4725d88a13e071ee22e632de551d4a55ca08ee7d'
+          '5a83febc0974e17d6b2356a4b1be9a834b715378')
 
 build() {
   cd "${srcdir}/${pkgname}-${pkgver}"
@@ -32,7 +34,7 @@ build() {
 
   make || return 1
   make DESTDIR="${pkgdir}" install || return 1
-
+  install -Dm644 ../LICENSE "${pkgdir}"/usr/share/licenses/graphviz/LICENSE
   #Fix a wrong file location for x86_64
   rm -rf ${pkgdir}/usr/lib64
 
