@@ -1,0 +1,18 @@
+# Maintainer: Daniele Cocca <jmc@chakra-project.org>
+
+_pkgname=python-application
+pkgname=python26-application
+pkgver=1.2.7
+pkgrel=1
+pkgdesc="Collection of modules that are useful when building Python applications."
+arch=('any')
+license=('LGPL')
+depends=('python26')
+url="http://ag-projects.com/"
+source=("http://pypi.python.org/packages/source/p/${_pkgname}/${_pkgname}-${pkgver}.tar.gz")
+md5sums=('07b32e25d931c5e591278848f3fc9f20')
+
+package() {
+  cd "${srcdir}/${_pkgname}-${pkgver}"
+  python2.6 setup.py install --prefix=/usr --root="${pkgdir}" || return 1
+}

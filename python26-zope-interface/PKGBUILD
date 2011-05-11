@@ -1,0 +1,19 @@
+# Maintainer: Daniele Cocca <jmc@chakra-project.org>
+
+_pkgname=zope.interface
+pkgname=python26-zope-interface
+pkgver=3.5.3
+pkgrel=1
+pkgdesc="Separate distribution of the zope.interface package used in Zope 3."
+license=('ZPL')
+arch=('i686' 'x86_64')
+url="http://www.zope.org/Products/ZopeInterface/"
+depends=('python26')
+source=("http://pypi.python.org/packages/source/z/${_pkgname}/${_pkgname}-${pkgver}.tar.gz")
+md5sums=('1fdb9a77f92d3ada3e795a8c9b58d0c6')
+
+package() {
+  cd "${srcdir}/${_pkgname}-${pkgver}"
+  python2.6 setup.py install --prefix=/usr --root="${pkgdir}"
+  rm ${pkgdir}/usr/lib/python2.6/site-packages/zope/interface/README*.txt
+}

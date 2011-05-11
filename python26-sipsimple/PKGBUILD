@@ -1,0 +1,35 @@
+# Maintainer: Daniele Cocca <jmc@chakra-project.org>
+
+pkgname=python26-sipsimple
+pkgver=20110511
+pkgrel=1
+pkgdesc="SIP SIMPLE client SDK is a Software Development Kit for easy development of SIP end-points that support rich media like Audio, Instant Messaging, File Transfers, Desktop Sharing and Presence."
+arch=('i386' 'x86_64')
+license=('LGPL')
+depends=('python26' 'openssl' 'gnutls>=2.4.1' 'libxml2>=2.6.32' 'libxslt>=1.1.24' 'python26-gnutls>=1.1.9' 'python26-application>=1.2.5' 'python26-lxml>=2.1.2' 'python26-eventlet>=0.8.11' 'python26-cjson>=1.0.5' 'python26-cython>=0.12.1' 'python26-dnspython>=1.6.0' 'python26-twisted>=8.1.0' 'python26-zope-interface>=3.3.1' 'python26-imaging>=1.1.6' 'python26-dateutil>=1.4' 'python26-msrplib' 'python26-xcaplib')
+makedepends=('python26-setuptools>=0.6c9' 'subversion' 'darcs')
+url="http://sipsimpleclient.com/"
+
+_darcstrunk="http://devel.ag-projects.com/repositories"
+_darcsmod="python-sipsimple"
+
+build() {
+  msg "Starting Darcs pull..."
+  cd "${srcdir}"
+  if [ -d "${_darcsmod}/_darcs" ]; then
+    (cd "${_darcsmod}" && darcs pull -a)
+  else
+    darcs get "${_darcstrunk}/${_darcsmod}" "${_darcsmod}"
+  fi
+  msg "Darcs pull done (or server timeout)."
+
+  cd "${srcdir}/${_darcsmod}"
+  python2.6 setup.py build_ext --pjsip-clean-compile
+}
+
+package() {
+  cd "${srcdir}/${_darcsmod}"
+  python2.6 setup.py install --prefix=/usr --root="${pkgdir}"
+}
+
+# vim:set ts=2 sw=2 et:

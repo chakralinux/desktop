@@ -1,0 +1,18 @@
+# Maintainer: Daniele Cocca <daniele.cocca@gmail.com>
+
+_pkgname=Cython
+pkgname=python26-cython
+pkgver=0.12.1
+pkgrel=1
+pkgdesc="C extensions for Python."
+arch=('i686' 'x86_64')
+url="http://www.cython.org"
+license=('Apache')
+depends=('python26')
+source=("http://cython.org/release/${_pkgname}-${pkgver}.tar.gz")
+md5sums=('cf9f98e982258f8516620277975016f3')
+
+package() {
+  cd "${srcdir}/${_pkgname}-${pkgver}"
+  python2.6 setup.py install --root="${pkgdir}"
+}

@@ -1,0 +1,26 @@
+# Maintainer: Daniele Cocca <jmc@chakra-project.org>
+
+_pkgname=pycrypto
+pkgname=python26-pycrypto
+pkgver=2.3
+pkgrel=1
+pkgdesc="A collection of cryptographic algorithms and protocols, implemented for use from Python."
+arch=('i686' 'x86_64')
+depends=('python26')
+url="http://www.dlitz.net/software/pycrypto/"
+license=(custom)
+source=("http://ftp.dlitz.net/pub/dlitz/crypto/${_pkgname}/${_pkgname}-${pkgver}.tar.gz")
+sha256sums=('4f11e85fbcf13960373650fc2dae8f088f9b001f07fb6d3efb2fcb5334987182')
+
+build() {
+  cd "${srcdir}/${_pkgname}-${pkgver}"
+  python2.6 setup.py build
+}
+
+package() {
+  cd "${srcdir}/${_pkgname}-${pkgver}"
+  python2.6 setup.py install --root="${pkgdir}" --optimize=1
+  install -m755 -d "${pkgdir}/usr/share/licenses/${pkgname}"
+  install -m644 COPYRIGHT "${pkgdir}/usr/share/licenses/${pkgname}/"
+  cp -r LEGAL "${pkgdir}/usr/share/licenses/${pkgname}/"
+}

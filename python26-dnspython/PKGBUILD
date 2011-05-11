@@ -1,0 +1,19 @@
+# Maintainer: Daniele Cocca <jmc@chakra-project.org>
+
+_pkgname=dnspython
+pkgname=python26-dnspython
+pkgver=1.8.0
+pkgrel=1
+pkgdesc="A DNS toolkit for Python"
+arch=('any')
+url="http://www.dnspython.org"
+license=('BSD')
+depends=('python26')
+source=("http://www.dnspython.org/kits/${pkgver}/${_pkgname}-${pkgver}.tar.gz")
+md5sums=('77f379e0cb21e11470a35359e6211c53')
+
+package() {
+  cd "${srcdir}/${_pkgname}-${pkgver}"
+  python2.6 setup.py install --root="${pkgdir}"
+  install -D LICENSE "${pkgdir}/usr/share/licenses/${pkgname}/LICENSE"
+}

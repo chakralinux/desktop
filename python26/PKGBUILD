@@ -1,0 +1,45 @@
+# Maintainer: Daniele Cocca <jmc@chakra-project.org>
+
+_pkgname=Python
+pkgname=python26
+pkgver=2.6.6
+pkgrel=1
+pkgdesc="A high level programming language. This package contains Python version ${pkgver}."
+arch=('i686' 'x86_64')
+url="http://www.python.org/download/releases/${pkgver}/"
+license=('GPL')
+provides=("python2=${pkgver}")
+source=("http://www.python.org/ftp/python/${pkgver}/${_pkgname}-${pkgver}.tar.bz2")
+md5sums=(cf4e6881bb84a7ce6089e4a307f71f14)
+
+build() {
+  cd "${srcdir}/${_pkgname}-${pkgver}"
+
+  ./configure --prefix=/usr
+  make
+}
+
+package() {
+  cd "${srcdir}/${_pkgname}-${pkgver}"
+
+  make DESTDIR="${pkgdir}" install
+
+  #
+  # Rename files conflicting with other Python interpreter packages.
+  #
+  __to_fix=('2to3' 'idle' 'pydoc' 'smtpd.py')
+  for file in ${__to_fix[@]}; do
+    mv "${pkgdir}/usr/bin/${file}" "${pkgdir}/usr/bin/${file}-2.6"
+  done
+
+  #
+  # Rename the executables that will conflict with other Python 2.x packages.
+  #
+  rm -f "${pkgdir}/usr/bin/python2.6"
+  mv "${pkgdir}/usr/bin/python" "${pkgdir}/usr/bin/python2.6"
+
+  rm -f "${pkgdir}/usr/bin/python2.6-config"
+  mv "${pkgdir}/usr/bin/python-config" "${pkgdir}/usr/bin/python2.6-config"
+}
+
+# vim:set ts=2 sw=2 et:

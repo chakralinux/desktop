@@ -1,0 +1,41 @@
+# Maintainer: Daniele Cocca <jmc@chakra-project.org>
+
+_pkgname=Twisted
+pkgname=python26-twisted
+pkgver=10.2.0
+pkgrel=1
+pkgdesc="Asynchronous networking framework written in Python."
+arch=('i686' 'x86_64')
+url="http://twistedmatrix.com/"
+license=('MIT')
+depends=('python26' 'python26-pycrypto' 'python26-zope-interface')
+optdepends=('python26-pyopenssl'
+            'python26-soappy: for twisted.web.soap')
+install="twisted.install"
+source=("http://tmrc.mit.edu/mirror/twisted/Twisted/${pkgver%.*}/${_pkgname}-${pkgver}.tar.bz2"
+        4771.diff)
+md5sums=('73da62c793269eade8121da336b01ba5'
+         '087ed6149abca43919dcece24ba222ab')
+
+package() {
+  cd "${srcdir}/${_pkgname}-${pkgver}"
+
+  #http://twistedmatrix.com/trac/ticket/4771
+  patch -Np0 -i "${srcdir}/4771.diff"
+
+  python2.6 setup.py install --prefix=/usr --root="${pkgdir}" --optimize=1
+  install -D -m644 LICENSE "${pkgdir}/usr/share/licenses/${pkgname}/LICENSE"
+
+  sed -e 's|#!/usr/bin/env python|#!/usr/bin/python2.6|' \
+      -i "${pkgdir}/usr/lib/python2.6/site-packages/twisted/trial/test/scripttest.py"
+  sed -e 's|#!/usr/bin/env python|#!/usr/bin/python2.6|' \
+      -i "${pkgdir}/usr/lib/python2.6/site-packages/twisted/mail/test/pop3testserver.py"
+
+  #
+  # Rename files conflicting with other Python packages.
+  #
+  __to_fix=('cftp' 'ckeygen' 'conch' 'lore' 'mailmail' 'manhole' 'mktap' 'pyhtmlizer' 'tap2deb' 'tap2rpm' 'tapconvert' 'tkconch' 'trial' 'twistd')
+  for file in ${__to_fix[@]}; do
+    mv "${pkgdir}/usr/bin/${file}" "${pkgdir}/usr/bin/${file}-2.6"
+  done
+}

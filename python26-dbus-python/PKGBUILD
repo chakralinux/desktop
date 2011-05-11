@@ -1,0 +1,39 @@
+# Maintainer: Daniele Cocca <jmc@chakra-project.org>
+
+_pkgname=dbus-python
+pkgname=python26-dbus-python
+pkgver=0.83.2
+pkgrel=1
+pkgdesc="Python bindings for DBUS"
+arch=('i686' 'x86_64')
+license=('GPL' 'LGPL')
+url="http://www.freedesktop.org/wiki/Software/DBusBindings"
+depends=('python26' 'dbus-glib>=0.82')
+makedepends=('pkgconfig') # 'docutils'
+options=('!libtool')
+source=("http://dbus.freedesktop.org/releases/${_pkgname}/${_pkgname}-${pkgver}.tar.gz")
+md5sums=('4ebcaa905bdcb4132b915196b0a3691b')
+
+build() {
+  cd "${srcdir}/${_pkgname}-${pkgver}"
+  PYTHON=python2.6 ./configure --prefix=/usr || return 1
+  make || return 1
+}
+
+package() {
+  cd "${srcdir}/${_pkgname}-${pkgver}"
+  make DESTDIR="${pkgdir}" install || return 1
+
+  #
+  # Remove development files that are not relevant to this Python distribution.
+  #
+  rm -rf "${pkgdir}/usr/lib/pkgconfig"
+  rm -rf "${pkgdir}/usr/include/dbus-1.0"
+
+  #
+  # Remove the following directory (which is empty, anyway).
+  #
+  rm -rf "${pkgdir}/usr/share"
+}
+
+# vim:set ts=2 sw=2 et:
