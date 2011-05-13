@@ -1,0 +1,42 @@
+#
+# Games Packages for Chakra, part of chakra-project.org
+#
+# Maintainer: Adrián Chaves Fernández (Gallaecio) <adriyetichaves@gmail.com>
+
+# include global config
+source ../_buildscripts/${current_repo}-${_arch}-cfg.conf
+
+pkgname=flightgear
+_pkgname=FlightGear
+pkgver=2.0.0
+pkgrel=1
+pkgdesc="An open-source, multi-platform flight simulator."
+arch=(i686 x86_64)
+depends=('simgear' 'libxmu' 'libxi' 'zlib' 'openscenegraph' 'subversion')
+makedepends=('boost')
+license=("GPL")
+url="http://www.flightgear.org"
+options=('!makeflags')
+source=("http://mirrors.ibiblio.org/pub/mirrors/$pkgname/ftp/Source/$_pkgname-$pkgver.tar.gz"
+	"http://mirrors.ibiblio.org/pub/mirrors/$pkgname/ftp/Shared/$_pkgname-data-$pkgver.tar.bz2")
+md5sums=('549aa45171480082f5b6e5e8d5ce8930'
+         '85009e54cfd0cf74fd66fdd97c23ccd0')
+
+build() {
+  cd $srcdir/$_pkgname-$pkgver
+
+  [ $NOEXTRACT -eq 1 ] || find -name \*.c\* -exec sed -i '1,2i#include <stdio.h>' {} \;
+  [ $NOEXTRACT -eq 1 ] || ./configure --prefix=/usr
+
+  make
+}
+
+package() {
+  cd $srcdir/$_pkgname-$pkgver
+  make DESTDIR=$pkgdir install
+
+  # Data.
+  mkdir -p	$pkgdir/usr/share/$_pkgname
+  mv		$srcdir/data	$pkgdir/usr/share/$_pkgname
+  chown root.users 		$pkgdir/usr/share/$_pkgname/data
+} 

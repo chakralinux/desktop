@@ -1,0 +1,39 @@
+#
+# Games Packages for Chakra, part of chakra-project.org
+#
+# Maintainer: Adrián Chaves Fernández (Gallaecio) <adriyetichaves@gmail.com>
+
+# include global config
+source ../_buildscripts/${current_repo}-${_arch}-cfg.conf
+
+pkgname=openscenegraph
+_pkgname=OpenSceneGraph
+pkgver=2.8.4
+pkgrel=1
+pkgdesc="FOSS high performance real-time graphics toolkit."
+arch=('i686' 'x86_64')
+license=('custom:OSGPL')
+url="http://www.openscenegraph.org"
+depends=('curl' 'ffmpeg' 'giflib' 'jasper' 'librsvg' 'pth' 'xine-lib')
+makedepends=('cmake' 'libvncserver')
+optdepends=('libvncserver' 'gdal' 'openexr' 'poppler-glib')
+conflicts=('openthreads')
+provides=('openthreads')
+source=($url/downloads/stable_releases/$_pkgname-$pkgver/source/$_pkgname-$pkgver.zip)
+md5sums=('283215b4040f7c5b85d30862a8eba97c')
+
+build() {
+  cd $srcdir/$_pkgname-$pkgver
+  mkdir build && cd build
+  cmake \
+    -DCMAKE_INSTALL_PREFIX=/usr \
+    -DCMAKE_BUILD_TYPE=RelWithDebInfo \
+    ..
+  make
+}
+
+package() {
+  cd $srcdir/$_pkgname-$pkgver/build
+  make DESTDIR=$pkgdir install
+  install -D -m644 ../LICENSE.txt $pkgdir/usr/share/licenses/$pkgname/LICENSE
+}

@@ -1,0 +1,33 @@
+#
+# Games Packages for Chakra, part of chakra-project.org
+#
+# Maintainer: Adrián Chaves Fernández (Gallaecio) <adriyetichaves@gmail.com>
+
+# include global config
+source ../_buildscripts/${current_repo}-${_arch}-cfg.conf
+
+pkgname=simgear
+_pkgname=SimGear
+pkgver=2.0.0
+pkgrel=1
+pkgdesc="FOSS libraries for quickly assembling 3D simulations."
+arch=('i686' 'x86_64')
+depends=('glut' 'freealut' 'plib' 'openscenegraph')
+makedepends=('boost')
+license=("GPL2")
+url="http://www.simgear.org"
+options=('!makeflags')
+source=(ftp://mirrors.ibiblio.org/pub/mirrors/simgear/ftp/Source/$_pkgname-$pkgver.tar.gz)
+md5sums=('414bea545ea1e8ce17e4aa0809159cec')
+
+build() {
+  cd $srcdir/$_pkgname-$pkgver
+  ./configure \
+    --prefix=/usr
+  make
+}
+
+package() {
+  cd $srcdir/$_pkgname-$pkgver
+  make DESTDIR=$pkgdir install
+} 
