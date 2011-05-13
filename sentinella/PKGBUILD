@@ -5,21 +5,27 @@
 # maintainer (x86_64): Manuel Tortosa <manutortosa[at]chakra-project[dot]org>
 
 pkgname=sentinella
-pkgver=0.7.3
+pkgver=0.9.0
 pkgrel=1
 pkgdesc="Desktop application that watches your system activity and, in consequence, takes an action that you've chosen."
 url="http://sentinella.sourceforge.net/"
 license=('GPL')
 arch=('i686' 'x86_64')
-depends=('oxygen-icons' 'libsysactivity' 'kdebase-workspace')
-makedepends=('cmake' 'hicolor-icon-theme' 'automoc4')
+depends=('libsysactivity' 'kdebase-runtime')
+makedepends=('cmake' 'hicolor-icon-theme' 'kdebase-workspace' 'automoc4')
 install=('sentinella.install')
-source=(http://downloads.sourceforge.net/${pkgname}/Sentinella-${pkgver}.tar.gz)
-md5sums=('a3280608195ddee46308f635ebf404bd')
+source=(http://downloads.sourceforge.net/${pkgname}/sentinella-${pkgver}.tar.gz)
+md5sums=('a6a12e0b702f3b50232ea3e9e29655b6')
 
 build() {
-  cd ${srcdir}/Sentinella-${pkgver}
-  cmake -DCMAKE_INSTALL_PREFIX=/usr -DCMAKE_BUILD_TYPE=release
+
+  cd ${srcdir}
+  mkdir ${srcdir}/build
+  cd ${srcdir}/build 
+  cmake ${srcdir}/${pkgname}-${pkgver} -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=/usr
   make
-  make  DESTDIR=${pkgdir} install
+}
+package() {
+  cd ${srcdir}/build
+  make DESTDIR=${pkgdir} install
 }
