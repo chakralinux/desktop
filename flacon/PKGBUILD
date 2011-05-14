@@ -1,0 +1,32 @@
+#
+# Apps Packages for Chakra, part of chakra-project.org
+#
+# Maintainer: Adrián Chaves Fernández (Gallaecio) <adriyetichaves gmail.com>
+
+# include global config
+source ../_buildscripts/${current_repo}-${_arch}-cfg.conf
+
+pkgname=flacon
+pkgver=0.5.7
+pkgrel=1
+pkgdesc="Tool to extract individual tracks from one big audio file."
+arch=('i686' 'x86_64')
+url="http://kde-apps.org/content/show.php/Flacon?content=113388"
+license=('GPL3')
+depends=('pyqt' 'python' 'shntool')
+optdepends=('flac: for encoding and decoding FLAC files'
+	    'mac: for APE support'
+	    'ttaenc: for TrueAudio support'
+	    'lame: for MP3 support'
+	    'mp3gain: for MP3 Replay Gain support'
+	    'vorbis-tools: for OGG support'
+	    'vorbisgain: for OGG Replay Gain support'
+	    'wavpack: for WavPack support')
+changelog=ChangeLog
+source=(http://$pkgname.googlecode.com/files/$pkgname-$pkgver.tgz)
+md5sums=('56500dd2b0cafc90e3e4c354e7f2616a')
+
+package() {
+  cd $srcdir/$pkgname-$pkgver
+  make DESTDIR=$pkgdir install
+}
