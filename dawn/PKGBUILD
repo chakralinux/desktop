@@ -8,7 +8,7 @@ source ../_buildscripts/${current_repo}-${_arch}-cfg.conf
 
 pkgname=dawn
 _pkgname=dawn-rpg
-pkgver=0.0.44
+pkgver=0.0.46
 pkgrel=1
 pkgdesc="2D RPG set in a fantasy world."
 arch=('i686' 'x86_64')
@@ -17,15 +17,16 @@ url="http://dawn-rpg.sourceforge.net/wiki"
 depends=('sdl' 'sdl_image' 'sdl_mixer' 'libgl' 'mesa' 'freeglut' 'freetype2' 'lua' 'toluapp')
 makedepends=('autoconf' 'automake')
 replaces=('dawn-rpg')
+conflicts=('dawn-svn')
 changelog=ChangeLog
 source=("http://downloads.sourceforge.net/project/$_pkgname/$_pkgname/$pkgname-$pkgver.tar.gz")
-md5sums=('dac93b36f6d3e9af3aa401042e4f5bbd')
+md5sums=('f46021a2ec4a07dc1af2c5e87167e2a9')
 
 build()
 {
-  cd $srcdir/$_pkgname
+  cd $srcdir/$pkgname-$pkgver
 
-# Emptied for this configuration (else you get a tolua++ fail):
+  # Emptied for this configuration (else you get a tolua++ fail):
   LDFLAGS="" \
   ./configure \
     --prefix=/usr
@@ -34,21 +35,24 @@ build()
 
 package()
 {
-  cd $srcdir/$_pkgname
+  cd $srcdir/$pkgname-$pkgver
 #   make DESTDIR=$pkgdir install
 
-  install -Dm 775 $srcdir/$_pkgname/$_pkgname $pkgdir/usr/share/$pkgname/$pkgname
-  cp -R $srcdir/$_pkgname/data $pkgdir/usr/share/$pkgname/data
-  install $srcdir/$_pkgname/settings.lua $pkgdir/usr/share/$pkgname/settings.lua
+  install -Dm 775	$srcdir/$pkgname-$pkgver/$_pkgname \
+				$pkgdir/usr/share/$pkgname/$pkgname
+  cp -R			$srcdir/$pkgname-$pkgver/data \
+				$pkgdir/usr/share/$pkgname/data
+  install		$srcdir/$pkgname-$pkgver/settings.lua \
+				$pkgdir/usr/share/$pkgname/settings.lua
 
   # Temporal launcher:
   mkdir -p $pkgdir/usr/bin
-  echo "#!/bin/bash"				> $pkgdir/usr/bin/$pkgname
+  echo "#!/bin/bash"				>  $pkgdir/usr/bin/$pkgname
   echo "cd /usr/share/$pkgname"			>> $pkgdir/usr/bin/$pkgname
   echo "./$pkgname"				>> $pkgdir/usr/bin/$pkgname
   chmod +x $pkgdir/usr/bin/$pkgname
 
   # Change permissions so all users in "games" group can save games.
-  chown :games $pkgdir/usr/share/$pkgname/ -R
-  chmod 775 $pkgdir/usr/share/$pkgname/ -R
+  chown :games	$pkgdir/usr/share/$pkgname/ -R
+  chmod 775	$pkgdir/usr/share/$pkgname/ -R
 }
