@@ -1,0 +1,26 @@
+#
+# Games Packages for Chakra, part of chakra-project.org
+#
+# Maintainer: Adrián Chaves Fernández (Gallaecio) <adriyetichaves gmail.com>
+
+# include global config
+source ../_buildscripts/${current_repo}-${_arch}-cfg.conf
+
+pkgname=python-cython
+_pkgname=Cython
+pkgver=0.14.1
+pkgrel=1
+pkgdesc="C-Extensions for Python 2."
+arch=(i686 x86_64)
+url="http://www.cython.org"
+license=('APACHE')
+depends=('python2')
+source=("http://cython.org/release/$_pkgname-$pkgver.tar.gz")
+md5sums=('1ae1947c1218110f0e41fc95b2bc4530')
+
+
+package() {
+  cd $srcdir/$_pkgname-$pkgver
+  python2 setup.py install \
+    --root=$pkgdir
+}

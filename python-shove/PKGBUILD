@@ -1,0 +1,26 @@
+#
+# Games Packages for Chakra, part of chakra-project.org
+#
+# Maintainer: Adrián Chaves Fernández (Gallaecio) <adriyetichaves gmail.com>
+
+# include global config
+source ../_buildscripts/${current_repo}-${_arch}-cfg.conf
+
+pkgname=python-shove
+_pkgname=shove
+pkgver=0.2.5
+pkgrel=1
+pkgdesc='Python common object storage frontend.'
+arch=('i686' 'x86_64')
+url='http://pypi.python.org/pypi/shove'
+license=('BSD')
+depends=('python2')
+source=("http://pypi.python.org/packages/source/s/$_pkgname/$_pkgname-$pkgver.tar.gz")
+md5sums=('aaec6003fa35825e507d9bd57f254420')
+
+package() {
+  cd $srcdir/shove-$pkgver
+#   sed -i -e '/ez_setup/d' setup.py
+  python2 setup.py install \
+    --root=$pkgdir
+}
