@@ -9,12 +9,12 @@ source ../_buildscripts/${current_repo}-${_arch}-cfg.conf
 
 pkgname=skype
 pkgver=2.2.0.25
-pkgrel=1
+pkgrel=2
 arch=('i686')
 pkgdesc="P2P software for high-quality voice communication"
 url="http://www.skype.com/"
 license=('custom')
-depends=('qt' 'alsa-lib' 'libxss' 'libxv' 'xdg-utils')
+depends=('qt' 'alsa-lib' 'libxss' 'libxv' 'xdg-utils' 'hicolor-icon-theme' 'libcanberra' 'v4l-utils')
 conflicts=('skype-staticqt')
 options=('!strip')
 install=skype.install
@@ -22,19 +22,22 @@ source=(http://download.skype.com/linux/$pkgname-$pkgver.tar.bz2 PERMISSION)
 md5sums=('dacece3b56f28fbd70a713db12d5bfaf'
          '26e1772379d4d4df9471b6ed660a6d97')
 
-build() {
-  cd $startdir/src/$pkgname-$pkgver
-  install -m 755 -d $startdir/pkg/usr/share/$pkgname/{avatars,lang,sounds}
-  install -m 644 avatars/* $startdir/pkg/usr/share/$pkgname/avatars
-  install -m 644 lang/* $startdir/pkg/usr/share/$pkgname/lang
-  install -m 644 sounds/* $startdir/pkg/usr/share/$pkgname/sounds
-  install -m 755 -D $pkgname $startdir/pkg/usr/bin/$pkgname
-  install -m 644 -D $pkgname.conf $startdir/pkg/etc/dbus-1/system.d/$pkgname.conf
-  install -m 644 -D icons/SkypeBlue_16x16.png $startdir/pkg/usr/share/icons/hicolor/16x16/$pkgname.png
-  install -m 644 -D icons/SkypeBlue_32x32.png $startdir/pkg/usr/share/icons/hicolor/32x32/$pkgname.png
-  install -m 644 -D icons/SkypeBlue_48x48.png $startdir/pkg/usr/share/icons/hicolor/48x48/$pkgname.png
-  install -m 644 -D icons/SkypeBlue_48x48.png $startdir/pkg/usr/share/pixmaps/$pkgname.png
-  install -m 644 -D $pkgname.desktop $startdir/pkg/usr/share/applications/$pkgname.desktop
-  install -m 644 -D LICENSE $startdir/pkg/usr/share/licenses/$pkgname/LICENSE
-  install -m 644 -D $startdir/src/PERMISSION $startdir/pkg/usr/share/licenses/$pkgname/PERMISSION
+package() {
+  cd "$srcdir/$pkgname-$pkgver"
+
+  install -dm 755 "$pkgdir/usr/share/$pkgname/avatars" || return 1
+  install -dm 755 "$pkgdir/usr/share/$pkgname/lang" || return 1
+  install -dm 755 "$pkgdir/usr/share/$pkgname/sounds" || return 1
+  install -m 644 avatars/* "$pkgdir/usr/share/$pkgname/avatars" || return 1
+  install -m 644 lang/* "$pkgdir/usr/share/$pkgname/lang" || return 1
+  install -m 644 sounds/* "$pkgdir/usr/share/$pkgname/sounds" || return 1
+
+  install -Dm 755 "$pkgname" "$pkgdir/usr/bin/$pkgname" || return 1
+  install -Dm 644 "$pkgname.conf" "$pkgdir/etc/dbus-1/system.d/$pkgname.conf" || return 1
+  install -Dm 644 icons/SkypeBlue_16x16.png "$pkgdir/usr/share/icons/hicolor/16x16/$pkgname.png" || return 1
+  install -Dm 644 icons/SkypeBlue_32x32.png "$pkgdir/usr/share/icons/hicolor/32x32/$pkgname.png" || return 1
+  install -Dm 644 icons/SkypeBlue_48x48.png "$pkgdir/usr/share/icons/hicolor/48x48/$pkgname.png" || return 1
+  install -Dm 644 icons/SkypeBlue_48x48.png "$pkgdir/usr/share/pixmaps/$pkgname.png" || return 1
+  install -Dm 644 "$pkgname.desktop" "$pkgdir/usr/share/applications/$pkgname.desktop" || return 1
+  install -Dm 644 LICENSE "$pkgdir/usr/share/licenses/$pkgname/LICENSE" || return 1
 }
