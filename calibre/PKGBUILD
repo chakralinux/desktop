@@ -7,21 +7,22 @@
 source ../_buildscripts/${current_repo}-${_arch}-cfg.conf
 
 pkgname=calibre
-pkgver=0.7.49
+pkgver=0.8.1
 pkgrel=1
-pkgdesc="E-book library management application"
+pkgdesc="Ebook management application"
 arch=('i686' 'x86_64') 
 url="http://calibre.kovidgoyal.net/"
 license=('GPL3')
 depends=('python2' 'python-imaging' 'libusb' 'pyqt' 'python-mechanize'
          'imagemagick' 'dbus-python' 'python-lxml' 'beautiful-soup' 'python-dateutil'
-         'python-cssutils-beta' 'desktop-file-utils' 'shared-mime-info' 'python-dnspython' 
-         'podofo>=0.8.1-6' 'xdg-utils' 'cherrypy' 'python-pypdf' 'unrar' 'chmlib' 'poppler' 'poppler-qt' 'liblqr' 'icu' 'sip' 'libffi')
-makedepends=('python-distribute')
+         'python-cssutils-beta' 'desktop-file-utils' 'python-dnspython' 
+         'podofo>=0.8.1-6' 'xdg-utils' 'cherrypy' 'python-pypdf' 'unrar' 'chmlib' 'poppler' 'poppler-qt' 'icu' 'libwmf' 'libffi')
+makedepends=('python-pycountry')
+optdepends=('ipython: to use calibre-debug')
 install=calibre.install
 source=(http://calibre-ebook.googlecode.com/files/${pkgname}-${pkgver}.tar.gz
         desktop_integration.patch)
-md5sums=('08f817afae4fb8a8dc2c99e8c483423d'
+md5sums=('83eeccca30e2ecbe903aba84f8188b8d'
          'bcc538a3b004429bf8f5a0ac1d89a37f')
 
 build() {
@@ -32,9 +33,9 @@ build() {
   sed -i -e 's:\(#!/usr/bin/env[ ]\+python$\|#!/usr/bin/python$\):\12:g' \
     $(find . -regex ".*.py\|.*.recipe")
 
-  python2 setup.py build || return 1
-  python2 setup.py resources || return 1
-  python2 setup.py translations || return 1
+  python setup.py build || return 1
+  python setup.py resources || return 1
+  python setup.py translations || return 1
 }
 
 package() {
@@ -42,7 +43,7 @@ package() {
   
   patch -Np1 -i $srcdir/desktop_integration.patch || return 1
 
-  # More on desktop integration (e.g. enforce arch defaults)
+  # More on desktop integration (e.g. enforce chakra defaults)
   sed -i -e "/self.create_uninstaller()/,/os.rmdir(config_dir)/d" \
       -e "s|self.opts.staging_sharedir, 'man/man1'|self.opts.staging_root, 'usr/share/man/man1'|" \
       -e "s|manpath, prog+'.1'+__appname__+'.bz2'|manpath, prog+'.1'+'.bz2'|" \
@@ -53,7 +54,7 @@ package() {
   sed -i -e "s|(prefix=.*)|(prefix='$pkgdir/usr')|g" setup/install.py
 
   mkdir -p ${pkgdir}/usr/lib/python2.7/site-packages
-  python2 setup.py install --root=${pkgdir}/ --prefix=/usr \
+  python setup.py install --root=${pkgdir}/ --prefix=/usr \
     --staging-bindir=${pkgdir}/usr/bin \
     --staging-libdir=${pkgdir}/usr/lib \
     --staging-sharedir=${pkgdir}/usr/share
