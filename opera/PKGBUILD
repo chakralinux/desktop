@@ -5,25 +5,27 @@
 # maintainer (x86_64): Manuel Tortosa <manutortosa[at]chakra-project[dot]org>
 
 pkgname=opera
-pkgver=11.10
-_buildver=2092
+pkgver=11.11
+_buildver=2109
 pkgrel=1
 pkgdesc="A fast and secure web browser and Internet suite."
 url="http://www.opera.com/browser/"
-depends=('gcc-libs' 'gstreamer0.10-good' 'libxt' 'freetype2' 'libxext')
+depends=('gcc-libs' 'libxt' 'freetype2' 'libxext')
 optdepends=('gtk2: GTK integration' \
 	    'kdebase-runtime: KDE4 integration' \
-	    'gstreamer0.10-ffmpeg: HTML5 H.264 support' \
-	    'gstreamer0.10-bad-plugins: HTML5 H.264 support')
+	    'gstreamer0.10-base-plugins: HTML5 open codecs support'
+	    'gstreamer0.10-good: HTML5 open codecs support'
+	    'gstreamer0.10-ffmpeg: HTML5 not so open codecs support'
+	    'gstreamer0.10-bad-plugins: HTML5 not so open codecs support')
 install=${pkgname}.install
 options=(!strip)
 license=('custom:opera')
 arch=('i686' 'x86_64')
 _barch=i386
 [ "$CARCH" = "x86_64" ] && _barch=x86_64
-source=(http://ftp.opera.com/pub/opera/linux/${pkgver/./}/opera-${pkgver}-${_buildver}.${_barch}.linux.tar.bz2)
+source=(http://ftp.opera.com/pub/opera/linux/${pkgver/./}/opera-${pkgver}-${_buildver}.${_barch}.linux.tar.xz)
 md5sums=('14783f9e0502c7d6a4e8a75cb54b1635')
-[ "$CARCH" = "x86_64" ] && md5sums=('8daf01ad504406dc418fb732f718c400')
+[ "$CARCH" = "x86_64" ] && md5sums=('206550f16b98dd3dfd3063912dcba53a')
 
 build() {
 cd opera-${pkgver}-${_buildver}.${_barch}.linux
