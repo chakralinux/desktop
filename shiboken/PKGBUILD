@@ -1,0 +1,35 @@
+#
+# Games Packages for Chakra, part of chakra-project.org
+#
+# Maintainer: Adrián Chaves Fernández (Gallaecio) <adriyetichaves gmail.com>
+
+# include global config
+source ../_buildscripts/${current_repo}-${_arch}-cfg.conf
+
+pkgname=shiboken
+_pkgname=libshiboken
+pkgver=1.0.2
+pkgrel=1
+pkgdesc="Support library for Python bindings."
+arch=('i686' 'x86_64')
+license=('LGPL')
+url="http://www.pyside.org"
+depends=('python' 'qt>=4.7' 'openssl')
+makedepends=('cmake' 'automoc4' 'generatorrunner>=0.6.8')
+source=("http://www.pyside.org/files/$pkgname-$pkgver.tar.bz2")
+md5sums=('585aa365811575ec3b48d59ca007f6ae')
+
+build(){
+    cd $srcdir/$pkgname-$pkgver
+    mkdir -p build && cd build
+    cmake \
+      -DCMAKE_INSTALL_PREFIX=/usr \
+      -DCMAKE_BUILD_TYPE=RelWithDebInfo \
+      ..
+    make $_pkgname
+}
+
+package(){
+    cd $srcdir/$pkgname-$pkgver/build/$_pkgname
+    make DESTDIR=$pkgdir install
+}
