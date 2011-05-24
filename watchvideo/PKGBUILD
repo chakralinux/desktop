@@ -8,20 +8,20 @@ source ../_buildscripts/${current_repo}-${_arch}-cfg.conf
 
 pkgname=watchvideo
 _pkgname=WatchVideo
-pkgver=2.1
+pkgver=2.2
 pkgrel=1
 pkgdesc="Small application to play, download, convert to OGG or rip videos from Youtube-like sites."
 arch=('i686' 'x86_64')
 url="http://www.nongnu.org/watchvideo/"
 license=('custom:AGPLv3')
-depends=('pyqt' 'python2' 'python-getmediumurl' 'python-lxml' 'setuptools')
+depends=('pyqt' 'python2' 'python-getmediumurl' 'python-lxml' 'python-distribute')
 optdepends=('ffmpeg: needed for all operations related with video conversion or ripping.'
 	    'ffmpeg2theora: needed to convert videos to Ogg Vorbis or Theora, but not for ripping audio.'
 	    'python-notify: uses the system’s default mechanism to show notification messages.')
 install=$pkgname.install
 changelog=ChangeLog
 source=("http://kde-apps.org/CONTENT/content-files/133133-$_pkgname-$pkgver.tar.gz")
-md5sums=('687719a1b9eed769bb9846a1e10d0b74')
+md5sums=('8caf1f4b2bf0fca366c90f016d99ef5a')
 
 build() {
   cd $srcdir/$_pkgname-$pkgver
