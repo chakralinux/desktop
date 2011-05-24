@@ -7,9 +7,9 @@
 source ../_buildscripts/${current_repo}-${_arch}-cfg.conf
 
 pkgname=0ad
-pkgver=alpha_4
-_pkgver=r09049-alpha
-pkgrel=4
+pkgver=alpha_5
+_pkgver=r09530-alpha
+pkgrel=1
 pkgdesc="Cross-platform, 3D and historically-based real-time strategy game."
 arch=('i686' 'x86_64')
 url="http://wildfiregames.com/0ad"
@@ -17,34 +17,30 @@ license=('GPL2' 'CCPL')
 depends=('binutils' 'boost' 'crypto++' 'curl' 'devil' 'enet' 'fam' 'libogg' 'libpng' 'libvorbis' 'libxml2' 'mesa' 'nasm' 'openal' 'python2' 'sdl' 'zip' 'zlib')
 makedepends=('cmake')
 changelog=ChangeLog
-source=("http://releases.wildfiregames.com/$pkgname-$_pkgver-unix-build.tar.xz"
-	"http://releases.wildfiregames.com/$pkgname-$_pkgver-unix-data.tar.xz"
-	"$pkgname.sh"
-	"$pkgname-nogtk.patch"
-	"http://www.wildfiregames.com/forum/index.php?app=core&module=attach&section=attach&attach_id=2797")
-md5sums=('3ebb1b322cd947c855da75828ebcd539'
-         '30c289cdbffd552cc29e62778cd718d4'
+source=(http://releases.wildfiregames.com/$pkgname-$_pkgver-unix-build.tar.xz
+	http://releases.wildfiregames.com/$pkgname-$_pkgver-unix-data.tar.xz
+	$pkgname.sh
+	$pkgname-nogtk.patch
+	$pkgname-archdetection.diff)
+md5sums=('d8c66ab1ef2309be7aa5ff127ccf0e6c'
+         'b03270f6145053f4f517ca7bd6e5cdc4'
          '27c6ee0a240c3ea481d08aa7e8e5158b'
          '7bb8119a4d611cdffa05177ea2603151'
-         'ee4d5d7bffadbd4985891584f1e021df')
+         '641a8ee6dab4f0c9a875fbd84410c46a')
 
 build()
 {
-  cd $srcdir/$pkgname-$_pkgver/source/
-  patch -uN $srcdir/$pkgname-$_pkgver/source/lib/file/file.cpp \
-	    "$srcdir/index.php?app=core&module=attach&section=attach&attach_id=2797" || return 1
-
   cd $srcdir/$pkgname-$_pkgver/build/workspaces
 
+  patch -uN update-workspaces.sh $srcdir/$pkgname-archdetection.diff
   patch -uN update-workspaces.sh $srcdir/$pkgname-nogtk.patch
-
-  export CHOST="$CARCH-pc-linux-gnu"
 
   ./update-workspaces.sh
 
   cd $srcdir/$pkgname-$_pkgver/build/workspaces/gcc
 
-  CONFIG=Debug make
+#   CONFIG=Debug make
+  CONFIG=Release make
 }
 
 package()

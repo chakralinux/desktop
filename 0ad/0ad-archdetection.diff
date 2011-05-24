@@ -1,0 +1,10 @@
+--- update-workspaces.sh.old	2011-05-04 01:54:29.000000000 +0200
++++ update-workspaces.sh	2011-05-23 20:20:38.875992890 +0200
+@@ -43,6 +43,6 @@
+ echo
+ 
+ # If we're in bash then make HOSTTYPE available to Premake, for primitive arch-detection
+-export HOSTTYPE="$HOSTTYPE"
++export HOSTTYPE="$CARCH"
+ 
+ src/bin/premake --outpath ../workspaces/gcc --collada "$@" --target gnu || die "Premake failed"
