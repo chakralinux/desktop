@@ -7,31 +7,28 @@
 # Contributor: Neo Kolokotronis <tetris4@gmail.com>
 
 pkgname=spideroak
-pkgver=3.7.9740
+pkgver=3.7.9810
 pkgrel=1
 pkgdesc="Secure and consolidated free online backup, storage, access, sharing & sync tool for Windows, Mac OS X, and Linux."
 url="https://spideroak.com/"
 depends=(openssl)
 optdepends=('qt: if you want to run the GUI')
-makedepends=()
 license=('custom')
-conflicts=()
-replaces=()
 options=(!strip)
 install=spideroak.install
 _source_arch="i386"
 [ "$CARCH" = "x86_64" ] && _source_arch="x86_64"  
-source=("spideroak_${pkgver}_${_source_arch}.deb::https://spideroak.com/directdownload?platform=ubuntukarmic&arch=${_source_arch}")
-  md5sums=('f8ac349f89abe18e77dd1c8365f2603e')
-[ "$CARCH" = "x86_64" ] && md5sums=('b40effb23486c2226cfe740e4f08d802')
+source=("spideroak_${pkgver}_${_source_arch}.deb::https://spideroak.com/directdownload?platform=ubuntulucid&arch=${_source_arch}")
+md5sums=('3a6a3845bc1ce0583522025152bd730a')
+[ "$CARCH" = "x86_64" ] && md5sums=('27f20650ace00db96886e49c33b6e0b7')
 
 arch=('i686' 'x86_64')
 
-build() {
-  cd $srcdir/
-  bsdtar -xf spideroak_${pkgver}_${_source_arch}.deb data.tar.gz
+package() {
+  cd "${srcdir}"
+  bsdtar -xf "spideroak_${pkgver}_${_source_arch}.deb" data.tar.gz
   bsdtar -xf data.tar.gz
   rm data.tar.gz
-  mv {usr,etc} ${pkgdir}
+  mv {usr,etc} "${pkgdir}"
   msg "Done"
 }
