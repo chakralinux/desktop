@@ -1,0 +1,26 @@
+#
+# Games Packages for Chakra, part of chakra-project.org
+#
+# Maintainer: Adrián Chaves Fernández (Gallaecio) <adriyetichaves gmail.com>
+
+# include global config
+source ../_buildscripts/${current_repo}-${_arch}-cfg.conf
+
+pkgname=openttd-openmsx
+_pkgname=openmsx
+pkgver=0.3.1
+pkgrel=1
+pkgdesc="Music set for OpenTTD."
+arch=('any')
+url="http://www.openttd.org"
+license=('GPL2')
+source=(http://bundles.openttdcoop.org/$_pkgname/releases/$pkgver/$_pkgname-$pkgver.zip)
+md5sums=('858b79d44aea6de5e15d9d1439e86cc3')
+
+package() {
+  cd $srcdir/$_pkgname-$pkgver
+  chmod 0644 *
+  mkdir -pm0755	$pkgdir/usr/share/openttd/gm
+  cp openmsx.*	$pkgdir/usr/share/openttd/gm/
+  cp *.mid	$pkgdir/usr/share/openttd/gm/
+}

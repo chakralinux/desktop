@@ -1,0 +1,25 @@
+#
+# Games Packages for Chakra, part of chakra-project.org
+#
+# Maintainer: Adrián Chaves Fernández (Gallaecio) <adriyetichaves gmail.com>
+
+# include global config
+source ../_buildscripts/${current_repo}-${_arch}-cfg.conf
+
+pkgname=openttd-opengfx
+_pkgname=opengfx
+pkgver=0.3.4
+pkgrel=1
+pkgdesc='Graphics set for OpenTTD.'
+arch=('any')
+url='http://dev.openttdcoop.org/projects/opengfx'
+license=('GPL2')
+source=("http://bundles.openttdcoop.org/$_pkgname/releases/$pkgver/$_pkgname-$pkgver.zip")
+md5sums=('5730955f074825213abba50a4a682e48')
+
+package() {
+  cd $srcdir/$_pkgname-$pkgver
+  install -d $pkgdir/usr/share/openttd/data   
+  install -m644 *.grf $pkgdir/usr/share/openttd/data
+  install -m644 *.obg $pkgdir/usr/share/openttd/data
+}
