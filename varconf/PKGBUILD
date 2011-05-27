@@ -1,0 +1,34 @@
+#
+# Games Packages for Chakra, part of chakra-project.org
+#
+# Maintainer: Adrián Chaves Fernández (Gallaecio) <adriyetichaves gmail.com>
+
+# include global config
+source ../_buildscripts/${current_repo}-${_arch}-cfg.conf
+
+pkgname=varconf
+pkgver=0.6.6
+pkgrel=1
+pkgdesc="WorldForge library to save configuration"
+arch=(i686 x86_64)
+url="http://worldforge.org/dev/eng/libraries/varconf"
+license=('LGPL')
+depends=(libsigc++2.0)
+source=("http://downloads.sourceforge.net/worldforge/varconf-$pkgver.tar.bz2")
+md5sums=('5ca6cfe2ab3044f90d18e06966ff1dda')
+
+build() {
+  cd $srcdir/$pkgname-$pkgver
+
+  ./configure \
+    --prefix=/usr
+
+  make
+}
+
+package() {
+  cd $srcdir/$pkgname-$pkgver
+
+  make DESTDIR=$pkgdir install
+}
+
