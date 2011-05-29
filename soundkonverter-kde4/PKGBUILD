@@ -7,8 +7,7 @@
 
 pkgname=soundkonverter-kde4
 _appname=soundkonverter
-pkgver=1.0.0rc3
-_pkgver=0.9.95rc3
+pkgver=1.0.0
 pkgrel=1
 pkgdesc="soundKonverter is a frontend to various audio converters"
 arch=('i686' 'x86_64')
@@ -16,11 +15,11 @@ url="http://www.kde-apps.org/content/show.php?content=29024"
 license=('GPL')
 depends=('kdemultimedia-common' 'taglib')
 makedepends=('cmake' 'automoc4')
-source=(https://api.opensuse.org/public/source/home:HessiJames/soundkonverter/${_appname}-${_pkgver}.tar.gz)
-md5sums=('26abeb0f99120782f4d0d04c62c71014')
+source=(https://api.opensuse.org/public/source/home:HessiJames/soundkonverter/${_appname}-${pkgver}.tar.gz)
+md5sums=('fc8bab43a27c53e651907489f5ce5032')
 
 build() {
-  cd "${srcdir}/${_appname}-${_pkgver}"
+  cd "${srcdir}/${_appname}-${pkgver}"
   mkdir build
   cd build
   cmake -DCMAKE_INSTALL_PREFIX=/usr -DCMAKE_BUILD_TYPE=Release ..
