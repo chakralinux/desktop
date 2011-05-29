@@ -1,0 +1,30 @@
+#
+# <Repo> Packages for Chakra, part of chakra-project.org
+#
+# Maintainer: <Maintainer contact information>
+
+# include global config
+source ../_buildscripts/${current_repo}-${_arch}-cfg.conf
+
+pkgname=protobuf
+pkgver=2.4.0a
+pkgrel=2
+pkgdesc="A way of encoding structured data in an efficient yet extensible format."
+arch=('i686' 'x86_64')
+url="http://code.google.com/p/protobuf/"
+license=('APACHE')
+depends=('gcc-libs' 'zlib')
+source=(http://$pkgname.googlecode.com/files/$pkgname-$pkgver.tar.bz2)
+md5sums=('61df3f63ec284fc6f57a68c67e4918c6')
+
+build() {
+  cd $srcdir/$pkgname-$pkgver
+  ./autogen.sh 
+  ./configure --prefix=/usr --disable-static 
+}
+
+package() {
+  cd $srcdir/$pkgname-$pkgver
+
+  make DESTDIR=$pkgdir install
+}
