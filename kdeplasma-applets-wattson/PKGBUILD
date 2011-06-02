@@ -1,0 +1,35 @@
+#
+# Chakra Packages for Chakra, part of chakra-project.org
+#
+# maintainer (i686): Phil Miller <philm[at]chakra-project[dog]org>
+# maintainer (x86_64): Manuel Tortosa <manutortosa[at]chakra-project[dot]org>
+# contributor: Radu Andries  <admiral0 at tuxfamily.org>
+ 
+pkgname=kdeplasma-applets-wattson
+pkgver=1.0
+pkgrel=1
+arch=('i686' 'x86_64')
+pkgdesc="A plasmoid for displaying used watts by laptop"
+url="http://admiral0.it"
+makedepends=("cmake" "automoc4")
+depends=('kdebase-workspace')
+license=('GPL')
+source=("http://kde-look.org/CONTENT/content-files/126981-wattson.tar.bz2")
+md5sums=('5aa219ba572f3de8db3ca3cb8aec1c7e')
+ 
+build() {
+  cd  $srcdir/wattson/
+  if [ -d build ]; then
+    rm -rf build
+  fi
+  mkdir build
+  cd build
+  cmake -DCMAKE_INSTALL_PREFIX=/usr ..
+  make
+}
+ 
+package() {
+  cd $srcdir/wattson/build
+  make DESTDIR=$pkgdir install
+ 
+}
