@@ -8,8 +8,8 @@
 source ../_buildscripts/${current_repo}-${_arch}-cfg.conf
 
 pkgname=telepathy-idle
-pkgver=0.1.9
-pkgrel=1
+pkgver=0.1.10
+pkgrel=2
 pkgdesc="An IRC connection manager for Telepathy"
 arch=('i686' 'x86_64')
 url="http://telepathy.freedesktop.org"
@@ -18,17 +18,17 @@ license=('LGPL')
 depends=('telepathy-glib>=0.12.5' 'openssl')
 makedepends=('libxslt' 'python2')
 install=telepathy-idle.install
-source=(http://telepathy.freedesktop.org/releases/telepathy-idle/${pkgname}-${pkgver}.tar.gz
-        python27.patch)
-md5sums=('423f2cc0481bdb32facb850eaf586ff2'
-         '03661efde8f768417e224720e1346d7b')
+source=(http://telepathy.freedesktop.org/releases/${pkgname}/${pkgname}-${pkgver}.tar.gz)
+md5sums=('570a431e3e28ca6ebf3f0c84198f0b9a')
 
 build() {
     cd "${srcdir}/${pkgname}-${pkgver}"
-    patch -Np1 -i "${srcdir}/python27.patch"
-    autoreconf -fi
     ./configure --prefix=/usr \
     	--libexecdir=/usr/lib/telepathy
     make
+}
+
+package() {
+    cd "${srcdir}/${pkgname}-${pkgver}"
     make DESTDIR="${pkgdir}" install
 }

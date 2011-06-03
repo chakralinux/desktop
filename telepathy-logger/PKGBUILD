@@ -8,8 +8,8 @@
 source ../_buildscripts/${current_repo}-${_arch}-cfg.conf
 
 pkgname=telepathy-logger
-pkgver=0.2.8
-pkgrel=3
+pkgver=0.2.10
+pkgrel=1
 pkgdesc="Telepathy framework logging daemon"
 arch=(i686 x86_64)
 url="http://telepathy.freedesktop.org/wiki/Logger"
@@ -18,7 +18,7 @@ depends=('telepathy-glib' 'sqlite3' 'libxml2')
 makedepends=('intltool' 'gobject-introspection' 'libxslt')
 options=('!libtool')
 source=(http://telepathy.freedesktop.org/releases/${pkgname}/${pkgname}-${pkgver}.tar.bz2)
-md5sums=('755e6dcaa6a9ccf47f2fe73f3d4d888b')
+md5sums=('ec01a8f99fc11406e85153095433c155')
 
 build() {
   cd "$srcdir/$pkgname-$pkgver"
@@ -27,6 +27,7 @@ build() {
     --sysconfdir=/etc \
     --libexecdir=/usr/lib/telepathy \
     --disable-static \
+    --disable-scrollkeeper \
     --disable-schemas-compile
   make
 }

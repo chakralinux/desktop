@@ -1,0 +1,29 @@
+# Apps Packages for Chakra, part of chakra-project.org
+#
+# maintainer (i686): Phil Miller <philm[at]chakra-project[dog]org>
+# maintainer (x86_64): Manuel Tortosa <manutortosa[at]chakra-project[dot]org>
+
+pkgname=telepathy-mission-control
+pkgver=5.7.11
+pkgrel=2
+pkgdesc="A Telepathy component providing abstraction of some of the details of connection managers."
+arch=('i686' 'x86_64')
+url="http://mission-control.sourceforge.net/"
+license=('LGPL2.1')
+depends=('telepathy-glib')
+makedepends=('libxslt' 'python2')
+options=('!libtool')
+source=(http://telepathy.freedesktop.org/releases/telepathy-mission-control/$pkgname-$pkgver.tar.gz)
+md5sums=('d4b37aa43f391c34d033b1af5ab32e6d')
+
+build() {
+    cd "$srcdir/$pkgname-$pkgver"
+    ./configure --prefix=/usr \
+ 	--libexecdir=/usr/lib/telepathy 
+    make
+}
+
+package() {
+    cd "$srcdir/$pkgname-$pkgver"
+    make DESTDIR="$pkgdir" install
+}
