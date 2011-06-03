@@ -8,23 +8,27 @@ source ../_buildscripts/${current_repo}-${_arch}-cfg.conf
 
 pkgname=supertuxkart
 _pkgname=SuperTuxKart
-pkgver=0.7
-pkgrel=4
+pkgver=0.7.1b
+_pkgver=0.7.1
+pkgrel=1
 pkgdesc="Kart racing game featuring Tux and friends."
 url="http://supertuxkart.sourceforge.net/"
 arch=('i686' 'x86_64')
 license=('GPL3' 'GPL2' 'CCPL-by' 'CCPL-by-sa' 'custom:Creative Commons Sampling Plus 1.0' 'custom:FreeArt License' 'custom:SoundSnap license' 'custom:Public Domain')
-depends=('enet' 'irrlicht>=1.7' 'libgl' 'libogg' 'libvorbis' 'openal')
+depends=('enet' 'irrlicht' 'libgl' 'libogg' 'libvorbis' 'openal')
 conflicts=('supertuxkart-svn')
 changelog=ChangeLog
-source=(http://downloads.sourceforge.net/project/$pkgname/$_pkgname/$pkgver/$pkgname-$pkgver-src.tar.bz2)
-md5sums=('2806f271e4d37fee5ad8ca166e1ad489')
+source=(http://downloads.sourceforge.net/project/$pkgname/$_pkgname/$_pkgver/$pkgname-$pkgver-src.tar.bz2)
+md5sums=('8538d147d3178035be6e1519a509e4f5')
 
 build() {
   cd $srcdir/$pkgname-$pkgver
   
+  LDFLAGS="-lpng -ljpeg" \
+  LIBS="-lbz2" \
   ./configure \
-    --prefix=/usr
+    --prefix=/usr \
+    --datadir=/usr/share
 
   make
 }
@@ -33,4 +37,10 @@ package() {
   cd $srcdir/$pkgname-$pkgver
   
   make DESTDIR=$pkgdir install
+
+  # Add executable link from /usr/bin
+  mkdir -p $pkgdir/usr/bin/
+  echo "#!/bin/bash"		 > $pkgname
+  echo "/usr/games/$pkgname"	>> $pkgname
+  chmod +x ./$pkgname
 }

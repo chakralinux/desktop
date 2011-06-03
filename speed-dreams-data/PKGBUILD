@@ -1,0 +1,45 @@
+#
+# Games Packages for Chakra, part of chakra-project.org
+#
+# Maintainer: Adrián Chaves Fernández (Gallaecio) <adriyetichaves gmail.com>
+
+# include global config
+source ../_buildscripts/${current_repo}-${_arch}-cfg.conf
+
+pkgname=speed-dreams-data
+_pkgname=speed-dreams
+pkgver=1.4.0
+_pkgver=1.4.0-r2307 # For managing files and directories
+pkgrel=1
+pkgdesc="A racing simulator with rich graphics and physics (data files)."
+arch=('any')
+url="http://speed-dreams.sourceforge.net/"
+license=('GPL2')
+depends=()
+makedepends=('enet' 'freealut' 'freeglut' 'libpng' 'libxmu' 'libxrandr'
+'plib>=1.8.3' 'libjpeg' 'zlib')
+source=("http://sourceforge.net/projects/$_pkgname/files/$pkgver/$_pkgname-$_pkgver-src.tar.bz2/download")
+md5sums=('92c324c2c47a598dea9278d9a66c5b78')
+
+build() {
+  cd $srcdir/$_pkgname-$pkgver-src
+  
+  unset LDFLAGS MAKEFLAGS
+
+  ./configure \
+    --prefix=/opt/$_pkgname \
+    --x-includes=/usr/include \
+    --x-libraries=/usr/lib 
+  
+  make
+}
+
+package() {
+  cd $srcdir/$_pkgname-$pkgver-src
+  
+  make DESTDIR=$pkgdir/ install datainstall
+
+  find $pkgdir/ -type d -exec chmod 755 {} \;
+  rm -r $pkgdir/opt/speed-dreams/bin
+  rm -r $pkgdir/opt/speed-dreams/lib
+}

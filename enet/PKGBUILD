@@ -7,33 +7,30 @@
 source ../_buildscripts/${current_repo}-${_arch}-cfg.conf
 
 pkgname=enet
-pkgver=1.2.3
-pkgrel=2
-pkgdesc='A relatively thin, simple and robust network communication layer on top of UDP. (Old Version)'
+pkgver=1.2.4
+pkgrel=1
+pkgdesc='A relatively thin, simple and robust network communication layer on top of UDP.'
 arch=('i686' 'x86_64')
 url='http://enet.bespin.org/'
 license=('MIT')
 replaces=('enet-old')
 changelog=ChangeLog
 source=("http://$pkgname.bespin.org/download/$pkgname-$pkgver.tar.gz")
-md5sums=('30be76b63db9bcebb89e142ddbada20b')
+md5sums=('e2c35f5090a8a26c5ea41e6d08fadc91')
 
 build() {
   cd $pkgname-$pkgver
 
-  CFLAGS="-fPIC" \
+#   CFLAGS="-fPIC" \
   ./configure \
     --prefix=/usr
   make
-#   gcc -Wl,-soname,libenet.so.2 -shared -o libenet.so.2 *.o
 }
 
 package() {
   cd $pkgname-$pkgver
 
   make prefix=$pkgdir/usr install
-
-#   install -m 755 libenet.so.2 $pkgdir/usr/lib
 
   # License:
   install -D -m644 LICENSE $pkgdir/usr/share/licenses/$pkgname/LICENSE

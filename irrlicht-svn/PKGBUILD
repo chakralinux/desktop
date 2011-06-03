@@ -1,0 +1,105 @@
+#
+# Games Packages for Chakra, part of chakra-project.org
+#
+# Maintainer: Adrián Chaves Fernández (Gallaecio) <adriyetichaves gmail.com>
+
+# include global config
+source ../_buildscripts/${current_repo}-${_arch}-cfg.conf
+
+pkgname=irrlicht-svn
+_pkgname=irrlicht
+pkgver=3777
+pkgrel=1
+pkgdesc="High performance realtime 3D graphics engine."
+arch=('i686' 'x86_64')
+url="http://irrlicht.sourceforge.net/"
+license=('ZLIB')
+depends=('libgl' 'libjpeg' 'bzip2')
+makedepends=('subversion')
+changelog=ChangeLog
+provides=('irrlicht')
+replaces=('irrlicht') # It will be this way until SuperTuxKart supports a stable release.
+
+_svntrunk="https://$_pkgname.svn.sourceforge.net/svnroot/$_pkgname/trunk"
+_svnmod="$_pkgname"
+ 
+build() {
+  msg "Starting SVN checkout..."
+ 
+  cd $srcdir
+ 
+  if [ -d $_svnmod/.svn ]; then
+    (cd $_svnmod && svn up)
+  else
+    svn co $_svntrunk $_svnmod
+  fi
+ 
+  msg "SVN checkout done or server timeout."
+  msg "Starting make..."
+ 
+  rm -rf $srcdir/$_svnmod-build
+  cp -r $srcdir/$_svnmod $srcdir/$_svnmod-build
+  cd $srcdir/$_svnmod-build
+ 
+  # Use system libraries.
+  sed -i -e '/^#define.*NON_SYSTEM*/d'	include/IrrCompileConfig.h || return 1
+
+  cd source/Irrlicht
+  sed -i -e "/^INSTALL_DIR/s:=.*:=$pkgdir/usr/lib:" \
+	 -e '/^CXXFLAGS/s:-g.*::' \
+         -e '/^CXXFLAGS/s:-Wall::' \
+	 -e '/^CFLAGS/s/:= -O3 -fexpensive-optimizations/+=/' \
+	 -e '/^CXXINCS/s:-Izlib -Ijpeglib::' \
+	 -e '/^ZLIBOBJ/d' \
+         -e '/^JPEGLIBOBJ/d' \
+         -e '/^BZIP2OBJ/d' \
+	 -e '/.o=.d/d' \
+	 -e '/^sharedlib: LDFLAGS/s:+=:+= -lGL -lXxf86vm -ljpeg -lbz2 -lz:' \
+         -e 's/0-SVN/1/' \
+         -e 's/.$(VERSION_MINOR) -o/ -o/' \
+	 Makefile || return 1
+
+  make sharedlib || return 1
+
+  make
+}
+ 
+package() {
+  cd $srcdir/$_svnmod-build/source/Irrlicht
+ 
+  install -d $pkgdir/usr/lib \
+             $pkgdir/usr/share/licenses/$_pkgname \
+             $pkgdir/usr/share/$_pkgname/examples/bin \
+             $pkgdir/usr/share/doc/$_pkgname
+
+  make install || return 1
+
+  cd $srcdir/$_svnmod-build/
+  install -m644 readme.txt $pkgdir/usr/share/licenses/$_pkgname
+
+  # Install static library and fix headers permissions
+  install -m644 lib/Linux/libIrrlicht.a $pkgdir/usr/lib
+  chmod 644 $pkgdir/usr/include/$_pkgname/*
+
+  # Install media files for examples
+  cp -r media $pkgdir/usr/share/$_pkgname
+
+  # Install documentation
+  cp -r doc/* $pkgdir/usr/share/doc/$_pkgname
+  rm -f $pkgdir/usr/share/doc/$_pkgname/*.txt
+
+  cd $pkgdir/usr/lib
+  ln -s libIrrlicht.so.$pkgver libIrrlicht.so.1
+
+  # Just a helper for examples compilation
+  ln -s libIrrlicht.so.$pkgver $srcdir/$_svnmod-build/lib/Linux/libIrrlicht.so
+
+  # Edit, build and install the examples
+  cd $srcdir/$_svnmod-build/examples
+  sed -i '/define USE_IRRKLANG/s:.*://&:' ./Demo/CDemo.h || return 1
+  sed -i '/^CXXFLAGS/d' $(grep -Rl "^CXXFLAGS =" *)
+
+  make
+
+  install -m755  ../bin/Linux/* /$pkgdir/usr/share/$_pkgname/examples/bin/
+}
