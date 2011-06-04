@@ -10,25 +10,27 @@
 source ../_buildscripts/${current_repo}-${_arch}-cfg.conf
 
 pkgname=ifuse
-pkgver=1.0.0
-pkgrel=1
-pkgdesc="A fuse filesystem which uses libimobiledevice to expose an iPhone's contents as a filesystem"
-url="http://libimobiledevice.org/"
+pkgver=1.1.1
+pkgrel=2
+pkgdesc='A fuse filesystem to access the contents of an iPhone or iPod Touch'
+url='http://libimobiledevice.org/'
 arch=('i686' 'x86_64')
-license=('GPL2')
-depends=('libimobiledevice>=1.0.0' 'fuse' 'glib2')
-makedepends=('gcc' 'make' 'automake' 'autoconf' 'pkgconfig')
-provides=('ifuse-git')
-conflicts=('ifuse-git')
-source=(http://cloud.github.com/downloads/MattColyer/${pkgname}/${pkgname}-${pkgver}.tar.bz2)
-md5sums=('325d58abe182afa95187e6c55f2bba5f')
+license=('LGPL2.1')
+depends=('libimobiledevice' 'fuse')
+source=("http://www.libimobiledevice.org/downloads/${pkgname}-${pkgver}.tar.bz2")
+md5sums=('8d528a79de024b91f12f8ac67965c37c')
 
 build() {
+  cd ${pkgname}-${pkgver}
 
-  cd ${srcdir}/${pkgname}-${pkgver}
+  ./configure \
+    --prefix=/usr
 
-  ./configure --prefix=/usr
+  make
+}
 
-  make || return 1
-  make DESTDIR=${pkgdir} install || return 1
+package() {
+  cd ${pkgname}-${pkgver}
+
+  make DESTDIR=${pkgdir} install
 }
