@@ -1,0 +1,48 @@
+#
+# Games Packages for Chakra, part of chakra-project.org
+#
+# Maintainer: Adrián Chaves Fernández (Gallaecio) <adriyetichaves gmail.com>
+
+# include global config
+# source ../_buildscripts/${current_repo}-${_arch}-cfg.conf
+
+pkgname=naev
+pkgver=0.5.0
+pkgrel=1
+pkgdesc="2D action/rpg space game."
+arch=('i686' 'x86_64')
+url="http://code.google.com/p/naev/"
+license=('custom: code: GPLv3; media: mixture of public domain, GPLv2, GPLv3, CC:BY 3.0, CC:BY-SA 3.0')
+depends=('freetype2' 'libgl' 'libpng' 'libvorbis' 'libxml2' 'openal' 'sdl_image' 'sdl_mixer')
+makedepends=('freeglut')
+conflicts=('naev-dev')
+changelog=ChangeLog
+source=("http://downloads.sourceforge.net/project/$pkgname/$pkgname-$pkgver/$pkgname-$pkgver.tar.bz2"
+	"http://downloads.sourceforge.net/project/$pkgname/$pkgname-$pkgver/ndata-$pkgver")
+md5sums=('f7d754a17ace87aac540d0d6d48313d6'
+         '4ab3a4364d746fe11b72bda03349b3b0')
+
+build() {
+  cd $srcdir/$pkgname-$pkgver
+
+  ./configure \
+    --prefix=/usr \
+    --enable-debug \
+    --with-ndata-path=/usr/share/naev/data
+  make
+}
+
+package() {
+  cd $srcdir/$pkgname-$pkgver
+
+  # Main.
+  make DESTDIR=$pkgdir install
+
+  # Media:
+  mkdir -p $pkgdir/usr/share/naev/
+  install -m644 $srcdir/ndata-$pkgver $pkgdir/usr/share/naev/data
+
+  # License:
+  mkdir -p $pkgdir/usr/share/licenses/naev/
+  install -m644 $srcdir/$pkgname-$pkgver/LICENSE $pkgdir/usr/share/licenses/naev/
+}
