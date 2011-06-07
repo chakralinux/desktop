@@ -9,7 +9,7 @@ source ../_buildscripts/${current_repo}-${_arch}-cfg.conf
 pkgname=0ad
 pkgver=alpha_5
 _pkgver=r09530-alpha
-pkgrel=2
+pkgrel=3
 pkgdesc="Cross-platform, 3D and historically-based real-time strategy game."
 arch=('i686' 'x86_64')
 url="http://wildfiregames.com/0ad"
@@ -19,12 +19,10 @@ makedepends=('cmake')
 changelog=ChangeLog
 source=(http://releases.wildfiregames.com/$pkgname-$_pkgver-unix-build.tar.xz
 	http://releases.wildfiregames.com/$pkgname-$_pkgver-unix-data.tar.xz
-	$pkgname.sh
 	$pkgname-nogtk.patch
 	$pkgname-archdetection.diff)
 md5sums=('d8c66ab1ef2309be7aa5ff127ccf0e6c'
          'b03270f6145053f4f517ca7bd6e5cdc4'
-         '27c6ee0a240c3ea481d08aa7e8e5158b'
          '7bb8119a4d611cdffa05177ea2603151'
          '641a8ee6dab4f0c9a875fbd84410c46a')
 
@@ -47,6 +45,11 @@ package()
 {  
   install -d $pkgdir/usr/share/$pkgname
   cp -r $srcdir/$pkgname-$_pkgver/binaries/* $pkgdir/usr/share/$pkgname
- 
-  install -D -m755 $srcdir/$pkgname.sh $pkgdir/usr/bin/$pkgname
+
+  # Execution script:
+  install -d $pkgdir/usr/bin/
+  echo "#!/bin/sh"			>  $pkgdir/usr/bin/$pkgname
+  echo "cd /usr/share/0ad/system"	>> $pkgdir/usr/bin/$pkgname
+  echo "./pyrogenesis $*"		>> $pkgdir/usr/bin/$pkgname
+  chmod +x $pkgdir/usr/bin/$pkgname
 }
