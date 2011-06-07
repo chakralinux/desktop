@@ -10,7 +10,7 @@ source ../_buildscripts/${current_repo}-${_arch}-cfg.conf
 #
 # package info
 #
-pkgbase=('kdepim')
+pkgbase="kdepim"
 pkgname=('kdepim-common'
          'kdepim-doc'
 	 'kdepim-akonadiconsole'
@@ -42,8 +42,8 @@ license=('GPL' 'LGPL' 'FDL')
 options=('!docs' '!splithdr' 'splitdbg' 'log')
 
 makedepends=('pkgconfig' 'cmake' 'automoc4' 'boost' "kdelibs>=${_kdever}" "kdepimlibs>=${_kdever}"
-             "kdepim-runtime>=${pkgver}" 'libxss' "kdebase-runtime>=${_kdever}" 
-	     'kde-agent' 'libindicate-qt>=0.2.2' 'docbook-xml')
+             "kdepim-runtime" 'libxss' "kdebase-runtime" 
+	     'kde-agent' 'libindicate-qt>=0.2.2' 'docbook-xml' 'dblatex')
 
 
 source=($_mirror/${pkgbase}-${pkgver}.tar.bz2)
@@ -55,10 +55,6 @@ md5sums=('72396ca638233f52fcc69cac74fcc06d')
 build()
 {
 	cd ${srcdir}/${pkgbase}-${pkgver}
-
-	# Documents translations don't compile atm
-	# rm ${startdir}/src/kdepim-4.5.94/doc-translations/CMakeLists.txt
-        # touch ${startdir}/src/kdepim-4.5.94/doc-translations/CMakeLists.txt
 
 	msg "starting build ..."
 	cmake . -DCMAKE_BUILD_TYPE=${_build_type} \
@@ -77,8 +73,8 @@ build()
 package_kdepim-common()
 {
 	pkgdesc="KDE PIM - Common files and libraries"
-	depends=("kdepimlibs>=${_kdever}" 'libxss' "kdebase-runtime>=${_kdever}" 'kde-agent'
-                 'libxss' 'libindicate-qt>=0.2.2' "kdepim-runtime>=${pkgver}")
+	depends=("kdepimlibs>=${_kdever}" 'libxss' "kdebase-runtime" 'kde-agent'
+                 'libxss' 'libindicate-qt>=0.2.2' "kdepim-runtime>=${_kdever}")
 	groups=("kde" "kdepim" "kde" "kde-uninstall")
 	install=${pkgbase}.install
 
@@ -96,7 +92,6 @@ package_kdepim-doc()
 {
 	pkgdesc="KDE PIM - Documentation"
 	groups=("${pkgbase}" "kde" "kde-doc" "kde-uninstall")
-	depends=("${pkgbase}-common>=${pkgver}")
 
 	splitdirs="doc"
 		for i in ${splitdirs} ; do
