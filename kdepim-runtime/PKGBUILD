@@ -7,37 +7,28 @@
 # include global config
 source ../_buildscripts/${current_repo}-${_arch}-cfg.conf
 
-# original name (used for the source and pkgnames)
-_origname=kdepim-runtime
-
-
 #
 # package info
 #
-pkgname=${_origname}
+pkgbase=kdepim-runtime
+pkgname=${pkgbase}
 arch=('i686' 'x86_64')
+
 #pkgver=${_kdever}
-pkgver=4.4.11.1
-pkgrel=2
+pkgver=4.6.0
+pkgrel=1
 
 pkgdesc="KDE Pim Runtime"
 url="http://www.kde.org"
 license=('GPL' 'LGPL' 'FDL')
-
-install=${_origname}.install
+install=${pkgbase}.install
 options=('docs' '!splithdr' 'splitdbg' 'log')
-
-provides=("${_origname}=${_kdever}")
-conflicts=("kdemod-${_origname}")
-
-depends=("kdepimlibs>=${_kdever}" "kdebase-runtime>=${_kdever}" "kdelibs>=${_kdever}")
+depends=("kdepimlibs>=${_kdever}" "kde-runtime>=${_kdever}" "kdelibs>=${_kdever}")
 makedepends=('pkgconfig' 'cmake' 'automoc4')
+groups=("kde" "kdepim" "kde-uninstall" "kde-minimal")
 
-groups=("kde" "kde-complete" "kde-uninstall" "kde-minimal")
-
-#source=("$_mirror/${_origname}-$_kdever.tar.bz2")
-source=("ftp://ftp.gwdg.de/pub/x11/kde/stable/kdepim-$pkgver/src/${_origname}-$pkgver.tar.bz2")
-sha1sums=('e3105eb99ab0de47c617f8491774b2e3ee4cdd4a')
+source=($_mirror/${pkgbase}-$pkgver.tar.bz2)
+md5sums=('b7b5409cb22d57bd817a6d653f714bd7')
 
 #
 # build and install
@@ -49,26 +40,18 @@ build()
 	mkdir -p build
 	cd build
 
-	cmake ../${_origname}-${pkgver} \
+	cmake ../${pkgbase}-${_pkgver} \
 		-DCMAKE_BUILD_TYPE=${_build_type} \
 		-DCMAKE_INSTALL_PREFIX=${_installprefix} \
 		-DCMAKE_SKIP_RPATH=ON \
 		-DCMAKE_{SHARED,MODULE,EXE}_LINKER_FLAGS='-Wl,--no-undefined -Wl,--as-needed'
 
 	make || return 1
+}
 
+package()
+{
+	cd ${srcdir}/build
 	make DESTDIR=${pkgdir} install || return 1
 
-#	# include our patches into the package
-#	ls -1 ${startdir}/*.patch &>/dev/null 2>&1
-#	if [ "$?" = "0" ]; then
-#		warning "incuding patches into package"
-#		mkdir -p ${pkgdir}/usr/share/chakra/patches/${_origname} &>/dev/null
-#		for i in ${startdir}/*.patch; do
-#			msg "$i"
-#			cp $i ${pkgdir}/usr/share/chakra/patches/${_origname}/ &>/dev/null
-#		done
-#	else
-#		warning "no patches found, skipping to include them into the package..."
-#	fi
 }
