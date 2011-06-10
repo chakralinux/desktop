@@ -88,7 +88,6 @@ package_kdepim-common()
 	splitdirs="akonadi_next icons calendarsupport calendarviews console incidenceeditor-ng kdgantt2 kleopatra kresources ksendemail libkdepim libkdepimdbusinterfaces libkleo libkpgp libksieve mailcommon messagecore messagecomposer messagecore messagelist messageviewer nepomuk_email_feeder ontologies plugins strigi-analyzer templateparser po"
 		for i in ${splitdirs} ; do
 			cd ${srcdir}/${pkgbase}-${pkgver}/${i}
-			sed -i -e "s~# Include the install script for each subdirectory.~~g" cmake_install.cmake
 			make DESTDIR=${pkgdir} install || return 1
 		done
 
