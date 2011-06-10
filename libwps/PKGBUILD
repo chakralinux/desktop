@@ -1,0 +1,30 @@
+#
+# Apps Packages for Chakra, part of chakra-project.org
+#
+
+pkgname=libwps
+pkgver=0.2.2
+pkgrel=1
+pkgdesc="a Microsoft Works file word processor format import filter library"
+arch=('i686' 'x86_64')
+url="http://libwps.sourceforge.net/"
+license=('LGPL')
+depends=('libwpd')
+options=(!libtool)
+source=("http://downloads.sourceforge.net/project/libwps/$pkgname/$pkgname-$pkgver/$pkgname-$pkgver.tar.bz2")
+md5sums=('29721a16f25967d59969d5f0ae485b4a')
+
+build() {
+	cd "$srcdir/$pkgname-$pkgver"
+	sed -i -e 's: -Wall -Werror -pedantic::' configure.in
+	touch NEWS AUTHORS ChangeLog
+	autoreconf -fi
+	./configure  --prefix=/usr
+	make
+}
+
+package() {
+	cd "$srcdir/$pkgname-$pkgver"
+	make DESTDIR="$pkgdir" install
+}
+
