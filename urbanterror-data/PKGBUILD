@@ -1,0 +1,36 @@
+#
+# Games Packages for Chakra, part of chakra-project.org
+#
+# Maintainer: Adrián Chaves Fernández (Gallaecio) <adriyetichaves gmail.com> 
+
+# include global config
+source ../_buildscripts/${current_repo}-${_arch}-cfg.conf
+
+pkgname=urbanterror-data
+_pkgname=urbanterror
+_pkgname2=UrbanTerror
+pkgver=4.1.1
+_pkgver=411
+pkgrel=1
+pkgdesc="A team-based tactical shooter based on the Quake 3 Engine (data files)."
+arch=('any')
+url="http://www.urbanterror.net"
+license=('custom:freeware')
+source=("http://www.iourt.com/files/${_pkgname2}${_pkgver}.zip")
+md5sums=('722c1fea9936593c9ef039bb068cc33b')
+
+package() {
+  install -d $pkgdir/usr/share/$_pkgname/q3ut4/demos
+
+  cd $pkgdir/usr/share/$_pkgname
+
+  for i in $srcdir/$_pkgname2/q3ut4/*.{cfg,pk3,txt}
+  do
+      mv "$i" q3ut4/
+      chmod 644 "q3ut4/$(basename "$i")"
+  done
+
+  install -m644 $srcdir/$_pkgname2/q3ut4/demos/tutorial.dm_68 q3ut4/demos/tutorial.dm_68
+
+  install -Dm644 $pkgdir/usr/share/$_pkgname/q3ut4/readme41.txt $pkgdir/usr/share/licenses/$pkgname/LICENSE
+}
