@@ -7,8 +7,8 @@
 source ../_buildscripts/${current_repo}-${_arch}-cfg.conf
 
 pkgname=lilypond
-pkgver=2.12.3
-pkgrel=2
+pkgver=2.14.0
+pkgrel=1
 pkgdesc="A music engraving program, devoted to producing the highest-quality sheet music possible."
 arch=('i686' 'x86_64')
 url="http://lilypond.org/"
@@ -24,17 +24,15 @@ optdepends=('netpbm: building HTML documentation'
             'rsync: installing HTML documentation')
 
 install=$pkgname.install
-source=(http://download.linuxaudio.org/${pkgname}/sources/v2.12/${pkgname}-${pkgver}.tar.gz
-	spacing-spanner-fix.patch)
-md5sums=('2303bf5f2ea8d4628f33a68f016f3866'
-	 'a8fb1950f4b4a13eb7e74660e0015756')
+source=(http://download.linuxaudio.org/${pkgname}/sources/v2.14/${pkgname}-${pkgver}.tar.gz)
+md5sums=('6c08f7246ce79934ec8a41ae7bea05d9')
 
 
 build() {
   cd "$srcdir/lilypond-$pkgver"
 
   # Applying patch to spacing-spanner.cc
-  patch -Np1 -i ${srcdir}/spacing-spanner-fix.patch
+  #patch -Np1 -i ${srcdir}/spacing-spanner-fix.patch
 
   # python2 fix
   for file in $(find . -name '*.py' -print); do
