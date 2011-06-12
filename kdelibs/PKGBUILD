@@ -7,23 +7,16 @@
 # include global config
 source ../_buildscripts/${current_repo}-${_arch}-cfg.conf
 
-
-
-# original name (used for the source and pkgnames)
-_origname=kdelibs
-
-
-
 #
 # package info
 #
-pkgbase=('kdelibs')
+pkgbase="kdelibs"
 pkgname=('kdelibs'
-         'kdelibs-doc')
+	 'kdelibs-doc')
 
 arch=('i686' 'x86_64')
 pkgver=${_kdever}
-pkgrel=1
+pkgrel=2
 
 pkgdesc="split package"
 url="http://www.kde.org"
@@ -31,56 +24,52 @@ license=('GPL' 'LGPL' 'FDL')
 
 options=('docs' '!splithdr' 'splitdbg' 'log')
 
-makedepends=("${_qtpkg}>=${_qtver}"
-	"kde-common>=${_kdever}"
-	"oxygen-icons>=${_kdever}"
+makedepends=("${_qtpkg}>=${_qtver}" "kde-common>=${_kdever}" "oxygen-icons>=${_kdever}"
 	'pkgconfig' 'cmake' 'automoc4' 'intltool' 'avahi' 'libgl' 'aspell' 'hspell' 'libxslt'
 	'shared-mime-info' 'upower' 'udisks' 'hal' 'xz>=5.0.0' 'enchant' 'jasper' 'openexr' 'giflib'
-	'strigi' 'libxtst' 'soprano>=2.5.63' 'ca-certificates' 'xdg-utils' 'qca' 'polkit-qt>=0.98.1'
+	'strigi' 'libxtst' 'soprano' 'ca-certificates' 'xdg-utils' 'qca' 'polkit-qt>=0.98.1'
 	'libxss' 'phonon' 'shared-desktop-ontologies>=0.5' 'attica>=0.2.0' 'heimdal' 'libxcursor'
-	'hicolor-icon-theme' 'docbook-xsl' 'docbook-xml' 'dbusmenu-qt-git' 'grantlee-git') # hal
+	'hicolor-icon-theme' 'docbook-xsl' 'docbook-xml' 'dbusmenu-qt-git' 'grantlee-git' 'bzip2>=1.0.6' 'libzip')
 
-replaces=('arts' "kdelibs-experimental")
+replaces=('arts' 'kdelibs-experimental')
 
-source=($_mirror/${_origname}-$_kdever.tar.bz2
+source=($_mirror/${pkgbase}-$_kdever.tar.bz2
 	01_chakra_tag.patch
 	02_kde_applications_menu.patch
 	03_chakra_menu.patch
-	04_add_arch_filetypes_to_kate_syntax_highlighting.patch
-	05_useragent-branding.patch)
+	04_add_arch_filetypes_to_kate_syntax_highlighting.patch)
 
-md5sums=(`grep ${_origname}-$_kdever.tar.bz2 ../kde-sc.md5 | cut -d" " -f1`
-         '40ba51f0c50ced94dfffe667ec856950'  # 01_kdemod_tag.patch
-         'e94450ba5430ea9c1e33bad9ae38ca2d'  # 02_kde_applications_menu.patch
-         '53b85403e4dd8f9146933c52ca23243e'  # 03_chakra_menu.patch
-         'b125c42a85f1b265b7aa31fb7950b690'  # 04_add_arch_filetypes_to_kate_syntax_highlighting.patch
-         '11635b2d2315c7ed6e7746f0d882efcf') # 05_useragent-branding.patch
+md5sums=(`grep ${pkgbase}-$_kdever.tar.bz2 ../kde-sc.md5 | cut -d" " -f1`
+         '40ba51f0c50ced94dfffe667ec856950'   # 01_chakra_tag.patch
+         'e94450ba5430ea9c1e33bad9ae38ca2d'   # 02_kde_applications_menu.patch
+         '53b85403e4dd8f9146933c52ca23243e'   # 03_chakra_menu.patch
+         'b125c42a85f1b265b7aa31fb7950b690')  # 04_add_arch_filetypes_to_kate_syntax_highlighting.patch
+
          
 #
 # build function
 #
 build()
 {
-	cd ${srcdir}/${_origname}-${pkgver}
+	cd ${srcdir}/${pkgbase}-${pkgver}
 
 	# main patches
 	msg "applying main patchset ..."
-	patch -Np1 -i ${srcdir}/01_chakra_tag.patch || return 1
-	patch -Np1 -i ${srcdir}/02_kde_applications_menu.patch || return 1
-	patch -Np1 -i ${srcdir}/03_chakra_menu.patch || return 1
-	patch -Np1 -i ${srcdir}/04_add_arch_filetypes_to_kate_syntax_highlighting.patch || return 1
-	patch -Np0 -i ${srcdir}/05_useragent-branding.patch || return 1
+	patch -Np1 -i ${srcdir}/01_chakra_tag.patch
+	patch -Np1 -i ${srcdir}/02_kde_applications_menu.patch
+	patch -Np1 -i ${srcdir}/03_chakra_menu.patch
+	patch -Np1 -i ${srcdir}/04_add_arch_filetypes_to_kate_syntax_highlighting.patch
 
 	# fixes
 	# msg "applying fixes ..."
-        
+   
 	cd ..
 
 	msg "starting build ..."
 	mkdir -p build
 	cd build
 
-	cmake ../${_origname}-${pkgver} \
+	cmake ../${pkgbase}-${pkgver} \
 		-DCMAKE_BUILD_TYPE=${_build_type} \
 		-DCMAKE_INSTALL_PREFIX=${_installprefix} \
 		-DSYSCONF_INSTALL_DIR=/etc \
@@ -92,36 +81,34 @@ build()
 		-DCMAKE_SKIP_RPATH=ON \
 		-DCMAKE_{SHARED,MODULE,EXE}_LINKER_FLAGS='-Wl,--no-undefined -Wl,--as-needed'
 
-	make VERBOSE=1 || return 1
+	make VERBOSE=1
 }
-
 
 package_kdelibs()
 {
 	pkgdesc="KDE Core Libraries"
 	depends=("${_qtpkg}>=${_qtver}" "kde-common>=${_kdever}" "oxygen-icons>=${_kdever}"
 		 'shared-mime-info' 'upower' 'udisks' 'xz>=5.0.0' 'enchant' 'jasper' 'openexr' 'giflib'
-		 'strigi' 'libxtst' 'soprano>=2.5.63' 'ca-certificates' 'xdg-utils' 'qca' 'polkit-qt>=0.98.1'
+		 'strigi' 'libxtst' 'soprano' 'ca-certificates' 'xdg-utils' 'qca' 'polkit-qt>=0.98.1'
 		 'libxss' 'phonon' 'shared-desktop-ontologies>=0.5' 'attica>=0.2.0' 'heimdal' 'libxcursor'
-		 'hicolor-icon-theme' 'dbusmenu-qt-git' 'grantlee-git') #hal
+		 'hicolor-icon-theme' 'dbusmenu-qt-git' 'grantlee-git')
 
-	optdepends=('phonon-xine      : Xine Phonon backend (default)' 
-		    'phonon-gstreamer : GStreamer Phonon backend'
+	optdepends=('phonon-gstreamer : GStreamer Phonon backend (default)'
+		    'phonon-xine      : Xine Phonon backend'
 		    'phonon-mplayer   : MPlayer Phonon backend'
 		    'phonon-vlc       : VLC Phonon backend'
 		    'avahi            : Service discovery on your local network'
 		    'aspell           : Spell checking'
 		    'hspell           : Hebrew spell checking')
 
-	provides=("${_origname}=${_kdever}")
-	conflicts=("kdemod-${_origname}")
+	provides=("${pkgbase}=${_kdever}")
 	replaces=('kdelibs-experimental')
-	groups=("kde" "kde-minimal" "kde-complete" "kde-uninstall")
-	install=${_origname}.install
+	groups=("kde" "kde-minimal" "kde-uninstall")
+	install=${pkgbase}.install
 
 	cd ${srcdir}/build
 
-	make DESTDIR=${pkgdir} install || return 1
+	make DESTDIR=${pkgdir} install
 
 	# link cert bundle to the one from ca-certificates
 	rm -f ${pkgdir}/usr/share/apps/kssl/ca-bundle.crt
@@ -136,10 +123,10 @@ package_kdelibs()
 	if [ "$?" = "0" ]; then
 		warning "incuding patches into package"
 		rm -rf ${startdir}/*experimental*.patch
-		mkdir -p ${pkgdir}/usr/share/chakra/patches/${_origname} &>/dev/null
+		mkdir -p ${pkgdir}/usr/share/chakra/patches/${pkgbase} &>/dev/null
 		for i in ${startdir}/*.patch; do
 			msg "$i"
-			cp $i ${pkgdir}/usr/share/chakra/patches/${_origname}/ &>/dev/null
+			cp $i ${pkgdir}/usr/share/chakra/patches/${pkgbase}/ &>/dev/null
 		done
 	else
 		warning "no patches found, skipping to include them into the package..."
@@ -149,12 +136,9 @@ package_kdelibs()
 package_kdelibs-doc()
 {
 	pkgdesc="KDE Core Libraries - Documentation"
-	depends=("${_origname}>=${_kdever}")
-	groups=("kde-complete" "kde-doc" "kde-uninstall")
+	groups=("kde" "kde-doc" "kde-uninstall")
 
 	mkdir -p ${pkgdir}/usr/share
 	mv ${srcdir}/doc ${pkgdir}/usr/share
 	mv ${srcdir}/man ${pkgdir}/usr/share
 }
-
-
