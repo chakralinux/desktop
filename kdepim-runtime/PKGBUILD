@@ -16,7 +16,7 @@ arch=('i686' 'x86_64')
 
 #pkgver=${_kdever}
 pkgver=4.6.0
-pkgrel=1
+pkgrel=2
 
 pkgdesc="KDE Pim Runtime"
 url="http://www.kde.org"
@@ -27,8 +27,10 @@ depends=("kdepimlibs>=${_kdever}" "kdebase-runtime" "kdelibs>=${_kdever}")
 makedepends=('pkgconfig' 'cmake' 'automoc4')
 groups=("kde" "kdepim" "kde-uninstall" "kde-minimal")
 
-source=($_mirror/${pkgbase}-$pkgver.tar.bz2)
-md5sums=('b7b5409cb22d57bd817a6d653f714bd7')
+source=($_mirror/${pkgbase}-$pkgver.tar.bz2
+        disable-l10n.patch)
+md5sums=('b7b5409cb22d57bd817a6d653f714bd7'
+         '46dbfb8cdd364e6434f7dc499105bdfb')
 
 #
 # build and install
@@ -39,6 +41,7 @@ build()
 	cd ${srcdir}
 	mkdir -p build
 	cd build
+	patch -p1 -i "${srcdir}"/disable-l10n.patch
 
 	cmake ../${pkgbase}-${pkgver} \
 		-DCMAKE_BUILD_TYPE=${_build_type} \
