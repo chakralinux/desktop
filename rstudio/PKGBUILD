@@ -1,0 +1,51 @@
+#
+# Apps Packages for Chakra, part of chakra-project.org
+#
+# maintainer (i686): Phil Miller <philm[at]chakra-project[dog]org>
+# maintainer (x86_64): Manuel Tortosa <manutortosa[at]chakra-project[dot]org>
+
+pkgname=rstudio
+_altname=rstudio-rstudio
+_numb=a250b30
+pkgver=0.94.82
+pkgrel=0
+pkgdesc="A new integrated development environment (IDE) for R - The Desktop Client"
+arch=('i686' 'x86_64')
+url="http://www.rstudio.org/"
+license=('AGPL')
+depends=('qt' 'r' 'java-environment')
+makedepends=('apache-ant' 'git' 'cmake' 'boost' 'unzip' 'openssl' 'pam' 'bzip2' 'icu')
+source=(https://github.com/rstudio/rstudio/tarball/v${pkgver})
+provides=('rstudio-desktop')
+md5sums=('43754f89fe079700c5d3a181968133e3')
+
+build() {
+  cd "${srcdir}/${_altname}-${_numb}"
+  source /etc/profile.d/apache-ant.sh
+ #Checking for ANT and java can be found
+ which ant > /dev/null
+ which java > /dev/null
+
+ # install qt sdk
+ # msg "Downloading and installing Qt SDK"
+ # cd "${srcdir}/${_altname}-${_numb}/dependencies/linux"
+ # ./install-qt-sdk
+
+  # Install gwt
+  msg "Downloading and installing gwt"
+  cd "${srcdir}/${_altname}-${_numb}/dependencies/common"
+  ./install-gwt
+
+  # Configure and build
+  msg "Configuring the makefile with cmake"
+  mkdir "${srcdir}/${_altname}-${_numb}/build"
+  cd "${srcdir}/${_altname}-${_numb}/build"
+  unset LDFLAGS
+  cmake -DRSTUDIO_TARGET=Desktop -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=/usr/local/lib/rstudio ..
+}
+
+package() {
+  msg "Starting make..."
+  cd "${srcdir}/${_altname}-${_numb}/build"
+  make DESTDIR="$pkgdir/" install
+}
