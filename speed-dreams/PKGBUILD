@@ -3,23 +3,18 @@
 #
 # Maintainer: Adrián Chaves Fernández (Gallaecio) <adriyetichaves gmail.com>
 
-# include global config
-source ../_buildscripts/${current_repo}-${_arch}-cfg.conf
-
 pkgname=speed-dreams
 pkgver=1.4.0
 _pkgver=1.4.0-r2307
-pkgrel=3
+pkgrel=4
 pkgdesc="A racing simulatir with rich graphics and physics."
 arch=('i686' 'x86_64')
 url="http://speed-dreams.sourceforge.net/"
 license=('GPL2')
 depends=('enet' 'freealut' 'freeglut' 'libpng' 'libxi' 'libxmu' 'libxrandr'
 'plib>=1.8.3' 'libjpeg' 'speed-dreams-data' 'zlib')
-source=("http://sourceforge.net/projects/$pkgname/files/$pkgver/$pkgname-$_pkgver-src.tar.bz2/download"
-	"$pkgname.sh")
-md5sums=('92c324c2c47a598dea9278d9a66c5b78'
-         'f0f5040a3746084d9967e055afa35f32')
+source=("http://sourceforge.net/projects/$pkgname/files/$pkgver/$pkgname-$_pkgver-src.tar.bz2/download")
+md5sums=('92c324c2c47a598dea9278d9a66c5b78')
 
 build() {
   cd $srcdir/$pkgname-$pkgver-src
@@ -27,7 +22,7 @@ build() {
   unset LDFLAGS MAKEFLAGS
 
   ./configure \
-    --prefix=/opt/$_pkgname \
+    --prefix=/usr/share/$pkgname \
     --x-includes=/usr/include \
     --x-libraries=/usr/lib 
   
@@ -36,11 +31,17 @@ build() {
 
 package() {
   cd $srcdir/$pkgname-$pkgver-src
+
   make DESTDIR=$pkgdir/ install datainstall
 
   install -D -m644 icon.png $pkgdir/usr/share/pixmaps/$pkgname.png
-  install -D -m755 ../$pkgname.sh $pkgdir/bin/$pkgname
 
+  mkdir -p $pkgdir/usr/bin
+  echo "#!/bin/bash"			>  $pkgdir/usr/bin/$pkgname
+  echo "cd /usr/share/$pkgname/bin"	>> $pkgdir/usr/bin/$pkgname
+  echo "./$pkgname"			>> $pkgdir/usr/bin/$pkgname
+  chmod +x $pkgdir/usr/bin/$pkgname
+
+  rm -r $pkgdir/usr/share/$pkgname/share
   find $pkgdir/ -type d -exec chmod 755 {} \;
-  rm -r $pkgdir/opt/share
 }

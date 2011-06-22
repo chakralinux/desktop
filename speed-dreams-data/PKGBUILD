@@ -3,14 +3,11 @@
 #
 # Maintainer: Adrián Chaves Fernández (Gallaecio) <adriyetichaves gmail.com>
 
-# include global config
-source ../_buildscripts/${current_repo}-${_arch}-cfg.conf
-
 pkgname=speed-dreams-data
 _pkgname=speed-dreams
 pkgver=1.4.0
 _pkgver=1.4.0-r2307 # For managing files and directories
-pkgrel=1
+pkgrel=2
 pkgdesc="A racing simulator with rich graphics and physics (data files)."
 arch=('any')
 url="http://speed-dreams.sourceforge.net/"
@@ -27,7 +24,7 @@ build() {
   unset LDFLAGS MAKEFLAGS
 
   ./configure \
-    --prefix=/opt/$_pkgname \
+    --prefix=/usr/share/$_pkgname \
     --x-includes=/usr/include \
     --x-libraries=/usr/lib 
   
@@ -39,7 +36,7 @@ package() {
   
   make DESTDIR=$pkgdir/ install datainstall
 
+  rm -r $pkgdir/usr/share/$_pkgname/bin
+  rm -r $pkgdir/usr/share/$_pkgname/lib
   find $pkgdir/ -type d -exec chmod 755 {} \;
-  rm -r $pkgdir/opt/speed-dreams/bin
-  rm -r $pkgdir/opt/speed-dreams/lib
 }
