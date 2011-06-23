@@ -1,0 +1,35 @@
+#
+# Apps Packages for Chakra, part of chakra-project.org
+#
+# Maintainer: Adrián Chaves Fernández (Gallaecio) <adriyetichaves gmail.com>
+
+pkgname=partclone
+pkgver=0.2.16
+pkgrel=2
+pkgdesc="Backup and restore a partition for numerous file-systems types."
+arch=('i686' 'x86_64')
+url="http://partclone.org/"
+license=('GPL2')
+depends=('e2fsprogs' 'progsreiserfs' 'ntfs-3g' 'ncurses')
+makedepends=('ncurses')
+changelog=ChangeLog
+source=("http://downloads.sourceforge.net/project/$pkgname/stable/$pkgver/$pkgname-$pkgver.tar.gz")
+md5sums=('e9259b13837013c3e4ec10a8b05f01b3')
+md5sums=('b28059c89ff11e2b3a3afa45da51a738')
+
+build() {
+  cd $srcdir/$pkgname-$pkgver
+  ./configure \
+    --prefix=/usr \
+    --enable-extfs \
+    --enable-reiserfs \
+    --enable-hfsp \
+    --enable-fat \
+    --enable-ncursesw
+  make
+}
+
+package() {
+  cd $srcdir/$pkgname-$pkgver
+  make DESTDIR=$pkgdir install
+}
