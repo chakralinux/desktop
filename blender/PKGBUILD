@@ -8,36 +8,25 @@
 source ../_buildscripts/${current_repo}-${_arch}-cfg.conf
 
 pkgname=blender
-pkgver=2.57
+pkgver=2.58
 pkgrel=1
 pkgdesc="A fully integrated 3D graphics creation suite"
 arch=('i686' 'x86_64')
 license=('GPL')
 url="http://www.blender.org"
-depends=('libjpeg' 'libpng' 'openjpeg' 'libtiff' 'openexr' 'sdl' 'python3' 'desktop-file-utils' 'shared-mime-info' 'hicolor-icon-theme' 'xdg-utils' 'gettext' 'libxi' 'libxmu' 'mesa' 'freetype2' 'openal' 'libsndfile' 'libsamplerate' 'ffmpeg')
-makedepends=('cmake' 'cvs')
+depends=('libpng' 'libtiff' 'openexr' 'sdl' 'python3' 'desktop-file-utils' 'shared-mime-info' 'hicolor-icon-theme' 'xdg-utils' 'glew' 'libxi' 'libxmu' 'mesa' 'freetype2' 'openal' 'libsndfile' 'libsamplerate' 'ffmpeg')
+makedepends=('cmake')
 install=blender.install
-if [ ! $_cvs -o $_cvs = false ]; then
-  makedepends=('cmake')
-  source=(http://download.blender.org/source/$pkgname-$pkgver.tar.gz)
-  md5sums=('e6cb5523323a71c070051e6fe6efe497')
-fi
+source=(http://download.blender.org/source/$pkgname-$pkgver.tgz)
+md5sums=('04a0d43ff27aa0abf14ca559f6a6bf67')
 
 build() {
-  if [ $_cvs = true ]; then
-    cd "$srcdir/"
-    #cvs -d:pserver:anonymous@cvs.blender.org:/cvsroot/bf-blender login
-    cvs -z3 -d:pserver:anonymous@cvs.blender.org:/cvsroot/bf-blender checkout $pkgname
-    _cvsrel=$pkgname-$(echo $pkgver | sed 's/\./-/')-release
-    cvs -d:pserver:anonymous@cvs.blender.org:/cvsroot/bf-blender update -r $_cvsrel
-    find $pkgname/{bin,release/scripts} -name 'CVS' -exec rm -rf {} \; 2> /dev/null
-    cd $pkgname
-  else
-    cd "$srcdir/$pkgname-$pkgver"
-  fi
-
+  cd "$srcdir/$pkgname-$pkgver"
+  
   mkdir build
   cd build
+
+ [[ $CARCH == i686 ]] && ENABLESSE2="-DSUPPORT_SSE2_BUILD:BOOL=OFF"
 
   cmake .. \
     -DCMAKE_INSTALL_PREFIX:PATH=/usr \
@@ -47,30 +36,32 @@ build() {
     -DWITH_OPENCOLLADA:BOOL=OFF \
     -DWITH_GAMEENGINE:BOOL=ON \
     -DWITH_PLAYER:BOOL=ON \
+    -DWITH_BUILTIN_GLEW:BOOL=OFF \
+    -DWITH_CODEC_FFMPEG:BOOL=ON \
     -DPYTHON_VERSION:STRING=3.2 \
     -DPYTHON_LIBPATH:STRING=/usr/lib \
     -DPYTHON_LIBRARY:STRING=python3.2mu \
-    -DPYTHON_INCLUDE_DIRS:STRING=/usr/include/python3.2mu
+    -DPYTHON_INCLUDE_DIRS:STRING=/usr/include/python3.2mu \
+    $ENABLESSE2
 
   make $MAKEFLAGS
+
+  cp -rf "$srcdir"/${pkgname}-$pkgver/release/plugins/* \
+    "$srcdir"/${pkgname}-$pkgver/source/blender/blenpluginapi/
+  cd "$srcdir"/${pkgname}-$pkgver/source/blender/blenpluginapi
+  chmod 755 bmake
+  make
 }
 
 package() {
-  if [ $_cvs = true ]; then
-    cd "$srcdir/$pkgname"
-  else
-    cd "$srcdir/$pkgname-$pkgver"
-  fi
-
-  cd build
+  cd "$srcdir/$pkgname-$pkgver/build"
   make DESTDIR="${pkgdir}" install
-  python -m compileall "${pkgdir}/usr/share/blender"
+  python3 -m compileall "${pkgdir}/usr/share/blender"
 
-  for i in 128 16 192 22 32 48 64 96 ; do
-    install -D -m644 ../release/freedesktop/icons/${i}x${i}/blender.png \
-      "${pkgdir}/usr/share/icons/hicolor/${i}x${i}/apps/blender.png"
-  done
-
-  install -D -m644 ../release/freedesktop/icons/scalable/blender.svg \
-    "${pkgdir}/usr/share/icons/hicolor/scalable/apps/blender.svg"
+# install plugins
+  install -d -m755 "$pkgdir"/usr/share/blender/${pkgver%[a-z]}/plugins/{sequence,texture}
+  cp "$srcdir"/${pkgname}-$pkgver/source/blender/blenpluginapi/sequence/*.so \
+    "$pkgdir"/usr/share/blender/${pkgver%[a-z]}/plugins/sequence/
+  cp "$srcdir"/${pkgname}-$pkgver/source/blender/blenpluginapi/texture/*.so \
+    "$pkgdir"/usr/share/blender/${pkgver%[a-z]}/plugins/texture/
 }
