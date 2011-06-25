@@ -1,0 +1,58 @@
+#
+# Apps Packages for Chakra, part of chakra-project.org
+#
+# Maintainer: Adrián Chaves Fernández (Gallaecio) <adriyetichaves gmail.com>
+
+pkgname=coin
+_pkgname=Coin
+pkgver=3.1.3
+pkgrel=1
+pkgdesc='Coin3D is a high-level 3D graphics toolkit on top of OpenGL.'
+url='http://www.coin3d.org/'
+license=('GPL')
+arch=('i686' 'x86_64')
+depends=('mesa' 'expat')
+makedepends=('doxygen')
+optdepends=('openal: sound/dynamic linking support'
+            'fontconfig: dynamic linking support'
+            'zlib: dynamic linking support'
+            'freetype2: dynamic linking support'
+            'spidermonkey: dynamic linking support')
+options=('!libtool')
+changelog=ChangeLog
+source=("http://ftp.coin3d.org/coin/src/all/$_pkgname-$pkgver.tar.gz")
+md5sums=('1538682f8d92cdf03e845c786879fbea')
+
+build() {
+  cd $_pkgname-$pkgver
+
+  ./configure \
+    --prefix=/usr \
+    --mandir=/usr/share/man \
+    --enable-optimization \
+    --enable-3ds-import \
+    --enable-javascript-api \
+    --enable-threadsafe \
+    --enable-exceptions \
+    --enable-man \
+    --with-mesa \
+    --disable-debug \
+    --enable-shared \
+    --disable-maintainer-mode \
+    --disable-dependency-tracking \
+    --enable-system-expat
+
+  make
+}
+
+package() {
+  cd $_pkgname-$pkgver
+
+  make DESTDIR=$pkgdir install
+
+  # Final adjustments.
+  for _FILE in threads deprecated
+  do
+    mv  $pkgdir/usr/share/man/man3/$_FILE.3 $pkgdir/usr/share/man/man3/$pkgname-$_FILE.3
+  done
+}

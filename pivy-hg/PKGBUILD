@@ -1,0 +1,29 @@
+#
+# Apps Packages for Chakra, part of chakra-project.org
+#
+# Maintainer: Adrián Chaves Fernández (Gallaecio) <adriyetichaves gmail.com>
+
+pkgname=pivy-hg
+pkgver=20101207
+pkgrel=1
+pkgdesc="Coin binding for Python."
+arch=('i686' 'x86_64')
+url="http://pivy.coin3d.org"
+license=('BSD')
+depends=('python2' 'soqt')
+makedepends=('swig')
+provides=('pivy')
+conflicts=('pivy')
+_pivyrev=8eab90908f2a
+changelog=ChangeLog
+source=("http://hg.sim.no/Pivy/default/archive/$_pivyrev.tar.bz2")
+md5sums=('38bd55d54f74defe651337ac67bdb30f')
+
+package() {
+  cd $srcdir/default-$_pivyrev
+
+  python2 setup.py install \
+    --root=$pkgdir
+
+  install -Dm644 LICENSE $pkgdir/usr/share/licenses/$pkgname/LICENSE
+}

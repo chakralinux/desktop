@@ -1,0 +1,43 @@
+#
+# Apps Packages for Chakra, part of chakra-project.org
+#
+# Maintainer: Adrián Chaves Fernández (Gallaecio) <adriyetichaves gmail.com>
+
+pkgname=soqt
+_pkgname=SoQt
+pkgver=1.5.0
+pkgrel=1
+pkgdesc='SoQt is a library which provides the glue between Coin and Qt.'
+arch=('i686' 'x86_64')
+url='http://www.coin3d.org/lib/soqt/'
+license=('GPL')
+depends=('coin' 'qt')
+makedepends=('doxygen')
+options=('!libtool')
+changelog=ChangeLog
+source=("http://ftp.coin3d.org/coin/src/all/$_pkgname-$pkgver.tar.gz")
+md5sums=('9f1e582373d66f556b1db113a93ac68e')
+
+build() {
+  cd $_pkgname-$pkgver
+
+  ./configure \
+    --prefix=/usr \
+    --enable-optimization \
+    --enable-man \
+    --enable-exceptions \
+    --disable-debug \
+    --disable-maintainer-mode \
+    --disable-dependency-tracking \
+    --enable-shared \
+    --disable-static \
+    --with-qt=/usr
+
+  make
+}
+
+package() {
+  cd $_pkgname-$pkgver
+
+  make DESTDIR=$pkgdir install
+}
