@@ -5,20 +5,23 @@
 # maintainer (x86_64): Manuel Tortosa <manutortosa[at]chakra-project[dot]org>
 
 pkgname=synaptiks
-pkgver=0.6.2
+pkgver=0.7.0
 pkgrel=1
 pkgdesc="A touchpad tool for KDE."
 arch=('i686' 'x86_64')
 url="http://synaptiks.lunaryorn.de/"
 license=('BSD')
-depends=('xf86-input-synaptics' 'libxi>=1.3' 'pyqt' 'kdebindings-python>=4.5' 'python-udev' 'kdesdk-scripts' 'python-distribute')
-makedepends=('gettext' 'docbook-xsl')
-source=(http://pypi.python.org/packages/source/s/synaptiks/$pkgname-$pkgver.tar.bz2)
-md5sums=('e893a155bf8ca0bdbdbcd11061bafae8')
+depends=('kdebindings-python' 'kdebase-workspace'
+  'xf86-input-synaptics' 'python-udev>=0.8' 'dbus-python')
+makedepends=('python-distribute' 'kdesdk-scripts' 'gettext' 'docbook-xsl')
+source=(http://pypi.python.org/packages/source/s/${pkgname}/${pkgname}-${pkgver}.tar.bz2)
+md5sums=('16925f2df9d8422fb406898f36faaca6')
+install=(synaptiks.install)
 
 build() {
-  cd $srcdir/$pkgname-$pkgver
-
-  python2 setup.py install --single-version-externally-managed  --prefix=/usr --root=$pkgdir
+ cd "${srcdir}/${pkgname}-${pkgver}"
+ python2 setup.py install --root "${pkgdir}"
+ install -m755 -d "$pkgdir/usr/share/licenses/synaptiks/"
+ install -m644 COPYING "$pkgdir/usr/share/licenses/synaptiks"
 }
 
