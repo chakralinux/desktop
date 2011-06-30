@@ -1,7 +1,7 @@
 pkgname=clementine
 
 post_install() {
-  gtk-update-icon-cache -t -f usr/share/icons/hicolor
+  xdg-icon-resource forceupdate --theme hicolor &> /dev/null
 }
 
 post_upgrade() {
@@ -10,5 +10,5 @@ post_upgrade() {
 
 
 post_remove() {
-  gtk-update-icon-cache -t -f usr/share/icons/hicolor
+  post_install $1
 }
