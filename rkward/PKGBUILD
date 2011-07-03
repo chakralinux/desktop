@@ -10,31 +10,30 @@
 source ../_buildscripts/${current_repo}-${_arch}-cfg.conf
 
 pkgname=rkward
-pkgver=0.5.4
+pkgver=0.5.6
 pkgrel=2
 pkgdesc="Easy to use transparent frontend to R for KDE4"
 arch=('i686' 'x86_64')
 url="http://rkward.sourceforge.net/"
 license=('GPL')
-depends=('kdelibs>=4.0.0' 'qt>=4.3' 'r>=2.8.0' 'docbook-xml')
-makedepends=('cmake' 'automoc4')
-conflicts=('kdemod-rkward<0.5.0')
+depends=('kdelibs' 'qt' 'r' 'docbook-xsl')
+makedepends=('cmake' 'automoc4' 'icu')
 source=(http://downloads.sourceforge.net/sourceforge/${pkgname}/${pkgname}-${pkgver}.tar.gz)
-	md5sums=('417377f8ea4623c050b46a0dc5cec88d')
+	md5sums=('58ce297310c73ee9c617360a975f0752')
 	 
 build() {
 	cd "${srcdir}/${pkgname}-${pkgver}"
-	cmake -DCMAKE_INSTALL_PREFIX="${pkgdir}/usr"
+	# Dir for rkward R package
+	mkdir -p "${pkgdir}/usr/lib/R/library"
+	cmake -DCMAKE_INSTALL_PREFIX="/usr" -DR_LIBDIR="/usr/lib/R/library"
 	make 
 }
 
 package(){
 	cd "${srcdir}/${pkgname}-${pkgver}"
-	make install
+	make install DESTDIR="${pkgdir}"
 
-	# Install the rkward R package to installation directory
-	mkdir -p "${pkgdir}/usr/lib/R/library"
-	R CMD INSTALL -l "${pkgdir}/usr/lib/R/library" "${srcdir}/${pkgname}-${pkgver}/${pkgname}/rbackend/rpackages/${pkgname}"
+	# Some cleanup
 	rm -vf "${pkgdir}/usr/lib/R/library/R.css"
 	rm -vf "${pkgdir}/usr/share/apps/katepart/syntax/r.xml"
 }
