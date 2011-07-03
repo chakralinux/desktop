@@ -1,0 +1,54 @@
+#
+# Apps Packages for Chakra, part of chakra-project.org
+#
+# Maintainer: Daniele Cocca <jmc@chakra-project.org>
+#
+
+# include global config
+source ../_buildscripts/${current_repo}-${_arch}-cfg.conf
+
+pkgname=python-sipsimple
+pkgver=20110702
+pkgrel=1
+pkgdesc="SIP SIMPLE Client SDK is a Software Development Kit for easy development of SIP end-points that support rich media like Audio, Instant Messaging, File Transfers, Desktop Sharing and Presence."
+arch=('i686' 'x86_64')
+license=('LGPL')
+depends=('python2' 'openssl' 'gnutls>=2.4.1' 'libxml2>=2.6.32' 'libxslt>=1.1.24' 'python-gnutls>=1.1.9' 'python-application>=1.2.5' 'python-lxml>=2.1.2' 'python-eventlet>=0.8.11' 'python-cjson>=1.0.5' 'python-cython>=0.12.1' 'python-dnspython>=1.6.0' 'twisted>=8.1.0' 'zope-interface>=3.3.1' 'python-imaging>=1.1.6' 'python-dateutil>=1.4' 'python-msrplib' 'python-xcaplib')
+makedepends=('setuptools>=0.6c9' 'subversion' 'darcs')
+optdepends=('python-sipclients: command line programs to test the SIP SIMPLE Client library')
+url="http://sipsimpleclient.com/"
+source=('fix-verbose-compilation-and-retry-compiling.patch')
+md5sums=('670e7176886b4eb42d7ad931961834f6')
+
+_darcstrunk="http://devel.ag-projects.com/repositories"
+_darcsmod="python-sipsimple"
+
+build() {
+  msg "Starting Darcs pull..."
+  cd "${srcdir}"
+  if [ -d "${_darcsmod}/_darcs" ]; then
+    (cd "${_darcsmod}" && darcs pull -a)
+  else
+    darcs get "${_darcstrunk}/${_darcsmod}" "${_darcsmod}"
+  fi
+  msg "Darcs pull done (or server timeout)."
+
+  cd "${srcdir}/${_darcsmod}"
+  #
+  # Enable a verbose build of PJSIP.
+  #
+  patch -Np0 -i "${srcdir}/fix-verbose-compilation-and-retry-compiling.patch"
+  python2 setup.py build_ext --pjsip-clean-compile --pjsip-disable-assertions
+}
+
+package() {
+  cd "${srcdir}/${_darcsmod}"
+  python2 setup.py install --prefix=/usr --root="${pkgdir}"
+
+  #
+  # Fix an incorrect module name.
+  #
+  sed -i 's/backports.weakref/weakref/g' "${pkgdir}/usr/lib/python2.7/site-packages/sipsimple/configuration/__init__.py"
+}
+
+# vim:set ts=2 sw=2 et:

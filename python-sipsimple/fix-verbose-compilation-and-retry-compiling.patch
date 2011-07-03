@@ -1,0 +1,34 @@
+--- setup_pjsip.py	2011-05-11 20:19:56.581641264 +0000
++++ setup_pjsip_patched.py	2011-05-11 20:39:57.993622405 +0000
+@@ -154,7 +154,7 @@
+         self.svn_dir = os.path.join(self.pjsip_build_dir or self.build_temp, "pjsip")
+         if not os.path.exists(self.svn_dir):
+             log.info("Fetching PJSIP from SVN repository")
+-            distutils_exec_process(["svn", "co", "-r", self.pjsip_svn_revision, self.pjsip_svn_repo, self.svn_dir], True, input='t'+os.linesep)
++            distutils_exec_process(["svn", "co", "-r", self.pjsip_svn_revision, self.pjsip_svn_repo, self.svn_dir], False, input='t'+os.linesep)
+             new_svn_rev = get_svn_revision(self.svn_dir)
+             svn_updated = True
+         else:
+@@ -246,7 +246,7 @@
+             env['LDFLAGS'] = "-Lc:/openssl/lib/MinGW"
+             distutils_exec_process(["bash", "configure"], True, cwd=self.svn_dir, env=env)
+         else:
+-            distutils_exec_process(["./configure"], True, cwd=self.svn_dir, env=env)
++            distutils_exec_process(["./configure"], False, cwd=self.svn_dir, env=env)
+         if "#define PJSIP_HAS_TLS_TRANSPORT 1\n" not in open(os.path.join(self.svn_dir, "pjsip", "include", "pjsip", "sip_autoconf.h")).readlines():
+             os.remove(os.path.join(self.svn_dir, "build.mak"))
+             raise DistutilsError("PJSIP TLS support was disabled, OpenSSL development files probably not present on this system")
+@@ -284,7 +284,12 @@
+ 
+     def compile_pjsip(self):
+         log.info("Compiling PJSIP")
+-        distutils_exec_process([get_make_cmd()], True, cwd=self.svn_dir)
++        compiling_ok = False
++        while not compiling_ok:
++                try:
++                        distutils_exec_process([get_make_cmd()], False, cwd=self.svn_dir)
++                        compiling_ok = True
++                except: pass
+ 
+     def cython_sources(self, sources, extension):
+         if extension.name == "sipsimple.core._core":

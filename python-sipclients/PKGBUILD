@@ -1,0 +1,39 @@
+#
+# Apps Packages for Chakra, part of chakra-project.org
+#
+# Maintainer: Daniele Cocca <jmc@chakra-project.org>
+#
+
+# include global config
+source ../_buildscripts/${current_repo}-${_arch}-cfg.conf
+
+pkgname=python-sipclients
+pkgver=20110702
+pkgrel=1
+pkgdesc="Clients used to test the SIP SIMPLE Client library."
+arch=('any')
+url="http://sipsimpleclient.com/"
+license=('LGPL')
+depends=('python-sipsimple')
+makedepends=('darcs')
+
+_darcstrunk="http://devel.ag-projects.com/repositories"
+_darcsmod="sipclients"
+
+build() {
+  msg "Starting Darcs pull..."
+  cd "${srcdir}"
+  if [ -d "${_darcsmod}/_darcs" ]; then
+    (cd "${_darcsmod}" && darcs pull -a)
+  else
+    darcs get "${_darcstrunk}/${_darcsmod}" "${_darcsmod}"
+  fi
+  msg "Darcs pull done (or server timeout)."
+}
+
+package() {
+  cd "${srcdir}/${_darcsmod}"
+  python2 setup.py install --prefix=/usr --root="${pkgdir}" || return 1
+}
+
+# vim:set ts=2 sw=2 et:

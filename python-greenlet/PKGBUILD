@@ -1,0 +1,27 @@
+#
+# Apps Packages for Chakra, part of chakra-project.org
+#
+# Maintainer: Daniele Cocca <jmc@chakra-project.org>
+#
+
+# include global config
+source ../_buildscripts/${current_repo}-${_arch}-cfg.conf
+
+pkgname=python-greenlet
+pkgver=0.4.1
+pkgrel=1
+pkgdesc="The greenlet package is a spin-off of Stackless, a version of CPython that supports micro-threads called \"tasklets\"."
+arch=('i686' 'x86_64')
+license=('LGPL')
+depends=('python2')
+makedepends=('setuptools')
+url="http://bitbucket.org/ambroff/greenlet"
+source=("http://download.ag-projects.com/SipClient/${pkgname}-${pkgver}.tar.gz")
+md5sums=('06038bf679b534dd820ef7b02c657152')
+
+package() {
+  cd "${srcdir}/${pkgname}-${pkgver}"
+  python2 setup.py install --prefix=/usr --root="${pkgdir}" || return 1
+}
+
+# vim:set ts=2 sw=2 et:
