@@ -31,7 +31,7 @@ pkgname=('kdepim-common'
 arch=('i686' 'x86_64')
 #pkgver=${_kdever}
 pkgver=4.6.0
-pkgrel=1
+pkgrel=2
 pkgdesc="split package"
 url="http://www.kde.org"
 license=('GPL' 'LGPL' 'FDL')
@@ -59,18 +59,6 @@ build()
 		-DCMAKE_{SHARED,MODULE,EXE}_LINKER_FLAGS='-Wl,--no-undefined -Wl,--as-needed'
 
 	make || return 1
-
-	# Fix translations
-	msg "Fixing translations..."
-	for i in ${srcdir}/${pkgbase}-${pkgver}/po/* ; do
-		if [ -d "$i" ] && [ "$(echo "$i" | grep "CMake")" == "" ] ; then 
-			cd $i
-			for po in ${i}/*.po ; do
-				msgfmt -o $(echo ${po/.po/.mo}) $po	
-			done
-		fi
-	done
-
 }
 
 
@@ -85,7 +73,7 @@ package_kdepim-common()
 	groups=("kde" "kdepim" "kde" "kde-uninstall")
 	install=${pkgbase}.install
 
-	splitdirs="akonadi_next icons calendarsupport calendarviews console incidenceeditor-ng kdgantt2 kleopatra kresources ksendemail libkdepim libkdepimdbusinterfaces libkleo libkpgp libksieve mailcommon messagecore messagecomposer messagecore messagelist messageviewer nepomuk_email_feeder ontologies plugins strigi-analyzer templateparser po"
+	splitdirs="akonadi_next icons calendarsupport calendarviews console incidenceeditor-ng kdgantt2 kleopatra kresources ksendemail libkdepim libkdepimdbusinterfaces libkleo libkpgp libksieve mailcommon messagecore messagecomposer messagecore messagelist messageviewer nepomuk_email_feeder ontologies plugins strigi-analyzer templateparser"
 		for i in ${splitdirs} ; do
 			cd ${srcdir}/${pkgbase}-${pkgver}/${i}
 			make DESTDIR=${pkgdir} install || return 1
