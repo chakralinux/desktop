@@ -7,7 +7,7 @@
 source ../_buildscripts/${current_repo}-${_arch}-cfg.conf
 
 pkgname=kchildlock
-pkgver=0.90.2
+pkgver=0.90.3
 pkgrel=1
 pkgdesc="Computer usage time monitor and administrator, focused on parental control."
 url="http://sourceforge.net/projects/kchildlock"
@@ -15,17 +15,11 @@ license=('GPL2')
 arch=('i686' 'x86_64')
 depends=('kdebase-runtime')
 makedepends=('automoc4' 'cmake' 'docbook-xsl')
-source=(http://downloads.sourceforge.net/$pkgname/$pkgname-$pkgver.tar.gz
-	docbook-version-fix.diff)
-md5sums=('138d81468ee905e9705e2ef46287fa6c'
-         '68fe7edb62e9f56cd6b00dfa539122b4')
+source=(http://downloads.sourceforge.net/$pkgname/$pkgname-$pkgver.tar.gz)
+md5sums=('c3118908e789ce0513e75a68bd0ce631')
 
 build() {
 #   find . -name CMakeLists.txt -exec sed -i 's/add_subdirectory(doc)/#add_subdirectory(doc)/g' {} \;
-
-  # Documentation patch.
-  cd $srcdir/$pkgname-$pkgver/doc/en/
-  patch -uN index.docbook $srcdir/docbook-version-fix.diff
 
   cd $srcdir/$pkgname-$pkgver  
   mkdir build && cd build
