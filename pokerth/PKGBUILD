@@ -6,26 +6,27 @@
 # include global config
 source ../_buildscripts/${current_repo}-${_arch}-cfg.conf
 
-pkgname=pokerth
 _pkgname=PokerTH
-pkgver=0.8.3
-pkgrel=1
+_pkgver=0.8.3
+pkgname=pokerth
+pkgver=0.8.3.1
+pkgrel=3.1
 pkgdesc="PokerTH is a Texas Holdem poker game written in C++/Qt."
 arch=('i686' 'x86_64')
 license=('GPL' 'custom')
 depends=('qt>=4.4.3' 'zlib>=1.2.3' 'curl>=7.1.6' 'gnutls>=2.2.2' 'libgsasl' 'boost>=1.36' 'sdl' 'sdl_mixer' 'icu')
 url="http://www.pokerth.net/"
-source=("http://downloads.sourceforge.net/sourceforge/${pkgname}/${_pkgname}-${pkgver}-src.tar.bz2")
+source=("http://downloads.sourceforge.net/sourceforge/${pkgname}/${_pkgname}-${_pkgver}-src.tar.bz2")
 md5sums=('adbe56ad5f547eb255dad91de564bf1c')
 
 build() {
-  cd "${srcdir}/${_pkgname}-${pkgver}-src"
+  cd "${srcdir}/${_pkgname}-${_pkgver}-src"
   qmake pokerth.pro || return 1
   make || return 1
 }
 
 package() {
-  cd "${srcdir}/${_pkgname}-${pkgver}-src"
+  cd "${srcdir}/${_pkgname}-${_pkgver}-src"
   make INSTALL_ROOT="${pkgdir}" install || return 1
 
   install -D -m755 pokerth "${pkgdir}/usr/bin/pokerth" || return 1
