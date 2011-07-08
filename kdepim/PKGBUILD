@@ -30,8 +30,8 @@ pkgname=('kdepim-common'
    
 arch=('i686' 'x86_64')
 #pkgver=${_kdever}
-pkgver=4.6.0
-pkgrel=2
+pkgver=4.6.1
+pkgrel=1
 pkgdesc="split package"
 url="http://www.kde.org"
 license=('GPL' 'LGPL' 'FDL')
@@ -43,7 +43,7 @@ makedepends=('pkgconfig' 'cmake' 'automoc4' 'boost' "kdelibs>=${_kdever}" "kdepi
 
 
 source=($_mirror/${pkgbase}-${pkgver}.tar.bz2)
-md5sums=('72396ca638233f52fcc69cac74fcc06d')
+md5sums=('3886ae80ff15df5c1504ec3e8c410f63')
 
 #
 # build function
@@ -59,18 +59,6 @@ build()
 		-DCMAKE_{SHARED,MODULE,EXE}_LINKER_FLAGS='-Wl,--no-undefined -Wl,--as-needed'
 
 	make || return 1
-
-	# Fix translations
-	msg "Fixing translations..."
-	for i in ${srcdir}/${pkgbase}-${pkgver}/po/* ; do
-		if [ -d "$i" ] && [ "$(echo "$i" | grep "CMake")" == "" ] ; then 
-			cd $i
-			for po in ${i}/*.po ; do
-				msgfmt -o $(echo ${po/.po/.mo}) $po	
-			done
-		fi
-	done
-
 }
 
 
@@ -85,7 +73,7 @@ package_kdepim-common()
 	groups=("kde" "kdepim" "kde" "kde-uninstall")
 	install=${pkgbase}.install
 
-	splitdirs="akonadi_next icons calendarsupport calendarviews console incidenceeditor-ng kdgantt2 kleopatra kresources ksendemail libkdepim libkdepimdbusinterfaces libkleo libkpgp libksieve mailcommon messagecore messagecomposer messagecore messagelist messageviewer nepomuk_email_feeder ontologies plugins strigi-analyzer templateparser po"
+	splitdirs="akonadi_next icons calendarsupport calendarviews console incidenceeditor-ng kdgantt2 kleopatra kresources ksendemail libkdepim libkdepimdbusinterfaces libkleo libkpgp libksieve mailcommon messagecore messagecomposer messagecore messagelist messageviewer nepomuk_email_feeder ontologies plugins strigi-analyzer templateparser"
 		for i in ${splitdirs} ; do
 			cd ${srcdir}/${pkgbase}-${pkgver}/${i}
 			make DESTDIR=${pkgdir} install || return 1
@@ -221,7 +209,7 @@ package_kdepim-kmail()
 
 package_kdepim-mobile()
 {
-	pkgdesc="Sync your mobile phone"
+	pkgdesc="KDEPim Suite for Mobile devices"
 	groups=("kde-mobile")
 	depends=("${pkgbase}-common>=${pkgver}")
 	install=${pkgbase}.install
