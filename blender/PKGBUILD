@@ -8,23 +8,25 @@
 source ../_buildscripts/${current_repo}-${_arch}-cfg.conf
 
 pkgname=blender
-pkgver=2.57b
+pkgver=2.58a
 pkgrel=1
 pkgdesc="A fully integrated 3D graphics creation suite"
 arch=('i686' 'x86_64')
 license=('GPL')
 url="http://www.blender.org"
-depends=('libjpeg' 'libpng' 'openjpeg' 'libtiff' 'openexr' 'sdl' 'python3' 'desktop-file-utils' 'shared-mime-info' 'hicolor-icon-theme' 'xdg-utils' 'gettext' 'libxi' 'libxmu' 'mesa' 'freetype2' 'openal' 'libsndfile' 'libsamplerate' 'ffmpeg')
+depends=('libpng' 'libtiff' 'openexr' 'sdl' 'python3' 'desktop-file-utils' 'shared-mime-info' 'hicolor-icon-theme' 'xdg-utils' 'glew' 'libxi' 'libxmu' 'mesa' 'freetype2' 'openal' 'libsndfile' 'libsamplerate' 'ffmpeg')
 makedepends=('cmake')
 install=blender.install
-makedepends=('cmake')
 source=(http://download.blender.org/source/$pkgname-$pkgver.tar.gz)
-md5sums=('d5f1083d39545686fe8ec8480546ec3f')
+md5sums=('1a9714b9944e8ded2790160652606fd6')
 
 build() {
   cd "$srcdir/$pkgname-$pkgver"
+  
   mkdir build
   cd build
+
+ [[ $CARCH == i686 ]] && ENABLESSE2="-DSUPPORT_SSE2_BUILD:BOOL=OFF"
 
   cmake .. \
     -DCMAKE_INSTALL_PREFIX:PATH=/usr \
@@ -34,10 +36,13 @@ build() {
     -DWITH_OPENCOLLADA:BOOL=OFF \
     -DWITH_GAMEENGINE:BOOL=ON \
     -DWITH_PLAYER:BOOL=ON \
+    -DWITH_BUILTIN_GLEW:BOOL=OFF \
+    -DWITH_CODEC_FFMPEG:BOOL=ON \
     -DPYTHON_VERSION:STRING=3.2 \
     -DPYTHON_LIBPATH:STRING=/usr/lib \
     -DPYTHON_LIBRARY:STRING=python3.2mu \
-    -DPYTHON_INCLUDE_DIRS:STRING=/usr/include/python3.2mu
+    -DPYTHON_INCLUDE_DIRS:STRING=/usr/include/python3.2mu \
+    $ENABLESSE2
 
   make $MAKEFLAGS
 
