@@ -6,7 +6,7 @@
 pkgname=0ad
 pkgver=alpha_6
 _pkgver=r09786-alpha
-pkgrel=1
+pkgrel=2
 pkgdesc="Cross-platform, 3D and historically-based real-time strategy game."
 arch=('i686' 'x86_64')
 url="http://wildfiregames.com/0ad"
@@ -26,6 +26,10 @@ build()
   sed -i \
   's/unix_names = { "boost_signals-mt", "boost_filesystem-mt", "boost_system-mt" },/unix_names = { "boost_signals", "boost_filesystem", "boost_system" },/g' \
   $srcdir/$pkgname-$_pkgver/build/premake/extern_libs.lua
+
+  sed -i \
+  's/export HOSTTYPE="$HOSTTYPE"/export HOSTTYPE="$CARCH"/g'
+  ./update-workspaces.sh
 
   # Atlas disabled because it requires GTK.
   ./update-workspaces.sh \
