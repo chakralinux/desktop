@@ -3,13 +3,10 @@
 #
 # Maintainer: Adrián Chaves Fernández (Gallaecio) <adriyetichaves gmail.com>
 
-# include global config
-source ../_buildscripts/${current_repo}-${_arch}-cfg.conf
-
 pkgname=0ad
-pkgver=alpha_5
-_pkgver=r09530-alpha
-pkgrel=3
+pkgver=alpha_6
+_pkgver=r09786-alpha
+pkgrel=1
 pkgdesc="Cross-platform, 3D and historically-based real-time strategy game."
 arch=('i686' 'x86_64')
 url="http://wildfiregames.com/0ad"
@@ -18,22 +15,22 @@ depends=('binutils' 'boost' 'crypto++' 'curl' 'devil' 'enet' 'fam' 'libogg' 'lib
 makedepends=('cmake')
 changelog=ChangeLog
 source=(http://downloads.sourceforge.net/project/zero-ad/releases/$pkgname-$_pkgver-unix-build.tar.xz
-	http://downloads.sourceforge.net/project/zero-ad/releases/$pkgname-$_pkgver-unix-data.tar.xz
-	$pkgname-nogtk.patch
-	$pkgname-archdetection.diff)
-md5sums=('d8c66ab1ef2309be7aa5ff127ccf0e6c'
-         'b03270f6145053f4f517ca7bd6e5cdc4'
-         '7bb8119a4d611cdffa05177ea2603151'
-         '641a8ee6dab4f0c9a875fbd84410c46a')
+	http://downloads.sourceforge.net/project/zero-ad/releases/$pkgname-$_pkgver-unix-data.tar.xz)
+md5sums=('cb4be5f4a9b74a535f39815a6b0c3e85'
+         '085da67a4a681a34418aba49f04cbd28')
 
 build()
 {
   cd $srcdir/$pkgname-$_pkgver/build/workspaces
 
-  patch -uN update-workspaces.sh $srcdir/$pkgname-archdetection.diff
-  patch -uN update-workspaces.sh $srcdir/$pkgname-nogtk.patch
+  sed -i \
+  's/unix_names = { "boost_signals-mt", "boost_filesystem-mt", "boost_system-mt" },/unix_names = { "boost_signals", "boost_filesystem", "boost_system" },/g' \
+  $srcdir/$pkgname-$_pkgver/build/premake/extern_libs.lua
 
-  ./update-workspaces.sh
+  # Atlas disabled because it requires GTK.
+  ./update-workspaces.sh \
+    --disable-atlas \
+    --with-system-enet
 
   cd $srcdir/$pkgname-$_pkgver/build/workspaces/gcc
 
