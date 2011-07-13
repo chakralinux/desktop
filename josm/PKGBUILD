@@ -6,36 +6,33 @@
 
 # from AUR package http://aur.archlinux.org/packages.php?ID=12136
 
-# include global config
-source ../_buildscripts/${current_repo}-${_arch}-cfg.conf
-
 pkgname=josm
-pkgver=4021
+pkgver=4232
 pkgrel=1
 pkgdesc="An editor for OpenStreetMap written in Java."
-arch=('i686' 'x86_64')
+arch=('any')
 url="http://josm.openstreetmap.de/"
 license=('GPL')
 depends=('java-runtime' 'intltool')
 source=(http://josm.openstreetmap.de/download/$pkgname-tested.jar \
 	$pkgname.desktop)
-md5sums=('bf374e0279719aef29857b8e66c9ef15'
+md5sums=('2d8a9513cd5ae8a29d36fcada193b4b5'
          'e2b8c820100f3403a6cd10c1239d659a')
          
 build() {
   cd ${srcdir}
   
-  install -D -m644 $pkgname-tested.jar ${pkgdir}/usr/share/java/$pkgname/$pkgname.jar
+  install -D -m644 $pkgname-tested.jar $pkgdir/usr/share/java/$pkgname/$pkgname.jar
 
-#.desktop and icon file
-  install -D -m644 ${srcdir}/${pkgname}.desktop ${pkgdir}/usr/share/applications/$pkgname.desktop
-  install -D -m644 images/logo.png ${pkgdir}/usr/share/pixmaps/$pkgname.png
+  # Desktop integration.
+  install -D -m644 $pkgname.desktop $pkgdir/usr/share/applications/$pkgname.desktop
+  install -D -m644 images/logo.png $pkgdir/usr/share/pixmaps/$pkgname.png
 
-#executable file
-  install -d ${pkgdir}/usr/bin
-  echo "#!/bin/sh" > ${pkgdir}/usr/bin/$pkgname
-  echo CLASSPATH="/usr/share/java/josm/josm.jar" >> ${pkgdir}/usr/bin/$pkgname
+  # Executable.
+  install -d $pkgdir/usr/bin
+  echo "#!/bin/sh"					 > $pkgdir/usr/bin/$pkgname
+  echo CLASSPATH="/usr/share/java/josm/josm.jar"	>> $pkgdir/usr/bin/$pkgname
   echo java -cp \"\${CLASSPATH}\" org.openstreetmap.josm.gui.MainApplication \"\$@\" \
-    >> ${pkgdir}/usr/bin/$pkgname
-  chmod 755 ${pkgdir}/usr/bin/$pkgname
+							>> $pkgdir/usr/bin/$pkgname
+  chmod 755 $pkgdir/usr/bin/$pkgname
 }
