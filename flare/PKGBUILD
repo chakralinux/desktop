@@ -3,12 +3,11 @@
 #
 # Maintainer: Adrián Chaves Fernández (Gallaecio) <adriyetichaves@gmail.com>
 
-# include global config
-source ../_buildscripts/${current_repo}-${_arch}-cfg.conf
-
 pkgname=flare
-pkgver=0.13
-_pkgver=013
+_pkgname=clintbellanger-$pkgname
+pkgver=0.14.1
+_pkgver=05b5a9c
+_pkgver2=v$pkgver-0-g$_pkgver
 pkgrel=1
 pkgdesc="Action roleplaying game from an isometric perspective."
 arch=('i686' 'x86_64')
@@ -17,11 +16,11 @@ license=('GPL2' 'CCPL-by-sa')
 depends=('sdl' 'sdl_image' 'sdl_mixer')
 replaces=('osare')
 changelog=ChangeLog
-source=("http://$pkgname-engine.googlecode.com/files/${pkgname}_src_v$_pkgver.zip")
-md5sums=('a674696506cb316eb7ef98b12c98d06f')
+source=(https://download.github.com/clintbellanger-$pkgname-$_pkgver2.tar.gz)
+md5sums=('f53b8060e897ea5161f7bc34450005fe')
 
 build() {
-  cd $srcdir/${pkgname}_src_v$_pkgver/build
+  cd $srcdir/$_pkgname-$_pkgver/build
 
   cmake \
     -DCMAKE_INSTALL_PREFIX=/usr \
@@ -31,7 +30,7 @@ build() {
 }
 
 package() {
-  cd $srcdir/${pkgname}_src_v$_pkgver/
+  cd $srcdir/$_pkgname-$_pkgver
 
   msg "Installing basic directory structure..."
   install -m755 -d $pkgdir/usr/{bin,share/$pkgname}
@@ -40,7 +39,7 @@ package() {
   install -m755 $pkgname $pkgdir/usr/share/$pkgname/$pkgname
 
   msg "Installing media..."
-  for folder in enemies fonts images items maps music npcs powers saves soundfx tilesetdefs
+  for folder in animations art enemies engine fonts images itemdb items maps music npcs powers quests soundfx tiled tilesetdefs
   do
     cp -R $folder $pkgdir/usr/share/$pkgname/
   done
@@ -51,9 +50,5 @@ package() {
 cd /usr/share/$pkgname/
 ./$pkgname
 EOF
-
-  msg "Setting the right permissions..."
-  chmod -R +x $pkgdir/usr/bin/$pkgname
-  chmod -R 775 $pkgdir/usr/share/$pkgname/saves
-  chown -R :games $pkgdir/usr/share/$pkgname
+  chmod +x $pkgdir/usr/bin/$pkgname
 }
