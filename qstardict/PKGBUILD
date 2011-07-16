@@ -7,8 +7,8 @@
 source ../_buildscripts/${current_repo}-${_arch}-cfg.conf
 
 pkgname=qstardict
-pkgver=0.13.1
-pkgrel=2
+pkgver=1.0
+pkgrel=1
 pkgdesc="Qt4 clone of StarDict with full support of StarDict dictionaries."
 arch=('i686' 'x86_64')
 url="http://qstardict.ylsoftware.com/index.php"
@@ -19,19 +19,14 @@ optdepends=('festival-awb-arctic: for pronouncing words, Scottish English male s
             'festival-kallpc16k: for pronouncing words, British English RP male speaker'
             'festival-rablpc16k: for pronouncing words, British English RP male speaker')
 provides=('stardict')
-source=(http://qstardict.ylsoftware.com/files/${pkgname}-${pkgver}.tar.bz2
-        gcc4.4.patch)
-
-md5sums=('0828c3fa01c5237db8a67d356a9d1a8c'
-         'c6ed927f349025bdbf202f1c5a5888e8')
+source=(http://qstardict.ylsoftware.com/files/${pkgname}-${pkgver}.tar.bz2)
+        
+md5sums=('07f97bd61a5f64f0c8f80f68bd1ed07c')
 
 build() {
   cd ${srcdir}/$pkgname-$pkgver
 
-  # This patch is commited upstream, remove on next release
-  patch -Np1 -i "$srcdir/gcc4.4.patch" || return 1
-
-  qmake ENABLED_PLUGINS="stardict web swac" || return 1
-  make || return 1
+  qmake ENABLED_PLUGINS="stardict web swac" 
+  make 
   make INSTALL_ROOT=${pkgdir} install
 }
