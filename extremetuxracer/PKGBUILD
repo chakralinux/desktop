@@ -1,0 +1,36 @@
+#
+# Games Packages for Chakra, part of chakra-project.org
+#
+# Maintainer: Adrián Chaves Fernández (Gallaecio) <adriyetichaves gmail.com>
+
+pkgname=extremetuxracer
+pkgver=0.4
+pkgrel=1
+pkgdesc="Downhill racing game starring Tux."
+arch=('i686' 'x86_64')
+url="http://www.extremetuxracer.com"
+license=('GPL')
+depends=('sdl_mixer' 'tcl>=8.5.0' 'mesa' 'libpng>=1.4.0' 'freetype2' 'libxi' 'libxmu')
+source=(http://downloads.sourceforge.net/$pkgname/$pkgname-$pkgver.tar.gz \
+       libpng14.patch)
+md5sums=('6830eb4e1ca7c5a541f286ded3853f9f'
+         '0c16eb309df6413397cd886f63361fcc')
+
+build() {
+  cd $srcdir/$pkgname-$pkgver
+
+  patch -Np1 -i $srcdir/libpng14.patch
+
+  sed -i -e 's/libpng12/libpng14/g' configure
+
+  ./configure \
+    --prefix=/usr
+
+  make
+}
+
+package() {
+  cd $srcdir/$pkgname-$pkgver
+
+  make DESTDIR=$pkgdir install
+}
