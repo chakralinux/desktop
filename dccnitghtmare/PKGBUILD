@@ -1,0 +1,33 @@
+#
+# Games Packages for Chakra, part of chakra-project.org
+#
+# Maintainer: Adrián Chaves Fernández (Gallaecio) <adriyetichaves gmail.com>
+
+pkgname=dccnitghtmare
+pkgver=0.7
+pkgrel=1
+pkgdesc="A sarcastic 3D single player RPG set in a post-apocalyptical world."
+arch=('i686' 'x86_64')
+url="http://dnt.dnteam.org/"
+license=('custom:code:GPL' 'custom:media:GPL, CC:BY-SA or Public Domain' )
+depends=('cal3d' 'mesa' 'libgl' 'libvorbis' 'openal' 'sdl' 'sdl_image' 'sdl_ttf')
+source=("http://downloads.sourceforge.net/$pkgname/$pkgname-$pkgver.tar.bz2")
+md5sums=('fd015add7670b99ef1e0761544e90d40')
+
+build() {
+  cd $srcdir/$pkgname
+
+  ./configure \
+    --prefix=/usr \
+    LDFLAGS=""
+
+  make \
+    LDFLAGS=""
+}
+
+package() {
+  cd $srcdir/$pkgname
+
+  mkdir -p $pkgdir/usr/bin
+  make prefix=$pkgdir/usr install
+}
