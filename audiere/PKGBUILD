@@ -1,0 +1,51 @@
+#
+# Games Packages for Chakra, part of chakra-project.org
+#
+# Maintainer: Adrián Chaves Fernández (Gallaecio) <adriyetichaves gmail.com>
+
+pkgname=audiere
+pkgver=1.9.4
+pkgrel=1
+pkgdesc="High-level audio API."
+arch=('i686' 'x86_64')
+url="http://audiere.sourceforge.net/"
+license=('LGPL')
+depends=('speex' 'libvorbis' 'libcdaudio')
+makdedepends=('flac') # For flac support.
+source=("http://downloads.sourceforge.net/sourceforge/$pkgname/$pkgname-$pkgver.tar.gz"
+	"gcc-4.4.patch"
+	"TagsDialog.h"
+	"DeviceFrame.cpp"
+	"MIDIDeviceDialog.h"
+	"speexfile.cpp.patch")
+md5sums=('b95dfe6f1e69cfd12371747f22772766'
+	 'bd082fa9a258ef6598eefe88a71a4279'
+	 '55c31ad9a68304f49f30ac8ca9fa3288'
+	 '0fe69aeb84a6860ef7a36f75887f4f07'
+         'a80de799a3b833f0331cf83f7f6a27ab'
+	 '8dd3fd42cb0ff4961ec050fc859bcf63')
+
+build() {
+    cd $srcdir/$pkgname-$pkgver
+
+    msg "Applying patches…"
+    patch -Np1 < $srcdir/gcc-4.4.patch
+    patch -Np1 < $srcdir/speexfile.cpp.patch
+    for _i in TagsDialog.h DeviceFrame.cpp MIDIDeviceDialog.h
+    do
+      cp $srcdir/${_i} examples/wxPlayer || return 1
+    done
+
+    msg "Compiling…"
+    ./configure \
+      --prefix=/usr \
+      --with-pic \
+      --without-dumb \
+      --without-wxgtk
+    make
+}
+package() {
+    cd $srcdir/$pkgname-$pkgver
+
+    make DESTDIR=$pkgdir install
+}
