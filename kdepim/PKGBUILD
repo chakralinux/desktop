@@ -29,21 +29,20 @@ pkgname=('kdepim-common'
          'kdepim-wizards')
    
 arch=('i686' 'x86_64')
-#pkgver=${_kdever}
-pkgver=4.6.0
-pkgrel=3
+pkgver=${_kdever}
+pkgrel=1
 pkgdesc="split package"
 url="http://www.kde.org"
 license=('GPL' 'LGPL' 'FDL')
 options=('!docs' '!splithdr' 'splitdbg' 'log')
 
 makedepends=('pkgconfig' 'cmake' 'automoc4' 'boost' "kdelibs>=${_kdever}" "kdepimlibs>=${_kdever}"
-             "kdepim-runtime" 'libxss' "kdebase-runtime" 
+             "kdepim-runtime" 'libxss' "kde-runtime" 
 	     'kde-agent' 'libindicate-qt>=0.2.2' 'docbook-xml' 'dblatex')
 
 
 source=($_mirror/${pkgbase}-${pkgver}.tar.bz2)
-md5sums=('72396ca638233f52fcc69cac74fcc06d')
+md5sums=('ae05fcfa597c35ede53e351a9d9045d0')
 
 #
 # build function
@@ -68,7 +67,7 @@ build()
 package_kdepim-common()
 {
 	pkgdesc="KDE PIM - Common files and libraries"
-	depends=("kdepimlibs>=${_kdever}" 'libxss' "kdebase-runtime" 'kde-agent'
+	depends=("kdepimlibs>=${_kdever}" 'libxss' "kde-runtime" 'kde-agent'
                  'libxss' 'libindicate-qt>=0.2.2' "kdepim-runtime>=${_pkgver}")
 	groups=("kde" "kdepim" "kde" "kde-uninstall")
 	install=${pkgbase}.install
@@ -209,7 +208,7 @@ package_kdepim-kmail()
 
 package_kdepim-mobile()
 {
-	pkgdesc="Sync your mobile phone"
+	pkgdesc="The KDEPim Suite for mobile devices"
 	groups=("kde-mobile")
 	depends=("${pkgbase}-common>=${pkgver}")
 	install=${pkgbase}.install
@@ -277,7 +276,7 @@ package_kdepim-korganizer()
 			make DESTDIR=${pkgdir} install || return 1
 		done
 
-	# remove conflict with kdebase-runtime
+	# remove conflict with kde-runtime
 	rm -f ${pkgdir}/usr/share/icons/oxygen/32x32/actions/appointment-new.png
 }
 
