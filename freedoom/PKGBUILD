@@ -1,0 +1,33 @@
+#
+# Games Packages for Chakra, part of chakra-project.org
+#
+# Maintainer: Adrián Chaves Fernández (Gallaecio) <adriyetichaves gmail.com>
+
+pkgname=freedoom
+_pkgname=doom
+pkgver=0.7
+pkgrel=1
+pkgdesc="Completely free Doom IWADs (game data)"
+arch=('any')
+url="http://www.nongnu.org/freedoom/"
+license=('custom:Modified BSD')
+makedepends=('deutex' 'imagemagick' 'python2')
+provides=('doom-data')
+source=(http://savannah.nongnu.org/download/$pkgname/source/$pkgname-$pkgver.tar.gz)
+md5sums=('109b1a10a13cfa9c72f9096f4a0ef0cd')
+
+build() {
+  cd $srcdir/$pkgname-$pkgver
+
+  make wads/{doom,doom2,freedm}.wad
+}
+
+package() {
+  cd $srcdir/$pkgname-$pkgver
+
+  install -d $pkgdir/usr/share/$_pkgname
+  install -m644 wads/{doom,doom2,freedm}.wad $pkgdir/usr/share/$_pkgname/
+
+  # License.
+  install -Dm644 COPYING $pkgdir/usr/share/licenses/$pkgname/COPYING
+}

@@ -1,0 +1,40 @@
+#
+# Games Packages for Chakra, part of chakra-project.org
+#
+# Maintainer: Adrián Chaves Fernández (Gallaecio) <adriyetichaves gmail.com>
+
+pkgname=remood
+_pkgname=doom
+pkgver=0.8a
+_pkgver=08a
+pkgrel=1
+pkgdesc="An advanced Doom game engine based on Doom Legacy."
+arch=('i686' 'x86_64')
+url="http://$pkgname.sourceforge.net/"
+license=('GPL')
+depends=('bash' 'sdl')
+provides=('doom')
+source=(http://downloads.sourceforge.net/$pkgname/${pkgname}src_$_pkgver.tar.gz)
+md5sums=('33e284a22467e732cbdad4d17e03a648')
+
+build() {
+  cd ${pkgname}src_$_pkgver
+
+  make CC_MODECFLAGS="$CFLAGS -DNDEBUG"
+}
+
+package() {
+  cd ${pkgname}src_$_pkgver
+
+  mkdir -p $pkgdir/usr/share/{applications,pixmaps,$pkgname}
+  install -Dm755	bin/$pkgname		$pkgdir/usr/share/$pkgname/
+  install -m644		bin/$pkgname.wad	$pkgdir/usr/share/$pkgname/
+  install -m644		$pkgname.xpm		$pkgdir/usr/share/pixmaps/
+  install -m644		$pkgname.desktop	$pkgdir/usr/share/applications/
+
+  mkdir -p $pkgdir/usr/bin
+  echo "#!/bin/sh"	 > $pkgdir/usr/bin/$pkgname
+  echo "DOOMWADDIR=\"/usr/share/$_pkgname:/usr/share/$pkgname\" exec /usr/share/$pkgname/$pkgname \$@" \
+			>> $pkgdir/usr/bin/$pkgname
+  chmod +x $pkgdir/usr/bin/$pkgname
+}
