@@ -1,0 +1,49 @@
+#
+# Apps Packages for Chakra, part of chakra-project.org
+#
+# maintainer (i686): Phil Miller <philm[at]chakra-project[dog]org>
+# maintainer (x86_64): Manuel Tortosa <manutortosa[at]chakra-project[dot]org>
+
+pkgname=rstudio
+_pkgname=rstudio-rstudio
+pkgver=0.94.92
+_pkgver=cd1d55a
+pkgrel=1
+pkgdesc="A new integrated development environment (IDE) for R - The Desktop Client"
+arch=('i686' 'x86_64')
+url="http://www.rstudio.org/"
+license=('AGPL')
+depends=('boost-libs' 'java-environment' 'qt' 'r')
+makedepends=('apache-ant' 'boost' 'bzip2' 'cmake' 'git' 'icu' 'openssl' 'pam' 'unzip')
+provides=('rstudio-desktop')
+source=("https://github.com/$pkgname/$pkgname/tarball/v$pkgver")
+md5sums=('951bc137f41b80234c180594c0fb7576')
+
+build() {
+  cd $srcdir/$_pkgname-$_pkgver
+
+  source /etc/profile.d/apache-ant.sh
+ #Checking for ANT and Java can be found.
+ which ant > /dev/null
+ which java > /dev/null
+
+  # Install gwt
+  cd $srcdir/$_pkgname-$_pkgver/dependencies/common
+  ./install-gwt
+
+  # Configure and build.
+  cd $srcdir/$_pkgname-$_pkgver
+
+  mkdir build && cd build
+  unset LDFLAGS
+  cmake \
+    -DRSTUDIO_TARGET=Desktop \
+    -DCMAKE_BUILD_TYPE=RelWithDebInfo \
+    -DCMAKE_INSTALL_PREFIX=/usr/lib/$pkgname \
+    ..
+}
+
+package() {
+  cd $srcdir/$_pkgname-$_pkgver/build
+  make DESTDIR=$pkgdir install
+}
