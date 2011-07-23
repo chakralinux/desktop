@@ -1,0 +1,34 @@
+
+# Games Packages for Chakra, part of chakra-project.org
+#
+# Maintainer: Adrián Chaves Fernández (Gallaecio) <adriyetichaves gmail.com>
+
+pkgname=pyside-tools
+pkgver=0.2.12
+pkgrel=1
+pkgdesc="UI Compiler (pyside-uic) plus Qt Resource Compiler (pyside-rcc4) for PySide."
+arch=('i686' 'x86_64')
+license=('LGPL')
+url="http://www.pyside.org"
+depends=('pyside>=1.0.3' 'python')
+makedepends=('cmake' 'automoc4')
+source=("http://www.pyside.org/files/$pkgname-$pkgver.tar.bz2")
+md5sums=('9a41a565774974a0e2bb60244c996166')
+
+build(){
+  cd $srcdir/$pkgname-$pkgver
+
+  pyside-uic > pyside-uic_mod && mv pyside-uic{_mod,} && chmod 755 pyside-uic
+
+  mkdir -p build && cd build
+  cmake \
+    -DCMAKE_INSTALL_PREFIX=/usr \
+    -DCMAKE_BUILD_TYPE=RelWithDebInfo \
+    ..
+  make
+}
+
+package(){
+  cd $srcdir/$pkgname-$pkgver/build
+  make DESTDIR=$pkgdir install
+}
