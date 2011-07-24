@@ -1,0 +1,27 @@
+#
+# Chakra Packages for Chakra, part of chakra-project.org
+#
+# contributor (x86_64): Giuseppe Calà <jiveaxe@gmail.com>
+
+# include global config
+source ../_buildscripts/${current_repo}-${_arch}-cfg.conf
+
+pkgname=kdeplasma-addons-runners-browsefirefoxbookmarks
+pkgver=0.2.1
+pkgrel=2
+pkgdesc="A Plasma Runner that matches Firefox's bookmarks."
+url="http://kde-apps.org/content/show.php/Browse+Firefox+Bookmarks?content=141042"
+arch=('i686' 'x86_64')
+license=('GPL')
+depends=('kde-workspace')
+makedepends=('cmake' 'automoc4')
+source=("http://kde-look.org/CONTENT/content-files/141042-browsefirefoxbookmarks.tar.bz2")
+md5sums=('e6b1f621414e520f9f6270d78eb40e64')
+
+build() {
+  cd ${srcdir}/plasma-runner-browsefirefoxbookmarks/
+  mkdir build && cd build
+  cmake .. -DCMAKE_INSTALL_PREFIX=`kde4-config --prefix` -DCMAKE_BUILD_TYPE=Release
+  make || return 1
+  make DESTDIR=${pkgdir} install
+}
