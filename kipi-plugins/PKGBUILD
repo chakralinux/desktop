@@ -12,7 +12,7 @@ arch=('i686' 'x86_64')
 license=('GPL')
 url="http://www.kipi-plugins.org"
 makedepends=('pkgconfig' 'cmake' 'automoc4')
-depends=('kdegraphics-common' 'kdepimlibs' 'opencv' 'libgpod' 'sane')
+depends=('kdegraphics-kgamma' 'kdepimlibs' 'opencv' 'libgpod' 'sane')
 source=("http://downloads.sourceforge.net/kipi/$pkgname-$pkgver.tar.bz2")
 optdepends=('imagemagick: for picture manipulation'
             'qca: for shwup webservice support')
@@ -27,7 +27,7 @@ build() {
     -DCMAKE_BUILD_TYPE=Release \
     -DCMAKE_INSTALL_PREFIX=/usr \
     -DCMAKE_SKIP_RPATH=ON
-  make || return 1
+  make 
 }
 
 package() {
