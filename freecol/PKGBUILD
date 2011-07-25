@@ -3,37 +3,32 @@
 #
 # Maintainer: Adrián Chaves Fernández (Gallaecio) <adriyetichaves gmail.com>
 
-# include global config
-source ../_buildscripts/${current_repo}-${_arch}-cfg.conf
-
 pkgname=freecol
-pkgver=0.9.5
+_pkgname=FreeCol
+pkgver=0.10.1
 pkgrel=1
-pkgdesc="A turn-based strategy game based on Colonization"
+pkgdesc="A turn-based strategy game based on Colonization."
 arch=('i686' 'x86_64')
 url="http://www.freecol.org/"
 license=('GPL')
 depends=('java-runtime')
-source=(http://downloads.sourceforge.net/$pkgname/$pkgname-$pkgver.tar.gz
-        fc.desktop fc.sh)
-md5sums=('6d5cb3b18cede24196f360b225ff7ccc'
+source=(http://downloads.sourceforge.net/$pkgname/$pkgname-$pkgver-src.zip
+        main.desktop
+        main.sh)
+md5sums=('e7e218d1170cc049f0bbf7bc3bad76b1'
          '68922dfb7c1db20c13c4eb6930f9bd93'
-         'ae473cd1d86f8f764250ee00b6fda90b')
-
-build() {
-  cd "$srcdir/$pkgname"
-}
+         '058e8125acc3b475e90cb2be7cd8f55a')
 
 package() {
-  cd "$srcdir/$pkgname"
+  cd $srcdir/$pkgname
 
-  install -Dm644 FreeCol.jar "$pkgdir/usr/share/java/$pkgname/FreeCol.jar"
-  install -Dm644 FreeCol.pdf "$pkgdir/usr/share/doc/$pkgname/FreeCol.pdf"
-  install -Dm644 $pkgname.xpm "$pkgdir/usr/share/pixmaps/$pkgname.xpm"
-  install -Dm644 ../fc.desktop "$pkgdir/usr/share/applications/$pkgname.desktop"
-  install -Dm755 ../fc.sh "$pkgdir/usr/bin/$pkgname"
+  install -Dm644 $_pkgname.jar		$pkgdir/usr/share/java/$pkgname/$pkgname.jar
+  install -Dm644 doc/$_pkgname.pdf	$pkgdir/usr/share/doc/$pkgname/$pkgname.pdf
+  install -Dm644 $pkgname.xpm		$pkgdir/usr/share/pixmaps/$pkgname.xpm
+  install -Dm644 $srcdir/main.desktop	$pkgdir/usr/share/applications/$pkgname.desktop
+  install -Dm755 $srcdir/main.sh	$pkgdir/usr/bin/$pkgname
 
-  cp -r data jars "$pkgdir/usr/share/java/$pkgname/"
-  find "$pkgdir/usr/share/java/$pkgname" -type d -exec chmod 755 '{}' \;
-  find "$pkgdir/usr/share/java/$pkgname" -type f -exec chmod 644 '{}' \;
+  cp -r data jars $pkgdir/usr/share/java/$pkgname/
+  find $pkgdir/usr/share/java/$pkgname -type d -exec chmod 755 '{}' \;
+  find $pkgdir/usr/share/java/$pkgname -type f -exec chmod 644 '{}' \;
 }
