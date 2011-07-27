@@ -8,7 +8,7 @@
 source ../_buildscripts/${current_repo}-${_arch}-cfg.conf
 
 pkgname=mc
-pkgver=4.7.5.2
+pkgver=4.7.5.3
 pkgrel=1
 pkgdesc="A filemanager/shell that emulates Norton Commander"
 arch=('i686' 'x86_64')
@@ -22,7 +22,7 @@ conflicts=('mc-utf8')
 replaces=('mc-utf8')
 options=('!emptydirs' '!makeflags')
 source=(http://www.midnight-commander.org/downloads/${pkgname}-${pkgver}.tar.bz2)
-sha1sums=('08ffcc9fd19c7d8906a454c27b7074ca35bce14a')
+sha256sums=('0875b4c745d771b65ab71d0a295f2e6e91297121411a82068e2879f39a7628b6')
 
 build() {
 	cd ${srcdir}/${pkgname}-${pkgver}
@@ -35,7 +35,7 @@ build() {
 	    --without-debug --without-gnome --without-included-gettext \
 	    --libexecdir=/usr/lib
 
-	make || return 1
+	make 
 }
 
 package() {
