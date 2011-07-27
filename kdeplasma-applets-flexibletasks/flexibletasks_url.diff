@@ -1,0 +1,22 @@
+--- taskgroupitem.cpp.orig	2011-03-30 09:56:59.000000000 -0400
++++ taskgroupitem.cpp	2011-07-27 18:19:01.000000000 -0400
+@@ -1113,7 +1113,7 @@
+                     while (it.hasNext()) {
+                         it.next();
+                         if (it.key()->itemType() == TaskManager::LauncherItemType &&
+-                            static_cast<LauncherItem *>(it.key())->url() == url) {
++                            static_cast<LauncherItem *>(it.key())->launcherUrl() == url) {
+                             layoutTaskItem(it.value(), event->pos());
+                             break;
+                         }
+--- tasks.cpp.orig	2011-03-30 10:11:06.000000000 -0400
++++ tasks.cpp	2011-07-27 18:47:48.636307521 -0400
+@@ -241,7 +241,7 @@
+     KConfigGroup launcherCg(&cg, "Launchers");
+ 
+     QVariantList launcherProperties;
+-    launcherProperties.append(launcher->url().url());
++    launcherProperties.append(launcher->launcherUrl().url());
+     launcherProperties.append(launcher->icon().name());
+     launcherProperties.append(launcher->name());
+     launcherProperties.append(launcher->genericName());
