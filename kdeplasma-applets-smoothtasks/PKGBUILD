@@ -9,7 +9,7 @@ source ../_buildscripts/${current_repo}-${_arch}-cfg.conf
 
 pkgname=kdeplasma-applets-smoothtasks
 pkgver=wip_2010_11_06
-pkgrel=4
+pkgrel=5
 
 url="http://kde-look.org/content/show.php/Smooth+Tasks?content=101586"
 pkgdesc="A taskbar replacement Plasmoid with window peeking similar to Windows 7."
@@ -44,11 +44,11 @@ function build()
 
 	# Copy the source to a build directory
 	cp -a "${__hgrepo}" "${__hgrepo}-build" &&
-	cd "${__hgrepo}-build" || return 1
+	cd "${__hgrepo}-build" 
 
 	# Compile the plasmoid
-	cmake . -DCMAKE_INSTALL_PREFIX=/usr -DCMAKE_BUILD_TYPE=Release || return 1
-	make || return 1
+	cmake . -DCMAKE_INSTALL_PREFIX=/usr -DCMAKE_BUILD_TYPE=Release 
+	make 
 
 	# Hack to get the correct pkgver :)
 	pkgver="$(head -n 1 ChangeLog | perl -pe 's|^.*(wip)\s+(\d{4})-(\d{2})-(\d{2}).*$|\1_\2_\3_\4|')"
@@ -65,7 +65,7 @@ function package()
 	cd "${__hgrepo}-build"
 
 	# Install the plasmoid
-	make DESTDIR="${pkgdir}" install || return 1
+	make DESTDIR="${pkgdir}" install 
 
 	# Get the correct pkgver
 	if [[ -f "${pkgname}-pkgver.txt" ]]; then
