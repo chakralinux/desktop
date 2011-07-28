@@ -8,19 +8,18 @@
 source ../_buildscripts/${current_repo}-${_arch}-cfg.conf
 
 pkgname=digikam
-pkgver=1.9.0
-pkgrel=2
+pkgver=2.0.0
+pkgrel=1
 pkgdesc="Digital photo management application for kde"
 arch=('i686' 'x86_64')
 license=('GPL')
 url="http://digikam.sourceforge.net"
-depends=('kdebase-runtime' 'kdegraphics-common' 'kdepimlibs' 'lensfun' 'kdeedu-marble' 'liblqr')
-makedepends=('pkgconfig' 'cmake' 'automoc4' 'doxygen')
-source=(http://downloads.sourceforge.net/${pkgname}/${pkgname}-${pkgver}.tar.bz2)
+depends=('kde-runtime' 'kdegraphics-kgamma' 'kdepimlibs' 'lensfun' 'kdeedu-marble' 'liblqr' 'kipi-plugins')
+makedepends=('pkgconfig' 'cmake' 'automoc4' 'doxygen' 'docbook-xsl')
+source=(http://sourceforge.net/projects/digikam/files/${pkgname}/${pkgver}/${pkgname}-${pkgver}.tar.bz2)
 replaces=('digikamimageplugins')
 install=digikam.install
-optdepends=('kipi-plugins: for more extras and plugins')
-md5sums=('08934e97b63e8b1981f4087ec1a3372e')
+md5sums=('7b1ab69fc2fb36a45dc3ca38b01d42d8')
 
 build() {
    cd ${srcdir}
@@ -32,6 +31,10 @@ build() {
      -DENABLE_MARBLEWIDGET=yes \
      -DWITH_MarbleWidget=yes \
      -DCMAKE_SKIP_RPATH=ON
-   make all || return 1
-   make DESTDIR="${pkgdir}" install || return 1
- }
+   make 
+}
+
+package() {
+  cd "${srcdir}"/build
+  make DESTDIR="${pkgdir}" install
+}
