@@ -1,13 +1,10 @@
 #
 # Games Packages for Chakra, part of chakra-project.org
 #
-# Maintainer: Adrián Chaves Fernández (Gallaecio) <adriyetichaves@gmail.com>
-
-# include global config
-source ../_buildscripts/${current_repo}-${_arch}-cfg.conf
+# Maintainer: Adrián Chaves Fernández (Gallaecio) <adriyetichaves gmail.com>
 
 pkgname=redeclipse
-pkgver=1.0
+pkgver=1.1
 pkgrel=1
 pkgdesc="A single-player and multi-player first-person ego-shooter, built as a total conversion of Cube Engine 2"
 arch=('i686' 'x86_64')
@@ -15,7 +12,7 @@ url="http://redeclipse.net"
 license=('CCPL-by-sa' 'ZLIB')
 depends=('sdl_image'  'libgl' 'sdl_mixer')
 makedepends=('mesa')
-source=("http://downloads.sourceforge.net/${pkgname}/${pkgname}_${pkgver}_linux.tar.bz2")
+source=("http://downloads.sourceforge.net/$pkgname/${pkgname}_${pkgver}_linux_bsd.tar.bz2")
 md5sums=('8d8aa038c7c866bced43b110333b37d7')
 
 build() {
@@ -31,6 +28,7 @@ package() {
   install -m755 src/re{server,client} $pkgdir/usr/share/$pkgname/bin/
   cp -rf  data/ $pkgdir/usr/share/$pkgname
 
+  # Execution script.
   cat <<EOF > $pkgdir/usr/bin/$pkgname
 #!/bin/sh
 cd /usr/share/$pkgname
@@ -38,6 +36,11 @@ exec bin/reclient -r "\$@"
 EOF
   chmod 755 $pkgdir/usr/bin/$pkgname
 
+  # Icon.
   install -Dm644 src/redeclipse.ico $pkgdir/usr/share/pixmaps/$pkgname.png
+
+  # License.
   install -Dm644 license.txt $pkgdir/usr/share/licenses/$pkgname/LICENSE
 }
+
+md5sums=('e1330a858944e3bdb98fd15e07025d5f')
