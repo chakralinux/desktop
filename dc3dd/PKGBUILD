@@ -1,0 +1,27 @@
+#
+# Apps Packages for Chakra, part of chakra-project.org
+#
+# Maintainer: Adrián Chaves Fernández (Gallaecio) <adriyetichaves gmail.com>
+
+pkgname=dc3dd
+pkgver=7.1.614
+pkgrel=1
+pkgdesc="A patched version of dd that includes a number of features useful for computer forensics."
+url="http://dc3dd.sourceforge.net/"
+license=("GPL3")
+arch=('i686' 'x86_64')
+changelog=ChangeLog
+source=(http://downloads.sf.net/sourceforge/$pkgname/$pkgname-$pkgver.tar.bz2)
+md5sums=('f5a63a8252ac1c9f72b36d18712602a4')
+
+build() {
+  cd $srcdir/$pkgname-$pkgver
+  ./configure \
+    --prefix=/usr
+  make
+}
+
+package() {
+  cd $srcdir/$pkgname-$pkgver
+  make DESTDIR=$pkgdir install
+}
