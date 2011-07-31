@@ -15,35 +15,41 @@ url="http://2mandvd.tuxfamily.org/"
 license=('GPL')
 arch=('i686' 'x86_64')
 install=2mandvd.install
-depends=('qt>=4.6' 'sox' 'mplayer' 'perl' 'netpbm' 'transcode' 'ffmpegthumbnailer' 'dvdauthor' 'mjpegtools' 'ttf-dejavu' 'dvd+rw-tools' 'exif')
+depends=('qt>=4.6' 'sox' 'mplayer' 'perl' 'netpbm' 'transcode' 'ffmpegthumbnailer' 'dvdauthor' 'mjpegtools' 'ttf-dejavu' 'dvd+rw-tools' 'exif' 'python-opengl')
 optdepends=('xine-ui: to preview the result')
-source=(http://download.tuxfamily.org/2mandvd/2ManDVD-${pkgver}.tar.gz
+source=(http://chakra-project.org/sources/2manDVD/2ManDVD-${pkgver}.zip
 	2mandvd.desktop
 	2mandvd.sh)
 
-md5sums=('32aea4ae6afdbcc62568dec713ff3802'
+md5sums=('196d8c4e5549838a2a87de9b07a6bf94'
          '1eaaeef9a5e7896482d51d489b781689'
          '0112971f170034aff6efaafb9508b010')
 
 build() {
-  cd $srcdir/2ManDVD
+  cd ${srcdir}/2ManDVD
+  
   qmake 2ManDVD.pro
-  make  
 
-  install -d -m755 $pkgdir/opt/2ManDVD $pkgdir/usr/bin
-  cp -R Bibliotheque Interface 2ManDVD fake.pl *.qm README.txt $pkgdir/opt/2ManDVD/
-  install -D -m755 $srcdir/2mandvd.sh $pkgdir/usr/bin/2ManDVD
+  make || return 1
+}
+
+package(){
+  cd $srcdir/2ManDVD
+  
+  install -d -m755 ${pkgdir}/opt/2ManDVD ${pkgdir}/usr/bin
+  cp -R Bibliotheque Interface 2ManDVD fake.pl *.qm README.txt ${pkgdir}/opt/2ManDVD/
+  install -D -m755 ${srcdir}/2mandvd.sh ${pkgdir}/usr/bin/2ManDVD
 
   # Fixing some right problems
-  cd $pkgdir/opt/2ManDVD
+  cd ${pkgdir}/opt/2ManDVD
   find . -type f -print0 | xargs -0 -n1 chmod 644
-  #find . -type d -print0 | xargs -0 -n1 chmod 755
+  
   chmod 755 Bibliotheque Interface
   chmod +x 2ManDVD
-  cd $pkgdir/opt/2ManDVD/Bibliotheque
-  chmod 777 *
+  cd ${pkgdir}/opt/2ManDVD/Bibliotheque
+  chmod -R 777 *
 
   # Creating menu item
-  install -D -m644 $srcdir/2ManDVD/Interface/mandvd.png $pkgdir/usr/share/pixmaps/2mandvd.png
-  install -D -m644 $srcdir/2mandvd.desktop $pkgdir/usr/share/applications/2mandvd.desktop
+  install -D -m644 ${srcdir}/2ManDVD/Interface/mandvd.png ${pkgdir}/usr/share/pixmaps/2mandvd.png
+  install -D -m644 ${srcdir}/2mandvd.desktop ${pkgdir}/usr/share/applications/2mandvd.desktop  
 }
