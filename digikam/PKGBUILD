@@ -4,21 +4,16 @@
 # maintainer (i686): Phil Miller <philm[at]chakra-project[dog]org>
 # maintainer (x86_64): Manuel Tortosa <manutortosa[at]chakra-project[dot]org>
 
-# include global config
-source ../_buildscripts/${current_repo}-${_arch}-cfg.conf
-
-pkgname=digikam
+pkgbase=digikam
+pkgname=('digikam' 'kipi-plugins')
 pkgver=2.0.0
-pkgrel=1
-pkgdesc="Digital photo management application for kde"
+pkgrel=2
 arch=('i686' 'x86_64')
 license=('GPL')
 url="http://digikam.sourceforge.net"
-depends=('kde-runtime' 'kdegraphics-kgamma' 'kdepimlibs' 'lensfun' 'kdeedu-marble' 'liblqr' 'kipi-plugins')
-makedepends=('pkgconfig' 'cmake' 'automoc4' 'doxygen' 'docbook-xsl')
+makedepends=('kde-runtime' 'kdegraphics-kgamma' 'kdepimlibs' 'lensfun' 'kdeedu-marble' 'liblqr' 'opencv'
+	     'pkgconfig' 'cmake' 'automoc4' 'doxygen' 'docbook-xsl')
 source=(http://sourceforge.net/projects/digikam/files/${pkgname}/${pkgver}/${pkgname}-${pkgver}.tar.bz2)
-replaces=('digikamimageplugins')
-install=digikam.install
 md5sums=('7b1ab69fc2fb36a45dc3ca38b01d42d8')
 
 build() {
@@ -34,7 +29,36 @@ build() {
    make 
 }
 
-package() {
-  cd "${srcdir}"/build
-  make DESTDIR="${pkgdir}" install
+package_digikam() {
+  pkgdesc="Digital photo management application for kde"
+  depends=('kde-runtime' 'kdegraphics-kgamma' 'kdepimlibs' 'lensfun' 'kdeedu-marble' 'liblqr' 'opencv')
+  optdepends=('kipi-plugins : additional image operations')
+  install=digikam.install
+  replaces=('digikamimageplugins')
+
+  splitdirs="core doc po"
+  for i in ${splitdirs} ; do
+      cd ${srcdir}/build/${i}
+      make DESTDIR="${pkgdir}" install
+  done
+
+}
+
+package_kipi-plugins() {
+  pkgdesc="libkipi plugins for digikam and kde apps"
+  url="http://www.kipi-plugins.org"
+  depends=('kdegraphics-kgamma' 'kdepimlibs' 'opencv' 'libgpod' 'sane')
+  optdepends=('imagemagick: for picture manipulation'
+		'qca: for shwup webservice support')
+  install=kipi-plugins.install
+  provides=('libkface libkgeomap libmediawiki')
+  replaces=('libkface libkgeomap libmediawiki')
+  conflicts=('libkface libkgeomap libmediawiki')
+
+  splitdirs="libkface libkgeomap libmediawiki kipi-plugins"
+  for i in ${splitdirs} ; do
+      cd ${srcdir}/build/extra/${i}
+      make DESTDIR="${pkgdir}" install
+  done
+
 }
