@@ -9,7 +9,7 @@
 
 
 pkgname=texmaker
-pkgver=3.0.2
+pkgver=3.1
 pkgrel=1
 pkgdesc="The LaTeX IDE TexMaker. Gives you an environment where you can easily create and manage LaTeX documents."
 arch=('i686' 'x86_64')
@@ -18,11 +18,15 @@ license=('GPL')
 depends=('qt>=4.6.1' 'poppler-qt')
 
 source=(http://www.xm1math.net/texmaker/texmaker-$pkgver.tar.bz2)
-md5sums=('d375c8f486fe44f3f2a2a7d2ddac08f3')
+md5sums=('10a14c75abbb7234d4e5e58a7c85b110')
 
 build() {
     cd $srcdir/$pkgname-$pkgver
     qmake texmaker.pro
     make || return 1
+}
+
+package() {
+    cd $srcdir/$pkgname-$pkgver
     make install INSTALL_ROOT="$pkgdir"
 }
