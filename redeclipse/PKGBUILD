@@ -5,42 +5,55 @@
 
 pkgname=redeclipse
 pkgver=1.1
-pkgrel=1
-pkgdesc="A single-player and multi-player first-person ego-shooter, built as a total conversion of Cube Engine 2"
-arch=('i686' 'x86_64')
-url="http://redeclipse.net"
-license=('CCPL-by-sa' 'ZLIB')
-depends=('sdl_image'  'libgl' 'sdl_mixer')
-makedepends=('mesa')
-source=("http://downloads.sourceforge.net/$pkgname/${pkgname}_${pkgver}_linux_bsd.tar.bz2")
-md5sums=('8d8aa038c7c866bced43b110333b37d7')
+pkgrel=2
+pkgdesc='A first-person shooter, built as a total conversion of Cube Engine 2.'
+arch=(i686 x86_64)
+url=http://redeclipse.net
+license=(CCPL-by-sa ZLIB)
+depends=(enet libgl mesa sdl sdl_image sdl_mixer zlib)
+source=(http://downloads.sourceforge.net/$pkgname/${pkgname}_${pkgver}_linux_bsd.tar.bz2
+	system-libs.diff
+	http://imagecdn.maketecheasier.com/2011/04/red-eclipse-logo.png)
+md5sums=('e1330a858944e3bdb98fd15e07025d5f'
+         'f34900e6c8247754800d8fba0600dfb7'
+         '813971d2496132781ff0f8bf55e0cd2d')
 
 build() {
   cd $srcdir/$pkgname/src
+
+  # Patches.
+  patch -uN Makefile $srcdir/system-libs.diff
+
+  # Compilation.
   make
 }
 
 package() {
   cd $srcdir/$pkgname
   
-  install -d $pkgdir/usr/{share/$pkgname,}/bin
-  sed -i "s|RE_DATA=.|RE_DATA=/usr/share/$pkgname|" $pkgname.sh
+  # Game.
+  install -d $pkgdir/usr/share/$pkgname/bin
   install -m755 src/re{server,client} $pkgdir/usr/share/$pkgname/bin/
   cp -rf  data/ $pkgdir/usr/share/$pkgname
 
   # Execution script.
-  cat <<EOF > $pkgdir/usr/bin/$pkgname
-#!/bin/sh
-cd /usr/share/$pkgname
-exec bin/reclient -r "\$@"
-EOF
-  chmod 755 $pkgdir/usr/bin/$pkgname
+  install -d $pkgdir/usr/bin
+  echo '#!/bin/sh'			 > $pkgdir/usr/bin/$pkgname
+  echo "cd /usr/share/$pkgname"		>> $pkgdir/usr/bin/$pkgname
+  echo 'exec bin/reclient -r "$@"'	>> $pkgdir/usr/bin/$pkgname
+  chmod +x $pkgdir/usr/bin/$pkgname
+
+  # Desktop integration file.
+  sed -i \
+    -e 's/Version=1\.1/Version=1\.0/' \
+    -e 's|Icon=redeclipse|Icon=/usr/share/pixmaps/redeclipse|' \
+    -e 's/a\./a/' \
+    src/install/nix/$pkgname.desktop
+  install -Dm644 src/install/nix/$pkgname.desktop $pkgdir/usr/share/applications/$pkgname.desktop
 
   # Icon.
-  install -Dm644 src/redeclipse.ico $pkgdir/usr/share/pixmaps/$pkgname.png
+  install -Dm644 $srcdir/red-eclipse-logo.png $pkgdir/usr/share/pixmaps/$pkgname.png
 
   # License.
   install -Dm644 license.txt $pkgdir/usr/share/licenses/$pkgname/LICENSE
 }
-
-md5sums=('e1330a858944e3bdb98fd15e07025d5f')
