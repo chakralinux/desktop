@@ -10,9 +10,8 @@ source ../_buildscripts/${current_repo}-${_arch}-cfg.conf
 #
 # package info
 #
-pkgbase="kdewebdev"
-pkgname=('kdewebdev-common'
-         'kdewebdev-doc'
+pkgbase=('kdewebdev')
+pkgname=('kdewebdev-doc'
          'kdewebdev-kfilereplace'
          'kdewebdev-kimagemapeditor'
          'kdewebdev-kommander'
@@ -29,10 +28,11 @@ license=('GPL' 'LGPL' 'FDL')
 options=('docs' '!splithdr' 'splitdbg' 'log')
 
 makedepends=('pkgconfig' 'cmake' 'automoc4' 'ruby' "kdepimlibs>=${_kdever}"
-             "kdebase-runtime>=${_kdever}" 'tidyhtml') # "kdepim-runtime>=${_kdever}"
+             "kde-runtime>=${_kdever}" 'tidyhtml' "kdepim-runtime>=${_kdever}")
 
 source=($_mirror/${pkgbase}-$_kdever.tar.bz2)
 md5sums=(`grep ${pkgbase}-$_kdever.tar.bz2 ../kde-sc.md5 | cut -d" " -f1`)
+
 
 
 #
@@ -51,34 +51,17 @@ build()
 	make || return 1
 }
 
+
+
 #
 # split-install functions
 #
-package_kdewebdev-common()
-{
-	pkgdesc="KDE webdev - Common files and libraries"
-	provides=("${pkgbase}=${_kdever}")
-	groups=("kde" "${pkgbase}" "kde-uninstall")
-	install=${pkgbase}.install
-
-	# include our patches into the package
-#	ls -1 ${startdir}/*.patch &>/dev/null 2>&1
-#	if [ "$?" = "0" ]; then
-#		warning "incuding patches into package"
-#		mkdir -p ${pkgdir}/usr/share/kdemod/patches/${pkgbase} &>/dev/null
-#		for i in ${startdir}/*.patch; do
-#			msg "$i"
-#			cp $i ${pkgdir}/usr/share/kdemod/patches/${pkgbase}/ &>/dev/null
-#		done
-#	else
-#		warning "no patches found, skipping to include them into the package..."
-#	fi
-}
 
 package_kdewebdev-doc()
 {
 	pkgdesc="KDE webdev - Documentation"
 	groups=("kde" "${pkgbase}" "kde-doc" "kde-uninstall")
+	conflicts=('kdewebdev-common')
 
 	splitdirs="doc"
 		for i in ${splitdirs} ; do
@@ -90,10 +73,9 @@ package_kdewebdev-doc()
 package_kdewebdev-kfilereplace()
 {
 	pkgdesc="Utility that replace some strings with others in a lot of files in an only operation"
-	depends=("${pkgbase}-common>=${_kdever}" "kdebase-runtime>=${_kdever}"
-		 "kdelibs>=${_kdever}")
-	provides=('kfilereplace')
+	depends=("kde-runtime>=${_kdever}" "kdelibs>=${_kdever}")
 	groups=("kde" "${pkgbase}" "kde-uninstall")
+	conflicts=('kdewebdev-common')
 	install=${pkgbase}.install
 
 	splitdirs="kfilereplace"
@@ -106,9 +88,8 @@ package_kdewebdev-kfilereplace()
 package_kdewebdev-kimagemapeditor()
 {
 	pkgdesc="Image map editor"
-	depends=("${pkgbase}-common>=${_kdever}" "kdebase-runtime>=${_kdever}"
-		 "kdelibs>=${_kdever}")
-	provides=('kimagemapeditor')
+	depends=("kde-runtime>=${_kdever}" "kdelibs>=${_kdever}")
+	conflicts=('kdewebdev-common')
 	groups=("kde" "${pkgbase}" "kde-uninstall")
 	install=${pkgbase}.install
 
@@ -122,9 +103,8 @@ package_kdewebdev-kimagemapeditor()
 package_kdewebdev-kommander()
 {
 	pkgdesc="Kommander, the visual application builder"
-	depends=("${pkgbase}-common>=${_kdever}" "kdebase-runtime>=${_kdever}"
-		 "kdelibs>=${_kdever}")
-	provides=('kommander')
+	depends=("kde-runtime>=${_kdever}" "kdelibs>=${_kdever}")
+	conflicts=('kdewebdev-common')
 	groups=("kde" "${pkgbase}" "kde-uninstall")
 	install=${pkgbase}.install
 
@@ -138,9 +118,8 @@ package_kdewebdev-kommander()
 package_kdewebdev-klinkstatus()
 {
 	pkgdesc="A Link checker utility"
-	depends=("${pkgbase}-common>=${_kdever}" "kdebase-runtime>=${_kdever}"
-		 "kdelibs>=${_kdever}" 'tidyhtml' "kdepimlibs>=${_kdever}") # "kdepim-runtime>=${_kdever}"
-	provides=('klinkstatus')
+	depends=("kde-runtime>=${_kdever}" "kdelibs>=${_kdever}" 'tidyhtml' "kdepimlibs>=${_kdever}") # "kdepim-runtime>=${_kdever}"
+	conflicts=('kdewebdev-common')
 	groups=("kde" "${pkgbase}" "kde-uninstall")
 	install=${pkgbase}.install
 
@@ -150,3 +129,4 @@ package_kdewebdev-klinkstatus()
 			make DESTDIR=${pkgdir} install || return 1
 		done
 }
+

@@ -7,11 +7,13 @@
 # include global config
 source ../_buildscripts/${current_repo}-${_arch}-cfg.conf
 
+# original name (used for the source and pkgnames)
+_origname=kdepimlibs
+
 #
 # package info
 #
-pkgbase="kdepimlibs"
-pkgname="kdepimlibs"
+pkgname=${_origname}
 arch=('i686' 'x86_64')
 pkgver=${_kdever}
 pkgrel=1
@@ -20,18 +22,15 @@ pkgdesc="KDE Pim Libraries"
 url="http://www.kde.org"
 license=('GPL' 'LGPL' 'FDL')
 
-install=${pkgbase}.install
+install=${_origname}.install
 options=('docs' '!splithdr' 'splitdbg' 'log')
+depends=("kdelibs>=${_kdever}" 'akonadi>=1.5.80' 'libical' 'gpgme' 'prison')
+makedepends=('pkgconfig' 'cmake' 'automoc4' 'boost' 'cyrus-sasl' 'openldap' 'prison')
+
 groups=("kde" "kde-uninstall" "kde-minimal")
 
-depends=("kdelibs>=${_kdever}" 'akonadi>=1.4.85' 'libical' 'gpgme')
-makedepends=('pkgconfig' 'cmake' 'automoc4' 'boost' 'cyrus-sasl' 'openldap' 'docbook-xsl')
-
-
-source=($_mirror/${pkgbase}-$_kdever.tar.bz2)
-md5sums=(`grep ${pkgbase}-$_kdever.tar.bz2 ../kde-sc.md5 | cut -d" " -f1`)
-
-
+source=($_mirror/${_origname}-$_kdever.tar.bz2)
+md5sums=(`grep ${_origname}-$_kdever.tar.bz2 ../kde-sc.md5 | cut -d" " -f1`)
 
 #
 # build and install
@@ -43,26 +42,17 @@ build()
 	mkdir -p build
 	cd build
 
-	cmake ../${pkgbase}-${pkgver} \
+	cmake ../${_origname}-${pkgver} \
 		-DCMAKE_BUILD_TYPE=${_build_type} \
 		-DCMAKE_INSTALL_PREFIX=${_installprefix} \
 		-DCMAKE_SKIP_RPATH=ON \
 		-DCMAKE_{SHARED,MODULE,EXE}_LINKER_FLAGS='-Wl,--no-undefined -Wl,--as-needed'
 
 	make || return 1
+}
 
+package()
+{
+	cd ${srcdir}/build
 	make DESTDIR=${pkgdir} install || return 1
-
-#	# include our patches into the package
-#	ls -1 ${startdir}/*.patch &>/dev/null 2>&1
-#	if [ "$?" = "0" ]; then
-#		warning "incuding patches into package"
-#		mkdir -p ${pkgdir}/usr/share/chakra/patches/${pkgbase} &>/dev/null
-#		for i in ${startdir}/*.patch; do
-#			msg "$i"
-#			cp $i ${pkgdir}/usr/share/chakra/patches/${pkgbase}/ &>/dev/null
-#		done
-#	else
-#		warning "no patches found, skipping to include them into the package..."
-#	fi
 }
