@@ -19,7 +19,7 @@ pkgname=('kde-baseapps'
 
 arch=('i686' 'x86_64')
 pkgver=${_kdever}
-pkgrel=1
+pkgrel=2
 
 pkgdesc="split package"
 url="http://www.kde.org"
@@ -67,7 +67,7 @@ package_kde-baseapps()
 	groups=("${pkgbase}" "kde" "kde-minimal" "kde-uninstall")
 	install=kde-baseapps.install
 
-	splitdirs="kdepasswd kdialog keditbookmarks kfind lib nsplugins plasma"
+	splitdirs="kdepasswd kdialog keditbookmarks kfind lib nsplugins plasma konqueror"
 		for i in ${splitdirs} ; do
 			cd ${srcdir}/${pkgbase}-${pkgver}/${i}
 			make DESTDIR=${pkgdir} install || return 1
@@ -81,6 +81,33 @@ package_kde-baseapps()
 		-DCMAKE_{SHARED,MODULE}_LINKER_FLAGS='-Wl,--no-undefined -Wl,--as-needed'
 	make
 	make DESTDIR=${pkgdir} install || return 1
+	
+	# prepare konqueror
+	msg "splitting konqueror ..."
+	rm -vR ${pkgdir}/usr/include/konqsidebarplugin.h 
+	rm -vR ${pkgdir}/usr/lib/libkonqsidebarplugin.so*
+	rm -vR ${pkgdir}/usr/lib/libkdeinit4_konqueror.so*
+	rm -vR ${pkgdir}/usr/lib/libkonquerorprivate.so*
+	rm -vR ${pkgdir}/usr/lib/kde4/konq_aboutpage.so*
+	rm -vR ${pkgdir}/usr/lib/kde4/konqsidebar_web.so*
+	rm -vR ${pkgdir}/usr/lib/kde4/konq_sidebartree_bookmarks.so*
+	rm -vR ${pkgdir}/usr/lib/kde4/konq_sidebartree_dirtree.so*
+	rm -vR ${pkgdir}/usr/lib/kde4/konq_sidebar.so*
+	rm -vR ${pkgdir}/usr/lib/kde4/konqsidebar_history.so*
+	rm -vR ${pkgdir}/usr/lib/kde4/kded_konqy_preloader.so*
+	rm -vR ${pkgdir}/usr/lib/kde4/konqsidebar_places.so*
+	rm -vR ${pkgdir}/usr/lib/kde4/konqsidebar_tree.so*
+	rm -vR ${pkgdir}/usr/share/config/konqsidebartngrc
+	rm -vR ${pkgdir}/usr/share/config.kcfg/konqueror.kcfg
+	rm -vR ${pkgdir}/usr/share/autostart/konqy_preload.desktop
+	rm -vR ${pkgdir}/usr/share/applications/kde4/konquerorsu.desktop
+	rm -vR ${pkgdir}/usr/share/applications/kde4/konqbrowser.desktop
+	rm -vR ${pkgdir}/usr/share/apps/konqsidebartng
+	rm -vR ${pkgdir}/usr/share/apps/konqueror
+	rm -vR ${pkgdir}/usr/share/icons/
+	rm -vR ${pkgdir}/usr/share/dbus-1/interfaces/org.kde.Konq*
+	rm -vR ${pkgdir}/usr/share/dbus-1/interfaces/org.kde.konq*
+	rm -vR ${pkgdir}/usr/bin/konqueror
 	
 	# we dont want the cdemu manager app. the service menu + devicenotifier is perfect already
 	rm -rfv ${pkgdir}/usr/share/applications/kde4/kde_cdemu.desktop
@@ -145,6 +172,22 @@ package_kde-baseapps-konqueror()
 			cd ${srcdir}/${pkgbase}-${pkgver}/${i}
 			make DESTDIR=${pkgdir} install || return 1
 		done
+
+	msg "remove conflicting files ..."
+	rm -vR ${pkgdir}/usr/bin/kfmclient
+	rm -vR ${pkgdir}/usr/lib/kde4/kcm_history.so*
+	rm -vR ${pkgdir}/usr/lib/kde4/kcm_kio.so*
+	rm -vR ${pkgdir}/usr/lib/kde4/kcm_konq.so*
+	rm -vR ${pkgdir}/usr/lib/kde4/kcm_konqhtml.so*
+	rm -vR ${pkgdir}/usr/lib/kde4/kcm_kurifilt.so*
+	rm -vR ${pkgdir}/usr/lib/kde4/kcm_performance.so*
+	rm -vR ${pkgdir}/usr/lib/libkdeinit4_kfmclient.so*
+	rm -vR ${pkgdir}/usr/share/applications/kde4/Home.desktop
+	rm -vR ${pkgdir}/usr/share/applications/kde4/kfmclient*
+	rm -vR ${pkgdir}/usr/share/apps/kcmcss
+	rm -vR ${pkgdir}/usr/share/apps/kconf_update
+	rm -vR ${pkgdir}/usr/share/apps/kcontrol
+	rm -vR ${pkgdir}/usr/share/kde4/service*
 }
 
 package_kde-baseapps-konq-plugins()
