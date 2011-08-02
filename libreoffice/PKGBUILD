@@ -24,8 +24,8 @@ pkgname=('libreoffice' 'libreoffice-sdk'
 	'libreoffice-extension-validator'
 	'libreoffice-extension-watch-window'
 	'libreoffice-extension-wiki-publisher')
-_LOver=3.4.1.3
-pkgver=3.4.1
+_LOver=3.4.2.3
+pkgver=3.4.2
 pkgrel=1
 arch=('i686' 'x86_64')
 #_LO_tree="3.4"
@@ -44,7 +44,6 @@ makedepends=( # makedepends
              'hicolor-icon-theme' 'desktop-file-utils' 'shared-mime-info' 'ttf-dejavu' 'libcups')
 
 _mirror="http://download.documentfoundation.org/libreoffice/src"
-#_mirror="http://dev-builds.libreoffice.org/pre-releases/src/"
 _additional_source_url="http://hg.services.openoffice.org/binaries"
 source=(${_mirror}/${pkgbase}-{artwork,base,bootstrap,calc,components,extensions,extras,filters,help,impress,libs-core,libs-extern,libs-extern-sys,libs-gui,postprocess,sdk,testing,ure,writer}-${_LOver}.tar.bz2 #,translations
 	${_additional_source_url}/1f24ab1d39f4a51faf22244c94a6203f-xmlsec1-1.2.14.tar.gz
@@ -70,14 +69,14 @@ source=(${_mirror}/${pkgbase}-{artwork,base,bootstrap,calc,components,extensions
 	${_additional_source_url}/db60e4fde8dd6d6807523deb71ee34dc-liblayout-0.2.10.zip
 	${_additional_source_url}/ba2930200c9f019c2d93a8c88c651a0f-flow-engine-0.9.4.zip
 	${_additional_source_url}/18f577b374d60b3c760a3a3350407632-STLport-4.5.tar.gz
-	http://download.go-oo.org/src/7a0dcb3fe1e8c7229ab4fb868b7325e6-mdds_0.5.2.tar.bz2
+	http://download.go-oo.org/src/0ff7d225d087793c8c2c680d77aac3e7-mdds_0.5.3.tar.bz2
 	http://download.go-oo.org/extern/185d60944ea767075d27247c3162b3bc-unowinreg.dll
 	http://download.go-oo.org/extern/b4cae0700aa1c2aef7eb7f345365e6f1-translate-toolkit-1.8.1.tar.bz2
 	http://download.go-oo.org/src/90401bca927835b6fbae4a707ed187c8-nlpsolver-0.9.tar.bz2
 	http://download.go-oo.org/src/f02578f5218f217a9f20e9c30e119c6a-boost_1_44_0.tar.bz2
 	http://ooo.itc.hu/oxygenoffice/download/libreoffice/7e7efc5d4a03126bb9ae3ae9aa2c4e87-Barcode_1.3.1.0.oxt
 	http://ooo.itc.hu/oxygenoffice/download/libreoffice/41c9b65ad60af4b3255bbecdfef11736-Diagram_1.1.0.0.oxt
-	http://ooo.itc.hu/oxygenoffice/download/libreoffice/451ccf439a36a568653b024534669971-ConvertTextToNumber-1.3.2.oxt
+	http://ooo.itc.hu/oxygenoffice/download/libreoffice/451ccf439a36a568653b024534669971-ConvertTextToNumber_1.3.2.oxt
 	http://ooo.itc.hu/oxygenoffice/download/libreoffice/bbdd5639ada63e3130761daaecae1a10-Validator_1.1.0.0.oxt
 	http://ooo.itc.hu/oxygenoffice/download/libreoffice/23bd75552206dfcd8fd4e29137dcac84-WatchWindow_1.2.0.0.oxt
 	http://ooo.itc.hu/oxygenoffice/download/libreoffice/b8cbca7b3363e6ca2d02bc0ba2b63904-numbertext_0.9.4.oxt
@@ -88,10 +87,10 @@ source=(${_mirror}/${pkgbase}-{artwork,base,bootstrap,calc,components,extensions
 	buildfix_boost.diff
 	buildfix_ct2n.diff
 	vbahelper.visibility.patch
-	0001-fix-configure-without-the-optional-translations-modu.patch)
+	scp2-more-reasonable-file-access-rights.diff)
 noextract=(185d60944ea767075d27247c3162b3bc-unowinreg.dll
 	b4cae0700aa1c2aef7eb7f345365e6f1-translate-toolkit-1.8.1.tar.bz2
-	7a0dcb3fe1e8c7229ab4fb868b7325e6-mdds_0.5.2.tar.bz2
+	0ff7d225d087793c8c2c680d77aac3e7-mdds_0.5.3.tar.bz2
 	ada24d37d8d638b3d8a9985e80bc2978-source-9.0.0.7-bj.zip
 	798b2ffdc8bcfe7bca2cf92b62caf685-rhino1_5R5.zip
 	1f24ab1d39f4a51faf22244c94a6203f-xmlsec1-1.2.14.tar.gz
@@ -127,68 +126,69 @@ noextract=(185d60944ea767075d27247c3162b3bc-unowinreg.dll
 	b7b2d0e04e142f26dd96119c80757d1f-oooblogger_0.1.oxt
 	90401bca927835b6fbae4a707ed187c8-nlpsolver-0.9.tar.bz2
 	f02578f5218f217a9f20e9c30e119c6a-boost_1_44_0.tar.bz2)
-md5sums=('10b3212002688e7ce49a276c68352b50'
-         'c6547ec8f971284ea1e58bb39375c500'
-         '26328364a0804dedab94818c15e76871'
-         'd26c6ab53c9404e82e04ea366d4db261'
-         '132aa87f2f3e7fff62d7211a86b769f3'
-         '801c254c28402df0c5fb5e2615817a6d'
-         'b94208fdae537f0b026ee26cede9a946'
-         '096e3071949d1eedf73faa13a2cf7b7e'
-         'e27e715b08cc6a35988aaa6efab6cc7f'
-         'e94d7adb79f38d3fd8119b712b04cc6e'
-         '1d2e7ca24b9fffafeaf236817fc8cbe9'
-         '69a9af6536607340a57b54b5562077f7'
-         '3b4e819497ba695f5c64a0107c2aac8d'
-         '5a7370a79e563f649f6bf506bc71928c'
-         'c480ed571703e68d851fbbcd4aa520be'
-         '222cec135152c108068baa4e370a3f68'
-         '93524298efb472503b12ae47c95de399'
-         '5420c40473f8bf8e5b400dd8a1e54f02'
-         '1516196f023bb1ae55fd1773a8db9d16'
-         '1f24ab1d39f4a51faf22244c94a6203f'
-         '35c94d2df8893241173de1d16b6034c0'
-         '798b2ffdc8bcfe7bca2cf92b62caf685'
-         'fdb27bfe2dbe2e7b57ae194d9bf36bab'
-         'ada24d37d8d638b3d8a9985e80bc2978'
-         '2a177023f9ea8ec8bd00837605c5df1b'
-         'a7983f859eafb2677d7ff386a023bc40'
-         '3c219630e4302863a9a83d0efde889db'
-         '2ae988b339daec234019a7066f96733e'
-         '2c9b0f83ed5890af02c0df1c1776f39b'
-         'af3c3acf618de6108d65fcdc92b492e1'
-         'eeb2c7ddf0d302fba4bfc6e97eac9624'
-         '39bb3fcea1514f1369fcfc87542390fd'
-         '3404ab6b1792ae5f16bbd603bd1e1d03'
-         '97b2d4dba862397f446b217e2b623e71'
-         'f94d9870737518e3b597f9265f4e9803'
-         '8ce2fcd72becf06c41f7201d15373ed9'
-         'd8bd5eed178db6e2b18eeed243f85aa8'
-         '3bdf40c0d199af31923e900d082ca2dd'
-         'ace6ab49184e329db254e454a010f56d'
-         'db60e4fde8dd6d6807523deb71ee34dc'
-         'ba2930200c9f019c2d93a8c88c651a0f'
-         '18f577b374d60b3c760a3a3350407632'
-         '7a0dcb3fe1e8c7229ab4fb868b7325e6'
-         '185d60944ea767075d27247c3162b3bc'
-         'b4cae0700aa1c2aef7eb7f345365e6f1'
-         '90401bca927835b6fbae4a707ed187c8'
-         'f02578f5218f217a9f20e9c30e119c6a'
-         '7e7efc5d4a03126bb9ae3ae9aa2c4e87'
-         '41c9b65ad60af4b3255bbecdfef11736'
-         '451ccf439a36a568653b024534669971'
-         'bbdd5639ada63e3130761daaecae1a10'
-         '23bd75552206dfcd8fd4e29137dcac84'
-         'b8cbca7b3363e6ca2d02bc0ba2b63904'
-         'b632bdd25649cc4067bcb410bae23d2b'
-         '9d60b6cfa3ef1926848710bbcd11115b'
-         'dbaafd21de055e582d92d7d32fe9da13'
-         'b7b2d0e04e142f26dd96119c80757d1f'
-         'bc228237108cab7745897a9f466b6d39'
-         'eee273f501ff45dc5f1365e78c6d57c0'
-         '43b145db28e6c0d73578ae6fd35e510d'
-         'f8a8fdcc58f50560fbc266e28efdbbfe')
 
+md5sums=('1600ebf998ec7075bd0e96e7a49513dc' #libreoffice-artwork-3.4.2.3.tar.bz2
+         '0e12b4a03d14645dac1f073eb2f67423' #libreoffice-base-3.4.2.3.tar.bz2
+         'f106511220a2a0b2a45571cf7605953a' #libreoffice-bootstrap-3.4.2.3.tar.bz2
+         '20854b5961b8b0b38219376a93ecf362' #libreoffice-calc-3.4.2.3.tar.bz2
+         '5799be1571289b7c17bd8fd2020c00f6' #libreoffice-components-3.4.2.3.tar.bz2
+         '75ca9da214abe072e37fb4d19fc2c34f' #libreoffice-extensions-3.4.2.3.tar.bz2
+         '73aa766053ea8f4c84dd0a76c0888f18' #libreoffice-extras-3.4.2.3.tar.bz2
+         '4416cc18cfa84f61eae905ff441a18d0' #libreoffice-filters-3.4.2.3.tar.bz2
+         'ecfd57a3dfd0ce230e5837b5099a0d5a' #libreoffice-help-3.4.2.3.tar.bz2
+         '40e23531e95617c7fe91e7025f007a91' #libreoffice-impress-3.4.2.3.tar.bz2
+         'bd2027fc2160798728e49d0fd331d163' #libreoffice-libs-core-3.4.2.3.tar.bz2
+         '9a948012496fcd27c31f755314ff98e3' #libreoffice-libs-extern-3.4.2.3.tar.bz2
+         'a5a8d9080492968eef001314093cd82d' #libreoffice-libs-extern-sys-3.4.2.3.tar.bz2
+         '810aa9e69b96af0f4de2e6d74b7b1847' #libreoffice-libs-gui-3.4.2.3.tar.bz2
+         '45de04dcbb6f6ff7474110ee982da7b8' #libreoffice-postprocess-3.4.2.3.tar.bz2
+         '545d65e92b674d354dd6511ee552d23f' #libreoffice-sdk-3.4.2.3.tar.bz2
+         '99e306957e38ce5e68deed9568874be6' #libreoffice-testing-3.4.2.3.tar.bz2
+         '2e7277588ef610b7a06953c59dc77c9b' #libreoffice-ure-3.4.2.3.tar.bz2
+         '281973e517d3b5626f5eedd746378fcc' #libreoffice-writer-3.4.2.3.tar.bz2
+         '1f24ab1d39f4a51faf22244c94a6203f' #1f24ab1d39f4a51faf22244c94a6203f-xmlsec1-1.2.14.tar.gz
+         '35c94d2df8893241173de1d16b6034c0' #35c94d2df8893241173de1d16b6034c0-swingExSrc.zip
+         '798b2ffdc8bcfe7bca2cf92b62caf685' #798b2ffdc8bcfe7bca2cf92b62caf685-rhino1_5R5.zip
+         'fdb27bfe2dbe2e7b57ae194d9bf36bab' #fdb27bfe2dbe2e7b57ae194d9bf36bab-SampleICC-1.3.2.tar.gz
+         'ada24d37d8d638b3d8a9985e80bc2978' #ada24d37d8d638b3d8a9985e80bc2978-source-9.0.0.7-bj.zip
+         '2a177023f9ea8ec8bd00837605c5df1b' #2a177023f9ea8ec8bd00837605c5df1b-jakarta-tomcat-5.0.30-src.tar.gz
+         'a7983f859eafb2677d7ff386a023bc40' #a7983f859eafb2677d7ff386a023bc40-xsltml_2.1.2.zip
+         '3c219630e4302863a9a83d0efde889db' #3c219630e4302863a9a83d0efde889db-commons-logging-1.1.1-src.tar.gz
+         '2ae988b339daec234019a7066f96733e' #2ae988b339daec234019a7066f96733e-commons-lang-2.3-src.tar.gz
+         '2c9b0f83ed5890af02c0df1c1776f39b' #2c9b0f83ed5890af02c0df1c1776f39b-commons-httpclient-3.1-src.tar.gz
+         'af3c3acf618de6108d65fcdc92b492e1' #af3c3acf618de6108d65fcdc92b492e1-commons-codec-1.3-src.tar.gz
+         'eeb2c7ddf0d302fba4bfc6e97eac9624' #eeb2c7ddf0d302fba4bfc6e97eac9624-libbase-1.1.6.zip
+         '39bb3fcea1514f1369fcfc87542390fd' #39bb3fcea1514f1369fcfc87542390fd-sacjava-1.3.zip
+         '3404ab6b1792ae5f16bbd603bd1e1d03' #3404ab6b1792ae5f16bbd603bd1e1d03-libformula-1.1.7.zip
+         '97b2d4dba862397f446b217e2b623e71' #97b2d4dba862397f446b217e2b623e71-libloader-1.1.6.zip
+         'f94d9870737518e3b597f9265f4e9803' #f94d9870737518e3b597f9265f4e9803-libserializer-1.1.6.zip
+         '8ce2fcd72becf06c41f7201d15373ed9' #8ce2fcd72becf06c41f7201d15373ed9-librepository-1.1.6.zip
+         'd8bd5eed178db6e2b18eeed243f85aa8' #d8bd5eed178db6e2b18eeed243f85aa8-flute-1.1.6.zip
+         '3bdf40c0d199af31923e900d082ca2dd' #3bdf40c0d199af31923e900d082ca2dd-libfonts-1.1.6.zip
+         'ace6ab49184e329db254e454a010f56d' #ace6ab49184e329db254e454a010f56d-libxml-1.1.7.zip
+         'db60e4fde8dd6d6807523deb71ee34dc' #db60e4fde8dd6d6807523deb71ee34dc-liblayout-0.2.10.zip
+         'ba2930200c9f019c2d93a8c88c651a0f' #ba2930200c9f019c2d93a8c88c651a0f-flow-engine-0.9.4.zip
+         '18f577b374d60b3c760a3a3350407632' #18f577b374d60b3c760a3a3350407632-STLport-4.5.tar.gz
+         '0ff7d225d087793c8c2c680d77aac3e7' #0ff7d225d087793c8c2c680d77aac3e7-mdds_0.5.3.tar.bz2
+         '185d60944ea767075d27247c3162b3bc' #185d60944ea767075d27247c3162b3bc-unowinreg.dll
+         'b4cae0700aa1c2aef7eb7f345365e6f1' #b4cae0700aa1c2aef7eb7f345365e6f1-translate-toolkit-1.8.1.tar.bz2
+         '90401bca927835b6fbae4a707ed187c8' #90401bca927835b6fbae4a707ed187c8-nlpsolver-0.9.tar.bz2
+         'f02578f5218f217a9f20e9c30e119c6a' #f02578f5218f217a9f20e9c30e119c6a-boost_1_44_0.tar.bz2
+         '7e7efc5d4a03126bb9ae3ae9aa2c4e87' #7e7efc5d4a03126bb9ae3ae9aa2c4e87-Barcode_1.3.1.0.oxt
+         '41c9b65ad60af4b3255bbecdfef11736' #41c9b65ad60af4b3255bbecdfef11736-Diagram_1.1.0.0.oxt
+         '451ccf439a36a568653b024534669971' #451ccf439a36a568653b024534669971-ConvertTextToNumber_1.3.2.oxt
+         'bbdd5639ada63e3130761daaecae1a10' #bbdd5639ada63e3130761daaecae1a10-Validator_1.1.0.0.oxt
+         '23bd75552206dfcd8fd4e29137dcac84' #23bd75552206dfcd8fd4e29137dcac84-WatchWindow_1.2.0.0.oxt
+         'b8cbca7b3363e6ca2d02bc0ba2b63904' #b8cbca7b3363e6ca2d02bc0ba2b63904-numbertext_0.9.4.oxt
+         'b632bdd25649cc4067bcb410bae23d2b' #b632bdd25649cc4067bcb410bae23d2b-hunart_0.3.oxt
+         '9d60b6cfa3ef1926848710bbcd11115b' #9d60b6cfa3ef1926848710bbcd11115b-typo_0.4.2.oxt
+         'dbaafd21de055e582d92d7d32fe9da13' #dbaafd21de055e582d92d7d32fe9da13-gdocs_2.3.1.oxt
+         'b7b2d0e04e142f26dd96119c80757d1f' #b7b2d0e04e142f26dd96119c80757d1f-oooblogger_0.1.oxt
+         'bc228237108cab7745897a9f466b6d39' #buildfix_boost.diff
+         'eee273f501ff45dc5f1365e78c6d57c0' #buildfix_ct2n.diff
+         '43b145db28e6c0d73578ae6fd35e510d' #vbahelper.visibility.patch
+         '37638431e7e40baf2e47966ebb9bc0e9' #scp2-more-reasonable-file-access-rights.diff
+         )
 build() {
 
 	unset J2REDIR; unset J2SDKDIR; unset JAVA_HOME; unset CLASSPATH; unset EXTRAOPTS
@@ -214,13 +214,11 @@ build() {
 	patch -Np1 -i ${srcdir}/buildfix_boost.diff
 	patch -Np1 -i ${srcdir}/buildfix_ct2n.diff
 	patch -Np0 -i ${srcdir}/vbahelper.visibility.patch
-	patch -Np1 -i ${srcdir}/0001-fix-configure-without-the-optional-translations-modu.patch
-	
-	# unset C(XX)FLAGS
-	# http://www.openoffice.org/issues/show_bug.cgi?id=103205
-#	unset CFLAGS
-#	unset CXXFLAGS
+	patch -Np0 -i ${srcdir}/scp2-more-reasonable-file-access-rights.diff
 
+	# Temporary workaround to avoid build failure in ct2n
+	mv ${srcdir}/451ccf439a36a568653b024534669971-ConvertTextToNumber{_,-}1.3.2.oxt
+	
 	#use the CFLAGS but remove the LibO overridden ones
 	for i in $CFLAGS; do
 		case "$i" in
@@ -231,21 +229,6 @@ build() {
 	
 	# python2 fix
 	export PYTHON=python2
-
-	# http://wiki.documentfoundation.org/Development/How_to_build/Configure_options
-
-#	if [ "$CARCH" = "x86_64" ]; then
-#	      EXTRAOPTS="--without-stlport"
-#	 else 
-#	      EXTRAOPTS="--with-stlport" # --without-system-boost"
-#	      # # avoid problems with ixion for now
-#	      sed -i '/fields-table-formula.diff/d' patches/dev300/apply || return 1
-#	fi
-
-#	autoconf -v -f
-
-	# non-SMP test build
-#	export MAKEFLAGS="-j1"
 
 	./configure --with-build-version="${_LOver} Chakra GNU/Linux-${pkgrel}" --with-vendor="Chakra GNU/Linux" \
 		--with-unix-wrapper="libreoffice" \
@@ -340,7 +323,7 @@ package_libreoffice() {
  depends=("curl>=7.20.0" "hunspell>=1.2.8" "python2" 'libwpd>=0.9.0' 'libwps' 'libxaw' "neon>=0.28.6"
           'pango' 'nspr' 'libjpeg' 'libxrandr' 'libgl' 'dbus-glib' "icu>=4.6" 'libxslt'
           'redland' 'libgraphite' 'hyphen' 'lpsolve' 'gcc-libs' 'sh' 'libtextcat'
-          'hicolor-icon-theme' 'desktop-file-utils' 'shared-mime-info' 'libtextcat') 
+          'hicolor-icon-theme' 'desktop-file-utils' 'shared-mime-info' 'libtextcat' 'java-runtime') 
 ooptdepends=('java-runtime:     adds java support'
              'libcups:          adds printing support'
              'nss:              adds support for signed files/macros'
