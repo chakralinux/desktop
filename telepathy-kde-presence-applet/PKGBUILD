@@ -1,0 +1,31 @@
+#
+# Chakra Packages for Chakra, part of chakra-project.org
+#
+# maintainer (i686): Phil Miller <philm[at]chakra-project[dog]org>
+# maintainer (x86_64): Manuel Tortosa <manutortosa[at]chakra-project[dot]org>
+
+# include global config
+source ../_buildscripts/${current_repo}-${_arch}-cfg.conf
+
+pkgname=telepathy-kde-presence-applet
+pkgver=0.1.0
+pkgrel=1
+pkgdesc="Plasma applet for managing your Telepathy account presence"
+arch=('any')
+url="http://www.kde.org"
+license=('GPL')
+depends=('telepathy-kde-presence-dataengine')
+makedepends=('cmake' 'automoc4')
+conflicts=('telepathy-presence-applet-git')
+replaces=('telepathy-presence-applet-git')
+groups=('telepathy-kde')
+source=("http://download.kde.org/unstable/telepathy-kde/${pkgver}/src/${pkgname}_${pkgver}.tar.bz2")
+sha1sums=('9a013b50cbe7df53496f6af166fdc005a356e99a')
+
+package() {
+  cd "${srcdir}"/${pkgname}_${pkgver}
+  cmake . \
+    -DCMAKE_INSTALL_PREFIX=/usr \
+    -DCMAKE_BUILD_TYPE=Release
+  make DESTDIR="${pkgdir}" install
+}
