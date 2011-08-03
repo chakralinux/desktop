@@ -1,0 +1,42 @@
+#
+# Apps Packages for Chakra, part of chakra-project.org
+#
+# Maintainer: Adrián Chaves Fernández (Gallaecio) <adriyetichaves gmail.com>
+
+pkgname=bitcoin-cli
+_pkgname=bitcoin
+pkgver=0.3.24
+pkgrel=1
+pkgdesc='Bitcoin is a peer-to-peer network based digital currency.'
+arch=(i686 x86_64)
+url=http://www.bitcoin.org/
+license=(MIT)
+depends=(boost-libs expat miniupnpc)
+makedepends=(boost openssl)
+conflicts=(bitcoin)
+source=(http://downloads.sourceforge.net/sourceforge/$_pkgname/$_pkgname-$pkgver-linux.tar.gz
+	makefile.archlinux)
+md5sums=('7a9e5d45cccd21ef88b8cbbe20946599'
+         '27d4d8a3b6c6cc1c4a9b16c7b408ffca')
+
+build() {
+  cd $srcdir/$_pkgname-$pkgver/src/src
+
+  # Usage of Archlinux’s Makefile.
+  cp $srcdir/makefile.archlinux Makefile
+
+  # Compilation.
+  make bitcoind
+}
+
+package() {
+  # Installation.
+  install -Dm755 $srcdir/$_pkgname-$pkgver/src/src/bitcoind $pkgdir/usr/bin/$_pkgname
+  
+  # Locales.
+  cd $srcdir/$_pkgname-$pkgver/locale
+  find -name *.mo | xargs -I{} install -Dm644 {} $pkgdir/usr/share/locale/{}
+
+  # License.
+  install -Dm644 $srcdir/$_pkgname-$pkgver/COPYING $pkgdir/usr/share/licenses/$_pkgname/COPYING
+}

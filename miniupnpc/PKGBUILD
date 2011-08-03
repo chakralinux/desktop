@@ -1,0 +1,28 @@
+#
+# Apps Packages for Chakra, part of chakra-project.org
+#
+# Maintainer: Adrián Chaves Fernández (Gallaecio) <adriyetichaves gmail.com>
+
+pkgname=miniupnpc
+pkgver=1.5
+pkgrel=1
+pkgdesc='A small UPnP client library/tool to access Internet Gateway Devices'
+arch=(i686 x86_64)
+url='http://miniupnp.free.fr'
+license=(BSD)
+depends=(sh)
+source=("http://miniupnp.free.fr/files/$pkgname-$pkgver.tar.gz")
+md5sums=('0efa7498d27c82a56a0300b0c05c4f58')
+
+build() {
+  cd $srcdir/$pkgname-$pkgver
+  make
+}
+
+package() {
+  cd $srcdir/$pkgname-$pkgver
+  make INSTALLPREFIX=$pkgdir/usr install
+
+  # License.
+  install -Dm644 LICENSE $pkgdir/usr/share/licenses/$pkgname/LICENSE
+}
