@@ -1,0 +1,21 @@
+# Moved from CCR
+
+pkgname=qsynth
+pkgver=0.3.6
+pkgrel=1
+pkgdesc="Qt GUI for fluidsynth"
+arch=('i686' 'x86_64')
+url="http://qsynth.sourceforge.net/qsynth-index.html"
+license=('GPL')
+depends=('fluidsynth' 'qt' 'portaudio')
+options=('!makeflags')
+source=(http://downloads.sourceforge.net/${pkgname}/${pkgname}-${pkgver}.tar.gz)
+
+build() {
+  cd "${srcdir}/${pkgname}-${pkgver}"
+  ./configure --prefix=/usr
+  make || return 1
+  make DESTDIR="${pkgdir}" install
+}
+
+md5sums=('3cba3c87463be75ac188ebc3c3023d12')
