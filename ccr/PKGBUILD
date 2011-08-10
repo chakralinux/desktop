@@ -5,8 +5,8 @@
 # maintainer (x86_64): Manuel Tortosa <manutortosa[at]chakra-project[dot]org>
 
 pkgname=ccr
-pkgver=20100927
-pkgrel=4
+pkgver=20110810
+pkgrel=1
 pkgdesc="Bash wrapper for pacman and the CCR"
 url="http://github.com/bruenig/ccr"
 license="GPL"
@@ -19,15 +19,15 @@ optdepends=('sudo: install and update packages as non-root'
 	    'base-devel: for building packages from the ccr')
 source=("http://chakra-project.org/sources/ccr/ccr-$pkgver.tar.xz"
 	"ccr-vote")
-md5sums=('3b831830867ef58f186f8c1a97c59147'
+md5sums=('79ff9b34229c1070400815e6426c57fe'
          'c888f773a869e09d6ec484394d2fcd35')
 
 # source PKGBUILD && _create-tarball
 _create-tarball() {
     mkdir -p "ccr"
     git clone git://github.com/bruenig/packer.git "ccr"
-    tar -cJf ccr-$pkgver-$pkgrel.tar.xz "ccr"
-    md5sum "ccr-$pkgver-$pkgrel.tar.xz"
+    tar -cJf ccr-$pkgver.tar.xz "ccr"
+    md5sum "ccr-$pkgver.tar.xz"
     rm -rf "ccr"
 }
 
