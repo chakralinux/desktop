@@ -6,39 +6,42 @@
 
 pkgname=ccr
 pkgver=20100927
-pkgrel=2
+pkgrel=6
 pkgdesc="Bash wrapper for pacman and the CCR"
 url="http://github.com/bruenig/ccr"
 license="GPL"
 arch=('any')
 makedepends=('git')
-depends=('grep' 'sed' 'coreutils' 'bash' 'wget' 'pacman')
+depends=('grep' 'sed' 'coreutils' 'bash' 'wget' 'pacman' 'autoconf' 'automake' 'bin86' 'bison' 'ed' 'fakeroot' 'flex' 'gcc' 'libtool' 'm4' 'make' 'patch' 'pkgconfig')
 optdepends=('sudo: install and update packages as non-root'
-            'pacman-color: colorized output'
-	    'base-devel: for building packages from the ccr')
-source=(http://chakra-project.org/sources/ccr/ccr-$pkgver.tar.xz)
-md5sums=(3b831830867ef58f186f8c1a97c59147)
+            'pacman-color: colorized output')
+source=("http://chakra-project.org/sources/ccr/ccr-$pkgver.tar.xz"
+	"ccr-vote")
+md5sums=('3b831830867ef58f186f8c1a97c59147'
+         'c888f773a869e09d6ec484394d2fcd35')
 
 # source PKGBUILD && _create-tarball
 _create-tarball() {
     mkdir -p "ccr"
     git clone git://github.com/bruenig/packer.git "ccr"
-    tar -cJf ccr-$pkgver-$pkgrel.tar.xz "ccr"
-    md5sum "ccr-$pkgver-$pkgrel.tar.xz"
+    tar -cJf ccr-$pkgver.tar.xz "ccr"
+    md5sum "ccr-$pkgver.tar.xz"
     rm -rf "ccr"
 }
 
 build() {
-    cd "$startdir/src/ccr"
+    cd "$srcdir/ccr"
 
     # Change all the server references from http://aur.archlinux.org to http://chakra-project.org/ccr
     cat packer | sed "s/aur\.archlinux\.org/chakra\-project\.org\/ccr/g" > step1
     # Change all the aur references to ccr
     cat step1 | sed "s/aur/ccr/g" > step2
     # Change all the Aur references to Ccr
-    cat step2 | sed "s/Aur/Ccr/g" > ccr
+    cat step2 | sed "s/Aur/Ccr/g" > step3
+    # Change all the packer references to ccr
+    cat step3 | sed "s/packer/ccr/g" > ccr
       
-    install -m 755 -D ccr "$startdir/pkg/usr/bin/ccr"
+    install -m 755 -D ccr "$pkgdir/usr/bin/ccr"
 
     # Do some sed-magic
     sed -i -e "s~AUR~CCR~g" packer.8
@@ -47,5 +50,8 @@ build() {
     sed -i -e "s~Packer~CCR~g" packer.8
     sed -i -e "s~PACKER~CCR~g" packer.8
 
-    install -m 644 -D packer.8 "$startdir/pkg/usr/share/man/man8/ccr.8"
+    install -m 644 -D packer.8 "$pkgdir/usr/share/man/man8/ccr.8"
+    
+    cd $srcdir
+    install -m 775 -D ccr-vote "$pkgdir/usr/bin/ccr-vote"
 }
