@@ -5,23 +5,33 @@
 # maintainer (x86_64): Manuel Tortosa <manutortosa[at]chakra-project[dot]org>
 
 pkgname=ktorrent
-pkgver=4.1.1
+pkgver=4.1.2
 pkgrel=1
-ktorver=4.1.1
+ktorver=4.1.2
 pkgdesc="A BitTorrent program for KDE"
 arch=('i686' 'x86_64')
 url="http://ktorrent.org"
 license=('GPL2')
-depends=('kdelibs' 'kdebase-runtime' 'kdepimlibs' 'qca' 'gmp' 'taglib' 'libktorrent>=1.1.1')
+depends=('kdelibs' 'kdebase-runtime' 'kdepimlibs' 'qca' 'gmp' 'taglib' 'libktorrent>=1.1.2')
 makedepends=('cmake' 'automoc4' 'docbook-xsl')
 source=(http://ktorrent.org/downloads/${ktorver}/ktorrent-${pkgver}.tar.bz2)
 options=('libtool')
-md5sums=('affadf7c7198e5aa430e91ab75800296')
+md5sums=('8026d9f75257f2e52ac5ba3ce4720d55')
 
 build() {
-	cd ${srcdir}/ktorrent-${ktorver}
+	cd "${srcdir}/${pkgname}-${pkgver}"
 
-	cmake .	-DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=/usr
-	make || return 1
-	make DESTDIR=${pkgdir} install 
+	cd "${srcdir}"
+	mkdir build
+	cd build
+	cmake ../${pkgname}-${pkgver} \
+	  -DCMAKE_BUILD_TYPE=Release \
+	  -DCMAKE_INSTALL_PREFIX=/usr \
+	  -DENABLE_MEDIAPLAYER_PLUGIN=true
+	make
+}
+
+package() {
+	cd "${srcdir}/build"
+	make DESTDIR="${pkgdir}" install
 }
