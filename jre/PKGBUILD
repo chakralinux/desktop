@@ -8,7 +8,7 @@
 source ../_buildscripts/${current_repo}-${_arch}-cfg.conf
 
 pkgname=jre
-pkgver=6u26
+pkgver=6u27
 pkgrel=1
 pkgdesc="Sun's java runtime environment"
 arch=('i686' 'x86_64')
@@ -17,13 +17,13 @@ arch=('i686' 'x86_64')
 url="http://java.sun.com"
 depends=('glibc' 'libxtst')
 install="jre.install"
-source=(http://download.java.net/dlj/binaries/jdk-${pkgver}-dlj-linux-$ARCH.bin
+source=(http://download.oracle.com/otn-pub/java/jdk/${pkgver}-b07/jdk-${pkgver}-linux-$ARCH.bin
         construct.sh::http://java.net/projects/jdk-distros/sources/svn/content/trunk/utils/construct.sh?raw=true
         jre.profile)
-[ "$CARCH" = "i686" ]   && md5sums=('d54e58b69e4db80f267435be679a66b9'
+[ "$CARCH" = "i686" ]   && md5sums=('bdb5f05bd20c6aa9a4729726191bf6fd'
          			    '94065b612df0046d9ae758943f9f6a75'
 	          		    '50b4f5ac4129097461d246645d73a622')
-[ "$CARCH" = "x86_64" ] && md5sums=('43f4e9699afce82d3ebae841c59d02fb'
+[ "$CARCH" = "x86_64" ] && md5sums=('94f93a3ff03f824a238ecd79ad90433e'
 			            '94065b612df0046d9ae758943f9f6a75'
 	          		    '50b4f5ac4129097461d246645d73a622')
 replaces=('j2re')
@@ -37,7 +37,7 @@ build() {
 	mkdir unbundle-jdk
 	cd unbundle-jdk
 
-	sh ../jdk-${pkgver}-dlj-linux-$ARCH.bin --accept-license
+	sh ../jdk-${pkgver}-linux-$ARCH.bin --accept-license
 
 	cd ..
 
