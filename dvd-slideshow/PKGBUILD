@@ -1,0 +1,33 @@
+#
+# Apps Packages for Chakra, part of chakra-project.org
+#
+# Maintainer: Adrián Chaves Fernández (Gallaecio) <adriyetichaves gmail.com>
+# Contributor: Jaroslav Lichtblau <dragonlord@aur.archlinux.org>
+# Contributor: Tim Yang <tdy@gmx.com>
+# Contributor: JJDaNiMoTh <jjdanimoth.aur@gmail.com>
+# Contributor: Travis Nickles <ryoohki7@yahoo.com>
+# Contributor: Haw-Bin Chai <hbchai@gmail.com>
+
+pkgname=dvd-slideshow
+pkgver=0.8.4
+_pkgver=$pkgver-1
+pkgrel=1
+pkgdesc="Scripts for creating slideshow DVDs with menus, audio, and fancy effects."
+arch=('any')
+url="http://dvd-slideshow.sourceforge.net"
+license=('GPL')
+depends=('bc' 'cdrkit' 'dvdauthor' 'jhead' 'netpbm' 'sox' 'toolame' 'transcode' 'vorbis-tools')
+source=(http://downloads.sourceforge.net/$pkgname/$pkgname-$_pkgver.tar.gz)
+md5sums=('ff0adf41553e78831e3217d7caca1ffe')
+
+package() {
+  cd $srcdir/$pkgname-$_pkgver
+
+  for _file in `ls man | sed 's/\.1//'`; do
+    install -Dm755 $_file $pkgdir/usr/bin/$_file
+    install -Dm644 man/$_file.1 $pkgdir/usr/share/man/man1/$_file.1
+    install -Dm644 doc/$_file.html $pkgdir/usr/share/doc/$pkgname/$_file.html
+  done
+
+  install -Dm644 ${pkgname}rc $pkgdir/usr/share/$pkgname/${pkgname}rc
+}
