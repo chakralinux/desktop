@@ -48,6 +48,8 @@ package() {
     -e 's/Version=1\.1/Version=1\.0/' \
     -e 's|Icon=redeclipse|Icon=/usr/share/pixmaps/redeclipse|' \
     -e 's/a\./a/' \
+    -e "s#Exec=bin/reclient -r#Exec=$pkgname#" \
+    -e "/Path=*/d" \
     src/install/nix/$pkgname.desktop
   install -Dm644 src/install/nix/$pkgname.desktop $pkgdir/usr/share/applications/$pkgname.desktop
 
