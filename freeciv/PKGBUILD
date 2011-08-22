@@ -4,7 +4,7 @@
 # Maintainer: Adrián Chaves Fernández (Gallaecio) <adriyetichaves gmail.com>
 
 pkgname=freeciv
-pkgver=2.2.7
+pkgver=2.3.0
 pkgrel=1
 pkgdesc="Multiplayer clone of Civilization™."
 arch=('i686' 'x86_64')
@@ -13,7 +13,7 @@ license=('GPL2')
 depends=('bzip2' 'freetype2' 'readline' 'sdl_image')
 changelog=ChangeLog
 source=(http://downloads.sourceforge.net/sourceforge/$pkgname/$pkgname-$pkgver.tar.bz2)
-md5sums=('db61c36222ad0bd1de233cf29226ff27')
+md5sums=('70fd4285f2da7d41bdadac43458e62c9')
 
 build() {
   cd $srcdir/$pkgname-$pkgver
@@ -27,6 +27,11 @@ build() {
 
 package() {
   cd $srcdir/$pkgname-$pkgver
+
   install -dm 755 $pkgdir/etc
   make DESTDIR=$pkgdir install
+
+  # Link to SDL client.
+  cd $pkgdir/usr/bin
+  ln -s freeciv-sdl freeciv
 }
