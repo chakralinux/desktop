@@ -1,0 +1,37 @@
+#
+# Games Packages for Chakra, part of chakra-project.org
+#
+# Maintainer: Adrián Chaves Fernández (Gallaecio) <adriyetichaves gmail.com>
+# Contributor: Thomas Dziedzic < gostrc at gmail >
+# Contributor: Lauri Niskanen <ape@ape3000.com>
+
+pkgname=knightsgame
+_pkgname=knights
+pkgver=017
+pkgrel=1
+pkgdesc='Action game that was originally released for Amiga in 1994.'
+arch=('i686' 'x86_64')
+url='http://www.knightsgame.org.uk/'
+license=('GPL3')
+depends=('boost-libs>=1.35' 'curl' 'fontconfig' 'sdl')
+makedepends=('boost>=1.35')
+options=('!makeflags')
+source=("http://www.knightsgame.org.uk/files/${_pkgname}_${pkgver}_src.tar.gz")
+md5sums=('d03d4646dd2ed162c0dc602379c92bb6')
+
+build() {
+  cd ${_pkgname}_${pkgver}_src
+
+  sed \
+    -e 's|-lboost_thread-mt|-lboost_thread|g' \
+    -e "s/KNIGHTS_BINARY_NAME = knights/KNIGHTS_BINARY_NAME = $pkgname/" \
+    -e "s/SERVER_BINARY_NAME = knights_server/SERVER_BINARY_NAME = $pkgname-server/" \
+    -i Makefile
+  make PREFIX=/usr
+}
+
+package() {
+  cd ${_pkgname}_${pkgver}_src
+
+  make PREFIX=$pkgdir/usr install
+}
