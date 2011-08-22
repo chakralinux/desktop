@@ -1,0 +1,32 @@
+#
+# Apps Packages for Chakra, part of chakra-project.org
+#
+# Maintainer: Adrián Chaves Fernández (Gallaecio) <adriyetichaves gmail.com>
+
+pkgname=mpg321
+pkgver=0.2.13
+_pkgver=$pkgver-3
+pkgrel=1
+pkgdesc='A completely Free drop-in replacement for mpg123, for the use of frontends, shell scripts, etc.'
+arch=('i686' 'x86_64')
+url='http://sourceforge.net/projects/mpg321/'
+license=('GPL')
+depends=('libmad' 'libao' 'libid3tag')
+provides=('mpg123')
+conflicts=('mpg123')
+changelog=ChangeLog
+source=(http://downloads.sourceforge.net/project/$pkgname/$pkgname/$pkgver/${pkgname}-$_pkgver.tar.gz)
+md5sums=('ef5ca3deefd4413df967067e787a9a6e')
+
+build() {
+  cd $srcdir/$pkgname
+
+  ./configure \
+    --prefix=/usr
+  make
+}
+
+package() {
+  cd $srcdir/$pkgname
+  make DESTDIR=$pkgdir install
+}
