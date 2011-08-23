@@ -1,0 +1,30 @@
+#
+# Apps Packages for Chakra, part of chakra-project.org
+#
+# Maintainer: Adrián Chaves Fernández (Gallaecio) <adriyetichaves gmail.com>
+# Contributor: Stefan Husmann <stefan-husmann@t-online.de>
+# Contributor: corvolino <corvolino@archlinux.com.br>
+# Contributor: Joel Schaerer
+
+pkgname=pdf2svg
+pkgver=0.2.1
+pkgrel=1
+pkgdesc="A PDF to SVG converter."
+arch=('i686' 'x86_64')
+url="http://www.cityinthesky.co.uk/pdf2svg.html"
+license=('GPL3')
+depends=('poppler-glib')
+source=("http://www.cityinthesky.co.uk/_media/opensource/$pkgname-$pkgver.tar.gz")
+md5sums=('59b3b9768166f73b77215e95d91f0a9d')
+
+build() {
+  cd $srcdir/$pkgname-$pkgver
+  ./configure \
+    --prefix=/usr
+  make
+}
+
+package() {
+  cd $srcdir/$pkgname-$pkgver
+  make DESTDIR=$pkgdir install
+}
