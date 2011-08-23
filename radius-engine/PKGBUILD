@@ -1,0 +1,36 @@
+#
+# Games Packages for Chakra, part of chakra-project.org
+#
+# Maintainer: Adrián Chaves Fernández (Gallaecio) <adriyetichaves gmail.com>
+# Contributor: Iwan Gabovitch <qubodup@gmail.com>
+
+pkgname=radius-engine
+pkgver=0.7
+pkgrel=1
+pkgdesc="2D game engine built on top of SDL, OpenGL, and Lua."
+arch=(i686 x86_64)
+url="http://radius-engine.sourceforge.net/"
+license=("MIT")
+depends=('lua' 'physfs' 'sdl' 'sdl_sound')
+makedepends=('sed')
+source=(http://sourceforge.net/projects/$pkgname/files/$pkgname-$pkgver.tar.gz)
+md5sums=('1eaf4858adf4b7d049bff0d11a070848')
+
+build() {
+  cd $srcdir/$pkgname-$pkgver
+
+  # Dirty fix.
+  sed -i 's/lua5.1/lua/g' configure
+
+  # Configure and build.
+  ./configure \
+    --prefix=/usr \
+    --sysconfdir=/etc 
+  make
+}
+
+package() {
+  cd $srcdir/$pkgname-$pkgver
+  make DESTDIR=$pkgdir install
+}
+
