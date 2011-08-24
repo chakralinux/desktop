@@ -1,0 +1,45 @@
+#
+# Apps Packages for Chakra, part of chakra-project.org
+#
+# Maintainer: Adrián Chaves Fernández (Gallaecio) <adriyetichaves gmail.com>
+# Contributor: raku <raczkow@gmail.com>
+
+pkgname=kim
+_pkgname=kim4
+pkgver=0.9.5
+pkgrel=3
+pkgdesc="KDE image menu to compress, resize, convert, rename and much more."
+arch=(i686 x86_64)
+url="http://www.kde-apps.org/content/show.php?content=11505"
+license=('GPL3')
+depends=('imagemagick' 'kdelibs')
+replaces=('kim4')
+source=(http://bouveyron.free.fr/kim/release/$_pkgname-$pkgver.tar.gz)
+md5sums=('c7934ab0dbf988da5f60d9c4cbf97dd5')
+
+package() {
+  cd $srcdir/$_pkgname
+
+  # Create needed directories.
+  install -d $pkgdir/usr/share/kde4/services/ServiceMenus/
+  install -d $pkgdir/usr/bin
+
+  # Install.
+  cp src/kim_*.desktop $pkgdir/usr/share/kde4/services/ServiceMenus/
+  cp src/bin/kim_* $pkgdir/usr/bin/
+
+  # Fix permissions.
+  chmod a+rx $pkgdir/usr/bin/kim_*
+  chmod a+r $pkgdir/usr/share/kde4/services/ServiceMenus/kim_*.desktop
+
+  # License.
+  install -Dm664 COPYING $pkgdir/usr/share/licenses/$pkgname/license.txt
+
+  # Slideshow.
+  install -d $pkgdir/usr/share/$pkgname/slideshow/
+  cp src/slideshow/* $pkgdir/usr/share/$pkgname/slideshow/
+
+  # Gallery.
+  install -d $pkgdir/usr/share/$pkgname/gallery
+  cp src/gallery/* $pkgdir/usr/share/$pkgname/gallery
+}
