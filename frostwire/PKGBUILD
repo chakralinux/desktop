@@ -1,0 +1,54 @@
+#
+# Apps Packages for Chakra, part of chakra-project.org
+#
+# Maintainer: Adrián Chaves Fernández (Gallaecio) <adriyetichaves gmail.com>
+
+pkgname=frostwire
+pkgver=5.1.4
+pkgrel=1
+pkgdesc="BitTorrent client with integrated search"
+arch=('any')
+url="http://www.frostwire.com"
+license=('GPL3')
+depends=('java-runtime' 'hicolor-icon-theme')
+optdepends=('mplayer: audio playback.'
+            'vlc: video playback.')
+makedepends=('libicns')
+source=(http://dl.frostwire.com/$pkgname/$pkgver/$pkgname-$pkgver.noarch.tar.gz)
+# noextract=($pkgname-$pkgver.noarch.tar.gz)	# Extraction fails because of wrong ends of line.
+md5sums=('97c4cc469071820a8af6c54ac51bc2b2')
+
+package() {
+  # Extraction.
+#   tar -xf $pkgname-$pkgver.noarch.tar.gz &> /dev/null || true
+
+  cd $srcdir/$pkgname-$pkgver.noarch
+
+  # Fix Java version detection.
+#   sed \
+#     -e 's/head -n 1/grep version/' \
+#     -i $pkgname
+
+  # Install files.
+  install -d $pkgdir/usr/share/$pkgname
+  cp -r $pkgname *.gif *.jar *.properties $pkgdir/usr/share/$pkgname
+
+  # Desktop integration.
+  install -Dm644 $pkgname.desktop		$pkgdir/usr/share/applications/$pkgname.desktop
+  icns2png -x -d 32 -s 512x512 FrostWire.icns &> /dev/null	# Extract 512×512 PNG icon.
+  install -Dm644 FrostWire_512x512x32.png	$pkgdir/usr/share/pixmaps/$pkgname.png
+  
+  # Execution script.
+  install -dm755 $pkgdir/usr/bin
+  echo '#!/bin/bash'					 > $pkgdir/usr/bin/$pkgname
+  echo "cd /usr/share/$pkgname && ./$pkgname \$@"	>> $pkgdir/usr/bin/$pkgname
+  chmod +x $pkgdir/usr/bin/$pkgname
+
+  # Documentation.
+  install -Dm664 changelog $pkgdir/usr/share/doc/$pkgname/ChangeLog
+
+  # License.
+  install -Dm664 COPYING $pkgdir/usr/share/licenses/$pkgname/license.txt
+  install -Dm664 EULA.txt $pkgdir/usr/share/licenses/$pkgname/EULA.txt
+}
+md5sums=('90aa9dec3609fc751e624927697c7313')
