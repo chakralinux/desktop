@@ -1,0 +1,31 @@
+#
+# Apps Packages for Chakra, part of chakra-project.org
+#
+# Maintainer: Adrián Chaves Fernández (Gallaecio) <adriyetichaves gmail.com>
+# Contributor: Neo Kolokotronis <tetris4@gmail.com>
+
+pkgname=python-beaker
+_pkgname=Beaker
+pkgver=1.5.4
+pkgrel=1
+arch=('any')
+license=('BSD')
+pkgdesc="Caching and sessions WSGI middleware for use with web applications and stand-alone Python scripts and applications."
+url="http://beaker.groovie.org/"
+depends=('python2')
+makedepends=('setuptools')
+source=("http://cheeseshop.python.org/packages/source/B/$_pkgname/$_pkgname-$pkgver.tar.gz")
+md5sums=('de84e7511119dc0b8eb4ac177d3e2512')
+
+package() {
+  cd $srcdir/$_pkgname-$pkgver
+
+  # Python 2 fix.
+  sed -i "s#/usr/bin/python#/usr/bin/python2#" beaker/crypto/pbkdf2.py
+
+  # Installation.
+  python2 setup.py install --root=$pkgdir --optimize=1
+
+  # License.
+  install -D -m644 LICENSE $pkgdir/usr/share/licenses/$pkgname/license.txt
+}
