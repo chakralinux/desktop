@@ -1,0 +1,46 @@
+#
+# Apps Packages for Chakra, part of chakra-project.org
+#
+# Maintainer: Adrián Chaves Fernández (Gallaecio) <adriyetichaves gmail.com>
+
+pkgname=bsnes
+pkgver=082
+_pkgver=v$pkgver
+pkgrel=1
+pkgdesc="Super Nintendo Entertainment System™ (SNES) emulator focused on accuracy."
+arch=('i686' 'x86_64')
+url="http://byuu.org/bsnes/"
+license=('GPL2')
+depends=('libao' 'libgl' 'libxv' 'openal' 'sdl' 'qt')
+makedepends=('mesa')
+source=("http://bsnes.googlecode.com/files/${pkgname}_$_pkgver-source.tar.bz2")
+md5sums=('c7deead3fb28bcf1aa7bcef44f236f59')
+
+# Build profile, to choose between: accuracy, compatibility or performance.
+_profile='performance'
+
+build() {
+  cd $srcdir/${pkgname}_$_pkgver-source/$pkgname
+
+ # Don't copy the cheat file.
+  sed -e '/mkdir -p ~\/.config\/bsnes/{N;N;d}' -i "ui/Makefile"
+
+  make compiler=gcc platform=x profile=$_profile
+}
+
+package() {
+  cd $srcdir/${pkgname}_$_pkgver-source/$pkgname
+  make install profile=$_profile DESTDIR=$pkgdir prefix=/usr
+
+  # Data cheats. Installed to be later used.
+  install -Dm644 data/cheats.xml $pkgdir/usr/share/$pkgname/cheats.xml
+
+  # Change executale path.
+  mv $pkgdir/usr/bin/$pkgname $pkgdir/usr/share/$pkgname/$pkgname
+
+  # Execution script.
+  echo '#!/bin/bash'				 > $pkgdir/usr/bin/$pkgname
+  echo "mkdir -p ~/.config/$pkgname && cp /usr/share/$pkgname/cheats.xml ~/.config/$pkgname/cheats.xml && chmod 755 ~/.config/$pkgname ~/.config/$pkgname/cheats.xml"	>> $pkgdir/usr/bin/$pkgname
+  echo "cd /usr/share/$pkgname && ./$pkgname"	>> $pkgdir/usr/bin/$pkgname
+  chmod +x $pkgdir/usr/bin/$pkgname
+}
