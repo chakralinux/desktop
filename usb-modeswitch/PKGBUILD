@@ -1,0 +1,52 @@
+#
+# Apps Packages for Chakra, part of chakra-project.org
+#
+# Maintainer: Adrián Chaves Fernández (Gallaecio) <adriyetichaves gmail.com>
+
+pkgname=usb-modeswitch
+_pkgname=usb_modeswitch
+pkgver=1.1.9
+pkgrel=2
+_pkgdata=20110805
+pkgdesc="Activating switchable USB devices on Linux."
+arch=('i686' 'x86_64')
+url="http://www.draisberghof.de/usb_modeswitch/"
+license=('GPL3')
+depends=('libusb-compat' 'tcl')
+makedepends=('gcc' 'make')
+conflicts=(usb_modeswitch)
+replaces=(usb_modeswitch)
+backup=("etc/$_pkgname.conf")
+source=("http://www.draisberghof.de/$_pkgname/$pkgname-$pkgver.tar.bz2"
+	"http://www.draisberghof.de/$_pkgname/$pkgname-data-$_pkgdata.tar.bz2"
+        "http://www.draisberghof.de/$_pkgname/device_reference.txt")
+md5sums=('76f6978f18cac41f269a346a5d0f1052'
+         '0ed8a28f8efd3177a128ecd46fc8bf9f'
+	 'e8e39e52e3cf7a38e483e7a80d382927')
+
+build() {  
+  cd $srcdir/$pkgname-$pkgver
+  install -d $pkgdir/lib/udev/$_pkgname
+  install -d $pkgdir/etc
+  install -d $pkgdir/usr/share/man/man1
+
+  make clean
+  make
+}
+
+package() {
+  cd $srcdir/$pkgname-$pkgver
+
+  # Bin Installation.
+  make DESTDIR=$pkgdir install
+
+  # Adjustments.
+  mv $pkgdir/lib/udev/$_pkgname/$_pkgname.sh $pkgdir/lib/udev/$_pkgname.sh
+  rmdir $pkgdir/lib/udev/$_pkgname
+  mv $pkgdir/lib/udev/$_pkgname.sh $pkgdir/lib/udev/$_pkgname
+  cp $srcdir/device_reference.txt $pkgdir/etc/$_pkgname.setup
+
+  # Data Installation.
+  cd $srcdir/$pkgname-data-$_pkgdata
+  make DESTDIR=$pkgdir install
+}
