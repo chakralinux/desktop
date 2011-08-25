@@ -1,0 +1,35 @@
+#
+# Apps Packages for Chakra, part of chakra-project.org
+#
+# Maintainer: Adrián Chaves Fernández (Gallaecio) <adriyetichaves gmail.com>
+
+pkgname=c-ares
+pkgver=1.7.5
+pkgrel=1
+pkgdesc='C library that performs DNS requests and name resolves asynchronously.'
+arch=('i686' 'x86_64')
+url='http://c-ares.haxx.se/'
+license=('MIT')
+depends=('glibc')
+source=(http://c-ares.haxx.se/download/$pkgname-$pkgver.tar.gz
+        license.txt)
+md5sums=('800875fc23cd8e1924d8af9172ed33e7'
+         'c69f2042941b708ce3e7121424d0b7e6')
+
+build() {
+  cd $srcdir/$pkgname-$pkgver
+  ./configure \
+    --enable-shared \
+    --prefix=/usr
+  make
+}
+
+package() {
+  cd $srcdir/$pkgname-$pkgver
+
+  # Main Installation.
+  make DESTDIR=$pkgdir install
+
+  # License.
+  install -Dm644 $srcdir/license.txt $pkgdir/usr/share/licenses/$pkgname/license.txt || return 1
+}
