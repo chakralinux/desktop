@@ -9,7 +9,7 @@ source ../_buildscripts/${current_repo}-${_arch}-cfg.conf
 
 pkgname=rekonq
 pkgver=0.7.0
-pkgrel=4
+pkgrel=5
 pkgdesc='A WebKit based web browser for KDE'
 arch=('i686' 'x86_64')
 url='http://rekonq.sourceforge.net/'
@@ -26,7 +26,6 @@ build(){
   cd build
   cmake ../${pkgname}-${pkgver} \
     -DCMAKE_BUILD_TYPE=RelWithDebInfo \
-    -DCMAKE_SKIP_RPATH=ON \
     -DCMAKE_INSTALL_PREFIX=/usr
   make 
 }
