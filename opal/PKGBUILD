@@ -1,28 +1,25 @@
 #
 # Apps Packages for Chakra, part of chakra-project.org
 #
-# Maintainer: Adrián Chaves Fernández (Gallaecio) <adriyetichaves gmail.com>
-
-# include global config
-source ../_buildscripts/${current_repo}-${_arch}-cfg.conf
+# Maintainer: Adrián Chaves Fernández (Gallaecio) <adriyetichaves@gmail.com>
 
 pkgname=opal
-pkgver=3.10.1
-_pkgver="Stable 1"
+pkgver=3.10.2
+_pkgver="Stable 2"
 _pkgver2="v3.10 Luyten"
 pkgrel=1
 pkgdesc="Open Phone Abstraction Library."
 arch=('i686' 'x86_64')
 url="http://www.opalvoip.org/"
 license=('MPL')
-depends=('ptlib' 'libtheora' 'x264>=20090416' 'speex')
+depends=('libtheora' 'ptlib' 'speex' 'x264>=20090416')
 makedepends=('ffmpeg')
 changelog=ChangeLog
 source=("http://downloads.sourceforge.net/project/opalvoip/$_pkgver2/$_pkgver/$pkgname-$pkgver.tar.bz2")
-md5sums=('eda49f2c0c3649fab8b82aca0c499b1a')
+md5sums=('5331938f9283563eaae2cc6d970c3040')
 
 build() {
-  cd $srcdir/$pkgname-$pkgver
+  cd $srcdir/$pkgname-$pkgver/opal
   CFLAGS="$CFLAGS -D__STDC_CONSTANT_MACROS" \
   ./configure \
     --localstatedir=/var \
@@ -32,6 +29,6 @@ build() {
 }
 
 package() {
-  cd $srcdir/$pkgname-$pkgver
+  cd $srcdir/$pkgname-$pkgver/opal
   make DESTDIR=$pkgdir install
 }
