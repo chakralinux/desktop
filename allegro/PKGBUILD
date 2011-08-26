@@ -1,22 +1,21 @@
 #
-# Chakra Packages for Chakra, part of chakra-project.org
+# Games Packages for Chakra, part of chakra-project.org
 #
-# Maintainer: Giuseppe Calà <jiveaxe@gmail.com>
-
-# include global config
-source ../_buildscripts/${current_repo}-${_arch}-cfg.conf
+# Maintainer: Adrián Chaves Fernández (Gallaecio) <adriyetichaves@gmail.com>
+# Contributor: Giuseppe Calà <jiveaxe@gmail.com>
 
 pkgname=allegro
-pkgver=5.0.3
+pkgver=5.0.4
 pkgrel=1
 pkgdesc="Portable library mainly aimed at video game and multimedia programming."
 arch=('i686' 'x86_64')
 url="http://alleg.sourceforge.net/"
 license=('ZLIB')
-depends=('dumb' 'freetype2' 'jack' 'libjpeg' 'libxpm' 'libxxf86vm' 'libxxf86dga' 'libxcursor' 'libpng' 'mesa')
-makedepends=('cmake')
+depends=('jack' 'libxpm' 'libxxf86vm' 'libxxf86dga' 'libxcursor' 'libpng')
+# With the exception of CMake, all are there to enable plugins support (all plugins but DUMB).
+makedepends=('cmake' 'flac' 'freetype2' 'libjpeg' 'libogg' 'libpng' 'libvorbis' 'openal' 'physfs' 'zlib')
 source=(http://downloads.sourceforge.net/alleg/$pkgname-$pkgver.tar.gz)
-md5sums=('159ca85ea51c0447d951d720b06079f2')
+md5sums=('e2e314ee7116c7efddd0497d6c885e46')
 
 build() {
   cd $srcdir/$pkgname-$pkgver
