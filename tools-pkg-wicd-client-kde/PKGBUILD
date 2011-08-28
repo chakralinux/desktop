@@ -5,8 +5,9 @@
 # maintainer (x86_64): Manuel Tortosa <manutortosa[at]chakra-project[dot]org>
 
 pkgname=wicd-client-kde
-pkgver=0.2.1
-pkgrel=3
+_pkgname=wicd-kde
+pkgver=0.2.2
+pkgrel=1
 pkgdesc="Wicd client build on the KDE Development Platform"
 arch=("i686" "x86_64")
 url="http://kde-apps.org/content/show.php/Wicd+Client+KDE?content=132366"
@@ -14,13 +15,13 @@ license=('GPL')
 depends=('kdelibs' 'qt' 'wicd')
 conflicts=('networkmanagement')
 makedepends=('cmake' 'automoc4')
-source=("http://kde-apps.org/CONTENT/content-files/132366-wicd-client-kde-0.2.1.tar.gz")
-md5sums=('162ad45b86ea30668316095574efcf81')
+source=("http://kde-apps.org/CONTENT/content-files/132366-${_pkgname}-${pkgver}.tar.gz")
+md5sums=('b335154f13db95d1667db297e0c3da44')
 
 build() 
 
 {
-  cd ${srcdir}/${pkgname} || return 1
+  cd ${srcdir}/${_pkgname} || return 1
   
 
   cmake . -DCMAKE_INSTALL_PREFIX=`kde4-config --prefix` || return 1
@@ -30,6 +31,6 @@ build()
 
 package()
 {
-  cd ${srcdir}/${pkgname} || return 1
+  cd ${srcdir}/${_pkgname} || return 1
   make DESTDIR=${pkgdir} install || return 1
 }
