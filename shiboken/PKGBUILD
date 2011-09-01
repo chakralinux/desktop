@@ -3,30 +3,48 @@
 #
 # Maintainer: Adrián Chaves Fernández (Gallaecio) <adriyetichaves gmail.com>
 
-pkgname=shiboken
-_pkgname=libshiboken
-pkgver=1.0.5
+pkgbase=shiboken
+_pkgbase=Shiboken
+pkgname=($pkgbase $pkgbase-generator)
+pkgver=1.0.6
+_pyver=2.7
 pkgrel=1
 pkgdesc="Support library for Python bindings."
 arch=('i686' 'x86_64')
 license=('LGPL')
 url="http://www.pyside.org"
-depends=('python' 'qt>=4.7' 'openssl')
+depends=("python>=$_pyver" 'qt>=4.7' 'openssl')
 makedepends=('cmake' 'automoc4' 'generatorrunner>=0.6.8')
-source=("http://www.pyside.org/files/$pkgname-$pkgver.tar.bz2")
-md5sums=('e9249ab88a5ba67183a165d11143c894')
+source=("http://www.pyside.org/files/$pkgbase-$pkgver.tar.bz2")
+md5sums=('d52f0dfdc1a63534085547946e4b5fff')
 
 build(){
-    cd $srcdir/$pkgname-$pkgver
-    mkdir -p build && cd build
-    cmake \
-      -DCMAKE_INSTALL_PREFIX=/usr \
-      -DCMAKE_BUILD_TYPE=RelWithDebInfo \
-      ..
-    make $_pkgname
+  cd $srcdir/$pkgbase-$pkgver
+  mkdir -p build && cd build
+  cmake \
+    -DCMAKE_INSTALL_PREFIX=/usr \
+    -DCMAKE_BUILD_TYPE=RelWithDebInfo \
+    ..
+  make shiboken
+  make generator
 }
 
-package(){
-    cd $srcdir/$pkgname-$pkgver/build/$_pkgname
-    make DESTDIR=$pkgdir install
+package_shiboken(){
+  cd $srcdir/$pkgbase-$pkgver/build/libshiboken
+  make DESTDIR=$pkgdir install
+}
+
+package_shiboken-generator(){
+  pkgdesc="Support library for Python bindings (generator)."
+  
+  cd $srcdir/$pkgbase-$pkgver/build/generator
+  make DESTDIR=$pkgdir install
+
+  mkdir -m 755 -p $pkgdir/usr/lib/cmake/$_pkgbase-$pkgver/
+  install -m 755 ../data/ShibokenConfig.cmake $pkgdir/usr/lib/cmake/$_pkgbase-$pkgver/
+  install -m 755 ../data/ShibokenConfigVersion.cmake $pkgdir/usr/lib/cmake/$_pkgbase-$pkgver/
+  install -m 755 ../data/ShibokenConfig-python$_pyver.cmake $pkgdir/usr/lib/cmake/$_pkgbase-$pkgver/
+
+  mkdir -m 755 -p $pkgdir/usr/lib/pkgconfig/
+  install -m 755 ../data/$pkgbase.pc $pkgdir/usr/lib/pkgconfig/
 }

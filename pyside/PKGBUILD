@@ -4,7 +4,10 @@
 # Maintainer: Adrián Chaves Fernández (Gallaecio) <adriyetichaves gmail.com>
 
 pkgname=pyside
-pkgver=1.0.5
+pkgver=1.0.6
+_pkgver=1.0.6.1
+_pkgver2=qt4.7+$pkgver
+_pkgver3=qt4.7+$_pkgver
 pkgrel=1
 pkgdesc="Provides LGPL Qt bindings for Python and related tools for binding generation."
 arch=('i686' 'x86_64')
@@ -12,11 +15,11 @@ license=('LGPL')
 url="http://www.pyside.org"
 depends=('shiboken' 'python' 'qt>=4.7' 'phonon')
 makedepends=('cmake' 'automoc4' 'shiboken-generator')
-source=("http://www.pyside.org/files/$pkgname-qt4.7+$pkgver.tar.bz2")
-md5sums=('b24a9dc2e111718043eecf614375f2a5')
+source=("http://www.pyside.org/files/$pkgname-$_pkgver2.tar.bz2")
+md5sums=('6773cdd7c594f5bc314541d8cfb70256')
 
 build(){
-  cd $srcdir/$pkgname-qt4.7+$pkgver
+  cd $srcdir/$pkgname-$_pkgver3
   mkdir -p build && cd build
   cmake \
     -DCMAKE_INSTALL_PREFIX=/usr \
@@ -26,6 +29,6 @@ build(){
 }
 
 package(){
-  cd $srcdir/$pkgname-qt4.7+$pkgver/build
+  cd $srcdir/$pkgname-$_pkgver3/build
   make DESTDIR=$pkgdir install
 }
