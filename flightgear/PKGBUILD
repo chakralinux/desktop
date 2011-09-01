@@ -3,40 +3,32 @@
 #
 # Maintainer: Adrián Chaves Fernández (Gallaecio) <adriyetichaves@gmail.com>
 
-# include global config
-source ../_buildscripts/${current_repo}-${_arch}-cfg.conf
-
 pkgname=flightgear
 _pkgname=FlightGear
-pkgver=2.0.0
+pkgver=2.4.0
 pkgrel=1
 pkgdesc="An open-source, multi-platform flight simulator."
 arch=(i686 x86_64)
-depends=('simgear' 'libxmu' 'libxi' 'zlib' 'openscenegraph' 'subversion')
+depends=('flightgear-data' 'freealut' 'openal' 'openscenegraph' 'ptlib' 'simgear')
 makedepends=('boost')
-license=("GPL")
+license=(GPL3)
 url="http://www.flightgear.org"
-options=('!makeflags')
-source=("http://mirrors.ibiblio.org/pub/mirrors/$pkgname/ftp/Source/$_pkgname-$pkgver.tar.gz"
-	"http://mirrors.ibiblio.org/pub/mirrors/$pkgname/ftp/Shared/$_pkgname-data-$pkgver.tar.bz2")
-md5sums=('549aa45171480082f5b6e5e8d5ce8930'
-         '85009e54cfd0cf74fd66fdd97c23ccd0')
+source=(ftp://ftp.goflyflightgear.com/$pkgname/Source/$pkgname-$pkgver.tar.bz2)
+md5sums=('e6e1f8b1def24326fa64ff001e195da7')
 
 build() {
-  cd $srcdir/$_pkgname-$pkgver
-
-  [ $NOEXTRACT -eq 1 ] || find -name \*.c\* -exec sed -i '1,2i#include <stdio.h>' {} \;
-  [ $NOEXTRACT -eq 1 ] || ./configure --prefix=/usr
-
+  cd $srcdir/$pkgname-$pkgver
+  ./configure \
+    --prefix=/usr
   make
 }
 
 package() {
-  cd $srcdir/$_pkgname-$pkgver
+  cd $srcdir/$pkgname-$pkgver
   make DESTDIR=$pkgdir install
 
-  # Data.
-  mkdir -p	$pkgdir/usr/share/$_pkgname
-  mv		$srcdir/data	$pkgdir/usr/share/$_pkgname
-  chown root.users 		$pkgdir/usr/share/$_pkgname/data
-} 
+  # Execution script.
+  echo "#!/bin/bash"	 > $pkgdir/usr/bin/$pkgname
+  echo "fgfs \$@"	>> $pkgdir/usr/bin/$pkgname
+  chmod +x $pkgdir/usr/bin/$pkgname
+}

@@ -1,0 +1,37 @@
+#
+# Games Packages for Chakra, part of chakra-project.org
+#
+# Maintainer: Adrián Chaves Fernández (Gallaecio) <adriyetichaves@gmail.com>
+
+pkgname=flightgear-aircrafts
+_pkgname=Aircraft
+_pkgname2=flightgear
+pkgver=2.4
+pkgrel=1
+pkgdesc="A collection of aircrafts for FlightGear."
+url="http://www.flightgear.org/Downloads/aircraft-2.0.0/"
+license="custom:unknown"
+arch=(any)
+depends=('flightgear' 'flightgear-data')
+makedepends=('unzip')
+
+package() {
+  cd $srcdir
+  mkdir -p $pkgdir/usr/share/$_pkgname2/data/$_pkgname
+
+  # Download files.
+  URLS="ftp://flightgear.wo0t.de/$_pkgname2-ftp/ftp/$_pkgname-$pkgver
+	ftp://ftp.de.$_pkgname2.org/pub/fgfs/$_pkgname-$pkgver
+        ftp://ftp.goflyflightgear.com/$_pkgname2/$_pkgname-$pkgver
+	ftp://ftp.igh.cnrs.fr/pub/$_pkgname2/ftp/$_pkgname-$pkgver
+	ftp://ftp.kingmont.com/flightsims/$_pkgname2/$_pkgname-$pkgver
+	ftp://ftp.linux.kiev.ua/pub/fgfs/$_pkgname-$pkgver
+	ftp://mirrors.ibiblio.org/pub/mirrors/$_pkgname2/ftp/$_pkgname-$pkgver"
+  for URL in $URLS
+  do
+    wget -r -nd -nc $URL | true
+  done
+
+  # Uncompress files.
+  unzip '*.zip' -d $pkgdir/usr/share/flightgear/data/Aircraft/ || true
+}

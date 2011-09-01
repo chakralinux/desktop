@@ -1,0 +1,22 @@
+#
+# Games Packages for Chakra, part of chakra-project.org
+#
+# Maintainer: Adrián Chaves Fernández (Gallaecio) <adriyetichaves@gmail.com>
+
+pkgname=flightgear-data
+_pkgname=flightgear
+_pkgname2=FlightGear
+pkgver=2.4.0
+pkgrel=1
+pkgdesc="FlightGear base data."
+arch=(any)
+license=(GPL3)
+url=http://www.flightgear.org
+source=(ftp://ftp.goflyflightgear.com/$_pkgname/Shared/$_pkgname2-data-$pkgver.tar.bz2)
+md5sums=('fea4d52b4197bae58ce2b6a5ddbc5659')
+
+package() {
+  mkdir -p $pkgdir/usr/share/$_pkgname
+  mv $srcdir/data $pkgdir/usr/share/$_pkgname
+  chown root:users $pkgdir/usr/share/$_pkgname/data
+}
