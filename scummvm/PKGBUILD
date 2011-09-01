@@ -1,0 +1,44 @@
+#
+# Games Packages for Chakra, part of chakra-project.org
+#
+# Maintainer: Adrián Chaves Fernández (Gallaecio) <adriyetichaves gmail.com>
+
+pkgname=scummvm
+pkgver=1.3.1
+pkgrel=1
+pkgdesc="A “virtual machine” for several classic graphical point-and-click adventure games."
+arch=('i686' 'x86_64')
+license=('GPL3')
+url="http://www.scummvm.org/"
+depends=('alsa-lib' 'flac' 'fluidsynth' 'libmad' 'libvorbis' 'sdl' 'zlib')
+source=(http://downloads.sourceforge.net/sourceforge/${pkgname}/${pkgname}-${pkgver}.tar.bz2
+	$pkgname.desktop)
+md5sums=('87e5076e93bfa762f1c5d7f45b41d4e2'
+         'dd8104df19d60c5c0afdef194395c7f8')
+
+build() {
+  cd $srcdir/$pkgname-$pkgver
+
+  ./configure \
+    --backend=sdl \
+    --disable-debug \
+    --prefix=/usr \
+    --with-flac-prefix=/usr \
+    --with-mpeg2-prefix=/usr
+  make
+}
+
+package() {
+  cd $srcdir/$pkgname-$pkgver
+  
+  # Manual installation.
+  install -Dm755 $pkgname $pkgdir/usr/bin/$pkgname
+  install -Dm644 dists/$pkgname.6 $pkgdir/usr/share/man/man6/$pkgname.6
+
+  # Desktop integration.
+  install -Dm644 dists/$pkgname.desktop	$pkgdir/usr/share/applications/$pkgname.desktop
+  install -Dm644 icons/$pkgname.xpm	$pkgdir/usr/share/pixmaps/$pkgname.xpm
+
+  # Themes.
+  install -Dm644 gui/themes/scummmodern.zip $pkgdir/usr/share/scummvm/scummmodern.zip
+}
