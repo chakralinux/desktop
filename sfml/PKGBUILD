@@ -1,0 +1,63 @@
+# Maintainer: Adrián Chaves Fernández (Gallaecio) <adriyetichaves@gmail.com>
+
+pkgname=sfml
+_pkgname=SFML
+pkgver=1.6
+pkgrel=2
+pkgdesc="A simple, fast, cross-platform and object-oriented multimedia API."
+arch=('i686' 'x86_64')
+url="http://www.sfml-dev.org"
+license=('ZLIB')
+depends=('freetype2' 'glew' 'libjpeg' 'libsndfile' 'libxrandr' 'openal' 'soil')
+makedepends=(mesa doxygen)
+changelog=ChangeLog
+source=("http://downloads.sourceforge.net/$pkgname/$_pkgname-$pkgver-sdk-linux-64.tar.gz"
+        "use-system-libs.patch")
+md5sums=('7a9b3a1ef6d14cd25090e440ccdbb3a8'
+         '505ea908fb6e4b9359061d8d55373963')
+
+build() {
+  cd $srcdir/$_pkgname-$pkgver
+
+  # Apply patch to use system libs in favor of included ones (fixes many problems).
+  patch -Np1 < $srcdir/use-system-libs.patch
+
+  # Compilation.
+  make
+
+  # Fix the library softlinks for samples.
+  cd lib
+  for lib in *
+  do
+      ln -sf $lib ${lib/.${pkgver}/}
+  done
+}
+
+package() {
+  cd $srcdir/$_pkgname-$pkgver
+
+  # Prepare some directories.
+  mkdir -p $pkgdir/usr/lib \
+           $pkgdir/usr/include \
+           $pkgdir/usr/share/$pkgname \
+           $pkgdir/usr/share/doc
+
+  # Actual installation.
+  sed '/export DESTDIR/d' -i src/$_pkgname/Makefile
+  make DESTDIR=$pkgdir/usr install
+
+  # Fix the library softlinks (again).
+  cd $pkgdir/usr/lib
+    rm *.so
+    for lib in *
+    do
+      ln -s $lib ${lib/.$pkgver/}
+    done
+  cd $srcdir/$_pkgname-$pkgver
+
+  # Install docs.
+  cp -r doc $pkgdir/usr/share/doc/$pkgname
+
+  # License.
+  install -Dm 644 license.txt $pkgdir/usr/share/licenses/$pkgname/LICENSE
+}
