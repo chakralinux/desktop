@@ -1,0 +1,35 @@
+#
+# Games Packages for Chakra, part of chakra-project.org
+#
+# Maintainer: Adrián Chaves Fernández (Gallaecio) <adriyetichaves gmail.com>
+
+pkgname=kbackgammon
+_pkgname=KBackgammon
+_pkgname2=backgammon
+pkgver=0.12
+_pkgver=012
+pkgrel=1
+pkgdesc="Application to play Backgammon-like games."
+arch=('i686' 'x86_64')
+url="http://kde-apps.org/content/show.php?content=142680"
+screenshot="http://kde-apps.org/CONTENT/content-pre1/142680-1.png"
+license=('GPL3')
+depends=('kdelibs' 'kdegames-common')
+source=(http://kde-apps.org/CONTENT/content-files/142680-${_pkgname}_$_pkgver.tar.gz)
+md5sums=('bfc3f6de91e45f39c3ed46a0d399dbb5')
+
+build() {
+  cd $srcdir/$_pkgname2
+  [[ -d build ]] && rm -r build
+  mkdir build && cd build
+  cmake \
+    -DCMAKE_INSTALL_PREFIX=/usr \
+    -DCMAKE_BUILD_TYPE=RelWithDebInfo \
+    ..
+  make
+}
+ 
+package() {
+  cd $srcdir/$_pkgname2/build
+  make DESTDIR=$pkgdir install
+}
