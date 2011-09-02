@@ -1,0 +1,46 @@
+#
+# Games Packages for Chakra, part of chakra-project.org
+#
+# Maintainer: Adrián Chaves Fernández (Gallaecio) <adriyetichaves gmail.com>
+
+pkgname=capitalism
+_pkgname=Capitalism
+pkgver=0.5.1
+_pkgver=0.5
+pkgrel=1
+pkgdesc="Interface to play board games like Monopoly™ online."
+arch=('i686' 'x86_64')
+url="http://qt-apps.org/content/show.php?content=113173"
+screenshot="http://qt-apps.org/CONTENT/content-pre1/113173-1.png"
+license=('GPL2')
+depends=('qt')
+source=(http://downloads.sourceforge.net/project/$pkgname/$_pkgname/$_pkgver/$pkgname-$pkgver.tbz)
+md5sums=('f232647ecee3c2bd9ae53822812e2dd2')
+
+build() {
+  cd $srcdir/$_pkgname-$pkgver
+  qmake -makefile
+  make
+}
+
+package() {
+  cd $srcdir/$_pkgname-$pkgver
+
+  # Binary and data.
+  install -d $pkgdir/usr/share/$pkgname
+  cp -r $_pkgname games icons images ts $pkgdir/usr/share/$pkgname/
+
+  # Execution script.
+  install -d $pkgdir/usr/bin/
+  echo "#!/bin/bash"		 > $pkgdir/usr/bin/$pkgname
+  echo "cd /usr/share/$pkgname"	>> $pkgdir/usr/bin/$pkgname
+  echo "./$_pkgname \$@"	>> $pkgdir/usr/bin/$pkgname
+  chmod +x $pkgdir/usr/bin/$pkgname
+
+  # Documentation.
+  install -Dm644 changelog $pkgdir/usr/doc/$pkgname/ChangeLog
+  install -Dm644 README $pkgdir/usr/doc/$pkgname/information.txt
+
+  # License.
+  install -Dm644 copying.txt $pkgdir/usr/doc/$pkgname/license.txt
+}
