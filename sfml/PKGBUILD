@@ -3,7 +3,7 @@
 pkgname=sfml
 _pkgname=SFML
 pkgver=1.6
-pkgrel=2
+pkgrel=3
 pkgdesc="A simple, fast, cross-platform and object-oriented multimedia API."
 arch=('i686' 'x86_64')
 url="http://www.sfml-dev.org"
@@ -12,7 +12,8 @@ depends=('freetype2' 'glew' 'libjpeg' 'libsndfile' 'libxrandr' 'openal' 'soil')
 makedepends=(mesa doxygen)
 changelog=ChangeLog
 source=("http://downloads.sourceforge.net/$pkgname/$_pkgname-$pkgver-sdk-linux-64.tar.gz"
-        "use-system-libs.patch")
+        "use-system-libs.patch"
+	"FindSFML.cmake")
 md5sums=('7a9b3a1ef6d14cd25090e440ccdbb3a8'
          '505ea908fb6e4b9359061d8d55373963')
 
@@ -57,7 +58,13 @@ package() {
 
   # Install docs.
   cp -r doc $pkgdir/usr/share/doc/$pkgname
+  
+  # CMake module.
+  install -D $srcdir/FindSFML.cmake $pkgdir/usr/share/cmake-2.8/Modules/FindSFML.cmake
 
   # License.
   install -Dm 644 license.txt $pkgdir/usr/share/licenses/$pkgname/LICENSE
 }
+md5sums=('7a9b3a1ef6d14cd25090e440ccdbb3a8'
+         '505ea908fb6e4b9359061d8d55373963'
+         '1f57ca0865c6ead90a5ecd768b90f1c1')
