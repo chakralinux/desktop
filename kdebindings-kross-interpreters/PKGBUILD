@@ -13,12 +13,12 @@ source ../_buildscripts/${current_repo}-${_arch}-cfg.conf
 pkgname=kdebindings-kross-interpreters
 _pkgname=kross-interpreters
 pkgver=${_kdever}
-pkgrel=1
+pkgrel=2
 pkgdesc="KDE interpreters for Kross"
 url="http://kde.org/"
 arch=('i686' 'x86_64')
 license=('GPL' 'LGPL' 'FDL')
-depends=("kdebindings-pykde4>=${_kdever}" "kdebindings-korundum>=${_kdever}")
+depends=("kdebindings-pykde4>=${_kdever}" "kdebindings-korundum>=${_kdever}" "java-runtime")
 makedepends=('cmake' 'automoc4' 'ruby' 'python2' 'openjdk6')
 source=("$_mirror/${_pkgname}-$_kdever.tar.bz2")
 md5sums=(`grep ${_pkgname}-$_kdever.tar.bz2 ../kde-sc.md5 | cut -d" " -f1`)
@@ -30,9 +30,11 @@ build()
 {
 	cd ${srcdir}/${_pkgname}-${pkgver}
 
-	# FIXME; ruby and java are not compiling atm
+	# FIXME; ruby is not compiling atm
 	sed -i -e "s~macro_optional_add_subdirectory(ruby)~~g" CMakeLists.txt
-	sed -i -e "s~macro_optional_add_subdirectory(java)~~g" CMakeLists.txt
+
+	# Enable this to disable Java:
+	# sed -i -e "s~macro_optional_add_subdirectory(java)~~g" CMakeLists.txt
   
 	cmake . -DCMAKE_BUILD_TYPE=${_build_type} \
                 -DCMAKE_INSTALL_PREFIX=${_installprefix} 
