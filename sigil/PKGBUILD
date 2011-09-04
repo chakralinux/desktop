@@ -3,12 +3,9 @@
 #
 # contributor (x86_64): Giuseppe Calà <jiveaxe@gmail.com>
 
-# include global config
-source ../_buildscripts/${current_repo}-${_arch}-cfg.conf
-
 pkgname=sigil
 _pkgname=Sigil
-pkgver=0.4.1
+pkgver=0.4.2
 pkgrel=1
 pkgdesc="A multi-platform WYSIWYG ebook editor. It is designed to edit books in ePub format. "
 arch=('i686' 'x86_64') 
@@ -17,33 +14,30 @@ license=('GPL3')
 depends=('qt')
 makedepends=('cmake')
 install=sigil.install
-source=(http://${pkgname}.googlecode.com/files/${_pkgname}-${pkgver}-Code.zip
-        ${pkgname}.desktop)
-md5sums=('b0ae292aea366fe6eb3f3392232ba9a6'
-         '3034d3948eb01804db7a71f89a3eba7d')
+source=(http://$pkgname.googlecode.com/files/$_pkgname-$pkgver-Code.zip
+        $pkgname.desktop)
+md5sums=('ce27976254236f8b11b787fd05be9acb'
+         '83779d140d681fd18f3a8c917bfa7f2f')
 
 build() {
-  mkdir build
-  cd build
+  mkdir build && cd build
   cmake -G "Unix Makefiles" \
     -DCMAKE_INSTALL_PREFIX=/usr \
-    -DCMAKE_C_FLAGS:STRING="${CFLAGS}" \
-    -DCMAKE_CXX_FLAGS:STRING="${CXXFLAGS}" \
+    -DCMAKE_C_FLAGS:STRING="$CFLAGS" \
+    -DCMAKE_CXX_FLAGS:STRING="$CXXFLAGS" \
     -DCMAKE_BUILD_TYPE=Release \
     -DCMAKE_SKIP_RPATH=ON ..
-
-    make
+  make
 }
 
 package() {
   cd build
-  make install DESTDIR="${pkgdir}"
+  make install DESTDIR=$pkgdir
 
-  install -d -m 0755 "${pkgdir}"/usr/share/applications
-  install -m 0644 "${srcdir}"/${pkgname}.desktop "${pkgdir}"/usr/share/applications
-
+  # Desktop integration.
+  install -Dm0644 $srcdir/$pkgname.desktop $pkgdir/usr/share/applications/$pkgname.desktop
   for _pic in 16 32 48 128 256; do
-    install -D -m 0644 ../src/Sigil/Resource_Files/icon/app_icon_${_pic}.png \
-      "${pkgdir}"/usr/share/icons/hicolor/${_pic}x${_pic}/apps/${pkgname}.png
+    install -Dm0644 ../src/Sigil/Resource_Files/icon/app_icon_$_pic.png \
+      $pkgdir/usr/share/icons/hicolor/$_picx$_pic/apps/$pkgname.png
   done
 }
