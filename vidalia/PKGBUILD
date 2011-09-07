@@ -7,7 +7,7 @@
 source ../_buildscripts/${current_repo}-${_arch}-cfg.conf
 
 pkgname=vidalia
-pkgver=0.2.12
+pkgver=0.2.14
 pkgrel=1
 pkgdesc="Controller GUI for Tor"
 url="https://www.torproject.org/vidalia"
@@ -16,15 +16,15 @@ license="GPL"
 depends=('qt>=4.3.0' 'tor>=0.2.0.35')
 makedepends=('cmake>=2.4.0')
 source=(https://www.torproject.org/vidalia/dist/$pkgname-$pkgver.tar.gz vidalia.png)
-md5sums=('f1e108af87676980ff821c36ce8d87e2' '5ec703cf17d75f880b2494495a5d2a58')
+md5sums=('f297bb5fde07463f1eeb36c3b7c8675e' '5ec703cf17d75f880b2494495a5d2a58')
 
 build() {
   [ -f /etc/profile.d/qt4.sh ] && source /etc/profile.d/qt4.sh
 
   cd $pkgname-$pkgver
-  cmake -D CMAKE_INSTALL_PREFIX=/usr . || return 1
+  cmake -D CMAKE_INSTALL_PREFIX=/usr . 
   make || return 1
-  make DESTDIR=$pkgdir install || return 1
-  install -Dm644 doc/vidalia.1.in $pkgdir/usr/share/man/man1/vidalia.1 || return 1
-  install -Dm644 $srcdir/vidalia.png $pkgdir/usr/share/pixmaps/vidalia.png || return 1
+  make DESTDIR=$pkgdir install 
+  install -Dm644 doc/vidalia.1.in $pkgdir/usr/share/man/man1/vidalia.1 
+  install -Dm644 $srcdir/vidalia.png $pkgdir/usr/share/pixmaps/vidalia.png 
 }

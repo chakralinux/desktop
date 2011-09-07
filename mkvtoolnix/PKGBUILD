@@ -1,0 +1,31 @@
+#
+# Apps Packages for Chakra, part of chakra-project.org
+#
+# Maintainer: Adrián Chaves Fernández (Gallaecio) <adriyetichaves gmail.com>
+
+pkgname=mkvtoolnix
+pkgver=4.9.1
+pkgrel=1
+pkgdesc="Set of tools to create, edit and inspect Matroska files."
+arch=('i686' 'x86_64')
+license=('GPL')
+url="http://www.bunkus.org/videotools/mkvtoolnix/index.html"
+depends=('bzip2' 'curl' 'file' 'flac' 'libmatroska' 'libvorbis' 'lzo2' 'qt' 'xdg-utils')
+makedepends=('boost' 'ruby')
+install=mkvtoolnix.install
+source=("http://www.bunkus.org/videotools/$pkgname/sources/$pkgname-$pkgver.tar.bz2")
+md5sums=('5981f266e6d25da4a49f7464e4a97cdf')
+
+build() {
+  cd $srcdir/$pkgname-$pkgver
+  ./configure \
+    --enable-qt \
+    --prefix=/usr \
+    --with-boost-libdir=/usr/lib
+  ./drake
+}
+
+package () {
+  cd $srcdir/$pkgname-$pkgver
+  ./drake DESTDIR=$pkgdir install
+}

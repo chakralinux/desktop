@@ -1,0 +1,46 @@
+#
+# Apps Packages for Chakra, part of chakra-project.org
+#
+# Maintainer: Adrián Chaves Fernández (Gallaecio) <adriyetichaves gmail.com>
+
+pkgname=v4l2ucp
+pkgver=2.0.2
+pkgrel=2
+pkgdesc="A universal control panel for Video for Linux Two (V4L2) devices."
+arch=("i686" "x86_64")
+url="http://$pkgname.sourceforge.net"
+license=('GPL2')
+depends=('qt' 'v4l-utils')
+optdepends=('mplayer: video preview.')
+makedepends=('cmake')
+install=$pkgname.install
+source=(http://downloads.sourceforge.net/sourceforge/$pkgname/$pkgname-$pkgver.tar.bz2
+        $pkgname.desktop)
+md5sums=('e5bc6e71e2cd3ab123c277b2f7154b4f'
+         'db20c209857533aeeb00e30c4872efd3')
+
+build() {
+  cd $srcdir/$pkgname-$pkgver
+
+  # Remove old v4l header.
+  sed -i 's|\(videodev\)\.|\12\.|' src/v4l2ctrl.c
+
+  # Configure and build.
+  [[ -d build ]] && rm -r build
+  mkdir build && cd build
+  cmake \
+    -DCMAKE_INSTALL_PREFIX=/usr \
+    -DCMAKE_BUILD_TYPE=RelWithDebInfo \
+    ..
+  make
+}
+
+package() {
+  cd $srcdir/$pkgname-$pkgver/build
+
+  # Installation.
+  make DESTDIR=$pkgdir install
+
+  # Desktop Integration.
+  install -Dm644 $srcdir/$pkgname.desktop $pkgdir/usr/share/applications/$pkgname.desktop
+}

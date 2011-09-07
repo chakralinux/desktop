@@ -1,0 +1,45 @@
+#
+# Apps Packages for Chakra, part of chakra-project.org
+#
+# Maintainer: Adrián Chaves Fernández (Gallaecio) <adriyetichaves gmail.com>
+
+pkgname=pyload
+pkgver=0.4.7
+pkgrel=1
+pkgdesc="Downloadtool for One-Click-Hoster written in python."
+url="http://pyload.org/"
+license='GPL3'
+arch=('any')
+conflicts=('pyload-hg')
+replaces=('pyload-hg')
+depends=('pycrypto' 'pyqt' 'python2' 'python-beaker' 'python-imaging' 'python-jinja' 'python-pycurl' 'tesseract')
+source=($pkgname-$pkgver.tar.gz::http://get.pyload.org/get/src/$pkgver
+	http://bitbucket.org/ranan/pyload-dist/raw/88fa4a2f3f0c/debian/pyload/usr/share/applications/pyload-gui.desktop 
+        http://bitbucket.org/ranan/pyload-dist/raw/88fa4a2f3f0c/debian/pyload/usr/share/applications/pyload.desktop
+	http://bitbucket.org/ranan/pyload-dist/raw/88fa4a2f3f0c/debian/pyload/usr/share/pixmaps/pyload-gui.png
+        http://bitbucket.org/ranan/pyload-dist/raw/88fa4a2f3f0c/debian/pyload/usr/share/pixmaps/pyload.png)
+md5sums=('488e5ba1a6fbeb9beaf13d0b608bf8ab'
+         'b96a4e5091463b3b7fd79208623f1a3a'
+         'c67462993d27d5884677dd6e8a8a17d2'
+         '73fcec930d25a49e1b99576069d88bd5'
+         '8cbffcc4e7bbd5441a764d844ca2f05e')
+
+package() {
+  cd $srcdir
+
+  # Installation.
+  install -d $pkgdir/usr/share/$pkgname
+  cp -r $pkgname/* $pkgdir/usr/share/$pkgname
+ 
+  # Desktop integration.
+  install -Dm644 $pkgname.desktop	$pkgdir/usr/share/applications/$pkgname.desktop
+  install -Dm644 $pkgname-gui.desktop	$pkgdir/usr/share/applications/$pkgname-gui.desktop
+  install -Dm644 $pkgname.png		$pkgdir/usr/share/pixmaps/$pkgname.png
+  install -Dm644 $pkgname-gui.png		$pkgdir/usr/share/pixmaps/$pkgname-gui.png
+
+  # Execution links.
+  install -d $pkgdir/usr/bin
+  ln -s /usr/share/$pkgname/pyLoadCore.py	$pkgdir/usr/bin/pyLoadCore
+  ln -s /usr/share/$pkgname/pyLoadCli.py	$pkgdir/usr/bin/pyLoadCli
+  ln -s /usr/share/$pkgname/pyLoadGui.py	$pkgdir/usr/bin/pyLoadGui
+}

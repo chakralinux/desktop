@@ -1,0 +1,37 @@
+#
+# Apps Packages for Chakra, part of chakra-project.org
+#
+# Maintainer: Adrián Chaves Fernández (Gallaecio) <adriyetichaves gmail.com>
+# Contributor: mcder3@gmail.com
+
+pkgname=kdeplasma-applets-icontasks
+_pkgname=plasma-icontasks
+pkgver=0.3.0
+pkgrel=1
+pkgdesc="A modified version of default taskbar applet and taskmanager library."
+arch=('i686' 'x86_64')
+url="http://kde-look.org/content/show.php?content=144808"
+screenshot="http://i.imgur.com/FQvwx.png"
+license=('GPL3')
+depends=('qt' 'kde-workspace')
+makedepends=('automoc4' 'cmake')
+conflicts=('kdeplasma-addons-applets-icontasks')
+replaces=('kdeplasma-addons-applets-icontasks')
+source=(http://kde-look.org/CONTENT/content-files/144808-$_pkgname-$pkgver.tar.bz2)
+md5sums=('b20f3bde7fb66c66854bb170b81b9d99')
+
+build() {
+  cd $srcdir/$_pkgname-$pkgver
+  [[ -d build ]] && rm -r build
+  mkdir build && cd build
+  cmake \
+    -DCMAKE_INSTALL_PREFIX=/usr \
+    -DCMAKE_BUILD_TYPE=RelWithDebInfo \
+    ..
+  make
+}
+ 
+package() {
+  cd $srcdir/$_pkgname-$pkgver/build
+  make DESTDIR=$pkgdir install
+}

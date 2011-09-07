@@ -1,0 +1,39 @@
+#
+# Apps Packages for Chakra, part of chakra-project.org
+#
+# Maintainer: Adrián Chaves Fernández (Gallaecio) <adriyetichaves gmail.com>
+# Contributor: Michael Kanis <mkanis gmx de>
+# Contributor: Paulo Freire <paulofreire gmail com>
+# Contributor: Brice Maron <brice bmaron net>
+
+pkgname=merkaartor
+pkgver=0.17.2
+pkgrel=2
+pkgdesc="An editor for the OpenStreetMap project"
+arch=('i686' 'x86_64')
+url="http://www.merkaartor.org/"
+license=('GPL2')
+depends=('exiv2' 'libxml2' 'libxslt' 'proj' 'qt>=4.6')
+optdepends=('gpsd')
+makedepends=('boost')
+conflicts=('merkaartor-svn')
+source=("http://www.merkaartor.be/attachments/download/253/$pkgname-$pkgver.tar.bz2")
+md5sums=('44c49f73efa589a455bb9d3d0a284d09')
+
+build() {
+  cd $srcdir/$pkgname-$pkgver
+
+  lrelease ./src/src.pro
+  qmake \
+    GEOIMAGE=1 \
+    NODEBUG=1 \
+    PREFIX="/usr" \
+    RELEASE=1 \
+    Merkaartor.pro
+  make
+}
+
+package() {
+  cd $srcdir/$pkgname-$pkgver
+  make INSTALL_ROOT=$pkgdir install
+}

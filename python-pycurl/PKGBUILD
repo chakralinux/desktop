@@ -1,0 +1,24 @@
+#
+# Apps Packages for Chakra, part of chakra-project.org
+#
+# Maintainer: Adrián Chaves Fernández (Gallaecio) <adriyetichaves gmail.com>
+# Contributor: Giuseppe Calà <jiveaxe@gmail.com>
+
+pkgname=python-pycurl
+_pkgname=pycurl
+pkgver=7.19.0
+pkgrel=1
+pkgdesc="A Python interface to libcurl."
+arch=('i686' 'x86_64')
+url="http://pycurl.sourceforge.net"
+license=('GPL3')
+depends=('python' 'curl>=7.19.0')
+replaces=('pycurl')
+provides=('pycurl')
+source=(http://pycurl.sourceforge.net/download/$_pkgname-$pkgver.tar.gz)
+md5sums=('919d58fe37e69fe87ce4534d8b6a1c7b')
+
+build() {
+  cd $srcdir/$_pkgname-$pkgver
+  python setup.py install --curl-config=/usr/bin/curl-config --prefix $pkgdir/usr
+}

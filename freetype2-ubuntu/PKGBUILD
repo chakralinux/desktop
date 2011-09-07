@@ -1,0 +1,57 @@
+#
+# Apps Packages for Chakra, part of chakra-project.org
+#
+# Maintainer: Adrián Chaves Fernández (Gallaecio) <adriyetichaves gmail.com>
+
+pkgname=freetype2-ubuntu
+_pkgname=freetype
+_pkgname2=freetype2
+pkgver=2.4.6
+_pkgver=2.4.4-2
+pkgrel=1
+pkgdesc="TrueType font rendering library, with Ubuntu's LCD rendering patches."
+arch=('i686' 'x86_64')
+url="https://launchpad.net/ubuntu/oneiric/+source/freetype"
+license=('GPL')
+depends=('zlib')
+conflicts=($_pkgname2)
+provides=("$_pkgname2=$pkgver")
+options=('!libtool')
+source=(http://downloads.sourceforge.net/sourceforge/$_pkgname/$_pkgname-$pkgver.tar.bz2
+        https://launchpad.net/ubuntu/oneiric/+source/$_pkgname/$_pkgver/+files/${_pkgname}_$_pkgver.diff.gz
+        apple-offset.patch
+	enable-valid.patch)
+md5sums=('5e6510613f612809d2d7862592b92ab7'
+         '8a170e472c2b1d60dff0987722a290d3'
+         '1c964f90ae90aa391af574ceb0814cda'
+         '214119610444c9b02766ccee5e220680')
+
+build() {
+  cd $srcdir/$_pkgname-$pkgver
+
+  # Patch from Ubuntu.
+  patch -Np1 -i $srcdir/${_pkgname}_$_pkgver.diff
+
+  # Patches adjustments.
+  sed -i -e "s#\ssrc# freetype-$pkgver/src#g" debian/patches-freetype/freetype-2.1.7-backwards.compat.patch
+  sed -i -e "s/-p[0-9]\|.*otvalid\.patch//g" debian/patches-freetype/series
+  
+  # Patches.
+  for _f in $(cat debian/patches-freetype/series) ; do    
+    patch -Np1 -i debian/patches-freetype/$_f    
+  done
+
+  # Patches from Arch Linux.
+  patch -Np1 -i $srcdir/enable-valid.patch
+
+  # Configure and build.
+  ./configure \
+    --prefix=/usr
+  make
+}
+
+package() {
+  cd $srcdir/$_pkgname-$pkgver
+
+  make DESTDIR=$pkgdir install
+}
