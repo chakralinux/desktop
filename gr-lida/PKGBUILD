@@ -1,0 +1,28 @@
+#
+# Games Packages for Chakra, part of chakra-project.org
+#
+# Maintainer: Adrián Chaves Fernández (Gallaecio) <adriyetichaves@gmail.com>
+
+pkgname=gr-lida
+_pkgname=GR-lida
+pkgver=0.9.1
+pkgrel=1
+pkgdesc="Front-End for DOSBox and ScummVM"
+arch=('i686' 'x86_64')
+license=('GPL2')
+url="http://sharesource.org/project/grlida/"
+depends=('phonon')
+optdepends=('dosbox: for DOSBox support' 'scummvm: for ScummVM support')
+source=(http://dl.sharesource.org/grlida/$_pkgname-$pkgver.tar.bz2)
+md5sums=('e9595643bf36bfb83d81510b71981ab5')
+
+build() {
+  cd $srcdir/$_pkgname-$pkgver
+  qmake
+  make
+}
+
+package() {
+  cd $srcdir/$_pkgname-$pkgver
+  make INSTALL_ROOT=$pkgdir install
+}
