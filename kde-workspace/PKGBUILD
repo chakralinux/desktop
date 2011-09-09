@@ -16,7 +16,7 @@ pkgname=('kde-workspace'
 
 arch=('i686' 'x86_64')
 pkgver=${_kdever}
-pkgrel=1
+pkgrel=2
 pkgdesc="split package"
 url="http://www.kde.org"
 license=('GPL' 'LGPL' 'FDL')
@@ -27,7 +27,7 @@ _default_wp="Horos"
 
 # NOTE keep in sync with kde-workspace-depends
 depends=('polkit-kde-agent' "kdepimlibs>=${_kdever}" "kde-runtime>=${_kdever}" 'qimageblitz'
-         'libxxf86misc' 'libxcomposite' 'libxss' 'lm_sensors' 'libxklavier' 'libxft' 'oxygen-icons' "xkit"
+         'libxxf86misc' 'libxcomposite' 'libxss' 'lm_sensors' 'libxklavier' 'libxft' 'oxygen-icons' "xkit" 'libgles' 'libegl'
          'libxdamage' 'xorg-utils' 'libxrandr' 'libxres' 'libdmtx' 'libqalculate' 'prison' 'qrencode' "kdepim-runtime>=${_kdever}")
 
 makedepends=('pkgconfig' 'cmake' 'automoc4' 'networkmanager' 'bluez' "kdebindings-pykde4>=${_kdever}"
@@ -139,6 +139,8 @@ build()
 		-DWITH_Xmms=OFF \
 		-DCMAKE_SKIP_RPATH=ON \
                 -DWITH_PolkitQt=OFF \
+		-DWITH_OpenGLES=ON \
+		-DKWIN_BUILD_WITH_OPENGLES=ON \
 		-DCMAKE_{SHARED,MODULE,EXE}_LINKER_FLAGS='-Wl,--no-undefined -Wl,--as-needed'
 
 	make
@@ -188,7 +190,7 @@ package_kde-workspace()
 # FIXME don't find google-gadgets
 # NOTE keep in sync with depends
 	depends=('polkit-kde-agent' "kdepimlibs>=${_kdever}" "kde-runtime>=${_kdever}" 'qimageblitz'
-	         'libxxf86misc' 'libxcomposite' 'libxss' 'lm_sensors' 'libxklavier' 'libxft' 'oxygen-icons' "xkit"
+	         'libxxf86misc' 'libxcomposite' 'libxss' 'lm_sensors' 'libxklavier' 'libxft' 'oxygen-icons' "xkit" 'libgles' 'libegl'
 	         'libxdamage' 'xorg-utils' 'libxrandr' 'libxres' 'libdmtx' 'libqalculate' 'prison' 'qrencode' "kdepim-runtime>=${_kdever}")
 
 	optdepends=("kdebindings-pykde4 : Python Support for Plasma"
