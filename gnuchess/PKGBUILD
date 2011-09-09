@@ -1,25 +1,23 @@
 #
 # Games Packages for Chakra, part of chakra-project.org
 #
-# Maintainer: Adrián Chaves Fernández (Gallaecio) <adriyetichaves gmail.org>
-
-# include global config
-source ../_buildscripts/${current_repo}-${_arch}-cfg.conf
+# Maintainer: Adrián Chaves Fernández (Gallaecio) <adriyetichaves@gmail.org>
 
 pkgname=gnuchess
-pkgver=5.08
+pkgver=6.0.1
 pkgrel=1
-pkgdesc="Lets most modern computers play a full game of chess."
+pkgdesc="Application able to play chess (against another software or a human)"
 url="http://www.gnu.org/software/chess/chess.html"
 arch=('i686' 'x86_64')
-license=('GPL')
-depends=('glibc' 'ncurses' 'readline')
+license=('GPL3')
+depends=('readline')
 source=(ftp://ftp.gnu.org/pub/gnu/chess/$pkgname-$pkgver.tar.gz)
-md5sums=('9db91dbac6b5b86de0c57a420a9fea57')
+md5sums=('041888218f73886f146fa7fbf92190de')
 
 build() {
   cd $srcdir/$pkgname-$pkgver
-  ./configure --prefix=/usr
+  ./configure \
+    --prefix=/usr
   make
 }
 
