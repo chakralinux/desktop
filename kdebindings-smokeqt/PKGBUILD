@@ -13,13 +13,13 @@ source ../_buildscripts/${current_repo}-${_arch}-cfg.conf
 pkgname=kdebindings-smokeqt
 _pkgname=smokeqt
 pkgver=${_kdever}
-pkgrel=1
+pkgrel=2
 pkgdesc="Language independent library for Qt bindings"
 url="http://kde.org/"
 arch=('i686' 'x86_64')
 license=('GPL' 'LGPL' 'FDL')
-depends=("kde-runtime>=${_kdever}" 'qimageblitz' 'qscintilla' 'qwt')
-makedepends=('cmake' 'automoc4' "kdebindings-smokegen>=${_kdever}")
+depends=("kde-runtime>=${_kdever}" 'qimageblitz' 'qscintilla')
+makedepends=('cmake' 'automoc4' "kdebindings-smokegen>=${_kdever}" "qwt")
 source=("$_mirror/${_pkgname}-$_kdever.tar.bz2")
 md5sums=(`grep ${_pkgname}-$_kdever.tar.bz2 ../kde-sc.md5 | cut -d" " -f1`)
 groups=("kde" "kdebindings" "kde-uninstall")
@@ -30,13 +30,13 @@ build()
 {
 	cd ${srcdir}/${_pkgname}-${pkgver}
 	cmake . -DCMAKE_BUILD_TYPE=${_build_type} \
-                -DCMAKE_INSTALL_PREFIX=${_installprefix} 
+                -DCMAKE_INSTALL_PREFIX=${_installprefix}
         make
 }
 
 package()
 {
 	cd ${srcdir}/${_pkgname}-${pkgver}
-	make DESTDIR=${pkgdir} install || return 1
+	make DESTDIR=${pkgdir} install 
 
 }

@@ -17,7 +17,7 @@ pkgname=('kdelibs' 'kdelibs-doc')
 
 arch=('i686' 'x86_64')
 pkgver=${_kdever}
-pkgrel=1
+pkgrel=2
 
 pkgdesc="split package"
 url="http://www.kde.org"
@@ -29,7 +29,7 @@ makedepends=("${_qtpkg}>=${_qtver}" "kde-common>=${_kdever}" "oxygen-icons>=${_k
 	'pkgconfig' 'cmake' 'automoc4' 'intltool' 'avahi' 'libgl' 'aspell' 'hspell' 'libxslt'
 	'shared-mime-info' 'upower' 'udisks' 'hal' 'xz>=5.0.0' 'enchant' 'jasper' 'openexr' 'giflib'
 	'strigi>=0.7.5' 'libxtst' 'soprano' 'ca-certificates' 'xdg-utils' 'qca' 'polkit-qt>=0.98.1'
-	'libxss' 'phonon' 'shared-desktop-ontologies>=0.7' 'attica>=0.2.0' 'heimdal' 'libxcursor'
+	'libxss' 'phonon' 'shared-desktop-ontologies>=0.7' 'attica>=0.2.0' 'krb5' 'libxcursor'
 	'hicolor-icon-theme' 'docbook-xsl' 'docbook-xml' 'dbusmenu-qt-git' 'grantlee-git' 'bzip2>=1.0.6' 'libzip')
 
 replaces=('arts' 'kdelibs-experimental')
@@ -37,12 +37,14 @@ replaces=('arts' 'kdelibs-experimental')
 source=($_mirror/${_origname}-$_kdever.tar.bz2
 	01_chakra_tag.patch
 	02_kde_applications_menu.patch
-	03_chakra_menu.patch)
+	03_chakra_menu.patch
+        fix-kdirwatch.patch)
 
 md5sums=(`grep ${_origname}-$_kdever.tar.bz2 ../kde-sc.md5 | cut -d" " -f1`
          '40ba51f0c50ced94dfffe667ec856950'  # 01_chakra_tag.patch
          'e94450ba5430ea9c1e33bad9ae38ca2d'  # 02_kde_applications_menu.patch
-         '53b85403e4dd8f9146933c52ca23243e') # 03_chakra_menu.patch
+         '53b85403e4dd8f9146933c52ca23243e'  # 03_chakra_menu.patch
+         'd8219059f24fa060d975dd008a3a5b05') # fix-kdirwatch.patch
         
 #
 # build function
@@ -58,7 +60,8 @@ build()
 	patch -Np1 -i ${srcdir}/03_chakra_menu.patch || return 1
 
 	# fixes
-	# msg "applying fixes ..."
+	msg "applying fixes ..."
+        patch -Np1 -i ${srcdir}/fix-kdirwatch.patch || return 1
 
         cd ..
 
@@ -87,7 +90,7 @@ package_kdelibs()
 	depends=("${_qtpkg}>=${_qtver}" "kde-common>=${_kdever}" "oxygen-icons>=${_kdever}"
 		 'shared-mime-info' 'upower' 'udisks' 'xz>=5.0.0' 'enchant' 'jasper' 'openexr' 'giflib'
 		 'strigi' 'libxtst' 'soprano' 'ca-certificates' 'xdg-utils' 'qca' 'polkit-qt>=0.98.1'
-		 'libxss' 'phonon' 'shared-desktop-ontologies>=0.5' 'attica>=0.2.0' 'heimdal' 'libxcursor'
+		 'libxss' 'phonon' 'shared-desktop-ontologies>=0.5' 'attica>=0.2.0' 'krb5' 'libxcursor'
 		 'hicolor-icon-theme' 'dbusmenu-qt-git' 'grantlee-git')
 
 	optdepends=('phonon-gstreamer : GStreamer Phonon backend (default)'
@@ -96,7 +99,8 @@ package_kdelibs()
 		    'phonon-vlc       : VLC Phonon backend'
 		    'avahi            : Service discovery on your local network'
 		    'aspell           : Spell checking'
-		    'hspell           : Hebrew spell checking')
+		    'hspell           : Hebrew spell checking'
+		    'hal              : Optional hardware abstraction layer for Solid')
 
 	provides=("${_origname}=${_kdever}")
 	replaces=('kdelibs-experimental')
