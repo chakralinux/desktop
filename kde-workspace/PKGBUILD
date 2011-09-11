@@ -16,7 +16,7 @@ pkgname=('kde-workspace'
 
 arch=('i686' 'x86_64')
 pkgver=${_kdever}
-pkgrel=1
+pkgrel=2
 pkgdesc="split package"
 url="http://www.kde.org"
 license=('GPL' 'LGPL' 'FDL')
@@ -66,6 +66,8 @@ source=($_mirror/${pkgbase}-$_kdever.tar.bz2
 	fix_root-only-kcms.patch
         # shutdown-fix.patch
 	sensors-fix.patch
+	# fix some issues with the desktop effects and overall performace of Kwin
+	fix-kwin-effects.patch
 	)
 
 md5sums=(`grep ${pkgbase}-$_kdever.tar.bz2 ../kde-sc.md5 | cut -d" " -f1`
@@ -92,7 +94,8 @@ md5sums=(`grep ${pkgbase}-$_kdever.tar.bz2 ../kde-sc.md5 | cut -d" " -f1`
 	'97a5eb51e6f9d460f0d61bb322a1db5e' #  fix_kdm_configdef.patch
 	'5f963f80a026f0600edae1b1c70411e5' #  fix_root-only-kcms.patch
         'ecf3a9d6af9bdd3db0189e06ddf21034' #  sensors-fix.patch
-         )
+        '1c85190d0b8371470d903475e9220630') # fix-kwin-effects.patch
+
 
 #        '13c3203589143e9e2fc757c17375227a' #  feature_plasma-transparent-panel-v4-rb#472.patch
 #        '7361012da217f9aeeca61f0e9956e1d0' #  feature_brightness-osd.patch
@@ -121,6 +124,8 @@ build()
 	patch -Np0 -i ${srcdir}/fix_terminate-server.patch
 	patch -p0 -N -i ${srcdir}/fix_kdm_configdef.patch
         patch -Np1 -i ${srcdir}/fix_root-only-kcms.patch
+        patch -Np1 -i ${srcdir}/fix-kwin-effects.patch 
+
 
 
 # FIXME: update feature patches
@@ -138,12 +143,12 @@ build()
 		-DCMAKE_INSTALL_PREFIX=${_installprefix} \
 		-DWITH_Xmms=OFF \
 		-DCMAKE_SKIP_RPATH=ON \
-                -DWITH_PolkitQt=OFF \
-		#-DWITH_OpenGLES=ON \
-		#-DKWIN_BUILD_WITH_OPENGLES=ON \
 		-DCMAKE_{SHARED,MODULE,EXE}_LINKER_FLAGS='-Wl,--no-undefined -Wl,--as-needed'
-
 	make
+
+        # Option for OpenGLES - PLEASE DON'T SHIP THIS YET (ask manutortosa)
+        # -DWITH_OpenGLES=ON \
+        # -DKWIN_BUILD_WITH_OPENGLES=ON \
 
 	msg "starting kcm_touchpad build ..."
 	cd ${srcdir}/mishaaq-kcm_touchpad-00370b5
@@ -152,8 +157,6 @@ build()
 
 	cmake . -DCMAKE_BUILD_TYPE=${_build_type} \
 		-DCMAKE_INSTALL_PREFIX=${_installprefix} \
-		-DWITH_Xmms=OFF \
-		-DCMAKE_SKIP_RPATH=ON \
 		-DCMAKE_{SHARED,MODULE,EXE}_LINKER_FLAGS='-Wl,--no-undefined -Wl,--as-needed'
 
 	msg "starting kcm_tablet build ..."
@@ -163,16 +166,12 @@ build()
 
 	cmake . -DCMAKE_BUILD_TYPE=${_build_type} \
 		-DCMAKE_INSTALL_PREFIX=${_installprefix} \
-		-DWITH_Xmms=OFF \
-		-DCMAKE_SKIP_RPATH=ON \
 		-DCMAKE_{SHARED,MODULE,EXE}_LINKER_FLAGS='-Wl,--no-undefined -Wl,--as-needed'
 
 	msg "starting favorites launcher build ..."
 	cd ${srcdir}/favorites-0.1
 	cmake . -DCMAKE_BUILD_TYPE=${_build_type} \
 		-DCMAKE_INSTALL_PREFIX=${_installprefix} \
-		-DWITH_Xmms=OFF \
-		-DCMAKE_SKIP_RPATH=ON \
 		-DCMAKE_{SHARED,MODULE,EXE}_LINKER_FLAGS='-Wl,--no-undefined -Wl,--as-needed'
 
 	make
