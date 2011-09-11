@@ -8,25 +8,30 @@
 source ../_buildscripts/${current_repo}-${_arch}-cfg.conf
 
 pkgname=kmymoney
-pkgver=4.5.3
+pkgver=4.6.0
 pkgrel=1
 pkgdesc="An finance manager for KDE4 with HBCI support"
 arch=('i686' 'x86_64')
 url="http://kmymoney2.sourceforge.net"
 license=('GPL')
-depends=('kdebase-workspace' 'aqbanking-qt4' 'shared-mime-info' 'boost' 'libpulse' 'libofx')
-makedepends=('cmake' 'automoc4' 'gwenhywfar' 'docbook-xsl')
+depends=('kde-workspace' 'aqbanking-qt4' 'shared-mime-info' 'boost-libs' 'libpulse' 'libofx')
+makedepends=('cmake' 'automoc4' 'gwenhywfar' 'docbook-xsl' 'boost' 'doxygen')
 provides=()
 conflicts=(kmymoney2)
 replaces=(kmymoney2)
 
 source=(http://downloads.sourceforge.net/project/kmymoney2/KMyMoney-KDE4/$pkgver/$pkgname-$pkgver.tar.bz2)
-sha256sums=('a9b37275cf3cdcd5ce865d94391df44c7822639b830fccb9962a54b7fcf76ffb')
+sha256sums=('8f034a92682cc61dfa76c2593893524d00658c49360b17ddc67671e32ec7edf8')
 
 build() {
-  cd "$srcdir/$pkgname-$pkgver"
+  cd ${srcdir}/$pkgname-$pkgver
 
   cmake -DCMAKE_INSTALL_PREFIX=/usr -DCMAKE_BUILD_TYPE=RELEASE
-  make || return 1
-  make DESTDIR="$pkgdir/" install
+  make
+}
+
+package() {
+  cd ${srcdir}/$pkgname-$pkgver
+
+  make DESTDIR=${pkgdir} install
 }
