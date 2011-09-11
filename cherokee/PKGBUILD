@@ -7,7 +7,7 @@
 # include global config
 
 pkgname=cherokee
-pkgver=1.2.98
+pkgver=1.2.99
 pkgrel=1
 pkgdesc="A very fast, flexible and easy to configure Web Server"
 arch=('i686' 'x86_64')
@@ -29,7 +29,7 @@ source=(http://www.cherokee-project.com/download/1.2/$pkgver/cherokee-$pkgver.ta
         cherokee.rc
         cherokee.logrotate)        
 options=('!libtool')
-md5sums=('21b01e7d45c0e82ecc0c4257a9c27feb'
+md5sums=('c83115c3eebb29e6f2b4cc6fe699affe'
          'a2d2b69c6220fab57cda4f531b680f9f'
          '8d69341bd4002bffd69c6e82ff6c905f')
 
@@ -44,6 +44,11 @@ build() {
               --with-wwwuser=http --with-wwwgroup=http \
               --enable-os-string="Chakra Linux"
   make
+}
+
+package() {
+  cd "$srcdir/$pkgname-$pkgver"
+
   make -j1 DESTDIR="$pkgdir" install
 
   # PAM configuration file for cherokee
@@ -52,9 +57,12 @@ build() {
   # Fix ownership of /var/lib/cherokee/graphs
   chown -R http:http "$pkgdir/var/lib/$pkgname/graphs"
 
-  # Point Python scripts to the python2 binary
-  sed -i 's/env python/env python2/' \
-    "$pkgdir/usr/share/cherokee/admin/"{server,upgrade_config}.py
+  # Use Python 2
+  sed -i 's/env python$/&2/' \
+    "$pkgdir/usr/share/cherokee/admin/"{server,upgrade_config}.py \
+    "$pkgdir/usr/bin/"{CTK-run,cherokee-{admin-launcher,tweak}}
+  sed -i -r "s/['\"]python/&2/g" \
+    "$pkgdir/usr/share/cherokee/admin/wizards/django.py"
 
   # Compile Python scripts
   python2 -m compileall "$pkgdir"
