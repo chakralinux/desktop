@@ -8,20 +8,26 @@ source ../_buildscripts/${current_repo}-${_arch}-cfg.conf
 
 pkgname=libgsasl
 pkgver=1.6.0
-pkgrel=1
+pkgrel=2
 pkgdesc="GNU SASL is an implementation of the Simple Authentication and Security Layer framework and a few common SASL mechanisms."
-arch=(i686 x86_64)
+arch=('i686' 'x86_64')
 license=('LGPL')
 options=('!libtool' '!emptydirs')
 url="http://www.gnu.org/software/gsasl"
-source=(ftp://ftp.gnu.org/gnu/gsasl/${pkgname}-${pkgver}.tar.gz)
+source=("ftp://ftp.gnu.org/gnu/gsasl/${pkgname}-${pkgver}.tar.gz")
 md5sums=('21efc8a02c4ff4e1326267b8ac16a48f')
 
 build() {
   cd "${srcdir}/${pkgname}-${pkgver}"
 
-  ./configure --prefix=/usr || return 1
-
-  make || return 1
-  make DESTDIR="${pkgdir}" install || return 1
+  ./configure --prefix=/usr
+  make
 }
+
+package() {
+  cd "${srcdir}/${pkgname}-${pkgver}"
+
+  make DESTDIR="${pkgdir}" install
+}
+
+# vim:set ts=2 sw=2 et:
