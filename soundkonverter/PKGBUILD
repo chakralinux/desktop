@@ -5,9 +5,8 @@
 # maintainer (x86_64): Manuel Tortosa <manutortosa[at]chakra-project[dot]org>
 # contributor nqn1976 @ gmail.com
 
-pkgname=soundkonverter-kde4
-_appname=soundkonverter
-pkgver=1.0.0
+pkgname=soundkonverter
+pkgver=1.1.0
 pkgrel=1
 pkgdesc="soundKonverter is a frontend to various audio converters"
 arch=('i686' 'x86_64')
@@ -15,15 +14,23 @@ url="http://www.kde-apps.org/content/show.php?content=29024"
 license=('GPL')
 depends=('kdemultimedia-common' 'taglib')
 makedepends=('cmake' 'automoc4')
-source=(https://api.opensuse.org/public/source/home:HessiJames/soundkonverter/${_appname}-${pkgver}.tar.gz)
-md5sums=('fc8bab43a27c53e651907489f5ce5032')
+replaces=('soundKonverter-kde')
+provides=('soundKonverter-kde')
+source=("http://kde-apps.org/CONTENT/content-files/29024-"${pkgname}-"${pkgver}.tar.gz")
+md5sums=('cf7c6dde265937e3211dd1e5b98ae46f')
 
 build() {
-  cd "${srcdir}/${_appname}-${pkgver}"
+  cd "${srcdir}"
   mkdir build
   cd build
-  cmake -DCMAKE_INSTALL_PREFIX=/usr -DCMAKE_BUILD_TYPE=Release ..
+  cmake ../${pkgname}-${pkgver} \
+    -DCMAKE_INSTALL_PREFIX=/usr \
+    -DCMAKE_BUILD_TYPE=Release
   make
-  make DESTDIR="${pkgdir}" install
+}
+
+package() {
+	cd "${srcdir}"/build
+	make DESTDIR="${pkgdir}" install
 }
  
