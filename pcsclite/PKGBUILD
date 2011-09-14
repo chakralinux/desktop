@@ -1,0 +1,43 @@
+#
+# Apps Packages for Chakra, part of chakra-project.org
+#
+# Maintainer: Adrián Chaves Fernández (Gallaecio) <adriyetichaves@gmail.com>
+# Contributor: Giovanni Scafora <giovanni@archlinux.org>
+# Contributor: Daniel Plaza <daniel.plaza.espi@gmail.com>
+
+pkgname=pcsclite
+_pkgname=pcsc-lite
+pkgver=1.7.4
+pkgrel=1
+pkgdesc="PC/SC Architecture smartcard middleware library"
+arch=('i686' 'x86_64')
+url="https://alioth.debian.org/projects/pcsclite/"
+license=('BSD')
+depends=('udev')
+source=(https://alioth.debian.org/frs/download.php/3598/$_pkgname-$pkgver.tar.bz2
+        pcscd)
+md5sums=('1caf0b8ca2ecbf82fe3b035b3fff22dd'
+         'c97b6bce695222efb0f003d8e8369010')
+
+build() {
+  cd $srcdir/$_pkgname-$pkgver
+
+  ./configure \
+    --enable-ipcdir=/run/pcscd \
+    --enable-libudev \
+    --enable-usbdropdir=/usr/lib/pcsc/drivers \
+    --prefix=/usr \
+    --sysconfdir=/etc
+
+  make
+}
+
+package() {
+  cd $srcdir/$_pkgname-$pkgver
+
+  make DESTDIR=$pkgdir install
+
+  install -D $srcdir/$_pkgname-$pkgver/COPYING $pkgdir/usr/share/licenses/$pkgname/license.txt
+  install -D -m755 $srcdir/pcscd $pkgdir/etc/rc.d/pcscd
+  install -d $pkgdir/usr/lib/pcsc/drivers
+}
