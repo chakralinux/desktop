@@ -1,0 +1,65 @@
+#
+# Games Packages for Chakra, part of chakra-project.org
+#
+# Maintainer: Adrián Chaves Fernández (Gallaecio) <adriyetichaves@gmail.com>
+
+pkgname=openworldsoccer
+_pkgname=ows
+pkgver=0.5
+pkgrel=1
+pkgdesc="A funny, easy to play and nice looking soccer game."
+arch=('i686' 'x86_64')
+url="http://openworldsoccer.sourceforge.net/"
+screenshot="http://sourceforge.net/dbimage.php?id=212203"
+license=('GPL3')
+depends=('boost-libs' 'ftgl' 'sdl' 'sdl_image' 'ttf-dejavu')
+makedepends=('boost' 'scons' 'subversion')
+
+_svntrunk="https://$pkgname.svn.sourceforge.net/svnroot/$pkgname/tags/release-$pkgver"
+_svnmod=$pkgname
+
+build() {
+  cd $srcdir
+ 
+  if [ ! -d $_svnmod/.svn ]; then
+    svn co $_svntrunk --config-dir ./ $_svnmod
+  fi
+ 
+  msg "SVN checkout done or server timeout"
+  msg "Starting make..."
+ 
+  rm -rf $srcdir/$_svnmod-build
+  cp -r $srcdir/$_svnmod $srcdir/$_svnmod-build
+  cd $srcdir/$_svnmod-build
+
+  # Fix SConstruct reference to boost library.
+  sed \
+    -e "s/boost_program_options-mt/boost_program_options/" \
+    -i SConstruct
+
+  # Fix DejaVu fonts path.
+  sed \
+    -e "s#/usr/share/fonts/truetype/ttf-dejavu/#/usr/share/fonts/TTF/#" \
+    -i main.cpp
+
+  scons
+}
+ 
+package() {
+  cd $srcdir/$_svnmod-build
+
+  # Shared folder.
+  install -d $pkgdir/usr/share/$pkgname
+
+  # Binary.
+  install -Dm755 $_pkgname $pkgdir/usr/share/$pkgname/$_pkgname
+  
+  # Data.
+  cp -R data images tactics $pkgdir/usr/share/$pkgname/
+
+  # Execution script.
+  install -d $pkgdir/usr/bin
+  echo "#!/bin/bash"					 > $pkgdir/usr/bin/$pkgname
+  echo "cd /usr/share/$pkgname && ./$_pkgname \$@"	>> $pkgdir/usr/bin/$pkgname
+  chmod +x $pkgdir/usr/bin/$pkgname
+}
