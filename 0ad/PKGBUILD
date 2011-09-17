@@ -1,32 +1,33 @@
 #
 # Games Packages for Chakra, part of chakra-project.org
 #
-# Maintainer: Adrián Chaves Fernández (Gallaecio) <adriyetichaves gmail.com>
+# Maintainer: Adrián Chaves Fernández (Gallaecio) <adriyetichaves@gmail.com>
 
-pkgname=0ad
-pkgver=alpha_6
-_pkgver=r09786-alpha
+pkgbase=0ad
+pkgname=($pkgbase $pkgbase-debug $pkgbase-data)
+pkgver=alpha_7
+_pkgver=r10288-alpha
 pkgrel=1
-pkgdesc="Cross-platform, 3D and historically-based real-time strategy game."
+pkgdesc="Cross-platform, 3D and historically-based real-time strategy game"
+screenshot=http://www.wildfiregames.com/0ad/images/news_images/dynamic-borders.jpg
 arch=('i686' 'x86_64')
 url="http://wildfiregames.com/0ad"
-license=('GPL2' 'CCPL')
-depends=('binutils' 'boost' 'crypto++' 'curl' 'devil' 'enet' 'fam' 'libogg' 'libpng' 'libvorbis' 'libxml2' 'mesa' 'nasm' 'openal' 'python2' 'sdl' 'zip' 'zlib')
-makedepends=('cmake')
+depends=('boost-libs' 'curl' 'devil' 'enet' 'gamin' 'libogg' 'libpng' 'libvorbis' 'libxml2' 'mesa'
+'nasm' 'openal' 'sdl' 'zip' 'zlib')
+makedepends=('boost' 'cmake')
 changelog=ChangeLog
-source=(http://downloads.sourceforge.net/project/zero-ad/releases/$pkgname-$_pkgver-unix-build.tar.xz
-	http://downloads.sourceforge.net/project/zero-ad/releases/$pkgname-$_pkgver-unix-data.tar.xz)
-md5sums=('cb4be5f4a9b74a535f39815a6b0c3e85'
-         '085da67a4a681a34418aba49f04cbd28')
+source=(http://downloads.sourceforge.net/project/zero-ad/releases/$pkgbase-$_pkgver-unix-build.tar.xz
+	http://downloads.sourceforge.net/project/zero-ad/releases/$pkgbase-$_pkgver-unix-data.tar.xz)
+md5sums=('234f623b5fd576907da5a7314d6c61e9'
+         'f870ff620667d6c40a4809e28a80eeb5')
 
-build()
-{
-  cd $srcdir/$pkgname-$_pkgver/build/workspaces
+build() {
+  cd $srcdir/$pkgbase-$_pkgver/build/workspaces
 
+  # NOTE: These sed commands are not likely to be changed between releases, like most patches.
   sed -i \
   's/unix_names = { "boost_signals-mt", "boost_filesystem-mt", "boost_system-mt" },/unix_names = { "boost_signals", "boost_filesystem", "boost_system" },/g' \
-  $srcdir/$pkgname-$_pkgver/build/premake/extern_libs.lua
-
+  $srcdir/$pkgbase-$_pkgver/build/premake/extern_libs.lua
   sed -i \
   's/export HOSTTYPE="$HOSTTYPE"/export HOSTTYPE="$CARCH"/g' \
   ./update-workspaces.sh
@@ -34,23 +35,113 @@ build()
   # Atlas disabled because it requires GTK.
   ./update-workspaces.sh \
     --disable-atlas \
-    --with-system-enet
+    --with-system-enet \
+    --with-system-nvtt
 
-  cd $srcdir/$pkgname-$_pkgver/build/workspaces/gcc
-
-#   CONFIG=Debug make
+  cd $srcdir/$pkgbase-$_pkgver/build/workspaces/gcc
   CONFIG=Release make
+  CONFIG=Debug make
 }
 
-package()
-{  
-  install -d $pkgdir/usr/share/$pkgname
-  cp -r $srcdir/$pkgname-$_pkgver/binaries/* $pkgdir/usr/share/$pkgname
+# This script might change between releases. It install the content of ‘binaries/system/’ depending
+# on the type of build, release or debug.
+install_0ad() {
+  AFILES="libatlas libengine libgraphics libgui liblowlevel libmocks_real libmocks_test libnetwork libscriptinterface libsimulation2"
+
+  if [ "$1" == "Debug" ]
+  then	# Debug.
+
+    # Install .a files.
+    for FILENAME in $AFILES
+    do
+      install -D $srcdir/$pkgbase-$_pkgver/binaries/system/${FILENAME}_dbg.a $pkgdir/usr/share/$pkgbase/system/${FILENAME}_dbg.a
+    done
+
+    # Install libCollada.
+    install -D $srcdir/$pkgbase-$_pkgver/binaries/system/libCollada_dbg.so $pkgdir/usr/share/$pkgbase/system/libCollada_dbg.so
+
+    # Install libmozjs185-ps.
+    install -D $srcdir/$pkgbase-$_pkgver/binaries/system/libmozjs185-ps-debug.so.1.0 $pkgdir/usr/share/$pkgbase/system/libmozjs185-ps-debug.so.1.0
+
+    # Install main binary.
+    install -D $srcdir/$pkgbase-$_pkgver/binaries/system/pyrogenesis_dbg $pkgdir/usr/share/$pkgbase/system/pyrogenesis_dbg
+
+  else	# Release.
+
+    # Install .a files.
+    for FILENAME in $AFILES
+    do
+      install -D $srcdir/$pkgbase-$_pkgver/binaries/system/${FILENAME}.a $pkgdir/usr/share/$pkgbase/system/${FILENAME}.a
+    done
+
+    # Install libCollada.
+    install -D $srcdir/$pkgbase-$_pkgver/binaries/system/libCollada.so $pkgdir/usr/share/$pkgbase/system/libCollada.so
+
+    # Install libmozjs185-ps.
+    install -D $srcdir/$pkgbase-$_pkgver/binaries/system/libmozjs185-ps-release.so.1.0 $pkgdir/usr/share/$pkgbase/system/libmozjs185-ps-release.so.1.0
+
+    # Install main binary.
+    install -D $srcdir/$pkgbase-$_pkgver/binaries/system/pyrogenesis $pkgdir/usr/share/$pkgbase/system/pyrogenesis
+
+  fi
+
+}
+
+package_0ad() {
+  license=('GPL2' 'custom:MIT')	# ‘source/’ licenses.
+  depends=('boost-libs' 'curl' 'devil' 'enet' 'gamin' 'libogg' 'libpng' 'libvorbis' 'libxml2' 'mesa'
+  'nasm' 'openal' 'sdl' 'zip' 'zlib' '0ad-data')
+
+  cd $srcdir/$pkgbase-$_pkgver
+  install_0ad Release
+
+  # Execution script:
+  install -d $pkgdir/usr/bin/
+  echo "#!/bin/sh"			>  $pkgdir/usr/bin/$pkgbase
+  echo "cd /usr/share/0ad/system"	>> $pkgdir/usr/bin/$pkgbase
+  echo "./pyrogenesis $*"		>> $pkgdir/usr/bin/$pkgbase
+  chmod +x $pkgdir/usr/bin/$pkgbase
+
+  # Desktop Integration.
+  install -D ./build/resources/$pkgname.desktop $pkgdir/usr/share/applications/$pkgname.desktop
+  install -D ./build/resources/$pkgname.png $pkgdir/usr/share/pixmaps/$pkgname.png
+
+  # Legal.
+  install -Dm644 LICENSE.txt $pkgdir/usr/share/licenses/$pkgname/license.txt
+  
+}
+
+package_0ad-debug() {
+  pkgdesc="Cross-platform, 3D and historically-based real-time strategy game (debug version)"
+  license=('GPL2' 'custom:MIT')	# ‘source/’ licenses.
+  depends=('boost-libs' 'curl' 'devil' 'enet' 'gamin' 'libogg' 'libpng' 'libvorbis' 'libxml2' 'mesa'
+  'nasm' 'openal' 'sdl' 'zip' 'zlib' '0ad-data')
+
+  cd $srcdir/$pkgbase-$_pkgver
+  install_0ad Debug
 
   # Execution script:
   install -d $pkgdir/usr/bin/
   echo "#!/bin/sh"			>  $pkgdir/usr/bin/$pkgname
-  echo "cd /usr/share/0ad/system"	>> $pkgdir/usr/bin/$pkgname
-  echo "./pyrogenesis $*"		>> $pkgdir/usr/bin/$pkgname
+  echo "cd /usr/share/$pkgbase/system"	>> $pkgdir/usr/bin/$pkgname
+  echo "./pyrogenesis_dbg $*"		>> $pkgdir/usr/bin/$pkgname
   chmod +x $pkgdir/usr/bin/$pkgname
+
+  # Legal.
+  install -Dm644 LICENSE.txt $pkgdir/usr/share/licenses/$pkgname/license.txt
+  
+}
+
+package_0ad-data() {
+  pkgdesc="Cross-platform, 3D and historically-based real-time strategy game (data files)"
+  arch=('any')
+  license=('GPL2' 'CCPL-by-sa')	# ‘binary/data/’ licenses.
+
+  cd $srcdir/$pkgbase-$_pkgver
+
+  install -d $pkgdir/usr/share/$pkgbase
+  cp -r $srcdir/$pkgbase-$_pkgver/binaries/data $pkgdir/usr/share/$pkgbase/
+
+  # Legal.
+  install -Dm644 LICENSE.txt $pkgdir/usr/share/licenses/$pkgname/license.txt
 }
