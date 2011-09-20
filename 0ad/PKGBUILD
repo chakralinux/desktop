@@ -97,17 +97,18 @@ package_0ad() {
 
   # Execution script:
   install -d $pkgdir/usr/bin/
-  echo "#!/bin/sh"			>  $pkgdir/usr/bin/$pkgbase
-  echo "cd /usr/share/0ad/system"	>> $pkgdir/usr/bin/$pkgbase
-  echo "./pyrogenesis $*"		>> $pkgdir/usr/bin/$pkgbase
-  chmod +x $pkgdir/usr/bin/$pkgbase
+  local scriptname="${pkgbase}"
+  echo "#!/bin/sh"			>  $pkgdir/usr/bin/$scriptname
+  echo "cd /usr/share/0ad/system"	>> $pkgdir/usr/bin/$scriptname
+  echo "./pyrogenesis $*"		>> $pkgdir/usr/bin/$scriptname
+  chmod +x $pkgdir/usr/bin/$scriptname
 
   # Desktop Integration.
   install -D ./build/resources/$pkgname.desktop $pkgdir/usr/share/applications/$pkgname.desktop
   install -D ./build/resources/$pkgname.png $pkgdir/usr/share/pixmaps/$pkgname.png
 
   # Legal.
-  install -Dm644 LICENSE.txt $pkgdir/usr/share/licenses/$pkgname/license.txt
+  install -Dm644 LICENSE.txt $pkgdir/usr/share/licenses/$pkgbase/license.txt
   
 }
 
@@ -122,13 +123,14 @@ package_0ad-debug() {
 
   # Execution script:
   install -d $pkgdir/usr/bin/
-  echo "#!/bin/sh"			>  $pkgdir/usr/bin/$pkgname
-  echo "cd /usr/share/$pkgbase/system"	>> $pkgdir/usr/bin/$pkgname
-  echo "./pyrogenesis_dbg $*"		>> $pkgdir/usr/bin/$pkgname
-  chmod +x $pkgdir/usr/bin/$pkgname
+  local scriptname="${pkgbase}-debug"
+  echo "#!/bin/sh"			>  $pkgdir/usr/bin/$scriptname
+  echo "cd /usr/share/$pkgbase/system"	>> $pkgdir/usr/bin/$scriptname
+  echo "./pyrogenesis_dbg $*"		>> $pkgdir/usr/bin/$scriptname
+  chmod +x $pkgdir/usr/bin/$scriptname
 
   # Legal.
-  install -Dm644 LICENSE.txt $pkgdir/usr/share/licenses/$pkgname/license.txt
+  install -Dm644 LICENSE.txt $pkgdir/usr/share/licenses/$pkgbase-debug/license.txt
   
 }
 
@@ -143,5 +145,5 @@ package_0ad-data() {
   cp -r $srcdir/$pkgbase-$_pkgver/binaries/data $pkgdir/usr/share/$pkgbase/
 
   # Legal.
-  install -Dm644 LICENSE.txt $pkgdir/usr/share/licenses/$pkgname/license.txt
+  install -Dm644 LICENSE.txt $pkgdir/usr/share/licenses/$pkgbase-data/license.txt
 }
