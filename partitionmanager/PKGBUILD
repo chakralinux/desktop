@@ -8,13 +8,13 @@
 source ../_buildscripts/${current_repo}-${_arch}-cfg.conf
 
 pkgname=partitionmanager
-pkgver=1.0.3
-pkgrel=2
+pkgver=1252996
+pkgrel=1
 arch=('i686' 'x86_64')
 url="https://sourceforge.net/projects/partitionman"
 license=('GPL2')
 depends=('kdebase-runtime' 'parted' 'libatasmart')
-makedepends=('cmake' 'automoc4' 'pkgconfig')
+makedepends=('cmake' 'automoc4' 'pkgconfig' 'svn')
 conflicts=("tribe-partitionmanager")
 optdepends=('e2fsprogs: ext2/3/4 support'
 	    'xfsprogs: XFS support'
@@ -23,20 +23,33 @@ optdepends=('e2fsprogs: ext2/3/4 support'
 	    'ntfsprogs: NTFS support'
 	    'dosfstools: FAT32 support')
 install=partitionmanager.install	    
-source=("http://sourceforge.net/projects/partitionman/files/$pkgname/$pkgver/$pkgname-$pkgver.tar.bz2")
-md5sums=('1f987d314c717ba2579c69eeef16336d') 
+#source=(tribe.patch) # disable-gpt.patch)
+#md5sums=('315e17fcc5c6e8e64902f0d3385f3c9f') # '30c6cdf25c23c6fc33c21b3b48b28ed0')
 
+#_svntrunk=svn://anonsvn.kde.org/home/kde/trunk/extragear/sysadmin/partitionmanager
+_svnmod=partitionmanager-svn
 
 build() {
-  cd "${srcdir}/${pkgname}-1.0.3"
-  
+  cd "${srcdir}"
+
+  svn co svn://anonsvn.kde.org/home/kde/trunk/extragear/sysadmin/partitionmanager -r $pkgver $_svnmod
+
+  msg "SVN checkout done or server timeout"
+  msg "Starting make..."
+
+  cp -r $_svnmod $_svnmod-build
+  cd $_svnmod-build
+
+  #patch -p1 < ${srcdir}/tribe.patch
+  #patch -p1 < ${srcdir}/disable-gpt.patch
+
   cmake -DCMAKE_INSTALL_PREFIX=/usr -DCMAKE_BUILD_TYPE=RelWithDebInfo
 
   make 
 }
 
 package() {
-  cd "${srcdir}/${pkgname}-1.0.3"
+  cd "${srcdir}/$_svnmod-build"
   make DESTDIR="${pkgdir}" install 
 }
 
