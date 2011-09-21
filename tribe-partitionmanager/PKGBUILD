@@ -8,14 +8,13 @@
 source ../_buildscripts/${current_repo}-${_arch}-cfg.conf
 
 pkgname=tribe-partitionmanager
-pkgver=1216949
+pkgver=1252996
 pkgrel=1
 arch=('i686' 'x86_64')
 url="https://sourceforge.net/projects/partitionman"
 license=('GPL2')
-depends=('kdebase-runtime' 'parted' 'libatasmart')
+depends=('kdebase-runtime' 'parted' 'libatasmart' "partitionmanager=$pkgver")
 makedepends=('cmake' 'automoc4' 'pkgconfig' 'svn')
-conflicts=("partitionmanager")
 optdepends=('e2fsprogs: ext2/3/4 support'
 	    'xfsprogs: XFS support'
 	    'jfsutils: JFS support'
@@ -24,7 +23,7 @@ optdepends=('e2fsprogs: ext2/3/4 support'
 	    'dosfstools: FAT32 support')
 install=partitionmanager.install	    
 source=(tribe.patch) # disable-gpt.patch)
-md5sums=('315e17fcc5c6e8e64902f0d3385f3c9f') # '30c6cdf25c23c6fc33c21b3b48b28ed0')
+md5sums=('748fcb71ac661cc06001d589ed5fa688') # '30c6cdf25c23c6fc33c21b3b48b28ed0')
 
 #_svntrunk=svn://anonsvn.kde.org/home/kde/trunk/extragear/sysadmin/partitionmanager
 _svnmod=partitionmanager-svn
@@ -50,6 +49,16 @@ build() {
 
 package() {
   cd "${srcdir}/$_svnmod-build"
-  make DESTDIR="${pkgdir}" install || return 1
+  make DESTDIR="${pkgdir}" install
+
+  #remove conflicting files
+  rm ${pkgdir}/usr/lib/libpartitionmanagerfatlabel.so
+  rm ${pkgdir}/usr/bin/partitionmanager
+  rm ${pkgdir}/usr/bin/partitionmanager-bin
+  rm ${pkgdir}/usr/share/apps/partitionmanager/partitionmanagerui.rc
+  rm ${pkgdir}/usr/share/applications/kde4/partitionmanager.desktop
+  rm ${pkgdir}/usr/share/kde4/servicetypes/pmcorebackendplugin.desktop
+  rm ${pkgdir}/usr/share/kde4/services/pmlibpartedbackendplugin.desktop
+  rm -R ${pkgdir}/usr/share/icons/hicolor/
 }
 
