@@ -1,0 +1,48 @@
+#
+# Games Packages for Chakra, part of chakra-project.org
+#
+# Maintainer: Adrián Chaves Fernández (Gallaecio) <adriyetichaves@gmail.com>
+
+pkgname=hale
+pkgver=0.2.4
+pkgrel=1
+pkgdesc="Role-playing game ith a deep tactical combat system and storyline."
+arch=(any)
+url="http://sourceforge.net/apps/mediawiki/hale/index.php?title=Main_Page"
+screenshot="http://sourceforge.net/apps/gallery/hale/main.php?g2_view=core.DownloadItem&g2_itemId=92&g2_serialNumber=2"
+license=('GPL2')
+depends=('java-runtime')
+options=('!strip')
+source=(http://downloads.sourceforge.net/project/$pkgname/$pkgname-$pkgver.zip)
+md5sums=('8baa1bc8e0373683bcbc48bfb5804f8d')
+
+package() {
+  cd $srcdir/$pkgname
+
+  # Main.
+  install -Dm644 config.txt $pkgdir/usr/share/$pkgname/config.txt
+  install -Dm755 hale.sh $pkgdir/usr/share/$pkgname/hale.sh
+  install -Dm755 hale.jar $pkgdir/usr/share/$pkgname/hale.jar
+  install -Dm755 core.zip $pkgdir/usr/share/$pkgname/core.zip
+  for FOLDER in gui characters saves log campaigns lib
+  do
+    cp -R $FOLDER $pkgdir/usr/share/$pkgname/
+  done
+
+  # Write permissions (not really safe…).
+  chmod -R 666 \
+    $pkgdir/usr/share/$pkgname/campaigns \
+    $pkgdir/usr/share/$pkgname/log \
+    $pkgdir/usr/share/$pkgname/saves
+
+  # Execution script.
+  install -d $pkgdir/usr/bin
+  echo "#!/bin/bash"					 > $pkgdir/usr/bin/$pkgname
+  echo "cd /usr/share/$pkgname && ./$pkgname.sh"	>> $pkgdir/usr/bin/$pkgname
+  chmod +x $pkgdir/usr/bin/$pkgname
+
+  # Legal.
+  install -Dm644 COPYING.txt $pkgdir/usr/share/licenses/$pkgname/license.txt
+  install -Dm644 copyright.txt $pkgdir/usr/share/licenses/$pkgname/authors.txt
+  install -Dm644 CONTRIBUTORS.txt $pkgdir/usr/share/licenses/$pkgname/authors-2.txt
+}
