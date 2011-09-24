@@ -1,0 +1,54 @@
+#
+# Apps Packages for Chakra, part of chakra-project.org
+#
+# Maintainer: Neo Kolokotronis <tetris4@gmail.com>
+# Contributor: csslayer <wengxt AT gmail com>
+
+# include global config
+source ../_buildscripts/${current_repo}-${_arch}-cfg.conf
+
+pkgbase=fcitx
+pkgname=('fcitx' 'fcitx-qt')
+pkgver=4.1.1
+pkgrel=1
+pkgdesc="Free Chinese Input Toy of X - Input Method Server for X window system"
+arch=("i686" "x86_64")
+license=('GPL')
+url="http://code.google.com/p/fcitx"
+makedepends=('intltool' 'cmake' 'pango' 'qt' 'icu' 'dbus-core' 'wget')
+conflicts=('fcitx-utf8-svn' 'fcitx-svn' 'fcitx-hg')
+source=("http://fcitx.googlecode.com/files/${pkgname}-${pkgver}.tar.bz2")
+
+build() {
+  cd $srcdir/
+
+  msg "Creating make environment..."
+  
+  mkdir -p $srcdir/build
+
+  msg "Starting make..."
+  cd $srcdir/build
+  cmake ../${pkgname}-${pkgver} -DCMAKE_INSTALL_PREFIX=/usr -DCMAKE_BUILD_TYPE=Release \
+      -DENABLE_QT_IM_MODULE=On \
+      -DENABLE_GTK2_IM_MODULE=Off \
+      -DENABLE_GTK3_IM_MODULE=Off \
+      -DENABLE_OPENCC=Off
+  make
+}
+
+package_fcitx(){
+    depends=('pango' 'dbus-core')
+    cd $srcdir/build
+    make DESTDIR=$pkgdir install
+    rm -rf $pkgdir/usr/lib/qt/
+    rm -rf $pkgdir/usr/lib/gtk-2.0/
+}
+
+package_fcitx-qt()
+{
+    pkgdesc='QT IM Module for fcitx'
+    depends=('qt' 'icu' 'fcitx')
+    cd $srcdir/build/src/frontend/qt
+    make DESTDIR=$pkgdir install
+}
+md5sums=('ade2c8b4b29d5bfdee4f2092637d5af6')

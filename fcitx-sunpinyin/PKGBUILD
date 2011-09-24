@@ -1,0 +1,36 @@
+#
+# Apps Packages for Chakra, part of chakra-project.org
+#
+# Maintainer: Neo Kolokotronis <tetris4@gmail.com>
+# Contributor: csslayer <wengxt AT gmail com>
+
+# include global config
+source ../_buildscripts/${current_repo}-${_arch}-cfg.conf
+
+pkgname=fcitx-sunpinyin
+pkgver=0.3.1
+pkgrel=1
+pkgdesc="Fcitx Wrapper for sunpinyin."
+arch=('i686' 'x86_64')
+url="http://code.google.com/p/fcitx"
+license=('GPL')
+depends=('fcitx>=4.1.0' 'sunpinyin-git' 'libxpm')
+makedepends=('cmake' 'intltool')
+source=(http://fcitx.googlecode.com/files/${pkgname}-${pkgver}.tar.bz2)
+
+build(){
+    cd "$srcdir/${pkgname}-${pkgver}"
+    rm -rf build
+    mkdir build
+    cd build
+    
+    cmake -DCMAKE_INSTALL_PREFIX=/usr -DCMAKE_BUILD_TYPE=Release ..
+    make
+}
+
+package ()
+{
+    cd "$srcdir/${pkgname}-${pkgver}/build"
+    make DESTDIR=${pkgdir} install
+}
+md5sums=('b6b2307a8aaa39db5445c171c5e6a431')

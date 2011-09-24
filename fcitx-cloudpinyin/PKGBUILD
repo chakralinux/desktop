@@ -1,0 +1,35 @@
+#
+# Apps Packages for Chakra, part of chakra-project.org
+#
+# Maintainer: Neo Kolokotronis <tetris4@gmail.com>
+# Contributor: poplarch <poplarch@gmail.com>
+
+# include global config
+source ../_buildscripts/${current_repo}-${_arch}-cfg.conf
+
+pkgname=fcitx-cloudpinyin
+pkgver=0.1.1
+pkgrel=1
+pkgdesc="This is a standalone module for fcitx, it can use pinyin API on the internet to input."
+arch=('i686' 'x86_64')
+url="https://github.com/csslayer/fcitx-cloudpinyin"
+license=('GPL')
+depends=('fcitx>=4.1.0')
+makedepends=('cmake' 'intltool')
+source=(http://fcitx.googlecode.com/files/${pkgname}-${pkgver}.tar.bz2)
+
+build(){
+    cd "$srcdir/${pkgname}-${pkgver}"
+    rm -rf build
+    mkdir build
+    cd build
+    cmake -DCMAKE_INSTALL_PREFIX=/usr -DCMAKE_BUILD_TYPE=Release ..
+    make
+}
+
+package ()
+{
+    cd "$srcdir/${pkgname}-${pkgver}/build"
+    make DESTDIR=${pkgdir} install
+}
+md5sums=('f5b77c42d441bab8248a8c3558b61177')
