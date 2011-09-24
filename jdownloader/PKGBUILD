@@ -10,16 +10,24 @@ source ../_buildscripts/${current_repo}-${_arch}-cfg.conf
 
 pkgname=jdownloader
 pkgver=latest
-pkgrel=2
+pkgrel=3
 pkgdesc='Download manager, written in Java, for one-click hosting sites like Rapidshare and Megaupload. Uses its own updater.'
 arch=('any')
 url='http://jdownloader.org/'
 license=('GPL')
 depends=('java-runtime>=1.5' 'wget' 'bash')
 install='jdownloader.install'
-source=('http://212.117.163.148/jd.sh')
-md5sums=('5be66194f939c9c060db6c061c09b421')
+source=('http://212.117.163.148/jd.sh'
+        'jdownloader.png::http://jdownloader.org/_media/knowledge/wiki/jdownloader.png?w=128&h=128'
+        'jdownloader.desktop')
+md5sums=('5be66194f939c9c060db6c061c09b421'
+         'd22a9c09b613e1645425999339525a71'
+         '2b204bac81633cf76a03b6f197113542')
 
-build() {
-    install -Dm 755 $srcdir/jd.sh $pkgdir/usr/bin/$pkgname || return 1
+package() {
+  install -Dm755 "${srcdir}/jd.sh" "${pkgdir}/usr/bin/${pkgname}"
+  install -Dm644 "${srcdir}/jdownloader.png" "${pkgdir}/usr/share/pixmaps/${pkgname}.png"
+  install -Dm644 "${srcdir}/jdownloader.desktop" "${pkgdir}/usr/share/applications/${pkgname}.desktop"
 }
+
+# vim:set ts=2 sw=2 et:
