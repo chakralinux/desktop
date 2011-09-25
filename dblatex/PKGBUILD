@@ -1,25 +1,31 @@
 #
-# Chakra Packages for Chakra, part of chakra-project.org
+# Apps Packages for Chakra, part of chakra-project.org
 #
-# contributor (x86_64): Giuseppe Calà <jiveaxe@gmail.com>
-
-# include global config
-source ../_buildscripts/${current_repo}-${_arch}-cfg.conf
+# Contributor: Giuseppe Calà <jiveaxe@gmail.com>
+# Contributor: Adrián Chaves Fernández (Gallaecio) <adriyetichaves@gmail.com>
 
 pkgname=dblatex
-pkgver=0.3
-pkgrel=2
+pkgver=0.3.2
+pkgrel=1
 pkgdesc="DocBook (XML and SGML) to DVI, PDF, PostScript converter using latex"
 arch=(any)
 url="http://dblatex.sourceforge.net/"
-license=("GPL")
-depends=('libxslt' 'texlive-core' 'texlive-htmlxml' 'docbook-xsl' 'docbook-xml' 'python2' 'latex-epic'
-'texlive-latexextra')
-source=("http://downloads.sourceforge.net/project/dblatex/dblatex/$pkgname-$pkgver/$pkgname-$pkgver.tar.bz2")
-md5sums=('7de6bf72b8b2934169ce0ec911e966ed')
+license=(GPL)
+depends=('docbook-xml' 'docbook-xsl' 'latex-epic' 'libxslt' 'python2' 'texlive-core' 'texlive-htmlxml' 'texlive-latexextra')
+source=("http://downloads.sourceforge.net/project/$pkgname/$pkgname/$pkgname-$pkgver/$pkgname-$pkgver.tar.bz2")
+md5sums=('95f81bc46690c4052818a82a32d05b7c')
 
-build() {
-  cd ${srcdir}/${pkgname}-${pkgver}
-  python2 setup.py install --root ${pkgdir} --catalogs=/etc/xml/docbook
-  sed -i -e "s,${pkgdir},," -e "s,#!/usr/bin/env python,#!/usr/bin/env python2," ${pkgdir}/usr/bin/dblatex 
+package() {
+  cd $srcdir/$pkgname-$pkgver
+
+  python2 setup.py install \
+    --root $pkgdir \
+    --catalogs=/etc/xml/docbook
+  
+  # Python 2 fix.
+  sed -i -e "s,${pkgdir},," -e "s,#!/usr/bin/env python,#!/usr/bin/env python2," $pkgdir/usr/bin/dblatex
+
+  # Texlive fix. Without it, ‘ghc’ package documentation won’t compile.
+  # NOTE: see http://www.haskell.org/pipermail/glasgow-haskell-users/2011-March/020199.html
+  sed -i -e "s#<xsl:param name=\"texlive.version\">2010</xsl:param>#<xsl:param name=\"texlive.version\">2009</xsl:param>#" $pkgdir/usr/share/$pkgname/xsl/param.xsl
 }
