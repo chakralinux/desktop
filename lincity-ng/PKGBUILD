@@ -1,0 +1,26 @@
+# Maintainer: Daniele Cocca <daniele.cocca@gmail.com>
+
+pkgname=lincity-ng
+pkgver=2.0
+pkgrel=1
+pkgdesc="LinCity-NG is a city simulation game. It is a polished and improved version of the classic LinCity game."
+arch=('i686' 'x86_64')
+url="http://lincity-ng.berlios.de/wiki/index.php/Main_Page"
+license=('GPL')
+depends=('sdl>=1.2.5' 'sdl_mixer>=1.2.4' 'sdl_image>=1.2.3' 'sdl_ttf>=2.0.8' 'sdl_gfx>=2.0.13' 'physfs>=1.0.0' 'zlib>=1.0' 'libxml2>=2.6.11')
+makedepends=('ftjam>=2.5')
+source=("http://download.berlios.de/${pkgname}/${pkgname}-${pkgver}.tar.bz2")
+md5sums=('1bd0f58e0f2b131d70044f4230600ed1')
+
+build() {
+  cd "${srcdir}/${pkgname}-${pkgver}"
+  ./configure --prefix=/usr
+  jam
+}
+
+package() {
+  cd "${srcdir}/${pkgname}-${pkgver}"
+  jam DESTDIR="${pkgdir}" install
+}
+
+# vim:set ts=2 sw=2 et:
