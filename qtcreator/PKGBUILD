@@ -5,27 +5,34 @@
 # maintainer (x86_64): Manuel Tortosa <manutortosa[at]chakra-project[dot]org>
 
 pkgname=qtcreator
-pkgver=2.2.1
+pkgver=2.3.1
 pkgrel=1
-_qtver=4.7.3
+_qtver=4.7.4
 pkgdesc="Lightweight, cross-platform integrated development environment"
 arch=('i686' 'x86_64')
 url="http://trolltech.com/developer/qt-creator"
 license=('LGPL')
-makedepends=('qt-private-headers>=4.7.3')
-depends=('qt>=4.7.3')
+makedepends=('qt-private-headers>=4.7.4' 'git')
+depends=('qt>=4.7.4')
 optdepends=('qt-docs: for the integrated Qt documentation'
-            'gdb: for the debugger')
+            'gdb: for the debugger'
+            'qt-doc: for the integrated Qt documentation'
+            'cmake: for cmake project suppport'
+            'openssh-askpass: for ssh support'
+            'git: for git support'
+            'mercurial: for mercurial support'
+            'bzr: for bazaar support')
 options=(docs)
 source=("http://get.qt.nokia.com/qtcreator/qt-creator-${pkgver}-src.tar.gz"
 	 qtcreator.desktop)
 
-md5sums=('35d74837e48b12ee58379e1c029a9a6c'
+md5sums=('8aa296ed9034f847bd53ee0424e5ef08'
          '2c3ffbd66845b37be9804f2966815a10')
          
 
 build() {
   cd ${srcdir}
+  [[ -d build ]] && rm -r build
   mkdir build
   cd build
 
