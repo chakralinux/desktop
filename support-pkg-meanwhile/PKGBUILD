@@ -16,7 +16,7 @@ _origname=meanwhile
 
 pkgname=${_origname}
 pkgver=1.0.2
-pkgrel=11
+pkgrel=13
 arch=('i686' 'x86_64')
 pkgdesc="Meanwhile Libraries"
 url="http://meanwhile.sourceforge.net/"
@@ -24,14 +24,22 @@ license="GPL"
 depends=('glib2')
 makedepends=('doxygen')
 options=('!splitdbg' '!splithdr')
-source=(http://downloads.sourceforge.net/project/meanwhile/meanwhile/$pkgver/meanwhile-$pkgver.tar.gz)
-md5sums=('bf4ced109a367b4c5d71fe63c043270e') #  meanwhile-1.0.2.tar.gz
+source=(http://downloads.sourceforge.net/project/meanwhile/meanwhile/$pkgver/meanwhile-$pkgver.tar.gz
+        broken-status.patch)
+md5sums=('bf4ced109a367b4c5d71fe63c043270e' #  meanwhile-1.0.2.tar.gz
+         '9c5c5ea73a43597ce09d0c81b16e6316')
 groups=("kde-uninstall" "kde-support")
 
-build() 
-{
-	cd $startdir/src/$_origname-$pkgver
-	./configure --prefix=${_installprefix}
-	make || return 1
-	make DESTDIR=$startdir/pkg install
+build() {
+  cd $srcdir/$pkgname-$pkgver/src
+  patch -Np0 -i "${srcdir}/broken-status.patch"
+
+  cd $srcdir/$pkgname-$pkgver
+  ./configure --prefix=/usr --disable-mailme
+  make
+}
+
+package() {
+  cd $srcdir/$pkgname-$pkgver
+  make DESTDIR=$pkgdir install
 } 
