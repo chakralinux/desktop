@@ -1,0 +1,34 @@
+#
+# <Repo> Packages for Chakra, part of chakra-project.org
+#
+# Maintainer: Neo Kolokotronis <tetris4@gmail.com
+# Contributor: Andrea Scarpino <andrea@archlinux.org>
+# include global config
+source ../_buildscripts/${current_repo}-${_arch}-cfg.conf
+
+pkgname=libmygpo-qt
+pkgver=1.0.4
+pkgrel=1
+pkgdesc="A C++/Qt client library for gpodder.net"
+arch=('i686' 'x86_64')
+url="http://wiki.gpodder.org/wiki/Libmygpo-qt"
+license=('LGPL2.1')
+depends=('qjson')
+makedepends=('cmake')
+source=("http://stefan.derkits.at/files/${pkgname}/${pkgname}.${pkgver}.tar.gz")
+md5sums=('9c840d6a7dc96055c6eb5a7d36d02a7c')
+
+build() {
+  cd "${srcdir}"
+  mkdir build
+  cd build
+  cmake ../${pkgname} \
+    -DCMAKE_BUILD_TYPE=Release \
+    -DCMAKE_INSTALL_PREFIX=/usr
+  make
+}
+
+package(){
+  cd "${srcdir}/build"
+  make DESTDIR="${pkgdir}" install
+}
