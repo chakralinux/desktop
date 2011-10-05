@@ -8,7 +8,7 @@
 source ../_buildscripts/${current_repo}-${_arch}-cfg.conf
 
 pkgname=fcitx-sunpinyin
-pkgver=0.3.1
+pkgver=0.3.2
 pkgrel=1
 pkgdesc="Fcitx Wrapper for sunpinyin."
 arch=('i686' 'x86_64')
@@ -17,6 +17,7 @@ license=('GPL')
 depends=('fcitx>=4.1.0' 'sunpinyin-git' 'libxpm')
 makedepends=('cmake' 'intltool')
 source=(http://fcitx.googlecode.com/files/${pkgname}-${pkgver}.tar.bz2)
+md5sums=('a43cc199b16880a2a4b3dbdfed07c9a8')
 
 build(){
     cd "$srcdir/${pkgname}-${pkgver}"
@@ -33,4 +34,3 @@ package ()
     cd "$srcdir/${pkgname}-${pkgver}/build"
     make DESTDIR=${pkgdir} install
 }
-md5sums=('b6b2307a8aaa39db5445c171c5e6a431')
