@@ -8,7 +8,7 @@
 source ../_buildscripts/${current_repo}-${_arch}-cfg.conf
 
 pkgname=qtractor
-pkgver=0.4.6
+pkgver=0.5.1
 pkgrel=1
 pkgdesc="Audio/MIDI multitrack sequencer"
 arch=(i686 x86_64)
@@ -24,7 +24,12 @@ build() {
   cd "$srcdir/$pkgname-$pkgver"
 
   ./configure --prefix=/usr
-  make || return 1
+  make
+}
+
+package () {
+	cd "$srcdir/$pkgname-$pkgver"
+
   make DESTDIR="$pkgdir/" install
 }
-md5sums=('50ba658782fcba412095525eaaf56038')
+md5sums=('c54adf974fd363a9f2151a802f170e6d')
