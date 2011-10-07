@@ -9,18 +9,17 @@
 source ../_buildscripts/${current_repo}-${_arch}-cfg.conf
 
 pkgname=skrooge
-pkgver=0.9.0
-pkgrel=2
+pkgver=1.0.0
+pkgrel=1
 pkgdesc="Allows you to manage your personal finances in KDE"
 arch=('i686' 'x86_64')
 url="http://skrooge.org"
 license=('GPL')
-depends=('kde-runtime' 'libofx' 'qca')
+depends=('kdebase-runtime' 'libofx' 'qca-ossl')
 makedepends=('cmake' 'automoc4' 'docbook-xsl')
-opdepends=('qca-ossl: for file-encryption, setting password')
 install=${pkgname}.install
 source=(http://skrooge.org/files/${pkgname}-${pkgver}.tar.bz2)
-md5sums=('340cbec2ddc2a258bd9b5091dbdb5e92')
+md5sums=('900da5dd41b940272941ee71e78cf8b4')
 
 build() {
   cd "$srcdir/$pkgname-$pkgver"
@@ -36,3 +35,4 @@ package() {
 
   make DESTDIR="$pkgdir/" install
 }
+
