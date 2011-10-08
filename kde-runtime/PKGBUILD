@@ -16,7 +16,7 @@ pkgname=('kde-runtime'
         
 arch=('i686' 'x86_64')
 pkgver=${_kdever}
-pkgrel=5
+pkgrel=1
 pkgdesc="split package"
 url="http://www.kde.org"
 license=('GPL' 'LGPL' 'FDL')
@@ -31,21 +31,21 @@ source=($_mirror/${pkgbase}-$_kdever.tar.bz2
 	branding.svgz
 #	01_knetattach_use_sftp.patch
 #	02_oxygenify_knetattach_icon.patch
-	03_disable_logout_sound.patch
+	03_disable_logout_sound.patch)
 #	04_disable_nepomuk_popups.patch
 #	http://chakra-project.org/sources/kde-runtime/kde-runtime-95f65b882149d398553e8934318658301c84dd29.diff
 #	http://chakra-project.org/sources/kde-runtime/kde-runtime-ebaf3b457b94a8be7a894b8eed81940cb7bb818f.diff
-        fix-empty-jobs.patch)
+#       fix-empty-jobs.patch)
 
 md5sums=(`grep ${pkgbase}-$_kdever.tar.bz2 ../kde-sc.md5 | cut -d" " -f1`
         '68cd8eb57db22c2f2ed554b721253bc2'  #  branding.svgz
 #       '45fa12b8baf21c4fc845147afcea2bc1'  #  01_knetattach_use_sftp.patch
 #       '1f0225f31d5f44e753e966fd3a032f00'  #  02_oxygenify_knetattach_icon.patch
-        'a434bf282ee391b2f857184be59a3b6f'  #  03_disable_logout_sound.patch
+        'a434bf282ee391b2f857184be59a3b6f')  #  03_disable_logout_sound.patch
 #       'a3c844d7bbd9a31f39b1b877ae521340'  #  04_disable_nepomuk_popups.patch
 #        '286b55c6f8d11ee960739443993bc292'  # kde-runtime-95f65b882149d398553e8934318658301c84dd29.diff
 #        '23e58fefbe59872f346b2470e3c9973b'  # kde-runtime-ebaf3b457b94a8be7a894b8eed81940cb7bb818f.diff
-         'bf39497d3a8ba27751d10c2d4b913a5d') # fix-empty-jobs.patch
+#        'bf39497d3a8ba27751d10c2d4b913a5d') # fix-empty-jobs.patch
 
      
 
@@ -72,7 +72,7 @@ build()
 	#patch -Np1 -i ${srcdir}/kde-runtime-95f65b882149d398553e8934318658301c84dd29.diff
 
         # see: http://www.afiestas.org/two-annoying-bugs-fixed-in-kdirwatch-and-kuiserver/
-	patch -Np1 -i ${srcdir}/fix-empty-jobs.patch
+	#patch -Np1 -i ${srcdir}/fix-empty-jobs.patch
         
 	# copy our branding stuff
 	cp -f ${srcdir}/branding.svgz ${srcdir}/${pkgbase}-${pkgver}/desktoptheme/oxygen/widgets/
@@ -97,7 +97,7 @@ package_kde-runtime()
 {
 	pkgdesc="KDE Runtime"
 	depends=("kdelibs>=${_kdever}" 'oxygen-icons' 'xorg-xauth' 'hicolor-icon-theme'
-		 'smbclient' 'rarian' 'libssh' 'libpulse' 'libssh' 'ntrack' 'libcanberra' 'libcanberra-pulse' 'sound-theme-freedesktop')
+		 'smbclient' 'rarian' 'libssh' 'libpulse' 'libssh' 'ntrack' 'libcanberra' 'sound-theme-freedesktop')
 	optdepends=('htdig: to build the search index' 'gdb: drkonq crash handler')
 	groups=("kde" "kde-minimal" "kde-uninstall")
         replaces=('kdebase-runtime')

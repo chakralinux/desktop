@@ -16,7 +16,7 @@ pkgname=('kde-workspace'
 
 arch=('i686' 'x86_64')
 pkgver=${_kdever}
-pkgrel=2
+pkgrel=1
 pkgdesc="split package"
 url="http://www.kde.org"
 license=('GPL' 'LGPL' 'FDL')
@@ -65,10 +65,9 @@ source=($_mirror/${pkgbase}-$_kdever.tar.bz2
 	# "fix" some sytemsettings modules that need root access
 	fix_root-only-kcms.patch
         # shutdown-fix.patch
-	sensors-fix.patch
+	sensors-fix.patch)
 	# fix some issues with the desktop effects and overall performace of Kwin
-	fix-kwin-effects.patch
-	)
+	#fix-kwin-effects.patch)
 
 md5sums=(`grep ${pkgbase}-$_kdever.tar.bz2 ../kde-sc.md5 | cut -d" " -f1`
         `grep kde-wallpapers-$_kdever.tar.bz2 ../kde-sc.md5 | cut -d" " -f1` # kde-wallpapers
@@ -93,8 +92,8 @@ md5sums=(`grep ${pkgbase}-$_kdever.tar.bz2 ../kde-sc.md5 | cut -d" " -f1`
         '814350c52c135d6f7bdada1e29223d38' #  fix_terminate-server.patch
 	'97a5eb51e6f9d460f0d61bb322a1db5e' #  fix_kdm_configdef.patch
 	'5f963f80a026f0600edae1b1c70411e5' #  fix_root-only-kcms.patch
-        'ecf3a9d6af9bdd3db0189e06ddf21034' #  sensors-fix.patch
-        '1c85190d0b8371470d903475e9220630') # fix-kwin-effects.patch
+        'ecf3a9d6af9bdd3db0189e06ddf21034') #  sensors-fix.patch
+#       '1c85190d0b8371470d903475e9220630') # fix-kwin-effects.patch
 
 
 #        '13c3203589143e9e2fc757c17375227a' #  feature_plasma-transparent-panel-v4-rb#472.patch
@@ -124,7 +123,7 @@ build()
 	patch -Np0 -i ${srcdir}/fix_terminate-server.patch
 	patch -p0 -N -i ${srcdir}/fix_kdm_configdef.patch
         patch -Np1 -i ${srcdir}/fix_root-only-kcms.patch
-        patch -Np1 -i ${srcdir}/fix-kwin-effects.patch 
+#        patch -Np1 -i ${srcdir}/fix-kwin-effects.patch 
 
 
 

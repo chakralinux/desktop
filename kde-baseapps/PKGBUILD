@@ -27,7 +27,7 @@ license=('GPL' 'LGPL' 'FDL')
 
 options=('docs' '!splithdr' 'splitdbg' 'log')
 
-makedepends=("kde-workspace>=${_kdever}" 'pkgconfig' 'cmake' 'automoc4' 'libraw1394' 'ruby' 'tidyhtml')
+makedepends=("kde-workspace>=${_kdever}" 'pkgconfig' 'cmake' 'automoc4' 'libraw1394' 'ruby' 'tidyhtml' 'docbook-xsl')
 
 source=("$_mirror/${pkgbase}-$_kdever.tar.bz2"
 	"http://www.kde-apps.org/CONTENT/content-files/99752-kde_cdemu-0.3.1.tar.bz2")
@@ -111,6 +111,9 @@ package_kde-baseapps()
 	
 	# we dont want the cdemu manager app. the service menu + devicenotifier is perfect already
 	rm -rfv ${pkgdir}/usr/share/applications/kde4/kde_cdemu.desktop
+
+	# Fix missing KFind icon, fixes FS#325
+	sed -i -e "s~Icon=kfind~Icon=edit-find~g" ${pkgdir}/usr/share/applications/kde4/kfind.desktop
 
 	# include our patches into the package
 	#ls -1 ${startdir}/*.patch &>/dev/null 2>&1
