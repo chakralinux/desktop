@@ -5,9 +5,9 @@
 # maintainer (x86_64): Manuel Tortosa <manutortosa[at]chakra-project[dot]org>
 
 pkgbase=digikam
-pkgname=('digikam' 'kipi-plugins')
+pkgname=('digikam' 'kipi-plugins' 'libkvkontakte')
 pkgver=2.2.0
-pkgrel=1
+pkgrel=2
 url="http://digikam.sourceforge.net"
 arch=('i686' 'x86_64')
 license=('GPL')
@@ -43,9 +43,17 @@ package_digikam() {
 
 }
 
+package_libkvkontakte() {
+  pkgdesc="KDE C++ library for asynchronous interaction with vkontakte.rusocial network"
+  depends=('kdelibs')
+
+  cd "${srcdir}"/build/extra/libkvkontakte
+  make DESTDIR="${pkgdir}" install
+}
+
 package_kipi-plugins() {
   pkgdesc="Kipi plugins and additional libs for digikam and kde apps"
-  depends=('kdegraphics-kgamma' 'kdepimlibs' 'opencv' 'libgpod' 'sane' 'hugin-tools' 'libgphoto2-nolimit')
+  depends=('kdegraphics-kgamma' 'kdepimlibs' 'opencv' 'libgpod' 'sane' 'hugin-tools' 'libgphoto2-nolimit' 'libkvkontakte')
   optdepends=('imagemagick: for picture manipulation'
 	      'qca: for shwup webservice support')
   install=kipi-plugins.install
