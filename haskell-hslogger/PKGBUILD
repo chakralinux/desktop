@@ -3,20 +3,20 @@
 #
 # Maintainer: Adrián Chaves Fernández (Gallaecio) <adriyetichaves@gmail.com>
 
-pkgname=haskell-html
+pkgname=haskell-hslogger
 _basename=haskell
-_pkgname=html
-pkgver=1.0.1.2
+_pkgname=hslogger
+pkgver=1.1.0
 ghcver=7.0.3
-pkgrel=7
-pkgdesc="HTML combinator library"
+pkgrel=1
+pkgdesc="Versatile logging framework"
 url="http://hackage.haskell.org/package/$_pkgname"
-license=('BSD')
+license=('LGPL')
 arch=('i686' 'x86_64')
-depends=(ghc=$ghcver)
+depends=(ghc=$ghcver haskell-mtl haskell-network)
 install=$pkgname.install
 source=(http://hackage.haskell.org/packages/archive/$_pkgname/$pkgver/$_pkgname-$pkgver.tar.gz)
-md5sums=('2a7de5a2af9a2f80d39825d6a95ee445')
+md5sums=('8039e079338dae19e1273bbd73332014')
 
 build() {
   cd $srcdir/$_pkgname-$pkgver
@@ -40,8 +40,4 @@ package() {
   ln -s /usr/share/doc/$pkgname/html $pkgdir/usr/share/doc/ghc/html/libraries/$_pkgname
   
   runhaskell Setup copy --destdir=$pkgdir
-
-  # Legal.
-  install -Dm644 LICENSE $pkgdir/usr/share/licenses/$pkgname/license.txt
-  rm -f $pkgdir/usr/share/doc/$pkgname/LICENSE
 }

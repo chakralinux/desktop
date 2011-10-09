@@ -1,41 +1,47 @@
 #
 # Apps Packages for Chakra, part of chakra-project.org
 #
-# Maintainer: Adrián Chaves Frenández (Gallaecio) <adriyetichaves gmail.com>
+# Maintainer: Adrián Chaves Fernández (Gallaecio) <adriyetichaves@gmail.com>
 
-# include global config
-source ../_buildscripts/${current_repo}-${_arch}-cfg.conf
-
-_hkgname=hashed-storage
 pkgname=haskell-hashed-storage
-pkgver=0.5.3
+_basename=haskell
+_pkgname=hashed-storage
+pkgver=0.5.8
+ghcver=7.0.3
 pkgrel=1
 pkgdesc="Hashed file storage support code."
 url="http://hackage.haskell.org/package/hashed-storage"
-license=('custom:BSD3')
+license=('BSD')
 arch=('i686' 'x86_64')
-depends=('ghc=6.12.3' 'haskell-binary=0.5.0.2' 'haskell-mmap>=0.5' 'haskell-zlib'  'haskell-mtl' 'haskell-dataenc')
-options=('strip')
-source=(http://hackage.haskell.org/packages/archive/hashed-storage/$pkgver/hashed-storage-$pkgver.tar.gz)
-install=haskell-hashed-storage.install
-md5sums=('84b9fc1b408aee53c5106d9737ca4929')
+depends=(ghc=$ghcver haskell-binary haskell-dataenc haskell-mmap haskell-mtl haskell-zlib)
+install=$pkgname.install
+source=(http://hackage.haskell.org/packages/archive/$_pkgname/$pkgver/$_pkgname-$pkgver.tar.gz)
+md5sums=('31abd73fc4566e04b056fc22acdec2aa')
 
 build() {
-    cd ${srcdir}/hashed-storage-$pkgver
-    runhaskell Setup configure --prefix=/usr -p --enable-split-objs --enable-shared --docdir=/usr/share/doc/${pkgname}
-    runhaskell Setup build
-    runhaskell Setup haddock
-    runhaskell Setup register   --gen-script
-    runhaskell Setup unregister --gen-script
-}
+  cd $srcdir/$_pkgname-$pkgver
 
+  runhaskell Setup configure -O -p --enable-split-objs --enable-shared \
+    --prefix=/usr --docdir=/usr/share/doc/$pkgname \
+    --libsubdir=\$compiler/site-local/\$pkgid
+  runhaskell Setup build
+  runhaskell Setup haddock
+  runhaskell Setup register   --gen-script
+  runhaskell Setup unregister --gen-script
+
+  sed -i -r -e "s|ghc-pkg.*unregister[^ ]* |&'--force' |" unregister.sh
+}
 package() {
-    cd ${srcdir}/${_hkgname}-${pkgver}
-    install -D -m744 register.sh   ${pkgdir}/usr/share/haskell/${pkgname}/register.sh
-    install    -m744 unregister.sh ${pkgdir}/usr/share/haskell/${pkgname}/unregister.sh
-    install -d -m755 ${pkgdir}/usr/share/doc/ghc/html/libraries
-    ln -s /usr/share/doc/${pkgname}/html ${pkgdir}/usr/share/doc/ghc/html/libraries/${_hkgname}
-    runhaskell Setup copy --destdir=${pkgdir}
-    install -D -m644 LICENSE ${pkgdir}/usr/share/licenses/${pkgname}/LICENSE
-    rm -f ${pkgdir}/usr/share/doc/${pkgname}/LICENSE
+  cd $srcdir/$_pkgname-$pkgver
+
+  install -Dm744 register.sh	$pkgdir/usr/share/$_basename/$pkgname/register.sh
+  install -Dm744 unregister.sh	$pkgdir/usr/share/$_basename/$pkgname/unregister.sh
+  install -dm755 $pkgdir/usr/share/doc/ghc/html/libraries
+  ln -s /usr/share/doc/$pkgname/html $pkgdir/usr/share/doc/ghc/html/libraries/$_pkgname
+  
+  runhaskell Setup copy --destdir=$pkgdir
+
+  # Legal.
+  install -Dm644 LICENSE $pkgdir/usr/share/licenses/$pkgname/license.txt
+  rm -f $pkgdir/usr/share/doc/$pkgname/LICENSE
 }

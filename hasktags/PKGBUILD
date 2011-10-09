@@ -1,0 +1,35 @@
+#
+# Apps Packages for Chakra, part of chakra-project.org
+#
+# Maintainer: Adrián Chaves Frenández (Gallaecio) <adriyetichaves@gmail.com>
+# Colaborator: arch-haskell
+
+pkgname=hasktags
+pkgver=0.68.1
+pkgrel=1
+pkgdesc='Produces ctags “tags” and etags “TAGS” files for Haskell software'
+url="http://hackage.haskell.org/package/$pkgname"
+license=(BSD)
+arch=(i686 x86_64)
+makedepends=(ghc)
+source=("http://hackage.haskell.org/packages/archive/$pkgname/$pkgver/$pkgname-$pkgver.tar.gz")
+md5sums=('5387ac07a273e08dffb3e3a0f03f7a46')
+
+build() {
+  cd $srcdir/$pkgname-$pkgver
+  runhaskell Setup configure -O \
+    --prefix=/usr
+  runhaskell Setup build
+}
+
+package() {
+  cd $srcdir/$pkgname-$pkgver
+  runhaskell Setup copy --destdir=$pkgdir
+
+  # Documentation.
+  install -Dm644 README $pkgdir/usr/share/doc/$pkgname/usage.txt
+  rm -R $pkgdir/usr/share/doc/$pkgname-$pkgver
+
+  # Legal.
+  install -Dm644 LICENSE $pkgdir/usr/share/licenses/$pkgname/license.txt
+}
