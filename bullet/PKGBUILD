@@ -3,22 +3,20 @@
 #
 # Maintainer: Adrián Chaves Fernández (Gallaecio) <adriyetichaves gmail.com>
 
-# include global config
-source ../_buildscripts/${current_repo}-${_arch}-cfg.conf
-
 pkgname=bullet
-pkgver=2.78
+pkgver=2.79
+_pkgver=$pkgver-rev2440
 pkgrel=1
-pkgdesc="A 3D Collision Detection and Rigid Body Dynamics Library for games and animation."
+pkgdesc="A 3D Collision Detection and Rigid Body Dynamics Library for games and animation"
 arch=('i686' 'x86_64')
 url="http://www.bulletphysics.com/Bullet/"
 license=('ZLIB')
 depends=('freeglut')
 makedepends=('cmake' 'doxygen' 'graphviz' 'ttf-dejavu')
 changelog=ChangeLog
-source=("http://$pkgname.googlecode.com/files/$pkgname-$pkgver.tgz"
+source=("http://$pkgname.googlecode.com/files/$pkgname-$_pkgver.tgz"
         "$pkgname.pc")
-md5sums=('c5bd755a2340cc59448696d250e1bc6b'
+md5sums=('29d6f43964d8494f0366cd69e4883dd1'
          'd1da06deba3b08b884d2212f6838905c')
 
 build() {
@@ -31,12 +29,11 @@ build() {
   # Generate CMake Makefile.
   cmake .. \
        -DCMAKE_INSTALL_PREFIX=/usr \
-       -DBUILD_SHARED_LIBS=1 \
-       -DBUILD_DEMOS=0 \
-       -DBUILD_EXTRAS=0 \
-       -DINSTALL_LIBS=1 \
-       -DINSTALL_EXTRA_LIBS=1 \
-       -DCMAKE_BUILD_TYPE=Debug
+       -DBUILD_SHARED_LIBS=on \
+       -DBUILD_DEMOS=off \
+       -DBUILD_EXTRAS=off \
+       -DINSTALL_LIBS=on \
+       -DCMAKE_BUILD_TYPE=Release
 
   make
 
