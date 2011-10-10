@@ -9,7 +9,7 @@ source ../_buildscripts/${current_repo}-${_arch}-cfg.conf
 
 pkgname=telepathy-logger
 pkgver=0.2.10
-pkgrel=1
+pkgrel=2
 pkgdesc="Telepathy framework logging daemon"
 arch=(i686 x86_64)
 url="http://telepathy.freedesktop.org/wiki/Logger"
@@ -28,6 +28,7 @@ build() {
     --libexecdir=/usr/lib/telepathy \
     --disable-static \
     --disable-scrollkeeper \
+    --enable-call \
     --disable-schemas-compile
   make
 }
