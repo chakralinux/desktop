@@ -3,22 +3,19 @@
 #
 # Contributor: Giuseppe Calà <jiveaxe@gmail.com>
 
-# include global config
-source ../_buildscripts/${current_repo}-${_arch}-cfg.conf
-
 pkgname=alienarena
-pkgver=7.50
+pkgver=7.51
+_pkgver=7_51
 pkgrel=1
-_verdate=20101214
+_verdate=20110311
 pkgdesc="Multiplayer retro sci-fi deathmatch game"
 arch=('i686' 'x86_64')
 url='http://icculus.org/alienarena/rpa/'
-license=('GPL')
+license=('GPL' 'LGPL' 'custom:Non-free data')
 depends=('curl' 'freetype2' 'libgl' 'libjpeg' 'libvorbis' 'libxxf86dga' 'libxxf86vm' 'mesa' 'ode' 'sdl' 'openal')
-source=(http://icculus.org/alienarena/Files/alienarena-7_50-linux${_verdate}.tar.gz
+source=(http://icculus.org/alienarena/Files/alienarena-$_pkgver-linux${_verdate}.tar.gz
 	'alienarena.desktop')
-
-md5sums=('40e44cb49f5bc6ff6c8abcead897b29a' 
+md5sums=('c9f1f050f52cdc45ab85487c526518d8'
          '7bc3fba786eb379fbcb3c9aecf106811')
  
 build() {
