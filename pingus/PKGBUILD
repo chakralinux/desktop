@@ -5,7 +5,7 @@
 
 pkgname=pingus
 pkgver=0.7.4
-pkgrel=1
+pkgrel=2
 pkgdesc="A Lemmings clone, i.e. a level-based puzzle game."
 arch=('i686' 'x86_64')
 url="http://pingus.seul.org"
@@ -23,6 +23,13 @@ build() {
 package() {
   cd "${srcdir}/${pkgname}-${pkgver}"
   make install PREFIX="${pkgdir}/usr"
+
+  # This is needed... the standard installation method it TOTALLY broken in this script creation.
+  cat > "${pkgdir}/usr/bin/pingus" <<EOF
+#!/bin/sh
+exec "/usr/bin/pingus.bin" --datadir "/usr/share/pingus"
+EOF
+  chmod 755 "${pkgdir}/usr/bin/pingus"
 }
 
 # vim:set ts=2 sw=2 et:
