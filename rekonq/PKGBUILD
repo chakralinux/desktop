@@ -8,8 +8,8 @@
 source ../_buildscripts/${current_repo}-${_arch}-cfg.conf
 
 pkgname=rekonq
-pkgver=0.7.0
-pkgrel=5
+pkgver=0.7.92
+pkgrel=1
 pkgdesc='A WebKit based web browser for KDE'
 arch=('i686' 'x86_64')
 url='http://rekonq.sourceforge.net/'
@@ -17,14 +17,14 @@ license=('GPL')
 depends=('kdelibs>=4.7.0' 'kde-baseapps>=4.7.0' 'qt>=4.7.2')
 makedepends=('cmake' 'automoc4' 'docbook-xsl')
 install=${pkgname}.install
-source=(http://downloads.sourceforge.net/${pkgname}/${pkgname}-${pkgver}.tar.bz2)
-md5sums=('73de712f71ea4caf2e66a92c77505da8')
+source=(${pkgname}.tar.gz)
+md5sums=('a83ce9910de9bb120f2fd1777ef15297')
 
 build(){
   cd ${srcdir}
   mkdir -p build 
   cd build
-  cmake ../${pkgname}-${pkgver} \
+  cmake ../${pkgname} \
     -DCMAKE_BUILD_TYPE=RelWithDebInfo \
     -DCMAKE_INSTALL_PREFIX=/usr
   make 
