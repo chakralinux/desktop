@@ -1,0 +1,61 @@
+#
+# Games Packages for Chakra, part of chakra-project.org
+#
+# Maintainer: Adrián Chaves Fernández (Gallaecio) <adriyetichaves@gmail.com>
+# Contributor: Sven-Hendrik Haase <sh@lutzhaase.com>
+# Contributor: Arkham <arkham at archlinux dot us>
+# Contributor: Kristoffer Fossgård <kfs1 at online dot no>
+
+pkgname=fretsonfire
+_pkgname=FretsOnFire
+_pkgname2="Frets on Fire"
+pkgver=1.3.110
+pkgrel=1
+pkgdesc="A game of musical skill where you play guitar with the keyboard as accurately as possible"
+url="http://fretsonfire.sourceforge.net/"
+arch=('any')
+license=('GPL')
+depends=('python-pygame' 'python-opengl' 'pil' 'python-numpy')
+optdepends=('glew: Used for render-to-texture support' 
+            'pyogg: Used for streaming OGG files from the disk'
+            'vorbis-tools: Used to import Guitar Hero files')
+[ "$CARCH" = "i686" ] && optdepends[3]='psyco: Used for speed optimization'
+source=(http://downloads.sourceforge.net/$pkgname/$_pkgname-$pkgver.tar.gz
+        "$pkgname.desktop::http://projects.archlinux.org/svntogit/community.git/plain/trunk/fretsonfire.desktop?h=packages/fretsonfire"
+        "$pkgname.png::http://projects.archlinux.org/svntogit/community.git/plain/trunk/fretsonfire.png?h=packages/fretsonfire")
+md5sums=('daa7e23ebc8ed5bc78aa5e9f4ca3471e'
+         'e792e7dfe01775c0034781393c457696'
+         '66668cad0211bf4e6ab1bd5efa8f65bf')
+
+package() {
+  cd $srcdir/"$_pkgname2"-$pkgver
+
+  # Folders.
+  install -d $pkgdir/usr/share/$pkgname/{bin,data}
+
+  # Python 2 fix.
+  sed -i 's|/usr/bin/python|/usr/bin/python2|g' -i src/$_pkgname.py
+
+  # Actual installation.
+  cp -r src/* $pkgdir/usr/share/$pkgname/bin/
+  cp -r data/* $pkgdir/usr/share/$pkgname/data/
+
+  # Unneeded files.
+  cd $pkgdir/usr/share/$pkgname/data
+  rm -rf win32/ launcher* Makefile *.svg songs/tutorial/*.svg \
+      mods/Chilly/*.svg mods/LightGraphics/*.svg 
+
+  # Permissions.
+  find $pkgdir/usr/share/$pkgname -type f -exec chmod 664 {} + 
+  find $pkgdir/usr/share/$pkgname -type d -exec chmod 775 {} + 
+
+  # Execution script.
+  install -d $pkgdir/usr/bin
+  echo "#!/bin/bash"	 > $pkgdir/usr/bin/$pkgname
+  echo "cd /usr/share/$pkgname/bin && python2 $_pkgname.py \$@"	>> $pkgdir/usr/bin/$pkgname
+  chmod +x $pkgdir/usr/bin/$pkgname
+
+  # Desktop integration.
+  install -Dm 644 $srcdir/$pkgname.desktop $pkgdir/usr/share/applications/$pkgname.desktop
+  install -Dm 644 $srcdir/$pkgname.png $pkgdir/usr/share/pixmaps/$pkgname.png
+}
