@@ -1,0 +1,61 @@
+#
+# Apps Packages for Chakra, part of chakra-project.org
+#
+# Maintainer: Adrián Chaves Fernández (Gallaecio) <adriyetichaves@gmail.com>
+
+pkgname=qemu-kvm
+_pkgname=kvm
+pkgver=0.15.0
+pkgrel=2
+pkgdesc="Generic and open source processor emulator using dynamic translation to improve speed."
+arch=('i686' 'x86_64')
+license=('GPL2' 'LGPL2.1')
+url="http://www.linux-kvm.org"
+depends=('libjpeg' 'libpng' 'libsasl' 'curl' 'sdl' 'alsa-lib' 'esound' 'gnutls>=2.4.1' 'bluez' 'vde2' 'util-linux-ng')
+makedepends=('texi2html' 'perl')
+backup=('etc/qemu/target-x86_64.conf')
+provides=(qemu)
+conflicts=(qemu)
+options=(!strip)
+install=qemu-kvm.install
+changelog=ChangeLog
+source=("http://downloads.sourceforge.net/$_pkgname/$pkgname-$pkgver.tar.gz"
+        "65-kvm.rules")
+md5sums=('b45b0deebba4ce47dcaaab3807f6ed47'
+         'b316a066d2f1bb57d8f5b7ea1d0d1caf')
+
+build() {
+  cd $srcdir/$pkgname-$pkgver
+    
+  # Fix esound building.
+  ./configure\
+    --prefix=/usr \
+    --sysconfdir=/etc \
+    --audio-drv-list=alsa,sdl,oss,esd \
+    --audio-card-list=ac97,sb16,es1370,adlib \
+    --enable-docs
+  make
+}
+
+package() {
+  cd $srcdir/$pkgname-$pkgver
+
+  make DESTDIR=$pkgdir install
+
+  # Symbolic link for backwards compatibility:
+  ln -s qemu-system-x86_64 $pkgdir/usr/bin/qemu-kvm
+
+  # Symbolic link for to qemu binary for emulator apps:
+  ln -s qemu-system-x86_64 $pkgdir/usr/bin/qemu
+
+  # Symbolic link for to qemu binary for emulator apps:
+  ln -s qemu-system-x86_64 $pkgdir/usr/bin/kvm
+
+  # Fix man page:
+  mv $pkgdir/usr/share/man/man1/qemu.1 \
+		    $pkgdir/usr/share/man/man1/qemu-kvm.1
+
+  # Install udev rules:
+  install -D -m644 $srcdir/65-kvm.rules \
+		    $pkgdir/lib/udev/rules.d/65-kvm.rules
+}
