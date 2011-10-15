@@ -5,33 +5,37 @@
 # maintainer (x86_64): Manuel Tortosa <manutortosa[at]chakra-project[dot]org>
 # contributor (x86_64): Giuseppe Calà <jiveaxe@gmail.com>
 
-# include global config
-source ../_buildscripts/${current_repo}-${_arch}-cfg.conf
-
 pkgname=skrooge
-pkgver=0.9.1
-pkgrel=1
+pkgver=1.0.0
+pkgrel=2
 pkgdesc="Allows you to manage your personal finances in KDE"
 arch=('i686' 'x86_64')
 url="http://skrooge.org"
 license=('GPL')
 depends=('kdebase-runtime' 'libofx' 'qca-ossl')
-makedepends=('cmake' 'automoc4' 'docbook-xsl')
-install=${pkgname}.install
-source=(http://skrooge.org/files/${pkgname}-${pkgver}.tar.bz2)
-md5sums=('2fa984e250359fd6008d2c601f1209ec')
+makedepends=('automoc4' 'cmake' 'docbook-xsl')
+install=$pkgname.install
+source=(http://skrooge.org/files/$pkgname-$pkgver.tar.bz2
+	"$pkgname-$pkgver-numbers.diff::http://quickgit.kde.org/?p=skrooge.git&a=blobdiff_plain&h=6419c8feca1e52e29ea80bed40968332559d58ca&hp=c123c16274a1f19c172a7ce0604835f76ffd7288&f=skgbasegui/skgcalculatoredit.cpp")
+md5sums=('900da5dd41b940272941ee71e78cf8b4'
+         'a841957f870a997ea0cba11b01775b97')
 
 build() {
-  cd "$srcdir/$pkgname-$pkgver"
+  cd $srcdir/$pkgname-$pkgver
 
-  cmake . -DCMAKE_BUILD_TYPE=Release \
-	  -DCMAKE_INSTALL_PREFIX=/usr
+  # Patch for https://bugs.kde.org/show_bug.cgi?id=283683:
+  patch -uNp1 -i $srcdir/$pkgname-$pkgver-numbers.diff
 
+  [[ -d build ]] && rm -r build
+  mkdir build && cd build
+  cmake \
+    -DCMAKE_INSTALL_PREFIX=/usr \
+    -DCMAKE_BUILD_TYPE=RelWithDebInfo \
+    ..
   make
 }
-
+ 
 package() {
-  cd "$srcdir/$pkgname-$pkgver"
-
-  make DESTDIR="$pkgdir/" install
+  cd $srcdir/$pkgname-$pkgver/build
+  make DESTDIR=$pkgdir install
 }
