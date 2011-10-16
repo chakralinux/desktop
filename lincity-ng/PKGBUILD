@@ -5,26 +5,37 @@
 
 pkgname=lincity-ng
 pkgver=2.0
-pkgrel=2
-pkgdesc="LinCity-NG is a city simulation game. It is a polished and improved version of the classic LinCity game."
+pkgrel=3
+pkgdesc="LinCity-NG is a city simulation game, a polished and improved version of LinCity"
 arch=('i686' 'x86_64')
 url="http://lincity-ng.berlios.de/wiki/index.php/Main_Page"
 license=('GPL')
 depends=('mesa' 'sdl>=1.2.5' 'sdl_mixer>=1.2.4' 'sdl_image>=1.2.3' 'sdl_ttf>=2.0.8' 'sdl_gfx>=2.0.13' 
 'physfs>=1.0.0' 'zlib>=1.0' 'libxml2>=2.6.11')
 makedepends=('ftjam>=2.5')
-source=("http://download.berlios.de/${pkgname}/${pkgname}-${pkgver}.tar.bz2")
+source=("http://download.berlios.de/$pkgname/$pkgname-$pkgver.tar.bz2")
 md5sums=('1bd0f58e0f2b131d70044f4230600ed1')
 
 build() {
-  cd "${srcdir}/${pkgname}-${pkgver}"
-  ./configure --prefix=/usr
+  cd $srcdir
+  
+  msg "Getting Italian translation files…"
+  git clone --depth 1 https://github.com/hamen/sannioglug-lincity-ng-ita.git it
+
+  msg "Starting actual build…"
+  cd $srcdir/$pkgname-$pkgver
+  ./configure \
+    --prefix=/usr
   jam
 }
 
 package() {
-  cd "${srcdir}/${pkgname}-${pkgver}"
-  jam DESTDIR="${pkgdir}" install
-}
+  cd $srcdir/$pkgname-$pkgver
+  jam DESTDIR=$pkgdir install
 
-# vim:set ts=2 sw=2 et:
+  # Italian translation files installation.
+  cd $srcdir/it
+  install locale/it.po		$pkgdir/usr/share/$pkgname/locale/it.po
+  install locale/gui/it.po	$pkgdir/usr/share/$pkgname/locale/gui/it.po
+  cp -R help/it			$pkgdir/usr/share/$pkgname/help/it
+}
