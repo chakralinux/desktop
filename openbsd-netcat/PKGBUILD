@@ -1,0 +1,41 @@
+#
+# Chakra Packages for Chakra, part of chakra-project.org
+#
+# Maintainer: Sergej Pupykin <pupykin.s+arch@gmail.com>
+# Contributor: Andrej Gelenberg <andrej.gelenberg@udo.edu>
+
+pkgname=openbsd-netcat
+_pkgver=1.89
+_pkgver_debrel=4
+pkgver="${_pkgver}.${_pkgver_debrel}"
+pkgrel=1
+pkgdesc="TCP/IP swiss army knife. OpenBSD variant."
+arch=('i686' 'x86_64')
+url="http://packages.debian.org/sid/netcat-openbsd"
+license=('BSD')
+depends=('glib2')
+makedepends=('gcc' 'make')
+source=("http://ftp.debian.org/debian/pool/main/n/netcat-openbsd/netcat-openbsd_${_pkgver}.orig.tar.gz"
+        "http://ftp.debian.org/debian/pool/main/n/netcat-openbsd/netcat-openbsd_${_pkgver}-${_pkgver_debrel}.diff.gz")
+md5sums=('7238ce15aae43069e96ba7faf03f153e'
+         '00c65aa22243b76998174c733cbb64cc')
+
+build() {
+  cd "${srcdir}/netcat-openbsd-${_pkgver}.orig"
+  patch -p1 < "../netcat-openbsd_${_pkgver}-${_pkgver_debrel}.diff"
+  for i in $(cat debian/patches/series); do
+    echo "** patch ${i}" 1>&2
+    cat "debian/patches/${i}"
+  done | patch -p1
+  make CFLAGS="${CFLAGS} -DDEBIAN_VERSION=\"\\\"${_pkgver_debrel}\\\"\""
+}
+
+package() {
+  cd "${srcdir}/netcat-openbsd-${_pkgver}.orig"
+  install -d "${pkgdir}/usr/bin"
+  install -d "${pkgdir}/usr/share/man/man1"
+  install nc "${pkgdir}/usr/bin/nc.openbsd"
+  install nc.1 "${pkgdir}/usr/share/man/man1/nc.openbsd.1"
+}
+
+# vim:set ts=2 sw=2 et:
