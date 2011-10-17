@@ -1,0 +1,25 @@
+# Contributor: Neophytos Kolokotronis <tetris4@gmail.com>
+
+pkgname=qupzilla
+pkgver=1.0.1
+pkgrel=5
+pkgdesc="A very fast open source browser based on WebKit core"
+url="http://qt-apps.org/content/show.php?content=145693"
+arch=('i686' 'x86_64')
+license=('GPL3')
+depends=('qt')
+source=(https://github.com/nowrep/QupZilla/zipball/master)
+md5sums=('712f7333c23fa275f44472d2abe3e779')
+
+build() {
+   cd $srcdir/nowrep-QupZilla-4d135f7/src/
+   export USE_WEBGL="true"
+   qmake QupZilla.pro
+   make
+}
+
+package() {
+   cd $srcdir/nowrep-QupZilla-4d135f7/src/
+   make INSTALL_ROOT=$pkgdir install
+
+}
