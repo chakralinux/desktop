@@ -12,7 +12,7 @@ arch=('i686' 'x86_64')
 license=('GPL2' 'LGPL2.1')
 url="http://www.linux-kvm.org"
 depends=('libjpeg' 'libpng' 'libsasl' 'curl' 'sdl' 'alsa-lib' 'esound' 'gnutls>=2.4.1' 'bluez' 'vde2' 'util-linux-ng')
-makedepends=('texi2html' 'perl')
+makedepends=('texi2html' 'perl' 'python2')
 backup=('etc/qemu/target-x86_64.conf')
 provides=(qemu)
 conflicts=(qemu)
@@ -30,6 +30,7 @@ build() {
   # Fix esound building.
   ./configure\
     --prefix=/usr \
+    --python=/usr/bin/python \
     --sysconfdir=/etc \
     --audio-drv-list=alsa,sdl,oss,esd \
     --audio-card-list=ac97,sb16,es1370,adlib \
