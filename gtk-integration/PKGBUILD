@@ -5,12 +5,12 @@
 # maintainer (x86_64): Manuel Tortosa <manutortosa[at]chakra-project[dot]org>
 
 pkgname=gtk-integration
-pkgver=2.6
-pkgrel=3
+pkgver=3.0
+pkgrel=2
 iconspkgver=2.5.0
-widgetpkgver=1.1.3
+widgetpkgver=1.1.4
 _colors=3.0
-cgcver=1.6
+cgcver=1.7
 
 pkgdesc="A bundles and Gtk apps integration package for Chakra GNU/Linux"
 arch=('i686' 'x86_64')
@@ -29,8 +29,8 @@ source=("http://download.tuxfamily.org/oxygenrefit2/oxygen-refit-2-$iconspkgver.
 	"http://chakra-project.org/sources/gtk-integration/chakra-gtk-config-${cgcver}.tar.gz")
 
 md5sums=('60f32f98d8d33d82db79b6bb934f0580'
-         'e3b280a61cbe4363c41c26083e94643d'
-         'd924ec89729cd00e31d48b888e8e2324')
+         '61a7424e77785501df27b5c050e5f287'
+         'd7e9c6ba2a9dc06252589f3d86b44489')
 
 function create_install() {
 cat > "${startdir}/${pkgname}.install" <<EOF
@@ -70,8 +70,8 @@ function build() {
 	rm -rf build
 	mkdir build && cd build
 	cmake -DCMAKE_BUILD_TYPE=Release \
-	-DCMAKE_SKIP_RPATH=ON \
-	-DCMAKE_INSTALL_PREFIX=/usr .. || return 1
+	      -DCMAKE_SKIP_RPATH=ON \
+	      -DCMAKE_INSTALL_PREFIX=/usr .. || return 1
 	make || return 1
 	make DESTDIR=${pkgdir} install
 
