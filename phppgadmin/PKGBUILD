@@ -1,31 +1,41 @@
 #
 # Apps Packages for Chakra, part of chakra-project.org
 #
-# Maintainer: Adrián Chaves Fernández (Gallaecio) <adriyetichaves gmail.com>
-
-# include global config
-source ../_buildscripts/${current_repo}-${_arch}-cfg.conf
+# Maintainer: Adrián Chaves Fernández (Gallaecio) <adriyetichaves@gmail.com
+# Contributor: Sergej Pupykin <pupykin.s+arch@gmail.com>
+# Contributor: wizzomafizzo <wizzomafizzo@gmail.com>
+# Contributor: Benjamin Andresen <benny@klapmuetz.org>
 
 pkgname=phppgadmin
-_pkgname=phpPgAdmin
 pkgver=5.0.2
-pkgrel=2
-pkgdesc="Web-based administration tool for PostgreSQL."
+pkgrel=3
+pkgdesc="A web-based administration tool for PostgreSQL. It is perfect for PostgreSQL DBAs, newbies and hosting services"
 arch=('any')
 url="http://sourceforge.net/projects/phppgadmin"
-license=('GPL2')
-depends=('php' 'postgresql')
-backup=('srv/http/phppgadmin/conf/config.inc.php'
-	'srv/http/phppgadmin/.htaccess')
-changelog=ChangeLog
-source=(http://downloads.sourceforge.net/sourceforge/$pkgname/$_pkgname-$pkgver.tar.gz)
+license=('GPL')
+depends=('php' 'postgresql' 'php-pgsql')
+backup=('etc/webapps/phppgadmin/config.inc.php'
+	'etc/webapps/phppgadmin/.htaccess')
+install=phppgadmin.install
+source=(http://downloads.sourceforge.net/sourceforge/$pkgname/phpPgAdmin-$pkgver.tar.gz)
 md5sums=('dfdbb5860847123413596292931a44f9')
 
 build() {
-  mkdir -p $pkgdir/srv/http/phppgadmin
-  cd $pkgdir/srv/http/phppgadmin
-
-  cp -ra $srcdir/$_pkgname-$pkgver/* . && \
-  cp ./conf/config.inc.php-dist ./conf/config.inc.php && \
-  echo "deny from all" >> .htaccess
+  _instdir=$pkgdir/usr/share/webapps/phppgadmin
+  mkdir -p ${_instdir} $pkgdir/etc/webapps/phppgadmin
+  cd ${_instdir}
+  cp -ra $srcdir/phpPgAdmin-$pkgver/* .
+  cp ./conf/config.inc.php-dist $pkgdir/etc/webapps/phppgadmin/config.inc.php
+  echo "deny from all" >$pkgdir/etc/webapps/phppgadmin/.htaccess
+  ln -s /etc/webapps/phppgadmin/.htaccess ${_instdir}/.htaccess
+  ln -s /etc/webapps/phppgadmin/config.inc.php ${_instdir}/config.inc.php
+  cat >$pkgdir/etc/webapps/phppgadmin/apache.example.conf <<EOF
+	Alias /phppgadmin "/usr/share/webapps/phppgadmin"
+	<Directory "/usr/share/webapps/phppgadmin">
+		AllowOverride All
+		Options FollowSymlinks
+		Order allow,deny
+		Allow from all
+	</Directory>
+EOF
 }
