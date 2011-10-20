@@ -1,5 +1,5 @@
 #
-# Apps Packages for Chakra, part of chakra-project.org
+# Apps SC Packages for Chakra, part of chakra-project.org
 #
 # maintainer (i686): Phil Miller <philm[at]chakra-project[dog]org>
 # maintainer (x86_64): Manuel Tortosa <manutortosa[at]chakra-project[dot]org>
@@ -8,18 +8,18 @@
 source ../_buildscripts/${current_repo}-${_arch}-cfg.conf
 
 pkgname=kadu
-pkgver=0.9.2
+pkgver=0.10.1
 pkgrel=1
-pkgdesc="A Qt-based Jabber/XMPP and Gadu-Gadu client"
+pkgdesc="A Qt-based Gadu-Gadu client"
 arch=('i686' 'x86_64')
 url="http://www.kadu.net/"
 license=('GPL')
-depends=('libgadu' 'libxss' 'aspell' 'phonon' 'qca-ossl' 'libidn')
-makedepends=('cmake' 'libao' 'libsndfile' 'libxtst' 'curl')
+depends=('libgadu' 'aspell' 'phonon' 'libxss' 'qca-ossl' 'libidn')
+makedepends=('cmake' 'libao' 'libsndfile' 'libxtst' 'curl' 'libmpdclient')
 conflicts=('kadu-svn')
 install=$pkgname.install
-source=(http://www.kadu.net/download/stable/$pkgname-$pkgver.tar.bz2)
-md5sums=('e23d39a2233a0585febe5a8ab50274dc')
+source=(http://download.kadu.im/stable/$pkgname-$pkgver.tar.bz2)
+sha1sums=('d31e425a8f9680413b3e2a16932e3087a152b186')
 
 build() {
   cd $srcdir/kadu-$pkgver
