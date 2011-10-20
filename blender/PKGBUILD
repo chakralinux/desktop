@@ -3,27 +3,29 @@
 #
 # maintainer (i686): Phil Miller <philm[at]chakra-project[dog]org>
 # maintainer (x86_64): Manuel Tortosa <manutortosa[at]chakra-project[dot]org>
+# maintainer (x86_64): Mateusz Krawczuk <willingmagic[at]gmail[dot]com>
 
 # include global config
 source ../_buildscripts/${current_repo}-${_arch}-cfg.conf
 
 pkgname=blender
-pkgver=2.59
-pkgrel=2
+pkgver=2.60
+pkgrel=1
 pkgdesc="A fully integrated 3D graphics creation suite"
 arch=('i686' 'x86_64')
 license=('GPL')
 url="http://www.blender.org"
-depends=('libpng' 'libtiff' 'openexr' 'sdl' 'python3' 'desktop-file-utils' 'shared-mime-info' 'hicolor-icon-theme' 'xdg-utils' 'glew' 'libxi' 'libxmu' 'mesa' 'freetype2' 'openal' 'libsndfile' 'libsamplerate' 'ffmpeg')
+depends=('libpng' 'libtiff' 'openexr' 'sdl' 'python3' 'desktop-file-utils' 'shared-mime-info' 'hicolor-icon-theme' 'xdg-utils' 'glew' 'libxi' 'libxmu' 
+'mesa' 'freetype2' 'openal' 'libsndfile' 'libsamplerate' 'ffmpeg' 'fftw')
 makedepends=('cmake')
 install=blender.install
 source=(http://download.blender.org/source/$pkgname-$pkgver.tar.gz)
-md5sums=('6f68fe3c3c2b6a85f1ba9ebc5b1155fe')
+md5sums=('2951df9d5f004c5e0375b53969205a38')
 
 build() {
   cd "$srcdir/$pkgname-$pkgver"
   
-  mkdir build
+  mkdir -p build
   cd build
 
  [[ $CARCH == i686 ]] && ENABLESSE2="-DSUPPORT_SSE2_BUILD:BOOL=OFF"
@@ -38,7 +40,7 @@ build() {
     -DWITH_PLAYER:BOOL=ON \
     -DWITH_BUILTIN_GLEW:BOOL=OFF \
     -DWITH_CODEC_FFMPEG:BOOL=ON \
-    -DPYTHON_VERSION:STRING=3.2 \
+    -DPYTHON_VERSION:STRING=3.2.2 \
     -DPYTHON_LIBPATH:STRING=/usr/lib \
     -DPYTHON_LIBRARY:STRING=python3.2mu \
     -DPYTHON_INCLUDE_DIRS:STRING=/usr/include/python3.2mu \
