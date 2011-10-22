@@ -1,0 +1,75 @@
+#
+# Apps Packages for Chakra, part of chakra-project.org
+#
+# maintainer (x86_64): Giuseppe Calà <jiveaxe@chakra-project.org>
+
+# include global config
+source ../_buildscripts/${current_repo}-${_arch}-cfg.conf
+
+pkgname=icedtea-web
+pkgdesc="Provides a Free Software web browser plugin running applets written in the Java programming language and an implementation of Java Web Start, originally based on the NetX project"
+pkgver=1.1.3
+pkgrel=1
+arch=('i686' 'x86_64')
+url="http://icedtea.classpath.org/wiki/IcedTea-Web"
+license=('GPL2')
+makedepends=('openjdk6' 'zip' 'xulrunner' 'qt')
+depends=('openjdk6' 'desktop-file-utils')
+install=$pkgname.install
+
+source=(http://icedtea.classpath.org/download/source/$pkgname-$pkgver.tar.gz
+        replacing-gtk-with-qt.patch)
+        
+md5sums=('0e2e653c7436d81edcbc1d4255571ab6'
+         '9bbddef7dfe53f98f0b814db7b19d586')
+
+
+build() {
+  _javaver=6
+  _jvmdir=/usr/lib/jvm/java-${_javaver}-openjdk
+
+  cd "$srcdir/$pkgname-$pkgver"
+
+  # Replacing gtk with qt
+  patch -Np1 -i ../replacing-gtk-with-qt.patch
+  
+  ./configure --prefix=/usr/lib/jvm/java-6-openjdk \
+              --datarootdir=/usr/share \
+              --disable-docs
+  make
+}
+
+check() {
+  cd "$srcdir/$pkgname-$pkgver"
+  make -k check
+}
+
+package() {
+  _javaver=6
+  _jvmdir=/usr/lib/jvm/java-${_javaver}-openjdk
+
+  cd "$srcdir/$pkgname-$pkgver"
+  # possible make target (see bottom of Makefile.am: install-exec-local install-data-local
+  make DESTDIR="$pkgdir" install-exec-local install-data-local
+
+  # Install desktop files.
+  install -m755 -d ${pkgdir}/usr/share/{applications,pixmaps}
+  install -m644 javaws.png ${pkgdir}/usr/share/pixmaps
+  install -m644 {javaws,itweb-settings}.desktop ${pkgdir}/usr/share/applications
+  # remove splitted doc files
+  rm -rf ${pkgdir}/usr/share/doc
+
+  # link binaries into /usr/bin + jre/bin
+  install -m755 -d ${pkgdir}/usr/bin
+  install -m755 -d ${pkgdir}/${_jvmdir}/jre/bin
+  pushd ${pkgdir}/${_jvmdir}/bin
+  for file in *; do
+    ln -sf ${_jvmdir}/bin/${file} ${pkgdir}/usr/bin
+    ln -sf ${_jvmdir}/bin/${file} ${pkgdir}/${_jvmdir}/jre/bin
+  done
+  popd
+
+  # link the mozilla-plugin - test it here http://www.java.com/en/download/help/testvm.xml
+  install -m755 -d ${pkgdir}/usr/lib/mozilla/plugins/
+  ln -sf ${_jvmdir}/lib/IcedTeaPlugin.so ${pkgdir}/usr/lib/mozilla/plugins/
+}
