@@ -1,0 +1,57 @@
+#
+# Chakra Packages for Chakra, part of chakra-project.org
+#
+# Maintainer: Daniele Cocca <jmc@chakra-project.org>
+#
+
+# include global config
+source ../_buildscripts/${current_repo}-${_arch}-cfg.conf
+
+pkgname=peazip
+pkgver=4.1
+pkgrel=1
+pkgdesc="Free, Open Source file and archive manager. Supports 7Z, ACE, ARC, CAB, ISO, PAQ, PEA, RAR, TAR, ZIP and many more archive formats."
+arch=('i686')
+url="http://peazip.org/"
+license=('GPL')
+depends=('zip' 'unzip' 'unrar' 'xz' 'p7zip' 'unarj' 'fpc-qtbindings')
+optdepends=('rar: support for RAR archive compression')
+source=("http://peazip.googlecode.com/files/${pkgname}-${pkgver}.LINUX.Qt.tgz")
+noextract=("${pkgname}-${pkgver}.LINUX.Qt.tgz")
+md5sums=('99c99ca755e81e95d66e6f895ffac13b')
+
+package() {
+  # Extract the software as distributed upstream
+  tar -zxf "${srcdir}/${pkgname}-${pkgver}.LINUX.Qt.tgz" -C "${pkgdir}"
+
+  # Remove useless KDE3 support directories or empty ones
+  rm -rf "${pkgdir}/opt"
+  rm -rf "${pkgdir}/usr/lib32"
+  rm -rf "${pkgdir}/usr/local/lib"
+  rm -rf "${pkgdir}/usr/local/lib32"
+  rm -rf "${pkgdir}/usr/local/share/PeaZip/res/icons"
+  rm -rf "${pkgdir}/usr/local/share/PeaZip/res/unace"
+  rm -rf "${pkgdir}/usr/local/share/PeaZip/FreeDesktop_integration/kde3-konqueror"
+
+  # Remove the duplicated libQtPas library (will be provided by fpc-qtcompat)
+  rm -rf "${pkgdir}/usr/lib"
+
+  # Move files from /usr/local/share to /usr/share prefix
+  for directory in "${pkgdir}/usr/local/share"/*; do
+    mv "${directory}" "${directory}/../../../share"
+  done
+  rm -rf "${pkgdir}/usr/local/share"
+
+  # Move files from /usr/local to /usr prefix
+  for directory in "${pkgdir}/usr/local"/*; do
+    mv "${directory}" "${directory}/../../"
+  done
+  rm -rf "${pkgdir}/usr/local"
+
+  # Recreate the application launchers
+  ln -sf /usr/share/PeaZip/res/pea "${pkgdir}/usr/bin/pea"
+  ln -sf /usr/share/PeaZip/res/pealauncher "${pkgdir}/usr/bin/pealauncher"
+  ln -sf /usr/share/PeaZip/peazip "${pkgdir}/usr/bin/peazip"
+}
+
+# vim:set ts=2 sw=2 et:
