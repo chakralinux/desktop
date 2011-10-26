@@ -3,13 +3,13 @@
 #
 
 pkgname=qgis
-pkgver=1.6.0
-pkgrel=2
+pkgver=1.7.1
+pkgrel=1
 pkgdesc='A Geographic Information System (GIS) that supports vector, raster & database formats.'
 url='http://qgis.org/'
 license=('GPL')
 arch=('i686' 'x86_64')
-depends=('libmysqlclient' 'postgresql-libs' 'sqlite3' 'jasper' 'curl' 'qt' 'python2' 'pyqt' 'giflib' 'xerces-c' 'cfitsio' 'qwt' 'gdal')
+depends=('libmysqlclient' 'postgresql-libs' 'sqlite3' 'jasper' 'curl' 'qt' 'python2' 'pyqt' 'giflib' 'xerces-c' 'cfitsio' 'qwt' 'gdal' 'flex' 'bison' 'graphviz')
 makedepends=('grass' 'gsl' 'postgis' 'netcdf' 'cmake' 'fcgi' 'sip')
 optdepends=('postgis: postgis support and SPIT plugin'
             'fcgi: qgis mapserver'
@@ -18,16 +18,11 @@ optdepends=('postgis: postgis support and SPIT plugin'
             'gsl: georeferencer  ')
 options=('!makeflags')
 source=("http://qgis.org/downloads/${pkgname}-${pkgver}.tar.bz2"
-        'qgis.desktop'
-        'ticket_3378.diff')
-md5sums=('9ea8a784d970f5009b0e6271820248f6'
-         '8ab66039f2aba519b92f52272ec3c13e'
-         '402f3d39a344367fd55bdaa324deb797')
+        'qgis.desktop')
+md5sums=('677dcb9d0d53cc7c2a6451590a362477'
+         '8ab66039f2aba519b92f52272ec3c13e')
 
 build() {
-	cd ${pkgname}-${pkgver}
-	# fix compilation error https://trac.osgeo.org/qgis/ticket/3378
-	patch -Np3 -i ${srcdir}/ticket_3378.diff
 	cd ${srcdir}
 	rm -rf build
 	mkdir build
