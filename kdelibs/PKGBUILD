@@ -37,14 +37,12 @@ replaces=('arts' 'kdelibs-experimental')
 source=($_mirror/${_origname}-$_kdever.tar.bz2
 	01_chakra_tag.patch
 	02_kde_applications_menu.patch
-	03_chakra_menu.patch
-        kdelibs-nepomuk-unicode.diff)
+	03_chakra_menu.patch)
 
 md5sums=(`grep ${_origname}-$_kdever.tar.bz2 ../kde-sc.md5 | cut -d" " -f1`
          '40ba51f0c50ced94dfffe667ec856950'  # 01_chakra_tag.patch
          'e94450ba5430ea9c1e33bad9ae38ca2d'  # 02_kde_applications_menu.patch
-         '53b85403e4dd8f9146933c52ca23243e'  # 03_chakra_menu.patch
-         '2aca117e9a019b46789f445ff6e80b8e') # kdelibs-nepomuk-unicode.diff
+         '53b85403e4dd8f9146933c52ca23243e')
         
 #
 # build function
@@ -60,9 +58,8 @@ build()
 	patch -Np1 -i ${srcdir}/03_chakra_menu.patch || return 1
 
 	# fixes
-	msg "applying fixes ..."
-	patch -Np1 -i ${srcdir}/kdelibs-nepomuk-unicode.diff || return 1
-
+	#msg "applying fixes ..."
+	
         cd ..
 
 	msg "starting build ..."
