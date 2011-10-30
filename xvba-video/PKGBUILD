@@ -1,0 +1,35 @@
+#
+# Chakra Packages for Chakra, part of chakra-project.org
+#
+# contributor (x86_64): Giuseppe Calà <jiveaxe@gmail.com>
+
+# include global config
+source ../_buildscripts/${current_repo}-${_arch}-cfg.conf
+
+pkgname=xvba-video
+pkgver=0.8.0
+pkgrel=1
+pkgdesc="AMDs XvBA backend for VA-API, hardware video acceleration on RadeonHD cards"
+arch=('i686' 'x86_64')
+url="http://www.splitted-desktop.com/~gbeauchesne/xvba-video/"
+license=('custom')
+depends=('catalyst-utils')
+source=(http://www.splitted-desktop.com/~gbeauchesne/xvba-video/xvba-video-${pkgver}.${CARCH}.tar.gz)
+
+if [ "${CARCH}" == "x86_64" ]; then
+md5sums=('cdc84ddac2f7d80b7aaf3f50d3626d77')
+else
+md5sums=('8e3ee3fbd393dd0e73922018c9629431')
+fi
+
+build() {
+cd ${srcdir}/xvba-video-${pkgver}.${CARCH}
+
+# driver
+install -m755 -d "${pkgdir}/usr/lib/dri"
+install -m755 -t "${pkgdir}/usr/lib/dri" usr/lib/va/drivers/*
+
+# documentation
+install -m755 -d "${pkgdir}/usr/share/doc/${pkgname}"
+install -m755 -t "${pkgdir}/usr/share/doc/${pkgname}" AUTHORS COPYING NEWS README
+}
