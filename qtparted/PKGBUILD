@@ -1,0 +1,37 @@
+#
+# Chakra Packages for Chakra, part of chakra-project.org
+#
+# maintainer (i686): Phil Miller <philm[at]chakra-project[dog]org>
+# maintainer (x86_64): Manuel Tortosa <manutortosa[at]chakra-project[dot]org>
+
+pkgname=qtparted
+pkgver=0.5.0
+pkgrel=1
+pkgdesc="a Partition Magic clone written in C++ using the Qt toolkit"
+arch=('i686' 'x86_64')
+url="http://qtparted.sourceforge.net"
+license=('GPL 2')
+depends=('qt>=4.7' 'util-linux' 'parted')
+makedepends=()
+conflicts=()
+install=${pkgname}.install
+
+source=(http://sourceforge.net/projects/qtparted/files/qtparted-0.5.0/qtparted-0.5.0.tar.xz)
+
+md5sums=('dc9ce20fd88cbd2e288b828d03ac7c2b')
+
+
+
+build() {
+  cd "$srcdir/$pkgname-$pkgver"
+  cmake . -DCMAKE_INSTALL_PREFIX=/usr \
+	  -DCMAKE_BUILD_TYPE=Release \
+	  -DCMAKE_SKIP_RPATH=ON \
+	  -DCMAKE_{SHARED,MODULE,EXE}_LINKER_FLAGS='-Wl,--no-undefined -Wl,--as-needed'
+  make
+}
+
+package() {
+  cd "$srcdir/$pkgname-$pkgver"
+  make DESTDIR="$pkgdir" install
+}
