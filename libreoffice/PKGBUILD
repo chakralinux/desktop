@@ -24,11 +24,11 @@ pkgname=('libreoffice' 'libreoffice-sdk'
 	'libreoffice-extension-validator'
 	'libreoffice-extension-watch-window'
 	'libreoffice-extension-wiki-publisher')
-_LOver=3.4.3.1
-pkgver=3.4.3
+_LOver=3.4.4.1
+pkgver=3.4.4
+_HIver=3.4
 pkgrel=1
 arch=('i686' 'x86_64')
-#_LO_tree="3.4"
 _OFFICEUPD="340"
 license=('LGPL3')
 url="http://www.libreoffice.org/"
@@ -127,68 +127,7 @@ noextract=(185d60944ea767075d27247c3162b3bc-unowinreg.dll
 	90401bca927835b6fbae4a707ed187c8-nlpsolver-0.9.tar.bz2
 	f02578f5218f217a9f20e9c30e119c6a-boost_1_44_0.tar.bz2)
 
-md5sums=('6f3ba9fccf42ace5ca51e4766ba7be3d'
-         '41428447cc5b7751038389be75c97a55'
-         '91075b6f34215e0318dcfa9d64c8111b'
-         'fdb98f710d000b12fcc3449752798191'
-         'd0cb5f73a63b102400c93fe5049bc978'
-         'bcdb25b77d4321ef3681fc403b4276ad'
-         '3d9e96e513a3cd57a86f08b9846123fb'
-         '3c37ed0f57a5f7f593bbf81af7f79697'
-         '775f247adadc8a31d436bde4ec1070a1'
-         '9d202ce3af5cf78544ac9e34fefcbb35'
-         '45844c201b64682c154f2776cdaee5f7'
-         '32fb19a28d9c5e0d4ae0068875e811ab'
-         '05ad2aea9167dcb1bab2c46b5e563abd'
-         '4b991cf9b4a5a4ebb3ae268c8aa28cfd'
-         '015d004c73d149d4cca8bf658d75c20e'
-         '6088b104881171b3775e5e3fb39adbca'
-         'b09b89c34d25c5bfd6a592205cd95f83'
-         '274048864e8a1b606e6cab9fd1aaf2c8'
-         'b84620672dff6f22edca0266c4de0359'
-         '1f24ab1d39f4a51faf22244c94a6203f'
-         '35c94d2df8893241173de1d16b6034c0'
-         '798b2ffdc8bcfe7bca2cf92b62caf685'
-         'fdb27bfe2dbe2e7b57ae194d9bf36bab'
-         'ada24d37d8d638b3d8a9985e80bc2978'
-         '2a177023f9ea8ec8bd00837605c5df1b'
-         'a7983f859eafb2677d7ff386a023bc40'
-         '3c219630e4302863a9a83d0efde889db'
-         '2ae988b339daec234019a7066f96733e'
-         '2c9b0f83ed5890af02c0df1c1776f39b'
-         'af3c3acf618de6108d65fcdc92b492e1'
-         'eeb2c7ddf0d302fba4bfc6e97eac9624'
-         '39bb3fcea1514f1369fcfc87542390fd'
-         '3404ab6b1792ae5f16bbd603bd1e1d03'
-         '97b2d4dba862397f446b217e2b623e71'
-         'f94d9870737518e3b597f9265f4e9803'
-         '8ce2fcd72becf06c41f7201d15373ed9'
-         'd8bd5eed178db6e2b18eeed243f85aa8'
-         '3bdf40c0d199af31923e900d082ca2dd'
-         'ace6ab49184e329db254e454a010f56d'
-         'db60e4fde8dd6d6807523deb71ee34dc'
-         'ba2930200c9f019c2d93a8c88c651a0f'
-         '18f577b374d60b3c760a3a3350407632'
-         '0ff7d225d087793c8c2c680d77aac3e7'
-         '185d60944ea767075d27247c3162b3bc'
-         'b4cae0700aa1c2aef7eb7f345365e6f1'
-         '90401bca927835b6fbae4a707ed187c8'
-         'f02578f5218f217a9f20e9c30e119c6a'
-         '7e7efc5d4a03126bb9ae3ae9aa2c4e87'
-         '41c9b65ad60af4b3255bbecdfef11736'
-         '451ccf439a36a568653b024534669971'
-         'bbdd5639ada63e3130761daaecae1a10'
-         '23bd75552206dfcd8fd4e29137dcac84'
-         'b8cbca7b3363e6ca2d02bc0ba2b63904'
-         'b632bdd25649cc4067bcb410bae23d2b'
-         '9d60b6cfa3ef1926848710bbcd11115b'
-         'dbaafd21de055e582d92d7d32fe9da13'
-         'b7b2d0e04e142f26dd96119c80757d1f'
-         'bc228237108cab7745897a9f466b6d39'
-         'eee273f501ff45dc5f1365e78c6d57c0'
-         '43b145db28e6c0d73578ae6fd35e510d'
-         '37638431e7e40baf2e47966ebb9bc0e9')
-
+source libreoffice.md5
 
 build() {
 
@@ -423,9 +362,9 @@ ooptdepends=('java-runtime:     adds java support'
 	mv -f ${pkgdir}/gid_Module* ${srcdir}/splitlist/
 
 	# remove unneded icon themes
-	# rm -rf  ${pkgdir}/usr/lib/libreoffice/basis${_HIver}/share/config/images_classic.zip
-	# rm -rf  ${pkgdir}/usr/lib/libreoffice/basis${_HIver}/share/config/images_tango.zip
-	# rm -rf  ${pkgdir}/usr/lib/libreoffice/basis${_HIver}/share/config/images_crystal.zip
+	rm -rf  ${pkgdir}/usr/lib/libreoffice/basis${_HIver}/share/config/images_classic.zip
+	rm -rf  ${pkgdir}/usr/lib/libreoffice/basis${_HIver}/share/config/images_tango.zip
+	rm -rf  ${pkgdir}/usr/lib/libreoffice/basis${_HIver}/share/config/images_crystal.zip
 }
 
 package_libreoffice-sdk() {
