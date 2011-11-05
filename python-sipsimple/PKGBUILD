@@ -8,7 +8,7 @@
 source ../_buildscripts/${current_repo}-${_arch}-cfg.conf
 
 pkgname=python-sipsimple
-pkgver=20110704
+pkgver=20111105
 pkgrel=1
 pkgdesc="SIP SIMPLE Client SDK is a Software Development Kit for easy development of SIP end-points that support rich media like Audio, Instant Messaging, File Transfers, Desktop Sharing and Presence."
 arch=('i686' 'x86_64')
@@ -34,11 +34,8 @@ build() {
   msg "Darcs pull done (or server timeout)."
 
   cd "${srcdir}/${_darcsmod}"
-  #
-  # Enable a verbose build of PJSIP.
-  #
-  patch -Np0 -i "${srcdir}/fix-verbose-compilation-and-retry-compiling.patch"
-  python2 setup.py build_ext --pjsip-clean-compile --pjsip-disable-assertions
+
+  MAKEFLAGS=-j1 python2 setup.py build_ext --pjsip-clean-compile --pjsip-disable-assertions
 }
 
 package() {
@@ -48,7 +45,7 @@ package() {
   #
   # Fix an incorrect module name.
   #
-  sed -i 's/backports.weakref/weakref/g' "${pkgdir}/usr/lib/python2.7/site-packages/sipsimple/configuration/__init__.py"
+  # sed -i 's/backports.weakref/weakref/g' "${pkgdir}/usr/lib/python2.7/site-packages/sipsimple/configuration/__init__.py"
 }
 
 # vim:set ts=2 sw=2 et:
