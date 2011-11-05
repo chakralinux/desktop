@@ -1,0 +1,26 @@
+#
+# Apps Packages for Chakra, part of chakra-project.org
+#
+# Maintainer: Daniele Cocca <jmc@chakra-project.org>
+#
+
+# include global config
+source ../_buildscripts/${current_repo}-${_arch}-cfg.conf
+
+pkgname=python-cjson
+pkgver=1.0.5
+pkgrel=1
+pkgdesc="Fast JSON encoder/decoder for Python."
+arch=('i686' 'x86_64')
+license=('LGPL')
+depends=('python2')
+url="http://pypi.python.org/pypi/python-cjson"
+source=("http://pypi.python.org/packages/source/p/${pkgname}/${pkgname}-${pkgver}.tar.gz")
+md5sums=('4d55b66ecdf0300313af9d030d9644a3')
+
+package() {
+  cd "${srcdir}/${pkgname}-${pkgver}"
+  python2 setup.py install --prefix=/usr --root="${pkgdir}" || return 1
+}
+
+# vim:set ts=2 sw=2 et:

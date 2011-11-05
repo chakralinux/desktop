@@ -1,0 +1,27 @@
+#
+# Apps Packages for Chakra, part of chakra-project.org
+#
+# Maintainer: Daniele Cocca <jmc@chakra-project.org>
+#
+
+# include global config
+source ../_buildscripts/${current_repo}-${_arch}-cfg.conf
+
+_pkgname=python-eventlet-0.8
+pkgname=python-eventlet
+pkgver=0.8.11
+pkgrel=1
+pkgdesc="Eventlet is a networking library written in Python."
+arch=('any')
+license=('LGPL')
+depends=('python' 'python-greenlet')
+url="http://wiki.secondlife.com/wiki/Eventlet"
+source=("http://download.ag-projects.com/SipClient/${_pkgname}-${pkgver}.tar.gz")
+md5sums=('7450420f50e0fa1b264ff9b6f9da4761')
+
+package() {
+  cd "${srcdir}/${_pkgname}-${pkgver}"
+  python2 setup.py install --prefix=/usr --root="${pkgdir}" || return 1
+}
+
+# vim:set ts=2 sw=2 et:
