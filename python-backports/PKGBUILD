@@ -1,0 +1,26 @@
+#
+# Apps Packages for Chakra, part of chakra-project.org
+#
+# Maintainer: Daniele Cocca <jmc@chakra-project.org>
+#
+
+# include global config
+source ../_buildscripts/${current_repo}-${_arch}-cfg.conf
+
+pkgname=python-backports
+pkgver=1.0.0
+pkgrel=1
+pkgdesc="Collection of backported python features that run on Python 2.5 or newer."
+arch=('any')
+license=('LGPL')
+depends=('python2')
+url="http://ag-projects.com/"
+source=("http://download.ag-projects.com/SipClient/${pkgname}-${pkgver}.tar.gz")
+md5sums=('fe1cc2c79f9d987fc67ca0e986a183a7')
+
+package() {
+  cd "${srcdir}/${pkgname}-${pkgver}"
+  python2 setup.py install --prefix=/usr --root="${pkgdir}" || return 1
+}
+
+# vim:set ts=2 sw=2 et:
