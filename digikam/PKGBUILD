@@ -4,20 +4,17 @@
 # maintainer (i686): Phil Miller <philm[at]chakra-project[dog]org>
 # maintainer (x86_64): Manuel Tortosa <manutortosa[at]chakra-project[dot]org>
 
-# include global config
-source ../_buildscripts/${current_repo}-${_arch}-cfg.conf
-
 pkgbase=digikam
-pkgname=('digikam' 'kipi-plugins')
-pkgver=2.1.0
-pkgrel=2
+pkgname=('digikam' 'kipi-plugins' 'libkvkontakte')
+pkgver=2.3.0
+pkgrel=1
 url="http://digikam.sourceforge.net"
 arch=('i686' 'x86_64')
 license=('GPL')
 makedepends=('kde-runtime' 'kdegraphics-kgamma' 'kdepimlibs' 'lensfun' 'kdeedu-marble' 'liblqr' 'opencv'
-	     'pkgconfig' 'cmake' 'automoc4' 'doxygen' 'docbook-xsl')
+	     'pkgconfig' 'cmake' 'automoc4' 'doxygen' 'docbook-xsl' 'qjson')
 source=(http://sourceforge.net/projects/digikam/files/${pkgname}/${pkgver}/${pkgname}-${pkgver}.tar.bz2)
-md5sums=('3e5228a60ae916c530a7a87e081862b6')
+md5sums=('45e635c0079a608c2d5508be8127d388')
 
 build() {
    cd ${srcdir}
@@ -46,9 +43,17 @@ package_digikam() {
 
 }
 
+package_libkvkontakte() {
+  pkgdesc="KDE C++ library for asynchronous interaction with vkontakte.rusocial network"
+  depends=('kdelibs')
+
+  cd "${srcdir}"/build/extra/libkvkontakte
+  make DESTDIR="${pkgdir}" install
+}
+
 package_kipi-plugins() {
   pkgdesc="Kipi plugins and additional libs for digikam and kde apps"
-  depends=('kdegraphics-kgamma' 'kdepimlibs' 'opencv' 'libgpod' 'sane' 'hugin-tools' 'libgphoto2-nolimit')
+  depends=('kdegraphics-kgamma' 'kdepimlibs' 'opencv' 'libgpod' 'sane' 'hugin-tools' 'libgphoto2-nolimit' 'libkvkontakte')
   optdepends=('imagemagick: for picture manipulation'
 	      'qca: for shwup webservice support')
   install=kipi-plugins.install
@@ -61,5 +66,4 @@ package_kipi-plugins() {
       cd ${srcdir}/build/extra/${i}
       make DESTDIR="${pkgdir}" install
   done
-
 }
