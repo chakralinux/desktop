@@ -2,9 +2,9 @@
 ver=0.1
 tempdir=$(mktemp -d)
 configrc=$HOME/.config/ccr-toolsrc
-ccrurl="http://chakra-project.org/ccr/packages.php"
-idurl="http://chakra-project.org/ccr/rpc.php?type=info&arg="
-checkurl="http://chakra-project.org/ccr/packages.php?ID="
+ccrurl="http://chakra-linux.org/ccr/packages.php"
+idurl="http://chakra-linux.org/ccr/rpc.php?type=info&arg="
+checkurl="http://chakra-linux.org/ccr/packages.php?ID="
 # Defining some functions needed by main program
 
 die() {
@@ -108,7 +108,7 @@ elif [ ! -r $configrc ]; then
    echo "pass=YOUR_CCR_PASS"
    echo
    echo "To create a new account just go to:"
-   echo "http://chakra-project.org/ccr/account.php"
+   echo "http://chakra-linux.org/ccr/account.php"
    die 1
 fi
   
@@ -117,7 +117,7 @@ source $configrc || die 1
 
 #logins to ccr and keeps sesion alive
 umask 077
-curl -Ss --cookie-jar "$tempdir/cjar" --output /dev/null http://chakra-project.org/ccr/ 
+curl -Ss --cookie-jar "$tempdir/cjar" --output /dev/null http://chakra-linux.org/ccr/ 
 curl -Ss --cookie "$tempdir/cjar" --cookie-jar "$tempdir/cjar"  \
 --data "user=$user" --data "passwd=$(urlencode $pass)" \
 --location --output "$tempdir/ccrvote.login"  \
@@ -148,7 +148,7 @@ for pkgname in ${pkgnames[@]}; do
 	elif [ "$action" = "vote" ]; then
 		if curl -Ss --cookie "$tempdir/cjar" --cookie-jar "$tempdir/cjar" --data "IDs[${ccrid}]=1" \
 		    --data "ID=${ccrid}" --data "do_Vote=1" \
-		    --output /dev/null http://chakra-project.org/ccr/packages.php; then
+		    --output /dev/null http://chakra-linux.org/ccr/packages.php; then
 			echo "$pkgname now voted"
 		else
 			echo "ERROR: Can't access $ccrurl"
@@ -156,7 +156,7 @@ for pkgname in ${pkgnames[@]}; do
 	elif [ "$action" = "unvote" ]; then
 		 if curl -Ss --cookie "$tempdir/cjar" --cookie-jar "$tempdir/cjar" --data "IDs[${ccrid}]=1" \
 		    --data "ID=${ccrid}" --data "do_UnVote=1" \
-		    --output /dev/null http://chakra-project.org/ccr/packages.php; then
+		    --output /dev/null http://chakra-linux.org/ccr/packages.php; then
 			echo "$pkgname now unvoted"
 		else
 			echo "ERROR: Can't access $ccrurl"
