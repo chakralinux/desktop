@@ -7,7 +7,7 @@
 pkgbase=digikam
 pkgname=('digikam' 'kipi-plugins' 'libkvkontakte')
 pkgver=2.3.0
-pkgrel=1
+pkgrel=2
 url="http://digikam.sourceforge.net"
 arch=('i686' 'x86_64')
 license=('GPL')
@@ -40,7 +40,7 @@ package_digikam() {
       cd ${srcdir}/build/${i}
       make DESTDIR="${pkgdir}" install
   done
-
+  rm -rf "${pkgdir}/usr/share/icons/oxygen"
 }
 
 package_libkvkontakte() {
