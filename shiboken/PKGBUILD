@@ -6,17 +6,17 @@
 pkgbase=shiboken
 _pkgbase=Shiboken
 pkgname=("${pkgbase}" "${pkgbase}-generator")
-pkgver=1.0.7
+pkgver=1.0.9
 _pyver=2.7
-pkgrel=2
+pkgrel=1
 pkgdesc="Support library for Python bindings."
 arch=('i686' 'x86_64')
 license=('LGPL')
 url="http://www.pyside.org"
 depends=("python>=${_pyver}" 'qt>=4.7' 'openssl')
-makedepends=('cmake' 'automoc4' 'generatorrunner>=0.6.8')
+makedepends=('cmake' 'automoc4' 'generatorrunner')
 source=("http://www.pyside.org/files/${pkgbase}-${pkgver}.tar.bz2")
-md5sums=('b932c66a49145894c0af556030ac90ac')
+md5sums=('c33a25a64a06320e495e8b8775b8918c')
 
 build() {
   cd "${srcdir}/${pkgbase}-${pkgver}"
@@ -35,7 +35,7 @@ package_shiboken(){
 }
 
 package_shiboken-generator() {
-  depends=("${depends[@]}" "generatorrunner>=0.6.8")
+  depends=("${depends[@]}" "generatorrunner")
   pkgdesc="Support library for Python bindings (generator)."
   
   cd "${srcdir}/${pkgbase}-${pkgver}/build/generator"
@@ -49,5 +49,3 @@ package_shiboken-generator() {
   mkdir -m 755 -p "${pkgdir}/usr/lib/pkgconfig"
   install -m 755 "../data/${pkgbase}.pc" "${pkgdir}/usr/lib/pkgconfig"
 }
-
-# vim:set ts=2 sw=2 et:

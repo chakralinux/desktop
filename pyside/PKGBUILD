@@ -4,8 +4,8 @@
 # Maintainer: Adrián Chaves Fernández (Gallaecio) <adriyetichaves gmail.com>
 
 pkgname=pyside
-pkgver=1.0.7
-_pkgver=1.0.7
+pkgver=1.0.8
+_pkgver=1.0.8
 _pkgver2="qt4.7+${pkgver}"
 _pkgver3="qt4.7+${_pkgver}"
 pkgrel=1
@@ -16,7 +16,7 @@ url="http://www.pyside.org"
 depends=('shiboken' 'python' 'qt' 'phonon')
 makedepends=('cmake' 'automoc4' 'shiboken-generator')
 source=("http://www.pyside.org/files/${pkgname}-${_pkgver2}.tar.bz2")
-md5sums=('f2a0e8b69bf49feeaea1ff682e30a7a9')
+md5sums=('131cc4d5c56b3b20bc99362f68f3f29d')
 
 build() {
   cd "${srcdir}/${pkgname}-${_pkgver3}"
@@ -32,5 +32,3 @@ package() {
   cd "${srcdir}/${pkgname}-${_pkgver3}/build"
   make DESTDIR="${pkgdir}" install
 }
-
-# vim:set ts=2 sw=2 et:

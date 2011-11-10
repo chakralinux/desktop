@@ -5,7 +5,8 @@
 
 pkgname=pyside-tools
 pkgver=0.2.13
-pkgrel=2
+_pyver=2.7
+pkgrel=3
 pkgdesc="UI Compiler (pyside-uic) plus Qt Resource Compiler (pyside-rcc4) for PySide."
 arch=('i686' 'x86_64')
 license=('LGPL')
@@ -18,12 +19,14 @@ md5sums=('14d3a36df06d680357d7bc1960f19a6d')
 build(){
   cd $srcdir/$pkgname-$pkgver
 
-  pyside-uic > pyside-uic_mod && mv pyside-uic{_mod,} && chmod 755 pyside-uic
+  #sed -e "s/python/python2/g" -i pyside-uic
 
   mkdir -p build && cd build
   cmake \
     -DCMAKE_INSTALL_PREFIX=/usr \
-    -DCMAKE_BUILD_TYPE=RelWithDebInfo \
+    -DCMAKE_BUILD_TYPE=Release \
+    -DSHIBOKEN_PYTHON_SUFFIX=-python$_pyver \
+    -DPYTHON_EXECUTABLE=/usr/bin/python$_pyver \
     ..
   make
 }
