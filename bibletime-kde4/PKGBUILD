@@ -9,23 +9,27 @@ source ../_buildscripts/${current_repo}-${_arch}-cfg.conf
 
 pkgname=bibletime-kde4
 origname=bibletime
-pkgver=2.8.0
+pkgver=2.9_rc1
 pkgrel=1
 pkgdesc="Bible software that uses the Sword Engine for KDE4"
 arch=('i686' 'x86_64')
 url=("http://www.blog.bibletime.info")
 license=('GPL2')
-depends=('qt>=4.5' 'sword' 'openssl')
+depends=('qt' 'sword' 'openssl')
 makedepends=('cmake' 'boost')
 source=(http://sourceforge.net/projects/bibletime/files/bibletime-$pkgver.tar.bz2)
-md5sums=('4580162f54779259aaafc72c4982e02b')
+md5sums=('eec5375f0bc447f4badbea5a8a444897')
 
 build() {
   cd $srcdir/bibletime-$pkgver
   cmake -DCMAKE_INSTALL_PREFIX=/usr \
-	-DCMAKE_BUILD_TYPE=Release ${srcdir}/$origname-$pkgver || return 1
-  make || return 1
-  make DESTDIR="${pkgdir}" install || return 1
+	-DCMAKE_BUILD_TYPE=Release ${srcdir}/$origname-$pkgver 
+  make 
+}
+
+package() {
+  cd $srcdir/bibletime-$pkgver
+  make DESTDIR="${pkgdir}" install 
 
 }
 
