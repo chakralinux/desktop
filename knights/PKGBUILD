@@ -3,12 +3,9 @@
 #
 # Maintainer: Adrián Chaves Fernández (Gallaecio) <adriyetichav@gmail.com>
 
-# include global config
-source ../_buildscripts/${current_repo}-${_arch}-cfg.conf
-
 pkgname=knights
 _pkgname=Knights
-pkgver=2.3.2
+pkgver=2.4.0
 pkgrel=1
 pkgdesc="Chess board with XBoard protocol support."
 arch=('i686' 'x86_64')
@@ -19,15 +16,15 @@ optdepends=('gnuchess: for playing against the computer.')
 makedepends=('automoc4' 'cmake' 'docbook-xsl')
 changelog=ChangeLog
 source=("http://dl.dropbox.com/u/2888238/$_pkgname/$pkgname-$pkgver.tar.bz2")
-md5sums=('34b14b6df963e8af93b68205e7bcda1a')
+md5sums=('1b7adf1c60ac5e828dfa9e00c7e1c5e4')
 
 build()
 {
   cd $srcdir/$pkgname-$pkgver
   mkdir build && cd build
-  cmake -DCMAKE_INSTALL_PREFIX=`kde4-config --prefix` \
-        -DCMAKE_BUILD_TYPE=RelWithDebInfo \
-        ..
+  cmake \
+    -DCMAKE_INSTALL_PREFIX=/usr \
+    ..
   make
 }
  
