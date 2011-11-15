@@ -7,7 +7,7 @@
 source ../_buildscripts/${current_repo}-${_arch}-cfg.conf
 
 pkgname=kdeplasma-applets-yawp
-pkgver=0.3.6
+pkgver=0.4.0
 pkgrel=2
 pkgdesc="A Colorful Kdeplasma weather plasmoid"
 arch=('i686' 'x86_64')
@@ -18,13 +18,13 @@ conflicts=(kde-extragear-plasmoids)
 install=$pkgname.install
 source=(http://downloads.sourceforge.net/yawp/yawp-$pkgver.tar.bz2)
 license=('GPL')
-md5sums=('d64c6d528e3ba7b7afba63e6670211c8')
+md5sums=('990f46f1b8689cec7f20ef6ba32cb1be')
 
 build() {
   cd $srcdir/yawp-$pkgver
   mkdir build
   cd build
-  cmake -DCMAKE_INSTALL_PREFIX=`kde4-config --prefix` .. || return 1
-  make VERBOSE=1 || return 1
-  make DESTDIR=$pkgdir install || return 1
+  cmake -DCMAKE_INSTALL_PREFIX=`kde4-config --prefix` .. 
+  make VERBOSE=1 
+  make DESTDIR=$pkgdir install 
 }

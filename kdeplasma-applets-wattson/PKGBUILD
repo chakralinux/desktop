@@ -7,15 +7,15 @@
  
 pkgname=kdeplasma-applets-wattson
 pkgver=1.0
-pkgrel=1
+pkgrel=3
 arch=('i686' 'x86_64')
 pkgdesc="A plasmoid for displaying used watts by laptop"
-url="http://admiral0.it"
+url="http://kde-apps.org/content/show.php/Wattson?content=126981"
 makedepends=("cmake" "automoc4")
-depends=('kdebase-workspace')
+depends=('kde-workspace')
 license=('GPL')
-source=("http://kde-look.org/CONTENT/content-files/126981-wattson.tar.bz2")
-md5sums=('5aa219ba572f3de8db3ca3cb8aec1c7e')
+source=("http://kde-look.org/CONTENT/content-files/126981-wattson.tar.xz")
+md5sums=('373f70d4772c8d6023639cd80ed77124')
  
 build() {
   cd  $srcdir/wattson/
@@ -31,5 +31,4 @@ build() {
 package() {
   cd $srcdir/wattson/build
   make DESTDIR=$pkgdir install
- 
-}
+ }
