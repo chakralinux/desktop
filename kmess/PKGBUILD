@@ -6,7 +6,7 @@
 
 pkgname=kmess
 pkgver=2.0.6.1
-pkgrel=1
+pkgrel=2
 pkgdesc="KMess is a MSN Messenger client for Linux."
 arch=('i686' 'x86_64')
 url="http://kmess.sourceforge.net/"
@@ -14,14 +14,31 @@ license=('GPL')
 depends=('libxss' 'libxslt' 'giflib' 'kdebase-runtime' 'xdg-utils' 'qt')
 makedepends=('automoc4' 'cmake' 'docbook-xsl')
 optdepends=('cabextract: provides winks support')
-install=kmess.install
-source=(http://downloads.sourceforge.net/sourceforge/kmess/kmess-$pkgver.tar.bz2)
-md5sums=('bc960c0bacb38be6dc118a2d2a6e69a6')
+install="kmess.install"
+source=("http://downloads.sourceforge.net/sourceforge/${pkgname}/${pkgname}-${pkgver}.tar.bz2"
+        "http://lekensteyn.nl/files/kmess/follow-location-redirects.patch")
+md5sums=('bc960c0bacb38be6dc118a2d2a6e69a6'
+         '73cda6f36eda602fc0ce9e23051e603a')
 
 build() {
   cd "${srcdir}/${pkgname}-${pkgver}"
-  cmake -DCMAKE_INSTALL_PREFIX=/usr .
-  make || return 1
-  make DESTDIR=$startdir/pkg install || return 1
+
+  # Patch for fixing the latest connection issues.
+  # Should be removed when this gets integrated in a new release.
+  # See http://kmess.org/board/viewtopic.php?f=4&t=20549&start=15
+  patch -Np1 -i "${srcdir}/follow-location-redirects.patch"
+
+  mkdir -p build
+  cd build
+
+  cmake ../ -DCMAKE_INSTALL_PREFIX=/usr -DCMAKE_BUILD_TYPE=RelWithDebInfo
+
+  make
 }
 
+package() {
+  cd "${srcdir}/${pkgname}-${pkgver}/build"
+  make DESTDIR="${pkgdir}" install
+}
+
+# vim:set ts=2 sw=2 et:
