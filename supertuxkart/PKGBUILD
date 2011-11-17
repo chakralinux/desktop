@@ -5,7 +5,7 @@
 
 pkgname=supertuxkart
 _pkgname=SuperTuxKart
-pkgver=0.7.2
+pkgver=0.7.3
 pkgrel=1
 pkgdesc="Kart racing game featuring Tux and friends."
 url="http://supertuxkart.sourceforge.net/"
@@ -14,11 +14,11 @@ license=('GPL3' 'GPL2' 'CCPL-by' 'CCPL-by-sa' 'custom:Creative Commons Sampling 
 depends=('bzip2' 'enet' 'freeglut' 'irrlicht' 'libgl' 'libjpeg' 'libogg' 'libpng' 'libvorbis' 'openal')
 conflicts=('supertuxkart-svn')
 changelog=ChangeLog
-source=(http://downloads.sourceforge.net/project/$pkgname/$_pkgname/$pkgver/$pkgname-$pkgver-src.tar.bz2)
-md5sums=('65a5fb2eb9cf6d3f868eb8a504383c9a')
+source=("http://downloads.sourceforge.net/project/${pkgname}/${_pkgname}/${pkgver}/${pkgname}-${pkgver}-src.tar.bz2")
+md5sums=('502664b2ec9ad5ab88b1882fef4c074d')
 
 build() {
-  cd $srcdir/$pkgname-$pkgver
+  cd "${srcdir}/${pkgname}-${pkgver}"
   
   LDFLAGS="-lpng -ljpeg" \
   LIBS="-lbz2" \
@@ -30,28 +30,30 @@ build() {
 }
 
 package() {
-  cd $srcdir/$pkgname-$pkgver
+  cd "${srcdir}/${pkgname}-${pkgver}"
   
-  make DESTDIR=$pkgdir install
+  make DESTDIR="${pkgdir}" install
 
   # Add executable link from ‘/usr/bin’.
-  mkdir -p $pkgdir/usr/bin/
-  echo '#!/bin/bash'			 > $pkgdir/usr/bin/$pkgname
-  echo "/usr/games/$pkgname \$@"	>> $pkgdir/usr/bin/$pkgname
-  chmod +x $pkgdir/usr/bin/$pkgname
+  mkdir -p "${pkgdir}/usr/bin"
+  echo '#!/bin/bash'                     > "${pkgdir}/usr/bin/${pkgname}"
+  echo "/usr/games/${pkgname} \"\${@}\"" >> "${pkgdir}/usr/bin/${pkgname}"
+  chmod +x "${pkgdir}/usr/bin/${pkgname}"
 
   # Set right game version in .desktop file.
-  sed -i -e "s/0.5/$pkgver/" $pkgdir/usr/share/applications/$pkgname.desktop
+  sed -i -e "s/0.5/${pkgver}/" "${pkgdir}/usr/share/applications/${pkgname}.desktop"
 
   # Remove AUTHORS file from documentation folder.
-  rm $pkgdir/usr/share/doc/$pkgname/AUTHORS
+  rm "${pkgdir}/usr/share/doc/${pkgname}/AUTHORS"
 
   # Create license folder.
-  install -d $pkgdir/usr/share/licenses/$pkgname
+  install -d "${pkgdir}/usr/share/licenses/${pkgname}"
 
   # Link credits from license folder.
-  ln -s $pkgdir/usr/share/games/$pkgname/data/CREDITS $pkgdir/usr/share/licenses/$pkgname/AUTHORS
+  ln -s "${pkgdir}/usr/share/games/${pkgname}/data/CREDITS" "${pkgdir}/usr/share/licenses/${pkgname}/AUTHORS"
 
   # Move license from documentation folder to license folder.
-  mv $pkgdir/usr/share/doc/$pkgname/COPYING $pkgdir/usr/share/licenses/$pkgname/LICENSE
+  mv "${pkgdir}/usr/share/doc/${pkgname}/COPYING" "${pkgdir}/usr/share/licenses/${pkgname}/LICENSE"
 }
+
+# vim:set ts=2 sw=2 et:
