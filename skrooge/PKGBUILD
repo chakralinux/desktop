@@ -1,30 +1,30 @@
 #
-# Chakra Packages for Chakra, part of chakra-project.org
+# Apps Packages for Chakra, part of chakra-project.org
 #
 # maintainer (i686): Phil Miller <philm[at]chakra-project[dog]org>
 # maintainer (x86_64): Manuel Tortosa <manutortosa[at]chakra-project[dot]org>
 # contributor (x86_64): Giuseppe Calà <jiveaxe@gmail.com>
 
 pkgname=skrooge
-pkgver=1.0.0
-pkgrel=2
+pkgver=1.1.0
+pkgrel=1
 pkgdesc="Allows you to manage your personal finances in KDE"
 arch=('i686' 'x86_64')
 url="http://skrooge.org"
 license=('GPL')
-depends=('kdebase-runtime' 'libofx' 'qca-ossl')
+depends=('kde-runtime' 'libofx' 'qca-ossl')
 makedepends=('automoc4' 'cmake' 'docbook-xsl')
 install=$pkgname.install
-source=(http://skrooge.org/files/$pkgname-$pkgver.tar.bz2
-	"$pkgname-$pkgver-numbers.diff::http://quickgit.kde.org/?p=skrooge.git&a=blobdiff_plain&h=6419c8feca1e52e29ea80bed40968332559d58ca&hp=c123c16274a1f19c172a7ce0604835f76ffd7288&f=skgbasegui/skgcalculatoredit.cpp")
-md5sums=('900da5dd41b940272941ee71e78cf8b4'
-         'a841957f870a997ea0cba11b01775b97')
+source=(http://skrooge.org/files/$pkgname-$pkgver.tar.bz2)
+#"$pkgname-$pkgver-numbers.diff::http://quickgit.kde.org/?p=skrooge.git&a=blobdiff_plain&h=6419c8feca1e52e29ea80bed40968332559d58ca&hp=c123c16274a1f19c172a7ce0604835f76ffd7288&f=skgbasegui/skgcalculatoredit.cpp")
+md5sums=('b523b162392d1b4f9942e5895b11d6a4')
+#         'a841957f870a997ea0cba11b01775b97')
 
 build() {
   cd $srcdir/$pkgname-$pkgver
 
-  # Patch for https://bugs.kde.org/show_bug.cgi?id=283683:
-  patch -uNp1 -i $srcdir/$pkgname-$pkgver-numbers.diff
+# Patch for https://bugs.kde.org/show_bug.cgi?id=283683:
+#  patch -uNp1 -i $srcdir/$pkgname-$pkgver-numbers.diff
 
   [[ -d build ]] && rm -r build
   mkdir build && cd build
