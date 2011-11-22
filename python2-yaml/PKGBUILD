@@ -1,0 +1,32 @@
+#
+# Games Packages for Chakra, part of chakra-project.org
+#
+# Contributor: Michal Bozon <michal.bozon__at__gmail.com>
+# Maintainer: Adrián Chaves Fernández (Gallaecio) <adriyetichaves@gmail.com>
+
+pkgname=python2-yaml
+_pkgname=PyYAML
+pkgver=3.09
+pkgrel=1
+pkgdesc="Python bindings for YAML, using fast libYAML library"
+arch=('i686' 'x86_64')
+url="http://pyyaml.org"
+license=('MIT')
+depends=('python' 'yaml')
+provides=('python-yaml')
+replaces=('python-yaml')
+conflicts=('python-yaml')
+install='python2-yaml.install'
+source=(http://pyyaml.org/download/pyyaml/PyYAML-$pkgver.tar.gz)
+md5sums=('f219af2361e87fdc5e85e95b84c11d87')
+
+package() {
+  cd $srcdir/$_pkgname-$pkgver
+
+  python2 setup.py install \
+    --prefix=/usr \
+    --root=$pkgdir
+
+  # License.
+  install -m644 -D LICENSE $pkgdir/usr/share/licenses/$pkgname/license.txt
+}

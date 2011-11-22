@@ -1,0 +1,40 @@
+#
+# Games Packages for Chakra, part of chakra-project.org
+#
+# Contributor: Mateusz Herych <heniekk@gmail.com>
+# Contributor: Björn Lindeijer <bjorn@lindeijer.nl>
+# Contributor (Chakra): Conrad Hübler <conrad-huebler@arcor.de>
+# Maintainer: Adrián Chaves Fernández (Gallaecio) <adriyetichaves@gmail.com>
+
+pkgname=guichan
+pkgver=0.8.2
+pkgrel=1
+pkgdesc="Guichan is a portable C++ GUI library designed for games using Allegro, SDL and/or OpenGL"
+arch=('i686' 'x86_64')
+url="http://guichan.sourceforge.net/"
+license=('BSD')
+makedepends=('sdl_image' 'allegro' 'libgl' 'glut')
+conflicts=('guichan-sdl' 'guichan-allegro' 'guichan-opengl' 'guichan-glut')
+provides=('guichan-sdl' 'guichan-allegro' 'guichan-opengl' 'guichan-glut')
+options=(!libtool !strip)
+source=(http://guichan.googlecode.com/files/$pkgname-$pkgver.tar.gz)
+md5sums=('af535d7f387e774e3197cef8023ea105')
+
+build() {
+  cd $srcdir/$pkgname-$pkgver
+
+  CXXFLAGS="-g" \
+  ./configure \
+    --prefix=/usr
+
+  make
+}
+
+package() {
+  cd $srcdir/$pkgname-$pkgver
+
+  make prefix=$pkgdir/usr install
+
+  # License.
+  install -m644 -D COPYING $startdir/pkg/usr/share/licenses/$pkgname/license.txt
+}
