@@ -8,7 +8,7 @@
 source ../_buildscripts/${current_repo}-${_arch}-cfg.conf
 
 pkgname=telepathy-kde-contact-list
-pkgver=0.1.0
+pkgver=0.2.0
 pkgrel=1
 pkgdesc="Telepathy contact list application "
 arch=('i686' 'x86_64')
@@ -20,14 +20,14 @@ conflicts=('telepathy-contact-list-git')
 replaces=('telepathy-contact-list-git')
 groups=('telepathy-kde')
 install=${pkgname}.install
-source=("http://download.kde.org/unstable/telepathy-kde/${pkgver}/src/${pkgname}_${pkgver}.tar.bz2")
-sha1sums=('1875f88842568f800e08d7d1b391d05152834b3b')
+source=("ftp://mirrors.mit.edu/kde/unstable/telepathy-kde/${pkgver}/src/${pkgname}-${pkgver}.tar.bz2")
+sha1sums=('7ec01e08d991123db9c2ce17d6350d8dd835793f')
 
 build() {
   cd "${srcdir}"
   mkdir build
   cd build
-  cmake ../${pkgname}_${pkgver} \
+  cmake ../${pkgname}-${pkgver} \
     -DCMAKE_INSTALL_PREFIX=/usr \
     -DCMAKE_BUILD_TYPE=Release
   make
