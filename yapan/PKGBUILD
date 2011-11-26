@@ -9,7 +9,7 @@ source ../_buildscripts/${current_repo}-${_arch}-cfg.conf
 
 pkgname=yapan
 pkgver=0.4.1
-pkgrel=1
+pkgrel=2
 pkgdesc="Yet Another Package mAnager Notifier."
 arch=('i686' 'x86_64')
 url="https://bitbucket.org/otsug/yapan/wiki/Home"
@@ -20,15 +20,15 @@ sha256sums=('60a03e332aae35fd329ae4457f10317c6b35f82f36e72d717588eda5f5a5f6b3')
 
 build() {
   cd "${srcdir}/${pkgname}-${pkgver}"
-  qmake 
   lupdate -noobsolete -silent yapan.pro 
   lrelease -silent yapan.pro 
+  qmake 
   make 
 }
 
 package() {
   cd "${srcdir}/${pkgname}-${pkgver}"
-  make INSTALL_ROOT="${pkgdir}" install 
+  make INSTALL_ROOT="${pkgdir}" install
 }
 
 # vim:set ts=2 sw=2 et:
