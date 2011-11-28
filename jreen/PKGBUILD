@@ -1,0 +1,43 @@
+#
+# Apps SC Packages for Chakra, part of chakra-project.org
+#
+# maintainer (i686): Phil Miller <philm[at]chakra-project[dog]org>
+# maintainer (x86_64): Manuel Tortosa <manutortosa[at]chakra-project[dot]org>
+# contributor kote martini438[at]gmail.com
+
+##############################################################
+#### The section below can be adjusted to suit your needs ####
+##############################################################
+
+# What type of build do you want?
+# See http://techbase.kde.org/Development/CMake/Addons_for_KDE#Buildtypes to check what is supported.
+# Default is RelWithDebInfo to help with debugging.
+
+_buildtype="RelWithDebInfo"
+
+##############################################################
+
+pkgname=jreen
+pkgver=1.0.0
+pkgrel=1
+pkgdesc="Qt XMPP library"
+arch=('i686' 'x86_64')
+url="https://github.com/euroelessar/jreen"
+license=('GPL2')
+depends=('libidn' 'qca' 'zlib')
+makedepends=('cmake')
+conflicts=('jreen-git')
+options=(!strip)
+source=("https://github.com/euroelessar/jreen/tarball/v${pkgver}")
+md5sums=('f99a21f715b24d2dc0e72b0846b8f687')
+
+build() {
+  cd ${srcdir}/euroelessar-jreen-0a0f55b
+  cmake -DCMAKE_INSTALL_PREFIX=/usr -DCMAKE_BUILD_TYPE=${_buildtype}
+  make
+}
+
+package() {
+  cd ${srcdir}/euroelessar-jreen-0a0f55b
+  make DESTDIR=${pkgdir} install
+}
