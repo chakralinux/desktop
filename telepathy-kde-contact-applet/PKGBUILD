@@ -7,20 +7,20 @@
 # include global config
 source ../_buildscripts/${current_repo}-${_arch}-cfg.conf
 
-pkgname=telepathy-kde-presence-applet
+pkgname=telepathy-kde-contact-applet
 pkgver=0.2.0
 pkgrel=1
-pkgdesc="Plasma applet for managing your Telepathy account presence"
+pkgdesc="Plasma applet for displaying contacts"
 arch=('any')
 url="http://www.kde.org"
 license=('GPL')
-depends=('telepathy-kde-presence-dataengine')
+depends=('kde-runtime' 'telepathy-qt4')
 makedepends=('cmake' 'automoc4')
 conflicts=('telepathy-presence-applet-git')
 replaces=('telepathy-presence-applet-git')
 groups=('telepathy-kde')
 source=("ftp://mirrors.mit.edu/kde/unstable/telepathy-kde/${pkgver}/src/${pkgname}-${pkgver}.tar.bz2")
-sha1sums=('ba2792434cd5bc7d71c1b8ab2176775fc8e5524f')
+sha1sums=('b1e2ad706deccd6ca4d745828a8b54fd87bc2066')
 
 package() {
   cd "${srcdir}"/${pkgname}-${pkgver}

@@ -8,7 +8,7 @@
 source ../_buildscripts/${current_repo}-${_arch}-cfg.conf
 
 pkgname=telepathy-kde-accounts-kcm
-pkgver=0.1.0
+pkgver=0.2.0
 pkgrel=1
 pkgdesc="KCM Module for configuring Telepathy Instant Messaging Accounts"
 arch=('i686' 'x86_64')
@@ -16,17 +16,21 @@ url="http://www.kde.org"
 license=('GPL')
 depends=('kdelibs' 'telepathy-qt4' 'telepathy-mission-control')
 makedepends=('cmake' 'automoc4')
+optdepends=('telepathy-gabble: XMPP/Jabber/GTalk support'
+            'telepathy-butterfly: MSN/Windows Live support'
+            'telepathy-haze: all protocols supported by libpurple')
 groups=('telepathy-kde')
-conflicts=('telepathy-accounts-kcm-git')
-replaces=('telepathy-accounts-kcm-git')
-source=("http://download.kde.org/unstable/telepathy-kde/${pkgver}/src/${pkgname}_${pkgver}.tar.bz2")
-sha1sums=('23c1d3289ecaf4b4361d0ed324a7044cccfae801')
+conflicts=('telepathy-accounts-kcm-git' 'telepathy-kde-accounts-kcm-plugins')
+replaces=('telepathy-accounts-kcm-git' 'telepathy-kde-accounts-kcm-plugins')
+provides=('telepathy-kde-accounts-kcm-plugins')
+source=("ftp://mirrors.mit.edu/kde/unstable/telepathy-kde/${pkgver}/src/${pkgname}-${pkgver}.tar.bz2")
+sha1sums=('2ebc4ac117a3e28e2812a2a9c97f7d0ee97dac67')
 
 build() {
   cd "${srcdir}"
   mkdir build
   cd build
-  cmake ../${pkgname}_${pkgver} \
+  cmake ../${pkgname}-${pkgver} \
     -DCMAKE_INSTALL_PREFIX=/usr \
     -DCMAKE_BUILD_TYPE=Release
   make

@@ -7,7 +7,7 @@
 source ../_buildscripts/${current_repo}-${_arch}-cfg.conf
 
 pkgname=qtgstreamer-git
-pkgver=20110922
+pkgver=20111127
 pkgrel=1
 pkgdesc="Gstreamer bindings for C++/Qt."
 arch=('i686' 'x86_64')
@@ -26,24 +26,24 @@ build() {
   msg "Connecting to GIT server...."
 
   if [ -d $_gitname ] ; then
-    cd $_gitname && git pull origin || return 1
+    cd $_gitname && git pull origin 
     msg "The local files are updated."
   else
-    git clone $_gitroot $_gitname || return 1
+    git clone $_gitroot $_gitname 
   fi
 
   msg "GIT checkout done or server timeout"
   msg "Starting make..."
 
   rm -rf "$srcdir/$_gitname-build"
-  git clone "$srcdir/$_gitname" "$srcdir/$_gitname-build" || return 1
+  git clone "$srcdir/$_gitname" "$srcdir/$_gitname-build" 
   cd "$srcdir/$_gitname-build"
 
-  cmake -DCMAKE_INSTALL_PREFIX=/usr . || return 1
+  cmake -DCMAKE_INSTALL_PREFIX=/usr . 
   make || return 1
 }
 
 package() {
   cd "$srcdir/$_gitname-build"
-  make DESTDIR="$pkgdir/" install || return 1
+  make DESTDIR="$pkgdir/" install 
 }
