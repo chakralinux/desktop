@@ -1,0 +1,40 @@
+#
+# Apps Packages for Chakra, part of chakra-project.org
+#
+# maintainer (i686): Phil Miller <philm[at]chakra-project[dog]org>
+# maintainer (x86_64): Manuel Tortosa <manutortosa[at]chakra-project[dot]org>
+
+# include global config
+source ../_buildscripts/${current_repo}-${_arch}-cfg.conf
+
+pkgname=kwave
+pkgver=0.8.7
+pkgrel=1
+pkgdesc="A sound editor for KDE"
+arch=('i686' 'x86_64')
+url="http://kwave.sourceforge.net/"
+license=('GPL')
+depends=('audiofile>=0.3.0' 'flac' 'fftw' 'kdelibs' 'libvorbis' 'id3lib' 'libsamplerate' 'libmad')
+makedepends=('cmake' 'kdesdk-poxml' 'gettext' 'imagemagick' 'automoc4' 'docbook-xsl')
+options=('!libtool')
+source=(http://downloads.sourceforge.net/sourceforge/${pkgname}/${pkgname}-${pkgver}-1.tar.bz2)
+md5sums=('d21702f2d94d9ce9a32eab3cfba78649')
+
+build() {
+  cd "${srcdir}"
+  mkdir build
+  cd build
+
+  cmake "../${pkgname}-${pkgver}" -DCMAKE_INSTALL_PREFIX=/usr \
+  -DLIB_INSTALL_DIR=/usr/lib \
+  -DCMAKE_BUILD_TYPE=Release \
+  -DWITH_PULSEAUDIO=OFF \
+  -DWITH_PHONON=OFF \
+  -DWITH_MP3=ON 
+  make
+}
+
+package() {
+  cd "${srcdir}/build"
+  make DESTDIR="${pkgdir}" install
+}
