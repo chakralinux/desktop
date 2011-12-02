@@ -8,8 +8,7 @@
 source ../_buildscripts/${current_repo}-${_arch}-cfg.conf
 
 pkgname=jdk
-pkgver=7u1
-pkgbuild=b08
+pkgver=6u29
 pkgrel=1
 pkgdesc="Sun's Java Development Kit"
 arch=('i686' 'x86_64')
@@ -18,58 +17,87 @@ arch=('i686' 'x86_64')
 url="http://java.sun.com"
 depends=('glibc' 'jre')
 install="jdk.install"
-source=("http://download.oracle.com/otn-pub/java/jdk/${pkgver}-${pkgbuild}/${pkgname}-${pkgver}-linux-${ARCH}.tar.gz"
-        'jdk.profile'
-        'jdk.profile.csh'
-        'java-control-panel.desktop'
-        'java-monitoring-and-management-console.desktop'
-        'java-policy-settings.desktop'
-        'java-visualvm.desktop'
-        'java-web-start.desktop')
-noextract=("${pkgname}-${pkgver}-linux-${ARCH}.tar.gz")
+source=("http://download.oracle.com/otn-pub/java/jdk/${pkgver}-b07/jdk-${pkgver}-linux-${ARCH}.bin"
+        construct.sh::http://java.net/projects/jdk-distros/sources/svn/content/trunk/utils/construct.sh?raw=true
+  jdk.profile
+        jdk.profile.csh
+  java-control-panel.desktop 
+  java-monitoring-and-management-console.desktop
+  java-policy-settings.desktop 
+  java-visualvm.desktop 
+  java-web-start.desktop)
 
-md5sums=('661c426a167ef31c121c51f8f57dc7ea'
-         'fc2bf7c855629c5a07145dfe72fea914'
-         'e4d814c0f310d77ed6990c731bccd0fb'
-         '4bc2b0be93f76ed07b471e3c89eb5a8a'
-         '8e3cec7ab641ec449cabd068be583f5c'
-         '9ba148ebabce8ed3351b813a9a66b6e5'
-         '568451cf45fc8c7adb83a222a61ca2c6')
-
-[ "${CARCH}" = 'i686' ]   && md5sums=('7267759f93bc6fb23046dd42d40d1c2f' "${md5sums[@]}")
-[ "${CARCH}" = 'x86_64' ] && md5sums=('9707049b591f47e5c3988a9f029c015e' "${md5sums[@]}")
+[ "${CARCH}" = 'i686' ]   && md5sums=('bdb5f05bd20c6aa9a4729726191bf6fd'
+                                      '94065b612df0046d9ae758943f9f6a75'
+                                      '7aaac9ec3e440b92361c6561ac00424a'
+                                      '6f4cbf332816d2c4e9578ecd1d0dce7f'
+                                      'e4d814c0f310d77ed6990c731bccd0fb'
+                                      '4bc2b0be93f76ed07b471e3c89eb5a8a'
+                                      '8e3cec7ab641ec449cabd068be583f5c'
+                                      '9ba148ebabce8ed3351b813a9a66b6e5'
+                                      '568451cf45fc8c7adb83a222a61ca2c6')
+[ "${CARCH}" = 'x86_64' ] && md5sums=('ab2ddd0d83d7b8eab3876a37ed1deec5'
+                                      '94065b612df0046d9ae758943f9f6a75'
+                                      '7aaac9ec3e440b92361c6561ac00424a'
+                                      '6f4cbf332816d2c4e9578ecd1d0dce7f'
+                                      'e4d814c0f310d77ed6990c731bccd0fb'
+                                      '4bc2b0be93f76ed07b471e3c89eb5a8a'
+                                      '8e3cec7ab641ec449cabd068be583f5c'
+                                      '9ba148ebabce8ed3351b813a9a66b6e5'
+                                      '568451cf45fc8c7adb83a222a61ca2c6')
 
 replaces=('j2sdk')
 conflicts=('java-environment' 'j2sdk')
-provides=('java-environment=7' 'j2sdk')
+provides=('java-environment=6' 'j2sdk')
 license=('custom')
 
+build() {
+  cd "${srcdir}"
+
+  mkdir unbundle-jdk
+  cd unbundle-jdk
+
+  sh "../jdk-${pkgver}-linux-${ARCH}.bin" --accept-license
+
+  cd ..
+
+  sh construct.sh unbundle-jdk linux-jdk linux-jre
+}
+
 package() {
-  msg "Extracting the Java Development Kit..."
-  install -d "${pkgdir}/opt/java"
-  tar -zxf "${srcdir}/${pkgname}-${pkgver}-linux-${ARCH}.tar.gz" -C "${pkgdir}/opt/java"
-  mv "${pkgdir}/opt/java/jdk1.7.0_01" "${pkgdir}/opt/java/jdk"
+  cd "${srcdir}"
 
-  # Icon
-  install -Dm644 "${pkgdir}/opt/java/jdk/lib/desktop/icons/hicolor/48x48/apps/sun-java.png" "${pkgdir}/usr/share/pixmaps/java.png"
+  #copy icon
+  install -Dm644 "${srcdir}/linux-jdk/jre/lib/desktop/icons/hicolor/48x48/apps/sun-java.png" "${pkgdir}/usr/share/pixmaps/java.png"
 
-  # Environmental variables
-  install -D "${srcdir}/jdk.profile" "${pkgdir}/etc/profile.d/jdk.sh"
-  install -D "${srcdir}/jdk.profile.csh" "${pkgdir}/etc/profile.d/jdk.csh"
+  rm -rf linux-jdk/jre
+  install -d "${pkgdir}/opt"
+  mv linux-jdk "${pkgdir}/opt/java"
 
-  # License and documentation
+  install -D "${srcdir}/jdk.profile" \
+        "${pkgdir}/etc/profile.d/jdk.sh"
+  install -D "${srcdir}/jdk.profile.csh" \
+        "${pkgdir}/etc/profile.d/jdk.csh"
+
   install -d "${pkgdir}/usr/share/licenses/jdk"
-  install -m644 "${pkgdir}/opt/java/jdk/COPYRIGHT" "${pkgdir}/usr/share/licenses/jdk"
-  install -m644 "${pkgdir}/opt/java/jdk/LICENSE" "${pkgdir}/usr/share/licenses/jdk"
-  install -m644 "${pkgdir}/opt/java/jdk/THIRDPARTYLICENSEREADME.txt" "${pkgdir}/usr/share/licenses/jdk"
+  install -m644 "${pkgdir}/opt/java/COPYRIGHT" \
+        "${pkgdir}/usr/share/licenses/jdk"
+  install -m644 "${pkgdir}/opt/java/LICENSE" \
+        "${pkgdir}/usr/share/licenses/jdk"
+  install -m644 "${pkgdir}/opt/java/THIRDPARTYLICENSEREADME.txt" \
+        "${pkgdir}/usr/share/licenses/jdk"
 
-  # Desktop entries
-  install -d "${pkgdir}/usr/share/applications"
-  install -m644 "${srcdir}/java-control-panel.desktop" "${pkgdir}/usr/share/applications"
-  install -m644 "${srcdir}/java-monitoring-and-management-console.desktop" "${pkgdir}/usr/share/applications"
-  install -m644 "${srcdir}/java-policy-settings.desktop" "${pkgdir}/usr/share/applications"
-  install -m644 "${srcdir}/java-visualvm.desktop" "${pkgdir}/usr/share/applications"
-  install -m644 "${srcdir}/java-web-start.desktop" "${pkgdir}/usr/share/applications"
+  #desktop entries
+  install -Dm644 "${srcdir}/java-control-panel.desktop" \
+        "${pkgdir}/usr/share/applications/java-control-panel.desktop"
+  install -Dm644 "${srcdir}/java-monitoring-and-management-console.desktop" \
+        "${pkgdir}/usr/share/applications/java-monitoring-and-management-console.desktop"
+  install -Dm644 "${srcdir}/java-policy-settings.desktop" \
+        "${pkgdir}/usr/share/applications/java-policy-settings.desktop"
+  install -Dm644 "${srcdir}/java-visualvm.desktop" \
+        "${pkgdir}/usr/share/applications/java-visualvm.desktop"
+  install -Dm644 "${srcdir}/java-web-start.desktop" \
+        "${pkgdir}/usr/share/applications/java-web-start.desktop"
 }
 
 # vim:set ts=2 sw=2 et:
