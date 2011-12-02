@@ -1,4 +1,4 @@
-export J2SDKDIR=/opt/java
-export PATH=$PATH:/opt/java/bin
-export JAVA_HOME=/opt/java
-export DERBY_HOME=/opt/java/db
+export J2SDKDIR=/opt/java/jdk
+export PATH=$PATH:/opt/java/jdk/bin
+export JAVA_HOME=/opt/java/jdk
+export DERBY_HOME=/opt/java/jdk/db

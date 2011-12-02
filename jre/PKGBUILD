@@ -8,7 +8,8 @@
 source ../_buildscripts/${current_repo}-${_arch}-cfg.conf
 
 pkgname=jre
-pkgver=6u29
+pkgver=7u1
+pkgbuild=b08
 pkgrel=1
 pkgdesc="Sun's java runtime environment"
 arch=('i686' 'x86_64')
@@ -17,54 +18,38 @@ arch=('i686' 'x86_64')
 url="http://java.sun.com"
 depends=('glibc' 'libxtst')
 install="jre.install"
-source=("http://download.oracle.com/otn-pub/java/jdk/${pkgver}-b11/jdk-${pkgver}-linux-${ARCH}.bin"
-        construct.sh::http://java.net/projects/jdk-distros/sources/svn/content/trunk/utils/construct.sh?raw=true
-        jre.profile)
+source=("http://download.oracle.com/otn-pub/java/jdk/${pkgver}-${pkgbuild}/${pkgname}-${pkgver}-linux-${ARCH}.tar.gz"
+        'jre.profile')
+noextract=("${pkgname}-${pkgver}-linux-${ARCH}.tar.gz")
 
-[ "${CARCH}" = 'i686' ]   && md5sums=('0aaabd639e50aaf9fc22153ff0cf76da'
-                                      '94065b612df0046d9ae758943f9f6a75'
+[ "${CARCH}" = 'i686' ]   && md5sums=('d9b73cc5ccaa4f0b36cd6b8b62d07142'
                                       '50b4f5ac4129097461d246645d73a622')
-[ "${CARCH}" = 'x86_64' ] && md5sums=('ab2ddd0d83d7b8eab3876a37ed1deec5'
-                                      '94065b612df0046d9ae758943f9f6a75'
+[ "${CARCH}" = 'x86_64' ] && md5sums=('07bd73571b7028b73fc8ed19bc85226d'
                                       '50b4f5ac4129097461d246645d73a622')
 replaces=('j2re')
 conflicts=('j2re' 'java-runtime')
-provides=('j2re' 'java-runtime=6')
+provides=('j2re' 'java-runtime=7')
 license=('custom')
 
-build() {
-  cd "${srcdir}"
-
-  mkdir unbundle-jdk
-  cd unbundle-jdk
-
-  sh "../jdk-${pkgver}-linux-${ARCH}.bin" --accept-license
-
-  cd ..
-
-  sh construct.sh unbundle-jdk linux-jdk linux-jre
-}
-
 package() {
-  cd "${srcdir}"
+  msg "Extracting the Java Runtime Environment..."
+  install -d "${pkgdir}/opt/java"
+  tar -zxf "${srcdir}/${pkgname}-${pkgver}-linux-${ARCH}.tar.gz" -C "${pkgdir}/opt/java"
+  mv "${pkgdir}/opt/java/jre1.7.0_01" "${pkgdir}/opt/java/jre"
 
-  mkdir -p "${pkgdir}/opt/java"
-  mv linux-jdk/jre "${pkgdir}/opt/java"
+  # Browser plugin
+  [ "${CARCH}" = 'i686' ] && __arch='i386' || __arch='amd64'
+  install -d "${pkgdir}/usr/lib/mozilla/plugins"
+  ln -s "/opt/java/jre/lib/${__arch}/libnpjp2.so" "${pkgdir}/usr/lib/mozilla/plugins/libnpjp2.so"
 
+  # License files and documentation
+  install -d "${pkgdir}/usr/share/licenses/jre"
+  install -m644 "${pkgdir}/opt/java/jre/COPYRIGHT" "${pkgdir}/usr/share/licenses/jre"
+  install -m644 "${pkgdir}/opt/java/jre/LICENSE" "${pkgdir}/usr/share/licenses/jre"
+  install -m644 "${pkgdir}/opt/java/jre/THIRDPARTYLICENSEREADME.txt" "${pkgdir}/usr/share/licenses/jre"
+
+  # Environmental variables
   install -Dm755 "${srcdir}/${pkgname}.profile" "${pkgdir}/etc/profile.d/${pkgname}.sh"
-
-  mkdir -p "${pkgdir}/usr/lib/mozilla/plugins"
-
-  if [ "${CARCH}" = 'i686' ]; then
-    ln -s /opt/java/jre/lib/i386/libnpjp2.so "${pkgdir}/usr/lib/mozilla/plugins"
-  else
-    ln -s /opt/java/jre/lib/amd64/libnpjp2.so "${pkgdir}/usr/lib/mozilla/plugins"
-  fi
-
-  mkdir -p "${pkgdir}/usr/share/licenses/jre"
-  cp "${pkgdir}/opt/java/jre/COPYRIGHT" "${pkgdir}/usr/share/licenses/jre"
-  cp "${pkgdir}/opt/java/jre/LICENSE" "${pkgdir}/usr/share/licenses/jre"
-  cp "${pkgdir}/opt/java/jre/THIRDPARTYLICENSEREADME.txt" "${pkgdir}/usr/share/licenses/jre"
 
   # Fix system prefs folder (FS#18872)
   install -dm755 "${pkgdir}/etc/.java/.systemPrefs"
