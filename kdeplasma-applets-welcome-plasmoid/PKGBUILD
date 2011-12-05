@@ -1,0 +1,39 @@
+#
+# Chakra Packages for Chakra, part of chakra-project.org
+#
+# maintainer (i686): Phil Miller <philm[at]chakra-project[dog]org>
+# maintainer (x86_64): Manuel Tortosa <manutortosa[at]chakra-project[dot]org>
+
+pkgname=kdeplasma-applets-welcome-plasmoid
+pkgver=0.3.3
+pkgrel=1
+depends=('kdebase-workspace')
+makedepends=('make' 'cmake' 'automoc4')
+pkgdesc="Chakra's Welcome plasmoid, for live ISO info sharing"
+arch=("i686" "x86_64")
+license=('GPL')
+#install=$pkgname.install
+url="http://chakra-project.org/"
+
+source=("http://chakra.sourceforge.net/sources/welcome-plasmoid/welcome-plasmoid-$pkgver.tar.xz")
+md5sums=('494e5b1e507786fd07eaa87a9b36b26e')
+
+# create tarball: source PKGBUILD && mksource
+
+mksource() {
+  git clone git://gitorious.org//chakra/welcome-plasmoid.git
+  pushd welcome-plasmoid
+  popd
+  tar -cvJf welcome-plasmoid-${pkgver}.tar.xz welcome-plasmoid/*
+  md5sum welcome-plasmoid-${pkgver}.tar.xz
+}
+
+build() {
+        cd "${srcdir}/welcome-plasmoid"
+        
+        cmake  \
+          -DCMAKE_INSTALL_PREFIX=/usr \
+          -DCMAKE_BUILD_TYPE=Release
+        make || return 1
+        make DESTDIR=${pkgdir} install || return 1
+}
