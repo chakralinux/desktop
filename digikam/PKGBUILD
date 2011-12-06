@@ -6,15 +6,15 @@
 
 pkgbase=digikam
 pkgname=('digikam' 'kipi-plugins' 'libkvkontakte')
-pkgver=2.2.0
-pkgrel=2
+pkgver=2.4.1
+pkgrel=1
 url="http://digikam.sourceforge.net"
 arch=('i686' 'x86_64')
 license=('GPL')
-makedepends=('kde-runtime' 'kdegraphics-kgamma' 'kdepimlibs' 'lensfun' 'kdeedu-marble' 'liblqr' 'opencv'
-	     'pkgconfig' 'cmake' 'automoc4' 'doxygen' 'docbook-xsl')
+makedepends=('kde-runtime' 'kdegraphics-kgamma' 'kdepimlibs' 'lensfun' 'kdeedu-marble' 'liblqr' 'opencv' 'lapack' 'libgpod'
+	     'pkgconfig' 'cmake' 'automoc4' 'doxygen' 'docbook-xsl' 'qjson')
 source=(http://sourceforge.net/projects/digikam/files/${pkgname}/${pkgver}/${pkgname}-${pkgver}.tar.bz2)
-md5sums=('be6100de4961a8cb99a8d9d1688a0460')
+md5sums=('4e36b8cc33f5ac589e4b45b22c902fdd')
 
 build() {
    cd ${srcdir}
@@ -23,15 +23,13 @@ build() {
    cd build
    cmake ../${pkgname}-${pkgver} \
      -DCMAKE_INSTALL_PREFIX=/usr \
-     -DENABLE_MARBLEWIDGET=yes \
-     -DWITH_MarbleWidget=yes \
      -DCMAKE_SKIP_RPATH=ON
    make 
 }
 
 package_digikam() {
   pkgdesc="Digital photo management application for kde"
-  depends=('kde-runtime' 'kdegraphics-kgamma' 'kdepimlibs' 'lensfun' 'kdeedu-marble' 'liblqr' 'opencv' 'kipi-plugins')
+  depends=('kde-runtime' 'kdegraphics-kgamma' 'kdepimlibs' 'lensfun' 'kdeedu-marble' 'liblqr' 'opencv' 'kipi-plugins' 'lapack' 'libgpod')
   install=digikam.install
   replaces=('digikamimageplugins')
 
@@ -40,7 +38,7 @@ package_digikam() {
       cd ${srcdir}/build/${i}
       make DESTDIR="${pkgdir}" install
   done
-
+  rm -rf "${pkgdir}/usr/share/icons/oxygen"
 }
 
 package_libkvkontakte() {
@@ -66,5 +64,4 @@ package_kipi-plugins() {
       cd ${srcdir}/build/extra/${i}
       make DESTDIR="${pkgdir}" install
   done
-
 }
