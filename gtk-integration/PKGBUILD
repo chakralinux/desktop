@@ -5,31 +5,30 @@
 # maintainer (x86_64): Manuel Tortosa <manutortosa[at]chakra-project[dot]org>
 
 pkgname=gtk-integration
-pkgver=3.0
+pkgver=3.1
 pkgrel=1
-iconspkgver=2.5.0
-widgetpkgver=1.1.3
-_colors=3.0
+iconspkgver=0.1
+widgetpkgver=1.1.5
 cgcver=1.7
 
 pkgdesc="A bundles and Gtk apps integration package for Chakra GNU/Linux"
 arch=('i686' 'x86_64')
 
-url=("http://www.nanolx.org/home/item/75-oxygen-refit http://kde-look.org/content/show.php/gtk-oxygen-engine?content=129715")
+url="https://projects.kde.org/projects/playground/artwork/oxygen-gtk"
 
 license=('LGPL3' 'GPL')
 
 depends=('kdelibs' 'qt' 'oxygen-icons' 'cairo')
 makedepends=('gcc' 'cmake' 'findutils' 'imagemagick' 'liblqr' 'gtk2' 'automoc4')
-provides=('gtk-integration' 'oxygenrefit2-icon-theme' 'oxygen-gtk' 'chakra-gtk-config')
-conflicts=('oxygenrefit2-icon-theme' 'oxygen-gtk')
+provides=('gtk-integration' 'oxygen-gtk' 'chakra-gtk-config' 'oxygen-gtk-icons')
+conflicts=('oxygen-gtk-icons' 'oxygen-gtk')
 
-source=("http://download.tuxfamily.org/oxygenrefit2/oxygen-refit-2-$iconspkgver.tar.bz2"
+source=("http://sourceforge.net/projects/chakra/files/Tools/Oxygen-Gtk-Icons/oxygen-gtk-0.1.tar.gz/download"
         "ftp://ftp.caliu.cat/pub/mirrors/kde/stable/oxygen-gtk/$widgetpkgver/src/oxygen-gtk-$widgetpkgver.tar.bz2"
-	"http://chakra-project.org/sources/gtk-integration/chakra-gtk-config-${cgcver}.tar.gz")
+	"http://chakra.sourceforge.net/sources/gtk-integration/chakra-gtk-config-${cgcver}.tar.gz")
 
-md5sums=('60f32f98d8d33d82db79b6bb934f0580'
-         'e3b280a61cbe4363c41c26083e94643d'
+md5sums=('2690c3be8243af48d6bf10f7615c7bc0'
+         'd20902809e634c820bebdfea49de19a1'
          'd7e9c6ba2a9dc06252589f3d86b44489')
 
 function create_install() {
@@ -60,9 +59,8 @@ EOF
 function build() {
 	# Icon theme
 	cd ${srcdir}
-	install -d ${pkgdir}/usr/share/icons/
-	cp -rf "oxygen-refit-2-${iconspkgver}" ${pkgdir}/usr/share/icons/ || return 1
-	mv "oxygen-refit-2-${iconspkgver}" "oxygen-refit-2"
+	install -d ${pkgdir}/usr/share/icons/oxygen-gtk
+	cp -rf oxygen-gtk-${iconspkgver}/* ${pkgdir}/usr/share/icons/oxygen-gtk || return 1
 	find -type f -print0 | xargs -0 chmod 644
 
         # Widget theme
@@ -75,7 +73,7 @@ function build() {
 	make || return 1
 	make DESTDIR=${pkgdir} install
 
-	# Chakra-Gtk-Config
+	# KCM
 	cd ${srcdir}/chakra-gtk-config-${cgcver}
 	rm -rf build
 	mkdir build && cd build
