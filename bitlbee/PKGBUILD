@@ -8,20 +8,21 @@
 source ../_buildscripts/${current_repo}-${_arch}-cfg.conf
 
 pkgname=bitlbee
-pkgver=3.0.3
+pkgver=3.0.4
 pkgrel=1
 pkgdesc="An IRC to IM gateway. Supports MSN, ICQ, Jabber, Yahoo!, and AIM"
 arch=('i686' 'x86_64')
 url="http://www.bitlbee.org/" 
 license=('GPL')
-depends=('gnutls' 'glib2')
+depends=('openssl' 'glib2')
+makedepends=('asciidoc')
 optdepends=('xinetd: to run bitlbee through xinetd')
 install=${pkgname}.install
 backup=(etc/bitlbee/bitlbee.conf etc/bitlbee/motd.txt etc/xinetd.d/bitlbee)
 source=(http://get.bitlbee.org/src/${pkgname}-${pkgver}.tar.gz
 	'bitlbee.xinetd'
 	'bitlbee.rcd')
-sha1sums=('4140eb7aaa2c6a39fa059d19f8fbaec0d7a1ebff'
+sha1sums=('2c2742948d1ed2c83ee5db2d2fbff5e8b656b8c4'
           '5e0af27ba9cc4fe455e3381c75fc49a9326e2f17'
           '299776783902cc2e20be49e2fe729572ca656383')
 
@@ -29,25 +30,22 @@ build() {
 	cd ${srcdir}/${pkgname}-${pkgver}
 	
 	./configure --prefix=/usr \
-		--ssl=gnutls \
+		--ssl=openssl \
 		--etcdir=/etc/bitlbee \
 		--pidfile=/var/run/bitlbee/bitlbee.pid \
-		--ipcsocket=/var/run/bitlbee/bitlbee.sock || return 1
-	make || return 1
+		--ipcsocket=/var/run/bitlbee/bitlbee.sock 
+	make 
 }
 
 package() {
 	cd ${srcdir}/${pkgname}-${pkgver}
 
-	install -dm755 ${pkgdir}/var/lib
 	install -o65 -g65 -dm0770 ${pkgdir}/var/lib/bitlbee
-	install -dm755 ${pkgdir}/var/run
-	install -o65 -g65 -dm755 ${pkgdir}/var/run/bitlbee
 	install -Dm644 ${srcdir}/bitlbee.xinetd \
 		${pkgdir}/etc/xinetd.d/bitlbee
 	install -Dm755 ${srcdir}/bitlbee.rcd \
-		${pkgdir}/etc/rc.d/bitlbee || return 1
-	make DESTDIR=${pkgdir} install || return 1
-	make DESTDIR=${pkgdir} install-etc || return 1
-	make DESTDIR=${pkgdir} install-dev || return 1
+		${pkgdir}/etc/rc.d/bitlbee 
+	make DESTDIR=${pkgdir} install 
+	make DESTDIR=${pkgdir} install-etc 
+	make DESTDIR=${pkgdir} install-dev 
 }
