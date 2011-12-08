@@ -1,15 +1,10 @@
 #
 # Games Packages for Chakra, part of chakra-project.org
 #
-# Maintainer: Adrián Chaves Fernández (Gallaecio) <adriyetichaves gmail.com>
-
-# include global config
-source ../_buildscripts/${current_repo}-${_arch}-cfg.conf
+# Maintainer: Adrián Chaves Fernández (Gallaecio) <adriyetichaves@gmail.com>
 
 pkgname=ember
-pkgver=0.6.1.1
-_pkgver=0.6.1
-_mediaver=0.6.0
+pkgver=0.6.2
 pkgrel=1
 pkgdesc="Ember is a 3D client using the OGRE 3d library, valid for WorldForge server."
 arch=('i686' 'x86_64')
@@ -18,12 +13,12 @@ license=('GPL3')
 depends=('atlas_cpp' 'boost' 'cegui' 'curl' 'eris' 'freealut' 'libsigc++2.0'
 'libwfut' 'mercator' 'ogre' 'openal' 'sdl' 'skstream' 'varconf' 'wfmath')
 source=("http://downloads.sourceforge.net/worldforge/$pkgname-$pkgver.tar.bz2"
-	"http://downloads.sourceforge.net/worldforge/$pkgname-media-$_mediaver.tar.bz2")
-md5sums=('adbe44a98fa3bdf9d9fc9ef7faded539'
-         '9bb9899601a8489c8bb55ad7a9e057a1')
+	"http://downloads.sourceforge.net/worldforge/$pkgname-media-$pkgver.tar.bz2")
+md5sums=('e3f854897fa73f54403e111f45031d3f'
+         'd2acb2b2f1876876f4a0332be2280c41')
 
 build() {
-  cd $srcdir/$pkgbase-$_pkgver
+  cd $srcdir/$pkgbase-$pkgver
   
   ./configure \
     --enable-cegui-toluapp \
@@ -34,11 +29,11 @@ build() {
 }
 
 package() {
-  cd $srcdir/$pkgbase-$_pkgver
+  cd $srcdir/$pkgbase-$pkgver
 
   make DESTDIR=$pkgdir install
 
   # Data.
   mkdir -p $pkgdir/usr/share/$pkgname/media/
-  cp -R $srcdir/media-$_mediaver/media/* $pkgdir/usr/share/$pkgname/media/
+  cp -R $srcdir/media-$pkgver/media/* $pkgdir/usr/share/$pkgname/media/
 }
