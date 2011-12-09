@@ -17,25 +17,20 @@ pkgname=('calligra-filters'
          'calligra-templates'
          'calligra-tools'
          'calligra-karbon'
-         #'calligra-karbon-doc'
          'calligra-kexi'
-         #'calligra-kexi-doc'
          #'calligra-kformula'
-         #'calligra-kformula-doc'
          'calligra-kounavail'
          'calligra-plan'
          'calligra-stage'
-         #'calligra-stage-doc'
          'calligra-krita'
          'calligra-tables'
-         #'calligra-tables-doc'
          'calligra-words'
          'calligra-handbook'
          'calligra-thesaurus-doc'
          'calligra-braindump'
          'calligra-flow')
-pkgver=2.3.84
-pkgrel=3
+pkgver=2.3.85
+pkgrel=1
 arch=('i686' 'x86_64')
 url='http://www.calligra-suite.org'
 license=('FDL1.2' 'GPL2' 'LGPL')
@@ -44,7 +39,7 @@ makedepends=('kdelibs' 'kdepimlibs' 'eigen' 'freetds' 'kdegraphics-okular' 'kdee
              'boost' 'libkdcraw' 'libpqxx' 'fftw' 'opengtl' 'docbook-xsl' 'create-resources' 'lcms2' 'qrencode' 'libdmtx')
 groups=('calligra')
 source=("http://download.kde.org/unstable/${pkgbase}-${pkgver}/${pkgbase}-${pkgver}.tar.bz2")
-md5sums=('6888603d1ff09843a8581eef66baad41')
+md5sums=('a00dbd648ea2c2b56ac62025c836c806')
 
 build() {
   cd "${srcdir}"
@@ -147,7 +142,7 @@ package_calligra-tools() {
   make DESTDIR="${pkgdir}" install
 }
 
-#### package common files done #####
+#### package common files #####
 
 #### package apps and their docs #####
 
@@ -174,15 +169,6 @@ package_calligra-kexi() {
   cd "${srcdir}"/build/kexi
   make DESTDIR="${pkgdir}" install
 }
-
-#  pkgdesc="Documentation for Kexi"
-#  depends=('calligra-kexi')
-#  conflicts=('koffice-doc' 'calligra-kexi-doc-git')
-#  replaces=('koffice-doc' 'calligra-kexi-doc-git')
-
-#  cd "${srcdir}"/build/doc/kexi
-#  make DESTDIR="${pkgdir}" install
-#}
 
 package_calligra-kounavail() {
   pkgdesc="Unavailable Calligra Document"
