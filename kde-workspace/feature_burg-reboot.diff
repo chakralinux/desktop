@@ -1,0 +1,141 @@
+diff -Nurd kde-workspace-4.7.90/kdm/backend/bootman.c mywork/kdm/backend/bootman.c
+--- kde-workspace-4.7.90/kdm/backend/bootman.c  2011-07-27 20:35:39.000000000 +0200
++++ mywork/kdm/backend/bootman.c        2011-12-04 20:36:43.045270353 +0100
+@@ -41,6 +41,7 @@
+ #include <unistd.h>
+ #include <stdio.h>
+ #include <ctype.h>
++#include <malloc.h>
+ 
+ static int
+ getNull(char ***opts ATTR_UNUSED, int *def ATTR_UNUSED, int *cur ATTR_UNUSED)
+@@ -160,26 +161,29 @@
+     }
+ }
+ 
+-#define GRUB2_MENU "/boot/grub/grub.cfg"
+ 
+ static char *grubReboot;
++static char *grubConfig;
++static char *grubRebootExec;
++
++
+ 
+ static int
+-getGrub2(char ***opts, int *def, int *cur)
++getGrub2OrBurg(char ***opts, int *def, int *cur)
+ {
+     FILE *f;
+     char *ptr, *linp;
+     int len, ret = BO_NOMAN, i;
+     char line[1000];
+ 
+-    if (!grubReboot && !(grubReboot = locate("grub-reboot")))
++    if (!grubReboot && !(grubReboot = locate(grubRebootExec)))
+         return BO_NOMAN;
+ 
+     *def = -1;
+     *cur = -1;
+     *opts = initStrArr(0);
+ 
+-    if (!(f = fopen(GRUB2_MENU, "r")))
++    if (!(f = fopen(grubConfig, "r")))
+         return errno == ENOENT ? BO_NOMAN : BO_IO;
+     while ((len = fGets(line, sizeof(line), f)) != -1) {
+         for (linp = line; isspace(*linp); linp++, len--);
+@@ -222,6 +226,17 @@
+     return ret;
+ }
+ 
++static int 
++getGrub2(char ***opts, int *def, int *cur){
++  if(!grubConfig && !grubRebootExec){
++    grubConfig=malloc(21*sizeof(char));
++    strcpy(grubConfig,"/boot/grub/grub.cfg");
++    grubRebootExec=malloc(13*sizeof(char));
++    strcpy(grubRebootExec,"grub-reboot");
++  }
++  return getGrub2OrBurg(opts,def,cur);
++}
++
+ static int
+ setGrub2(const char *opt, SdRec *sdr)
+ {
+@@ -233,7 +248,7 @@
+     for (i = 0; opts[i]; i++) {
+         if (!strcmp(opts[i], opt)) {
+             sdr->osindex = i;
+-            sdr->bmstamp = mTime(GRUB2_MENU);
++            sdr->bmstamp = mTime(grubConfig);
+             freeStrArr(opts);
+             return BO_OK;
+         }
+@@ -245,7 +260,7 @@
+ static void
+ commitGrub2(void)
+ {
+-    if (sdRec.bmstamp != mTime(GRUB2_MENU) &&
++    if (sdRec.bmstamp != mTime(grubConfig) &&
+         setGrub2(sdRec.osname, &sdRec) != BO_OK)
+         return;
+ 
+@@ -257,6 +272,29 @@
+     }
+ }
+ 
++static int 
++getBurg(char ***opts, int *def, int *cur){
++  if(!grubConfig && !grubRebootExec){
++    grubConfig=malloc(21*sizeof(char));
++    strcpy(grubConfig,"/boot/burg/burg.cfg");
++    grubRebootExec=malloc(13*sizeof(char));
++    strcpy(grubRebootExec,"burg-reboot");
++  }
++  return getGrub2OrBurg(opts,def,cur);
++}
++
++static int
++setBurg(const char *opt, SdRec *sdr)
++{
++  return setGrub2(opt,sdr);
++}
++
++static void
++commitBurg(void)
++{
++  commitGrub2();
++}
++
+ static char *lilo;
+ 
+ static int
+@@ -352,6 +390,7 @@
+     { getNull, setNull, 0 },
+     { getGrub, setGrub, commitGrub },
+     { getGrub2, setGrub2, commitGrub2 },
++    { getBurg, setBurg, commitBurg },
+     { getLilo, setLilo, commitLilo },
+ };
+ 
+diff -Nurd kde-workspace-4.7.90/kdm/config.def mywork/kdm/config.def
+--- kde-workspace-4.7.90/kdm/config.def 2011-07-27 20:35:39.000000000 +0200
++++ mywork/kdm/config.def       2011-12-04 20:37:40.122520573 +0100
+@@ -1257,6 +1257,7 @@
+  None/BO_NONE: no boot manager
+  Grub/BO_GRUB: Grub boot manager
+  Grub2/BO_GRUB2: Grub2 boot manager
++ Burg/BO_BURG: Burg boot manager
+  Lilo/BO_LILO: Lilo boot manager (Linux on i386 &amp; x86-64 only)
+ Default: None
+ User: core
+diff -Nurd kde-workspace-4.7.90/kdm/kcm/kdm-shut.cpp mywork/kdm/kcm/kdm-shut.cpp
+--- kde-workspace-4.7.90/kdm/kcm/kdm-shut.cpp   2011-08-22 15:29:50.000000000 +0200
++++ mywork/kdm/kcm/kdm-shut.cpp 2011-12-04 20:38:22.932961382 +0100
+@@ -98,6 +98,7 @@
+     bm_combo->insertItem("None", i18nc("boot manager", "None"));
+     bm_combo->insertItem("Grub", i18n("Grub"));
+     bm_combo->insertItem("Grub2", i18n("Grub2"));
++    bm_combo->insertItem("Burg", i18n("Burg"));
+ #if defined(__linux__) && (defined(__i386__) || defined(__amd64__))
+     bm_combo->insertItem("Lilo", i18n("Lilo"));
+ #endif

@@ -10,6 +10,7 @@ source ../_buildscripts/${current_repo}-${_arch}-cfg.conf
 pkgbase=calligra-l10n
 pkgname=('calligra-l10n-ca'
 	 'calligra-l10n-ca@valencia'
+	 'calligra-l10n-cs'
 	 'calligra-l10n-da'
 	 'calligra-l10n-de'
 	 'calligra-l10n-el'
@@ -32,7 +33,7 @@ pkgname=('calligra-l10n-ca'
 	 'calligra-l10n-sv'
 #	 'calligra-l10n-tr'
 	 'calligra-l10n-uk'
-#	 'calligra-l10n-zh_cn'
+	 'calligra-l10n-zh_CN'
 	 'calligra-l10n-zh_TW')
 pkgver=2.3.85
 pkgrel=1
@@ -62,7 +63,8 @@ source=(ftp://ftp.kde.org/pub/kde/unstable/calligra-${pkgver}/calligra-l10n/call
         ftp://ftp.kde.org/pub/kde/unstable/calligra-${pkgver}/calligra-l10n/calligra-l10n-ru-${pkgver}.tar.bz2
         ftp://ftp.kde.org/pub/kde/unstable/calligra-${pkgver}/calligra-l10n/calligra-l10n-sv-${pkgver}.tar.bz2
         ftp://ftp.kde.org/pub/kde/unstable/calligra-${pkgver}/calligra-l10n/calligra-l10n-uk-${pkgver}.tar.bz2
-        ftp://ftp.kde.org/pub/kde/unstable/calligra-${pkgver}/calligra-l10n/calligra-l10n-zh_TW-${pkgver}.tar.bz2)
+        ftp://ftp.kde.org/pub/kde/unstable/calligra-${pkgver}/calligra-l10n/calligra-l10n-zh_TW-${pkgver}.tar.bz2
+	ftp://ftp.kde.org/pub/kde/unstable/calligra-${pkgver}/calligra-l10n/calligra-l10n-zh_CN-${pkgver}.tar.bz2)
 md5sums=('8ca2790b2d7fbf6546099aeda13e6786'
          '58b1a7ac73d51f1fc8a88d034d0e9f4f'
          '76a46c54710a098d23cb1a0aa831b47c'
@@ -84,219 +86,21 @@ md5sums=('8ca2790b2d7fbf6546099aeda13e6786'
          '9fd0f88ed7fdf3928513b4ae3124c74c'
          '43769939a24d4e5df45d91409f2b6111'
          'ed7611b9d958f1c62fb5aa4b6e95577a'
-         '76927f3889ee7f643ac708b7de5fbeec')
+         '76927f3889ee7f643ac708b7de5fbeec'
+         '61d5bdb6f7bc2ee691da95bdf86d0a5c')
 
 build() {
   cd $srcdir
-
-  install -d build/ca
-  cd build/ca
-  cmake ${srcdir}/calligra-l10n-ca-${pkgver} \
-    -DCMAKE_BUILD_TYPE=Release \
-    -DCMAKE_INSTALL_PREFIX=/usr
-  make 
-  cd ../..
-
-  install -d build/ca@valencia
-  cd build/ca@valencia
-  cmake ${srcdir}/calligra-l10n-ca@valencia-${pkgver} \
-    -DCMAKE_BUILD_TYPE=Release \
-    -DCMAKE_INSTALL_PREFIX=/usr
-  make 
-  cd ../..
-
-  install -d build/da
-  cd build/da
-  cmake ${srcdir}/calligra-l10n-da-${pkgver} \
-    -DCMAKE_BUILD_TYPE=Release \
-    -DCMAKE_INSTALL_PREFIX=/usr
-  make 
-  cd ../..
-
-  install -d build/de
-  cd build/de
-  cmake ${srcdir}/calligra-l10n-de-${pkgver} \
-    -DCMAKE_BUILD_TYPE=Release \
-    -DCMAKE_INSTALL_PREFIX=/usr
-  make 
-  cd ../..
-
-  install -d build/el
-  cd build/el
-  cmake ${srcdir}/calligra-l10n-el-${pkgver} \
-    -DCMAKE_BUILD_TYPE=Release \
-    -DCMAKE_INSTALL_PREFIX=/usr
-  make 
-  cd ../..
-
-  install -d build/en_GB
-  cd build/en_GB
-  cmake ${srcdir}/calligra-l10n-en_GB-${pkgver} \
-    -DCMAKE_BUILD_TYPE=Release \
-    -DCMAKE_INSTALL_PREFIX=/usr
-  make 
-  cd ../..
-
-  install -d build/es
-  cd build/es
-  cmake ${srcdir}/calligra-l10n-es-${pkgver} \
-    -DCMAKE_BUILD_TYPE=Release \
-    -DCMAKE_INSTALL_PREFIX=/usr
-  make 
-  cd ../..
-
-  install -d build/et
-  cd build/et
-  cmake ${srcdir}/calligra-l10n-et-${pkgver} \
-    -DCMAKE_BUILD_TYPE=Release \
-    -DCMAKE_INSTALL_PREFIX=/usr
-  make 
-  cd ../..
-
-  install -d build/fr
-  cd build/fr
-  cmake ${srcdir}/calligra-l10n-fr-${pkgver} \
-    -DCMAKE_BUILD_TYPE=Release \
-    -DCMAKE_INSTALL_PREFIX=/usr
-  make 
-  cd ../..
-
-#  install -d build/gl
-#  cd build/gl
-#  cmake ${srcdir}/calligra-l10n-gl-${pkgver} \
-#    -DCMAKE_BUILD_TYPE=Release \
-#    -DCMAKE_INSTALL_PREFIX=/usr
-#  make 
-#  cd ../..
-
-#  install -d build/hu
-#  cd build/hu
-#  cmake ${srcdir}/calligra-l10n-hu-${pkgver} \
-#    -DCMAKE_BUILD_TYPE=Release \
-#    -DCMAKE_INSTALL_PREFIX=/usr
-#  make
-#  cd ../..
-
-  install -d build/it
-  cd build/it
-  cmake ${srcdir}/calligra-l10n-it-${pkgver} \
-    -DCMAKE_BUILD_TYPE=Release \
-    -DCMAKE_INSTALL_PREFIX=/usr
-  make 
-  cd ../..
-
-#  install -d build/ja
-#  cd build/ja
-#  cmake ${srcdir}/calligra-l10n-ja-${pkgver} \
-#    -DCMAKE_BUILD_TYPE=Release \
-#    -DCMAKE_INSTALL_PREFIX=/usr
-#  make 
-#  cd ../..
-
-  install -d build/kk
-  cd build/kk
-  cmake ${srcdir}/calligra-l10n-kk-${pkgver} \
-    -DCMAKE_BUILD_TYPE=Release \
-    -DCMAKE_INSTALL_PREFIX=/usr
-  make 
-  cd ../..
-
-  install -d build/nb
-  cd build/nb
-  cmake ${srcdir}/calligra-l10n-nb-${pkgver} \
-    -DCMAKE_BUILD_TYPE=Release \
-    -DCMAKE_INSTALL_PREFIX=/usr
-  make 
-  cd ../..
-
-  install -d build/nds
-  cd build/nds
-  cmake ${srcdir}/calligra-l10n-nds-${pkgver} \
-    -DCMAKE_BUILD_TYPE=Release \
-    -DCMAKE_INSTALL_PREFIX=/usr
-  make 
-  cd ../..
-
-  install -d build/nl
-  cd build/nl
-  cmake ${srcdir}/calligra-l10n-nl-${pkgver} \
-    -DCMAKE_BUILD_TYPE=Release \
-    -DCMAKE_INSTALL_PREFIX=/usr
-  make 
-  cd ../..
-
-  install -d build/pl
-  cd build/pl
-  cmake ${srcdir}/calligra-l10n-pl-${pkgver} \
-    -DCMAKE_BUILD_TYPE=Release \
-    -DCMAKE_INSTALL_PREFIX=/usr
-  make 
-  cd ../..
-
-  install -d build/pt
-  cd build/pt
-  cmake ${srcdir}/calligra-l10n-pt-${pkgver} \
-    -DCMAKE_BUILD_TYPE=Release \
-    -DCMAKE_INSTALL_PREFIX=/usr
-  make 
-  cd ../..
-
-  install -d build/pt_BR
-  cd build/pt_BR
-  cmake ${srcdir}/calligra-l10n-pt_BR-${pkgver} \
-    -DCMAKE_BUILD_TYPE=Release \
-    -DCMAKE_INSTALL_PREFIX=/usr
-  make 
-  cd ../..
-
-  install -d build/ru
-  cd build/ru
-  cmake ${srcdir}/calligra-l10n-ru-${pkgver} \
-    -DCMAKE_BUILD_TYPE=Release \
-    -DCMAKE_INSTALL_PREFIX=/usr
-  make
-  cd ../..
-
-  install -d build/sv
-  cd build/sv
-  cmake ${srcdir}/calligra-l10n-sv-${pkgver} \
-    -DCMAKE_BUILD_TYPE=Release \
-    -DCMAKE_INSTALL_PREFIX=/usr
-  make 
-  cd ../..
-
-#  install -d build/tr
-#  cd build/tr
-#  cmake ${srcdir}/calligra-l10n-tr-${pkgver} \
-#    -DCMAKE_BUILD_TYPE=Release \
-#    -DCMAKE_INSTALL_PREFIX=/usr
-#  make 
-#  cd ../..
-
-  install -d build/uk
-  cd build/uk
-  cmake ${srcdir}/calligra-l10n-uk-${pkgver} \
-    -DCMAKE_BUILD_TYPE=Release \
-    -DCMAKE_INSTALL_PREFIX=/usr
-  make 
-  cd ../..
-
-#  install -d build/zh_CN
-#  cd build/zh_CN
-#  cmake ${srcdir}/calligra-l10n-zh_CN-${pkgver} \
-#    -DCMAKE_BUILD_TYPE=Release \
-#    -DCMAKE_INSTALL_PREFIX=/usr
-#  make 
-#  cd ../..
-
-  install -d build/zh_TW
-  cd build/zh_TW
-  cmake ${srcdir}/calligra-l10n-zh_TW-${pkgver} \
-    -DCMAKE_BUILD_TYPE=Release \
-    -DCMAKE_INSTALL_PREFIX=/usr
-  make 
-  cd ../..
-
+  langs="ca ca@valencia cs da de el en_GB es et fr it kk nb nds nl pl pt pt_BR ru sv uk zh_CN zh_TW" 
+  for lang in $langs; do
+    install -d build/${lang}
+    pushd build/${lang}
+      cmake ${srcdir}/calligra-l10n-${lang}-${pkgver} \
+	-DCMAKE_BUILD_TYPE=Release \
+	-DCMAKE_INSTALL_PREFIX=/usr
+      make 
+    popd
+  done
 }
 
 package_calligra-l10n-ca() {
@@ -308,6 +112,12 @@ package_calligra-l10n-ca() {
 package_calligra-l10n-ca@valencia() {
         pkgdesc=('Catalan (Valencian) Localization for calligra')
         cd $srcdir/build/ca@valencia
+        make DESTDIR=$pkgdir install
+}
+
+package_calligra-l10n-cs() {
+        pkgdesc=('Czech Localization for calligra')
+        cd $srcdir/build/cs
         make DESTDIR=$pkgdir install
 }
 
@@ -421,11 +231,11 @@ package_calligra-l10n-uk() {
         cd $srcdir/build/uk
         make DESTDIR=$pkgdir install
 }
-#package_calligra-l10n-zh_cn() {
-#        pkgdesc=('Simplified Chinese Localization for calligra')
-#        cd $srcdir/build/zh_CN
-#        make DESTDIR=$pkgdir install
-#}
+package_calligra-l10n-zh_CN() {
+        pkgdesc=('Simplified Chinese Localization for calligra')
+        cd $srcdir/build/zh_CN
+        make DESTDIR=$pkgdir install
+}
 package_calligra-l10n-zh_TW() {
         pkgdesc=('Traditional Chinese Localization for calligra')
         cd $srcdir/build/zh_TW
