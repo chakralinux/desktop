@@ -1,0 +1,121 @@
+commit f5b7e8426e61ee8ada6a940a14151c698850803a
+Author: Radu Andries <admiral0@tuxfamily.org>
+Date:   Mon Dec 5 00:27:44 2011 +0100
+
+    Added support for burg
+    
+    REVIEW: 103330
+
+diff --git a/kdm/backend/bootman.c b/kdm/backend/bootman.c
+index f130719..b3575bb 100644
+--- a/kdm/backend/bootman.c
++++ b/kdm/backend/bootman.c
+@@ -160,26 +160,25 @@ commitGrub(void)
+     }
+ }
+ 
+-#define GRUB2_MENU "/boot/grub/grub.cfg"
+-
+ static char *grubReboot;
++static const char *grubConfig;
+ 
+ static int
+-getGrub2(char ***opts, int *def, int *cur)
++getGrub2OrBurg(char ***opts, int *def, int *cur, const char *grubRebootExec)
+ {
+     FILE *f;
+     char *ptr, *linp;
+     int len, ret = BO_NOMAN, i;
+     char line[1000];
+ 
+-    if (!grubReboot && !(grubReboot = locate("grub-reboot")))
++    if (!grubReboot && !(grubReboot = locate(grubRebootExec)))
+         return BO_NOMAN;
+ 
+     *def = -1;
+     *cur = -1;
+     *opts = initStrArr(0);
+ 
+-    if (!(f = fopen(GRUB2_MENU, "r")))
++    if (!(f = fopen(grubConfig, "r")))
+         return errno == ENOENT ? BO_NOMAN : BO_IO;
+     while ((len = fGets(line, sizeof(line), f)) != -1) {
+         for (linp = line; isspace(*linp); linp++, len--);
+@@ -223,6 +222,13 @@ getGrub2(char ***opts, int *def, int *cur)
+ }
+ 
+ static int
++getGrub2(char ***opts, int *def, int *cur)
++{
++    grubConfig = "/boot/grub/grub.cfg";
++    return getGrub2OrBurg(opts, def, cur, "grub-reboot");
++}
++
++static int
+ setGrub2(const char *opt, SdRec *sdr)
+ {
+     char **opts;
+@@ -233,7 +239,7 @@ setGrub2(const char *opt, SdRec *sdr)
+     for (i = 0; opts[i]; i++) {
+         if (!strcmp(opts[i], opt)) {
+             sdr->osindex = i;
+-            sdr->bmstamp = mTime(GRUB2_MENU);
++            sdr->bmstamp = mTime(grubConfig);
+             freeStrArr(opts);
+             return BO_OK;
+         }
+@@ -245,7 +251,7 @@ setGrub2(const char *opt, SdRec *sdr)
+ static void
+ commitGrub2(void)
+ {
+-    if (sdRec.bmstamp != mTime(GRUB2_MENU) &&
++    if (sdRec.bmstamp != mTime(grubConfig) &&
+         setGrub2(sdRec.osname, &sdRec) != BO_OK)
+         return;
+ 
+@@ -257,6 +263,13 @@ commitGrub2(void)
+     }
+ }
+ 
++static int
++getBurg(char ***opts, int *def, int *cur)
++{
++    grubConfig = "/boot/burg/burg.cfg";
++    return getGrub2OrBurg(opts, def, cur, "burg-reboot");
++}
++
+ static char *lilo;
+ 
+ static int
+@@ -352,6 +365,7 @@ static const struct {
+     { getNull, setNull, 0 },
+     { getGrub, setGrub, commitGrub },
+     { getGrub2, setGrub2, commitGrub2 },
++    { getBurg, setGrub2, commitGrub2 },
+     { getLilo, setLilo, commitLilo },
+ };
+ 
+diff --git a/kdm/config.def b/kdm/config.def
+index d30e438..f2a6ae4 100644
+--- a/kdm/config.def
++++ b/kdm/config.def
+@@ -1257,6 +1257,7 @@ Type: enum
+  None/BO_NONE: no boot manager
+  Grub/BO_GRUB: Grub boot manager
+  Grub2/BO_GRUB2: Grub2 boot manager
++ Burg/BO_BURG: Burg boot manager
+  Lilo/BO_LILO: Lilo boot manager (Linux on i386 &amp; x86-64 only)
+ Default: None
+ User: core
+diff --git a/kdm/kcm/kdm-shut.cpp b/kdm/kcm/kdm-shut.cpp
+index ad0a16f..37fa1b4 100644
+--- a/kdm/kcm/kdm-shut.cpp
++++ b/kdm/kcm/kdm-shut.cpp
+@@ -98,6 +98,7 @@ KDMSessionsWidget::KDMSessionsWidget(QWidget *parent)
+     bm_combo->insertItem("None", i18nc("boot manager", "None"));
+     bm_combo->insertItem("Grub", i18n("Grub"));
+     bm_combo->insertItem("Grub2", i18n("Grub2"));
++    bm_combo->insertItem("Burg", i18n("Burg"));
+ #if defined(__linux__) && (defined(__i386__) || defined(__amd64__))
+     bm_combo->insertItem("Lilo", i18n("Lilo"));
+ #endif

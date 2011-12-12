@@ -24,8 +24,10 @@ depends=("kdepimlibs>=${_kdever}" "kde-runtime>=${_kdever}" "kdelibs>=${_kdever}
 makedepends=('pkgconfig' 'cmake' 'automoc4' 'libdmtx' 'prison' 'qrencode')
 groups=("kde" "kdepim" "kde-uninstall" "kde-minimal")
 
-source=($_mirror/${pkgbase}-$_kdever.tar.bz2)
-md5sums=(`grep ${pkgbase}-$_kdever.tar.bz2 ../kde-sc.md5 | cut -d" " -f1`)
+source=($_mirror/${pkgbase}-$_kdever.tar.bz2
+        kmail_bcc.diff)
+md5sums=(`grep ${pkgbase}-$_kdever.tar.bz2 ../kde-sc.md5 | cut -d" " -f1`
+         '06a124e94713704411ddd20fcae3ad21')
 
 #
 # build and install
@@ -34,9 +36,10 @@ build()
 {
 	msg "starting build ..."
 	cd ${srcdir}
+	patch -p0 -i ${srcdir}/kmail_bcc.diff
 	mkdir -p build
 	cd build
-
+        
 	cmake ../${pkgbase}-${pkgver} \
 		-DCMAKE_BUILD_TYPE=${_build_type} \
 		-DCMAKE_INSTALL_PREFIX=${_installprefix} \
