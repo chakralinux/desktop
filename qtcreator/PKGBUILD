@@ -5,8 +5,8 @@
 # maintainer (x86_64): Manuel Tortosa <manutortosa[at]chakra-project[dot]org>
 
 pkgname=qtcreator
-pkgver=2.3.1
-pkgrel=2
+pkgver=2.4.0
+pkgrel=1
 _qtver=4.7.4
 pkgdesc="Lightweight, cross-platform integrated development environment."
 arch=('i686' 'x86_64')
@@ -26,7 +26,7 @@ options=(docs)
 source=("http://get.qt.nokia.com/qtcreator/qt-creator-${pkgver}-src.tar.gz"
         qtcreator.desktop)
 
-md5sums=('8aa296ed9034f847bd53ee0424e5ef08'
+md5sums=('80c1a2be4c685ce147c42424ad977e1a'
          '457956849ca2658072a6ce4c56ed1b36')
          
 
@@ -37,7 +37,7 @@ build() {
   cd build
 
   qmake "${srcdir}/qt-creator-${pkgver}-src/qtcreator.pro"
-  make --quiet
+  make 
 }
 
 package() {
