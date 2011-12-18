@@ -1,0 +1,36 @@
+#
+# Apps Packages for Chakra, part of chakra-project.org
+#
+# Contributor: Evangelos Foutras <evangelos@foutrelis.com>
+# Maintainer: Adrián Chaves Fernández (Gallaecio) <adriyetichaves@gmail.com>
+
+pkgname=memcached
+_pkgname=libmemcached
+pkgver=1.0.2
+_pkgver=1.0
+pkgrel=1
+pkgdesc="C and C++ client library to the memcached server"
+arch=('i686' 'x86_64')
+url="http://libmemcached.org/"
+license=('GPL')
+depends=('glibc')
+makedepends=('perl')
+options=('!libtool')
+source=(http://launchpad.net/$_pkgname/$_pkgver/$pkgver/+download/$_pkgname-$pkgver.tar.gz)
+sha1sums=('d992845fe71210e2e93147ba8f29df1fca14e716')
+
+build() {
+  cd $srcdir/$_pkgname-$pkgver
+
+  # NOTE: memcached is only needed in ‘make test’, therefore we pass
+  # ‘--without-memcached’ to the ‘configure’ script to skip ‘make test’.
+  ./configure \
+    --prefix=/usr \
+    --without-memcached
+  make
+}
+
+package() {
+  cd $srcdir/$_pkgname-$pkgver
+  make DESTDIR="$pkgdir" install
+}
