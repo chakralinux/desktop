@@ -1,0 +1,44 @@
+#
+# Games Packages for Chakra, part of chakra-project.org
+#
+# Contributor: Sergej Pupykin <pupykin.s+arch@gmail.com>
+# Contributor: nut543 <kfs1@online.no>
+# Contributor: Gandalf77 <kprzechowski@gmail.com>
+# Maintainer: Adrián Chaves Fernández (Gallaecio) <adriyetichaves@gmail.com>
+
+pkgname=freedroid
+_pkgname1=freedroidrpg
+_pkgname2=freedroidRPG
+pkgver=0.15rc2
+_pkgver=0.15
+pkgrel=1
+pkgdesc="A mature science-fiction role-playing game set in the future."
+arch=('i686' 'x86_64')
+url="http://freedroid.sourceforge.net"
+screenshot='http://www.freedroid.org/typo3temp/pics/469c9a5549.jpg'
+license=(GPL2)
+depends=('lua' 'sdl_gfx' 'sdl_mixer' 'sdl_image' 'libogg' 'libvorbis' 'libgl' 'mesa')
+optdepends=('python2' 'espeak')
+replaces=($_pkgname1)
+source=(http://downloads.sourceforge.net/project/$pkgname/$_pkgname2/$_pkgname2-$_pkgver/$_pkgname1-$pkgver.tar.gz
+        $pkgname.jpg::http://projects.archlinux.org/svntogit/community.git/plain/trunk/$_pkgname1.jpg?h=packages/$_pkgname1
+        $pkgname.desktop::http://projects.archlinux.org/svntogit/community.git/plain/trunk/$_pkgname1.desktop?h=packages/$_pkgname1)
+md5sums=('0e098aae0b16b6f87ffe5f7932580491'
+         'b73d9dac44c7e83a6c80fbe4eb96ba79'
+         '9a10c2a2064439cdcff5b945dfb1c3ac')
+
+build() {
+  cd $srcdir/$_pkgname1-$pkgver
+  ./configure \
+    --prefix=/usr
+  make
+}
+
+package() {
+  cd $srcdir/$_pkgname1-$pkgver
+  make DESTDIR=$pkgdir/ install
+
+  # Desktop integration.
+  install -D -m644 $srcdir/$pkgname.jpg $pkgdir/usr/share/pixmaps/$pkgname.jpg
+  install -D -m644 $srcdir/$pkgname.desktop $pkgdir/usr/share/applications/$pkgname.desktop
+}
