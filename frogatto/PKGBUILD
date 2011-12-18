@@ -4,7 +4,7 @@
 # Maintainer: Adrián Chaves Fernández (Gallaecio) <adriyetichaves gmail.com>
 
 pkgname=frogatto
-pkgver=1.1.1
+pkgver=1.2
 pkgrel=1
 pkgdesc="An old-school 2D platformer game, starring a certain quixotic frog."
 arch=('i686' 'x86_64')
@@ -12,13 +12,13 @@ url="http://www.frogatto.com"
 license=("custom: GPL3 code, non-free data")
 depends=('boost-libs' 'glew' 'icu' 'libgl' 'libpng' 'mesa' 'sdl' 'sdl_image' 'sdl_mixer' 'sdl_ttf')
 makedepends=('boost')
-source=("http://www.frogatto.com/files/$pkgname-$pkgver.tar.bz2"
+source=("$pkgname.zip::https://github.com/$pkgname/$pkgname/zipball/${pkgver}_stable"
         "$pkgname.desktop")
-md5sums=('bf5a2ee4c3254a424766895ff250758b'
+md5sums=('9dcf7f30111c5d8628f7699cf6b6cbff'
          'e31563b04748a39292a59aaad633ff58')
 
 build() {
-  cd $srcdir/$pkgname-$pkgver
+  cd $srcdir/$pkgname-$pkgname-*
 
   sed -i 's/ccache //g' Makefile
   sed -i 's/-lprofiler//g' Makefile
@@ -30,7 +30,7 @@ build() {
 }
 
 package() {
-  cd $srcdir/$pkgname-$pkgver
+  cd $srcdir/$pkgname-$pkgname-*
 
   # Binaries:
   install -Dm755 game $pkgdir/usr/share/$pkgname/game
