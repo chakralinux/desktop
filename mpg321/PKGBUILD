@@ -4,10 +4,10 @@
 # Maintainer: Adrián Chaves Fernández (Gallaecio) <adriyetichaves gmail.com>
 
 pkgname=mpg321
-pkgver=0.2.13
-_pkgver=$pkgver-4
+pkgver=0.3.0
+_pkgver=$pkgver
 pkgrel=1
-pkgdesc='A completely Free drop-in replacement for mpg123, for the use of frontends, shell scripts, etc.'
+pkgdesc='A completely free drop-in replacement for mpg123, for the use of frontends, shell scripts, etc.'
 screenshot='http://screenshots.debian.net/screenshots/m/mpg321/6895_large.png'
 arch=('i686' 'x86_64')
 url='http://sourceforge.net/projects/mpg321/'
@@ -17,10 +17,10 @@ provides=('mpg123')
 conflicts=('mpg123')
 changelog=ChangeLog
 source=(http://downloads.sourceforge.net/project/$pkgname/$pkgname/$pkgver/${pkgname}-$_pkgver.tar.gz)
-md5sums=('270ac72fa32f55d2f4fb8ad768b8b777')
+md5sums=('7953be3f5de16edfc7d2994838965c47')
 
 build() {
-  cd $srcdir/$pkgname-$_pkgver
+  cd $srcdir/$pkgname-$_pkgver-orig
 
   ./configure \
     --prefix=/usr
@@ -28,6 +28,6 @@ build() {
 }
 
 package() {
-  cd $srcdir/$pkgname-$_pkgver
+  cd $srcdir/$pkgname-$_pkgver-orig
   make DESTDIR=$pkgdir install
 }
