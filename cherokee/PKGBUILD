@@ -8,7 +8,7 @@
 
 pkgname=cherokee
 pkgver=1.2.101
-pkgrel=1
+pkgrel=2
 pkgdesc="A very fast, flexible and easy to configure Web Server"
 arch=('i686' 'x86_64')
 url="http://www.cherokee-project.com/"
@@ -27,14 +27,19 @@ backup=('etc/cherokee/cherokee.conf'
         'etc/logrotate.d/cherokee')
 source=(http://www.cherokee-project.com/download/1.2/$pkgver/cherokee-$pkgver.tar.gz
         cherokee.rc
-        cherokee.logrotate)        
+        cherokee.logrotate
+        fix-ctk-path-handler-match.patch)        
 options=('!libtool')
 md5sums=('ef47003355a2e368e4d9596cd070ef23'
-         'a2d2b69c6220fab57cda4f531b680f9f'
-         '8d69341bd4002bffd69c6e82ff6c905f')
+         '83d1d1f58357fedf549ceeaddaacf42e'
+         '8d69341bd4002bffd69c6e82ff6c905f'
+         '565326a51632bd803671b36b13d02f1d')
 
 build() {
   cd "$srcdir/$pkgname-$pkgver"
+
+  # Fix path matching bug in CTK apps (e.g. market)
+  patch -Np1 -i "$srcdir/fix-ctk-path-handler-match.patch"
 
   # Use subdirectory for logs
   sed -i -r 's|(%localstatedir%/log)|\1/cherokee|' cherokee.conf.sample.pre
