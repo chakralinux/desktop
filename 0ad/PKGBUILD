@@ -5,21 +5,21 @@
 
 pkgbase=0ad
 pkgname=($pkgbase $pkgbase-debug $pkgbase-data)
-pkgver=alpha_7
-_pkgver=r10288-alpha
-pkgrel=2
+pkgver=alpha_8
+_pkgver=r10803-alpha
+pkgrel=1
 pkgdesc="Cross-platform, 3D and historically-based real-time strategy game"
 screenshot=http://www.wildfiregames.com/0ad/images/news_images/dynamic-borders.jpg
 arch=('i686' 'x86_64')
 url="http://wildfiregames.com/0ad"
 depends=('boost-libs' 'curl' 'devil' 'enet' 'gamin' 'libogg' 'libpng' 'libvorbis' 'libxml2' 'mesa'
-'nasm' 'openal' 'sdl' 'zip' 'zlib' 'nvidia-texture-tools')
+'nasm' 'openal' 'openexr' 'sdl' 'zip' 'zlib' 'nvidia-texture-tools')
 makedepends=('boost' 'cmake')
 changelog=ChangeLog
 source=(http://downloads.sourceforge.net/project/zero-ad/releases/$pkgbase-$_pkgver-unix-build.tar.xz
 	http://downloads.sourceforge.net/project/zero-ad/releases/$pkgbase-$_pkgver-unix-data.tar.xz)
-md5sums=('234f623b5fd576907da5a7314d6c61e9'
-         'f870ff620667d6c40a4809e28a80eeb5')
+md5sums=('92ac750c433a8aea4db602019b27a274'
+         '13915fe5ded7974a22e865eef128506e')
 
 build() {
   cd $srcdir/$pkgbase-$_pkgver/build/workspaces
@@ -27,7 +27,7 @@ build() {
   # NOTE: These sed commands are not likely to be changed between releases, like most patches.
   sed -i \
   's/unix_names = { "boost_signals-mt", "boost_filesystem-mt", "boost_system-mt" },/unix_names = { "boost_signals", "boost_filesystem", "boost_system" },/g' \
-  $srcdir/$pkgbase-$_pkgver/build/premake/extern_libs.lua
+  $srcdir/$pkgbase-$_pkgver/build/premake/extern_libs4.lua
   sed -i \
   's/export HOSTTYPE="$HOSTTYPE"/export HOSTTYPE="$CARCH"/g' \
   ./update-workspaces.sh
