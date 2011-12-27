@@ -4,7 +4,7 @@
 # Maintainer: Adrián Chaves Fernández (Gallaecio) <adriyetichaves gmail.com>
 
 pkgname=mkvtoolnix
-pkgver=4.9.1
+pkgver=5.2.0
 pkgrel=1
 pkgdesc="Set of tools to create, edit and inspect Matroska files."
 arch=('i686' 'x86_64')
@@ -14,7 +14,7 @@ depends=('bzip2' 'curl' 'file' 'flac' 'libmatroska' 'libvorbis' 'lzo2' 'qt' 'xdg
 makedepends=('boost' 'ruby')
 install=mkvtoolnix.install
 source=("http://www.bunkus.org/videotools/$pkgname/sources/$pkgname-$pkgver.tar.bz2")
-md5sums=('5981f266e6d25da4a49f7464e4a97cdf')
+md5sums=('53445217c42736d5932082e5596c20d4')
 
 build() {
   cd $srcdir/$pkgname-$pkgver
@@ -22,10 +22,23 @@ build() {
     --enable-qt \
     --prefix=/usr \
     --with-boost-libdir=/usr/lib
-  ./drake
+  rake
 }
 
 package () {
   cd $srcdir/$pkgname-$pkgver
-  ./drake DESTDIR=$pkgdir install
+  rake DESTDIR=$pkgdir install
+
+  rm -rf "${pkgdir}"/usr/bin/mkvinfo
+  install -Dm755 src/mkvinfo "${pkgdir}"/usr/bin/mkvinfo
+
+  rm -rf "${pkgdir}"/usr/bin/mmg
+  rm -rf "${pkgdir}"/usr/share/man/ja/man1/mmg.1
+  rm -rf "${pkgdir}"/usr/share/man/man1/mmg.1
+  rm -rf "${pkgdir}"/usr/share/man/nl/man1/mmg.1
+  rm -rf "${pkgdir}"/usr/share/man/zh_CN/man1/mmg.1
+  rm -rf "${pkgdir}"/usr/share/man/uk/man1/mmg.1
+  rm -rf "${pkgdir}"/usr/share/applications
+  rm -rf "${pkgdir}"/usr/share/icons
+  rm -rf "${pkgdir}"/usr/share/mime
 }
