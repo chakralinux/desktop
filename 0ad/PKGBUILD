@@ -36,11 +36,8 @@ build() {
   ./update-workspaces.sh \
     --disable-atlas \
     --with-system-enet \
-    --with-system-nvtt
-
-  cd $srcdir/$pkgbase-$_pkgver/build/workspaces/gcc
-  CONFIG=Release make
-  CONFIG=Debug make
+    --with-system-nvtt \
+�    -j3
 }
 
 # This script might change between releases. It install the content of ‘binaries/system/’ depending
@@ -48,7 +45,7 @@ build() {
 install_0ad() {
   AFILES="libatlas libengine libgraphics libgui liblowlevel libmocks_real libmocks_test libnetwork libscriptinterface libsimulation2"
 
-  if [ "$1" == "Debug" ]
+  if [ "$1" == "debug" ]
   then	# Debug.
 
     # Install .a files.
@@ -92,8 +89,10 @@ package_0ad() {
   depends=('boost-libs' 'curl' 'devil' 'enet' 'gamin' 'libogg' 'libpng' 'libvorbis' 'libxml2' 'mesa'
   'nasm' 'openal' 'sdl' 'zip' 'zlib' '0ad-data')
 
+  cd $srcdir/$pkgbase-$_pkgver/build/workspaces/gcc
+  make config=release -j3
   cd $srcdir/$pkgbase-$_pkgver
-  install_0ad Release
+  install_0ad release
 
   # Execution script:
   install -d $pkgdir/usr/bin/
@@ -118,8 +117,10 @@ package_0ad-debug() {
   depends=('boost-libs' 'curl' 'devil' 'enet' 'gamin' 'libogg' 'libpng' 'libvorbis' 'libxml2' 'mesa'
   'nasm' 'openal' 'sdl' 'zip' 'zlib' '0ad-data')
 
+  cd $srcdir/$pkgbase-$_pkgver/build/workspaces/gcc
+  make config=debug -j3
   cd $srcdir/$pkgbase-$_pkgver
-  install_0ad Debug
+  install_0ad debug
 
   # Execution script:
   install -d $pkgdir/usr/bin/
