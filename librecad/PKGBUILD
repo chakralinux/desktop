@@ -1,0 +1,44 @@
+#
+# Apps Packages for Chakra, part of chakra-project.org
+#
+# Maintainer: Adrián Chaves Fernández (Gallaecio) <adriyetichaves@gmail.com>
+# Contributor: Christian Hesse <mail@eworm.de>
+# Contributor: mickele <mimocciola at yahoo dot com> (librecad-git PKGBUILD)
+# Contributor: Ilmari Repo <ilmari at gmail dot com> (librecad-svn PKGBUILD)
+# Contributor: GazJ Gary James <garyjames82 at gmail dot com> (CADuntu PKGBUILD)
+
+pkgname=librecad
+_pkgname=LibreCAD
+pkgver=1.0.0
+_pkgtag=2d7f866
+pkgrel=1
+pkgdesc="A 2D CAD drawing tool based on the community edition of QCad"
+arch=('i686' 'x86_64')
+url="http://www.librecad.org/"
+license=('GPL3')
+depends=('qt' 'boost')
+source=("${pkgname}-${pkgver}.tar.bz2::https://github.com/$_pkgname/$_pkgname/tarball/v${pkgver}"
+	"http://aur.archlinux.org/packages/li/$pkgname/$pkgname.tar.gz")
+md5sums=('3e30028bffe2c0994200bfcee8e45430'
+         'bcf533ad8b3501f16678d050f6ac9fd7')
+
+build() {
+  cd "${srcdir}/$_pkgname-$_pkgname-${_pkgtag}"
+  qmake
+  make
+}
+
+package() {
+  cd "${srcdir}/$_pkgname-$_pkgname-${_pkgtag}"
+
+  # Executable.
+  install -D -m 755 unix/$pkgname ${pkgdir}/usr/bin/$pkgname
+
+  # Desktop Integration.
+  install -D -m 644 "${srcdir}/$pkgname/$pkgname.desktop" "${pkgdir}/usr/share/applications/$pkgname.desktop"
+  install -D -m 644 res/main/$pkgname.png "${pkgdir}/usr/share/pixmaps/$pkgname.png"
+
+  # Resources.
+  mkdir -p "${pkgdir}/usr/share/$pkgname/"
+  cp -r unix/resources/{library,patterns,fonts,qm} "${pkgdir}/usr/share/$pkgname/"
+}
