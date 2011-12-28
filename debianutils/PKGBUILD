@@ -1,0 +1,37 @@
+# Maintainer: Daniele Cocca <jmc@chakra-project.org>
+
+pkgname=debianutils
+pkgver=4.1
+pkgrel=1
+pkgdesc="Utility programs from Debian."
+url="http://packages.debian.org/source/sid/debianutils"
+arch=('i686' 'x86_64')
+license=('GPL')
+depends=('glibc')
+source=("http://ftp.de.debian.org/debian/pool/main/d/debianutils/debianutils_4.1.tar.gz")
+md5sums=('d5698daa217fd9140e9ae8d5b73f9ce8')
+
+build() {
+  cd "${srcdir}/${pkgname}-${pkgver}"
+  ./configure --prefix=/usr
+  make
+}
+
+package() {
+  cd "${srcdir}/${pkgname}-${pkgver}"
+  make DESTDIR="${pkgdir}" install
+
+  msg "Removing files already provided by the \"which\" package..."
+  rm "${pkgdir}/usr/bin/which"
+  find "${pkgdir}/usr/share/man" -name 'which.1' -delete
+
+  msg "Removing files already provided by the \"run-parts\" package..."
+  rm "${pkgdir}/usr/bin/run-parts"
+  find "${pkgdir}/usr/share/man" -name 'run-parts.8' -delete
+
+  msg "Removing the \"installkernel\" utility, which is probably too Debian-specific to work here..."
+  rm "${pkgdir}/usr/sbin/installkernel"
+  find "${pkgdir}/usr/share/man" -name 'installkernel.8' -delete
+}
+
+# vim:set ts=2 sw=2 et:
