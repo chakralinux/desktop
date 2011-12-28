@@ -7,8 +7,8 @@ source ../_buildscripts/${current_repo}-${_arch}-cfg.conf
  
 
 pkgname=privoxy
-pkgver=3.0.17
-pkgrel=2
+pkgver=3.0.19
+pkgrel=1
 pkgdesc='A web proxy with advanced filtering capabilities.'
 arch=('i686' 'x86_64')
 url='http://www.privoxy.org'
@@ -24,9 +24,9 @@ source=("http://downloads.sourceforge.net/ijbswa/${pkgname}-${pkgver}-stable-src
         'privoxy'
         'privoxy.logrotate.d'
         'privoxy.conf.d')
-md5sums=('9d363d738a3f3d73e774d6dfeafdb15f'
+md5sums=('57acc79059565cc42eda67982842785d'
          'a799e4d4f0ebb7f08190fa2bc961f439'
-         'a364c34c8dc6eb78c9a6b777237932de'
+         '79480f311313cc43974f6cbe6b672927'
          '27830ef79418e277b90c1c1fa933f876')
 
 build() {
@@ -63,5 +63,5 @@ package() {
 
   find "${pkgdir}/etc/privoxy/" -type d | xargs chmod 0770
   find "${pkgdir}/etc/privoxy/" -type f | xargs chmod 0660
-  chmod 0770 "${pkgdir}/var/log/privoxy"
+  chmod 0700 "${pkgdir}/var/log/privoxy"
 }
