@@ -8,17 +8,21 @@ arch=('i686' 'x86_64')
 url="http://www.nongnu.org/tiger/"
 license=('GPL')
 depends=('perl')
-makedepends=('patch')
-backup=('opt/tiger/config' 'etc/tiger/tigerrc' 'etc/tiger/cronrc')
+makedepends=('patch' 'debianutils')
+backup=('etc/tiger/tigerrc' 'etc/tiger/cronrc')
 source=("http://download.savannah.gnu.org/releases/${pkgname}/${pkgname}-${pkgver}.tar.gz"
-        "${pkgname}-makefile.diff")
+        'tiger-makefile.diff'
+        'fix-genmsgidx-basedir.patch')
 md5sums=('f41076f645da9de937819bf6d516e546'
-         'aadd12186c717dfe202d55d1192851c2')
+         'aadd12186c717dfe202d55d1192851c2'
+         '97255dbd16a663b2494df8d90829945e')
 
 build() {
   cd "${srcdir}/${pkgname}-${pkgver}"
 
-  patch -Np0 -i ${srcdir}/$pkgname-makefile.diff
+  patch -Np0 -i "${srcdir}/tiger-makefile.diff"
+
+  patch -Np1 -i "${srcdir}/fix-genmsgidx-basedir.patch"
 
   install -d "${pkgdir}/usr/share/tiger" "${pkgdir}/usr/sbin"
 
@@ -30,7 +34,7 @@ build() {
               --with-tigerlog=/var/log/tiger \
               --with-tigerbin=/usr/sbin
 
-  make
+  make -j1
 }
 
 package() {
