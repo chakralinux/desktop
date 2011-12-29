@@ -2,17 +2,17 @@
 
 pkgname=qupzilla
 pkgver=1.1.0
-pkgrel=1
+pkgrel=2
 pkgdesc="A very fast open source browser based on WebKit core"
-url="http://qt-apps.org/content/show.php?content=14569"3
+url="http://qt-apps.org/content/show.php?content=14569"
 arch=('i686' 'x86_64')
 license=('GPL3')
 depends=('qt')
-source=(https://github.com/nowrep/QupZilla/tarball/master/nowrep-QupZilla-v1.1.0-1-g4fc1779.tar.gz)
-md5sums=('8b7259de98877c9b9d8cceefa947df52')
+source=(https://github.com/nowrep/QupZilla/tarball/master/nowrep-QupZilla-v1.1.0-83-g45d3f5b.tar.gz)
+md5sums=('28e88617b711fad016b94b1503e06a0e')
 
 build() {
-   cd $srcdir/nowrep-QupZilla-4fc1779/
+   cd $srcdir/nowrep-QupZilla-45d3f5b/
    export USE_WEBGL="true"
    export KDE="true"
    qmake QupZilla.pro
@@ -20,7 +20,7 @@ build() {
 }
 
 package() {
-   cd $srcdir/nowrep-QupZilla-4fc1779/
+   cd $srcdir/nowrep-QupZilla-45d3f5b/
    make INSTALL_ROOT=$pkgdir install
 
 }
