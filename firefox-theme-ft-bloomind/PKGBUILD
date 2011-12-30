@@ -1,0 +1,26 @@
+#
+# Apps Packages for Chakra, part of chakra-project.org
+#
+# maintainer (i686): Phil Miller <philm[at]chakra-project[dog]org>
+# maintainer (x86_64): Manuel Tortosa <manutortosa[at]chakra-project[dot]org>
+
+_plugin_id=136585
+pkgname=firefox-theme-ft-silverglow
+pkgdesc="Smooth silver theme for Firefox."
+pkgver=2.4.3
+pkgrel=2
+arch=('any')
+url="https://addons.mozilla.org/firefox/addon/$_plugin_id"
+depends=('firefox-qt')
+license=('custom')
+source=("https://addons.mozilla.org/firefox/downloads/file/136585/ft_silverglow-${pkgver}-fx-linux.jar")
+md5sums=('39ea9924f53864b1ffd98eaf95edeca2')
+
+build() {
+  cd $srcdir
+  emid=$(sed -n '/.*<em:id>\(.*\)<\/em:id>.*/{s//\1/p;q}' install.rdf) 
+  local dstdir=$pkgdir/usr/lib/firefox/extensions/${emid}
+  install -d $dstdir
+  #sed -i 's#<em:maxVersion>.*</em:maxVersion>#<em:maxVersion>10.*</em:maxVersion>#' install.rdf
+  mv * $dstdir
+}
