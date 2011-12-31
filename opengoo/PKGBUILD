@@ -1,0 +1,40 @@
+#
+# Games Packages for Chakra, part of chakra-project.org
+#
+# Maintainer: Adrián Chaves Fernández (Gallaecio) <adriyetichaves@gmail.com>
+
+pkgname=opengoo
+_pkgname=OpenGOO
+_developer=Mandarancio
+pkgver=20111231
+pkgrel=1
+pkgdesc="Clone of World of GOO™"
+arch=('i686' 'x86_64')
+url="http://qt-apps.org/content/show.php/OpenGOO?content=147716"
+screenshot="http://qt-apps.org/CONTENT/content-pre1/147716-1.png"
+license=('GPL3')
+depends=('box2d' 'qt')
+source=($pkgname-$pkgver.tar.gz::https://github.com/$_developer/$_pkgname/tarball/master)
+md5sums=('4b6d758fcff4429cd31dc78404c2bd08')
+
+build() {
+  cd $srcdir/$_developer-$_pkgname*
+  qmake
+  make
+}
+
+package() {
+  cd $srcdir/$_developer-$_pkgname*
+
+  # Game.
+  install -Dm755 $_pkgname      $pkgdir/usr/share/$pkgname/$_pkgname
+  install -Dm644 l01.level      $pkgdir/usr/share/$pkgname/l01.level
+  install -Dm644 menu.index     $pkgdir/usr/share/$pkgname/menu.index
+  
+  # Execution script.
+  mkdir -p $pkgdir/usr/bin
+  echo "#!/bin/bash"             > $pkgdir/usr/bin/$pkgname
+  echo "cd /usr/share/$pkgname" >> $pkgdir/usr/bin/$pkgname
+  echo "./$_pkgname"            >> $pkgdir/usr/bin/$pkgname
+  chmod +x $pkgdir/usr/bin/$pkgname
+}
