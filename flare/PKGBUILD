@@ -4,51 +4,52 @@
 # Maintainer: Adrián Chaves Fernández (Gallaecio) <adriyetichaves@gmail.com>
 
 pkgname=flare
-_pkgname=clintbellanger-$pkgname
-pkgver=0.14.1
-_pkgver=05b5a9c
-_pkgver2=v$pkgver-0-g$_pkgver
+pkgver=0.15.1
+_developer=clintbellanger
+_code=e0debc9
 pkgrel=1
 pkgdesc="Action roleplaying game from an isometric perspective."
 arch=('i686' 'x86_64')
 url="http://clintbellanger.net/rpg/"
 license=('GPL2' 'CCPL-by-sa')
-depends=('sdl' 'sdl_image' 'sdl_mixer')
+depends=('sdl' 'sdl_image' 'sdl_mixer' 'sdl_ttf')
 replaces=('osare')
 changelog=ChangeLog
-source=(https://download.github.com/clintbellanger-$pkgname-$_pkgver2.tar.gz)
-md5sums=('f53b8060e897ea5161f7bc34450005fe')
+source=($pkgname-$pkgver.tar.gz::https://github.com/$_developer/$pkgname/tarball/v$pkgver)
+md5sums=('bb8eff66aa999fc7fd520c6c3772451f')
 
 build() {
-  cd $srcdir/$_pkgname-$_pkgver/build
+  cd $srcdir/$_developer-$pkgname-$_code
 
+  # Some CMake changes.
+  sed -i -e "s#share/games#share#" -e "s#/games#/bin#" CMakeLists.txt
+ 
+  # Executable compilation.
+  mkdir build && cd build
   cmake \
     -DCMAKE_INSTALL_PREFIX=/usr \
-    -DCMAKE_BUILD_TYPE=RelWithDebInfo \
-    .
+    -DCMAKE_BUILD_TYPE=Release \
+    -DBINDIR=bin \
+    -DDATADIR=share/$pkgname \
+    ..
   make
 }
 
 package() {
-  cd $srcdir/$_pkgname-$_pkgver
-
-  msg "Installing basic directory structure..."
-  install -m755 -d $pkgdir/usr/{bin,share/$pkgname}
-
-  msg "Installing executable..."
-  install -m755 $pkgname $pkgdir/usr/share/$pkgname/$pkgname
-
-  msg "Installing media..."
-  for folder in animations art enemies engine fonts images itemdb items maps music npcs powers quests soundfx tiled tilesetdefs
-  do
-    cp -R $folder $pkgdir/usr/share/$pkgname/
-  done
-
-  msg "Installing execution script..."
-  cat > $pkgdir/usr/bin/$pkgname << EOF
-#!/bin/sh
-cd /usr/share/$pkgname/
-./$pkgname
-EOF
-  chmod +x $pkgdir/usr/bin/$pkgname
+  cd $srcdir/$_developer-$pkgname-$_code/build
+  make DESTDIR=$pkgdir install
+ 
+  # Move executable (only way for it to work).
+#   mv $pkgdir/usr/bin/$pkgname $pkgdir/usr/share/$pkgname/$pkgname
+ 
+  # Execution script.
+#   cat > $pkgdir/usr/bin/$pkgname << EOF
+# #!/bin/sh
+# cd /usr/share/$pkgname/
+# ./$pkgname
+# EOF
+#   chmod -R +x $pkgdir/usr/bin/$pkgname
+ 
+  # Documentation.
+  install -Dm644 $srcdir/$_developer-$pkgname-$_code/README $pkgdir/usr/share/doc/$pkgname/readme.txt
 }
