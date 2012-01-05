@@ -10,21 +10,29 @@ source ../_buildscripts/${current_repo}-${_arch}-cfg.conf
 pkgname=qftp
 pkgver=1.3.2
 pkgrel=1
-pkgdesc="A QT client for FTP file transfer"
+pkgdesc="A QT client for FTP file transfer."
 arch=('i686' 'x86_64')
 url="http://www.phenix.bnl.gov/WWW/publish/hpereira/software/index.php?page=package&package_list=software_list_qt4&package=qftp-qt4&full=1"
 license=('GPL')
 depends=('qt')
-source=(http://www.phenix.bnl.gov/WWW/publish/hpereira/software/tgz/$pkgname-$pkgver.tar.gz)
+source=("http://www.phenix.bnl.gov/WWW/publish/hpereira/software/tgz/${pkgname}-${pkgver}.tar.gz")
 md5sums=('5e83cdaa172cb04d48dd0ef7abc44ecd')
 
 build() {
-  cd "$srcdir/$pkgname-$pkgver"
+  cd "${srcdir}/${pkgname}-${pkgver}"
+
+  # Configure and build
   ./autogen.sh --prefix=/usr --with-qt-dir=/usr
-  make || return 1
+
+  # Set the right flags... (-Werror is not gonna work!)
+  find "${srcdir}" -name Makefile -exec sed -i 's~^CXXFLAGS = -Wall -Werror -Wno-non-virtual-dtor$~CXXFLAGS = -Wall -Wno-non-virtual-dtor~g' \{\} \;
+
+  make
 }
 
 package() {
-  cd "$srcdir/$pkgname-$pkgver"
-  make DESTDIR="$pkgdir" install
+  cd "${srcdir}/${pkgname}-${pkgver}"
+  make DESTDIR="${pkgdir}" install
 }
+
+# vim:set ts=2 sw=2 et:
