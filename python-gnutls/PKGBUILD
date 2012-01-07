@@ -8,7 +8,7 @@
 source ../_buildscripts/${current_repo}-${_arch}-cfg.conf
 
 pkgname=python-gnutls
-pkgver=1.2.1
+pkgver=1.2.2
 pkgrel=1
 pkgdesc="Python wrapper for the GNU TLS library."
 arch=('any')
@@ -16,15 +16,11 @@ license=('LGPL')
 depends=('python2')
 url="http://ag-projects.com/"
 source=("http://pypi.python.org/packages/source/p/${pkgname}/${pkgname}-${pkgver}.tar.gz")
-md5sums=('b02d29b47830bbd8aec0b13206c2800e')
+md5sums=('1ca32b3e2d22ca33a15222191efc04aa')
 
 package() {
   cd "${srcdir}/${pkgname}-${pkgver}"
   python2 setup.py install --prefix=/usr --root="${pkgdir}" || return 1
-
-  # Replace an deprecated gnutls symbol name with a new one.
-  # See https://bugs.archlinux.org/task/24937 as a reference.
-  sed -i 's/gnutls_openpgp_privkey_sign_hash/gnutls_privkey_sign_hash/g' "${pkgdir}/usr/lib/python2.7/site-packages/gnutls/library/functions.py"
 }
 
 # vim:set ts=2 sw=2 et:
