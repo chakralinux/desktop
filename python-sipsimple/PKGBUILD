@@ -8,8 +8,8 @@
 source ../_buildscripts/${current_repo}-${_arch}-cfg.conf
 
 pkgname=python-sipsimple
-pkgver=20111106
-pkgrel=2
+pkgver=20120107
+pkgrel=1
 pkgdesc="SIP SIMPLE Client SDK is a Software Development Kit for easy development of SIP end-points that support rich media like Audio, Instant Messaging, File Transfers, Desktop Sharing and Presence."
 arch=('i686' 'x86_64')
 license=('LGPL')
@@ -17,7 +17,6 @@ depends=('python2' 'openssl' 'gnutls>=2.4.1' 'libxml2>=2.6.32' 'libxslt>=1.1.24'
 makedepends=('setuptools>=0.6c9' 'subversion' 'darcs')
 optdepends=('python-sipclients: command line programs to test the SIP SIMPLE Client library')
 url="http://sipsimpleclient.com/"
-md5sums=('670e7176886b4eb42d7ad931961834f6')
 
 _darcstrunk="http://devel.ag-projects.com/repositories"
 _darcsmod="python-sipsimple"
@@ -40,11 +39,6 @@ build() {
 package() {
   cd "${srcdir}/${_darcsmod}"
   python2 setup.py install --prefix=/usr --root="${pkgdir}"
-
-  #
-  # Fix an incorrect module name.
-  #
-  # sed -i 's/backports.weakref/weakref/g' "${pkgdir}/usr/lib/python2.7/site-packages/sipsimple/configuration/__init__.py"
 }
 
 # vim:set ts=2 sw=2 et:
