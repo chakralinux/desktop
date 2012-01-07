@@ -1,15 +1,13 @@
 #
 # Chakra Packages for Chakra, part of chakra-project.org
 #
-# maintainer (i686): Phil Miller <philm[at]chakra-project[dog]org>
-# maintainer (x86_64): Manuel Tortosa <manutortosa[at]chakra-project[dot]org>
-# contributor (x86_64): Giuseppe Calà <jiveaxe@gmail.com>
+# maintainer abveritas[at]chakra-project[dog]org>
 
 # include global config
 source ../_buildscripts/${current_repo}-${_arch}-cfg.conf
 
 pkgname=minitube
-pkgver=1.6
+pkgver=1.7
 pkgrel=1
 pkgdesc="A native YouTube client in QT. Watch YouTube videos without Flash Player"
 arch=('i686' 'x86_64')
@@ -23,12 +21,12 @@ optdepends=('phonon-xine: for xine backend (default by chakra)'
             'phonon-vlc: for vlc backend')
 install=minitube.install
 source=(http://flavio.tordini.org/files/${pkgname}/${pkgname}-${pkgver}.tar.gz)
-md5sums=('dae6a1e4d17c778d87f8683bb1774d61')
+md5sums=('9a657616eaa32311296d41eb99717ec2')
 
 build() {
         cd "${srcdir}/${pkgname}"
 
-        qmake PREFIX="/usr" || return 1
-        make install INSTALL_ROOT="${pkgdir}" || return 1
+        qmake PREFIX="/usr" 
+        make install INSTALL_ROOT="${pkgdir}" 
 }
 
