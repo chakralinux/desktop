@@ -7,28 +7,44 @@
 # include global config
 source ../_buildscripts/${current_repo}-${_arch}-cfg.conf
 
+_pkgname=kradio4
 pkgname=kradio
 pkgver=4.0.2
-pkgrel=1
+pkgrel=2
 arch=('i686' 'x86_64')
 license=('GPL2')
-pkgdesc="KRadio is a comfortable KDE radio application"
+pkgdesc="KRadio is a comfortable KDE radio application."
 url="http://kradio.sourceforge.net/"
 depends=('lame' 'kdelibs' 'libsndfile' 'lirc-utils' 'libmms' 'ffmpeg')
 makedepends=('pkgconfig' 'automoc4')
-source=(http://downloads.sourceforge.net/sourceforge/kradio/kradio4-$pkgver.tar.bz2)
 options=(!libtool)
+source=("http://downloads.sourceforge.net/sourceforge/${pkgname}/${_pkgname}-${pkgver}.tar.bz2")
+md5sums=('18fea3e2bc7100882075187c6a89f7bd')
 
 build() {
-  cd $srcdir
-  mkdir build
-  cd build
-  cmake ../${pkgname}4-$pkgver -DCMAKE_SKIP_RPATH=ON -DCMAKE_INSTALL_PREFIX=/usr -DCMAKE_BUILD_TYPE=Release
+  cd "${srcdir}"
+
+  mkdir -p build && cd build
+
+  # This is needed because the naming of those definitions has changed
+  # in newer ffmpeg versions.
+  CXXFLAGS="${CXXFLAGS} -DCODEC_TYPE_VIDEO=AVMEDIA_TYPE_VIDEO"
+  CXXFLAGS="${CXXFLAGS} -DCODEC_TYPE_AUDIO=AVMEDIA_TYPE_AUDIO"
+  CXXFLAGS="${CXXFLAGS} -DCODEC_TYPE_DATA=AVMEDIA_TYPE_DATA"
+  export CXXFLAGS
+
+  cmake "../${_pkgname}-${pkgver}" \
+    -DCMAKE_SKIP_RPATH=ON \
+    -DCMAKE_INSTALL_PREFIX=/usr \
+    -DCMAKE_BUILD_TYPE=Release \
+    -DCMAKE_CXX_FLAGS="${CXXFLAGS}"
+
   make
 }
 
 package() {
-  cd $srcdir/build
-  make DESTDIR=$startdir/pkg install
+  cd "${srcdir}/build"
+  make DESTDIR="${pkgdir}" install
 }
-md5sums=('18fea3e2bc7100882075187c6a89f7bd')
+
+# vim:set ts=2 sw=2 et:
