@@ -1,0 +1,46 @@
+# Maintainer: Daniele Cocca <jmc@chakra-project.org>
+
+pkgname=jockey
+pkgver=0.9.6
+_tagname="0.9.6-0ubuntu1"
+pkgrel=1
+pkgdesc="Jockey provides a user interface for configuring third-party drivers, such as the NVIDIA and ATI fglrx X.org and various Wireless LAN kernel modules."
+arch=('any')
+url="https://launchpad.net/jockey"
+license=('GPL2')
+depends=('python2' 'pyqt' 'kdebindings-pykde4' 'dbus-python' 'pyxdg' 'python-distribute' 'python-distutils-extra' 'python-pycurl' 'polkit' 'polkit-kde-agent')
+makedepends=('bzr')
+
+build() {
+  cd "${srcdir}"
+
+  # Fetch the current version
+  if [ ! -d "${pkgname}-${pkgver}" ]; then
+    msg "Sources not found. Downloading them from Launchpad..."
+
+    bzr branch lp:~ubuntu-core-dev/jockey/ubuntu "${pkgname}-${pkgver}" -r "tag:${_tagname}" || {
+      error "Could not fetch the sources, exiting."
+      return 1
+    }
+  fi
+
+  cd "${pkgname}-${pkgver}"
+  ./setup.py build
+}
+
+package() {
+  cd "${srcdir}/${pkgname}-${pkgver}"
+  ./setup.py install --root="${pkgdir}"
+
+  # Remove GTK+ parts of Jockey that we don't need
+  rm "${pkgdir}/usr/bin/jockey-gtk"
+  rm "${pkgdir}/usr/share/jockey/jockey-gtk.ui"
+  rm "${pkgdir}/usr/share/applications/jockey-gtk.desktop"
+  rm "${pkgdir}/usr/share/autostart/jockey-gtk.desktop"
+
+  # Set the correct Python version in the executable scripts
+  sed -i '1s~^#!/usr/bin/python$~#!/usr/bin/python2~' "${pkgdir}/usr/bin/jockey-kde"
+  sed -i '1s~^#!/usr/bin/python$~#!/usr/bin/python2~' "${pkgdir}/usr/bin/jockey-text"
+}
+
+# vim:set ts=2 sw=2 et:
