@@ -8,7 +8,7 @@
 
 pkgname=cherokee
 pkgver=1.2.101
-pkgrel=2
+pkgrel=3
 pkgdesc="A very fast, flexible and easy to configure Web Server"
 arch=('i686' 'x86_64')
 url="http://www.cherokee-project.com/"
@@ -25,60 +25,73 @@ optdepends=('python2: cherokee-admin (administrative web interface)'
             'rrdtool: RRDtool based information collector')
 backup=('etc/cherokee/cherokee.conf'
         'etc/logrotate.d/cherokee')
-source=(http://www.cherokee-project.com/download/1.2/$pkgver/cherokee-$pkgver.tar.gz
-        cherokee.rc
-        cherokee.logrotate
-        fix-ctk-path-handler-match.patch)        
 options=('!libtool')
+source=("http://www.cherokee-project.com/download/1.2/${pkgver}/${pkgname}-${pkgver}.tar.gz"
+        'cherokee.rc'
+        'cherokee.logrotate'
+        'fix-ctk-path-handler-match.patch'
+        'gentoo-cherokee-1.2.98-linux3.patch'
+        'gentoo-cherokee-1.2.99-gentoo.patch')
 md5sums=('ef47003355a2e368e4d9596cd070ef23'
          '83d1d1f58357fedf549ceeaddaacf42e'
          '8d69341bd4002bffd69c6e82ff6c905f'
-         '565326a51632bd803671b36b13d02f1d')
+         '565326a51632bd803671b36b13d02f1d'
+         'f8a102f6b4711a2af4ce17e7f59437ae'
+         '5738df659ba069b0eea0d4517e36738b')
 
 build() {
-  cd "$srcdir/$pkgname-$pkgver"
+  cd "${srcdir}/${pkgname}-${pkgver}"
 
   # Fix path matching bug in CTK apps (e.g. market)
-  patch -Np1 -i "$srcdir/fix-ctk-path-handler-match.patch"
+  patch -Np1 -i "${srcdir}/fix-ctk-path-handler-match.patch"
+
+  # Apply Gentoo patches
+  patch -Np1 -i "${srcdir}/gentoo-cherokee-1.2.98-linux3.patch"
+  patch -Np1 -i "${srcdir}/gentoo-cherokee-1.2.99-gentoo.patch"
 
   # Use subdirectory for logs
   sed -i -r 's|(%localstatedir%/log)|\1/cherokee|' cherokee.conf.sample.pre
 
-  ./configure --prefix=/usr --sysconfdir=/etc --localstatedir=/var \
-              --with-wwwroot=/srv/http --disable-static \
-              --with-wwwuser=http --with-wwwgroup=http \
+  ./configure --prefix=/usr \
+              --sysconfdir=/etc \
+              --localstatedir=/var \
+              --with-wwwroot=/srv/http \
+              --disable-static \
+              --with-wwwuser=http \
+              --with-wwwgroup=http \
               --enable-os-string="Chakra Linux"
+
   make
 }
 
 package() {
-  cd "$srcdir/$pkgname-$pkgver"
+  cd "${srcdir}/${pkgname}-${pkgver}"
 
-  make -j1 DESTDIR="$pkgdir" install
+  make -j1 DESTDIR="${pkgdir}" install
 
   # PAM configuration file for cherokee
-  install -D -m644 pam.d_cherokee "$pkgdir/etc/pam.d/$pkgname"
+  install -D -m644 pam.d_cherokee "${pkgdir}/etc/pam.d/${pkgname}"
 
   # Fix ownership of /var/lib/cherokee/graphs
-  chown -R http:http "$pkgdir/var/lib/$pkgname/graphs"
+  chown -R http:http "${pkgdir}/var/lib/${pkgname}/graphs"
 
   # Use Python 2
   sed -i 's/env python$/&2/' \
-    "$pkgdir/usr/share/cherokee/admin/"{server,upgrade_config}.py \
-    "$pkgdir/usr/bin/"{CTK-run,cherokee-{admin-launcher,tweak}}
+    "${pkgdir}/usr/share/cherokee/admin/"{server,upgrade_config}.py \
+    "${pkgdir}/usr/bin/"{CTK-run,cherokee-{admin-launcher,tweak}}
   sed -i -r "s/['\"]python/&2/g" \
-    "$pkgdir/usr/share/cherokee/admin/wizards/django.py"
+    "${pkgdir}/usr/share/cherokee/admin/wizards/django.py"
 
   # Compile Python scripts
-  python2 -m compileall "$pkgdir"
-  python2 -O -m compileall "$pkgdir"
+  python2 -m compileall "${pkgdir}"
+  python2 -O -m compileall "${pkgdir}"
 
-  install -d -o http -g http "$pkgdir/var/log/$pkgname"
-  install -D "$srcdir/$pkgname.rc" "$pkgdir/etc/rc.d/$pkgname"
-  install -Dm644 "$srcdir/$pkgname.logrotate" "$pkgdir/etc/logrotate.d/$pkgname"
+  install -d -o http -g http "${pkgdir}/var/log/${pkgname}"
+  install -D "${srcdir}/${pkgname}.rc" "${pkgdir}/etc/rc.d/${pkgname}"
+  install -Dm644 "${srcdir}/${pkgname}.logrotate" "${pkgdir}/etc/logrotate.d/${pkgname}"
 
   # Cleanup
-  rm -rf "$pkgdir/srv"
+  rm -rf "${pkgdir}/srv"
 }
 
 # vim:set ts=2 sw=2 et:
