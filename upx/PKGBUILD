@@ -1,0 +1,35 @@
+#
+# Apps Packages for Chakra, part of chakra-project.org
+#
+# Maintainer: Adrián Chaves Fernández (Gallaecio) <adriyetichaves@gmail.com>
+# Contributor: Daniele Cocca <daniele.cocca@gmail.com>
+
+pkgname=upx
+pkgver=3.08
+pkgrel=1
+pkgdesc='Ultimate executable compressor.'
+arch=('i686' 'x86_64')
+url='http://upx.sourceforge.net/'
+license=('GPL2')
+depends=('zlib')
+makedepends=('ucl')
+source=("http://upx.sourceforge.net/download/${pkgname}-${pkgver}-src.tar.bz2"
+        'http://downloads.sourceforge.net/sevenzip/lzma465.tar.bz2')
+md5sums=('54c76fa52cad578ff23ef98aee91e3f5'
+         '29d5ffd03a5a3e51aef6a74e9eafb759')
+
+build() {
+  cd "${pkgname}-${pkgver}-src"
+
+  make UPX_LZMA_VERSION=0x465 UPX_LZMADIR="${srcdir}" all
+}
+
+package() {
+  cd "${pkgname}-${pkgver}-src"
+
+  install -D src/upx.out \
+    ${pkgdir}/usr/bin/upx
+
+  install -D -m644 doc/upx.1 \
+    ${pkgdir}/usr/share/man/man1/upx.1
+}
