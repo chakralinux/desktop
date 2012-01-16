@@ -3,12 +3,10 @@
 #
 # maintainer (x86_64): Giuseppe Calà <jiveaxe@gmail.com>
 
-# include global config
-source ../_buildscripts/${current_repo}-${_arch}-cfg.conf
 
 pkgname=avogadro
 pkgver=1.0.3
-pkgrel=2
+pkgrel=4
 pkgdesc="An advanced molecular editor based on Qt"
 arch=('i686' 'x86_64')
 url="http://avogadro.openmolecules.net/wiki/Main_Page"
@@ -19,9 +17,12 @@ source=("http://downloads.sourceforge.net/${pkgname}/${pkgname}-${pkgver}.tar.bz
 md5sums=('92c2702c1980f70fb6d87a1a58147911')
 
 build() {
+  cd "${srcdir}/${pkgname}-${pkgver}"
+  patch -p1 -i ../../replace-qt4_automoc-with-qt4_wrap_cpp.patch
+  patch -p1 -i ../../fix-boost.patch
 
   cd ${srcdir}
-  mkdir build
+  mkdir -p build
   cd build
 
   # use the cmake module in system to enable python 2.7 support
@@ -29,7 +30,8 @@ build() {
 
   cmake ../${pkgname}-${pkgver} \
     -DCMAKE_BUILD_TYPE=Release \
-    -DCMAKE_INSTALL_PREFIX=/usr
+    -DCMAKE_INSTALL_PREFIX=/usr \
+    -DQT_MKSPECS_RELATIVE=share/qt/mkspecs
   make
 }
 
