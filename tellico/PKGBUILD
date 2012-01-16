@@ -5,39 +5,35 @@
 # maintainer (x86_64): Manuel Tortosa <manutortosa[at]chakra-project[dot]org>
 # contributor (x86_64): Giuseppe Calà <jiveaxe@gmail.com>
 
-# include global config
-source ../_buildscripts/${current_repo}-${_arch}-cfg.conf
-
 pkgname=tellico
-pkgver=2.3.3
+pkgver=2.3.5
 pkgrel=1
 pkgdesc="A collection manager for KDE"
 arch=('i686' 'x86_64')
-url="http://www.periapsis.org/tellico/"
+url="http://tellico-project.org/"
 license=('GPL')
-depends=('kdebase-workspace' 'yaz' 'exempi' 'kdegraphics-common' 'taglib'
-	'kdemultimedia-common' 'poppler-qt' 'qjson')
+depends=('kde-workspace' 'yaz' 'exempi' 'libksane' 'taglib'
+         'kdemultimedia-common' 'poppler-qt' 'qjson')
 makedepends=('automoc4' 'cmake' 'docbook-xsl')
-install=${pkgname}.install
-source=(http://tellico-project.org/files/$pkgname-$pkgver.tar.bz2)
-md5sums=('7e3da69119324995308fca7ddf8ea6a9')
+install=$pkgname.install
+source=("http://tellico-project.org/files/${pkgname}-${pkgver}.tar.bz2")
+md5sums=('e6a1835d2622b79c4bfd95271bce858e')
 
 build() {
-  cd ${srcdir}
+  cd "${srcdir}"
   mkdir build
   cd build
-   cmake ../${pkgname}-${pkgver} \
-     -DCMAKE_BUILD_TYPE=Release \
-     -DCMAKE_SKIP_RPATH=ON \
-     -DCMAKE_INSTALL_PREFIX=/usr
-  make || return 1
+  cmake ../${pkgname}-${pkgver} \
+    -DCMAKE_BUILD_TYPE=Release \
+    -DCMAKE_INSTALL_PREFIX=/usr
+
+  make
 }
 
 package() {
-  cd ${srcdir}/build
-  make DESTDIR=${pkgdir} install
+  cd "${srcdir}"/build
+  make DESTDIR="${pkgdir}" install
 
   # fix python 2.7 path
   find "$pkgdir" -iname "*.py" | xargs sed -i 's|#!/usr/bin/env python|#!/usr/bin/env python2|'
-
 }
