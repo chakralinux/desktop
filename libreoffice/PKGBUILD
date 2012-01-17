@@ -24,10 +24,10 @@ pkgname=('libreoffice' 'libreoffice-sdk'
 	'libreoffice-extension-validator'
 	'libreoffice-extension-watch-window'
 	'libreoffice-extension-wiki-publisher')
-_LOver=3.4.4.2
-pkgver=3.4.4.2
-_pkgver=3.4.4
-_HIver=3.4
+_LOver=3.4.5.2
+pkgver=3.4.5.2
+_pkgver=3.4.5
+_HIver=3.5
 pkgrel=1
 arch=('i686' 'x86_64')
 _OFFICEUPD="340"
@@ -46,6 +46,7 @@ makedepends=( # makedepends
 
 _mirror="http://download.documentfoundation.org/libreoffice/src/$_pkgver"
 _additional_source_url="http://hg.services.openoffice.org/binaries"
+_additional_source_url="http://dev-www.libreoffice.org/src"
 source=(${_mirror}/${pkgbase}-{artwork,base,bootstrap,calc,components,extensions,extras,filters,help,impress,libs-core,libs-extern,libs-extern-sys,libs-gui,postprocess,sdk,testing,ure,writer}-${_LOver}.tar.bz2 #,translations
 	${_additional_source_url}/1f24ab1d39f4a51faf22244c94a6203f-xmlsec1-1.2.14.tar.gz
 	${_additional_source_url}/35c94d2df8893241173de1d16b6034c0-swingExSrc.zip
@@ -152,7 +153,7 @@ build() {
 	cd ${srcdir}/build
 
 	# buildfixes & bugfixes
-	patch -Np1 -i ${srcdir}/buildfix_boost.diff
+	#patch -Np1 -i ${srcdir}/buildfix_boost.diff
 	patch -Np1 -i ${srcdir}/buildfix_ct2n.diff
 	patch -Np0 -i ${srcdir}/vbahelper.visibility.patch
 	patch -Np0 -i ${srcdir}/scp2-more-reasonable-file-access-rights.diff
