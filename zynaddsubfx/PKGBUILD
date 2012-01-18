@@ -3,7 +3,7 @@
 _pkgname=ZynAddSubFX
 pkgname=zynaddsubfx
 pkgver=2.4.1
-pkgrel=2
+pkgrel=3
 pkgdesc="ZynAddSubFX is a open source software synthesizer capable of making a countless number of instruments, from some common heard from expensive hardware to interesting sounds that you'll boost to an amazing universe of sounds."
 arch=('i686' 'x86_64')
 url="http://zynaddsubfx.sourceforge.net/"
@@ -46,6 +46,11 @@ build() {
 package() {
   cd "${srcdir}/build"
   make DESTDIR="${pkgdir}" install
+
+  # Also copy the data files...
+  install -d -m755 "${pkgdir}/usr/share/${pkgname}"
+  cp -a "${srcdir}/${_pkgname}-${pkgver}/banks" "${pkgdir}/usr/share/${pkgname}"
+  cp -a "${srcdir}/${_pkgname}-${pkgver}/examples" "${pkgdir}/usr/share/${pkgname}"
 }
 
 # vim:set ts=2 sw=2 et:
