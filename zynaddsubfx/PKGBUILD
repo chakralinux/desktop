@@ -1,0 +1,35 @@
+# Maintainer: Daniele Cocca <jmc@chakra-project.org>
+
+_pkgname=ZynAddSubFX
+pkgname=zynaddsubfx
+pkgver=2.4.1
+pkgrel=1
+pkgdesc="ZynAddSubFX is a open source software synthesizer capable of making a countless number of instruments, from some common heard from expensive hardware to interesting sounds that you'll boost to an amazing universe of sounds."
+arch=('i686' 'x86_64')
+url="http://zynaddsubfx.sourceforge.net/"
+license=('GPL2')
+depends=('fftw' 'mxml' 'zlib')
+makedepends=('oss' 'jack')
+source=("https://downloads.sourceforge.net/project/${pkgname}/${pkgname}/${pkgver}/${_pkgname}-${pkgver}.tar.bz2")
+md5sums=('59eb69ce24d6f8c605f8ba43958d0526')
+
+build() {
+  cd "${srcdir}"
+  
+  [ ! -d build ] && mkdir -p build
+  
+  cd build
+  
+  cmake "${srcdir}/${_pkgname}-${pkgver}" \
+        -DCMAKE_BUILD_TYPE=RelWithDebInfo \
+        -DCMAKE_INSTALL_PREFIX=/usr
+  
+  make
+}
+
+package() {
+  cd "${srcdir}/build"
+  make DESTDIR="${pkgdir}" install
+}
+
+# vim:set ts=2 sw=2 et:
