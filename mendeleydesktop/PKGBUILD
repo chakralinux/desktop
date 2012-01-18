@@ -6,37 +6,50 @@
  
  
 pkgname=mendeleydesktop
-pkgver=1.3
+pkgver=1.3.1
 pkgrel=1
 url="http://www.mendeley.com/"
 pkgdesc="The desktop client for managing and sharing research papers."
 license=('custom:mendeley_eula')
-depends=('python2' 'qt')
+depends=('python2' 'qt' 'libpng12')
 arch=(i686 x86_64)
-_filearch=i486
-md5sums=('ee98b4d6d5348b69e515397e589d90af')
-[ "${CARCH}" == "x86_64" ] && _filearch=x86_64 && md5sums=('4d0f77a37df5cb4912d0daee22a639b5')
-source=("http://download.mendeley.com/linux/$pkgname-$pkgver-linux-$_filearch.tar.bz2")
-screenshot=('http://wstaw.org/m/2011/11/21/plasma-desktopcl2200.jpg')
- 
-build()
-{
-  cd "$pkgname-$pkgver-linux-${_filearch}"
- 
-  rm -f share/doc/mendeleydesktop/*.txt
-  install -dm755 "$pkgdir/opt/$pkgname/"{,bin}
-  mv lib share "$pkgdir/opt/$pkgname/"
-  ln -s "../lib/mendeleydesktop/libexec/mendeleydesktop.${_filearch}" "$pkgdir/opt/$pkgname/bin/$pkgname"
- 
-  sed -i '1s@^#!/usr/bin/python$@&2@' bin/mendeleydesktop
-  install -Dm755 "bin/mendeleydesktop" "$pkgdir/usr/bin/mendeleydesktop"
-  install -Dm644 LICENSE "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
- 
-  mkdir -p "$pkgdir"/usr/share/applications
-  ln -s /opt/$pkgname/share/applications/mendeleydesktop.desktop "$pkgdir"/usr/share/applications/
-  for size in 16 22 32 48 64 128;do
-    mkdir -p "$pkgdir"/usr/share/icons/hicolor/${size}x${size}/apps
-    ln -s /opt/$pkgname/share/icons/hicolor/${size}x${size}/apps/${pkgname}.png \
-      "$pkgdir"/usr/share/icons/hicolor/${size}x${size}/apps
-  done
+_arch=$CARCH
+[[ $CARCH = i686 ]] && _arch=i486
+
+source=("http://download.mendeley.com/linux/$pkgname-$pkgver-linux-$_arch.tar.bz2"
+        'mendeleydesktop.install')
+md5sums=('9a733e695c49c348759a8493a07d8910'
+         '16358cd53dc258a72efcaeab5a415217')
+sha256sums=('b58feabbb62e93104f0277ad792d2ef81e55f828c5ba8b42c036a1d0e9d44a61'
+            '5484716ec4adf29a7bfc5ecb45c8ed4d6a5e253b8c72fccea12662454d398b85')
+
+if [[ $CARCH = x86_64 ]]; then
+	md5sums[0]='18715f40a084d99ff35141488aa0fd45'
+	sha256sums[0]='15fab4130f560e420a6de803e4174a107c0fe720f4f53f84e4e18b91a586b693'
+fi
+
+package() {
+	cd "$pkgname-$pkgver-linux-$_arch"
+
+	find share/doc/mendeleydesktop/ -iname "*.txt" -delete
+	install -dm755 "$pkgdir/opt/$pkgname/bin"
+	mv lib share "$pkgdir/opt/$pkgname/"
+
+	sed -i 's@^\s*subprocess\.Popen(\[MENDELEY_BASE_PATH+"/bin/install-mendeley-link-handler\.sh".*$@#&@' "bin/$pkgname"
+	install -Dm755 "bin/$pkgname" "$pkgdir/opt/$pkgname/bin/$pkgname"
+	install -Dm644 LICENSE "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
+	install -dm755 "$pkgdir/usr/bin/"
+	ln -s "/opt/$pkgname/bin/$pkgname" "$pkgdir/usr/bin/$pkgname"
+
+	install -dm755 "$pkgdir/usr/share/applications"
+	ln -s "/opt/$pkgname/share/applications/mendeleydesktop.desktop" "$pkgdir/usr/share/applications/"
+
+	# force bundled qt since mendeley crashes when using qt 4.8
+	sed -i 's/^Exec.*$/& --force-bundled-qt/' "$pkgdir/opt/$pkgname/share/applications/mendeleydesktop.desktop"
+
+	for size in 16 22 32 48 64 128; do
+	    install -dm755 "$pkgdir/usr/share/icons/hicolor/${size}x${size}/apps"
+	    ln -s "/opt/$pkgname/share/icons/hicolor/${size}x${size}/apps/$pkgname.png" \
+		  "$pkgdir/usr/share/icons/hicolor/${size}x${size}/apps"
+	done
 }
