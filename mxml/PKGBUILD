@@ -1,0 +1,29 @@
+# Maintainer: Daniele Cocca <jmc@chakra-project.org>
+
+pkgname=mxml
+pkgver=2.7
+pkgrel=1
+pkgdesc="Mini-XML is a small XML library that you can use to read and write XML and XML-like data files in your application without requiring large non-standard libraries."
+arch=('i686' 'x86_64')
+url="http://www.minixml.org/"
+license=('custom:Mini-XML License')
+source=("http://ftp.easysw.com/pub/${pkgname}/${pkgver}/${pkgname}-${pkgver}.tar.gz"
+        'LICENSE')
+md5sums=('76f2ae49bf0f5745d5cb5d9507774dc9'
+         '27ec281067efafcdd080f0cf8304c22f')
+
+build() {
+  cd "${srcdir}/${pkgname}-${pkgver}"
+  ./configure --prefix=/usr
+  make
+}
+
+package() {
+  cd "${srcdir}/${pkgname}-${pkgver}"
+  make DSTROOT="${pkgdir}" install
+
+  # Install the license file
+  install -D -m644 "${srcdir}/LICENSE" "${pkgdir}/usr/share/licenses/${pkgname}/LICENSE"
+}
+
+# vim:set ts=2 sw=2 et:
