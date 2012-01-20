@@ -1,6 +1,6 @@
-diff -Naur cherokee-1.2.99.orig/admin/configured.py.pre cherokee-1.2.99/admin/configured.py.pre
---- cherokee-1.2.99.orig/admin/configured.py.pre	2011-03-31 17:30:04.000000000 +0900
-+++ cherokee-1.2.99/admin/configured.py.pre	2011-09-16 19:37:15.893487362 +0900
+diff -Naur a/admin/configured.py.pre b/admin/configured.py.pre
+--- a/admin/configured.py.pre	2012-01-20 00:58:20.098021174 +0000
++++ b/admin/configured.py.pre	2012-01-20 00:58:33.997967915 +0000
 @@ -22,7 +22,7 @@
  CHEROKEE_DATADIR      = join (DATADIR, "cherokee")
  CHEROKEE_DEPSDIR      = join (DATADIR, "cherokee/deps")
@@ -10,19 +10,10 @@ diff -Naur cherokee-1.2.99.orig/admin/configured.py.pre cherokee-1.2.99/admin/co
  CHEROKEE_VAR_RUN      = join (LOCALSTATE, "run")
  CHEROKEE_VAR_LIB      = join (LOCALSTATE, "lib/cherokee")
  CHEROKEE_RRD_DIR      = join (LOCALSTATE, "lib/cherokee/graphs")
-diff -Naur cherokee-1.2.99.orig/cherokee.conf.sample.pre cherokee-1.2.99/cherokee.conf.sample.pre
---- cherokee-1.2.99.orig/cherokee.conf.sample.pre	2011-05-03 18:01:42.000000000 +0900
-+++ cherokee-1.2.99/cherokee.conf.sample.pre	2011-09-16 19:37:15.894487368 +0900
-@@ -18,6 +18,8 @@
- server!server_tokens = full
- server!panic_action = %prefix%/bin/cherokee-panic
- server!pid_file = %localstatedir%/run/cherokee.pid
-+server!user = cherokee
-+server!group = cherokee
- 
- # Default virtual server
- #
-@@ -27,11 +29,11 @@
+diff -Naur a/cherokee.conf.sample.pre b/cherokee.conf.sample.pre
+--- a/cherokee.conf.sample.pre	2012-01-20 00:58:20.064687465 +0000
++++ b/cherokee.conf.sample.pre	2012-01-20 00:58:45.677878184 +0000
+@@ -27,11 +27,11 @@
  
  vserver!1!logger = combined
  vserver!1!logger!access!type = file

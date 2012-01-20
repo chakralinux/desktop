@@ -8,7 +8,7 @@
 
 pkgname=cherokee
 pkgver=1.2.101
-pkgrel=3
+pkgrel=4
 pkgdesc="A very fast, flexible and easy to configure Web Server"
 arch=('i686' 'x86_64')
 url="http://www.cherokee-project.com/"
@@ -31,13 +31,13 @@ source=("http://www.cherokee-project.com/download/1.2/${pkgver}/${pkgname}-${pkg
         'cherokee.logrotate'
         'fix-ctk-path-handler-match.patch'
         'gentoo-cherokee-1.2.98-linux3.patch'
-        'gentoo-cherokee-1.2.99-gentoo.patch')
+        'gentoo-cherokee-1.2.99-chakra-customized.patch')
 md5sums=('ef47003355a2e368e4d9596cd070ef23'
-         '83d1d1f58357fedf549ceeaddaacf42e'
+         'aaf900097afba950f0a0a15d906a3648'
          '8d69341bd4002bffd69c6e82ff6c905f'
          '565326a51632bd803671b36b13d02f1d'
          'f8a102f6b4711a2af4ce17e7f59437ae'
-         '5738df659ba069b0eea0d4517e36738b')
+         'e6800e28a2487698a04ad870412f42a9')
 
 build() {
   cd "${srcdir}/${pkgname}-${pkgver}"
@@ -47,7 +47,7 @@ build() {
 
   # Apply Gentoo patches
   patch -Np1 -i "${srcdir}/gentoo-cherokee-1.2.98-linux3.patch"
-  patch -Np1 -i "${srcdir}/gentoo-cherokee-1.2.99-gentoo.patch"
+  patch -Np1 -i "${srcdir}/gentoo-cherokee-1.2.99-chakra-customized.patch"
 
   # Use subdirectory for logs
   sed -i -r 's|(%localstatedir%/log)|\1/cherokee|' cherokee.conf.sample.pre
