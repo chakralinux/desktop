@@ -5,16 +5,16 @@
 
 pkgname=pokerth
 _realname=PokerTH
-pkgver=0.8.3
-pkgrel=6
+pkgver=0.9.1
+pkgrel=1
 pkgdesc="PokerTH is a Texas Holdem poker game written in C++/Qt."
 arch=('i686' 'x86_64')
-license=('GPL' 'custom')
-depends=('qt' 'zlib' 'curl' 'gnutls' 'libgsasl' 'sdl' 'sdl_mixer' 'icu' 'boost' 'boost-libs' 'krb5' 'libidn')
-makedepends=('boost' 'boost-libs')
+license=('AGPL3' 'custom:Variety of FOSS licenses for data files')
+depends=('boost-libs' 'curl' 'gnutls' 'libgsasl' 'libircclient=1.3' 'qt' 'sdl_mixer' 'tinyxml')
+makedepends=('boost')
 url="http://www.pokerth.net/"
 source=("http://downloads.sourceforge.net/sourceforge/${pkgname}/${_realname}-${pkgver}-src.tar.bz2")
-md5sums=('adbe56ad5f547eb255dad91de564bf1c')
+md5sums=('c22ec528ebb47c44b93149b63619004f')
 
 build() {
   cd "${srcdir}/${_realname}-${pkgver}-src"
@@ -40,5 +40,3 @@ package() {
   install -D -m644 data/data-copyright.txt "${pkgdir}/usr/share/licenses/pokerth/data-copyright.txt"
   rm -f "${pkgdir}/usr/share/pokerth/data/data-copyright.txt"
 }
-
-# vim:set ts=2 sw=2 et:
