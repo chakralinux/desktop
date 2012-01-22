@@ -4,8 +4,8 @@
 # Maintainer: Adrián Chaves Fernández (Gallaecio) <adriyetichaves gmail.com>
 
 pkgname=redeclipse
-pkgver=1.1
-pkgrel=2
+pkgver=1.2
+pkgrel=1
 pkgdesc='A first-person shooter, built as a total conversion of Cube Engine 2.'
 arch=(i686 x86_64)
 url=http://redeclipse.net
@@ -14,7 +14,7 @@ depends=(enet libgl mesa sdl sdl_image sdl_mixer zlib)
 source=(http://downloads.sourceforge.net/$pkgname/${pkgname}_${pkgver}_linux_bsd.tar.bz2
 	system-libs.diff
 	http://imagecdn.maketecheasier.com/2011/04/red-eclipse-logo.png)
-md5sums=('e1330a858944e3bdb98fd15e07025d5f'
+md5sums=('e133361f79be01782bf0bbc4c5a01236'
          'f34900e6c8247754800d8fba0600dfb7'
          '813971d2496132781ff0f8bf55e0cd2d')
 
@@ -29,29 +29,31 @@ build() {
 }
 
 package() {
-  cd $srcdir/$pkgname
-  
+  cd $srcdir/$pkgname/src
+  make DESTDIR=$pkgdir install
+
+  # Start actual installation.
+  cd ..
+
   # Game.
   install -d $pkgdir/usr/share/$pkgname/bin
-  install -m755 src/re{server,client} $pkgdir/usr/share/$pkgname/bin/
+  install -Dm755 bin/reserver_native $pkgdir/usr/share/$pkgname/bin/reserver_native
+  install -Dm755 bin/reclient_native $pkgdir/usr/share/$pkgname/bin/reclient_native
   cp -rf  data/ $pkgdir/usr/share/$pkgname
 
   # Execution script.
   install -d $pkgdir/usr/bin
-  echo '#!/bin/sh'			 > $pkgdir/usr/bin/$pkgname
-  echo "cd /usr/share/$pkgname"		>> $pkgdir/usr/bin/$pkgname
-  echo 'exec bin/reclient -r "$@"'	>> $pkgdir/usr/bin/$pkgname
+  echo '#!/bin/sh'				 > $pkgdir/usr/bin/$pkgname
+  echo "cd /usr/share/$pkgname"			>> $pkgdir/usr/bin/$pkgname
+  echo 'exec bin/reclient_native -r "$@"'	>> $pkgdir/usr/bin/$pkgname
   chmod +x $pkgdir/usr/bin/$pkgname
 
   # Desktop integration file.
   sed -i \
-    -e 's/Version=1\.1/Version=1\.0/' \
-    -e 's|Icon=redeclipse|Icon=/usr/share/pixmaps/redeclipse|' \
-    -e 's/a\./a/' \
-    -e "s#Exec=bin/reclient -r#Exec=$pkgname#" \
-    -e "/Path=*/d" \
-    src/install/nix/$pkgname.desktop
-  install -Dm644 src/install/nix/$pkgname.desktop $pkgdir/usr/share/applications/$pkgname.desktop
+    -e 's#Icon=@REDECLIPSE@#Icon=/usr/share/pixmaps/redeclipse#' \
+    -e "s#Exec=@REDECLIPSE@#Exec=$pkgname#" \
+    src/install/nix/$pkgname.desktop.am
+  install -Dm644 src/install/nix/$pkgname.desktop.am $pkgdir/usr/share/applications/$pkgname.desktop
 
   # Icon.
   install -Dm644 $srcdir/red-eclipse-logo.png $pkgdir/usr/share/pixmaps/$pkgname.png
