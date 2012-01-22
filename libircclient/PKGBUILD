@@ -9,7 +9,7 @@
 
 pkgname=libircclient
 pkgver=1.3
-pkgrel=1
+pkgrel=2
 pkgdesc="A small but powerful library, which implements client-server IRC protocol."
 arch=('i686' 'x86_64')
 url="http://www.ulduzsoft.com/libircclient/"
@@ -39,4 +39,8 @@ package() {
   cd "$srcdir/$pkgname-$pkgver/src"
 
   make DESTDIR="$pkgdir/" install
+
+  # Remove conflicting man pages (conflict with coin package).
+  rm $pkgdir/usr/share/man/man3/errors.3
+  rm $pkgdir/usr/share/man/man3/events.3
 }
