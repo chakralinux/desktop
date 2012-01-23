@@ -3,21 +3,19 @@
 #
 # Maintainer: Adrián Chaves Fernández (Gallaecio) <adriyetichaves gmail.com>
 
-# include global config
-source ../_buildscripts/${current_repo}-${_arch}-cfg.conf
-
 pkgname=wesnoth
-pkgver=1.8.6
+pkgver=1.10
 pkgrel=1
 pkgdesc="A turn-based strategy game on a fantasy world."
 arch=('i686' 'x86_64')
 license=('GPL2')
 url="http://www.wesnoth.org/"
-depends=('boost' 'freetype2' 'fribidi' 'gcc-libs' 'icu' 'libvorbis' 'lua' 'pango' 'sdl_image' 'sdl_mixer' 'sdl_net' 'sdl_ttf')
-makedepends=('cmake')
+depends=('boost-libs' 'freetype2' 'fribidi' 'gcc-libs' 'icu' 'libvorbis' 'lua' 'pango' 'sdl_image' 'sdl_mixer' 
+'sdl_net' 'sdl_ttf')
+makedepends=('boost' 'cmake')
 conflicts=('wesnoth-dev' 'wesnoth-svn')
 source=(http://downloads.sourceforge.net/sourceforge/$pkgname/$pkgname-$pkgver.tar.bz2)
-md5sums=('f1c3179869b01b61e253e74aeb241034')
+md5sums=('707daa13e2f5b3976d9b169aab62dc29')
 
 build() {
   cd $srcdir/$pkgname-$pkgver
@@ -25,7 +23,7 @@ build() {
   mkdir build && cd build
   cmake \
     -DCMAKE_INSTALL_PREFIX=/usr \
-    -DCMAKE_BUILD_TYPE=RelWithDebInfo \
+    -DCMAKE_BUILD_TYPE=Release \
     ..
   make
 }
