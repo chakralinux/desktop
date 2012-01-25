@@ -4,29 +4,27 @@
 # maintainer (i686): Phil Miller <philm[at]chakra-project[dog]org>
 # maintainer (x86_64): Manuel Tortosa <manutortosa[at]chakra-project[dot]org>
 
-# include global config
-source ../_buildscripts/${current_repo}-${_arch}-cfg.conf
-
-pkgname=telepathy-kde-approver
-pkgver=0.1.0
+pkgname=ktp-approver
+pkgver=0.3.0
 pkgrel=1
 pkgdesc="KDE Channel Approver for Telepathy"
 arch=('i686' 'x86_64')
 url="http://www.kde.org"
 license=('GPL')
-depends=('kdelibs' 'telepathy-qt4')
+depends=('kdelibs' 'telepathy-qt')
 makedepends=('cmake' 'automoc4')
-conflicts=('telepathy-approver-git')
-replaces=('telepathy-approver-git')
-groups=('telepathy-kde')
-source=("http://download.kde.org/unstable/telepathy-kde/${pkgver}/src/${pkgname}_${pkgver}.tar.bz2")
-sha1sums=('ca4bb9d817354e50af18072736843b961a5dc916')
+conflicts=('telepathy-kde-approver')
+replaces=('telepathy-kde-approver')
+provides=('telepathy-kde-approver')
+groups=('kde-telepathy')
+source=("ftp://mirrors.mit.edu/kde/unstable/kde-telepathy/${pkgver}/src/${pkgname}-${pkgver}.tar.bz2")
+sha1sums=('2e80de030b9861f47a05e60ce41bd04ed3402258')
 
 build() {
   cd "${srcdir}"
   mkdir build
   cd build
-  cmake ../${pkgname}_${pkgver} \
+  cmake ../${pkgname}-${pkgver} \
     -DCMAKE_INSTALL_PREFIX=/usr \
     -DCMAKE_BUILD_TYPE=Release
   make
