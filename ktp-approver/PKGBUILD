@@ -4,23 +4,20 @@
 # maintainer (i686): Phil Miller <philm[at]chakra-project[dog]org>
 # maintainer (x86_64): Manuel Tortosa <manutortosa[at]chakra-project[dot]org>
 
-# include global config
-source ../_buildscripts/${current_repo}-${_arch}-cfg.conf
-
-pkgname=telepathy-kde-text-ui
-pkgver=0.2.0
+pkgname=ktp-kde-approver
+pkgver=0.3.0
 pkgrel=1
-pkgdesc="Telepathy text chat handler"
+pkgdesc="KDE Channel Approver for Telepathy"
 arch=('i686' 'x86_64')
 url="http://www.kde.org"
 license=('GPL')
-depends=('kde-runtime' 'telepathy-qt4')
+depends=('kdelibs' 'telepathyQt')
 makedepends=('cmake' 'automoc4')
-conflicts=('telepathy-call-ui-git')
-replaces=('telepathy-call-ui-git')
+conflicts=('telepathy-approver')
+replaces=('telepathy-approver-git')
 groups=('telepathy-kde')
 source=("ftp://mirrors.mit.edu/kde/unstable/telepathy-kde/${pkgver}/src/${pkgname}-${pkgver}.tar.bz2")
-sha1sums=('fb7c5dc02bb9d150d0e372c3584f50670d620f4a')
+sha1sums=('6488f3119a19c38fc72e0afe3007a49394f36b13')
 
 build() {
   cd "${srcdir}"

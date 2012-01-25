@@ -4,23 +4,20 @@
 # maintainer (i686): Phil Miller <philm[at]chakra-project[dog]org>
 # maintainer (x86_64): Manuel Tortosa <manutortosa[at]chakra-project[dot]org>
 
-# include global config
-source ../_buildscripts/${current_repo}-${_arch}-cfg.conf
-
-pkgname=telepathy-kde-presence-dataengine
-pkgver=0.2.0
+pkgname=ktp-integration-module
+pkgver=0.3.0
 pkgrel=1
-pkgdesc="Plasma dataengine for managing Telepathy account presence"
+pkgdesc="Workspace integration module - provides several plugins like auto-away, the infamous 'Now listening to...' and also an error handler"
 arch=('i686' 'x86_64')
 url="http://www.kde.org"
 license=('GPL')
-depends=('kde-baseapps' 'telepathy-qt4')
+depends=('kde-runtime' 'telepathyQt')
 makedepends=('cmake' 'automoc4')
-conflicts=('telepathy-presence-dataengine-git')
-replaces=('telepathy-presence-dataengine-git')
+conflicts=('telepathy-filetransfer-handler')
+replaces=('telepathy-filetransfer-handler')
 groups=('telepathy-kde')
 source=("ftp://mirrors.mit.edu/kde/unstable/telepathy-kde/${pkgver}/src/${pkgname}-${pkgver}.tar.bz2")
-sha1sums=('87f8c65baf35410e65ca9b7cb016210f2b13f72d')
+sha1sums=('5ad3e5786707b624a0f785c6891ed6de4a5d79c7')
 
 build() {
   cd "${srcdir}"

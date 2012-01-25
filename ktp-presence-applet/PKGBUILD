@@ -4,23 +4,20 @@
 # maintainer (i686): Phil Miller <philm[at]chakra-project[dog]org>
 # maintainer (x86_64): Manuel Tortosa <manutortosa[at]chakra-project[dot]org>
 
-# include global config
-source ../_buildscripts/${current_repo}-${_arch}-cfg.conf
-
-pkgname=telepathy-kde-contact-applet
-pkgver=0.2.0
+pkgname=ktp-presence-applet
+pkgver=0.3.0
 pkgrel=1
-pkgdesc="Plasma applet for displaying contacts"
+pkgdesc="Plasma applet for managing your Telepathy account presence"
 arch=('any')
 url="http://www.kde.org"
 license=('GPL')
-depends=('kde-runtime' 'telepathy-qt4')
+depends=('ktp-presence-dataengine')
 makedepends=('cmake' 'automoc4')
-conflicts=('telepathy-presence-applet-git')
-replaces=('telepathy-presence-applet-git')
+conflicts=('telepathy-presence-applet')
+replaces=('telepathy-presence-applet')
 groups=('telepathy-kde')
 source=("ftp://mirrors.mit.edu/kde/unstable/telepathy-kde/${pkgver}/src/${pkgname}-${pkgver}.tar.bz2")
-sha1sums=('b1e2ad706deccd6ca4d745828a8b54fd87bc2066')
+sha1sums=('ba2792434cd5bc7d71c1b8ab2176775fc8e5524f')
 
 package() {
   cd "${srcdir}"/${pkgname}-${pkgver}

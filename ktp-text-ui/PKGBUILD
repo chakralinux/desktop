@@ -7,24 +7,20 @@
 # include global config
 source ../_buildscripts/${current_repo}-${_arch}-cfg.conf
 
-pkgname=telepathy-kde-accounts-kcm
-pkgver=0.2.0
+pkgname=ktp-kde-text-ui
+pkgver=0.3.0
 pkgrel=1
-pkgdesc="KCM Module for configuring Telepathy Instant Messaging Accounts"
+pkgdesc="Telepathy text chat handler"
 arch=('i686' 'x86_64')
 url="http://www.kde.org"
 license=('GPL')
-depends=('kdelibs' 'telepathy-qt4' 'telepathy-mission-control')
+depends=('kde-runtime' 'telepathyQt')
 makedepends=('cmake' 'automoc4')
-optdepends=('telepathy-gabble: XMPP/Jabber/GTalk support'
-            'telepathy-butterfly: MSN/Windows Live support'
-            'telepathy-haze: all protocols supported by libpurple')
+conflicts=('telepathy-call-ui')
+replaces=('telepathy-call-ui')
 groups=('telepathy-kde')
-conflicts=('telepathy-accounts-kcm-git' 'telepathy-kde-accounts-kcm-plugins')
-replaces=('telepathy-accounts-kcm-git' 'telepathy-kde-accounts-kcm-plugins')
-provides=('telepathy-kde-accounts-kcm-plugins')
 source=("ftp://mirrors.mit.edu/kde/unstable/telepathy-kde/${pkgver}/src/${pkgname}-${pkgver}.tar.bz2")
-sha1sums=('2ebc4ac117a3e28e2812a2a9c97f7d0ee97dac67')
+sha1sums=('fb7c5dc02bb9d150d0e372c3584f50670d620f4a')
 
 build() {
   cd "${srcdir}"
