@@ -20,10 +20,17 @@ groups=('kde-telepathy')
 source=("ftp://mirrors.mit.edu/kde/unstable/kde-telepathy/${pkgver}/src/${pkgname}-${pkgver}.tar.bz2")
 sha1sums=('ab2a78b4810cc0c21aa649e8371e52188a13a1b1')
 
-package() {
-  cd "${srcdir}"/${pkgname}-${pkgver}
-  cmake . \
+build() {
+  cd "${srcdir}"
+  mkdir build
+  cd build
+  cmake ../${pkgname}-${pkgver} \
     -DCMAKE_INSTALL_PREFIX=/usr \
     -DCMAKE_BUILD_TYPE=Release
+  make
+}
+
+package() {
+  cd "${srcdir}"/build
   make DESTDIR="${pkgdir}" install
 }
