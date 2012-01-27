@@ -5,47 +5,47 @@
 # maintainer (x86_64): Manuel Tortosa <manutortosa[at]chakra-project[dot]org>
 
 pkgname=rstudio
-_altname=rstudio-rstudio
-_numb=a250b30
-pkgver=0.94.82
-pkgrel=0
+_pkgname=rstudio-rstudio
+pkgver=0.95.110
+_pkgver=bbadd49
+pkgrel=2
 pkgdesc="A new integrated development environment (IDE) for R - The Desktop Client"
 arch=('i686' 'x86_64')
 url="http://www.rstudio.org/"
 license=('AGPL')
-depends=('qt' 'r' 'java-environment')
-makedepends=('apache-ant' 'git' 'cmake' 'boost' 'unzip' 'openssl' 'pam' 'bzip2' 'icu')
-source=(https://github.com/rstudio/rstudio/tarball/v${pkgver})
+depends=('boost-libs' 'java-environment' 'qt' 'r')
+makedepends=('apache-ant' 'boost' 'bzip2' 'cmake' 'git' 'icu' 'openssl' 'pam' 'unzip')
 provides=('rstudio-desktop')
-md5sums=('43754f89fe079700c5d3a181968133e3')
+source=("https://github.com/$pkgname/$pkgname/tarball/v$pkgver" 'cmakelists.diff')
+md5sums=('813991c03a842ed97339fea80ee7b56e'
+         '0dcfba94a8cdfd02c3eb92c3c70203e2')
 
 build() {
-  cd "${srcdir}/${_altname}-${_numb}"
+  cd $srcdir/$_pkgname-$_pkgver
+  patch -Np2 -i "$srcdir/cmakelists.diff"
   source /etc/profile.d/apache-ant.sh
- #Checking for ANT and java can be found
+ #Checking for ANT and Java can be found.
  which ant > /dev/null
  which java > /dev/null
 
- # install qt sdk
- # msg "Downloading and installing Qt SDK"
- # cd "${srcdir}/${_altname}-${_numb}/dependencies/linux"
- # ./install-qt-sdk
-
   # Install gwt
-  msg "Downloading and installing gwt"
-  cd "${srcdir}/${_altname}-${_numb}/dependencies/common"
+  cd $srcdir/$_pkgname-$_pkgver/dependencies/common
   ./install-gwt
 
-  # Configure and build
-  msg "Configuring the makefile with cmake"
-  mkdir "${srcdir}/${_altname}-${_numb}/build"
-  cd "${srcdir}/${_altname}-${_numb}/build"
+  # Configure and build.
+  cd $srcdir/$_pkgname-$_pkgver
+
+  mkdir build 
+  cd build
   unset LDFLAGS
-  cmake -DRSTUDIO_TARGET=Desktop -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=/usr/local/lib/rstudio ..
+  cmake \
+    -DRSTUDIO_TARGET=Desktop \
+    -DCMAKE_BUILD_TYPE=RelWithDebInfo \
+    -DCMAKE_INSTALL_PREFIX=/usr/local/lib/$pkgname \
+    ..
 }
 
 package() {
-  msg "Starting make..."
-  cd "${srcdir}/${_altname}-${_numb}/build"
-  make DESTDIR="$pkgdir/" install
+  cd $srcdir/$_pkgname-$_pkgver/build
+  make DESTDIR=$pkgdir install
 }

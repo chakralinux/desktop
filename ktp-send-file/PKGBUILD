@@ -4,30 +4,28 @@
 # maintainer (i686): Phil Miller <philm[at]chakra-project[dog]org>
 # maintainer (x86_64): Manuel Tortosa <manutortosa[at]chakra-project[dot]org>
 
-# include global config
-source ../_buildscripts/${current_repo}-${_arch}-cfg.conf
-
-pkgname=telepathy-kde-contact-list
-pkgver=0.1.0
+pkgname=ktp-send-file
+pkgver=0.3.0
 pkgrel=1
-pkgdesc="Telepathy contact list application "
+pkgdesc="A File manager plugin to launch a file transfer job with a specified contact"
 arch=('i686' 'x86_64')
 url="http://www.kde.org"
 license=('GPL')
-depends=('kde-runtime' 'telepathy-qt4')
+depends=('ktp-filetransfer-handler')
 makedepends=('cmake' 'automoc4')
-conflicts=('telepathy-contact-list-git')
-replaces=('telepathy-contact-list-git')
-groups=('telepathy-kde')
+conflicts=('telepathy-kde-send-file')
+replaces=('telepathy-kde-send-file')
+provides=('telepathy-kde-send-file')
+groups=('kde-telepathy')
 install=${pkgname}.install
-source=("http://download.kde.org/unstable/telepathy-kde/${pkgver}/src/${pkgname}_${pkgver}.tar.bz2")
-sha1sums=('1875f88842568f800e08d7d1b391d05152834b3b')
+source=("ftp://mirrors.mit.edu/kde/unstable/kde-telepathy/${pkgver}/src/${pkgname}-${pkgver}.tar.bz2")
+sha1sums=('bf78aff2333245511424297aadb3cb1625d75525')
 
 build() {
   cd "${srcdir}"
   mkdir build
   cd build
-  cmake ../${pkgname}_${pkgver} \
+  cmake ../${pkgname}-${pkgver} \
     -DCMAKE_INSTALL_PREFIX=/usr \
     -DCMAKE_BUILD_TYPE=Release
   make
