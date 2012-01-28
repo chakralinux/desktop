@@ -1,0 +1,43 @@
+#
+# Games Packages for Chakra, part of chakra-project.org
+#
+# Maintainer: Neophytos Kolokotronis <tetris4@gmail.com>
+# Contributor: Joao Cordeiro <jlcordeiro at gmail dot com>
+# Contributor: Joekey joekey1@gmail.com
+pkgbase=trigger
+pkgname=($pkgbase $pkgbase-data)
+pkgver=0.6.0 
+pkgrel=1
+pkgdesc="Free OpenGL rally car racing game"
+arch=('i686' 'x86_64')
+url="http://sourceforge.net/projects/trigger-rally/"
+license=('GPL-2')
+conflicts=()
+makedepends=('ftjam' 'glew' 'sdl_mixer' 'sdl_image' 'physfs' 'mesa' 'freeglut' 'freealut')
+install=trigger.install
+source=("http://sourceforge.net/projects/trigger-rally/files/trigger-rally/trigger-$pkgver/trigger-rally-$pkgver-src.tar.bz2"
+        "http://sourceforge.net/projects/trigger-rally/files/trigger-rally/trigger-$pkgver/trigger-rally-$pkgver-data.tar.bz2")
+md5sums=('f67301aa4e0f07dad2d696b2abbeb1f2'
+         '741fdd681d9387a220aff295b4ba353a')
+
+build() {
+    cd "${srcdir}/trigger-rally-${pkgver}-src"
+    ./autogen.sh
+    ./configure --prefix="${pkgdir}/usr" --datadir="/opt/games/trigger/trigger-${pkgver}-data"
+    jam -qa
+}
+
+package_trigger() {
+depends=('sdl_mixer' 'sdl_image' 'physfs' 'mesa' 'freeglut' 'freealut' 'trigger-data')
+    
+    cd "${srcdir}/trigger-rally-${pkgver}-src"
+    install -d -m755 "${pkgdir}/usr/bin"
+    install -m775 trigger "$pkgdir/usr/bin/trigger" 
+}
+
+package_trigger-data() {
+  _dest_dir="${pkgdir}/opt/games/trigger/trigger-${pkgver}-data"
+  install -d -m755 "${_dest_dir}"
+  mv "${srcdir}/trigger-rally-${pkgver}-data"/* "${_dest_dir}/"
+  chgrp -R games "${_dest_dir}" 
+}
