@@ -1,0 +1,30 @@
+#
+# Chakra Packages for Chakra, part of chakra-project.org
+#
+# Maintainer: Daniele Cocca <jmc@chakra-project.org>
+# Original AUR Maintainer: Tom Debruyne <tomdebruyne at gmail dot com>
+
+pkgname=kdeplasma-addons-applets-veromix
+pkgver=0.14.1
+_date='2012-01-28'
+pkgrel=1
+pkgdesc="A plasmoid mixer for the Pulseaudio sound server"
+url="http://code.google.com/p/veromix-plasmoid/"
+license=('GPL3')
+arch=('any')
+depends=('kdebase-workspace' 'kdebindings-python' 'pulseaudio' 'pyxdg')
+optdepends=('swh-plugins: equalizer and other effects support')
+source=("http://veromix-plasmoid.googlecode.com/files/${_date}_${pkgver}_veromix.plasmoid")
+md5sums=('1b5436915caea85d98e13d07216c4a38')
+
+package() {
+  cd "${srcdir}"
+
+  install -dm755 "${pkgdir}/usr/share/apps/plasma/plasmoids/veromix-plasmoid"
+  cp -R {contents,dbus-service,metadata.desktop} "${pkgdir}/usr/share/apps/plasma/plasmoids/veromix-plasmoid"
+  install -Dm644 metadata.desktop "${pkgdir}/usr/share/kde4/services/plasma-applet-veromix-plasmoid.desktop"
+  
+  sed -i -e '1 s/python/python2/' "${pkgdir}/usr/share/apps/plasma/plasmoids/veromix-plasmoid/dbus-service/VeromixServiceMain.py"
+}
+
+# vim:set ts=2 sw=2 et:
