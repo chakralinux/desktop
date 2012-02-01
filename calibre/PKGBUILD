@@ -7,7 +7,7 @@
 source ../_buildscripts/${current_repo}-${_arch}-cfg.conf
 
 pkgname=calibre
-pkgver=0.8.21
+pkgver=0.8.37
 pkgrel=1
 pkgdesc="Ebook management application"
 arch=('i686' 'x86_64') 
@@ -20,9 +20,9 @@ depends=('python2' 'python-imaging' 'libusb' 'pyqt' 'python-mechanize'
 makedepends=('python-pycountry')
 optdepends=('ipython: to use calibre-debug')
 install=calibre.install
-source=(http://downloads.sourceforge.net/${pkgname}/${pkgname}-${pkgver}.tar.gz
+source=(http://downloads.sourceforge.net/${pkgname}/${pkgname}-${pkgver}.tar.xz
         desktop_integration.patch)
-md5sums=('46317b1f4bd6f1cd5279a5f8a1d712ae'
+md5sums=('7e313e9bf84e046d5ccfa0e9e4c06b26'
          'f4b80e3b34e34bce68b3f052ff52dee8')
 
 build() {
@@ -34,7 +34,7 @@ build() {
     $(find . -regex ".*.py\|.*.recipe")
 
   python setup.py build 
-  python setup.py resources
+  #python setup.py resources
   python setup.py translations
 }
 
