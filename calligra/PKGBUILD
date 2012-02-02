@@ -29,8 +29,8 @@ pkgname=('calligra-filters'
          'calligra-thesaurus-doc'
          'calligra-braindump'
          'calligra-flow')
-pkgver=2.3.86
-pkgrel=2
+pkgver=2.3.87
+pkgrel=1
 arch=('i686' 'x86_64')
 url='http://www.calligra-suite.org'
 license=('FDL1.2' 'GPL2' 'LGPL')
@@ -38,8 +38,8 @@ makedepends=('kdelibs' 'kdepimlibs' 'eigen' 'freetds' 'kdegraphics-okular' 'kdee
              'libgsf' 'libwpd' 'libwpg' 'pstoedit' 'glew' 'gsl' 'cmake' 'automoc4' 'libspnav' 'libqtgtl'
              'boost' 'libkdcraw' 'libpqxx' 'fftw' 'opengtl' 'docbook-xsl' 'create-resources' 'lcms2' 'qrencode' 'libdmtx')
 groups=('calligra')
-source=("http://download.kde.org/unstable/${pkgbase}-${pkgver}/${pkgbase}-${pkgver}.tar.bz2")
-md5sums=('1c2d073846089a812cb9ebd43c4b6b56')
+source=("http://mirrors.mit.edu/kde/unstable/${pkgbase}-${pkgver}/${pkgbase}-${pkgver}.tar.bz2")
+md5sums=('c4c7f802f04c86cd4265829900d2fd10')
 
 build() {
   cd "${srcdir}"
@@ -222,8 +222,8 @@ package_calligra-tables() {
   pkgdesc="Write spreadsheet documents"
   depends=('calligra-libs' 'calligra-templates' 'calligra-plugins' 'gsl' 'hicolor-icon-theme')
   optdepends=('calligra-filters: import/export filters')
-  conflicts=('koffice-kspread' 'calligra-tables-git')
-  replaces=('koffice-kspread' 'calligra-tables-git')
+  conflicts=('koffice-kspread' 'calligra-tables-git' 'kformula')
+  replaces=('koffice-kspread' 'calligra-tables-git' 'kformula')
   install=calligra-tables.install
 
   cd "${srcdir}"/build/tables
