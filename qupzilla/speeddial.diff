@@ -1,0 +1,28 @@
+--- src/plugins/speeddial.cpp	2012-02-02 17:26:15.000000000 -0500
++++ src/plugins/speeddial.cpp	2012-02-03 14:55:33.231695258 -0500
+@@ -36,18 +36,17 @@
+     Settings settings;
+     settings.beginGroup("SpeedDial");
+     m_allPages = settings.value("pages", "").toString();
+-    m_backgroundImage = settings.value("background", "").toString();
+-    m_backgroundImageSize = settings.value("backsize", "auto").toString();
++    m_backgroundImage = settings.value("background", "file:///usr/share/icons/start-white.png").toString();
++    m_backgroundImageSize = settings.value("backsize", "contain").toString();
+     m_maxPagesInRow = settings.value("pagesrow", 4).toInt();
+-    m_sizeOfSpeedDials = settings.value("sdsize", 231).toInt();
++    m_sizeOfSpeedDials = settings.value("sdsize", 150).toInt();
+     settings.endGroup();
+ 
+     if (m_allPages.isEmpty()) {
+-        m_allPages = "url:\"http://www.google.com\"|title:\"Google\";"
+-                     "url:\"http://www.qupzilla.com\"|title:\"QupZilla\";"
+-                     "url:\"http://blog.qupzilla.com\"|title:\"QupZilla Blog\";"
+-                     "url:\"https://github.com/nowrep/QupZilla\"|title:\"QupZilla GitHub\";"
+-                     "url:\"http://facebook.com\"|title:\"Facebook\";";
++        m_allPages = "url:\"http://www.chakra-linux.org/\"|title:\"The Chakra Project - Welcome\";"
++                     "url:\"http://www.chakra-project.org/bbs/\"|title:\"Forums\";"
++                     "url:\"http://webchat.freenode.net/?channels=chakra/\"|title:\"IRC\";"
++                     "url:\"http://www.youtube.com/html5\"|title:\"YouTube-html5\";";
+     }
+ 
+     m_thumbnailsDir = mApp->getActiveProfilPath() + "thumbnails/";

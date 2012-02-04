@@ -2,18 +2,32 @@
 
 pkgname=qupzilla
 pkgver=1.1.5
-pkgrel=3
-commit=7536da2
+pkgrel=4
+commit=05d6622
 pkgdesc="A very fast open source browser based on WebKit core"
 url="http://www.qupzilla.com"
 arch=('i686' 'x86_64')
 license=('GPL3')
 depends=('qt')
-source=("https://www.github.com/nowrep/QupZilla/tarball/master/nowrep-QupZilla-${commit}.tar.gz")
-md5sums=('17b8823cb604b7a38a02400d03c16efc')
+source=("https://www.github.com/nowrep/QupZilla/tarball/master/nowrep-QupZilla-${commit}.tar.gz"
+        'searchenginesmanager.diff'
+        'speeddial.diff'
+        'preferences.diff'
+        'qupzilla.diff'
+        'start-white.png')
+md5sums=('d2d4460b44f0bb07e38b5ea1a8c54b36'
+         'd4ada584b731f392380570c002f4d13d'
+         '6ae6712cb6960a3132bb7176b22d1a0f'
+         '945f9530f75f4c5e6097459d7f2ee918'
+         '8e495fa90d5043fb4d0d6e1cac097290'
+         'fc705d7aba952361a626a2c79726bbfa')
 
 build() {
    cd "${srcdir}/nowrep-QupZilla-${commit}/"
+   patch -Np0 -i "${srcdir}/searchenginesmanager.diff"
+   patch -Np0 -i "${srcdir}/speeddial.diff"
+   patch -Np0 -i "${srcdir}/preferences.diff"
+   patch -Np0 -i "${srcdir}/qupzilla.diff"
    export USE_WEBGL="true"
    export KDE="true"
    qmake QupZilla.pro
@@ -22,5 +36,7 @@ build() {
 
 package() {
    cd "${srcdir}/nowrep-QupZilla-${commit}/"
+   mkdir -p ${pkgdir}/usr/share/icons
+   install -m 644 -p ${srcdir}/start-white.png ${pkgdir}/usr/share/icons/
    make INSTALL_ROOT=$pkgdir install
 }
