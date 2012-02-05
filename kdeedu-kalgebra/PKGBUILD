@@ -19,29 +19,26 @@ url="http://kde.org/applications/education/kalgebra/"
 arch=('i686' 'x86_64')
 url='http://www.kde.org'
 license=('GPL' 'LGPL' 'FDL')
-depends=("kde-runtime>=${_kdever}" "kdeedu-libkdeedu>=${_kdever}" )
+depends=("kde-runtime>=${_kdever}" "kdeedu-libkdeedu>=${_kdever}" "kdeedu-analitza>=${_kdever}")
 makedepends=('cmake' 'automoc4' 'docbook-xsl')
 provides=('kalgebra')
 groups=("kde" "kdeedu" "kde-uninstall")
-options=('!splithdr' 'splitdbg' 'log')
+options=('docs' '!splithdr' 'splitdbg' 'log')
 install=${pkgname}.install
 
 source=("$_mirror/${_pkgname}-$_kdever.tar.bz2")
 md5sums=(`grep ${_pkgname}-$_kdever.tar.bz2 ../kde-sc.md5 | cut -d" " -f1`)
 
-build()
-{
+build() {
 	cd ${srcdir}/${_pkgname}-${pkgver}
 	cmake . -DCMAKE_BUILD_TYPE=${_build_type} \
                 -DCMAKE_INSTALL_PREFIX=${_installprefix} \
                 -DCMAKE_SKIP_RPATH=ON \
-		-DINSTALL_ANALITZA_HEADERS=TRUE \
                 -DCMAKE_{SHARED,MODULE,EXE}_LINKER_FLAGS='-Wl,--no-undefined -Wl,--as-needed'
 
 }
 
-package()
-{
+package() {
 	cd ${srcdir}/${_pkgname}-${pkgver}
 	make DESTDIR=${pkgdir} install || return 1
 

@@ -14,20 +14,18 @@ pkgbase=kdepim-runtime
 pkgname=${pkgbase}
 arch=('i686' 'x86_64')
 pkgver=${_kdever}
-pkgrel=1
+pkgrel=2
 pkgdesc="KDE Pim Runtime"
 url="http://www.kde.org"
 license=('GPL' 'LGPL' 'FDL')
 install=${pkgbase}.install
 options=('docs' '!splithdr' 'splitdbg' 'log')
-depends=("kdepimlibs>=${_kdever}" "kde-runtime>=${_kdever}" "kdelibs>=${_kdever}")
-makedepends=('pkgconfig' 'cmake' 'automoc4' 'libdmtx' 'prison' 'qrencode')
+depends=("kdepimlibs>=${_kdever}" "kde-runtime>=${_kdever}" "kdelibs>=${_kdever}" 'prison' 'libdmtx' 'qrencode')
+makedepends=('pkgconfig' 'cmake' 'automoc4')
 groups=("kde" "kdepim" "kde-uninstall" "kde-minimal")
 
-source=($_mirror/${pkgbase}-$_kdever.tar.bz2
-        kmail_bcc.diff)
-md5sums=(`grep ${pkgbase}-$_kdever.tar.bz2 ../kde-sc.md5 | cut -d" " -f1`
-         '06a124e94713704411ddd20fcae3ad21')
+source=($_mirror/${pkgbase}-$_kdever.tar.bz2)
+md5sums=(`grep ${pkgbase}-$_kdever.tar.bz2 ../kde-sc.md5 | cut -d" " -f1`)
 
 #
 # build and install
@@ -36,10 +34,9 @@ build()
 {
 	msg "starting build ..."
 	cd ${srcdir}
-	patch -p0 -i ${srcdir}/kmail_bcc.diff
 	mkdir -p build
 	cd build
-        
+
 	cmake ../${pkgbase}-${pkgver} \
 		-DCMAKE_BUILD_TYPE=${_build_type} \
 		-DCMAKE_INSTALL_PREFIX=${_installprefix} \

@@ -37,13 +37,10 @@ source=($_mirror/${pkgbase}-$_kdever.tar.bz2
 md5sums=(`grep ${pkgbase}-$_kdever.tar.bz2 ../kde-sc.md5 | cut -d" " -f1`
          'e44e5e6ff9dd2fe66aba7313f7ff1d22') # 92545-xscreensaver.tar.bz2
 
-
-
 #
 # build function
 #
-build() 
-{
+build() {
 	cd ${srcdir}/${pkgbase}-${pkgver}
 
 	msg "starting build ..."
@@ -55,14 +52,10 @@ build()
 	make || return 1
 }
 
-
-
 #
 # split-install functions
 #
-
-package_kdeartwork-aurorae()
-{
+package_kdeartwork-aurorae() {
         pkgdesc='An Aurorae theme based on the Oxygen plasma theme'
         depends=("kde-workspace>=${_kdever}")
         groups=("${pkgbase}" "kde" "kde-uninstall")
@@ -75,8 +68,7 @@ package_kdeartwork-aurorae()
 		done
 }
 
-package_kdeartwork-colorschemes() 
-{
+package_kdeartwork-colorschemes() {
 	pkgdesc="KDE Artwork - Color Schemes"
         depends=("kde-workspace>=${_kdever}")
         groups=("${pkgbase}" "kde" "kde-uninstall")
@@ -89,8 +81,7 @@ package_kdeartwork-colorschemes()
 		done
 }
 
-package_kdeartwork-desktopthemes()
-{
+package_kdeartwork-desktopthemes() {
 	pkgdesc="KDE Artwork - Additional Desktop Themes"
         depends=("kde-workspace>=${_kdever}")
         groups=("${pkgbase}" "kde" "kde-uninstall")
@@ -110,8 +101,7 @@ package_kdeartwork-desktopthemes()
 	done
 }
 
-package_kdeartwork-emoticons()
-{
+package_kdeartwork-emoticons() {
 	pkgdesc="KDE Artwork - Additional Emoticons"
         depends=("kde-workspace>=${_kdever}")
         groups=("${pkgbase}" "kde" "kde-uninstall")
@@ -124,8 +114,7 @@ package_kdeartwork-emoticons()
 		done
 }
 
-package_kdeartwork-iconthemes()
-{
+package_kdeartwork-iconthemes() {
 	pkgdesc="KDE Artwork - Additional Icon Themes"
         depends=("kde-workspace>=${_kdever}")
         groups=("${pkgbase}" "kde" "kde-uninstall")
@@ -138,8 +127,7 @@ package_kdeartwork-iconthemes()
 		done
 }
 
-package_kdeartwork-screensavers()
-{
+package_kdeartwork-screensavers() {
 	pkgdesc="KDE Artwork - Screen Savers"
 	depends=("kde-workspace>=${_kdever}" "eigen")
         groups=("${pkgbase}" "kde" "kde-uninstall")
@@ -158,8 +146,7 @@ package_kdeartwork-screensavers()
 	popd
 }
 
-package_kdeartwork-kwinstyles()
-{
+package_kdeartwork-kwinstyles() {
 	pkgdesc="KDE Artwork - Window Decoration Styles for KWin"
         depends=("kde-workspace>=${_kdever}")
         groups=("${pkgbase}" "kde" "kde-uninstall")
@@ -172,8 +159,7 @@ package_kdeartwork-kwinstyles()
 		done
 }
 
-package_kdeartwork-sounds()
-{
+package_kdeartwork-sounds() {
 	pkgdesc="KDE Artwork - Sounds"
         depends=("kde-workspace>=${_kdever}")
         groups=("${pkgbase}" "kde" "kde-uninstall")
@@ -186,8 +172,7 @@ package_kdeartwork-sounds()
 		done
 }
 
-package_kdeartwork-styles()
-{
+package_kdeartwork-styles() {
 	pkgdesc="KDE Artwork - Additional Widget Styles"
 	depends=("kde-workspace>=${_kdever}")
         groups=("${pkgbase}" "kde" "kde-uninstall")
@@ -200,8 +185,7 @@ package_kdeartwork-styles()
 		done
 }
 
-package_kdeartwork-wallpapers()
-{
+package_kdeartwork-wallpapers() {
 	pkgdesc="KDE Artwork - Additional Wallpapers"
 	depends=("kde-workspace>=${_kdever}")
         groups=("${pkgbase}" "kde" "kde-uninstall")
@@ -214,8 +198,7 @@ package_kdeartwork-wallpapers()
 		done
 }
 
-package_kdeartwork-weatherwallpapers()
-{
+package_kdeartwork-weatherwallpapers() {
 	pkgdesc="KDE Artwork - Additional Wallpapers for the Plasma weather plugin"
 	depends=("kde-workspace>=${_kdever}")
         groups=("${pkgbase}" "kde" "kde-uninstall")

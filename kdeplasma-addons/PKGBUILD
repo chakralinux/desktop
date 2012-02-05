@@ -26,6 +26,7 @@ pkgname=('kdeplasma-addons-applets-bball'
          'kdeplasma-addons-applets-filewatcher'
          'kdeplasma-addons-applets-frame'
          'kdeplasma-addons-applets-fuzzy-clock'
+	 'kdeplasma-addons-applets-icontasks'
          'kdeplasma-addons-applets-incomingmsg'
          'kdeplasma-addons-applets-kdeobservatory'
          'kdeplasma-addons-applets-kimpanel'
@@ -82,7 +83,7 @@ pkgname=('kdeplasma-addons-applets-bball'
          'kdeplasma-addons-wallpapers-weather')
 arch=('i686' 'x86_64')
 pkgver=${_kdever}
-pkgrel=1
+pkgrel=2
 
 pkgdesc="KDE Plasma Addons"
 url="http://www.kde.org/"
@@ -92,22 +93,18 @@ depends=("kde-workspace>=${_kdever}" 'libqalculate' "kdeedu-marble>=${_kdever}" 
 makedepends=('pkgconfig' 'cmake' 'automoc4' "kde-workspace>=${_kdever}" 'libqalculate'
              "kdegraphics-libkexiv2>=${_kdever}" "kdeedu-marble>=${_kdever}" 'eigen' 'scim' 'qwt')
 
-source=($_mirror/${pkgbase}-$_kdever.tar.bz2)
-        #http://chakra-project.org/sources/kdeplasma-addons/kdeplasma-addons-4127af9b305485be34fd9ae7d6be7fab29b73a55.diff)
+source=("$_mirror/${pkgbase}-$_kdever.tar.bz2")
 md5sums=(`grep ${pkgbase}-$_kdever.tar.bz2 ../kde-sc.md5 | cut -d" " -f1`)
-         #4d34c126e683289b248ebfa7afa67e06)
-
 
 build() {
-	cd $srcdir
+	cd $srcdir/$pkgbase-$pkgver
 
-	# fixed in 4.7.1
-	#cd ${pkgbase}-${pkgver}
-	#patch -Np1 -i $srcdir/kdeplasma-addons-4127af9b305485be34fd9ae7d6be7fab29b73a55.diff
-	#cd ..
+	#msg "Applying upstream fixes..."
 
-	mkdir -p build
-	cd build
+	cd ..
+        rm -rf build
+	mkdir -p build && cd build
+
 	cmake ../${pkgbase}-${pkgver} \
 		-DCMAKE_BUILD_TYPE=Release \
 		-DCMAKE_SKIP_RPATH=ON \
@@ -258,6 +255,17 @@ package_kdeplasma-addons-applets-fuzzy-clock() {
         depends=('kde-workspace')
         groups=("kde" "kde-uninstall" "kdeplasma-addons")
         cd $srcdir/build/applets/fuzzy-clock
+        make DESTDIR=$pkgdir install
+}
+
+package_kdeplasma-addons-applets-icontasks() {
+        pkgdesc='A modified version of default taskbar applet and taskmanager library'
+        depends=('kde-workspace')
+        provides=('kdeplasma-applets-icontasks')
+        conflicts=('kdeplasma-applets-icontasks')
+        replaces=('kdeplasma-applets-icontasks')
+        groups=("kde" "kde-uninstall" "kdeplasma-addons")
+        cd $srcdir/build/applets/icontasks
         make DESTDIR=$pkgdir install
 }
 

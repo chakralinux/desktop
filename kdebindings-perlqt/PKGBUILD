@@ -18,24 +18,22 @@ pkgdesc="Perl bindings for the Qt libraries"
 url="http://kde.org/"
 arch=('i686' 'x86_64')
 license=('GPL' 'LGPL' 'FDL')
-depends=("kdebindings-smokeqt>=${_kdever}" 'qwt' 'perl-list-moreutils')
-makedepends=('cmake' 'automoc4' "kdebindings-smokegen>=${_kdever}" 'qwt' "kdesdk-kate>=$Â{_kdever}")
+depends=("kdebindings-smokeqt>=${_kdever}")
+makedepends=('cmake' 'automoc4' "kdebindings-smokegen>=${_kdever}" 'qwt' "kdesdk-kate>=${_kdever}")
 source=("$_mirror/${_pkgname}-$_kdever.tar.bz2")
 md5sums=(`grep ${_pkgname}-$_kdever.tar.bz2 ../kde-sc.md5 | cut -d" " -f1`)
 groups=("kde" "kdebindings" "kde-uninstall")
 provides=('perlqt')
-options=('!splithdr' 'splitdbg' 'log')
+options=('docs' '!splithdr' 'splitdbg' 'log')
 
-build()
-{
+build() {
 	cd ${srcdir}/${_pkgname}-${pkgver}
 	cmake . -DCMAKE_BUILD_TYPE=${_build_type} \
                 -DCMAKE_INSTALL_PREFIX=${_installprefix} 
         make
 }
 
-package()
-{
+package() {
 	cd ${srcdir}/${_pkgname}-${pkgver}
 	make DESTDIR=${pkgdir} install || return 1
 

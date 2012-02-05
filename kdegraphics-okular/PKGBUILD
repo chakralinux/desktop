@@ -18,7 +18,7 @@ pkgrel=1
 pkgdesc="split package"
 url="http://www.kde.org"
 license=('GPL' 'LGPL' 'FDL')
-options=('!splithdr' 'splitdbg' 'log')
+options=('docs' '!splithdr' 'splitdbg' 'log')
 groups=("kde" "kdegraphics" "kde-uninstall")
 provides=('okular')
 install=okular.install
@@ -33,12 +33,10 @@ makedepends=('pkgconfig' 'cmake' 'automoc4' 'qca')
 source=("$_mirror/${_pkgname}-$_kdever.tar.bz2")
 md5sums=(`grep ${_pkgname}-$_kdever.tar.bz2 ../kde-sc.md5 | cut -d" " -f1`)
 
-
 #
 # build function
 #
-build()
-{
+build() {
 
         msg "starting build ..."
 	cd ${srcdir}/${_pkgname}-${pkgver}
@@ -50,13 +48,7 @@ build()
 	make || return 1
 }
 
-
-
-#
-# split-install functions
-#
-package()
-{
+package() {
 	cd ${srcdir}/${_pkgname}-${pkgver}
 	make DESTDIR=${pkgdir} install || return 1
 }
