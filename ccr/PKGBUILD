@@ -4,31 +4,20 @@
 # maintainer (i686): Phil Miller <philm[at]chakra-project[dog]org>
 # maintainer (x86_64): Manuel Tortosa <manutortosa[at]chakra-project[dot]org>
 
+
 pkgname=ccr
-pkgver=3.0
-pkgrel=1
-pkgdesc="Bash wrapper for pacman and the CCR"
-url="http://github.com/bruenig/ccr"
+pkgver=4.0.1
+pkgrel=2
+pkgdesc="A Bash wrapper for the CCR"
 license="GPL"
 arch=('any')
-makedepends=('git')
-depends=('grep' 'sed' 'coreutils' 'bash' 'wget' 'pacman' 'autoconf' 'automake' 'bin86' 'bison' 'ed' 'fakeroot' 'flex' 'gcc' 'libtool' 'm4' 'make' 'patch' 'pkgconfig')
-optdepends=('sudo: install and update packages as non-root'
-            'pacman-color: colorized output')
+depends=('grep' 'sed' 'coreutils' 'bash' 'curl' 'pacman' 'autoconf' 'automake' 'bin86' 'bison' 'ed' 'fakeroot' 'flex' 'gcc' 'libtool' 'm4' 'make' 'patch' 'pkgconfig' 'jshon')
+optdepends=('sudo: install and update packages as non-root')
 #source=("http://chakra-project.org/sources/ccr/ccr-$pkgver.tar.xz"
-source=("http://chakra.sourceforge.net/sources/ccr/ccr-$pkgver.tar.gz"
+source=("http://chakra-linux.org/sources/ccr/ccr-$pkgver.tar.gz"
 	"ccr-vote")
-md5sums=('8e70b44c956dd4e3d9876fb34c7323eb'
-         'c888f773a869e09d6ec484394d2fcd35')
-
-# source PKGBUILD && _create-tarball
-_create-tarball() {
-    mkdir -p "ccr"
-    git clone git://github.com/bruenig/packer.git "ccr"
-    tar -cJf ccr-$pkgver.tar.xz "ccr"
-    md5sum "ccr-$pkgver.tar.xz"
-    rm -rf "ccr"
-}
+md5sums=('0f01f2ea1606f04ee9cd51b51b9e15c9'
+         '8c179875982d98c542ebb826f50f7924')
 
 build() {
     cd "$srcdir/ccr-$pkgver"
