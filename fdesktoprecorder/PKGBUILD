@@ -1,28 +1,30 @@
+ 
 # Contributor: Adria Arrufat <swiftscythe@gmail.com>
 # maintainer: abveritas@chakra-project.org
 
 pkgname=fdesktoprecorder
-pkgver=20120128
-pkgrel=1
+pkgver=20120206
+_pkgver=cf4f228
+pkgrel=3
 pkgdesc="A program that can video record a single window or your entire desktop using ffmpeg."
 arch=('i686' 'x86_64')
 url="http://opendesktop.org/content/show.php?content=147844"
 depends=('qt' 'ffmpeg')
 makedepends=('cmake' 'automoc4' 'kdelibs')
-source=(http://opendesktop.org/CONTENT/content-files/147844-FDesktopRecorder.tar.gz)
+source=(https://github.com/froksen/FDesktopRecorder/tarball/master/froksen-FDesktopRecorder-${_pkgver}.tar.gz)
 license=('GPL')
-md5sums=('924494a7ef2e3245ad0288adb5a8ac56')
+md5sums=('1f2c2173495461fbcbbf8c3a975635c5')
 
 build() {
-  cd ${srcdir}/FDesktopRecorder-${pkgver}
+  cd ${srcdir}/froksen-FDesktopRecorder-${_pkgver}
   qmake
   make
 }
 
 package() {
   mkdir -p ${pkgdir}/usr/{bin,share/{applications,pixmaps}}
-  cd ${srcdir}/FDesktopRecorder-${pkgver}
+  install -m644 ${startdir}/FDesktopRecorder.desktop ${pkgdir}/usr/share/applications/FDesktopRecorder.desktop
+  cd ${srcdir}/froksen-FDesktopRecorder-${_pkgver}
   install -m755 FDesktopRecorder ${pkgdir}/usr/bin/FDesktopRecorder
-  install -m644 Desktop/fdesktoprecorder.png ${pkgdir}/usr/share/pixmaps
-  install -m644 Desktop/FDesktopRecorder.desktop ${pkgdir}/usr/share/applications/FDesktopRecorder.desktop
+  install -m644 images/icon.png ${pkgdir}/usr/share/pixmaps/fdesktoprecorder.png
 }
