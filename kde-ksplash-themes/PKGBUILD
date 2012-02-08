@@ -13,13 +13,15 @@ source ../_buildscripts/${current_repo}-${_arch}-cfg.conf
 # package info
 #
 pkgname=kde-ksplash-themes
-pkgver=1.1
+pkgver=1.0.1
 pkgrel=1
 
 pkgbase="${_pkgprefix}-ksplash-themes"
 pkgname=("${_pkgprefix}-ksplash-themes-crunchy-branch-blue"
 	 "${_pkgprefix}-ksplash-themes-ashoc"
-	 "${_pkgprefix}-ksplash-themes-neda")
+	 "${_pkgprefix}-ksplash-themes-neda"
+	 "${_pkgprefix}-ksplash-themes-ronak"
+	 "${_pkgprefix}-ksplash-themes-ronak-light")
 
 pkgdesc="KDE KSplash-Themes for Chakra"
 url="http://chakra-project.org"
@@ -33,13 +35,17 @@ source=("http://chakra-project.org/sources/kde-ksplash-themes/kde-ksplash-themes
 	"http://chakra-project.org/sources/kde-ksplash-themes/kde-ksplash-themes-ashoc-1.0.tar.gz"
 	"http://chakra-project.org/sources/kde-ksplash-themes/ashoc-1.0-2-png.tar.gz"
 	"http://chakra-project.org/sources/kde-ksplash-themes/crunchy-branch-blue-1.0-png.tar.gz"
-	'http://chakra-project.org/sources/neda/NEDA.tar.gz')
+	'http://chakra-project.org/sources/neda/NEDA.tar.gz'
+	'http://chakra-project.org/sources/ronak/ksplash-ronak-1.0.1.tar.gz'
+	'http://chakra-project.org/sources/ronak/ksplash-ronak-light-1.0.1.tar.gz')
 
 md5sums=("0b10bc1f2e671aa895fae88f53f3c583"  #  kde-ksplash-themes-crunchy-branch-blue-1.0.tar.gz
 	 "d8ce77dd251138a9ef5a107542a086d6"  #  kde-ksplash-themes-ashoc-1.0.tar.gz
 	 "e9e16e1c6bc2661d922763b1fc76ffa8"  #  ashoc-1.0-2-png.tar.gz
 	 "b91f6203d846ba171771259d7689346d"  #  crunchy-branch-blue-1.0-png.tar.gz
-	 '83686866b1e7313b77b3cf98c5c4ddc3') #  NEDA.tar.gz
+	 '83686866b1e7313b77b3cf98c5c4ddc3' #  NEDA.tar.gz
+	 '2e9b621056ba539c29c9284d9dc5766e'  
+	 '5ad2bdc452720393fdc478f304b0dcf4')
 
 
 #_gitroot="git://git.chakra-project.org/artwork/ksplash-themes.git"
@@ -145,6 +151,42 @@ package_kde-ksplash-themes-neda()
 	pkgrel=1
 	
 	cd ${srcdir}/$_THEME/Ksplash
+	
+	msg "Install theme"
+	mkdir -pv $pkgdir/usr/share/apps/ksplash/Themes/$_THEME
+	cp -Rv * $pkgdir/usr/share/apps/ksplash/Themes/$_THEME
+	# fix rc file
+	sed -i -e "s~KStarboard~$_THEME~g" $pkgdir/usr/share/apps/ksplash/Themes/$_THEME/Theme.rc
+
+}
+
+package_kde-ksplash-themes-ronak()
+{
+
+	pkgdesc="Chakra Ronak KSplash-Theme"
+	groups=("${_pkgprefix}" "${_pkgprefix}-complete" "${_pkgprefix}-uninstall" "${_pkgprefix}-minimal" "${_pkgprefix}-ksplash-themes")
+	_THEME="RONAK"
+	pkgrel=1
+	
+	cd ${srcdir}/ksplash-ronak
+	
+	msg "Install theme"
+	mkdir -pv $pkgdir/usr/share/apps/ksplash/Themes/$_THEME
+	cp -Rv * $pkgdir/usr/share/apps/ksplash/Themes/$_THEME
+	# fix rc file
+	sed -i -e "s~KStarboard~$_THEME~g" $pkgdir/usr/share/apps/ksplash/Themes/$_THEME/Theme.rc
+
+}
+
+package_kde-ksplash-themes-ronak-light()
+{
+
+	pkgdesc="Chakra Ronak-Light KSplash-Theme"
+	groups=("${_pkgprefix}" "${_pkgprefix}-complete" "${_pkgprefix}-uninstall" "${_pkgprefix}-minimal" "${_pkgprefix}-ksplash-themes")
+	_THEME="RONAK-LIGHT"
+	pkgrel=1
+	
+	cd ${srcdir}/ksplash-ronak-light
 	
 	msg "Install theme"
 	mkdir -pv $pkgdir/usr/share/apps/ksplash/Themes/$_THEME

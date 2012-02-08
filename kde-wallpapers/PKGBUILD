@@ -14,13 +14,15 @@ pkgname=kde-wallpapers
 pkgver=${_kdever}
 pkgrel=1
 
-_default_wp="Ariya"
+_default_wp="Horos"
 
 pkgbase="kde-wallpapers"
 pkgname=("kde-wallpapers"
 	 "kde-wallpapers-crunchy-branch-blue"
 	 "kde-wallpapers-ashoc"
-	 "kde-wallpapers-neda")
+	 "kde-wallpapers-neda"
+	 "kde-wallpapers-ronak"
+	 "kde-wallpapers-ronak-light")
 
 pkgdesc="KDE Wallpapers for Chakra"
 url="http://www.chakra-project.org"
@@ -32,11 +34,15 @@ groups=("kde" "kde-uninstall")
 source=("$_mirror/${pkgbase}-$_kdever.tar.bz2"
 	"http://chakra.sourceforge.net/sources/kde-wallpapers/kde-wallpapers-crunchy-branch-blue-1.0.tar.gz"
 	"http://chakra.sourceforge.net/sources/kde-wallpapers/kde-wallpapers-ashoc-1.0-2.tar.gz"
-	"http://chakra.sourceforge.net/sources/neda/NEDA.tar.gz")
+	"http://chakra.sourceforge.net/sources/neda/NEDA.tar.gz"
+	"http://chakra.sourceforge.net/sources/ronak/ronak-wallpapers-1.0.tar.gz"
+	"http://chakra.sourceforge.net/sources/ronak/ronak-light-wallpapers-1.0.tar.gz")
 md5sums=(`grep ${pkgbase}-$_kdever.tar.bz2 ../kde-sc.md5 | cut -d" " -f1`
 	 "52d75a03f18204dde7965bd3dccb9ce4"  #  kde-wallpapers-crunchy-branch-blue-1.0.tar.gz
 	 "e6a3a7e170a739d226c180f5c2a09618"  #  kde-wallpapers-ashoc-1.0-2.tar.gz
-	 "83686866b1e7313b77b3cf98c5c4ddc3") #  NEDA.tar.gz
+	 "83686866b1e7313b77b3cf98c5c4ddc3" #  NEDA.tar.gz
+	 "0a82309f8d7315b35d7e7c6f64afadc5"
+	 "ff75399ca35846ee8dab701af975b8ee")
 
 #_gitroot="git://git.chakra-project.org/artwork/kde-wallpapers.git"
 #_gitname="kde-wallpapers"
@@ -45,6 +51,24 @@ md5sums=(`grep ${pkgbase}-$_kdever.tar.bz2 ../kde-sc.md5 | cut -d" " -f1`
 # build function
 #
 build() {
+
+	 # Smart hack here, cool :)
+
+#        cd "${srcdir}"
+#        msg "Connecting to GIT server...."
+#
+#        if [ -d $_gitname ] ; then
+#        cd $_gitname && git pull
+#        msg "The local files are updated."
+#        else
+#	      git clone $_gitroot
+#        fi
+#        msg "GIT checkout done or server timeout"
+#        msg "Starting make..."
+#
+#        rm -rf "${srcdir}/$_gitname-build"
+#
+#        cp -r "${srcdir}/$_gitname" "${srcdir}/$_gitname-build"
 
 	msg "building official kde wallpapers"
 	cd ${srcdir}/${pkgbase}-${pkgver}
@@ -137,6 +161,64 @@ package_kde-wallpapers-neda()
 	_WALLPAPER="NEDA"
 
 	cd ${srcdir}/NEDA/wallpaper/
+	
+	mkdir -pv $pkgdir/usr/share/wallpapers/$_WALLPAPER/contents/images
+	cp -Rv * $pkgdir/usr/share/wallpapers/$_WALLPAPER/contents/images
+	cd $pkgdir/usr/share/wallpapers/$_WALLPAPER/contents/images
+
+#	#fix structure
+#	_FILES="*.jpg"
+#	for i in $_FILES
+#	do
+#	#proper rename
+#	_OUT=$(echo $i | sed "s/KDEmod-Galaxair-//g" | sed 's/-/x/g')
+#	mv -v $i $_OUT
+#	done
+	cp -v $startdir/metadata.desktop $pkgdir/usr/share/wallpapers/$_WALLPAPER
+	cd $pkgdir/usr/share/wallpapers/$_WALLPAPER
+	sed -i -e "s~WALLPAPERNAME~$_WALLPAPER~g" metadata.desktop
+	sed -i -e "s~AUTHOR~Roozbeh Shafiee~g" metadata.desktop
+
+}
+
+package_kde-wallpapers-ronak()
+{
+
+	pkgdesc="Chakra Ronak Theme by Roozbeh Shafiee "
+	groups=("kde" "kde-complete" "kde-uninstall" "kde-minimal" "kde-wallpapers")
+
+	_WALLPAPER="RONAK"
+
+	cd ${srcdir}/ronak-wallpaper
+	
+	mkdir -pv $pkgdir/usr/share/wallpapers/$_WALLPAPER/contents/images
+	cp -Rv * $pkgdir/usr/share/wallpapers/$_WALLPAPER/contents/images
+	cd $pkgdir/usr/share/wallpapers/$_WALLPAPER/contents/images
+
+#	#fix structure
+#	_FILES="*.jpg"
+#	for i in $_FILES
+#	do
+#	#proper rename
+#	_OUT=$(echo $i | sed "s/KDEmod-Galaxair-//g" | sed 's/-/x/g')
+#	mv -v $i $_OUT
+#	done
+	cp -v $startdir/metadata.desktop $pkgdir/usr/share/wallpapers/$_WALLPAPER
+	cd $pkgdir/usr/share/wallpapers/$_WALLPAPER
+	sed -i -e "s~WALLPAPERNAME~$_WALLPAPER~g" metadata.desktop
+	sed -i -e "s~AUTHOR~Roozbeh Shafiee~g" metadata.desktop
+
+}
+
+package_kde-wallpapers-ronak-light()
+{
+
+	pkgdesc="Chakra Ronak Theme by Roozbeh Shafiee "
+	groups=("kde" "kde-complete" "kde-uninstall" "kde-minimal" "kde-wallpapers")
+
+	_WALLPAPER="RONAK-LIGHT"
+
+	cd ${srcdir}/ronak-light-wallpaper
 	
 	mkdir -pv $pkgdir/usr/share/wallpapers/$_WALLPAPER/contents/images
 	cp -Rv * $pkgdir/usr/share/wallpapers/$_WALLPAPER/contents/images
