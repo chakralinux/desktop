@@ -17,15 +17,35 @@ license=('custom')
 depends=('openssl' 'gc>=7.0' 'ncurses' 'zlib')
 makedepends=('imlib2')
 optdepends=('imlib2: for graphics support') 
-source=(http://downloads.sourceforge.net/sourceforge/w3m/$pkgname-$pkgver.tar.gz)
-sha1sums=('444b6c8cf7094ee95f8e9de96b37f814b9d83237')
+depends=('openssl' 'gc' 'ncurses')
+source=("http://downloads.sourceforge.net/sourceforge/w3m/${pkgname}-${pkgver}.tar.gz"
+        'https-segfault.patch')
+sha1sums=('444b6c8cf7094ee95f8e9de96b37f814b9d83237'
+          '66affb2f695fe0bdde25cf774642bfd6a9404e88')
 
 build() {
-  cd "$srcdir/$pkgname-$pkgver"
-  ./configure --prefix=/usr --libexecdir=/usr/lib --enable-ansi-color \
-    --disable-mouse --disable-w3mmailer --enable-image=x11,fb \
-    --with-imagelib=imlib2 --with-termlib=ncurses || return 1
-  make || return 1
-  make DESTDIR="${pkgdir}" install || return 1
-  install -Dm644 doc/README "${pkgdir}/usr/share/licenses/$pkgname/README"
+	cd "${srcdir}/${pkgname}-${pkgver}"
+
+	sed 's/file_handle/file_handle_rofl/g' -i istream.*
+	patch -p1 -i ../https-segfault.patch
+
+	./configure \
+		--prefix=/usr \
+		--libexecdir=/usr/lib \
+		--enable-image=x11,fb \
+		--with-imagelib=imlib2 \
+		--with-termlib=ncurses \
+		--disable-w3mmailer \
+		--disable-mouse \
+
+	make
+}
+
+package() {
+	cd "${srcdir}/${pkgname}-${pkgver}"
+	make DESTDIR="${pkgdir}" install
+
+	install -d "${pkgdir}"/usr/share/{doc,licenses}/"${pkgname}"
+	find doc/* | grep -v CVS | xargs -i install "{}" "${pkgdir}/usr/share/doc/${pkgname}"
+	ln -s ../../doc/"${pkgname}"/README "${pkgdir}/usr/share/licenses/${pkgname}"
 }
