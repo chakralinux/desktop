@@ -1,5 +1,5 @@
---- src/opensearch/searchenginesmanager.cpp	2012-02-02 18:04:29.000000000 -0500
-+++ src/opensearch/searchenginesmanager.cpp	2012-02-02 18:05:15.050820457 -0500
+--- src/opensearch/searchenginesmanager.cpp	2012-02-10 08:24:13.000000000 -0500
++++ src/opensearch/searchenginesmanager.cpp	2012-02-10 08:28:37.871589581 -0500
 @@ -43,7 +43,7 @@
  {
      Settings settings;
@@ -9,29 +9,12 @@
      settings.endGroup();
  
      connect(this, SIGNAL(enginesChanged()), this, SLOT(scheduleSave()));
-@@ -104,6 +104,12 @@
- 
- void SearchEnginesManager::restoreDefaults()
- {
-+    Engine duck;
-+    duck.name = "DuckDuckGo";
-+    duck.icon = QIcon(":/icons/menu/duck.png");
-+    duck.url = "https://duckduckgo.com/?q=%s";
-+    duck.shortcut = "d";
-+    
-     Engine google;
-     google.name = "Google";
-     google.icon = QIcon(":icons/menu/google.png");
-@@ -125,12 +131,6 @@
-     yt.shortcut = "yt";
-     yt.suggestionsUrl = "http://suggestqueries.google.com/complete/search?ds=yt&output=firefox&q=%s";
- 
--    Engine duck;
--    duck.name = "DuckDuckGo";
--    duck.icon = QIcon(":/icons/menu/duck.png");
+@@ -128,7 +128,7 @@
+     Engine duck;
+     duck.name = "DuckDuckGo";
+     duck.icon = QIcon(":/icons/menu/duck.png");
 -    duck.url = "https://duckduckgo.com/?q=%s";
--    duck.shortcut = "d";
--
++    duck.url = "https://duckduckgo.com/?t=chakra&q=%s";
+     duck.shortcut = "d";
+ 
      addEngine(google, false);
-     addEngine(wiki, false);
-     addEngine(yt, false);
