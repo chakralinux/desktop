@@ -4,28 +4,26 @@
 # maintainer (i686): Phil Miller <philm[at]chakra-project[dog]org>
 # maintainer (x86_64): Manuel Tortosa <manutortosa[at]chakra-project[dot]org>
 
-# include global config
-source ../_buildscripts/${current_repo}-${_arch}-cfg.conf
-
 pkgname=kdeplasma-applets-cwp
-pkgver=1.3.3
-pkgrel=3
+pkgver=1.5.9
+pkgrel=1
 pkgdesc="cwp, a kdeplasma weather plasmoid with lots of customization"
 arch=('i686' 'x86_64')
 url="http://www.kde-look.org/content/show.php/Customizable+Weather+Plasmoid?content=98925"
 license=('GPL')
-depends=('kdebase-workspace')
+depends=('kde-workspace')
 makedepends=('make' 'cmake' 'automoc4')
 conflicts=(kde-extragear-plasmoids)
 replaces=('kdeplasma-addons-cwp')
 install=customizable-weather-plasmoid.install
 source=(http://www.kde-look.org/CONTENT/content-files/98925-cwp-$pkgver.tar.bz2)
-md5sums=('c736026cdde8148cfff8a99261a3f1a8')
+md5sums=('a25a1982952aa5666c14000f904708c5')
+
 build() {
   cd $srcdir/cwp-$pkgver/
   mkdir build
   cd build
-  cmake -DCMAKE_INSTALL_PREFIX=`kde4-config --prefix` .. || return 1
-  make || return 1
-  make DESTDIR=$pkgdir install || return 1
+  cmake -DCMAKE_INSTALL_PREFIX=`kde4-config --prefix` .. 
+  make 
+  make DESTDIR=$pkgdir install 
 }
