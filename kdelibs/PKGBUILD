@@ -13,7 +13,7 @@ source ../_buildscripts/${current_repo}-${_arch}-cfg.conf
 pkgname="kdelibs"
 arch=('i686' 'x86_64')
 pkgver=${_kdever}
-pkgrel=1
+pkgrel=2
 pkgdesc="KDE Core Libraries"
 url="http://www.kde.org"
 license=('GPL' 'LGPL' 'FDL')
@@ -46,12 +46,14 @@ source=($_mirror/${pkgname}-$_kdever.tar.bz2
 	#http://chakra-linux.org/sources/${pkgname}/${pkgname}_knotify-qt-4.8.0.diff
 	01_chakra_tag.patch
 	02_kde_applications_menu.patch
-	03_chakra_menu.patch)
+	03_chakra_menu.patch
+	kdelibs-4.8.0-xinelib12x.patch)
 md5sums=(`grep ${pkgname}-$_kdever.tar.bz2 ../kde-sc.md5 | cut -d" " -f1`
          #'677bb68f64da2ca44b57337a9f753e59'  # kdelibs_knotify-qt-4.8.0.diff
          '40ba51f0c50ced94dfffe667ec856950'  # 01_chakra_tag.patch
          'e94450ba5430ea9c1e33bad9ae38ca2d'  # 02_kde_applications_menu.patch
-         '53b85403e4dd8f9146933c52ca23243e') # 03_chakra_menu.path
+         '53b85403e4dd8f9146933c52ca23243e'  # 03_chakra_menu.path
+         'e3182247eba97d0f600b627bcba93dbd') # kdelibs-4.8.0-xinelib12x.patch
         
 #
 # build function
@@ -64,6 +66,9 @@ build() {
 	patch -Np1 -i ${srcdir}/01_chakra_tag.patch
 	patch -Np1 -i ${srcdir}/02_kde_applications_menu.patch
 	patch -Np1 -i ${srcdir}/03_chakra_menu.patch
+
+	# already fixed in 4.8.1
+	patch -Np1 -i ${srcdir}/kdelibs-4.8.0-xinelib12x.patch
         cd ..
 
 	rm -rf build
