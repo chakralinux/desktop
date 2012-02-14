@@ -4,30 +4,31 @@
 # maintainer (i686): Phil Miller <philm[at]chakra-project[dog]org>
 # maintainer (x86_64): Manuel Tortosa <manutortosa[at]chakra-project[dot]org>
 
-# include global config
-source ../_buildscripts/${current_repo}-${_arch}-cfg.conf
-
 pkgname=kaffeine
 pkgver=1.2.2
-_pkgver=1.2.2
-pkgrel=1
+pkgrel=2
 pkgdesc='KDE media player'
 license=('GPL')
 arch=('i686' 'x86_64')
 url="http://kaffeine.kde.org"
 depends=('kdelibs' 'kdebase-runtime' 'xine-lib')
-makedepends=('pkgconfig' 'cmake' 'automoc4')
-source=("http://downloads.sourceforge.net/${pkgname}/${pkgname}-${_pkgver}.tar.gz")
+makedepends=('pkg-config' 'cmake' 'automoc4')
+install=kaffeine.install
+source=("http://downloads.sourceforge.net/${pkgname}/${pkgname}-${pkgver}.tar.gz")
+md5sums=('690e48d2e5fe123887109aa9b1bc1c31')
 
 build() {
-	cd $srcdir
-	mkdir build
+	cd "$srcdir"
+	mkdir -p build
 	cd build
-	cmake ../${pkgname}-${_pkgver} \
+	cmake ../${pkgname}-${pkgver} \
 		-DCMAKE_BUILD_TYPE=Release \
 		-DCMAKE_SKIP_RPATH=ON \
 		-DCMAKE_INSTALL_PREFIX=/usr
 	make
-	make DESTDIR=$pkgdir install
 }
-md5sums=('690e48d2e5fe123887109aa9b1bc1c31')
+
+package() {
+        cd "$srcdir/build"
+	make DESTDIR="$pkgdir" install
+}
