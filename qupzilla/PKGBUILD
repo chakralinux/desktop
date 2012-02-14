@@ -1,9 +1,10 @@
 # Contributor: Neophytos Kolokotronis <tetris4@gmail.com>
 
 pkgname=qupzilla
-pkgver=1.1.6
+pkgver=1.1.8
 pkgrel=1
-commit=72c55de
+commit=g7a81ccd
+_commit=7a81ccd
 pkgdesc="A very fast open source browser based on WebKit core"
 url="http://www.qupzilla.com"
 arch=('i686' 'x86_64')
@@ -15,7 +16,7 @@ source=("https://www.github.com/nowrep/QupZilla/tarball/master/nowrep-QupZilla-$
         'preferences.diff'
         'qupzilla.diff'
         'start-white.png')
-md5sums=('dcafdd98af7ce70ee41170131aba2411'
+md5sums=('fcdcdef683dfbaea3fc647b3dc9ce07a'
          'c2e9cc0b063130425df6b48c8d78540a'
          'a7502451930dd0b3e1bf1e297b69f605'
          '945f9530f75f4c5e6097459d7f2ee918'
@@ -23,7 +24,7 @@ md5sums=('dcafdd98af7ce70ee41170131aba2411'
          'fc705d7aba952361a626a2c79726bbfa')
 
 build() {
-   cd "${srcdir}/nowrep-QupZilla-${commit}/"
+   cd "${srcdir}/nowrep-QupZilla-${_commit}/"
    patch -Np0 -i "${srcdir}/searchenginesmanager.diff"
    patch -Np0 -i "${srcdir}/speeddial.diff"
    patch -Np0 -i "${srcdir}/preferences.diff"
@@ -35,7 +36,7 @@ build() {
 }
 
 package() {
-   cd "${srcdir}/nowrep-QupZilla-${commit}/"
+   cd "${srcdir}/nowrep-QupZilla-${_commit}/"
    mkdir -p ${pkgdir}/usr/share/icons
    install -m 644 -p ${srcdir}/start-white.png ${pkgdir}/usr/share/icons/
    make INSTALL_ROOT=$pkgdir install
