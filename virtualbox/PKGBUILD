@@ -1,4 +1,4 @@
-# Maintainer: Sebastien Luttringer <seblu+arch@seblu.net>
+# Contributor: Sebastien Luttringer <seblu[plus]arch[at]seblu[dot]net>
 #
 # Chakra Packages for Chakra, part of chakra-project.org
 #
@@ -6,19 +6,18 @@
 # maintainer (x86_64): Manuel Tortosa <manutortosa[at]chakra-project[dot]org>
 
 pkgname=virtualbox
-pkgver=4.1.2
-_build=73507
+pkgver=4.1.8
+_build=75467
 pkgrel=2
 pkgdesc='Oracle VM VirtualBox Binary Edition'
 arch=('i686' 'x86_64')
 url='http://virtualbox.org/'
 license=('GPL2')
-depends=('libidl2' 'libxcursor' 'libxinerama' 'libxslt' 'curl' 'linux-headers' 'python2')
+depends=('libidl2' 'libxcursor' 'libxinerama' 'libxslt' 'curl' 'linux-headers' 'python2' 'directfb')
 options=('!strip')
 optdepends=('virtualbox-ext-oracle: for Oracle extensions'
             'dkms: for handling kernel modules with dkms'
             'qt: for GUI support'
-            'sdl: for VBoxSDL and GUI support'
             'mesa: for OpenGL support'
             'libgl: for shared OpenGL support'
             'libxt: for shared clipboard support'
@@ -40,13 +39,13 @@ source=(
   'vboxweb.rc'
   'vboxweb.conf'
 )
-sha256sums=('bbf488cda504f05e2f21acf726c058db7844993c8b41012dc1a092eaac35b50a'
+sha256sums=('7d0d45dfc8e4ef27a817c017c6589d5204a6515d86f0c874843cb99ccfe319ee'
             '69417a9e8855cab8e4878886abe138f559fd17ae487d4cd19c8a24974a8bbec2'
             '578b63ab173cdcd9169d8aff00caf48668e46a6886bb90fd34a0fbe63e180a4e'
             'a3961bdeac733264320ec3b7de49018cbdb7e26b726170370feac8b809bf0bdd'
             '656905de981ffa24f6f921c920538854a235225053f44baedacc07b46ca0cf56'
             '12dbba3b59991f2b68cddeeeda20236aeff63e11b7e2d1b08d9d6a82225f6651')
-[ "${CARCH}" = i686 ] && sha256sums[0]='f98dad52d5f1e29f75b4195a6b65af8e82f65785e0a841e4416dcf2134bbb807'
+[[ "${CARCH}" = i686 ]] && sha256sums[0]='7780d8fc171ccfa3047a3d6373f9965b8c2896b11137817314f29cf5a3bc514f'
 _installdir='/opt/VirtualBox'
 
 package() {
