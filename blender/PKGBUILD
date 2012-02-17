@@ -9,22 +9,21 @@
 source ../_buildscripts/${current_repo}-${_arch}-cfg.conf
 
 pkgname=blender
-pkgver=2.60.1
-_pkgver=2.60a
-pkgrel=2
+pkgver=2.62
+pkgrel=1
 pkgdesc="A fully integrated 3D graphics creation suite"
 arch=('i686' 'x86_64')
 license=('GPL')
 url="http://www.blender.org"
 depends=('libpng' 'libtiff' 'openexr' 'sdl' 'python3' 'desktop-file-utils' 'shared-mime-info' 'hicolor-icon-theme' 'xdg-utils' 'glew' 'libxi' 'libxmu' 
-'mesa' 'freetype2' 'openal' 'libsndfile' 'libsamplerate' 'ffmpeg' 'fftw')
+'mesa' 'freetype2' 'openal' 'libsndfile' 'libsamplerate' 'ffmpeg' 'fftw' 'directfb')
 makedepends=('cmake' 'jack')
 install=blender.install
-source=(http://download.blender.org/source/$pkgname-$_pkgver.tar.gz)
-md5sums=('cc7e4a56c9f7941c33c958ff0338f9a6')
+source=(http://download.blender.org/source/$pkgname-$pkgver.tar.gz)
+md5sums=('f2357584a5081b03f6e60ba3efe2a610')
 
 build() {
-  cd "$srcdir/$pkgname-$_pkgver"
+  cd "$srcdir/$pkgname-$pkgver"
   
   mkdir -p build
   cd build
@@ -49,22 +48,22 @@ build() {
 
   make $MAKEFLAGS
 
-  cp -rf "$srcdir"/${pkgname}-$_pkgver/release/plugins/* \
-    "$srcdir"/${pkgname}-$_pkgver/source/blender/blenpluginapi/
-  cd "$srcdir"/${pkgname}-$_pkgver/source/blender/blenpluginapi
+  cp -rf "$srcdir"/${pkgname}-$pkgver/release/plugins/* \
+    "$srcdir"/${pkgname}-$pkgver/source/blender/blenpluginapi/
+  cd "$srcdir"/${pkgname}-$pkgver/source/blender/blenpluginapi
   chmod 755 bmake
   make
 }
 
 package() {
-  cd "$srcdir/$pkgname-$_pkgver/build"
+  cd "$srcdir/$pkgname-$pkgver/build"
   make DESTDIR="${pkgdir}" install
   python3 -m compileall "${pkgdir}/usr/share/blender"
 
 # install plugins
-  install -d -m755 "$pkgdir"/usr/share/blender/${_pkgver%[a-z]}/plugins/{sequence,texture}
-  cp "$srcdir"/${pkgname}-$_pkgver/source/blender/blenpluginapi/sequence/*.so \
-    "$pkgdir"/usr/share/blender/${_pkgver%[a-z]}/plugins/sequence/
-  cp "$srcdir"/${pkgname}-$_pkgver/source/blender/blenpluginapi/texture/*.so \
-    "$pkgdir"/usr/share/blender/${_pkgver%[a-z]}/plugins/texture/
+  install -d -m755 "$pkgdir"/usr/share/blender/${pkgver%[a-z]}/plugins/{sequence,texture}
+  cp "$srcdir"/${pkgname}-$pkgver/source/blender/blenpluginapi/sequence/*.so \
+    "$pkgdir"/usr/share/blender/${pkgver%[a-z]}/plugins/sequence/
+  cp "$srcdir"/${pkgname}-$pkgver/source/blender/blenpluginapi/texture/*.so \
+    "$pkgdir"/usr/share/blender/${pkgver%[a-z]}/plugins/texture/
 }
