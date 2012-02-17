@@ -1,34 +1,57 @@
-#
 # Apps Packages for Chakra, part of chakra-project.org
 #
 # Maintainer: Adrián Chaves Fernández (Gallaecio) <adriyetichaves gmail.com>
 
-pkgname=bsnes
-pkgver=085
-_pkgver=v$pkgver
-pkgrel=2
-pkgdesc="Super Nintendo Entertainment System™ (SNES) emulator focused on accuracy."
+pkgname='bsnes'
+pkgver=086
+pkgrel=1
+pkgdesc="Super Nintendo Entertainment System (SNES) emulator focused on accuracy."
 arch=('i686' 'x86_64')
 url="http://byuu.org/bsnes/"
-license=('GPL2')
-depends=('libao' 'libgl' 'libxv' 'openal' 'sdl' 'qt')
-makedepends=('mesa' 'libpulse')
-source=("http://bsnes.googlecode.com/files/${pkgname}_$_pkgver-source.tar.bz2")
-md5sums=('2419710087ba28c894e5aa1c3c41b6e7')
+license=('GPL3')
+depends=('libao' 'libgl' 'libxv' 'openal' 'sdl' 'qt>=4.7.0')
+makedepends=('pkg-config' 'mesa' 'libpulse')
+source=('http://bsnes.googlecode.com/files/bsnes_v086-source.tar.bz2' 'add-usr-share-fallback.patch')
+md5sums=('54f73b38d24405186b538e01713b0c1f' 'ebff549dd24224ff7df02596bf2672fc')
 
-# Build profile, to choose between: accuracy, compatibility or performance.
-_profile='performance'
+# Build the accuracy profile (you can also choose 'performance' or 'compatibility')
+__profile='accuracy'
 
 build() {
-  cd $srcdir/${pkgname}_$_pkgver-source/$pkgname
+  cd "${srcdir}/${pkgname}_v${pkgver}-source/${pkgname}"
 
- # Don't copy the cheat file.
-  sed -e '/mkdir -p ~\/.config\/bsnes/{N;N;d}' -i "ui/Makefile" 
+  # Makefile hacks:
+  # Disable pulseaudio.
+  sed -e 's|audio.pulseaudio ||' \
+      -e 's|audio.pulseaudiosimple ||' \
+      -i 'ui/Makefile'
+  # Don't copy the cheat file.
+  sed -e '/mkdir -p ~\/.config\/$(name)/{d}' \
+      -e '/cp data\/cheats.xml/{N;d}' \
+      -i 'ui/Makefile'
 
-  make compiler=gcc platform=x profile=$_profile phoenix=qt
+  # Apply patch to make bsnes look in /usr/share/bsnes for filters/shaders.
+  patch -p0 < "${srcdir}/add-usr-share-fallback.patch"
+
+  # Fix building with QT 4.8.0.
+  moc -i -Iphoenix/qt/ -o phoenix/qt/platform.moc phoenix/qt/platform.moc.hpp
+
+  # Compile bsnes.
+  make compiler=gcc platform=x profile=${__profile} phoenix=qt
+
+  # Compile the filters.
+  cd "${srcdir}/${pkgname}_v${pkgver}-source/snesfilter"
+  make compiler=gcc platform=x
 }
 
 package() {
-  cd $srcdir/${pkgname}_$_pkgver-source/$pkgname
-  make install profile=$_profile DESTDIR=$pkgdir prefix=/usr
+
+  cd "${srcdir}/${pkgname}_v${pkgver}-source/${pkgname}"
+  make install profile=${__profile} DESTDIR="${pkgdir}" prefix=/usr
+
+  # Install the filters/shaders
+  install --directory "${pkgdir}/usr/share/${pkgname}/filters"
+  install -D --mode=644 "${srcdir}/${pkgname}_v${pkgver}-source"/snesfilter/out/*.filter "${pkgdir}/usr/share/${pkgname}/filters"
+  install --directory "${pkgdir}/usr/share/${pkgname}/shaders"
+  install -D --mode=644 "${srcdir}/${pkgname}_v${pkgver}-source"/snesshader/*.shader "${pkgdir}/usr/share/${pkgname}/shaders"
 }
