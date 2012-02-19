@@ -5,28 +5,28 @@
 # maintainer (x86_64): Manuel Tortosa <manutortosa[at]chakra-project[dot]org>
 
 pkgname=mixxx
-pkgver=1.9.0
-_rel=release-1.9.x~bzr2720
-pkgrel=1.1
+pkgver=1.10.0
+_rel=release-1.10.x~bzr2720
+pkgrel=2
 pkgdesc="Digital DJ mixing software with cpu optimization enabled"
 arch=('i686' 'x86_64')
 url="http://www.mixxx.org/"
 license=('GPL2')
-depends=('libsndfile' 'libogg' 'taglib' 'libid3tag' 'libmad' 'libvorbis' 'portaudio' 'portmidi' 'qt>=4.7.0' 'libshout')
+depends=('libsndfile' 'libogg' 'taglib' 'libid3tag' 'libmad' 'libvorbis' 'portaudio' 'portmidi' 'qt>=4.8.0' 'libshout')
 makedepends=('bzr' 'scons>=0.98' 'pkgconfig>=0.15.0')
 #optdepends=('lib32-faad2' 'mp4v2')
 provides=(mixxx)
 source=(http://downloads.mixxx.org/mixxx-${pkgver}/mixxx-${pkgver}-src.tar.gz)
-md5sums=(ea78fc81922e6c7d85d6afffd2e526b1)
+md5sums=(d92bf422491fa92adf7ed6c2998e67fb)
 
 build() {
-  cd "${srcdir}/${pkgname}-${pkgver}~${_rel}"
+  cd "${srcdir}/${pkgname}-${pkgver}"
 
-  scons qtdir=/usr/lib/qt prefix=/usr install_root=$pkgdir/usr tuned=1 || return 1 
+  scons qtdir=/usr/lib/qt prefix=/usr install_root=$pkgdir/usr tuned=1 
 }
 
 package() {
-  cd "${srcdir}/${pkgname}-${pkgver}~${_rel}"
-  scons qtdir=/usr/lib/qt prefix=/usr install_root=$pkgdir/usr install || return 1
+  cd "${srcdir}/${pkgname}-${pkgver}"
+  scons qtdir=/usr/lib/qt prefix=/usr install_root=$pkgdir/usr install 
   sed -i -e "s~Exec=pasuspender mixxx~Exec=mixxx~g" "$pkgdir/usr/share/applications/mixxx.desktop"
 }
