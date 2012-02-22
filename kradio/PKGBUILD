@@ -1,16 +1,13 @@
 #
-# Chakra Packages for Chakra, part of chakra-project.org
+# Apps Packages for Chakra, part of chakra-project.org
 #
 # maintainer (i686): Phil Miller <philm[at]chakra-project[dog]org>
 # maintainer (x86_64): Manuel Tortosa <manutortosa[at]chakra-project[dot]org>
 
-# include global config
-source ../_buildscripts/${current_repo}-${_arch}-cfg.conf
-
 _pkgname=kradio4
 pkgname=kradio
-pkgver=4.0.2
-pkgrel=2
+pkgver=4.0.4
+pkgrel=1
 arch=('i686' 'x86_64')
 license=('GPL2')
 pkgdesc="KRadio is a comfortable KDE radio application."
@@ -19,7 +16,7 @@ depends=('lame' 'kdelibs' 'libsndfile' 'lirc-utils' 'libmms' 'ffmpeg')
 makedepends=('pkgconfig' 'automoc4')
 options=(!libtool)
 source=("http://downloads.sourceforge.net/sourceforge/${pkgname}/${_pkgname}-${pkgver}.tar.bz2")
-md5sums=('18fea3e2bc7100882075187c6a89f7bd')
+md5sums=('4b5495a4f1dda21f7201bc8db0d4f95e')
 
 build() {
   cd "${srcdir}"
@@ -47,4 +44,3 @@ package() {
   make DESTDIR="${pkgdir}" install
 }
 
-# vim:set ts=2 sw=2 et:
