@@ -4,19 +4,19 @@
 # Maintainer: Adrián Chaves Fernández (Gallaecio) <adriyetichaves gmail.com>
 
 pkgname=frostwire
-pkgver=5.2.11
+pkgver=5.3.2
 pkgrel=1
 pkgdesc="BitTorrent client with integrated search"
 arch=('any')
 url="http://www.frostwire.com"
 license=('GPL3')
-depends=('java-runtime' 'hicolor-icon-theme')
+depends=('java-runtime' 'hicolor-icon-theme' 'desktop-file-utils')
 optdepends=('mplayer: audio playback.'
             'vlc: video playback.')
 makedepends=('libicns')
 source=(http://dl.frostwire.com/$pkgname/$pkgver/$pkgname-$pkgver.noarch.tar.gz)
 # noextract=($pkgname-$pkgver.noarch.tar.gz)	# Extraction fails because of wrong ends of line.
-md5sums=('16683cdcc481c89830b8d35579fc5226')
+md5sums=('9134ad4019c13dffa3fa2b6a4496e2d6')
 
 package() {
   # Extraction.
@@ -51,4 +51,3 @@ package() {
   install -Dm664 COPYING $pkgdir/usr/share/licenses/$pkgname/license.txt
   install -Dm664 EULA.txt $pkgdir/usr/share/licenses/$pkgname/EULA.txt
 }
-md5sums=('90aa9dec3609fc751e624927697c7313')
