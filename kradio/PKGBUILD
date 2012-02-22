@@ -1,34 +1,46 @@
 #
-# Chakra Packages for Chakra, part of chakra-project.org
+# Apps Packages for Chakra, part of chakra-project.org
 #
 # maintainer (i686): Phil Miller <philm[at]chakra-project[dog]org>
 # maintainer (x86_64): Manuel Tortosa <manutortosa[at]chakra-project[dot]org>
 
 _pkgname=kradio4
 pkgname=kradio
-pkgver=4.0.3
-pkgrel=1
+pkgver=4.0.4
+pkgrel=2
 arch=('i686' 'x86_64')
 license=('GPL2')
 pkgdesc="KRadio is a comfortable KDE radio application."
 url="http://kradio.sourceforge.net/"
-depends=('lame' 'kde-runtime' 'libsndfile' 'lirc-utils' 'libmms' 'ffmpeg')
+depends=('lame' 'kdelibs' 'libsndfile' 'lirc-utils' 'libmms' 'ffmpeg')
 makedepends=('pkgconfig' 'automoc4')
 options=(!libtool)
-source=(http://downloads.sourceforge.net/sourceforge/kradio/kradio4-$pkgver.tar.bz2{,.asc})
-md5sums=('f495ce341150ab04515d217bd8c36a32'
-         '42259fac62e427b8c86b7a5e5d4b18bf')
+source=("http://downloads.sourceforge.net/sourceforge/${pkgname}/${_pkgname}-${pkgver}.tar.bz2")
+md5sums=('4b5495a4f1dda21f7201bc8db0d4f95e')
 
 build() {
-  cd "$srcdir"
-  mkdir build
-  cd build
-  cmake ../${pkgname}4-$pkgver -DCMAKE_SKIP_RPATH=ON -DCMAKE_INSTALL_PREFIX=/usr -DCMAKE_BUILD_TYPE=Release
+  cd "${srcdir}"
+
+  mkdir -p build && cd build
+
+  # This is needed because the naming of those definitions has changed
+  # in newer ffmpeg versions.
+  CXXFLAGS="${CXXFLAGS} -DCODEC_TYPE_VIDEO=AVMEDIA_TYPE_VIDEO"
+  CXXFLAGS="${CXXFLAGS} -DCODEC_TYPE_AUDIO=AVMEDIA_TYPE_AUDIO"
+  CXXFLAGS="${CXXFLAGS} -DCODEC_TYPE_DATA=AVMEDIA_TYPE_DATA"
+  export CXXFLAGS
+
+  cmake "../${_pkgname}-${pkgver}" \
+    -DCMAKE_SKIP_RPATH=ON \
+    -DCMAKE_INSTALL_PREFIX=/usr \
+    -DCMAKE_BUILD_TYPE=Release \
+    -DCMAKE_CXX_FLAGS="${CXXFLAGS}"
+
   make
 }
 
 package() {
-  cd "$srcdir/build"
-  make DESTDIR="$pkgdir" install
+  cd "${srcdir}/build"
+  make DESTDIR="${pkgdir}" install
 }
 
