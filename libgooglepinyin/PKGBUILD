@@ -9,7 +9,7 @@
 source ../_buildscripts/${current_repo}-${_arch}-cfg.conf
 
 pkgname=libgooglepinyin
-pkgver=0.1.1
+pkgver=0.1.2
 pkgrel=1
 pkgdesc="A fork from google pinyin on android"
 arch=('i686' 'x86_64')
@@ -18,6 +18,7 @@ license=('APACHE')
 makedepends=('cmake')
 conflicts=('libgooglepinyin-hg')
 source=(http://libgooglepinyin.googlecode.com/files/${pkgname}-${pkgver}.tar.bz2)
+md5sums=('d697aba08fdc0fe15c9d7b6096ca3b28')
 
 build(){
   cd "${srcdir}"
@@ -33,4 +34,3 @@ build(){
   make DESTDIR=${pkgdir} install
 }
 
-md5sums=('dd78eaf1fb4fc7dac379a8c837d8940d')
