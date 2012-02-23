@@ -1,0 +1,36 @@
+#
+# Games Packages for Chakra, part of chakra-project.org
+#
+# Maintainer: Daniele Cocca <daniele.cocca@gmail.com>
+
+# include global config
+source ../_buildscripts/${current_repo}-${_arch}-cfg.conf
+
+pkgname=epiar
+_pkgbranch=0.5.0
+pkgver=0.5.0
+pkgrel=2
+pkgdesc="Epiar is an open source, open-ended space action/trading game."
+arch=('i686' 'x86_64')
+url="http://www.epiar.net/"
+license=('GPL')
+depends=('sdl' 'sdl_image' 'sdl_mixer' 'libxml2' 'ftgl' 'lua' 'physfs')
+options=(!libtool)
+source=("http://epiar.net/files/epiar/releases/${_pkgbranch}/${pkgname}-${pkgver}.tar.bz2")
+md5sums=('506ac509dd99c59875411faa4147cbb6')
+
+build() {
+  cd "${srcdir}/${pkgname}-${pkgver}"
+
+  ./configure --prefix=/usr
+
+  make
+}
+
+package() {
+  cd "${srcdir}/${pkgname}-${pkgver}"
+
+  make DESTDIR="${pkgdir}" install
+}
+
+# vim:set ts=2 sw=2 et:
