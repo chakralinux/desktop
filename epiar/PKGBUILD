@@ -7,8 +7,8 @@
 source ../_buildscripts/${current_repo}-${_arch}-cfg.conf
 
 pkgname=epiar
-_pkgbranch=0.4.0
-pkgver=0.4.2
+_pkgbranch=0.5.0
+pkgver=0.5.0
 pkgrel=1
 pkgdesc="Epiar is an open source, open-ended space action/trading game."
 arch=('i686' 'x86_64')
@@ -16,51 +16,21 @@ url="http://www.epiar.net/"
 license=('GPL')
 depends=('sdl' 'sdl_image' 'sdl_mixer' 'libxml2' 'ftgl' 'lua')
 options=(!libtool)
-source=(http://epiar.net/files/epiar/releases/${_pkgbranch}/${pkgname}-${pkgver}.tar.bz2)
-md5sums=('9c365ca29f693bcf5648d78ae6b4dd33')
+source=("http://epiar.net/files/epiar/releases/${_pkgbranch}/${pkgname}-${pkgver}.tar.bz2")
+md5sums=('506ac509dd99c59875411faa4147cbb6')
 
 build() {
   cd "${srcdir}/${pkgname}-${pkgver}"
 
-  chmod +x ./autogen.sh
-  ./autogen.sh
   ./configure --prefix=/usr
+
   make
 }
 
 package() {
   cd "${srcdir}/${pkgname}-${pkgver}"
 
-  # INSTALL_TOP is needed for Source/Lua/ installation.
-  make DESTDIR="${pkgdir}" INSTALL_TOP="${pkgdir}/usr" install
-
-  #
-  # Handmade installation hacks, from now on.
-  #
-  gamedir=("${pkgdir}/usr/share/games/epiar")
-
-  # Move the executable away.
-  install -d "${gamedir}"
-  mv "${pkgdir}/usr/bin/Epiar" "${gamedir}/Epiar"
-
-  # Copy the resources directory.
-  cp -r "Resources/" "${gamedir}/Resources/"
-
-  # DON'T remove this as it would result in a game crash.
-  # We need to manually change the extension of a file name to
-  # have it seen correctly by the game.
-  mv "${gamedir}/Resources/Graphics/ui_button_mouseover.PNG" "${gamedir}/Resources/Graphics/ui_button_mouseover.png"
-
-  # Create a brand new launch script in /usr/bin.
-  cat > "${pkgdir}/usr/bin/epiar" <<-EOF
-	#!/bin/sh
-	( cd /usr/share/games/epiar && ./Epiar )
-EOF
-  chmod +x "${pkgdir}/usr/bin/epiar"
-
-  # Filter out lua files that would conflict with the user's
-  # filesystem contents.
-  rm -rf "${pkgdir}"/usr/bin/lua* "${pkgdir}"/usr/lib/*lua* "${pkgdir}"/usr/include/{lua,lau}*
+  make DESTDIR="${pkgdir}" install
 }
 
 # vim:set ts=2 sw=2 et:
