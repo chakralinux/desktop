@@ -1,0 +1,35 @@
+#
+# Games Packages for Chakra, part of chakra-project.org
+#
+# Maintainer: Adrián Chaves Fernández (Gallaecio) <adriyetichaves@gmail.com>
+# Contributor: Jesse Jaara <jesse.jaara@gmail.com>
+
+pkgname=wizznic
+pkgver=0.9.9
+pkgrel=1
+pkgdesc="Puzzle game where you have to match equal bricks (it is harder than it sounds)"
+arch=(i686 x86_64)
+url="http://wizznic.sourceforge.net/"
+license=('GPL3')
+depends=('directfb' 'mesa' 'sdl' 'sdl_mixer' 'sdl_image')
+source=("http://downloads.sourceforge.net/project/$pkgname/Source%20Releases/$pkgname-$pkgver-src.tar.bz2")
+md5sums=('1b017cd84903f40f2a3ae7aef9951e8d')
+
+build() {
+  cd $srcdir/$pkgname-$pkgver-src
+
+  make \
+    -f Makefile.linux \
+    DATADIR=/usr/share/$pkgname/ \
+    BINDIR=/usr/bin/
+}
+
+package() {
+  cd $srcdir/$pkgname-$pkgver-src
+
+  make \
+    -f Makefile.linux \
+    DATADIR=$pkgdir/usr/share/$pkgname/ \
+    BINDIR=$pkgdir/usr/bin/ \
+    install
+}
