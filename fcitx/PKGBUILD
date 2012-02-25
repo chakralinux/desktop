@@ -10,7 +10,7 @@ source ../_buildscripts/${current_repo}-${_arch}-cfg.conf
 pkgbase=fcitx
 pkgname=('fcitx' 'fcitx-qt' 'fcitx-gtk2' 'fcitx-gtk3')
 pkgver=4.2.0
-pkgrel=2
+pkgrel=3
 pkgdesc="A Flexible Input Method Framework"
 arch=("i686" "x86_64")
 license=('GPL')
@@ -58,6 +58,7 @@ package_fcitx-gtk2()
 {
     pkgdesc='GTK2 IM Module for fcitx'
     depends=('gtk2' 'icu' 'fcitx')
+    install=fcitx-gtk2.install
     cd $srcdir/build/src/frontend/gtk2
     make DESTDIR=$pkgdir install
 }
@@ -66,6 +67,7 @@ package_fcitx-gtk3()
 {
     pkgdesc='GTK3 IM Module for fcitx'
     depends=('gtk3' 'fcitx')
+    install=fcitx-gtk3.install
     cd $srcdir/build/src/frontend/gtk3
     make DESTDIR=$pkgdir install
 }
