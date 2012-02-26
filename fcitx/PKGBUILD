@@ -8,14 +8,14 @@
 source ../_buildscripts/${current_repo}-${_arch}-cfg.conf
 
 pkgbase=fcitx
-pkgname=('fcitx' 'fcitx-qt')
+pkgname=('fcitx' 'fcitx-qt' 'fcitx-gtk2' 'fcitx-gtk3')
 pkgver=4.2.0
-pkgrel=1
-pkgdesc="Free Chinese Input Toy of X - Input Method Server for X window system"
+pkgrel=3
+pkgdesc="A Flexible Input Method Framework"
 arch=("i686" "x86_64")
 license=('GPL')
 url="http://code.google.com/p/fcitx"
-makedepends=('intltool' 'cmake' 'pango' 'qt' 'icu' 'dbus-core' 'wget')
+makedepends=('intltool' 'cmake' 'pango' 'qt' 'icu' 'dbus-core' 'wget' 'gtk2' 'gtk3')
 conflicts=('fcitx-utf8-svn' 'fcitx-svn' 'fcitx-hg')
 source=("http://fcitx.googlecode.com/files/${pkgname}-${pkgver}.tar.bz2")
 md5sums=('4ba77f769219460439f9e1e5c0c6c5f3')
@@ -31,8 +31,8 @@ build() {
   cd $srcdir/build
   cmake ../${pkgname}-${pkgver} -DCMAKE_INSTALL_PREFIX=/usr -DCMAKE_BUILD_TYPE=Release \
       -DENABLE_QT_IM_MODULE=On \
-      -DENABLE_GTK2_IM_MODULE=Off \
-      -DENABLE_GTK3_IM_MODULE=Off \
+      -DENABLE_GTK2_IM_MODULE=On \
+      -DENABLE_GTK3_IM_MODULE=On \
       -DENABLE_OPENCC=Off
   make
 }
@@ -43,6 +43,7 @@ package_fcitx(){
     make DESTDIR=$pkgdir install
     rm -rf $pkgdir/usr/lib/qt/
     rm -rf $pkgdir/usr/lib/gtk-2.0/
+    rm -rf $pkgdir/usr/lib/gtk-3.0/
 }
 
 package_fcitx-qt()
@@ -50,5 +51,23 @@ package_fcitx-qt()
     pkgdesc='QT IM Module for fcitx'
     depends=('qt' 'icu' 'fcitx')
     cd $srcdir/build/src/frontend/qt
+    make DESTDIR=$pkgdir install
+}
+
+package_fcitx-gtk2()
+{
+    pkgdesc='GTK2 IM Module for fcitx'
+    depends=('gtk2' 'icu' 'fcitx')
+    install=fcitx-gtk2.install
+    cd $srcdir/build/src/frontend/gtk2
+    make DESTDIR=$pkgdir install
+}
+
+package_fcitx-gtk3()
+{
+    pkgdesc='GTK3 IM Module for fcitx'
+    depends=('gtk3' 'fcitx')
+    install=fcitx-gtk3.install
+    cd $srcdir/build/src/frontend/gtk3
     make DESTDIR=$pkgdir install
 }
