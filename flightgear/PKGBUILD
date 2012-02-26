@@ -5,21 +5,21 @@
 
 pkgname=flightgear
 _pkgname=FlightGear
-pkgver=2.4.0
+pkgver=2.6.0
 pkgrel=1
 pkgdesc="An open-source, multi-platform flight simulator."
 arch=(i686 x86_64)
-depends=('flightgear-data' 'freealut' 'openal' 'openscenegraph' 'ptlib' 'simgear')
-makedepends=('boost')
+depends=('flightgear-data' 'libxmu' 'libxi' 'openal' 'openscenegraph' 'zlib' 'simgear' 'subversion')
+makedepends=('boost' 'cmake')
 license=(GPL3)
 url="http://www.flightgear.org"
-source=(ftp://ftp.goflyflightgear.com/$pkgname/Source/$pkgname-$pkgver.tar.bz2)
-md5sums=('e6e1f8b1def24326fa64ff001e195da7')
+source=(http://ftp.icm.edu.pl/packages/$pkgname/Source/$pkgname-$pkgver.tar.bz2)
+sha256sums=('1554efbe20ad5002ad169225605ae95fca46d381bdff03dd624d92cf24b1a40f')
 
 build() {
   cd $srcdir/$pkgname-$pkgver
-  ./configure \
-    --prefix=/usr
+  cd $srcdir/flightgear-$pkgver
+  cmake -DCMAKE_INSTALL_PREFIX=/usr -DCMAKE_INSTALL_LIBDIR=lib .
   make
 }
 
