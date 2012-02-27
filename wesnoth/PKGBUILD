@@ -4,7 +4,7 @@
 # Maintainer: Adrián Chaves Fernández (Gallaecio) <adriyetichaves gmail.com>
 
 pkgname=wesnoth
-pkgver=1.10
+pkgver=1.10.1
 pkgrel=1
 pkgdesc="A turn-based strategy game on a fantasy world."
 arch=('i686' 'x86_64')
@@ -15,12 +15,12 @@ depends=('boost-libs' 'freetype2' 'fribidi' 'gcc-libs' 'icu' 'libvorbis' 'lua' '
 makedepends=('boost' 'cmake')
 conflicts=('wesnoth-dev' 'wesnoth-svn')
 source=(http://downloads.sourceforge.net/sourceforge/$pkgname/$pkgname-$pkgver.tar.bz2)
-md5sums=('707daa13e2f5b3976d9b169aab62dc29')
+md5sums=('a2ac2d629d4e3e5fc7e7e48f935d9960')
 
 build() {
   cd $srcdir/$pkgname-$pkgver
 
-  mkdir build && cd build
+  mkdir -p build && cd build
   cmake \
     -DCMAKE_INSTALL_PREFIX=/usr \
     -DCMAKE_BUILD_TYPE=Release \
