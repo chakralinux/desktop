@@ -30,5 +30,6 @@ build() {
 package() {
   cd ${srcdir}/${pkgname}
   make INSTALL_ROOT=${pkgdir} install
+  sed -i -e 's/Icon=minitunes/Icon=musique/g' ${pkgdir}/usr/share/applications/musique.desktop
   install -Dm644 ${srcdir}/${pkgname}/data/128x128/${pkgname}.png ${pkgdir}/usr/share/pixmaps/${pkgname}.png
 }
