@@ -1,0 +1,61 @@
+#
+# Apps Packages for Chakra, part of chakra-project.org
+#
+# maintainer (i686): Phil Miller <philm[at]chakra-project[dog]org>
+# maintainer (x86_64): Manuel Tortosa <manutortosa[at]chakra-project[dot]org>
+# contributor SpepS <dreamspepser at yahoo dot it>
+
+_name=ardour
+pkgname=$_name
+pkgver=3.0beta3_11482
+pkgrel=1
+pkgdesc="A multichannel hard disk recorder and digital audio workstation"
+arch=('i686' 'x86_64')
+url="http://$_name.org/"
+license=('GPL')
+depends=('qjackctl' 'desktop-file-utils')
+options=('!strip')
+install="$pkgname.install"
+_source_arch="_32"
+[ "$CARCH" = "x86_64" ] && _source_arch="_64"
+md5sums=('14c899f77ddd30bc974a47b5be5f01e9')
+[ "$CARCH" = "i686" ] && md5sums=('f3b1cfd1bb3f1d5d48e1e95768e9f13c')
+source=("http://$_name.org/files/${_name/a/A}${_source_arch}bit-$pkgver-dbg.tar"
+        "$pkgname.desktop")
+md5sums+=('36d0dbc5b98e3fa9a1b6bfc36f3baa56')
+
+build() {
+  return 0
+}
+
+package() {
+  cd "$srcdir/${_name/a/A}${_source_arch}bit-$pkgver-dbg"
+
+  # unpack
+  install -d "$pkgdir/opt"
+  bsdtar --no-same-owner -jxvf \
+    ${_name/a/A}_x86${_source_arch/_32}-$pkgver-dbg.tar.bz2 \
+    -C "$pkgdir/opt"
+
+  # install to /opt as does not conflict
+  # with other ardour installations and libs
+  cd "$pkgdir/opt"
+  mv ${_name/a/A}_x86${_source_arch/_32}-$pkgver-dbg $_name
+
+  # rm uninstaller and sanity check
+  rm $_name/bin/{*.uninstall.sh,sanityCheck}
+
+  # launcher
+  install -d "$pkgdir/usr/bin"
+  cat << EOF >> "$pkgdir/usr/bin/$pkgname"
+#!/bin/bash
+cd /opt/$_name/bin && ./${_name}3
+EOF
+  chmod +x "$pkgdir/usr/bin/$pkgname"
+
+  # desktop file
+  install -Dm644 "$srcdir/$pkgname.desktop" \
+    "$pkgdir/usr/share/applications/$pkgname.desktop"
+}
+
+# vim:set ts=2 sw=2 et:
