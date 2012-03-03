@@ -5,24 +5,26 @@
 
 pkgbase=ogre
 pkgname=('ogre' 'ogre-docs')
-pkgver=1.7.3
+pkgver=1.7.9
+_pkgver=1.8.0RC1
 pkgrel=1
 pkgdesc="A scene-oriented, flexible 3D engine written in C++"
 arch=('i686' 'x86_64')
 url='http://www.ogre3d.org'
 license=('custom:MIT')
-depends=('boost' 'freeimage' 'freetype2' 'libxaw' 'libxrandr' 
+depends=('boost-libs' 'freeimage' 'freetype2' 'libxaw' 'libxrandr' 
          'nvidia-cg-toolkit' 'mesa' 'zziplib' 'ois')
 makedepends=('boost' 'cmake' 'doxygen' 'graphviz' 'ttf-dejavu')
 optdepends=('cppunit: unit testing'
             'intel-tbb: better threading support'
-            'poco: portability')
+            'poco: portability'
+            'boost: for developing using ogre')
 install=ogre.install
-source=("http://downloads.sourceforge.net/${pkgname}/${pkgname}_src_v${pkgver//./-}.tar.bz2")
-md5sums=('7a85d3b8f0d64debd186e48ebe9556aa')
+source=("http://downloads.sourceforge.net/${pkgname}/${pkgname}_src_v${_pkgver//./-}.tar.bz2")
+md5sums=('7eec85b9116c0c9b09409c65db6a8276')
 
 build() {
-  cd ${srcdir}/${pkgname}_src_v${pkgver//./-}
+  cd ${srcdir}/${pkgname}_src_v${_pkgver//./-}
 
   # get a clean build dir
   [[ -d build ]] && rm -rf build
@@ -51,7 +53,7 @@ build() {
 package_ogre() {
   optdepends=('ogre-docs: documentation')
 
-  cd ${srcdir}/${pkgname}_src_v${pkgver//./-}/build
+  cd ${srcdir}/${pkgname}_src_v${_pkgver//./-}/build
 
   # install the bugger
   make DESTDIR=${pkgdir} install
@@ -76,7 +78,7 @@ package_ogre() {
 package_ogre-docs() {
   pkgdesc="Documentation for ogre"
   depends=()
-  cd ${srcdir}/${pkgname}_src_v${pkgver//./-}/build
+  cd ${srcdir}/${pkgname}_src_v${_pkgver//./-}/build
 
   # move docs into this package
   install -dm755 ${pkgdir}/usr/share/doc

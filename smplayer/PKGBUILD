@@ -6,24 +6,24 @@
 
 pkgname=smplayer
 _pkgname=SMPlayer
-pkgver=0.7.0
+pkgver=0.7.1
 pkgrel=1
 pkgdesc="A complete front-end for MPlayer"
 arch=('i686' 'x86_64')
 url="http://smplayer.sourceforge.net/"
 license=('GPL')
-depends=('qt>=4.7.0' 'mplayer>=30526' 'mpg123')
+depends=('qt>=4.8.0' 'mplayer>=30526' 'mpg123')
 source=(http://downloads.sourceforge.net/sourceforge/$pkgname/$_pkgname/$pkgver/${pkgname}-${pkgver}.tar.bz2)
-md5sums=('e39ba5b54e6218d411ecd296002d77bb')
+md5sums=('e50046399ee918bb7b57e98971425c95')
 
 build() {
   cd ${srcdir}/${pkgname}-${pkgver}
-  make PREFIX=/usr || return 1
+  make PREFIX=/usr 
 }
 
 package() {
   cd ${srcdir}/${pkgname}-${pkgver}
-  make PREFIX=${pkgdir}/usr install || return 1
+  make PREFIX=${pkgdir}/usr install 
 
   # Icon
   install -dm755 ${pkgdir}/usr/share/pixmaps
@@ -33,5 +33,5 @@ package() {
   # Menu entries.
   sed -i 's|Exec=smplayer %U|Exec=smplayer %F|' ${pkgdir}/usr/share/applications/smplayer.desktop || return 1
   sed -i 's|Exec=smplayer -add-to-playlist %U|Exec=smplayer -add-to-playlist %F|' \
-  	${pkgdir}/usr/share/applications/smplayer_enqueue.desktop || return 1
+  	${pkgdir}/usr/share/applications/smplayer_enqueue.desktop 
 }
