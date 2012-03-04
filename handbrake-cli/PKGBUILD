@@ -6,14 +6,14 @@
 
 pkgbase=handbrake
 pkgname=('handbrake-cli')
-pkgver=0.9.5
+pkgver=0.9.6
 pkgrel=1
 arch=('i686' 'x86_64')
 url="http://handbrake.fr/"
 license=('GPL')
-makedepends=('intltool' 'python2' 'yasm' 'wget' 'bzip2' 'gcc-libs')
+makedepends=('intltool' 'python' 'yasm' 'wget' 'bzip2' 'gcc-libs' 'libnotify' 'gstreamer0.10-base' 'dbus-glib' 'fribidi')
 source=(http://downloads.sourceforge.net/project/handbrake/$pkgver/HandBrake-$pkgver.tar.bz2)
-md5sums=('e17d3663fc36a985fe43e188695e3196')
+md5sums=('c75a0ca3ee74a3d67b25959937397cc4')
 
 build() {
   cd "$srcdir/HandBrake-$pkgver"
@@ -26,7 +26,7 @@ build() {
 
 package_handbrake-cli() {
   pkgdesc="Multithreaded video transcoder (CLI)"
-  depends=('bzip2' 'gcc-libs' 'zlib')
+  depends=('bzip2' 'gcc-libs' 'zlib' 'fribidi')
 
   cd "$srcdir/HandBrake-$pkgver/build"
   install -D HandBrakeCLI "$pkgdir/usr/bin/HandBrakeCLI"
