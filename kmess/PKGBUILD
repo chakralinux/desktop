@@ -5,8 +5,8 @@
 # maintainer (x86_64): Manuel Tortosa <manutortosa[at]chakra-project[dot]org>
 
 pkgname=kmess
-pkgver=2.0.6.1
-pkgrel=2
+pkgver=2.0.6.2
+pkgrel=1
 pkgdesc="KMess is a MSN Messenger client for Linux."
 arch=('i686' 'x86_64')
 url="http://kmess.sourceforge.net/"
@@ -15,10 +15,10 @@ depends=('libxss' 'libxslt' 'giflib' 'kdebase-runtime' 'xdg-utils' 'qt')
 makedepends=('automoc4' 'cmake' 'docbook-xsl')
 optdepends=('cabextract: provides winks support')
 install="kmess.install"
-source=("http://downloads.sourceforge.net/sourceforge/${pkgname}/${pkgname}-${pkgver}.tar.bz2"
-        "http://lekensteyn.nl/files/kmess/follow-location-redirects.patch")
-md5sums=('bc960c0bacb38be6dc118a2d2a6e69a6'
-         '73cda6f36eda602fc0ce9e23051e603a')
+source=("http://downloads.sourceforge.net/sourceforge/${pkgname}/${pkgname}-${pkgver}.tar.bz2")
+#        "http://lekensteyn.nl/files/kmess/follow-location-redirects.patch")
+md5sums=('a2e57911713308bef81b9347135cc5dd')
+#         '73cda6f36eda602fc0ce9e23051e603a')
 
 build() {
   cd "${srcdir}/${pkgname}-${pkgver}"
@@ -26,7 +26,7 @@ build() {
   # Patch for fixing the latest connection issues.
   # Should be removed when this gets integrated in a new release.
   # See http://kmess.org/board/viewtopic.php?f=4&t=20549&start=15
-  patch -Np1 -i "${srcdir}/follow-location-redirects.patch"
+  # patch -Np1 -i "${srcdir}/follow-location-redirects.patch"
 
   mkdir -p build
   cd build
@@ -40,5 +40,3 @@ package() {
   cd "${srcdir}/${pkgname}-${pkgver}/build"
   make DESTDIR="${pkgdir}" install
 }
-
-# vim:set ts=2 sw=2 et:
