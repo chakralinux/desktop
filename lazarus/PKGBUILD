@@ -5,37 +5,38 @@
 # maintainer (x86_64): Manuel Tortosa <manutortosa[at]chakra-project[dot]org>
 
 pkgname=lazarus
-	pkgver=0.9.31
-	_snapshot=35628-20120301
-	pkgrel=2
-	pkgdesc='Delphi-like IDE for FreePascal'
-	url='http://www.lazarus.freepascal.org/'
-	license=('GPL2' 'MPL' 'custom:LGPL')
-	arch=('i686' 'x86_64')
-	depends=('fpc' 'fpc-src' 'fpc-qtbindings' 'qt') #'gdk-pixbuf' 'gtk2'
-	options=('!emptydirs' '!makeflags')
-	source=(http://mirrors.iwi.me/lazarus/snapshots/lazarus-$pkgver-${_snapshot}-src.tar.bz2)
-        md5sums=('dab6a8ea5679e96221cfa7d1729ba840')
-	
-	build() {
-	  cd $srcdir/${pkgname}
-	  
-	  # don't 'make examples' or you'll end up with a 100MB pkg
-	  make FPC=/usr/bin/fpc LCL_PLATFORM=qt OPT="-dUSE_QT_45" clean all || return 1
-	
-	  # skip the 'make install' mess completely and do everything manually
-	  mkdir -p $pkgdir/usr/lib/lazarus $pkgdir/usr/bin
-	  rm -r debian #:)
-	  cp -R . $pkgdir/usr/lib/lazarus
-	  ln -s /usr/lib/lazarus/lazarus $pkgdir/usr/bin/lazarus
-	  ln -s /usr/lib/lazarus/startlazarus $pkgdir/usr/bin/startlazarus
-	  ln -s /usr/lib/lazarus/lazbuild $pkgdir/usr/bin/lazbuild
-	  install -Dm644 install/man/man1/lazbuild.1 $pkgdir/usr/share/man/man1/lazbuild.1
-	  # make 'desktop-file-validate' happy and fix missing .png icon
-	  sed -e 's|\(Categories\).*|\1=IDE;Development;|' -i install/lazarus.desktop
-	  install -Dm644 install/lazarus.desktop $pkgdir/usr/share/applications/lazarus.desktop
-	  install -Dm644 images/ide_icon48x48.png $pkgdir/usr/share/pixmaps/lazarus.png
-	  rm -r $pkgdir/usr/lib/lazarus/install
-	  # license files: /usr/lib/lazarus/COPYING*
-	  install -D -m644 COPYING.modifiedLGPL.txt $pkgdir/usr/share/licenses/$pkgname/COPYING.modifiedLGPL.txt
-	}
+pkgver=0.9.31
+_snapshot=35628-20120301
+pkgrel=2
+pkgdesc='Delphi-like IDE for FreePascal'
+url='http://www.lazarus.freepascal.org/'
+license=('GPL2' 'MPL' 'custom:LGPL')
+arch=('i686' 'x86_64')
+depends=('fpc' 'fpc-src' 'fpc-qtbindings' 'qt') #'gdk-pixbuf' 'gtk2'
+options=('!emptydirs' '!makeflags')
+categories=('programming')
+source=(http://mirrors.iwi.me/lazarus/snapshots/lazarus-$pkgver-${_snapshot}-src.tar.bz2)
+       md5sums=('dab6a8ea5679e96221cfa7d1729ba840')
+
+build() {
+  cd $srcdir/${pkgname}
+  
+  # don't 'make examples' or you'll end up with a 100MB pkg
+  make FPC=/usr/bin/fpc LCL_PLATFORM=qt OPT="-dUSE_QT_45" clean all || return 1
+
+  # skip the 'make install' mess completely and do everything manually
+  mkdir -p $pkgdir/usr/lib/lazarus $pkgdir/usr/bin
+  rm -r debian #:)
+  cp -R . $pkgdir/usr/lib/lazarus
+  ln -s /usr/lib/lazarus/lazarus $pkgdir/usr/bin/lazarus
+  ln -s /usr/lib/lazarus/startlazarus $pkgdir/usr/bin/startlazarus
+  ln -s /usr/lib/lazarus/lazbuild $pkgdir/usr/bin/lazbuild
+  install -Dm644 install/man/man1/lazbuild.1 $pkgdir/usr/share/man/man1/lazbuild.1
+  # make 'desktop-file-validate' happy and fix missing .png icon
+  sed -e 's|\(Categories\).*|\1=IDE;Development;|' -i install/lazarus.desktop
+  install -Dm644 install/lazarus.desktop $pkgdir/usr/share/applications/lazarus.desktop
+  install -Dm644 images/ide_icon48x48.png $pkgdir/usr/share/pixmaps/lazarus.png
+  rm -r $pkgdir/usr/lib/lazarus/install
+  # license files: /usr/lib/lazarus/COPYING*
+  install -D -m644 COPYING.modifiedLGPL.txt $pkgdir/usr/share/licenses/$pkgname/COPYING.modifiedLGPL.txt
+}
