@@ -1,6 +1,6 @@
---- src/opensearch/searchenginesmanager.cpp	2012-02-10 08:24:13.000000000 -0500
-+++ src/opensearch/searchenginesmanager.cpp	2012-02-10 08:28:37.871589581 -0500
-@@ -43,7 +43,7 @@
+--- src/lib/opensearch/searchenginesmanager.cpp.orig	2012-03-05 08:33:24.000000000 -0500
++++ src/lib/opensearch/searchenginesmanager.cpp	2012-03-05 14:07:15.125791995 -0500
+@@ -46,7 +46,7 @@
  {
      Settings settings;
      settings.beginGroup("SearchEngines");
@@ -9,11 +9,20 @@
      settings.endGroup();
  
      connect(this, SIGNAL(enginesChanged()), this, SLOT(scheduleSave()));
-@@ -128,7 +128,7 @@
+@@ -69,7 +69,7 @@
+         // TODO: Remove when releasing new version
+         //       and move into profile updater
+         if (en.name == "DuckDuckGo") {
+-            en.url = "https://duckduckgo.com/?q=%s&t=qupzilla";
++            en.url = "https://duckduckgo.com/?t=chakra&q=%s";
+         }
+ 
+         m_allEngines.append(en);
+@@ -137,7 +137,7 @@
      Engine duck;
      duck.name = "DuckDuckGo";
      duck.icon = QIcon(":/icons/menu/duck.png");
--    duck.url = "https://duckduckgo.com/?q=%s";
+-    duck.url = "https://duckduckgo.com/?q=%s&t=qupzilla";
 +    duck.url = "https://duckduckgo.com/?t=chakra&q=%s";
      duck.shortcut = "d";
  
