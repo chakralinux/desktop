@@ -18,6 +18,7 @@ pkgname=('kdepim-common'
          'kdepim-kaddressbook'
          'kdepim-kalarm'
          'kdepim-kjots'
+	 'kdepim-kleopatra'
          'kdepim-kmail'
          'kdepim-knode'
          'kdepim-knotes'
@@ -29,7 +30,7 @@ pkgname=('kdepim-common'
    
 arch=('i686' 'x86_64')
 pkgver=${_kdever}
-pkgrel=1
+pkgrel=2
 pkgdesc="split package"
 url="http://www.kde.org"
 license=('GPL' 'LGPL' 'FDL')
@@ -69,9 +70,9 @@ package_kdepim-common() {
 	groups=("kde" "kdepim" "kde" "kde-uninstall")
 	install=${pkgbase}.install
 
-	splitdirs=(akonadi_next icons calendarsupport calendarviews console incidenceeditor-ng kdgantt2 kleopatra kresources ksendemail libkdepim 
+	splitdirs=(akonadi_next icons calendarsupport calendarviews console incidenceeditor-ng kdgantt2 kresources ksendemail libkdepim 
                    libkdepimdbusinterfaces libkleo libkpgp libksieve mailcommon mailfilteragent messagecore messagecomposer messagecore messagelist messageviewer 
-		   ontologies plugins strigi-analyzer templateparser doc/kleopatra doc/kwatchgnupg doc/kabcclient doc/kioslave doc/konsolekalendar)
+		   ontologies plugins strigi-analyzer templateparser doc/kwatchgnupg doc/kabcclient doc/kioslave doc/konsolekalendar)
 
 		for i in ${splitdirs[@]} ; do
 			cd ${srcdir}/${pkgbase}-${pkgver}/${i}
@@ -181,6 +182,21 @@ package_kdepim-kjots() {
 			cd ${srcdir}/${pkgbase}-${pkgver}/${i}
 			make DESTDIR=${pkgdir} install || return 1
 		done
+}
+
+package_kdepim-kleopatra() {
+	pkgdesc='Certificate Manager and Unified Crypto GUI'
+	depends=('kdepim-common')
+        groups=("kde" "kdepim" "kde" "kde-uninstall")
+        provides=('kleopatra')
+        install=${pkgbase}.install
+	url="http://kde.org/applications/utilities/kleopatra/"
+
+        splitdirs="kleopatra doc/kleopatra"
+                for i in ${splitdirs} ; do
+                        cd ${srcdir}/${pkgbase}-${pkgver}/${i}
+                        make DESTDIR=${pkgdir} install || return 1
+                done
 }
 
 package_kdepim-kmail() {
