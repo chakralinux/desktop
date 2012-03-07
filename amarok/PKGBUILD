@@ -7,7 +7,7 @@
 pkgname=amarok
 replaces=('amarok-base' 'amarok-engine-xine' 'amarok-base-mysqlfree')
 pkgver=2.5.0
-pkgrel=3
+pkgrel=4
 pkgdesc="A media player for KDE"
 arch=("i686" "x86_64")
 url="http://amarok.kde.org"
@@ -18,11 +18,17 @@ optdepends=("libgpod: support Apple iPod audio devices"
             "libmtp: support for portable media devices"
             "libmygpo-qt: support for gpodder.net"  )
 install="${pkgname}.install"
-source=("http://mirrors.mit.edu/kde/stable/${pkgname}/${pkgver}/src/${pkgname}-${pkgver}.tar.bz2")
-md5sums=('b7983eaa33e4771769ae9e330c811995')
+source=("http://mirrors.mit.edu/kde/stable/${pkgname}/${pkgver}/src/${pkgname}-${pkgver}.tar.bz2"
+        "toolbarfix.patch")
+md5sums=('b7983eaa33e4771769ae9e330c811995'
+         '135ceaaf24cf9e332eb4f714700da7ee')
 
 build() {
   cd "${srcdir}"
+
+  #Patch to add the toolbar not showing well, should be removed in newer versions.
+  patch -Np0 -i "${srcdir}"/toolbarfix.patch
+
   mkdir build
   cd build
   cmake "../${pkgname}-${pkgver}" \
