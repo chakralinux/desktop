@@ -9,7 +9,7 @@
 
 pkgname=unknown-horizons
 pkgver=2011.3
-pkgrel=1
+pkgrel=2
 pyver=2.7
 pkgdesc="A 2D realtime strategy simulation with an emphasis on economy and city building"
 arch=('i686' 'x86_64')
@@ -34,4 +34,12 @@ package() {
   mkdir -p $pkgdir/usr/lib/python$pyver/site-packages/
   mv $pkgdir/usr/lib/python/* $pkgdir/usr/lib/python$pyver/site-packages/
   rm -rf $pkgdir/usr/lib/python
+
+  # Fix Enet (one-version fix).
+  # See http://forum.unknown-horizons.org/viewtopic.php?t=445 for additional information.
+  for ARCH in x86 x64
+  do
+    wget http://trac.unknown-horizons.org/t/export/08c6bf3973d1b731ecc912f605cce22d5b739a83/horizons/network/linux-$ARCH/enet.so
+    mv ./enet.so $pkgdir/usr/lib/python$pyver/site-packages/horizons/network/linux-$ARCH/enet.so
+  done
 }
