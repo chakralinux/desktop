@@ -6,7 +6,7 @@
 pkgbase=openarena
 pkgname=(openarena openarena-data)
 pkgver=0.8.8
-pkgrel=2
+pkgrel=3
 pkgdesc="A violent, sexy, multiplayer first person shooter based on the ioquake3 engine"
 arch=('i686' 'x86_64')
 url="http://openarena.ws/"
@@ -46,7 +46,7 @@ build() {
 }
 
 package_openarena() {
-    pkgrel=2
+    pkgrel=3
     depends=('curl' 'libvorbis' 'openarena-data' 'sdl')
     optdepends=('openal')
 
@@ -67,9 +67,6 @@ package_openarena() {
     # Executables.
     mv -f $pkgdir/usr/share/$pkgbase/$pkgbase.$_ARCH $pkgdir/usr/bin/$pkgbase
     mv -f $pkgdir/usr/share/$pkgbase/oa_ded.$_ARCH $pkgdir/usr/bin/$pkgbase-server
-
-    # Data:
-    cp -rf $srcdir/$pkgname-0.8.1/{baseoa,missionpack}/ $pkgdir/usr/share/$pkgname/
 
     find $pkgdir/usr/share -type f -exec chmod 644 {} +
 
