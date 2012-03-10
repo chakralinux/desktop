@@ -3,7 +3,7 @@
 # Maintainer: Adrián Chaves Fernández (Gallaecio) <adriyetichaves gmail.com>
 
 pkgname='bsnes'
-pkgver=086
+pkgver=087
 pkgrel=1
 pkgdesc="Super Nintendo Entertainment System (SNES) emulator focused on accuracy."
 arch=('i686' 'x86_64')
@@ -11,8 +11,9 @@ url="http://byuu.org/bsnes/"
 license=('GPL3')
 depends=('libao' 'libgl' 'libxv' 'openal' 'sdl' 'qt>=4.7.0')
 makedepends=('pkg-config' 'mesa' 'libpulse')
-source=('http://bsnes.googlecode.com/files/bsnes_v086-source.tar.bz2' 'add-usr-share-fallback.patch')
-md5sums=('54f73b38d24405186b538e01713b0c1f' 'ebff549dd24224ff7df02596bf2672fc')
+source=("http://bsnes.googlecode.com/files/bsnes_v${pkgver}-source.tar.bz2" 'add-usr-share-fallback.patch')
+md5sums=('e2a7b33d47ecdb015e01fdad5835a71d'
+         '730ca5572ed2ea5c0a2d0c09a48ba195')
 
 # Build the accuracy profile (you can also choose 'performance' or 'compatibility')
 __profile='accuracy'
@@ -24,11 +25,11 @@ build() {
   # Disable pulseaudio.
   sed -e 's|audio.pulseaudio ||' \
       -e 's|audio.pulseaudiosimple ||' \
-      -i 'ui/Makefile'
+      -i 'target-ui/Makefile'
   # Don't copy the cheat file.
   sed -e '/mkdir -p ~\/.config\/$(name)/{d}' \
       -e '/cp data\/cheats.xml/{N;d}' \
-      -i 'ui/Makefile'
+      -i 'target-ui/Makefile'
 
   # Apply patch to make bsnes look in /usr/share/bsnes for filters/shaders.
   patch -p0 < "${srcdir}/add-usr-share-fallback.patch"
