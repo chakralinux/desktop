@@ -17,6 +17,7 @@ url="http://www.unknown-horizons.org/"
 license=('GPL' 'CCPL')
 depends=('python2'  'python2-yaml' 'fife' 'python-distutils-extra')
 categories=('games')
+options=(!strip)
 source=("http://downloads.sourceforge.net/project/unknownhorizons/Unknown%20Horizons/${pkgver}/${pkgname}-${pkgver}-source.tar.bz2")
 md5sums=('0939357f9681c056cda7b161a4f17098')
 
@@ -37,9 +38,12 @@ package() {
 
   # Fix Enet (one-version fix).
   # See http://forum.unknown-horizons.org/viewtopic.php?t=445 for additional information.
-  for ARCH in x86 x64
-  do
-    wget http://trac.unknown-horizons.org/t/export/08c6bf3973d1b731ecc912f605cce22d5b739a83/horizons/network/linux-$ARCH/enet.so
-    mv ./enet.so $pkgdir/usr/lib/python$pyver/site-packages/horizons/network/linux-$ARCH/enet.so
-  done
+  if [[ $CARCH = "i686" ]]; then
+    ARCH="x86"
+  else
+    ARCH="x64"
+  fi
+  
+  wget http://trac.unknown-horizons.org/t/export/08c6bf3973d1b731ecc912f605cce22d5b739a83/horizons/network/linux-$ARCH/enet.so
+  mv ./enet.so $pkgdir/usr/lib/python$pyver/site-packages/horizons/network/linux-$ARCH/enet.so
 }
