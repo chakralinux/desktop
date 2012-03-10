@@ -6,13 +6,13 @@
 pkgbase=openarena
 pkgname=(openarena openarena-data)
 pkgver=0.8.8
-pkgrel=1
+pkgrel=2
 pkgdesc="A violent, sexy, multiplayer first person shooter based on the ioquake3 engine"
 arch=('i686' 'x86_64')
 url="http://openarena.ws/"
 screenshot="http://openarena.ws/e107_images/custom/085-3.jpg"
 license=('GPL2')
-makedepends=('openal' 'mesa')
+makedepends=('curl' 'libvorbis' 'mesa' 'openal' 'sdl')
 categories=('games')
 source=(http://download.tuxfamily.org/$pkgbase/rel/081/oa081.zip
         http://download.tuxfamily.org/$pkgbase/rel/085/oa085p.zip
@@ -46,7 +46,8 @@ build() {
 }
 
 package_openarena() {
-    depends=('culr' 'libvorbis' 'openarena-data' 'sdl')
+    pkgrel=2
+    depends=('curl' 'libvorbis' 'openarena-data' 'sdl')
     optdepends=('openal')
 
     cd $srcdir/$pkgbase-engine-0.8.1
@@ -78,6 +79,7 @@ package_openarena() {
 }
 
 package_openarena-data() {
+    pkgrel=1
     pkgdesc="Data files for Open Arena (openarena package)."
     arch=(any)
 
