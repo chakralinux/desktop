@@ -5,14 +5,14 @@
 
 pkgname=qemu-kvm
 _pkgname=kvm
-pkgver=0.15.0
-pkgrel=2
+pkgver=1.0
+pkgrel=1
 pkgdesc="Generic and open source processor emulator using dynamic translation to improve speed."
 arch=('i686' 'x86_64')
 license=('GPL2' 'LGPL2.1')
 url="http://www.linux-kvm.org"
-depends=('libjpeg' 'libpng' 'libsasl' 'curl' 'sdl' 'alsa-lib' 'esound' 'gnutls>=2.4.1' 'bluez' 'vde2' 'util-linux-ng')
-makedepends=('texi2html' 'perl' 'python2')
+depends=('alsa-lib' 'bluez' 'curl' 'gnutls>=2.4.1' 'libjpeg' 'libpng' 'libpulse' 'libsasl' 'sdl' 'util-linux-ng' 'vde2')
+makedepends=('git' 'iasl' 'perl' 'python2' 'texi2html')
 backup=('etc/qemu/target-x86_64.conf')
 provides=(qemu)
 conflicts=(qemu)
@@ -21,7 +21,7 @@ install=qemu-kvm.install
 changelog=ChangeLog
 source=("http://downloads.sourceforge.net/$_pkgname/$pkgname-$pkgver.tar.gz"
         "65-kvm.rules")
-md5sums=('b45b0deebba4ce47dcaaab3807f6ed47'
+md5sums=('00a825db46a70ba8ef9fc95da9cc7c1e'
          'b316a066d2f1bb57d8f5b7ea1d0d1caf')
 
 build() {
@@ -32,31 +32,48 @@ build() {
     --prefix=/usr \
     --python=/usr/bin/python \
     --sysconfdir=/etc \
-    --audio-drv-list=alsa,sdl,oss,esd \
-    --audio-card-list=ac97,sb16,es1370,adlib \
+    --audio-drv-list=alsa,sdl,oss,pa \
+    --audio-card-list=ac97,sb16,es1370,hda \
     --enable-docs
-  make
+
+    # Use latest seabios version
+    # https://bugs.archlinux.org/task/27616
+    cd "${srcdir}/"
+    git clone git://git.seabios.org/seabios.git
+    cd seabios
+    find 'tools/' 'contrib' -type f | xargs sed -i 's@^#!.*python$@#!/usr/bin/python2@'
+    make clean
+    make
+
 }
 
 package() {
   cd $srcdir/$pkgname-$pkgver
+    cd "${srcdir}/${pkgname}-${pkgver}"
+    make DESTDIR="${pkgdir}" install
 
-  make DESTDIR=$pkgdir install
+    # Use latest seabios version
+    # https://bugs.archlinux.org/task/27616
+    cp "${srcdir}/seabios/out/bios.bin" "${pkgdir}/usr/share/qemu/bios.bin"
 
-  # Symbolic link for backwards compatibility:
-  ln -s qemu-system-x86_64 $pkgdir/usr/bin/qemu-kvm
+    # symbolic link for backwards compatibility
+    ln -s qemu-system-x86_64 "${pkgdir}/usr/bin/qemu-kvm"
+    # symbolic link for to qemu binary for emulator apps
+    ln -s qemu-system-x86_64 "${pkgdir}/usr/bin/qemu"
+    # symbolic link for to qemu binary for emulator apps
+    ln -s qemu-system-x86_64 "${pkgdir}/usr/bin/kvm"
+    # fix man page
+    mv "${pkgdir}/usr/share/man/man1/qemu.1" \
+                     "${pkgdir}/usr/share/man/man1/qemu-kvm.1"
+    # install udev rules
+    install -D -m644 "${srcdir}/65-kvm.rules" \
+                     "${pkgdir}/lib/udev/rules.d/65-kvm.rules"
+    # strip scripts directory
+    find "${pkgdir}/usr/bin"  -type f -perm -u+w 2>/dev/null | while read binary ; do
+      case "$(file -bi "$binary")" in
+        *application/x-executable*) # Binaries
+        /usr/bin/strip $STRIP_BINARIES "$binary";;
+      esac
+    done
 
-  # Symbolic link for to qemu binary for emulator apps:
-  ln -s qemu-system-x86_64 $pkgdir/usr/bin/qemu
-
-  # Symbolic link for to qemu binary for emulator apps:
-  ln -s qemu-system-x86_64 $pkgdir/usr/bin/kvm
-
-  # Fix man page:
-  mv $pkgdir/usr/share/man/man1/qemu.1 \
-		    $pkgdir/usr/share/man/man1/qemu-kvm.1
-
-  # Install udev rules:
-  install -D -m644 $srcdir/65-kvm.rules \
-		    $pkgdir/lib/udev/rules.d/65-kvm.rules
 }
