@@ -23,10 +23,9 @@ makedepends=('pkgconfig' 'cmake' 'automoc4')
 source=("$_mirror/${_pkgname}-$_kdever.tar.bz2")
 md5sums=(`grep ${pkgname}-$_kdever.tar.bz2 ../kde-sc.md5 | cut -d" " -f1`)
 groups=("kde" "kdegraphics" "kde-uninstall")
-options=('!splithdr' 'splitdbg' 'log')
+options=('docs' '!splithdr' 'splitdbg' 'log')
 
-build()
-{
+build() {
 	cd ${srcdir}/${pkgname}-${pkgver}
 	cmake . -DCMAKE_BUILD_TYPE=${_build_type} \
                 -DCMAKE_INSTALL_PREFIX=${_installprefix} \
@@ -35,8 +34,7 @@ build()
 
 }
 
-package()
-{
+package() {
 	cd ${srcdir}/${pkgname}-${pkgver}
 	make DESTDIR=${pkgdir} install || return 1
 

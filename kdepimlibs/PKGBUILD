@@ -7,13 +7,10 @@
 # include global config
 source ../_buildscripts/${current_repo}-${_arch}-cfg.conf
 
-# original name (used for the source and pkgnames)
-_origname=kdepimlibs
-
 #
 # package info
 #
-pkgname=${_origname}
+pkgname="kdepimlibs"
 arch=('i686' 'x86_64')
 pkgver=${_kdever}
 pkgrel=1
@@ -22,15 +19,15 @@ pkgdesc="KDE Pim Libraries"
 url="http://www.kde.org"
 license=('GPL' 'LGPL' 'FDL')
 
-install=${_origname}.install
+install=${pkgname}.install
 options=('docs' '!splithdr' 'splitdbg' 'log')
-depends=("kdelibs>=${_kdever}" 'akonadi' 'libical' 'gpgme' 'prison')
+depends=("kdelibs>=${_kdever}" 'akonadi>=1.6.90' 'libical' 'gpgme' 'prison')
 makedepends=('pkgconfig' 'cmake' 'automoc4' 'boost' 'cyrus-sasl' 'openldap' 'prison' 'docbook-xsl')
 
 groups=("kde" "kde-uninstall" "kde-minimal")
 
-source=($_mirror/${_origname}-$_kdever.tar.bz2)
-md5sums=(`grep ${_origname}-$_kdever.tar.bz2 ../kde-sc.md5 | cut -d" " -f1`)
+source=($_mirror/${pkgname}-$_kdever.tar.bz2)
+md5sums=(`grep ${pkgname}-$_kdever.tar.bz2 ../kde-sc.md5 | cut -d" " -f1`)
 
 #
 # build and install
@@ -42,7 +39,7 @@ build()
 	mkdir -p build
 	cd build
 
-	cmake ../${_origname}-${pkgver} \
+	cmake ../${pkgname}-${pkgver} \
 		-DCMAKE_BUILD_TYPE=${_build_type} \
 		-DCMAKE_INSTALL_PREFIX=${_installprefix} \
 		-DCMAKE_SKIP_RPATH=ON \

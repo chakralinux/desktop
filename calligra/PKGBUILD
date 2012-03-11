@@ -29,7 +29,7 @@ pkgname=('calligra-filters'
          'calligra-thesaurus-doc'
          'calligra-braindump'
          'calligra-flow')
-pkgver=2.3.85
+pkgver=2.3.91
 pkgrel=1
 arch=('i686' 'x86_64')
 url='http://www.calligra-suite.org'
@@ -38,15 +38,15 @@ makedepends=('kdelibs' 'kdepimlibs' 'eigen' 'freetds' 'kdegraphics-okular' 'kdee
              'libgsf' 'libwpd' 'libwpg' 'pstoedit' 'glew' 'gsl' 'cmake' 'automoc4' 'libspnav' 'libqtgtl'
              'boost' 'libkdcraw' 'libpqxx' 'fftw' 'opengtl' 'docbook-xsl' 'create-resources' 'lcms2' 'qrencode' 'libdmtx')
 groups=('calligra')
-source=("http://download.kde.org/unstable/${pkgbase}-${pkgver}/${pkgbase}-${pkgver}.tar.bz2")
-md5sums=('a00dbd648ea2c2b56ac62025c836c806')
+source=("http://mirrors.mit.edu/kde/unstable/${pkgbase}-${pkgver}/${pkgbase}-${pkgver}.tar.bz2")
+md5sums=('3f5d02279c5657e24af6e1590cebaeb3')
 
 build() {
   cd "${srcdir}"
   mkdir build
   cd build
   cmake ../${pkgbase}-${pkgver} \
-    -DCMAKE_BUILD_TYPE=Release \
+    -DCMAKE_BUILD_TYPE=RelWithDebInfo \
     -DCMAKE_SKIP_RPATH=ON \
     -DCMAKE_INSTALL_PREFIX=/usr \
     -DBUILD_active=OFF \
@@ -96,6 +96,7 @@ package_calligra-plugins() {
   depends=('calligra-libs')
   conflicts=('koffice-common' 'calligra-plugins-git')
   replaces=('koffice-common' 'calligra-plugins-git')
+  categories=('office')
 
   cd "${srcdir}"/build/plugins
   make DESTDIR="${pkgdir}" install
@@ -106,6 +107,7 @@ package_calligra-pics() {
   depends=('calligra-libs')
   conflicts=('koffice-common' 'calligra-pics-git')
   replaces=('koffice-common' 'calligra-pics-git')
+  categories=('office')
   install=calligra.install
 
   cd "${srcdir}"/build/pics
@@ -152,6 +154,7 @@ package_calligra-karbon() {
   provides=('karbon')
   conflicts=('koffice-karbon' 'calligra-karbon-git')
   replaces=('koffice-karbon' 'calligra-karbon-git')
+  categories=('graphics')
   install=calligra-karbon.install
 
   cd "${srcdir}"/build/karbon
@@ -164,6 +167,7 @@ package_calligra-kexi() {
   provides=('kexi')
   conflicts=('koffice-kexi' 'calligra-kexi-git')
   replaces=('koffice-kexi' 'calligra-kexi-git')
+  categories=('office')
   install=calligra-kexi.install
 
   cd "${srcdir}"/build/kexi
@@ -176,6 +180,7 @@ package_calligra-kounavail() {
   provides=('kounavail')
   conflicts=('koffice-kounavail' 'calligra-kounavail-git')
   replaces=('koffice-kounavail' 'calligra-kounavail-git')
+  categories=('office')
 
   cd "${srcdir}"/build/kounavail
   make DESTDIR="${pkgdir}" install
@@ -187,6 +192,7 @@ package_calligra-plan() {
 		'calligra-plugins')
   conflicts=('koffice-kplato' 'calligra-kplato-git')
   replaces=('koffice-kplato' 'calligra-kplato-git')
+  categories=('office')
   install=calligra-plan.install
 
   cd "${srcdir}"/build/plan
@@ -199,6 +205,7 @@ package_calligra-stage() {
   optdepends=('calligra-filters: import/export filters')
   conflicts=('koffice-kpresenter' 'calligra-stage-git')
   replaces=('koffice-kpresenter' 'calligra-stage-git')
+  categories=('office')
   install=calligra-stage.install
 
   cd "${srcdir}"/build/stage
@@ -212,6 +219,7 @@ package_calligra-krita() {
   provides=('krita')
   conflicts=('koffice-krita' 'calligra-krita-git')
   replaces=('koffice-krita' 'calligra-krita-git')
+  categories=('graphics')
   install=calligra-krita.install
 
   cd "${srcdir}"/build/krita
@@ -222,8 +230,9 @@ package_calligra-tables() {
   pkgdesc="Write spreadsheet documents"
   depends=('calligra-libs' 'calligra-templates' 'calligra-plugins' 'gsl' 'hicolor-icon-theme')
   optdepends=('calligra-filters: import/export filters')
-  conflicts=('koffice-kspread' 'calligra-tables-git')
-  replaces=('koffice-kspread' 'calligra-tables-git')
+  conflicts=('koffice-kspread' 'calligra-tables-git' 'kformula')
+  replaces=('koffice-kspread' 'calligra-tables-git' 'kformula')
+  categories=('office')
   install=calligra-tables.install
 
   cd "${srcdir}"/build/tables
@@ -235,6 +244,7 @@ package_calligra-tables-doc() {
   depends=('calligra-tables')
   conflicts=('koffice-doc' 'calligra-tables-doc-git')
   replaces=('koffice-doc' 'calligra-tables-doc-git')
+  categories=('documentation')
 
   cd "${srcdir}"/build/doc/tables
   make DESTDIR="${pkgdir}" install
@@ -247,6 +257,7 @@ package_calligra-words() {
   optdepends=('calligra-filters: import/export filters')
   conflicts=('koffice-kword' 'calligra-words-git')
   replaces=('koffice-kword' 'calligra-words-git')
+  categories=('office')
   install=calligra-words.install
 
   cd "${srcdir}"/build/words
@@ -257,6 +268,7 @@ package_calligra-handbook() {
   pkgdesc="Documentation for Calligra"
   conflicts=('koffice-doc' 'koffice-common' 'calligra-handbook-git')
   replaces=('koffice-doc' 'koffice-common' 'calligra-handbook-git')
+  categories=('documentation')
 
   cd "${srcdir}"/build/doc/calligra
   make DESTDIR="${pkgdir}" install
@@ -266,6 +278,7 @@ package_calligra-thesaurus-doc() {
   pkgdesc="Documentation for Thesaurus"
   conflicts=('koffice-doc' 'calligra-thesaurus-doc-git')
   replaces=('koffice-doc' 'calligra-thesaurus-doc-git')
+  categories=('documentation')
 
   cd "${srcdir}"/build/doc/thesaurus
   make DESTDIR="${pkgdir}" install
@@ -273,8 +286,10 @@ package_calligra-thesaurus-doc() {
 
 package_calligra-braindump() {
   pkgdesc="Notes and idea gathering"
+  depends=('calligra-libs')
   conflicts=('calligra-braindump-git')
   replaces=('calligra-braindump-git')
+  categories=('office')
   install=calligra-braindump.install
 
   cd "${srcdir}"/build/braindump
@@ -283,9 +298,11 @@ package_calligra-braindump() {
 
 package_calligra-flow() {
   pkgdesc="Flowchart & Diagram Editing"
+  depends=('calligra-libs')
   install=calligra-flow.install
   conflict=('calligra-flow-git')
   replaces=('calligra-flow-git')
+  categories=('office')
 
   cd "${srcdir}"/build/flow
   make DESTDIR="${pkgdir}" install

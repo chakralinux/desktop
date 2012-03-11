@@ -10,53 +10,51 @@ source ../_buildscripts/${current_repo}-${_arch}-cfg.conf
 #
 # package info
 #
-pkgbase="kde-runtime"
-pkgname=('kde-runtime' 
-	 'kde-runtime-doc')
-        
+pkgname="kde-runtime"    
 arch=('i686' 'x86_64')
 pkgver=${_kdever}
 pkgrel=1
-pkgdesc="split package"
+pkgdesc="KDE Runtime"
 url="http://www.kde.org"
 license=('GPL' 'LGPL' 'FDL')
 options=('docs' '!splithdr' 'splitdbg' 'log')
+depends=("kdelibs>=${_kdever}" 'oxygen-icons' 'xorg-xauth' 'hicolor-icon-theme'
+	     'smbclient' 'rarian' 'libssh' 'libpulse' 'libssh' 'ntrack' 'libcanberra' 'sound-theme-freedesktop' 'qt-mobility')
 makedepends=('pkgconfig' 'cmake' 'automoc4' "kdepimlibs>=${_kdever}" 'openslp' 'docbook-xml' 'docbook-xsl'
              'xine-lib' 'libpulse' 'libssh' 'ntrack' 'libcanberra' 'libcanberra-pulse' 'samba' 'soprano')
-groups=('kde')
-
+optdepends=('htdig: to build the search index' 'gdb: drkonq crash handler')
+groups=("kde" "kde-minimal" "kde-uninstall")
+eplaces=('kdebase-runtime' 'kde-runtime-doc')
+provides=('kdebase-runtime' 'kde-runtime-doc')
+conflicts=('kdebase-runtime' 'kde-runtime-doc')
+install=kde-runtime.install
 noextract=(branding.svgz)
 
-source=($_mirror/${pkgbase}-$_kdever.tar.bz2
+source=($_mirror/${pkgname}-$_kdever.tar.bz2
 	branding.svgz
-#	01_knetattach_use_sftp.patch
-#	02_oxygenify_knetattach_icon.patch
+	# 01_knetattach_use_sftp.patch
+	# 02_oxygenify_knetattach_icon.patch
 	03_disable_logout_sound.patch)
-
-md5sums=(`grep ${pkgbase}-$_kdever.tar.bz2 ../kde-sc.md5 | cut -d" " -f1`
-        '68cd8eb57db22c2f2ed554b721253bc2'  #  branding.svgz
-#       '45fa12b8baf21c4fc845147afcea2bc1'  #  01_knetattach_use_sftp.patch
-#       '1f0225f31d5f44e753e966fd3a032f00'  #  02_oxygenify_knetattach_icon.patch
+md5sums=(`grep ${pkgname}-$_kdever.tar.bz2 ../kde-sc.md5 | cut -d" " -f1`
+        '68cd8eb57db22c2f2ed554b721253bc2'   #  branding.svgz
+	# '45fa12b8baf21c4fc845147afcea2bc1' #  01_knetattach_use_sftp.patch
+	# '1f0225f31d5f44e753e966fd3a032f00' #  02_oxygenify_knetattach_icon.patch
         'a434bf282ee391b2f857184be59a3b6f')  #  03_disable_logout_sound.patch
-
 
 #
 # build function
 #
-build()
-{
-	cd ${pkgbase}-${pkgver}
+build() {
+	cd ${pkgname}-${pkgver}
 
 	msg "applying main patchset ..."
 	# patch -Np1 -i ${srcdir}/01_knetattach_use_sftp.patch
 	# patch -Np1 -i ${srcdir}/02_oxygenify_knetattach_icon.patch
 	patch -Np1 -i ${srcdir}/03_disable_logout_sound.patch
-
-	# msg "add hotfixes ..."
-   
+ 
 	# copy our branding stuff
-	cp -f ${srcdir}/branding.svgz ${srcdir}/${pkgbase}-${pkgver}/desktoptheme/oxygen/widgets/
-	cp -f ${srcdir}/branding.svgz ${srcdir}/${pkgbase}-${pkgver}/desktoptheme/air/widgets/
+	cp -f ${srcdir}/branding.svgz ${srcdir}/${pkgname}-${pkgver}/desktoptheme/oxygen/widgets/
+	cp -f ${srcdir}/branding.svgz ${srcdir}/${pkgname}-${pkgver}/desktoptheme/air/widgets/
 
 	msg "starting build ..."
 	cmake . -DCMAKE_BUILD_TYPE=${_build_type} \
@@ -68,29 +66,9 @@ build()
 	make
 }
 
-
-
-#
-# split-install functions
-#
-package_kde-runtime()
-{
-	pkgdesc="KDE Runtime"
-	depends=("kdelibs>=${_kdever}" 'oxygen-icons' 'xorg-xauth' 'hicolor-icon-theme'
-		 'smbclient' 'rarian' 'libssh' 'libpulse' 'libssh' 'ntrack' 'libcanberra' 'sound-theme-freedesktop')
-	optdepends=('htdig: to build the search index' 'gdb: drkonq crash handler')
-	groups=("kde" "kde-minimal" "kde-uninstall")
-        replaces=('kdebase-runtime')
-        provides=('kdebase-runtime')
-	conflicts=('kdebase-runtime')
-	install=kde-runtime.install
-
-	cd ${srcdir}/${pkgbase}-${pkgver}/
+package() {
+	cd ${srcdir}/${pkgname}-${pkgver}/
 	make DESTDIR=${pkgdir} install
-
-	# also in kde-runtime-doc
-	rm -rf ${pkgdir}/usr/share/man
-	rm -rf ${pkgdir}/usr/share/doc
 
 	# put kdesu into the path
 	cp ${pkgdir}/usr/lib/kde4/libexec/kdesu ${pkgdir}/usr/bin/kdesu
@@ -104,10 +82,10 @@ package_kde-runtime()
 	ls -1 ${startdir}/*.patch &>/dev/null 2>&1
 	if [ "$?" = "0" ]; then
 		warning "incuding patches into package"
-		mkdir -p ${pkgdir}/usr/share/chakra/patches/${pkgbase} &>/dev/null
+		mkdir -p ${pkgdir}/usr/share/chakra/patches/${pkgname} &>/dev/null
 		for i in ${startdir}/*.patch; do
 			msg "$i"
-			cp $i ${pkgdir}/usr/share/chakra/patches/${pkgbase}/ &>/dev/null
+			cp $i ${pkgdir}/usr/share/chakra/patches/${pkgname}/ &>/dev/null
 		done
 	else
 		warning "no patches found, skipping to include them into the package..."
@@ -117,17 +95,3 @@ package_kde-runtime()
 	rm -rf ${pkgdir}/usr/share/icons/hicolor/index.theme
 	rm -rf ${pkgdir}/usr/share/icons/default.kde4
 }
-
-package_kde-runtime-doc()
-{
-	pkgdesc="KDE Runtime - Documentation"
-	groups=("kde" "kde-uninstall" "kde-doc")
-        replaces=('kdebase-runtime-doc')
-
-	splitdirs="doc"
-		for i in ${splitdirs} ; do
-			cd ${srcdir}/${pkgbase}-${pkgver}/${i}
-			make DESTDIR=${pkgdir} install
-		done
-}
-

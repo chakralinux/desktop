@@ -12,7 +12,6 @@ source ../_buildscripts/${current_repo}-${_arch}-cfg.conf
 #
 pkgbase="kde-baseapps"
 pkgname=('kde-baseapps'
-         'kde-baseapps-doc'
 	 'kde-baseapps-dolphin'
 	 'kde-baseapps-konqueror'
 	 'kde-baseapps-konq-plugins')
@@ -33,14 +32,15 @@ source=("$_mirror/${pkgbase}-$_kdever.tar.bz2"
 	"http://www.kde-apps.org/CONTENT/content-files/99752-kde_cdemu-0.3.1.tar.bz2")
 
 md5sums=(`grep ${pkgbase}-$_kdever.tar.bz2 ../kde-sc.md5 | cut -d" " -f1`
-         '6b68353583ee959fb61b3c68a07606ae')  # 99752-kde_cdemu-0.3.1.tar.gz
+         '6b68353583ee959fb61b3c68a07606ae') # 99752-kde_cdemu-0.3.1.tar.gz
 
 #
 # build function
 #
-build()
-{
+build() {
 	cd ${pkgbase}-${pkgver}
+
+        # msg "aplying upstream fixes..."
 
         msg "starting build ..."
 	cmake . -DCMAKE_BUILD_TYPE=${_build_type} \
@@ -51,23 +51,20 @@ build()
 	make || return 1
 }
 
-
-
 #
 # split-install functions
 #
-package_kde-baseapps()
-{
+package_kde-baseapps() {
 	pkgdesc="KDE Base Applications"
 	depends=("kde-runtime>=${_kdever}" 'libraw1394')
 	optdepends=("cdemu-client: Support transparent CD/DVD image mounting in KDE")
-	conflicts=("kdebase")
-        replaces=('kdebase')
-        provides=("kdebase" "baseapps")
+	conflicts=("kdebase" 'kde-baseapps-doc')
+        replaces=('kdebase' 'kde-baseapps-doc')
+        provides=("kdebase" "baseapps" 'kde-baseapps-doc')
 	groups=("${pkgbase}" "kde" "kde-minimal" "kde-uninstall")
 	install=kde-baseapps.install
 
-	splitdirs="kdepasswd kdialog keditbookmarks kfind lib nsplugins plasma konqueror"
+	splitdirs="kdepasswd kdialog keditbookmarks kfind lib nsplugins plasma konqueror doc/kdepasswd doc/kfind"
 		for i in ${splitdirs} ; do
 			cd ${srcdir}/${pkgbase}-${pkgver}/${i}
 			make DESTDIR=${pkgdir} install || return 1
@@ -129,48 +126,34 @@ package_kde-baseapps()
 	#fi
 }
 
-package_kde-baseapps-doc()
-{
-	pkgdesc="KDE Base Applications - Documentation"
-	conflicts=('kdebase-doc')
-	replaces=('kdebase-doc')
-        groups=("kde" "kde-uninstall" "kde-doc")
-
-	splitdirs="doc"
-		for i in ${splitdirs} ; do
-			cd ${srcdir}/${pkgbase}-${pkgver}/${i}
-			make DESTDIR=${pkgdir} install || return 1
-		done
-}
-
-package_kde-baseapps-dolphin()
-{
+package_kde-baseapps-dolphin() {
 	pkgdesc="KDE Base Applications - Dolphin, the default KDE file manager"
 	depends=("${pkgbase}>=${_kdever}")
 	groups=("${pkgbase}" "kde" "kde-complete" "kde-uninstall")
 	conflicts=("kdebase-dolphin")
 	provides=("kdebase-dolphin" "dolphin")
 	replaces=('kdebase-dolphin')
+	categories=('system')
 	install=kde-baseapps-dolphin.install
 
-	splitdirs="dolphin"
+	splitdirs="dolphin doc/dolphin"
 		for i in ${splitdirs} ; do
 			cd ${srcdir}/${pkgbase}-${pkgver}/${i}
 			make DESTDIR=${pkgdir} install || return 1
 		done
 }
 
-package_kde-baseapps-konqueror()
-{
+package_kde-baseapps-konqueror() {
 	pkgdesc="KDE Base Applications - Konqueror, the default KDE web browser"
 	depends=("${pkgbase}>=${_kdever}" "${pkgbase}-dolphin>=${_kdever}")
 	groups=("${pkgbase}" "kde" "kde-minimal" "kde-uninstall")
 	conflicts=("kdebase-konqueror")
 	provides=("kdebase-konqueror" "konqueror")
 	replaces=('kdebase-konqueror')
+	categories=('network')
 	install=kde-baseapps-konqueror.install
 
-	splitdirs="konqueror"
+	splitdirs="konqueror doc/konqueror"
 		for i in ${splitdirs} ; do
 			cd ${srcdir}/${pkgbase}-${pkgver}/${i}
 			make DESTDIR=${pkgdir} install || return 1
@@ -193,14 +176,14 @@ package_kde-baseapps-konqueror()
 	rm -vR ${pkgdir}/usr/share/kde4/service*
 }
 
-package_kde-baseapps-konq-plugins()
-{
+package_kde-baseapps-konq-plugins() {
 	pkgdesc="KDE Base Applications - Extra plugins for Konqueror"
 	depends=("${pkgbase}-konqueror>=${_kdever}")
 	groups=("${pkgbase}" "kde" "kde-minimal" "kde-uninstall")
 	conflicts=('konq-plugins')
 	provides=("konq-plugins")
 	replaces=('konq-plugins')
+	categories=('network')
 	install=kde-baseapps-konqueror.install
 
 	splitdirs="konq-plugins"

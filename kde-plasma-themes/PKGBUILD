@@ -9,18 +9,18 @@ source ../_buildscripts/${current_repo}-${_arch}-cfg.conf
 
 pkgbase="kde-plasma-themes"
 pkgname=("kde-plasma-themes-neda"
-	 "kde-plasma-themes-kneda")
+	 "kde-plasma-themes-ronak")
 pkgver=1.0
 pkgrel=1
 arch=('any')
 
-source=('http://chakra-project.org/sources/neda/Neda-1.7.4.tar.gz'
-        'http://chakra-project.org/sources/kneda/Kneda-0.6.4.tar.gz')
-md5sums=('22dfbe05a16601fb359dcbbd7f068ab7'
-         '149b1ace8fa3d2d7f981bc6841749f83')
+source=('http://chakra-linux.org/sources/neda/Neda-1.8.3.2.tar.gz'
+        'http://chakra-linux.org/sources/ronak/ronak-plasma-1.0.tar.gz')
+md5sums=('0be3b8f65318e4147cbc1720fb772463'
+         '83537e8480609ea7142f036e7ca37752')
 
 package_kde-plasma-themes-neda() {
-pkgver=1.7.4
+pkgver=1.8.3.2
 pkgrel=1
 pkgdesc="Chakra NEDA Plasma theme"
 url="http://www.chakra-project.org"
@@ -35,15 +35,15 @@ replaces=('kde-plasma-themes-kneda')
   find $pkgdir/ -name ".directory" -type f -exec rm -fr {} +
 }
 
-package_kde-plasma-themes-kneda() {
-pkgver=0.6.4
+package_kde-plasma-themes-ronak() {
+pkgver=1.0
 pkgrel=1
-pkgdesc="Chakra KNEDA Plasma theme"
+pkgdesc="Chakra RONAK Plasma theme"
 url="http://www.chakra-project.org"
 license=('GPL')
-  mkdir -p $pkgdir/usr/share/apps/desktoptheme
-  cd $startdir/src
-  cp -R Kneda $pkgdir/usr/share/apps/desktoptheme
+  mkdir -p $pkgdir/usr/share/apps/desktoptheme/RONAK
+  cd $startdir/src/ronak-plasma
+  cp -R * $pkgdir/usr/share/apps/desktoptheme/RONAK
   # fix file rights
   chmod 755 -R $pkgdir/usr/share/apps/desktoptheme
   # remove nasty files

@@ -26,10 +26,9 @@ conflicts=('kdebindings-csharp')
 replaces=('kdebindings-csharp')
 provides=('kdebindings-csharp' 'kimono')
 groups=("kde" "kdebindings" "kde-uninstall")
-options=('!splithdr' 'splitdbg' 'log')
+options=('docs' '!splithdr' 'splitdbg' 'log')
 
-build()
-{
+build() {
 	cd ${srcdir}/${_pkgname}-${pkgver}
 	cmake . -DCMAKE_BUILD_TYPE=${_build_type} \
                 -DCMAKE_INSTALL_PREFIX=${_installprefix} \
@@ -37,8 +36,7 @@ build()
         make
 }
 
-package()
-{
+package() {
 	cd ${srcdir}/${_pkgname}-${pkgver}
 	make DESTDIR=${pkgdir} install || return 1
 
