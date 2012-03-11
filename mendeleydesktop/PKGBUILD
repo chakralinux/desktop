@@ -6,7 +6,7 @@
  
  
 pkgname=mendeleydesktop
-pkgver=1.3.1
+pkgver=1.3.2
 pkgrel=1
 url="http://www.mendeley.com/"
 pkgdesc="The desktop client for managing and sharing research papers."
@@ -24,8 +24,8 @@ sha256sums=('b58feabbb62e93104f0277ad792d2ef81e55f828c5ba8b42c036a1d0e9d44a61'
             '5484716ec4adf29a7bfc5ecb45c8ed4d6a5e253b8c72fccea12662454d398b85')
 
 if [[ $CARCH = x86_64 ]]; then
-	md5sums[0]='18715f40a084d99ff35141488aa0fd45'
-	sha256sums[0]='15fab4130f560e420a6de803e4174a107c0fe720f4f53f84e4e18b91a586b693'
+	md5sums[0]='766e7f94a49943064a8a8d06559bf222'
+	sha256sums[0]='869e5df39b5af17b89af49e602d3a2a919b600a33c2e98678fef8ae3569be2f7'
 fi
 
 package() {
@@ -45,9 +45,10 @@ package() {
 	ln -s "/opt/$pkgname/share/applications/mendeleydesktop.desktop" "$pkgdir/usr/share/applications/"
 
 	# force bundled qt since mendeley crashes when using qt 4.8
-	sed -i 's/^Exec.*$/& --force-bundled-qt/' "$pkgdir/opt/$pkgname/share/applications/mendeleydesktop.desktop"
-
-	for size in 16 22 32 48 64 128; do
+	#sed -i 's/^Exec.*$/& --force-bundled-qt/' "$pkgdir/opt/$pkgname/share/applications/mendeleydesktop.desktop"
+        sed -e 's/^Exec.*$/& --force-bundled-qt/g' -i "$pkgdir/opt/$pkgname/share/applications/mendeleydesktop.desktop"
+	
+        for size in 16 22 32 48 64 128; do
 	    install -dm755 "$pkgdir/usr/share/icons/hicolor/${size}x${size}/apps"
 	    ln -s "/opt/$pkgname/share/icons/hicolor/${size}x${size}/apps/$pkgname.png" \
 		  "$pkgdir/usr/share/icons/hicolor/${size}x${size}/apps"
