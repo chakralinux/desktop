@@ -1,42 +1,38 @@
 #
 # Apps Packages for Chakra, part of chakra-project.org
 #
-# maintainer (i686): Phil Miller <philm[at]chakra-project[dog]org>
-# maintainer (x86_64): Manuel Tortosa <manutortosa[at]chakra-project[dot]org>
-
-# include global config
-source ../_buildscripts/${current_repo}-${_arch}-cfg.conf
+# Maintainer: Neophytos Kolokotronis <tetris4@gmail.com>
+# Contributor: tefan Husmann <stefan-husmann@t-online.de
+# Contributor: Cristian Maureira <saint [at] archlinux.cl>
+# Contributor: Dr.Egg <rwhite @ archlinux . us>
 
 pkgname=musescore
-pkgver=1.0
+_pkgname=mscore
+pkgver=1.2
 pkgrel=1
-pkgdesc="A music score editor written in Qt4"
+pkgdesc="A music score editor written in Qt"
 arch=('i686' 'x86_64')
 url="http://www.musescore.org/en/"
 license=('GPL')
-depends=('qt>=4.5.0' 'openssl' 'libsndfile' 'qtscriptgenerator')
+depends=('qtwebkit' 'libsndfile' 'qtscriptgenerator' 'portaudio')
 makedepends=('cmake' 'doxygen')
-optdepends=('portaudio' 'jack-audio-connection-kit')
-conflicts=('musescore-svn' 'mscore')
-source=(http://downloads.sourceforge.net/project/mscore/mscore/MuseScore-${pkgver}/MuseScore-${pkgver}.tar.bz2 'paths.patch')
-md5sums=('475c7c5abdaa80318b207884475de9ac'
-         'e5011154d217f633f21b4bb70e589510')
-         
+optdepends=('jack')
+install=musescore.install
+source=("http://downloads.sourceforge.net/${_pkgname}/${_pkgname}-${pkgver}.tar.bz2"
+paths.patch 64bit.patch)
+md5sums=('9dd182ab3b6a80dae33d3cfe3ff08ef9'
+         'a0419cbe08b655820d52ea440653b1d3'
+         '7f98c6f97ccc6c5ed3f1641c49cb7358')
+
 build() {
-  cd $srcdir/mscore-${pkgver}
-  export QT_PLUGINS_DIR=/usr/lib/qt/plugins
+  cd $srcdir/${_pkgname}-${pkgver}
+  export QT_PLUGINS_DIR=/usr/lib/qt/plugins 
   [ -d build ] && make clean
   patch -p1 < $srcdir/paths.patch
-  sed -i 's+${Mscore_INSTALL_NAME}man+doc/mscore+' \
-    "$srcdir"/mscore-$pkgver/mscore/manual/CMakeLists.txt
-  make PREFIX=/usr release
+  patch -p1 < $srcdir/64bit.patch
+  make PREFIX=/usr release 
 }
 package() {
-  cd $srcdir/mscore-${pkgver}
+  cd $srcdir/${_pkgname}-${pkgver}
   make DESTDIR="$pkgdir" install
-  # avoid file conflict with "qtscriptgenerator" 
-  for _i in gui network core uitools xml
-  do 
-    rm $pkgdir/usr/lib/qt/plugins/script/libqtscript_${_i}.so
-  done
 }
