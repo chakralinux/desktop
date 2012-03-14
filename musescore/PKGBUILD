@@ -9,7 +9,7 @@
 pkgname=musescore
 _pkgname=mscore
 pkgver=1.2
-pkgrel=1
+pkgrel=2
 pkgdesc="A music score editor written in Qt"
 arch=('i686' 'x86_64')
 url="http://www.musescore.org/en/"
@@ -35,4 +35,9 @@ build() {
 package() {
   cd $srcdir/${_pkgname}-${pkgver}
   make DESTDIR="$pkgdir" install
+# avoid file conflict with "qtscriptgenerator" 
+  for _i in gui network core uitools xml
+  do 
+    rm $pkgdir/usr/lib/qt/plugins/script/libqtscript_${_i}.so
+  done
 }
