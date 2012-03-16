@@ -17,27 +17,28 @@ url="http://xbmc.org"
 license=('GPL' 'custom')
 depends=( 'bzip2' 'curl' 'enca' 'faac' 'faad2' 'fontconfig' 'fribidi'
           'glew' 'jasper' 'libcdio' 'libgl' 'libmad' 'libmms'
-	  'libmpeg2' 'libmysqlclient' 'libsamplerate' 'libxinerama'
-	  'libxrandr' 'libxtst' 'lzo2' 'sdl_image' 'sdl_mixer'
-	  'smbclient' 'wavpack' 'mesa-demos' 'xorg-utils' 'libmicrohttpd'
-	  'libssh' 'libva' 'libmodplug' 'rtmpdump' 'lsb-release' 'sqlite3')
+          'libmpeg2' 'libmysqlclient' 'libsamplerate' 'libxinerama'
+          'libxrandr' 'libxtst' 'lzo2' 'sdl_image' 'sdl_mixer'
+          'smbclient' 'wavpack' 'mesa-demos' 'xorg-utils' 'libmicrohttpd'
+          'libssh' 'libva' 'libmodplug' 'rtmpdump' 'lsb-release' 'sqlite3')
 if [ "$_ext_python" != "disable" ]; then
   depends=( '${depends[@]}' 'python2' )
 fi
 makedepends=('boost' 'cmake' 'gperf' 'nasm' 'libvdpau' 'unzip' 'zip' 'cvs')
 optdepends=('lirc: remote controller support'
-	    'unrar: access compressed files without unpacking them'
-	    'udisks: automount external drives'
-	    'upower: used to trigger suspend functionality'
-	    'libvdpau: for nvidia hardware acceleration'
-	    'lcms'
-	    'tk')
+            'unrar: access compressed files without unpacking them'
+            'udisks: automount external drives'
+            'upower: used to trigger suspend functionality'
+            'libvdpau: for nvidia hardware acceleration'
+            'lcms'
+            'tk')
+categories=('multimedia')
 install=("${pkgname}.install")
 options=(makeflags)
 source=("http://mirrors.xbmc.org/releases/source/xbmc-$pkgver.tar.gz"
-	"FEH.sh"
+        "FEH.sh"
         xbmc-10.1-gcc-4.6.patch
-	http://trac.xbmc.org/raw-attachment/ticket/11584/xbmcplugin_int_format.patch)
+        http://trac.xbmc.org/raw-attachment/ticket/11584/xbmcplugin_int_format.patch)
 md5sums=('391398126cb86a4f6fbd0b7037997d84'
          'c3e2ab79b9965f1a4a048275d5f222c4'
          '16479d228f81cca4dc32146f1efc1838'
