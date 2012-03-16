@@ -7,7 +7,7 @@
 source ../_buildscripts/${current_repo}-${_arch}-cfg.conf
 
 pkgname=fcitx-chewing
-pkgver=0.1.0
+pkgver=0.1.1
 pkgrel=1
 pkgdesc="Fcitx Wrapper for chewing."
 arch=('i686' 'x86_64')
@@ -15,7 +15,8 @@ url="http://code.google.com/p/fcitx"
 license=('GPL')
 depends=('fcitx>=4.2.0' 'libchewing')
 makedepends=('cmake' 'intltool')
-source=(http://fcitx.googlecode.com/files/${pkgname}-${pkgver}.tar.bz2)
+source=(http://fcitx.googlecode.com/files/${pkgname}-${pkgver}.tar.xz)
+md5sums=('21f293ab520c9e8d0fb603bf58886e59')
 
 build(){
     cd "$srcdir/${pkgname}-${pkgver}"
@@ -32,4 +33,3 @@ package ()
     cd "$srcdir/${pkgname}-${pkgver}/build"
     make DESTDIR=${pkgdir} install
 }
-md5sums=('4cef5df66045f0984e94197dbaf1e139')
