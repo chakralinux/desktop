@@ -5,7 +5,7 @@
 # maintainer (x86_64): Manuel Tortosa <manutortosa[at]chakra-project[dot]org>
 
 pkgbase="libreoffice-i18n"
-pkgname=( 'libreoffice-af'    'libreoffice-ar'    'libreoffice-as'    'libreoffice-ast'	 'libreoffice-be'    'libreoffice-bg'    'libreoffice-bn'
+pkgname=('libreoffice-af'    'libreoffice-ar'    'libreoffice-as'    'libreoffice-ast'	 'libreoffice-be'    'libreoffice-bg'    'libreoffice-bn'
 	 'libreoffice-bo'    'libreoffice-br'    'libreoffice-brx'   'libreoffice-bs'    'libreoffice-ca'    'libreoffice-ca-XV' 'libreoffice-cs'
 	 'libreoffice-cy'    'libreoffice-da'    'libreoffice-de'    'libreoffice-dgo'	 'libreoffice-dz'    'libreoffice-el'
 	 'libreoffice-en-GB' 'libreoffice-en-ZA' 'libreoffice-eo'    'libreoffice-es'    'libreoffice-et'    'libreoffice-eu'
@@ -24,7 +24,7 @@ pkgname=( 'libreoffice-af'    'libreoffice-ar'    'libreoffice-as'    'libreoffi
 	 'libreoffice-tn'    'libreoffice-tr'    'libreoffice-ts'    'libreoffice-ug'    'libreoffice-uk' #   'libreoffice-ur'
 	 'libreoffice-uz'    'libreoffice-ve'    'libreoffice-vi'    'libreoffice-xh'    'libreoffice-zh-CN' 'libreoffice-zh-TW'
 	 'libreoffice-zu')
-pkgver=3.4.5
+pkgver=3.5.1
 pkgrel=1
 pkgdesc="LibreOffice language/localisation files"
 arch=('any')
@@ -34,11 +34,11 @@ license=('LGPL')
 makedepends=('rpmextract')
 
 _url="http://download.documentfoundation.org/libreoffice/stable"
-_oover="3.4.5"
-_oodlver="3.4.5"
-_oomainver="3.4"
-_helpver="3.4.5rc2"
-_dirver="3.4.5rc2"
+_oover="3.5.1"
+_oodlver="3.5.1rc2"
+_oomainver="3.5"
+_helpver=${_oodlver}
+_dirver="${_oodlver}"
 
 _url+="/${_oover}"
 
@@ -135,6 +135,7 @@ source=(#${_url}/rpm/x86/LibO_${_oodlver}_Linux_x86_{langpack,helppack}-rpm_af.t
 	${_url}/rpm/x86/LibO_${_oodlver}_Linux_x86_{langpack,helppack}-rpm_nn.tar.gz
 	#${_url}/rpm/x86/LibO_${_oodlver}_Linux_x86_{langpack,helppack}-rpm_nr.tar.gz
 	${_url}/rpm/x86/LibO_${_oodlver}_Linux_x86_langpack-rpm_nr.tar.gz
+#	${_url}/rpm/x86/LibO_${_oodlver}_Linux_x86_{langpack,helppack}-rpm_nso.tar.gz
 	${_url}/rpm/x86/LibO_${_oodlver}_Linux_x86_langpack-rpm_nso.tar.gz
 	#${_url}/rpm/x86/LibO_${_oodlver}_Linux_x86_{langpack,helppack}-rpm_oc.tar.gz
 	${_url}/rpm/x86/LibO_${_oodlver}_Linux_x86_langpack-rpm_oc.tar.gz
@@ -212,7 +213,7 @@ build() {
     #cd ${srcdir}/LibO_${_oover/-/}_Linux_x86_langpack-rpm_${_pkglang}/RPMS
     cd ${srcdir}/LibO_${_helpver}_Linux_x86_langpack-rpm_${_pkglang}/RPMS
     # remove dictionaries if shipped - we ship them now in separate packages
-    rm libreoffice3.4-dict-*.rpm || /bin/true
+    rm libreoffice3.5-dict-*.rpm || /bin/true
 	for j in *.rpm
 	 do rpmextract.sh $j
 	done
@@ -226,744 +227,682 @@ build() {
 package_libreoffice-af() {
   pkgdesc="Afrikaans language pack for LibreOffice"
   provides=('openoffice-af' 'libreoffice-langpack')
-  categories=('localization')
   replaces=(openoffice-af)
   conflicts=(openoffice-af)
   cd "${srcdir}"/LibO_${_dirver}_Linux_x86_langpack-rpm_af/RPMS
   mkdir -p "${pkgdir}"/usr/lib/libreoffice
-  cp -R opt/libreoffice3.4/* "${pkgdir}"/usr/lib/libreoffice
+  cp -R opt/libreoffice3.5/* "${pkgdir}"/usr/lib/libreoffice
   chown root:root -R "${pkgdir}"/usr/lib/libreoffice
 }
 
 package_libreoffice-ar() {
   pkgdesc="Arabic language pack for LibreOffice"
   provides=('openoffice-ar' 'libreoffice-langpack')
-  categories=('localization')
   replaces=(openoffice-ar)
   conflicts=(openoffice-ar)
   cd "${srcdir}"/LibO_${_dirver}_Linux_x86_langpack-rpm_ar/RPMS
   mkdir -p "${pkgdir}"/usr/lib/libreoffice
-  cp -R opt/libreoffice3.4/* "${pkgdir}"/usr/lib/libreoffice
+  cp -R opt/libreoffice3.5/* "${pkgdir}"/usr/lib/libreoffice
   chown root:root -R "${pkgdir}"/usr/lib/libreoffice
 }
 
 package_libreoffice-as() {
   pkgdesc="Assamese (India) language pack for LibreOffice"
   provides=('openoffice-as' 'libreoffice-langpack')
-  categories=('localization')
   replaces=(openoffice-as)
   conflicts=(openoffice-as)
   cd "${srcdir}"/LibO_${_dirver}_Linux_x86_langpack-rpm_as/RPMS
   mkdir -p "${pkgdir}"/usr/lib/libreoffice
-  cp -R opt/libreoffice3.4/* "${pkgdir}"/usr/lib/libreoffice
+  cp -R opt/libreoffice3.5/* "${pkgdir}"/usr/lib/libreoffice
   chown root:root -R "${pkgdir}"/usr/lib/libreoffice
 }
 
 package_libreoffice-ast() {
   pkgdesc="Asturianu language pack for LibreOffice"
   provides=('openoffice-ast' 'libreoffice-langpack')
-  categories=('localization')
   replaces=(openoffice-ast)
   conflicts=(openoffice-ast)
   cd "${srcdir}"/LibO_${_dirver}_Linux_x86_langpack-rpm_ast/RPMS
   mkdir -p "${pkgdir}"/usr/lib/libreoffice
-  cp -R opt/libreoffice3.4/* "${pkgdir}"/usr/lib/libreoffice
+  cp -R opt/libreoffice3.5/* "${pkgdir}"/usr/lib/libreoffice
   chown root:root -R "${pkgdir}"/usr/lib/libreoffice
 }
 
 package_libreoffice-be() {
   pkgdesc="Belarusian language pack for LibreOffice"
   provides=('openoffice-be-BY' 'libreoffice-langpack')
-  categories=('localization')
   replaces=(openoffice-be-BY)
   conflicts=(openoffice-be-BY)
   cd "${srcdir}"/LibO_${_dirver}_Linux_x86_langpack-rpm_be/RPMS
   mkdir -p "${pkgdir}"/usr/lib/libreoffice
-  cp -R opt/libreoffice3.4/* "${pkgdir}"/usr/lib/libreoffice
+  cp -R opt/libreoffice3.5/* "${pkgdir}"/usr/lib/libreoffice
   chown root:root -R "${pkgdir}"/usr/lib/libreoffice
 }
 
 package_libreoffice-bg() {
   pkgdesc="Bulgarian language pack for LibreOffice"
   provides=('openoffice-bg' 'libreoffice-langpack')
-  categories=('localization')
   replaces=(openoffice-bg)
   conflicts=(openoffice-bg)
   cd "${srcdir}"/LibO_${_dirver}_Linux_x86_langpack-rpm_bg/RPMS
   mkdir -p "${pkgdir}"/usr/lib/libreoffice
-  cp -R opt/libreoffice3.4/* "${pkgdir}"/usr/lib/libreoffice
+  cp -R opt/libreoffice3.5/* "${pkgdir}"/usr/lib/libreoffice
   chown root:root -R "${pkgdir}"/usr/lib/libreoffice
 }
 
 package_libreoffice-bn() {
   pkgdesc="Bengali language pack for LibreOffice"
   provides=('openoffice-bn' 'libreoffice-langpack')
-  categories=('localization')
   replaces=(openoffice-bn)
   conflicts=(openoffice-bn)
   cd "${srcdir}"/LibO_${_dirver}_Linux_x86_langpack-rpm_bn/RPMS
   mkdir -p "${pkgdir}"/usr/lib/libreoffice
-  cp -R opt/libreoffice3.4/* "${pkgdir}"/usr/lib/libreoffice
+  cp -R opt/libreoffice3.5/* "${pkgdir}"/usr/lib/libreoffice
   chown root:root -R "${pkgdir}"/usr/lib/libreoffice
 }
 
 package_libreoffice-bo() {
   pkgdesc="Tibetan language pack for LibreOffice"
   provides=('openoffice-bo' 'libreoffice-langpack')
-  categories=('localization')
   replaces=(openoffice-bo)
   conflicts=(openoffice-bo)
   cd "${srcdir}"/LibO_${_dirver}_Linux_x86_langpack-rpm_bo/RPMS
   mkdir -p "${pkgdir}"/usr/lib/libreoffice
-  cp -R opt/libreoffice3.4/* "${pkgdir}"/usr/lib/libreoffice
+  cp -R opt/libreoffice3.5/* "${pkgdir}"/usr/lib/libreoffice
   chown root:root -R "${pkgdir}"/usr/lib/libreoffice
 }
 
 package_libreoffice-br() {
   pkgdesc="Breton language pack for LibreOffice"
   provides=('openoffice-br' 'libreoffice-langpack')
-  categories=('localization')
   replaces=(openoffice-br)
   conflicts=(openoffice-br)
   cd "${srcdir}"/LibO_${_dirver}_Linux_x86_langpack-rpm_br/RPMS
   mkdir -p "${pkgdir}"/usr/lib/libreoffice
-  cp -R opt/libreoffice3.4/* "${pkgdir}"/usr/lib/libreoffice
+  cp -R opt/libreoffice3.5/* "${pkgdir}"/usr/lib/libreoffice
   chown root:root -R "${pkgdir}"/usr/lib/libreoffice
 }
 
 package_libreoffice-brx() {
   pkgdesc="Bodo language pack for LibreOffice"
   provides=('openoffice-brx' 'libreoffice-langpack')
-  categories=('localization')
   replaces=(openoffice-brx)
   conflicts=(openoffice-brx)
   cd "${srcdir}"/LibO_${_dirver}_Linux_x86_langpack-rpm_brx/RPMS
   mkdir -p "${pkgdir}"/usr/lib/libreoffice
-  cp -R opt/libreoffice3.4/* "${pkgdir}"/usr/lib/libreoffice
+  cp -R opt/libreoffice3.5/* "${pkgdir}"/usr/lib/libreoffice
   chown root:root -R "${pkgdir}"/usr/lib/libreoffice
 }
 
 package_libreoffice-bs() {
   pkgdesc="Bosnian language pack for LibreOffice"
   provides=('openoffice-bs' 'libreoffice-langpack')
-  categories=('localization')
   replaces=(openoffice-bs)
   conflicts=(openoffice-bs)
   cd "${srcdir}"/LibO_${_dirver}_Linux_x86_langpack-rpm_bs/RPMS
   mkdir -p "${pkgdir}"/usr/lib/libreoffice
-  cp -R opt/libreoffice3.4/* "${pkgdir}"/usr/lib/libreoffice
+  cp -R opt/libreoffice3.5/* "${pkgdir}"/usr/lib/libreoffice
   chown root:root -R "${pkgdir}"/usr/lib/libreoffice
 }
 
 package_libreoffice-ca() {
   pkgdesc="Catalan language pack for LibreOffice"
   provides=('openoffice-ca' 'libreoffice-langpack')
-  categories=('localization')
   replaces=(openoffice-ca)
   conflicts=(openoffice-ca)
   cd "${srcdir}"/LibO_${_dirver}_Linux_x86_langpack-rpm_ca/RPMS
   mkdir -p "${pkgdir}"/usr/lib/libreoffice
-  cp -R opt/libreoffice3.4/* "${pkgdir}"/usr/lib/libreoffice
+  cp -R opt/libreoffice3.5/* "${pkgdir}"/usr/lib/libreoffice
   chown root:root -R "${pkgdir}"/usr/lib/libreoffice
 }
 
 package_libreoffice-ca-XV() {
   pkgdesc="Catalan (Valencia) language pack for LibreOffice"
   provides=('openoffice-ca-XV' 'libreoffice-langpack')
-  categories=('localization')
   replaces=(openoffice-ca-XV)
   conflicts=(openoffice-ca-XV)
   cd "${srcdir}"/LibO_${_dirver}_Linux_x86_langpack-rpm_ca-XV/RPMS
   mkdir -p "${pkgdir}"/usr/lib/libreoffice
-  cp -R opt/libreoffice3.4/* "${pkgdir}"/usr/lib/libreoffice
+  cp -R opt/libreoffice3.5/* "${pkgdir}"/usr/lib/libreoffice
   chown root:root -R "${pkgdir}"/usr/lib/libreoffice
 }
 
 package_libreoffice-cs() {
   pkgdesc="Czech language pack for LibreOffice"
   provides=('openoffice-cs' 'libreoffice-langpack')
-  categories=('localization')
   replaces=(openoffice-cs)
   conflicts=(openoffice-cs)
   cd "${srcdir}"/LibO_${_dirver}_Linux_x86_langpack-rpm_cs/RPMS
   mkdir -p "${pkgdir}"/usr/lib/libreoffice
-  cp -R opt/libreoffice3.4/* "${pkgdir}"/usr/lib/libreoffice
+  cp -R opt/libreoffice3.5/* "${pkgdir}"/usr/lib/libreoffice
   chown root:root -R "${pkgdir}"/usr/lib/libreoffice
 }
 
 package_libreoffice-cy() {
   pkgdesc="Welsh language pack for LibreOffice"
   provides=('openoffice-cy' 'libreoffice-langpack')
-  categories=('localization')
   replaces=(openoffice-cy)
   conflicts=(openoffice-cy)
   cd "${srcdir}"/LibO_${_dirver}_Linux_x86_langpack-rpm_cy/RPMS
   mkdir -p "${pkgdir}"/usr/lib/libreoffice
-  cp -R opt/libreoffice3.4/* "${pkgdir}"/usr/lib/libreoffice
+  cp -R opt/libreoffice3.5/* "${pkgdir}"/usr/lib/libreoffice
   chown root:root -R "${pkgdir}"/usr/lib/libreoffice
 }
 
 package_libreoffice-da() {
   pkgdesc="Danish language pack for LibreOffice"
   provides=('openoffice-da' 'libreoffice-langpack')
-  categories=('localization')
   replaces=(openoffice-da)
   conflicts=(openoffice-da)
   cd "${srcdir}"/LibO_${_dirver}_Linux_x86_langpack-rpm_da/RPMS
   mkdir -p "${pkgdir}"/usr/lib/libreoffice
-  cp -R opt/libreoffice3.4/* "${pkgdir}"/usr/lib/libreoffice
+  cp -R opt/libreoffice3.5/* "${pkgdir}"/usr/lib/libreoffice
   chown root:root -R "${pkgdir}"/usr/lib/libreoffice
 }
 
 package_libreoffice-de() {
   pkgdesc="German language pack for LibreOffice"
   provides=('openoffice-de' 'libreoffice-langpack')
-  categories=('localization')
   replaces=(openoffice-de)
   conflicts=(openoffice-de)
   cd "${srcdir}"/LibO_${_dirver}_Linux_x86_langpack-rpm_de/RPMS
   mkdir -p "${pkgdir}"/usr/lib/libreoffice
-  cp -R opt/libreoffice3.4/* "${pkgdir}"/usr/lib/libreoffice
+  cp -R opt/libreoffice3.5/* "${pkgdir}"/usr/lib/libreoffice
   chown root:root -R "${pkgdir}"/usr/lib/libreoffice
 }
 
 package_libreoffice-dgo() {
   pkgdesc="Dogri language pack for LibreOffice"
   provides=('openoffice-dgo' 'libreoffice-langpack')
-  categories=('localization')
   replaces=(openoffice-dgo)
   conflicts=(openoffice-dgo)
   cd "${srcdir}"/LibO_${_dirver}_Linux_x86_langpack-rpm_dgo/RPMS
   mkdir -p "${pkgdir}"/usr/lib/libreoffice
-  cp -R opt/libreoffice3.4/* "${pkgdir}"/usr/lib/libreoffice
+  cp -R opt/libreoffice3.5/* "${pkgdir}"/usr/lib/libreoffice
   chown root:root -R "${pkgdir}"/usr/lib/libreoffice
 }
 
 package_libreoffice-dz() {
   pkgdesc="Dzongkha language pack for LibreOffice"
   provides=('openoffice-dz' 'libreoffice-langpack')
-  categories=('localization')
   replaces=(openoffice-dz)
   conflicts=(openoffice-dz)
   cd "${srcdir}"/LibO_${_dirver}_Linux_x86_langpack-rpm_dz/RPMS
   mkdir -p "${pkgdir}"/usr/lib/libreoffice
-  cp -R opt/libreoffice3.4/* "${pkgdir}"/usr/lib/libreoffice
+  cp -R opt/libreoffice3.5/* "${pkgdir}"/usr/lib/libreoffice
   chown root:root -R "${pkgdir}"/usr/lib/libreoffice
 }
 
 package_libreoffice-el() {
   pkgdesc="Greek language pack for LibreOffice"
   provides=('openoffice-el' 'libreoffice-langpack')
-  categories=('localization')
   replaces=(openoffice-el)
   conflicts=(openoffice-el)
   cd "${srcdir}"/LibO_${_dirver}_Linux_x86_langpack-rpm_el/RPMS
   mkdir -p "${pkgdir}"/usr/lib/libreoffice
-  cp -R opt/libreoffice3.4/* "${pkgdir}"/usr/lib/libreoffice
+  cp -R opt/libreoffice3.5/* "${pkgdir}"/usr/lib/libreoffice
   chown root:root -R "${pkgdir}"/usr/lib/libreoffice
 }
 
 package_libreoffice-en-GB() {
   pkgdesc="English (GB) language pack for LibreOffice"
   provides=('openoffice-en-GB' 'libreoffice-langpack')
-  categories=('localization')
   replaces=(openoffice-en-GB)
   conflicts=(openoffice-en-GB)
   cd "${srcdir}"/LibO_${_dirver}_Linux_x86_langpack-rpm_en-GB/RPMS
   mkdir -p "${pkgdir}"/usr/lib/libreoffice
-  cp -R opt/libreoffice3.4/* "${pkgdir}"/usr/lib/libreoffice
+  cp -R opt/libreoffice3.5/* "${pkgdir}"/usr/lib/libreoffice
   chown root:root -R "${pkgdir}"/usr/lib/libreoffice
 }
 
 package_libreoffice-en-ZA() {
   pkgdesc="English (ZA) language pack for LibreOffice"
   provides=('openoffice-en-ZA' 'libreoffice-langpack')
-  categories=('localization')
   replaces=(openoffice-en-ZA)
   conflicts=(openoffice-en-ZA)
   cd "${srcdir}"/LibO_${_dirver}_Linux_x86_langpack-rpm_en-ZA/RPMS
   mkdir -p "${pkgdir}"/usr/lib/libreoffice
-  cp -R opt/libreoffice3.4/* "${pkgdir}"/usr/lib/libreoffice
+  cp -R opt/libreoffice3.5/* "${pkgdir}"/usr/lib/libreoffice
   chown root:root -R "${pkgdir}"/usr/lib/libreoffice
 }
 
 package_libreoffice-eo() {
   pkgdesc="Esperanto language pack for LibreOffice"
   provides=('openoffice-eo' 'libreoffice-langpack')
-  categories=('localization')
   replaces=(openoffice-eo)
   conflicts=(openoffice-eo)
   cd "${srcdir}"/LibO_${_dirver}_Linux_x86_langpack-rpm_eo/RPMS
   mkdir -p "${pkgdir}"/usr/lib/libreoffice
-  cp -R opt/libreoffice3.4/* "${pkgdir}"/usr/lib/libreoffice
+  cp -R opt/libreoffice3.5/* "${pkgdir}"/usr/lib/libreoffice
   chown root:root -R "${pkgdir}"/usr/lib/libreoffice
 }
 
 package_libreoffice-es() {
   pkgdesc="Spanish language pack for LibreOffice"
   provides=('openoffice-es' 'libreoffice-langpack')
-  categories=('localization')
   replaces=(openoffice-es)
   conflicts=(openoffice-es)
   cd "${srcdir}"/LibO_${_dirver}_Linux_x86_langpack-rpm_es/RPMS
   mkdir -p "${pkgdir}"/usr/lib/libreoffice
-  cp -R opt/libreoffice3.4/* "${pkgdir}"/usr/lib/libreoffice
+  cp -R opt/libreoffice3.5/* "${pkgdir}"/usr/lib/libreoffice
   chown root:root -R "${pkgdir}"/usr/lib/libreoffice
 }
 
 package_libreoffice-et() {
   pkgdesc="Estonian language pack for LibreOffice"
   provides=('openoffice-et' 'libreoffice-langpack')
-  categories=('localization')
   replaces=(openoffice-et)
   conflicts=(openoffice-et)
   cd "${srcdir}"/LibO_${_dirver}_Linux_x86_langpack-rpm_et/RPMS
   mkdir -p "${pkgdir}"/usr/lib/libreoffice
-  cp -R opt/libreoffice3.4/* "${pkgdir}"/usr/lib/libreoffice
+  cp -R opt/libreoffice3.5/* "${pkgdir}"/usr/lib/libreoffice
   chown root:root -R "${pkgdir}"/usr/lib/libreoffice
 }
 
 package_libreoffice-eu() {
   pkgdesc="Basque language pack for LibreOffice"
   provides=('openoffice-eu' 'libreoffice-langpack')
-  categories=('localization')
   replaces=(openoffice-eu)
   conflicts=(openoffice-eu)
   cd "${srcdir}"/LibO_${_dirver}_Linux_x86_langpack-rpm_eu/RPMS
   mkdir -p "${pkgdir}"/usr/lib/libreoffice
-  cp -R opt/libreoffice3.4/* "${pkgdir}"/usr/lib/libreoffice
+  cp -R opt/libreoffice3.5/* "${pkgdir}"/usr/lib/libreoffice
   chown root:root -R "${pkgdir}"/usr/lib/libreoffice
 }
 
 package_libreoffice-fa() {
   pkgdesc="Persian language pack for LibreOffice"
   provides=('openoffice-fa' 'libreoffice-langpack')
-  categories=('localization')
   replaces=(openoffice-fa)
   conflicts=(openoffice-fa)
   cd "${srcdir}"/LibO_${_dirver}_Linux_x86_langpack-rpm_fa/RPMS
   mkdir -p "${pkgdir}"/usr/lib/libreoffice
-  cp -R opt/libreoffice3.4/* "${pkgdir}"/usr/lib/libreoffice
+  cp -R opt/libreoffice3.5/* "${pkgdir}"/usr/lib/libreoffice
   chown root:root -R "${pkgdir}"/usr/lib/libreoffice
 }
 
 package_libreoffice-fi() {
   pkgdesc="Finnish language pack for LibreOffice"
   provides=('openoffice-fi' 'libreoffice-langpack')
-  categories=('localization')
   replaces=(openoffice-fi)
   conflicts=(openoffice-fi)
   cd "${srcdir}"/LibO_${_dirver}_Linux_x86_langpack-rpm_fi/RPMS
   mkdir -p "${pkgdir}"/usr/lib/libreoffice
-  cp -R opt/libreoffice3.4/* "${pkgdir}"/usr/lib/libreoffice
+  cp -R opt/libreoffice3.5/* "${pkgdir}"/usr/lib/libreoffice
   chown root:root -R "${pkgdir}"/usr/lib/libreoffice
 }
 
 package_libreoffice-fr() {
   pkgdesc="French language pack for LibreOffice"
   provides=('openoffice-fr' 'libreoffice-langpack')
-  categories=('localization')
   replaces=(openoffice-fr)
   conflicts=(openoffice-fr)
   cd "${srcdir}"/LibO_${_dirver}_Linux_x86_langpack-rpm_fr/RPMS
   mkdir -p "${pkgdir}"/usr/lib/libreoffice
-  cp -R opt/libreoffice3.4/* "${pkgdir}"/usr/lib/libreoffice
+  cp -R opt/libreoffice3.5/* "${pkgdir}"/usr/lib/libreoffice
   chown root:root -R "${pkgdir}"/usr/lib/libreoffice
 }
 
 package_libreoffice-ga() {
   pkgdesc="Irish language pack for LibreOffice"
   provides=('openoffice-ga' 'libreoffice-langpack')
-  categories=('localization')
   replaces=(openoffice-ga)
   conflicts=(openoffice-ga)
   cd "${srcdir}"/LibO_${_dirver}_Linux_x86_langpack-rpm_ga/RPMS
   mkdir -p "${pkgdir}"/usr/lib/libreoffice
-  cp -R opt/libreoffice3.4/* "${pkgdir}"/usr/lib/libreoffice
+  cp -R opt/libreoffice3.5/* "${pkgdir}"/usr/lib/libreoffice
   chown root:root -R "${pkgdir}"/usr/lib/libreoffice
 }
 
 package_libreoffice-gl() {
   pkgdesc="Galician language pack for LibreOffice"
   provides=('openoffice-gl' 'libreoffice-langpack')
-  categories=('localization')
   replaces=(openoffice-gl)
   conflicts=(openoffice-gl)
   cd "${srcdir}"/LibO_${_dirver}_Linux_x86_langpack-rpm_gl/RPMS
   mkdir -p "${pkgdir}"/usr/lib/libreoffice
-  cp -R opt/libreoffice3.4/* "${pkgdir}"/usr/lib/libreoffice
+  cp -R opt/libreoffice3.5/* "${pkgdir}"/usr/lib/libreoffice
   chown root:root -R "${pkgdir}"/usr/lib/libreoffice
 }
 
 package_libreoffice-gu() {
   pkgdesc="Gujarati language pack for LibreOffice"
   provides=('openoffice-gu' 'libreoffice-langpack')
-  categories=('localization')
   replaces=(openoffice-gu)
   conflicts=(openoffice-gu)
   cd "${srcdir}"/LibO_${_dirver}_Linux_x86_langpack-rpm_gu/RPMS
   mkdir -p "${pkgdir}"/usr/lib/libreoffice
-  cp -R opt/libreoffice3.4/* "${pkgdir}"/usr/lib/libreoffice
+  cp -R opt/libreoffice3.5/* "${pkgdir}"/usr/lib/libreoffice
   chown root:root -R "${pkgdir}"/usr/lib/libreoffice
 }
 
 package_libreoffice-he() {
   pkgdesc="Hebrew language pack for LibreOffice"
   provides=('openoffice-he' 'libreoffice-langpack')
-  categories=('localization')
   replaces=(openoffice-he)
   conflicts=(openoffice-he)
   cd "${srcdir}"/LibO_${_dirver}_Linux_x86_langpack-rpm_he/RPMS
   mkdir -p "${pkgdir}"/usr/lib/libreoffice
-  cp -R opt/libreoffice3.4/* "${pkgdir}"/usr/lib/libreoffice
+  cp -R opt/libreoffice3.5/* "${pkgdir}"/usr/lib/libreoffice
   chown root:root -R "${pkgdir}"/usr/lib/libreoffice
 }
 
 package_libreoffice-hi() {
   pkgdesc="Hindi language pack for LibreOffice"
   provides=('openoffice-hi' 'libreoffice-langpack')
-  categories=('localization')
   replaces=(openoffice-hi)
   conflicts=(openoffice-hi)
   cd "${srcdir}"/LibO_${_dirver}_Linux_x86_langpack-rpm_hi/RPMS
   mkdir -p "${pkgdir}"/usr/lib/libreoffice
-  cp -R opt/libreoffice3.4/* "${pkgdir}"/usr/lib/libreoffice
+  cp -R opt/libreoffice3.5/* "${pkgdir}"/usr/lib/libreoffice
   chown root:root -R "${pkgdir}"/usr/lib/libreoffice
 }
 
 package_libreoffice-hr() {
   pkgdesc="Croatian language pack for LibreOffice"
   provides=('openoffice-hr' 'libreoffice-langpack')
-  categories=('localization')
   replaces=(openoffice-hr)
   conflicts=(openoffice-hr)
   cd "${srcdir}"/LibO_${_dirver}_Linux_x86_langpack-rpm_hr/RPMS
   mkdir -p "${pkgdir}"/usr/lib/libreoffice
-  cp -R opt/libreoffice3.4/* "${pkgdir}"/usr/lib/libreoffice
+  cp -R opt/libreoffice3.5/* "${pkgdir}"/usr/lib/libreoffice
   chown root:root -R "${pkgdir}"/usr/lib/libreoffice
 }
 
 package_libreoffice-hu() {
   pkgdesc="Hungarian language pack for LibreOffice"
   provides=('openoffice-hu' 'libreoffice-langpack')
-  categories=('localization')
   replaces=(openoffice-hu)
   conflicts=(openoffice-hu)
   cd "${srcdir}"/LibO_${_dirver}_Linux_x86_langpack-rpm_hu/RPMS
   mkdir -p "${pkgdir}"/usr/lib/libreoffice
-  cp -R opt/libreoffice3.4/* "${pkgdir}"/usr/lib/libreoffice
+  cp -R opt/libreoffice3.5/* "${pkgdir}"/usr/lib/libreoffice
   chown root:root -R "${pkgdir}"/usr/lib/libreoffice
 }
 
 package_libreoffice-id() {
   pkgdesc="Bahasa Indonesia language pack for LibreOffice"
   provides=('openoffice-id' 'libreoffice-langpack')
-  categories=('localization')
   replaces=(openoffice-id)
   conflicts=(openoffice-id)
   cd "${srcdir}"/LibO_${_dirver}_Linux_x86_langpack-rpm_id/RPMS
   mkdir -p "${pkgdir}"/usr/lib/libreoffice
-  cp -R opt/libreoffice3.4/* "${pkgdir}"/usr/lib/libreoffice
+  cp -R opt/libreoffice3.5/* "${pkgdir}"/usr/lib/libreoffice
   chown root:root -R "${pkgdir}"/usr/lib/libreoffice
 }
 
 package_libreoffice-is() {
   pkgdesc="Icelandic language pack for LibreOffice"
   provides=('openoffice-is' 'libreoffice-langpack')
-  categories=('localization')
   replaces=(openoffice-is)
   conflicts=(openoffice-is)
   cd "${srcdir}"/LibO_${_dirver}_Linux_x86_langpack-rpm_is/RPMS
   mkdir -p "${pkgdir}"/usr/lib/libreoffice
-  cp -R opt/libreoffice3.4/* "${pkgdir}"/usr/lib/libreoffice
+  cp -R opt/libreoffice3.5/* "${pkgdir}"/usr/lib/libreoffice
   chown root:root -R "${pkgdir}"/usr/lib/libreoffice
 }
 
 package_libreoffice-it() {
   pkgdesc="Italian language pack for LibreOffice"
   provides=('openoffice-it' 'libreoffice-langpack')
-  categories=('localization')
   replaces=(openoffice-it)
   conflicts=(openoffice-it)
   cd "${srcdir}"/LibO_${_dirver}_Linux_x86_langpack-rpm_it/RPMS
   mkdir -p "${pkgdir}"/usr/lib/libreoffice
-  cp -R opt/libreoffice3.4/* "${pkgdir}"/usr/lib/libreoffice
+  cp -R opt/libreoffice3.5/* "${pkgdir}"/usr/lib/libreoffice
   chown root:root -R "${pkgdir}"/usr/lib/libreoffice
 }
 
 package_libreoffice-ja() {
   pkgdesc="Japanese language pack for LibreOffice"
   provides=('openoffice-ja' 'libreoffice-langpack')
-  categories=('localization')
   replaces=(openoffice-ja)
   conflicts=(openoffice-ja)
   cd "${srcdir}"/LibO_${_dirver}_Linux_x86_langpack-rpm_ja/RPMS
   mkdir -p "${pkgdir}"/usr/lib/libreoffice
-  cp -R opt/libreoffice3.4/* "${pkgdir}"/usr/lib/libreoffice
+  cp -R opt/libreoffice3.5/* "${pkgdir}"/usr/lib/libreoffice
   chown root:root -R "${pkgdir}"/usr/lib/libreoffice
 }
 
 package_libreoffice-ka() {
   pkgdesc="Georgian language pack for LibreOffice"
   provides=('openoffice-ka' 'libreoffice-langpack')
-  categories=('localization')
   replaces=(openoffice-ka)
   conflicts=(openoffice-ka)
   cd "${srcdir}"/LibO_${_dirver}_Linux_x86_langpack-rpm_ka/RPMS
   mkdir -p "${pkgdir}"/usr/lib/libreoffice
-  cp -R opt/libreoffice3.4/* "${pkgdir}"/usr/lib/libreoffice
+  cp -R opt/libreoffice3.5/* "${pkgdir}"/usr/lib/libreoffice
   chown root:root -R "${pkgdir}"/usr/lib/libreoffice
 }
 
 package_libreoffice-kk() {
   pkgdesc="Kazakh language pack for LibreOffice"
   provides=('openoffice-kk' 'libreoffice-langpack')
-  categories=('localization')
   replaces=(openoffice-kk)
   conflicts=(openoffice-kk)
   cd "${srcdir}"/LibO_${_dirver}_Linux_x86_langpack-rpm_kk/RPMS
   mkdir -p "${pkgdir}"/usr/lib/libreoffice
-  cp -R opt/libreoffice3.4/* "${pkgdir}"/usr/lib/libreoffice
+  cp -R opt/libreoffice3.5/* "${pkgdir}"/usr/lib/libreoffice
   chown root:root -R "${pkgdir}"/usr/lib/libreoffice
 }
 
 package_libreoffice-km() {
   pkgdesc="Khmer (Cambodia) language pack for LibreOffice"
   provides=('openoffice-km' 'libreoffice-langpack')
-  categories=('localization')
   replaces=(openoffice-km)
   conflicts=(openoffice-km)
   cd "${srcdir}"/LibO_${_dirver}_Linux_x86_langpack-rpm_km/RPMS
   mkdir -p "${pkgdir}"/usr/lib/libreoffice
-  cp -R opt/libreoffice3.4/* "${pkgdir}"/usr/lib/libreoffice
+  cp -R opt/libreoffice3.5/* "${pkgdir}"/usr/lib/libreoffice
   chown root:root -R "${pkgdir}"/usr/lib/libreoffice
 }
 
 package_libreoffice-kn() {
   pkgdesc="Kannada language pack for LibreOffice"
   provides=('openoffice-kn' 'libreoffice-langpack')
-  categories=('localization')
   replaces=(openoffice-kn)
   conflicts=(openoffice-kn)
   cd "${srcdir}"/LibO_${_dirver}_Linux_x86_langpack-rpm_kn/RPMS
   mkdir -p "${pkgdir}"/usr/lib/libreoffice
-  cp -R opt/libreoffice3.4/* "${pkgdir}"/usr/lib/libreoffice
+  cp -R opt/libreoffice3.5/* "${pkgdir}"/usr/lib/libreoffice
   chown root:root -R "${pkgdir}"/usr/lib/libreoffice
 }
 
 package_libreoffice-ko() {
   pkgdesc="Korean language pack for LibreOffice"
   provides=('openoffice-ko' 'libreoffice-langpack')
-  categories=('localization')
   replaces=(openoffice-ko)
   conflicts=(openoffice-ko)
   cd "${srcdir}"/LibO_${_dirver}_Linux_x86_langpack-rpm_ko/RPMS
   mkdir -p "${pkgdir}"/usr/lib/libreoffice
-  cp -R opt/libreoffice3.4/* "${pkgdir}"/usr/lib/libreoffice
+  cp -R opt/libreoffice3.5/* "${pkgdir}"/usr/lib/libreoffice
   chown root:root -R "${pkgdir}"/usr/lib/libreoffice
 }
 
 package_libreoffice-kok() {
   pkgdesc="Konkani language pack for LibreOffice"
   provides=('openoffice-kok' 'libreoffice-langpack')
-  categories=('localization')
   replaces=(openoffice-kok)
   conflicts=(openoffice-kok)
   cd "${srcdir}"/LibO_${_dirver}_Linux_x86_langpack-rpm_kok/RPMS
   mkdir -p "${pkgdir}"/usr/lib/libreoffice
-  cp -R opt/libreoffice3.4/* "${pkgdir}"/usr/lib/libreoffice
+  cp -R opt/libreoffice3.5/* "${pkgdir}"/usr/lib/libreoffice
   chown root:root -R "${pkgdir}"/usr/lib/libreoffice
 }
 
 package_libreoffice-ks() {
   pkgdesc="Kashmiri language pack for LibreOffice"
   provides=('openoffice-ks' 'libreoffice-langpack')
-  categories=('localization')
   replaces=(openoffice-ks)
   conflicts=(openoffice-ks)
   cd "${srcdir}"/LibO_${_dirver}_Linux_x86_langpack-rpm_ks/RPMS
   mkdir -p "${pkgdir}"/usr/lib/libreoffice
-  cp -R opt/libreoffice3.4/* "${pkgdir}"/usr/lib/libreoffice
+  cp -R opt/libreoffice3.5/* "${pkgdir}"/usr/lib/libreoffice
   chown root:root -R "${pkgdir}"/usr/lib/libreoffice
 }
 
 package_libreoffice-ku() {
   pkgdesc="Kurdish language pack for LibreOffice"
   provides=('openoffice-ku' 'libreoffice-langpack')
-  categories=('localization')
   replaces=(openoffice-ku)
   conflicts=(openoffice-ku)
   cd "${srcdir}"/LibO_${_dirver}_Linux_x86_langpack-rpm_ku/RPMS
   mkdir -p "${pkgdir}"/usr/lib/libreoffice
-  cp -R opt/libreoffice3.4/* "${pkgdir}"/usr/lib/libreoffice
+  cp -R opt/libreoffice3.5/* "${pkgdir}"/usr/lib/libreoffice
   chown root:root -R "${pkgdir}"/usr/lib/libreoffice
 }
 
 package_libreoffice-lo() {
   pkgdesc="Lao language pack for LibreOffice"
   provides=('openoffice-lo' 'libreoffice-langpack')
-  categories=('localization')
   replaces=(openoffice-lo)
   conflicts=(openoffice-lo)
   cd "${srcdir}"/LibO_${_dirver}_Linux_x86_langpack-rpm_lo/RPMS
   mkdir -p "${pkgdir}"/usr/lib/libreoffice
-  cp -R opt/libreoffice3.4/* "${pkgdir}"/usr/lib/libreoffice
+  cp -R opt/libreoffice3.5/* "${pkgdir}"/usr/lib/libreoffice
   chown root:root -R "${pkgdir}"/usr/lib/libreoffice
 }
 
 package_libreoffice-lt() {
   pkgdesc="Lithuanian language pack for LibreOffice"
   provides=('openoffice-lt' 'libreoffice-langpack')
-  categories=('localization')
   replaces=(openoffice-lt)
   conflicts=(openoffice-lt)
   cd "${srcdir}"/LibO_${_dirver}_Linux_x86_langpack-rpm_lt/RPMS
   mkdir -p "${pkgdir}"/usr/lib/libreoffice
-  cp -R opt/libreoffice3.4/* "${pkgdir}"/usr/lib/libreoffice
+  cp -R opt/libreoffice3.5/* "${pkgdir}"/usr/lib/libreoffice
   chown root:root -R "${pkgdir}"/usr/lib/libreoffice
 }
 
 package_libreoffice-lv() {
   pkgdesc="Latvian language pack for LibreOffice"
   provides=('openoffice-lv' 'libreoffice-langpack')
-  categories=('localization')
   replaces=(openoffice-lv)
   conflicts=(openoffice-lv)
   cd "${srcdir}"/LibO_${_dirver}_Linux_x86_langpack-rpm_lv/RPMS
   mkdir -p "${pkgdir}"/usr/lib/libreoffice
-  cp -R opt/libreoffice3.4/* "${pkgdir}"/usr/lib/libreoffice
+  cp -R opt/libreoffice3.5/* "${pkgdir}"/usr/lib/libreoffice
   chown root:root -R "${pkgdir}"/usr/lib/libreoffice
 }
 
 package_libreoffice-mai() {
   pkgdesc="Maithili language pack for LibreOffice"
   provides=('openoffice-mai' 'libreoffice-langpack')
-  categories=('localization')
   replaces=(openoffice-mai)
   conflicts=(openoffice-mai)
   cd "${srcdir}"/LibO_${_dirver}_Linux_x86_langpack-rpm_mai/RPMS
   mkdir -p "${pkgdir}"/usr/lib/libreoffice
-  cp -R opt/libreoffice3.4/* "${pkgdir}"/usr/lib/libreoffice
+  cp -R opt/libreoffice3.5/* "${pkgdir}"/usr/lib/libreoffice
   chown root:root -R "${pkgdir}"/usr/lib/libreoffice
 }
 
 package_libreoffice-mk() {
   pkgdesc="Macedonian language pack for LibreOffice"
   provides=('openoffice-mk' 'libreoffice-langpack')
-  categories=('localization')
   replaces=(openoffice-mk)
   conflicts=(openoffice-mk)
   cd "${srcdir}"/LibO_${_dirver}_Linux_x86_langpack-rpm_mk/RPMS
   mkdir -p "${pkgdir}"/usr/lib/libreoffice
-  cp -R opt/libreoffice3.4/* "${pkgdir}"/usr/lib/libreoffice
+  cp -R opt/libreoffice3.5/* "${pkgdir}"/usr/lib/libreoffice
   chown root:root -R "${pkgdir}"/usr/lib/libreoffice
 }
 
 package_libreoffice-ml() {
   pkgdesc="Malayalam language pack for LibreOffice"
   provides=('openoffice-ml' 'libreoffice-langpack')
-  categories=('localization')
   replaces=(openoffice-ml)
   conflicts=(openoffice-ml)
   cd "${srcdir}"/LibO_${_dirver}_Linux_x86_langpack-rpm_ml/RPMS
   mkdir -p "${pkgdir}"/usr/lib/libreoffice
-  cp -R opt/libreoffice3.4/* "${pkgdir}"/usr/lib/libreoffice
+  cp -R opt/libreoffice3.5/* "${pkgdir}"/usr/lib/libreoffice
   chown root:root -R "${pkgdir}"/usr/lib/libreoffice
 }
 
 package_libreoffice-mn() {
   pkgdesc="Mongolian language pack for LibreOffice"
   provides=('openoffice-mn' 'libreoffice-langpack')
-  categories=('localization')
   replaces=(openoffice-mn)
   conflicts=(openoffice-mn)
   cd "${srcdir}"/LibO_${_dirver}_Linux_x86_langpack-rpm_mn/RPMS
   mkdir -p "${pkgdir}"/usr/lib/libreoffice
-  cp -R opt/libreoffice3.4/* "${pkgdir}"/usr/lib/libreoffice
+  cp -R opt/libreoffice3.5/* "${pkgdir}"/usr/lib/libreoffice
   chown root:root -R "${pkgdir}"/usr/lib/libreoffice
 }
 
 package_libreoffice-mni() {
   pkgdesc="Manipuri language pack for LibreOffice"
   provides=('openoffice-mni' 'libreoffice-langpack')
-  categories=('localization')
   replaces=(openoffice-mni)
   conflicts=(openoffice-mni)
   cd "${srcdir}"/LibO_${_dirver}_Linux_x86_langpack-rpm_mni/RPMS
   mkdir -p "${pkgdir}"/usr/lib/libreoffice
-  cp -R opt/libreoffice3.4/* "${pkgdir}"/usr/lib/libreoffice
+  cp -R opt/libreoffice3.5/* "${pkgdir}"/usr/lib/libreoffice
   chown root:root -R "${pkgdir}"/usr/lib/libreoffice
 }
 
 package_libreoffice-mr() {
   pkgdesc="Marathi language pack for LibreOffice"
   provides=('openoffice-mr' 'libreoffice-langpack')
-  categories=('localization')
   replaces=(openoffice-mr)
   conflicts=(openoffice-mr)
   cd "${srcdir}"/LibO_${_dirver}_Linux_x86_langpack-rpm_mr/RPMS
   mkdir -p "${pkgdir}"/usr/lib/libreoffice
-  cp -R opt/libreoffice3.4/* "${pkgdir}"/usr/lib/libreoffice
+  cp -R opt/libreoffice3.5/* "${pkgdir}"/usr/lib/libreoffice
   chown root:root -R "${pkgdir}"/usr/lib/libreoffice
 }
 
 package_libreoffice-my() {
   pkgdesc="Burmese language pack for LibreOffice"
   provides=('openoffice-my' 'libreoffice-langpack')
-  categories=('localization')
   replaces=(openoffice-my)
   conflicts=(openoffice-my)
   cd "${srcdir}"/LibO_${_dirver}_Linux_x86_langpack-rpm_my/RPMS
   mkdir -p "${pkgdir}"/usr/lib/libreoffice
-  cp -R opt/libreoffice3.4/* "${pkgdir}"/usr/lib/libreoffice
+  cp -R opt/libreoffice3.5/* "${pkgdir}"/usr/lib/libreoffice
   chown root:root -R "${pkgdir}"/usr/lib/libreoffice
 }
 
 package_libreoffice-nb() {
   pkgdesc="Norwegian Bokmal language pack for LibreOffice"
   provides=('openoffice-nb' 'libreoffice-langpack')
-  categories=('localization')
   replaces=(openoffice-nb)
   conflicts=(openoffice-nb)
   cd "${srcdir}"/LibO_${_dirver}_Linux_x86_langpack-rpm_nb/RPMS
   mkdir -p "${pkgdir}"/usr/lib/libreoffice
-  cp -R opt/libreoffice3.4/* "${pkgdir}"/usr/lib/libreoffice
+  cp -R opt/libreoffice3.5/* "${pkgdir}"/usr/lib/libreoffice
   chown root:root -R "${pkgdir}"/usr/lib/libreoffice
 }
 
 package_libreoffice-ne() {
   pkgdesc="Nepali language pack for LibreOffice"
   provides=('openoffice-ne' 'libreoffice-langpack')
-  categories=('localization')
   replaces=('openoffice-ne')
   conflicts=(openoffice-ne)
   cd "${srcdir}"/LibO_${_dirver}_Linux_x86_langpack-rpm_ne/RPMS
   mkdir -p "${pkgdir}"/usr/lib/libreoffice
-  cp -R opt/libreoffice3.4/* "${pkgdir}"/usr/lib/libreoffice
+  cp -R opt/libreoffice3.5/* "${pkgdir}"/usr/lib/libreoffice
   chown root:root -R "${pkgdir}"/usr/lib/libreoffice
 }
 
 package_libreoffice-nl() {
   pkgdesc="Dutch language pack for LibreOffice"
   provides=('openoffice-nl' 'libreoffice-langpack')
-  categories=('localization')
   replaces=(openoffice-nl)
   conflicts=(openoffice-nl)
   cd "${srcdir}"/LibO_${_dirver}_Linux_x86_langpack-rpm_nl/RPMS
   mkdir -p "${pkgdir}"/usr/lib/libreoffice
-  cp -R opt/libreoffice3.4/* "${pkgdir}"/usr/lib/libreoffice
+  cp -R opt/libreoffice3.5/* "${pkgdir}"/usr/lib/libreoffice
   chown root:root -R "${pkgdir}"/usr/lib/libreoffice
 }
 
 package_libreoffice-nn() {
   pkgdesc="Norwegian Nynorsk language pack for LibreOffice"
   provides=('openoffice-nn' 'libreoffice-langpack')
-  categories=('localization')
   replaces=(openoffice-nn)
   conflicts=(openoffice-nn)
   cd "${srcdir}"/LibO_${_dirver}_Linux_x86_langpack-rpm_nn/RPMS
   mkdir -p "${pkgdir}"/usr/lib/libreoffice
-  cp -R opt/libreoffice3.4/* "${pkgdir}"/usr/lib/libreoffice
+  cp -R opt/libreoffice3.5/* "${pkgdir}"/usr/lib/libreoffice
   chown root:root -R "${pkgdir}"/usr/lib/libreoffice
 }
 
@@ -972,10 +911,9 @@ package_libreoffice-nr() {
   provides=(openoffice-nr)
   replaces=(openoffice-nr)
   conflicts=(openoffice-nr)
-  categories=('localization')
   cd "${srcdir}"/LibO_${_dirver}_Linux_x86_langpack-rpm_nr/RPMS
   mkdir -p "${pkgdir}"/usr/lib/libreoffice
-  cp -R opt/libreoffice3.4/* "${pkgdir}"/usr/lib/libreoffice
+  cp -R opt/libreoffice3.5/* "${pkgdir}"/usr/lib/libreoffice
   chown root:root -R "${pkgdir}"/usr/lib/libreoffice
 }
 
@@ -983,478 +921,438 @@ package_libreoffice-nso() {
   pkgdesc="Northern Sotho language pack for LibreOffice"
   provides=('openoffice-ns' 'libreoffice-ns' 'libreoffice-langpack')
   replaces=('openoffice-ns' 'libreoffice-ns')
-  categories=('localization')
   conflicts=(openoffice-ns)
   cd "${srcdir}"/LibO_${_dirver}_Linux_x86_langpack-rpm_nso/RPMS
   mkdir -p "${pkgdir}"/usr/lib/libreoffice
-  cp -R opt/libreoffice3.4/* "${pkgdir}"/usr/lib/libreoffice
+  cp -R opt/libreoffice3.5/* "${pkgdir}"/usr/lib/libreoffice
   chown root:root -R "${pkgdir}"/usr/lib/libreoffice
 }
 
 package_libreoffice-oc() {
   pkgdesc="Occitan language pack for LibreOffice"
   provides=('openoffice-oc' 'libreoffice-langpack')
-  categories=('localization')
   replaces=(openoffice-oc)
   conflicts=(openoffice-oc)
   cd "${srcdir}"/LibO_${_dirver}_Linux_x86_langpack-rpm_oc/RPMS
   mkdir -p "${pkgdir}"/usr/lib/libreoffice
-  cp -R opt/libreoffice3.4/* "${pkgdir}"/usr/lib/libreoffice
+  cp -R opt/libreoffice3.5/* "${pkgdir}"/usr/lib/libreoffice
   chown root:root -R "${pkgdir}"/usr/lib/libreoffice
 }
 
 package_libreoffice-om() {
   pkgdesc="Oromo language pack for LibreOffice"
   provides=('openoffice-om' 'libreoffice-langpack')
-  categories=('localization')
   replaces=(openoffice-om)
   conflicts=(openoffice-om)
   cd "${srcdir}"/LibO_${_dirver}_Linux_x86_langpack-rpm_om/RPMS
   mkdir -p "${pkgdir}"/usr/lib/libreoffice
-  cp -R opt/libreoffice3.4/* "${pkgdir}"/usr/lib/libreoffice
+  cp -R opt/libreoffice3.5/* "${pkgdir}"/usr/lib/libreoffice
   chown root:root -R "${pkgdir}"/usr/lib/libreoffice
 }
 
 package_libreoffice-or() {
   pkgdesc="Oriya language pack for LibreOffice"
   provides=('openoffice-or' 'libreoffice-langpack')
-  categories=('localization')
   replaces=(openoffice-or)
   conflicts=(openoffice-or)
   cd "${srcdir}"/LibO_${_dirver}_Linux_x86_langpack-rpm_or/RPMS
   mkdir -p "${pkgdir}"/usr/lib/libreoffice
-  cp -R opt/libreoffice3.4/* "${pkgdir}"/usr/lib/libreoffice
+  cp -R opt/libreoffice3.5/* "${pkgdir}"/usr/lib/libreoffice
   chown root:root -R "${pkgdir}"/usr/lib/libreoffice
 }
 
 package_libreoffice-pa-IN() {
   pkgdesc="Punjabi (India) language pack for LibreOffice"
   provides=('openoffice-pa-IN' 'libreoffice-langpack')
-  categories=('localization')
   replaces=(openoffice-pa-IN)
   conflicts=(openoffice-pa-IN)
   cd "${srcdir}"/LibO_${_dirver}_Linux_x86_langpack-rpm_pa-IN/RPMS
   mkdir -p "${pkgdir}"/usr/lib/libreoffice
-  cp -R opt/libreoffice3.4/* "${pkgdir}"/usr/lib/libreoffice
+  cp -R opt/libreoffice3.5/* "${pkgdir}"/usr/lib/libreoffice
   chown root:root -R "${pkgdir}"/usr/lib/libreoffice
 }
 
 package_libreoffice-pl() {
   pkgdesc="Polish language pack for LibreOffice"
   provides=('openoffice-pl' 'libreoffice-langpack')
-  categories=('localization')
   replaces=(openoffice-pl)
   conflicts=(openoffice-pl)
   cd "${srcdir}"/LibO_${_dirver}_Linux_x86_langpack-rpm_pl/RPMS
   mkdir -p "${pkgdir}"/usr/lib/libreoffice
-  cp -R opt/libreoffice3.4/* "${pkgdir}"/usr/lib/libreoffice
+  cp -R opt/libreoffice3.5/* "${pkgdir}"/usr/lib/libreoffice
   chown root:root -R "${pkgdir}"/usr/lib/libreoffice
 }
 
 package_libreoffice-pt-BR() {
   pkgdesc="Portuguese (Brasil) language pack for LibreOffice"
   provides=('openoffice-pt-BR' 'libreoffice-langpack')
-  categories=('localization')
   replaces=(openoffice-pt-BR)
   conflicts=(openoffice-pt-BR)
   cd "${srcdir}"/LibO_${_dirver}_Linux_x86_langpack-rpm_pt-BR/RPMS
   mkdir -p "${pkgdir}"/usr/lib/libreoffice
-  cp -R opt/libreoffice3.4/* "${pkgdir}"/usr/lib/libreoffice
+  cp -R opt/libreoffice3.5/* "${pkgdir}"/usr/lib/libreoffice
   chown root:root -R "${pkgdir}"/usr/lib/libreoffice
 }
 
 package_libreoffice-pt() {
   pkgdesc="Portuguese language pack for LibreOffice"
   provides=('openoffice-pt' 'libreoffice-langpack')
-  categories=('localization')
   replaces=(openoffice-pt)
   conflicts=(openoffice-pt)
   cd "${srcdir}"/LibO_${_dirver}_Linux_x86_langpack-rpm_pt/RPMS
   mkdir -p "${pkgdir}"/usr/lib/libreoffice
-  cp -R opt/libreoffice3.4/* "${pkgdir}"/usr/lib/libreoffice
+  cp -R opt/libreoffice3.5/* "${pkgdir}"/usr/lib/libreoffice
   chown root:root -R "${pkgdir}"/usr/lib/libreoffice
 }
 
 package_libreoffice-ro() {
   pkgdesc="Romanian language pack for LibreOffice"
   provides=('openoffice-ro' 'libreoffice-langpack')
-  categories=('localization')
   replaces=(openoffice-ro)
   conflicts=(openoffice-ro)
   cd "${srcdir}"/LibO_${_dirver}_Linux_x86_langpack-rpm_ro/RPMS
   mkdir -p "${pkgdir}"/usr/lib/libreoffice
-  cp -R opt/libreoffice3.4/* "${pkgdir}"/usr/lib/libreoffice
+  cp -R opt/libreoffice3.5/* "${pkgdir}"/usr/lib/libreoffice
   chown root:root -R "${pkgdir}"/usr/lib/libreoffice
 }
 
 package_libreoffice-ru() {
   pkgdesc="Russian language pack for LibreOffice"
   provides=('openoffice-ru' 'libreoffice-langpack')
-  categories=('localization')
   replaces=(openoffice-ru)
   conflicts=(openoffice-ru)
   cd "${srcdir}"/LibO_${_dirver}_Linux_x86_langpack-rpm_ru/RPMS
   mkdir -p "${pkgdir}"/usr/lib/libreoffice
-  cp -R opt/libreoffice3.4/* "${pkgdir}"/usr/lib/libreoffice
+  cp -R opt/libreoffice3.5/* "${pkgdir}"/usr/lib/libreoffice
   chown root:root -R "${pkgdir}"/usr/lib/libreoffice
 }
 
 package_libreoffice-rw() {
   pkgdesc="Kinyarwanda language pack for LibreOffice"
   provides=('openoffice-rw' 'libreoffice-langpack')
-  categories=('localization')
   replaces=(openoffice-rw)
   conflicts=(openoffice-rw)
   cd "${srcdir}"/LibO_${_dirver}_Linux_x86_langpack-rpm_rw/RPMS
   mkdir -p "${pkgdir}"/usr/lib/libreoffice
-  cp -R opt/libreoffice3.4/* "${pkgdir}"/usr/lib/libreoffice
+  cp -R opt/libreoffice3.5/* "${pkgdir}"/usr/lib/libreoffice
   chown root:root -R "${pkgdir}"/usr/lib/libreoffice
 }
 
 package_libreoffice-sa-IN() {
   pkgdesc="Sanskrit (India) language pack for LibreOffice"
   provides=('openoffice-sa-IN' 'libreoffice-langpack')
-  categories=('localization')
   replaces=(openoffice-sa-IN)
   conflicts=(openoffice-sa-IN)
   cd "${srcdir}"/LibO_${_dirver}_Linux_x86_langpack-rpm_sa-IN/RPMS
   mkdir -p "${pkgdir}"/usr/lib/libreoffice
-  cp -R opt/libreoffice3.4/* "${pkgdir}"/usr/lib/libreoffice
+  cp -R opt/libreoffice3.5/* "${pkgdir}"/usr/lib/libreoffice
   chown root:root -R "${pkgdir}"/usr/lib/libreoffice
 }
 
 package_libreoffice-sat() {
   pkgdesc="Santali language pack for LibreOffice"
   provides=('openoffice-sat' 'libreoffice-langpack')
-  categories=('localization')
   replaces=(openoffice-sat)
   conflicts=(openoffice-sat)
   cd "${srcdir}"/LibO_${_dirver}_Linux_x86_langpack-rpm_sat/RPMS
   mkdir -p "${pkgdir}"/usr/lib/libreoffice
-  cp -R opt/libreoffice3.4/* "${pkgdir}"/usr/lib/libreoffice
+  cp -R opt/libreoffice3.5/* "${pkgdir}"/usr/lib/libreoffice
   chown root:root -R "${pkgdir}"/usr/lib/libreoffice
 }
 
 package_libreoffice-sd() {
   pkgdesc="Sindhi language pack for LibreOffice"
   provides=('openoffice-sd' 'libreoffice-langpack')
-  categories=('localization')
   replaces=(openoffice-sd)
   conflicts=(openoffice-sd)
   cd "${srcdir}"/LibO_${_dirver}_Linux_x86_langpack-rpm_sd/RPMS
   mkdir -p "${pkgdir}"/usr/lib/libreoffice
-  cp -R opt/libreoffice3.4/* "${pkgdir}"/usr/lib/libreoffice
+  cp -R opt/libreoffice3.5/* "${pkgdir}"/usr/lib/libreoffice
   chown root:root -R "${pkgdir}"/usr/lib/libreoffice
 }
 
 package_libreoffice-sh() {
   pkgdesc="Serbo-Croatian language pack for LibreOffice"
   provides=('openoffice-sh' 'libreoffice-langpack')
-  categories=('localization')
   replaces=(openoffice-sh)
   conflicts=(openoffice-sh)
   cd "${srcdir}"/LibO_${_dirver}_Linux_x86_langpack-rpm_sh/RPMS
   mkdir -p "${pkgdir}"/usr/lib/libreoffice
-  cp -R opt/libreoffice3.4/* "${pkgdir}"/usr/lib/libreoffice
+  cp -R opt/libreoffice3.5/* "${pkgdir}"/usr/lib/libreoffice
   chown root:root -R "${pkgdir}"/usr/lib/libreoffice
 }
 
 package_libreoffice-si() {
   pkgdesc="Singhalese language pack for LibreOffice"
   provides=('openoffice-si' 'libreoffice-langpack')
-  categories=('localization')
   replaces=(openoffice-si)
   conflicts=(openoffice-si)
   cd "${srcdir}"/LibO_${_dirver}_Linux_x86_langpack-rpm_si/RPMS
   mkdir -p "${pkgdir}"/usr/lib/libreoffice
-  cp -R opt/libreoffice3.4/* "${pkgdir}"/usr/lib/libreoffice
+  cp -R opt/libreoffice3.5/* "${pkgdir}"/usr/lib/libreoffice
   chown root:root -R "${pkgdir}"/usr/lib/libreoffice
 }
 
 package_libreoffice-sk() {
   pkgdesc="Slovak language pack for LibreOffice"
   provides=('openoffice-sk' 'libreoffice-langpack')
-  categories=('localization')
   replaces=(openoffice-sk)
   conflicts=(openoffice-sk)
   cd "${srcdir}"/LibO_${_dirver}_Linux_x86_langpack-rpm_sk/RPMS
   mkdir -p "${pkgdir}"/usr/lib/libreoffice
-  cp -R opt/libreoffice3.4/* "${pkgdir}"/usr/lib/libreoffice
+  cp -R opt/libreoffice3.5/* "${pkgdir}"/usr/lib/libreoffice
   chown root:root -R "${pkgdir}"/usr/lib/libreoffice
 }
 
 package_libreoffice-sl() {
   pkgdesc="Slovenian language pack for LibreOffice"
   provides=('openoffice-sl' 'libreoffice-langpack')
-  categories=('localization')
   replaces=(openoffice-sl)
   conflicts=(openoffice-sl)
   cd "${srcdir}"/LibO_${_dirver}_Linux_x86_langpack-rpm_sl/RPMS
   mkdir -p "${pkgdir}"/usr/lib/libreoffice
-  cp -R opt/libreoffice3.4/* "${pkgdir}"/usr/lib/libreoffice
+  cp -R opt/libreoffice3.5/* "${pkgdir}"/usr/lib/libreoffice
   chown root:root -R "${pkgdir}"/usr/lib/libreoffice
 }
 
 package_libreoffice-sq() {
   pkgdesc="Albanien language pack for LibreOffice"
   provides=('openoffice-sq' 'libreoffice-langpack')
-  categories=('localization')
   replaces=(openoffice-sq)
   conflicts=(openoffice-sq)
   cd "${srcdir}"/LibO_${_dirver}_Linux_x86_langpack-rpm_sq/RPMS
   mkdir -p "${pkgdir}"/usr/lib/libreoffice
-  cp -R opt/libreoffice3.4/* "${pkgdir}"/usr/lib/libreoffice
+  cp -R opt/libreoffice3.5/* "${pkgdir}"/usr/lib/libreoffice
   chown root:root -R "${pkgdir}"/usr/lib/libreoffice
 }
 
 package_libreoffice-sr() {
   pkgdesc="Serbian language pack for LibreOffice"
   provides=('openoffice-sr' 'libreoffice-langpack')
-  categories=('localization')
   replaces=(openoffice-sr)
   conflicts=(openoffice-sr)
   cd "${srcdir}"/LibO_${_dirver}_Linux_x86_langpack-rpm_sr/RPMS
   mkdir -p "${pkgdir}"/usr/lib/libreoffice
-  cp -R opt/libreoffice3.4/* "${pkgdir}"/usr/lib/libreoffice
+  cp -R opt/libreoffice3.5/* "${pkgdir}"/usr/lib/libreoffice
   chown root:root -R "${pkgdir}"/usr/lib/libreoffice
 }
 
 package_libreoffice-ss() {
   pkgdesc="Swati language pack for LibreOffice"
   provides=('openoffice-ss' 'libreoffice-langpack')
-  categories=('localization')
   replaces=(openoffice-ss)
   conflicts=(openoffice-ss)
   cd "${srcdir}"/LibO_${_dirver}_Linux_x86_langpack-rpm_ss/RPMS
   mkdir -p "${pkgdir}"/usr/lib/libreoffice
-  cp -R opt/libreoffice3.4/* "${pkgdir}"/usr/lib/libreoffice
+  cp -R opt/libreoffice3.5/* "${pkgdir}"/usr/lib/libreoffice
   chown root:root -R "${pkgdir}"/usr/lib/libreoffice
 }
 
 package_libreoffice-st() {
   pkgdesc="Southern Sotho language pack for LibreOffice"
   provides=('openoffice-st' 'libreoffice-langpack')
-  categories=('localization')
   replaces=(openoffice-st)
   conflicts=(openoffice-st)
   cd "${srcdir}"/LibO_${_dirver}_Linux_x86_langpack-rpm_st/RPMS
   mkdir -p "${pkgdir}"/usr/lib/libreoffice
-  cp -R opt/libreoffice3.4/* "${pkgdir}"/usr/lib/libreoffice
+  cp -R opt/libreoffice3.5/* "${pkgdir}"/usr/lib/libreoffice
   chown root:root -R "${pkgdir}"/usr/lib/libreoffice
 }
 
 package_libreoffice-sv() {
   pkgdesc="Swedish language pack for LibreOffice"
   provides=('openoffice-sv' 'libreoffice-langpack')
-  categories=('localization')
   replaces=(openoffice-sv)
   conflicts=(openoffice-sv)
   cd "${srcdir}"/LibO_${_dirver}_Linux_x86_langpack-rpm_sv/RPMS
   mkdir -p "${pkgdir}"/usr/lib/libreoffice
-  cp -R opt/libreoffice3.4/* "${pkgdir}"/usr/lib/libreoffice
+  cp -R opt/libreoffice3.5/* "${pkgdir}"/usr/lib/libreoffice
   chown root:root -R "${pkgdir}"/usr/lib/libreoffice
 }
 
 package_libreoffice-sw-TZ() {
   pkgdesc="Swahili (Tanzania) language pack for LibreOffice"
   provides=('openoffice-sw-TZ' 'libreoffice-langpack')
-  categories=('localization')
   replaces=(openoffice-sw-TZ)
   conflicts=(openoffice-sw-TZ)
   cd "${srcdir}"/LibO_${_dirver}_Linux_x86_langpack-rpm_sw-TZ/RPMS
   mkdir -p "${pkgdir}"/usr/lib/libreoffice
-  cp -R opt/libreoffice3.4/* "${pkgdir}"/usr/lib/libreoffice
+  cp -R opt/libreoffice3.5/* "${pkgdir}"/usr/lib/libreoffice
   chown root:root -R "${pkgdir}"/usr/lib/libreoffice
 }
 
 package_libreoffice-ta() {
   pkgdesc="Tamil language pack for LibreOffice"
   provides=('openoffice-ta' 'libreoffice-langpack')
-  categories=('localization')
   replaces=(openoffice-ta)
   conflicts=(openoffice-ta)
   cd "${srcdir}"/LibO_${_dirver}_Linux_x86_langpack-rpm_ta/RPMS
   mkdir -p "${pkgdir}"/usr/lib/libreoffice
-  cp -R opt/libreoffice3.4/* "${pkgdir}"/usr/lib/libreoffice
+  cp -R opt/libreoffice3.5/* "${pkgdir}"/usr/lib/libreoffice
   chown root:root -R "${pkgdir}"/usr/lib/libreoffice
 }
 
 package_libreoffice-te() {
   pkgdesc="Telugu language pack for LibreOffice"
   provides=('openoffice-te' 'libreoffice-langpack')
-  categories=('localization')
   replaces=(openoffice-te)
   conflicts=(openoffice-te)
   cd "${srcdir}"/LibO_${_dirver}_Linux_x86_langpack-rpm_te/RPMS
   mkdir -p "${pkgdir}"/usr/lib/libreoffice
-  cp -R opt/libreoffice3.4/* "${pkgdir}"/usr/lib/libreoffice
+  cp -R opt/libreoffice3.5/* "${pkgdir}"/usr/lib/libreoffice
   chown root:root -R "${pkgdir}"/usr/lib/libreoffice
 }
 
 package_libreoffice-tg() {
   pkgdesc="Tajik language pack for LibreOffice"
   provides=('openoffice-tg' 'libreoffice-langpack')
-  categories=('localization')
   replaces=(openoffice-tg)
   conflicts=(openoffice-tg)
   cd "${srcdir}"/LibO_${_dirver}_Linux_x86_langpack-rpm_tg/RPMS
   mkdir -p "${pkgdir}"/usr/lib/libreoffice
-  cp -R opt/libreoffice3.4/* "${pkgdir}"/usr/lib/libreoffice
+  cp -R opt/libreoffice3.5/* "${pkgdir}"/usr/lib/libreoffice
   chown root:root -R "${pkgdir}"/usr/lib/libreoffice
 }
 
 package_libreoffice-th() {
   pkgdesc="Thai language pack for LibreOffice"
   provides=('openoffice-th' 'libreoffice-langpack')
-  categories=('localization')
   replaces=(openoffice-th)
   conflicts=(openoffice-th)
   cd "${srcdir}"/LibO_${_dirver}_Linux_x86_langpack-rpm_th/RPMS
   mkdir -p "${pkgdir}"/usr/lib/libreoffice
-  cp -R opt/libreoffice3.4/* "${pkgdir}"/usr/lib/libreoffice
+  cp -R opt/libreoffice3.5/* "${pkgdir}"/usr/lib/libreoffice
   chown root:root -R "${pkgdir}"/usr/lib/libreoffice
 }
 
 package_libreoffice-tn() {
   pkgdesc="Tswana language pack for LibreOffice"
   provides=('openoffice-tn' 'libreoffice-langpack')
-  categories=('localization')
   replaces=(openoffice-tn)
   conflicts=(openoffice-tn)
   cd "${srcdir}"/LibO_${_dirver}_Linux_x86_langpack-rpm_tn/RPMS
   mkdir -p "${pkgdir}"/usr/lib/libreoffice
-  cp -R opt/libreoffice3.4/* "${pkgdir}"/usr/lib/libreoffice
+  cp -R opt/libreoffice3.5/* "${pkgdir}"/usr/lib/libreoffice
   chown root:root -R "${pkgdir}"/usr/lib/libreoffice
 }
 
 package_libreoffice-tr() {
   pkgdesc="Turkish language pack for LibreOffice"
   provides=('openoffice-tr' 'libreoffice-langpack')
-  categories=('localization')
   replaces=(openoffice-tr)
   conflicts=(openoffice-tr)
   cd "${srcdir}"/LibO_${_dirver}_Linux_x86_langpack-rpm_tr/RPMS
   mkdir -p "${pkgdir}"/usr/lib/libreoffice
-  cp -R opt/libreoffice3.4/* "${pkgdir}"/usr/lib/libreoffice
+  cp -R opt/libreoffice3.5/* "${pkgdir}"/usr/lib/libreoffice
   chown root:root -R "${pkgdir}"/usr/lib/libreoffice
 }
 
 package_libreoffice-ts() {
   pkgdesc="Tsonga language pack for LibreOffice"
   provides=('openoffice-ts' 'libreoffice-langpack')
-  categories=('localization')
   replaces=(openoffice-ts)
   conflicts=(openoffice-ts)
   cd "${srcdir}"/LibO_${_dirver}_Linux_x86_langpack-rpm_ts/RPMS
   mkdir -p "${pkgdir}"/usr/lib/libreoffice
-  cp -R opt/libreoffice3.4/* "${pkgdir}"/usr/lib/libreoffice
+  cp -R opt/libreoffice3.5/* "${pkgdir}"/usr/lib/libreoffice
   chown root:root -R "${pkgdir}"/usr/lib/libreoffice
 }
 
 package_libreoffice-ug() {
   pkgdesc="Uighur language pack for LibreOffice"
   provides=('openoffice-ug' 'libreoffice-langpack')
-  categories=('localization')
   replaces=(openoffice-ug)
   conflicts=(openoffice-ug)
   cd "${srcdir}"/LibO_${_dirver}_Linux_x86_langpack-rpm_ug/RPMS
   mkdir -p "${pkgdir}"/usr/lib/libreoffice
-  cp -R opt/libreoffice3.4/* "${pkgdir}"/usr/lib/libreoffice
+  cp -R opt/libreoffice3.5/* "${pkgdir}"/usr/lib/libreoffice
   chown root:root -R "${pkgdir}"/usr/lib/libreoffice
 }
 
 package_libreoffice-uk() {
   pkgdesc="Ukrainian language pack for LibreOffice"
   provides=('openoffice-uk' 'libreoffice-langpack')
-  categories=('localization')
   replaces=(openoffice-uk)
   conflicts=(openoffice-uk)
   cd "${srcdir}"/LibO_${_dirver}_Linux_x86_langpack-rpm_uk/RPMS
   mkdir -p "${pkgdir}"/usr/lib/libreoffice
-  cp -R opt/libreoffice3.4/* "${pkgdir}"/usr/lib/libreoffice
+  cp -R opt/libreoffice3.5/* "${pkgdir}"/usr/lib/libreoffice
   chown root:root -R "${pkgdir}"/usr/lib/libreoffice
 }
 
 package_libreoffice-uz() {
   pkgdesc="Uzbek language pack for LibreOffice"
   provides=('openoffice-uz' 'libreoffice-langpack')
-  categories=('localization')
   replaces=(openoffice-uz)
   conflicts=(openoffice-uz)
   cd "${srcdir}"/LibO_${_dirver}_Linux_x86_langpack-rpm_uz/RPMS
   mkdir -p "${pkgdir}"/usr/lib/libreoffice
-  cp -R opt/libreoffice3.4/* "${pkgdir}"/usr/lib/libreoffice
+  cp -R opt/libreoffice3.5/* "${pkgdir}"/usr/lib/libreoffice
   chown root:root -R "${pkgdir}"/usr/lib/libreoffice
 }
 
 package_libreoffice-ve() {
   pkgdesc="Venda language pack for LibreOffice"
   provides=('openoffice-ve' 'libreoffice-langpack')
-  categories=('localization')
   replaces=(openoffice-ve)
   conflicts=(openoffice-ve)
   cd "${srcdir}"/LibO_${_dirver}_Linux_x86_langpack-rpm_ve/RPMS
   mkdir -p "${pkgdir}"/usr/lib/libreoffice
-  cp -R opt/libreoffice3.4/* "${pkgdir}"/usr/lib/libreoffice
+  cp -R opt/libreoffice3.5/* "${pkgdir}"/usr/lib/libreoffice
   chown root:root -R "${pkgdir}"/usr/lib/libreoffice
 }
 
 package_libreoffice-vi() {
   pkgdesc="Vietnamese language pack for LibreOffice"
   provides=('openoffice-vi' 'libreoffice-langpack')
-  categories=('localization')
   replaces=(openoffice-vi)
   conflicts=(openoffice-vi)
   cd "${srcdir}"/LibO_${_dirver}_Linux_x86_langpack-rpm_vi/RPMS
   mkdir -p "${pkgdir}"/usr/lib/libreoffice
-  cp -R opt/libreoffice3.4/* "${pkgdir}"/usr/lib/libreoffice
+  cp -R opt/libreoffice3.5/* "${pkgdir}"/usr/lib/libreoffice
   chown root:root -R "${pkgdir}"/usr/lib/libreoffice
 }
 
 package_libreoffice-xh() {
   pkgdesc="Xhosa language pack for LibreOffice"
   provides=('openoffice-xh' 'libreoffice-langpack')
-  categories=('localization')
   replaces=(openoffice-xh)
   conflicts=(openoffice-xh)
   cd "${srcdir}"/LibO_${_dirver}_Linux_x86_langpack-rpm_xh/RPMS
   mkdir -p "${pkgdir}"/usr/lib/libreoffice
-  cp -R opt/libreoffice3.4/* "${pkgdir}"/usr/lib/libreoffice
+  cp -R opt/libreoffice3.5/* "${pkgdir}"/usr/lib/libreoffice
   chown root:root -R "${pkgdir}"/usr/lib/libreoffice
 }
 
 package_libreoffice-zh-CN() {
   pkgdesc="Chinese (simplified) language pack for LibreOffice"
   provides=('openoffice-zh-CN' 'libreoffice-langpack')
-  categories=('localization')
   replaces=(openoffice-zh-CN)
   conflicts=(openoffice-zh-CN)
   cd "${srcdir}"/LibO_${_dirver}_Linux_x86_langpack-rpm_zh-CN/RPMS
   mkdir -p "${pkgdir}"/usr/lib/libreoffice
-  cp -R opt/libreoffice3.4/* "${pkgdir}"/usr/lib/libreoffice
+  cp -R opt/libreoffice3.5/* "${pkgdir}"/usr/lib/libreoffice
   chown root:root -R "${pkgdir}"/usr/lib/libreoffice
 }
 
 package_libreoffice-zh-TW() {
   pkgdesc="Chinese (traditional) language pack for LibreOffice"
   provides=('openoffice-zh-TW' 'libreoffice-langpack')
-  categories=('localization')
   replaces=(openoffice-zh-TW)
   conflicts=(openoffice-zh-TW)
   cd "${srcdir}"/LibO_${_dirver}_Linux_x86_langpack-rpm_zh-TW/RPMS
   mkdir -p "${pkgdir}"/usr/lib/libreoffice
-  cp -R opt/libreoffice3.4/* "${pkgdir}"/usr/lib/libreoffice
+  cp -R opt/libreoffice3.5/* "${pkgdir}"/usr/lib/libreoffice
   chown root:root -R "${pkgdir}"/usr/lib/libreoffice
 }
 
 package_libreoffice-zu() {
   pkgdesc="Zulu language pack for LibreOffice"
   provides=('openoffice-zu' 'libreoffice-langpack')
-  categories=('localization')
   replaces=(openoffice-zu)
   conflicts=(openoffice-zu)
   cd "${srcdir}"/LibO_${_dirver}_Linux_x86_langpack-rpm_zu/RPMS
   mkdir -p "${pkgdir}"/usr/lib/libreoffice
-  cp -R opt/libreoffice3.4/* "${pkgdir}"/usr/lib/libreoffice
+  cp -R opt/libreoffice3.5/* "${pkgdir}"/usr/lib/libreoffice
   chown root:root -R "${pkgdir}"/usr/lib/libreoffice
 }
