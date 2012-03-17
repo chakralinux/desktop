@@ -1,29 +1,25 @@
 #
 # Chakra Packages for Chakra, part of chakra-project.org
 #
-# maintainer (i686): Phil Miller <philm[at]chakra-project[dog]org>
 # maintainer (x86_64): Manuel Tortosa <manutortosa[at]chakra-project[dot]org>
 
 pkgbase="libreoffice"
-pkgname=('libreoffice' 'libreoffice-sdk' 
-	'libreoffice-extension-diagram'
-	'libreoffice-extension-google-docs'
-	'libreoffice-extension-hunart'
-	'libreoffice-extension-nlpsolver'
-	'libreoffice-extension-ct2n'
-	'libreoffice-extension-numbertext'	
-	'libreoffice-extension-oooblogger'
+pkgname=('libreoffice-common'
+	'libreoffice-base'
+	'libreoffice-calc'
+	'libreoffice-draw'
+	'libreoffice-impress'
+	'libreoffice-kde4'
+	'libreoffice-math'
+	'libreoffice-sdk'
+	'libreoffice-sdk-doc'
+	'libreoffice-writer'
+	'libreoffice-en-US'
+	'libreoffice-postgresql-connector'
 	'libreoffice-extension-pdfimport'
 	'libreoffice-extension-presenter-screen'
 	'libreoffice-extension-presentation-minimizer'
-	'libreoffice-extension-report-builder'
-	'libreoffice-extension-scripting-beanshell'
-	'libreoffice-extension-scripting-javascript'
-	'libreoffice-extension-scripting-python'
-	'libreoffice-extension-typo'
-	'libreoffice-extension-validator'
-	'libreoffice-extension-watch-window'
-	'libreoffice-extension-wiki-publisher')
+	'libreoffice-extension-report-builder')
 _LOver=3.5.1.2
 pkgver=3.5.1.2
 _pkgver=3.5.1
@@ -136,19 +132,20 @@ build() {
 
 	unset J2REDIR; unset J2SDKDIR; unset JAVA_HOME; unset CLASSPATH; unset EXTRAOPTS
 	[ -z "${JAVA_HOME}" ] && . /etc/profile.d/openjdk6.sh
+        [ -z "${MOZ_PLUGIN_PATH}" ] && . /etc/profile.d/mozilla-common.sh
 	[ -z "${ANT_HOME}" ] && . /etc/profile.d/apache-ant.sh
 
 	cd ${srcdir}/libreoffice-core-$_LOver
 
 	# move external sources into place
-	mkdir ${srcdir}/ext_sources &&	pushd ${srcdir}/ext_sources
-	for source in "${noextract[@]}"; do
-	  ln -s ${srcdir}/$source .
-	done
-	popd
+	#mkdir ${srcdir}/ext_sources &&	pushd ${srcdir}/ext_sources
+	#for source in "${noextract[@]}"; do
+	#  ln -s ${srcdir}/$source .
+	#done
+	#popd
 
-	ln -s ../libreoffice-help-$_LOver/helpcontent2 .
-	ln -s ../libreoffice-translations-$_LOver/translations .
+	#ln -s ../libreoffice-help-$_LOver/helpcontent2 .
+	#ln -s ../libreoffice-translations-$_LOver/translations .
 
 	# buildfixes & bugfixes
 	# one late fix to solve make distro-pack-install issue
@@ -157,7 +154,7 @@ build() {
 	patch -Np1 -i ${srcdir}/buildfix_kde4fpicker.diff
 
 	# Temporary workaround to avoid build failure in ct2n
-	mv ${srcdir}/451ccf439a36a568653b024534669971-ConvertTextToNumber{_,-}1.3.2.oxt
+	#mv ${srcdir}/451ccf439a36a568653b024534669971-ConvertTextToNumber{_,-}1.3.2.oxt
 	
 	#use the CFLAGS but remove the LibO overridden ones
 	for i in $CFLAGS; do
@@ -208,9 +205,7 @@ build() {
                  --without-system-libcmis \
                  --without-system-sampleicc \
                  --without-system-libexttextcat \
-                 --disable-mozilla \
-		--without-system-mozilla \
-		--without-system-mozilla-headers \
+		--with-system-mozilla \
 		--with-system-dicts \
 		--with-external-dict-dir=/usr/share/hunspell \
 		--with-external-hyph-dir=/usr/share/hyphen \
@@ -235,24 +230,11 @@ build() {
 		--with-theme="oxygen" \
 		--with-lucene-core-jar=/usr/share/java/lucene-core.jar\
 		--with-lucene-analyzers-jar=/usr/share/java/lucene-analyzers.jar\
-		--enable-ext-barcode \
-		--enable-ext-diagram \
-		--enable-ext-google-docs \
-		--enable-ext-hunart \
-		--enable-ext-nlpsolver \
-		--enable-ext-ct2n \
-		--enable-ext-numbertext \
-		--enable-ext-oooblogger \
 		--enable-ext-pdfimport \
 		--enable-ext-presenter-console \
 		--enable-ext-presenter-minimizer \
 		--enable-ext-report-builder \
 		--enable-ext-scripting-beanshell \
-		--enable-ext-scripting-javascript \
-		--enable-ext-typo \
-		--enable-ext-validator \
-		--enable-ext-watch-window \
-		--enable-ext-wiki-publisher \
                  --with-java-target-version=1.5 \
 		$EXTRAOPTS 
 
@@ -260,343 +242,370 @@ build() {
 	#./download
 	make
 	# fake installation to create split file lists
-	mkdir $srcdir/fakeinstall
+	#mkdir $srcdir/fakeinstall
 	make DESTDIR=${srcdir}/fakeinstall distro-pack-install
 }
 
-package_libreoffice() {
+package_libreoffice-common() {
 
- pkgdesc="a productivity suite that is compatible with other major office suites"
+ pkgdesc="common files for LibreOffice - a productivity suite that is compatible with other major office suites"
  install=${pkgbase}.install
- depends=("curl>=7.20.0" "hunspell>=1.2.8" "python2" 'libwpd>=0.9.0' 'libwps' 'libxaw' "neon>=0.28.6"
-          'pango' 'nspr' 'libjpeg' 'libxrandr' 'libgl' 'dbus-glib' "icu>=4.6" 'libxslt'
-          'redland' 'libgraphite' 'hyphen' 'lpsolve' 'gcc-libs' 'sh' 'libtextcat''hsqldb-java' 
-          'hicolor-icon-theme' 'desktop-file-utils' 'shared-mime-info' 'libtextcat' 'java-runtime') 
-ooptdepends=('java-runtime:     adds java support'
+ depends=('libreoffice-langpack' "hunspell" "python2" "neon"
+          'nspr' "icu" 'libsm' 'redland' 'hyphen' 'libgraphite'
+          'hicolor-icon-theme' 'desktop-file-utils' 'shared-mime-info' 'xdg-utils')
+          #'saxon'
+ optdepends=('libreoffice-langpack: additional language support'
+             'java-runtime:     adds java support'
              'libcups:          adds printing support'
              'nss:              adds support for signed files/macros'
              'pstoedit:         translates PostScript and PDF graphics into other vector formats'
              'poppler:          for shipped pdfimport extension'
-             'kdelibs:          for kde integration'
              'libmythes:        for use in thesaurus'
              'beanshell:        interactive java -- good for prototyping /macros'
              'vigra:            C++ computer vision library, usable in Basebmp'
              'libmspack:        library for Microsoft compression formats for use in FontOOo'
              'libwpg:           library for importing and converting Corel WordPerfect(tm) Graphics images'
-             'libldap:          to get profiles via ldap'
              'lucene:           full-text search engine library for Java needed in the help section'
              'sane:             for scanner access'
              'unixodbc:         adds ODBC database support'
-             'mesa:             for the OGLTrans extension'
              'gstreamer0.10-base: + some gstr-plugins to support multimedia content, e.g. in impress')
  backup=(etc/libreoffice/sofficerc
          etc/libreoffice/bootstraprc
          etc/libreoffice/psprint.conf)
+ groups=('libreoffice')
  provides=('go-openoffice')
  conflicts=('go-openoffice')
- replaces=('go-openoffice' 'openoffice-base' )
- categories=('office')
+ replaces=('go-openoffice' 'openoffice-base' 'libreoffice')
 
-	cd ${srcdir}/build
-	make DESTDIR=${pkgdir} install
-	
-	# fix missing desktop integration
-	install -dm755 ${pkgdir}/usr/bin
-	pushd ${pkgdir}/usr/bin
-	ln -vs /usr/lib/libreoffice/program/soffice ./libreoffice
-	ln -vs /usr/lib/libreoffice/program/soffice ./soffice
-	ln -vs /usr/lib/libreoffice/program/sbase ./lobase
-	ln -vs /usr/lib/libreoffice/program/scalc ./localc
-	ln -vs /usr/lib/libreoffice/program/sdraw ./lodraw
-	ln -vs /usr/lib/libreoffice/program/simpress ./loimpress
-	ln -vs /usr/lib/libreoffice/program/smath ./lomath
-	ln -vs /usr/lib/libreoffice/program/swriter ./lowriter
-	ln -vs /usr/lib/libreoffice/program/unopkg ./unopkg
-	popd
-	
-	# move sysui desktop files into place we want to use - javafilter and qstarter, but not unneeded printeradmin
-	install -dm755 ${pkgdir}/usr/share/{applications,icons,mime/packages,pixmaps}
-	rm ${pkgdir}/usr/lib/libreoffice/share/xdg/printeradmin.desktop
-	for i in base calc draw impress javafilter math startcenter writer; do
-	  cp ${pkgdir}/usr/lib/libreoffice/share/xdg/$i.desktop ${pkgdir}/usr/share/applications/libreoffice-$i.desktop
-	done
-	# remove version in menu entry and make it visible
-	sed -i -e "s/3.4//g" ${pkgdir}/usr/share/applications/*.desktop
-	# sed -i -e "s/Icon=libreoffice34-/Icon=/g" ${pkgdir}/usr/share/applications/*.desktop
-
-	# remove unneeded .desktop files
-	rm -rf ${pkgdir}/usr/lib/libreoffice/share/xdg
-	
-	# add missing icon files
-	cp -R ${srcdir}/build/sysui/desktop/icons/{hi,lo}color ${pkgdir}/usr/share/icons/
-	pushd ${pkgdir}/usr/share/pixmaps
-	  for i in base calc draw impress main math printeradmin startcenter writer; do
-	    ln -vs /usr/share/icons/hicolor/48x48/apps/$i.png .
-	  done
-	popd
-	sed -i -e 's/Icon=libreoffice34-/Icon=/' ${pkgdir}/usr/share/applications/*.desktop
-
-	# add missing mimetype file
-	install -m644 ${srcdir}/build/sysui/unxlng*/misc/libreoffice/openoffice.org.xml ${pkgdir}/usr/share/mime/packages/libreoffice.xml
-
-	# put configuration files into place
-	install -dm755 ${pkgdir}/etc/libreoffice
-	install -m644 ${pkgdir}/usr/lib/libreoffice/program/{bootstraprc,sofficerc} ${pkgdir}/etc/libreoffice/
-	install -m644 ${pkgdir}/usr/lib/libreoffice/basis3.4/share/psprint/psprint.conf ${pkgdir}/etc/libreoffice/
-	# install dummy links to make them found by LibO
-	cd ${pkgdir}/usr/lib/libreoffice/program/
-	ln -vsf /etc/libreoffice/{bootstraprc,sofficerc} .
-	cd ${pkgdir}/usr/lib/libreoffice/basis3.4/share/psprint/
-	ln -vsf /etc/libreoffice/psprint.conf .
+ # create directories from *list.txt file
+ for directory in `grep ^%dir ${srcdir}/libreoffice-core-$_LOver/file-lists/common_list.txt`; do
+   install -dm755 ${pkgdir}/${directory/\%dir/}
+ done
+ # install files into the pkg from fakeinstall dir
+ for file in `grep -v ^%dir $srcdir/libreoffice-core-$_LOver/file-lists/common_list.txt`; do
+   dirname=`dirname $file`
+   # check if directory has been already been created - some are missing like manpages
+   [ -d ${pkgdir}/$dirname ] || install -dm755 ${pkgdir}/$dirname
+   # mv file from fakeinstall to pkgdir
+   mv ${srcdir}/fakeinstall${file} ${pkgdir}$file
+ done
  
-	#fixes
-	find ${pkgdir} -perm 444 -exec ls -lh {} \;
-	find ${pkgdir} -perm 444 -exec chmod 644 {} \;
-	find ${pkgdir} -perm 555 -exec ls -lh {} \;
-	find ${pkgdir} -perm 555 -exec chmod 755 {} \;
-	
-	# split out extensions
-	mv ${pkgdir}/usr/lib/libreoffice/share/extensions ${srcdir}/extensions-install
-	install -dm755 ${pkgdir}/usr/lib/libreoffice/share/extensions
-	install -m644 ${srcdir}/extensions-install/package.txt ${pkgdir}/usr/lib/libreoffice/share/extensions/
+ # put configuration files into place
+ install -dm755 ${pkgdir}/etc/libreoffice
+ install -m644 ${pkgdir}/usr/lib/libreoffice/program/{bootstraprc,sofficerc} ${pkgdir}/etc/libreoffice/
+ install -m644 ${pkgdir}/usr/lib/libreoffice/share/psprint/psprint.conf ${pkgdir}/etc/libreoffice/
+ # install dummy links to make them found by LibO
+ cd ${pkgdir}/usr/lib/libreoffice/program/
+ ln -vsf /etc/libreoffice/{bootstraprc,sofficerc} .
+ cd ${pkgdir}/usr/lib/libreoffice/share/psprint/
+ ln -vsf /etc/libreoffice/psprint.conf .
 
-	# move SDK to separated package
-	mkdir -p ${srcdir}/sdk-install/usr/lib/libreoffice/basis3.4/sdk
-	mv ${pkgdir}/usr/lib/libreoffice/basis3.4/sdk ${srcdir}/sdk-install/usr/lib/libreoffice/basis3.4/
+ #fix http://bugs.archlinux.org/task/17656
+ find ${pkgdir} -perm 444 -exec ls -lh {} \;
+ find ${pkgdir} -perm 444 -exec chmod 644 {} \;
+ find ${pkgdir} -perm 555 -exec ls -lh {} \;
+ find ${pkgdir} -perm 555 -exec chmod 755 {} \;
+}
 
-	# cleanup gid_Module files
-	mkdir ${srcdir}/splitlist
-	mv -f ${pkgdir}/gid_Module* ${srcdir}/splitlist/
+package_libreoffice-base() {
+ pkgdesc="GUI Spreadsheet Applicationdatabase front-end for LibreOffice. Allows creation and management of databases through a GUI."
+ depends=('libreoffice-common' 'hsqldb-java')
+ optdepends=('libreoffice-postgresql-connector')
+ backup=()
+ groups=('libreoffice')
+ replaces=('libreoffice')
 
-	# remove unneded icon themes
-	rm -rf  ${pkgdir}/usr/lib/libreoffice/basis${_HIver}/share/config/images_classic.zip
-	rm -rf  ${pkgdir}/usr/lib/libreoffice/basis${_HIver}/share/config/images_tango.zip
-	rm -rf  ${pkgdir}/usr/lib/libreoffice/basis${_HIver}/share/config/images_crystal.zip
+ # create directories from *list.txt file
+ for directory in `grep ^%dir ${srcdir}/libreoffice-core-$_LOver/file-lists/base_list.txt`; do
+   install -dm755 ${pkgdir}/${directory/\%dir/}
+ done
+ # install files into the pkg from fakeinstall dir
+ for file in `grep -v ^%dir $srcdir/libreoffice-core-$_LOver/file-lists/base_list.txt`; do
+   dirname=`dirname $file`
+   # check if directory has been already been created - some are missing like manpages
+   [ -d ${pkgdir}/$dirname ] || install -dm755 ${pkgdir}/$dirname
+   # mv file from fakeinstall to pkgdir
+   mv ${srcdir}/fakeinstall${file} ${pkgdir}$file
+ done
+}
+
+package_libreoffice-postgresql-connector() {
+ pkgdesc="A PostgreSQL connector for the database front-end for LibreOffice"
+ depends=('libreoffice-base' 'postgresql-libs')
+ groups=('libreoffice')
+ replaces=('libreoffice')
+
+ # no file-list so far
+ install -dm755 ${pkgdir}/usr/lib/libreoffice/program/services
+ install -m644 ${srcdir}/fakeinstall/usr/lib/libreoffice/program/postgresql-sdbc.uno.so ${pkgdir}/usr/lib/libreoffice/program
+ install -m644 ${srcdir}/fakeinstall/usr/lib/libreoffice/program/postgresql-sdbc-impl.uno.so ${pkgdir}/usr/lib/libreoffice/program
+ install -m644 ${srcdir}/fakeinstall/usr/lib/libreoffice/program/postgresql-sdbc.ini ${pkgdir}/usr/lib/libreoffice/program
+ install -m644 ${srcdir}/fakeinstall/usr/lib/libreoffice/program/services/postgresql-sdbc.rdb ${pkgdir}/usr/lib/libreoffice/program/services
+ install -dm755 ${pkgdir}/usr/lib/libreoffice/share/registry
+ install -m644 ${srcdir}/fakeinstall/usr/lib/libreoffice/share/registry/postgresqlsdbc.xcd ${pkgdir}/usr/lib/libreoffice/share/registry
+
+# # create directories from *list.txt file
+# for directory in `grep ^%dir ${srcdir}/libreoffice-core-$_LOver/file-lists/postgresql_list.txt`; do
+#   install -dm755 ${pkgdir}/${directory/\%dir/}
+# done
+# # install files into the pkg from fakeinstall dir
+# for file in `grep -v ^%dir $srcdir/libreoffice-core-$_LOver/file-lists/postgresql_list.txt`; do
+#   dirname=`dirname $file`
+#   # check if directory has been already been created - some are missing like manpages
+#   [ -d ${pkgdir}/$dirname ] || install -dm755 ${pkgdir}/$dirname
+#   # mv file from fakeinstall to pkgdir
+#   mv ${srcdir}/fakeinstall${file} ${pkgdir}$file
+# done
+}
+
+package_libreoffice-calc() {
+ pkgdesc="Spreadsheet application for LibreOffice."
+ depends=('libreoffice-common' 'lpsolve' )
+ optdepends=()
+ backup=()
+ groups=('libreoffice')
+ replaces=('libreoffice')
+ 
+ # create directories from *list.txt file
+ for directory in `grep ^%dir ${srcdir}/libreoffice-core-$_LOver/file-lists/calc_list.txt`; do
+   install -dm755 ${pkgdir}/${directory/\%dir/}
+ done
+ # install files into the pkg from fakeinstall dir
+ for file in `grep -v ^%dir $srcdir/libreoffice-core-$_LOver/file-lists/calc_list.txt`; do
+   dirname=`dirname $file`
+   # check if directory has been already been created - some are missing like manpages
+   [ -d ${pkgdir}/$dirname ] || install -dm755 ${pkgdir}/$dirname
+   # mv file from fakeinstall to pkgdir
+   mv ${srcdir}/fakeinstall${file} ${pkgdir}$file
+ done
+}
+
+package_libreoffice-draw() {
+ pkgdesc="Drawing Application for LibreOffice."
+ depends=('libreoffice-common')
+ optdepends=()
+ backup=()
+ groups=('libreoffice')
+ replaces=('libreoffice')
+ 
+ # create directories from *list.txt file
+ for directory in `grep ^%dir ${srcdir}/libreoffice-core-$_LOver/file-lists/draw_list.txt`; do
+   install -dm755 ${pkgdir}/${directory/\%dir/}
+ done
+ # install files into the pkg from fakeinstall dir
+ for file in `grep -v ^%dir $srcdir/libreoffice-core-$_LOver/file-lists/draw_list.txt`; do
+   dirname=`dirname $file`
+   # check if directory has been already been created - some are missing like manpages
+   [ -d ${pkgdir}/$dirname ] || install -dm755 ${pkgdir}/$dirname
+   # mv file from fakeinstall to pkgdir
+   mv ${srcdir}/fakeinstall${file} ${pkgdir}$file
+ done
+}
+
+package_libreoffice-impress() {
+ pkgdesc="Presentation Application for LibreOffice."
+ depends=('libreoffice-common')
+ optdepends=('mesa:             for the OGLTrans extension')
+ backup=()
+ groups=('libreoffice')
+ replaces=('libreoffice')
+ 
+ # create directories from *list.txt file
+ for directory in `grep ^%dir ${srcdir}/libreoffice-core-$_LOver/file-lists/impress_list.txt`; do
+   install -dm755 ${pkgdir}/${directory/\%dir/}
+ done
+ # install files into the pkg from fakeinstall dir
+ for file in `grep -v ^%dir $srcdir/libreoffice-core-$_LOver/file-lists/impress_list.txt`; do
+   dirname=`dirname $file`
+   # check if directory has been already been created - some are missing like manpages
+   [ -d ${pkgdir}/$dirname ] || install -dm755 ${pkgdir}/$dirname
+   # mv file from fakeinstall to pkgdir
+   mv ${srcdir}/fakeinstall${file} ${pkgdir}$file
+ done
+}
+
+package_libreoffice-kde4() {
+ pkgdesc="Plug-in for LibreOffice that enables integration into the KDE4 desktop environment."
+ depends=('libreoffice-common' 'kdelibs')
+ optdepends=()
+ backup=()
+ groups=('libreoffice')
+ 
+ # create directories from *list.txt file
+ for directory in `grep ^%dir ${srcdir}/libreoffice-core-$_LOver/file-lists/kde4_list.txt`; do
+   install -dm755 ${pkgdir}/${directory/\%dir/}
+ done
+ # install files into the pkg from fakeinstall dir
+ for file in `grep -v ^%dir $srcdir/libreoffice-core-$_LOver/file-lists/kde4_list.txt`; do
+   dirname=`dirname $file`
+   # check if directory has been already been created - some are missing like manpages
+   [ -d ${pkgdir}/$dirname ] || install -dm755 ${pkgdir}/$dirname
+   # mv file from fakeinstall to pkgdir
+   mv ${srcdir}/fakeinstall${file} ${pkgdir}$file
+ done
+}
+
+package_libreoffice-math() {
+ pkgdesc="Equation Editor Applicationfor LibreOffice."
+ depends=('libreoffice-common')
+ optdepends=()
+ backup=()
+ groups=('libreoffice')
+ replaces=('libreoffice')
+ 
+ # create directories from *list.txt file
+ for directory in `grep ^%dir ${srcdir}/libreoffice-core-$_LOver/file-lists/math_list.txt`; do
+   install -dm755 ${pkgdir}/${directory/\%dir/}
+ done
+ # install files into the pkg from fakeinstall dir
+ for file in `grep -v ^%dir $srcdir/libreoffice-core-$_LOver/file-lists/math_list.txt`; do
+   dirname=`dirname $file`
+   # check if directory has been already been created - some are missing like manpages
+   [ -d ${pkgdir}/$dirname ] || install -dm755 ${pkgdir}/$dirname
+   # mv file from fakeinstall to pkgdir
+   mv ${srcdir}/fakeinstall${file} ${pkgdir}$file
+ done
 }
 
 package_libreoffice-sdk() {
-
- pkgdesc="Software development kit for LibreOffice"
- depends=('libreoffice' 'gcc-libs' 'sh')
- categories=('programming')
-
-	cd ${srcdir}/sdk-install
-	cp -r * ${pkgdir}
-
-	cd ${pkgdir}/usr/lib/libreoffice/basis3.4/sdk
-	mv setsdkenv_unix setsdkenv_unix.sh && chmod 755 setsdkenv_unix.sh
-	rm -f ${pkgdir}/usr/lib/libreoffice/basis3.4/sdk/setsdkenv_unix.{csh,sh}.in
-	#fix permissions
-	find examples -type f -exec chmod -x {} \;
+ pkgdesc="Software Development Kit for LibreOffice."
+ depends=('libreoffice-common' 'gcc-libs' 'sh' 'make' 'zip' 'gcc' 'java-environment')
+ optdepends=()
+ backup=()
+ groups=('libreoffice')
+ 
+ # create directories from *list.txt file
+ for directory in `grep ^%dir ${srcdir}/libreoffice-core-$_LOver/file-lists/sdk_list.txt`; do
+   install -dm755 ${pkgdir}/${directory/\%dir/}
+ done
+ # install files into the pkg from fakeinstall dir
+ for file in `grep -v ^%dir $srcdir/libreoffice-core-$_LOver/file-lists/sdk_list.txt`; do
+   dirname=`dirname $file`
+   # check if directory has been already been created - some are missing like manpages
+   [ -d ${pkgdir}/$dirname ] || install -dm755 ${pkgdir}/$dirname
+   # mv file from fakeinstall to pkgdir
+   mv ${srcdir}/fakeinstall${file} ${pkgdir}$file
+ done
+ 
+ # fix ArchLinux LibreOffice installation paths	
+ sed -i -e "s,@OO_SDK_NAME@,libreoffice-sdk," \
+        -e "s,@OO_SDK_HOME@,/usr/lib/libreoffice/sdk," \
+        -e "s,@OFFICE_HOME@,/usr/lib/libreoffice," \
+        -e "s,@OFFICE_BASE_HOME@,/usr/lib/libreoffice," \
+        -e "s,@OO_SDK_URE_HOME@,/usr/lib/libreoffice/ure," \
+        -e "s,@OO_SDK_MAKE_HOME@,/usr/bin," \
+        -e "s,@OO_SDK_ZIP_HOME@,/usr/bin," \
+        -e "s,@OO_SDK_CPP_HOME@,/usr/bin," \
+        -e "s,@OO_SDK_CC_55_OR_HIGHER@,," \
+        -e "s,@OO_SDK_JAVA_HOME@,\$J2SDKDIR," \
+        -e "s,@OO_SDK_OUTPUT_DIR@,\$HOME," \
+        -e "s,@SDK_AUTO_DEPLOYMENT@,NO," ${pkgdir}/usr/lib/libreoffice/sdk/setsdkenv_unix.{csh,sh}.in
 }
 
-package_libreoffice-extension-barcode() {
+package_libreoffice-sdk-doc() {
+ pkgdesc="Software Development Kit documentation for LibreOffice"
+ depends=('libreoffice-common' 'libreoffice-sdk')
+ optdepends=()
+ backup=()
+ groups=('libreoffice')
+ 
+ # create directories from *list.txt file
+ for directory in `grep ^%dir ${srcdir}/libreoffice-core-$_LOver/file-lists/sdk_doc_list.txt`; do
+   install -dm755 ${pkgdir}/${directory/\%dir/}
+ done
+ # install files into the pkg from fakeinstall dir
+ for file in `grep -v ^%dir $srcdir/libreoffice-core-$_LOver/file-lists/sdk_doc_list.txt`; do
+   dirname=`dirname $file`
+   # check if directory has been already been created - some are missing like manpages
+   [ -d ${pkgdir}/$dirname ] || install -dm755 ${pkgdir}/$dirname
+   # mv file from fakeinstall to pkgdir
+   mv ${srcdir}/fakeinstall${file} ${pkgdir}$file
+ done
 
- pkgdesc="This extension generates UPC-A, EAN-13, ISBN and JAN barcodes in Draw "
- depends=('libreoffice')
- groups=('libreoffice-extensions')
- categories=('office')
-
-	install -dm755 ${pkgdir}/usr/lib/libreoffice/share/extensions
-	unzip -q ${srcdir}/7e7efc5d4a03126bb9ae3ae9aa2c4e87-Barcode_1.3.1.0.oxt -d ${pkgdir}/usr/lib/libreoffice/share/extensions/Barcode
-	chmod o-w -R ${pkgdir}/usr/lib/libreoffice/share/extensions/Barcode
+ #fix permissions
+ find ${pkgdir}/usr/lib/libreoffice/sdk/examples -type f -exec chmod -x {} \;
 }
 
-package_libreoffice-extension-diagram() {
+package_libreoffice-writer() {
+ pkgdesc="Word Processor Applicationfor LibreOffice."
+ depends=('libreoffice-common' 'libwpd' 'libwps' 'libxml2')
+ optdepends=('libwpg: library for importing and converting Corel WordPerfect(tm) Graphics images')
+ backup=()
+ groups=('libreoffice')
+ replaces=('libreoffice')
 
- pkgdesc="An OOo Draw and Impress extension that creates your favorite diagrams with a few clicks"
- depends=('libreoffice')
- groups=('libreoffice-extensions')
- categories=('office')
-
-	install -dm755 ${pkgdir}/usr/lib/libreoffice/share/extensions
-	unzip -q ${srcdir}/41c9b65ad60af4b3255bbecdfef11736-Diagram_1.1.0.0.oxt -d ${pkgdir}/usr/lib/libreoffice/share/extensions/diagram
+ # create directories from *list.txt file
+ for directory in `grep ^%dir ${srcdir}/libreoffice-core-$_LOver/file-lists/writer_list.txt`; do
+   install -dm755 ${pkgdir}/${directory/\%dir/}
+ done
+ # install files into the pkg from fakeinstall dir
+ for file in `grep -v ^%dir $srcdir/libreoffice-core-$_LOver/file-lists/writer_list.txt`; do
+   dirname=`dirname $file`
+   # check if directory has been already been created - some are missing like manpages
+   [ -d ${pkgdir}/$dirname ] || install -dm755 ${pkgdir}/$dirname
+   # mv file from fakeinstall to pkgdir
+   mv ${srcdir}/fakeinstall${file} ${pkgdir}$file
+ done
 }
 
-package_libreoffice-extension-google-docs() {
+package_libreoffice-en-US() {
+  pkgdesc="English (US) language pack for LibreOffice"
+  #arch=('any')
+  provides=('openoffice-en-US' 'libreoffice-langpack')
+  replaces=(openoffice-en-US)
+  conflicts=(openoffice-en-US)
 
- pkgdesc="Google Documents extension for LibreOffice"
- depends=('libreoffice')
- groups=('libreoffice-extensions')
- categories=('office')
-
-	install -dm755 ${pkgdir}/usr/lib/libreoffice/share/extensions
-	unzip -q ${srcdir}/dbaafd21de055e582d92d7d32fe9da13-gdocs_2.3.1.oxt -d ${pkgdir}/usr/lib/libreoffice/share/extensions/google-docs
-}
-
-package_libreoffice-extension-hunart() {
-
- pkgdesc="Hungarian cross-reference toolbar extension"
- depends=('libreoffice')
- groups=('libreoffice-extensions')
- categories=('office')
-
-	install -dm755 ${pkgdir}/usr/lib/libreoffice/share/extensions
-	unzip -q ${srcdir}/b632bdd25649cc4067bcb410bae23d2b-hunart_0.3.oxt -d ${pkgdir}/usr/lib/libreoffice/share/extensions/hunart
-}
-
-package_libreoffice-extension-nlpsolver() {
-
- pkgdesc="This extension integrates into Calc and offers new Solver engines to use for optimizing nonlinear programming models"
- depends=('libreoffice')
- groups=('libreoffice-extensions')
- categories=('office')
-
-	install -dm755 ${pkgdir}/usr/lib/libreoffice/share/extensions
-	unzip -q ${srcdir}/build/solver/${_OFFICEUPD}/unxlng*/bin/NLPSolver.oxt -d ${pkgdir}/usr/lib/libreoffice/share/extensions/nlpsolver
-}
-
-package_libreoffice-extension-ct2n() {
-
- pkgdesc="This extension enables you to convert text-cells in Calc with numbers and dates, to real numbers and dates."
- depends=('libreoffice')
- groups=('libreoffice-extensions')
- categories=('office')
-
-	install -dm755 ${pkgdir}/usr/lib/libreoffice/share/extensions
-	unzip -q ${srcdir}/build/solver/${_OFFICEUPD}/unxlng*/bin/ConvertTextToNumber.oxt -d ${pkgdir}/usr/lib/libreoffice/share/extensions/ct2n
-}
-
-package_libreoffice-extension-numbertext() {
-
- pkgdesc="NUMBERTEXT/MONEYTEXT extensions"
- depends=('libreoffice')
- groups=('libreoffice-extensions')
- categories=('office')
-
-	install -dm755 ${pkgdir}/usr/lib/libreoffice/share/extensions
-	unzip -q ${srcdir}/b8cbca7b3363e6ca2d02bc0ba2b63904-numbertext_0.9.4.oxt -d ${pkgdir}/usr/lib/libreoffice/share/extensions/numbertext
-}
-
-package_libreoffice-extension-oooblogger() {
-
- pkgdesc="An extensions for blogging"
- depends=('libreoffice' 'coreutils')
- groups=('libreoffice-extensions')
- categories=('office')
-
-	install -dm755 ${pkgdir}/usr/lib/libreoffice/share/extensions
-	unzip -q ${srcdir}/b7b2d0e04e142f26dd96119c80757d1f-oooblogger_0.1.oxt -d ${pkgdir}/usr/lib/libreoffice/share/extensions/oooblogger
+ # create directories from *list.txt file
+ for directory in `grep ^%dir ${srcdir}/libreoffice-core-$_LOver/file-lists/lang_en_US_list.txt`; do
+   install -dm755 ${pkgdir}/${directory/\%dir/}
+ done
+ # install files into the pkg from fakeinstall dir
+ for file in `grep -v ^%dir $srcdir/libreoffice-core-$_LOver/file-lists/lang_en_US_list.txt`; do
+   dirname=`dirname $file`
+   # check if directory has been already been created - some are missing like manpages
+   [ -d ${pkgdir}/$dirname ] || install -dm755 ${pkgdir}/$dirname
+   # mv file from fakeinstall to pkgdir
+   mv ${srcdir}/fakeinstall${file} ${pkgdir}$file
+ done
 }
 
 package_libreoffice-extension-pdfimport() {
 
  pkgdesc="This extension allows you to import and modify PDF documents"
- depends=('libreoffice' 'poppler')
+ depends=('libreoffice-common' 'poppler')
  groups=('libreoffice-extensions')
- categories=('office')
 
 	install -dm755 ${pkgdir}/usr/lib/libreoffice/share/extensions
-	unzip -q ${srcdir}/build/solver/${_OFFICEUPD}/unxlng*/bin/pdfimport/pdfimport.oxt -d ${pkgdir}/usr/lib/libreoffice/share/extensions/pdfimport
+	unzip -q ${srcdir}/libreoffice-core-$_LOver/solver/unxlng*/bin/pdfimport/pdfimport.oxt -d ${pkgdir}/usr/lib/libreoffice/share/extensions/pdfimport
 }
 
 package_libreoffice-extension-presenter-screen() {
 
  pkgdesc="This extension provides more control over your slide show presentation, such as the ability to see the upcoming slide, the slide notes, and a presentation timer whereas the audience see only the current slide"
- depends=('libreoffice')
+ depends=('libreoffice-common' 'java-environment')
  groups=('libreoffice-extensions')
- categories=('office')
 
 	install -dm755 ${pkgdir}/usr/lib/libreoffice/share/extensions
-	unzip -q ${srcdir}/build/solver/${_OFFICEUPD}/unxlng*/bin/presenter-screen.oxt -d ${pkgdir}/usr/lib/libreoffice/share/extensions/presenter-screen
+	unzip -q ${srcdir}/libreoffice-core-$_LOver/solver/unxlng*/bin/presenter-screen.oxt -d ${pkgdir}/usr/lib/libreoffice/share/extensions/presenter-screen
 }
 
 package_libreoffice-extension-presentation-minimizer() {
 
  pkgdesc="This extension reduce the file size of the current presentation"
- depends=('libreoffice' 'gcc-libs')
+ depends=('libreoffice-common' 'gcc-libs')
  groups=('libreoffice-extensions')
- categories=('office')
 
 	install -dm755 ${pkgdir}/usr/lib/libreoffice/share/extensions
-	unzip -q ${srcdir}/build/solver/${_OFFICEUPD}/unxlng*/bin/presentation-minimizer.oxt -d ${pkgdir}/usr/lib/libreoffice/share/extensions/presentation-minimizer
+	unzip -q ${srcdir}/libreoffice-core-$_LOver/solver/unxlng*/bin/presentation-minimizer.oxt -d ${pkgdir}/usr/lib/libreoffice/share/extensions/presentation-minimizer
 }
 
 package_libreoffice-extension-report-builder() {
 
  pkgdesc="This extension creates smart-looking database reports"
- depends=('libreoffice')
+ #arch=('any')
+ depends=('libreoffice-common' 'java-environment')
  groups=('libreoffice-extensions')
- categories=('office')
 
 	install -dm755 ${pkgdir}/usr/lib/libreoffice/share/extensions
-	unzip -q ${srcdir}/build/solver/${_OFFICEUPD}/unxlng*/bin/report-builder.oxt -d ${pkgdir}/usr/lib/libreoffice/share/extensions/report-builder
-}
-
-package_libreoffice-extension-scripting-beanshell() {
-
- pkgdesc="LibreOffice extension - Enables support for scripts in BeanShell"
- depends=('libreoffice')
- groups=('libreoffice-extensions')
- categories=('office')
-
-	install -dm755 ${pkgdir}/usr/lib/libreoffice/share/extensions
-	unzip -q ${srcdir}/build/solver/${_OFFICEUPD}/unxlng*/bin/script-provider-for-beanshell.oxt -d ${pkgdir}/usr/lib/libreoffice/share/extensions/script-provider-for-beanshell
-}
-
-package_libreoffice-extension-scripting-javascript() {
-
- pkgdesc="LibreOffice extension - Enables support for scripts in JavaScript"
- depends=('libreoffice')
- groups=('libreoffice-extensions')
- categories=('office')
-
-	install -dm755 ${pkgdir}/usr/lib/libreoffice/share/extensions
-	unzip -q ${srcdir}/build/solver/${_OFFICEUPD}/unxlng*/bin/script-provider-for-javascript.oxt -d ${pkgdir}/usr/lib/libreoffice/share/extensions/script-provider-for-javascript
-}
-
-package_libreoffice-extension-scripting-python() {
-
- pkgdesc="LibreOffice extension - Enables support for scripts in Python"
- depends=('libreoffice')
- groups=('libreoffice-extensions')
- categories=('office')
-
-	install -dm755 ${pkgdir}/usr/lib/libreoffice/share/extensions
-	unzip -q ${srcdir}/build/solver/${_OFFICEUPD}/unxlng*/bin/script-provider-for-python.oxt -d ${pkgdir}/usr/lib/libreoffice/share/extensions/script-provider-for-python
-}
-
-package_libreoffice-extension-typo() {
-
- pkgdesc="Typography toolbar extension"
- depends=('libreoffice')
- groups=('libreoffice-extensions')
- categories=('office')
-
-	install -dm755 ${pkgdir}/usr/lib/libreoffice/share/extensions
-	unzip -q ${srcdir}/9d60b6cfa3ef1926848710bbcd11115b-typo_0.4.2.oxt -d ${pkgdir}/usr/lib/libreoffice/share/extensions/typo
-	chmod o+r -R ${pkgdir}/usr/lib/libreoffice/share/extensions/typo
-}
-
-package_libreoffice-extension-validator() {
-
- pkgdesc="Validator extension for LibreOffice"
- depends=('libreoffice')
- groups=('libreoffice-extensions')
- categories=('office')
-
-	install -dm755 ${pkgdir}/usr/lib/libreoffice/share/extensions
-	unzip -q ${srcdir}/bbdd5639ada63e3130761daaecae1a10-Validator_1.1.0.0.oxt -d ${pkgdir}/usr/lib/libreoffice/share/extensions/validator
-}
-
-package_libreoffice-extension-wiki-publisher() {
-
- pkgdesc="This extension enables you to create Wiki articles on MediaWiki servers without having to know the syntax of the MediaWiki markup language"
- depends=('libreoffice')
- groups=('libreoffice-extensions')
- categories=('office')
-
-	install -dm755 ${pkgdir}/usr/lib/libreoffice/share/extensions
-	unzip -q ${srcdir}/build/solver/${_OFFICEUPD}/unxlng*/bin/wiki-publisher.oxt -d ${pkgdir}/usr/lib/libreoffice/share/extensions/wiki-publisher
-}
-
-package_libreoffice-extension-watch-window() {
-
- pkgdesc="A OOo Calc extension to add a Watch Window, which keeps the value of the monitored cell on the screen."
- depends=('libreoffice')
- groups=('libreoffice-extensions')
- categories=('office')
-
-	install -dm755 ${pkgdir}/usr/lib/libreoffice/share/extensions
-	unzip -q ${srcdir}/23bd75552206dfcd8fd4e29137dcac84-WatchWindow_1.2.0.0.oxt -d ${pkgdir}/usr/lib/libreoffice/share/extensions/watch-window
+	unzip -q ${srcdir}/libreoffice-core-$_LOver/solver/unxlng*/bin/report-builder.oxt -d ${pkgdir}/usr/lib/libreoffice/share/extensions/report-builder
 }

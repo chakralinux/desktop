@@ -3,12 +3,9 @@
 #
 # contributor (x86_64): Giuseppe Calà <jiveaxe@gmail.com>
 
-# include global config
-source ../_buildscripts/${current_repo}-${_arch}-cfg.conf
-
 pkgname=cppunit
 pkgver=1.12.1
-pkgrel=1
+pkgrel=2
 pkgdesc="A C++ unit testing framework"
 arch=('i686' 'x86_64')
 url="http://cppunit.sourceforge.net"
@@ -17,21 +14,17 @@ depends=('sh' 'gcc-libs')
 makedepends=('gcc')
 categories=('programming')
 options=('!libtool')
-source=("http://downloads.sourceforge.net/$pkgname/$pkgname-$pkgver.tar.gz"
-	'gcc4.5.patch')
-md5sums=('bd30e9cf5523cdfc019b94f5e1d7fd19'
-	'7f4e3b50fa1ee8bc854ab431848dddec')
+source=("http://downloads.sourceforge.net/$pkgname/$pkgname-$pkgver.tar.gz")
+md5sums=('bd30e9cf5523cdfc019b94f5e1d7fd19')
 
 build() {
-  cd ${srcdir}/$pkgname-$pkgver
-  patch -Np1 -i ${srcdir}/gcc4.5.patch
-  autoreconf
-  libtoolize -f
-  ./configure --prefix=/usr
-  make || return 1
+   cd "${srcdir}/${pkgname}-${pkgver}"
+   export LDFLAGS+=" -ldl"
+   ./configure --prefix=/usr
+   make
 }
 
 package() {
-  cd ${srcdir}/$pkgname-$pkgver
-  make DESTDIR=${pkgdir} install || return 1
+   cd "${srcdir}/${pkgname}-${pkgver}"
+   make DESTDIR="${pkgdir}" install
 }
