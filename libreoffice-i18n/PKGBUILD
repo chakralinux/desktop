@@ -33,16 +33,16 @@ license=('LGPL')
 #depends=('libreoffice-common') #>=${pkgver}")
 makedepends=('rpmextract')
 
-_url="http://download.documentfoundation.org/libreoffice/stable"
+_url="http://download.documentfoundation.org/libreoffice/testing"
 _oover="3.5.1"
-_oodlver="3.5.1rc2"
+_oodlver="3.5.1"
 _oomainver="3.5"
 _helpver=${_oodlver}
-_dirver="${_oodlver}"
+_dirver="3.5.1rc2"
 
 _url+="/${_oover}"
 
-source=(#${_url}/rpm/x86/LibO_${_oodlver}_Linux_x86_{langpack,helppack}-rpm_af.tar.gz
+source=( #${_url}/rpm/x86/LibO_${_oodlver}_Linux_x86_{langpack,helppack}-rpm_af.tar.gz
 	${_url}/rpm/x86/LibO_${_oodlver}_Linux_x86_langpack-rpm_af.tar.gz
 	#${_url}/rpm/x86/LibO_${_oodlver}_Linux_x86_{langpack,helppack}-rpm_ar.tar.gz
 	${_url}/rpm/x86/LibO_${_oodlver}_Linux_x86_langpack-rpm_ar.tar.gz
@@ -211,7 +211,7 @@ build() {
    do _pkglang=${i#*-}
     echo ${_pkglang} " unpacking..."
     #cd ${srcdir}/LibO_${_oover/-/}_Linux_x86_langpack-rpm_${_pkglang}/RPMS
-    cd ${srcdir}/LibO_${_helpver}_Linux_x86_langpack-rpm_${_pkglang}/RPMS
+    cd ${srcdir}/LibO_${_dirver}_Linux_x86_langpack-rpm_${_pkglang}/RPMS
     # remove dictionaries if shipped - we ship them now in separate packages
     rm libreoffice3.5-dict-*.rpm || /bin/true
 	for j in *.rpm
@@ -220,7 +220,7 @@ build() {
     # the helppack rpm goes also into the langpack dir - so far we don't want to split the helppacks separate
 #     rpmextract.sh ${srcdir}/LibO_${_oover/-/}_Linux_x86_helppack-rpm_${_pkglang}/RPMS/libobasis3.3-${_pkglang}-help-${_helpver}.i586.rpm
     #rpmextract.sh ${srcdir}/LibO_${_oover/-/}_Linux_x86_helppack-rpm_${_pkglang}/RPMS/*.rpm
-    rpmextract.sh ${srcdir}/LibO_${_helpver/-/}_Linux_x86_helppack-rpm_${_pkglang}/RPMS/*.rpm || /bin/true
+    rpmextract.sh ${srcdir}/LibO_${_dirver/-/}_Linux_x86_helppack-rpm_${_pkglang}/RPMS/*.rpm || /bin/true
   done
 }
 
