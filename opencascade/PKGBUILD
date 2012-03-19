@@ -2,56 +2,53 @@
 # Apps Packages for Chakra, part of chakra-project.org
 #
 # Maintainer: Adrián Chaves Fernández (Gallaecio) <adriyetichaves gmail.com>
+# Contributors from AUR:
+# Giuseppe Borzi <gborzi@ieee.org>
+# Brice M<E9>alier <mealier_brice@yahoo.fr>
+# Michele Mocciola <mickele>
 
 pkgname=opencascade
-pkgver=6.5.1
-_pkgver2=651
+pkgver=6.5.2
 pkgrel=1
-pkgdesc="Open CASCADE Technology, 3D modeling & numerical simulation."
+pkgdesc="Open CASCADE Technology, 3D modeling & numerical simulation"
 arch=('i686' 'x86_64')
 url="http://www.opencascade.org"
-license=('custom:Open CASCADE Technology Public License')
-depends=('tk' 'mesa' 'openjdk6' 'libxmu')
-makedepends=('openjdk6' 'ftgl')
-categories=('programming')
+license=('custom')
+depends=('tk' 'mesa' 'java-runtime' 'libxmu')
+makedepends=('java-environment' 'ftgl')
 options=(!libtool)
-changelog=ChangeLog
-source=("http://files.$pkgname.com/OCCT/OCC_${pkgver}_release/OpenCASCADE$_pkgver2.tar.gz"
-	"env.sh"
-	"$pkgname.sh"
-	"$pkgname.conf"
-	"missing-header.diff")
-md5sums=('3d554533671c1c817ed0b70078e9e210'
+source=("http://files.opencascade.com/OCCT/OCC_${pkgver}_release/OpenCASCADE652.tar.gz" "env.sh" "opencascade.sh" "opencascade.conf")
+md5sums=('bfc4c8974e1ae56230b0cc81ec836898'
          'acf8ad1e470cd7d1c2033954c1b0f03a'
-         '8612eae471692a42019ebda8a5db5d93'
-         '2924ecf57c95d25888f51071fdc72ad0'
-         'e0e70dcf29863133ae8c17ef8f5f2ba8')
+         'd9368b8d348ced3ec4462012977552d2'
+         '2924ecf57c95d25888f51071fdc72ad0')
 
 build() {
-  cd $srcdir/ros
-
-  # Patches.
-  patch -uN $srcdir/ros/src/OSD/OSD_MAllocHook.cxx $srcdir/missing-header.diff
+  cd "$srcdir/ros"
 
   export CPLUS_INCLUDE_PATH=/usr/include/FTGL:/usr/include/freetype2
-  export CASROOT=$srcdir/ros
+  export CASROOT="$srcdir/ros"
   export CFLAGS="$CFLAGS -fpermissive"
   export CXXFLAGS="$CXXFLAGS -fpermissive"
-  ./configure \
-    --disable-debug \
-    --enable-production \
-    --with-java-include=/usr/lib/jvm/java-6-openjdk/include/ \
-    --prefix=$pkgdir/usr/share/$pkgname
+  if [ ! -d $JAVA_HOME/include ]; then
+    [ -e /etc/profile.d/openjdk6.sh ] && source /etc/profile.d/openjdk6.sh
+    [ -e /etc/profile.d/jdk.sh ] && source /etc/profile.d/jdk.sh
+  fi
+
+  ./build_configure
+  ./configure --disable-debug --enable-production \
+    --with-java-include=${JAVA_HOME}/include --prefix="$pkgdir/opt/$pkgname"
   make
 }
 
 package() {
-  cd $srcdir/ros
+  cd "$srcdir/ros"
 
   make install
-
-  install -D -m644	$srcdir/$pkgname.conf	$pkgdir/etc/ld.so.conf.d/$pkgname.conf
-  install -D -m 755	$srcdir/$pkgname.sh	$pkgdir/etc/profile.d/$pkgname.sh
-  install -m 755	$srcdir/env.sh		$pkgdir/usr/share/$pkgname
-  install -Dm644	$srcdir/LICENSE		$pkgdir/usr/share/licenses/$pkgname/License.txt
+  install -D -m644 "${srcdir}/opencascade.conf" "${pkgdir}/etc/ld.so.conf.d/opencascade.conf"
+  install -D -m 755 "${srcdir}/opencascade.sh" "${pkgdir}/etc/profile.d/opencascade.sh"
+  install -m 755 "${srcdir}/env.sh" "${pkgdir}/opt/$pkgname"
+  install -Dm644 "$srcdir/LICENSE" "$pkgdir/usr/share/licenses/$pkgname/License.txt"
 }
+
+# vim:set ts=2 sw=2 et:

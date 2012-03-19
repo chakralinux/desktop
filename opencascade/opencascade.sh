@@ -1,2 +1,2 @@
-export CASROOT=/usr/share/opencascade
-source /usr/share/opencascade/env.sh
+export CASROOT=/opt/opencascade
+source /opt/opencascade/env.sh
