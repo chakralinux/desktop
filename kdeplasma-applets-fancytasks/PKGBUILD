@@ -1,15 +1,11 @@
 #
 # KDEPlasma Packages for Chakra, part of chakra-project.org
 #
-# maintainer (i686): Phil Miller <philm[at]chakra-project[dog]org>
-# maintainer (x86_64): Manuel Tortosa <manutortosa[at]chakra-project[dot]org>
-
-# include global config
-source ../_buildscripts/${current_repo}-${_arch}-cfg.conf
+# maintainer abveritas@chakra-project.org
 
 pkgname=kdeplasma-applets-fancytasks
-pkgver=1.0.96
-pkgrel=2
+pkgver=1.1.0
+pkgrel=1
 pkgdesc="Plasmoid Binary"
 arch=('i686' 'x86_64')
 url="http://www.kde-look.org/content/show.php/Fancy+Tasks?content=99737"
@@ -17,11 +13,11 @@ license=('GPL')
 depends=('kde-workspace')
 makedepends=('cmake' 'automoc4' 'kde-baseapps')
 categories=('accessories')
-source=(http://www.kde-look.org/CONTENT/content-files/99737-fancytasks-${pkgver}-4.8.tar.bz2)
-md5sums=('f3bf7fc8d1dbfb8cfc6d2f1a7bc56c2b')
+source=(https://opendesktop.org/CONTENT/content-files/99737-fancytasks-$pkgver.tar.bz2)
+md5sums=('e99f4449da0b4b019fb8d66c037f50f9')
 
 build() {
-	cd "$srcdir/fancytasks-${pkgver}-4.8"
+	cd "$srcdir/fancytasks-${pkgver}"
 	[[ -d build ]] && rm -fR build
         mkdir build
         cd build
@@ -30,7 +26,7 @@ build() {
 }
 
 package() {
-	cd "$srcdir/fancytasks-${pkgver}-4.8/build"
+	cd "$srcdir/fancytasks-${pkgver}/build"
         make DESTDIR="$pkgdir" install
 }
 
