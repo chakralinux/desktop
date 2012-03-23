@@ -24,7 +24,7 @@ _LOver=3.5.1.2
 pkgver=3.5.1.2
 _pkgver=3.5.1
 _HIver=3.5
-pkgrel=1
+pkgrel=2
 arch=('i686' 'x86_64')
 _OFFICEUPD="340"
 license=('LGPL3')
@@ -37,7 +37,7 @@ makedepends=( # makedepends
              # libreoffice main pkg
              "curl>=7.20.0" "hunspell>=1.2.8" 'python2' 'libwpd>=0.9.0' 'libwps' 'libxaw' "neon>=0.28.6"
              'pango' 'nspr' 'libjpeg' 'libxrandr' 'libgl' 'dbus-glib' "icu>=4.6" 'libxslt'
-             'redland' 'libgraphite' 'hyphen' 'lpsolve' 'gcc-libs' 'sh'  'libtextcat' 'librsvg'
+             'redland' 'graphite' 'hyphen' 'lpsolve' 'gcc-libs' 'sh'  'libtextcat' 'librsvg'
              'hicolor-icon-theme' 'desktop-file-utils' 'shared-mime-info' 'translate-toolkit' 'xdg-utils' 'ttf-dejavu' 'libcups')
 
 _mirror="http://download.documentfoundation.org/libreoffice/src/$_pkgver"
@@ -181,7 +181,7 @@ build() {
 		--enable-crashdump \
 		--enable-dbus \
 		--disable-evolution2 \
-		--disable-graphite\
+		--enable-graphite\
 		--enable-gio\
 		--disable-gnome-vfs\
 		--disable-kde\
@@ -212,6 +212,7 @@ build() {
 		--with-external-thes-dir=/usr/share/mythes \
 		--with-system-beanshell \
                  --with-system-cppunit\
+                 --with-system-graphite\
 		--with-system-libwpg \
 		--with-system-libwps \
 		--with-system-redland\
@@ -227,7 +228,6 @@ build() {
 		--with-system-hsqldb \
 		--with-alloc=system\
 		--with-system-lucene\
-		--with-theme="oxygen" \
 		--with-lucene-core-jar=/usr/share/java/lucene-core.jar\
 		--with-lucene-analyzers-jar=/usr/share/java/lucene-analyzers.jar\
 		--enable-ext-pdfimport \
@@ -251,7 +251,7 @@ package_libreoffice-common() {
  pkgdesc="common files for LibreOffice - a productivity suite that is compatible with other major office suites"
  install=${pkgbase}.install
  depends=('libreoffice-langpack' "hunspell" "python2" "neon"
-          'nspr' "icu" 'libsm' 'redland' 'hyphen' 'libgraphite'
+          'nspr' "icu" 'libsm' 'redland' 'hyphen' 'graphite'
           'hicolor-icon-theme' 'desktop-file-utils' 'shared-mime-info' 'xdg-utils')
           #'saxon'
  optdepends=('libreoffice-langpack: additional language support'
@@ -273,7 +273,22 @@ package_libreoffice-common() {
          etc/libreoffice/bootstraprc
          etc/libreoffice/psprint.conf)
  groups=('libreoffice')
- replaces=('libreoffice')
+ replaces=('libreoffice' 
+           'libreoffice-extension-diagram'
+           'libreoffice-extension-google-docs'
+           'libreoffice-extension-hunart'
+           'libreoffice-extension-nlpsolver'
+           'libreoffice-extension-ct2n'
+           'libreoffice-extension-numbertext'	
+           'libreoffice-extension-oooblogger'
+           'libreoffice-extension-report-builder'
+           'libreoffice-extension-scripting-beanshell'
+           'libreoffice-extension-scripting-javascript'
+           'libreoffice-extension-scripting-python'
+           'libreoffice-extension-typo'
+           'libreoffice-extension-validator'
+           'libreoffice-extension-watch-window'
+           'libreoffice-extension-wiki-publisher')
 
  # create directories from *list.txt file
  for directory in `grep ^%dir ${srcdir}/libreoffice-core-$_LOver/file-lists/common_list.txt`; do
