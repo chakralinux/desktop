@@ -1,27 +1,22 @@
 #
 # Chakra Packages for Chakra, part of chakra-project.org
 #
-# maintainer (i686): Phil Miller <philm[at]chakra-project[dog]org>
-# maintainer (x86_64): Manuel Tortosa <manutortosa[at]chakra-project[dot]org>
-# maintainer (x86_64): Mateusz Krawczuk <willingmagic[at]gmail[dot]com>
-
-# include global config
-source ../_buildscripts/${current_repo}-${_arch}-cfg.conf
+# maintainer : Mateusz Krawczuk <willingmagic[at]gmail[dot]com>
 
 pkgname=blender
-pkgver=2.61
-pkgrel=1
+pkgver=2.62
+pkgrel=3
 pkgdesc="A fully integrated 3D graphics creation suite"
 arch=('i686' 'x86_64')
 license=('GPL')
 url="http://www.blender.org"
 depends=('libpng' 'libtiff' 'openexr' 'sdl' 'python3' 'desktop-file-utils' 'shared-mime-info' 'hicolor-icon-theme' 'xdg-utils' 'glew' 'libxi' 'libxmu' 
-'mesa' 'freetype2' 'openal' 'libsndfile' 'libsamplerate' 'ffmpeg' 'fftw')
+'mesa' 'freetype2' 'openal' 'libsndfile' 'libsamplerate' 'ffmpeg' 'fftw' 'openimageio')
 makedepends=('cmake' 'jack')
 categories=('graphics')
 install=blender.install
 source=(http://download.blender.org/source/$pkgname-$pkgver.tar.gz)
-md5sums=('11a4721ff92286f678bb2e05e5f29c97')
+md5sums=('f2357584a5081b03f6e60ba3efe2a610')
 
 build() {
   cd "$srcdir/$pkgname-$pkgver"
@@ -39,7 +34,7 @@ build() {
     -DWITH_OPENCOLLADA:BOOL=OFF \
     -DWITH_GAMEENGINE:BOOL=ON \
     -DWITH_PLAYER:BOOL=ON \
-    -DWITH_BUILTIN_GLEW:BOOL=OFF \
+    -DWITH_BUILTIN_GLEW:BOOL=On \
     -DWITH_CODEC_FFMPEG:BOOL=ON \
     -DPYTHON_VERSION:STRING=3.2 \
     -DPYTHON_LIBPATH:STRING=/usr/lib \
