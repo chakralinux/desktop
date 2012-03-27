@@ -1,27 +1,26 @@
 #
 # Chakra Packages for Chakra, part of chakra-project.org
 #
-# maintainer (i686): Phil Miller <philm[at]chakra-project[dog]org>
-# maintainer (x86_64): Manuel Tortosa <manutortosa[at]chakra-project[dot]org>
+# maintainer abveritas@chakra-project.org
 
 pkgname=ktp-accounts-kcm
 pkgver=0.3.0
-pkgrel=1
+pkgrel=2
 pkgdesc="KCM Module for configuring Telepathy Instant Messaging Accounts"
 arch=('i686' 'x86_64')
 url="http://www.kde.org"
 license=('GPL')
-depends=('kdelibs' 'telepathyQt' 'ktp-mission-control')
+depends=('kdelibs' 'telepathy-qt' 'ktp-common-internals' 'telepathy-mission-control')
 makedepends=('cmake' 'automoc4')
 optdepends=('telepathy-gabble: XMPP/Jabber/GTalk support'
             'telepathy-butterfly: MSN/Windows Live support'
             'telepathy-haze: all protocols supported by libpurple')
-groups=('telepathy-kde')
-conflicts=('telepathy-accounts-kcm' 'telepathy-kde-accounts-kcm-plugins')
-replaces=('telepathy-accounts-kcm' 'telepathy-kde-accounts-kcm-plugins')
+groups=('kde-telepathy')
+conflicts=('telepathy-kde-accounts-kcm' 'telepathy-kde-accounts-kcm-plugins')
+replaces=('telepathy-kde-accounts-kcm' 'telepathy-kde-accounts-kcm-plugins')
 provides=('telepathy-kde-accounts-kcm')
-source=("ftp://mirrors.mit.edu/kde/unstable/telepathy-kde/${pkgver}/src/${pkgname}-${pkgver}.tar.bz2")
-sha1sums=('2ebc4ac117a3e28e2812a2a9c97f7d0ee97dac67')
+source=("ftp://mirrors.mit.edu/kde/unstable/kde-telepathy/${pkgver}/src/${pkgname}-${pkgver}.tar.bz2")
+sha1sums=('7eab29f98811ba6747442715dcd6cb30a96851b5')
 
 build() {
   cd "${srcdir}"
