@@ -6,32 +6,30 @@
 
 pkgname=oxygen-gtk-icons
 pkgver=2.5.0
-pkgrel=4
+_iconspkgver=0.1 # not sure how to decrease the pkgver and have pacman see this as a new pkg. epoch?
+pkgrel=5
 
 pkgdesc="The Oxygen icon set for GTK+."
 arch=('i686' 'x86_64')
 
-url=("http://www.nanolx.org/home/item/75-oxygen-refit")
+url=("http://sourceforge.net/projects/chakra/files/Tools/Oxygen-Gtk-Icons/")
 
 license=('LGPL3' 'GPL')
 
 depends=('kdelibs' 'qt' 'oxygen-icons' 'cairo')
 makedepends=('findutils' 'imagemagick' 'liblqr')
-provides=('oxygenrefit2-icon-theme')
-conflicts=('oxygenrefit2-icon-theme') # 'gtk-integration')
 replaces=('gtk-integration')
 categories=('system')
 #groups=('gtk-integration')
 options=('!strip')
 
-source=("https://downloads.sourceforge.net/project/chakra/Tools/Oxygen-Gtk-Icons/oxygen-gtk-0.1.tar.gz")
+source=("https://sourceforge.net/projects/chakra/files/Tools/Oxygen-Gtk-Icons/oxygen-gtk-${_iconspkgver}.tar.gz")
 
 md5sums=('2690c3be8243af48d6bf10f7615c7bc0')
 
 package() {
 	cd "${srcdir}"
-	install -d "${pkgdir}/usr/share/icons/"
-	cp -rf "oxygen-gtk-0.1" "${pkgdir}/usr/share/icons/" || return 1
-	mv "oxygen-gtk-0.1" "oxygen-gtk"
+	install -d -m755 "${pkgdir}/usr/share/icons/oxygen-gtk"
 	find -type f -print0 | xargs -0 chmod 644
+	cp -rf "oxygen-gtk-${_iconspkgver}/"* "${pkgdir}/usr/share/icons/oxygen-gtk" || return 1
 }
