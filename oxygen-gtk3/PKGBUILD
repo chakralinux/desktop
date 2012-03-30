@@ -6,32 +6,31 @@
 
 pkgname=oxygen-gtk3
 pkgver=1.1.4
-pkgrel=3
+_pkgver=1.0.2-1 # can we change pkgver to 1.0.2_1 ?
+pkgrel=4
 
 pkgdesc="The Oxygen engine for GTK3, for better Qt/GKT+ integration."
 arch=('i686' 'x86_64')
 
-url=("http://kde-look.org/content/show.php/gtk-oxygen-engine?content=129715")
+url=("http://projects.kde.org/projects/playground/artwork/oxygen-gtk/")
 
 license=('LGPL3' 'GPL')
 
-depends=('kdelibs' 'qt' 'oxygen-icons' 'cairo')
-makedepends=('gcc' 'cmake' 'findutils' 'imagemagick' 'liblqr' 'gtk2' 'automoc4')
-provides=('oxygen-gtk')
-conflicts=('oxygen-gtk' 'oxygen-gtk2')
+depends=('kdelibs' 'qt' 'oxygen-icons' 'cairo' 'dbus-glib' 'gtk3')
+makedepends=('gcc' 'cmake' 'findutils' 'automoc4')
 categories=('system')
 #groups=('gtk-integration')
 
-source=("ftp://ftp.caliu.cat/pub/mirrors/kde/stable/oxygen-gtk/$pkgver/src/oxygen-gtk-$pkgver.tar.bz2")
+source=("http://download.kde.org/stable/${pkgname}/${_pkgver}/src/${pkgname}-${_pkgver}.tar.bz2")
 
-md5sums=('61a7424e77785501df27b5c050e5f287')
+md5sums=('e4cd32bc1169db39d4e29141449979a4')
 
 create_install() {
 cat > "${startdir}/${pkgname}.install" <<EOF
 post_install() {
 	cat <<-'EOF'
 
-GTK - Oxygen-GTK2 v$pkgver
+GTK - Oxygen-GTK3 v$pkgver
 
 You can install aditional engines:
 ----------------------------------
@@ -52,7 +51,7 @@ EOF
 }
 
 build() {
-	cd $srcdir/oxygen-gtk-$pkgver
+	cd $srcdir/oxygen-gtk3-$_pkgver
 	rm -rf build
 	mkdir build && cd build
 	cmake -DCMAKE_BUILD_TYPE=Release \
@@ -62,7 +61,7 @@ build() {
 }
 
 package() {
-	cd $srcdir/oxygen-gtk-$pkgver/build
+	cd $srcdir/oxygen-gtk3-$_pkgver/build
 	make DESTDIR="${pkgdir}" install
 
 	# Create the install file
