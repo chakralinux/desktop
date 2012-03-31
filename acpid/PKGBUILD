@@ -1,0 +1,47 @@
+#
+# Apps Packages for Chakra, part of chakra-project.org
+#
+# Maintainer: Adrián Chaves Fernández (Gallaecio) <adriyetichaves@gmail.com>
+
+pkgname=acpid
+pkgver=2.0.15
+pkgrel=1
+pkgdesc="A daemon for delivering ACPI power management events."
+arch=('i686' 'x86_64')
+url="http://tedfelix.com/linux/acpid-netlink.html"
+license=('GPL2')
+depends=('bash')
+backup=('etc/acpi/events/anything'
+	'etc/acpi/handler.sh'
+	'etc/conf.d/acpid')
+source=(http://www.tedfelix.com/linux/$pkgname-$pkgver.tar.xz
+    acpid
+    acpid.conf.d
+    anything
+    handler.sh)
+categories=('system')
+md5sums=('1b1c8775adab6a994a386c45af6b86dc'
+         'd9ca7f71f520238a0448fab105a23fe9'
+         '91fdb3709c878eed757d192a420251a1'
+         '2d37b98d6e74bab815604b8b48c6cfd4'
+         '0e8dd13793b1baa79a745f4034888367')
+
+build() {
+  cd $pkgname-$pkgver
+  ./configure --prefix=/usr
+  make
+}
+
+package() {
+  cd $pkgname-$pkgver
+  make DESTDIR="$pkgdir" install
+
+  # Install supplementary scripts.
+  install -Dm755 ../acpid "$pkgdir/etc/rc.d/acpid"
+  install -Dm644 ../anything "$pkgdir/etc/acpi/events/anything"
+  install -Dm755 ../handler.sh "$pkgdir/etc/acpi/handler.sh"
+  install -Dm644 ../acpid.conf.d "$pkgdir/etc/conf.d/acpid"
+
+  # Set world readable bit on the acpid binary.
+  chmod 755 "$pkgdir"/usr/sbin/acpid
+}
