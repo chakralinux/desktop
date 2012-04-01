@@ -1,0 +1,40 @@
+#
+# Apps Packages for Chakra, part of chakra-project.org
+#
+# Maintainer: Adrián Chaves Fernández (Gallaecio) <adriyetichaves@gmail.com>
+
+pkgname=hydrogen
+pkgver=0.9.5.1
+pkgrel=1
+pkgdesc="Advanced drum machine."
+arch=('i686' 'x86_64')
+license=('GPL2')
+url="http://www.hydrogen-music.org/"
+depends=('alsa-lib' 'flac' 'jack' 'libarchive' 'liblrdf' 'libsndfile' 'qt' 'tar' 'zlib')
+makedepends=('scons')
+categories=('multimedia')
+changelog=ChangeLog
+source=(http://downloads.sourceforge.net/$pkgname/$pkgname-$pkgver.tar.gz
+        lrdf_raptor2.patch
+        hydrogen-0.9.5-install.patch)
+md5sums=('52f3a528705818c65acf546a3be4c6fb'
+         '2124851e890f46158189b5fa90006d40'
+         'ce3a83a069b55e46aa532b55e803c9a5')
+
+build() {
+  cd $srcdir/$pkgname-$pkgver
+
+msg "Compiling..."
+  export QTDIR=/usr
+  patch -Np1 -i "${srcdir}/lrdf_raptor2.patch"
+  patch -Np0 -i "${srcdir}/hydrogen-0.9.5-install.patch"
+  scons \
+    prefix=/usr \
+    libarchive=1
+}
+
+package() {
+  cd $srcdir/$pkgname-$pkgver
+
+  scons DESTDIR="$pkgdir" install
+}
