@@ -8,7 +8,7 @@
 source ../_buildscripts/${current_repo}-${_arch}-cfg.conf
 
 pkgname=rekonq
-pkgver=0.9.0
+pkgver=0.9.1
 pkgrel=1
 pkgdesc='A WebKit based web browser for KDE'
 arch=('i686' 'x86_64')
@@ -19,13 +19,13 @@ makedepends=('cmake' 'automoc4' 'docbook-xsl')
 categories=('network')
 install=${pkgname}.install
 source=(http://downloads.sourceforge.net/${pkgname}/${pkgname}-${pkgver}.tar.bz2)
-md5sums=('efa2f8ded1d4b405013ab28d4a6a3911')
+md5sums=('e92aff6ea160607fe528b590b43bec15')
 
 build(){
   cd ${srcdir}
 
   #Ignore dutch translation cause it was causing issues with 0.9.0
-  sed -i -e "s/add_subdirectory(nl)/#add_subdirectory(nl)/" ${srcdir}/${pkgname}-${pkgver}/doc/CMakeLists.txt
+  #sed -i -e "s/add_subdirectory(nl)/#add_subdirectory(nl)/" ${srcdir}/${pkgname}-${pkgver}/doc/CMakeLists.txt
 
   mkdir -p build 
   cd build
