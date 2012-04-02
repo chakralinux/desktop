@@ -7,7 +7,7 @@
 
 pkgname=ccr
 pkgver=4.0.1
-pkgrel=2
+pkgrel=3
 pkgdesc="A Bash wrapper for the CCR"
 license="GPL"
 arch=('any')
@@ -16,16 +16,19 @@ optdepends=('sudo: install and update packages as non-root')
 #source=("http://chakra-project.org/sources/ccr/ccr-$pkgver.tar.xz"
 categories=('system')
 source=("http://chakra-linux.org/sources/ccr/ccr-$pkgver.tar.gz"
-	"ccr-vote")
+	"ccr-vote"
+	"fixnumbering.patch")
 md5sums=('0f01f2ea1606f04ee9cd51b51b9e15c9'
-         '8c179875982d98c542ebb826f50f7924')
+         '8c179875982d98c542ebb826f50f7924'
+         'f62fdaece2b8789ed95294fa259509a1')
 
-build() {
-    cd "$srcdir/ccr-$pkgver"
- 
-    install -m 755 -D ccr "$pkgdir/usr/bin/ccr"
-    install -m 644 -D ccr.8 "$pkgdir/usr/share/man/man8/ccr.8"
+package() {
+	cd "$srcdir/ccr-$pkgver"
+	patch -p1 ccr < "$startdir/fixnumbering.patch"
+
+	install -m 755 -D ccr "$pkgdir/usr/bin/ccr"
+	install -m 644 -D ccr.8 "$pkgdir/usr/share/man/man8/ccr.8"
     
-    cd $srcdir
-    install -m 775 -D ccr-vote "$pkgdir/usr/bin/ccr-vote"
+	cd $srcdir
+	install -m 775 -D ccr-vote "$pkgdir/usr/bin/ccr-vote"
 }
