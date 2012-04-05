@@ -5,7 +5,7 @@
 # maintainer (x86_64): Manuel Tortosa <manutortosa[at]chakra-project[dot]org>
 
 pkgname=ktp-send-file
-pkgver=0.3.0
+pkgver=0.3.1
 pkgrel=1
 pkgdesc="A File manager plugin to launch a file transfer job with a specified contact"
 arch=('i686' 'x86_64')
@@ -13,10 +13,13 @@ url="http://www.kde.org"
 license=('GPL')
 depends=('ktp-filetransfer-handler')
 makedepends=('cmake' 'automoc4')
-groups=('telepathy-kde')
+conflicts=('telepathy-kde-send-file')
+replaces=('telepathy-kde-send-file')
+provides=('telepathy-kde-send-file')
+groups=('kde-telepathy')
 install=${pkgname}.install
-source=("ftp://mirrors.mit.edu/kde/unstable/telepathy-kde/${pkgver}/src/${pkgname}-${pkgver}.tar.bz2")
-sha1sums=('d6cdd99b6feef58f81c2c0c39325954c239deb2d')
+source=("ftp://mirrors.mit.edu/kde/unstable/kde-telepathy/${pkgver}/src/${pkgname}-${pkgver}.tar.bz2")
+sha1sums=('ce523b929c05df3149e3e674ba3bc4f61658aac3')
 
 build() {
   cd "${srcdir}"

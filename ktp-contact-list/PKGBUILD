@@ -5,21 +5,22 @@
 # maintainer (x86_64): Manuel Tortosa <manutortosa[at]chakra-project[dot]org>
 
 pkgname=ktp-contact-list
-pkgver=0.3.0
+pkgver=0.3.1
 pkgrel=1
 pkgdesc="Telepathy contact list application "
 arch=('i686' 'x86_64')
 url="http://www.kde.org"
 license=('GPL')
-depends=('kde-runtime' 'telepathyQt')
+depends=('kde-runtime' 'telepathy-qt' 'ktp-common-internals' 'telepathy-mission-control')
 makedepends=('cmake' 'automoc4')
-conflicts=('telepathy-contact-list')
-replaces=('telepathy-contact-list')
-groups=('telepathy-kde')
+conflicts=('telepathy-kde-contact-list')
+replaces=('telepathy-kde-contact-list')
+provides=('telepathy-kde-contact-list')
+groups=('kde-telepathy')
 categories=('communication')
 install=${pkgname}.install
-source=("ftp://mirrors.mit.edu/kde/unstable/telepathy-kde/${pkgver}/src/${pkgname}-${pkgver}.tar.bz2")
-sha1sums=('7ec01e08d991123db9c2ce17d6350d8dd835793f')
+source=("ftp://mirrors.mit.edu/kde/unstable/kde-telepathy/${pkgver}/src/${pkgname}-${pkgver}.tar.bz2")
+sha1sums=('5126abb03184da209b8745afb6ee0ab70a24536e')
 
 build() {
   cd "${srcdir}"

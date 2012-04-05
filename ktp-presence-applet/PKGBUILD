@@ -5,24 +5,33 @@
 # maintainer (x86_64): Manuel Tortosa <manutortosa[at]chakra-project[dot]org>
 
 pkgname=ktp-presence-applet
-pkgver=0.3.0
+pkgver=0.3.1
 pkgrel=1
 pkgdesc="Plasma applet for managing your Telepathy account presence"
 arch=('any')
 url="http://www.kde.org"
 license=('GPL')
-depends=('ktp-presence-dataengine')
+depends=('ktp-common-internals')
 makedepends=('cmake' 'automoc4')
-conflicts=('telepathy-presence-applet')
-replaces=('telepathy-presence-applet')
-groups=('telepathy-kde')
-source=("ftp://mirrors.mit.edu/kde/unstable/telepathy-kde/${pkgver}/src/${pkgname}-${pkgver}.tar.bz2")
-sha1sums=('ba2792434cd5bc7d71c1b8ab2176775fc8e5524f')
+conflicts=('telepathy-kde-presence-applet')
+replaces=('telepathy-kde-presence-applet')
+provides=('telepathy-kde-presence-applet')
+groups=('kde-telepathy')
+categories=('utils' 'communication')
+source=("ftp://mirrors.mit.edu/kde/unstable/kde-telepathy/${pkgver}/src/${pkgname}-${pkgver}.tar.bz2")
+sha1sums=('b15b66dd0783fefb9df2acaedb242c9008cb688b')
 
-package() {
-  cd "${srcdir}"/${pkgname}-${pkgver}
-  cmake . \
+build() {
+  cd "${srcdir}"
+  mkdir build
+  cd build
+  cmake ../${pkgname}-${pkgver} \
     -DCMAKE_INSTALL_PREFIX=/usr \
     -DCMAKE_BUILD_TYPE=Release
+  make
+}
+
+package() {
+  cd "${srcdir}"/build
   make DESTDIR="${pkgdir}" install
 }
