@@ -2,50 +2,43 @@
 ver=0.1
 tempdir=$(mktemp -d)
 configrc=$HOME/.config/ccr-toolsrc
-ccrbaseurl="http://chakra-linux.org/ccr/"
-ccrurl="${ccrbaseurl}packages.php"
-idurl="${ccrbaseurl}rpc.php?type=info&arg="
-checkurl="${ccrbaseurl}packages.php?ID="
+ccrurl="http://chakra-linux.org/ccr/packages.php"
+idurl="http://chakra-linux.org/ccr/rpc.php?type=info&arg="
+checkurl="http://chakra-linux.org/ccr/packages.php?ID="
 # Defining some functions needed by main program
 
 die() {
-    if [ -d "$tempdir" ]; then
-        rm -rf "$tempdir"
-    fi
-    exit $1
+	if [ -d "$tempdir" ]; then
+		rm -rf "$tempdir"
+	fi
+	exit $1
 }
 
 version() {
-    echo "ccr-vote - version $ver"
-    echo
-    echo " http://cruznick.github.com/"
-    die 0
+   echo "ccr-vote - version $ver"
+   echo
+   echo " http://cruznick.github.com/"
+   die 0
 }
 
 
 
 use() {
-    echo "ccr-vote - version $ver"
-    echo
-    echo "usage: ccr-vote <option> <pkgname1> <pkgname2> ..."
-    echo
-    echo "ccr-vote --version, -V       shows version"
-    echo "ccr-vote --help,    -h       shows this help"
-    echo "ccr-vote --vote,    -v       vote for packages"
-    echo "ccr-vote --unvote,  -u       unvote packages"
-    echo "ccr-vote --check,   -c       check for voted packages"
-    echo
-    echo " example:  ccr-vote --vote shake bfilter"
-    echo
-    echo "You can create ~/.config/ccr-toolsrc containing:"
-    echo "user=YOUR_CCR_USERNAME"
-    echo "pass=YOUR_CCR_PASS"
-    echo
-    echo "To create a new account just go to:"
-    echo "http://chakra-linux.org/ccr/account.php"
-    echo "Fork of aurvote <http://archlinux.fr/>"
-    echo "written by cruznick <cruznick at archlinux dot us>"
-    echo " http://cruznick.github.com"
+   echo "ccr-vote - version $ver"
+   echo
+   echo "usage: ccr-vote <option> <pkgname1> <pkgname2> ..."
+   echo
+   echo "ccr-vote --version, -V       shows version"
+   echo "ccr-vote --help,    -h       shows this help"
+   echo "ccr-vote --vote,    -v       vote for packages"
+   echo "ccr-vote --unvote,  -u       unvote packages"
+   echo "ccr-vote --check,   -c       check for voted packages"
+   echo
+   echo " example:  ccr-vote --vote shake bfilter"
+   echo
+   echo "Fork of aurvote <http://archlinux.fr/>"
+   echo "written by cruznick <cruznick at archlinux dot us>"
+   echo " http://cruznick.github.com"
 }
 
 
@@ -82,7 +75,7 @@ action="vote"
 while [ "$#" -ne "0" ]; do
 	case $1 in
 		--help|-h)
-			use
+			usage
 			die 0
 			;;
 		--version|-V) version;;
@@ -90,7 +83,7 @@ while [ "$#" -ne "0" ]; do
 		--vote|-v) action="vote";;
 		--unvote|-u) action="unvote";;
 		--*|-*)
-			use
+			usage
 			die 0
 			;;
 		*)
@@ -109,20 +102,26 @@ fi
 if [ -r ~/.ccr-toolsrc ] && [ ! -r "$configrc" ]; then
 	echo "Moving ~/.ccr-toolsrc to $configrc"
 	mv ~/.ccr-toolsrc $configrc
+elif [ ! -r $configrc ]; then
+   echo "You have to create ~/.config/ccr-toolsrc with inside:"
+   echo "user=YOUR_CCR_USERNAME"
+   echo "pass=YOUR_CCR_PASS"
+   echo
+   echo "To create a new account just go to:"
+   echo "http://chakra-linux.org/ccr/account.php"
+   die 1
 fi
   
-[ -r "$configrc" ] && source $configrc
-
-[[ -z $user ]] && read -p "please enter your CCR username: " user
-[[ -z $pass ]] && read -p "please enter your CCR password: " -s pass && echo
+  
+source $configrc || die 1
 
 #logins to ccr and keeps sesion alive
 umask 077
-curl -Ss --cookie-jar "$tempdir/cjar" --output /dev/null ${ccrbaseurl} 
+curl -Ss --cookie-jar "$tempdir/cjar" --output /dev/null http://chakra-linux.org/ccr/ 
 curl -Ss --cookie "$tempdir/cjar" --cookie-jar "$tempdir/cjar"  \
 --data "user=$user" --data "passwd=$(urlencode $pass)" \
 --location --output "$tempdir/ccrvote.login"  \
-  ${ccrbaseurl}
+  http://chakra-project.org/ccr/
 if grep --quiet "'error'>Bad username or password" "$tempdir/ccrvote.login";then
 	echo "incorrect password: check $configrc file"
 	die 1
@@ -130,12 +129,12 @@ fi
 
 # vote/unvote/check for each package
 for pkgname in ${pkgnames[@]}; do
-    ccrid=$(wget --quiet "${idurl}${pkgname}" -O - | \
-    sed 's/.*"ID":"\([^"]*\)".*/\1/;q')
-    if [ -z "$ccrid" ]; then
-        echo "$pkgname was not found on CCR"
-        continue
-    fi
+		ccrid=$(wget --quiet "${idurl}${pkgname}" -O - | \
+		sed 's/.*"ID":"\([^"]*\)".*/\1/;q')
+		if [ -z "$ccrid" ]; then
+			echo "$pkgname was not found on CCR"
+			continue
+		fi
 	if [ "$action" = "check" ]; then
 		echo -n "$pkgname:  "
 		curl -Ss --cookie "$tempdir/cjar"  --cookie-jar "$tempdir/cjar"  --output "$tempdir/$pkgname" "${checkurl}${ccrid}"
@@ -166,5 +165,3 @@ for pkgname in ${pkgnames[@]}; do
 done
 
 die 0
-
-# vim: sts=4 ts=4 sw=4 et
