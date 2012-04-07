@@ -9,8 +9,9 @@ _protobuf_ver=2.4.1
 pkgbase=mozc
 pkgdesc="A Japanese Input Method for Chromium OS, Windows, Mac and Linux (the Open Source Edition of Google Japanese Input)"
 pkgname=('mozc' 'fcitx-mozc')
-pkgver=1.4.1003.102
-pkgrel=3
+pkgver=1.4.1033.102
+_patchver=${pkgver}-1
+pkgrel=1
 arch=('i686' 'x86_64')
 url="http://code.google.com/p/mozc/"
 license=('BSD' 'custom')
@@ -19,20 +20,20 @@ source=(http://mozc.googlecode.com/files/mozc-${pkgver}.tar.bz2
         http://downloads.sourceforge.net/pnsft-aur/ken_all-${_zipcoderel}.zip
         http://downloads.sourceforge.net/pnsft-aur/jigyosyo-${_zipcoderel}.zip
 	http://protobuf.googlecode.com/files/protobuf-${_protobuf_ver}.tar.bz2
-	http://fcitx.googlecode.com/files/fcitx-mozc-${pkgver}.patch
+	http://fcitx.googlecode.com/files/fcitx-mozc-${_patchver}.patch
 )
-sha1sums=('1402a767e2244a3cfa41fe7fa2d1bfa3f6a6f1b9'
+sha1sums=('93a4918acc5115847efbaea91f05962c4ccf4bba'
           'f2dca1f3b4386d768b5b04ffe1f5e6103ef5bd08'
           'e52272cc5e75c59e8491d1caf00edc9b35fe44ae'
           'df5867e37a4b51fb69f53a8baf5b994938691d6d'
-          'ab346a6088d4b4e47aa81a7a2861eea3864c6def')
+          '8bd15a29c13b49563265f113689d007a04223930')
 
 
 build() {
   cd "${srcdir}/${pkgbase}-${pkgver}"
 
   rm unix/fcitx -rf
-  patch -Np2 -i ${srcdir}/fcitx-mozc-1.4.1003.102.patch || return 1
+  patch -Np2 -i ${srcdir}/fcitx-mozc-${_patchver}.patch || return 1
 
   # Generate zip code seed
   msg "Generating zip code seed..."
