@@ -1,0 +1,30 @@
+#
+# Apps Packages for Chakra, part of chakra-project.org
+#
+# Maintainer: Adrián Chaves Fernández (Gallaecio) <adriyetichaves@gmail.com>
+# Contributor: Matteo Agostinelli <matteo@agostinelli.me>
+
+pkgname=dpic
+pkgver=20120212
+pkgrel=1
+pkgdesc="A pic language interpreter"
+arch=('x86_64' 'i686')
+url="http://www.ece.uwaterloo.ca/~aplevich/dpic/"
+license=('BSD')
+makedepends=('gcc')
+source=('http://www.ece.uwaterloo.ca/~aplevich/dpic/dpic-2012.02.12.tar.gz')
+md5sums=('7994d1f375997a6e008541560cc9a43c')
+
+build() {
+  cd $srcdir/$pkgname
+  make
+}
+
+package() {
+  # Documentation.
+  mkdir -p $pkgdir/usr/share/man/man1
+  mv dpic/doc/dpic.1 $pkgdir/usr/share/man/man1
+
+  cd $srcdir/$pkgname
+  make DESTDIR=$pkgdir/usr install
+}
