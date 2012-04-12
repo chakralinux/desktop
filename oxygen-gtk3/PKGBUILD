@@ -7,48 +7,20 @@
 pkgname=oxygen-gtk3
 pkgver=1.1.4
 _pkgver=1.0.2-1 # can we change pkgver to 1.0.2_1 ?
-pkgrel=4
-
+pkgrel=5
 pkgdesc="The Oxygen engine for GTK3, for better Qt/GKT+ integration."
 arch=('i686' 'x86_64')
-
 url=("http://projects.kde.org/projects/playground/artwork/oxygen-gtk/")
-
 license=('LGPL3' 'GPL')
 
-depends=('kdelibs' 'qt' 'oxygen-icons' 'cairo' 'dbus-glib' 'gtk3')
-makedepends=('gcc' 'cmake' 'findutils' 'automoc4')
+depends=('cairo' 'dbus-glib' 'gtk3')
+makedepends=('gcc' 'cmake')
 categories=('system')
-#groups=('gtk-integration')
+groups=('gtk-integration')
 
 source=("http://download.kde.org/stable/${pkgname}/${_pkgver}/src/${pkgname}-${_pkgver}.tar.bz2")
 
 md5sums=('e4cd32bc1169db39d4e29141449979a4')
-
-create_install() {
-cat > "${startdir}/${pkgname}.install" <<EOF
-post_install() {
-	cat <<-'EOF'
-
-GTK - Oxygen-GTK3 v$pkgver
-
-You can install aditional engines:
-----------------------------------
-gtk-integration-engine-molecule
-gtk-integration-engine-qtcurve
-               
-	EOF
-}
-
-post_upgrade() {
-	post_install \$1
-}
-
-op=\$1
-shift
-\$op \$*
-EOF
-}
 
 build() {
 	cd $srcdir/oxygen-gtk3-$_pkgver
@@ -63,8 +35,4 @@ build() {
 package() {
 	cd $srcdir/oxygen-gtk3-$_pkgver/build
 	make DESTDIR="${pkgdir}" install
-
-	# Create the install file
-	create_install
-	export install="${pkgname}.install"
 }
