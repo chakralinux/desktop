@@ -18,7 +18,6 @@ pkgname=('calligra-filters'
          'calligra-tools'
          'calligra-karbon'
          'calligra-kexi'
-         #'calligra-kformula'
          'calligra-kounavail'
          'calligra-plan'
          'calligra-stage'
@@ -29,7 +28,7 @@ pkgname=('calligra-filters'
          'calligra-thesaurus-doc'
          'calligra-braindump'
          'calligra-flow')
-pkgver=2.3.92
+pkgver=2.4.0
 pkgrel=1
 arch=('i686' 'x86_64')
 url='http://www.calligra-suite.org'
@@ -38,12 +37,12 @@ makedepends=('kdepimlibs' 'eigen' 'freetds' 'kdegraphics-okular' 'kdeedu-marble'
              'libgsf' 'libwpd' 'libwpg' 'pstoedit' 'glew' 'gsl' 'cmake' 'automoc4' 'libspnav' 'libqtgtl'
              'boost' 'libkdcraw' 'libpqxx' 'fftw' 'opengtl' 'docbook-xsl' 'create-resources' 'lcms2' 'qrencode' 'libdmtx')
 groups=('calligra')
-source=("http://mirrors.mit.edu/kde/unstable/${pkgbase}-${pkgver}/${pkgbase}-${pkgver}.tar.bz2")
-md5sums=('4121631cf148e801cca29e2167b1806d')
+source=("http://mirrors.mit.edu/kde/stable/${pkgbase}-${pkgver}/${pkgbase}-${pkgver}.tar.bz2")
+md5sums=('a45b9141c6bb750569e8f6554197dd50')
 
 build() {
   cd "${srcdir}"
-  mkdir build
+  #mkdir build
   cd build
   cmake ../${pkgbase}-${pkgver} \
     -DCMAKE_BUILD_TYPE=RelWithDebInfo \
@@ -52,7 +51,8 @@ build() {
     -DBUILD_active=OFF \
     -DBUILD_mobile=OFF \
     -DBUILD_mysql=OFF \
-    -DKDCRAW_LOCAL_FOUND=/usr/lib/libkdcraw.so 
+    -DKDCRAW_LOCAL_FOUND=/usr/lib/libkdcraw.so \
+    -DIHAVEPATCHEDQT=1
   make
 }
 
