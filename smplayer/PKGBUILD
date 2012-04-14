@@ -1,46 +1,37 @@
 #
-# Chakra Packages for Chakra, part of chakra-project.org
+# Apps Packages for Chakra, part of chakra-project.org
 #
-# maintainer (i686): Phil Miller <philm[at]chakra-project[dog]org>
-# maintainer (x86_64): Manuel Tortosa <manutortosa[at]chakra-project[dot]org>
-
-# include global config
-source ../_buildscripts/${current_repo}-${_arch}-cfg.conf
+# maintainer abveritas@chakra-project.org
 
 pkgname=smplayer
-pkgver=0.6.9
-pkgrel=5
+_pkgname=SMPlayer
+pkgver=0.8.0
+pkgrel=1
 pkgdesc="A complete front-end for MPlayer"
 arch=('i686' 'x86_64')
 url="http://smplayer.sourceforge.net/"
 license=('GPL')
-depends=('qt>=4.7.2' 'mplayer' 'mpg123')
+depends=('qt>=4.8.0' 'mplayer>=30526' 'mpg123')
 categories=('multimedia')
-source=(http://downloads.sourceforge.net/sourceforge/smplayer/${pkgname}-${pkgver}.tar.bz2
-        seekingfix.diff)
-md5sums=('dfe874b386509de5df78537489f95004'
-         '9cfd4e15e0c307ebeebec349b07aa6f7')
+source=(http://downloads.sourceforge.net/sourceforge/$pkgname/$_pkgname/$pkgver/${pkgname}-${pkgver}.tar.bz2)
+md5sums=('8f7d3a9c116e956c68976d0e5dbb83dd')
 
 build() {
   cd ${srcdir}/${pkgname}-${pkgver}
-  # seeking fix for mplayer2
-  patch -Np2 -i ${srcdir}/seekingfix.diff
-  # remove broken translation
-  sed -i "s|translations/smplayer_gl.ts|#translations/smplayer_gl.ts|" src/smplayer.pro
-
-  make PREFIX=/usr || return 1
+  make PREFIX=/usr 
 }
 
-package(){
+package() {
   cd ${srcdir}/${pkgname}-${pkgver}
-  make PREFIX=${pkgdir}/usr install || return 1
+  make PREFIX=${pkgdir}/usr install 
 
+  # Icon
   install -dm755 ${pkgdir}/usr/share/pixmaps
   ln -s /usr/share/icons/hicolor/64x64/apps/smplayer.png \
         ${pkgdir}/usr/share/pixmaps/
 
+  # Menu entries.
   sed -i 's|Exec=smplayer %U|Exec=smplayer %F|' ${pkgdir}/usr/share/applications/smplayer.desktop || return 1
   sed -i 's|Exec=smplayer -add-to-playlist %U|Exec=smplayer -add-to-playlist %F|' \
-  	${pkgdir}/usr/share/applications/smplayer_enqueue.desktop || return 1
+  	${pkgdir}/usr/share/applications/smplayer_enqueue.desktop 
 }
-
