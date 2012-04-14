@@ -6,26 +6,35 @@
 pkgname=openscenegraph
 _pkgname=OpenSceneGraph
 pkgver=3.0.1
-pkgrel=1
+pkgrel=2
 pkgdesc="FOSS high performance real-time graphics toolkit."
 arch=('i686' 'x86_64')
 license=('custom:OSGPL')
 url="http://www.openscenegraph.org"
-depends=('curl' 'giflib' 'jasper' 'librsvg' 'pth' 'xine-lib')
+depends=('curl' 'giflib' 'jasper' 'librsvg' 'libxrandr' 'pth' 'xine-lib')
 makedepends=('cmake' 'libvncserver')
 optdepends=('libvncserver' 'gdal' 'openexr' 'poppler-glib')
 categories=('games')
-source=($url/downloads/stable_releases/$_pkgname-$pkgver/source/$_pkgname-$pkgver.zip)
-md5sums=('c43a25d023e635c3566b2083d8e6d956')
+source=("$url/downloads/stable_releases/$_pkgname-$pkgver/source/$_pkgname-$pkgver.zip"
+        "xine-1.2.patch::https://projects.archlinux.org/svntogit/community.git/plain/trunk/osg-xine-1.2.patch?h=packages/openscenegraph")
+md5sums=('c43a25d023e635c3566b2083d8e6d956'
+         'a4d286df308de1765413073170fe5639')
 
 build() {
   cd $srcdir/$_pkgname-$pkgver
-  # Using “Release” instead of “RelWithDebInfo” on purpose, else there are problems.
-  mkdir build && cd build
+
+  mkdir -p build && cd build
+
   cmake \
     -DCMAKE_INSTALL_PREFIX=/usr \
     -DCMAKE_BUILD_TYPE=Release \
     ..
+
+  # Patches.
+  sed -i 's|#include <curl/types.h>|//#include <curl/types.h>|' ../src/osgPlugins/curl/ReaderWriterCURL.cpp
+  patch -p1 < $srcdir/xine-1.2.patch -d ..
+
+  # Build.
   make
 }
 
