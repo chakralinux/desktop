@@ -3,19 +3,17 @@
 #
 # contributor (x86_64): Giuseppe Calà <jiveaxe@gmail.com>
 
-# include global config
-source ../_buildscripts/${current_repo}-${_arch}-cfg.conf
-
 pkgname=smc
 pkgver=1.9
 _musicver=5.0
-pkgrel=7
+pkgrel=10
 pkgdesc="Secret Maryo Chronicles"
 arch=('i686' 'x86_64')
 url="http://www.secretmaryo.org/"
 license=('GPL3')
 depends=('sdl_image' 'sdl_ttf' 'sdl_mixer' 'cegui>=0.7' 'boost' 'libpng')
 makedepends=('autoconf' 'automake')
+categories=('games')
 source=(http://downloads.sourceforge.net/smclone/$pkgname-$pkgver.tar.bz2
         http://downloads.sourceforge.net/smclone/SMC_Music_${_musicver}_high.zip
         smc-for-cegui-v0-7.diff
@@ -33,8 +31,14 @@ build() {
   # to remove when smc will be compatible with cegui-0.7.x
   patch -Np1 -i ${srcdir}/smc-for-cegui-v0-7.diff
 
+  # fix for boost-1.46
+  export CXXFLAGS="${CXXFLAGS} -DBOOST_FILESYSTEM_VERSION=2"
+
   ./autogen.sh
-  ./configure --prefix=/usr
+  LIBS+="-lX11 -lboost_system" \
+  ./configure \
+    --prefix=/usr
+  make
 }
 
 package() {
@@ -42,7 +46,7 @@ package() {
 
   make install LDADD=-lpng DESTDIR=$pkgdir
 
-  # install some freedesktop.org compatibility
+  # Desktop Integration.
   install -Dm644 $srcdir/$pkgname.desktop $pkgdir/usr/share/applications/$pkgname.desktop
   install -Dm644 $srcdir/$pkgname.png $pkgdir/usr/share/pixmaps/$pkgname.png
 

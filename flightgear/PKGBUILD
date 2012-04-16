@@ -5,30 +5,47 @@
 
 pkgname=flightgear
 _pkgname=FlightGear
-pkgver=2.4.0
-pkgrel=1
+pkgver=2.6.0
+pkgrel=2
 pkgdesc="An open-source, multi-platform flight simulator."
 arch=(i686 x86_64)
-depends=('flightgear-data' 'freealut' 'openal' 'openscenegraph' 'ptlib' 'simgear')
-makedepends=('boost')
+depends=('libxmu' 'libxi' 'openal' 'openscenegraph' 'zlib' 'simgear' 'subversion')
+makedepends=('boost' 'cmake')
+optdepends=('flightgear-aircrafts: Additional aircrafts.')
 license=(GPL3)
 url="http://www.flightgear.org"
-source=(ftp://ftp.goflyflightgear.com/$pkgname/Source/$pkgname-$pkgver.tar.bz2)
-md5sums=('e6e1f8b1def24326fa64ff001e195da7')
+screenshot="http://www.flightgear.org/wp-content/gallery/gallery-v2-6/737-300_egkk_hom.jpg"
+categories=('games')
+source=(http://ftp.icm.edu.pl/packages/$pkgname/Source/$pkgname-$pkgver.tar.bz2)
+sha256sums=('1554efbe20ad5002ad169225605ae95fca46d381bdff03dd624d92cf24b1a40f')
 
 build() {
   cd $srcdir/$pkgname-$pkgver
-  ./configure \
-    --prefix=/usr
+  
+  mkdir -p build
+  cd build
+  
+  cmake \
+    -DCMAKE_INSTALL_PREFIX=/usr \
+    ..
+    
   make
 }
 
 package() {
-  cd $srcdir/$pkgname-$pkgver
+  depends=( "${depends[@]}" "flightgear-data" )
+
+  cd $srcdir/$pkgname-$pkgver/build
+  
   make DESTDIR=$pkgdir install
 
   # Execution script.
   echo "#!/bin/bash"	 > $pkgdir/usr/bin/$pkgname
-  echo "fgfs \$@"	>> $pkgdir/usr/bin/$pkgname
+  echo "fgfs --fg-root=/usr/share/$pkgname/data \$@"	>> $pkgdir/usr/bin/$pkgname
   chmod +x $pkgdir/usr/bin/$pkgname
+  
+  # Desktop Integration.
+  cd .. # From /build
+  install -Dm0644 package/$pkgname.desktop              $pkgdir/usr/share/applications/$pkgname.desktop
+  install -Dm0644 package/RedHat/$pkgname.48.png        $pkgdir/usr/share/icons/$pkgname.png
 }

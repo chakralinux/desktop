@@ -1,11 +1,11 @@
 #
 # Games Packages for Chakra, part of chakra-project.org
 #
-# Maintainer: Adrián Chaves Fernández (Gallaecio) <adriyetichaves gmail.com>
+# Maintainer: Adrián Chaves Fernández (Gallaecio) <adriyetichaves@gmail.com>
 
 pkgname=bullet
-pkgver=2.79
-_pkgver=$pkgver-rev2440
+pkgver=2.80
+_pkgver=$pkgver-rev2531
 pkgrel=1
 pkgdesc="A 3D Collision Detection and Rigid Body Dynamics Library for games and animation"
 arch=('i686' 'x86_64')
@@ -16,11 +16,11 @@ makedepends=('cmake' 'doxygen' 'graphviz' 'ttf-dejavu')
 changelog=ChangeLog
 source=("http://$pkgname.googlecode.com/files/$pkgname-$_pkgver.tgz"
         "$pkgname.pc")
-md5sums=('29d6f43964d8494f0366cd69e4883dd1'
+md5sums=('d1eec0332110264a21d0fc0f2fb127c3'
          'd1da06deba3b08b884d2212f6838905c')
 
 build() {
-  cd $srcdir/$pkgname-$pkgver
+  cd $srcdir/$pkgname-$_pkgver
 
   # Get a clean build directory.
   [[ -d build ]] && rm -rf build
@@ -44,7 +44,7 @@ build() {
 }
 
 package() {
-  cd $srcdir/$pkgname-$pkgver/build
+  cd $srcdir/$pkgname-$_pkgver/build
 
   make DESTDIR=$pkgdir install
 

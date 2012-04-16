@@ -1,0 +1,32 @@
+#
+# Games Packages for Chakra, part of chakra-project.org
+#
+# Maintainer: Adrián Chaves Fernández (Gallaecio) <adriyetichaves@gmail.com>
+# Contributor: MCMic <come.bernigaud@laposte.net>
+
+pkgname=meandmyshadow
+pkgver=0.2
+pkgrel=1
+pkgdesc="Puzzle/platform game with an interesting concept and rather unique gameplay"
+arch=('i686' 'x86_64')
+url="http://meandmyshadow.sourceforge.net/"
+license=('GPL3')
+depends=('directfb' 'sdl' 'sdl_gfx' 'sdl_image' 'curl' 'libarchive' 'sdl_ttf' 'sdl_mixer')
+makedepends=('cmake')
+categories=('games')
+source=("http://sourceforge.net/projects/$pkgname/files/$pkgver/$pkgname-${pkgver}-src.tar.gz/download")
+md5sums=('3736880e6c52135f1ac2fd56e6df566a')
+
+build() {
+  cd $srcdir/$pkgname-$pkgver
+
+  cmake \
+    -DCMAKE_INSTALL_PREFIX=/usr \
+    .
+  make
+}
+
+package() {
+  cd $srcdir/$pkgname-$pkgver
+  make install DESTDIR=$pkgdir
+}

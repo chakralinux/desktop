@@ -1,0 +1,42 @@
+#
+# Games Packages for Chakra, part of chakra-project.org
+#
+# Maintainer: Adrián Chaves Fernández (Gallaecio) <adriyetichaves@gmail.com>
+# Contributor: Sven-Hendrik Haase <sh@lutzhaase.com>
+
+pkgname=clanlib
+pkgver=1.0.0
+pkgrel=1
+pkgdesc="A multi-platform game development library"
+arch=('i686' 'x86_64')
+url="http://clanlib.org/"
+license=('zlib')
+depends=('alsa-lib' 'libjpeg' 'libmikmod' 'libpng' 'libvorbis' 'libxi' 'libxmu' 'mesa' 'sdl_gfx' 'freetype2' 'pcre' 'sqlite3')
+makedepends=('doxygen' 'graphviz')
+options=('!libtool')
+source=(http://clanlib.org/download/releases-${pkgver:0:3}/ClanLib-${pkgver}.tgz
+        $pkgname-$pkgver-stdio.diff)
+md5sums=('281e64a463155474d0f1270686286811'
+         '8266047805d8dba2f4bf67562c9f061d')
+
+build() { 
+  cd ${srcdir}/ClanLib-${pkgver}
+  
+  # Patches.
+  patch -uNp1 -i $srcdir/$pkgname-$pkgver-stdio.diff
+
+  ./configure \
+    --prefix=/usr
+
+  make
+}
+
+package() {
+  cd ${srcdir}/ClanLib-${pkgver}
+
+  make DESTDIR=${pkgdir} install
+
+  # License.
+  install -d ${pkgdir}/usr/share/licenses/${pkgname}
+  install -m644 COPYING ${pkgdir}/usr/share/licenses/${pkgname}/
+}

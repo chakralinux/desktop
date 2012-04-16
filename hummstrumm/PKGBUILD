@@ -1,0 +1,29 @@
+#
+# Games Packages for Chakra, part of chakra-project.org
+#
+# Maintainer: Adrián Chaves Fernández (Gallaecio) <adriyetichaves@gmail.com>
+
+pkgname=hummstrumm
+pkgver=0.4
+pkgrel=1
+pkgdesc="A 3D adventure game in which two players set out to stop the evil Dr. Geoff from taking over the world."
+arch=('i686' 'x86_64')
+url="http://hummstrumm.blogspot.com/"
+screenshot="https://lh6.googleusercontent.com/-oa0ajQj51WY/S6Dx2iKb7nI/AAAAAAAAAXc/nsL2eJw2r4k/d/splitscreen-ui-concept.png"
+license=('GPL3' 'CCPL-by-sa')
+depends=(freetype2 ftgl libjpeg libpng libtheora libvorbis libxrandr mesa openal zlib)
+makedepends=(cmake doxygen)
+categories=('games')
+source=(http://$pkgname.googlecode.com/files/$pkgname-$pkgver.tar.gz)
+md5sums=('e23dfce97df7d9f51a0e5d96dad5b6ca')
+
+build() {
+  cd $srcdir/$pkgname-$pkgver
+  cmake \
+    -G "Unix Makefiles"
+}
+
+package() {
+  cd $srcdir/$pkgname-$pkgver
+  make DESTDIR=$pkgdir install
+}

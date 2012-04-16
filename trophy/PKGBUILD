@@ -1,0 +1,35 @@
+#
+# Games Packages for Chakra, part of chakra-project.org
+#
+# Maintainer: Adrián Chaves Fernández (Gallaecio) <adriyetichaves@gmail.com>
+# Contributor: Colin Pitrat <colin.pitrat@gmail.com>
+
+pkgname=trophy
+pkgver=2.0.3
+pkgrel=1
+pkgdesc="A 2D car racing action game"
+arch=('i686' 'x86_64')
+url="http://$pkgname.sourceforge.net"
+screenshot="http://trophy.sourceforge.net/img/screenshot04.gif"
+license=(GPL2)
+depends=(clanlib)
+source=(http://downloads.sourceforge.net/project/$pkgname/$pkgname/$pkgver/$pkgname-$pkgver.tar.gz)
+md5sums=('bf62269cacf794e087ac88f0e39f54c1')
+
+build()
+{
+    cd $srcdir/$pkgname-$pkgver
+    
+    ./configure \
+      --prefix=/usr
+      
+    make
+}
+
+package()
+{
+    cd $srcdir/$pkgname-$pkgver
+
+    make DESTDIR=$pkgdir install
+}
+md5sums=('a16c20ebfd8b852f4fe74a58dc7cdf2f')

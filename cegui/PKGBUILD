@@ -3,41 +3,35 @@
 #
 # Maintainer: Giuseppe Calà <jiveaxe@gmail.com>
 
-# include global config
-source ../_buildscripts/${current_repo}-${_arch}-cfg.conf
-
 pkgname=cegui
 _pkgname=CEGUI
-pkgver=0.7.5
-pkgrel=10
+pkgver=0.7.6
+pkgrel=1
 pkgdesc="A free library providing windowing and widgets for graphics APIs/engines."
 arch=('i686' 'x86_64')
 url="http://crayzedsgui.sourceforge.net"
-options=('!libtool')
 license=("MIT")
-depends=('devil' 'expat' 'freeglut' 'freetype2' 'libxml2' 'lua' 'pcre' 'python2' 'silly' 'toluapp')
-makedepends=('ogre') # Needed during build for OGRE support.
+depends=('devil' 'expat' 'freeglut' 'freetype2' 'glew' 'libxml2' 'lua' 'pcre' 'silly')
+makedepends=('boost' 'doxygen' 'graphviz' 'irrlicht' 'ogre' 'python2' 'toluapp')
+optdepends=("python2: python bindings"
+            "ogre: ogre module"
+            "irrlicht: irrlicht module")
+options=(!libtool)
 source=("http://downloads.sourceforge.net/crayzedsgui/${_pkgname}-${pkgver}.tar.gz"
-        'fix-missing-ptrdiff_t.patch')
-md5sums=('38c79d1fdfaaa10f481c99a2ac479516'
-         '96463a26c42b22da22955212750496a3')
-
+        
+"cegui-0.7.6-python-detection.patch::http://projects.archlinux.org/svntogit/community.git/plain/trunk/cegui-0.7.6-python-detection.patch?h=packages/cegui")
+md5sums=('7ddb5145dc94fb7daf9aea1d30a6ffa3'
+         '4600775f78b7349621a8a314ade8c902')
 build() {
   cd "${srcdir}/${_pkgname}-${pkgver}"
 
-  patch -Np1 -i "${srcdir}/fix-missing-ptrdiff_t.patch"
-    
+  patch -Np0 < "${srcdir}/cegui-0.7.6-python-detection.patch"
+
+  ./bootstrap
   ./configure \
-    --prefix=/usr \
-    --disable-xerces-c \
     --enable-null-renderer \
+    --prefix=/usr \
     --sysconfdir=/etc
-  make
-
-  cd "${srcdir}/${_pkgname}-${pkgver}/${pkgname}/src/RendererModules/Null"
-  make
-
-  cd "${srcdir}/${_pkgname}-${pkgver}/${pkgname}/include/RendererModules/Null"
   make
 }
 
@@ -45,20 +39,10 @@ package() {
   cd "${srcdir}/${_pkgname}-${pkgver}"
   make DESTDIR="${pkgdir}" install
 
-  cd "${srcdir}/${_pkgname}-${pkgver}/${pkgname}/src/RendererModules/Null"
-  make DESTDIR="${pkgdir}" install
+  # Documentation.
+  cd doc/doxygen && doxygen
+  cd .. && make DESTDIR=${pkgdir} install-html
 
-  cd "${srcdir}/${_pkgname}-${pkgver}/${pkgname}/include/RendererModules/Null"
-  make DESTDIR="${pkgdir}" install
-
-  # License:
+  # License.
   install -D -m644 "${srcdir}/${_pkgname}-${pkgver}/doc/COPYING" "${pkgdir}/usr/share/licenses/${pkgname}/LICENSE"
-
-  # NULL .pc file (see this[1] for additional information).
-  cd "${pkgdir}/usr/lib/pkgconfig"
-  cat CEGUI-OPENGL.pc | sed 's/OpenGL/Null/' > CEGUI-NULL.pc
 }
-
-# [1] http://www.secretmaryo.org/phpBB3/viewtopic.php?f=2&t=4270
-
-# vim:set ts=2 sw=2 et:

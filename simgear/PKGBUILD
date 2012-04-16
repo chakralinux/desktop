@@ -5,7 +5,7 @@
 
 pkgname=simgear
 _pkgname=SimGear
-pkgver=2.4.0
+pkgver=2.6.0
 pkgrel=1
 pkgdesc="FOSS libraries for quickly assembling 3D simulations."
 arch=('i686' 'x86_64')
@@ -14,13 +14,12 @@ makedepends=('boost')
 license=("GPL2")
 url=http://www.flightgear.org/
 options=('!makeflags')
-source=(ftp://ftp.goflyflightgear.com/$pkgname/Source/$pkgname-$pkgver.tar.bz2)
-md5sums=('31f4ce7254a43229f050a8f86d6966ef')
+source=(http://mirrors.ibiblio.org/pub/mirrors/simgear/ftp/Source//$pkgname-$pkgver.tar.bz2)
+sha256sums=('a44369ca6fc7861c8432363313a4ba2a744c2d1b3bb9fff010bdb6fcd4986a2f')
 
 build() {
   cd $srcdir/$pkgname-$pkgver
-  ./configure \
-    --prefix=/usr
+  cmake -DCMAKE_INSTALL_PREFIX=/usr -DCMAKE_INSTALL_LIBDIR=lib .
   make
 }
 
