@@ -3,25 +3,22 @@
 #
 # Maintainer: Adrián Chaves Fernández (Gallaecio) <adriyetichaves gmail.com>
 
-# include global config
-# source ../_buildscripts/${current_repo}-${_arch}-cfg.conf
-
-pkgname=naev
-pkgver=0.5.1
+pkgbase=naev
+pkgname=(naev naev-data)
+pkgver=0.5.3
 pkgrel=1
 pkgdesc="2D action/rpg space game."
 arch=('i686' 'x86_64')
 url="http://code.google.com/p/naev/"
-license=('custom: code: GPLv3; media: mixture of public domain, GPLv2, GPLv3, CC:BY 3.0, CC:BY-SA 3.0')
+screenshot="http://blog.naev.org/wp-content/gallery/media/bigplanet.png"
 depends=('freetype2' 'libgl' 'libpng' 'libvorbis' 'libxml2' 'openal' 'sdl_image' 'sdl_mixer')
 makedepends=('freeglut')
-conflicts=('naev-dev')
 categories=('games')
 changelog=ChangeLog
-source=("http://downloads.sourceforge.net/project/$pkgname/$pkgname-$pkgver/$pkgname-$pkgver.tar.bz2"
-	"http://downloads.sourceforge.net/project/$pkgname/$pkgname-$pkgver/ndata-$pkgver")
-md5sums=('a5fea2f4e0fef23d8932167b568d1868'
-         '9cab0bce7a4dcb7cdc840fc60da5ed1f')
+source=("http://downloads.sourceforge.net/project/$pkgbase/$pkgbase-$pkgver/$pkgbase-$pkgver.tar.bz2"
+	"http://downloads.sourceforge.net/project/$pkgbase/$pkgbase-$pkgver/ndata-$pkgver")
+md5sums=('bec719b3daa33ec190d785120a7b0159'
+         '652db194ffd2f45fc5f8ecee2ad2985c')
 
 build() {
   cd $srcdir/$pkgname-$pkgver
@@ -29,21 +26,32 @@ build() {
   ./configure \
     --prefix=/usr \
     --enable-debug \
-    --with-ndata-path=/usr/share/naev/data
+    --with-ndata-path=/usr/share/$pkgbase/data
   make
 }
 
-package() {
+package_naev() {
+  depends=( "${depends[@]}" naev-data )
+  conflicts=('naev-dev')
+  license=('GPL3')
+
   cd $srcdir/$pkgname-$pkgver
 
   # Main.
   make DESTDIR=$pkgdir install
 
-  # Media:
-  mkdir -p $pkgdir/usr/share/naev/
-  install -m644 $srcdir/ndata-$pkgver $pkgdir/usr/share/naev/data
-
   # License:
-  mkdir -p $pkgdir/usr/share/licenses/naev/
-  install -m644 $srcdir/$pkgname-$pkgver/LICENSE $pkgdir/usr/share/licenses/naev/
+  mkdir -p $pkgdir/usr/share/licenses/$pkgbase/
+  install -m644 $srcdir/$pkgbase-$pkgver/LICENSE $pkgdir/usr/share/licenses/$pkgbase/
+}
+
+package_naev-data() {
+  arch=('any')
+  depends=()
+  license=('custom: mixture of public domain, GPLv2, GPLv3, CC:BY 3.0, CC:BY-SA 3.0')
+
+  cd $srcdir/$pkgbase-$pkgver
+
+  mkdir -p $pkgdir/usr/share/$pkgbase/
+  install -m644 $srcdir/ndata-$pkgver $pkgdir/usr/share/$pkgbase/data
 }
