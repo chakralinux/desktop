@@ -1,0 +1,45 @@
+--- system-install.mk.old	2012-04-17 00:58:07.088468000 +0200
++++ system-install.mk	2012-04-17 00:59:08.305449416 +0200
+@@ -4,7 +4,6 @@
+ 	install/nix/redeclipse_x32.png \
+ 	install/nix/redeclipse_x48.png \
+ 	install/nix/redeclipse_x64.png \
+-	install/nix/redeclipse_x128.png
+ 
+ prefix=/usr/local
+ games=
+@@ -28,9 +27,6 @@
+ install/nix/redeclipse_x64.png: redeclipse.ico
+ 	convert 'redeclipse.ico[2]' $@
+ 
+-install/nix/redeclipse_x128.png: redeclipse.ico
+-	convert 'redeclipse.ico[3]' $@
+-
+ icons: $(ICONS)
+ 
+ system-install-client: client
+@@ -88,7 +84,6 @@
+ 	install -d $(icondir)/32x32/apps
+ 	install -d $(icondir)/48x48/apps
+ 	install -d $(icondir)/64x64/apps
+-	install -d $(icondir)/128x128/apps
+ 	sed -e 's,@LIBEXECDIR@,$(patsubst $(DESTDIR)%,%,$(libexecdir)),g' \
+ 		-e 's,@DATADIR@,$(patsubst $(DESTDIR)%,%,$(datadir)),g' \
+ 		-e 's,@DOCDIR@,$(patsubst $(DESTDIR)%,%,$(docdir)),g' \
+@@ -101,8 +96,6 @@
+ 		$(icondir)/48x48/apps/$(redeclipse).png
+ 	install -m644 install/nix/redeclipse_x64.png \
+ 		$(icondir)/64x64/apps/$(redeclipse).png
+-	install -m644 install/nix/redeclipse_x128.png \
+-		$(icondir)/128x128/apps/$(redeclipse).png
+ 
+ system-install-cube2font: system-install-cube2font-docs
+ 	install -d $(bindir)
+@@ -137,7 +130,6 @@
+ 	@rm -fv $(icondir)/32x32/apps/$(redeclipse).png
+ 	@rm -fv $(icondir)/48x48/apps/$(redeclipse).png
+ 	@rm -fv $(icondir)/64x64/apps/$(redeclipse).png
+-	@rm -fv $(icondir)/128x128/apps/$(redeclipse).png
+ 
+ system-uninstall: system-uninstall-client system-uninstall-server system-uninstall-data system-uninstall-docs system-uninstall-menus
+ 	-@rmdir -v $(libexecdir)/$(redeclipse)

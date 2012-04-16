@@ -13,15 +13,18 @@ license=(CCPL-by-sa ZLIB)
 depends=(enet libgl mesa sdl sdl_image sdl_mixer zlib hicolor-icon-theme)
 makedepends=('mesa' 'gzip' 'imagemagick')
 source=(http://downloads.sourceforge.net/$pkgname/${pkgname}_${pkgver}_linux_bsd.tar.bz2
-	system-libs.diff)
+	system-libs.diff
+        no-x128-icon-since-old-imagemagick.diff)
 md5sums=('e133361f79be01782bf0bbc4c5a01236'
-         'f34900e6c8247754800d8fba0600dfb7')
+         'f34900e6c8247754800d8fba0600dfb7'
+         'd6c0c52a0e217e21f8951426fe40db18')
 
 build() {
   cd "$srcdir/$pkgname/src"
 
   # Patches.
   patch -uN Makefile $srcdir/system-libs.diff
+  patch -uN system-install.mk $srcdir/no-x128-icon-since-old-imagemagick.diff
 
   # Compilation.
   make
