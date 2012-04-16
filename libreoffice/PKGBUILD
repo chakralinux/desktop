@@ -20,11 +20,11 @@ pkgname=('libreoffice-common'
 	'libreoffice-extension-presenter-screen'
 	'libreoffice-extension-presentation-minimizer'
 	'libreoffice-extension-report-builder')
-_LOver=3.5.1.2
-pkgver=3.5.1.2
-_pkgver=3.5.1
+_LOver=3.5.2.2
+pkgver=3.5.2
+_pkgver=3.5.2
 _HIver=3.5
-pkgrel=2
+pkgrel=1
 arch=('i686' 'x86_64')
 _OFFICEUPD="340"
 license=('LGPL3')
@@ -74,7 +74,6 @@ source=(${_mirror}/${pkgbase}-{core,help,translations}-${_LOver}.tar.xz
 	http://download.go-oo.org/extern/185d60944ea767075d27247c3162b3bc-unowinreg.dll
 	gmake_install.diff::http://cgit.freedesktop.org/libreoffice/core/patch/?id=1048d8fa4abd3e55a45dfb6884db808da1d72c9e
 	smp_buildfix.diff::http://cgit.freedesktop.org/libreoffice/core/patch/?id=cf23f57ae6bb7af689a45e0a850c3c2f67a8f810
-	buildfix_kde4fpicker.diff::http://cgit.freedesktop.org/libreoffice/core/patch/?id=ee67c55260ec7723c39606955ccdbd3e2934935a
 	http://ooo.itc.hu/oxygenoffice/download/libreoffice/7e7efc5d4a03126bb9ae3ae9aa2c4e87-Barcode_1.3.1.0.oxt
 	http://ooo.itc.hu/oxygenoffice/download/libreoffice/41c9b65ad60af4b3255bbecdfef11736-Diagram_1.1.0.0.oxt
 	http://ooo.itc.hu/oxygenoffice/download/libreoffice/451ccf439a36a568653b024534669971-ConvertTextToNumber_1.3.2.oxt
@@ -151,7 +150,6 @@ build() {
 	# one late fix to solve make distro-pack-install issue
 	patch -Np1 -i ${srcdir}/gmake_install.diff
 	patch -Np1 -i ${srcdir}/smp_buildfix.diff
-	patch -Np1 -i ${srcdir}/buildfix_kde4fpicker.diff
 
 	# Temporary workaround to avoid build failure in ct2n
 	#mv ${srcdir}/451ccf439a36a568653b024534669971-ConvertTextToNumber{_,-}1.3.2.oxt
@@ -501,18 +499,18 @@ package_libreoffice-sdk() {
  done
  
  # fix LibreOffice installation paths	
- sed -i -e "s,@OO_SDK_NAME@,libreoffice-sdk," \
-        -e "s,@OO_SDK_HOME@,/usr/lib/libreoffice/sdk," \
-        -e "s,@OFFICE_HOME@,/usr/lib/libreoffice," \
-        -e "s,@OFFICE_BASE_HOME@,/usr/lib/libreoffice," \
-        -e "s,@OO_SDK_URE_HOME@,/usr/lib/libreoffice/ure," \
-        -e "s,@OO_SDK_MAKE_HOME@,/usr/bin," \
-        -e "s,@OO_SDK_ZIP_HOME@,/usr/bin," \
-        -e "s,@OO_SDK_CPP_HOME@,/usr/bin," \
-        -e "s,@OO_SDK_CC_55_OR_HIGHER@,," \
-        -e "s,@OO_SDK_JAVA_HOME@,\$J2SDKDIR," \
-        -e "s,@OO_SDK_OUTPUT_DIR@,\$HOME," \
-        -e "s,@SDK_AUTO_DEPLOYMENT@,NO," ${pkgdir}/usr/lib/libreoffice/sdk/setsdkenv_unix.{csh,sh}.in
+ #sed -i -e "s,@OO_SDK_NAME@,libreoffice-sdk," \
+ #       -e "s,@OO_SDK_HOME@,/usr/lib/libreoffice/sdk," \
+ #       -e "s,@OFFICE_HOME@,/usr/lib/libreoffice," \
+ #       -e "s,@OFFICE_BASE_HOME@,/usr/lib/libreoffice," \
+ #       -e "s,@OO_SDK_URE_HOME@,/usr/lib/libreoffice/ure," \
+ #       -e "s,@OO_SDK_MAKE_HOME@,/usr/bin," \
+ #       -e "s,@OO_SDK_ZIP_HOME@,/usr/bin," \
+ #       -e "s,@OO_SDK_CPP_HOME@,/usr/bin," \
+ #       -e "s,@OO_SDK_CC_55_OR_HIGHER@,," \
+ #       -e "s,@OO_SDK_JAVA_HOME@,\$J2SDKDIR," \
+ #       -e "s,@OO_SDK_OUTPUT_DIR@,\$HOME," \
+ #       -e "s,@SDK_AUTO_DEPLOYMENT@,NO," ${pkgdir}/usr/lib/libreoffice/sdk/setsdkenv_unix.{csh,sh}.in
 }
 
 package_libreoffice-sdk-doc() {
