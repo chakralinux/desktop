@@ -3,13 +3,10 @@
 #
 # Maintainer: Adrián Chaves Fernández (Gallaecio) <adriyetichaves gmail.com>
 
-# include global config
-source ../_buildscripts/${current_repo}-${_arch}-cfg.conf
-
 pkgname=corsix-th
 _pkgname=CorsixTH
-pkgver=beta6
-_pkgver=Beta6
+pkgver=0.01b
+_pkgver=$pkgver
 pkgrel=1
 pkgdesc='Reimplementation of the game engine of Theme Hospital.'
 arch=('i686' 'x86_64')
@@ -21,25 +18,23 @@ makedepends=('cmake')
 install=$pkgname.install
 source=("$url/files/$_pkgname-$_pkgver-Source.tar.gz"
         "$pkgname.sh")
-sha1sums=('120d30f0cabd5589e6935e95d61862c25f827fd7'
+sha1sums=('491404ccd225e60d57d33f772cc7d4f921ff5e38'
           '7fd6ae8db366b7f9c4671708e8ea7beb48f1bea3')
 
 build() {
-  cd $srcdir/$_pkgname-$_pkgver-Source
+  cd $srcdir/
 
-  mkdir build && cd build
-  cmake -DCMAKE_INSTALL_PREFIX=/usr/share \
-        -DCMAKE_BUILD_TYPE=RelWithDebInfo \
-        ..
+  mkdir -p build && cd build
+  cmake \
+    -DCMAKE_INSTALL_PREFIX=/usr/share \
+    -DCMAKE_BUILD_TYPE=RelWithDebInfo \
+    ..
+
   make
-# 	cmake \
-# 		-D CMAKE_INSTALL_PREFIX=/usr/share/ \
-# 		-D CMAKE_BUILD_TYPE=Release \
-# 		-Wno-dev .
 }
 
 package() {
-  cd $srcdir/$_pkgname-$_pkgver-Source/build
+  cd $srcdir/build
 
   make DESTDIR=$pkgdir install
 
@@ -47,5 +42,5 @@ package() {
   install -Dm755 $srcdir/$pkgname.sh $pkgdir/usr/bin/$pkgname
 
   # License:
-  install -Dm644 $srcdir/$_pkgname-$_pkgver-Source/CorsixTH/LICENSE.txt $pkgdir/usr/share/licenses/$pkgname/License.txt
+  install -Dm644 $srcdir/CorsixTH/LICENSE.txt $pkgdir/usr/share/licenses/$pkgname/License.txt
 }
