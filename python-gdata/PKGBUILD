@@ -1,0 +1,18 @@
+pkgname=python-gdata
+pkgver=2.0.16
+pkgrel=1
+arch=(any)
+pkgdesc="Python client library for Google data APIs"
+url="http://code.google.com/p/gdata-python-client/"
+license=('APACHE')
+depends=('python2')
+provides=('gdata_py')
+replaces=('gdata_py')
+conflicts=('gdata_py')
+source=(http://gdata-python-client.googlecode.com/files/gdata-${pkgver}.tar.gz)
+md5sums=('10e78a7f3bbccbaec266590f412e833e')
+
+build() {
+  cd "${srcdir}/gdata-${pkgver}"
+  python2 setup.py install --prefix=/usr --root "${pkgdir}" 
+}

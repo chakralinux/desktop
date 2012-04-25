@@ -1,0 +1,16 @@
+pkgname=google-docs-fs
+pkgver=1
+pkgrel=1
+pkgdesc="Mounts Google Drive or Google Docs to system"
+arch=('i686' 'x86_64')
+url='https://launchpad.net/google-docs-fs'
+license=('GPL2')
+makedepends=('bzr')
+depends=('python2' 'python-fuse' 'python-gdata')
+
+package() {
+  cd "$srcdir"
+  bzr branch lp:google-docs-fs
+  cd google-docs-fs
+  python2 setup.py install --root=$pkgdir --optimize=1 || return 1
+}
