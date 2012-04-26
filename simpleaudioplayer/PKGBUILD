@@ -1,0 +1,31 @@
+#
+# Apps Packages for Chakra, part of chakra-project.org
+#
+# Maintainer: Adrián Chaves Fernández (Gallaecio) <adriyetichaves gmail.com>
+
+pkgname=simpleaudioplayer
+pkgver=1.0.9
+pkgrel=1
+pkgdesc="Simple audio player which makes opening music files from a file manager quick and easy."
+arch=('i686' 'x86_64')
+url="http://kde-apps.org/content/show.php?content=133147"
+license=('GPL3')
+depends=('kdelibs')
+makedepends=('cmake' 'automoc4' 'docbook-xsl')
+changelog=ChangeLog
+source=(http://kde-apps.org/CONTENT/content-files/133147-$pkgname.tar.bz2)
+md5sums=('2498a089005710dfddea3a1d78da22f5')
+
+build() {
+  cd $srcdir/$pkgname*
+  mkdir build && cd build
+  cmake \
+    -DCMAKE_INSTALL_PREFIX=`kde4-config --prefix` \
+    ..
+  make
+}
+ 
+package() {
+  cd $srcdir/$pkgname*/build
+  make DESTDIR=$pkgdir install
+}
