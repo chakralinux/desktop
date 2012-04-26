@@ -1,23 +1,27 @@
 #
 # Chakra Packages for Chakra, part of chakra-project.org
 #
-# maintainer (i686): Phil Miller <philm[at]chakra-project[dog]org>
-# maintainer (x86_64): Manuel Tortosa <manutortosa[at]chakra-project[dot]org>
+# maintainer abveritas@chakra-project.org
 
 pkgname=rtmpdump
-pkgver=2.3
+pkgver=2.4
 pkgrel=1
 pkgdesc="A tool to download rtmp streams"
 arch=('i686' 'x86_64')
 url="http://rtmpdump.mplayerhq.hu/"
-license=('LGPL')
+license=('GPL2' 'LGPL2.1')
 depends=('openssl')
 categories=('network')
-source=(http://rtmpdump.mplayerhq.hu/download/${pkgname}-${pkgver}.tgz)
-sha256sums=('ef38b7a99d82ce6912063d21063aeaf28185341b3df486e24bffce5354224b2c')
+source=(http://rtmpdump.mplayerhq.hu/download/${pkgname}-${pkgver}.tar.gz)
+md5sums=('8241345cf6476c1c1b9689494d6e820f')
 
 build() {
-  cd "${srcdir}/${pkgname}-${pkgver}"
-  sed -i 's/^install_so.0:.*/& install_base/' librtmp/Makefile
-  make prefix=/usr MANDIR="${pkgdir}/usr/share/man" DESTDIR="${pkgdir}" install
+  cd "${srcdir}/${pkgname}"  
+  make
+}
+
+package() {
+  cd "${srcdir}/${pkgname}"
+  install -d -m755 "${pkgdir}/usr/lib"
+  make prefix=/usr mandir=/usr/share/man DESTDIR="${pkgdir}" install
 }
