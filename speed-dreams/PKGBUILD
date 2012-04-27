@@ -1,48 +1,82 @@
 #
 # Games Packages for Chakra, part of chakra-project.org
 #
-# Maintainer: Adrián Chaves Fernández (Gallaecio) <adriyetichaves gmail.com>
+# Maintainer: Adrián Chaves Fernández (Gallaecio) <adriyetichaves@gmail.com>
 
-pkgname=speed-dreams
-pkgver=1.4.0
-_pkgver=1.4.0-r2307
-pkgrel=5
-pkgdesc="A racing simulatir with rich graphics and physics."
+pkgbase=speed-dreams
+pkgname=('speed-dreams' 'speed-dreams-data')
+pkgver=2.0.0
+_pkgver=2.0.0-r4687
+pkgrel=1
+pkgdesc="A racing simulator with rich graphics and physics"
 arch=('i686' 'x86_64')
 url="http://speed-dreams.sourceforge.net/"
 license=('GPL2')
-depends=('enet' 'freealut' 'freeglut' 'libpng' 'libxi' 'libxmu' 'libxrandr'
-'plib>=1.8.3' 'libjpeg' 'speed-dreams-data' 'zlib')
+depends=('enet' 'freeglut' 'libgl' 'libjpeg' 'libpng' 'libxi' 'libxmu' 'libxrandr' 'openal' 'plib' 'sdl' 'zlib')
+makedepends=('mesa')
 categories=('games')
-source=("http://sourceforge.net/projects/$pkgname/files/$pkgver/$pkgname-$_pkgver-src.tar.bz2/download")
-md5sums=('92c324c2c47a598dea9278d9a66c5b78')
+source=("http://downloads.sourceforge.net/project/$pkgbase/$pkgver/$pkgbase-src-base-$_pkgver.tar.xz"
+        "http://downloads.sourceforge.net/project/$pkgbase/$pkgver/$pkgbase-src-hq-cars-and-tracks-$_pkgver.tar.xz"
+        "http://downloads.sourceforge.net/project/$pkgbase/$pkgver/$pkgbase-src-more-hq-cars-and-tracks-$_pkgver.tar.xz"
+        "http://downloads.sourceforge.net/project/$pkgbase/$pkgver/$pkgbase-src-wip-cars-and-tracks-$_pkgver.tar.xz"
+        "http://downloads.sourceforge.net/project/$pkgbase/$pkgver/$pkgbase-src-unmaintained-$_pkgver.tar.xz")
+md5sums=('a6842887fc289ed6057be2ba9d2afaa2'
+         '57cf5c475491294ce1fb249e2dc0273b'
+         'c8ab7ef068fa3fbe67d2b3246b30ea8a'
+         'edcc842291737dbb13a3083252bf51d4'
+         '8505c46aae6ce56a43353b8899d40ce4')
 
 build() {
-  cd $srcdir/$pkgname-$pkgver-src
+  cd $srcdir
   
-  unset LDFLAGS MAKEFLAGS
-
-  ./configure \
-    --prefix=/usr/share/$pkgname \
-    --x-includes=/usr/include \
-    --x-libraries=/usr/lib 
+  mkdir -p  build
+  cd build
   
+  cmake \
+    -D OPTION_OFFICIAL_ONLY:BOOL=ON \
+    -D CMAKE_INSTALL_PREFIX:STRING=/usr \
+    -D SD_LOCALDIR:STRING=~/.speed-dreams \
+    ..
   make
+  
+  mkdir -p ../tmppkg
+  make DESTDIR=../tmppkg install
 }
 
-package() {
-  cd $srcdir/$pkgname-$pkgver-src
-
-  make DESTDIR=$pkgdir/ install datainstall
-
-  install -D -m644 icon.png $pkgdir/usr/share/pixmaps/$pkgname.png
-
+package_speed-dreams() {
+  depends=(${depends[@]} speed-dreams-data)
+  
+  cd $srcdir
+  
+  # Copy game from the installation.
+  mkdir -p $pkgdir/usr
+  mv $srcdir/tmppkg/usr/games   $pkgdir/usr/games
+  mv $srcdir/tmppkg/usr/include $pkgdir/usr/include
+  if [ -d "$srcdir/tmppkg/usr/lib64" ]; then
+    mv $srcdir/tmppkg/usr/lib64 $pkgdir/usr/lib64
+  else
+    mv $srcdir/tmppkg/usr/lib   $pkgdir/usr/lib
+  fi
+  mkdir -p $pkgdir/usr/share
+  mv $srcdir/tmppkg/usr/share/man   $pkgdir/usr/share/man
+  
+  # Run Script.
   mkdir -p $pkgdir/usr/bin
-  echo "#!/bin/bash"			>  $pkgdir/usr/bin/$pkgname
-  echo "cd /usr/share/$pkgname/bin"	>> $pkgdir/usr/bin/$pkgname
-  echo "./$pkgname"			>> $pkgdir/usr/bin/$pkgname
-  chmod +x $pkgdir/usr/bin/$pkgname
+  echo "#!/bin/bash"                    >  $pkgdir/usr/bin/$pkgbase
+  echo "/usr/games/speed-dreams-2"      >> $pkgdir/usr/bin/$pkgbase
+  chmod +x $pkgdir/usr/bin/$pkgbase
+  
+  # Desktop Integration.
+  install -Dm644 $srcdir/data/data/icons/icon.png $pkgdir/usr/share/pixmaps/$pkgname.png
+}
 
-  rm -r $pkgdir/usr/share/$pkgname/share
-  find $pkgdir/ -type d -exec chmod 755 {} \;
+package_speed-dreams-data() {
+  depends=()
+  pkgdesc="$pkgdesk (data files)"
+  
+  cd $srcdir
+  
+  # Copy game from the installation.
+  mkdir -p $pkgdir/usr/share
+  mv $srcdir/tmppkg/usr/share/games   $pkgdir/usr/share/games
 }
