@@ -28,7 +28,7 @@ pkgname=('calligra-filters'
          'calligra-braindump'
          'calligra-flow')
 pkgver=2.4.1
-pkgrel=2
+pkgrel=3
 arch=('i686' 'x86_64')
 url='http://www.calligra-suite.org'
 license=('FDL1.2' 'GPL2' 'LGPL')
@@ -36,12 +36,17 @@ makedepends=('kdepimlibs' 'eigen' 'freetds' 'kdegraphics-okular' 'kdeedu-marble'
              'libgsf' 'libwpd' 'libwpg' 'pstoedit' 'glew' 'gsl' 'cmake' 'automoc4' 'libspnav' 'libqtgtl'
              'boost' 'libkdcraw' 'libpqxx' 'fftw' 'opengtl' 'docbook-xsl' 'create-resources' 'lcms2' 'qrencode' 'libdmtx')
 groups=('calligra')
-source=("http://mirrors.mit.edu/kde/stable/${pkgbase}-${pkgver}/${pkgbase}-${pkgver}.tar.bz2")
+source=("http://mirrors.mit.edu/kde/stable/${pkgbase}-${pkgver}/${pkgbase}-${pkgver}.tar.bz2"
+        'KoColorSetwithQPointer.diff' 'Make_KoColorSet_QObject.diff')
 screenshot=("http://upload.wikimedia.org/wikipedia/commons/thumb/3/3e/Calligra_Stage_2.4.png/800px-Calligra_Stage_2.4.png")
-md5sums=('a4da7e1181e1539850a4fcae466d7d75')
+md5sums=('a4da7e1181e1539850a4fcae466d7d75'
+         '4fec7b571f43e1418855b77a29393e93'
+         'd4f068106218ebe97a3a8792151b993a')
 
 build() {
   cd "${srcdir}"
+  patch -p1 -i "${srcdir}/KoColorSetwithQPointer.diff"
+  patch -p1 -i "${srcdir}/Make_KoColorSet_QObject.diff"
   mkdir build
   cd build
   cmake ../${pkgbase}-${pkgver} \
@@ -83,7 +88,7 @@ package_calligra-interfaces() {
 
 package_calligra-libs() {
   pkgdesc="Libraries for the Calligra office suite"
-  depends=('kdepimlibs' 'lcms2' 'calligra-servicetypes' 'kdeedu-marble' 'create-resources' 'libspnav' 'glew' 'qimageblitz' 'poppler-qt' 'openexr' 'opengtl' 'hicolor-icon-theme' 'shared-mime-info' 'lcms2' 'libqtgtl')
+  depends=('kdepimlibs' 'lcms2' 'calligra-servicetypes' 'kdeedu-marble' 'create-resources' 'libspnav')
   conflicts=('koffice-common' 'calligra-libs-git')
   replaces=('koffice-common' 'calligra-libs-git')
 
@@ -150,7 +155,7 @@ package_calligra-tools() {
 
 package_calligra-karbon() {
   pkgdesc="Create scalable vector drawings"
-  depends=('calligra-libs' 'calligra-templates')
+  depends=('calligra-libs' 'calligra-templates' 'hicolor-icon-theme')
   provides=('karbon')
   conflicts=('koffice-karbon' 'calligra-karbon-git')
   replaces=('koffice-karbon' 'calligra-karbon-git')
@@ -188,7 +193,7 @@ package_calligra-kounavail() {
 
 package_calligra-plan() {
   pkgdesc="Calligra Project Management Component"
-  depends=('calligra-words' 'calligra-libs' 'kdepimlibs' 'calligra-templates' \
+  depends=('calligra-words' 'hicolor-icon-theme' 'calligra-libs' 'kdepimlibs' 'calligra-templates' \
 		'calligra-plugins')
   conflicts=('koffice-kplato' 'calligra-kplato-git')
   replaces=('koffice-kplato' 'calligra-kplato-git')
@@ -201,7 +206,7 @@ package_calligra-plan() {
 
 package_calligra-stage() {
   pkgdesc="Write presentation documents"
-  depends=('calligra-libs' 'calligra-templates')
+  depends=('calligra-libs' 'calligra-templates' 'hicolor-icon-theme')
   optdepends=('calligra-filters: import/export filters')
   conflicts=('koffice-kpresenter' 'calligra-stage-git')
   replaces=('koffice-kpresenter' 'calligra-stage-git')
@@ -214,7 +219,7 @@ package_calligra-stage() {
 
 package_calligra-krita() {
   pkgdesc="Edit and paint images"
-  depends=('calligra-libs' 'calligra-templates' 'calligra-plugins')
+  depends=('calligra-libs' 'calligra-templates' 'calligra-plugins' 'glew' 'qimageblitz' 'poppler-qt' 'openexr' 'opengtl' 'hicolor-icon-theme' 'shared-mime-info' 'lcms2' 'libqtgtl')
   optdepends=('calligra-filters: import/export filters')
   provides=('krita')
   conflicts=('koffice-krita' 'calligra-krita-git')
@@ -228,7 +233,7 @@ package_calligra-krita() {
 
 package_calligra-sheets() {
   pkgdesc="Write spreadsheet documents"
-  depends=('calligra-libs' 'calligra-templates' 'calligra-plugins' 'gsl')
+  depends=('calligra-libs' 'calligra-templates' 'calligra-plugins' 'gsl' 'hicolor-icon-theme')
   optdepends=('calligra-filters: import/export filters')
   conflicts=('koffice-kspread' 'calligra-tables-doc' 'calligra-tables' 'kformula')
   replaces=('koffice-kspread' 'calligra-tables-doc' 'calligra-tables' 'kformula')
@@ -242,7 +247,7 @@ package_calligra-sheets() {
 package_calligra-words() {
   pkgdesc="Word Processor"
   depends=('calligra-libs' 'calligra-templates' 'calligra-plugins' 'calligra-pics'
-           'calligra-kounavail')
+           'calligra-kounavail' 'hicolor-icon-theme')
   optdepends=('calligra-filters: import/export filters')
   conflicts=('koffice-kword' 'calligra-words-git')
   replaces=('koffice-kword' 'calligra-words-git')
