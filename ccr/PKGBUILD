@@ -7,31 +7,29 @@
 
 pkgname=ccr
 pkgver=4.0.1
-pkgrel=3
+pkgrel=6
 pkgdesc="A Bash wrapper for the CCR"
 license="GPL"
 arch=('any')
 depends=('grep' 'sed' 'coreutils' 'bash' 'curl' 'pacman' 'autoconf' 'automake' 'bin86' 'bison' 'ed' 'fakeroot' 'flex' 'gcc' 'libtool' 'm4' 'make' 'patch' 'pkgconfig' 'jshon')
 optdepends=('sudo: install and update packages as non-root')
+conflicts=('ccr-tools-git' 'ccr-tools')
 #source=("http://chakra-project.org/sources/ccr/ccr-$pkgver.tar.xz"
 categories=('system')
-source=("http://chakra-linux.org/sources/ccr/ccr-$pkgver.tar.gz"
-	"http://raw.github.com/ccr-tools/ccr-tools/master/ccr"
+source=("https://raw.github.com/ccr-tools/ccr-tools/master/ccr"
+	"https://raw.github.com/ccr-tools/ccr-tools/master/ccr.8"
 	"https://raw.github.com/ccr-tools/ccr-tools/master/ccr-tools"
         "https://raw.github.com/ccr-tools/ccr-tools/master/ccr-tools.8")
-md5sums=('0f01f2ea1606f04ee9cd51b51b9e15c9'
-         'd41d8cd98f00b204e9800998ecf8427e'
+md5sums=('a486ef9f22498e29b75fb18311efe3c4'
+         '502021ae4ca2fd2b7a8f6fb0062e4710'
          '9b89cdf57f89c569b589a45f4c8803db'
          '9ab61b206beb5718af841dc1ff2454e8')
 
 package() {
-	cd "$srcdir/ccr-$pkgver"
-
-	install -m 644 -D ccr.8 "$pkgdir/usr/share/man/man8/ccr.8"
-
-	cd $srcdir
+	cd "$srcdir"
 	install -m 755 -D ccr "$pkgdir/usr/bin/ccr"
+	install -m 644 -D ccr.8 "$pkgdir/usr/share/man/man8/ccr.8"
     
-	install -m 775 -D ccr-tools "$pkgdir/usr/bin/ccr-vote"
+	install -m 775 -D ccr-tools "$pkgdir/usr/bin/ccr-tools"
 	install -m 644 -D ccr-tools.8 "$pkgdir/usr/share/man/man8/ccr-tools.8"
 }
