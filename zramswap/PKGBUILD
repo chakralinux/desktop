@@ -1,0 +1,19 @@
+#
+# Apps Packages for Chakra, part of chakra-project.org
+#
+# Maintainer: george <george[at]chakra-project[dot]org>
+
+pkgname=zramswap
+pkgver=0.2
+pkgrel=1
+pkgdesc="Sets up zram swap devices on boot."
+arch=('any')
+url="http://www.webupd8.org/2011/10/increased-performance-in-linux-with.html"
+license=('GPL')
+install=$pkgname.install
+source=('zramswap.rc.d')
+md5sums=('630d83824f13b192721a113aad862c57')
+
+package() {
+        install -Dm755 zramswap.rc.d "$pkgdir/etc/rc.d/zramswap"
+}
