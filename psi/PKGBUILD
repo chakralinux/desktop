@@ -4,12 +4,9 @@
 # maintainer (i686): Phil Miller <philm[at]chakra-project[dog]org>
 # maintainer (x86_64): Manuel Tortosa <manutortosa[at]chakra-project[dot]org>
 
-# include global config
-source ../_buildscripts/${current_repo}-${_arch}-cfg.conf
-
 pkgname=psi
 pkgver=0.14
-pkgrel=4
+pkgrel=6
 pkgdesc='Instant messaging application designed for the Jabber IM'
 url='http://psi-im.org/'
 license=('GPL')
@@ -18,15 +15,18 @@ depends=('qca-ossl' 'qca-gnupg' 'enchant' 'libxss' 'xdg-utils')
 categories=('communication')
 install='psi.install'
 source=("http://downloads.sourceforge.net/psi/psi-${pkgver}.tar.bz2"
-        'chakralinux.patch')
+        'chakralinux.patch'
+	'gcc-47.patch')
 md5sums=('9d7dcce3bcab53b741a712199bd986be'
-         '4f41758f1ddff5cb2ac3396895da3530')
+         '4f41758f1ddff5cb2ac3396895da3530'
+         'f91c1f36c97a1a9d7f93c9b1efb5a047')
 
 build() {
 	cd $srcdir/psi-${pkgver}
 	patch -p1 -i $srcdir/chakralinux.patch
-	./configure --prefix=/usr --disable-bundled-qca || return 1
-	make || return 1
+	patch -p0 -i $srcdir/gcc-47.patch
+	./configure --prefix=/usr --disable-bundled-qca
+	make
 }
 
 package() {
