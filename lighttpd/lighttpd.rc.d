@@ -37,6 +37,7 @@ test_config() {
 		stat_die
 	fi
 
+	mkdir -p /var/{run,log,cache}/lighttpd
 	local d
 	for d in /var/{run,log,cache}/lighttpd; do
 		if [ ! -d $d ]; then
