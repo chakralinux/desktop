@@ -5,33 +5,34 @@
 # Contributor: Andrej Gelenberg <andrej.gelenberg@udo.edu>
 
 pkgname=openbsd-netcat
-_pkgver=1.89
-_pkgver_debrel=4
+_pkgver=1.105
+_pkgver_debrel=6
 pkgver="${_pkgver}.${_pkgver_debrel}"
 pkgrel=1
 pkgdesc="TCP/IP swiss army knife. OpenBSD variant."
 arch=('i686' 'x86_64')
 url="http://packages.debian.org/sid/netcat-openbsd"
 license=('BSD')
-depends=('glib2')
+depends=('glib2' 'libbsd')
 makedepends=('gcc' 'make')
 source=("http://ftp.debian.org/debian/pool/main/n/netcat-openbsd/netcat-openbsd_${_pkgver}.orig.tar.gz"
-        "http://ftp.debian.org/debian/pool/main/n/netcat-openbsd/netcat-openbsd_${_pkgver}-${_pkgver_debrel}.diff.gz")
-md5sums=('7238ce15aae43069e96ba7faf03f153e'
-         '00c65aa22243b76998174c733cbb64cc')
+        "http://ftp.debian.org/debian/pool/main/n/netcat-openbsd/netcat-openbsd_${_pkgver}-${_pkgver_debrel}.debian.tar.gz")
+md5sums=('7e67b22f1ad41a1b7effbb59ff28fca1'
+         '1928b269b86d404ffb8ff57d3ead1d2c')
 
 build() {
-  cd "${srcdir}/netcat-openbsd-${_pkgver}.orig"
-  patch -p1 < "../netcat-openbsd_${_pkgver}-${_pkgver_debrel}.diff"
-  for i in $(cat debian/patches/series); do
+  cd "${srcdir}/netcat-openbsd-${_pkgver}"
+  #patch -p1 < "../netcat-openbsd_${_pkgver}-${_pkgver_debrel}.diff"
+  for i in $(cat ../debian/patches/series); do
     echo "** patch ${i}" 1>&2
-    cat "debian/patches/${i}"
+    cat "../debian/patches/${i}"
   done | patch -p1
-  make CFLAGS="${CFLAGS} -DDEBIAN_VERSION=\"\\\"${_pkgver_debrel}\\\"\""
+  make CFLAGS="${CFLAGS} -DDEBIAN_VERSION=\"\\\"${_pkgver_debrel}\\\"\" -I/usr/include/libbsd" \
+    LDFLAGS="$LDFLAGS -lbsd"
 }
 
 package() {
-  cd "${srcdir}/netcat-openbsd-${_pkgver}.orig"
+  cd "${srcdir}/netcat-openbsd-${_pkgver}"
   install -d "${pkgdir}/usr/bin"
   install -d "${pkgdir}/usr/share/man/man1"
   install nc "${pkgdir}/usr/bin/nc.openbsd"
