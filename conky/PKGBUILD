@@ -1,15 +1,11 @@
 #
 # Apps Packages for Chakra, part of chakra-project.org
 #
-# maintainer (i686): Phil Miller <philm[at]chakra-project[dog]org>
-# maintainer (x86_64): Manuel Tortosa <manutortosa[at]chakra-project[dot]org>
-
-# include global config
-source ../_buildscripts/${current_repo}-${_arch}-cfg.conf
+# maintainer abveritas@chakra-project.org
 
 pkgname=conky
-pkgver=1.8.1
-pkgrel=2
+pkgver=1.9.0
+pkgrel=1
 pkgdesc="An advanced, highly configurable system monitor for X based on torsmo"
 arch=('i686' 'x86_64')
 url="http://conky.sourceforge.net/"
@@ -20,7 +16,7 @@ makedepends=('pkgconfig')
 categories=('utils')
 backup=(etc/conky/conky.conf etc/conky/conky_no_x11.conf)
 source=(http://downloads.sourceforge.net/project/${pkgname}/${pkgname}/${pkgver}/${pkgname}-${pkgver}.tar.bz2)
-md5sums=('366dc6a5c2ebebfbe6f53da25061b5d6')
+md5sums=('d3de615f43aadc98d555e05ad9e902c2')
 
 build() {
   cd "${srcdir}/${pkgname}-${pkgver}"
@@ -31,7 +27,11 @@ build() {
 	      --enable-ibm \
 	      --enable-imlib2 \
 	      --disable-lua
-  make || return 1
-  make DESTDIR="${pkgdir}" install || return 1
+  make 
+}
+
+package() {
+  cd "${srcdir}/${pkgname}-${pkgver}"
+  make DESTDIR="${pkgdir}" install 
   install -D -m644 COPYING ${pkgdir}/usr/share/licenses/${pkgname}/LICENSE
 }
