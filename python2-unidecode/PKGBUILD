@@ -1,0 +1,23 @@
+#
+# Apps Packages for Chakra, part of chakra-project.org
+#
+# Maintanier: Adrián Chaves Fernández (Gallaecio) <adriyetichaves@gmail.com>
+# Contributor: Matias Moreno <mmoreno80@gmail.com>
+
+pkgname=python2-unidecode
+_pkgname=Unidecode
+pkgver=0.04.9
+pkgrel=1
+pkgdesc='ASCII transliterations of Unicode text.'
+arch=('any')
+license=('PerlArtistic')
+url="http://pypi.python.org/pypi/Unidecode/"
+depends=('python2')
+source=(http://pypi.python.org/packages/source/U/$_pkgname/$_pkgname-$pkgver.tar.gz)
+md5sums=('c156f2cf31dd186532f8b993629b5b91')
+
+package() {
+  cd $srcdir/$_pkgname-$pkgver
+
+  python2 setup.py install --prefix=/usr --root=$pkgdir
+}
