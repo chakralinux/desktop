@@ -24,6 +24,8 @@ md5sums=('bdc9bc0aa631af1aa7fb450507611a58'
 build() {
     cd $srcdir/$pkgname-$_pkgver-src
 
+    sed -i "1 i #include <unistd.h>" src/main.cc
+
     mkdir -p build/compile && cd build/compile
 
     cmake \
