@@ -6,8 +6,8 @@
 
 pkgname=oxygen-gtk3
 pkgver=1.1.4
-_pkgver=1.0.2-1 # can we change pkgver to 1.0.2_1 ?
-pkgrel=6
+_pkgver=1.0.4
+pkgrel=7
 pkgdesc="The Oxygen engine for GTK3, for better Qt/GKT+ integration."
 arch=('i686' 'x86_64')
 url=("http://projects.kde.org/projects/playground/artwork/oxygen-gtk/")
@@ -19,11 +19,10 @@ categories=('system')
 groups=('gtk-integration')
 
 source=("http://download.kde.org/stable/${pkgname}/${_pkgver}/src/${pkgname}-${_pkgver}.tar.bz2")
-
-md5sums=('e4cd32bc1169db39d4e29141449979a4')
+md5sums=('793786ee97f2d0601ed50a82fc95db25')
 
 build() {
-	cd $srcdir/oxygen-gtk3-$_pkgver
+	cd $srcdir/$pkgname-$_pkgver
 	rm -rf build
 	mkdir build && cd build
 	cmake -DCMAKE_BUILD_TYPE=Release \
@@ -33,6 +32,6 @@ build() {
 }
 
 package() {
-	cd $srcdir/oxygen-gtk3-$_pkgver/build
+	cd $srcdir/$pkgname-$_pkgver/build
 	make DESTDIR="${pkgdir}" install
 }

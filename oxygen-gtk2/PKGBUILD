@@ -4,7 +4,7 @@
 # maintainer: Manuel Tortosa <manutortosa[at]chakra-project[dot]org>
 
 pkgname=oxygen-gtk2
-pkgver=1.1.6
+pkgver=1.2.4
 pkgrel=2
 
 pkgdesc="The Oxygen engine for GTK2, for better Qt/GKT+ integration."
@@ -18,11 +18,11 @@ conflicts=('oxygen-gtk')
 categories=('system')
 groups=('gtk-integration')
 
-source=("ftp://ftp.caliu.cat/pub/mirrors/kde/stable/oxygen-gtk/$pkgver/src/oxygen-gtk-$pkgver.tar.bz2")
-md5sums=('714cd895e276cfd20a43b406a78ae6af')
+source=("http://download.kde.org/stable/${pkgname}/${pkgver}/src/${pkgname}-${pkgver}.tar.bz2")
+md5sums=('107c56ae519483fcb747b751680bbf37')
 
 build() {
-	cd $srcdir/oxygen-gtk-$pkgver
+	cd $srcdir/$pkgname-$pkgver
 	rm -rf build
 	mkdir build && cd build
 	cmake -DCMAKE_BUILD_TYPE=Release \
@@ -32,6 +32,6 @@ build() {
 }
 
 package() {
-	cd $srcdir/oxygen-gtk-$pkgver/build
+	cd $srcdir/$pkgname-$pkgver/build
 	make DESTDIR="${pkgdir}" install
 }
