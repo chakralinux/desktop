@@ -1,14 +1,11 @@
 #
-# Chakra Packages for Chakra, part of chakra-project.org
+# Apps Packages for Chakra, part of chakra-project.org
 #
 # maintainer (i686): Phil Miller <philm[at]chakra-project[dog]org>
 # maintainer (x86_64): Manuel Tortosa <manutortosa[at]chakra-project[dot]org>
 
-# include global config
-source ../_buildscripts/${current_repo}-${_arch}-cfg.conf
-
 pkgname=kdenlive
-pkgver=0.8.2.1
+pkgver=0.9
 pkgrel=1
 pkgdesc="A non-linear video editor for Linux"
 arch=('i686' 'x86_64')
@@ -19,14 +16,15 @@ optdepends=("dvdauthor: for creating dvds"
 	    "recordmydesktop: for desktop-recordings")
 makedepends=('automoc4' 'cmake' 'gettext' 'docbook-xsl')
 categories=('multimedia')
-source=(http://downloads.sourceforge.net/kdenlive/kdenlive-$pkgver.tar.gz)
-md5sums=('96b39531eba98c77546e7eba45a744ce')
+source=(http://download.kde.org/stable/$pkgname/$pkgver/src/$pkgname-$pkgver.tar.gz)
+md5sums=('8ceb59444df9aa950fd6bc7300c4a90d')
+screenshot=('http://kdenlive.org/sites/default/files/kdenlive-090a_0.png')
 
 build() {
   export LDFLAGS="$LDFLAGS -lX11"
 
   cd "$srcdir/$pkgname-$pkgver"
-  
+
   cmake \
     -DCMAKE_BUILD_TYPE=Release \
     -DCMAKE_INSTALL_PREFIX=/usr \
