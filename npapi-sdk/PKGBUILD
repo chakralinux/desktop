@@ -1,0 +1,27 @@
+#
+# Apps Packages for Chakra, part of chakra-project.org
+#
+# maintainer (i686): Phil Miller <philm[at]chakra-project[dog]org>
+# maintainer (x86_64): Manuel Tortosa <manutortosa[at]chakra-project[dot]org>
+
+pkgname=npapi-sdk
+pkgver=0.27
+pkgrel=1
+pkgdesc="Netscape Plugin API (NPAPI)"
+arch=(any)
+url="https://github.com/mgorny/npapi-sdk/"
+license=('MPL')
+source=(https://github.com/downloads/mgorny/$pkgname/$pkgname-$pkgver.tar.bz2)
+md5sums=('b5e63f4452ddd6351d29333951fb1640')
+
+build() {
+  cd "$srcdir/$pkgname-$pkgver"
+  ./configure --prefix=/usr
+  make
+}
+
+package() {
+  cd "$srcdir/$pkgname-$pkgver"
+  make DESTDIR="$pkgdir" install
+}
+
