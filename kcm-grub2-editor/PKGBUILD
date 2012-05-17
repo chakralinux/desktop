@@ -1,0 +1,38 @@
+#
+# Apps Packages for Chakra, part of chakra-project.org
+#
+# maintainer abveritas@chakra-project.org
+
+pkgname=grub2-editor
+_pkgname=kcm-grub2
+pkgver=0.5.5
+pkgdesc="A KDE4 control module for configuring the GRUB2 bootloader."
+pkgrel=2
+arch=('i686' 'x86_64')
+_kdeapps=139643
+url="http://kde-apps.org/content/show.php?content=${_kdeapps}"
+license=('GPL3')
+makedepends=('cmake' 'automoc4')
+depends=('kdelibs' 'hwinfo' 'imagemagick')
+categories=('system')
+source=("http://sourceforge.net/projects/kcm-grub2/files/${pkgver}/${_pkgname}-${pkgver}.tar.gz")
+md5sums=('90871941e8b8138902f2dbf76427e162')
+
+build(){
+  cd "${srcdir}/${_pkgname}-${pkgver}"
+
+  mkdir -p build
+  cd build
+
+  cmake -DCMAKE_INSTALL_PREFIX=/usr \
+        -DCMAKE_BUILD_TYPE=RelWithDebInfo  \
+        ../
+  make
+}
+
+package(){
+  cd "${srcdir}/${_pkgname}-${pkgver}/build"
+  make DESTDIR="${pkgdir}" install
+}
+
+# vim:set ts=2 sw=2 et:
