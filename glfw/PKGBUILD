@@ -4,7 +4,7 @@
 # Maintainer: Adrián Chaves Fernández (Gallaecio) <adriyetichaves gmail.com>
 
 pkgname=glfw
-pkgver=2.7.3
+pkgver=2.7.5
 pkgrel=1
 pkgdesc="A free, open source, portable framework for OpenGL application development."
 arch=('i686' 'x86_64')
@@ -12,14 +12,14 @@ url="http://glfw.sourceforge.net/"
 license=('ZLIB')
 depends=('mesa' 'xorg-server')
 source=(http://sunet.dl.sourceforge.net/sourceforge/$pkgname/$pkgname-$pkgver.tar.bz2 )
-md5sums=('f0e40049cc3ef30cb145047a7631ab3f')
+md5sums=('b9ef11d08b6283b1b4a274fcf995fd79')
 
 build() {
   cd $srcdir/$pkgname-$pkgver
 
   mkdir -p $pkgdir/usr/lib $pkgdir/usr/include/GL
-
-  make x11
+  CXXFLAGS="" \
+  make VERBOSE=1 x11
 }
 
 package() {
