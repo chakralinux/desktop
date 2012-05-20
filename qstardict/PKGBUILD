@@ -3,11 +3,8 @@
 #
 # contributor (x86_64): Giuseppe Calà <jiveaxe@gmail.com>
 
-# include global config
-source ../_buildscripts/${current_repo}-${_arch}-cfg.conf
-
 pkgname=qstardict
-pkgver=1.0
+pkgver=1.0.1
 pkgrel=1
 pkgdesc="Qt4 clone of StarDict with full support of StarDict dictionaries."
 arch=('i686' 'x86_64')
@@ -20,12 +17,15 @@ optdepends=('festival-awb-arctic: for pronouncing words, Scottish English male s
             'festival-rablpc16k: for pronouncing words, British English RP male speaker')
 provides=('stardict')
 categories=('utils')
-source=(http://qstardict.ylsoftware.com/files/${pkgname}-${pkgver}.tar.bz2)
-        
-md5sums=('07f97bd61a5f64f0c8f80f68bd1ed07c')
+screenshot=('http://qstardict.ylsoftware.com/images/screenshot1.png')
+source=(http://qstardict.ylsoftware.com/files/${pkgname}-${pkgver}.tar.bz2
+        stardict_new.diff)       
+md5sums=('4e058439edad45103a9f5c74d2a381e5'
+         '0d4da45440c0d34ed06f82fc4f142e07')
 
 build() {
   cd ${srcdir}/$pkgname-$pkgver
+  patch -p1 -i ${srcdir}/stardict_new.diff
 
   qmake ENABLED_PLUGINS="stardict web swac" 
   make 
