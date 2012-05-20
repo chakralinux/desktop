@@ -1,0 +1,39 @@
+#
+# Chakra Packages for Chakra, part of chakra-project.org
+#
+# maintainer abveritas@chakra-project.org
+
+pkgname=kdeplasma-applets-ccr-plasmoid
+pkgver=0.1.0
+pkgrel=1
+depends=('kdebase-workspace')
+makedepends=('make' 'cmake' 'automoc4')
+pkgdesc="Plasmoid for handle the Chakra Community Repo"
+arch=("i686" "x86_64")
+license=('GPL')
+categories=('accessories')
+screenshot=('')
+url="http://chakra-project.org/"
+
+source=("http://chakra-linux.org/sources/ccr-plasmoid/ccr-plasmoid-$pkgver.tar.xz")
+md5sums=('91b90a090993054071babc1a6fe7a9cb')
+
+# create tarball: source PKGBUILD && mksource
+
+mksource() {
+  git clone git://gitorious.org//chakra/ccr-plasmoid.git
+  pushd ccr-plasmoid
+  popd
+  tar -cvJf ccr-plasmoid-${pkgver}.tar.xz ccr-plasmoid/*
+  md5sum ccr-plasmoid-${pkgver}.tar.xz
+}
+
+build() {
+        cd "${srcdir}/ccr-plasmoid"
+        
+        cmake  \
+          -DCMAKE_INSTALL_PREFIX=/usr \
+          -DCMAKE_BUILD_TYPE=Release
+        make 
+        make DESTDIR=${pkgdir} install 
+}
