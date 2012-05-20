@@ -1,22 +1,21 @@
 #
-# Chakra Packages for Chakra, part of chakra-project.org
+# Apps Packages for Chakra, part of chakra-project.org
 #
-# maintainer (i686): Phil Miller <philm[at]chakra-project[dog]org>
-# maintainer (x86_64): Manuel Tortosa <manutortosa[at]chakra-project[dot]org>
+# maintainer abveritas@chakra-project.org
 
 pkgname=kile
-pkgver=2.1
+pkgver=2.1.2
 pkgrel=1
 pkgdesc="A user friendly TeX/LaTeX frontend for KDE."
 arch=("i686" "x86_64")
 license=('GPL2')
 url="http://kile.sourceforge.net/"
-depends=('kdelibs' 'texlive-core' 'docbook-xsl')
+depends=('kdelibs' 'texlive-core' 'docbook-xsl' 'kdesdk-kate')
 makedepends=('cmake' 'automoc4')
 categories=('office')
 install=kile.install
 source=("http://downloads.sourceforge.net/$pkgname/$pkgname-$pkgver.tar.bz2")
-md5sums=('9f76960ee477cc95f77a31a468b66e0a')
+md5sums=('52c2abbc329609d270a0cbfcaad9378a')
 
 build() {
   cd ${srcdir}
@@ -26,10 +25,10 @@ build() {
     -DCMAKE_BUILD_TYPE=Release \
     -DCMAKE_SKIP_RPATH=ON \
     -DCMAKE_INSTALL_PREFIX=/usr
-  make || return 1
+  make 
 }
 
 package() {
   cd ${srcdir}/build
-  make DESTDIR=$pkgdir install || return 1
+  make DESTDIR=$pkgdir install 
 }
