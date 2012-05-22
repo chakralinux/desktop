@@ -21,7 +21,7 @@ install=calibre.install
 source=(http://downloads.sourceforge.net/${pkgname}/${pkgname}-${pkgver}.tar.xz
         desktop_integration.patch)
 md5sums=('0842bdd815d5fe014ec6dac6a581a8e8'
-         'b807b81eab2779a43d8430fdfea966a6')
+         'ed9b53a3cf8b3f55aa4f7891e6b45a41')
 
 build() {
   cd "${srcdir}/${pkgname}"
@@ -58,9 +58,4 @@ package() {
     --staging-sharedir=${pkgdir}/usr/share
 
   find ${pkgdir} -type d -empty -delete
-
-  # Decompress the man pages so makepkg will do it for us.
-  for decom in ${pkgdir}/usr/share/man/man1/*.bz2; do
-    bzip2 -d ${decom}
-  done
 }
