@@ -1,43 +1,33 @@
 # Maintainer: Kuba Serafinowski <zizzfizzix(at)gmail(dot)com>
 # https://github.com/zizzfizzix/pkgbuilds
 
-##############################################################
-#### The section below can be adjusted to suit your needs ####
-##############################################################
-
-# What type of build do you want?
-# See http://techbase.kde.org/Development/CMake/Addons_for_KDE#Buildtypes to check what is supported.
-# Default is RelWithDebInfo to help with debugging.
-
-_buildtype="RelWithDebInfo"
-
-##############################################################
-
 pkgname=csync
 pkgver=0.50.6
-pkgrel=4
+pkgrel=5
 pkgdesc="A file synchronizer especially designed for you, the normal user."
 arch=("i686" "x86_64")
 url="http://www.csync.org"
 license=('GPL2')
-depends=('log4cxx' 'sqlite3' 'iniparser')
+depends=('log4cxx' 'sqlite3' 'iniparser' 'neon')
 makedepends=('cmake' 'smbclient' 'libssh')
-optdepends=('samba: smb support' 'libssh: sftp support')
-options=(!strip)
+optdepends=('samba: smb support'
+            'libssh: sftp support')
+options=()
 source=("http://download.owncloud.com/download/${pkgname}-${pkgver}.tar.bz2")
 md5sums=('c3972402b32b601fcab8dddc3e67a4d7')
 
-# Clean options array to strip pkg if release buildtype is chosen
-if [[ ${_buildtype} == "Release" ]] || [[ ${_buildtype} == "release" ]]; then
-  options=()
-fi
-
 build() {
-  if [[ -e ${srcdir}/${pkgname}-${pkgver}-build ]]; then rm -rf ${srcdir}/${pkgname}-${pkgver}-build; fi
+  if [[ -e ${srcdir}/${pkgname}-${pkgver}-build ]]; then
+    rm -rf ${srcdir}/${pkgname}-${pkgver}-build;
+  fi
+  
   mkdir ${srcdir}/${pkgname}-${pkgver}-build
+  
   cd ${srcdir}/${pkgname}-${pkgver}-build
   
-  cmake -DCMAKE_BUILD_TYPE=${_buildtype} -DCMAKE_INSTALL_PREFIX=/usr ../${pkgname}-${pkgver}
+  cmake  ../${pkgname}-${pkgver} \
+         -DCMAKE_BUILD_TYPE=${_buildtype} \
+         -DCMAKE_INSTALL_PREFIX=/usr 
   make
 }
 package() {
