@@ -1,0 +1,23 @@
+# Maintainer: Giuseppe Calà <jiveaxe@gmail.com>
+
+pkgname=csync
+pkgver=0.50.6
+pkgrel=2
+pkgdesc="A file synchronizer especially designed for you, the normal user"
+arch=("i686" "x86_64")
+license=('GPL2')
+url="http://www.csync.org"
+depends=('log4c' 'sqlite3' 'iniparser-legacy')
+makedepends=('cmake')
+optdepends=('samba: smb support' 'libssh: sftp support')
+source=(https://api.opensuse.org/public/source/isv:ownCloud:devel/$pkgname/$pkgname-$pkgver.tar.bz2)
+md5sums=('c3972402b32b601fcab8dddc3e67a4d7')
+
+build() {
+  cd $startdir/src/$pkgname-$pkgver
+  test -d build || mkdir build
+  cd build
+  cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=/usr .. || return 1
+  make || return 1
+  make DESTDIR=$startdir/pkg install || return 1
+}
