@@ -4,15 +4,15 @@
 # contributor (x86_64): Giuseppe Calà <jiveaxe@gmail.com>
 
 pkgname=calibre
-pkgver=0.8.52
+pkgver=0.8.53
 pkgrel=1
 pkgdesc="Ebook management application"
-arch=('i686' 'x86_64') 
+arch=('i686' 'x86_64')
 url="http://calibre.kovidgoyal.net/"
 license=('GPL3')
 depends=('python2' 'python-imaging' 'libusb' 'pyqt' 'python-mechanize'
          'imagemagick' 'dbus-python' 'python-lxml' 'beautiful-soup' 'python-dateutil'
-         'python-cssutils' 'desktop-file-utils' 'python-dnspython' 
+         'python-cssutils' 'desktop-file-utils' 'python-dnspython'
          'podofo>=0.8.1-6' 'xdg-utils' 'cherrypy' 'python-pypdf' 'unrar' 'chmlib' 'poppler' 'poppler-qt' 'icu' 'libwmf' 'libffi')
 makedepends=('python-pycountry')
 optdepends=('ipython: to use calibre-debug')
@@ -31,14 +31,14 @@ build() {
   sed -i -e 's:\(#!/usr/bin/env[ ]\+python$\|#!/usr/bin/python$\):\12:g' \
     $(find . -regex ".*.py\|.*.recipe")
 
-  python setup.py build 
+  python setup.py build
   #python setup.py resources
   python setup.py translations
 }
 
 package() {
   cd ${pkgname}
-  
+
   patch -Np1 -i $srcdir/desktop_integration.patch
 
   # More on desktop integration (e.g. enforce chakra defaults)
