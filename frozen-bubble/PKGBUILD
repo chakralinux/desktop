@@ -7,7 +7,7 @@
 pkgname=frozen-bubble
 _pkgver=2.2.1-beta1
 pkgver=2.2.1b1
-pkgrel=1
+pkgrel=2
 pkgdesc="A game in which you throw colorful bubbles and build groups to destroy the bubbles"
 arch=('i686' 'x86_64')
 url="http://www.frozen-bubble.org"
@@ -17,7 +17,7 @@ makedepends=('perl-file-slurp' 'perl-locale-maketext-lexicon')
 options=('!emptydirs')
 categories=('games')
 source=("http://www.frozen-bubble.org/data/${pkgname}-${_pkgver}.tar.bz2"
-        frozen-bubble.desktop)
+        'frozen-bubble.desktop')
 md5sums=('825cc23ed806838b9d86de9982a5687a'
          '3e0755836580e374e0911653f8cd33e2')
 
@@ -37,6 +37,14 @@ package() {
 
   find "${pkgdir}" -name '.packlist' -delete
   find "${pkgdir}" -name '*.pod' -delete
+
+  # Move the binaries in the correct location...
+  for binary in 'fb-server' 'frozen-bubble' 'frozen-bubble-editor'; do
+    mv "${pkgdir}/usr/bin/vendor_perl/${binary}" "${pkgdir}/usr/bin/${binary}"
+  done
+
+  # ...and remove the wrong directory.
+  rm -rf "${pkgdir}/usr/bin/vendor_perl"
 }
 
 # vim:set ts=2 sw=2 et:
