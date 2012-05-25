@@ -5,8 +5,8 @@
 
 pkgbase=0ad
 pkgname=($pkgbase $pkgbase-debug $pkgbase-data)
-pkgver=alpha_9
-_pkgver=r11339-alpha
+pkgver=alpha_10
+_pkgver=r11863-alpha
 pkgrel=1
 pkgdesc="Cross-platform, 3D and historically-based real-time strategy game"
 screenshot=http://www.wildfiregames.com/0ad/images/news_images/dynamic-borders.jpg
@@ -18,13 +18,13 @@ categories=('games')
 changelog=ChangeLog
 source=(http://downloads.sourceforge.net/project/zero-ad/releases/$pkgbase-$_pkgver-unix-build.tar.xz
 	http://downloads.sourceforge.net/project/zero-ad/releases/$pkgbase-$_pkgver-unix-data.tar.xz)
-md5sums=('6db1e62215654269516f5eb1eec371f1'
-         'da65e2eda05f054c595d1921bcdbda1e')
+md5sums=('f42a2e18515cbcd48b99f0ea3796b3a4'
+         'a0cc5004e243f8aa5d50f1cf5c36159e')
 
 build() {
   cd $srcdir/$pkgbase-$_pkgver/build/workspaces
 
-  # NOTE: These sed commands are not likely to be changed between releases, like most patches.
+  # NOTE: These sed commands are *not* likely to be changed between releases, like most patches.
   sed \
     -e 's/unix_names = { "boost_filesystem-mt", "boost_system-mt" },/unix_names = { "boost_filesystem", "boost_system" },/g' \
     -e 's/unix_names = { "boost_signals-mt" },/unix_names = { "boost_signals" },/g' \
