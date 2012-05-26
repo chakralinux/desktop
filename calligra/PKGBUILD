@@ -37,16 +37,13 @@ makedepends=('kdepimlibs' 'eigen' 'freetds' 'kdegraphics-okular' 'kdeedu-marble'
              'boost' 'libkdcraw' 'libpqxx' 'fftw' 'opengtl' 'docbook-xsl' 'create-resources' 'lcms2' 'qrencode' 'libdmtx')
 groups=('calligra')
 source=("http://mirrors.mit.edu/kde/stable/${pkgbase}-${pkgver}/${pkgbase}-${pkgver}.tar.bz2")
-        #'KoColorSetwithQPointer.diff' 'Make_KoColorSet_QObject.diff')
 screenshot=("http://upload.wikimedia.org/wikipedia/commons/thumb/3/3e/Calligra_Stage_2.4.png/800px-Calligra_Stage_2.4.png")
 md5sums=('31b0c44ad4ee27017580c7c2fc8e87a9')
-         #'4fec7b571f43e1418855b77a29393e93'
-         #'d4f068106218ebe97a3a8792151b993a')
+
 
 build() {
   cd "${srcdir}"
-  #patch -p1 -i "${srcdir}/KoColorSetwithQPointer.diff"
-  #patch -p1 -i "${srcdir}/Make_KoColorSet_QObject.diff"
+
   mkdir build
   cd build
   cmake ../${pkgbase}-${pkgver} \
