@@ -27,8 +27,8 @@ pkgname=('calligra-filters'
          'calligra-thesaurus-doc'
          'calligra-braindump'
          'calligra-flow')
-pkgver=2.4.1
-pkgrel=3
+pkgver=2.4.2
+pkgrel=1
 arch=('i686' 'x86_64')
 url='http://www.calligra-suite.org'
 license=('FDL1.2' 'GPL2' 'LGPL')
@@ -36,17 +36,17 @@ makedepends=('kdepimlibs' 'eigen' 'freetds' 'kdegraphics-okular' 'kdeedu-marble'
              'libgsf' 'libwpd' 'libwpg' 'pstoedit' 'glew' 'gsl' 'cmake' 'automoc4' 'libspnav' 'libqtgtl'
              'boost' 'libkdcraw' 'libpqxx' 'fftw' 'opengtl' 'docbook-xsl' 'create-resources' 'lcms2' 'qrencode' 'libdmtx')
 groups=('calligra')
-source=("http://mirrors.mit.edu/kde/stable/${pkgbase}-${pkgver}/${pkgbase}-${pkgver}.tar.bz2"
-        'KoColorSetwithQPointer.diff' 'Make_KoColorSet_QObject.diff')
+source=("http://mirrors.mit.edu/kde/stable/${pkgbase}-${pkgver}/${pkgbase}-${pkgver}.tar.bz2")
+        #'KoColorSetwithQPointer.diff' 'Make_KoColorSet_QObject.diff')
 screenshot=("http://upload.wikimedia.org/wikipedia/commons/thumb/3/3e/Calligra_Stage_2.4.png/800px-Calligra_Stage_2.4.png")
-md5sums=('a4da7e1181e1539850a4fcae466d7d75'
-         '4fec7b571f43e1418855b77a29393e93'
-         'd4f068106218ebe97a3a8792151b993a')
+md5sums=('31b0c44ad4ee27017580c7c2fc8e87a9')
+         #'4fec7b571f43e1418855b77a29393e93'
+         #'d4f068106218ebe97a3a8792151b993a')
 
 build() {
   cd "${srcdir}"
-  patch -p1 -i "${srcdir}/KoColorSetwithQPointer.diff"
-  patch -p1 -i "${srcdir}/Make_KoColorSet_QObject.diff"
+  #patch -p1 -i "${srcdir}/KoColorSetwithQPointer.diff"
+  #patch -p1 -i "${srcdir}/Make_KoColorSet_QObject.diff"
   mkdir build
   cd build
   cmake ../${pkgbase}-${pkgver} \
@@ -56,8 +56,7 @@ build() {
     -DBUILD_active=OFF \
     -DBUILD_mobile=OFF \
     -DBUILD_mysql=OFF \
-    -DKDCRAW_LOCAL_FOUND=/usr/lib/libkdcraw.so \
-    -DIHAVEPATCHEDQT=1
+    -DKDCRAW_LOCAL_FOUND=/usr/lib/libkdcraw.so 
   make
 }
 
