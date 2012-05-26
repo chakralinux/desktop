@@ -36,7 +36,8 @@ build() {
 	cd ${srcdir}/${_pkgname}-${pkgver}
         patch -p1 -i "${srcdir}/krubypluginfactory.diff"
 	cmake . -DCMAKE_BUILD_TYPE=${_build_type} \
-                -DCMAKE_INSTALL_PREFIX=${_installprefix} 
+                -DCMAKE_INSTALL_PREFIX=${_installprefix} \
+                -DWITH_Soprano=OFF
         make
 }
 

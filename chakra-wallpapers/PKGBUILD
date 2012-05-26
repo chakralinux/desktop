@@ -1,44 +1,31 @@
 #
 # Chakra Packages for Chakra, part of chakra-project.org
 #
-# maintainer (i686): Phil Miller <philm[at]chakra-project[dog]org>
-# maintainer (x86_64): Manuel Tortosa <manutortosa[at]chakra-project[dot]org>
-
-# include global config
-source ../_buildscripts/${current_repo}-${_arch}-cfg.conf
+# maintainer: Manuel Tortosa <manutortosa[at]chakra-project[dot]org>
 
 #
 # package info
 #
-pkgname=kde-wallpapers
-pkgver=${_kdever}
+pkgname=("chakra-wallpapers-crunchy-branch-blue"
+	 "chakra-wallpapers-ashoc"
+	 "chakra-wallpapers-neda"
+	 "chakra-wallpapers-ronak"
+	 "chakra-wallpapers-ronak-light")
+pkgver=0.1
 pkgrel=1
-
-_default_wp="Ariya"
-
-pkgbase="kde-wallpapers"
-pkgname=("kde-wallpapers"
-	 "kde-wallpapers-crunchy-branch-blue"
-	 "kde-wallpapers-ashoc"
-	 "kde-wallpapers-neda"
-	 "kde-wallpapers-ronak"
-	 "kde-wallpapers-ronak-light")
-
-pkgdesc="KDE Wallpapers for Chakra"
+pkgdesc="Chakra Wallpapers for KDE"
 url="http://www.chakra-project.org"
 license="GPL"
 arch=('any')
 options=('!splithdr' 'splitdbg')
 groups=("kde" "kde-uninstall")
 
-source=("$_mirror/${pkgbase}-$_kdever.tar.xz"
-	"http://chakra.sourceforge.net/sources/kde-wallpapers/kde-wallpapers-crunchy-branch-blue-1.0.tar.gz"
+source=("http://chakra.sourceforge.net/sources/kde-wallpapers/kde-wallpapers-crunchy-branch-blue-1.0.tar.gz"
 	"http://chakra.sourceforge.net/sources/kde-wallpapers/kde-wallpapers-ashoc-1.0-2.tar.gz"
 	"http://chakra.sourceforge.net/sources/neda/NEDA.tar.gz"
 	"http://chakra.sourceforge.net/sources/ronak/ronak-wallpaper-1.0.tar.gz"
 	"http://chakra.sourceforge.net/sources/ronak/ronak-light-wallpaper-1.0.tar.gz")
-md5sums=(`grep ${pkgbase}-$_kdever.tar.xz ../kde-sc.md5 | cut -d" " -f1`
-	 "52d75a03f18204dde7965bd3dccb9ce4"  #  kde-wallpapers-crunchy-branch-blue-1.0.tar.gz
+md5sums=("52d75a03f18204dde7965bd3dccb9ce4"  #  kde-wallpapers-crunchy-branch-blue-1.0.tar.gz
 	 "e6a3a7e170a739d226c180f5c2a09618"  #  kde-wallpapers-ashoc-1.0-2.tar.gz
 	 "83686866b1e7313b77b3cf98c5c4ddc3"  #  NEDA.tar.gz
 	 "0ec4edb6308f647e8eedb4490b846008"
@@ -47,35 +34,12 @@ md5sums=(`grep ${pkgbase}-$_kdever.tar.xz ../kde-sc.md5 | cut -d" " -f1`
 makedepends=('automoc4')
 
 #
-# build function
-#
-build() {
-	msg "building official kde wallpapers"
-	cd ${srcdir}/${pkgbase}-${pkgver}
-
-	cmake . -DCMAKE_BUILD_TYPE=${_build_type} \
-		-DCMAKE_INSTALL_PREFIX=${_installprefix} \
-		-DCMAKE_{SHARED,MODULE,EXE}_LINKER_FLAGS='-Wl,--no-undefined -Wl,--as-needed'
-
-	make
-
-}
-
-#
 # split-install functions
 #
-package_kde-wallpapers() {
-	replaces=('kdebase-workspace-wallpapers')
-	cd ${srcdir}/${pkgbase}-${pkgver}
-	make DESTDIR=${pkgdir} install
-
-	rm -rfv ${pkgdir}/usr/share/wallpapers/${_default_wp}
-}
-
-package_kde-wallpapers-crunchy-branch-blue() {
-
+package_chakra-wallpapers-crunchy-branch-blue() {
 	pkgdesc="Crunchy-Branch Wallpaper (blue) by Carles Codony"
-	groups=("kde" "kde-complete" "kde-uninstall" "kde-minimal" "kde-wallpapers")
+	groups=("kde-uninstall" "chakra-wallpapers")
+        replaces=('kde-wa√±√llpapers-crunchy-branch-blue')
 
 	_WALLPAPER="crunchy-branch-blue"
 
@@ -91,10 +55,10 @@ package_kde-wallpapers-crunchy-branch-blue() {
 	sed -i -e "s~AUTHOR~Carles Codony~g" metadata.desktop
 }
 
-package_kde-wallpapers-ashoc() {
-
+package_chakra-wallpapers-ashoc() {
 	pkgdesc="Ashoc Wallpaper by Taner Candan"
-	groups=("kde" "kde-complete" "kde-uninstall" "kde-minimal" "kde-wallpapers")
+	groups=("kde-uninstall" "chakra-wallpapers")
+	replaces=('kde-wallpapers-ashoc')
 
 	_WALLPAPER="ashoc"
 
@@ -110,10 +74,10 @@ package_kde-wallpapers-ashoc() {
 	sed -i -e "s~AUTHOR~Taner Candan~g" metadata.desktop
 }
 
-package_kde-wallpapers-neda() {
-
-	pkgdesc="Chakra NEDA Theme by Roozbeh Shafiee "
-	groups=("kde" "kde-complete" "kde-uninstall" "kde-minimal" "kde-wallpapers")
+package_chakra-wallpapers-neda() {
+	pkgdesc="Chakra NEDA Theme by Roozbeh Shafiee"
+	groups=("kde-uninstall" "chakra-wallpapers")
+	replaces=('kde-wallpapers-neda')
 
 	_WALLPAPER="NEDA"
 
@@ -129,10 +93,11 @@ package_kde-wallpapers-neda() {
 	sed -i -e "s~AUTHOR~Roozbeh Shafiee~g" metadata.desktop
 }
 
-package_kde-wallpapers-ronak() {
+package_chakra-wallpapers-ronak() {
 
 	pkgdesc="Chakra Ronak Theme by Roozbeh Shafiee "
-	groups=("kde" "kde-complete" "kde-uninstall" "kde-minimal" "kde-wallpapers")
+	groups=("kde-uninstall" "chakra-wallpapers")
+        replaces=('kde-wallpapers-ronak')
 
 	_WALLPAPER="RONAK"
 
@@ -148,11 +113,12 @@ package_kde-wallpapers-ronak() {
 	sed -i -e "s~AUTHOR~Roozbeh Shafiee~g" metadata.desktop
 }
 
-package_kde-wallpapers-ronak-light() {
+package_chakra-wallpapers-ronak-light() {
 
 	pkgdesc="Chakra Ronak Theme by Roozbeh Shafiee "
-	groups=("kde" "kde-complete" "kde-uninstall" "kde-minimal" "kde-wallpapers")
-
+	groups=("kde-uninstall" "chakra-wallpapers")
+        replaces=('kde-wallpapers-ronak-light') 
+       
 	_WALLPAPER="RONAK-LIGHT"
 
 	cd ${srcdir}/ronak-light-wallpaper
