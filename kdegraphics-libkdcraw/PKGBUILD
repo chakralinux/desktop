@@ -1,7 +1,6 @@
 #
 # KDE SC Packages for Chakra, part of chakra-project.org
 #
-# maintainer (i686): Phil Miller <philm[at]chakra-project[dog]org>
 # maintainer (x86_64): Manuel Tortosa <manutortosa[at]chakra-project[dot]org>
 
 # include global config
@@ -19,7 +18,7 @@ arch=('i686' 'x86_64')
 url='http://www.kde.org'
 license=('GPL' 'LGPL' 'FDL')
 depends=("kdelibs>=${_kdever}" 'lcms' 'libjpeg')
-makedepends=('pkgconfig' 'cmake' 'automoc4')
+makedepends=('pkg-config' 'cmake' 'automoc4')
 source=("$_mirror/${_pkgname}-$_kdever.tar.xz")
 md5sums=(`grep ${_pkgname}-$_kdever.tar.xz ../kde-sc.md5 | cut -d" " -f1`)
 groups=("kde" "kdegraphics" "kde-uninstall")
@@ -27,8 +26,7 @@ conflicts=('kdegraphics-doc' 'libkdcraw')
 provides=('libkdcraw')
 options=('docs' '!splithdr' 'splitdbg' 'log')
 
-build()
-{
+build() {
 	cd ${srcdir}/${_pkgname}-${pkgver}
 	cmake . -DCMAKE_BUILD_TYPE=${_build_type} \
                 -DCMAKE_INSTALL_PREFIX=${_installprefix} \
@@ -37,8 +35,7 @@ build()
 
 }
 
-package()
-{
+package() {
 	cd ${srcdir}/${_pkgname}-${pkgver}
 	make DESTDIR=${pkgdir} install || return 1
 
