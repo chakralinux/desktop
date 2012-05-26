@@ -20,7 +20,7 @@ url="http://www.kde.org"
 license=('GPL' 'LGPL' 'FDL')
 install=${pkgbase}.install
 options=('docs' '!splithdr' 'splitdbg' 'log')
-depends=("kdepimlibs>=${_kdever}" "kde-runtime>=${_kdever}" "kdelibs>=${_kdever}" 'prison' 'libdmtx' 'qrencode')
+depends=("kdepimlibs>=${_kdever}" "kde-runtime>=${_kdever}" "kdelibs>=${_kdever}" 'prison' 'libdmtx' 'qrencode' 'libkgoogle')
 makedepends=('pkg-config' 'cmake' 'automoc4')
 groups=("kde" "kdepim" "kde-uninstall" "kde-minimal")
 
@@ -47,6 +47,6 @@ build() {
 }
 
 package() {
-    cd ${srcdir}/bui√ld
+    cd ${srcdir}/build
     make DESTDIR=${pkgdir} install
 }
