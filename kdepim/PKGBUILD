@@ -26,7 +26,6 @@ pkgname=('kdepim-common'
          'kdepim-korganizer'
          'kdepim-ktimetracker'
          'kdepim-mobile')
-         #'kdepim-wizards')
    
 arch=('i686' 'x86_64')
 pkgver=${_kdever}
@@ -36,17 +35,14 @@ url="http://www.kde.org"
 license=('GPL' 'LGPL' 'FDL')
 options=('!docs' '!splithdr' 'splitdbg' 'log')
 
-makedepends=('pkgconfig' 'cmake' 'automoc4' 'boost' "kdelibs>=${_kdever}" "kdepimlibs>=${_kdever}"
-             "kdepim-runtime" 'libxss' "kde-runtime" "libsamplerate" "qrencode" "libdmtx"
+makedepends=('pkg-config' 'cmake' 'automoc4' 'boost' "kdelibs>=${_kdever}" "kdepimlibs>=${_kdever}"
+             "kdepim-runtime>=${_kdever}" 'libxss' "kde-runtime" "libsamplerate" "qrencode" "libdmtx"
 	     'kde-agent' 'libindicate-qt>=0.2.2' 'docbook-xml' 'dblatex')
 
 
 source=($_mirror/${pkgbase}-${pkgver}.tar.xz)
 md5sums=(`grep ${pkgbase}-$_kdever.tar.xz ../kde-sc.md5 | cut -d" " -f1`)
 
-#
-# build function
-#
 build() {
 
 	cd ${srcdir}/${pkgbase}-${pkgver}
