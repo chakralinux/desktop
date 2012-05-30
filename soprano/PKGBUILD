@@ -8,7 +8,7 @@
 source ../_buildscripts/${current_repo}-${_arch}-cfg.conf
 
 pkgname=soprano
-pkgver=2.7.6
+pkgver=2.7.56
 pkgrel=1
 pkgdesc='A library which provides a highly usable object-oriented C++/Qt4 framework for RDF data'
 arch=('i686' 'x86_64')
@@ -17,7 +17,7 @@ license=('GPL' 'LGPL')
 depends=('qt' 'redland-storage-virtuoso' 'libiodbc' 'virtuoso>=6.1.3')
 makedepends=('cmake' 'openjdk6' 'doxygen')
 source=("http://downloads.sourceforge.net/${pkgname}/${pkgname}-${pkgver}.tar.bz2")
-md5sums=('8eee947956134ea4aa2d1e94ddbd551e')
+md5sums=('999781170ebcf3e1494127f2eda7aa00')
 
 build() {
   cd "${srcdir}"
@@ -25,7 +25,7 @@ build() {
   cd build
   . /etc/profile.d/openjdk6.sh
   # we need the rpath
-  cmake ../${pkgname}-${pkgver} \
+  cmake ../${pkgname}-${pkgver}-beta1 \
     -DCMAKE_BUILD_TYPE=Release \
     -DCMAKE_SKIP_RPATH=OFF \
     -DCMAKE_INSTALL_PREFIX=/usr \
