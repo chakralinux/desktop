@@ -19,10 +19,12 @@ pkgname=('libreoffice-common'
 	'libreoffice-extension-pdfimport'
 	'libreoffice-extension-presenter-screen'
 	'libreoffice-extension-presentation-minimizer'
-	'libreoffice-extension-report-builder')
-_LOver=3.5.3.2
-pkgver=3.5.3
-_pkgver=3.5.3
+	'libreoffice-extension-report-builder'
+	'libreoffice-scripting-javascript'
+	'libreoffice-extension-scripting-python')
+_LOver=3.5.4.2
+pkgver=3.5.4
+_pkgver=3.5.4
 _HIver=3.5
 pkgrel=1
 arch=('i686' 'x86_64')
@@ -233,8 +235,8 @@ build() {
 		--enable-ext-presenter-console \
 		--enable-ext-presenter-minimizer \
 		--enable-ext-report-builder \
-		--enable-ext-scripting-beanshell \
-                 --with-java-target-version=1.5 \
+		--enable-ext-scripting-javascript \
+		--with-java-target-version=1.5 \
 		$EXTRAOPTS 
 
 	touch src.downloaded
@@ -618,4 +620,25 @@ package_libreoffice-extension-report-builder() {
 
 	install -dm755 ${pkgdir}/usr/lib/libreoffice/share/extensions
 	unzip -q ${srcdir}/libreoffice-core-$_LOver/solver/unxlng*/bin/report-builder.oxt -d ${pkgdir}/usr/lib/libreoffice/share/extensions/report-builder
+}
+
+package_libreoffice-scripting-javascript() {
+
+ pkgdesc="LibreOffice extension - Enables support for scripts in JavaScript"
+ depends=('libreoffice-common' 'libreoffice-kde4' 'java-environment')
+ groups=('libreoffice-extensions')
+
+	install -dm755 ${pkgdir}/usr/lib/libreoffice/program/{classes,services}
+	mv ${srcdir}/fakeinstall/usr/lib/libreoffice/program/classes/{js.jar,ScriptProviderForJavaScript.jar} ${pkgdir}/usr/lib/libreoffice/program/classes/
+	mv ${srcdir}/fakeinstall/usr/lib/libreoffice/program/services/scriptproviderforjavascript.rdb ${pkgdir}/usr/lib/libreoffice/program/services/
+}
+
+package_libreoffice-extension-scripting-python() {
+
+ pkgdesc="LibreOffice extension - Enables support for scripts in Python"
+ depends=('libreoffice-common' 'libreoffice-kde4' 'python2')
+ groups=('libreoffice-extensions')
+
+	install -dm755 ${pkgdir}/usr/lib/libreoffice/share/extensions
+	unzip -q ${srcdir}/libreoffice-core-$_LOver/solver/unxlng*/bin/script-provider-for-python.oxt -d ${pkgdir}/usr/lib/libreoffice/share/extensions/script-provider-for-python
 }
