@@ -1,15 +1,11 @@
 #
 # Chakra Packages for Chakra, part of chakra-project.org
 #
-# maintainer (i686): Phil Miller <philm[at]chakra-project[dog]org>
-# maintainer (x86_64): Manuel Tortosa <manutortosa[at]chakra-project[dot]org>
-
-# include global config
-source ../_buildscripts/${current_repo}-${_arch}-cfg.conf
+# maintainer abveritas@chakra-project.org
 
 pkgname=amsn
-pkgver=0.98.4
-pkgrel=2
+pkgver=0.98.9
+pkgrel=1
 pkgdesc="MSN client written in Tcl/Tk"
 arch=('i686' 'x86_64')
 url="http://amsn.sourceforge.net/"
@@ -18,13 +14,25 @@ depends=('tk' 'tls')
 makedepends=('libjpeg' 'libpng' 'farsight2' 'libv4l')
 optdepends=('farsight2: for video conferencing')
 categories=('communication')
-source=(http://downloads.sourceforge.net/sourceforge/${pkgname}/${pkgname}-${pkgver}-src.tar.bz2)
-md5sums=('96fd20e8709ced4443432d125a5e0a5a')
+screenshot=('http://www.amsn-project.net/files/automessage.jpg')
+source=(http://downloads.sourceforge.net/sourceforge/${pkgname}/${pkgname}-${pkgver}-src.tar.bz2
+        $pkgname-$pkgver-v4l2.patch
+        $pkgname-$pkgver-no-rebuild-on-install.patch)
+md5sums=('13885ccc9972b2722e33552601c5b2b4'
+         '1f29840acabe40c364f5269a80cc1023'
+         'e7f8ef13cd1d39ca0a65908dbcd8bd6b')
 
 build() {
   cd ${srcdir}/${pkgname}-${pkgver}
 
+  patch -p0 -i ${srcdir}/$pkgname-$pkgver-v4l2.patch
+  patch -p0 -i ${srcdir}/$pkgname-$pkgver-no-rebuild-on-install.patch
   ./configure --prefix=/usr
-  make || return 1
+  make 
+}
+
+package() {
+  cd ${srcdir}/${pkgname}-${pkgver}
+
   make DESTDIR=${pkgdir} install
 }
