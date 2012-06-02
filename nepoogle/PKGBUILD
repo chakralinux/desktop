@@ -1,0 +1,27 @@
+#
+# Apps Packages for Chakra, part of chakra-project.org
+#
+# maintainer abveritas@chakra-project.org
+# contributor Michael Kutschall <michaelkutschall@web.de>
+ 
+pkgname=nepoogle
+pkgver=0.9.2
+pkgrel=2
+pkgdesc="A search utility for Nepomuk inspired in Google's search syntax."
+arch=('any')
+url="http://kde-apps.org/content/show.php/Nepoogle?content=145505"
+screenshot="http://opendesktop.org/CONTENT/content-pre2/145505-2.jpeg"
+license=('GPL')
+depends=('kdebindings-pykde4')
+source=("http://kde-apps.org/CONTENT/content-files/145505-nepoogle_v$pkgver.tar.gz"
+	'nepoogle.desktop')
+md5sums=('2f991c5847b36f89f1c4f9ffa282bb05'
+         'ceb6bb8059658686b4e13abd66a61445')
+ 
+package() {
+  mkdir -p $pkgdir/usr/share/applications/kde4
+  cp nepoogle.desktop $pkgdir/usr/share/applications/kde4/nepoogle.desktop
+ 
+  mkdir -p $pkgdir/usr/bin
+  cp $srcdir/nepoogle $pkgdir/usr/bin/nepoogle
+}
