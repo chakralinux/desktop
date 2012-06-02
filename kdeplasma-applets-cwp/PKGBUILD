@@ -4,7 +4,7 @@
 # maintainer abveritas@chakra-project.org
 
 pkgname=kdeplasma-applets-cwp
-pkgver=1.5.14
+pkgver=1.6.2
 pkgrel=1
 pkgdesc="cwp, a kdeplasma weather plasmoid with lots of customization"
 arch=('i686' 'x86_64')
@@ -15,15 +15,20 @@ makedepends=('make' 'cmake' 'automoc4')
 conflicts=(kde-extragear-plasmoids)
 replaces=('kdeplasma-addons-cwp')
 categories=('accessories')
+screenshot=('http://kde-apps.org/CONTENT/content-pre1/98925-1.png')
 install=customizable-weather-plasmoid.install
 source=(http://www.kde-look.org/CONTENT/content-files/98925-cwp-$pkgver.tar.bz2)
-md5sums=('5bedc3088e4933f8886ea2ad1cebd12a')
+md5sums=('a05028a20e0075785ffbbf68b856805e')
 
 build() {
   cd $srcdir/cwp-$pkgver/
   mkdir build
   cd build
-  cmake -DCMAKE_INSTALL_PREFIX=`kde4-config --prefix` .. 
-  make 
-  make DESTDIR=$pkgdir install 
+  cmake -DCMAKE_INSTALL_PREFIX=`kde4-config --prefix` ..
+  make
+  }
+
+package() {
+  cd $srcdir/cwp-$pkgver/build
+  make DESTDIR=$pkgdir install
 }

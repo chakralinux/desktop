@@ -1,57 +1,65 @@
-# Maintainer: Daniele Cocca <jmc@chakra-project.org>
+# $Id$
+# Maintainer: Sergej Pupykin <pupykin.s+arch@gmail.com>
+# Maintainer: SpepS <dreamspepser at yahoo dot it>
+# Contributor: Ionut Biru <ibiru@archlinux.org>
+# Contributor: DonVla <donvla@users.sourceforge.net>
 
-_pkgname=ZynAddSubFX
 pkgname=zynaddsubfx
 pkgver=2.4.2
 pkgrel=1
-pkgdesc="ZynAddSubFX is a open source software synthesizer capable of making a countless number of instruments, from some common heard from expensive hardware to interesting sounds that you'll boost to an amazing universe of sounds."
+pkgdesc="Opensource software synthesizer capable of making a countless number of instruments."
 arch=('i686' 'x86_64')
-url="http://zynaddsubfx.sourceforge.net/"
-license=('GPL2')
-depends=('fftw' 'mxml' 'zlib' 'fltk')
-makedepends=('oss' 'jack')
-categories=('multimedia')
-source=("https://downloads.sourceforge.net/project/${pkgname}/${pkgname}/${pkgver}/${_pkgname}-${pkgver}.tar.bz2"
-        'gentoo-zynaddsubfx-2.4.1-docs.patch')
-        #'gentoo-zynaddsubfx-2.4.1-fltk.patch'
-        #'gentoo-zynaddsubfx-2.4.1-fltk13.patch')
+url="http://zynaddsubfx.sourceforge.net"
+license=('GPL')
+depends=('fltk' 'libgl' 'fftw' 'lash' 'mxml')
+makedepends=('cmake' 'pkgconfig' 'mesa' 'setconf' 'gendesk')
+options=('!emptydirs')
+source=("http://switch.dl.sourceforge.net/sourceforge/$pkgname/ZynAddSubFX-$pkgver.tar.bz2"
+	"http://sources.gentoo.org/cgi-bin/viewvc.cgi/gentoo-x86/media-sound/zynaddsubfx/files/zynaddsubfx-2.4.1-fltk.patch"
+	"http://sources.gentoo.org/cgi-bin/viewvc.cgi/gentoo-x86/media-sound/zynaddsubfx/files/zynaddsubfx-2.4.1-fltk13.patch"
+	"$pkgname.svg")
 md5sums=('4e1f15fd872f5cc649fc2217676e248e'
-         '1cc79aea2033fab472f35a5fec60167e')
-         #'eb95d339ff5deac8c6b54965f04a8c60'
-         #'49464a33ab9c4250520eda0df7705663')
+         'eb95d339ff5deac8c6b54965f04a8c60'
+         '49464a33ab9c4250520eda0df7705663'
+         '6f7e9c3ce3947088a10c99c46a65431f')
 
 build() {
-  # Patch it first
-  cd "${srcdir}/${_pkgname}-${pkgver}"
+  cd "$srcdir"
+  gendesk
+  setconf "$pkgname.desktop" Icon "$pkgname.svg"
 
-  patch -Np1 -i "${srcdir}/gentoo-zynaddsubfx-2.4.1-docs.patch"
-  #patch -Np1 -i "${srcdir}/gentoo-zynaddsubfx-2.4.1-fltk.patch"
-  #patch -Np1 -i "${srcdir}/gentoo-zynaddsubfx-2.4.1-fltk13.patch"
+  cd "ZynAddSubFX-$pkgver"
 
-  # Then, prepare the build directory
-  cd "${srcdir}"
-  
-  [ ! -d build ] && mkdir -p build
+  # patches
+#  patch -p1 -i "$srcdir/$pkgname-$pkgver-fltk.patch"
+#  patch -p1 -i "$srcdir/$pkgname-$pkgver-fltk13.patch"
+  sed -i '1,1i#include <unistd.h>' src/Nio/NulEngine.cpp
 
-  # Then, actually build it
-  cd build
-  
-  cmake "${srcdir}/${_pkgname}-${pkgver}" \
-        -DCMAKE_BUILD_TYPE=RelWithDebInfo \
-        -DCMAKE_INSTALL_PREFIX=/usr \
-        -DGuiModule=fltk
-  
+  [ -d build ] || mkdir build && cd build
+  cmake -DCMAKE_INSTALL_PREFIX=/usr -DOutputModule=jack -DGuiModule=fltk ..
   make
+
+  # build external programs
+  cd ../ExternalPrograms/Spliter && make
+  cd ../Controller && sed -i "s|Box\.h|Box\.H|" ControllerUI.fl && make
 }
 
 package() {
-  cd "${srcdir}/build"
-  make DESTDIR="${pkgdir}" install
+  cd "$srcdir/ZynAddSubFX-$pkgver/build"
 
-  # Also copy the data files...
-  install -d -m755 "${pkgdir}/usr/share/${pkgname}"
-  cp -a "${srcdir}/${_pkgname}-${pkgver}/banks" "${pkgdir}/usr/share/${pkgname}"
-  cp -a "${srcdir}/${_pkgname}-${pkgver}/examples" "${pkgdir}/usr/share/${pkgname}"
+  make DESTDIR="$pkgdir/" install
+
+  # install external programs
+  install -Dm755 ../ExternalPrograms/Spliter/spliter "$pkgdir/usr/bin/spliter"
+  install -Dm755 ../ExternalPrograms/Controller/controller "$pkgdir/usr/bin/controller"
+  install -Dm644 ../ExternalPrograms/Spliter/readme.txt "$pkgdir/usr/share/doc/$pkgname/SPLITER.txt"
+
+  # banks and examples
+  install -d "$pkgdir/usr/share/$pkgname"
+  cp -a ../banks "$pkgdir/usr/share/$pkgname"
+  cp -a ../examples "$pkgdir/usr/share/$pkgname"
+
+  # desktop file and icon
+  install -Dm644 "$srcdir/$pkgname.svg" "$pkgdir/usr/share/pixmaps/$pkgname.svg"
+  install -Dm644 "$srcdir/$pkgname.desktop" "$pkgdir/usr/share/applications/$pkgname.desktop"
 }
-
-# vim:set ts=2 sw=2 et:

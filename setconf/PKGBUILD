@@ -1,0 +1,32 @@
+# Contributor: Inkane <neoinkaneglade@aol.com>
+# Contributer: Alexander Rødseth <rodseth@gmail.com>
+
+pkgname=setconf
+pkgver=0.4
+pkgrel=1
+pkgdesc="A utility to easily change settings in Makefiles and other configuration files"
+arch=('x86_64' 'i686')
+url="http://setconf.roboticoverlords.org/"
+license=('GPL')
+depends=('pcre' 'gc' 'gcc')
+makedepends=('shedskin')
+source=("http://$pkgname.roboticoverlords.org/$pkgname-$pkgver.tbz2")
+md5sums=('5a254ed63e332fab63b48c558aef215c')
+
+build() {
+  cd "$srcdir/$pkgname-$pkgver"
+
+  shedskin ${pkgname}.py
+  make CPPFLAGS="-march=native -fomit-frame-pointer"
+}
+
+package() {
+  cd "$srcdir/$pkgname-$pkgver"
+
+  install -Dm 755 "$pkgname" "$pkgdir/usr/bin/$pkgname"
+  install -Dm 644 "$pkgname.1.gz" \
+    "$pkgdir/usr/share/man/man1/$pkgname.1.gz"
+  install -Dm 644 COPYING \
+    "$pkgdir/usr/share/licenses/$pkgname/COPYING"
+}
+

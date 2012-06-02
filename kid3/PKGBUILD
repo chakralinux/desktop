@@ -1,25 +1,22 @@
 #
 # Chakra Packages for Chakra, part of chakra-project.org
 #
-# maintainer (i686): Phil Miller <philm[at]chakra-project[dog]org>
-# maintainer (x86_64): Manuel Tortosa <manutortosa[at]chakra-project[dot]org>
-
-# include global config
-source ../_buildscripts/${current_repo}-${_arch}-cfg.conf
+# maintainer abveritas@chakra-project.org
 
 pkgname=kid3
-pkgver=2.0.1
+pkgver=2.1
 pkgrel=1
 pkgdesc="An MP3, Ogg/Vorbis and FLAC tag editor for KDE"
 arch=('i686' 'x86_64')
 url="http://kid3.sourceforge.net/"
 license=('GPL')
-depends=('id3lib' 'kdelibs' 'libmp4v2')
+depends=('id3lib' 'kdelibs' 'libmp4v2' 'chromaprint')
 makedepends=('automoc4' 'cmake' 'taglib' 'docbook-xsl')
 categories=('multimedia')
+screenshot=('http://pkgs.org/images/linux-software/kid3/kid3-screenshot.png')
 install=${pkgname}.install
-source=("http://downloads.sourceforge.net/$pkgname/$pkgname-$pkgver.tar.gz")
-md5sums=('08741a839ca2ff0e6759d5a1ff74e063')
+source=("http://sourceforge.net/projects/$pkgname/files/$pkgname/$pkgver/$pkgname-$pkgver.tar.gz")
+md5sums=('a2263f5094ea467cd708d02f1d2483ed')
 
 build() {
   cd ${srcdir}

@@ -1,0 +1,33 @@
+# Contributor: Alexander R�dseth <rodseth@gmail.com>
+# Thanks to Moonprincessluna at DeviantArt for the default icon:
+# http://mylittlepixel.deviantart.com/gallery/35405924#/d4pt23a
+
+pkgname=gendesk
+pkgver=0.4.2
+pkgrel=1
+pkgdesc="Utility to generate .desktop files and download icons"
+arch=('x86_64' 'i686')
+url="http://roboticoverlords.org/gendesk/"
+license=('MIT')
+depends=('glibc')
+makedepends=('go')
+conflicts=('go-hg')
+source=("http://roboticoverlords.org/$pkgname/$pkgname-$pkgver.tar.gz"
+        "http://roboticoverlords.org/images/default.png")
+sha256sums=('10b2a294f5d57fcc2fd8612ca9cba7f0f82af03b1bd38d93a3ef757689d20a8a'
+            '4d96eded48e536d02e35727c36dc20844c2e44654e81baf78e10aee4eb48e837')
+
+build() {
+  cd "$srcdir/$pkgname-$pkgver"
+
+  msg2 "Compiling..."
+  go build
+}
+
+package() {
+  cd "$srcdir/$pkgname-$pkgver"
+
+  install -Dm755 "$pkgname-$pkgver" "$pkgdir/usr/bin/$pkgname"
+  install -Dm644 "$srcdir/default.png" "$pkgdir/usr/share/pixmaps/default.png"
+  install -Dm644 LICENSE "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
+}

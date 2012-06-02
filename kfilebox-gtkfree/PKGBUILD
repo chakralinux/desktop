@@ -7,7 +7,7 @@
 
 pkgname=kfilebox-gtkfree
 _pkgname=kfilebox
-pkgver=0.4.8
+pkgver=0.4.9
 pkgrel=1
 pkgdesc="KDE4 Dropbox client (with own daemon)"
 arch=('i686' 'x86_64')
@@ -17,24 +17,26 @@ depends=('kde-workspace' 'gettext')
 provides=('dropbox')
 replaces=('kdropbox')
 categories=('network' 'backup' 'cloud')
-source=(http://downloads.sourceforge.net/project/kdropbox/kfilebox-${pkgver}/Source/${_pkgname}-${pkgver}.tar.gz)
+# getting the source from gentoo since upstream was messed up
+source=(http://dev.gentoo.org/~tampakrap/tarballs/kfilebox_0.4.9.tar.gz)
+#source=(http://downloads.sourceforge.net/project/kdropbox/kfilebox-${pkgver}/Source/${_pkgname}_${pkgver}.tar.gz)
 install=$_pkgname.install
-md5sums=('348921712d37ec262eff44065c968d11')
+md5sums=('fdec6cd4c37a4c9d06325f89d3ed2ee1')
 
 build() {
-    cd "${srcdir}/${_pkgname}-${pkgver}"
+    cd "${srcdir}/${_pkgname}_${pkgver}"
     qmake
     make
 }
 
 package() {
-    cd "${srcdir}/${_pkgname}-${pkgver}"
+    cd "${srcdir}/${_pkgname}_${pkgver}"
     make INSTALL_ROOT=${pkgdir} install
     #install locales
-    for language in `ls ${srcdir}/${_pkgname}-${pkgver}/locale`
+    for language in `ls ${srcdir}/${_pkgname}_${pkgver}/locale`
     do
-      if [ -e ${srcdir}/${_pkgname}-${pkgver}/locale/$language/kfilebox.mo ]; then
-	install -m 644 -p -D ${srcdir}/${_pkgname}-${pkgver}/locale/$language/kfilebox.mo ${pkgdir}/usr/share/locale/$language/LC_MESSAGES/kfilebox.mo
+      if [ -e ${srcdir}/${_pkgname}_${pkgver}/locale/$language/kfilebox.mo ]; then
+	install -m 644 -p -D ${srcdir}/${_pkgname}_${pkgver}/locale/$language/kfilebox.mo ${pkgdir}/usr/share/locale/$language/LC_MESSAGES/kfilebox.mo
       fi
     done
 }
