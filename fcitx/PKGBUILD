@@ -10,14 +10,12 @@ source ../_buildscripts/${current_repo}-${_arch}-cfg.conf
 pkgbase=fcitx
 pkgname=('fcitx' 'fcitx-qt' 'fcitx-gtk2' 'fcitx-gtk3')
 pkgver=4.2.4
-pkgrel=1
+pkgrel=2
 pkgdesc="A Flexible Input Method Framework"
 arch=("i686" "x86_64")
 license=('GPL')
 url="http://code.google.com/p/fcitx"
 makedepends=('intltool' 'cmake' 'pango' 'qt' 'icu' 'dbus-core' 'wget' 'gtk2' 'gtk3' 'opencc' 'lua' 'iso-codes')
-conflicts=('fcitx-utf8-svn' 'fcitx-svn' 'fcitx-hg' 'fcitx-keyboard')
-replaces=('fcitx-keyboard')
 source=("http://fcitx.googlecode.com/files/${pkgname}-${pkgver}.tar.xz")
 md5sums=('52601e2bc896448b0e2e8225133fa895')
 
@@ -42,6 +40,8 @@ build() {
 
 package_fcitx(){
     depends=('pango' 'dbus-core' 'opencc' 'lua')
+    conflicts=('fcitx-utf8-svn' 'fcitx-svn' 'fcitx-hg' 'fcitx-keyboard')
+    replaces=('fcitx-keyboard')
     cd $srcdir/build
     make DESTDIR=$pkgdir install
     rm -rf $pkgdir/usr/lib/qt/
