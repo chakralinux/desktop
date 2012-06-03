@@ -1,13 +1,10 @@
 #
-# Chakra Packages for Chakra, part of chakra-project.org
+# Apps Packages for Chakra, part of chakra-project.org
 #
 # contributor (x86_64): Giuseppe Calà <jiveaxe@gmail.com>
 
-# include global config
-source ../_buildscripts/${current_repo}-${_arch}-cfg.conf
-
 pkgname=telepathy-gabble
-pkgver=0.15.3
+pkgver=0.16.0
 pkgrel=1
 pkgdesc="A Jabber/XMPP connection manager that handles single- and multi-user chats and voice/video calls."
 arch=('i686' 'x86_64')
@@ -18,7 +15,7 @@ makedepends=('libxslt' 'python2')
 groups=('telepathy')
 install=telepathy-gabble.install
 source=(http://telepathy.freedesktop.org/releases/$pkgname/$pkgname-$pkgver.tar.gz)
-md5sums=('0600d3e1fb9ab552df7e6f31028d9c0b')
+md5sums=('15b15fb58a3c54102c3e3489b4bd5ee0')
 
 build() {
   cd $pkgname-$pkgver
@@ -31,4 +28,4 @@ package() {
   cd ${srcdir}/${pkgname}-${pkgver}
   make DESTDIR=${pkgdir} install
 }
- 
+

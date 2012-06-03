@@ -3,28 +3,28 @@
 #
 # maintainer (x86_64): Giuseppe calà <jiveaxe@gmail.com>
 
-
-# include global config
-source ../_buildscripts/${current_repo}-${_arch}-cfg.conf
-
 pkgname=telepathy-haze
-pkgver=0.4.0
+pkgver=0.6.0
 pkgrel=1
 pkgdesc="A telepathy-backend to use libpurple (Pidgin) protocols."
 arch=('i686' 'x86_64')
 url="http://telepathy.freedesktop.org"
 license=('GPL')
 depends=('telepathy-glib' 'libpurple')
-makedepends=('libxslt')
+makedepends=('libxslt' 'python2')
 install=telepathy-haze.install
 groups=('telepathy')
 source=(http://telepathy.freedesktop.org/releases/${pkgname}/${pkgname}-${pkgver}.tar.gz)
-md5sums=('6e3e048cbee27aa37a64b8e9cc611664')
+md5sums=('622e0b2f7ff4050a29f907f2ef0f039c')
 
 build() {
   cd "${srcdir}/${pkgname}-${pkgver}"
   ./configure --prefix=/usr --libexecdir=/usr/lib/telepathy
   make
+}
+
+package() {
+  cd "${srcdir}/${pkgname}-${pkgver}"
   make DESTDIR="${pkgdir}" install
 
   #remove manager, upstream suggested and it would be removed in the near future
