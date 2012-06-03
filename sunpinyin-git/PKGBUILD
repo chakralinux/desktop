@@ -10,14 +10,14 @@
 source ../_buildscripts/${current_repo}-${_arch}-cfg.conf
 
 pkgname=sunpinyin-git
-pkgver=20111005
+pkgver=20120603
 pkgrel=1
 pkgdesc='A statistical language model based pinyin IME by Sun.'
 url='http://code.google.com/p/sunpinyin/'
 arch=('i686' 'x86_64')
 license=('LGPL')
 depends=('sqlite3')
-makedepends=('git' 'scons' 'intltool')
+makedepends=('git' 'scons' 'intltool' 'python2')
 provides=('sunpinyin')
 conflicts=('sunpinyin')
 source=('http://open-gram.googlecode.com/files/lm_sc.t3g.arpa.tar.bz2'
@@ -50,9 +50,11 @@ build() {
   ln -sf ${srcdir}/lm_sc.t3g.arpa.tar.bz2 raw/lm_sc.t3g.arpa.tar.bz2
   ln -sf ${srcdir}/dict.utf8.tar.bz2 raw/dict.utf8.tar.bz2
 
+  sed -i -e "s|python|python2|" python/*.py python/importer/*.py SConstruct
+
   scons --prefix=/usr
   scons install --prefix=/usr --install-sandbox=$pkgdir || return 1
 
 }
-md5sums=('7a66d55a515959bbf69cb5480281afa0'
-         '5fe50a8a4d889e17c17d64d4241911d0')
+md5sums=('31dd2667d9a5cae9d2ecdacf2201ab13'
+         '98b1dc61d3ef3fd4be3c0a9fac410da2')

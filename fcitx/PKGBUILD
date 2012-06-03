@@ -9,16 +9,17 @@ source ../_buildscripts/${current_repo}-${_arch}-cfg.conf
 
 pkgbase=fcitx
 pkgname=('fcitx' 'fcitx-qt' 'fcitx-gtk2' 'fcitx-gtk3')
-pkgver=4.2.3
+pkgver=4.2.4
 pkgrel=1
 pkgdesc="A Flexible Input Method Framework"
 arch=("i686" "x86_64")
 license=('GPL')
 url="http://code.google.com/p/fcitx"
-makedepends=('intltool' 'cmake' 'pango' 'qt' 'icu' 'dbus-core' 'wget' 'gtk2' 'gtk3' 'opencc' 'lua')
-conflicts=('fcitx-utf8-svn' 'fcitx-svn' 'fcitx-hg')
+makedepends=('intltool' 'cmake' 'pango' 'qt' 'icu' 'dbus-core' 'wget' 'gtk2' 'gtk3' 'opencc' 'lua' 'iso-codes')
+conflicts=('fcitx-utf8-svn' 'fcitx-svn' 'fcitx-hg' 'fcitx-keyboard')
+replaces=('fcitx-keyboard')
 source=("http://fcitx.googlecode.com/files/${pkgname}-${pkgver}.tar.xz")
-md5sums=('8ebfbd00ae9c3433c8fde21fc42d1d6f')
+md5sums=('52601e2bc896448b0e2e8225133fa895')
 
 build() {
   cd $srcdir/
@@ -34,7 +35,8 @@ build() {
       -DENABLE_GTK2_IM_MODULE=On \
       -DENABLE_GTK3_IM_MODULE=On \
       -DENABLE_OPENCC=On \
-      -DENABLE_LUA=On
+      -DENABLE_LUA=On \
+      -DENABLE_GIR=Off
   make
 }
 
