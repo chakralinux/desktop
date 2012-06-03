@@ -3,9 +3,6 @@
 #
 # maintainer abveritas[at]chakra-project[dog]org>
 
-# include global config
-source ../_buildscripts/${current_repo}-${_arch}-cfg.conf
-
 pkgname=minitube
 pkgver=1.7.1
 pkgrel=1
@@ -21,11 +18,14 @@ optdepends=('phonon-xine: for xine backend (default by chakra)'
             'phonon-vlc: for vlc backend')
 categories=('multimedia')
 install=minitube.install
-source=(http://flavio.tordini.org/files/${pkgname}/${pkgname}-${pkgver}.tar.gz)
-md5sums=('ce336b8cca8294f85d8e34b6a7828e38')
-
+source=(http://flavio.tordini.org/files/${pkgname}/${pkgname}-${pkgver}.tar.gz
+	gcc47.patch)
+md5sums=('ce336b8cca8294f85d8e34b6a7828e38'
+         '799785b01a9d3d2e93770c33fffbcda0')
 build() {
         cd "${srcdir}/${pkgname}"
+
+	patch -p1 < "${srcdir}/gcc47.patch"
 
         qmake PREFIX="/usr" 
         make install INSTALL_ROOT="${pkgdir}" 
