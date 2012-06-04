@@ -6,32 +6,35 @@
 # contributor Neo Kolokotronis <tetris4@gmail.com>
 
 pkgname=trojita
-pkgver=0.2.9.4
+pkgver=0.3
 pkgrel=1
-pkgdesc="A QT IMAP email client"
-arch=(i686 x86_64)
+pkgdesc="Trojita is a Qt IMAP e-mail client."
+arch=('i686' 'x86_64')
 url="http://trojita.flaska.net"
 license=('GPL')
 depends=('qt')
 makedepends=('make')
 categories=('network')
-source=('http://sourceforge.net/projects/trojita/files/src/trojita-0.2.9.4.tar.bz2/download'
-	'trojita.desktop')
-md5sums=('ac151103b79f97b9b3e701873116339c'
-         'd39e10d321e369dc853fd242472aee91')
+source=("http://sourceforge.net/projects/trojita/files/src/${pkgname}-${pkgver}.tar.bz2/download"
+        'trojita.desktop')
+md5sums=('b0ebf69765b9e33ef43ff22624e4f23e'
+         '65a0b9d19e7641dfc73670fecc488975')
 
 build() {
-	cd $srcdir/trojita-$pkgver/
-	qmake PREFIX="$(kde4-config --prefix)"
+  cd "${srcdir}"
+  mkdir -p build && cd build
+  qmake "${srcdir}/${pkgname}-${pkgver}/trojita.pro"
         make
 }
-package() {
-	cd $srcdir/trojita-$pkgver/
-        install -D -m755 $srcdir/trojita-$pkgver/src/Gui/trojita "$pkgdir/usr/bin/trojita"
-    
-        #Desktop Icon
-	cd $srcdir/trojita-$pkgver/src/icons/
-	install -Dm644 trojita.png $pkgdir/usr/share/pixmaps/trojita.png
-        install -Dm644 $startdir/trojita.desktop $pkgdir/usr/share/applications/trojita.desktop
 
+package() {
+  cd "${srcdir}/build"
+  install -D -m755 src/Gui/trojita "${pkgdir}/usr/bin/trojita"
+    
+  # Desktop Icon
+  cd "${srcdir}/${pkgname}-${pkgver}/src/icons"
+  install -D -m644 trojita.png "${pkgdir}/usr/share/pixmaps/trojita.png"
+  install -D -m644 "${srcdir}/trojita.desktop" "${pkgdir}/usr/share/applications/trojita.desktop"
 }
+
+# vim:set ts=2 sw=2 et:
