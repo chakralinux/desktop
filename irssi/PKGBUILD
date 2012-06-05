@@ -1,15 +1,12 @@
 #
-# Chakra Packages for Chakra, part of chakra-project.org
+# Apps Packages for Chakra, part of chakra-project.org
 #
-# maintainer (i686): Phil Miller <philm[at]chakra-project[dog]org>
-# maintainer (x86_64): Manuel Tortosa <manutortosa[at]chakra-project[dot]org>
+# maintainer Neophytos Kolokotronis <tetris4@gmail.com>
 
-# include global config
-source ../_buildscripts/${current_repo}-${_arch}-cfg.conf
 
 pkgname=irssi
 pkgver=0.8.15
-pkgrel=4
+pkgrel=5
 pkgdesc="Modular text mode IRC client with Perl scripting"
 arch=('i686' 'x86_64')
 url="http://irssi.org/"
@@ -21,6 +18,7 @@ backup=(etc/irssi.conf)
 source=(http://irssi.org/files/${pkgname}-${pkgver}.tar.bz2)
 options=('!libtool')
 md5sums=('1dcb3f511b88df94b0c996f36668c7da')
+screenshot=('http://irssi.org/themefiles/dma147.png')
 
 build() {
   cd "${srcdir}/${pkgname}-${pkgver}"
@@ -30,6 +28,10 @@ build() {
 	      --with-proxy \
 	      --sysconfdir=/etc \
 	      --with-perl-lib=vendor
-  make || return 1
-  make DESTDIR="${pkgdir}" install || return 1
+  make
+}
+
+package() {
+  cd "${srcdir}/${pkgname}-${pkgver}"
+  make DESTDIR="${pkgdir}" install
 }
