@@ -1,0 +1,24 @@
+#
+# Apps Packages for Chakra, part of chakra-project.org
+#
+# maintainer: george <george[at]chakra-project[dot]org>
+# contributor: Neo Kolokotronis <tetris4@gmail.com>
+# contributor: Jeff Mickey <jeff@archlinux.org>
+# contributor: Pappa < jcberg @ gmail . com >
+ 
+pkgname=python2-xlib
+_pkgname=python-xlib
+pkgver=0.15rc1
+pkgrel=1
+pkgdesc='A fully functional X client library for Python programs.'
+url='http://python-xlib.sourceforge.net/'
+arch=('any')
+license=('GPL')
+depends=('python2')
+source=("http://downloads.sourceforge.net/${_pkgname}/${_pkgname}-${pkgver}.tar.gz")
+md5sums=('7941e91bc3e92dc921dfc930cc8f7830')
+
+package() {
+  cd "${srcdir}/${_pkgname}-${pkgver}"
+  python2 setup.py install --root="${pkgdir}"
+}
