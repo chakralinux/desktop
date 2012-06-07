@@ -41,13 +41,11 @@ install=${pkgname}.install
 source=($_mirror/${pkgname}-$_kdever.tar.xz
 	01_chakra_tag.patch
 	02_kde_applications_menu.patch
-	03_chakra_menu.patch
-        fixFstab.patch)
+	03_chakra_menu.patch)
 md5sums=(`grep ${pkgname}-$_kdever.tar.xz ../kde-sc.md5 | cut -d" " -f1`
          '40ba51f0c50ced94dfffe667ec856950'  # 01_chakra_tag.patch
          'e94450ba5430ea9c1e33bad9ae38ca2d'  # 02_kde_applications_menu.patch
-         '53b85403e4dd8f9146933c52ca23243e'  # 03_chakra_menu.path
-         'b38bb189fab235884604b0215e93ee99') # fixFstab.patch
+         '53b85403e4dd8f9146933c52ca23243e')  # 03_chakra_menu.path
 
         
 #
@@ -60,9 +58,6 @@ build() {
 	patch -Np1 -i ${srcdir}/01_chakra_tag.patch
 	patch -Np1 -i ${srcdir}/02_kde_applications_menu.patch
 	patch -Np1 -i ${srcdir}/03_chakra_menu.patch
-
-	msg "Fix for Dolphin"	
-	patch -p1 -i ${srcdir}/fixFstab.patch
 
         cd ..
 
