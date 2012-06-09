@@ -31,10 +31,13 @@ noextract=(branding.svgz)
 
 source=($_mirror/${pkgname}-$_kdever.tar.xz
 	branding.svgz
-	01_disable_logout_sound.patch)
+	01_disable_logout_sound.patch
+	FindKactivities.patch)
+
 md5sums=(`grep ${pkgname}-$_kdever.tar.xz ../kde-sc.md5 | cut -d" " -f1`
         '68cd8eb57db22c2f2ed554b721253bc2'   #  branding.svgz
-        'a434bf282ee391b2f857184be59a3b6f')  #  01_disable_logout_sound.patch
+        'a434bf282ee391b2f857184be59a3b6f'   #  01_disable_logout_sound.patch
+        '259d02a6fc6a1e2aa8ade4558250e9e4')  #  FIndKactivities.patch
 
 #
 # build function
@@ -44,6 +47,7 @@ build() {
 
 	msg "applying main patchset ..."
 	patch -Np1 -i ${srcdir}/01_disable_logout_sound.patch
+	patch -p1 -i ${srcdir}/FindKactivities.patch
  
 	# copy our branding stuff
 	cp -f ${srcdir}/branding.svgz ${srcdir}/${pkgname}-${pkgver}/desktoptheme/oxygen/widgets/
