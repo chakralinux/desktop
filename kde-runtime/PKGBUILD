@@ -49,8 +49,11 @@ build() {
 	cp -f ${srcdir}/branding.svgz ${srcdir}/${pkgname}-${pkgver}/desktoptheme/oxygen/widgets/
 	cp -f ${srcdir}/branding.svgz ${srcdir}/${pkgname}-${pkgver}/desktoptheme/air/widgets/
 
+        rm -rf build
+        mkdir build && cd build
+
 	msg "starting build ..."
-	cmake . -DCMAKE_BUILD_TYPE=${_build_type} \
+	cmake .. -DCMAKE_BUILD_TYPE=${_build_type} \
 		-DCMAKE_INSTALL_PREFIX=${_installprefix} \
 		-DWITH_PulseAudio=ON \
 		-DCMAKE_SKIP_RPATH=ON \
@@ -60,7 +63,7 @@ build() {
 }
 
 package() {
-	cd ${srcdir}/${pkgname}-${pkgver}/
+	cd ${srcdir}/${pkgname}-${pkgver}/build
 	make DESTDIR=${pkgdir} install
 
 	# put kdesu into the path
