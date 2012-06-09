@@ -28,15 +28,17 @@ provides=('smokekde')
 options=('docs' '!splithdr' 'splitdbg' 'log')
 
 build() {
-	cd ${srcdir}/${_pkgname}-${pkgver}
-	cmake . -DCMAKE_BUILD_TYPE=${_build_type} \
-                -DCMAKE_INSTALL_PREFIX=${_installprefix}  
-              # -DWITH_Soprano=OFF
-        make
+  cd "${srcdir}"
+  mkdir build
+  cd build
+  cmake ../smokekde-${pkgver} \
+    -DCMAKE_BUILD_TYPE=Release \
+    -DCMAKE_INSTALL_PREFIX=/usr \
+    -DWITH_Soprano=OFF
+  make
 }
 
 package() {
-	cd ${srcdir}/${_pkgname}-${pkgver}
-	make DESTDIR=${pkgdir} install || return 1
-
+  cd "${srcdir}"/build
+  make DESTDIR="${pkgdir}" install
 }
