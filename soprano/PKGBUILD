@@ -8,7 +8,7 @@
 source ../_buildscripts/${current_repo}-${_arch}-cfg.conf
 
 pkgname=soprano
-pkgver=2.7.56
+pkgver=2.7.57
 pkgrel=1
 pkgdesc='A library which provides a highly usable object-oriented C++/Qt4 framework for RDF data'
 arch=('i686' 'x86_64')
@@ -21,11 +21,13 @@ md5sums=('999781170ebcf3e1494127f2eda7aa00')
 
 build() {
   cd "${srcdir}"
-  mkdir build
-  cd build
+  
+  rm -rf build
+  mkdir build && cd build
+
   . /etc/profile.d/openjdk6.sh
   # we need the rpath
-  cmake ../${pkgname}-${pkgver}-beta1 \
+  cmake ../${pkgname}-${pkgver} \
     -DCMAKE_BUILD_TYPE=Release \
     -DCMAKE_SKIP_RPATH=OFF \
     -DCMAKE_INSTALL_PREFIX=/usr \

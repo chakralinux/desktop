@@ -18,7 +18,7 @@ pkgdesc="Language independent library for KDE bindings"
 url="http://kde.org/"
 arch=('i686' 'x86_64')
 license=('GPL' 'LGPL' 'FDL')
-depends=("kdebindings-smokeqt>=${_kdever}" "kdepimlibs>=${_kdever}")
+depends=("kdebindings-smokeqt>=${_kdever}" "kdepimlibs>=${_kdever}" "soprano>=2.7.57")
 makedepends=('cmake' 'automoc4' "kdebindings-smokegen>=${_kdever}" "kdegraphics-okular>=${_kdever}" "kdesdk-kate>=${_kdever}")
 source=("$_mirror/${_pkgname}-$_kdever.tar.xz")
 md5sums=(`grep ${_pkgname}-$_kdever.tar.xz ../kde-sc.md5 | cut -d" " -f1`)
@@ -33,8 +33,7 @@ build() {
   cd build
   cmake ../smokekde-${pkgver} \
     -DCMAKE_BUILD_TYPE=Release \
-    -DCMAKE_INSTALL_PREFIX=/usr \
-    -DWITH_Soprano=OFF
+    -DCMAKE_INSTALL_PREFIX=/usr 
   make
 }
 
