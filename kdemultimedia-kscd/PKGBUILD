@@ -14,7 +14,7 @@ pkgdesc="KDE CD player"
 url='http://kde.org/applications/multimedia/kscd/'
 arch=('i686' 'x86_64')
 license=('GPL' 'LGPL' 'FDL')
-depends=("kde-runtime>=${_kdever}" 'libkcddb' 'libkcompactdisc' 'musicbrainz')
+depends=("kde-runtime>=${_kdever}" "libkcddb>=${_kdever}" "libkcompactdisc>=${_kdever}" 'musicbrainz')
 makedepends=('cmake' 'automoc4')
 source=("$_mirror/${_pkgname}-$_kdever.tar.xz")
 md5sums=(`grep ${_pkgname}-$_kdever.tar.xz ../kde-sc.md5 | cut -d" " -f1`)
@@ -28,6 +28,7 @@ build() {
                 -DCMAKE_INSTALL_PREFIX=${_installprefix} \
                 -DCMAKE_SKIP_RPATH=ON \
 	        -DCMAKE_{SHARED,MODULE,EXE}_LINKER_FLAGS='-Wl,--no-undefined -Wl,--as-needed'
+	make
 }
 
 package() {
@@ -35,3 +36,9 @@ package() {
 	make DESTDIR=${pkgdir} install || return 1
 
 }
+
+
+
+Â# FIXME: It is broken, libkcddb needs musicbrainz5 while kscd needs musicbrainz3
+# and we decided to use the functionallity in libkcddb instead as this application
+@ seems pretty unmaintained.
