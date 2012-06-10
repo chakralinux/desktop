@@ -5,29 +5,19 @@
 
 kgbase=digikam
 pkgname=('digikam' 'kipi-plugins' 'libkvkontakte')
-pkgver=2.5.0
+pkgver=2.6.0
 pkgrel=2
 url="http://digikam.sourceforge.net"
 arch=('i686' 'x86_64')
 license=('GPL')
-makedepends=('kde-runtime' 'kdegraphics-kgamma' 'kdepimlibs' 'lensfun' 'kdeedu-marble' 'liblqr' 'opencv' 'lapack' 'libgpod'
+screenshot=('http://i.imgur.com/6YnUM.png')
+makedepends=('kde-runtime' 'kdegraphics-kgamma' 'kdepimlibs' 'lensfun' 'kdeedu-marble' 'liblqr' 'opencv' 'atlas-lapack' 'libgpod'
 	     'pkgconfig' 'cmake' 'automoc4' 'doxygen' 'docbook-xsl' 'qjson')
-source=("http://sourceforge.net/projects/digikam/files/${pkgname}/${pkgver}/${pkgname}-${pkgver}.tar.bz2"
-        'boost148.patch'
-        'libkipi140.patch'
-        'gcc-4.7.diff')
-md5sums=('770355060d2033a044c21b0f155be00c'
-         '91e89dc3abc5dd88e2e161f66b3d3f87'
-         '39f96ab48c829c01f1d6e522510b043e'
-         'cc442743ca9a0eb17f30ecbf0f240330')
+source=("http://sourceforge.net/projects/digikam/files/${pkgname}/${pkgver}/${pkgname}-${pkgver}.tar.bz2")
+md5sums=('5caf799b9a74d3bed3490d2cf66021dd')
 
 build() {
    cd ${srcdir}
-   pushd ${pkgname}-${pkgver}/core
-   patch -p0 -i ${srcdir}/boost148.patch
-   patch -Np1 -i ${srcdir}/libkipi140.patch
-   popd
-   patch -p0 -i $srcdir/gcc-4.7.diff
  
    mkdir -p build
    cd build
