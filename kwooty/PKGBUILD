@@ -1,7 +1,7 @@
 # Maintainer: Adrián Chaves Fernández (Gallaecio) <adriyetichaves gmail.com>
 
 pkgname=kwooty
-pkgver=0.8.3
+pkgver=0.8.4
 pkgrel=1
 pkgdesc="A friendly nzb usenet binary downloader."
 arch=('i686' 'x86_64')
@@ -14,7 +14,7 @@ optdepends=('unrar: automatic RAR-archive extraction.'
             'par2cmdline: automatic file repairing.')
 categories=('network')
 source=("http://downloads.sourceforge.net/project/$pkgname/$pkgname-$pkgver.tar.gz")
-md5sums=('8a693e6dab4e6cb777661123ffda0d9b')
+md5sums=('5d48d29d9e95743548745acb5881d3e4')
 
 build() {
   cd $srcdir/$pkgname-$pkgver
@@ -24,7 +24,7 @@ build() {
         ..
   make
 }
- 
+
 package() {
   cd $srcdir/$pkgname-$pkgver/build
   make DESTDIR=$pkgdir install
