@@ -13,7 +13,7 @@ source ../_buildscripts/${current_repo}-${_arch}-cfg.conf
 pkgname=kdebindings-kimono
 _pkgname=kimono
 pkgver=${_kdever}
-pkgrel=1
+pkgrel=2
 pkgdesc=".NET/Mono bindings for the KDE libraries"
 url="http://kde.org/"
 arch=('i686' 'x86_64')
@@ -32,7 +32,6 @@ build() {
 	cd ${srcdir}/${_pkgname}-${pkgver}
 	cmake . -DCMAKE_BUILD_TYPE=${_build_type} \
                 -DCMAKE_INSTALL_PREFIX=${_installprefix} 
-#		-DWITH_Soprano=OFF       # FIXME: the soprano/nepomuk bindings for mono are not compiling atm
         make
 }
 
