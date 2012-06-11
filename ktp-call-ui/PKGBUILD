@@ -3,24 +3,21 @@
 #
 # Neophytos Kolokotronis <tetris4@gmail.com>
 
-pkgname=ktp-contact-list
+pkgname=ktp-call-ui
 pkgver=0.4.0
 pkgrel=1
-pkgdesc="Telepathy contact list application "
+pkgdesc="Telepathy call handler "
 arch=('i686' 'x86_64')
 url="http://www.kde.org"
 license=('GPL')
-depends=('kde-runtime' 'telepathy-qt' 'ktp-common-internals')
-makedepends=('cmake' 'automoc4')
-conflicts=('telepathy-kde-contact-list')
-replaces=('telepathy-kde-contact-list')
-provides=('telepathy-kde-contact-list')
+depends=('kde-runtime' 'telepathy-qt' 'ktp-common-internals' 'telepathy-farstream'
+         'telepathy-mission-control' 'telepathy-gabble' 'gstreamer0.10-base-plugins'
+         ' gstreamer0.10-good-plugins' 'qt-gstreamer')
+makedepends=('boost' 'cmake' 'automoc4' )
 groups=('kde-telepathy')
 categories=('communication')
-install=${pkgname}.install
 source=("ftp://mirrors.mit.edu/kde/unstable/kde-telepathy/${pkgver}/src/${pkgname}-${pkgver}.tar.bz2")
-screenshot=('http://martys.typepad.com/.a/6a012876e7556d970c014e874d17ac970d-pi')
-md5sums=('9f1c643bd4fc5b5a76a556020b7048ee')
+md5sums=('77aa00101c83ec34dfa689ead783acc6')
 
 build() {
   cd "${srcdir}"
