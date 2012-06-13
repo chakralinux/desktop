@@ -2,18 +2,18 @@
 #
 # Chakra Packages for Chakra, part of chakra-project.org
 #
-# maintainer (i686): Phil Miller <philm[at]chakra-project[dog]org>
-# maintainer (x86_64): Manuel Tortosa <manutortosa[at]chakra-project[dot]org>
+# maintainer abveritas@chakra-project.org
 
 pkgname=virtualbox
-pkgver=4.1.8
-_build=75467
-pkgrel=3
+pkgver=4.1.16
+_build=78094
+pkgrel=2
 pkgdesc='Oracle VM VirtualBox Binary Edition'
 arch=('i686' 'x86_64')
 url='http://virtualbox.org/'
 license=('GPL2')
-depends=('libidl2' 'libxcursor' 'libxinerama' 'libxslt' 'curl' 'linux-headers' 'python2')
+depends=('libidl2' 'libxcursor' 'libxinerama' 'libxslt' 'curl' 'linux-headers' 
+         'python2' 'make' 'gcc')
 options=('!strip')
 optdepends=('virtualbox-ext-oracle: for Oracle extensions'
             'dkms: for handling kernel modules with dkms'
@@ -25,8 +25,8 @@ optdepends=('virtualbox-ext-oracle: for Oracle extensions'
             'alsa-lib: for ALSA support'
             'pulseaudio: for PulseAudio support')
 provides=("virtualbox=${pkgver}")
-categories=('system')
 conflicts=('virtualbox' 'virtualbox-ose' 'virtualbox-modules')
+categories=('system')
 backup=('etc/vbox/vbox.cfg' 'etc/conf.d/vboxdrv' 'etc/conf.d/vboxweb')
 install='install'
 
@@ -41,13 +41,13 @@ source=(
   'vboxweb.rc'
   'vboxweb.conf'
 )
-sha256sums=('7d0d45dfc8e4ef27a817c017c6589d5204a6515d86f0c874843cb99ccfe319ee'
+sha256sums=('d753c3390d1185aff9e5be8a344bffd0262b31d823b8122055d5c8bb44fee39c'
             '69417a9e8855cab8e4878886abe138f559fd17ae487d4cd19c8a24974a8bbec2'
             '578b63ab173cdcd9169d8aff00caf48668e46a6886bb90fd34a0fbe63e180a4e'
-            'a3961bdeac733264320ec3b7de49018cbdb7e26b726170370feac8b809bf0bdd'
+            '71740893a5f226f9d9fcc607ab9d39b7de816b2759625b34da19162bc7e579ff'
             '656905de981ffa24f6f921c920538854a235225053f44baedacc07b46ca0cf56'
             '12dbba3b59991f2b68cddeeeda20236aeff63e11b7e2d1b08d9d6a82225f6651')
-[[ "${CARCH}" = i686 ]] && sha256sums[0]='7780d8fc171ccfa3047a3d6373f9965b8c2896b11137817314f29cf5a3bc514f'
+[[ "${CARCH}" = i686 ]] && sha256sums[0]='ceb28127870738e9b397453b21f2331f71c9a5a5a716e467a940fe557ce7216d'
 _installdir='/opt/VirtualBox'
 
 package() {
@@ -89,14 +89,14 @@ package() {
   # Install vboxdrv initscript
   install -D -m 0755 "${srcdir}/vboxdrv.rc" "${pkgdir}/etc/rc.d/vboxdrv"
   install -D -m 0644 "${srcdir}/vboxdrv.conf" "${pkgdir}/etc/conf.d/vboxdrv"
-  
+
   # Install vboxweb initscript
   install -D -m 0755 "${srcdir}/vboxweb.rc" "${pkgdir}/etc/rc.d/vboxweb"
   install -D -m 0644 "${srcdir}/vboxweb.conf" "${pkgdir}/etc/conf.d/vboxweb"
 
   # Install udev rules
-  install -D -m 0644 "${srcdir}/10-vboxdrv.rules" "${pkgdir}/lib/udev/rules.d/10-vboxdrv.rules"
-  ln -s "${_installdir}/VBoxCreateUSBNode.sh" "${pkgdir}/lib/udev/VBoxCreateUSBNode.sh"
+  install -D -m 0644 "${srcdir}/10-vboxdrv.rules" "${pkgdir}/usr/lib/udev/rules.d/10-vboxdrv.rules"
+  ln -s "${_installdir}/VBoxCreateUSBNode.sh" "${pkgdir}/usr/lib/udev/VBoxCreateUSBNode.sh"
 
   # Install the SDK
   cd "${pkgdir}/${_installdir}/sdk/installer"
@@ -144,7 +144,7 @@ package() {
     cd - >/dev/null
   done
 
-  # Write the configuration file 
+  # Write the configuration file
   install -d -m 0755 "${pkgdir}/etc/vbox"
   echo "# VirtualBox installation directory" > "${pkgdir}/etc/vbox/vbox.cfg"
   echo "INSTALL_DIR='${_installdir}'" >> "${pkgdir}/etc/vbox/vbox.cfg"
@@ -152,7 +152,7 @@ package() {
   echo "INSTALL_VER='${pkgver}'" >> "${pkgdir}/etc/vbox/vbox.cfg"
   echo "INSTALL_REV='${_build}'" >> "${pkgdir}/etc/vbox/vbox.cfg"
   chmod 0644 "${pkgdir}/etc/vbox/vbox.cfg"
-  
+
   # Create the directory below if it doesn't exist
   install -d -m 0755 "${pkgdir}/var/run/VirtualBox"
 }
