@@ -7,7 +7,7 @@
 source ../_buildscripts/${current_repo}-${_arch}-cfg.conf
 
 pkgname=clamav
-pkgver=0.97.4
+pkgver=0.97.5
 pkgrel=1
 pkgdesc='Anti-virus toolkit for Unix'
 arch=('i686' 'x86_64')
@@ -24,7 +24,7 @@ source=("http://downloads.sourceforge.net/sourceforge/$pkgname/$pkgname-$pkgver.
         'clamav.logrotate'
         'config.patch')
 
-sha1sums=('56f90cf8a73acba8f97beca86b42c65c3923935d'
+sha1sums=('1bb317ead4a1a677a9a11a063fc35a63f22309e9'
           '7f15f0b13a1c11235bc99ef0add01efd8a442f07'
           'cb116cdab49a810381a515cbcfb6a6c148547f07'
           'be3310d2b41a68ce06e33c84ab68ffe59fdce104'
@@ -52,5 +52,5 @@ package() {
 	install -D -m755 ../clamav "$pkgdir/etc/rc.d/clamav"
 
 	# un-distribute databases to require freshclam
-	rm "$pkgdir"/var/lib/clamav/*.cvd
+	#rm "$pkgdir"/var/lib/clamav/*.cvd
 }
