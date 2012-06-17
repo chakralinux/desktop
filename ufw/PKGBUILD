@@ -5,7 +5,7 @@
 
 pkgname=ufw
 pkgver=0.31.1
-pkgrel=1
+pkgrel=2
 pkgdesc="Uncomplicated and easy to use CLI tool for managing a netfilter firewall"
 arch=('any')
 url="https://launchpad.net/ufw"
@@ -22,19 +22,26 @@ backup=('etc/ufw/before.rules'
         'lib/ufw/user.rules'
         'lib/ufw/user6.rules')
 categories=('network')
-source=(http://launchpad.net/${pkgname}/0.31/${pkgver}/+download/${pkgname}-${pkgver}.tar.gz \
-        $pkgname.rc)
+source=("http://launchpad.net/${pkgname}/0.31/${pkgver}/+download/${pkgname}-${pkgver}.tar.gz"
+        "${pkgname}.rc")
 md5sums=('74b49d4d06e26359a55bf4ff576833a7'
-         'e15e82645bcb61e85ecc6e6c7c2fc46e')
+         '3d32964a23e0d6b3b7002272154bfad3')
 
-build() {
-  cd ${srcdir}/${pkgname}-${pkgver}
+package() {
+  cd "${srcdir}/${pkgname}-${pkgver}"
+  python2 setup.py install --root="${pkgdir}"
 
-  python2 setup.py install --root=${pkgdir}
+  install -D -m755 "${srcdir}/${pkgname}.rc" "${pkgdir}/etc/rc.d/${pkgname}"
+  install -D -m755 "${pkgdir}/usr/sbin/${pkgname}" "${pkgdir}/usr/bin/${pkgname}"
+  rm -rf "${pkgdir}/usr/sbin"
+  chmod 644 "${pkgdir}/etc/ufw"/*.rules "${pkgdir}/lib/ufw"/*.rules
 
-  install -Dm755 ${srcdir}/$pkgname.rc ${pkgdir}/etc/rc.d/$pkgname
+  # Prepare for systemd
+  mv "${pkgdir}/lib/ufw" "${pkgdir}/usr/lib"
+  rm -r "${pkgdir}/lib"
 
-  install -D -m755 ${pkgdir}/usr/sbin/$pkgname ${pkgdir}/usr/bin/$pkgname
-  rm -rf ${pkgdir}/usr/sbin
-  chmod 644 ${pkgdir}/etc/ufw/*.rules ${pkgdir}/lib/ufw/*.rules
+  sed -e 's#/lib/ufw#/usr/lib/ufw#g' -i "${pkgdir}/usr/lib/ufw/ufw-init"
+  sed -e 's#/lib/ufw#/usr/lib/ufw#g' -i "${pkgdir}/usr/lib/ufw/ufw-init-functions"
 }
+
+# vim:set ts=2 sw=2 et:
