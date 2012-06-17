@@ -5,7 +5,7 @@
 
 pkgname=ufw
 pkgver=0.31.1
-pkgrel=2
+pkgrel=3
 pkgdesc="Uncomplicated and easy to use CLI tool for managing a netfilter firewall"
 arch=('any')
 url="https://launchpad.net/ufw"
@@ -42,6 +42,9 @@ package() {
 
   sed -e 's#/lib/ufw#/usr/lib/ufw#g' -i "${pkgdir}/usr/lib/ufw/ufw-init"
   sed -e 's#/lib/ufw#/usr/lib/ufw#g' -i "${pkgdir}/usr/lib/ufw/ufw-init-functions"
+
+  # Absolute paths are bad...
+  sed -e 's#/bin/echo#echo#g' -i "${pkgdir}/usr/lib/ufw/ufw-init-functions"
 }
 
 # vim:set ts=2 sw=2 et:
