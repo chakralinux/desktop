@@ -6,31 +6,34 @@
 
 pkgname=allegro
 pkgver=5.0.6
-pkgrel=2
+pkgrel=3
 pkgdesc="Portable library mainly aimed at video game and multimedia programming."
 arch=('i686' 'x86_64')
 url="http://alleg.sourceforge.net/"
 license=('ZLIB')
 depends=('alsa-lib' 'flac' 'freetype2' 'glibc' 'jack' 'libgl' 'libjpeg' 'libogg' 'libpng' 'libvorbis' 'libx11' 'libxau' 'libxcb' 'libxcursor' 'libxdmcp' 'libxext' 'libxfixes' 'libxpm' 'libxrender' 'libxxf86vm' 'libxxf86dga' 'libxcursor' 'libpng' 'openal' 'physfs' 'zlib')
 makedepends=('cmake')
-source=(http://downloads.sourceforge.net/alleg/$pkgname-$pkgver.tar.gz)
+source=("http://downloads.sourceforge.net/alleg/${pkgname}-${pkgver}.tar.gz")
 md5sums=('c4b4384ef03ac5f6388f378f3eeff243')
 
 build() {
-  cd $srcdir/$pkgname-$pkgver
-  mkdir build && cd build
+  cd "${srcdir}"
+  mkdir -p build && cd build
 
-  cmake \
-    -DCMAKE_INSTALL_PREFIX=/usr \
-    -DCMAKE_BUILD_TYPE=RelWithDebInfo \
-    ..
+  cmake "${srcdir}/${pkgname}-${pkgver}" \
+        -DCMAKE_INSTALL_PREFIX=/usr \
+        -DCMAKE_BUILD_TYPE=RelWithDebInfo
+
   make
 }
 
 package() {
-  cd $srcdir/$pkgname-$pkgver/build
-  make DESTDIR=$pkgdir install
+  cd "${srcdir}/build"
+  make DESTDIR="${pkgdir}" install
 
-  install -m755 -d $pkgdir/usr/share/licenses/$pkgname
-  install -m644 ../LICENSE.txt $pkgdir/usr/share/licenses/$pkgname/
+  install -d -m755 "${pkgdir}/usr/share/licenses/${pkgname}"
+  install -m644 "${srcdir}/${pkgname}-${pkgver}/LICENSE.txt" \
+                "${pkgdir}/usr/share/licenses/${pkgname}"
 }
+
+# vim:set ts=2 sw=2 et:
