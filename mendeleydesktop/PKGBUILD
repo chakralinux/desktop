@@ -1,12 +1,11 @@
 #
-# Chakra Packages for Chakra, part of chakra-project.org
+# Apps Packages for Chakra, part of chakra-project.org
 #
 # Maintainer: Giuseppe Calà <jiveaxe@gmail.com>
-#
- 
- 
+
+
 pkgname=mendeleydesktop
-pkgver=1.5.1
+pkgver=1.5.2
 pkgrel=1
 url="http://www.mendeley.com/"
 pkgdesc="The desktop client for managing and sharing research papers."
@@ -21,12 +20,9 @@ source=("http://download.mendeley.com/linux/$pkgname-$pkgver-linux-${_filearch}.
         'mendeleydesktop.install')
 md5sums=('f46b33b8b70b7b88ae64c42b4884127b'
          '16358cd53dc258a72efcaeab5a415217')
-sha256sums=('9b8bf61b6084fd0e25763f942bbd6c652c66b2e12742c4e4312d530f0188839b'
-            '5484716ec4adf29a7bfc5ecb45c8ed4d6a5e253b8c72fccea12662454d398b85')
 
 if [[ $CARCH = x86_64 ]]; then
-	md5sums[0]='95961bda9409d1d896b360ff69a71d20'
-	sha256sums[0]='1db939d39d2ccc0b1fe52510946b5a09b7ed8ab5f6a73795da23c0db0b41fec0'
+	md5sums[0]='1fb073e53ce2d795aa615656c736619e'
 fi
 
 package() {
@@ -48,7 +44,7 @@ package() {
 	# force bundled qt since mendeley crashes when using qt 4.8
 	#sed -i 's/^Exec.*$/& --force-bundled-qt/' "$pkgdir/opt/$pkgname/share/applications/mendeleydesktop.desktop"
         sed -e 's/^Exec.*$/& --force-bundled-qt/g' -i "$pkgdir/opt/$pkgname/share/applications/mendeleydesktop.desktop"
-	
+
         for size in 16 22 32 48 64 128; do
 	    install -dm755 "$pkgdir/usr/share/icons/hicolor/${size}x${size}/apps"
 	    ln -s "/opt/$pkgname/share/icons/hicolor/${size}x${size}/apps/$pkgname.png" \
