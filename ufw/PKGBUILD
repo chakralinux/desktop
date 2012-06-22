@@ -5,7 +5,7 @@
 
 pkgname=ufw
 pkgver=0.31.1
-pkgrel=4
+pkgrel=5
 pkgdesc="Uncomplicated and easy to use CLI tool for managing a netfilter firewall"
 arch=('any')
 url="https://launchpad.net/ufw"
@@ -37,7 +37,12 @@ package() {
 
   # Install sysvinit script and systemd unit
   install -D -m755 "${srcdir}/${pkgname}.rc" "${pkgdir}/etc/rc.d/${pkgname}"
-  install -D -m644 "${srcdir}/${pkgname}.service" "${pkgdir}/usr/lib/systemd/system/${pkgname}.service"
+  #
+  # FIXME: the installation of the .service unit for systemd is commented out
+  # because it would otherwise conflict with systemd-units.
+  # Uncomment this only when we got rid of systemd-units.
+  #
+  # install -D -m644 "${srcdir}/${pkgname}.service" "${pkgdir}/usr/lib/systemd/system/${pkgname}.service"
 
   # Move ufw to /usr/bin
   install -D -m755 "${pkgdir}/usr/sbin/${pkgname}" "${pkgdir}/usr/bin/${pkgname}"
