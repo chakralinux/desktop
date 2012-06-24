@@ -6,7 +6,7 @@
  
 pkgname=nepoogle
 pkgver=0.9.2
-pkgrel=2
+pkgrel=3
 pkgdesc="A search utility for Nepomuk inspired in Google's search syntax."
 arch=('any')
 url="http://kde-apps.org/content/show.php/Nepoogle?content=145505"
@@ -14,9 +14,15 @@ screenshot="http://opendesktop.org/CONTENT/content-pre2/145505-2.jpeg"
 license=('GPL')
 depends=('kdebindings-pykde4')
 source=("http://kde-apps.org/CONTENT/content-files/145505-nepoogle_v$pkgver.tar.gz"
-	'nepoogle.desktop')
+	'nepoogle.desktop'
+        'nepoogle.patch')
 md5sums=('2f991c5847b36f89f1c4f9ffa282bb05'
-         'ceb6bb8059658686b4e13abd66a61445')
+         'ceb6bb8059658686b4e13abd66a61445'
+         '7fe2d28254f12e584f32d3c01ff754a2')
+
+build(){
+  patch nepoogle nepoogle.patch
+}
  
 package() {
   mkdir -p $pkgdir/usr/share/applications/kde4
