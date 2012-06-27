@@ -24,7 +24,7 @@ options=('docs' '!splithdr' 'splitdbg' 'log')
 install=${pkgname}.install
 depends=('polkit-kde-agent' "kdepimlibs>=${_kdever}" "kde-runtime>=${_kdever}" 'qimageblitz' 'libgles' 'libegl' "kactivities>=${_kdever}"
 	    'libxxf86misc' 'libxcomposite' 'libxss' 'lm_sensors' 'libxklavier' 'libxft' 'oxygen-icons' "xkit" 'libgles' 'libegl'
-	    'libxdamage' 'xorg-utils' 'libxrandr' 'libxres' 'libdmtx' 'libqalculate' 'prison' 'qrencode' "kdepim-runtime>=${_kdever}")
+	    'libxdamage' 'xorg-utils' 'libxrandr' 'libxres' 'libdmtx' 'libqalculate' 'prison' 'qrencode' "kdepim-runtime>=${_kdever}" "kde-base-artwork>=${_kdever}")
 makedepends=('pkgconfig' 'cmake' 'automoc4' 'networkmanager' 'bluez' "kdebindings-pykde4>=${_kdever}"
 	    'oxygen-icons' 'qedje' "kde-runtime>=${_kdever}" 'gpsd' 'samba' 
 	    'libraw1394' 'libdmtx' 'consolekit' 'docbook-xsl' 'prison' 'qrencode') #google-gadgets-qt 
@@ -124,11 +124,13 @@ build() {
         #patch -p1 -i ${srcdir}/fix_battery-applet.diff
 
 	msg "starting workspace build ..."
-	cmake . -DCMAKE_BUILD_TYPE=${_build_type} \
+        cd "${srcdir}"
+	mkdir build
+	cd build
+	cmake ../${pkgname}-${pkgver} \
+	        -DCMAKE_BUILD_TYPE=${_build_type} \
 		-DCMAKE_INSTALL_PREFIX=${_installprefix} \
 		-DWITH_Xmms=OFF \
- 		-DWITH_OpenGLES=ON \
-		-DKWIN_BUILD_WITH_OPENGLES=ON \
 		-DCMAKE_SKIP_RPATH=ON \
 		-DCMAKE_{SHARED,MODULE,EXE}_LINKER_FLAGS='-Wl,--no-undefined -Wl,--as-needed'
 	make
