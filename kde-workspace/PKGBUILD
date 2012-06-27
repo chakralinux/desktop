@@ -73,7 +73,8 @@ source=($_mirror/${pkgname}-$_kdever.tar.xz
 	# "fix" some sytemsettings modules that need root access
 	fix_root-only-kcms.patch
         # shutdown-fix.patch
-	sensors-fix.patch)
+	sensors-fix.patch
+        workspace1.diff)
 
 md5sums=(`grep ${pkgname}-$_kdever.tar.xz ../kde-sc.md5 | cut -d" " -f1`
         `grep kde-wallpapers-$_kdever.tar.xz ../kde-sc.md5 | cut -d" " -f1` # kde-wallpapers
@@ -98,7 +99,8 @@ md5sums=(`grep ${pkgname}-$_kdever.tar.xz ../kde-sc.md5 | cut -d" " -f1`
         '814350c52c135d6f7bdada1e29223d38'  #  fix_terminate-server.patch
 	'97a5eb51e6f9d460f0d61bb322a1db5e'  #  fix_kdm_configdef.patch
 	'5f963f80a026f0600edae1b1c70411e5'  #  fix_root-only-kcms.patch
-        'ecf3a9d6af9bdd3db0189e06ddf21034')  #  sensors-fix.patch
+        'ecf3a9d6af9bdd3db0189e06ddf21034'  #  sensors-fix.patch
+        '7d45f3d643910f989714a496722be4a9')
 
 #
 # build function
@@ -121,16 +123,15 @@ build() {
         patch -Np1 -i ${srcdir}/fix_root-only-kcms.patch
  
         msg "Upstream fixes"
-        #patch -p1 -i ${srcdir}/fix_battery-applet.diff
+        patch -RNp1 -i ${srcdir}/workspace1.diff
 
 	msg "starting workspace build ..."
-        cd "${srcdir}"
-	mkdir build
-	cd build
-	cmake ../${pkgname}-${pkgver} \
-	        -DCMAKE_BUILD_TYPE=${_build_type} \
+	cmake . -DCMAKE_BUILD_TYPE=${_build_type} \
 		-DCMAKE_INSTALL_PREFIX=${_installprefix} \
 		-DWITH_Xmms=OFF \
+ 		-DWITH_OpenGL=OFF \
+		-DKWIN_PLASMA_ACTIVE=ON \
+		-DKWIN_BUILD_XRENDER_COMPOSITING=OFF \
 		-DCMAKE_SKIP_RPATH=ON \
 		-DCMAKE_{SHARED,MODULE,EXE}_LINKER_FLAGS='-Wl,--no-undefined -Wl,--as-needed'
 	make
