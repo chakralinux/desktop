@@ -29,8 +29,6 @@ options=('docs' '!splithdr' 'splitdbg' 'log')
 build() {
 	cd ${srcdir}/${_pkgname}-${pkgver}
 
-	patch -Rp1 -i ${startdir}/fix.patch
-
 	cmake . -DCMAKE_BUILD_TYPE=${_build_type} \
                 -DCMAKE_INSTALL_PREFIX=${_installprefix} 
         make
