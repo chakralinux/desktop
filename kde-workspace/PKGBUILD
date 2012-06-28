@@ -16,7 +16,7 @@ _default_wp="Ariya"
 pkgname="kde-workspace"
 arch=('i686' 'x86_64')
 pkgver=${_kdever}
-pkgrel=1
+pkgrel=2
 pkgdesc="KDE Workspace"
 url="http://www.kde.org"
 license=('GPL' 'LGPL' 'FDL')
@@ -129,9 +129,6 @@ build() {
 	cmake . -DCMAKE_BUILD_TYPE=${_build_type} \
 		-DCMAKE_INSTALL_PREFIX=${_installprefix} \
 		-DWITH_Xmms=OFF \
- 		-DWITH_OpenGL=OFF \
-		-DKWIN_PLASMA_ACTIVE=ON \
-		-DKWIN_BUILD_XRENDER_COMPOSITING=OFF \
 		-DCMAKE_SKIP_RPATH=ON \
 		-DCMAKE_{SHARED,MODULE,EXE}_LINKER_FLAGS='-Wl,--no-undefined -Wl,--as-needed'
 	make
