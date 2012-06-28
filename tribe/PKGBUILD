@@ -19,11 +19,11 @@ depends=('kdelibs' 'kdeedu-marble>=4.8.3' 'squashfs-tools' 'tribe-partitionmanag
 makedepends=('cmake' 'kde-workspace' 'automoc4')
 options=('!splithdr' '!splitdbg' 'sign')
 source=("http://chakra-linux.org/sources/tribe/tribe-${pkgver}.tar.xz"
-        "http://chakra-linux.org/sources/tribe/RELEASE_NOTES_20120630.html"
+        "http://chakra-linux.org/sources/tribe/RELEASE_NOTES_20120702.html"
         'launch-tribe.sh')
   
 md5sums=('6651a509e7e58005c0c11df97c55c7be'
-         'd67d174a3a43a28793e8f6d456bf34c2'
+         'fbf12d9f51eec4676c222ca6c4ba42ce'
          'e31855da237a2c8029774831b3c04685')
  
 groups=('kde-uninstall')
@@ -76,7 +76,7 @@ package()
 	make DESTDIR=$startdir/pkg install 
         install -Dm755 ${srcdir}/launch-tribe.sh \
         ${pkgdir}/usr/bin/launch-tribe.sh
-	cp -vf ${srcdir}/RELEASE_NOTES_20120630.html $pkgdir/usr/share/tribe/config/RELEASE_NOTES.html
+	cp -vf ${srcdir}/RELEASE_NOTES_20120702.html $pkgdir/usr/share/tribe/config/RELEASE_NOTES.html
 
 	# remove nasty files
 	find $startdir/pkg/ -name ".git" -type d -exec rm -fr {} +
