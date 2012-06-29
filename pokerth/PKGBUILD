@@ -5,7 +5,7 @@
 
 pkgname=pokerth
 _realname=PokerTH
-pkgver=0.9.4
+pkgver=0.9.5
 pkgrel=1
 pkgdesc="PokerTH is a Texas Holdem poker game written in C++/Qt."
 arch=('i686' 'x86_64')
@@ -15,23 +15,14 @@ makedepends=('boost')
 categories=('games')
 url="http://www.pokerth.net/"
 source=("http://downloads.sourceforge.net/sourceforge/${pkgname}/${_realname}-${pkgver}-src.tar.bz2")
-md5sums=('afdc63e9a4e499fd70fc0eee4d8dc1a9')
+md5sums=('4bdea98bfc142a825c64b77feb4667d0')
 
 build() {
   cd "${srcdir}/${_realname}-${pkgver}-src"
-  
-  sed -i 's/QMAKE_CXXFLAGS += -std=gnu++0x/QMAKE_CXXFLAGS += -std=gnu++0x -DBOOST_FILESYSTEM_VERSION=2/' *.pro
 
-  sed -i '23 i #include <libircclient/libirc_rfcnumeric.h>' src/net/common/ircthread.cpp
-
-  # fix g++: error: unrecognized option '-no_dead_strip_inits_and_terms'
-  sed \
-    -e 's/QMAKE_LFLAGS += -no_dead_strip_inits_and_terms//' \
-    -i zlib_compress.pro pokerth_game.pro pokerth_server.pro
-
-  # Chakra look & feel tweaks
-  sed -i -e "s~a.setStyle(new QPlastiqueStyle);~//~g" src/pokerth.cpp
-  sed -i -e "s~a.setStyleSheet(font1String +~a.setStyleSheet(~g" src/pokerth.cpp
+  # Fix missing include
+  sed -e '23 i #include <libircclient/libirc_rfcnumeric.h>' \
+      -i src/net/common/ircthread.cpp
 
   qmake "${pkgname}.pro"
   make
@@ -48,3 +39,5 @@ package() {
   install -D -m644 data/data-copyright.txt "${pkgdir}/usr/share/licenses/pokerth/data-copyright.txt"
   rm -f "${pkgdir}/usr/share/pokerth/data/data-copyright.txt"
 }
+
+# vim:set ts=2 sw=2 et:
