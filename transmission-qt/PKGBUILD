@@ -6,15 +6,15 @@
 
 pkgbase=transmission
 pkgname=('transmission-cli' 'transmission-qt')
-pkgver=2.52
-pkgrel=2
+pkgver=2.60
+pkgrel=1
 arch=('i686' 'x86_64')
 url="http://www.transmissionbt.com/"
 license=('MIT')
 makedepends=('intltool' 'curl' 'pkgconfig' 'desktop-file-utils' 'qt' 'libevent' 'gettext')
 source=(http://mirrors.m0k.org/transmission/files/${pkgbase}-${pkgver}.tar.xz
         transmissiond transmissiond.conf)
-md5sums=('b50cc87b4cd77ba0cbda98b5568a4d07'
+md5sums=('2aff84c29a3c4b51ac5682a89d96bda5'
          '50b7c17300bc8b38f44fb6f681ba05d0'
          'be39806c35b7544856fa4070b00fc960')
 build() {
@@ -63,9 +63,10 @@ package_transmission-qt() {
   install -D -m644 qt/icons/transmission.png "${pkgdir}/usr/share/pixmaps/transmission-qt.png"
   install -D -m644 qt/transmission-qt.desktop "${pkgdir}/usr/share/applications/transmission-qt.desktop"
  
-  mkdir -p "${pkgdir}/usr/share/transmission/i18n"
+  #mkdir -p "${pkgdir}/usr/share/transmission/i18n"
   install -D -m644 qt/translations/transmission_en.ts "${pkgdir}/usr/share/transmission/i18n/transmission_en.ts"
   install -D -m644 qt/translations/transmission_es.ts "${pkgdir}/usr/share/transmission/i18n/transmission_es.ts"
+  install -D -m644 qt/translations/transmission_eu.ts "${pkgdir}/usr/share/transmission/i18n/transmission_eu.ts"
   install -D -m644 qt/translations/transmission_kk.ts "${pkgdir}/usr/share/transmission/i18n/transmission_kk.ts"
   install -D -m644 qt/translations/transmission_lt.ts "${pkgdir}/usr/share/transmission/i18n/transmission_lt.ts"
   install -D -m644 qt/translations/transmission_pt_BR.ts "${pkgdir}/usr/share/transmission/i18n/transmission_pt_BR.ts"
