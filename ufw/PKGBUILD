@@ -4,8 +4,8 @@
 # maintainer abveritas@chakra-project.org
 
 pkgname=ufw
-pkgver=0.31.1
-pkgrel=5
+pkgver=0.32
+pkgrel=1
 pkgdesc="Uncomplicated and easy to use CLI tool for managing a netfilter firewall"
 arch=('any')
 url="https://launchpad.net/ufw"
@@ -19,13 +19,13 @@ backup=('etc/ufw/before.rules'
         'etc/ufw/user.rules'
         'etc/ufw/sysctl.conf'
         'etc/default/ufw'
-        'lib/ufw/user.rules'
-        'lib/ufw/user6.rules')
+        'usr/lib/ufw/user.rules'
+        'usr/lib/ufw/user6.rules')
 categories=('network')
-source=("http://launchpad.net/${pkgname}/0.31/${pkgver}/+download/${pkgname}-${pkgver}.tar.gz"
+source=("http://launchpad.net/${pkgname}/0.32/${pkgver}/+download/${pkgname}-${pkgver}.tar.gz"
         "${pkgname}.rc"
         "${pkgname}.service")
-md5sums=('74b49d4d06e26359a55bf4ff576833a7'
+md5sums=('e9d314a6213c94ec6bddf107f7bbdb9f'
          '3d32964a23e0d6b3b7002272154bfad3'
          'd125e918ce9a832c528e6982cf6f6d98')
 
@@ -37,12 +37,7 @@ package() {
 
   # Install sysvinit script and systemd unit
   install -D -m755 "${srcdir}/${pkgname}.rc" "${pkgdir}/etc/rc.d/${pkgname}"
-  #
-  # FIXME: the installation of the .service unit for systemd is commented out
-  # because it would otherwise conflict with systemd-units.
-  # Uncomment this only when we got rid of systemd-units.
-  #
-  # install -D -m644 "${srcdir}/${pkgname}.service" "${pkgdir}/usr/lib/systemd/system/${pkgname}.service"
+  install -D -m644 "${srcdir}/${pkgname}.service" "${pkgdir}/usr/lib/systemd/system/${pkgname}.service"
 
   # Move ufw to /usr/bin
   install -D -m755 "${pkgdir}/usr/sbin/${pkgname}" "${pkgdir}/usr/bin/${pkgname}"

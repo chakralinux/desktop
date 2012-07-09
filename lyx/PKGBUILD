@@ -1,14 +1,10 @@
 #
 # Apps Packages for Chakra, part of chakra-project.org
 #
-# maintainer (i686): Phil Miller <philm[at]chakra-project[dog]org>
-# maintainer (x86_64): Manuel Tortosa <manutortosa[at]chakra-project[dot]org>
-
-# include global config
-source ../_buildscripts/${current_repo}-${_arch}-cfg.conf
+# maintainer: Neophytos Kolokotronis <tetris4@gmail.com>
 
 pkgname=lyx
-pkgver=2.0.3
+pkgver=2.0.4
 pkgrel=1
 pkgdesc="An advanced open-source document processor."
 arch=('i686' 'x86_64')
@@ -20,7 +16,8 @@ categories=('office')
 license=('GPL')
 source=(ftp://ftp.lyx.org/pub/lyx/stable/2.0.x/$pkgname-$pkgver.tar.xz \
 	lyx.desktop)
-md5sums=('10b94117d95e33e0628204b56185ed2d'
+screenshot=('http://www.lyx.org/images/about/main_window.png')
+md5sums=('3c0a5216270d6ac8637c667ff59ca12b'
          '0a7a76d3d9682f8d18ef0ed002b6d6e8')
 
 build() {
@@ -28,7 +25,7 @@ build() {
 
   ./configure --prefix=/usr \
     --with-frontend=qt4 --without-included-boost
-  make 
+  make
 }
 
 package() {
