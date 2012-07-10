@@ -5,8 +5,8 @@
 
 pkgname=cegui
 _pkgname=CEGUI
-pkgver=0.7.6
-pkgrel=4
+pkgver=0.7.7
+pkgrel=1
 pkgdesc="A free library providing windowing and widgets for graphics APIs/engines."
 arch=('i686' 'x86_64')
 url="http://crayzedsgui.sourceforge.net"
@@ -14,15 +14,11 @@ license=("MIT")
 depends=('boost-libs' 'devil' 'expat' 'freeglut' 'freetype2' 'glew' 'irrlicht' 'libxml2' 'lua' 'ogre' 'pcre' 'python2' 'silly' 'toluapp')
 makedepends=('boost' 'doxygen' 'graphviz')
 options=(!libtool)
-source=("http://downloads.sourceforge.net/crayzedsgui/${_pkgname}-${pkgver}.tar.gz"
-        
-"cegui-0.7.6-python-detection.patch::http://projects.archlinux.org/svntogit/community.git/plain/trunk/cegui-0.7.6-python-detection.patch?h=packages/cegui")
-md5sums=('7ddb5145dc94fb7daf9aea1d30a6ffa3'
-         '4600775f78b7349621a8a314ade8c902')
+source=("http://downloads.sourceforge.net/crayzedsgui/${_pkgname}-${pkgver}.tar.gz")
+md5sums=('8b83577f86eaa1581765dd155c7c8f24')
+
 build() {
   cd "${srcdir}/${_pkgname}-${pkgver}"
-
-  patch -Np0 < "${srcdir}/cegui-0.7.6-python-detection.patch"
 
   ./bootstrap
   ./configure \
