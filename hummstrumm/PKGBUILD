@@ -4,7 +4,8 @@
 # Maintainer: Adrián Chaves Fernández (Gallaecio) <adriyetichaves@gmail.com>
 
 pkgname=hummstrumm
-pkgver=0.5
+pkgver=0.6.1
+_pkgver=0.6
 pkgrel=1
 pkgdesc="A 3D adventure game in which two players set out to stop the evil Dr. Geoff from taking over the world."
 arch=('i686' 'x86_64')
@@ -15,10 +16,10 @@ depends=(freetype2 ftgl libjpeg libpng libtheora libvorbis libxrandr mesa openal
 makedepends=(cmake doxygen)
 categories=('games')
 source=(http://$pkgname.googlecode.com/files/$pkgname-$pkgver.tar.gz)
-md5sums=('ed5fa8b029072b904066d21535efeb94')
+md5sums=('e6d548885bea4457d478664ae7bf523e')
 
 build() {
-  cd $srcdir/$pkgname-$pkgver
+  cd $srcdir/$pkgname-$_pkgver
   CXXFLAGS="" \
   cmake \
     -G "Unix Makefiles" \
@@ -26,6 +27,6 @@ build() {
 }
 
 package() {
-  cd $srcdir/$pkgname-$pkgver
+  cd $srcdir/$pkgname-$_pkgver
   make DESTDIR=$pkgdir install
 }
