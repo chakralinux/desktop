@@ -19,7 +19,7 @@ pkgname=('libreoffice-common'
 	'libreoffice-extension-pdfimport'
 	'libreoffice-extension-presenter-screen'
 	'libreoffice-extension-presentation-minimizer'
-	'libreoffice-extension-report-builder'
+	#'libreoffice-extension-report-builder'
 	'libreoffice-scripting-javascript'
 	'libreoffice-extension-scripting-python')
 _LOver=3.5.5.3
@@ -217,7 +217,6 @@ build() {
 		--with-system-libwpg \
 		--with-system-libwps \
 		--with-system-redland\
-		--with-system-boost \
 		--without-system-saxon\
 		--with-openldap\
 		--with-ant-home="/usr/share/java/apache-ant"\
@@ -234,7 +233,7 @@ build() {
 		--enable-ext-pdfimport \
 		--enable-ext-presenter-console \
 		--enable-ext-presenter-minimizer \
-		--enable-ext-report-builder \
+		--disable-ext-report-builder \
 		--enable-ext-scripting-javascript \
 		--with-java-target-version=1.5 \
 		$EXTRAOPTS 
@@ -611,16 +610,16 @@ package_libreoffice-extension-presentation-minimizer() {
 	unzip -q ${srcdir}/libreoffice-core-$_LOver/solver/unxlng*/bin/presentation-minimizer.oxt -d ${pkgdir}/usr/lib/libreoffice/share/extensions/presentation-minimizer
 }
 
-package_libreoffice-extension-report-builder() {
-
- pkgdesc="This extension creates smart-looking database reports"
+#package_libreoffice-extension-report-builder() {
+#
+# pkgdesc="This extension creates smart-looking database reports"
  #arch=('any')
- depends=('libreoffice-common' 'libreoffice-kde4' 'java-environment')
- groups=('libreoffice-extensions')
+# depends=('libreoffice-common' 'libreoffice-kde4' 'java-environment')
+# groups=('libreoffice-extensions')
 
-	install -dm755 ${pkgdir}/usr/lib/libreoffice/share/extensions
-	unzip -q ${srcdir}/libreoffice-core-$_LOver/solver/unxlng*/bin/report-builder.oxt -d ${pkgdir}/usr/lib/libreoffice/share/extensions/report-builder
-}
+#	install -dm755 ${pkgdir}/usr/lib/libreoffice/share/extensions
+#	unzip -q ${srcdir}/libreoffice-core-$_LOver/solver/unxlng*/bin/report-builder.oxt -d ${pkgdir}/usr/lib/libreoffice/share/extensions/report-builder
+#}
 
 package_libreoffice-scripting-javascript() {
 
