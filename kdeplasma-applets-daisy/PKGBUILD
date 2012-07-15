@@ -1,16 +1,15 @@
 #
 # Apps Packages for Chakra, part of chakra-project.org
 #
-# maintainer (i686): Phil Miller <philm[at]chakra-project[dog]org>
-# maintainer (x86_64): Manuel Tortosa <manutortosa[at]chakra-project[dot]org>
+# Maintainer: Fabian Kosmale <0inkane@googlemail.com>
 
-# include global config
 source ../_buildscripts/${current_repo}-${_arch}-cfg.conf
 
 pkgname=kdeplasma-applets-daisy
-pkgver=0.0.4.25
-pkgrel=4
+pkgver=0.0.4.26
+pkgrel=1
 pkgdesc="A simple application launcher for Plasma."
+screenshot="http://cdlszm.org/media/daisy-round1.jpg"
 arch=('i686' 'x86_64')
 url="http://lechio.freehostia.com/daisy.html"
 license=('GPL')
@@ -20,15 +19,11 @@ conflicts=('kde-extragear-plasmoids')
 replaces=('plasma-daisy-plasmoid')
 categories=('accessories')
 install=daisy.install
-source=("http://cdlszm.org/downloads/plasma-applet-daisy-$pkgver.tar.gz"
-        'patch.diff')
-md5sums=('269fd526453a16066cb704352505f7e9'
-         '0a36cfe275cb2c981c26e8e467d0fd57')
+source=("http://cdlszm.org/downloads/plasma-applet-daisy-$pkgver.tar.gz")
+md5sums=('43c1ae617a0216e0780187db8e628cdf')
 
 build() {
   cd $srcdir/plasma-applet-daisy-${pkgver}
-  #Patch to make daisy work with KDE>=4.8
-  patch -Np1 -i "${srcdir}/patch.diff"
 
   mkdir build && cd build
   cmake -DCMAKE_INSTALL_PREFIX=/usr ..
