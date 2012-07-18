@@ -4,7 +4,7 @@
 # maintainer abveritas@chakra-project.org
 
 pkgname=mc
-pkgver=4.8.3
+pkgver=4.8.4
 pkgrel=1
 pkgdesc="A filemanager/shell that emulates Norton Commander"
 arch=('i686' 'x86_64')
@@ -16,7 +16,7 @@ optdepends=('p7zip: support for 7zip archives')
 screenshot=('http://ompldr.org/vOG9vNg')
 options=('!emptydirs' '!makeflags')
 source=("https://www.midnight-commander.org/downloads/${pkgname}-${pkgver}.tar.bz2")
-sha256sums=('445f286652b85c3e8e87839bad64c28ad2dc80661778571a0b59c2b920ef60ac')
+md5sums=('a8edb8226cb25869f925ecce043faf1e')
 
 build() {
 	cd ${srcdir}/${pkgname}-${pkgver}
@@ -37,11 +37,10 @@ package() {
 
 	make DESTDIR=${pkgdir} install
 
-	# Fix FS#15177
+	# Fixes
 	sed -i 's|op_has_zipinfo = 0|op_has_zipinfo = 1|' \
 	    ${pkgdir}/usr/lib/mc/extfs.d/uzip
 
-	# Fix FS#18312
 	rm "${pkgdir}/usr/lib/mc/extfs.d/u7z"
 
 	sed 's#/usr/bin/env python#/usr/bin/python2#' \
