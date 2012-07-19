@@ -1,0 +1,21 @@
+--- qtsingleapplication/src/qtlocalpeer.cpp.orig	2012-07-19 15:01:51.610446745 +0000
++++ qtsingleapplication/src/qtlocalpeer.cpp	2012-07-19 15:01:10.499880379 +0000
+@@ -49,6 +49,7 @@
+ static PProcessIdToSessionId pProcessIdToSessionId = 0;
+ #endif
+ #if defined(Q_OS_UNIX)
++#include <unistd.h>
+ #include <time.h>
+ #endif
+ 
+--- processwrapper.cc.orig	2012-07-19 14:59:46.495424725 +0000
++++ processwrapper.cc	2012-07-19 15:00:07.155695828 +0000
+@@ -94,6 +94,8 @@
+ 
+ #else
+ 
++#include <unistd.h>
++
+ unsigned int ProcessWrapper::currentProcessId()
+ {
+     return getpid();

@@ -9,15 +9,15 @@ source ../_buildscripts/${current_repo}-${_arch}-cfg.conf
 
 pkgbase=fcitx
 pkgname=('fcitx' 'fcitx-qt' 'fcitx-gtk2' 'fcitx-gtk3')
-pkgver=4.2.4.1
+pkgver=4.2.5
 pkgrel=1
 pkgdesc="A Flexible Input Method Framework"
 arch=("i686" "x86_64")
 license=('GPL')
 url="http://code.google.com/p/fcitx"
-makedepends=('intltool' 'cmake' 'pango' 'qt' 'icu' 'dbus-core' 'wget' 'gtk2' 'gtk3' 'opencc' 'lua' 'iso-codes')
+makedepends=('intltool' 'cmake' 'pango' 'qt' 'icu' 'dbus-core' 'wget' 'gtk2' 'gtk3' 'opencc' 'lua' 'iso-codes' 'enchant')
 source=("http://fcitx.googlecode.com/files/${pkgname}-${pkgver}.tar.xz")
-md5sums=('554b9498e56556cac3d0b1869e909a71')
+md5sums=('4301375f3abfec374d3899ffdc9c7e28')
 
 build() {
   cd $srcdir/
@@ -39,7 +39,7 @@ build() {
 }
 
 package_fcitx(){
-    depends=('pango' 'dbus-core' 'opencc' 'lua')
+    depends=('pango' 'dbus-core' 'opencc' 'lua' 'iso-codes' 'enchant' 'icu')
     conflicts=('fcitx-utf8-svn' 'fcitx-svn' 'fcitx-hg' 'fcitx-keyboard')
     replaces=('fcitx-keyboard')
     cd $srcdir/build
@@ -60,7 +60,7 @@ package_fcitx-qt()
 package_fcitx-gtk2()
 {
     pkgdesc='GTK2 IM Module for fcitx'
-    depends=('gtk2' 'icu' 'fcitx')
+    depends=('gtk2' 'fcitx')
     install=fcitx-gtk2.install
     cd $srcdir/build/src/frontend/gtk2
     make DESTDIR=$pkgdir install
