@@ -5,11 +5,11 @@
 
 pkgname=handbrake-cli
 pkgver=0.9.8
-pkgrel=1
+pkgrel=2
 arch=('i686' 'x86_64')
 url="http://handbrake.fr/"
 license=('GPL')
-depends=('bzip2' 'gcc-libs' 'zlib' 'fribidi' 'ffmpeg' 'faac' 'libdvdread' 'libbluray')
+depends=('bzip2' 'gcc-libs' 'zlib' 'fribidi' 'ffmpeg')
 makedepends=('intltool' 'python' 'yasm' 'wget' 'libnotify' 'gstreamer0.10-base' 'dbus-glib')
 source=("http://downloads.sourceforge.net/project/handbrake/$pkgver/HandBrake-$pkgver.tar.bz2")
 categories=('multimedia')
@@ -18,7 +18,7 @@ md5sums=('71637bab2719a976d62d5c1944227b59')
 build() {
   cd "$srcdir/HandBrake-$pkgver"
 
-  ./configure --prefix=/usr --force --disable-gtk --disable-gtk-update-checks
+  ./configure --prefix=/usr --force --disable-gtk --disable-gtk-update-checks --enable-ff-mpeg2
   cd build
   make
 }
