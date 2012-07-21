@@ -4,8 +4,9 @@
 # Maintainer: Adrián Chaves Fernández (Gallaecio) <adriyetichaves@gmail.com>
 
 pkgname=ember
-pkgver=0.6.2
-pkgrel=5
+pkgver=0.6.3
+_mediaver=$pkgver
+pkgrel=1
 pkgdesc="Ember is a 3D client using the OGRE 3d library, valid for WorldForge server."
 arch=('i686' 'x86_64')
 url="http://wiki.worldforge.org/wiki/Ember"
@@ -13,9 +14,9 @@ license=('GPL3')
 depends=('atlas_cpp' 'boost' 'cegui' 'curl' 'eris' 'freealut' 'libsigc++2.0' 'libwfut' 'mercator' 'ogre' 'openal' 'sdl' 'skstream' 'toluapp' 'varconf' 'wfmath')
 categories=('games')
 source=("http://downloads.sourceforge.net/worldforge/$pkgname-$pkgver.tar.bz2"
-	"http://downloads.sourceforge.net/worldforge/$pkgname-media-$pkgver.tar.bz2")
-md5sums=('e3f854897fa73f54403e111f45031d3f'
-         'd2acb2b2f1876876f4a0332be2280c41')
+	"http://downloads.sourceforge.net/worldforge/$pkgname-media-$_mediaver.tar.bz2")
+md5sums=('4b241ffc78a5d081e409c23fdb2db4ea'
+         '2e2577b5faca0951dc40e443574ee548')
 
 build() {
   cd $srcdir/$pkgbase-$pkgver
@@ -35,5 +36,5 @@ package() {
 
   # Data.
   mkdir -p $pkgdir/usr/share/$pkgname/media/
-  cp -R $srcdir/media-$pkgver/media/* $pkgdir/usr/share/$pkgname/media/
+  cp -R $srcdir/$pkgname-media-$pkgver/media/* $pkgdir/usr/share/$pkgname/media/
 }
