@@ -1,10 +1,10 @@
 #
 # Games Packages for Chakra, part of chakra-project.org
 #
-# Maintainer: Adrián Chaves Fernández (Gallaecio)
+# Maintainer: Adrián Chaves Fernández (Gallaecio) <adriyetichaves@gmail.com>
 
 pkgname=dustrac
-pkgver=0.2.1
+pkgver=0.3.1
 pkgrel=1
 pkgdesc="Dust Racing (Dustrac) is a tile-based, 2D racing game."
 arch=('i686' 'x86_64')
@@ -14,7 +14,7 @@ license=('GPL3')
 depends=(qt)
 makedepends=(cmake)
 source=(http://downloads.sourceforge.net/project/$pkgname/src/$pkgname-$pkgver.tar.gz)
-md5sums=('4eade7f5eab15395062a6488941b46e0')
+md5sums=('c47c780b77c6df12d516c2443ce53cf1')
 
 build() {
   cd $srcdir/$pkgname-$pkgver
@@ -30,21 +30,22 @@ package() {
   
   # Manual installation.
   mkdir -p $pkgdir/usr/share/$pkgname
+  rm -R data/images/raw
   cp -R data dustrac editor $pkgdir/usr/share/$pkgname
   
   # Executables:
   mkdir -p $pkgdir/usr/bin
   
-    # Game.
-    echo "#!/bin/bash"             > $pkgdir/usr/bin/$pkgname
-    echo "cd /usr/share/$pkgname" >> $pkgdir/usr/bin/$pkgname
-    echo "./$pkgname"             >> $pkgdir/usr/bin/$pkgname
-    chmod +x $pkgdir/usr/bin/$pkgname
-    
-    # Editor.
-    echo "#!/bin/bash"             > $pkgdir/usr/bin/$pkgname-editor
-    echo "cd /usr/share/$pkgname" >> $pkgdir/usr/bin/$pkgname-editor
-    echo "./editor"               >> $pkgdir/usr/bin/$pkgname-editor
-    chmod +x $pkgdir/usr/bin/$pkgname-editor
+  # Game.
+  echo "#!/bin/bash"             > $pkgdir/usr/bin/$pkgname
+  echo "cd /usr/share/$pkgname" >> $pkgdir/usr/bin/$pkgname
+  echo "./$pkgname"             >> $pkgdir/usr/bin/$pkgname
+  chmod +x $pkgdir/usr/bin/$pkgname
+  
+  # Editor.
+  echo "#!/bin/bash"             > $pkgdir/usr/bin/$pkgname-editor
+  echo "cd /usr/share/$pkgname" >> $pkgdir/usr/bin/$pkgname-editor
+  echo "./editor"               >> $pkgdir/usr/bin/$pkgname-editor
+  chmod +x $pkgdir/usr/bin/$pkgname-editor
   
 }
