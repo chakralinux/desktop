@@ -6,7 +6,7 @@
 pkgname=amarok
 replaces=('amarok-base' 'amarok-engine-xine' 'amarok-base-mysqlfree')
 pkgver=2.5.0
-pkgrel=6
+pkgrel=7
 pkgdesc="A media player for KDE"
 arch=("i686" "x86_64")
 url="http://amarok.kde.org"
@@ -37,7 +37,8 @@ build() {
   cd build
   cmake "../${pkgname}-${pkgver}" \
     -DCMAKE_BUILD_TYPE=Release \
-    -DCMAKE_INSTALL_PREFIX=/usr
+    -DCMAKE_INSTALL_PREFIX=/usr \
+    -DDEBUG=true 
   make
 }
 
