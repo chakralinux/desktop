@@ -1,0 +1,35 @@
+#
+# Apps Packages for Chakra, part of chakra-project.org
+#
+# Neophytos Kolokotronis <tetris4@gmail.com>
+
+pkgname=ktp-kded-integration-module
+pkgver=0.4.0
+pkgrel=3
+pkgdesc="Workspace integration module - provides several plugins like auto-away, the infamous 'Now listening to...' and also an error handler"
+arch=('i686' 'x86_64')
+url="http://www.kde.org"
+license=('GPL')
+depends=('ktp-common-internals')
+makedepends=('cmake' 'automoc4')
+conflicts=('telepathy-kde-integration-module')
+replaces=('telepathy-kde-integration-module')
+provides=('telepathy-kde-integration-module')
+groups=('kde-telepathy')
+source=("ftp://mirrors.mit.edu/kde/unstable/kde-telepathy/${pkgver}/src/${pkgname}-${pkgver}.tar.bz2")
+md5sums=('e61d2cbf07416ebf6a1e48af23fb8055')
+
+build() {
+  cd "${srcdir}"
+  mkdir build
+  cd build
+  cmake ../${pkgname}-${pkgver} \
+    -DCMAKE_INSTALL_PREFIX=/usr \
+    -DCMAKE_BUILD_TYPE=Release
+  make
+}
+
+package() {
+  cd "${srcdir}"/build
+  make DESTDIR="${pkgdir}" install
+}
