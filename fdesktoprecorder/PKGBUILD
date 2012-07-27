@@ -3,8 +3,8 @@
 # maintainer: abveritas@chakra-project.org
 
 pkgname=fdesktoprecorder
-pkgver=20120615
-_pkgver=fde990a
+pkgver=20120726
+_pkgver=2ba3869
 pkgrel=1
 pkgdesc="A program that can video record a single window or your entire desktop using ffmpeg."
 arch=('i686' 'x86_64')
@@ -12,21 +12,20 @@ url="http://opendesktop.org/content/show.php?content=147844"
 depends=('qt' 'ffmpeg')
 makedepends=('cmake' 'automoc4' 'kdelibs' 'desktop-file-utils')
 categories=('utils')
+screenshot=('http://kde-apps.org/CONTENT/content-pre2/147844-2.png')
 source=("https://github.com/froksen/FDesktopRecorder/tarball/master/froksen-FDesktopRecorder-${_pkgver}.tar.gz")
 license=('GPL')
-md5sums=('f904cfefce6457a2340fe15de7f4a18f')
+md5sums=('379e016965799718d68868ac2ec9c3d7')
 
 build() {
   cd ${srcdir}/froksen-FDesktopRecorder-${_pkgver}/source
-  qmake FDesktopRecorder.pro
+  cmake  \
+          -DCMAKE_INSTALL_PREFIX=/usr \
+          -DCMAKE_BUILD_TYPE=Release
   make
 }
 
 package() {
-  mkdir -p ${pkgdir}/usr/{bin,share/{applications,pixmaps}}
   cd ${srcdir}/froksen-FDesktopRecorder-${_pkgver}/source
-  install -m755 FDesktopRecorder ${pkgdir}/usr/bin/FDesktopRecorder
-  install -m644 images/icon.png ${pkgdir}/usr/share/pixmaps/fdesktoprecorder.png
-  cd ${srcdir}/froksen-FDesktopRecorder-${_pkgver}/Desktop
-  install -m644 FDesktopRecorder.desktop ${pkgdir}/usr/share/applications/FDesktopRecorder.desktop
+  make DESTDIR="$pkgdir" install
 }
