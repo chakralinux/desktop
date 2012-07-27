@@ -9,43 +9,33 @@ pkgdesc="DVD Authoring Maker In Linux Environnement"
 url="http://2mandvd.tuxfamily.org/"
 license=('GPL')
 arch=('i686' 'x86_64')
-#install=2mandvd.install
 depends=('qt>=4.6' 'sox' 'mplayer' 'perl' 'netpbm' 'transcode' 'ffmpegthumbnailer' 'dvdauthor' 'mjpegtools' 'ttf-dejavu' 'dvd+rw-tools' 'exif' 'python-opengl')
 optdepends=('xine-ui: to preview the result')
 categories=('multimedia')
 screenshot=('http://i1-linux.softpedia-static.com/screenshots/2ManDVD_1.jpg')
-source=(http://download.tuxfamily.org/$pkgname/2ManDVD-${pkgver}.tar.gz
-	2mandvd.desktop
-	2mandvd.sh)
-md5sums=('2e362b6d963b0698ee4911d28865d50d'
-         '1eaaeef9a5e7896482d51d489b781689'
-         '0112971f170034aff6efaafb9508b010')
+source=("http://download.tuxfamily.org/${pkgname}/2ManDVD-${pkgver}.tar.gz")
+md5sums=('2e362b6d963b0698ee4911d28865d50d')
 
 build() {
-  cd ${srcdir}/2ManDVD
+  cd "${srcdir}"
 
-  qmake 2ManDVD.pro
+  # Prepare the build directory and configure the project
+  rm -rf build && mkdir -p build
+  cd build
 
+  qmake "${srcdir}/2ManDVD/2ManDVD.pro"
+
+  # Fix those damn absolute paths!
+  sed -e 's,chmod -R 755 /usr/share/2ManDVD,chmod -R 755 \$(INSTALL_ROOT)/usr/share/2ManDVD,g' \
+      -i Makefile
+
+  # Actually compile it
   make
 }
 
-package(){
-  cd $srcdir/2ManDVD
-
-  install -d -m755 ${pkgdir}/opt/2ManDVD ${pkgdir}/usr/bin
-  cp -R Bibliotheque Interface 2ManDVD fake.pl *.qm README.txt ${pkgdir}/opt/2ManDVD/
-  install -D -m755 ${srcdir}/2mandvd.sh ${pkgdir}/usr/bin/2ManDVD
-
-  # Fixing some right problems
-  #cd ${pkgdir}/opt/2ManDVD
-  #find . -type f -print0 | xargs -0 -n1 chmod 644
-
-  #chmod 755 Bibliotheque Interface
-  #chmod +x 2ManDVD
-  #cd ${pkgdir}/opt/2ManDVD/Bibliotheque
-  #chmod -R 777 *
-
-  # Creating menu item
-  install -D -m644 ${srcdir}/2ManDVD/Interface/mandvd.png ${pkgdir}/usr/share/pixmaps/2mandvd.png
-  install -D -m644 ${srcdir}/2mandvd.desktop ${pkgdir}/usr/share/applications/2mandvd.desktop
+package() {
+  cd "${srcdir}/build"
+  make install INSTALL_ROOT="${pkgdir}"
 }
+
+# vim:set ts=2 sw=2 et:
