@@ -1,26 +1,23 @@
 #
 # Chakra Packages for Chakra, part of chakra-project.org
 #
-# maintainer (i686): Phil Miller <philm[at]chakra-project[dog]org>
-# maintainer (x86_64): Manuel Tortosa <manutortosa[at]chakra-project[dot]org>
-# contributor (x86_64): Giuseppe Calà <jiveaxe@gmail.com>
-
-# include global config
-source ../_buildscripts/${current_repo}-${_arch}-cfg.conf
+# maintainer abveritas@chakra-project.org
 
 pkgname=tellico
-pkgver=2.3.4
-pkgrel=1
+pkgver=2.3.6
+pkgrel=2
 pkgdesc="A collection manager for KDE"
 arch=('i686' 'x86_64')
 url="http://tellico-project.org/"
 license=('GPL')
 depends=('kde-workspace' 'yaz' 'exempi' 'libksane' 'taglib'
-         'kdemultimedia-common' 'poppler-qt' 'qjson')
+         'libkcddb' 'poppler-qt' 'qjson')
 makedepends=('automoc4' 'cmake' 'docbook-xsl')
+categories=('office')
+screenshot=('http://tellico-project.org/img/main_screen-2.0.jpg')
 install=$pkgname.install
 source=("http://tellico-project.org/files/${pkgname}-${pkgver}.tar.bz2")
-md5sums=('0a955754e89fc96d9745266ec97410c7')
+md5sums=('a547c3cff6559012bf2292cec5a543ed')
 
 build() {
   cd "${srcdir}"
