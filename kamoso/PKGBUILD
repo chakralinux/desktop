@@ -1,0 +1,42 @@
+#
+# Chakra Packages for Chakra, part of chakra-project.org
+#
+# contributor: alex@eyeos.org, aleixpol@kde.org
+
+pkgname=kamoso
+pkgver=2.0.3.1
+pkgrel=1
+pkgdesc="Kamoso is an application to take pictures and videos out of your webcam."
+url="https://projects.kde.org/projects/playground/multimedia/kamoso/"
+arch=('i686' 'x86_64')
+license=('GPL')
+depends=('kde-workspace' 'qt-gstreamer' 'kipi-plugins')
+makedepends=('cmake' 'git' 'automoc4')
+conflicts=('kamoso-git')
+categories=('multimedia')
+screenshot=('http://kde-apps.org/CONTENT/content-pre1/111750-1.png')
+source=("http://www.chakra-linux.org/sources/$pkgname/$pkgname-$pkgver.tar.xz")
+md5sums=('57fc7faec306c41598d520e797404e1d')
+
+# create tarball: source PKGBUILD && mksource
+
+mksource() {
+  git clone git://anongit.kde.org/kamoso
+  pushd kamoso
+  popd
+  tar -cvJf kamoso-${pkgver}.tar.xz kamoso/*
+  md5sum kamoso-${pkgver}.tar.xz
+}
+
+build() {
+    cd "$srcdir/$pkgname"
+    cmake ${srcdir}/$pkgname \
+    -DCMAKE_INSTALL_PREFIX=`kde4-config --prefix` \
+    -DCMAKE_BUILD_TYPE=Release 
+    make 
+}
+
+package(){
+  cd "${srcdir}/$pkgname"
+  make DESTDIR="$pkgdir" install
+}
