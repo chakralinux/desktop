@@ -1,37 +1,28 @@
+#
+# Games Packages for Chakra, part of chakra-project.org
+#
+# Maintainer: Adrián Chaves Fernández (Gallaecio) <adriyetichaves@gmail.com>
+
 pkgname=warsow-data
-pkgver=0.62
+_pkgname=warsow
+pkgver=1.0
 pkgrel=1
-pkgdesc="a free online multiplayer competitive FPS based on the Qfusion engine (data files)"
+pkgdesc="A free online multiplayer competitive FPS based on the Qfusion engine (data files)"
 url="http://www.warsow.net/"
 license=('custom:Warsow Content License')
-arch=('any') 
-depends=()
-makedepends=('unzip')
-source=("http://www.zcdn.org/dl/warsow_0.61_unified.zip"
-        "http://www.zcdn.org/dl/warsow_0.62_update.zip")
-noextract=("warsow_0.61_unified.zip"
-           "warsow_0.62_update.zip")
-md5sums=('dd17ffccf51579e6b278624727190c01'
-         'b13804d1562ac9fb341d5d31105c5326')
-
-build() {
-    cd $srcdir/
-}
+arch=('any')
+source=("${_pkgname}_${pkgver}.tar.gz::http://www.warsow.net/download?dl=linux")
+md5sums=('92fd62c4bbd1324605bd004da9472b9f')
 
 package() {
-    # Extract game data
-    unzip -o warsow_0.61_unified.zip -d $srcdir/warsow
 
-    # Extract update on top of it
-    unzip -o warsow_0.62_update.zip -d $srcdir/warsow/warsow_0.61_unified
+    # Create the destination directories.
+    install -d $pkgdir/usr/share/${_pkgname}
 
-    # Create Destination Directories
-    install -d $pkgdir/opt/warsow/
+    # Move Data to destination directory.
+    cp -r $srcdir/${_pkgname}_${pkgver}/basewsw $pkgdir/usr/share/${_pkgname}
 
-    # Move Data to Destination Directory
-    cp -r $srcdir/warsow/warsow_0.61_unified/basewsw $pkgdir/opt/warsow
-
-    # Install Custom License: Warsow Content License
-    install -D -m 0644 $srcdir/warsow/warsow_0.61_unified/docs/license.txt \
+    # Install custom license: Warsow Content License.
+    install -Dm 0644 $srcdir/${_pkgname}_${pkgver}/docs/license.txt \
         $pkgdir/usr/share/licenses/${pkgname}/license.txt
 }
