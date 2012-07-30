@@ -14,7 +14,7 @@ license=('GPL')
 url="http://chakra-project.org/"
 
 source=("http://chakra-linux.org/sources/cinstall/cbundle-$pkgver.tar.xz")
-md5sums=('c2eb097a5441b03cbd402946ab42b3ec')
+md5sums=('6df54db46def243acc1616e273759e30')
 
 # create tarball: source PKGBUILD && mksource
 
@@ -32,6 +32,10 @@ build() {
         cmake  \
           -DCMAKE_INSTALL_PREFIX=/usr \
           -DCMAKE_BUILD_TYPE=Release
-        make || return 1
-        make DESTDIR=${pkgdir} install || return 1
+        make 
+}
+
+package() {
+        cd "${srcdir}/cbundle"       
+        make DESTDIR=${pkgdir} install 
 }
