@@ -1,8 +1,8 @@
 #
 # KDE SC Packages for Chakra, part of chakra-project.org
 #
-# maintainer (i686): Phil Miller <philm[at]chakra-project[dog]org>
-# maintainer (x86_64): Manuel Tortosa <manutortosa[at]chakra-project[dot]org>
+# maintainer: abveritas[at]chakra-project[dog]org>
+# maintainer: Manuel Tortosa <manutortosa[at]chakra-project[dot]org>
 
 # include global config
 source ../_buildscripts/${current_repo}-${_arch}-cfg.conf
@@ -31,8 +31,7 @@ options=('docs' '!splithdr' 'splitdbg' 'log')
 build() {
 	cd ${srcdir}/${_pkgname}-${pkgver}
 	cmake . -DCMAKE_BUILD_TYPE=${_build_type} \
-                -DCMAKE_INSTALL_PREFIX=${_installprefix} \
-		-DWITH_Soprano=OFF       # FIXME: the soprano/nepomuk bindings for mono are not compiling atm
+                -DCMAKE_INSTALL_PREFIX=${_installprefix} 
         make
 }
 

@@ -26,7 +26,7 @@ license=('GPL' 'LGPL' 'FDL')
 
 options=('docs' '!splithdr' 'splitdbg' 'log')
 
-makedepends=("kde-workspace>=${_kdever}" 'pkgconfig' 'cmake' 'automoc4' 'libraw1394' 'ruby' 'tidyhtml' 'docbook-xsl')
+makedepends=("kde-workspace>=${_kdever}" 'pkg-config' 'cmake' 'automoc4' 'libraw1394' 'ruby' 'tidyhtml' 'docbook-xsl')
 
 source=("$_mirror/${pkgbase}-$_kdever.tar.xz"
 	"http://www.kde-apps.org/CONTENT/content-files/99752-kde_cdemu-0.3.1.tar.bz2")
@@ -111,19 +111,6 @@ package_kde-baseapps() {
 
 	# Fix missing KFind icon, fixes FS#325
 	sed -i -e "s~Icon=kfind~Icon=edit-find~g" ${pkgdir}/usr/share/applications/kde4/kfind.desktop
-
-	# include our patches into the package
-	#ls -1 ${startdir}/*.patch &>/dev/null 2>&1
-	#if [ "$?" = "0" ]; then
-	#@	warning "incuding patches into package"
-	#	mkdir -p ${pkgdir}/usr/share/chakra/patches/${pkgbase} &>/dev/null
-	#	for i in ${startdir}/*.patch; do
-	#		msg "$i"
-	#		cp $i ${pkgdir}/usr/share/chakra/patches/${pkgbase}/ &>/dev/null
-	#	done
-	#else
-	#	warning "no patches found, skipping to include them into the package..."
-	#fi
 }
 
 package_kde-baseapps-dolphin() {

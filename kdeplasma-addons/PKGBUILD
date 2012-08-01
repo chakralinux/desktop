@@ -76,6 +76,7 @@ pkgname=('kdeplasma-addons-applets-bball'
          'kdeplasma-addons-runners-kopete'
          'kdeplasma-addons-runners-mediawiki'
          'kdeplasma-addons-runners-spellchecker'
+         'kdeplasma-addons-runners-youtube'
          'kdeplasma-addons-wallpapers-mandelbrot'
          'kdeplasma-addons-wallpapers-marble'
          'kdeplasma-addons-wallpapers-pattern'
@@ -90,7 +91,7 @@ url="http://www.kde.org/"
 license=('GPL' 'LGPL' 'FDL')
 options=('docs' '!splithdr' 'splitdbg' 'log')
 depends=("kde-workspace>=${_kdever}" 'libqalculate' "kdeedu-marble>=${_kdever}" 'qwt')
-makedepends=('pkgconfig' 'cmake' 'automoc4' "kde-workspace>=${_kdever}" 'libqalculate'
+makedepends=('pkg-config' 'cmake' 'automoc4' 'libqalculate'
              "kdegraphics-libkexiv2>=${_kdever}" "kdeedu-marble>=${_kdever}" 'eigen' 'scim' 'qwt')
 
 source=("$_mirror/${pkgbase}-$_kdever.tar.xz")
@@ -382,7 +383,7 @@ package_kdeplasma-addons-applets-mediaplayer() {
 
 package_kdeplasma-addons-applets-microblog() {
         pkgdesc='Update and view your microblog status.'
-        depends=('kde-workspace' 'kdeplasma-addons-common' 'qca-ossl')
+        depends=('kde-workspace' 'kdeplasma-addons-common' 'qca-ossl' 'qoauth')
         groups=("kde" "kde-uninstall" "kdeplasma-addons")
         cd $srcdir/build/applets/microblog
         make DESTDIR=$pkgdir install
@@ -656,6 +657,14 @@ package_kdeplasma-addons-runners-spellchecker() {
         make DESTDIR=$pkgdir install
 }
 
+package_kdeplasma-addons-runners-youtube() {
+	pkgdesc='Matches YouTube queries'
+	depends=('kde-workspace')
+        install='kdeplasma-addons.install'
+        groups=("kde" "kde-uninstall" "kdeplasma-addons")
+	cd $srcdir/build/runners/youtube
+	make DESTDIR=$pkgdir install
+}
 package_kdeplasma-addons-wallpapers-mandelbrot() {
         pkgdesc='Mandelbrot'
         depends=('kde-workspace')

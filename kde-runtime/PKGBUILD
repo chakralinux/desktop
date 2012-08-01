@@ -1,7 +1,6 @@
 #
 # KDE SC Packages for Chakra, part of chakra-project.org
 #
-# maintainer (i686): Phil Miller <philm[at]chakra-project[dog]org>
 # maintainer (x86_64): Manuel Tortosa <manutortosa[at]chakra-project[dot]org>
 
 # include global config
@@ -13,18 +12,18 @@ source ../_buildscripts/${current_repo}-${_arch}-cfg.conf
 pkgname="kde-runtime"    
 arch=('i686' 'x86_64')
 pkgver=${_kdever}
-pkgrel=3
+pkgrel=2
 pkgdesc="KDE Runtime"
 url="http://www.kde.org"
 license=('GPL' 'LGPL' 'FDL')
 options=('docs' '!splithdr' 'splitdbg' 'log')
-depends=("kdelibs>=${_kdever}" 'oxygen-icons' 'xorg-xauth' 'hicolor-icon-theme'
+depends=("kdelibs>=${_kdever}" "nepomuk-core>=${_kdever}" "kactivities>=${_kdever}" 'oxygen-icons' 'xorg-xauth' 'hicolor-icon-theme'
 	     'smbclient' 'rarian' 'libssh' 'libpulse' 'libssh' 'ntrack' 'libcanberra' 'sound-theme-freedesktop' 'qt-mobility')
-makedepends=('pkgconfig' 'cmake' 'automoc4' "kdepimlibs>=${_kdever}" 'openslp' 'docbook-xml' 'docbook-xsl'
+makedepends=('pkgconfig' 'cmake' 'automoc4' "kdepimlibs>=${_kdever}" 'openslp' 'docbook-xml' 'docbook-xsl' 'networkmanager'
              'xine-lib' 'libpulse' 'libssh' 'ntrack' 'libcanberra' 'libcanberra-pulse' 'samba' 'soprano')
 optdepends=('htdig: to build the search index' 'gdb: drkonq crash handler')
 groups=("kde" "kde-minimal" "kde-uninstall")
-eplaces=('kdebase-runtime' 'kde-runtime-doc')
+replaces=('kdebase-runtime' 'kde-runtime-doc')
 provides=('kdebase-runtime' 'kde-runtime-doc')
 conflicts=('kdebase-runtime' 'kde-runtime-doc')
 install=kde-runtime.install
@@ -32,14 +31,13 @@ noextract=(branding.svgz)
 
 source=($_mirror/${pkgname}-$_kdever.tar.xz
 	branding.svgz
-	# 01_knetattach_use_sftp.patch
-	# 02_oxygenify_knetattach_icon.patch
-	03_disable_logout_sound.patch)
+	01_disable_logout_sound.patch
+	FindKactivities.patch)
+
 md5sums=(`grep ${pkgname}-$_kdever.tar.xz ../kde-sc.md5 | cut -d" " -f1`
         '68cd8eb57db22c2f2ed554b721253bc2'   #  branding.svgz
-	# '45fa12b8baf21c4fc845147afcea2bc1' #  01_knetattach_use_sftp.patch
-	# '1f0225f31d5f44e753e966fd3a032f00' #  02_oxygenify_knetattach_icon.patch
-        'a434bf282ee391b2f857184be59a3b6f')  #  03_disable_logout_sound.patch
+        'a434bf282ee391b2f857184be59a3b6f'   #  01_disable_logout_sound.patch
+        '259d02a6fc6a1e2aa8ade4558250e9e4')  #  FIndKactivities.patch
 
 #
 # build function
@@ -48,21 +46,18 @@ build() {
 	cd ${pkgname}-${pkgver}
 
 	msg "applying main patchset ..."
-	# patch -Np1 -i ${srcdir}/01_knetattach_use_sftp.patch
-	# patch -Np1 -i ${srcdir}/02_oxygenify_knetattach_icon.patch
-	patch -Np1 -i ${srcdir}/03_disable_logout_sound.patch
+	patch -Np1 -i ${srcdir}/01_disable_logout_sound.patch
+	#patch -p1 -i ${srcdir}/FindKactivities.patch
  
 	# copy our branding stuff
 	cp -f ${srcdir}/branding.svgz ${srcdir}/${pkgname}-${pkgver}/desktoptheme/oxygen/widgets/
 	cp -f ${srcdir}/branding.svgz ${srcdir}/${pkgname}-${pkgver}/desktoptheme/air/widgets/
 
-	cd ${srcdir}
         rm -rf build
-	mkdir build && cd build
-	
+        mkdir build && cd build
+
 	msg "starting build ..."
-	cmake ../${pkgbase}-${pkgver} \
-		-DCMAKE_BUILD_TYPE=${_build_type} \
+	cmake .. -DCMAKE_BUILD_TYPE=${_build_type} \
 		-DCMAKE_INSTALL_PREFIX=${_installprefix} \
 		-DWITH_PulseAudio=ON \
 		-DCMAKE_SKIP_RPATH=ON \
@@ -72,7 +67,7 @@ build() {
 }
 
 package() {
-	cd ${srcdir}/build
+	cd ${srcdir}/${pkgname}-${pkgver}/build
 	make DESTDIR=${pkgdir} install
 
 	# put kdesu into the path
@@ -99,4 +94,7 @@ package() {
 	# WORKAROUND, conflict with hicolor-icon-theme
 	rm -rf ${pkgdir}/usr/share/icons/hicolor/index.theme
 	rm -rf ${pkgdir}/usr/share/icons/default.kde4
+
+	# WORKAROUND, conflict with repomuk-core
+	rm -rf ${pkgdir}//usr/lib/libnepomukcommon.so 
 }
