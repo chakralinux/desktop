@@ -2,35 +2,29 @@
 # Games Packages for Chakra, part of chakra-project.org
 #
 # Maintainer: Adrián Chaves Fernández (Gallaecio) <adriyetichaves@gmail.com>
+#
+# NOTE: The package must be built in a system with a matching architecture.
 
 pkgname=warsow
 pkgver=1.0
-pkgrel=1
+pkgrel=2
 pkgdesc="A free online multiplayer competitive FPS based on the Qfusion engine"
 url="http://www.warsow.net/"
 license=('GPL')
 arch=('i686' 'x86_64') 
-depends=('curl' 'libjpeg' 'libvorbis' 'libxinerama' 'libxxf86dga' 'libxxf86vm' 'sdl' 'warsow-data')
-makedepends=('mesa' 'openal')
+depends=('curl' 'libjpeg' 'libtheora' 'libvorbis' 'libxinerama' 'libxrandr' 'libxxf86dga' 'libxxf86vm' 'sdl' 'warsow-data')
+makedepends=('mesa' 'openal' 'imagemagick' 'gendesk')
 optdepends=('openal: for openal audio support')
 categories=('games')
-source=("https://launchpadlibrarian.net/111352130/${pkgname}_${pkgver}_sdk.tar.gz"
-        "${pkgname}.desktop")
-md5sums=('35b9a8f530b51cda15c660b3a73f377e'
-         'f9bf60c80820237f7097c4e50a9582cd')
+source=("https://launchpadlibrarian.net/111352130/${pkgname}_${pkgver}_sdk.tar.gz")
+md5sums=('35b9a8f530b51cda15c660b3a73f377e')
 
 build() {
+  cd ${srcdir}
+  gendesk -n
 
-  # Patch AngelScript so it compiles correctly on i686.
-  if [ "$CARCH" == "i686" ]; then
-      sed -i 's:CXXFLAGS = \(.*\):CXXFLAGS = -march=i686 \1:' \
-          $srcdir/${pkgname}_${pkgver}_sdk/libsrcs/angelscript/angelSVN/sdk/angelscript/projects/gnuc/makefile
-  fi
-
-  # Compile Warsow
+  # Compile Warsow.
   cd $srcdir/${pkgname}_${pkgver}_sdk/source/
-  unset CFLAGS
-  unset CXXFLAGS
   make -j1 # Error finding a library if -j is higher.
 }
 
@@ -44,7 +38,7 @@ generateAndInstall() {
 
 package() {
   cd $srcdir/${pkgname}_${pkgver}_sdk/source/
-  
+
   # Manual installation.
   install -d $pkgdir/usr/share/${pkgname}/
   cp -r $srcdir/${pkgname}_${pkgver}_sdk/source/release/* \
@@ -59,5 +53,5 @@ package() {
 
   # Desktop integration:
   install -D -m 0644 $srcdir/${pkgname}.desktop $pkgdir/usr/share/applications/${pkgname}.desktop
-  install -D -m 0644 $srcdir/${pkgname}_${pkgver}_sdk/source/win32/${pkgname}.ico $pkgdir/usr/share/pixmaps/${pkgname}.ico
+  install -Dm644 $srcdir/${pkgname}_${pkgver}_sdk/source/win32/${pkgname}.ico $pkgdir/usr/share/pixmaps/${pkgname}.png
 }
