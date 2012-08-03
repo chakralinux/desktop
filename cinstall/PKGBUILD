@@ -5,7 +5,7 @@
 # (c) 2010 Drake Justice
 
 pkgname=cinstall
-pkgver=0.4.7.4
+pkgver=0.4.8.2
 pkgrel=1
 depends=('rsync' 'cbundle' 'kdelibs' 'qjson')
 makedepends=('qt' 'automoc4' 'libcroco')
@@ -13,31 +13,43 @@ pkgdesc="Chakra's Bundle manager"
 screenshot=("http://wstaw.org/m/2012/04/22/cinstall1.png")
 arch=("i686" "x86_64")
 license=('GPL')
-install=$pkgname.install
+install="${pkgname}.install"
 url="http://chakra-project.org/"
 
-source=("http://chakra-linux.org/sources/cinstall/cinstall-$pkgver.tar.xz")
-md5sums=('33a9b457d973c826c390ea0b48665e48')
+source=("http://chakra-linux.org/sources/cinstall/${pkgname}-${pkgver}.tar.xz")
+md5sums=('0ad05bce85012c3ea480bbe34f818570')
 
 # create tarball: source PKGBUILD && mksource
 
 mksource() {
-  git clone git://gitorious.org//chakra/cinstall.git
-  pushd cinstall
-  popd
-  tar -cvJf cinstall-${pkgver}.tar.xz cinstall/*
-  md5sum cinstall-${pkgver}.tar.xz
+  git clone -n "git://gitorious.org/chakra/${pkgname}.git"
+
+  cd "${pkgname}"
+
+  git archive --prefix="${pkgname}-${pkgver}/" --format=tar "${pkgver}" \
+    | xz > "../${pkgname}-${pkgver}.tar.xz"
+
+  cd ../
+
+  md5sum "${pkgname}-${pkgver}.tar.xz"
 }
 
 build() {
-        cd "${srcdir}/cinstall"
-        
-        cmake  \
-          -DCMAKE_INSTALL_PREFIX=/usr \
-          -DCMAKE_BUILD_TYPE=Release
-        make 
+  cd "${srcdir}"
+
+  mkdir -p build && cd build
+
+  cmake "${srcdir}/${pkgname}-${pkgver}" \
+        -DCMAKE_INSTALL_PREFIX=/usr \
+        -DCMAKE_BUILD_TYPE=Release \
+  || return 1
+
+  make
 }
+
 package() {
-        cd "${srcdir}/cinstall"
-        make DESTDIR=${pkgdir} install 
+  cd "${srcdir}/build"
+  make DESTDIR="${pkgdir}" install
 }
+
+# vim:set ts=2 sw=2 et:
