@@ -1,0 +1,39 @@
+#
+# Apps Packages for Chakra, part of chakra-project.org
+#
+# Maintainer: Adrián Chaves Fernández <adriyetichaves@gmail.com>
+# Contributor: Sergej Pupykin <pupykin.s+arch@gmail.com>
+# Contributor: Angel 'angvp' Velasquez <angvp[at]archlinux.com.ve>
+# Contributor: Douglas Soares de Andrade <dsa@aur.archlinux.org>
+
+pkgbase=python-psycopg2
+_pkgbase=psycopg2
+pkgname=('python3-psycopg2' 'python2-psycopg2')
+pkgver=2.4.5
+pkgrel=1
+pkgdesc="A PostgreSQL database adapter for the Python programming language."
+arch=('i686' 'x86_64')
+url="http://initd.org/psycopg/"
+license=('LGPL3')
+makedepends=('python2' 'python3' 'postgresql-libs>=8.4.1')
+source=(http://initd.org/psycopg/tarballs/PSYCOPG-2-4/$_pkgbase-$pkgver.tar.gz)
+md5sums=('075e4df465e9a863f288d5bdf6e6887e')
+
+build() {
+  cd "$srcdir/$_pkgbase-$pkgver"
+  sed -i 's/,PSYCOPG_DEBUG$//' setup.cfg
+}
+
+package_python3-psycopg2() {
+  depends=('python3' 'postgresql-libs>=8.4.1')
+
+  cd "$srcdir/$_pkgbase-$pkgver"
+  python3 setup.py install --root="$pkgdir"
+}
+
+package_python2-psycopg2() {
+  depends=('python2' 'postgresql-libs>=8.4.1')
+
+  cd "$srcdir/$_pkgbase-$pkgver"
+  python2 setup.py install --root="$pkgdir"
+}
