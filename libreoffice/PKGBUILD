@@ -142,19 +142,14 @@ build() {
 	cd ${srcdir}/libreoffice-core-$_LOver
 
 	# move external sources into place
-	#mkdir ${srcdir}/ext_sources &&	pushd ${srcdir}/ext_sources
-	#for source in "${noextract[@]}"; do
-	#  ln -s ${srcdir}/$source .
-	#done
-	#popd
+	mkdir ${srcdir}/ext_sources &&	pushd ${srcdir}/ext_sources
+	for source in "${noextract[@]}"; do
+	  ln -s ${srcdir}/$source .
+	done
+	popd
 
-	#ln -s ../libreoffice-help-$_LOver/helpcontent2 .
-	#ln -s ../libreoffice-translations-$_LOver/translations .
-
-	# buildfixes & bugfixes
-	# one late fix to solve make distro-pack-install issue
-	#patch -p1 -i ${srcdir}/gmake_install.diff
-	#patch -p1 -i ${srcdir}/smp_buildfix.diff
+	ln -s ../libreoffice-help-$_LOver/helpcontent2 .
+	ln -s ../libreoffice-translations-$_LOver/translations .
 
 	# Temporary workaround to avoid build failure in ct2n
 	#mv ${srcdir}/451ccf439a36a568653b024534669971-ConvertTextToNumber{_,-}1.3.2.oxt
@@ -243,7 +238,7 @@ build() {
 	#./download
 	make
 	# fake installation to create split file lists
-	#mkdir $srcdir/fakeinstall
+	mkdir $srcdir/fakeinstall
 	make DESTDIR=${srcdir}/fakeinstall distro-pack-install
 }
 
