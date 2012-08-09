@@ -19,13 +19,13 @@ pkgname=('libreoffice-common'
 	'libreoffice-extension-pdfimport'
 	'libreoffice-extension-presenter-screen'
 	'libreoffice-extension-presentation-minimizer'
-	#'libreoffice-extension-report-builder'
+	'libreoffice-extension-report-builder'
 	'libreoffice-scripting-javascript'
 	'libreoffice-extension-scripting-python')
-_LOver=3.5.5.3
-pkgver=3.5.5
-_pkgver=3.5.5
-_HIver=3.5
+_LOver=3.6.0.4
+pkgver=3.6.0
+_pkgver=3.6.0
+_HIver=3.6
 pkgrel=1
 arch=('i686' 'x86_64')
 _OFFICEUPD="340"
@@ -36,14 +36,14 @@ makedepends=( # makedepends
              'sane' 'perl-archive-zip' 'zip' 'unzip' 'unixodbc' 'xulrunner' 'hsqldb-java' 'boost' # boost -> internal one for now that has some gcc4.6 fixes.
              'apache-ant' 'gperf' 'poppler' 'kdelibs' 'cppunit' #'libmysqlclient'
              'beanshell'  'vigra' 'libldap' 'lucene' 'libmythes' 'junit' 'libwpg' 'imagemagick'
-             'mesa' 'gstreamer0.10-base' 'java-runtime' 'postgresql-libs'
+             'mesa' 'gstreamer0.10-base' 'java-runtime' 'postgresql-libs' 'clucene' 'doxygen'
              # libreoffice main pkg
              "curl>=7.20.0" "hunspell>=1.2.8" 'python2' 'libwpd>=0.9.0' 'libwps' 'libxaw' "neon>=0.28.6"
              'pango' 'nspr' 'libjpeg' 'libxrandr' 'libgl' 'dbus-glib' "icu>=4.6" 'libxslt'
              'redland' 'graphite' 'hyphen' 'lpsolve' 'gcc-libs' 'sh'  'libtextcat' 'librsvg'
              'hicolor-icon-theme' 'desktop-file-utils' 'shared-mime-info' 'translate-toolkit' 'xdg-utils' 'ttf-dejavu' 'libcups')
 
-_mirror="http://download.documentfoundation.org/libreoffice/src/$_pkgver"
+_mirror="http://mirror2.layerjet.com/tdf/libreoffice/src/$_pkgver"
 _additional_source_url="http://hg.services.openoffice.org/binaries"
 _additional_source_url="http://dev-www.libreoffice.org/src"
 source=(${_mirror}/${pkgbase}-{core,help,translations}-${_LOver}.tar.xz
@@ -72,8 +72,9 @@ source=(${_mirror}/${pkgbase}-{core,help,translations}-${_LOver}.tar.xz
 	${_additional_source_url}/db60e4fde8dd6d6807523deb71ee34dc-liblayout-0.2.10.zip
 	${_additional_source_url}/ba2930200c9f019c2d93a8c88c651a0f-flow-engine-0.9.4.zip
 	${_additional_source_url}/0ff7d225d087793c8c2c680d77aac3e7-mdds_0.5.3.tar.bz2
-	${_additional_source_url}/e1c178b18f130b40494561f02bc1a948-libexttextcat-3.2.0.tar.bz2
-	${_additional_source_url}/7c2549f6b0a8bb604e6c4c729ffdcfe6-libcmis-0.1.0.tar.gz
+	${_additional_source_url}/6097739c841f671cb21332b9cc593ae7-libexttextcat-3.3.1.tar.bz2
+	${_additional_source_url}/0d2dcdfbf28d6208751b33057f5361f0-libcmis-0.2.3.tar.gz
+	${_additional_source_url}/ce5a1def34578b75959ac31210f031f6-libcdr-0.0.8.tar.bz2
 	http://download.go-oo.org/extern/185d60944ea767075d27247c3162b3bc-unowinreg.dll
 	gmake_install.diff::http://cgit.freedesktop.org/libreoffice/core/patch/?id=1048d8fa4abd3e55a45dfb6884db808da1d72c9e
 	smp_buildfix.diff::http://cgit.freedesktop.org/libreoffice/core/patch/?id=cf23f57ae6bb7af689a45e0a850c3c2f67a8f810
@@ -96,8 +97,8 @@ noextract=(a9a1db27688bad49418667b434d29c1f-libvisio-0.0.18.tar.bz2
 	798b2ffdc8bcfe7bca2cf92b62caf685-rhino1_5R5.zip
 	1f24ab1d39f4a51faf22244c94a6203f-xmlsec1-1.2.14.tar.gz
 	fdb27bfe2dbe2e7b57ae194d9bf36bab-SampleICC-1.3.2.tar.gz
-	e1c178b18f130b40494561f02bc1a948-libexttextcat-3.2.0.tar.bz2
-	7c2549f6b0a8bb604e6c4c729ffdcfe6-libcmis-0.1.0.tar.gz
+	6097739c841f671cb21332b9cc593ae7-libexttextcat-3.3.1.tar.bz2
+	0d2dcdfbf28d6208751b33057f5361f0-libcmis-0.2.3.tar.gz
 	35c94d2df8893241173de1d16b6034c0-swingExSrc.zip
 	2a177023f9ea8ec8bd00837605c5df1b-jakarta-tomcat-5.0.30-src.tar.gz
 	a7983f859eafb2677d7ff386a023bc40-xsltml_2.1.2.zip
@@ -115,6 +116,7 @@ noextract=(a9a1db27688bad49418667b434d29c1f-libvisio-0.0.18.tar.bz2
 	3bdf40c0d199af31923e900d082ca2dd-libfonts-1.1.6.zip
 	ace6ab49184e329db254e454a010f56d-libxml-1.1.7.zip
 	db60e4fde8dd6d6807523deb71ee34dc-liblayout-0.2.10.zip
+	ce5a1def34578b75959ac31210f031f6-libcdr-0.0.8.tar.bz2
 	ba2930200c9f019c2d93a8c88c651a0f-flow-engine-0.9.4.zip
 	7e7efc5d4a03126bb9ae3ae9aa2c4e87-Barcode_1.3.1.0.oxt
 	41c9b65ad60af4b3255bbecdfef11736-Diagram_1.1.0.0.oxt
@@ -140,19 +142,19 @@ build() {
 	cd ${srcdir}/libreoffice-core-$_LOver
 
 	# move external sources into place
-	mkdir ${srcdir}/ext_sources &&	pushd ${srcdir}/ext_sources
-	for source in "${noextract[@]}"; do
-	  ln -s ${srcdir}/$source .
-	done
-	popd
+	#mkdir ${srcdir}/ext_sources &&	pushd ${srcdir}/ext_sources
+	#for source in "${noextract[@]}"; do
+	#  ln -s ${srcdir}/$source .
+	#done
+	#popd
 
-	ln -s ../libreoffice-help-$_LOver/helpcontent2 .
-	ln -s ../libreoffice-translations-$_LOver/translations .
+	#ln -s ../libreoffice-help-$_LOver/helpcontent2 .
+	#ln -s ../libreoffice-translations-$_LOver/translations .
 
 	# buildfixes & bugfixes
 	# one late fix to solve make distro-pack-install issue
-	patch -p1 -i ${srcdir}/gmake_install.diff
-	patch -p1 -i ${srcdir}/smp_buildfix.diff
+	#patch -p1 -i ${srcdir}/gmake_install.diff
+	#patch -p1 -i ${srcdir}/smp_buildfix.diff
 
 	# Temporary workaround to avoid build failure in ct2n
 	#mv ${srcdir}/451ccf439a36a568653b024534669971-ConvertTextToNumber{_,-}1.3.2.oxt
@@ -188,23 +190,25 @@ build() {
 		--disable-kde\
 		--disable-gtk \
 		--disable-gconf \
-		--enable-kde4\
+		--enable-kde4 \
 		--enable-lockdown\
 		--enable-mergelibs \
 		--enable-opengl \
-		--enable-odk\
+		--enable-odk \
 		--disable-ext-mysql-connector \
 		--with-system-mysql \
 		--enable-librsvg=system \
-		--without-fonts\
-		--without-afms\
-		--without-ppds\
-		--without-system-libwps\
-		--without-system-mdds\
+		--without-fonts \
+		--without-afms \
+		--without-ppds \
+		--without-system-libwps \
+		--without-system-libcdr \
+		--without-system-jfreereport \
+		--without-system-apache-commons \
+		--without-system-mdds \
 		--without-myspell-dicts \
                  --without-system-libvisio \
                  --without-system-libcmis \
-                 --without-system-sampleicc \
                  --without-system-libexttextcat \
 		--with-system-mozilla \
 		--with-system-dicts \
@@ -212,28 +216,25 @@ build() {
 		--with-external-hyph-dir=/usr/share/hyphen \
 		--with-external-thes-dir=/usr/share/mythes \
 		--with-system-beanshell \
-                 --with-system-cppunit\
-                 --with-system-graphite\
+                 --with-system-cppunit \
+                 --with-system-graphite \
 		--with-system-libwpg \
 		--with-system-libwps \
-		--with-system-redland\
-		--without-system-saxon\
+		--with-system-redland \
+		--without-system-saxon \
 		--with-openldap\
 		--with-ant-home="/usr/share/java/apache-ant"\
-		--with-system-boost\
-		--with-system-cairo\
-		--with-system-libs\
-		--with-system-mythes\
-		--with-system-headers\
+		--with-system-boost \
+		--with-system-cairo \
+		--with-system-libs \
+		--with-system-mythes \
+		--with-system-headers \
 		--with-system-hsqldb \
 		--with-alloc=system\
-		--with-system-lucene\
-		--with-lucene-core-jar=/usr/share/java/lucene-core.jar\
-		--with-lucene-analyzers-jar=/usr/share/java/lucene-analyzers.jar\
+		--with-system-clucene\
 		--enable-ext-pdfimport \
 		--enable-ext-presenter-console \
 		--enable-ext-presenter-minimizer \
-		--disable-ext-report-builder \
 		--enable-ext-scripting-javascript \
 		--with-java-target-version=1.5 \
 		$EXTRAOPTS 
@@ -242,7 +243,7 @@ build() {
 	#./download
 	make
 	# fake installation to create split file lists
-	mkdir $srcdir/fakeinstall
+	#mkdir $srcdir/fakeinstall
 	make DESTDIR=${srcdir}/fakeinstall distro-pack-install
 }
 
@@ -587,7 +588,7 @@ package_libreoffice-extension-pdfimport() {
  groups=('libreoffice-extensions')
 
 	install -dm755 ${pkgdir}/usr/lib/libreoffice/share/extensions
-	unzip -q ${srcdir}/libreoffice-core-$_LOver/solver/unxlng*/bin/pdfimport/pdfimport.oxt -d ${pkgdir}/usr/lib/libreoffice/share/extensions/pdfimport
+	unzip -q ${srcdir}/libreoffice-core-$_LOver/solver/unxlng*/bin/pdfimport.oxt -d ${pkgdir}/usr/lib/libreoffice/share/extensions/pdfimport
 }
 
 package_libreoffice-extension-presenter-screen() {
@@ -610,16 +611,16 @@ package_libreoffice-extension-presentation-minimizer() {
 	unzip -q ${srcdir}/libreoffice-core-$_LOver/solver/unxlng*/bin/presentation-minimizer.oxt -d ${pkgdir}/usr/lib/libreoffice/share/extensions/presentation-minimizer
 }
 
-#package_libreoffice-extension-report-builder() {
-#
-# pkgdesc="This extension creates smart-looking database reports"
- #arch=('any')
-# depends=('libreoffice-common' 'libreoffice-kde4' 'java-environment')
-# groups=('libreoffice-extensions')
+package_libreoffice-extension-report-builder() {
 
-#	install -dm755 ${pkgdir}/usr/lib/libreoffice/share/extensions
-#	unzip -q ${srcdir}/libreoffice-core-$_LOver/solver/unxlng*/bin/report-builder.oxt -d ${pkgdir}/usr/lib/libreoffice/share/extensions/report-builder
-#}
+ pkgdesc="This extension creates smart-looking database reports"
+ arch=('any')
+ depends=('libreoffice-common' 'libreoffice-kde4' 'java-environment')
+ groups=('libreoffice-extensions')
+
+	install -dm755 ${pkgdir}/usr/lib/libreoffice/share/extensions
+	unzip -q ${srcdir}/libreoffice-core-$_LOver/solver/unxlng*/bin/report-builder.oxt -d ${pkgdir}/usr/lib/libreoffice/share/extensions/report-builder
+}
 
 package_libreoffice-scripting-javascript() {
 
@@ -628,8 +629,8 @@ package_libreoffice-scripting-javascript() {
  groups=('libreoffice-extensions')
 
 	install -dm755 ${pkgdir}/usr/lib/libreoffice/program/{classes,services}
-	mv ${srcdir}/fakeinstall/usr/lib/libreoffice/program/classes/{js.jar,ScriptProviderForJavaScript.jar} ${pkgdir}/usr/lib/libreoffice/program/classes/
-	mv ${srcdir}/fakeinstall/usr/lib/libreoffice/program/services/scriptproviderforjavascript.rdb ${pkgdir}/usr/lib/libreoffice/program/services/
+	mv ${srcdir}/libreoffice-core-$_LOver/solver/unxlng*/bin/{js.jar,ScriptProviderForJavaScript.jar} ${pkgdir}/usr/lib/libreoffice/program/classes/
+	mv ${srcdir}/libreoffice-core-$_LOver/solver/unxlng*/xml/scriptproviderforjavascript.rdb ${pkgdir}/usr/lib/libreoffice/program/services/
 }
 
 package_libreoffice-extension-scripting-python() {
