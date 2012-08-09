@@ -17,15 +17,16 @@ arch=('i686' 'x86_64')
 depends=('kdelibs' 'kdeedu-marble>=4.9.0' 'squashfs-tools' 'tribe-partitionmanager'
         'cinstall>=0.4.6.10' 'rsync' 'mkinitcpio-nfs-utils' 'ntfs-3g')
 makedepends=('cmake' 'kde-workspace' 'automoc4')
-options=('!splithdr' '!splitdbg' 'sign')
-source=("tribe.tar.xz"
+options=('!splithdr' '!splitdbg')
+source=("tribe-${pkgver}.tar.xz"
         "http://chakra-linux.org/sources/tribe/RELEASE_NOTES_20120702.html"
-        'launch-tribe.sh')
-  
-md5sums=('868aaa9803c6d19fa4bb4970ed50038e'
+        'launch-tribe.sh'
+	'tribe.patch')
+md5sums=('334e55e7bc820a2211b887dc5598bdc2'
          'fbf12d9f51eec4676c222ca6c4ba42ce'
-         'e31855da237a2c8029774831b3c04685')
- 
+         'e31855da237a2c8029774831b3c04685'
+         '2d9dc250098a2450741bad708f72a5d3') 
+
 groups=('kde-uninstall')
 categories=('system')
 install=tools-tribe.install
@@ -52,6 +53,8 @@ build()
 	# replace rekonq screenshot with konqueror
 	#rm -v ui/images/screenshot04.png
 	#mv -v ui/images/screenshot04-konqueror.png ui/images/screenshot04.png
+
+	patch -p1 < "$srcdir/tribe.patch"
 
 	# proper bootmnt folder
 	sed -i -e "s/@ARCH@/${CARCH}/g" config-tribe.h.cmake
