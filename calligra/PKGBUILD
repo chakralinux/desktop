@@ -17,17 +17,17 @@ pkgname=('calligra-filters'
          'calligra-tools'
          'calligra-karbon'
          'calligra-kexi'
-         'calligra-kounavail'
+         #'calligra-kounavail'
          'calligra-plan'
          'calligra-stage'
          'calligra-krita'
          'calligra-sheets'
          'calligra-words'
          'calligra-handbook'
-         'calligra-thesaurus-doc'
+         #'calligra-thesaurus-doc'
          'calligra-braindump'
          'calligra-flow')
-pkgver=2.4.3
+pkgver=2.5.0
 pkgrel=1
 arch=('i686' 'x86_64')
 url='http://www.calligra-suite.org'
@@ -38,20 +38,19 @@ makedepends=('kdepimlibs' 'eigen' 'freetds' 'kdegraphics-okular' 'kdeedu-marble'
 groups=('calligra')
 source=("http://mirrors.mit.edu/kde/stable/${pkgbase}-${pkgver}/${pkgbase}-${pkgver}.tar.bz2")
 screenshot=("http://upload.wikimedia.org/wikipedia/commons/thumb/3/3e/Calligra_Stage_2.4.png/800px-Calligra_Stage_2.4.png")
-md5sums=('469d639f17e3d6a186baabd899147e39')
+md5sums=('bea9b5e9d95691caaba385ef5522a60d')
 
 
 build() {
   cd "${srcdir}"
 
-  mkdir build
+  #mkdir build
   cd build
   cmake ../${pkgbase}-${pkgver} \
     -DCMAKE_BUILD_TYPE=RelWithDebInfo \
     -DCMAKE_SKIP_RPATH=ON \
     -DCMAKE_INSTALL_PREFIX=/usr \
     -DBUILD_active=OFF \
-    -DBUILD_mobile=OFF \
     -DBUILD_mysql=OFF \
     -DKDCRAW_LOCAL_FOUND=/usr/lib/libkdcraw.so 
   make
@@ -243,7 +242,7 @@ package_calligra-sheets() {
 package_calligra-words() {
   pkgdesc="Word Processor"
   depends=('calligra-libs' 'calligra-templates' 'calligra-plugins' 'calligra-pics'
-           'calligra-kounavail' 'hicolor-icon-theme')
+           'hicolor-icon-theme')
   optdepends=('calligra-filters: import/export filters')
   conflicts=('koffice-kword' 'calligra-words-git')
   replaces=('koffice-kword' 'calligra-words-git')

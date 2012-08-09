@@ -7,8 +7,8 @@
 # package info
 #
 pkgname=tribe
-pkgver=2012.08.04
-pkgrel=2
+pkgver=2012.08.05
+pkgrel=1
 _codename=Claire
 pkgdesc="Tribe - Chakra LiveCD Installer"
 url="http://git.chakra-project.org/chakra/"
@@ -18,11 +18,11 @@ depends=('kdelibs' 'kdeedu-marble>=4.9.0' 'squashfs-tools' 'tribe-partitionmanag
         'cinstall>=0.4.6.10' 'rsync' 'mkinitcpio-nfs-utils' 'ntfs-3g')
 makedepends=('cmake' 'kde-workspace' 'automoc4')
 options=('!splithdr' '!splitdbg' 'sign')
-source=("http://chakra-linux.org/sources/tribe/tribe-${pkgver}.tar.xz"
+source=("tribe.tar.xz"
         "http://chakra-linux.org/sources/tribe/RELEASE_NOTES_20120702.html"
         'launch-tribe.sh')
   
-md5sums=('a1005c25b8766e78e76bacb15786161c'
+md5sums=('868aaa9803c6d19fa4bb4970ed50038e'
          'fbf12d9f51eec4676c222ca6c4ba42ce'
          'e31855da237a2c8029774831b3c04685')
  
@@ -47,7 +47,7 @@ mksource() {
 #
 build()
 {
-        cd "${srcdir}/${pkgname}-${pkgver}"
+        cd "${srcdir}/${pkgname}"
 
 	# replace rekonq screenshot with konqueror
 	#rm -v ui/images/screenshot04.png
@@ -58,8 +58,8 @@ build()
 
 	# add pkgver to tribe
 	sed -i -e "s~source build/from git~Build: ${pkgver} ($_codename)~g" config-tribe.h.cmake
-	sed -i -e "s~code-name~$_codename~g" "${srcdir}/${pkgname}-${pkgver}/scripts/postinstall-functions/job-initialize-target"
-	sed -i -e "s~chakra-version~${pkgver}~g" "${srcdir}/${pkgname}-${pkgver}/scripts/postinstall-functions/job-initialize-target"
+	sed -i -e "s~code-name~$_codename~g" "${srcdir}/${pkgname}/scripts/postinstall-functions/job-initialize-target"
+	sed -i -e "s~chakra-version~${pkgver}~g" "${srcdir}/${pkgname}/scripts/postinstall-functions/job-initialize-target"
 	cmake . -DCMAKE_INSTALL_PREFIX=/usr \
 		-DCMAKE_BUILD_TYPE=Release \
 		-DCMAKE_SKIP_RPATH=ON \
@@ -71,7 +71,7 @@ build()
 
 package()
 {
-        cd "${srcdir}/${pkgname}-${pkgver}"
+        cd "${srcdir}/${pkgname}"
 	msg "Make successful, installing..."
 	make DESTDIR=$startdir/pkg install 
         install -Dm755 ${srcdir}/launch-tribe.sh \
