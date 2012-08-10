@@ -1,0 +1,89 @@
+# Maintainer: arlx_ignacy <ziphims@gmail.com>
+# Contributor: Matthias Maennich <arch@maennich.net>
+
+# modify these two to whatever Python 3 interpreter you're targetting; on my
+# system I use the vanilla python3
+_pyver=3
+_pyexec=/usr/bin/python$_pyver
+
+pkgname=python3-shiboken
+pkgver=1.1.1
+pkgrel=1
+pkgdesc='Python binding generator that uses API Extractor and outputs CPython code. (Python 3 build)'
+arch=('i686' 'x86_64')
+license=('LGPL')
+url='http://www.pyside.org'
+depends=('python3' 'qt>=4.7' 'openssl')
+makedepends=('cmake' 'automoc4' 'sed' 'patch')
+replaces=('shibokengenerator-py3', 'python-libshiboken')
+source=("http://www.pyside.org/files/shiboken-$pkgver.tar.bz2"
+        'cmake_fixes.patch'
+        'cmake_vars.patch')
+md5sums=('fa451b6c4f3e06cce283a84550a96fd2'
+         'c434168b591c27d2b3b18cfca92189af'
+         '3ba4a76129899a2508fec517888bf6e8')
+
+build() {
+    cd "$srcdir/shiboken-$pkgver"
+
+    msg "Applying patches ..."
+    # this patch is to fix cmake to make python's and python2's version coexistence
+    patch -p1 -N < ../cmake_fixes.patch
+    # this patch is to make it much easier to veriables from cmake
+    patch -p1 -N < ../cmake_vars.patch
+
+#    # of course, if you want to undo the patches you can use:
+#    #  $ patch -p1 -R < ../cmake_vars.patch
+#    #  $ patch -p1 -R < ../cmake_fixes.patch
+
+    cd ..
+    if [ -d build ] ; then
+        msg "Removing last build ..."
+        rm -rf build
+    fi
+
+    mkdir -p build
+    cd build
+
+    cmake ../shiboken-$pkgver -DCMAKE_INSTALL_PREFIX=/usr  \
+                              -DCMAKE_BUILD_TYPE=Release   \
+                              -DBUILD_TESTS=FALSE          \
+                              -DPYTHON_EXECUTABLE=$_pyexec \
+                              -Dshiboken_SUFFIX=-python3   \
+                              -DUSE_PYTHON3=TRUE
+
+    # this will generate shiboken-python3
+    make shiboken
+    # this will create libshiboken to work with Python 3
+    make libshiboken
+}
+
+package() {
+    # install generator
+    cd "$srcdir/build/generator"
+    make DESTDIR=$pkgdir install
+    # install libshiboken
+    cd "$srcdir/build/libshiboken"
+    make DESTDIR=$pkgdir install
+
+    # get some variables for our purpose
+    SHIBOKEN_SUFFIX=$(sed -n '2p' ../data/cmake_vars)
+    PYTHON_SUFFIX=$(sed -n '3p' ../data/cmake_vars)
+
+    mkdir -m 755 -p $pkgdir/usr/lib/cmake/Shiboken$SHIBOKEN_SUFFIX-$pkgver/
+    install -m 755 ../data/ShibokenConfig.cmake $pkgdir/usr/lib/cmake/Shiboken$SHIBOKEN_SUFFIX-$pkgver/
+    install -m 755 ../data/ShibokenConfigVersion.cmake $pkgdir/usr/lib/cmake/Shiboken$SHIBOKEN_SUFFIX-$pkgver/
+    if [ -e ../data/ShibokenConfig-python$_pyver.cmake ] ; then
+        install -m 755 ../data/ShibokenConfig-python$_pyver.cmake $pkgdir/usr/lib/cmake/Shiboken$SHIBOKEN_SUFFIX-$pkgver/
+    else
+        if [ -e ../data/ShibokenConfig$PYTHON_SUFFIX.cmake ] ; then
+            install -m 755 ../data/ShibokenConfig$PYTHON_SUFFIX.cmake $pkgdir/usr/lib/cmake/Shiboken$SHIBOKEN_SUFFIX-$pkgver/
+        else
+            msg "Unable to resolve cmake config file for \"$PYTHON_SUFFIX\"."
+            return 1
+        fi
+    fi
+
+    mkdir -m 755 -p $pkgdir/usr/lib/pkgconfig/
+    install -m 755 ../data/shiboken$SHIBOKEN_SUFFIX.pc $pkgdir/usr/lib/pkgconfig/
+}

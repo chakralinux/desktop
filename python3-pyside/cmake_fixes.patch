@@ -1,0 +1,49 @@
+diff --git a/PySide/CMakeLists.txt b/PySide/CMakeLists.txt
+index d8371c0..4c546dc 100644
+--- a/PySide/CMakeLists.txt
++++ b/PySide/CMakeLists.txt
+@@ -32,7 +32,7 @@ HAS_QT_MODULE(QT_QTDECLARATIVE_FOUND QtDeclarative)
+ 
+ # install
+ install(FILES "${CMAKE_CURRENT_BINARY_DIR}/__init__.py"
+-        DESTINATION "${SITE_PACKAGE}/${BINDING_NAME}${pyside_SUFFIX}")
++        DESTINATION "${SITE_PACKAGE}/${BINDING_NAME}")
+ install(FILES ${CMAKE_CURRENT_SOURCE_DIR}/typesystem_templates.xml
+         DESTINATION share/PySide${pyside_SUFFIX}/typesystems)
+ install(FILES ${CMAKE_CURRENT_BINARY_DIR}/pyside_global.h
+diff --git a/PySide/QtGui/CMakeLists.txt b/PySide/QtGui/CMakeLists.txt
+index 7625634..e2e2dbc 100644
+--- a/PySide/QtGui/CMakeLists.txt
++++ b/PySide/QtGui/CMakeLists.txt
+@@ -437,4 +437,4 @@ create_pyside_module(QtGui
+                      ""
+                      ${CMAKE_CURRENT_BINARY_DIR}/typesystem_gui.xml)
+ 
+-install(FILES ${pyside_SOURCE_DIR}/qpytextobject.h DESTINATION include/PySide/QtGui/)
++install(FILES ${pyside_SOURCE_DIR}/qpytextobject.h DESTINATION include/PySide${pyside_SUFFIX}/QtGui/)
+diff --git a/libpyside/CMakeLists.txt b/libpyside/CMakeLists.txt
+index 4fa878f..6c514f9 100644
+--- a/libpyside/CMakeLists.txt
++++ b/libpyside/CMakeLists.txt
+@@ -78,8 +78,8 @@ install(TARGETS pyside EXPORT pyside
+                        RUNTIME DESTINATION bin)
+ install(FILES "${CMAKE_CURRENT_BINARY_DIR}/pyside${pyside_SUFFIX}.pc" DESTINATION "${LIB_INSTALL_DIR}/pkgconfig")
+ install(FILES "${CMAKE_CURRENT_BINARY_DIR}/PySideConfig.cmake"
+-        DESTINATION "${LIB_INSTALL_DIR}/cmake/PySide-${BINDING_API_VERSION}")
++        DESTINATION "${LIB_INSTALL_DIR}/cmake/PySide${pyside_SUFFIX}-${BINDING_API_VERSION}")
+ install(FILES "${CMAKE_CURRENT_BINARY_DIR}/PySideConfig${SHIBOKEN_PYTHON_SUFFIX}.cmake"
+-        DESTINATION "${LIB_INSTALL_DIR}/cmake/PySide-${BINDING_API_VERSION}")
++        DESTINATION "${LIB_INSTALL_DIR}/cmake/PySide${pyside_SUFFIX}-${BINDING_API_VERSION}")
+ install(FILES "${CMAKE_CURRENT_BINARY_DIR}/PySideConfigVersion.cmake"
+-        DESTINATION "${LIB_INSTALL_DIR}/cmake/PySide-${BINDING_API_VERSION}")
++        DESTINATION "${LIB_INSTALL_DIR}/cmake/PySide${pyside_SUFFIX}-${BINDING_API_VERSION}")
+diff --git a/libpyside/PySideConfig.cmake.in b/libpyside/PySideConfig.cmake.in
+index b7f45e8..27c760f 100644
+--- a/libpyside/PySideConfig.cmake.in
++++ b/libpyside/PySideConfig.cmake.in
+@@ -2,4 +2,4 @@ if (NOT PYTHON_BASENAME)
+     message(STATUS "Using default python: @SHIBOKEN_PYTHON_SUFFIX@")
+     SET(PYTHON_BASENAME @SHIBOKEN_PYTHON_SUFFIX@)
+ endif()
+-include(@LIB_INSTALL_DIR@/cmake/PySide-@BINDING_API_VERSION@/PySideConfig${PYTHON_BASENAME}.cmake)
++include(@LIB_INSTALL_DIR@/cmake/PySide@pyside_SUFFIX@-@BINDING_API_VERSION@/PySideConfig${PYTHON_BASENAME}.cmake)
