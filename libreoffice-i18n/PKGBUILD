@@ -8,7 +8,7 @@ pkgname=('libreoffice-af'    'libreoffice-ar'    'libreoffice-as'    'libreoffic
 	 'libreoffice-bo'    'libreoffice-br'    'libreoffice-brx'   'libreoffice-bs'    'libreoffice-ca'    'libreoffice-ca-XV' 'libreoffice-cs'
 	 'libreoffice-cy'    'libreoffice-da'    'libreoffice-de'    'libreoffice-dgo'	 'libreoffice-dz'    'libreoffice-el'
 	 'libreoffice-en-GB' 'libreoffice-en-ZA' 'libreoffice-eo'    'libreoffice-es'    'libreoffice-et'    'libreoffice-eu'
-	 'libreoffice-fa'    'libreoffice-fi'    'libreoffice-fr'    'libreoffice-ga'	 'libreoffice-gl' # 'libreoffice-gd'
+	 'libreoffice-fa'    'libreoffice-fi'    'libreoffice-fr'    'libreoffice-ga'	 'libreoffice-gl'  'libreoffice-gd'
 	 'libreoffice-gu'    'libreoffice-he'    'libreoffice-hi'    'libreoffice-hr'    'libreoffice-hu'    'libreoffice-id'    'libreoffice-is'
 	 'libreoffice-it'    'libreoffice-ja'    'libreoffice-ka'    'libreoffice-kk'    'libreoffice-km' #'libreoffice-kid'
 	 'libreoffice-kn'    'libreoffice-ko'    'libreoffice-kok'   'libreoffice-ks'    'libreoffice-ku' #   'libreoffice-ky'
@@ -23,7 +23,7 @@ pkgname=('libreoffice-af'    'libreoffice-ar'    'libreoffice-as'    'libreoffic
 	 'libreoffice-tn'    'libreoffice-tr'    'libreoffice-ts'    'libreoffice-ug'    'libreoffice-uk' #   'libreoffice-ur'
 	 'libreoffice-uz'    'libreoffice-ve'    'libreoffice-vi'    'libreoffice-xh'    'libreoffice-zh-CN' 'libreoffice-zh-TW'
 	 'libreoffice-zu')
-pkgver=3.5.5
+pkgver=3.6.0
 pkgrel=1
 pkgdesc="LibreOffice language/localisation files"
 arch=('any')
@@ -33,12 +33,12 @@ license=('LGPL')
 #depends=('libreoffice-common') #>=${pkgver}")
 makedepends=('rpmextract')
 
-_url="http://download.documentfoundation.org/libreoffice/stable"
-_oover="3.5.5"
-_oodlver="3.5.5"
-_oomainver="3.5"
+_url="http://mirror2.layerjet.com/tdf/libreoffice/stable"
+_oover="3.6.0"
+_oodlver="3.6.0"
+_oomainver="3.6"
 _helpver=${_oodlver}
-_dirver="3.5.5rc3"
+_dirver="3.6.0.4"
 
 _url+="/${_oover}"
 
@@ -83,7 +83,7 @@ source=( #${_url}/rpm/x86/LibO_${_oodlver}_Linux_x86_{langpack,helppack}-rpm_af.
 	${_url}/rpm/x86/LibO_${_oodlver}_Linux_x86_{langpack,helppack}-rpm_fr.tar.gz
 	#${_url}/rpm/x86/LibO_${_oodlver}_Linux_x86_{langpack,helppack}-rpm_ga.tar.gz
 	${_url}/rpm/x86/LibO_${_oodlver}_Linux_x86_langpack-rpm_ga.tar.gz
-#	${_url}/rpm/x86/LibO_${_oodlver}_Linux_x86_{langpack,helppack}-rpm_gd.tar.gz
+	${_url}/rpm/x86/LibO_${_oodlver}_Linux_x86_langpack-rpm_gd.tar.gz
 	${_url}/rpm/x86/LibO_${_oodlver}_Linux_x86_{langpack,helppack}-rpm_gl.tar.gz
 	${_url}/rpm/x86/LibO_${_oodlver}_Linux_x86_{langpack,helppack}-rpm_gu.tar.gz
 	${_url}/rpm/x86/LibO_${_oodlver}_Linux_x86_{langpack,helppack}-rpm_he.tar.gz
@@ -213,7 +213,7 @@ build() {
     #cd ${srcdir}/LibO_${_oover/-/}_Linux_x86_langpack-rpm_${_pkglang}/RPMS
     cd ${srcdir}/LibO_${_dirver}_Linux_x86_langpack-rpm_${_pkglang}/RPMS
     # remove dictionaries if shipped - we ship them now in separate packages
-    rm libreoffice3.5-dict-*.rpm || /bin/true
+    rm libreoffice3.6-dict-*.rpm || /bin/true
 	for j in *.rpm
 	 do rpmextract.sh $j
 	done
@@ -231,7 +231,7 @@ package_libreoffice-af() {
   conflicts=(openoffice-af)
   cd "${srcdir}"/LibO_${_dirver}_Linux_x86_langpack-rpm_af/RPMS
   mkdir -p "${pkgdir}"/usr/lib/libreoffice
-  cp -R opt/libreoffice3.5/* "${pkgdir}"/usr/lib/libreoffice
+  cp -R opt/libreoffice3.6/* "${pkgdir}"/usr/lib/libreoffice
   chown root:root -R "${pkgdir}"/usr/lib/libreoffice
 }
 
@@ -242,7 +242,7 @@ package_libreoffice-ar() {
   conflicts=(openoffice-ar)
   cd "${srcdir}"/LibO_${_dirver}_Linux_x86_langpack-rpm_ar/RPMS
   mkdir -p "${pkgdir}"/usr/lib/libreoffice
-  cp -R opt/libreoffice3.5/* "${pkgdir}"/usr/lib/libreoffice
+  cp -R opt/libreoffice3.6/* "${pkgdir}"/usr/lib/libreoffice
   chown root:root -R "${pkgdir}"/usr/lib/libreoffice
 }
 
@@ -253,7 +253,7 @@ package_libreoffice-as() {
   conflicts=(openoffice-as)
   cd "${srcdir}"/LibO_${_dirver}_Linux_x86_langpack-rpm_as/RPMS
   mkdir -p "${pkgdir}"/usr/lib/libreoffice
-  cp -R opt/libreoffice3.5/* "${pkgdir}"/usr/lib/libreoffice
+  cp -R opt/libreoffice3.6/* "${pkgdir}"/usr/lib/libreoffice
   chown root:root -R "${pkgdir}"/usr/lib/libreoffice
 }
 
@@ -264,7 +264,7 @@ package_libreoffice-ast() {
   conflicts=(openoffice-ast)
   cd "${srcdir}"/LibO_${_dirver}_Linux_x86_langpack-rpm_ast/RPMS
   mkdir -p "${pkgdir}"/usr/lib/libreoffice
-  cp -R opt/libreoffice3.5/* "${pkgdir}"/usr/lib/libreoffice
+  cp -R opt/libreoffice3.6/* "${pkgdir}"/usr/lib/libreoffice
   chown root:root -R "${pkgdir}"/usr/lib/libreoffice
 }
 
@@ -275,7 +275,7 @@ package_libreoffice-be() {
   conflicts=(openoffice-be-BY)
   cd "${srcdir}"/LibO_${_dirver}_Linux_x86_langpack-rpm_be/RPMS
   mkdir -p "${pkgdir}"/usr/lib/libreoffice
-  cp -R opt/libreoffice3.5/* "${pkgdir}"/usr/lib/libreoffice
+  cp -R opt/libreoffice3.6/* "${pkgdir}"/usr/lib/libreoffice
   chown root:root -R "${pkgdir}"/usr/lib/libreoffice
 }
 
@@ -286,7 +286,7 @@ package_libreoffice-bg() {
   conflicts=(openoffice-bg)
   cd "${srcdir}"/LibO_${_dirver}_Linux_x86_langpack-rpm_bg/RPMS
   mkdir -p "${pkgdir}"/usr/lib/libreoffice
-  cp -R opt/libreoffice3.5/* "${pkgdir}"/usr/lib/libreoffice
+  cp -R opt/libreoffice3.6/* "${pkgdir}"/usr/lib/libreoffice
   chown root:root -R "${pkgdir}"/usr/lib/libreoffice
 }
 
@@ -297,7 +297,7 @@ package_libreoffice-bn() {
   conflicts=(openoffice-bn)
   cd "${srcdir}"/LibO_${_dirver}_Linux_x86_langpack-rpm_bn/RPMS
   mkdir -p "${pkgdir}"/usr/lib/libreoffice
-  cp -R opt/libreoffice3.5/* "${pkgdir}"/usr/lib/libreoffice
+  cp -R opt/libreoffice3.6/* "${pkgdir}"/usr/lib/libreoffice
   chown root:root -R "${pkgdir}"/usr/lib/libreoffice
 }
 
@@ -308,7 +308,7 @@ package_libreoffice-bo() {
   conflicts=(openoffice-bo)
   cd "${srcdir}"/LibO_${_dirver}_Linux_x86_langpack-rpm_bo/RPMS
   mkdir -p "${pkgdir}"/usr/lib/libreoffice
-  cp -R opt/libreoffice3.5/* "${pkgdir}"/usr/lib/libreoffice
+  cp -R opt/libreoffice3.6/* "${pkgdir}"/usr/lib/libreoffice
   chown root:root -R "${pkgdir}"/usr/lib/libreoffice
 }
 
@@ -319,7 +319,7 @@ package_libreoffice-br() {
   conflicts=(openoffice-br)
   cd "${srcdir}"/LibO_${_dirver}_Linux_x86_langpack-rpm_br/RPMS
   mkdir -p "${pkgdir}"/usr/lib/libreoffice
-  cp -R opt/libreoffice3.5/* "${pkgdir}"/usr/lib/libreoffice
+  cp -R opt/libreoffice3.6/* "${pkgdir}"/usr/lib/libreoffice
   chown root:root -R "${pkgdir}"/usr/lib/libreoffice
 }
 
@@ -330,7 +330,7 @@ package_libreoffice-brx() {
   conflicts=(openoffice-brx)
   cd "${srcdir}"/LibO_${_dirver}_Linux_x86_langpack-rpm_brx/RPMS
   mkdir -p "${pkgdir}"/usr/lib/libreoffice
-  cp -R opt/libreoffice3.5/* "${pkgdir}"/usr/lib/libreoffice
+  cp -R opt/libreoffice3.6/* "${pkgdir}"/usr/lib/libreoffice
   chown root:root -R "${pkgdir}"/usr/lib/libreoffice
 }
 
@@ -341,7 +341,7 @@ package_libreoffice-bs() {
   conflicts=(openoffice-bs)
   cd "${srcdir}"/LibO_${_dirver}_Linux_x86_langpack-rpm_bs/RPMS
   mkdir -p "${pkgdir}"/usr/lib/libreoffice
-  cp -R opt/libreoffice3.5/* "${pkgdir}"/usr/lib/libreoffice
+  cp -R opt/libreoffice3.6/* "${pkgdir}"/usr/lib/libreoffice
   chown root:root -R "${pkgdir}"/usr/lib/libreoffice
 }
 
@@ -352,7 +352,7 @@ package_libreoffice-ca() {
   conflicts=(openoffice-ca)
   cd "${srcdir}"/LibO_${_dirver}_Linux_x86_langpack-rpm_ca/RPMS
   mkdir -p "${pkgdir}"/usr/lib/libreoffice
-  cp -R opt/libreoffice3.5/* "${pkgdir}"/usr/lib/libreoffice
+  cp -R opt/libreoffice3.6/* "${pkgdir}"/usr/lib/libreoffice
   chown root:root -R "${pkgdir}"/usr/lib/libreoffice
 }
 
@@ -363,7 +363,7 @@ package_libreoffice-ca-XV() {
   conflicts=(openoffice-ca-XV)
   cd "${srcdir}"/LibO_${_dirver}_Linux_x86_langpack-rpm_ca-XV/RPMS
   mkdir -p "${pkgdir}"/usr/lib/libreoffice
-  cp -R opt/libreoffice3.5/* "${pkgdir}"/usr/lib/libreoffice
+  cp -R opt/libreoffice3.6/* "${pkgdir}"/usr/lib/libreoffice
   chown root:root -R "${pkgdir}"/usr/lib/libreoffice
 }
 
@@ -374,7 +374,7 @@ package_libreoffice-cs() {
   conflicts=(openoffice-cs)
   cd "${srcdir}"/LibO_${_dirver}_Linux_x86_langpack-rpm_cs/RPMS
   mkdir -p "${pkgdir}"/usr/lib/libreoffice
-  cp -R opt/libreoffice3.5/* "${pkgdir}"/usr/lib/libreoffice
+  cp -R opt/libreoffice3.6/* "${pkgdir}"/usr/lib/libreoffice
   chown root:root -R "${pkgdir}"/usr/lib/libreoffice
 }
 
@@ -385,7 +385,7 @@ package_libreoffice-cy() {
   conflicts=(openoffice-cy)
   cd "${srcdir}"/LibO_${_dirver}_Linux_x86_langpack-rpm_cy/RPMS
   mkdir -p "${pkgdir}"/usr/lib/libreoffice
-  cp -R opt/libreoffice3.5/* "${pkgdir}"/usr/lib/libreoffice
+  cp -R opt/libreoffice3.6/* "${pkgdir}"/usr/lib/libreoffice
   chown root:root -R "${pkgdir}"/usr/lib/libreoffice
 }
 
@@ -396,7 +396,7 @@ package_libreoffice-da() {
   conflicts=(openoffice-da)
   cd "${srcdir}"/LibO_${_dirver}_Linux_x86_langpack-rpm_da/RPMS
   mkdir -p "${pkgdir}"/usr/lib/libreoffice
-  cp -R opt/libreoffice3.5/* "${pkgdir}"/usr/lib/libreoffice
+  cp -R opt/libreoffice3.6/* "${pkgdir}"/usr/lib/libreoffice
   chown root:root -R "${pkgdir}"/usr/lib/libreoffice
 }
 
@@ -407,7 +407,7 @@ package_libreoffice-de() {
   conflicts=(openoffice-de)
   cd "${srcdir}"/LibO_${_dirver}_Linux_x86_langpack-rpm_de/RPMS
   mkdir -p "${pkgdir}"/usr/lib/libreoffice
-  cp -R opt/libreoffice3.5/* "${pkgdir}"/usr/lib/libreoffice
+  cp -R opt/libreoffice3.6/* "${pkgdir}"/usr/lib/libreoffice
   chown root:root -R "${pkgdir}"/usr/lib/libreoffice
 }
 
@@ -418,7 +418,7 @@ package_libreoffice-dgo() {
   conflicts=(openoffice-dgo)
   cd "${srcdir}"/LibO_${_dirver}_Linux_x86_langpack-rpm_dgo/RPMS
   mkdir -p "${pkgdir}"/usr/lib/libreoffice
-  cp -R opt/libreoffice3.5/* "${pkgdir}"/usr/lib/libreoffice
+  cp -R opt/libreoffice3.6/* "${pkgdir}"/usr/lib/libreoffice
   chown root:root -R "${pkgdir}"/usr/lib/libreoffice
 }
 
@@ -429,7 +429,7 @@ package_libreoffice-dz() {
   conflicts=(openoffice-dz)
   cd "${srcdir}"/LibO_${_dirver}_Linux_x86_langpack-rpm_dz/RPMS
   mkdir -p "${pkgdir}"/usr/lib/libreoffice
-  cp -R opt/libreoffice3.5/* "${pkgdir}"/usr/lib/libreoffice
+  cp -R opt/libreoffice3.6/* "${pkgdir}"/usr/lib/libreoffice
   chown root:root -R "${pkgdir}"/usr/lib/libreoffice
 }
 
@@ -440,7 +440,7 @@ package_libreoffice-el() {
   conflicts=(openoffice-el)
   cd "${srcdir}"/LibO_${_dirver}_Linux_x86_langpack-rpm_el/RPMS
   mkdir -p "${pkgdir}"/usr/lib/libreoffice
-  cp -R opt/libreoffice3.5/* "${pkgdir}"/usr/lib/libreoffice
+  cp -R opt/libreoffice3.6/* "${pkgdir}"/usr/lib/libreoffice
   chown root:root -R "${pkgdir}"/usr/lib/libreoffice
 }
 
@@ -451,7 +451,7 @@ package_libreoffice-en-GB() {
   conflicts=(openoffice-en-GB)
   cd "${srcdir}"/LibO_${_dirver}_Linux_x86_langpack-rpm_en-GB/RPMS
   mkdir -p "${pkgdir}"/usr/lib/libreoffice
-  cp -R opt/libreoffice3.5/* "${pkgdir}"/usr/lib/libreoffice
+  cp -R opt/libreoffice3.6/* "${pkgdir}"/usr/lib/libreoffice
   chown root:root -R "${pkgdir}"/usr/lib/libreoffice
 }
 
@@ -462,7 +462,7 @@ package_libreoffice-en-ZA() {
   conflicts=(openoffice-en-ZA)
   cd "${srcdir}"/LibO_${_dirver}_Linux_x86_langpack-rpm_en-ZA/RPMS
   mkdir -p "${pkgdir}"/usr/lib/libreoffice
-  cp -R opt/libreoffice3.5/* "${pkgdir}"/usr/lib/libreoffice
+  cp -R opt/libreoffice3.6/* "${pkgdir}"/usr/lib/libreoffice
   chown root:root -R "${pkgdir}"/usr/lib/libreoffice
 }
 
@@ -473,7 +473,7 @@ package_libreoffice-eo() {
   conflicts=(openoffice-eo)
   cd "${srcdir}"/LibO_${_dirver}_Linux_x86_langpack-rpm_eo/RPMS
   mkdir -p "${pkgdir}"/usr/lib/libreoffice
-  cp -R opt/libreoffice3.5/* "${pkgdir}"/usr/lib/libreoffice
+  cp -R opt/libreoffice3.6/* "${pkgdir}"/usr/lib/libreoffice
   chown root:root -R "${pkgdir}"/usr/lib/libreoffice
 }
 
@@ -484,7 +484,7 @@ package_libreoffice-es() {
   conflicts=(openoffice-es)
   cd "${srcdir}"/LibO_${_dirver}_Linux_x86_langpack-rpm_es/RPMS
   mkdir -p "${pkgdir}"/usr/lib/libreoffice
-  cp -R opt/libreoffice3.5/* "${pkgdir}"/usr/lib/libreoffice
+  cp -R opt/libreoffice3.6/* "${pkgdir}"/usr/lib/libreoffice
   chown root:root -R "${pkgdir}"/usr/lib/libreoffice
 }
 
@@ -495,7 +495,7 @@ package_libreoffice-et() {
   conflicts=(openoffice-et)
   cd "${srcdir}"/LibO_${_dirver}_Linux_x86_langpack-rpm_et/RPMS
   mkdir -p "${pkgdir}"/usr/lib/libreoffice
-  cp -R opt/libreoffice3.5/* "${pkgdir}"/usr/lib/libreoffice
+  cp -R opt/libreoffice3.6/* "${pkgdir}"/usr/lib/libreoffice
   chown root:root -R "${pkgdir}"/usr/lib/libreoffice
 }
 
@@ -506,7 +506,7 @@ package_libreoffice-eu() {
   conflicts=(openoffice-eu)
   cd "${srcdir}"/LibO_${_dirver}_Linux_x86_langpack-rpm_eu/RPMS
   mkdir -p "${pkgdir}"/usr/lib/libreoffice
-  cp -R opt/libreoffice3.5/* "${pkgdir}"/usr/lib/libreoffice
+  cp -R opt/libreoffice3.6/* "${pkgdir}"/usr/lib/libreoffice
   chown root:root -R "${pkgdir}"/usr/lib/libreoffice
 }
 
@@ -517,7 +517,7 @@ package_libreoffice-fa() {
   conflicts=(openoffice-fa)
   cd "${srcdir}"/LibO_${_dirver}_Linux_x86_langpack-rpm_fa/RPMS
   mkdir -p "${pkgdir}"/usr/lib/libreoffice
-  cp -R opt/libreoffice3.5/* "${pkgdir}"/usr/lib/libreoffice
+  cp -R opt/libreoffice3.6/* "${pkgdir}"/usr/lib/libreoffice
   chown root:root -R "${pkgdir}"/usr/lib/libreoffice
 }
 
@@ -528,7 +528,7 @@ package_libreoffice-fi() {
   conflicts=(openoffice-fi)
   cd "${srcdir}"/LibO_${_dirver}_Linux_x86_langpack-rpm_fi/RPMS
   mkdir -p "${pkgdir}"/usr/lib/libreoffice
-  cp -R opt/libreoffice3.5/* "${pkgdir}"/usr/lib/libreoffice
+  cp -R opt/libreoffice3.6/* "${pkgdir}"/usr/lib/libreoffice
   chown root:root -R "${pkgdir}"/usr/lib/libreoffice
 }
 
@@ -539,7 +539,7 @@ package_libreoffice-fr() {
   conflicts=(openoffice-fr)
   cd "${srcdir}"/LibO_${_dirver}_Linux_x86_langpack-rpm_fr/RPMS
   mkdir -p "${pkgdir}"/usr/lib/libreoffice
-  cp -R opt/libreoffice3.5/* "${pkgdir}"/usr/lib/libreoffice
+  cp -R opt/libreoffice3.6/* "${pkgdir}"/usr/lib/libreoffice
   chown root:root -R "${pkgdir}"/usr/lib/libreoffice
 }
 
@@ -550,10 +550,20 @@ package_libreoffice-ga() {
   conflicts=(openoffice-ga)
   cd "${srcdir}"/LibO_${_dirver}_Linux_x86_langpack-rpm_ga/RPMS
   mkdir -p "${pkgdir}"/usr/lib/libreoffice
-  cp -R opt/libreoffice3.5/* "${pkgdir}"/usr/lib/libreoffice
+  cp -R opt/libreoffice3.6/* "${pkgdir}"/usr/lib/libreoffice
   chown root:root -R "${pkgdir}"/usr/lib/libreoffice
 }
 
+package_libreoffice-gd() {
+  pkgdesc="Irish language pack for LibreOffice"
+  provides=('openoffice-gd' 'libreoffice-langpack')
+  replaces=(openoffice-gd)
+  conflicts=(openoffice-gd)
+  cd "${srcdir}"/LibO_${_dirver}_Linux_x86_langpack-rpm_gd/RPMS
+  mkdir -p "${pkgdir}"/usr/lib/libreoffice
+  cp -R opt/libreoffice3.6/* "${pkgdir}"/usr/lib/libreoffice
+  chown root:root -R "${pkgdir}"/usr/lib/libreoffice
+}
 package_libreoffice-gl() {
   pkgdesc="Galician language pack for LibreOffice"
   provides=('openoffice-gl' 'libreoffice-langpack')
@@ -561,7 +571,7 @@ package_libreoffice-gl() {
   conflicts=(openoffice-gl)
   cd "${srcdir}"/LibO_${_dirver}_Linux_x86_langpack-rpm_gl/RPMS
   mkdir -p "${pkgdir}"/usr/lib/libreoffice
-  cp -R opt/libreoffice3.5/* "${pkgdir}"/usr/lib/libreoffice
+  cp -R opt/libreoffice3.6/* "${pkgdir}"/usr/lib/libreoffice
   chown root:root -R "${pkgdir}"/usr/lib/libreoffice
 }
 
@@ -572,7 +582,7 @@ package_libreoffice-gu() {
   conflicts=(openoffice-gu)
   cd "${srcdir}"/LibO_${_dirver}_Linux_x86_langpack-rpm_gu/RPMS
   mkdir -p "${pkgdir}"/usr/lib/libreoffice
-  cp -R opt/libreoffice3.5/* "${pkgdir}"/usr/lib/libreoffice
+  cp -R opt/libreoffice3.6/* "${pkgdir}"/usr/lib/libreoffice
   chown root:root -R "${pkgdir}"/usr/lib/libreoffice
 }
 
@@ -583,7 +593,7 @@ package_libreoffice-he() {
   conflicts=(openoffice-he)
   cd "${srcdir}"/LibO_${_dirver}_Linux_x86_langpack-rpm_he/RPMS
   mkdir -p "${pkgdir}"/usr/lib/libreoffice
-  cp -R opt/libreoffice3.5/* "${pkgdir}"/usr/lib/libreoffice
+  cp -R opt/libreoffice3.6/* "${pkgdir}"/usr/lib/libreoffice
   chown root:root -R "${pkgdir}"/usr/lib/libreoffice
 }
 
@@ -594,7 +604,7 @@ package_libreoffice-hi() {
   conflicts=(openoffice-hi)
   cd "${srcdir}"/LibO_${_dirver}_Linux_x86_langpack-rpm_hi/RPMS
   mkdir -p "${pkgdir}"/usr/lib/libreoffice
-  cp -R opt/libreoffice3.5/* "${pkgdir}"/usr/lib/libreoffice
+  cp -R opt/libreoffice3.6/* "${pkgdir}"/usr/lib/libreoffice
   chown root:root -R "${pkgdir}"/usr/lib/libreoffice
 }
 
@@ -605,7 +615,7 @@ package_libreoffice-hr() {
   conflicts=(openoffice-hr)
   cd "${srcdir}"/LibO_${_dirver}_Linux_x86_langpack-rpm_hr/RPMS
   mkdir -p "${pkgdir}"/usr/lib/libreoffice
-  cp -R opt/libreoffice3.5/* "${pkgdir}"/usr/lib/libreoffice
+  cp -R opt/libreoffice3.6/* "${pkgdir}"/usr/lib/libreoffice
   chown root:root -R "${pkgdir}"/usr/lib/libreoffice
 }
 
@@ -616,7 +626,7 @@ package_libreoffice-hu() {
   conflicts=(openoffice-hu)
   cd "${srcdir}"/LibO_${_dirver}_Linux_x86_langpack-rpm_hu/RPMS
   mkdir -p "${pkgdir}"/usr/lib/libreoffice
-  cp -R opt/libreoffice3.5/* "${pkgdir}"/usr/lib/libreoffice
+  cp -R opt/libreoffice3.6/* "${pkgdir}"/usr/lib/libreoffice
   chown root:root -R "${pkgdir}"/usr/lib/libreoffice
 }
 
@@ -627,7 +637,7 @@ package_libreoffice-id() {
   conflicts=(openoffice-id)
   cd "${srcdir}"/LibO_${_dirver}_Linux_x86_langpack-rpm_id/RPMS
   mkdir -p "${pkgdir}"/usr/lib/libreoffice
-  cp -R opt/libreoffice3.5/* "${pkgdir}"/usr/lib/libreoffice
+  cp -R opt/libreoffice3.6/* "${pkgdir}"/usr/lib/libreoffice
   chown root:root -R "${pkgdir}"/usr/lib/libreoffice
 }
 
@@ -638,7 +648,7 @@ package_libreoffice-is() {
   conflicts=(openoffice-is)
   cd "${srcdir}"/LibO_${_dirver}_Linux_x86_langpack-rpm_is/RPMS
   mkdir -p "${pkgdir}"/usr/lib/libreoffice
-  cp -R opt/libreoffice3.5/* "${pkgdir}"/usr/lib/libreoffice
+  cp -R opt/libreoffice3.6/* "${pkgdir}"/usr/lib/libreoffice
   chown root:root -R "${pkgdir}"/usr/lib/libreoffice
 }
 
@@ -649,7 +659,7 @@ package_libreoffice-it() {
   conflicts=(openoffice-it)
   cd "${srcdir}"/LibO_${_dirver}_Linux_x86_langpack-rpm_it/RPMS
   mkdir -p "${pkgdir}"/usr/lib/libreoffice
-  cp -R opt/libreoffice3.5/* "${pkgdir}"/usr/lib/libreoffice
+  cp -R opt/libreoffice3.6/* "${pkgdir}"/usr/lib/libreoffice
   chown root:root -R "${pkgdir}"/usr/lib/libreoffice
 }
 
@@ -660,7 +670,7 @@ package_libreoffice-ja() {
   conflicts=(openoffice-ja)
   cd "${srcdir}"/LibO_${_dirver}_Linux_x86_langpack-rpm_ja/RPMS
   mkdir -p "${pkgdir}"/usr/lib/libreoffice
-  cp -R opt/libreoffice3.5/* "${pkgdir}"/usr/lib/libreoffice
+  cp -R opt/libreoffice3.6/* "${pkgdir}"/usr/lib/libreoffice
   chown root:root -R "${pkgdir}"/usr/lib/libreoffice
 }
 
@@ -671,7 +681,7 @@ package_libreoffice-ka() {
   conflicts=(openoffice-ka)
   cd "${srcdir}"/LibO_${_dirver}_Linux_x86_langpack-rpm_ka/RPMS
   mkdir -p "${pkgdir}"/usr/lib/libreoffice
-  cp -R opt/libreoffice3.5/* "${pkgdir}"/usr/lib/libreoffice
+  cp -R opt/libreoffice3.6/* "${pkgdir}"/usr/lib/libreoffice
   chown root:root -R "${pkgdir}"/usr/lib/libreoffice
 }
 
@@ -682,7 +692,7 @@ package_libreoffice-kk() {
   conflicts=(openoffice-kk)
   cd "${srcdir}"/LibO_${_dirver}_Linux_x86_langpack-rpm_kk/RPMS
   mkdir -p "${pkgdir}"/usr/lib/libreoffice
-  cp -R opt/libreoffice3.5/* "${pkgdir}"/usr/lib/libreoffice
+  cp -R opt/libreoffice3.6/* "${pkgdir}"/usr/lib/libreoffice
   chown root:root -R "${pkgdir}"/usr/lib/libreoffice
 }
 
@@ -693,7 +703,7 @@ package_libreoffice-km() {
   conflicts=(openoffice-km)
   cd "${srcdir}"/LibO_${_dirver}_Linux_x86_langpack-rpm_km/RPMS
   mkdir -p "${pkgdir}"/usr/lib/libreoffice
-  cp -R opt/libreoffice3.5/* "${pkgdir}"/usr/lib/libreoffice
+  cp -R opt/libreoffice3.6/* "${pkgdir}"/usr/lib/libreoffice
   chown root:root -R "${pkgdir}"/usr/lib/libreoffice
 }
 
@@ -704,7 +714,7 @@ package_libreoffice-kn() {
   conflicts=(openoffice-kn)
   cd "${srcdir}"/LibO_${_dirver}_Linux_x86_langpack-rpm_kn/RPMS
   mkdir -p "${pkgdir}"/usr/lib/libreoffice
-  cp -R opt/libreoffice3.5/* "${pkgdir}"/usr/lib/libreoffice
+  cp -R opt/libreoffice3.6/* "${pkgdir}"/usr/lib/libreoffice
   chown root:root -R "${pkgdir}"/usr/lib/libreoffice
 }
 
@@ -715,7 +725,7 @@ package_libreoffice-ko() {
   conflicts=(openoffice-ko)
   cd "${srcdir}"/LibO_${_dirver}_Linux_x86_langpack-rpm_ko/RPMS
   mkdir -p "${pkgdir}"/usr/lib/libreoffice
-  cp -R opt/libreoffice3.5/* "${pkgdir}"/usr/lib/libreoffice
+  cp -R opt/libreoffice3.6/* "${pkgdir}"/usr/lib/libreoffice
   chown root:root -R "${pkgdir}"/usr/lib/libreoffice
 }
 
@@ -726,7 +736,7 @@ package_libreoffice-kok() {
   conflicts=(openoffice-kok)
   cd "${srcdir}"/LibO_${_dirver}_Linux_x86_langpack-rpm_kok/RPMS
   mkdir -p "${pkgdir}"/usr/lib/libreoffice
-  cp -R opt/libreoffice3.5/* "${pkgdir}"/usr/lib/libreoffice
+  cp -R opt/libreoffice3.6/* "${pkgdir}"/usr/lib/libreoffice
   chown root:root -R "${pkgdir}"/usr/lib/libreoffice
 }
 
@@ -737,7 +747,7 @@ package_libreoffice-ks() {
   conflicts=(openoffice-ks)
   cd "${srcdir}"/LibO_${_dirver}_Linux_x86_langpack-rpm_ks/RPMS
   mkdir -p "${pkgdir}"/usr/lib/libreoffice
-  cp -R opt/libreoffice3.5/* "${pkgdir}"/usr/lib/libreoffice
+  cp -R opt/libreoffice3.6/* "${pkgdir}"/usr/lib/libreoffice
   chown root:root -R "${pkgdir}"/usr/lib/libreoffice
 }
 
@@ -748,7 +758,7 @@ package_libreoffice-ku() {
   conflicts=(openoffice-ku)
   cd "${srcdir}"/LibO_${_dirver}_Linux_x86_langpack-rpm_ku/RPMS
   mkdir -p "${pkgdir}"/usr/lib/libreoffice
-  cp -R opt/libreoffice3.5/* "${pkgdir}"/usr/lib/libreoffice
+  cp -R opt/libreoffice3.6/* "${pkgdir}"/usr/lib/libreoffice
   chown root:root -R "${pkgdir}"/usr/lib/libreoffice
 }
 
@@ -759,7 +769,7 @@ package_libreoffice-lo() {
   conflicts=(openoffice-lo)
   cd "${srcdir}"/LibO_${_dirver}_Linux_x86_langpack-rpm_lo/RPMS
   mkdir -p "${pkgdir}"/usr/lib/libreoffice
-  cp -R opt/libreoffice3.5/* "${pkgdir}"/usr/lib/libreoffice
+  cp -R opt/libreoffice3.6/* "${pkgdir}"/usr/lib/libreoffice
   chown root:root -R "${pkgdir}"/usr/lib/libreoffice
 }
 
@@ -770,7 +780,7 @@ package_libreoffice-lt() {
   conflicts=(openoffice-lt)
   cd "${srcdir}"/LibO_${_dirver}_Linux_x86_langpack-rpm_lt/RPMS
   mkdir -p "${pkgdir}"/usr/lib/libreoffice
-  cp -R opt/libreoffice3.5/* "${pkgdir}"/usr/lib/libreoffice
+  cp -R opt/libreoffice3.6/* "${pkgdir}"/usr/lib/libreoffice
   chown root:root -R "${pkgdir}"/usr/lib/libreoffice
 }
 
@@ -781,7 +791,7 @@ package_libreoffice-lv() {
   conflicts=(openoffice-lv)
   cd "${srcdir}"/LibO_${_dirver}_Linux_x86_langpack-rpm_lv/RPMS
   mkdir -p "${pkgdir}"/usr/lib/libreoffice
-  cp -R opt/libreoffice3.5/* "${pkgdir}"/usr/lib/libreoffice
+  cp -R opt/libreoffice3.6/* "${pkgdir}"/usr/lib/libreoffice
   chown root:root -R "${pkgdir}"/usr/lib/libreoffice
 }
 
@@ -792,7 +802,7 @@ package_libreoffice-mai() {
   conflicts=(openoffice-mai)
   cd "${srcdir}"/LibO_${_dirver}_Linux_x86_langpack-rpm_mai/RPMS
   mkdir -p "${pkgdir}"/usr/lib/libreoffice
-  cp -R opt/libreoffice3.5/* "${pkgdir}"/usr/lib/libreoffice
+  cp -R opt/libreoffice3.6/* "${pkgdir}"/usr/lib/libreoffice
   chown root:root -R "${pkgdir}"/usr/lib/libreoffice
 }
 
@@ -803,7 +813,7 @@ package_libreoffice-mk() {
   conflicts=(openoffice-mk)
   cd "${srcdir}"/LibO_${_dirver}_Linux_x86_langpack-rpm_mk/RPMS
   mkdir -p "${pkgdir}"/usr/lib/libreoffice
-  cp -R opt/libreoffice3.5/* "${pkgdir}"/usr/lib/libreoffice
+  cp -R opt/libreoffice3.6/* "${pkgdir}"/usr/lib/libreoffice
   chown root:root -R "${pkgdir}"/usr/lib/libreoffice
 }
 
@@ -814,7 +824,7 @@ package_libreoffice-ml() {
   conflicts=(openoffice-ml)
   cd "${srcdir}"/LibO_${_dirver}_Linux_x86_langpack-rpm_ml/RPMS
   mkdir -p "${pkgdir}"/usr/lib/libreoffice
-  cp -R opt/libreoffice3.5/* "${pkgdir}"/usr/lib/libreoffice
+  cp -R opt/libreoffice3.6/* "${pkgdir}"/usr/lib/libreoffice
   chown root:root -R "${pkgdir}"/usr/lib/libreoffice
 }
 
@@ -825,7 +835,7 @@ package_libreoffice-mn() {
   conflicts=(openoffice-mn)
   cd "${srcdir}"/LibO_${_dirver}_Linux_x86_langpack-rpm_mn/RPMS
   mkdir -p "${pkgdir}"/usr/lib/libreoffice
-  cp -R opt/libreoffice3.5/* "${pkgdir}"/usr/lib/libreoffice
+  cp -R opt/libreoffice3.6/* "${pkgdir}"/usr/lib/libreoffice
   chown root:root -R "${pkgdir}"/usr/lib/libreoffice
 }
 
@@ -836,7 +846,7 @@ package_libreoffice-mni() {
   conflicts=(openoffice-mni)
   cd "${srcdir}"/LibO_${_dirver}_Linux_x86_langpack-rpm_mni/RPMS
   mkdir -p "${pkgdir}"/usr/lib/libreoffice
-  cp -R opt/libreoffice3.5/* "${pkgdir}"/usr/lib/libreoffice
+  cp -R opt/libreoffice3.6/* "${pkgdir}"/usr/lib/libreoffice
   chown root:root -R "${pkgdir}"/usr/lib/libreoffice
 }
 
@@ -847,7 +857,7 @@ package_libreoffice-mr() {
   conflicts=(openoffice-mr)
   cd "${srcdir}"/LibO_${_dirver}_Linux_x86_langpack-rpm_mr/RPMS
   mkdir -p "${pkgdir}"/usr/lib/libreoffice
-  cp -R opt/libreoffice3.5/* "${pkgdir}"/usr/lib/libreoffice
+  cp -R opt/libreoffice3.6/* "${pkgdir}"/usr/lib/libreoffice
   chown root:root -R "${pkgdir}"/usr/lib/libreoffice
 }
 
@@ -858,7 +868,7 @@ package_libreoffice-my() {
   conflicts=(openoffice-my)
   cd "${srcdir}"/LibO_${_dirver}_Linux_x86_langpack-rpm_my/RPMS
   mkdir -p "${pkgdir}"/usr/lib/libreoffice
-  cp -R opt/libreoffice3.5/* "${pkgdir}"/usr/lib/libreoffice
+  cp -R opt/libreoffice3.6/* "${pkgdir}"/usr/lib/libreoffice
   chown root:root -R "${pkgdir}"/usr/lib/libreoffice
 }
 
@@ -869,7 +879,7 @@ package_libreoffice-nb() {
   conflicts=(openoffice-nb)
   cd "${srcdir}"/LibO_${_dirver}_Linux_x86_langpack-rpm_nb/RPMS
   mkdir -p "${pkgdir}"/usr/lib/libreoffice
-  cp -R opt/libreoffice3.5/* "${pkgdir}"/usr/lib/libreoffice
+  cp -R opt/libreoffice3.6/* "${pkgdir}"/usr/lib/libreoffice
   chown root:root -R "${pkgdir}"/usr/lib/libreoffice
 }
 
@@ -880,7 +890,7 @@ package_libreoffice-ne() {
   conflicts=(openoffice-ne)
   cd "${srcdir}"/LibO_${_dirver}_Linux_x86_langpack-rpm_ne/RPMS
   mkdir -p "${pkgdir}"/usr/lib/libreoffice
-  cp -R opt/libreoffice3.5/* "${pkgdir}"/usr/lib/libreoffice
+  cp -R opt/libreoffice3.6/* "${pkgdir}"/usr/lib/libreoffice
   chown root:root -R "${pkgdir}"/usr/lib/libreoffice
 }
 
@@ -891,7 +901,7 @@ package_libreoffice-nl() {
   conflicts=(openoffice-nl)
   cd "${srcdir}"/LibO_${_dirver}_Linux_x86_langpack-rpm_nl/RPMS
   mkdir -p "${pkgdir}"/usr/lib/libreoffice
-  cp -R opt/libreoffice3.5/* "${pkgdir}"/usr/lib/libreoffice
+  cp -R opt/libreoffice3.6/* "${pkgdir}"/usr/lib/libreoffice
   chown root:root -R "${pkgdir}"/usr/lib/libreoffice
 }
 
@@ -902,7 +912,7 @@ package_libreoffice-nn() {
   conflicts=(openoffice-nn)
   cd "${srcdir}"/LibO_${_dirver}_Linux_x86_langpack-rpm_nn/RPMS
   mkdir -p "${pkgdir}"/usr/lib/libreoffice
-  cp -R opt/libreoffice3.5/* "${pkgdir}"/usr/lib/libreoffice
+  cp -R opt/libreoffice3.6/* "${pkgdir}"/usr/lib/libreoffice
   chown root:root -R "${pkgdir}"/usr/lib/libreoffice
 }
 
@@ -913,7 +923,7 @@ package_libreoffice-nr() {
   conflicts=(openoffice-nr)
   cd "${srcdir}"/LibO_${_dirver}_Linux_x86_langpack-rpm_nr/RPMS
   mkdir -p "${pkgdir}"/usr/lib/libreoffice
-  cp -R opt/libreoffice3.5/* "${pkgdir}"/usr/lib/libreoffice
+  cp -R opt/libreoffice3.6/* "${pkgdir}"/usr/lib/libreoffice
   chown root:root -R "${pkgdir}"/usr/lib/libreoffice
 }
 
@@ -924,7 +934,7 @@ package_libreoffice-nso() {
   conflicts=(openoffice-ns)
   cd "${srcdir}"/LibO_${_dirver}_Linux_x86_langpack-rpm_nso/RPMS
   mkdir -p "${pkgdir}"/usr/lib/libreoffice
-  cp -R opt/libreoffice3.5/* "${pkgdir}"/usr/lib/libreoffice
+  cp -R opt/libreoffice3.6/* "${pkgdir}"/usr/lib/libreoffice
   chown root:root -R "${pkgdir}"/usr/lib/libreoffice
 }
 
@@ -935,7 +945,7 @@ package_libreoffice-oc() {
   conflicts=(openoffice-oc)
   cd "${srcdir}"/LibO_${_dirver}_Linux_x86_langpack-rpm_oc/RPMS
   mkdir -p "${pkgdir}"/usr/lib/libreoffice
-  cp -R opt/libreoffice3.5/* "${pkgdir}"/usr/lib/libreoffice
+  cp -R opt/libreoffice3.6/* "${pkgdir}"/usr/lib/libreoffice
   chown root:root -R "${pkgdir}"/usr/lib/libreoffice
 }
 
@@ -946,7 +956,7 @@ package_libreoffice-om() {
   conflicts=(openoffice-om)
   cd "${srcdir}"/LibO_${_dirver}_Linux_x86_langpack-rpm_om/RPMS
   mkdir -p "${pkgdir}"/usr/lib/libreoffice
-  cp -R opt/libreoffice3.5/* "${pkgdir}"/usr/lib/libreoffice
+  cp -R opt/libreoffice3.6/* "${pkgdir}"/usr/lib/libreoffice
   chown root:root -R "${pkgdir}"/usr/lib/libreoffice
 }
 
@@ -957,7 +967,7 @@ package_libreoffice-or() {
   conflicts=(openoffice-or)
   cd "${srcdir}"/LibO_${_dirver}_Linux_x86_langpack-rpm_or/RPMS
   mkdir -p "${pkgdir}"/usr/lib/libreoffice
-  cp -R opt/libreoffice3.5/* "${pkgdir}"/usr/lib/libreoffice
+  cp -R opt/libreoffice3.6/* "${pkgdir}"/usr/lib/libreoffice
   chown root:root -R "${pkgdir}"/usr/lib/libreoffice
 }
 
@@ -968,7 +978,7 @@ package_libreoffice-pa-IN() {
   conflicts=(openoffice-pa-IN)
   cd "${srcdir}"/LibO_${_dirver}_Linux_x86_langpack-rpm_pa-IN/RPMS
   mkdir -p "${pkgdir}"/usr/lib/libreoffice
-  cp -R opt/libreoffice3.5/* "${pkgdir}"/usr/lib/libreoffice
+  cp -R opt/libreoffice3.6/* "${pkgdir}"/usr/lib/libreoffice
   chown root:root -R "${pkgdir}"/usr/lib/libreoffice
 }
 
@@ -979,7 +989,7 @@ package_libreoffice-pl() {
   conflicts=(openoffice-pl)
   cd "${srcdir}"/LibO_${_dirver}_Linux_x86_langpack-rpm_pl/RPMS
   mkdir -p "${pkgdir}"/usr/lib/libreoffice
-  cp -R opt/libreoffice3.5/* "${pkgdir}"/usr/lib/libreoffice
+  cp -R opt/libreoffice3.6/* "${pkgdir}"/usr/lib/libreoffice
   chown root:root -R "${pkgdir}"/usr/lib/libreoffice
 }
 
@@ -990,7 +1000,7 @@ package_libreoffice-pt-BR() {
   conflicts=(openoffice-pt-BR)
   cd "${srcdir}"/LibO_${_dirver}_Linux_x86_langpack-rpm_pt-BR/RPMS
   mkdir -p "${pkgdir}"/usr/lib/libreoffice
-  cp -R opt/libreoffice3.5/* "${pkgdir}"/usr/lib/libreoffice
+  cp -R opt/libreoffice3.6/* "${pkgdir}"/usr/lib/libreoffice
   chown root:root -R "${pkgdir}"/usr/lib/libreoffice
 }
 
@@ -1001,7 +1011,7 @@ package_libreoffice-pt() {
   conflicts=(openoffice-pt)
   cd "${srcdir}"/LibO_${_dirver}_Linux_x86_langpack-rpm_pt/RPMS
   mkdir -p "${pkgdir}"/usr/lib/libreoffice
-  cp -R opt/libreoffice3.5/* "${pkgdir}"/usr/lib/libreoffice
+  cp -R opt/libreoffice3.6/* "${pkgdir}"/usr/lib/libreoffice
   chown root:root -R "${pkgdir}"/usr/lib/libreoffice
 }
 
@@ -1012,7 +1022,7 @@ package_libreoffice-ro() {
   conflicts=(openoffice-ro)
   cd "${srcdir}"/LibO_${_dirver}_Linux_x86_langpack-rpm_ro/RPMS
   mkdir -p "${pkgdir}"/usr/lib/libreoffice
-  cp -R opt/libreoffice3.5/* "${pkgdir}"/usr/lib/libreoffice
+  cp -R opt/libreoffice3.6/* "${pkgdir}"/usr/lib/libreoffice
   chown root:root -R "${pkgdir}"/usr/lib/libreoffice
 }
 
@@ -1023,7 +1033,7 @@ package_libreoffice-ru() {
   conflicts=(openoffice-ru)
   cd "${srcdir}"/LibO_${_dirver}_Linux_x86_langpack-rpm_ru/RPMS
   mkdir -p "${pkgdir}"/usr/lib/libreoffice
-  cp -R opt/libreoffice3.5/* "${pkgdir}"/usr/lib/libreoffice
+  cp -R opt/libreoffice3.6/* "${pkgdir}"/usr/lib/libreoffice
   chown root:root -R "${pkgdir}"/usr/lib/libreoffice
 }
 
@@ -1034,7 +1044,7 @@ package_libreoffice-rw() {
   conflicts=(openoffice-rw)
   cd "${srcdir}"/LibO_${_dirver}_Linux_x86_langpack-rpm_rw/RPMS
   mkdir -p "${pkgdir}"/usr/lib/libreoffice
-  cp -R opt/libreoffice3.5/* "${pkgdir}"/usr/lib/libreoffice
+  cp -R opt/libreoffice3.6/* "${pkgdir}"/usr/lib/libreoffice
   chown root:root -R "${pkgdir}"/usr/lib/libreoffice
 }
 
@@ -1045,7 +1055,7 @@ package_libreoffice-sa-IN() {
   conflicts=(openoffice-sa-IN)
   cd "${srcdir}"/LibO_${_dirver}_Linux_x86_langpack-rpm_sa-IN/RPMS
   mkdir -p "${pkgdir}"/usr/lib/libreoffice
-  cp -R opt/libreoffice3.5/* "${pkgdir}"/usr/lib/libreoffice
+  cp -R opt/libreoffice3.6/* "${pkgdir}"/usr/lib/libreoffice
   chown root:root -R "${pkgdir}"/usr/lib/libreoffice
 }
 
@@ -1056,7 +1066,7 @@ package_libreoffice-sat() {
   conflicts=(openoffice-sat)
   cd "${srcdir}"/LibO_${_dirver}_Linux_x86_langpack-rpm_sat/RPMS
   mkdir -p "${pkgdir}"/usr/lib/libreoffice
-  cp -R opt/libreoffice3.5/* "${pkgdir}"/usr/lib/libreoffice
+  cp -R opt/libreoffice3.6/* "${pkgdir}"/usr/lib/libreoffice
   chown root:root -R "${pkgdir}"/usr/lib/libreoffice
 }
 
@@ -1067,7 +1077,7 @@ package_libreoffice-sd() {
   conflicts=(openoffice-sd)
   cd "${srcdir}"/LibO_${_dirver}_Linux_x86_langpack-rpm_sd/RPMS
   mkdir -p "${pkgdir}"/usr/lib/libreoffice
-  cp -R opt/libreoffice3.5/* "${pkgdir}"/usr/lib/libreoffice
+  cp -R opt/libreoffice3.6/* "${pkgdir}"/usr/lib/libreoffice
   chown root:root -R "${pkgdir}"/usr/lib/libreoffice
 }
 
@@ -1078,7 +1088,7 @@ package_libreoffice-sh() {
   conflicts=(openoffice-sh)
   cd "${srcdir}"/LibO_${_dirver}_Linux_x86_langpack-rpm_sh/RPMS
   mkdir -p "${pkgdir}"/usr/lib/libreoffice
-  cp -R opt/libreoffice3.5/* "${pkgdir}"/usr/lib/libreoffice
+  cp -R opt/libreoffice3.6/* "${pkgdir}"/usr/lib/libreoffice
   chown root:root -R "${pkgdir}"/usr/lib/libreoffice
 }
 
@@ -1089,7 +1099,7 @@ package_libreoffice-si() {
   conflicts=(openoffice-si)
   cd "${srcdir}"/LibO_${_dirver}_Linux_x86_langpack-rpm_si/RPMS
   mkdir -p "${pkgdir}"/usr/lib/libreoffice
-  cp -R opt/libreoffice3.5/* "${pkgdir}"/usr/lib/libreoffice
+  cp -R opt/libreoffice3.6/* "${pkgdir}"/usr/lib/libreoffice
   chown root:root -R "${pkgdir}"/usr/lib/libreoffice
 }
 
@@ -1100,7 +1110,7 @@ package_libreoffice-sk() {
   conflicts=(openoffice-sk)
   cd "${srcdir}"/LibO_${_dirver}_Linux_x86_langpack-rpm_sk/RPMS
   mkdir -p "${pkgdir}"/usr/lib/libreoffice
-  cp -R opt/libreoffice3.5/* "${pkgdir}"/usr/lib/libreoffice
+  cp -R opt/libreoffice3.6/* "${pkgdir}"/usr/lib/libreoffice
   chown root:root -R "${pkgdir}"/usr/lib/libreoffice
 }
 
@@ -1111,7 +1121,7 @@ package_libreoffice-sl() {
   conflicts=(openoffice-sl)
   cd "${srcdir}"/LibO_${_dirver}_Linux_x86_langpack-rpm_sl/RPMS
   mkdir -p "${pkgdir}"/usr/lib/libreoffice
-  cp -R opt/libreoffice3.5/* "${pkgdir}"/usr/lib/libreoffice
+  cp -R opt/libreoffice3.6/* "${pkgdir}"/usr/lib/libreoffice
   chown root:root -R "${pkgdir}"/usr/lib/libreoffice
 }
 
@@ -1122,7 +1132,7 @@ package_libreoffice-sq() {
   conflicts=(openoffice-sq)
   cd "${srcdir}"/LibO_${_dirver}_Linux_x86_langpack-rpm_sq/RPMS
   mkdir -p "${pkgdir}"/usr/lib/libreoffice
-  cp -R opt/libreoffice3.5/* "${pkgdir}"/usr/lib/libreoffice
+  cp -R opt/libreoffice3.6/* "${pkgdir}"/usr/lib/libreoffice
   chown root:root -R "${pkgdir}"/usr/lib/libreoffice
 }
 
@@ -1133,7 +1143,7 @@ package_libreoffice-sr() {
   conflicts=(openoffice-sr)
   cd "${srcdir}"/LibO_${_dirver}_Linux_x86_langpack-rpm_sr/RPMS
   mkdir -p "${pkgdir}"/usr/lib/libreoffice
-  cp -R opt/libreoffice3.5/* "${pkgdir}"/usr/lib/libreoffice
+  cp -R opt/libreoffice3.6/* "${pkgdir}"/usr/lib/libreoffice
   chown root:root -R "${pkgdir}"/usr/lib/libreoffice
 }
 
@@ -1144,7 +1154,7 @@ package_libreoffice-ss() {
   conflicts=(openoffice-ss)
   cd "${srcdir}"/LibO_${_dirver}_Linux_x86_langpack-rpm_ss/RPMS
   mkdir -p "${pkgdir}"/usr/lib/libreoffice
-  cp -R opt/libreoffice3.5/* "${pkgdir}"/usr/lib/libreoffice
+  cp -R opt/libreoffice3.6/* "${pkgdir}"/usr/lib/libreoffice
   chown root:root -R "${pkgdir}"/usr/lib/libreoffice
 }
 
@@ -1155,7 +1165,7 @@ package_libreoffice-st() {
   conflicts=(openoffice-st)
   cd "${srcdir}"/LibO_${_dirver}_Linux_x86_langpack-rpm_st/RPMS
   mkdir -p "${pkgdir}"/usr/lib/libreoffice
-  cp -R opt/libreoffice3.5/* "${pkgdir}"/usr/lib/libreoffice
+  cp -R opt/libreoffice3.6/* "${pkgdir}"/usr/lib/libreoffice
   chown root:root -R "${pkgdir}"/usr/lib/libreoffice
 }
 
@@ -1166,7 +1176,7 @@ package_libreoffice-sv() {
   conflicts=(openoffice-sv)
   cd "${srcdir}"/LibO_${_dirver}_Linux_x86_langpack-rpm_sv/RPMS
   mkdir -p "${pkgdir}"/usr/lib/libreoffice
-  cp -R opt/libreoffice3.5/* "${pkgdir}"/usr/lib/libreoffice
+  cp -R opt/libreoffice3.6/* "${pkgdir}"/usr/lib/libreoffice
   chown root:root -R "${pkgdir}"/usr/lib/libreoffice
 }
 
@@ -1177,7 +1187,7 @@ package_libreoffice-sw-TZ() {
   conflicts=(openoffice-sw-TZ)
   cd "${srcdir}"/LibO_${_dirver}_Linux_x86_langpack-rpm_sw-TZ/RPMS
   mkdir -p "${pkgdir}"/usr/lib/libreoffice
-  cp -R opt/libreoffice3.5/* "${pkgdir}"/usr/lib/libreoffice
+  cp -R opt/libreoffice3.6/* "${pkgdir}"/usr/lib/libreoffice
   chown root:root -R "${pkgdir}"/usr/lib/libreoffice
 }
 
@@ -1188,7 +1198,7 @@ package_libreoffice-ta() {
   conflicts=(openoffice-ta)
   cd "${srcdir}"/LibO_${_dirver}_Linux_x86_langpack-rpm_ta/RPMS
   mkdir -p "${pkgdir}"/usr/lib/libreoffice
-  cp -R opt/libreoffice3.5/* "${pkgdir}"/usr/lib/libreoffice
+  cp -R opt/libreoffice3.6/* "${pkgdir}"/usr/lib/libreoffice
   chown root:root -R "${pkgdir}"/usr/lib/libreoffice
 }
 
@@ -1199,7 +1209,7 @@ package_libreoffice-te() {
   conflicts=(openoffice-te)
   cd "${srcdir}"/LibO_${_dirver}_Linux_x86_langpack-rpm_te/RPMS
   mkdir -p "${pkgdir}"/usr/lib/libreoffice
-  cp -R opt/libreoffice3.5/* "${pkgdir}"/usr/lib/libreoffice
+  cp -R opt/libreoffice3.6/* "${pkgdir}"/usr/lib/libreoffice
   chown root:root -R "${pkgdir}"/usr/lib/libreoffice
 }
 
@@ -1210,7 +1220,7 @@ package_libreoffice-tg() {
   conflicts=(openoffice-tg)
   cd "${srcdir}"/LibO_${_dirver}_Linux_x86_langpack-rpm_tg/RPMS
   mkdir -p "${pkgdir}"/usr/lib/libreoffice
-  cp -R opt/libreoffice3.5/* "${pkgdir}"/usr/lib/libreoffice
+  cp -R opt/libreoffice3.6/* "${pkgdir}"/usr/lib/libreoffice
   chown root:root -R "${pkgdir}"/usr/lib/libreoffice
 }
 
@@ -1221,7 +1231,7 @@ package_libreoffice-th() {
   conflicts=(openoffice-th)
   cd "${srcdir}"/LibO_${_dirver}_Linux_x86_langpack-rpm_th/RPMS
   mkdir -p "${pkgdir}"/usr/lib/libreoffice
-  cp -R opt/libreoffice3.5/* "${pkgdir}"/usr/lib/libreoffice
+  cp -R opt/libreoffice3.6/* "${pkgdir}"/usr/lib/libreoffice
   chown root:root -R "${pkgdir}"/usr/lib/libreoffice
 }
 
@@ -1232,7 +1242,7 @@ package_libreoffice-tn() {
   conflicts=(openoffice-tn)
   cd "${srcdir}"/LibO_${_dirver}_Linux_x86_langpack-rpm_tn/RPMS
   mkdir -p "${pkgdir}"/usr/lib/libreoffice
-  cp -R opt/libreoffice3.5/* "${pkgdir}"/usr/lib/libreoffice
+  cp -R opt/libreoffice3.6/* "${pkgdir}"/usr/lib/libreoffice
   chown root:root -R "${pkgdir}"/usr/lib/libreoffice
 }
 
@@ -1243,7 +1253,7 @@ package_libreoffice-tr() {
   conflicts=(openoffice-tr)
   cd "${srcdir}"/LibO_${_dirver}_Linux_x86_langpack-rpm_tr/RPMS
   mkdir -p "${pkgdir}"/usr/lib/libreoffice
-  cp -R opt/libreoffice3.5/* "${pkgdir}"/usr/lib/libreoffice
+  cp -R opt/libreoffice3.6/* "${pkgdir}"/usr/lib/libreoffice
   chown root:root -R "${pkgdir}"/usr/lib/libreoffice
 }
 
@@ -1254,7 +1264,7 @@ package_libreoffice-ts() {
   conflicts=(openoffice-ts)
   cd "${srcdir}"/LibO_${_dirver}_Linux_x86_langpack-rpm_ts/RPMS
   mkdir -p "${pkgdir}"/usr/lib/libreoffice
-  cp -R opt/libreoffice3.5/* "${pkgdir}"/usr/lib/libreoffice
+  cp -R opt/libreoffice3.6/* "${pkgdir}"/usr/lib/libreoffice
   chown root:root -R "${pkgdir}"/usr/lib/libreoffice
 }
 
@@ -1265,7 +1275,7 @@ package_libreoffice-ug() {
   conflicts=(openoffice-ug)
   cd "${srcdir}"/LibO_${_dirver}_Linux_x86_langpack-rpm_ug/RPMS
   mkdir -p "${pkgdir}"/usr/lib/libreoffice
-  cp -R opt/libreoffice3.5/* "${pkgdir}"/usr/lib/libreoffice
+  cp -R opt/libreoffice3.6/* "${pkgdir}"/usr/lib/libreoffice
   chown root:root -R "${pkgdir}"/usr/lib/libreoffice
 }
 
@@ -1276,7 +1286,7 @@ package_libreoffice-uk() {
   conflicts=(openoffice-uk)
   cd "${srcdir}"/LibO_${_dirver}_Linux_x86_langpack-rpm_uk/RPMS
   mkdir -p "${pkgdir}"/usr/lib/libreoffice
-  cp -R opt/libreoffice3.5/* "${pkgdir}"/usr/lib/libreoffice
+  cp -R opt/libreoffice3.6/* "${pkgdir}"/usr/lib/libreoffice
   chown root:root -R "${pkgdir}"/usr/lib/libreoffice
 }
 
@@ -1287,7 +1297,7 @@ package_libreoffice-uz() {
   conflicts=(openoffice-uz)
   cd "${srcdir}"/LibO_${_dirver}_Linux_x86_langpack-rpm_uz/RPMS
   mkdir -p "${pkgdir}"/usr/lib/libreoffice
-  cp -R opt/libreoffice3.5/* "${pkgdir}"/usr/lib/libreoffice
+  cp -R opt/libreoffice3.6/* "${pkgdir}"/usr/lib/libreoffice
   chown root:root -R "${pkgdir}"/usr/lib/libreoffice
 }
 
@@ -1298,7 +1308,7 @@ package_libreoffice-ve() {
   conflicts=(openoffice-ve)
   cd "${srcdir}"/LibO_${_dirver}_Linux_x86_langpack-rpm_ve/RPMS
   mkdir -p "${pkgdir}"/usr/lib/libreoffice
-  cp -R opt/libreoffice3.5/* "${pkgdir}"/usr/lib/libreoffice
+  cp -R opt/libreoffice3.6/* "${pkgdir}"/usr/lib/libreoffice
   chown root:root -R "${pkgdir}"/usr/lib/libreoffice
 }
 
@@ -1309,7 +1319,7 @@ package_libreoffice-vi() {
   conflicts=(openoffice-vi)
   cd "${srcdir}"/LibO_${_dirver}_Linux_x86_langpack-rpm_vi/RPMS
   mkdir -p "${pkgdir}"/usr/lib/libreoffice
-  cp -R opt/libreoffice3.5/* "${pkgdir}"/usr/lib/libreoffice
+  cp -R opt/libreoffice3.6/* "${pkgdir}"/usr/lib/libreoffice
   chown root:root -R "${pkgdir}"/usr/lib/libreoffice
 }
 
@@ -1320,7 +1330,7 @@ package_libreoffice-xh() {
   conflicts=(openoffice-xh)
   cd "${srcdir}"/LibO_${_dirver}_Linux_x86_langpack-rpm_xh/RPMS
   mkdir -p "${pkgdir}"/usr/lib/libreoffice
-  cp -R opt/libreoffice3.5/* "${pkgdir}"/usr/lib/libreoffice
+  cp -R opt/libreoffice3.6/* "${pkgdir}"/usr/lib/libreoffice
   chown root:root -R "${pkgdir}"/usr/lib/libreoffice
 }
 
@@ -1331,7 +1341,7 @@ package_libreoffice-zh-CN() {
   conflicts=(openoffice-zh-CN)
   cd "${srcdir}"/LibO_${_dirver}_Linux_x86_langpack-rpm_zh-CN/RPMS
   mkdir -p "${pkgdir}"/usr/lib/libreoffice
-  cp -R opt/libreoffice3.5/* "${pkgdir}"/usr/lib/libreoffice
+  cp -R opt/libreoffice3.6/* "${pkgdir}"/usr/lib/libreoffice
   chown root:root -R "${pkgdir}"/usr/lib/libreoffice
 }
 
@@ -1342,7 +1352,7 @@ package_libreoffice-zh-TW() {
   conflicts=(openoffice-zh-TW)
   cd "${srcdir}"/LibO_${_dirver}_Linux_x86_langpack-rpm_zh-TW/RPMS
   mkdir -p "${pkgdir}"/usr/lib/libreoffice
-  cp -R opt/libreoffice3.5/* "${pkgdir}"/usr/lib/libreoffice
+  cp -R opt/libreoffice3.6/* "${pkgdir}"/usr/lib/libreoffice
   chown root:root -R "${pkgdir}"/usr/lib/libreoffice
 }
 
@@ -1353,6 +1363,6 @@ package_libreoffice-zu() {
   conflicts=(openoffice-zu)
   cd "${srcdir}"/LibO_${_dirver}_Linux_x86_langpack-rpm_zu/RPMS
   mkdir -p "${pkgdir}"/usr/lib/libreoffice
-  cp -R opt/libreoffice3.5/* "${pkgdir}"/usr/lib/libreoffice
+  cp -R opt/libreoffice3.6/* "${pkgdir}"/usr/lib/libreoffice
   chown root:root -R "${pkgdir}"/usr/lib/libreoffice
 }
