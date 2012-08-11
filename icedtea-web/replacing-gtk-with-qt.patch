@@ -1,0 +1,283 @@
+Author: Giuseppe Calà <jiveaxe@chakra-project.org>
+Date:   Sat Oct 22 14:36:13 CEST 2011
+
+    Replace gtk with qt4
+
+diff -Naur icedtea-web-1.1.3-orig/configure icedtea-web-1.1.3/configure
+--- icedtea-web-1.1.3-orig/configure	2011-09-28 22:18:57.000000000 +0200
++++ icedtea-web-1.1.3/configure	2011-10-22 11:59:07.059368396 +0200
+@@ -587,8 +587,9 @@
+ MOZILLA_CFLAGS
+ GLIB_LIBS
+ GLIB_CFLAGS
+-GTK_LIBS
+-GTK_CFLAGS
++QT4_CFLAGS
++QT4_LIBS
++MOC
+ PKG_CONFIG_LIBDIR
+ PKG_CONFIG_PATH
+ PKG_CONFIG
+@@ -752,8 +753,8 @@
+ PKG_CONFIG
+ PKG_CONFIG_PATH
+ PKG_CONFIG_LIBDIR
+-GTK_CFLAGS
+-GTK_LIBS
++QT4_CFLAGS
++QT4_LIBS
+ GLIB_CFLAGS
+ GLIB_LIBS
+ MOZILLA_CFLAGS
+@@ -1420,8 +1421,8 @@
+               directories to add to pkg-config's search path
+   PKG_CONFIG_LIBDIR
+               path overriding pkg-config's built-in search path
+-  GTK_CFLAGS  C compiler flags for GTK, overriding pkg-config
+-  GTK_LIBS    linker flags for GTK, overriding pkg-config
++  QT4_CFLAGS  C compiler flags for QT4, overriding pkg-config
++  QT4_LIBS    linker flags for QT4, overriding pkg-config
+   GLIB_CFLAGS C compiler flags for GLIB, overriding pkg-config
+   GLIB_LIBS   linker flags for GLIB, overriding pkg-config
+   MOZILLA_CFLAGS
+@@ -6175,47 +6176,50 @@
+ if test "x${enable_plugin}" = "xyes" ; then
+ 
+ pkg_failed=no
+-{ $as_echo "$as_me:${as_lineno-$LINENO}: checking for GTK" >&5
+-$as_echo_n "checking for GTK... " >&6; }
+ 
+-if test -n "$GTK_CFLAGS"; then
+-    pkg_cv_GTK_CFLAGS="$GTK_CFLAGS"
+- elif test -n "$PKG_CONFIG"; then
+-    if test -n "$PKG_CONFIG" && \
+-    { { $as_echo "$as_me:${as_lineno-$LINENO}: \$PKG_CONFIG --exists --print-errors \"gtk+-2.0\""; } >&5
+-  ($PKG_CONFIG --exists --print-errors "gtk+-2.0") 2>&5
++{ echo "$as_me:$LINENO: checking for QT4" >&5
++echo $ECHO_N "checking for QT4... $ECHO_C" >&6; }
++
++if test -n "$PKG_CONFIG"; then
++    if test -n "$QT4_CFLAGS"; then
++        pkg_cv_QT4_CFLAGS="$QT4_CFLAGS"
++    else
++        if test -n "$PKG_CONFIG" && \
++    { (echo "$as_me:$LINENO: \$PKG_CONFIG --exists --print-errors \"QtGui >= 4.3 QtCore >= 4.3\"") >&5
++  ($PKG_CONFIG --exists --print-errors "QtGui >= 4.3 QtCore >= 4.3") 2>&5
+   ac_status=$?
+-  $as_echo "$as_me:${as_lineno-$LINENO}: \$? = $ac_status" >&5
+-  test $ac_status = 0; }; then
+-  pkg_cv_GTK_CFLAGS=`$PKG_CONFIG --cflags "gtk+-2.0" 2>/dev/null`
++  echo "$as_me:$LINENO: \$? = $ac_status" >&5
++  (exit $ac_status); }; then
++  pkg_cv_QT4_CFLAGS=`$PKG_CONFIG --cflags "QtGui >= 4.3 QtCore >= 4.3" 2>/dev/null`
+ else
+   pkg_failed=yes
+ fi
+- else
++    fi
++else
+     pkg_failed=untried
+ fi
+-if test -n "$GTK_LIBS"; then
+-    pkg_cv_GTK_LIBS="$GTK_LIBS"
+- elif test -n "$PKG_CONFIG"; then
+-    if test -n "$PKG_CONFIG" && \
+-    { { $as_echo "$as_me:${as_lineno-$LINENO}: \$PKG_CONFIG --exists --print-errors \"gtk+-2.0\""; } >&5
+-  ($PKG_CONFIG --exists --print-errors "gtk+-2.0") 2>&5
++if test -n "$PKG_CONFIG"; then
++    if test -n "$QT4_LIBS"; then
++        pkg_cv_QT4_LIBS="$QT4_LIBS"
++    else
++        if test -n "$PKG_CONFIG" && \
++    { (echo "$as_me:$LINENO: \$PKG_CONFIG --exists --print-errors \"QtGui >= 4.3 QtCore >= 4.3\"") >&5
++  ($PKG_CONFIG --exists --print-errors "QtGui >= 4.3 QtCore >= 4.3") 2>&5
+   ac_status=$?
+-  $as_echo "$as_me:${as_lineno-$LINENO}: \$? = $ac_status" >&5
+-  test $ac_status = 0; }; then
+-  pkg_cv_GTK_LIBS=`$PKG_CONFIG --libs "gtk+-2.0" 2>/dev/null`
++  echo "$as_me:$LINENO: \$? = $ac_status" >&5
++  (exit $ac_status); }; then
++  pkg_cv_QT4_LIBS=`$PKG_CONFIG --libs "QtGui >= 4.3 QtCore >= 4.3" 2>/dev/null`
+ else
+   pkg_failed=yes
+ fi
+- else
++    fi
++else
+     pkg_failed=untried
+ fi
+ 
+ 
+ 
+ if test $pkg_failed = yes; then
+-   	{ $as_echo "$as_me:${as_lineno-$LINENO}: result: no" >&5
+-$as_echo "no" >&6; }
+ 
+ if $PKG_CONFIG --atleast-pkgconfig-version 0.20; then
+         _pkg_short_errors_supported=yes
+@@ -6223,46 +6227,25 @@
+         _pkg_short_errors_supported=no
+ fi
+         if test $_pkg_short_errors_supported = yes; then
+-	        GTK_PKG_ERRORS=`$PKG_CONFIG --short-errors --print-errors "gtk+-2.0" 2>&1`
++            QT4_PKG_ERRORS=`$PKG_CONFIG --short-errors --errors-to-stdout --print-errors "QtGui >= 4.3 QtCore >= 4.3"`
+         else
+-	        GTK_PKG_ERRORS=`$PKG_CONFIG --print-errors "gtk+-2.0" 2>&1`
++            QT4_PKG_ERRORS=`$PKG_CONFIG --errors-to-stdout --print-errors "QtGui >= 4.3 QtCore >= 4.3"`
+         fi
+-	# Put the nasty error message in config.log where it belongs
+-	echo "$GTK_PKG_ERRORS" >&5
+-
+-	as_fn_error $? "Package requirements (gtk+-2.0) were not met:
+-
+-$GTK_PKG_ERRORS
+-
+-Consider adjusting the PKG_CONFIG_PATH environment variable if you
+-installed software in a non-standard prefix.
+-
+-Alternatively, you may set the environment variables GTK_CFLAGS
+-and GTK_LIBS to avoid the need to call pkg-config.
+-See the pkg-config man page for more details." "$LINENO" 5
++    # Put the nasty error message in config.log where it belongs
++    echo "$QT4_PKG_ERRORS" >&5
+ 
++    { echo "$as_me:$LINENO: result: no" >&5
++echo "${ECHO_T}no" >&6; }
++                has_qt4=no
+ elif test $pkg_failed = untried; then
+-     	{ $as_echo "$as_me:${as_lineno-$LINENO}: result: no" >&5
+-$as_echo "no" >&6; }
+-	{ { $as_echo "$as_me:${as_lineno-$LINENO}: error: in \`$ac_pwd':" >&5
+-$as_echo "$as_me: error: in \`$ac_pwd':" >&2;}
+-as_fn_error $? "The pkg-config script could not be found or is too old.  Make sure it
+-is in your PATH or set the PKG_CONFIG environment variable to the full
+-path to pkg-config.
+-
+-Alternatively, you may set the environment variables GTK_CFLAGS
+-and GTK_LIBS to avoid the need to call pkg-config.
+-See the pkg-config man page for more details.
+-
+-To get pkg-config, see <http://pkg-config.freedesktop.org/>.
+-See \`config.log' for more details" "$LINENO" 5; }
+-
++    has_qt4=no
+ else
+-	GTK_CFLAGS=$pkg_cv_GTK_CFLAGS
+-	GTK_LIBS=$pkg_cv_GTK_LIBS
+-        { $as_echo "$as_me:${as_lineno-$LINENO}: result: yes" >&5
+-$as_echo "yes" >&6; }
+-
++    QT4_CFLAGS=$pkg_cv_QT4_CFLAGS
++    QT4_LIBS=$pkg_cv_QT4_LIBS
++        { echo "$as_me:$LINENO: result: yes" >&5
++echo "${ECHO_T}yes" >&6; }
++    has_qt4=yes
++                       MOC=`$PKG_CONFIG --variable=moc_location QtCore`
+ fi
+ 
+ pkg_failed=no
+diff -Naur icedtea-web-1.1.3-orig/Makefile.am icedtea-web-1.1.3/Makefile.am
+--- icedtea-web-1.1.3-orig/Makefile.am	2011-08-31 20:17:30.000000000 +0200
++++ icedtea-web-1.1.3/Makefile.am	2011-10-22 12:01:23.567595353 +0200
+@@ -210,7 +210,7 @@
+ 	  -DICEDTEA_WEB_JRE="\"$(SYSTEM_JRE_DIR)\"" \
+ 	  -DPLUGIN_BOOTCLASSPATH=$(PLUGIN_BOOTCLASSPATH) \
+ 	  $(GLIB_CFLAGS) \
+-	  $(GTK_CFLAGS) \
++	  $(QT4_CFLAGS) \
+ 	  $(MOZILLA_CFLAGS) \
+ 	  -fPIC -o $@ -c $<
+ 
+@@ -219,7 +219,7 @@
+ 	$(CXX) $(CXXFLAGS) \
+ 	  $(PLUGIN_OBJECTS) \
+ 	  $(GLIB_LIBS) \
+-	  $(GTK_LIBS) \
++	  $(QT4_LIBS) \
+ 	  $(MOZILLA_LIBS)\
+ 	  -shared -o $@
+ 
+diff -Naur icedtea-web-1.1.3-orig/Makefile.in icedtea-web-1.1.3/Makefile.in
+--- icedtea-web-1.1.3-orig/Makefile.in	2011-09-28 22:18:57.000000000 +0200
++++ icedtea-web-1.1.3/Makefile.in	2011-10-22 12:02:30.344303755 +0200
+@@ -94,8 +94,8 @@
+ GCJ = @GCJ@
+ GLIB_CFLAGS = @GLIB_CFLAGS@
+ GLIB_LIBS = @GLIB_LIBS@
+-GTK_CFLAGS = @GTK_CFLAGS@
+-GTK_LIBS = @GTK_LIBS@
++QT4_CFLAGS = @QT4_CFLAGS@
++QT4_LIBS = @QT4_LIBS@
+ HG = @HG@
+ ICEDTEA_REVISION = @ICEDTEA_REVISION@
+ INSTALL = @INSTALL@
+@@ -685,7 +685,7 @@
+ @ENABLE_PLUGIN_TRUE@	  -DICEDTEA_WEB_JRE="\"$(SYSTEM_JRE_DIR)\"" \
+ @ENABLE_PLUGIN_TRUE@	  -DPLUGIN_BOOTCLASSPATH=$(PLUGIN_BOOTCLASSPATH) \
+ @ENABLE_PLUGIN_TRUE@	  $(GLIB_CFLAGS) \
+-@ENABLE_PLUGIN_TRUE@	  $(GTK_CFLAGS) \
++@ENABLE_PLUGIN_TRUE@	  $(QT4_CFLAGS) \
+ @ENABLE_PLUGIN_TRUE@	  $(MOZILLA_CFLAGS) \
+ @ENABLE_PLUGIN_TRUE@	  -fPIC -o $@ -c $<
+ 
+@@ -694,7 +694,7 @@
+ @ENABLE_PLUGIN_TRUE@	$(CXX) $(CXXFLAGS) \
+ @ENABLE_PLUGIN_TRUE@	  $(PLUGIN_OBJECTS) \
+ @ENABLE_PLUGIN_TRUE@	  $(GLIB_LIBS) \
+-@ENABLE_PLUGIN_TRUE@	  $(GTK_LIBS) \
++@ENABLE_PLUGIN_TRUE@	  $(QT4_LIBS) \
+ @ENABLE_PLUGIN_TRUE@	  $(MOZILLA_LIBS)\
+ @ENABLE_PLUGIN_TRUE@	  -shared -o $@
+ 
+diff -Naur icedtea-web-1.1.3-orig/plugin/icedteanp/IcedTeaNPPlugin.cc icedtea-web-1.1.3/plugin/icedteanp/IcedTeaNPPlugin.cc
+--- icedtea-web-1.1.3-orig/plugin/icedteanp/IcedTeaNPPlugin.cc	2011-08-31 20:17:31.000000000 +0200
++++ icedtea-web-1.1.3/plugin/icedteanp/IcedTeaNPPlugin.cc	2011-10-22 12:25:53.998601401 +0200
+@@ -131,7 +131,7 @@
+ #define PLUGIN_FILE_EXTS "class,jar,zip"
+ #define PLUGIN_MIME_COUNT 1
+ 
+-#define FAILURE_MESSAGE "icedteanp plugin error: Failed to run %s." \
++#define FAILURE_MESSAGE "icedteanp plugin error: Failed to run %1." \
+   "  For more detail rerun \"firefox -g\" in a terminal window."
+ 
+ #if MOZILLA_VERSION_COLLAPSED < 1090100
+@@ -1078,21 +1078,13 @@
+ static void
+ plugin_display_failure_dialog ()
+ {
+-  GtkWidget* dialog = NULL;
+-
+   PLUGIN_DEBUG ("plugin_display_failure_dialog\n");
+ 
+-  dialog = gtk_message_dialog_new (NULL,
+-                                   GTK_DIALOG_DESTROY_WITH_PARENT,
+-                                   GTK_MESSAGE_ERROR,
+-                                   GTK_BUTTONS_CLOSE,
+-                                   FAILURE_MESSAGE,
+-                                   appletviewer_executable);
+-  gtk_widget_show_all (dialog);
+-  gtk_dialog_run (GTK_DIALOG (dialog));
+-  gtk_widget_destroy (dialog);
++  QMessageBox::critical(0, "Plugin display failure",
++                           QString(FAILURE_MESSAGE).arg(appletviewer_executable),
++                           QMessageBox::Ok);
+ 
+-  PLUGIN_DEBUG ("plugin_display_failure_dialog return\n");
++ PLUGIN_DEBUG ("plugin_display_failure_dialog return\n");
+ }
+ 
+ 
+diff -Naur icedtea-web-1.1.3-orig/plugin/icedteanp/IcedTeaNPPlugin.h icedtea-web-1.1.3/plugin/icedteanp/IcedTeaNPPlugin.h
+--- icedtea-web-1.1.3-orig/plugin/icedteanp/IcedTeaNPPlugin.h	2011-08-31 20:17:31.000000000 +0200
++++ icedtea-web-1.1.3/plugin/icedteanp/IcedTeaNPPlugin.h	2011-10-22 12:10:10.071490812 +0200
+@@ -51,8 +51,8 @@
+ #include <glib.h>
+ #include <glib/gstdio.h>
+ 
+-// GTK includes.
+-#include <gtk/gtk.h>
++// QT4 includes.
++#include <QtGui>
+ 
+ #include "IcedTeaPluginUtils.h"
+ #include "IcedTeaPluginRequestProcessor.h"
