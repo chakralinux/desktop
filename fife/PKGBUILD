@@ -5,8 +5,8 @@
 # Maintainer: Adrián Chaves Fernández (Gallaecio) <adriyetichaves@gmail.com>
 
 pkgname=fife
-pkgver=0.3.3r2
-pkgrel=3
+pkgver=0.3.3r3
+pkgrel=1
 pkgdesc="Flexible Isometric Free Engine is a cross platform game creation framework"
 arch=(i686 x86_64)
 url="http://fifengine.net/"
@@ -15,24 +15,18 @@ depends=('boost-libs' 'guichan' 'libvorbis' 'libxcursor' 'mesa' 'tinyxml'
          'openal' 'python2' 'sdl_image' 'sdl_ttf')
 makedepends=('scons' 'boost' 'swig' 'zlib')
 conflicts=("$pkgname-svn")
-source=("http://downloads.sourceforge.net/project/$pkgname/active/src/$pkgname-$pkgver.tar.gz"
-        "fife-resolution.diff::http://fife.trac.cvsdude.com/engine/changeset/3800?format=diff&new=3800")
-md5sums=('96b34b28b18e56142cbac9cfb89a6693'
-         '0575f1c35483b8f043f75def6679276d')
+source=("http://downloads.sourceforge.net/project/$pkgname/active/src/${pkgname}_$pkgver.tar.gz")
+md5sums=('ee39612009e124263dc79d1f0fa7ca7c')
 
 build() {
-  cd $srcdir/$pkgname-$pkgver
+  cd $srcdir/${pkgname}_$pkgver
 
   # Strip ldconfig.
   sed -i "/LD_RUN_PATH/d" build/linux2-config.py
-
-  # Patch for resolution issue.
-  # See: http://wiki.unknown-horizons.org/w/FAQ#I_am_using_the_1024x600_resolution_and_the_game_crashes_while_opening_the_settings_dialogue
-  patch -uN engine/python/fife/extensions/fife_settings.py $srcdir/fife-resolution.diff
 }
 
 package() {
-  cd $srcdir/$pkgname-$pkgver
+  cd $srcdir/${pkgname}_$pkgver
 
   export PYTHON="python2"
   export CXXFLAGS="-DBOOST_FILESYSTEM_VERSION=2"

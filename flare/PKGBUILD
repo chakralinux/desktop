@@ -4,9 +4,9 @@
 # Maintainer: Adrián Chaves Fernández (Gallaecio) <adriyetichaves@gmail.com>
 
 pkgname=flare
-pkgver=0.15.1
+pkgver=0.16
 _developer=clintbellanger
-_code=e0debc9
+_code=b3344302fd
 pkgrel=1
 pkgdesc="Action roleplaying game from an isometric perspective."
 arch=('i686' 'x86_64')
@@ -17,10 +17,10 @@ replaces=('osare')
 categories=('games')
 changelog=ChangeLog
 source=($pkgname-$pkgver.tar.gz::https://github.com/$_developer/$pkgname/tarball/v$pkgver)
-md5sums=('bb8eff66aa999fc7fd520c6c3772451f')
+md5sums=('c902e2149cb640cceb2e7d41ebdd6bcb')
 
 build() {
-  cd $srcdir/$_developer-$pkgname-$_code
+  cd $srcdir/$_developer-$pkgname-*
 
   # Some CMake changes.
   sed -i -e "s#share/games#share#" -e "s#/games#/bin#" CMakeLists.txt
@@ -37,20 +37,10 @@ build() {
 }
 
 package() {
-  cd $srcdir/$_developer-$pkgname-$_code/build
+  cd $srcdir/$_developer-$pkgname-*
+  cd build
   make DESTDIR=$pkgdir install
  
-  # Move executable (only way for it to work).
-#   mv $pkgdir/usr/bin/$pkgname $pkgdir/usr/share/$pkgname/$pkgname
- 
-  # Execution script.
-#   cat > $pkgdir/usr/bin/$pkgname << EOF
-# #!/bin/sh
-# cd /usr/share/$pkgname/
-# ./$pkgname
-# EOF
-#   chmod -R +x $pkgdir/usr/bin/$pkgname
- 
   # Documentation.
-  install -Dm644 $srcdir/$_developer-$pkgname-$_code/README $pkgdir/usr/share/doc/$pkgname/readme.txt
+  install -Dm644 ../README $pkgdir/usr/share/doc/$pkgname/readme.txt
 }

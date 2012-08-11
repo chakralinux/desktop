@@ -1,80 +1,57 @@
+#
+# Games Packages for Chakra, part of chakra-project.org
+#
+# Maintainer: Adrián Chaves Fernández (Gallaecio) <adriyetichaves@gmail.com>
+#
+# NOTE: The package must be built in a system with a matching architecture.
+
 pkgname=warsow
-pkgver=0.62
-pkgrel=1
-pkgdesc="a free online multiplayer competitive FPS based on the Qfusion engine"
+pkgver=1.0
+pkgrel=2
+pkgdesc="A free online multiplayer competitive FPS based on the Qfusion engine"
 url="http://www.warsow.net/"
 license=('GPL')
 arch=('i686' 'x86_64') 
-depends=('curl' 'libjpeg' 'libvorbis' 'libxinerama' 'libxxf86dga' 'libxxf86vm' 'sdl' 'warsow-data')
-makedepends=('mesa' 'openal' 'unzip')
+depends=('curl' 'libjpeg' 'libtheora' 'libvorbis' 'libxinerama' 'libxrandr' 'libxxf86dga' 'libxxf86vm' 'sdl' 'warsow-data')
+makedepends=('mesa' 'openal' 'imagemagick' 'gendesk')
 optdepends=('openal: for openal audio support')
 categories=('games')
-source=('warsow.desktop' 'warsow.launcher' 'wsw-server.launcher' 'wswtv-server.launcher' \
-"http://www.zcdn.org/dl/warsow_${pkgver}_sdk.zip")
-noextract=("warsow_${pkgver}_sdk.zip")
-md5sums=('f9bf60c80820237f7097c4e50a9582cd'
-         'ec00081d81ad9802a8ca42fc2eac5498'
-         'f73e10c26197178df71b941b10bf83d7'
-         'd7e4a69835bbcf801e58307e9d6b951e'
-         '649568447e938efded07e77cdfb3accb')
+source=("https://launchpadlibrarian.net/111352130/${pkgname}_${pkgver}_sdk.tar.gz")
+md5sums=('35b9a8f530b51cda15c660b3a73f377e')
 
 build() {
-  unset CFLAGS
-	unset CXXFLAGS
+  cd ${srcdir}
+  gendesk -n
 
-  # Extract Game Source Code
-  unzip -o warsow_${pkgver}_sdk.zip -d $srcdir/warsow-src
+  # Compile Warsow.
+  cd $srcdir/${pkgname}_${pkgver}_sdk/source/
+  make -j1 # Error finding a library if -j is higher.
+}
 
-  # Patch Makefile to use correct program to query for system information
-  sed -i 's:openal-config:pkg-config:g' $srcdir/warsow-src/source/Makefile
-
-  # Patch Makefile to correctly pass on ld opts
-  sed -i 's:--as-needed:-Wc,--as-needed:g' $srcdir/warsow-src/source/Makefile
-
-  # Patch Sound Code to point to base openal library
-  sed -i 's:libopenal.so.0:libopenal.so:g' $srcdir/warsow-src/source/snd_openal/snd_main.c
-
-  # Patch for libjpeg8
-  sed -i 's/jpeg_mem_src/_jpeg_mem_src/g' $srcdir/warsow-src/source/ref_gl/r_image.c
-
-  # Patch AngelScript so it compiles correctly on i686
-  if [ "$CARCH" == "i686" ]; then
-      sed -i 's:CXXFLAGS = \(.*\):CXXFLAGS = -march=i686 \1:' \
-          $srcdir/warsow-src/libsrcs/angelscript/angelSVN/sdk/angelscript/projects/gnuc/makefile
-  fi
-
-  # Compile Warsow
-  cd $srcdir/warsow-src/source/
-  make -j1
+generateAndInstall() {
+  echo "#!/bin/bash"             > $pkgdir/usr/bin/$1
+  echo "cd /usr/share/$pkgname" >> $pkgdir/usr/bin/$1
+  echo "./$1 \$*"               >> $pkgdir/usr/bin/$1
+  echo "exit \$?"               >> $pkgdir/usr/bin/$1
+  chmod +x $pkgdir/usr/bin/$1
 }
 
 package() {
-  cd $srcdir/warsow-src/source/
-  
-  # Create Destination Directories
-  install -d $pkgdir/opt/warsow/
+  cd $srcdir/${pkgname}_${pkgver}_sdk/source/
 
-  # Move Compiled Data to Destination Directory
-  cp -r $srcdir/warsow-src/source/release/* \
-      $pkgdir/opt/warsow
+  # Manual installation.
+  install -d $pkgdir/usr/share/${pkgname}/
+  cp -r $srcdir/${pkgname}_${pkgver}_sdk/source/release/* \
+      $pkgdir/usr/share/${pkgname}
 
-  # Install Client Game Launcher
-  install -D -m 0755 $srcdir/warsow.launcher \
-      $pkgdir/usr/bin/warsow
+  # Execution scripts:
+  install -d $pkgdir/usr/bin
+  for script in ${pkgname} wsw_server wswtv_server
+  do
+    generateAndInstall ${script}
+  done
 
-  # Install Server Game Launcher
-  install -D -m 0755 $srcdir/wsw-server.launcher \
-      $pkgdir/usr/bin/wsw-server
-
-  # Install WSWTV Server Launcher
-  install -D -m 0755 $srcdir/wswtv-server.launcher \
-      $pkgdir/usr/bin/wswtv-server
-
-  # Install Client Desktop Shortcut
-  install -D -m 0644 $srcdir/warsow.desktop \
-      $pkgdir/usr/share/applications/warsow.desktop
-
-  # Install Icon
-  install -D -m 0644 $srcdir/warsow-src/source/win32/warsow.ico \
-      $pkgdir/usr/share/pixmaps/warsow.ico
+  # Desktop integration:
+  install -D -m 0644 $srcdir/${pkgname}.desktop $pkgdir/usr/share/applications/${pkgname}.desktop
+  install -Dm644 $srcdir/${pkgname}_${pkgver}_sdk/source/win32/${pkgname}.ico $pkgdir/usr/share/pixmaps/${pkgname}.png
 }

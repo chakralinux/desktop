@@ -4,9 +4,9 @@
 # Maintainer: Adrián Chaves Fernández (Gallaecio) <adriyetichaves gmail.com>
 
 pkgname=widelands
-pkgver=16
-_pkgver=build16
-pkgrel=3
+pkgver=17
+_pkgver=build$pkgver
+pkgrel=1
 pkgdesc="A realtime strategy game with emphasis on economy and transport."
 arch=('i686' 'x86_64')
 url="http://widelands.org/"
@@ -14,15 +14,17 @@ license=('GPL')
 depends=('boost-libs' 'ggz-client-libs' 'glew' 'lua' 'python2' 'sdl_gfx' 'sdl_image' 'sdl_mixer' 'sdl_net' 'sdl_ttf')
 makedepends=('boost' 'cmake')
 categories=('games')
-source=(http://launchpad.net/$pkgname/$_pkgver/$_pkgver/+download/$pkgname-$_pkgver-src.tar.bz2
+source=(http://launchpad.net/$pkgname/$_pkgver/build-$pkgver/+download/$pkgname-$_pkgver-src.tar.bz2
         $pkgname.desktop
         $pkgname.png)
-md5sums=('3d8c28e145b73c64d8ed1625319d25a2'
+md5sums=('bdc9bc0aa631af1aa7fb450507611a58'
          '86950190758e1aeaec8fe742440e8ab5'
          '3dfda7e9ca76ca00dd98d745d0ceb328')
 
 build() {
     cd $srcdir/$pkgname-$_pkgver-src
+
+    sed -i "1 i #include <unistd.h>" src/main.cc
 
     mkdir -p build/compile && cd build/compile
 

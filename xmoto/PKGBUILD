@@ -5,19 +5,29 @@
 
 pkgname=xmoto
 pkgver=0.5.9
-pkgrel=1
+pkgrel=2
 pkgdesc="A challenging 2D motocross platform game, where physics play an important role."
 arch=('i686' 'x86_64')
 url="http://xmoto.tuxfamily.org"
 license=('GPL')
-depends=('bzip2' 'libjpeg' 'libpng' 'lua' 'sdl_mixer' 'ode=0.11.1' 'curl' 
+depends=('bzip2' 'libjpeg' 'libpng' 'lua' 'sdl_mixer' 'ode' 'curl' 
 	 'mesa' 'sqlite3' 'sdl_ttf' 'desktop-file-utils' 'sdl_net' 'libxdg-basedir')
 categories=('games')
-source=("http://download.tuxfamily.org/$pkgname/$pkgname/$pkgver/$pkgname-$pkgver-src.tar.gz")
-md5sums=('d8d6b7a405139530650b8a9ae2ea6df3')
+source=("http://download.tuxfamily.org/$pkgname/$pkgname/$pkgver/$pkgname-$pkgver-src.tar.gz"
+        
+"$pkgname-$pkgver-libpng.patch::https://projects.archlinux.org/svntogit/community.git/plain/trunk/$pkgname-$pkgver-libpng15.patch?h=packages/$pkgname")
+md5sums=('d8d6b7a405139530650b8a9ae2ea6df3'
+         '454af72fa4daba55aa43a08bb1a30714')
 
 build() {
   cd $srcdir/$pkgname-$pkgver
+
+  # Patches
+  patch -Np1 -i "${srcdir}/$pkgname-$pkgver-libpng.patch"
+  sed \
+    -e '/#include <vector>/ a\
+#include <unistd.h>' \
+    -i src/helpers/System.h
 
   ./configure \
     LDFLAGS="-L/usr/lib" \
