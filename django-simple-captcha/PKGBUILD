@@ -1,0 +1,43 @@
+#
+# Apps Packages for Chakra, part of chakra-project.org
+#
+# Maintainer: Adrián Chaves Fernández (Gallaecio) <adriyetichaves@gmail.com>
+
+pkgname=django-simple-captcha
+_dev=mbi
+pkgver=20120811
+pkgrel=1
+pkgdesc="A simple customizable application to add captcha images to Django forms"
+url="https://github.com/$_dev/$pkgname"
+arch=('i686' 'x86_64')
+license=('BSD')
+depends=('django' 'python2')
+ 
+_gitroot="git://github.com/$_dev/$pkgname.git"
+_gitname="$pkgname"
+
+build() {
+    cd $srcdir
+    
+    if [ -d $_gitname ] ; then
+        cd $_gitname && git pull origin
+    else
+        git clone $_gitroot $_gitname
+        cd $_gitname
+    fi
+    
+    # Get to the target commit.
+    git checkout 71d8d55e68
+    
+    # Build.
+    python2 setup.py build
+}
+
+package() {
+    cd $srcdir/$_gitname
+    python2 setup.py install --prefix=/usr --root=$pkgdir
+    
+    # License.
+    install -d $pkgdir/usr/share/licenses/$pkgname
+    cp LICENSE $pkgdir/usr/share/licenses/$pkgname/license.txt
+}
