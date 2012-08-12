@@ -4,9 +4,9 @@
 # Maintainer: Adrián Chaves Fernández (Gallaecio) <adriyetichaves@gmail.com>
 
 pkgname=hale
-pkgver=0.2.4
+pkgver=0.5.1
 pkgrel=1
-pkgdesc="Role-playing game ith a deep tactical combat system and storyline."
+pkgdesc="Role-playing game with a deep tactical combat system and storyline"
 arch=(any)
 url="http://sourceforge.net/apps/mediawiki/hale/index.php?title=Main_Page"
 screenshot="http://sourceforge.net/apps/gallery/hale/main.php?g2_view=core.DownloadItem&g2_itemId=92&g2_serialNumber=2"
@@ -15,21 +15,43 @@ depends=('java-runtime')
 options=('!strip')
 categories=('games')
 source=(http://downloads.sourceforge.net/project/$pkgname/$pkgname-$pkgver.zip)
-md5sums=('8baa1bc8e0373683bcbc48bfb5804f8d')
+md5sums=('42c3dfce0e4e3db935eafbd401690d81')
+
+build() {
+    cd $srcdir/$pkgname
+
+    mkdir -p bin
+    javac @compilerargs.txt
+
+    cd bin
+    jar cf hale.jar *
+    cp hale.jar ../
+}
 
 package() {
   cd $srcdir/$pkgname
 
   # Main.
-  install -Dm644 config.txt $pkgdir/usr/share/$pkgname/config.txt
   install -Dm755 hale.sh $pkgdir/usr/share/$pkgname/hale.sh
   install -Dm755 hale.jar $pkgdir/usr/share/$pkgname/hale.jar
   install -Dm755 core.zip $pkgdir/usr/share/$pkgname/core.zip
   install -d $pkgdir/usr/share/$pkgname/saves
   install -d $pkgdir/usr/share/$pkgname/log
-  for FOLDER in gui characters campaigns lib
+
+  for FOLDER in gui characters campaigns docs
   do
     cp -R $FOLDER $pkgdir/usr/share/$pkgname/
+  done
+
+  mkdir -p $pkgdir/usr/share/$pkgname/lib/native/linux
+  cp lib/*.jar $pkgdir/usr/share/$pkgname/lib/
+
+  if [[ $CARCH == "x86_64" ]]; then
+    SUFFIX=64
+  fi
+  for FILE in libjinput-linux liblwjgl libopenal
+  do
+    cp lib/native/linux/${FILE}${SUFFIX}.so $pkgdir/usr/share/$pkgname/lib/native/linux/
   done
 
   # Write permissions (not really safe…).
@@ -45,7 +67,7 @@ package() {
   chmod +x $pkgdir/usr/bin/$pkgname
 
   # Legal.
-  install -Dm644 COPYING.txt $pkgdir/usr/share/licenses/$pkgname/license.txt
-  install -Dm644 copyright.txt $pkgdir/usr/share/licenses/$pkgname/authors.txt
-  install -Dm644 CONTRIBUTORS.txt $pkgdir/usr/share/licenses/$pkgname/authors-2.txt
+  install -d $pkgdir/usr/share/licenses/$pkgname
+  cp docs/* $pkgdir/usr/share/licenses/$pkgname/
+  cp lib/*.txt $pkgdir/usr/share/licenses/$pkgname/
 }
