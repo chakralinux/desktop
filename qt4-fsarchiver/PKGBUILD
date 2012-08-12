@@ -1,0 +1,37 @@
+#
+# Chakra Packages for Chakra, part of chakra-project.org
+#
+# maintainer: abveritas[at]chakra-project[dot]org>
+ 
+pkgname=qt4-fsarchiver
+pkgver=0.6.13.4
+_pkgver=0.6.13-4
+pkgrel=1
+pkgdesc='GUI for fsarchiver'
+arch=('i686' 'x86_64')
+url='http://sourceforge.net/projects/qt4-fsarchiver/'
+license=('GPL')
+depends=('fsarchiver' 'kde-runtime')
+makedepends=('qt')
+categories=('utils')
+screenshot=('http://media.cdn.ubuntu-de.org/wiki/attachments/02/04/verzeichnis.jpg')
+source=("http://sourceforge.net/projects/${pkgname}/files/source/${pkgname}-${_pkgver}.tar.gz")
+install=("${pkgname}.install")
+md5sums=('6d3dd9c9fa16d300ba5d5570ce2729b8')
+
+build() {
+	cd "${srcdir}/${pkgname}"
+	qmake
+}
+
+package() {
+	cd "${srcdir}/${pkgname}"
+	make
+	make INSTALL_ROOT="${pkgdir}" install
+	mkdir -p ${pkgdir}/usr/share/qt/translations
+	rm -R ${pkgdir}/usr/share/qt4
+	install -D -m644 ${srcdir}/${pkgname}/translations/*.qm ${pkgdir}/usr/share/qt/translations
+	sed s/Terminal=true/Terminal=false/ -i ${pkgdir}/usr/share/applications/qt4-fsarchiver.desktop
+	sed s/sudo/kdesu/ -i ${pkgdir}/usr/share/applications/qt4-fsarchiver.desktop
+	
+}

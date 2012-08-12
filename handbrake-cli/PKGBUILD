@@ -1,35 +1,31 @@
 #
 # Apps Packages for Chakra, part of chakra-project.org
 #
-# maintainer (i686): Phil Miller <philm[at]chakra-project[dog]org>
-# maintainer (x86_64): Manuel Tortosa <manutortosa[at]chakra-project[dot]org>
+# maintainer abveritas[at]chakra-project[dot]org>
 
-pkgbase=handbrake
-pkgname=('handbrake-cli')
-pkgver=0.9.6
-pkgrel=1
+pkgname=handbrake-cli
+pkgver=0.9.8
+pkgrel=2
 arch=('i686' 'x86_64')
 url="http://handbrake.fr/"
 license=('GPL')
-makedepends=('intltool' 'python' 'yasm' 'wget' 'bzip2' 'gcc-libs' 'libnotify' 'gstreamer0.10-base' 'dbus-glib' 'fribidi')
-source=(http://downloads.sourceforge.net/project/handbrake/$pkgver/HandBrake-$pkgver.tar.bz2)
-md5sums=('c75a0ca3ee74a3d67b25959937397cc4')
+depends=('bzip2' 'gcc-libs' 'zlib' 'fribidi' 'ffmpeg')
+makedepends=('intltool' 'python' 'yasm' 'wget' 'libnotify' 'gstreamer0.10-base' 'dbus-glib')
+source=("http://downloads.sourceforge.net/project/handbrake/$pkgver/HandBrake-$pkgver.tar.bz2")
+categories=('multimedia')
+md5sums=('71637bab2719a976d62d5c1944227b59')
 
 build() {
   cd "$srcdir/HandBrake-$pkgver"
 
-  ./configure --prefix=/usr --force --disable-gtk --disable-gtk-update-checks
+  ./configure --prefix=/usr --force --disable-gtk --disable-gtk-update-checks --enable-ff-mpeg2
   cd build
   make
 }
 
-
-package_handbrake-cli() {
-  pkgdesc="Multithreaded video transcoder (CLI)"
-  depends=('bzip2' 'gcc-libs' 'zlib' 'fribidi')
-  categories=('multimedia')
-
+package() {
   cd "$srcdir/HandBrake-$pkgver/build"
+  
   install -D HandBrakeCLI "$pkgdir/usr/bin/HandBrakeCLI"
 }
 

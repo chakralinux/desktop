@@ -1,10 +1,11 @@
 #
 # Apps Packages for Chakra, part of chakra-project.org
 #
-# contributor (x86_64): Giuseppe Calà <jiveaxe@gmail.com>
+# maintainer: abveritas@chakra-project.org
+# contributor: Fabian Kosmale <0inkane@googlemail.com>
 
 pkgname=calibre
-pkgver=0.8.59
+pkgver=0.8.63
 pkgrel=1
 pkgdesc="Ebook management application"
 arch=('i686' 'x86_64')
@@ -18,11 +19,11 @@ makedepends=('python-pycountry')
 optdepends=('ipython: to use calibre-debug')
 screenshot=('https://lh5.googleusercontent.com/_lG58t3XWd3c/TcNwiXkAx_I/AAAAAAAAAEc/M34I4uY9UUY/s800/gui.jpeg')
 install=calibre.install
-source=("http://downloads.sourceforge.net/${pkgname}/${pkgname}-${pkgver}.tar.xz"
+source=("http://calibre-ebook.googlecode.com/files/${pkgname}-${pkgver}.tar.xz"
         'desktop_integration.patch')
-md5sums=('4a88b55f5efa735193533014e8e95c60'
-         'd4273962f670c7a089e7747473827e3e')
-
+md5sums=('a92898f51b1acf731fac7cb5626b9c4b'
+         '049558ae8372a011aee43e873171fbf2')
+         
 build() {
   cd "${srcdir}/${pkgname}"
 
@@ -59,3 +60,4 @@ package() {
 
   find ${pkgdir} -type d -empty -delete
 }
+

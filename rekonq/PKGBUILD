@@ -1,33 +1,37 @@
 #
 # Apps Packages for Chakra, part of chakra-project.org
 #
-# maintainer (i686): Phil Miller <philm[at]chakra-project[dog]org>
-# maintainer (x86_64): Andrei Nistor <coder[dot]tux[at]ceata[dot]org>
-
-# include global config
-source ../_buildscripts/${current_repo}-${_arch}-cfg.conf
+# maintainer: abveritas@chakra-project.org
 
 pkgname=rekonq
-pkgver=0.9.2
-pkgrel=1
+pkgver=1.0
+pkgrel=4
 pkgdesc='A WebKit based web browser for KDE'
 arch=('i686' 'x86_64')
 url='http://rekonq.sourceforge.net/'
 license=('GPL')
-depends=('kdelibs' 'kde-baseapps' 'qt')
+depends=('kde-baseapps' 'qoauth' 'qca-ossl')
 makedepends=('cmake' 'automoc4' 'docbook-xsl')
 categories=('network')
-install=${pkgname}.install
-source=(http://downloads.sourceforge.net/${pkgname}/${pkgname}-${pkgver}.tar.bz2)
-md5sums=('5e5ce5fc20f07ac0deb1584404595750')
 screenshot=('http://rekonq.kde.org/sites/rekonq.kde.org/files/images/Rekonq-0.6.0.png')
+install=${pkgname}.install
+source=("http://downloads.sourceforge.net/${pkgname}/${pkgname}-${pkgver}.tar.bz2"
+       'background.png'
+       'background.diff'
+       'searchengine.diff')
+md5sums=('ca7b86ad4a778cbba52a14192865c7b0'
+         'cd493df91e34030a8195eaf8b6d68140'
+         '5d7bab51b8f4b78c0f7cd94c885f22c3'
+         '7ab9dc2e4397a66c7a64e08265171996')
 
 build(){
+  cd ${srcdir}/${pkgname}-${pkgver}  
+  # Chakra theme:
+  patch -p1 -i "${srcdir}/background.diff"
+  # Default search bug (not an issue for kde 4.8)
+  #patch -p1 -i "${srcdir}/searchengine.diff"
+  
   cd ${srcdir}
-
-  #Ignore dutch translation cause it was causing issues with 0.9.0
-  #sed -i -e "s/add_subdirectory(nl)/#add_subdirectory(nl)/" ${srcdir}/${pkgname}-${pkgver}/doc/CMakeLists.txt
-
   mkdir -p build 
   cd build
   cmake ../${pkgname}-${pkgver} \
@@ -38,5 +42,8 @@ build(){
 
 package() {
   cd ${srcdir}/build
+  
   make DESTDIR=${pkgdir} install
+  rm ${pkgdir}/usr/share/apps/rekonq/pics/background.png
+  install -m 644 -p ${srcdir}/background.png ${pkgdir}/usr/share/apps/rekonq/pics/background.png
 }

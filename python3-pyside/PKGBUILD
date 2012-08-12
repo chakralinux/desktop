@@ -1,0 +1,54 @@
+# Maintainer: arlx_ignacy <ziphims@gmail.com>
+# Contributor: Douglas Soares de Andrade <douglas@archlinux.org>
+
+
+# modify these two to whatever Python 3 interpreter you're targetting; on my
+# system I use the vanilla python3
+_pyver=3
+_pyexec=/usr/bin/python$_pyver
+
+pkgname=python3-pyside
+pkgver=1.1.1
+pkgrel=1
+pkgdesc='CPython Qt bindings generated using the Shiboken generator. (Python 3 build)'
+arch=('i686' 'x86_64')
+license=('LGPL')
+url='http://www.pyside.org'
+depends=('python3-shiboken>=1.1.1' 'python3' 'qt>=4.8' 'phonon' 'mesa')
+makedepends=('cmake' 'automoc4')
+replaces=('pyside-py3')
+source=("http://www.pyside.org/files/pyside-qt4.8+$pkgver.tar.bz2"
+        'cmake_fixes.patch')
+md5sums=('0176d3746074afe47373d7302e1b4501'
+         '4a538e43dcfcd6c3bd67b8915f0d9769')
+
+
+build() {
+    cd "$srcdir/pyside-qt4.8+$pkgver"
+
+    msg "Applying patches ..."
+    # this patch is to use Python 3 libraries & generator
+    patch -p1 -N < ../cmake_fixes.patch
+
+    # of course, if you want to undo the patches you can use:
+    #  $ patch -p1 -R < ../cmake_fixes.patch
+
+    cd ..
+    if [ -d build ] ; then
+        msg "Removing last build ..."
+        rm -rf build
+    fi
+
+    mkdir build
+    cd build
+
+    cmake ../pyside-qt4.8+$pkgver -DCMAKE_INSTALL_PREFIX=/usr \
+                                  -DCMAKE_BUILD_TYPE=Release  \
+                                  -Dpyside_SUFFIX=-python3
+    make
+}
+
+package() {
+    cd "$srcdir/build"
+    make DESTDIR=$pkgdir install
+}

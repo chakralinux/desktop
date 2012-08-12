@@ -7,20 +7,20 @@
 source ../_buildscripts/${current_repo}-${_arch}-cfg.conf
 
 pkgname=gtk-integration-engine-qtcurve
-pkgver=1.8.12
+pkgver=1.8.13
 pkgrel=1
 arch=('i686' 'x86_64')
 license=('GPL')
 pkgdesc='QtCurve-Gtk2 Add-on for Gtk-integration.'
 url='http://www.kde-look.org/content/show.php?content=40492'
-depends=('gtk-integration' 'gtk2')
+depends=('chakra-gtk-config' 'gtk2')
 provides=('qtcurve-gtk2')
 conflicts=('qtcurve-gtk2')
 makedepends=('pkgconfig' 'cmake')
 categories=('system')
 options=('!libtool')
 source=("http://craigd.wikispaces.com/file/view/QtCurve-Gtk2-${pkgver}.tar.bz2")
-md5sums=('e1b8b4a8444c0afe8ba291f623c6b713')
+md5sums=('11cee806fd3f78d375498d5bd304799e')
 
 build() {
   cd "${srcdir}"
@@ -28,8 +28,9 @@ build() {
   mkdir -p build && cd build
 
   cmake "${srcdir}/QtCurve-Gtk2-${pkgver}" \
-    -DCMAKE_BUILD_TYPE=Release \
-    -DCMAKE_INSTALL_PREFIX=/usr
+        -DCMAKE_BUILD_TYPE=Release \
+        -DCMAKE_INSTALL_PREFIX=/usr \
+  || return 1
 
   make
 }

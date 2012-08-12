@@ -6,7 +6,8 @@
 # contributor Fabio Lima <fheday at dcc [dot] fc [dot] up [dot] pt>
 
 pkgname=netbeans
-pkgver=7.1
+_pkgdate=201207171143
+pkgver=7.2
 pkgrel=1
 pkgdesc='Netbeans IDE development platform.'
 arch=('any')
@@ -16,28 +17,32 @@ depends=('java-environment>=6')
 optdepends=('php: for developing programs in php'
             'ruby: for developing programs in ruby'
             'python: for developing programs in python')
-install="netbeans.install"
-source=('http://dlc.sun.com.edgesuite.net/netbeans/7.1/final/zip/netbeans-7.1-201112071828-ml.zip'
-        'netbeans.desktop')
 categories=('programming')
-md5sums=('ddcb3dfaf315becbda1e9d5e20ab4e3d'
-         '88c631d0d263218e01ea886fde2bc913')
+install="${pkgname}.install"
+source=("http://download.netbeans.org/${pkgname}/${pkgver}/final/zip/${pkgname}-${pkgver}-${_pkgdate}-ml.zip"
+        'netbeans.desktop')
+md5sums=('2870255966b864f63df3f55efdf4bf98'
+         '385f0c0f506880813f7b3afc239adb0c')
 
 package() {
-  rm "${pkgname}/bin/netbeans.exe"
+  cd "${srcdir}/${pkgname}"
+
+  rm bin/*.exe
 
   install -d -m755 "${pkgdir}/usr/share/${pkgname}"
-  cp -r "${pkgname}"/* "${pkgdir}/usr/share/${pkgname}"
-
-  install -D -m644 netbeans.desktop "${pkgdir}/usr/share/applications/netbeans.desktop"
+  cp -r * "${pkgdir}/usr/share/${pkgname}"
 
   install -d -m755 "${pkgdir}/usr/bin"
-  ln -s /usr/share/netbeans/bin/netbeans "${pkgdir}/usr/bin/netbeans"
+  ln -s /usr/share/netbeans/bin/netbeans \
+        "${pkgdir}/usr/bin/netbeans"
+
+  install -D -m644 "${srcdir}/netbeans.desktop" \
+                   "${pkgdir}/usr/share/applications/netbeans.desktop"
 
   # Globally enable antialiasing in NetBeans
   local __aaoptions="-J-Dswing.aatext=true -J-Dawt.useSystemAAFontSettings=on"
-  sed -n -e "s:netbeans_default_options=\"\(.*\)\":netbeans_default_options=\"\1 ${__aaoptions}\":" \
-    "${pkgdir}/usr/share/netbeans/etc/netbeans.conf"
+  sed -e "s:netbeans_default_options=\"\(.*\)\":netbeans_default_options=\"\1 ${__aaoptions}\":" \
+      -i "${pkgdir}/usr/share/netbeans/etc/netbeans.conf"
 }
 
 # vim:set ts=2 sw=2 et:
