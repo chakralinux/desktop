@@ -26,7 +26,7 @@ _LOver=3.6.0.4
 pkgver=3.6.0
 _pkgver=3.6.0
 _HIver=3.6
-pkgrel=1
+pkgrel=2
 arch=('i686' 'x86_64')
 _OFFICEUPD="340"
 license=('LGPL3')
@@ -87,8 +87,9 @@ source=(${_mirror}/${pkgbase}-{core,help,translations}-${_LOver}.tar.xz
 	http://ooo.itc.hu/oxygenoffice/download/libreoffice/b632bdd25649cc4067bcb410bae23d2b-hunart_0.3.oxt
 	http://ooo.itc.hu/oxygenoffice/download/libreoffice/9d60b6cfa3ef1926848710bbcd11115b-typo_0.4.2.oxt
 	http://ooo.itc.hu/oxygenoffice/download/libreoffice/dbaafd21de055e582d92d7d32fe9da13-gdocs_2.3.1.oxt
-	http://ooo.itc.hu/oxygenoffice/download/libreoffice/b7b2d0e04e142f26dd96119c80757d1f-oooblogger_0.1.oxt)
-noextract=(a9a1db27688bad49418667b434d29c1f-libvisio-0.0.18.tar.bz2
+	http://ooo.itc.hu/oxygenoffice/download/libreoffice/b7b2d0e04e142f26dd96119c80757d1f-oooblogger_0.1.oxt
+        buildfix.diff)
+	noextract=(a9a1db27688bad49418667b434d29c1f-libvisio-0.0.18.tar.bz2
 	18f577b374d60b3c760a3a3350407632-STLport-4.5.tar.gz
         185d60944ea767075d27247c3162b3bc-unowinreg.dll
 	b4cae0700aa1c2aef7eb7f345365e6f1-translate-toolkit-1.8.1.tar.bz2
@@ -135,21 +136,22 @@ source libreoffice.md5
 build() {
 
 	unset J2REDIR; unset J2SDKDIR; unset JAVA_HOME; unset CLASSPATH; unset EXTRAOPTS
-	[ -z "${JAVA_HOME}" ] && . /etc/profile.d/openjdk6.sh
-        [ -z "${MOZ_PLUGIN_PATH}" ] && . /etc/profile.d/mozilla-common.sh
+	[ -z "${JAVA_HOME}" ] && .  /etc/profile.d/openjdk.sh
 	[ -z "${ANT_HOME}" ] && . /etc/profile.d/apache-ant.sh
 
 	cd ${srcdir}/libreoffice-core-$_LOver
 
 	# move external sources into place
-	mkdir ${srcdir}/ext_sources &&	pushd ${srcdir}/ext_sources
-	for source in "${noextract[@]}"; do
-	  ln -s ${srcdir}/$source .
-	done
-	popd
+	#mkdir ${srcdir}/ext_sources &&	pushd ${srcdir}/ext_sources
+	#for source in "${noextract[@]}"; do
+	#  ln -s ${srcdir}/$source .
+	#done
+	#popd
 
-	ln -s ../libreoffice-help-$_LOver/helpcontent2 .
-	ln -s ../libreoffice-translations-$_LOver/translations .
+	#ln -s ../libreoffice-help-$_LOver/helpcontent2 .
+	#ln -s ../libreoffice-translations-$_LOver/translations .
+	
+	patch -p1 -i ${srcdir}/buildfix.diff
 
 	# Temporary workaround to avoid build failure in ct2n
 	#mv ${srcdir}/451ccf439a36a568653b024534669971-ConvertTextToNumber{_,-}1.3.2.oxt
@@ -238,7 +240,7 @@ build() {
 	#./download
 	make
 	# fake installation to create split file lists
-	mkdir $srcdir/fakeinstall
+	#mkdir $srcdir/fakeinstall
 	make DESTDIR=${srcdir}/fakeinstall distro-pack-install
 }
 
