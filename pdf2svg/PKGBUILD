@@ -8,17 +8,25 @@
 
 pkgname=pdf2svg
 pkgver=0.2.1
-pkgrel=1
+pkgrel=2
 pkgdesc="A PDF to SVG converter."
 arch=('i686' 'x86_64')
 url="http://www.cityinthesky.co.uk/pdf2svg.html"
 license=('GPL3')
-depends=('poppler-glib')
+depends=('lcms2' 'poppler-glib' 'glib2')
 source=("http://www.cityinthesky.co.uk/_media/opensource/$pkgname-$pkgver.tar.gz")
 md5sums=('59b3b9768166f73b77215e95d91f0a9d')
 
 build() {
   cd $srcdir/$pkgname-$pkgver
+  # fixes to remove the gtk2 dependency (unneeded, because glib contains everything)
+  sed -i '22a #include <stdlib.h>' ./pdf2svg.c
+  sed -i "23,24d" ./configure.ac
+  sed -i -e 's/$(GTK2_[^)]*) //g' ./Makefile.am  # reomve notion of gtk2
+  aclocal
+  autoscan
+  autoconf
+  automake
   ./configure \
     --prefix=/usr
   make
