@@ -16,7 +16,7 @@ _default_wp="Ariya"
 pkgname="kde-workspace"
 arch=('i686' 'x86_64')
 pkgver=${_kdever}
-pkgrel=2
+pkgrel=3
 pkgdesc="KDE Workspace"
 url="http://www.kde.org"
 license=('GPL' 'LGPL' 'FDL')
@@ -227,4 +227,10 @@ package() {
 	else
 		warning "no patches found, skipping to include them into the package..."
 	fi
+	
+	# Adding powerdevil option files
+	mkdir -p ${pkgdir}/usr/include/powerdevil
+	cp -rv ${srcdir}/${pkgname}-${_kdever}/powerdevil/daemon/powerdevilaction.h ${pkgdir}/usr/include/powerdevil
+	cp -rv ${srcdir}/${pkgname}-${_kdever}/powerdevil/daemon/powerdevilactionconfig.h ${pkgdir}/usr/include/powerdevil
+	cp -rv ${srcdir}/${pkgname}-${_kdever}/powerdevil/daemon/powerdevilpolicyagent.h ${pkgdir}/usr/include/powerdevil
 }
