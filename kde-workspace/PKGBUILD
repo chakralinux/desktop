@@ -54,6 +54,7 @@ source=($_mirror/${pkgname}-$_kdever.tar.xz
         kscreensaver.pam
         chakra-branding.tar.gz
 	chakra-themes.tar.gz
+	kdm.service
 
         # core patches
         01_kdm_zsh_profile.patch
@@ -86,6 +87,7 @@ md5sums=(`grep ${pkgname}-$_kdever.tar.xz ../kde-sc.md5 | cut -d" " -f1`
         '367a3538f54db71f108b34cfa31088ac'  #  kscreensaver.pam
         '169c6fc83d5562b5d7249db7fc46d8d6'  #  chakra-branding.tar.gz
         'c328f1c5cfa3e551205ffdc0fdda41a8'  #  chakra-themes.tar.gz
+        'c4b5f1b342b3dad38642318ca077daee'  #  kde.service
 
         '721e97031b62aee8914e8617e86f9235'  #  01_kdm_zsh_profile.patch
         'e2eb9d270fe0e93901b29256bdedd7e2'  #  02_sane_env_and_shutdown_path.patch
@@ -233,4 +235,7 @@ package() {
 	cp -rv ${srcdir}/${pkgname}-${_kdever}/powerdevil/daemon/powerdevilaction.h ${pkgdir}/usr/include/powerdevil
 	cp -rv ${srcdir}/${pkgname}-${_kdever}/powerdevil/daemon/powerdevilactionconfig.h ${pkgdir}/usr/include/powerdevil
 	cp -rv ${srcdir}/${pkgname}-${_kdever}/powerdevil/daemon/powerdevilpolicyagent.h ${pkgdir}/usr/include/powerdevil
+	
+	# Systemd .service file
+	install -D -m644 "${srcdir}"/kdm.service "${pkgdir}"/usr/lib/systemd/system/kdm.service
 }
