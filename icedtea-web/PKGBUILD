@@ -5,75 +5,82 @@
 # maintainer (x86_64): Manuel Tortosa <manutortosa[at]chakra-project[dot]org>
 
 pkgname=icedtea-web
-pkgdesc="Provides a Free Software web browser plugin running applets written in the Java programming language and an implementation of Java Web Start, originally based on the NetX project"
-pkgver=1.2
+pkgdesc="Provides a Free Software web browser plugin running applets written in the Java programming language and an implementation of Java Web Start, originally based on the NetX project."
+pkgver=1.2.1
 pkgrel=2
 arch=('i686' 'x86_64')
 url="http://icedtea.classpath.org/wiki/IcedTea-Web"
 license=('GPL2')
-makedepends=('openjdk6' 'zip' 'qt' 'npapi-sdk' 'rhino' 'junit')
-depends=('openjdk6' 'qt' 'desktop-file-utils')
-categories=('network')
-install=$pkgname.install
 
-source=(http://icedtea.classpath.org/download/source/$pkgname-$pkgver.tar.gz
-        replacing-gtk-with-qt.patch
-        include_unistd_h.patch)
-        
-sha256sums=('3f8d22b655df207409dd3451ba02907f61a12ac051e4df4d44bb5ed47c4f778d'
-            '4aca8cffa3e20cbd242dc5b77093a559d0398ec213af6532439fbdc5d55d4f52'
+_javaver=7
+_jvmdir="/usr/lib/jvm/java-${_javaver}-openjdk"
+
+makedepends=("java-environment=${_javaver}" 'zip' 'qt' 'npapi-sdk' 'rhino' 'junit' 'cups')
+depends=("java-environment=${_javaver}" 'qt' 'desktop-file-utils')
+categories=('network')
+install="${pkgname}.install"
+
+source=("http://icedtea.classpath.org/download/source/${pkgname}-${pkgver}.tar.gz"
+        'replacing-gtk-with-qt.patch'
+        'include_unistd_h.patch')
+sha256sums=('134efcd429086a643ba03ec6e4da991527c3e5dfcd6ed6680a83824ad3f0cfd6'
+            '008be13b6854f63df996456cca67b14ec4739fc5688416970b7e42ae5f85e5f5'
             'e2258177b59c51425dd67327f6c21785a5f49155624db3522ee25e5dfa8537fd')
 
 build() {
-  _javaver=6
-  _jvmdir=/usr/lib/jvm/java-${_javaver}-openjdk
-  cd "$srcdir/$pkgname-$pkgver"
+  cd "${srcdir}"
 
-  # Replacing gtk with qt
-  patch -Np1 -i ../replacing-gtk-with-qt.patch
-  
-  # missing #include <unistd.h> in plugin/icedteanp/IcedTeaPluginUtils.cc
-  patch -Np1 -i ../include_unistd_h.patch
-  
-  ./configure --prefix=/usr/lib/jvm/java-6-openjdk \
+  rm -rf build
+  cp -r "${pkgname}-${pkgver}" build
+
+  cd build
+
+  patch -Np1 -i "${srcdir}/replacing-gtk-with-qt.patch"
+  patch -Np1 -i "${srcdir}/include_unistd_h.patch"
+
+  ./configure --prefix="${_jvmdir}" \
+              --with-jdk-home="${_jvmdir}" \
               --datarootdir=/usr/share \
-              --disable-docs
+              --disable-docs \
+  || return 1
+
   make
 }
 
 check() {
-  cd "$srcdir/$pkgname-$pkgver"
+  cd "${srcdir}/build"
   # as more tests have been added some are expectged to fail
   # see http://mail.openjdk.java.net/pipermail/distro-pkg-dev/2012-March/017566.html
-  make -k check || /bin/true
+  make -k check
+  return 0
 }
 
 package() {
-  _javaver=6
-  _jvmdir=/usr/lib/jvm/java-${_javaver}-openjdk
+  cd "${srcdir}/build"
 
-  cd "$srcdir/$pkgname-$pkgver"
   # possible make target (see bottom of Makefile.am: install-exec-local install-data-local
-  make DESTDIR="$pkgdir" install-exec-local install-data-local
+  make install-exec-local install-data-local DESTDIR="${pkgdir}"
 
   # Install desktop files.
-  install -m755 -d ${pkgdir}/usr/share/{applications,pixmaps}
-  install -m644 javaws.png ${pkgdir}/usr/share/pixmaps
-  install -m644 {javaws,itweb-settings}.desktop ${pkgdir}/usr/share/applications
+  install -m755 -d "${pkgdir}/usr/share"/{applications,pixmaps}
+  install -m644 javaws.png "${pkgdir}/usr/share/pixmaps"
+  install -m644 {javaws,itweb-settings}.desktop "${pkgdir}/usr/share/applications"
   # remove splitted doc files
-  rm -rf ${pkgdir}/usr/share/doc
+  rm -rf "${pkgdir}/usr/share/doc"
 
   # link binaries into /usr/bin + jre/bin
-  install -m755 -d ${pkgdir}/usr/bin
-  install -m755 -d ${pkgdir}/${_jvmdir}/jre/bin
-  pushd ${pkgdir}/${_jvmdir}/bin
-  for file in *; do
-    ln -sf ${_jvmdir}/bin/${file} ${pkgdir}/usr/bin
-    ln -sf ${_jvmdir}/bin/${file} ${pkgdir}/${_jvmdir}/jre/bin
-  done
+  install -m755 -d "${pkgdir}/usr/bin"
+  install -m755 -d "${pkgdir}/${_jvmdir}/jre/bin"
+  pushd "${pkgdir}/${_jvmdir}/bin"
+    for file in *; do
+      ln -sf "${_jvmdir}/bin/${file}" "${pkgdir}/usr/bin"
+      ln -sf "${_jvmdir}/bin/${file}" "${pkgdir}/${_jvmdir}/jre/bin"
+    done
   popd
 
   # link the mozilla-plugin - test it here http://www.java.com/en/download/help/testvm.xml
-  install -m755 -d ${pkgdir}/usr/lib/mozilla/plugins/
-  ln -sf ${_jvmdir}/lib/IcedTeaPlugin.so ${pkgdir}/usr/lib/mozilla/plugins/
+  install -m755 -d "${pkgdir}/usr/lib/mozilla/plugins/"
+  ln -sf "${_jvmdir}/lib/IcedTeaPlugin.so" "${pkgdir}/usr/lib/mozilla/plugins/"
 }
+
+# vim:set ts=2 sw=2 et:
