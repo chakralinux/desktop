@@ -1,12 +1,11 @@
 #
 # Apps Packages for Chakra, part of chakra-project.org
 #
-# maintainer (i686): Phil Miller <philm[at]chakra-project[dog]org>
-# maintainer (x86_64): Manuel Tortosa <manutortosa[at]chakra-project[dot]org>
+# maintainer abveritas[at]chakra-project[dot]org>
 
 _pkgname=kradio4
 pkgname=kradio
-pkgver=4.0.4
+pkgver=4.0.6
 pkgrel=1
 arch=('i686' 'x86_64')
 license=('GPL2')
@@ -16,26 +15,20 @@ depends=('lame' 'kdelibs' 'libsndfile' 'lirc-utils' 'libmms' 'ffmpeg')
 makedepends=('pkgconfig' 'automoc4')
 options=(!libtool)
 categories=('multimedia')
+screenshot=('http://kradio.sourceforge.net/screenshots/4.0.0/docking.png')
 source=("http://downloads.sourceforge.net/sourceforge/${pkgname}/${_pkgname}-${pkgver}.tar.bz2")
-md5sums=('4b5495a4f1dda21f7201bc8db0d4f95e')
+md5sums=('ee9214156465e0416bb369f78b4a5eae')
 
 build() {
   cd "${srcdir}"
 
-  mkdir -p build && cd build
-
-  # This is needed because the naming of those definitions has changed
-  # in newer ffmpeg versions.
-  CXXFLAGS="${CXXFLAGS} -DCODEC_TYPE_VIDEO=AVMEDIA_TYPE_VIDEO"
-  CXXFLAGS="${CXXFLAGS} -DCODEC_TYPE_AUDIO=AVMEDIA_TYPE_AUDIO"
-  CXXFLAGS="${CXXFLAGS} -DCODEC_TYPE_DATA=AVMEDIA_TYPE_DATA"
-  export CXXFLAGS
+  mkdir -p build
+  cd build
 
   cmake "../${_pkgname}-${pkgver}" \
     -DCMAKE_SKIP_RPATH=ON \
     -DCMAKE_INSTALL_PREFIX=/usr \
-    -DCMAKE_BUILD_TYPE=Release \
-    -DCMAKE_CXX_FLAGS="${CXXFLAGS}"
+    -DCMAKE_BUILD_TYPE=Release 
 
   make
 }
