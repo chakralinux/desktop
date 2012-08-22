@@ -1,0 +1,1247 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 4cccf9d..ebb8064 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -129,7 +129,11 @@ if( WITH_PLAYER )
+     # macro_log_feature( STRIGI_FOUND "strigi" "Index metadata of files" "http://strigi.sourceforge.net" FALSE "" "" )
+ 
+     macro_optional_find_package(LibLastFm)
+-    macro_log_feature( LIBLASTFM_FOUND "liblastfm" "Enable Last.Fm service, including scrobbling, song submissions, and suggested song dynamic playlists" "http://cdn.last.fm/src/liblastfm-0.3.0.tar.bz2" FALSE "" "version 0.3.x (versions 1.0 or higher are incompatible)" )
++    set( LIBLASTFM_MIN_VERSION "1.0.0" )
++    if( LIBLASTFM_FOUND )
++        macro_ensure_version( ${LIBLASTFM_MIN_VERSION} ${LIBLASTFM_VERSION} LIBLASTFM_FOUND )
++    endif( LIBLASTFM_FOUND )
++    macro_log_feature( LIBLASTFM_FOUND "liblastfm" "Enable Last.Fm service, including scrobbling, song submissions, and suggested song dynamic playlists" "http://cdn.last.fm/client/liblastfm-1.0.1.tar.gz" FALSE ${LIBLASTFM_MIN_VERSION} "" )
+     macro_bool_to_01( LIBLASTFM_FOUND HAVE_LIBLASTFM )
+ 
+     macro_optional_find_package( FFmpeg )
+diff --git a/ChangeLog b/ChangeLog
+index ef55e54..57bb8bd 100644
+--- a/ChangeLog
++++ b/ChangeLog
+@@ -2,6 +2,7 @@ Amarok ChangeLog
+ ================
+ (C) 2002-2012 the Amarok authors.
+ 
++    * Optional liblastfm dependency raised to 1.0.0. (BR 302597)
+ VERSION 2.6
+   BUGFIXES:
+     * Fix problems when sql server is not reachable (BR 298425)
+diff --git a/README b/README
+index 53afc7e..234b7b7 100644
+--- a/README
++++ b/README
+@@ -83,10 +83,10 @@ Optional
+       * Loudmouth, the Jabber library, http://www.loudmouth-project.org/
+       * Qt must be compiled with Glib enabled
+ 
+-    * Liblastfm 0.3 (1.0 or newer is incompatible, porting is pending for Amarok 2.7)
+-      (scrobbling, internet radio, and artist info)
+-      http://cdn.last.fm/src/liblastfm-0.3.0.tar.bz2
+-      http://github.com/mxcl/liblastfm/tree/master
++    * Liblastfm 1.0 (or newer)
++      (For scrobbling, internet radio, and artist info)
++      http://cdn.last.fm/client/liblastfm-1.0.1.tar.gz
++      https://github.com/eartle/liblastfm
+ 
+     * QJson 0.7 (or newer)
+       (Qt JSON Parser for the Playdar Collection)
+diff --git a/cmake/modules/FindLibLastFm.cmake b/cmake/modules/FindLibLastFm.cmake
+index 1d863b0..58709b9 100644
+--- a/cmake/modules/FindLibLastFm.cmake
++++ b/cmake/modules/FindLibLastFm.cmake
+@@ -1,12 +1,13 @@
+ # - Find LibLastFM
+ # Find the liblastfm includes and the liblastfm libraries
+ # This module defines
++# LIBLASTFM_FOUND, whether liblastfm was found. If it was, it further sets:
+ # LIBLASTFM_INCLUDE_DIR, root lastfm include dir
+ # LIBLASTFM_LIBRARY, the path to liblastfm
+-# LIBLASTFM_FOUND, whether liblastfm was found
++# LIBLASTFM_VERSION, version of found liblastfm as a string, e.g "0.3"
+ 
+ 
+-find_path(LIBLASTFM_INCLUDE_DIR NAMES Audioscrobbler
++find_path(LIBLASTFM_INCLUDE_DIR NAMES global.h
+    HINTS
+    ~/usr/include
+    /opt/local/include
+@@ -31,12 +32,23 @@ find_library( LIBLASTFM_LIBRARY NAMES lastfm
+ 
+ if(LIBLASTFM_INCLUDE_DIR AND LIBLASTFM_LIBRARY)
+    set(LIBLASTFM_FOUND TRUE)
+-   message(STATUS "Found liblastfm: ${LIBLASTFM_INCLUDE_DIR}, ${LIBLASTFM_LIBRARY}")
+ else(LIBLASTFM_INCLUDE_DIR AND LIBLASTFM_LIBRARY)
+-   set(LIBLASTFM_FOUND FALSE)   
+-   if (LIBLASTFM_FIND_REQUIRED)
+-      message(FATAL_ERROR "Could NOT find required package LibLastFm")
+-   endif(LIBLASTFM_FIND_REQUIRED)
++   set(LIBLASTFM_FOUND FALSE)
+ endif(LIBLASTFM_INCLUDE_DIR AND LIBLASTFM_LIBRARY)
+ 
++if(LIBLASTFM_FOUND)
++   set(regex "#define LASTFM_VERSION_STRING \"(.*)\"")
++   file(STRINGS "${LIBLASTFM_INCLUDE_DIR}/global.h" LIBLASTFM_VERSION REGEX ${regex})
++   if(${LIBLASTFM_VERSION} MATCHES ${regex})
++      set(LIBLASTFM_VERSION ${CMAKE_MATCH_1})
++      message(STATUS "Found liblastfm: ${LIBLASTFM_INCLUDE_DIR}, ${LIBLASTFM_LIBRARY}, version ${LIBLASTFM_VERSION}")
++   else(${LIBLASTFM_VERSION} MATCHES ${regex})
++      message(WARNING "Found liblastfm: ${LIBLASTFM_INCLUDE_DIR} - but failed to parse version")
++      set(LIBLASTFM_FOUND FALSE)
++      unset(LIBLASTFM_INCLUDE_DIR)
++      unset(LIBLASTFM_LIBRARY)
++   endif(${LIBLASTFM_VERSION} MATCHES ${regex})
++   unset(regex)
++endif(LIBLASTFM_FOUND)
++
+ mark_as_advanced(LIBLASTFM_INCLUDE_DIR LIBLASTFM_LIBRARY)
+ 
+diff --git a/src/LastfmReadLabelCapability.cpp b/src/LastfmReadLabelCapability.cpp
+index 385e6b9..d1fb28b 100644
+--- a/src/LastfmReadLabelCapability.cpp
++++ b/src/LastfmReadLabelCapability.cpp
+@@ -22,8 +22,7 @@
+ #include <QMap>
+ #include <QNetworkReply>
+ 
+-#include <lastfm/XmlQuery>
+-#include <ws.h>
++#include <lastfm/XmlQuery.h>
+ #include "core/support/Amarok.h"
+ 
+ namespace Capabilities
+@@ -72,7 +71,8 @@ LastfmReadLabelCapability::onTagsFetched()
+     {
+         case QNetworkReply::NoError:
+         {
+-            lastfm::XmlQuery lfm = m_job->readAll();
++            lastfm::XmlQuery lfm;
++            lfm.parse(m_job->readAll());
+             QList<lastfm::XmlQuery> tags = lfm.children( "tag" );
+             QStringList ret;
+             foreach( const lastfm::XmlQuery &child, tags )
+diff --git a/src/context/engines/upcomingevents/UpcomingEventsEngine.cpp b/src/context/engines/upcomingevents/UpcomingEventsEngine.cpp
+index 4ae73d8..689323c 100644
+--- a/src/context/engines/upcomingevents/UpcomingEventsEngine.cpp
++++ b/src/context/engines/upcomingevents/UpcomingEventsEngine.cpp
+@@ -27,10 +27,6 @@
+ #include "EngineController.h"
+ #include "LastFmEventXmlParser.h"
+ 
+-// LastFm
+-#include <lastfm/XmlQuery>
+-#include <lastfm/ws.h>
+-
+ // KDE
+ #include <KDateTime>
+ 
+diff --git a/src/core-impl/collections/ipodcollection/support/IpodDeviceHelper.cpp b/src/core-impl/collections/ipodcollection/support/IpodDeviceHelper.cpp
+index 9b97c01..d68b9e3 100644
+--- a/src/core-impl/collections/ipodcollection/support/IpodDeviceHelper.cpp
++++ b/src/core-impl/collections/ipodcollection/support/IpodDeviceHelper.cpp
+@@ -222,7 +222,7 @@ safeToWriteWithMessage( const QString &mountPoint, const Itdb_iTunesDB *itdb, QS
+         message += ( sysInfoExtendedExists )
+                    ? i18n( "%1 family uses %2 file to generate correct database checksum.",
+                            gen, sysInfoExtended )
+-                   : i18n( "%1 family needs %2 file to generate correct database checksum!",
++                   : i18n( "%1 family needs %2 file to generate correct database checksum.",
+                            gen, sysInfoExtended );
+         if( !sysInfoExtendedExists )
+             return false;
+@@ -234,7 +234,7 @@ safeToWriteWithMessage( const QString &mountPoint, const Itdb_iTunesDB *itdb, QS
+         message += hashInfoExists
+                    ? i18n( "%1 family uses %2 file to generate correct database checksum.",
+                            gen, hashInfo )
+-                   : i18n( "%1 family needs %2 file to generate correct database checksum!",
++                   : i18n( "%1 family needs %2 file to generate correct database checksum.",
+                            gen, hashInfo );
+         if( !hashInfoExists )
+             return false;
+diff --git a/src/core/support/Amarok.h b/src/core/support/Amarok.h
+index c985215..d8c91e7 100644
+--- a/src/core/support/Amarok.h
++++ b/src/core/support/Amarok.h
+@@ -203,6 +203,7 @@ namespace Amarok
+ 
+     inline const char* discogsApiKey() { return "91734dd989"; }
+     inline const char* lastfmApiKey() { return "402d3ca8e9bc9d3cf9b85e1202944ca5"; }
++    inline const char* lastfmApiSharedSecret() { return "fe0dcde9fcd14c2d1d50665b646335e9"; }
+     inline const char* yahooBossApiKey() { return "oQepTNrV34G9Satb1dgRZ8hdl1uhJvguDSU5Knl2Xd4ALK85knYt6ylr.FTA57XMRBA-"; }
+     inline const char* flickrApiKey() { return "9c5a288116c34c17ecee37877397fe31"; }
+ }
+diff --git a/src/services/ampache/LastfmInfoParser.cpp b/src/services/ampache/LastfmInfoParser.cpp
+index 50cb529..0c6dd8f 100644
+--- a/src/services/ampache/LastfmInfoParser.cpp
++++ b/src/services/ampache/LastfmInfoParser.cpp
+@@ -20,8 +20,7 @@
+ #include "core/support/Amarok.h"
+ #include "core/support/Debug.h"
+ 
+-#include <lastfm/XmlQuery>
+-#include <lastfm/ws.h>
++#include <lastfm/XmlQuery.h>
+ 
+ #include <KLocale>
+ 
+@@ -55,7 +54,8 @@ void LastfmInfoParser::onGetTrackInfo()
+     {
+         case QNetworkReply::NoError:
+         {
+-            lastfm::XmlQuery lfm = m_jobs[ "getTrackInfo" ]->readAll();
++            lastfm::XmlQuery lfm;
++            lfm.parse( m_jobs[ "getTrackInfo" ]->readAll() );
+             lastfm::XmlQuery wiki = lfm["track"]["wiki"];
+             const QString contentText = wiki["content"].text();
+             const QString publishedDate = wiki["published"].text();
+@@ -103,7 +103,8 @@ void LastfmInfoParser::onGetAlbumInfo()
+     {
+         case QNetworkReply::NoError:
+         {
+-            lastfm::XmlQuery lfm = m_jobs[ "getAlbumInfo" ]->readAll();
++            lastfm::XmlQuery lfm;
++            lfm.parse( m_jobs[ "getAlbumInfo" ]->readAll() );
+             lastfm::XmlQuery wiki = lfm["album"]["wiki"];
+             const QString summaryText = wiki["summary"].text();
+             const QString contentText = wiki["content"].text();
+@@ -155,7 +156,8 @@ void LastfmInfoParser::onGetArtistInfo()
+     {
+         case QNetworkReply::NoError:
+         {
+-            lastfm::XmlQuery lfm = m_jobs[ "getArtistInfo" ]->readAll();
++            lastfm::XmlQuery lfm;
++            lfm.parse( m_jobs[ "getArtistInfo" ]->readAll() );
+             debug() << lfm.text();
+             lastfm::XmlQuery bio = lfm["artist"]["bio"];
+             const QString summaryText = bio["summary"].text();
+diff --git a/src/services/lastfm/AvatarDownloader.h b/src/services/lastfm/AvatarDownloader.h
+index 6ee4d23..d0f2dc1 100644
+--- a/src/services/lastfm/AvatarDownloader.h
++++ b/src/services/lastfm/AvatarDownloader.h
+@@ -21,7 +21,6 @@
+ 
+ #include <QHash>
+ #include <QObject>
+-#include <QPixmap>
+ 
+ class AvatarDownloader : public QObject
+ {
+diff --git a/src/services/lastfm/CMakeLists.txt b/src/services/lastfm/CMakeLists.txt
+index 637afd4..61042a1 100644
+--- a/src/services/lastfm/CMakeLists.txt
++++ b/src/services/lastfm/CMakeLists.txt
+@@ -31,7 +31,6 @@ include_directories(
+             LastFmService.cpp
+             LastFmServiceCollection.cpp
+             LastFmServiceConfig.cpp
+-            LastFmServiceQueryMaker.cpp
+ #             LastfmReadLabelCapability.cpp
+             ScrobblerAdapter.cpp
+             LastFmTreeModel.cpp
+diff --git a/src/services/lastfm/LastFmService.cpp b/src/services/lastfm/LastFmService.cpp
+index a14d989..a796774 100644
+--- a/src/services/lastfm/LastFmService.cpp
++++ b/src/services/lastfm/LastFmService.cpp
+@@ -25,8 +25,6 @@
+ #include "EngineController.h"
+ #include "biases/LastFmBias.h"
+ #include "biases/WeeklyTopBias.h"
+-#include "browsers/CollectionTreeItem.h"
+-#include "browsers/CollectionTreeItemModelBase.h"
+ #include "LastFmServiceCollection.h"
+ #include "LastFmServiceConfig.h"
+ #include "LoveTrackAction.h"
+@@ -34,33 +32,21 @@
+ #include "LastFmTreeModel.h"
+ #include "LastFmTreeView.h"
+ #include "ScrobblerAdapter.h"
+-#include "widgets/FlowLayout.h"
+-#include "GlobalCollectionActions.h"
+ #include "GlobalCurrentTrackActions.h"
+-#include "core-impl/collections/support/CollectionManager.h"
+-#include "core/capabilities/LastFmCapability.h"
+ #include "core/support/Components.h"
+ #include "core/interfaces/Logger.h"
+ #include "meta/LastFmMeta.h"
+-#include "playlist/PlaylistModelStack.h"
+ #include "widgets/SearchWidget.h"
+-#include "NetworkAccessManagerProxy.h"
+ 
+-#include <lastfm/Audioscrobbler> // from liblastfm
+-#include <lastfm/XmlQuery>
++#include <lastfm/XmlQuery.h>
+ 
+-#include <KLocale>
+-#include <KPasswordDialog>
++#include <KLineEdit>
+ #include <KStandardDirs>
+-#include <solid/networking.h>
+ 
+-#include <QComboBox>
+ #include <QCryptographicHash>
+ #include <QGroupBox>
+-#include <QNetworkReply>
+-#include <QPainter>
+-#include <QImage>
+-#include <QFrame>
++#include <QHBoxLayout>
++#include <QLabel>
+ #include <QTextDocument>        //Qt::escape
+ 
+ AMAROK_EXPORT_SERVICE_PLUGIN( lastfm, LastFmServiceFactory )
+@@ -224,10 +210,7 @@ LastFmService::init()
+ {
+     // set the global static Lastfm::Ws stuff
+     lastfm::ws::ApiKey = Amarok::lastfmApiKey();
+-    lastfm::ws::SharedSecret = "fe0dcde9fcd14c2d1d50665b646335e9";
+-    // testing w/ official keys
+-    //Ws::SharedSecret = "73582dfc9e556d307aead069af110ab8";
+-    //Ws::ApiKey = "c8c7b163b11f92ef2d33ba6cd3c2c3c3";
++    lastfm::ws::SharedSecret = Amarok::lastfmApiSharedSecret();
+     m_userNameArray = qstrdup( m_userName.toLatin1().data() );
+     lastfm::ws::Username = m_userNameArray;
+     if( lastfm::nam() != The::networkAccessManager() )
+@@ -309,7 +292,8 @@ LastFmService::onAuthenticated()
+         case QNetworkReply::NoError:
+         {
+ 
+-            lastfm::XmlQuery lfm = lastfm::XmlQuery( m_jobs[ "auth" ]->readAll() );
++            lastfm::XmlQuery lfm;
++            lfm.parse( m_jobs[ "auth" ]->readAll() );
+             LastFmServiceConfig config;
+ 
+             if( lfm.children( "error" ).size() > 0 )
+@@ -359,10 +343,8 @@ LastFmService::onGetUserInfo()
+     {
+         case QNetworkReply::NoError:
+         {
+-            try
+-            {
+-                lastfm::XmlQuery lfm( m_jobs[ "getUserInfo" ]->readAll() );
+-
++            lastfm::XmlQuery lfm;
++            if( lfm.parse( m_jobs[ "getUserInfo" ]->readAll() ) ) {
+                 m_country = lfm["user"]["country"].text();
+                 m_age = lfm["user"]["age"].text();
+                 m_gender = lfm["user"]["gender"].text();
+@@ -381,9 +363,10 @@ LastFmService::onGetUserInfo()
+                 }
+                 updateProfileInfo();
+ 
+-            } catch( lastfm::ws::ParseError& e )
++            }
++            else
+             {
+-                debug() << "Got exception in parsing from last.fm:" << e.what();
++                debug() << "Got exception in parsing from last.fm:" << lfm.parseError().message();
+             }
+             break;
+         } case QNetworkReply::AuthenticationRequiredError:
+diff --git a/src/services/lastfm/LastFmService.h b/src/services/lastfm/LastFmService.h
+index ac13d41..848dc39 100644
+--- a/src/services/lastfm/LastFmService.h
++++ b/src/services/lastfm/LastFmService.h
+@@ -21,8 +21,6 @@
+ 
+ #include "../ServiceBase.h"
+ 
+-#include <KLineEdit>
+-#include <QLabel>
+ class ScrobblerAdapter;
+ class LastFmService;
+ 
+@@ -30,11 +28,12 @@ namespace Collections {
+     class LastFmServiceCollection;
+ }
+ 
+-class QNetworkReply;
+-
+ class KHBox;
++class KLineEdit;
+ 
+ class QComboBox;
++class QLabel;
++class QNetworkReply;
+ 
+ namespace The
+ {
+diff --git a/src/services/lastfm/LastFmServiceCollection.cpp b/src/services/lastfm/LastFmServiceCollection.cpp
+index 22f49ec..368f0e7 100644
+--- a/src/services/lastfm/LastFmServiceCollection.cpp
++++ b/src/services/lastfm/LastFmServiceCollection.cpp
+@@ -19,18 +19,9 @@
+ #define DEBUG_PREFIX "lastfm"
+ 
+ #include "LastFmServiceCollection.h"
+-#include "LastFmServiceQueryMaker.h"
+ #include "meta/LastFmMeta.h"
+-#include "ServiceMetaBase.h"
+ 
+-#include "core-impl/collections/support/MemoryQueryMaker.h"
+-
+-#include <lastfm/ws.h>
+-#include <lastfm/XmlQuery>
+-
+-#include <QNetworkReply>
+-
+-#include <KLocale>
++#include <lastfm/XmlQuery.h>
+ 
+ using namespace Collections;
+ 
+@@ -154,10 +145,9 @@ void LastFmServiceCollection::slotAddNeighboursLoved()
+         case QNetworkReply::NoError:
+         {
+             // iterate through each neighbour
+-            try
++            lastfm::XmlQuery lfm;
++            if( lfm.parse( m_jobs[ "user.getNeighbours" ]->readAll() ) )
+             {
+-                lastfm::XmlQuery lfm( m_jobs[ "user.getNeighbours" ]->readAll() );
+-
+                 foreach( const lastfm::XmlQuery &e, lfm[ "neighbours" ].children( "user" ) )
+                 {
+                     const QString name = e[ "name" ].text();
+@@ -168,9 +158,10 @@ void LastFmServiceCollection::slotAddNeighboursLoved()
+                     addTrack( trackPtr );
+                 }
+ 
+-            } catch( lastfm::ws::ParseError& e )
++            }
++            else
+             {
+-                debug() << "Got exception in parsing from last.fm:" << e.what();
++                debug() << "Got exception in parsing from last.fm:" << lfm.parseError().message();
+             }
+             break;
+         }
+@@ -195,15 +186,14 @@ void LastFmServiceCollection::slotAddNeighboursPersonal()
+         case QNetworkReply::NoError:
+         {
+             // iterate through each neighbour
+-            try
++            if( !m_jobs[ "user.getNeighbours" ] )
++            {
++                debug() << "BAD! got no result object";
++                return;
++            }
++            lastfm::XmlQuery lfm;
++            if( lfm.parse( m_jobs[ "user.getNeighbours" ]->readAll() ) )
+             {
+-                if( !m_jobs[ "user.getNeighbours" ] )
+-                {
+-                    debug() << "BAD! got no result object";
+-                    return;
+-                }
+-                lastfm::XmlQuery lfm( m_jobs[ "user.getNeighbours" ]->readAll() );
+-
+                 // iterate through each neighbour
+                 foreach( const lastfm::XmlQuery &e, lfm[ "neighbours" ].children( "user" ) )
+                 {
+@@ -218,9 +208,10 @@ void LastFmServiceCollection::slotAddNeighboursPersonal()
+ 
+                 // should be safe, as both slots SHOULD get called before we return to the event loop...
+                 m_jobs[ "user.getNeighbours" ]->deleteLater();
+-            } catch( lastfm::ws::ParseError& e )
++            }
++            else
+             {
+-                debug() << "Got exception in parsing from last.fm:" << e.what();
++                debug() << "Got exception in parsing from last.fm:" << lfm.parseError().message();
+             }
+             break;
+         }
+@@ -248,10 +239,9 @@ void LastFmServiceCollection::slotAddFriendsLoved()
+     {
+         case QNetworkReply::NoError:
+         {
+-            try
++            lastfm::XmlQuery lfm;
++            if( lfm.parse( m_jobs[ "user.getFriends" ]->readAll() ) )
+             {
+-                lastfm::XmlQuery lfm( m_jobs[ "user.getFriends" ]->readAll() );
+-
+                 foreach( const lastfm::XmlQuery &e, lfm[ "friends" ].children( "user" ) )
+                 {
+                     const QString name = e[ "name" ].text();
+@@ -261,9 +251,10 @@ void LastFmServiceCollection::slotAddFriendsLoved()
+                     addTrack( trackPtr );
+                 }
+ 
+-            } catch( lastfm::ws::ParseError& e )
++            }
++            else
+             {
+-                debug() << "Got exception in parsing from last.fm:" << e.what();
++                debug() << "Got exception in parsing from last.fm:" << lfm.parseError().message();
+             }
+             break;
+         }
+@@ -293,10 +284,9 @@ void LastFmServiceCollection::slotAddFriendsPersonal()
+     {
+         case QNetworkReply::NoError:
+         {
+-            try
++            lastfm::XmlQuery lfm;
++            if( lfm.parse( m_jobs[ "user.getFriends" ]->readAll() ) )
+             {
+-                lastfm::XmlQuery lfm( m_jobs[ "user.getFriends" ]->readAll() );
+-
+                 foreach( const lastfm::XmlQuery &e, lfm[ "friends" ].children( "user" ) )
+                 {
+                     const QString name = e[ "name" ].text();
+@@ -306,9 +296,10 @@ void LastFmServiceCollection::slotAddFriendsPersonal()
+                     addTrack( trackPtr );
+                 }
+ 
+-            } catch( lastfm::ws::ParseError& e )
++            }
++            else
+             {
+-                debug() << "Got exception in parsing from last.fm:" << e.what();
++                debug() << "Got exception in parsing from last.fm:" << lfm.parseError().message();
+             }
+             break;
+         }
+diff --git a/src/services/lastfm/LastFmServiceQueryMaker.cpp b/src/services/lastfm/LastFmServiceQueryMaker.cpp
+deleted file mode 100644
+index 8f750a1..0000000
+--- a/src/services/lastfm/LastFmServiceQueryMaker.cpp
++++ /dev/null
+@@ -1,39 +0,0 @@
+-/****************************************************************************************
+- * Copyright (c) 2008 Shane King <kde@dontletsstart.com>                                *
+- *                                                                                      *
+- * This program is free software; you can redistribute it and/or modify it under        *
+- * the terms of the GNU General Public License as published by the Free Software        *
+- * Foundation; either version 2 of the License, or (at your option) any later           *
+- * version.                                                                             *
+- *                                                                                      *
+- * This program is distributed in the hope that it will be useful, but WITHOUT ANY      *
+- * WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A      *
+- * PARTICULAR PURPOSE. See the GNU General Public License for more details.             *
+- *                                                                                      *
+- * You should have received a copy of the GNU General Public License along with         *
+- * this program.  If not, see <http://www.gnu.org/licenses/>.                           *
+- ****************************************************************************************/
+-
+-#include "LastFmServiceQueryMaker.h"
+-
+-using namespace Collections;
+-
+-LastFmServiceQueryMaker::LastFmServiceQueryMaker( LastFmServiceCollection *collection )
+-{
+-    Q_UNUSED( collection );
+-}
+-
+-LastFmServiceQueryMaker::~LastFmServiceQueryMaker()
+-{
+-}
+-
+-void
+-LastFmServiceQueryMaker::run()
+-{
+-}
+-
+-void
+-LastFmServiceQueryMaker::abortQuery()
+-{
+-}
+-
+diff --git a/src/services/lastfm/LastFmServiceQueryMaker.h b/src/services/lastfm/LastFmServiceQueryMaker.h
+deleted file mode 100644
+index 3a6ac26..0000000
+--- a/src/services/lastfm/LastFmServiceQueryMaker.h
++++ /dev/null
+@@ -1,40 +0,0 @@
+-/****************************************************************************************
+- * Copyright (c) 2008 Shane King <kde@dontletsstart.com>                                *
+- *                                                                                      *
+- * This program is free software; you can redistribute it and/or modify it under        *
+- * the terms of the GNU General Public License as published by the Free Software        *
+- * Foundation; either version 2 of the License, or (at your option) any later           *
+- * version.                                                                             *
+- *                                                                                      *
+- * This program is distributed in the hope that it will be useful, but WITHOUT ANY      *
+- * WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A      *
+- * PARTICULAR PURPOSE. See the GNU General Public License for more details.             *
+- *                                                                                      *
+- * You should have received a copy of the GNU General Public License along with         *
+- * this program.  If not, see <http://www.gnu.org/licenses/>.                           *
+- ****************************************************************************************/
+-
+-#ifndef LASTFMSERVICEQUERYMAKER_H
+-#define LASTFMSERVICEQUERYMAKER_H
+-
+-#include "DynamicServiceQueryMaker.h"
+-
+-namespace Collections {
+-
+-class LastFmServiceCollection;
+-
+-class LastFmServiceQueryMaker : public DynamicServiceQueryMaker
+-{
+-    Q_OBJECT
+-
+-public:
+-    LastFmServiceQueryMaker( LastFmServiceCollection *collection );
+-    virtual ~LastFmServiceQueryMaker();
+-
+-    virtual void run();
+-    virtual void abortQuery();
+-};
+-
+-} //namespace Collections
+-
+-#endif // LASTFMSERVICEQUERYMAKER_H
+diff --git a/src/services/lastfm/LastFmServiceSettings.cpp b/src/services/lastfm/LastFmServiceSettings.cpp
+index 2eff71e..4fef543 100644
+--- a/src/services/lastfm/LastFmServiceSettings.cpp
++++ b/src/services/lastfm/LastFmServiceSettings.cpp
+@@ -23,14 +23,9 @@
+ #include "NetworkAccessManagerProxy.h"
+ #include "ui_LastFmConfigWidget.h"
+ 
+-#include <lastfm/Audioscrobbler> // from liblastfm
+-#include <lastfm/ws.h>
+-#include <lastfm/XmlQuery>
++#include <lastfm/XmlQuery.h>
+ 
+ #include <QCryptographicHash>
+-#include <QNetworkAccessManager>
+-#include <QNetworkReply>
+-#include <QVBoxLayout>
+ #include <QRegExpValidator>
+ 
+ #include <KMessageBox>
+@@ -100,7 +95,7 @@ LastFmServiceSettings::testLogin()
+     m_configDialog->testLogin->setText( i18n( "Testing..." ) );
+     // set the global static Lastfm::Ws stuff
+     lastfm::ws::ApiKey = Amarok::lastfmApiKey();
+-    lastfm::ws::SharedSecret = "fe0dcde9fcd14c2d1d50665b646335e9";
++    lastfm::ws::SharedSecret = Amarok::lastfmApiSharedSecret();
+     lastfm::ws::Username = qstrdup( m_configDialog->kcfg_ScrobblerUsername->text().toLatin1().data() );
+     if( lastfm::nam() != The::networkAccessManager() )
+         lastfm::setNetworkAccessManager( The::networkAccessManager() );
+@@ -126,7 +121,8 @@ LastFmServiceSettings::onAuthenticated()
+ {
+     DEBUG_BLOCK
+ 
+-    lastfm::XmlQuery lfm = lastfm::XmlQuery( m_authQuery->readAll() );
++    lastfm::XmlQuery lfm;
++    lfm.parse( m_authQuery->readAll() );
+ 
+     switch( m_authQuery->error() )
+     {
+diff --git a/src/services/lastfm/LastFmTreeModel.cpp b/src/services/lastfm/LastFmTreeModel.cpp
+index 2d94d67..38dc90b 100644
+--- a/src/services/lastfm/LastFmTreeModel.cpp
++++ b/src/services/lastfm/LastFmTreeModel.cpp
+@@ -25,15 +25,9 @@
+ #include "core-impl/collections/support/CollectionManager.h"
+ #include "AmarokMimeData.h"
+ 
+-#include <lastfm/ws.h>
+-#include <lastfm/Tag>
+-#include <lastfm/XmlQuery>
++#include <lastfm/Tag.h>
++#include <lastfm/XmlQuery.h>
+ 
+-#include <KIcon>
+-#include <KLocale>
+-
+-#include <QMap>
+-#include <QNetworkReply>
+ #include <QPainter>
+ 
+ using namespace LastFm;
+@@ -68,11 +62,12 @@ LastFmTreeModel::slotAddNeighbors ()
+ {
+     DEBUG_BLOCK
+ 
+-    try
+-    {
+         // Iterate over each neighbor, in two passes: 1) Get data 2) Sort data, store in model
+ 
+-        lastfm::XmlQuery lfm( m_jobs[ "getNeighbours" ]->readAll() );
++    lastfm::XmlQuery lfm;
++    lfm.parse( m_jobs[ "getNeighbours" ]->readAll() );
++    if( lfm.parseError().enumValue() == lastfm::ws::NoError )
++    {
+         foreach( const lastfm::XmlQuery &e, lfm[ "neighbours" ].children ( "user" ) )
+         {
+             const QString name = e[ "name" ].text();
+@@ -88,11 +83,11 @@ LastFmTreeModel::slotAddNeighbors ()
+             appendUserStations( neighbor, name );
+         }
+         m_neighbors.sort();
++    } else {
++        debug() << "Got exception in parsing from last.fm:" << lfm.parseError().message();
++        return;
+     }
+-    catch( lastfm::ws::ParseError e )
+-    {
+-        debug() << "Got exception in parsing from last.fm:" << e.what();
+-    }
++
+     emitRowChanged(LastFm::Neighbors);
+     m_jobs[ "getNeighbours" ]->deleteLater();
+ }
+@@ -102,11 +97,11 @@ LastFmTreeModel::slotAddFriends ()
+ {
+     DEBUG_BLOCK
+ 
+-    try
+-    {
+-        // Iterate over each friend, in two passes: 1) Get data 2) Sort data, store in model
++    // Iterate over each friend, in two passes: 1) Get data 2) Sort data, store in model
+ 
+-        lastfm::XmlQuery lfm( m_jobs[ "getFriends" ]->readAll() );
++    lastfm::XmlQuery lfm;
++    if( lfm.parse( m_jobs[ "getFriends" ]->readAll() ) )
++    {
+         foreach( const lastfm::XmlQuery &e, lfm[ "friends" ].children ( "user" ) )
+         {
+             const QString name = e[ "name" ].text();
+@@ -123,11 +118,11 @@ LastFmTreeModel::slotAddFriends ()
+             appendUserStations( afriend, name );
+         }
+         m_friends.sort();
++    } else {
++        debug() << "Got exception in parsing from last.fm:" << lfm.parseError().message();
++        return;
+     }
+-    catch( lastfm::ws::ParseError e )
+-    {
+-        debug() << "Got exception in parsing from last.fm:" << e.what();
+-    }
++
+     emitRowChanged(LastFm::Friends);
+     m_jobs[ "getFriends" ]->deleteLater();
+ }
+@@ -137,10 +132,9 @@ LastFmTreeModel::slotAddTopArtists ()
+ {
+     DEBUG_BLOCK
+     WeightedStringList list;
+-    try
++    lastfm::XmlQuery lfm;
++    if( lfm.parse( m_jobs[ "getTopArtists" ]->readAll() ) )
+     {
+-        lastfm::XmlQuery lfm( m_jobs[ "getTopArtists" ]->readAll() );
+-
+         foreach( const lastfm::XmlQuery &e, lfm[ "topartists" ].children ( "artist" ) )
+         {
+             const QString name = e[ "name" ].text();
+@@ -158,9 +152,10 @@ LastFmTreeModel::slotAddTopArtists ()
+             m_myTopArtists->appendChild ( artist );
+         }
+ 
+-    } catch( lastfm::ws::ParseError e )
++    }
++    else
+     {
+-        debug() << "Got exception in parsing from last.fm:" << e.what();
++        debug() << "Got exception in parsing from last.fm:" << lfm.parseError().message();
+     }
+     emitRowChanged(LastFm::TopArtists);
+     m_jobs[ "getTopArtists" ]->deleteLater();
+diff --git a/src/services/lastfm/LastFmTreeModel.h b/src/services/lastfm/LastFmTreeModel.h
+index ac171a5..20dd544 100644
+--- a/src/services/lastfm/LastFmTreeModel.h
++++ b/src/services/lastfm/LastFmTreeModel.h
+@@ -22,15 +22,9 @@
+ #include "core/meta/Meta.h"
+ #include "WeightedStringList.h"
+ 
+-#include <lastfm/User>
++#include <lastfm/User.h>
+ 
+ #include <QAbstractItemModel>
+-#include <QHash>
+-#include <QIcon>
+-#include <QMap>
+-#include <QModelIndex>
+-#include <QPixmap>
+-#include <QVariant>
+ 
+ class QNetworkReply;
+ 
+@@ -136,7 +130,7 @@ private:
+     LastFmTreeItem *m_myTopArtists;
+ 
+     QString m_userName;
+-    lastfm::AuthenticatedUser m_user;
++    lastfm::User m_user;
+ 
+     QStringList m_friends;
+     QStringList m_neighbors;
+diff --git a/src/services/lastfm/LastFmTreeView.cpp b/src/services/lastfm/LastFmTreeView.cpp
+index 900c22e..30f7d69 100644
+--- a/src/services/lastfm/LastFmTreeView.cpp
++++ b/src/services/lastfm/LastFmTreeView.cpp
+@@ -18,31 +18,16 @@
+ 
+ #include "LastFmTreeView.h"
+ 
+-#include "core/support/Amarok.h"
+ #include "core/support/Debug.h"
+ #include "LastFmTreeModel.h" //FIXME just for enums
+ #include "PopupDropperFactory.h"
+-#include "SvgHandler.h"
+ #include "context/ContextView.h"
+ #include "context/popupdropper/libpud/PopupDropper.h"
+ #include "context/popupdropper/libpud/PopupDropperItem.h"
+ 
+-#include <KIcon>
+ #include <KMenu>
+ 
+-#include <QAction>
+-#include <QContextMenuEvent>
+-#include <QDesktopServices>
+-#include <QDropEvent>
+ #include <QHeaderView>
+-#include <QMap>
+-#include <QMouseEvent>
+-#include <QPainter>
+-#include <QSlider>
+-#include <QStandardItemModel>
+-#include <QTimer>
+-#include <QTreeView>
+-#include <QWidgetAction>
+ 
+ LastFmTreeView::LastFmTreeView ( QWidget* parent )
+         : Amarok::PrettyTreeView ( parent )
+diff --git a/src/services/lastfm/LastFmTreeView.h b/src/services/lastfm/LastFmTreeView.h
+index 33e0a78..e7774c5 100644
+--- a/src/services/lastfm/LastFmTreeView.h
++++ b/src/services/lastfm/LastFmTreeView.h
+@@ -19,7 +19,6 @@
+ #ifndef LASTFMTREEVIEW_H
+ #define LASTFMTREEVIEW_H
+ 
+-#include "LastFmTreeModel.h"
+ #include "playlist/PlaylistController.h"
+ #include "widgets/PrettyTreeView.h"
+ 
+@@ -27,11 +26,12 @@
+ #include <QMutex>
+ #include <QWeakPointer>
+ 
++class LastFmTreeModel;
++
++class QAction;
+ class QContextMenuEvent;
+ class QMouseEvent;
+-
+ class PopupDropper;
+-class QAction;
+ 
+ typedef QList<QAction *> QActionList;
+ 
+diff --git a/src/services/lastfm/LoveTrackAction.cpp b/src/services/lastfm/LoveTrackAction.cpp
+index 056a565..1cd06d5 100644
+--- a/src/services/lastfm/LoveTrackAction.cpp
++++ b/src/services/lastfm/LoveTrackAction.cpp
+@@ -16,10 +16,9 @@
+  
+ #include "LoveTrackAction.h"
+ 
+-#include "SvgHandler.h"
++#include "LastFmService.h"
+ 
+ #include <KIcon>
+-#include <KLocale>
+ 
+ LoveTrackAction::LoveTrackAction( LastFmService * service )
+     : GlobalCollectionTrackAction( i18n( "Last.fm: Love" ), service )
+diff --git a/src/services/lastfm/LoveTrackAction.h b/src/services/lastfm/LoveTrackAction.h
+index 4da0906..a64b68c 100644
+--- a/src/services/lastfm/LoveTrackAction.h
++++ b/src/services/lastfm/LoveTrackAction.h
+@@ -19,9 +19,7 @@
+ 
+ #include "GlobalCollectionActions.h"
+ 
+-#include "core/meta/Meta.h"
+-#include "LastFmService.h"
+-
++class LastFmService;
+ 
+ /**
+ A last.fm specific global collection action for loving a track.
+diff --git a/src/services/lastfm/ScrobblerAdapter.cpp b/src/services/lastfm/ScrobblerAdapter.cpp
+index fa8635b..2191229 100644
+--- a/src/services/lastfm/ScrobblerAdapter.cpp
++++ b/src/services/lastfm/ScrobblerAdapter.cpp
+@@ -23,12 +23,12 @@
+ #include "amarokconfig.h"
+ #include "core/support/Debug.h"
+ #include "core/support/Components.h"
+-#include "core/interfaces/Logger.h"
+ #include "EngineController.h"
+ #include "MainWindow.h"
+-#include "core/meta/support/MetaConstants.h"
+ #include "meta/LastFmMeta.h"
+ 
++#include <lastfm/Audioscrobbler.h>
++
+ #include <KLocale>
+ 
+ ScrobblerAdapter::ScrobblerAdapter( QObject *parent, const QString &clientId )
+diff --git a/src/services/lastfm/ScrobblerAdapter.h b/src/services/lastfm/ScrobblerAdapter.h
+index 613ad99..bb50f71 100644
+--- a/src/services/lastfm/ScrobblerAdapter.h
++++ b/src/services/lastfm/ScrobblerAdapter.h
+@@ -20,10 +20,12 @@
+ 
+ #include "core/meta/Meta.h"
+ 
+-#include <lastfm/Audioscrobbler>
+-#include <lastfm/Track>
++#include <lastfm/Track.h>
+ 
+-#include <QVariant>
++namespace lastfm
++{
++class Audioscrobbler;
++}
+ 
+ class ScrobblerAdapter : public QObject
+ {
+diff --git a/src/services/lastfm/SimilarArtistsAction.cpp b/src/services/lastfm/SimilarArtistsAction.cpp
+index 1266cfa..0c4001f 100644
+--- a/src/services/lastfm/SimilarArtistsAction.cpp
++++ b/src/services/lastfm/SimilarArtistsAction.cpp
+@@ -17,10 +17,8 @@
+ #include "SimilarArtistsAction.h"
+ #include "playlist/PlaylistController.h"
+ #include "core-impl/collections/support/CollectionManager.h"
+-#include "SvgHandler.h"
+ 
+ #include <KIcon>
+-#include <KLocale>
+ 
+ SimilarArtistsAction::SimilarArtistsAction( QObject *parent )
+     : GlobalCollectionArtistAction( i18n( "Play Similar Artists from Last.fm" ), parent )
+diff --git a/src/services/lastfm/SimilarArtistsAction.h b/src/services/lastfm/SimilarArtistsAction.h
+index f078b70..a8aa1a2 100644
+--- a/src/services/lastfm/SimilarArtistsAction.h
++++ b/src/services/lastfm/SimilarArtistsAction.h
+@@ -19,9 +19,6 @@
+ 
+ #include "GlobalCollectionActions.h"
+ 
+-#include "core/meta/Meta.h"
+-
+-
+ class SimilarArtistsAction : public GlobalCollectionArtistAction
+ {
+     Q_OBJECT
+diff --git a/src/services/lastfm/biases/LastFmBias.cpp b/src/services/lastfm/biases/LastFmBias.cpp
+index b011b32..1840188 100644
+--- a/src/services/lastfm/biases/LastFmBias.cpp
++++ b/src/services/lastfm/biases/LastFmBias.cpp
+@@ -18,25 +18,16 @@
+ 
+ #include "core/support/Debug.h"
+ 
+-#include "TrackSet.h"
+-#include "DynamicBiasWidgets.h"
+-
+ #include <QDomDocument>
+ #include <QDomNode>
+-#include <QDomElement>
+ 
+ #include <QXmlStreamReader>
+-#include <QXmlStreamWriter>
+ #include <QTimer>
+ 
+-#include "core/meta/Meta.h"
+-#include "core/collections/Collection.h"
+-#include "core/collections/QueryMaker.h"
+ #include "core-impl/collections/support/CollectionManager.h"
+ 
+-#include "lastfm/Artist"
+-#include "lastfm/ws.h"
+-#include "lastfm/XmlQuery"
++#include <lastfm/Artist.h>
++#include <lastfm/ws.h>
+ 
+ #include <QLabel>
+ #include <QComboBox>
+diff --git a/src/services/lastfm/biases/LastFmBias.h b/src/services/lastfm/biases/LastFmBias.h
+index d798d69..5fc08e0 100644
+--- a/src/services/lastfm/biases/LastFmBias.h
++++ b/src/services/lastfm/biases/LastFmBias.h
+@@ -18,14 +18,12 @@
+ #ifndef LASTFM_BIAS_H
+ #define LASTFM_BIAS_H
+ 
+-#include "dynamic/Bias.h"
+-#include "dynamic/BiasFactory.h"
+ #include "dynamic/biases/TagMatchBias.h"
+ 
+ #include <QMutex>
+-#include <QNetworkReply>
+ 
+ class KJob;
++class QNetworkReply;
+ 
+ namespace Dynamic
+ {
+diff --git a/src/services/lastfm/biases/WeeklyTopBias.cpp b/src/services/lastfm/biases/WeeklyTopBias.cpp
+index df6dd66..266013d 100644
+--- a/src/services/lastfm/biases/WeeklyTopBias.cpp
++++ b/src/services/lastfm/biases/WeeklyTopBias.cpp
+@@ -25,18 +25,11 @@
+ #include <QDomDocument>
+ #include <QDomNode>
+ #include <QDomElement>
+-
+ #include <QXmlStreamReader>
+-#include <QXmlStreamWriter>
+ 
+-#include "core/meta/Meta.h"
+-#include "core/collections/Collection.h"
+-#include "core/collections/QueryMaker.h"
+ #include "core-impl/collections/support/CollectionManager.h"
+ 
+-#include "lastfm/Artist"
+-#include "lastfm/ws.h"
+-#include "lastfm/XmlQuery"
++#include <lastfm/XmlQuery.h>
+ 
+ #include <QNetworkReply>
+ 
+@@ -371,10 +364,9 @@ Dynamic::WeeklyTopBias::weeklyArtistQueryFinished()
+     }
+ 
+ 
+-    try
++    lastfm::XmlQuery lfm;
++    if( lfm.parse( reply->readAll() ) )
+     {
+-        lastfm::XmlQuery lfm( reply->readAll() );
+-
+         // debug() << "got response:" << lfm;
+         QStringList artists;
+         for( int i = 0; i < lfm[ "weeklyartistchart" ].children( "artist" ).size(); i++ )
+@@ -398,10 +390,10 @@ Dynamic::WeeklyTopBias::weeklyArtistQueryFinished()
+             warning() << "Got a reply for a week"<<week<<"that was not requested.";
+             return;
+         }
+-
+-    } catch( lastfm::ws::ParseError& e )
++    }
++    else
+     {
+-        debug() << "caught exception parsing weekly artist chart.";
++        debug() << "failed to parse weekly artist chart.";
+     }
+ 
+     reply->deleteLater();
+diff --git a/src/services/lastfm/biases/WeeklyTopBias.h b/src/services/lastfm/biases/WeeklyTopBias.h
+index bf5e631..56b6b8b 100644
+--- a/src/services/lastfm/biases/WeeklyTopBias.h
++++ b/src/services/lastfm/biases/WeeklyTopBias.h
+@@ -18,12 +18,8 @@
+ #ifndef WEEKLY_TOP_BIAS_H
+ #define WEEKLY_TOP_BIAS_H
+ 
+-#include "dynamic/Bias.h"
+-#include "dynamic/BiasFactory.h"
+ #include "dynamic/biases/TagMatchBias.h"
+ 
+-#include <QNetworkReply>
+-
+ class KJob;
+ class QNetworkReply;
+ 
+diff --git a/src/services/lastfm/meta/LastFmMeta.cpp b/src/services/lastfm/meta/LastFmMeta.cpp
+index d8f5284..6820c60 100644
+--- a/src/services/lastfm/meta/LastFmMeta.cpp
++++ b/src/services/lastfm/meta/LastFmMeta.cpp
+@@ -23,26 +23,13 @@
+ #include "LastFmCapabilityImpl_p.moc"
+ #include "MultiPlayableCapabilityImpl_p.h"
+ #include "MultiPlayableCapabilityImpl_p.moc"
+-#include "ServiceCapabilities.h"
+ 
+-#include "LastFmService.h"
+ #include "LastFmStreamInfoCapability.h"
+-#include "ScrobblerAdapter.h"
+ 
+ #include "EngineController.h"
+-#include "core/support/Debug.h"
+-#include "core/capabilities/ActionsCapability.h"
+ 
+-#include <KLocale>
+-#include <KSharedPtr>
+-#include <KStandardDirs>
+ #include <Solid/Networking>
+ 
+-#include <QWeakPointer>
+-#include <QUrl>
+-
+-#include <lastfm/Track>
+-
+ namespace LastFm {
+ 
+ class LastFmArtist;
+@@ -451,8 +438,7 @@ Track::love()
+     DEBUG_BLOCK
+ 
+     debug() << "info:" << d->lastFmTrack.artist() << d->lastFmTrack.title();
+-    d->wsReply = lastfm::MutableTrack( d->lastFmTrack ).love();
+-    connect( d->wsReply, SIGNAL( finished() ), this, SLOT( slotWsReply() ) );
++    lastfm::MutableTrack( d->lastFmTrack ).love();
+ }
+ 
+ void
+@@ -477,9 +463,9 @@ void Track::slotResultReady()
+ {
+     if( d->trackFetch->error() == QNetworkReply::NoError )
+     {
+-        try
++        lastfm::XmlQuery lfm;
++        if( lfm.parse( d->trackFetch->readAll() ) )
+         {
+-            lastfm::XmlQuery lfm( d->trackFetch->readAll() );
+             QString id = lfm[ "track" ][ "id" ].text();
+             QString streamable = lfm[ "track" ][ "streamable" ].text();
+             if( streamable.toInt() == 1 )
+@@ -487,9 +473,10 @@ void Track::slotResultReady()
+             else
+                 init();
+ 
+-        } catch( lastfm::ws::ParseError& e )
++        }
++        else
+         {
+-            debug() << "Got exception in parsing from last.fm:" << e.what();
++            debug() << "Got exception in parsing from last.fm:" << lfm.parseError().message();
+         }
+     } else
+     {
+diff --git a/src/services/lastfm/meta/LastFmMeta.h b/src/services/lastfm/meta/LastFmMeta.h
+index f7b93c1..8c6702c 100644
+--- a/src/services/lastfm/meta/LastFmMeta.h
++++ b/src/services/lastfm/meta/LastFmMeta.h
+@@ -23,13 +23,10 @@
+ #include "core/capabilities/Capability.h"
+ #include "ServiceMetaBase.h" // for the SourceInfoProvider
+ 
+-
+-#include <lastfm/Track>
+-
+-
+-#include <QObject>
+-
+-class WsReply;
++namespace lastfm
++{
++class Track;
++}
+ 
+ namespace LastFm
+ {
+diff --git a/src/services/lastfm/meta/LastFmMeta_p.h b/src/services/lastfm/meta/LastFmMeta_p.h
+index c2d88ac..63d5ce0 100644
+--- a/src/services/lastfm/meta/LastFmMeta_p.h
++++ b/src/services/lastfm/meta/LastFmMeta_p.h
+@@ -26,10 +26,10 @@
+ #include "core/statistics/StatisticsProvider.h"
+ #include "core-impl/statistics/providers/tag/TagStatisticsProvider.h"
+ 
+-#include <lastfm/Track>
++#include <lastfm/Track.h>
+ #include <lastfm/ws.h>
+-#include <lastfm/RadioTuner>
+-#include <lastfm/XmlQuery>
++#include <lastfm/RadioTuner.h>
++#include <lastfm/XmlQuery.h>
+ 
+ #include <kio/job.h>
+ #include <kio/jobclasses.h>
+@@ -144,9 +144,9 @@ class Track::Private : public QObject
+                 return;
+             if( m_userFetch->error() == QNetworkReply::NoError )
+             {
+-                try
++                lastfm::XmlQuery lfm;
++                if( lfm.parse( m_userFetch->readAll() ) )
+                 {
+-                    lastfm::XmlQuery lfm( m_userFetch->readAll() );
+                     albumUrl = lfm[ "track" ][ "album" ][ "url" ].text();
+                     trackUrl = lfm[ "track" ][ "url" ].text();
+                     artistUrl = lfm[ "track" ][ "artist" ][ "url" ].text();
+@@ -160,10 +160,11 @@ class Track::Private : public QObject
+                         KIO::Job* job = KIO::storedGet( KUrl( imageUrl ), KIO::Reload, KIO::HideProgressInfo );
+                         connect( job, SIGNAL( result( KJob* ) ), this, SLOT( fetchImageFinished( KJob* ) ) );
+                     }
+-
+-                } catch( lastfm::ws::ParseError& e )
++                }
++                else
+                 {
+-                    debug() << "Got exception in parsing from last.fm:" << e.what();
++                    debug() << "Got exception in parsing from last.fm:" << lfm.parseError().message();
++                    return;
+                 }
+             }
+ 
+diff --git a/src/services/lastfm/meta/MultiPlayableCapabilityImpl_p.h b/src/services/lastfm/meta/MultiPlayableCapabilityImpl_p.h
+index 1c464cc..e9b6327 100644
+--- a/src/services/lastfm/meta/MultiPlayableCapabilityImpl_p.h
++++ b/src/services/lastfm/meta/MultiPlayableCapabilityImpl_p.h
+@@ -25,8 +25,9 @@
+ #include "core/meta/Meta.h"
+ #include "core/capabilities/MultiPlayableCapability.h"
+ 
+-#include <lastfm/Track>
+-#include <lastfm/RadioTuner>
++#include <lastfm/Track.h>
++#include <lastfm/RadioStation.h>
++#include <lastfm/RadioTuner.h>
+ #include <lastfm/ws.h>
+ 
+ #include <KLocale>
+@@ -55,24 +56,23 @@ class MultiPlayableCapabilityImpl : public Capabilities::MultiPlayableCapability
+         {
+             DEBUG_BLOCK
+             m_tuner = new lastfm::RadioTuner( lastfm::RadioStation( m_track->uidUrl() ) );
+-            
++
+             connect( m_tuner, SIGNAL( trackAvailable() ), this, SLOT( slotNewTrackAvailable() ) );
+-            connect( m_tuner, SIGNAL( error( lastfm::ws::Error ) ), this, SLOT( error( lastfm::ws::Error ) ) );
++            connect( m_tuner, SIGNAL( error(lastfm::ws::Error,QString) ), this, SLOT( error( lastfm::ws::Error ) ) );
+         }
+-        
++
+         virtual void fetchNext()
+         {
+             DEBUG_BLOCK
+             m_currentTrack = m_tuner->takeNextTrack();
+             m_track->setTrackInfo( m_currentTrack );
+-
+         }
+-        
++
+         using Observer::metadataChanged;
+         virtual void metadataChanged( Meta::TrackPtr track )
+         {
+             const LastFm::TrackPtr ltrack = LastFm::TrackPtr::dynamicCast( track );
+-            
++
+             if( ltrack.isNull() )
+                 return;
+ 
+@@ -94,7 +94,7 @@ class MultiPlayableCapabilityImpl : public Capabilities::MultiPlayableCapability
+                 m_track->setTrackInfo( m_currentTrack );
+             }
+         }
+-        
++
+         virtual void skip()
+         {
+             fetchNext();
+

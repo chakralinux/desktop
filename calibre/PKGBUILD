@@ -5,7 +5,7 @@
 # contributor: Fabian Kosmale <0inkane@googlemail.com>
 
 pkgname=calibre
-pkgver=0.8.63
+pkgver=0.8.64
 pkgrel=1
 pkgdesc="Ebook management application"
 arch=('i686' 'x86_64')
@@ -42,7 +42,7 @@ package() {
 
   patch -p1 -i "${srcdir}/desktop_integration.patch"
 
-  # More on desktop integration (e.g. enforce chakra defaults)
+  # More on desktop integration (e.g. enforce Chakra defaults)
   sed -i -e "/self.create_uninstaller()/,/os.rmdir(config_dir)/d" \
       -e "s|self.opts.staging_sharedir, 'man/man1'|self.opts.staging_root, 'usr/share/man/man1'|" \
       -e "s|manpath, prog+'.1'+__appname__+'.bz2'|manpath, prog+'.1'+'.bz2'|" \
