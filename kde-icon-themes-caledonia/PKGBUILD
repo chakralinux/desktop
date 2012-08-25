@@ -1,0 +1,20 @@
+pkgname=kde-icon-themes-caledonia
+pkgver=1.0
+pkgrel=1
+pkgdesc="Icon theme for Caledonia."
+arch=('any')
+url='http://malcer.deviantart.com/'
+license=('CC-BY-SA')
+groups=('caledonia')
+depends=('kde-workspace')
+conflicts=('caledonia-bundle')
+provides=('caledonia-bundle')
+source=('http://switch.dl.sourceforge.net/project/caledonia/Caledonia%20Icons/Caledonia-Icons.tar.gz')
+md5sums=('9a1daef4d47c85f5bf22d0ed0c524d3a')
+
+package() {
+  mkdir -p $pkgdir/usr/share/icons/Caledonia
+  chmod 755 -R $pkgdir/usr/share/icons/Caledonia
+  cd ${srcdir}/Caledonia-Icons
+  cp -rf * $pkgdir/usr/share/icons/Caledonia
+}
