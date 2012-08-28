@@ -5,9 +5,9 @@
 
 pkgname=usb-modeswitch
 _pkgname=usb_modeswitch
-pkgver=1.1.9
-pkgrel=2
-_pkgdata=20110805
+pkgver=1.2.4
+pkgrel=1
+_pkgdata=20120815
 pkgdesc="Activating switchable USB devices on Linux."
 arch=('i686' 'x86_64')
 url="http://www.draisberghof.de/usb_modeswitch/"
@@ -20,34 +20,28 @@ categories=('system')
 backup=("etc/$_pkgname.conf")
 source=("http://www.draisberghof.de/$_pkgname/$pkgname-$pkgver.tar.bz2"
 	"http://www.draisberghof.de/$_pkgname/$pkgname-data-$_pkgdata.tar.bz2"
-        "http://www.draisberghof.de/$_pkgname/device_reference.txt")
-md5sums=('76f6978f18cac41f269a346a5d0f1052'
-         '0ed8a28f8efd3177a128ecd46fc8bf9f'
-	 'e8e39e52e3cf7a38e483e7a80d382927')
+	"usb-modeswitch-${pkgver}-device_reference.txt::http://www.draisberghof.de/$_pkgname/device_reference.txt")
+md5sums=('dbd4ce7966d7b4a5a0604a8280f7164d'
+         '12d7de3210e45ad6f48791d12bbdbf61'
+         '3588e76bf08f6c9ed51a1de4d086795e')
 
-build() {  
-  cd $srcdir/$pkgname-$pkgver
-  install -d $pkgdir/lib/udev/$_pkgname
-  install -d $pkgdir/etc
-  install -d $pkgdir/usr/share/man/man1
-
+build() {
+  cd $srcdir/usb-modeswitch-$pkgver/
   make clean
   make
 }
 
 package() {
-  cd $srcdir/$pkgname-$pkgver
+  cd $srcdir/usb-modeswitch-$pkgver/
 
-  # Bin Installation.
-  make DESTDIR=$pkgdir install
+  mkdir -p $pkgdir/usr/lib/udev
+  mkdir -p $pkgdir/etc
+  mkdir -p $pkgdir/usr/share/man/man1
 
-  # Adjustments.
-  mv $pkgdir/lib/udev/$_pkgname/$_pkgname.sh $pkgdir/lib/udev/$_pkgname.sh
-  rmdir $pkgdir/lib/udev/$_pkgname
-  mv $pkgdir/lib/udev/$_pkgname.sh $pkgdir/lib/udev/$_pkgname
-  cp $srcdir/device_reference.txt $pkgdir/etc/$_pkgname.setup
+  make DESTDIR=${pkgdir} UDEVDIR=${pkgdir}/usr/lib/udev install
 
-  # Data Installation.
-  cd $srcdir/$pkgname-data-$_pkgdata
-  make DESTDIR=$pkgdir install
+  cp $srcdir/usb-modeswitch-${pkgver}-device_reference.txt $pkgdir/etc/usb_modeswitch.setup
+
+  cd $srcdir/usb-modeswitch-data-${_pkgdata}
+  make DESTDIR=$pkgdir install RULESDIR=${pkgdir}/usr/lib/udev/rules.d
 }
