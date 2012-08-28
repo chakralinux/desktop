@@ -1,0 +1,38 @@
+#
+# Akabei Packages for Chakra, part of chakra-project.org
+#
+# maintainer: Lukas Appelhans
+
+# original name (used for the source and pkgnames)
+
+pkgname=('akabei')
+
+pkgver=0.1alpha1
+pkgrel=1
+epoch=1
+pkgdesc='The package manager of The Chakra Project'
+arch=('i686' 'x86_64')
+url='http://gitorious.org/chakra/akabei'
+license=('LGPL')
+
+depends=('qt' 'akabeicore' 'akabeiclient' 'kdelibs')
+
+source=("https://gitorious.org/chakra/akabei/archive-tarball/alpha1")
+
+md5sums=('8019a4215b128ce5934e1a3bc240394d')
+
+install=akabei.install
+
+build() {
+	cd ${srcdir}/chakra-akabei
+	mkdir -p build/
+	cd build/
+	cmake -DCMAKE_INSTALL_PREFIX=/usr ..
+	make
+}
+
+package_akabei() {
+	cd ${srcdir}/chakra-akabei/build
+	make DESTDIR=$pkgdir install 
+}
+
