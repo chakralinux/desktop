@@ -16,6 +16,7 @@ url='http://gitorious.org/chakra/akabei'
 license=('LGPL')
 
 depends=('qt' 'akabeicore' 'akabeiclient' 'kdelibs')
+makedepends=('automoc4')
 
 source=("https://gitorious.org/chakra/akabei/archive-tarball/alpha1")
 
@@ -31,7 +32,7 @@ build() {
 	make
 }
 
-package_akabei() {
+package() {
 	cd ${srcdir}/chakra-akabei/build
 	make DESTDIR=$pkgdir install 
 }
