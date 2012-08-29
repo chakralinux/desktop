@@ -22,11 +22,11 @@ pkgname=('libreoffice-common'
 	'libreoffice-extension-report-builder'
 	'libreoffice-scripting-javascript'
 	'libreoffice-extension-scripting-python')
-_LOver=3.6.0.4
-pkgver=3.6.0
-_pkgver=3.6.0
+_LOver=3.6.1.2
+pkgver=3.6.1
+_pkgver=3.6.1
 _HIver=3.6
-pkgrel=2
+pkgrel=1
 arch=('i686' 'x86_64')
 _OFFICEUPD="340"
 license=('LGPL3')
@@ -48,7 +48,7 @@ _additional_source_url="http://hg.services.openoffice.org/binaries"
 _additional_source_url="http://dev-www.libreoffice.org/src"
 source=(${_mirror}/${pkgbase}-{core,help,translations}-${_LOver}.tar.xz
 	${_additional_source_url}/18f577b374d60b3c760a3a3350407632-STLport-4.5.tar.gz
-	${_additional_source_url}/a9a1db27688bad49418667b434d29c1f-libvisio-0.0.18.tar.bz2
+	${_additional_source_url}/94e7f271e38c976462558b4278590178-libvisio-0.0.19.tar.bz2
 	${_additional_source_url}/1f24ab1d39f4a51faf22244c94a6203f-xmlsec1-1.2.14.tar.gz
 	${_additional_source_url}/35c94d2df8893241173de1d16b6034c0-swingExSrc.zip
 	${_additional_source_url}/798b2ffdc8bcfe7bca2cf92b62caf685-rhino1_5R5.zip
@@ -89,7 +89,7 @@ source=(${_mirror}/${pkgbase}-{core,help,translations}-${_LOver}.tar.xz
 	http://ooo.itc.hu/oxygenoffice/download/libreoffice/dbaafd21de055e582d92d7d32fe9da13-gdocs_2.3.1.oxt
 	http://ooo.itc.hu/oxygenoffice/download/libreoffice/b7b2d0e04e142f26dd96119c80757d1f-oooblogger_0.1.oxt
         buildfix.diff)
-	noextract=(a9a1db27688bad49418667b434d29c1f-libvisio-0.0.18.tar.bz2
+	noextract=(94e7f271e38c976462558b4278590178-libvisio-0.0.19.tar.bz2
 	18f577b374d60b3c760a3a3350407632-STLport-4.5.tar.gz
         185d60944ea767075d27247c3162b3bc-unowinreg.dll
 	b4cae0700aa1c2aef7eb7f345365e6f1-translate-toolkit-1.8.1.tar.bz2
@@ -311,11 +311,10 @@ package_libreoffice-common() {
  cd ${pkgdir}/usr/lib/libreoffice/share/psprint/
  ln -vsf /etc/libreoffice/psprint.conf .
 
- #fix 
- find ${pkgdir} -perm 444 -exec ls -lh {} \;
- find ${pkgdir} -perm 444 -exec chmod 644 {} \;
- find ${pkgdir} -perm 555 -exec ls -lh {} \;
- find ${pkgdir} -perm 555 -exec chmod 755 {} \;
+ # remove conflicting files
+ rm -f ${pkgdir}/usr/lib/libreoffice/program/classes/ScriptProviderForJavaScript.jar
+ rm -f ${pkgdir}/usr/lib/libreoffice/program/classes/js.jar
+ rm -f ${pkgdir}/usr/lib/libreoffice/program/services/scriptproviderforjavascript.rdb
 }
 
 package_libreoffice-base() {
@@ -457,7 +456,7 @@ package_libreoffice-kde4() {
 }
 
 package_libreoffice-math() {
- pkgdesc="Equation Editor Applicationfor LibreOffice."
+ pkgdesc="Equation Editor Application for LibreOffice."
  depends=('libreoffice-common' 'libreoffice-kde4')
  optdepends=()
  backup=()
