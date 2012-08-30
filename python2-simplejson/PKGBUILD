@@ -1,0 +1,29 @@
+#
+# Apps Packages for Chakra, part of chakra-project.org
+#
+# Maintainer: Adrian Chaves Fernandez (Gallaecio) <adriyetichaves@gmail.com>
+# Contributor: Giuseppe Calà <jiveaxe@gmail.com>
+
+pkgname=python2-simplejson
+_pkgname=simplejson
+pkgver=2.6.1
+pkgrel=1
+pkgdesc="Simple, fast, extensible JSON encoder/decoder for Python"
+license=('MIT')
+arch=('any')
+url="https://github.com/simplejson/simplejson"
+depends=('python2')
+makedepends=('python-distribute')
+replaces=(python-simplejson)
+provices=(python-simplejson)
+source=(http://pypi.python.org/packages/source/s/$_pkgname/$_pkgname-${pkgver}.tar.gz)
+md5sums=('03fbb6c4a4d37a767af7848f902e2ad4')
+
+package() {
+  cd ${srcdir}/$_pkgname-${pkgver}
+  python2 setup.py install --root=${pkgdir}
+
+  # License
+  install -Dm644 ${srcdir}/$_pkgname-${pkgver}/LICENSE.txt \
+    ${pkgdir}/usr/share/licenses/$pkgname/LICENSE
+}
