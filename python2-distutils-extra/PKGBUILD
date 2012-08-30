@@ -1,0 +1,25 @@
+#
+# Apps Packages for Chakra, part of chakra-project.org
+#
+# Maintainer: Adrian Chaves Fernandez (Gallaecio) <adriyetichaves@gmail.com>
+# Contributor: Giuseppe Calà <jiveaxe@gmail.com>
+
+pkgname=python2-distutils-extra
+_pkgname=python-distutils-extra
+pkgver=2.36
+pkgrel=1
+pkgdesc='Enhancements to the Python build system'
+arch=('any')
+license=('GPL')
+url=https://launchpad.net/python-distutils-extra
+depends=('intltool' 'python2')
+makedepends=('python-distribute')
+replaces=(python-distutils-extra)
+provides=(python-distutils-extra)
+source=(http://launchpad.net/$_pkgname/trunk/$pkgver/+download/$_pkgname-$pkgver.tar.gz)
+md5sums=('8e42b67947b80e27557b0fa66996b13e')
+
+build() {
+  cd "${srcdir}/$_pkgname-$pkgver"
+  python2 setup.py install --root="${pkgdir}"
+}
