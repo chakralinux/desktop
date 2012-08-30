@@ -14,18 +14,18 @@ pkgname=('kdeaccessibility-jovie')
 _pkgname="jovie"
 arch=('i686' 'x86_64')
 pkgver=${_kdever}
-pkgrel=3
+pkgrel=1
 pkgdesc="Text-to-speech system"
 url="http://www.kde.org"
 license=('GPL' 'LGPL' 'FDL')
-depends=("kde-runtime>=${_kdever}" "kdelibs>=${_kdever}" "speech-dispatcher>=0.6.7")
+depends=("kde-runtime>=${_kdever}" "kdelibs>=${_kdever}")
 conflicts=("kdeaccessibility-doc")
 replaces=("${pkgbase}-kttsd" "${pkgbase}-ksayit")
 provides=('jovie')
 install='kdeaccessibility.install'
 groups=("kdeaccessibility" "kde" "kde-uninstall" "kde-doc")
 options=('docs' '!splithdr' 'splitdbg' 'log')
-makedepends=('pkgconfig' 'cmake' 'automoc4' "kde-runtime>=${_kdever}" "kdelibs>=${_kdever}" 'docbook-xsl')
+makedepends=('pkgconfig' 'cmake' 'automoc4' "kde-runtime>=${_kdever}" "kdelibs>=${_kdever}" "speech-dispatcher>=0.6.7" 'docbook-xsl')
 categories=('accessibility')
 
 source=($_mirror/${_pkgname}-$_kdever.tar.xz)
@@ -43,7 +43,7 @@ build() {
 		-DCMAKE_SKIP_RPATH=ON \
 		-DCMAKE_{SHARED,MODULE,EXE}_LINKER_FLAGS='-Wl,--no-undefined -Wl,--as-needed'
 
-	make 
+	make || return 1
 }
 
 package() {
