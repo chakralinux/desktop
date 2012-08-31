@@ -5,23 +5,30 @@
 # maintainer (x86_64): Manuel Tortosa <manutortosa[at]chakra-project[dot]org>
 
 pkgname=synaptiks
-pkgver=0.8.0
-pkgrel=2
+pkgver=0.8.1
+pkgrel=1
 pkgdesc="A touchpad tool for KDE."
 arch=('i686' 'x86_64')
 url="http://synaptiks.lunaryorn.de/"
 license=('BSD')
 depends=('kdebindings-python' 'kde-workspace'
-  'xf86-input-synaptics' 'python-udev>=0.8' 'dbus-python' 'python-distribute')
-makedepends=('kdesdk-scripts' 'gettext' 'docbook-xsl')
+  'xf86-input-synaptics' 'python-udev' 'dbus-python' 'python-distribute')
+# makedepends=('kdesdk-scripts' 'gettext' 'docbook-xsl')
 categories=('utils')
-source=(http://pypi.python.org/packages/source/s/${pkgname}/${pkgname}-${pkgver}.tar.bz2)
-md5sums=('e733de797abb65f46a06006363a4755a')
-install=(synaptiks.install)
+install=synaptiks.install
+screenshot=(http://synaptiks.lunaryorn.de/en/0.8.1/_images/scrolling.png)
+source=("http://pypi.python.org/packages/source/s/${pkgname}/${pkgname}-${pkgver}.tar.bz2"
+        'pyudev-fix.patch')
+md5sums=('4137a5c7a6117cf8f2073bfdb05466d6'
+         '9a1c930ff2d8fad6e986270141c3fb0a')
 
-build() {
+package() {
  cd "${srcdir}/${pkgname}-${pkgver}"
- python2 setup.py install --root "${pkgdir}"
+
+ #Fix issue with bluetooth mouse: https://bugs.archlinux.org/task/31328
+ patch -p1 -i "${srcdir}"/pyudev-fix.patch
+
+ python2 setup.py install --root "${pkgdir}" --optimize=1
  install -m755 -d "$pkgdir/usr/share/licenses/synaptiks/"
  install -m644 COPYING "$pkgdir/usr/share/licenses/synaptiks"
  install -D -m644 README.rst "${pkgdir}/usr/share/doc/${pkgname}/README.rst"
