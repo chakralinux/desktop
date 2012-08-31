@@ -9,33 +9,35 @@
 # Contributor: Dave Pretty <david dot pretty at gmail dot com>
 
 pkgname=anki
-pkgver=1.2.9
-pkgrel=2
+pkgver=1.2.11
+pkgrel=1
 pkgdesc='Helps you remember facts (like words/phrases in a foreign language) efficiently.'
 url='http://ankisrs.net/'
 license=(GPL3)
 arch=('any')
+screenshot="http://ankisrs.net/shots/sync.png"
 depends=('beautiful-soup' 'pyqt' 'python-pysqlite' 'python-simplejson' 'python-sqlalchemy')
 optdepends=('python-matplotlib: show graphs.'
 	    'sox: audio recording.'
 	    'pyaudio: audio recording.')
 makedepends=('desktop-file-utils' 'setuptools')
-source=(http://anki.googlecode.com/files/$pkgname-$pkgver.tgz)
-md5sums=('3b32c40c589565ebd5b349f8e0d36967')
+source=("http://anki.googlecode.com/files/$pkgname-$pkgver.tgz")
+md5sums=('dcd43787bed2dbe63ffb6d153ee9dbe5')
 categories=('utils')
 
 package() {
-  cd $srcdir/$pkgname-$pkgver
+  cd "${srcdir}/${pkgname}-${pkgver}"
 
-  export PYTHONPATH=$srcdir/$pkgname-$pkgver/libanki
+  export PYTHONPATH="${srcdir}/${pkgname}-${pkgver}/libanki"
   
   (
     cd libanki \
-    && python2 setup.py install --root $pkgdir
+    && python2 setup.py install --root "${pkgdir}"
   )
-  python2 setup.py install --root $pkgdir
+  python2 setup.py install --root "${pkgdir}"
   
-  # Desktop integration.
-  desktop-file-install --dir $pkgdir/usr/share/applications $pkgname.desktop
-  install -D -m 644 icons/$pkgname.png $pkgdir/usr/share/pixmaps/$pkgname.png
+  # Desktop integration. KDE needs Qt in Categories
+  sed -i 's|Categories=Education;Languages;KDE;|Categories=Education;Languages;Qt;KDE;|' "${srcdir}/${pkgname}-${pkgver}/${pkgname}.desktop"
+  desktop-file-install --dir "${pkgdir}/usr/share/applications" ${pkgname}.desktop
+  install -D -m 644 icons/${pkgname}.png "${pkgdir}/usr/share/pixmaps/${pkgname}.png"
 }

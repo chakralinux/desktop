@@ -8,8 +8,8 @@
 pkgname=appmenu-qt
 appname=appmenu-qt
 pkgbranch=trunk
-pkgver=0.1.2
-pkgrel=2
+pkgver=0.2.6
+pkgrel=1
 pkgdesc="Application menu module for Qt"
 arch=('i686' 'x86_64')
 url="https://launchpad.net/appmenu-qt"
@@ -18,16 +18,16 @@ depends=('libdbusmenu-qt')
 makedepends=('cmake' 'automoc4')
 provides=('appmenu-qt')
 conflicts=('appmenu-qt-bzr')
-source=(http://launchpad.net/${appname}/${pkgbranch}/${pkgver}/+download/${appname}-${pkgver}.tar.bz2)
-sha1sums=('07939d653a036b6676c624a94d53ca327bc3415f')
+source=("http://launchpad.net/${appname}/${pkgbranch}/${pkgver}/+download/${appname}-${pkgver}.tar.bz2")
+sha1sums=('e600d389b85c941e2c891e5123968f1ffaa666d0')
 
- build() {
+build() {
     cd "${srcdir}/${appname}-${pkgver}"
     cmake . -DCMAKE_INSTALL_PREFIX=`kde4-config --prefix`
     make
 }
 
- package() {
+package() {
     cd "${srcdir}/${appname}-${pkgver}"
     make DESTDIR="${pkgdir}" install
 }
