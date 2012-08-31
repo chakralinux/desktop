@@ -6,8 +6,9 @@
 
 pkgname=python2-dateutil
 _pkgname=python-dateutil
-pkgver=2.1
+pkgver=1.5
 pkgrel=1
+epoch=1
 pkgdesc="Provides powerful extensions to the standard datetime module"
 arch=('any')
 license=('PYTHON')
@@ -17,9 +18,9 @@ makedepends=('setuptools')
 provides=(python-dateutil)
 replaces=(python-dateutil)
 source=(http://pypi.python.org/packages/source/p/$_pkgname/$_pkgname-$pkgver.tar.gz)
-md5sums=('1534bb15cf311f07afaa3aacba1c028b')
+md5sums=('0dcb1de5e5cad69490a3b6ab63f0cfa5')
 
-build() {
+package() {
     cd $srcdir/$_pkgname-$pkgver
     python2 setup.py install --root=$pkgdir
     install -Dm644 LICENSE \
