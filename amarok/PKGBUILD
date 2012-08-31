@@ -1,47 +1,45 @@
 #
 # Apps Packages for Chakra, part of chakra-project.org
 #
-# maintainer abveritas@chakra-project.org
+# maintainer (x86_64): Martín González <koteccr[at]gmail[dot]com>
 
 pkgname=amarok
 replaces=('amarok-base' 'amarok-engine-xine' 'amarok-base-mysqlfree')
-pkgver=2.5.0
-pkgrel=8
+pkgver=2.6.0
+pkgrel=2
 pkgdesc="A media player for KDE"
 arch=("i686" "x86_64")
 url="http://amarok.kde.org"
+screenshot="http://amarok.kde.org/files/Amarok-2.6-InDulciJubilo-screenie4.png"
 license=('GPL2' 'LGPL2' 'FDL')
-depends=('kde-runtime' 'mysql' 'qtscriptgenerator' 'taglib-extras' 'ffmpeg' 'libofa' 'qjson' 'loudmouth' 'liblastfm')
+depends=('kde-runtime' 'mysql' 'qtscriptgenerator' 'taglib-extras' 'liblastfm' 'ffmpeg' 'libofa' 'qjson' 'loudmouth')
 makedepends=('pkgconfig' 'automoc4' 'cmake' 'libgpod' 'libmtp' 'loudmouth' 'docbook-xsl' 'libmygpo-qt' )
 optdepends=("libgpod: support Apple iPod audio devices"
             "libmtp: support for portable media devices"
-            "libmygpo-qt: support for gpodder.net"  )
+            "libmygpo-qt: support for gpodder.net"
+	    "ifuse: support for Apple iPod Touch and iPhone")
 categories=('multimedia')
 install="${pkgname}.install"
-source=("http://mirrors.mit.edu/kde/stable/${pkgname}/${pkgver}/src/${pkgname}-${pkgver}.tar.bz2"
-        'toolbarfix.patch'
-        'liblastfm.patch')
-md5sums=('b7983eaa33e4771769ae9e330c811995'
-         '135ceaaf24cf9e332eb4f714700da7ee'
-         '89d661fdbc419e152f2576a725326483')
+source=("http://mirrors.mit.edu/kde/stable/${pkgname}/${pkgver}/src/${pkgname}-${pkgver}.tar.bz2")
+#	"liblastfm.patch")
+md5sums=('116f53c1109c7acd1ac7d78ec75c01c4')
+#         '6e0894b4598207d4849c053bfd0f1316')
 
 build() {
-  cd "${srcdir}"
+  cd "${srcdir}/${pkgname}-${pkgver}"
 
-  #Patch to add the toolbar not showing well, should be removed in newer versions.
-  patch -p0 -i "${srcdir}"/toolbarfix.patch
   #Patch to use liblastfm-1
-  patch -p1 -i "${srcdir}"/liblastfm.patch
+#  patch -p1 -i "$srcdir/liblastfm.patch"
 
   mkdir build
   cd build
-  cmake "../${pkgname}-${pkgver}" \
-    -DCMAKE_BUILD_TYPE=debugfull \
-    -DCMAKE_INSTALL_PREFIX=/usr  
+  cmake .. \
+    -DCMAKE_BUILD_TYPE=Release \
+    -DCMAKE_INSTALL_PREFIX=/usr
   make
 }
 
 package(){
-  cd "${srcdir}/build"
+  cd "${srcdir}/${pkgname}-${pkgver}/build"
   make DESTDIR="${pkgdir}" install
 }
