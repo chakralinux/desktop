@@ -7,7 +7,7 @@
 pkgname=icedtea-web
 pkgdesc="Provides a Free Software web browser plugin running applets written in the Java programming language and an implementation of Java Web Start, originally based on the NetX project."
 pkgver=1.2.1
-pkgrel=2
+pkgrel=3
 arch=('i686' 'x86_64')
 url="http://icedtea.classpath.org/wiki/IcedTea-Web"
 license=('GPL2')
@@ -51,8 +51,7 @@ check() {
   cd "${srcdir}/build"
   # as more tests have been added some are expectged to fail
   # see http://mail.openjdk.java.net/pipermail/distro-pkg-dev/2012-March/017566.html
-  make -k check
-  return 0
+  make -k check || return 0
 }
 
 package() {
