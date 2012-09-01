@@ -1,0 +1,28 @@
+#
+# Apps Packages for Chakra, part of chakra-project.org
+#
+# Maintainer: Adrian Chaves Fernandez (Gallaecio) <adriyetichaves@gmail.com>
+# Contributor (x86_64): Giuseppe Calà <jiveaxe@gmail.com>
+
+pkgname=python2-dateutil
+_pkgname=python-dateutil
+pkgver=1.5
+pkgrel=1
+epoch=1
+pkgdesc="Provides powerful extensions to the standard datetime module"
+arch=('any')
+license=('PYTHON')
+url="http://labix.org/python-dateutil"
+depends=('python2' 'python2-six')
+makedepends=('setuptools')
+provides=(python-dateutil)
+replaces=(python-dateutil)
+source=(http://pypi.python.org/packages/source/p/$_pkgname/$_pkgname-$pkgver.tar.gz)
+md5sums=('0dcb1de5e5cad69490a3b6ab63f0cfa5')
+
+package() {
+    cd $srcdir/$_pkgname-$pkgver
+    python2 setup.py install --root=$pkgdir
+    install -Dm644 LICENSE \
+      $pkgdir/usr/share/licenses/$pkgname/LICENSE
+}

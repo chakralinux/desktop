@@ -1,0 +1,19 @@
+pkgname=kde-kdm-themes-caledonia
+pkgver=1.0
+pkgrel=2
+pkgdesc="KDM theme for Caledonia."
+arch=('any')
+url='http://malcer.deviantart.com/'
+license=('CC-BY-SA')
+groups=('caledonia')
+depends=('kde-workspace')
+conflicts=('caledonia-bundle')
+source=('http://kde-look.org/CONTENT/content-files/143130-Caledonia-KDM.tar.gz')
+md5sums=('8dad3b0299bcc9029fdb3081f1c83826')
+
+package() {
+  mkdir -p $pkgdir/usr/share/apps/kdm/themes/caledonia
+  chmod 755 -R $pkgdir/usr/share/apps/kdm/themes
+  cd ${srcdir}/Caledonia-KDM
+  cp -rf * $pkgdir/usr/share/apps/kdm/themes/caledonia
+}

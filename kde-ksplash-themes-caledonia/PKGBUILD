@@ -1,0 +1,19 @@
+pkgname=kde-ksplash-themes-caledonia
+pkgver=1.0
+pkgrel=2
+pkgdesc="KSplash theme for Caledonia."
+arch=('any')
+url='http://malcer.deviantart.com/'
+license=('CC-BY-SA')
+groups=('caledonia')
+depends=('kde-workspace')
+conflicts=('caledonia-bundle')
+source=('http://kde-look.org/CONTENT/content-files/143576-Caledonia-KSplash.tar.gz')
+md5sums=('07462ebf696ffbfc44a8e29bc9eeab5f')
+
+package() {
+  mkdir -p $pkgdir/usr/share/apps/ksplash/Themes/caledonia
+  chmod 755 -R $pkgdir/usr/share/apps/ksplash/Themes
+  cd ${srcdir}/Caledonia-KSplash
+  cp -rf * $pkgdir/usr/share/apps/ksplash/Themes/caledonia
+}

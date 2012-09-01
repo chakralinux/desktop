@@ -5,25 +5,26 @@
 # contributor: Fabian Kosmale <0inkane@googlemail.com>
 
 pkgname=calibre
-pkgver=0.8.63
-pkgrel=1
+pkgver=0.8.66
+pkgrel=2
 pkgdesc="Ebook management application"
 arch=('i686' 'x86_64')
 url="http://calibre.kovidgoyal.net/"
 license=('GPL3')
 depends=('python2' 'python-imaging' 'libusb' 'pyqt' 'python-mechanize'
          'imagemagick' 'dbus-python' 'python-lxml' 'beautiful-soup' 'python-dateutil'
-         'python-cssutils' 'desktop-file-utils' 'python-dnspython'
-         'podofo>=0.8.1-6' 'xdg-utils' 'cherrypy' 'python-pypdf' 'unrar' 'chmlib' 'poppler' 'poppler-qt' 'icu' 'libwmf' 'libffi')
+         'python-cssutils' 'desktop-file-utils' 'python-dnspython' 'libmtp'
+         'podofo' 'xdg-utils' 'cherrypy' 'python-pypdf' 'unrar' 'chmlib' 'poppler'
+         'poppler-qt' 'icu' 'libwmf' 'libffi' 'python2-six')
 makedepends=('python-pycountry')
 optdepends=('ipython: to use calibre-debug')
 screenshot=('https://lh5.googleusercontent.com/_lG58t3XWd3c/TcNwiXkAx_I/AAAAAAAAAEc/M34I4uY9UUY/s800/gui.jpeg')
 install=calibre.install
 source=("http://calibre-ebook.googlecode.com/files/${pkgname}-${pkgver}.tar.xz"
         'desktop_integration.patch')
-md5sums=('a92898f51b1acf731fac7cb5626b9c4b'
+md5sums=('a5368b0af1dccda57a196024c638b60d'
          '049558ae8372a011aee43e873171fbf2')
-         
+
 build() {
   cd "${srcdir}/${pkgname}"
 
@@ -42,7 +43,7 @@ package() {
 
   patch -p1 -i "${srcdir}/desktop_integration.patch"
 
-  # More on desktop integration (e.g. enforce chakra defaults)
+  # More on desktop integration (e.g. enforce Chakra defaults)
   sed -i -e "/self.create_uninstaller()/,/os.rmdir(config_dir)/d" \
       -e "s|self.opts.staging_sharedir, 'man/man1'|self.opts.staging_root, 'usr/share/man/man1'|" \
       -e "s|manpath, prog+'.1'+__appname__+'.bz2'|manpath, prog+'.1'+'.bz2'|" \

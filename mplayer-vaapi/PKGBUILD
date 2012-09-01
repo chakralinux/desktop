@@ -4,8 +4,8 @@
 # contributor (x86_64): Giuseppe Calà <jiveaxe@gmail.com>
 
 pkgname=mplayer-vaapi
-pkgver=34578
-pkgrel=2
+pkgver=35107
+pkgrel=1
 pkgdesc="A movie player, compiled with vaapi support"
 arch=('i686' 'x86_64')
 url="http://gitorious.org/vaapi/mplayer"
@@ -16,7 +16,7 @@ depends=('libxxf86dga' 'libxxf86vm' 'libmad' 'libcdio' 'libxinerama' 'sdl'
          'lirc-utils' 'ttf-dejavu' 'libxvmc' 'enca' 'opencore-amr' 'libdca'
          'a52dec' 'schroedinger' 'mpg123' 'libvpx' 'libpulse' 'fribidi' 'faad2'
          'libva' 'desktop-file-utils')
-optdepends('libva-driver-intel: video acceleration for Intel graphic cards')
+optdepends=('libva-driver-intel: video acceleration for Intel graphic cards')
 makedepends=('unzip' 'live-media' 'yasm' 'ladspa' 'git')
 provides=("mplayer=$pkgver")
 conflicts=('mplayer')
@@ -24,21 +24,16 @@ backup=('etc/mplayer/codecs.conf' 'etc/mplayer/input.conf')
 categories=('multimedia')
 
 source=(http://pkgbuild.com/~foutrelis/mplayer-vaapi-$pkgver.tar.xz
-        tweak-desktop-file.patch
-        mplayer.png
-        live-media.patch)
+        tweak-desktop-file.patch)
 options=('!buildflags' '!emptydirs')
 install=mplayer-vaapi.install
-sha256sums=('cc35a057c8a64d2cdec2dc0a037811ef0f91dd03cd3d07465c7272a08665a37d'
-            '5b39f0a61969bf330c4434cb17975101be93c27334f65e154e4a93033033e795'
-            '061739a8cc267748ad58f168034cc39785d949a5262772535e1b347c7842af48'
-            '9c1400f27dd2ea54c125c66ed1af0eab19761b1b2ae808fa491cd3732fd8a685')
+sha256sums=('a6c645625cc2cd6ca48764db302c926049f831e757857ece351b37b674e05e56'
+            '5a09fb462729a4e573568f9e8c1f57dbe7f69c0b68cfa4f6d70b3e52c450d93b')
 
 build() {
   cd "$srcdir/mplayer-vaapi-$pkgver"
 
   patch -d etc -Np0 -i "$srcdir/tweak-desktop-file.patch"
-  patch -Np0 -i "$srcdir/live-media.patch"
 
   ./configure --prefix=/usr \
     --enable-runtime-cpudetection \
@@ -52,7 +47,10 @@ build() {
     --disable-musepack \
     --disable-esd \
     --disable-mga \
+    --disable-ass-internal \
     --enable-xvmc \
+    --enable-radio \
+    --enable-radio-capture \
     --disable-vdpau \
     --enable-vaapi \
     --language=all \
@@ -72,5 +70,5 @@ package() {
   install -d "$pkgdir/usr/share/mplayer/"
   ln -s /usr/share/fonts/TTF/DejaVuSans.ttf "$pkgdir/usr/share/mplayer/subfont.ttf"
   rm -rf "$pkgdir/usr/share/mplayer/font"
-  install -Dm644 "$srcdir/mplayer.png" "$pkgdir/usr/share/pixmaps/mplayer.png"
+  install -Dm644 etc/mplayer256x256.png "$pkgdir/usr/share/pixmaps/mplayer.png"
 }
