@@ -1,0 +1,28 @@
+#
+# Apps Packages for Chakra, part of chakra-project.org
+#
+# maintainer: george [at] chakra-project <dot> org
+
+pkgname=python2-netifaces
+_pkgname=netifaces
+pkgver=0.8
+pkgrel=1
+pkgdesc='Portable module to access network interface information in Python.'
+depends=('python2')
+makedepends=('python-distribute')
+arch=('i686' 'x86_64')
+url='http://alastairs-place.net/netifaces/'
+license=('MIT')
+provides=('netifaces' 'python-netifaces')
+source=("http://alastairs-place.net/projects/netifaces/netifaces-${pkgver}.tar.gz")
+md5sums=('e57e5983f4c286fac5f8068fbfc5c873')
+
+package() {
+	cd "${srcdir}/${_pkgname}-${pkgver}"
+
+	python2 setup.py install --root "${pkgdir}" || return 1
+ 
+	# Install license, that is inside the readme file
+	install -m755 -d "${pkgdir}/usr/share/licenses/${pkgname}"
+ 	install -m644 README "${pkgdir}/usr/share/licenses/${pkgname}/README"
+}
