@@ -4,31 +4,25 @@
 # Maintainer: Adrián Chaves Fernández (Gallaecio) <adriyetichaves gmail.com>
 
 pkgname=redeclipse
-pkgver=1.2
-pkgrel=3
-pkgdesc='A first-person shooter, built as a total conversion of Cube Engine 2.'
+pkgver=1.3
+pkgrel=1
+pkgdesc='A first-person shooter, built as a total conversion of Cube Engine 2'
 arch=(i686 x86_64)
 url=http://redeclipse.net
 license=(CCPL-by-sa ZLIB)
 depends=(enet libgl mesa sdl sdl_image sdl_mixer zlib hicolor-icon-theme)
-makedepends=('mesa' 'gzip' 'imagemagick')
+makedepends=('mesa' 'gzip')
 categories=('games')
-source=(http://downloads.sourceforge.net/$pkgname/${pkgname}_${pkgver}_linux_bsd.tar.bz2
-        system-libs.diff
-        no-x128-icon-since-old-imagemagick.diff
-        security-text-command-fix.patch)
-md5sums=('e133361f79be01782bf0bbc4c5a01236'
-         'f34900e6c8247754800d8fba0600dfb7'
-         'd6c0c52a0e217e21f8951426fe40db18'
-         '89253e190972021c9e89b75d91ee408b')
+source=(http://downloads.sourceforge.net/$pkgname/${pkgname}_${pkgver}_nix_bsd.tar.bz2
+        system-libs.diff)
+md5sums=('ef11041eb9ef49c9a4b278ccfd544fe4'
+         '06757915ad76d693b38852fb4f9d1a11')
 
 build() {
   cd "$srcdir/$pkgname/src"
 
   # Patches.
-  patch -uN Makefile $srcdir/system-libs.diff
-  patch -uN system-install.mk $srcdir/no-x128-icon-since-old-imagemagick.diff
-  patch -uN engine/textedit.h $srcdir/security-text-command-fix.patch
+  patch -uN Makefile $srcdir/system-libs.diff # System enet.
 
   # Compilation.
   make
@@ -39,6 +33,5 @@ package() {
   make -C src/ DESTDIR="$pkgdir" prefix=/usr system-install
 
   # License.
-  install -Dm644 license.txt "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
-  install -Dm644 trademark.txt "$pkgdir/usr/share/licenses/$pkgname/TRADEMARK"
+  install -Dm644 doc/all-licenses.txt "$pkgdir/usr/share/licenses/$pkgname/license.txt"
 }
