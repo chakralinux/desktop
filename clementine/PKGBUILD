@@ -6,11 +6,13 @@
 
 pkgname=clementine
 pkgver=1.0.1.1
-pkgrel=1
+pkgrel=2
 pkgdesc="A modern music player and library organiser and a port of Amarok 1.4, with some features rewritten to take advantage of Qt4."
 url="http://www.clementine-player.org/"
+screenshot="http://images.clementine-player.org/screenshots/clementine-1.0-3.png"
 license="GPL"
 arch=('i686' 'x86_64')
+install="${pkgname}.install"
 depends=('gstreamer0.10' 'taglib' 'glew' 'liblastfm' 'libgpod' 'libmtp' 'libplist' 'hicolor-icon-theme' 'qt' 'libimobiledevice' 'qjson' 'glew' 'protobuf')
 makedepends=('cmake' 'boost' 'gdk-pixbuf2')
 optdepends=('gstreamer0.10-base-plugins: for more open formats'
@@ -18,25 +20,29 @@ optdepends=('gstreamer0.10-base-plugins: for more open formats'
             'gstreamer0.10-bad-plugins: for use with "Bad" plugin libraries'
             'gstreamer0.10-ugly-plugins: for use with "Ugly" plugin libraries')
 categories=('multimedia')
-source=("http://chakra-linux.org/sources/clementine/clementine-player.tar.xz")
-md5sums=('e735a3100c730f5800fb24ccc60b1cee')
-install="clementine.install"
+source=("http://chakra-linux.org/sources/clementine/clementine-player.tar.xz"
+        "plasmarunner.patch")
+sha1sums=('bea8b626c5ca94279dddc2372ab68c7aaa3a5fc2'
+          '895a1e4679cdea2970d89b35ebfe805c0d59a654')
 
 build() {
-   cd "${srcdir}/${pkgname}-player"
-   #patch -p1 -i ${srcdir}/lastfmservice.diff
+  cd "${srcdir}/${pkgname}-player"
+  
+  # plasmarunner is buggy and will not be supported by clementine any more
+  # http://code.google.com/p/clementine-player/source/detail?r=5b3071e5f144
+  patch -p1 -i "${srcdir}/plasmarunner.patch"
 
-   mkdir -p build && cd build
-   cmake ../ -DCMAKE_INSTALL_PREFIX=/usr \
-             -DCMAKE_BUILD_TYPE=Release \
-             -DENABLE_GIO=OFF \
-             -DENABLE_PLASMARUNNER=ON
-   make
+  mkdir -p build && cd build
+  cmake ../ -DCMAKE_INSTALL_PREFIX=/usr \
+            -DCMAKE_BUILD_TYPE=Release \
+            -DENABLE_GIO=OFF
+  make
 }
 
 package() {
-   cd "${srcdir}/${pkgname}-player/build"
-   make DESTDIR="${pkgdir}" install
+  cd "${srcdir}/${pkgname}-player/build"
+   
+  make DESTDIR="${pkgdir}" install
 }
 
 # vim:set ts=2 sw=2 et:
