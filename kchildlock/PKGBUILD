@@ -3,11 +3,8 @@
 #
 # Maintainer: Adrián Chaves Fernández (Gallaecio) <adriyetichaves gmail.com>
 
-# include global config
-source ../_buildscripts/${current_repo}-${_arch}-cfg.conf
-
 pkgname=kchildlock
-pkgver=0.90.4
+pkgver=0.90.4.1
 pkgrel=1
 pkgdesc="Computer usage time monitor and administrator, focused on parental control."
 url="http://sourceforge.net/projects/kchildlock"
@@ -17,25 +14,17 @@ depends=('kdebase-runtime')
 makedepends=('automoc4' 'cmake' 'docbook-xsl')
 categories=('system')
 source=(http://downloads.sourceforge.net/$pkgname/$pkgname-$pkgver.tar.gz)
-md5sums=('a31d8791fbb32c1e724464d61d37ee70')
+md5sums=('0d8ff2f8c33ed2192bc240cf5f48fc0b')
 
 build() {
-#   find . -name CMakeLists.txt -exec sed -i 's/add_subdirectory(doc)/#add_subdirectory(doc)/g' {} \;
 
   cd $srcdir/$pkgname-$pkgver  
-  mkdir build && cd build
+  mkdir -p build && cd build
   cmake \
     -DCMAKE_INSTALL_PREFIX=/usr \
-    -DCMAKE_BUILD_TYPE=RelWithDebInfo \
+    -DCMAKE_BUILD_TYPE=Release \
     ..
   make
-#   cmake
-#     -DCMAKE_INSTALL_PREFIX=/usr
-#     -G KDevelop3
-#     -DCMAKE_BUILD_TYPE=Release \
-#     -DDATA_INSTALL_DIR=/usr/share/kde4/
-#     -DICON_INSTALL_DIR=/usr/share/kde4 .
-#   make
 }
 
 package() {
