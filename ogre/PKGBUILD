@@ -5,8 +5,8 @@
 
 pkgbase=ogre
 pkgname=('ogre' 'ogre-docs')
-pkgver=1.7.9
-_pkgver=1.8.0RC1
+pkgver=1.8.1
+_pkgver=$pkgver
 pkgrel=1
 pkgdesc="A scene-oriented, flexible 3D engine written in C++"
 arch=('i686' 'x86_64')
@@ -21,7 +21,7 @@ optdepends=('cppunit: unit testing'
             'boost: for developing using ogre')
 install=ogre.install
 source=("http://downloads.sourceforge.net/${pkgname}/${pkgname}_src_v${_pkgver//./-}.tar.bz2")
-md5sums=('7eec85b9116c0c9b09409c65db6a8276')
+md5sums=('b85e3dcf370a46b3a8624d4fdd722d39')
 
 build() {
   cd ${srcdir}/${pkgname}_src_v${_pkgver//./-}
@@ -32,14 +32,13 @@ build() {
 	cd build
 
   # generate CMake Makefile
-  cmake .. \
- 	 -DCMAKE_INSTALL_PREFIX=/usr \
-	 -DOGRE_INSTALL_PLUGINS_HEADERS=TRUE \
-	 -DOGRE_INSTALL_SAMPLES=TRUE \
-	 -DOGRE_INSTALL_DOCS=TRUE \
-   -DOGRE_INSTALL_MEDIA=TRUE \
-	 -DOGRE_INSTALL_SAMPLES_SOURCE=TRUE \
-   -DCMAKE_BUILD_TYPE=Release # set =Debug for debugging version
+  cmake \
+    -DCMAKE_INSTALL_PREFIX=/usr \
+    -DOGRE_INSTALL_SAMPLES=TRUE \
+    -DOGRE_INSTALL_DOCS=TRUE \
+    -DOGRE_INSTALL_SAMPLES_SOURCE=TRUE \
+    -DCMAKE_BUILD_TYPE=Release \
+    ..
 
   # compile
   make
@@ -91,4 +90,3 @@ package_ogre-docs() {
   cd ${pkgdir}/usr/share
   ln -s doc/OGRE/ OGRE/docs
 }
-
