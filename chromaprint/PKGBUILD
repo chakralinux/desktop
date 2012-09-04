@@ -1,0 +1,31 @@
+#
+# Chakra Packages for Chakra, part of chakra-project.org
+#
+# maintainer abveritas@chakra-project.org
+
+pkgname=chromaprint
+pkgver=0.6
+pkgrel=2
+pkgdesc='Client-side library that implements a custom algorithm for extracting fingerprints from any audio source'
+url='http://acoustid.org/chromaprint/'
+arch=('i686' 'x86_64')
+license=('LGPL')
+depends=('ffmpeg')
+makedepends=('cmake')
+screenshot=('')
+source=("https://github.com/downloads/lalinsky/${pkgname}/${pkgname}-${pkgver}.tar.gz"
+        "ffmpeg-11.patch")
+sha1sums=('e8bcc1d0d8dfec86aa648b87ba3f69b6d589eae0'
+          '2d05c8995ba5958964e3d58e43ada6b94d79a0c9')
+
+build() {
+	cd "${srcdir}/${pkgname}-${pkgver}"
+        patch -p1 -i "${srcdir}/ffmpeg-11.patch"
+	cmake -DCMAKE_INSTALL_PREFIX=/usr -DBUILD_EXAMPLES=ON .
+	make
+}
+
+package() {
+	cd "${srcdir}/${pkgname}-${pkgver}"
+	make DESTDIR="${pkgdir}" install
+}

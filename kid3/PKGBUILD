@@ -1,38 +1,42 @@
 #
 # Chakra Packages for Chakra, part of chakra-project.org
 #
-# maintainer (i686): Phil Miller <philm[at]chakra-project[dog]org>
-# maintainer (x86_64): Manuel Tortosa <manutortosa[at]chakra-project[dot]org>
-
-# include global config
-source ../_buildscripts/${current_repo}-${_arch}-cfg.conf
+# maintainer abveritas@chakra-project.org
 
 pkgname=kid3
-pkgver=1.5
+pkgver=2.1
 pkgrel=2
 pkgdesc="An MP3, Ogg/Vorbis and FLAC tag editor for KDE"
 arch=('i686' 'x86_64')
 url="http://kid3.sourceforge.net/"
 license=('GPL')
-depends=('id3lib' 'kdelibs' 'libmp4v2')
-makedepends=('automoc4' 'cmake' 'taglib' 'docbook-xsl')
+depends=('id3lib' 'kdelibs' 'libmp4v2' 'chromaprint')
+makedepends=('automoc4' 'cmake' 'taglib' 'docbook-xsl' 'ffmpeg')
 categories=('multimedia')
+screenshot=('http://pkgs.org/images/linux-software/kid3/kid3-screenshot.png')
 install=${pkgname}.install
-source=("http://downloads.sourceforge.net/$pkgname/$pkgname-$pkgver.tar.gz")
-md5sums=('a36b570cf981ab15595db50a67d4fd0f')
+source=("http://sourceforge.net/projects/$pkgname/files/$pkgname/$pkgver/$pkgname-$pkgver.tar.gz"
+        "ffmpeg-0.11.diff")
+sha1sums=('bdfad021123d41cdbe38dc02f92869786d9cdff6'
+          '80855ee0099964fa52b816797a9fe2eceeec8b5c')
 
 build() {
-  cd ${srcdir}
+  cd "${srcdir}/${pkgname}-${pkgver}"
+
+  patch -p1 -i "${srcdir}/ffmpeg-0.11.diff"
+
+  cd "${srcdir}"
+
   mkdir build
   cd build
-  cmake ../${pkgname}-${pkgver} \
+  cmake "../${pkgname}-${pkgver}" \
     -DCMAKE_INSTALL_PREFIX=/usr \
     -DCMAKE_BUILD_TYPE=Release \
     -DWITH_TUNEPIMP=OFF
-  make || return 1
+  make 
 }
 
 package() {
-  cd ${srcdir}/build
-  make DESTDIR=${pkgdir} install
+  cd "${srcdir}/build"
+  make DESTDIR="${pkgdir}" install
 }
