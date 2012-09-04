@@ -1,0 +1,11 @@
+--- 2ManDVD/videowrapper.cpp	2012-06-06 09:25:24.000000000 +0000
++++ 2ManDVD.fixed/videowrapper.cpp	2012-09-04 19:45:46.161280095 +0000
+@@ -38,7 +38,7 @@
+ int videowrapper::load_video(QString filename)
+ {
+     // *** OUVERTURE DU FICHIER VIDEO ***
+-    #ifdef avformat_open_input
++    #if 1//def avformat_open_input
+         if (avformat_open_input(&pFormatCtx,filename.toAscii().data(),NULL,NULL)!=0)
+         {
+     #else

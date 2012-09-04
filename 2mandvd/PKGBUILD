@@ -1,58 +1,47 @@
 #
 # Chakra Packages for Chakra, part of chakra-project.org
 #
-# maintainer (i686): Phil Miller <philm[at]chakra-project[dog]org>
-# maintainer (x86_64): Manuel Tortosa <manutortosa[at]chakra-project[dot]org>
-
 
 pkgname=2mandvd
 pkgver=1.8.4
-pkgrel=1
+pkgrel=3
 pkgdesc="DVD Authoring Maker In Linux Environment."
 url="http://2mandvd.tuxfamily.org/"
 license=('GPL')
 arch=('i686' 'x86_64')
-install="${pkgname}.install"
-depends=('qt>=4.6' 'sox' 'mplayer' 'mencoder' 'perl' 'netpbm' 'transcode' 'ffmpegthumbnailer' 'dvdauthor' 'mjpegtools' 'ttf-dejavu' 'dvd+rw-tools' 'exif')
+depends=('qt>=4.6' 'sox' 'mencoder' 'perl' 'netpbm' 'transcode' 'ffmpegthumbnailer' 'dvdauthor' 'mjpegtools' 'ttf-dejavu' 'dvd+rw-tools' 'exif' 'python-opengl')
 optdepends=('xine-ui: to preview the result')
+categories=('multimedia')
+screenshot=('http://i1-linux.softpedia-static.com/screenshots/2ManDVD_1.jpg')
 source=("http://download.tuxfamily.org/2mandvd/2ManDVD-${pkgver}.tar.gz"
-        '2mandvd.desktop'
-        '2mandvd.sh')
-md5sums=('2e362b6d963b0698ee4911d28865d50d'
-         '1eaaeef9a5e7896482d51d489b781689'
-         '0112971f170034aff6efaafb9508b010')
+        "ffmpeg-0.11.diff")
+sha1sums=('3ed5b79e88c05159ac05cb40a39a702e3c400c79'
+          '2870ea186ecfa4a894618418249fa28f184dbf89')
 
 build() {
-  cd "${srcdir}/2ManDVD"
+  cd "${srcdir}"
+  
+  # Patch 2ManDVD for ffmpeg
+  patch -p0 -i "${srcdir}/ffmpeg-0.11.diff"
 
-  qmake 2ManDVD.pro
+  # Prepare the build directory and configure the project
+  rm -rf build && mkdir -p build
+  cd build
 
+  qmake "${srcdir}/2ManDVD/2ManDVD.pro"
+
+  # Fix those damn absolute paths!
+  sed -e 's,chmod -R 755 /usr/share/2ManDVD,chmod -R 755 \$(INSTALL_ROOT)/usr/share/2ManDVD,g' \
+      -i Makefile
+
+  # Actually compile it
   make
 }
 
 package(){
-  cd "${srcdir}/2ManDVD"
-
-  sed -i "s|chmod -R 755 /usr/share/2ManDVD|chmod -R 755 \$(INSTALL_ROOT)/usr/share/2ManDVD|" Makefile
+  cd "${srcdir}/build"
 
   make INSTALL_ROOT="${pkgdir}" install
-
-#  install -d -m755 "${pkgdir}/opt/2ManDVD" "${pkgdir}/usr/bin"
-#  cp -R Bibliotheque Interface 2ManDVD fake.pl *.qm README.txt "${pkgdir}/opt/2ManDVD"
-#  install -D -m755 "${srcdir}/2mandvd.sh" "${pkgdir}/usr/bin/2ManDVD"
-
-#  # Fixing some right problems
-#  cd "${pkgdir}/opt/2ManDVD"
-#  find . -type f -print0 | xargs -0 -n1 chmod 644
-
-#  chmod 755 Bibliotheque Interface
-#  chmod +x 2ManDVD
-#  cd "${pkgdir}/opt/2ManDVD/Bibliotheque"
-#  chmod -R 777 *
-
-#  # Creating menu item
-#  install -D -m644 "${srcdir}/2ManDVD/Interface/mandvd.png" "${pkgdir}/usr/share/pixmaps/2mandvd.png"
-#  install -D -m644 "${srcdir}/2mandvd.desktop" "${pkgdir}/usr/share/applications/2mandvd.desktop"
 }
 
 # vim:set ts=2 sw=2 et:
