@@ -10,7 +10,7 @@
 
 pkgname=anki
 pkgver=1.2.11
-pkgrel=1
+pkgrel=2
 pkgdesc='Helps you remember facts (like words/phrases in a foreign language) efficiently.'
 url='http://ankisrs.net/'
 license=(GPL3)
@@ -37,7 +37,8 @@ package() {
   python2 setup.py install --root "${pkgdir}"
   
   # Desktop integration. KDE needs Qt in Categories
-  sed -i 's|Categories=Education;Languages;KDE;|Categories=Education;Languages;Qt;KDE;|' "${srcdir}/${pkgname}-${pkgver}/${pkgname}.desktop"
-  desktop-file-install --dir "${pkgdir}/usr/share/applications" ${pkgname}.desktop
+  desktop-file-install --dir "${pkgdir}/usr/share/applications" \
+                       --add-category='Qt' \
+                       ${pkgname}.desktop
   install -D -m 644 icons/${pkgname}.png "${pkgdir}/usr/share/pixmaps/${pkgname}.png"
 }
