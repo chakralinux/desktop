@@ -16,15 +16,14 @@ _default_wp="Ariya"
 pkgname="kde-workspace"
 arch=('i686' 'x86_64')
 pkgver=${_kdever}
-pkgrel=3
+pkgrel=4
 pkgdesc="KDE Workspace"
 url="http://www.kde.org"
 license=('GPL' 'LGPL' 'FDL')
 options=('docs' '!splithdr' 'splitdbg' 'log')
 install=${pkgname}.install
-depends=('polkit-kde-agent' "kdepimlibs>=${_kdever}" "kde-runtime>=${_kdever}" 'qimageblitz' 'libgles' 'libegl' "kactivities>=${_kdever}"
-	    'libxxf86misc' 'libxcomposite' 'libxss' 'lm_sensors' 'libxklavier' 'libxft' 'oxygen-icons' "xkit" 'libgles' 'libegl'
-	    'libxdamage' 'xorg-utils' 'libxrandr' 'libxres' 'libdmtx' 'libqalculate' 'prison' 'qrencode' "kdepim-runtime>=${_kdever}" "kde-base-artwork>=${_kdever}")
+depends=('polkit-kde-agent' "kdepimlibs>=${_kdever}" "kde-runtime>=${_kdever}" 'qimageblitz' 'mesa' "kactivities>=${_kdever}"
+	    'libxxf86misc' 'libxcomposite' 'libxss' 'lm_sensors' 'libxklavier' 'libxft' 'oxygen-icons' 'xkit' 'libxdamage' 'xorg-utils' 'libxrandr' 'libxres' 'libdmtx' 'libqalculate' 'prison' 'qrencode' "kdepim-runtime>=${_kdever}" "kde-base-artwork>=${_kdever}")
 makedepends=('pkgconfig' 'cmake' 'automoc4' 'networkmanager' 'bluez' "kdebindings-pykde4>=${_kdever}"
 	    'oxygen-icons' 'qedje' "kde-runtime>=${_kdever}" 'gpsd' 'samba' 
 	    'libraw1394' 'libdmtx' 'consolekit' 'docbook-xsl' 'prison' 'qrencode') #google-gadgets-qt 
@@ -74,7 +73,9 @@ source=($_mirror/${pkgname}-$_kdever.tar.xz
 	# "fix" some sytemsettings modules that need root access
 	fix_root-only-kcms.patch
         # shutdown-fix.patch
-	sensors-fix.patch)
+	sensors-fix.patch
+	# KDE task-switcher bug # 306260
+        unfreeze-tabbox.diff)
 
 md5sums=(`grep ${pkgname}-$_kdever.tar.xz ../kde-sc.md5 | cut -d" " -f1`
         `grep kde-wallpapers-$_kdever.tar.xz ../kde-sc.md5 | cut -d" " -f1` # kde-wallpapers
@@ -87,7 +88,7 @@ md5sums=(`grep ${pkgname}-$_kdever.tar.xz ../kde-sc.md5 | cut -d" " -f1`
         '367a3538f54db71f108b34cfa31088ac'  #  kscreensaver.pam
         '169c6fc83d5562b5d7249db7fc46d8d6'  #  chakra-branding.tar.gz
         'c328f1c5cfa3e551205ffdc0fdda41a8'  #  chakra-themes.tar.gz
-        'c4b5f1b342b3dad38642318ca077daee'  #  kde.service
+        'c4b5f1b342b3dad38642318ca077daee'  #  kdm.service
 
         '721e97031b62aee8914e8617e86f9235'  #  01_kdm_zsh_profile.patch
         'e2eb9d270fe0e93901b29256bdedd7e2'  #  02_sane_env_and_shutdown_path.patch
@@ -100,7 +101,8 @@ md5sums=(`grep ${pkgname}-$_kdever.tar.xz ../kde-sc.md5 | cut -d" " -f1`
         '814350c52c135d6f7bdada1e29223d38'  #  fix_terminate-server.patch
 	'97a5eb51e6f9d460f0d61bb322a1db5e'  #  fix_kdm_configdef.patch
 	'5f963f80a026f0600edae1b1c70411e5'  #  fix_root-only-kcms.patch
-        'ecf3a9d6af9bdd3db0189e06ddf21034')  #  sensors-fix.patch
+        'ecf3a9d6af9bdd3db0189e06ddf21034'   #  sensors-fix.patch
+        '908495c159de42d5ca1f4c5adb4564ac')  # unfreeze-tabbox.diff
 
 #
 # build function
@@ -122,8 +124,8 @@ build() {
 	patch -p0 -N -i ${srcdir}/fix_kdm_configdef.patch
         patch -Np1 -i ${srcdir}/fix_root-only-kcms.patch
  
-        #msg "Upstream fixes"
-        #patch -RNp1 -i ${srcdir}/workspace1.diff
+        # KDE task-switcher bug # 306260
+         patch -p1 -i "${srcdir}"/unfreeze-tabbox.diff
 
 	msg "starting workspace build ..."
 	cmake . -DCMAKE_BUILD_TYPE=${_build_type} \
@@ -238,4 +240,5 @@ package() {
 	
 	# Systemd .service file
 	install -D -m644 "${srcdir}"/kdm.service "${pkgdir}"/usr/lib/systemd/system/kdm.service
+
 }
