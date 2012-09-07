@@ -1,7 +1,7 @@
 #
 # Chakra Packages for Chakra, part of chakra-project.org
 #
-# maintainer (abveritas[at]chakra-project[dog]org>
+# maintainer (abveritas[at]chakra-project[dot]org>
 
 # include global config
 source ../_buildscripts/${current_repo}-${_arch}-cfg.conf
@@ -9,22 +9,25 @@ source ../_buildscripts/${current_repo}-${_arch}-cfg.conf
 pkgbase=avidemux
 pkgname=('avidemux-cli' 'avidemux')
 pkgver=2.5.6
-pkgrel=1
+pkgrel=2
 pkgdesc='Simple video editor for cutting, filtering and encoding tasks.'
 arch=('i686' 'x86_64')
 license=('GPL')
 url="http://fixounet.free.fr/avidemux/"
-makedepends=('cmake' 'libxslt' 'qt' 'jack' 'esound' 'libvorbis' 'sdl' 'libxv'
-             'alsa-lib' 'lame' 'xvidcore' 'faad2' 'faac' 'x264' 'libsamplerate' 'opencore-amr' 'yasm')
+screenshot="http://upload.wikimedia.org/wikipedia/commons/7/77/Avidemux_Screenshot_Qt.png"
+makedepends=('cmake' 'libxslt' 'qt' 'jack' 'libvorbis' 'sdl' 'libxv'
+             'alsa-lib' 'lame' 'xvidcore' 'faad2' 'faac' 'x264' 'libsamplerate' 
+             'opencore-amr' 'yasm' 'mesa' 'libvpx' 'libpulse' 'libva' 'desktop-file-utils')
 categories=('multimedia')
-source=(http://downloads.sourceforge.net/avidemux/avidemux_${pkgver}.tar.gz)
-md5sums=('00e479dd806b94a98d3f0f40639e88a9')
+options=("!makeflags")
+source=("http://downloads.sourceforge.net/avidemux/avidemux_${pkgver}.tar.gz")
+sha256sums=('d6da7f2c4304368bd9c367a74a464b47d42fee9cada2960e70053d61c1ef9b8b')
          
 build() {
   cd "${srcdir}/${pkgbase}_${pkgver}"
   mkdir build
   cd build
-  cmake -D CMAKE_INSTALL_PREFIX=/usr -D CMAKE_BUILD_TYPE=Release -D CMAKE_SKIP_RPATH=ON -D GTK=0 -D QT4=1 .. || return 1
+  cmake -D CMAKE_INSTALL_PREFIX=/usr -D CMAKE_BUILD_TYPE=Release -D CMAKE_SKIP_RPATH=ON -D GTK=0 -D QT4=1 ..
   make 
 
 # plugin build expects libraries to be already installed; we fake a prefix
@@ -35,7 +38,7 @@ build() {
   cd ../../plugins
   mkdir build
   cd build
-  cmake -D CMAKE_INSTALL_PREFIX=/usr -D AVIDEMUX_SOURCE_DIR=${srcdir}/avidemux_${pkgver} \
+  cmake -D CMAKE_INSTALL_PREFIX=/usr -D AVIDEMUX_SOURCE_DIR="${srcdir}/avidemux_${pkgver}" \
     -D AVIDEMUX_CORECONFIG_DIR=${srcdir}/avidemux_${pkgver}/build/config \
     -D AVIDEMUX_INSTALL_PREFIX=${srcdir}/avidemux_${pkgver}/build \
     -D CMAKE_BUILD_TYPE=Release -D CMAKE_SKIP_RPATH=ON -D GTK=0 -D QT4=1 .. 
@@ -45,14 +48,14 @@ build() {
 package_avidemux-cli() {
   pkgdesc="A graphical tool to edit video (filter/re-encode/split)"
   depends=('libxv' 'libxml2' 'sdl' 'fontconfig' 'libvpx')
-  optdepends=('lame: for the corresponding audio encoder plugin' \
-              'faac: for the corresponding audio encoder plugin' \
-              'faad2: for the corresponding audio decoder plugin' \
-              'opencore-amr: for the corresponding audio decoder plugin' \
-              'esound: for the corresponding audio device plugin' \
-              'jack: for the corresponding audio device plugin' \
-              'sdl: for the corresponding audio device plugin' \
-              'x264: for the corresponding video encoder plugin' \
+  optdepends=('lame: for the corresponding audio encoder plugin'
+              'faac: for the corresponding audio encoder plugin'
+              'faad2: for the corresponding audio decoder plugin'
+              'opencore-amr: for the corresponding audio decoder plugin'
+              'jack: for the corresponding audio device plugin'
+              'libpulse: for the corresponding audio device plugin'
+              'sdl: for the corresponding audio device plugin'
+              'x264: for the corresponding video encoder plugin'
               'xvidcore: for the corresponding video encoder plugin')
 
   cd "${srcdir}/${pkgbase}_${pkgver}/build"
@@ -91,7 +94,9 @@ package_avidemux() {
   install -d "${pkgdir}/usr/share/avidemux/i18n"
   install -D -m644 build/po/*.qm "${pkgdir}/usr/share/avidemux/i18n"
 
-  install -D -m644 avidemux2.desktop "${pkgdir}/usr/share/applications/avidemux.desktop" 
-  sed -i 's/Name=avidemux2/Name=avidemux/' "${pkgdir}/usr/share/applications/avidemux.desktop" 
-  sed -i 's/avidemux2_gtk/avidemux/' "${pkgdir}/usr/share/applications/avidemux.desktop" 
+  install -D -m644 avidemux2.desktop "${pkgdir}/usr/share/applications/avidemux.desktop"
+  desktop-file-edit --set-name="avidemux" \
+                    --set-key=Exec --set-value=avidemux \
+                    --set-icon="/usr/share/applications/avidemux.png" \
+                    "${pkgdir}/usr/share/applications/avidemux.desktop"
 }
