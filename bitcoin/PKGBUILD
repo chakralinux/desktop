@@ -6,7 +6,7 @@
 # Contributor: Timothy Redaelli <timothy.redaelli@gmail.com>
 
 pkgname=bitcoin
-pkgver=0.6.2
+pkgver=0.6.3
 pkgrel=1
 pkgdesc="Bitcoin is a peer-to-peer network based digital currency."
 arch=('i686' 'x86_64')
@@ -18,47 +18,46 @@ license=('MIT')
 categories=('office')
 source=("http://downloads.sourceforge.net/sourceforge/${pkgname}/${pkgname}-${pkgver}-linux.tar.gz"
         "${pkgname}.desktop")
-md5sums=('6a95e87a8f1ce38f69fe3f38173f9549'
+md5sums=('bce55d5192031e5f0370a0758363f106'
          '77139ce8a40f46bd7d7ad0a743672113')
-s1=$srcdir/${pkgname}-${pkgver}-linux
-src_qt=$s1/src
-src_d=$s1/src/src/
+s1="${srcdir}/${pkgname}-${pkgver}-linux"
+src_qt="${s1}/src"
+src_d="${s1}/src/src/"
 makefile_unix=makefile.unix
 
 build() {
-        cd $src_d
+  cd $src_d
 
+  msg "Patching $makefile_unix..."
+  sed -i $makefile_unix \
+    -e 's/\(-DNOPCH\)/\1 -DBOOST_FILESYSTEM_VERSION=2/' \
+    -e 's/-Bstatic/--as-needed ${LDFLAGS}/g' \
+    -e 's/\(USE_UPNP:=\)0/\11/' \
+    -e 's/$(DEBUGFLAGS)//g' \
+    -e 's/CXXFLAGS/CPPFLAGS/g' \
+    -e 's/-O[0-3]/${CXXFLAGS}/g'
 
-	msg "Patching $makefile_unix..."
-	sed -i $makefile_unix \
-		-e 's/\(-DNOPCH\)/\1 -DBOOST_FILESYSTEM_VERSION=2/' \
-		-e 's/-Bstatic/--as-needed ${LDFLAGS}/g' \
-		-e 's/\(USE_UPNP:=\)0/\11/' \
-		-e 's/$(DEBUGFLAGS)//g' \
-		-e 's/CXXFLAGS/CPPFLAGS/g' \
-		-e 's/-O[0-3]/${CXXFLAGS}/g'
+  # make bitcoind
+  cd $src_d
+  make $MAKEFLAGS -f $makefile_unix bitcoind
 
-	# make bitcoind
-	cd $src_d
-	make $MAKEFLAGS -f $makefile_unix bitcoind
-
-       # make qt gui
-	cd $src_qt
-	qmake
-	make $MAKEFLAGS
+  # make qt gui
+  cd $src_qt
+  qmake
+  make $MAKEFLAGS
 }
 
 
 package() {
-	mkdir -p $pkgdir/usr/bin
-	mkdir -p $pkgdir/usr/share/pixmaps
-	mkdir -p $pkgdir/usr/share/applications
+  mkdir -p "${pkgdir}/usr/bin"
+  mkdir -p "${pkgdir}/usr/share/pixmaps"
+  mkdir -p "${pkgdir}/usr/share/applications"
 
-	# get compiled binaries
-	install -D -m755 $src_qt/bitcoin-qt $pkgdir/usr/bin/
-	install -D -m755 $src_d/bitcoind $pkgdir/usr/bin/
+  # get compiled binaries
+  install -D -m755 "${src_qt}/bitcoin-qt" "${pkgdir}/usr/bin/"
+  install -D -m755 "${src_d}/bitcoind" "${pkgdir}/usr/bin/"
 
-	# add icon and .desktop file to pkg
-	install -D -m644 $src_qt/src/qt/res/icons/bitcoin.png $pkgdir/usr/share/pixmaps/
-	install -D -m644 $srcdir/$pkgname.desktop $pkgdir/usr/share/applications/
+  # add icon and .desktop file to pkg
+  install -D -m644 "${src_qt}/src/qt/res/icons/bitcoin.png" "${pkgdir}/usr/share/pixmaps/"
+  install -D -m644 "${srcdir}/${pkgname}.desktop" "${pkgdir}/usr/share/applications/"
 }
