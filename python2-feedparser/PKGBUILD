@@ -3,23 +3,30 @@
 #
 # Maintainer: Adrian Chaves Fernandez (Gallaecio) <adriyetichaves@gmail.com>
 
-pkgname=python2-feedparser
 _pkgname=feedparser
+pkgname="python2-${_pkgname}"
 pkgver=5.1.2
-pkgrel=1
-pkgdesc="Parse RSS and Atom feeds in Python"
+pkgrel=2
+pkgdesc="feedparser is a Python library that parses feeds in all known formats, including Atom, RSS, and RDF."
 arch=('any')
-url="http://feedparser.sf.net"
+url="http://code.google.com/p/feedparser/"
 license=(MIT)
 depends=('python2' 'libxml2' )
-replaces=(python-feedparser)
-provides=(python-feedparser)
-source=(http://$_pkgname.googlecode.com/files/$_pkgname-$pkgver.tar.bz2)
+makedepends=('python-distribute')
+replaces=('python-feedparser')
+provides=('python-feedparser')
+source=("http://${_pkgname}.googlecode.com/files/${_pkgname}-${pkgver}.tar.bz2")
 md5sums=('9f88692c7c1af1d47839eb2025984975')
 
-buildd() {
-  cd ${srcdir}/$_pkgname-$pkgver
+build() {
+  cd "${srcdir}/${_pkgname}-${pkgver}"
   python2 setup.py build
-  python2 setup.py install --root=${pkgdir}
-  install -Dm644 LICENSE ${pkgdir}/usr/share/licenses/${pkgname}/license
 }
+
+package() {
+  cd "${srcdir}/${_pkgname}-${pkgver}"
+  python2 setup.py install --root="${pkgdir}"
+  install -D -m644 LICENSE "${pkgdir}/usr/share/licenses/${pkgname}/LICENSE"
+}
+
+# vim:set ts=2 sw=2 et:
