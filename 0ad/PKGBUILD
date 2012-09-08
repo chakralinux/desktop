@@ -1,28 +1,27 @@
 #
 # Games Packages for Chakra, part of chakra-project.org
 #
-# Maintainer: Adri�n Chaves Fern�ndez (Gallaecio) <adriyetichaves@gmail.com>
+# Maintainer: Adrian Chaves Fernandez (Gallaecio) <adriyetichaves@gmail.com>
 
-pkgbase=0ad
-pkgname=($pkgbase $pkgbase-debug $pkgbase-data)
-pkgver=alpha_10
-_pkgver=r11863-alpha
-pkgrel=2
+pkgname=0ad
+pkgver=0.0.11
+_pkgver=$pkgver-alpha
+pkgrel=1
 pkgdesc="Cross-platform, 3D and historically-based real-time strategy game"
 screenshot=http://www.wildfiregames.com/0ad/images/news_images/dynamic-borders.jpg
 arch=('i686' 'x86_64')
 url="http://wildfiregames.com/0ad"
-depends=('boost-libs' 'curl' 'enet' 'gamin' 'libogg' 'libpng' 'libvorbis' 'libxml2' 'mesa' 'openal' 'openexr' 'sdl' 'zip' 'zlib' 'nvidia-texture-tools')
-makedepends=('boost' 'cmake' 'python2')
+license=('GPL2' 'custom:MIT') # source licenses.
+depends=('boost-libs' 'curl' 'enet' 'gamin' 'libogg' 'libpng' 'libvorbis' 'libxcursor' 'libxml2' 'mesa' 'nvidia-texture-tools' 'openal' 'sdl' 'zip' 'zlib' 0ad-data=$pkgver)
+makedepends=('boost' 'python2')
+replaces=(0ad-debug) # If someone wants a debug version, they should rebuild 0ad with config=debug.
 categories=('games')
 changelog=ChangeLog
-source=(http://downloads.sourceforge.net/project/zero-ad/releases/$pkgbase-$_pkgver-unix-build.tar.xz
-	http://downloads.sourceforge.net/project/zero-ad/releases/$pkgbase-$_pkgver-unix-data.tar.xz)
-md5sums=('f42a2e18515cbcd48b99f0ea3796b3a4'
-         'a0cc5004e243f8aa5d50f1cf5c36159e')
+source=(http://downloads.sourceforge.net/project/zero-ad/releases/$pkgname-$_pkgver-unix-build.tar.xz)
+md5sums=('0feedd076ea441ca821073b4b7014946')
 
 build() {
-  cd $srcdir/$pkgbase-$_pkgver/build/workspaces
+  cd $srcdir/$pkgname-$_pkgver/build/workspaces
 
   # NOTE: These sed commands are *not* likely to be changed between releases, like most patches.
   sed \
@@ -36,68 +35,29 @@ build() {
     --disable-atlas \
     --with-system-enet \
     --with-system-nvtt \
-    -j3
+    --bindir=/usr/bin \
+    --libdir=/usr/lib \
+    --datadir=/usr/share/${pkgname}/data
+
+
+  cd gcc
+  make config=release
 }
 
-# This script might change between releases. It install the content of ‘binaries/system/’ depending
-# on the type of build, release or debug.
-install_0ad() {
-  AFILES="libatlas libengine libgraphics libgui liblowlevel libmocks_real libmocks_test libnetwork libscriptinterface libsimulation2"
+package() {
 
-  if [ "$1" == "debug" ]
-  then	# Debug.
+  cd $srcdir/$pkgname-$_pkgver
 
-    # Install .a files.
-    for FILENAME in $AFILES
-    do
-      install -D $srcdir/$pkgbase-$_pkgver/binaries/system/${FILENAME}_dbg.a $pkgdir/usr/share/$pkgbase/system/${FILENAME}_dbg.a
-    done
+  # Manual installation.
+  install -d ${pkgdir}/usr/{bin,lib}
+  install -Dm755 ${srcdir}/${pkgbase}-${_pkgver}/binaries/system/pyrogenesis ${pkgdir}/usr/bin
+  install -Dm755 ${srcdir}/${pkgbase}-${_pkgver}/binaries/system/*.so{,.1.0} ${pkgdir}/usr/lib
 
-    # Install libCollada.
-    install -D $srcdir/$pkgbase-$_pkgver/binaries/system/libCollada_dbg.so $pkgdir/usr/share/$pkgbase/system/libCollada_dbg.so
-
-    # Install libmozjs185-ps.
-    install -D $srcdir/$pkgbase-$_pkgver/binaries/system/libmozjs185-ps-debug.so.1.0 $pkgdir/usr/share/$pkgbase/system/libmozjs185-ps-debug.so.1.0
-
-    # Install main binary.
-    install -D $srcdir/$pkgbase-$_pkgver/binaries/system/pyrogenesis_dbg $pkgdir/usr/share/$pkgbase/system/pyrogenesis_dbg
-
-  else	# Release.
-
-    # Install .a files.
-    for FILENAME in $AFILES
-    do
-      install -D $srcdir/$pkgbase-$_pkgver/binaries/system/${FILENAME}.a $pkgdir/usr/share/$pkgbase/system/${FILENAME}.a
-    done
-
-    # Install libCollada.
-    install -D $srcdir/$pkgbase-$_pkgver/binaries/system/libCollada.so $pkgdir/usr/share/$pkgbase/system/libCollada.so
-
-    # Install libmozjs185-ps.
-    install -D $srcdir/$pkgbase-$_pkgver/binaries/system/libmozjs185-ps-release.so.1.0 $pkgdir/usr/share/$pkgbase/system/libmozjs185-ps-release.so.1.0
-
-    # Install main binary.
-    install -D $srcdir/$pkgbase-$_pkgver/binaries/system/pyrogenesis $pkgdir/usr/share/$pkgbase/system/pyrogenesis
-
-  fi
-
-}
-
-package_0ad() {
-  license=('GPL2' 'custom:MIT')	# ‘source/’ licenses.
-  depends=('boost-libs' 'curl' 'enet' 'gamin' 'libogg' 'libpng' 'libvorbis' 'libxml2' 'mesa' 'openal' 'sdl' 'zip' 'zlib' '0ad-data')
-
-  cd $srcdir/$pkgbase-$_pkgver/build/workspaces/gcc
-  make config=release -j3
-  cd $srcdir/$pkgbase-$_pkgver
-  install_0ad release
-
-  # Execution script:
+  # Execution script.
   install -d $pkgdir/usr/bin/
   local scriptname="${pkgbase}"
-  echo "#!/bin/sh"			>  $pkgdir/usr/bin/$scriptname
-  echo "cd /usr/share/0ad/system"	>> $pkgdir/usr/bin/$scriptname
-  echo "./pyrogenesis $*"		>> $pkgdir/usr/bin/$scriptname
+  echo "#!/bin/sh"		>  $pkgdir/usr/bin/$scriptname
+  echo "pyrogenesis $*"		>> $pkgdir/usr/bin/$scriptname
   chmod +x $pkgdir/usr/bin/$scriptname
 
   # Desktop Integration.
@@ -105,44 +65,6 @@ package_0ad() {
   install -D ./build/resources/$pkgname.png $pkgdir/usr/share/pixmaps/$pkgname.png
 
   # Legal.
-  install -Dm644 LICENSE.txt $pkgdir/usr/share/licenses/$pkgbase/license.txt
+  install -Dm644 LICENSE.txt $pkgdir/usr/share/licenses/$pkgname/license.txt
   
-}
-
-package_0ad-debug() {
-  pkgdesc="Cross-platform, 3D and historically-based real-time strategy game (debug version)"
-  license=('GPL2' 'custom:MIT')	# ‘source/’ licenses.
-  depends=('boost-libs' 'curl' 'enet' 'gamin' 'libogg' 'libpng' 'libvorbis' 'libxml2' 'mesa' 'openal' 'sdl' 'zip' 'zlib' '0ad-data')
-
-  cd $srcdir/$pkgbase-$_pkgver/build/workspaces/gcc
-  make config=debug -j3
-  cd $srcdir/$pkgbase-$_pkgver
-  install_0ad debug
-
-  # Execution script:
-  install -d $pkgdir/usr/bin/
-  local scriptname="${pkgbase}-debug"
-  echo "#!/bin/sh"			>  $pkgdir/usr/bin/$scriptname
-  echo "cd /usr/share/$pkgbase/system"	>> $pkgdir/usr/bin/$scriptname
-  echo "./pyrogenesis_dbg $*"		>> $pkgdir/usr/bin/$scriptname
-  chmod +x $pkgdir/usr/bin/$scriptname
-
-  # Legal.
-  install -Dm644 LICENSE.txt $pkgdir/usr/share/licenses/$pkgbase-debug/license.txt
-  
-}
-
-package_0ad-data() {
-  depends=()
-  pkgdesc="Cross-platform, 3D and historically-based real-time strategy game (data files)"
-  arch=('any')
-  license=('GPL2' 'CCPL-by-sa')	# ‘binary/data/’ licenses.
-
-  cd $srcdir/$pkgbase-$_pkgver
-
-  install -d $pkgdir/usr/share/$pkgbase
-  cp -r $srcdir/$pkgbase-$_pkgver/binaries/data $pkgdir/usr/share/$pkgbase/
-
-  # Legal.
-  install -Dm644 LICENSE.txt $pkgdir/usr/share/licenses/$pkgbase-data/license.txt
 }
