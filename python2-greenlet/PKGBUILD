@@ -4,23 +4,22 @@
 # Maintainer: Daniele Cocca <jmc@chakra-project.org>
 #
 
-# include global config
-source ../_buildscripts/${current_repo}-${_arch}-cfg.conf
-
-pkgname=python-greenlet
+_pkgname=python-greenlet
+pkgname=python2-greenlet
 pkgver=0.4.1
 pkgrel=1
-pkgdesc="The greenlet package is a spin-off of Stackless, a version of CPython that supports micro-threads called \"tasklets\"."
+pkgdesc='The greenlet package is a spin-off of Stackless, a version of CPython that supports micro-threads called "tasklets".'
 arch=('i686' 'x86_64')
 license=('LGPL')
 depends=('python2')
 makedepends=('setuptools')
+replaces=('python-greenlet')
 url="http://bitbucket.org/ambroff/greenlet"
-source=("http://download.ag-projects.com/SipClient/${pkgname}-${pkgver}.tar.gz")
+source=("http://download.ag-projects.com/SipClient/${_pkgname}-${pkgver}.tar.gz")
 md5sums=('06038bf679b534dd820ef7b02c657152')
 
 package() {
-  cd "${srcdir}/${pkgname}-${pkgver}"
+  cd "${srcdir}/${_pkgname}-${pkgver}"
   python2 setup.py install --prefix=/usr --root="${pkgdir}" || return 1
 }
 

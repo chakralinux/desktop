@@ -4,17 +4,14 @@
 # Maintainer: Daniele Cocca <jmc@chakra-project.org>
 #
 
-# include global config
-source ../_buildscripts/${current_repo}-${_arch}-cfg.conf
-
 pkgname=blink
-pkgver=20120107
+pkgver=20120826
 pkgrel=1
 pkgdesc="A state of the art, easy to use SIP client. You can use it with any SIP provider or its own fully-featured SIP service."
 arch=('any')
 url="http://icanblink.com/"
 license=('GPL')
-depends=('python2' 'pyqt' 'python-sipsimple')
+depends=('python2' 'pyqt' 'python2-sipsimple')
 makedepends=('darcs')
 categories=('communication')
 source=('blink.desktop')
@@ -25,19 +22,25 @@ _darcsmod="blink-qt"
 
 build() {
   msg "Starting Darcs pull..."
+
   cd "${srcdir}"
+
   if [ -d "${_darcsmod}/_darcs" ]; then
     (cd "${_darcsmod}" && darcs pull -a)
   else
     darcs get "${_darcstrunk}/${_darcsmod}" "${_darcsmod}"
   fi
+
   msg "Darcs pull done (or server timeout)."
 }
 
 package() {
   cd "${srcdir}/${_darcsmod}"
+
   python2 setup.py install --prefix=/usr --root="${pkgdir}"
-  install -Dm644 "${srcdir}/blink.desktop" "${pkgdir}/usr/share/applications/blink.desktop"
+
+  install -D -m644 "${srcdir}/blink.desktop" \
+                   "${pkgdir}/usr/share/applications/blink.desktop"
 }
 
 # vim:set ts=2 sw=2 et:
