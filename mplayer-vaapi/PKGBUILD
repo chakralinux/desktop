@@ -5,7 +5,7 @@
 
 pkgname=mplayer-vaapi
 pkgver=35107
-pkgrel=2
+pkgrel=3
 pkgdesc="A movie player, compiled with vaapi support"
 arch=('i686' 'x86_64')
 url="http://gitorious.org/vaapi/mplayer"
@@ -18,21 +18,21 @@ depends=('libxxf86dga' 'libxxf86vm' 'libmad' 'libcdio' 'libxinerama' 'sdl'
          'libva' 'desktop-file-utils' 'libbs2b')
 optdepends=('libva-driver-intel: video acceleration for Intel graphic cards')
 makedepends=('unzip' 'live-media' 'yasm' 'ladspa' 'git')
-provides=("mplayer=$pkgver")
+provides=("mplayer=${pkgver}")
 conflicts=('mplayer')
 backup=('etc/mplayer/codecs.conf' 'etc/mplayer/input.conf')
 categories=('multimedia')
 options=('!buildflags' '!emptydirs')
 install=${pkgname}.install
-source=("http://pkgbuild.com/~foutrelis/mplayer-vaapi-$pkgver.tar.xz"
+source=("http://pkgbuild.com/~foutrelis/mplayer-vaapi-${pkgver}.tar.xz"
         "tweak-desktop-file.patch")
 sha256sums=('a6c645625cc2cd6ca48764db302c926049f831e757857ece351b37b674e05e56'
             '5a09fb462729a4e573568f9e8c1f57dbe7f69c0b68cfa4f6d70b3e52c450d93b')
 
 build() {
-  cd "$srcdir/mplayer-vaapi-$pkgver"
+  cd "${srcdir}/mplayer-vaapi-${pkgver}"
 
-  patch -d etc -Np0 -i "$srcdir/tweak-desktop-file.patch"
+  patch -d etc -Np0 -i "${srcdir}/tweak-desktop-file.patch"
 
   ./configure --prefix=/usr \
     --enable-runtime-cpudetection \
@@ -61,13 +61,13 @@ build() {
 }
 
 package() {
-  cd "$srcdir/mplayer-vaapi-$pkgver"
+  cd "${srcdir}/mplayer-vaapi-${pkgver}"
 
-  make -j1 DESTDIR="$pkgdir" install-mplayer install-mplayer-man
-  install -Dm644 etc/{codecs.conf,input.conf,example.conf} "$pkgdir/etc/mplayer/"
-  install -Dm644 etc/mplayer.desktop "$pkgdir/usr/share/applications/mplayer.desktop"
-  install -d "$pkgdir/usr/share/mplayer/"
-  ln -s /usr/share/fonts/TTF/DejaVuSans.ttf "$pkgdir/usr/share/mplayer/subfont.ttf"
-  rm -rf "$pkgdir/usr/share/mplayer/font"
-  install -Dm644 etc/mplayer256x256.png "$pkgdir/usr/share/pixmaps/mplayer.png"
+  make -j1 DESTDIR="${pkgdir}" install-mplayer install-mplayer-man
+  install -Dm644 etc/{codecs.conf,input.conf,example.conf} "${pkgdir}/etc/mplayer/"
+  install -Dm644 etc/mplayer.desktop "${pkgdir}/usr/share/applications/mplayer.desktop"
+  install -d "${pkgdir}/usr/share/mplayer/"
+  ln -s /usr/share/fonts/TTF/DejaVuSans.ttf "${pkgdir}/usr/share/mplayer/subfont.ttf"
+  rm -rf "${pkgdir}/usr/share/mplayer/font"
+  install -Dm644 etc/mplayer256x256.png "${pkgdir}/usr/share/pixmaps/mplayer.png"
 }
