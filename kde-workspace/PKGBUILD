@@ -16,15 +16,14 @@ _default_wp="Ariya"
 pkgname="kde-workspace"
 arch=('i686' 'x86_64')
 pkgver=${_kdever}
-pkgrel=3
+pkgrel=4
 pkgdesc="KDE Workspace"
 url="http://www.kde.org"
 license=('GPL' 'LGPL' 'FDL')
 options=('docs' '!splithdr' 'splitdbg' 'log')
 install=${pkgname}.install
-depends=('polkit-kde-agent' "kdepimlibs>=${_kdever}" "kde-runtime>=${_kdever}" 'qimageblitz' 'libgles' 'libegl' "kactivities>=${_kdever}"
-	    'libxxf86misc' 'libxcomposite' 'libxss' 'lm_sensors' 'libxklavier' 'libxft' 'oxygen-icons' "xkit" 'libgles' 'libegl'
-	    'libxdamage' 'xorg-utils' 'libxrandr' 'libxres' 'libdmtx' 'libqalculate' 'prison' 'qrencode' "kdepim-runtime>=${_kdever}" "kde-base-artwork>=${_kdever}")
+depends=('polkit-kde-agent' "kdepimlibs>=${_kdever}" "kde-runtime>=${_kdever}" 'qimageblitz' 'mesa' "kactivities>=${_kdever}"
+	    'libxxf86misc' 'libxcomposite' 'libxss' 'lm_sensors' 'libxklavier' 'libxft' 'oxygen-icons' 'xkit' 'libxdamage' 'xorg-utils' 'libxrandr' 'libxres' 'libdmtx' 'libqalculate' 'prison' 'qrencode' "kdepim-runtime>=${_kdever}" "kde-base-artwork>=${_kdever}")
 makedepends=('pkgconfig' 'cmake' 'automoc4' 'networkmanager' 'bluez' "kdebindings-pykde4>=${_kdever}"
 	    'oxygen-icons' 'qedje' "kde-runtime>=${_kdever}" 'gpsd' 'samba' 
 	    'libraw1394' 'libdmtx' 'consolekit' 'docbook-xsl' 'prison' 'qrencode') #google-gadgets-qt 
@@ -54,6 +53,7 @@ source=($_mirror/${pkgname}-$_kdever.tar.xz
         kscreensaver.pam
         chakra-branding.tar.gz
 	chakra-themes.tar.gz
+	kdm.service
 
         # core patches
         01_kdm_zsh_profile.patch
@@ -88,6 +88,7 @@ md5sums=(`grep ${pkgname}-$_kdever.tar.xz ../kde-sc.md5 | cut -d" " -f1`
         '367a3538f54db71f108b34cfa31088ac'  #  kscreensaver.pam
         '169c6fc83d5562b5d7249db7fc46d8d6'  #  chakra-branding.tar.gz
         'c328f1c5cfa3e551205ffdc0fdda41a8'  #  chakra-themes.tar.gz
+        'c4b5f1b342b3dad38642318ca077daee'  #  kdm.service
 
         '721e97031b62aee8914e8617e86f9235'  #  01_kdm_zsh_profile.patch
         'e2eb9d270fe0e93901b29256bdedd7e2'  #  02_sane_env_and_shutdown_path.patch
@@ -236,4 +237,8 @@ package() {
 	cp -rv ${srcdir}/${pkgname}-${_kdever}/powerdevil/daemon/powerdevilaction.h ${pkgdir}/usr/include/powerdevil
 	cp -rv ${srcdir}/${pkgname}-${_kdever}/powerdevil/daemon/powerdevilactionconfig.h ${pkgdir}/usr/include/powerdevil
 	cp -rv ${srcdir}/${pkgname}-${_kdever}/powerdevil/daemon/powerdevilpolicyagent.h ${pkgdir}/usr/include/powerdevil
+	
+	# Systemd .service file
+	install -D -m644 "${srcdir}"/kdm.service "${pkgdir}"/usr/lib/systemd/system/kdm.service
+
 }
