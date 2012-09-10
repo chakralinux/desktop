@@ -5,15 +5,15 @@
 # Contributor: Sebastien Luttringer <seblu[plus]arch[at]seblu[dot]net>
 
 pkgname=virtualbox
-pkgver=4.1.18
-_build=78361
-pkgrel=3
+pkgver=4.1.22
+_build=80657
+pkgrel=1
 pkgdesc='Oracle VM VirtualBox Binary Edition'
 arch=('i686' 'x86_64')
 url='http://virtualbox.org/'
 license=('GPL2')
 depends=('libidl2' 'libxcursor' 'libxinerama' 'libxslt' 'curl' 'linux-headers'
-         'python2' 'make' 'gcc' 'mesa' 'libgl')
+         'python2' 'make' 'gcc')
 options=('!strip')
 optdepends=('virtualbox-ext-oracle: for Oracle extensions'
             'dkms: for handling kernel modules with dkms'
@@ -29,6 +29,7 @@ conflicts=('virtualbox' 'virtualbox-ose' 'virtualbox-modules')
 categories=('system')
 backup=('etc/vbox/vbox.cfg' 'etc/conf.d/vboxdrv' 'etc/conf.d/vboxweb')
 install='install'
+screenshot='https://www.virtualbox.org/raw-attachment/wiki/Screenshots/gnome.png'
 
 _sarch='x86'
 [ "${CARCH}" = 'x86_64' ] && _sarch='amd64'
@@ -40,14 +41,20 @@ source=(
   'vboxdrv.conf'
   'vboxweb.rc'
   'vboxweb.conf'
+  'vboxdrv.service'
+  'vboxweb.service'
 )
-sha256sums=('f45015f3b427a24195e8cbabb2158d26daecd6c03cd7437aacb5249500a2b425'
+sha256sums=('d53a5cc2d1b9431d4f9443462b84549678e943be1d8b4a714d7844c741507c76'
             '69417a9e8855cab8e4878886abe138f559fd17ae487d4cd19c8a24974a8bbec2'
             '578b63ab173cdcd9169d8aff00caf48668e46a6886bb90fd34a0fbe63e180a4e'
             '71740893a5f226f9d9fcc607ab9d39b7de816b2759625b34da19162bc7e579ff'
             '656905de981ffa24f6f921c920538854a235225053f44baedacc07b46ca0cf56'
-            '12dbba3b59991f2b68cddeeeda20236aeff63e11b7e2d1b08d9d6a82225f6651')
-[[ "${CARCH}" = i686 ]] && sha256sums[0]='112d5eefb15fc96f9e2c3a85928a1984c022ef32bb8781536a7a06e33a80865a'
+            '12dbba3b59991f2b68cddeeeda20236aeff63e11b7e2d1b08d9d6a82225f6651'
+            'b8d4d82c90f81af67f7449d880430bda4d1d73c571851f40c339faee809d7239'
+            'e6e875ef186578b53106d7f6af48e426cdaf1b4e86834f01696b8ef1c685787f')
+
+
+[[ "${CARCH}" = i686 ]] && sha256sums[0]='e084db553064fb85136df22d13f262fef602daca56b95799cef7df761310a8d5'
 _installdir='/opt/VirtualBox'
 
 package() {
@@ -95,8 +102,8 @@ package() {
   install -D -m 0644 "${srcdir}/vboxweb.conf" "${pkgdir}/etc/conf.d/vboxweb"
 
   # Install udev rules
-  install -D -m 0644 "${srcdir}/10-vboxdrv.rules" "${pkgdir}/usr/lib/udev/rules.d/10-vboxdrv.rules"
-  ln -s "${_installdir}/VBoxCreateUSBNode.sh" "${pkgdir}/usr/lib/udev/VBoxCreateUSBNode.sh"
+  install -D -m 0644 "${srcdir}/10-vboxdrv.rules" "${pkgdir}/lib/udev/rules.d/10-vboxdrv.rules"
+  ln -s "${_installdir}/VBoxCreateUSBNode.sh" "${pkgdir}/lib/udev/VBoxCreateUSBNode.sh"
 
   # Install the SDK
   cd "${pkgdir}/${_installdir}/sdk/installer"
@@ -155,4 +162,8 @@ package() {
 
   # Create the directory below if it doesn't exist
   install -d -m 0755 "${pkgdir}/var/run/VirtualBox"
+
+  # Install systemd services
+   install -D -m644 "$srcdir/vboxweb.service" "$pkgdir/usr/lib/systemd/system/vboxweb.service"
+   install -D -m644 "$srcdir/vboxdrv.service" "$pkgdir/usr/lib/systemd/system/vboxdrv.service"
 }
