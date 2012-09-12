@@ -1,13 +1,14 @@
 # Chakra Packages for Chakra, part of chakra-project.org
 #
-# maintainer abveritas@chakra-project.org
+# maintainer (i686): Phil Miller <philm[at]chakra-project[dog]org>
+# maintainer (x86_64): Manuel Tortosa <manutortosa[at]chakra-project[dot]org>
 # Original Contributor Martin Lee < hellnest.fuah@gmail.com >
 # Fix Contributo mcder3 <mcder3@gmail.com>
 
 pkgname=appmenu-qt
 appname=appmenu-qt
 pkgbranch=trunk
-pkgver=0.2.5
+pkgver=0.2.6
 pkgrel=1
 pkgdesc="Application menu module for Qt"
 arch=('i686' 'x86_64')
@@ -17,16 +18,16 @@ depends=('libdbusmenu-qt')
 makedepends=('cmake' 'automoc4')
 provides=('appmenu-qt')
 conflicts=('appmenu-qt-bzr')
-source=(http://launchpad.net/${appname}/${pkgbranch}/${pkgver}/+download/${appname}-${pkgver}.tar.bz2)
-md5sums=('32f7064616e89e48ecc066cc7d65ef70')
+source=("http://launchpad.net/${appname}/${pkgbranch}/${pkgver}/+download/${appname}-${pkgver}.tar.bz2")
+sha1sums=('e600d389b85c941e2c891e5123968f1ffaa666d0')
 
- build() {
+build() {
     cd "${srcdir}/${appname}-${pkgver}"
     cmake . -DCMAKE_INSTALL_PREFIX=`kde4-config --prefix`
     make
 }
 
- package() {
+package() {
     cd "${srcdir}/${appname}-${pkgver}"
     make DESTDIR="${pkgdir}" install
 }

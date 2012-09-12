@@ -4,22 +4,21 @@
 # Maintainer: Daniele Cocca <jmc@chakra-project.org>
 #
 
-# include global config
-source ../_buildscripts/${current_repo}-${_arch}-cfg.conf
-
-pkgname=python-gnutls
-pkgver=1.2.3
+_pkgname=python-gnutls
+pkgname=python2-gnutls
+pkgver=1.2.4
 pkgrel=1
 pkgdesc="Python wrapper for the GNU TLS library."
 arch=('any')
 license=('LGPL')
 depends=('python2')
+replaces=('python-gnutls')
 url="http://ag-projects.com/"
-source=("http://pypi.python.org/packages/source/p/${pkgname}/${pkgname}-${pkgver}.tar.gz")
-md5sums=('a24fa2737e7ccf379f603707f5709317')
+source=("http://pypi.python.org/packages/source/p/${_pkgname}/${_pkgname}-${pkgver}.tar.gz")
+md5sums=('e3536c421291a791869d875a41dcb26a')
 
 package() {
-  cd "${srcdir}/${pkgname}-${pkgver}"
+  cd "${srcdir}/${_pkgname}-${pkgver}"
   python2 setup.py install --prefix=/usr --root="${pkgdir}" || return 1
 }
 

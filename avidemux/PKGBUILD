@@ -1,97 +1,104 @@
 #
 # Chakra Packages for Chakra, part of chakra-project.org
 #
-# maintainer (abveritas[at]chakra-project[dog]org>
+# maintainer (abveritas[at]chakra-project[dot]org>
 
 # include global config
 source ../_buildscripts/${current_repo}-${_arch}-cfg.conf
 
 pkgbase=avidemux
 pkgname=('avidemux-cli' 'avidemux')
-pkgver=2.5.6
+pkgver=2.6.0
 pkgrel=1
 pkgdesc='Simple video editor for cutting, filtering and encoding tasks.'
 arch=('i686' 'x86_64')
 license=('GPL')
 url="http://fixounet.free.fr/avidemux/"
-makedepends=('cmake' 'libxslt' 'qt' 'jack' 'esound' 'libvorbis' 'sdl' 'libxv'
-             'alsa-lib' 'lame' 'xvidcore' 'faad2' 'faac' 'x264' 'libsamplerate' 'opencore-amr' 'yasm')
+screenshot="http://upload.wikimedia.org/wikipedia/commons/7/77/Avidemux_Screenshot_Qt.png"
+makedepends=('cmake' 'libxslt' 'qt' 'jack' 'libvorbis' 'sdl' 'libxv'
+             'alsa-lib' 'lame' 'xvidcore' 'faad2' 'faac' 'x264' 'libsamplerate' 
+             'opencore-amr' 'yasm' 'mesa' 'libvpx' 'libpulse' 'libva' 'desktop-file-utils')
 categories=('multimedia')
-source=(http://downloads.sourceforge.net/avidemux/avidemux_${pkgver}.tar.gz)
-md5sums=('00e479dd806b94a98d3f0f40639e88a9')
+options=("!makeflags")
+source=("https://downloads.sourceforge.net/project/avidemux/avidemux/${pkgver}/${pkgbase}_${pkgver}.tar.gz")
+sha256sums=('5ee2d898794141b47bc288e9b0fb770eff831125a586e7e7046f0e2506ea4580')
          
 build() {
   cd "${srcdir}/${pkgbase}_${pkgver}"
-  mkdir build
-  cd build
-  cmake -D CMAKE_INSTALL_PREFIX=/usr -D CMAKE_BUILD_TYPE=Release -D CMAKE_SKIP_RPATH=ON -D GTK=0 -D QT4=1 .. || return 1
-  make 
 
-# plugin build expects libraries to be already installed; we fake a prefix
-# in build/ by symlinking all libraries to build/lib/
-  mkdir -p lib
-  cd lib
-  find ../avidemux -name '*.so*' | xargs ln -sft .  
-  cd ../../plugins
-  mkdir build
-  cd build
-  cmake -D CMAKE_INSTALL_PREFIX=/usr -D AVIDEMUX_SOURCE_DIR=${srcdir}/avidemux_${pkgver} \
-    -D AVIDEMUX_CORECONFIG_DIR=${srcdir}/avidemux_${pkgver}/build/config \
-    -D AVIDEMUX_INSTALL_PREFIX=${srcdir}/avidemux_${pkgver}/build \
-    -D CMAKE_BUILD_TYPE=Release -D CMAKE_SKIP_RPATH=ON -D GTK=0 -D QT4=1 .. 
-  make 
+  # build
+  bash ./bootStrap.bash --with-core \
+                        --with-cli \
+                        --with-qt4 \
+                        --without-gtk \
+                        --with-plugins
+
+  # Create qm files
+  cd po
+  lrelease *.po
 }
 
 package_avidemux-cli() {
   pkgdesc="A graphical tool to edit video (filter/re-encode/split)"
   depends=('libxv' 'libxml2' 'sdl' 'fontconfig' 'libvpx')
-  optdepends=('lame: for the corresponding audio encoder plugin' \
-              'faac: for the corresponding audio encoder plugin' \
-              'faad2: for the corresponding audio decoder plugin' \
-              'opencore-amr: for the corresponding audio decoder plugin' \
-              'esound: for the corresponding audio device plugin' \
-              'jack: for the corresponding audio device plugin' \
-              'sdl: for the corresponding audio device plugin' \
-              'x264: for the corresponding video encoder plugin' \
+  optdepends=('lame: for the corresponding audio encoder plugin'
+              'faac: for the corresponding audio encoder plugin'
+              'faad2: for the corresponding audio decoder plugin'
+              'opencore-amr: for the corresponding audio decoder plugin'
+              'jack: for the corresponding audio device plugin'
+              'libpulse: for the corresponding audio device plugin'
+              'sdl: for the corresponding audio device plugin'
+              'x264: for the corresponding video encoder plugin'
               'xvidcore: for the corresponding video encoder plugin')
 
-  cd "${srcdir}/${pkgbase}_${pkgver}/build"
-  make DESTDIR="${pkgdir}" install 
+  cd "${srcdir}/${pkgbase}_${pkgver}/install"
 
-  cd "${srcdir}/${pkgbase}_${pkgver}/plugins/build"
-  make DESTDIR="${pkgdir}" install 
-  rm -r "${pkgdir}"/usr/share/avidemux
-  rm "${pkgdir}"/usr/bin/avidemux2_qt4
-  rm "${pkgdir}"/usr/lib/*{_qt4,QT4}.so
-  rm "${pkgdir}"/usr/lib/ADM_plugins/videoEncoder/x264/*Qt.so
-  rm "${pkgdir}"/usr/lib/ADM_plugins/videoEncoder/xvid/*Qt.so
-  rm "${pkgdir}"/usr/lib/ADM_plugins/videoFilter/*_qt4.so
+  # install binary
+  install -Dm755 usr/bin/avidemux3_cli "${pkgdir}/usr/bin/avidemux3_cli"
 
-  ln -s /usr/lib/ADM_plugins/videoEncoder/libADM_vidEnc_xvid.so "${pkgdir}/usr/lib/libADM_vidEnc_xvid.so"
-  ln -s /usr/lib/ADM_plugins/videoEncoder/libADM_vidEnc_x264.so "${pkgdir}/usr/lib/libADM_vidEnc_x264.so"
+  # install libraries
+  cp -dpr --no-preserve=ownership usr/lib "${pkgdir}/usr/"
+  rm "${pkgdir}"/usr/lib/*{qt4,QT46}.so
+  rm "${pkgdir}"/usr/lib/ADM_plugins6/scriptEngines/libADM_script_qt.so
+  rm "${pkgdir}"/usr/lib/ADM_plugins6/videoEncoders/libADM_ve_x264_qt4.so
+  rm "${pkgdir}"/usr/lib/ADM_plugins6/videoFilters/libADM_vf_*{Qt4,qt4}.so
 
-  install -D -m644 ../../avidemux_icon.png "${pkgdir}/usr/share/pixmaps/avidemux.png" 
-  install -D -m644 ../../man/avidemux.1 "${pkgdir}/usr/share/man/man1/avidemux.1" 
+  ln -s /usr/lib/ADM_plugins6/videoEncoders/libADM_ve_xvid4.so "${pkgdir}/usr/lib/libADM_ve_xvid4.so"
+  ln -s /usr/lib/ADM_plugins6/videoEncoders/libADM_ve_x264_other.so "${pkgdir}/usr/lib/libADM_ve_x264_other.so"
+
+  # install icon and man pages
+  install -D -m644 "${srcdir}/${pkgbase}_${pkgver}/avidemux_icon.png" "${pkgdir}/usr/share/pixmaps/avidemux.png"
+  install -D -m644 "${srcdir}/${pkgbase}_${pkgver}/man/avidemux.1" "${pkgdir}/usr/share/man/man1/avidemux.1" 
 }
 
 package_avidemux() {
   pkgdesc="A graphical tool to edit video (filter/re-encode/split)"
   depends=('avidemux-cli' 'qt')
 
-  cd "${srcdir}/${pkgbase}_${pkgver}"
-  install -D -m755 build/avidemux/avidemux2_qt4 "${pkgdir}/usr/bin/avidemux" 
-  install -d "${pkgdir}"/usr/lib/ADM_plugins/videoEncoder/{x264,xvid}
-  install -d "${pkgdir}"/usr/lib/ADM_plugins/videoFilter
+  cd "${srcdir}/${pkgbase}_${pkgver}/install"
+  
+  # install binary
+  install -D -m755 usr/bin/avidemux3_qt4 "${pkgdir}/usr/bin/avidemux"
 
-  install -D -m755 build/lib/*{_qt4,QT4}.so "${pkgdir}/usr/lib"
-  install -D -m755 plugins/build/ADM_videoEncoder/ADM_vidEnc_x264/qt4/*Qt.so "${pkgdir}/usr/lib/ADM_plugins/videoEncoder/x264"
-  install -D -m755 plugins/build/ADM_videoEncoder/ADM_vidEnc_xvid/qt4/*Qt.so "${pkgdir}/usr/lib/ADM_plugins/videoEncoder/xvid"
-  install -D -m755 plugins/build/ADM_videoFilters/*/*_qt4.so "${pkgdir}/usr/lib/ADM_plugins/videoFilter"
+  # install libraries
+  install -d -m755 "${pkgdir}"/usr/lib/ADM_plugins6/videoEncoders
+  install -d -m755 "${pkgdir}"/usr/lib/ADM_plugins6/videoFilters
+  install -D -m755 usr/lib/*{_qt4,QT46}.so "${pkgdir}/usr/lib/"
+  install -D -m755 usr/lib/ADM_plugins6/videoEncoders/libADM_ve_x264_qt4.so "${pkgdir}/usr/lib/ADM_plugins6/videoEncoders/"
+  install -D -m755 usr/lib/ADM_plugins6/videoFilters/libADM_vf_*{Qt4,qt4}.so "${pkgdir}/usr/lib/ADM_plugins6/videoFilters/"
 
-  install -d "${pkgdir}/usr/share/avidemux/i18n"
-  install -D -m644 build/po/*.qm "${pkgdir}/usr/share/avidemux/i18n"
+  # install language files
+  install -d -m755 "${pkgdir}/usr/share/avidemux6/i18n"
+  install -D -m644 "${srcdir}/${pkgbase}_${pkgver}"/po/*.qm "${pkgdir}/usr/share/avidemux6/i18n/"
+    
+  # install docs
+  install -d -m755 "${pkgdir}/usr/share/avidemux"
+  cp -dpr --no-preserve=ownership usr/share/avidemux6/help/QtScript "${pkgdir}/usr/share/avidemux/"
 
-  install -D -m644 avidemux2.desktop "${pkgdir}/usr/share/applications/avidemux.desktop" 
-  sed -i 's/Name=avidemux2/Name=avidemux/' "${pkgdir}/usr/share/applications/avidemux.desktop" 
-  sed -i 's/avidemux2_gtk/avidemux/' "${pkgdir}/usr/share/applications/avidemux.desktop" 
+  # install desktop file
+  install -D -m644 "${srcdir}/${pkgbase}_${pkgver}/avidemux2.desktop" "${pkgdir}/usr/share/applications/avidemux.desktop"
+  desktop-file-edit --set-name="avidemux" \
+                    --set-key=Exec --set-value=avidemux \
+                    --set-icon="/usr/share/applications/avidemux.png" \
+                    "${pkgdir}/usr/share/applications/avidemux.desktop"
 }

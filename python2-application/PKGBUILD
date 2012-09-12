@@ -4,22 +4,21 @@
 # Maintainer: Daniele Cocca <jmc@chakra-project.org>
 #
 
-# include global config
-source ../_buildscripts/${current_repo}-${_arch}-cfg.conf
-
-pkgname=python-application
-pkgver=1.3.0
+_pkgname=python-application
+pkgname=python2-application
+pkgver=1.4.0
 pkgrel=1
 pkgdesc="Collection of modules that are useful when building Python applications."
 arch=('any')
 license=('LGPL')
 depends=('python2')
+replaces=('python-application')
 url="http://ag-projects.com/"
-source=("http://pypi.python.org/packages/source/p/${pkgname}/${pkgname}-${pkgver}.tar.gz")
-md5sums=('cbfb43e410e1d07e4b85775cdc4b28b0')
+source=("http://pypi.python.org/packages/source/p/${_pkgname}/${_pkgname}-${pkgver}.tar.gz")
+md5sums=('2c1ec745f512ffd5892b0dd415074834')
 
 package() {
-  cd "${srcdir}/${pkgname}-${pkgver}"
+  cd "${srcdir}/${_pkgname}-${pkgver}"
   python2 setup.py install --prefix=/usr --root="${pkgdir}" || return 1
 }
 

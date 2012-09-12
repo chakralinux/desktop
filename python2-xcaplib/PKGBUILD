@@ -4,11 +4,9 @@
 # Maintainer: Daniele Cocca <jmc@chakra-project.org>
 #
 
-# include global config
-source ../_buildscripts/${current_repo}-${_arch}-cfg.conf
-
-pkgname=python-xcaplib
-pkgver=20120107
+_pkgname=python-xcaplib
+pkgname=python2-xcaplib
+pkgver=20120826
 pkgrel=1
 pkgdesc="Client for managing full or partial XML documents on XCAP servers (RFC 4825)."
 arch=('any')
@@ -18,16 +16,19 @@ depends=('python2')
 makedepends=('darcs')
 
 _darcstrunk="http://devel.ag-projects.com/repositories"
-_darcsmod="python-xcaplib"
+_darcsmod="${_pkgname}"
 
 build() {
   msg "Starting Darcs pull..."
+
   cd "${srcdir}"
+
   if [ -d "${_darcsmod}/_darcs" ]; then
     (cd "${_darcsmod}" && darcs pull -a)
   else
     darcs get "${_darcstrunk}/${_darcsmod}" "${_darcsmod}"
   fi
+
   msg "Darcs pull done (or server timeout)."
 }
 
