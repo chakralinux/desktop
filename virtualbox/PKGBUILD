@@ -5,8 +5,8 @@
 # Contributor: Sebastien Luttringer <seblu[plus]arch[at]seblu[dot]net>
 
 pkgname=virtualbox
-pkgver=4.1.22
-_build=80657
+pkgver=4.2.0
+_build=80737
 pkgrel=1
 pkgdesc='Oracle VM VirtualBox Binary Edition'
 arch=('i686' 'x86_64')
@@ -44,7 +44,7 @@ source=(
   'vboxdrv.service'
   'vboxweb.service'
 )
-sha256sums=('d53a5cc2d1b9431d4f9443462b84549678e943be1d8b4a714d7844c741507c76'
+sha256sums=('04030998f15b656e9b76064cde3e6cb43c5a41b1e25e700f123f5a629578fe5e'
             '69417a9e8855cab8e4878886abe138f559fd17ae487d4cd19c8a24974a8bbec2'
             '578b63ab173cdcd9169d8aff00caf48668e46a6886bb90fd34a0fbe63e180a4e'
             '71740893a5f226f9d9fcc607ab9d39b7de816b2759625b34da19162bc7e579ff'
@@ -162,8 +162,4 @@ package() {
 
   # Create the directory below if it doesn't exist
   install -d -m 0755 "${pkgdir}/var/run/VirtualBox"
-
-  # Install systemd services
-   install -D -m644 "$srcdir/vboxweb.service" "$pkgdir/usr/lib/systemd/system/vboxweb.service"
-   install -D -m644 "$srcdir/vboxdrv.service" "$pkgdir/usr/lib/systemd/system/vboxdrv.service"
 }
