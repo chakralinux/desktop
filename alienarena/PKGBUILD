@@ -4,33 +4,33 @@
 # Contributor: Giuseppe Calà <jiveaxe@gmail.com>
 
 pkgname=alienarena
-pkgver=7.53
+pkgver=7.60.1
 pkgrel=1
-_verdate=20111227
+_verdate=20120823
 pkgdesc="Multiplayer retro sci-fi deathmatch game"
 arch=('i686' 'x86_64')
 url='http://icculus.org/alienarena/rpa/'
 license=('GPL' 'LGPL' 'custom:Non-free data')
 depends=('curl' 'freetype2' 'libgl' 'libjpeg' 'libvorbis' 'libxxf86dga' 'libxxf86vm' 'mesa' 'ode' 'sdl' 'openal')
 categories=('games')
-source=(http://icculus.org/alienarena/Files/alienarena-$pkgver-linux${_verdate}.tar.gz
-	'alienarena.desktop')
-md5sums=('2ccf9f1e2781c3bc005dbdb1b9954a33'
-         '7bc3fba786eb379fbcb3c9aecf106811')
+source=("http://icculus.org/alienarena/Files/alienarena-${pkgver}-linux${_verdate}.tar.gz"
+        'alienarena.desktop')
+sha256sums=('a53fcc6d1fe54217bf9f9e4ca5500a615686737da1919e2b52847ba879531301'
+            '1b872db6d5544e5537592ba19d08c1016ba1816e134f2ebbf0266a9468c753e4')
  
 build() {
-  cd "$srcdir/$pkgname-$pkgver"
+  cd "${srcdir}/${pkgname}-${pkgver}"
 
-  ./configure \
-    --prefix=/usr
+  ./configure --prefix=/usr
   make
 }
 
 package() {
-  cd "$srcdir/$pkgname-$pkgver"
+  cd "${srcdir}/${pkgname}-${pkgver}"
 
-  make DESTDIR="$pkgdir" install
-  mv -f "$pkgdir/usr/bin/crx" "$pkgdir/usr/bin/$pkgname"
-  mv -f "$pkgdir/usr/bin/crx-ded" "$pkgdir/usr/bin/$pkgname-ded"
-  install -D -m644 "$srcdir/alienarena.desktop" "${pkgdir}/usr/share/applications/alienarena.desktop"
+  make DESTDIR="${pkgdir}" install
+  install -d -m755 "${pkgdir}/usr/share/pixmaps"
+  mv -f "${pkgdir}/usr/share/icons/alienarena.png" "${pkgdir}/usr/share/pixmaps/"
+  rm -r "${pkgdir}/usr/share/icons"
+  install -D -m644 "${srcdir}/alienarena.desktop" "${pkgdir}/usr/share/applications/alienarena.desktop"
 }
