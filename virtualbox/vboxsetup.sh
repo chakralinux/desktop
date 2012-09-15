@@ -1,19 +1,21 @@
 #!/bin/bash
 
-. /etc/rc.conf
-. /etc/rc.d/functions
 . /etc/vbox/vbox.cfg
 . /etc/conf.d/vboxdrv
 
+if [ "$EUID" -ne "0" ]; then
+  echo "Please run this script with root privileges"
+  exit 0
+fi
+
 if [[ -n "$INSTALL_DIR" ]]; then
-  VBOXMANAGE="$INSTALL_DIR/VBoxManage"
-  BUILDVBOXDRV="$INSTALL_DIR/src/vboxhost/vboxdrv/build_in_tmp"
-  BUILDVBOXNETFLT="$INSTALL_DIR/src/vboxhost/vboxnetflt/build_in_tmp"
-  BUILDVBOXNETADP="$INSTALL_DIR/src/vboxhost/vboxnetadp/build_in_tmp"
+  MODULE_SRC="$INSTALL_DIR/src/vboxhost"
 else
   echo "Missing /etc/vbox/vbox.cfg"
   exit 0
 fi
+BUILDINTMP="$MODULE_SRC/build_in_tmp"
+DODKMS="$MODULE_SRC/do_dkms"
 
 # detection of dkms (if not disabled)
 if [[ "$DISABLE_DKMS" =~ [yY][eE][sS] ]]; then
@@ -30,81 +32,90 @@ fi
 load() {
   if [[ "$START_BUILD" =~ [yY][eE][sS] ]]; then
     # check if module exists
-    c=$('find' "/lib/modules/$(uname -r)" -type f -regex '.*/vbox\(drv\|netadp\|netflt\).ko' | wc -l)
+    c=$('find' "/lib/modules/$(uname -r)" -type f -regex '.*/vbox\(drv\|netadp\|netflt\|pci\).ko' | wc -l)
     ((c == 0 )) && setup
   fi
-  stat_busy "Loading VirtualBox kernel modules"
+  echo "Loading VirtualBox kernel modules"
   # trivial loading
-  for module in vbox{drv,netadp,netflt}; do
+  for module in vbox{drv,netadp,netflt,pci}; do
       modprobe $module &>/dev/null
   done
   # check
-  for module in vbox{drv,netadp,netflt}; do
+  for module in vbox{drv,netadp,netflt,pci}; do
     if ! grep -q "^${module}" /proc/modules; then
-      stat_fail
+      echo "Module ${module} could not be loaded"
       return 1
     fi
   done
-  add_daemon vboxdrv
-  stat_done
 }
 
 unload() {
-  stat_busy "Unloading VirtualBox kernel modules"
+  echo "Unloading VirtualBox kernel modules"
   # trivial unload
-  for module in vbox{netflt,netadp,drv}; do
+  for module in vbox{pci,netflt,netadp,drv}; do
     if grep -q "^${module}" /proc/modules; then
       modprobe -r $module &>/dev/null
     fi
   done
   # check
-  for module in vbox{drv,netadp,netflt}; do
+  for module in vbox{pci,drv,netadp,netflt}; do
     if grep -q "^${module}" /proc/modules; then
-      stat_fail
+      echo "Module ${module} could not be unloaded"
       return 1
     fi
   done
-  rm_daemon vboxdrv
-  stat_done
 }
 
 remove() {
+  unload
   if (( USE_DKMS == 1 )); then
-    status "Removing VirtualBox kernel modules with DKMS" dkms remove -m vboxhost -v "$INSTALL_VER" --all
+    echo "Removing VirtualBox kernel modules with DKMS"
+    $DODKMS uninstall vboxhost vboxdrv vboxnetflt vboxnetadp > $LOG
   else
-    stat_busy "Removing VirtualBox kernel modules"
-    find "/lib/modules/$(uname -r)" -type f -regex '.*/vbox\(drv\|netadp\|netflt\).ko' -delete
-    stat_done
+    echo "Removing VirtualBox kernel modules"
+    find "/lib/modules/$(uname -r)" -type f -regex '.*/vbox\(pci\|drv\|netadp\|netflt\).ko' -delete
   fi
 }
 
 setup() {
   if (( USE_DKMS == 1 )); then
-    status "Adding VirtualBox kernel modules in DKMS" dkms add -m vboxhost -v "$INSTALL_VER"
-    status "Bulding VirtualBox kernel modules with DKMS" dkms build -m vboxhost -v "$INSTALL_VER"
-    status "Installing VirtualBox kernel modules with DKMS" dkms install -m vboxhost -v "$INSTALL_VER"
+    echo "Trying to register the VirtualBox kernel modules using DKMS"
+    $DODKMS install vboxhost "$INSTALL_VER" >> $LOG
   else
     remove
-    stat_busy "Compiling VirtualBox kernel modules"
+    echo "Compiling VirtualBox kernel modules"
     LOG="/tmp/vbox-install.log"
-    if ! $BUILDVBOXDRV \
+    if ! $BUILDINTMP \
       --save-module-symvers /tmp/vboxdrv-Module.symvers \
+	  --module-source "$MODULE_SRC/vboxdrv" \
       --no-print-directory install > $LOG 2>&1; then
       echo  "Look at $LOG to find out what went wrong"
+      return 1
     fi
-    if ! $BUILDVBOXNETFLT \
+    if ! $BUILDINTMP \
       --use-module-symvers /tmp/vboxdrv-Module.symvers \
+	  --module-source "$MODULE_SRC/vboxnetflt" \
       --no-print-directory install >> $LOG 2>&1; then
       echo "Look at $LOG to find out what went wrong"
+      return 1
     fi
-    if ! $BUILDVBOXNETADP \
+    if ! $BUILDINTMP \
       --use-module-symvers /tmp/vboxdrv-Module.symvers \
+	  --module-source "$MODULE_SRC/vboxnetadp" \
       --no-print-directory install >> $LOG 2>&1; then
       echo "Look at $LOG to find out what went wrong"
+      return 1
+    fi
+	if ! $BUILDINTMP \
+      --use-module-symvers /tmp/vboxdrv-Module.symvers \
+      --module-source "$MODULE_SRC/vboxpci" \
+      --no-print-directory install >> $LOG 2>&1; then
+      echo "Look at $LOG to find out what went wrong"
+      return 1
     fi
     depmod -A
-    stat_done
-fi
+  fi
+  echo -e "\n==> Make sure to load the required modules to use VirtualBox"
 }
 
 fixusb() {
@@ -121,27 +132,15 @@ fixusb() {
 }
 
 case "$1" in
-  start)
-    load
-    ;;
-  stop)
-      unload
-      ;;
-  restart)
-      unload
-      load
-      ;;
   setup)
     setup
-    ;;
-  remove)
-    remove
     ;;
   fixusb)
     fixusb
     ;;
+  remove)
+    remove
+    ;;
   *)
-    echo "usage: $0 {start|stop|restart|setup|remove|fixusb}"
+  echo "usage: $0 {setup|fixusb}"
 esac
-
-# vim:set ts=2 sw=2 ft=sh et:

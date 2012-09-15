@@ -5,9 +5,9 @@
 # Contributor: Sebastien Luttringer <seblu[plus]arch[at]seblu[dot]net>
 
 pkgname=virtualbox
-pkgver=4.1.22
-_build=80657
-pkgrel=1
+pkgver=4.2.0
+_build=80737
+pkgrel=4
 pkgdesc='Oracle VM VirtualBox Binary Edition'
 arch=('i686' 'x86_64')
 url='http://virtualbox.org/'
@@ -28,7 +28,7 @@ provides=("virtualbox=${pkgver}")
 conflicts=('virtualbox' 'virtualbox-ose' 'virtualbox-modules')
 categories=('system')
 backup=('etc/vbox/vbox.cfg' 'etc/conf.d/vboxdrv' 'etc/conf.d/vboxweb')
-install='install'
+install="${pkgname}.install"
 screenshot='https://www.virtualbox.org/raw-attachment/wiki/Screenshots/gnome.png'
 
 _sarch='x86'
@@ -37,24 +37,19 @@ _sarch='x86'
 source=(
   "VirtualBox-${pkgver}-${_build}-Linux_${_sarch}.run::http://download.virtualbox.org/virtualbox/${pkgver}/VirtualBox-${pkgver}-${_build}-Linux_${_sarch}.run"
   '10-vboxdrv.rules'
-  'vboxdrv.rc'
+  'vboxsetup.sh'
   'vboxdrv.conf'
-  'vboxweb.rc'
   'vboxweb.conf'
-  'vboxdrv.service'
   'vboxweb.service'
 )
-sha256sums=('d53a5cc2d1b9431d4f9443462b84549678e943be1d8b4a714d7844c741507c76'
+sha256sums=('04030998f15b656e9b76064cde3e6cb43c5a41b1e25e700f123f5a629578fe5e'
             '69417a9e8855cab8e4878886abe138f559fd17ae487d4cd19c8a24974a8bbec2'
-            '578b63ab173cdcd9169d8aff00caf48668e46a6886bb90fd34a0fbe63e180a4e'
+            '9f70a97db16c85d347297a9fd5a416931990591686f0b3279bc9c32aab800688'
             '71740893a5f226f9d9fcc607ab9d39b7de816b2759625b34da19162bc7e579ff'
-            '656905de981ffa24f6f921c920538854a235225053f44baedacc07b46ca0cf56'
             '12dbba3b59991f2b68cddeeeda20236aeff63e11b7e2d1b08d9d6a82225f6651'
-            'b8d4d82c90f81af67f7449d880430bda4d1d73c571851f40c339faee809d7239'
             'e6e875ef186578b53106d7f6af48e426cdaf1b4e86834f01696b8ef1c685787f')
 
-
-[[ "${CARCH}" = i686 ]] && sha256sums[0]='e084db553064fb85136df22d13f262fef602daca56b95799cef7df761310a8d5'
+[[ "${CARCH}" = i686 ]] && sha256sums[0]='d859981312c2b6ed9e596375fc180378763b09e5a3cf0d6dd61bc252789006c4'
 _installdir='/opt/VirtualBox'
 
 package() {
@@ -93,18 +88,20 @@ package() {
   sed -i -e 's,sudo /etc/init.d/vboxdrv restart,/etc/rc.d/vboxdrv restart,g' \
     "${pkgdir}/${_installdir}/VBox.sh"
 
-  # Install vboxdrv initscript
-  install -D -m 0755 "${srcdir}/vboxdrv.rc" "${pkgdir}/etc/rc.d/vboxdrv"
+  # Install vboxdrv configuration
   install -D -m 0644 "${srcdir}/vboxdrv.conf" "${pkgdir}/etc/conf.d/vboxdrv"
 
   # Install vboxweb initscript
-  install -D -m 0755 "${srcdir}/vboxweb.rc" "${pkgdir}/etc/rc.d/vboxweb"
   install -D -m 0644 "${srcdir}/vboxweb.conf" "${pkgdir}/etc/conf.d/vboxweb"
+  install -D -m 0755 "${srcdir}/vboxweb.service" "${pkgdir}/usr/lib/systemd/system/vboxweb.service"
 
   # Install udev rules
   install -D -m 0644 "${srcdir}/10-vboxdrv.rules" "${pkgdir}/lib/udev/rules.d/10-vboxdrv.rules"
   ln -s "${_installdir}/VBoxCreateUSBNode.sh" "${pkgdir}/lib/udev/VBoxCreateUSBNode.sh"
 
+  # Install setup script for modules and usb devices
+  install -D -m 0755 "${srcdir}/vboxsetup.sh" "${pkgdir}/usr/bin/vboxsetup"
+  
   # Install the SDK
   cd "${pkgdir}/${_installdir}/sdk/installer"
   VBOX_INSTALL_PATH="${_installdir}" python2 vboxapisetup.py install --root "${pkgdir}"
@@ -162,8 +159,4 @@ package() {
 
   # Create the directory below if it doesn't exist
   install -d -m 0755 "${pkgdir}/var/run/VirtualBox"
-
-  # Install systemd services
-   install -D -m644 "$srcdir/vboxweb.service" "$pkgdir/usr/lib/systemd/system/vboxweb.service"
-   install -D -m644 "$srcdir/vboxdrv.service" "$pkgdir/usr/lib/systemd/system/vboxdrv.service"
 }
