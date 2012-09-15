@@ -7,25 +7,23 @@
 # include global config
 source ../_buildscripts/${current_repo}-${_arch}-cfg.conf
 
-pkgbase=fcitx
-pkgname=('fcitx' 'fcitx-qt' 'fcitx-gtk2' 'fcitx-gtk3')
-pkgver=4.2.5
+pkgname=fcitx
+pkgver=4.2.6
 pkgrel=2
 pkgdesc="A Flexible Input Method Framework"
 arch=("i686" "x86_64")
 license=('GPL')
 url="http://code.google.com/p/fcitx"
-makedepends=('intltool' 'cmake' 'pango' 'qt' 'icu' 'dbus-core' 'wget' 'gtk2' 'gtk3' 'opencc' 'lua' 'iso-codes' 'enchant')
-source=("http://fcitx.googlecode.com/files/${pkgname}-${pkgver}.tar.xz" '4.2.5-fix.patch')
-md5sums=('4301375f3abfec374d3899ffdc9c7e28'
-         'd49ed107b78ba2dadc11c70f2270b55e')
+depends=('pango' 'dbus-core' 'opencc' 'lua' 'iso-codes' 'icu' 'libxkbfile')
+replaces=('fcitx-qt' 'fcitx-gtk2' 'fcitx-gtk3' 'fcitx-keyboard')
+conflicts=('fcitx-utf8-svn' 'fcitx-svn' 'fcitx-hg' 'fcitx-keyboard' 'fcitx-qt' 'fcitx-gtk2' 'fcitx-gtk3')
+makedepends=('libxkbfile' 'intltool' 'cmake' 'pango' 'qt' 'icu' 'dbus-core' 'wget' 'gtk2' 'gtk3' 'opencc' 'lua' 'iso-codes' 'enchant')
+source=("http://fcitx.googlecode.com/files/${pkgname}-${pkgver}.tar.xz")
+md5sums=('5465888fcd89407b767e7fb3c16f7d63')
 categories=('localization')
+install=fcitx.install
 
 build() {
-
-  cd "$srcdir/${pkgname}-${pkgver}"
-  patch -i "$srcdir/${pkgver}-fix.patch" -p1 || return 1
-
   cd $srcdir/
 
   msg "Creating make environment..."
@@ -44,39 +42,7 @@ build() {
   make
 }
 
-package_fcitx(){
-    depends=('pango' 'dbus-core' 'opencc' 'lua' 'iso-codes' 'enchant' 'icu')
-    conflicts=('fcitx-utf8-svn' 'fcitx-svn' 'fcitx-hg' 'fcitx-keyboard')
-    replaces=('fcitx-keyboard')
+package(){
     cd $srcdir/build
-    make DESTDIR=$pkgdir install
-    rm -rf $pkgdir/usr/lib/qt/
-    rm -rf $pkgdir/usr/lib/gtk-2.0/
-    rm -rf $pkgdir/usr/lib/gtk-3.0/
-}
-
-package_fcitx-qt()
-{
-    pkgdesc='QT IM Module for fcitx'
-    depends=('qt' 'icu' 'fcitx')
-    cd $srcdir/build/src/frontend/qt
-    make DESTDIR=$pkgdir install
-}
-
-package_fcitx-gtk2()
-{
-    pkgdesc='GTK2 IM Module for fcitx'
-    depends=('gtk2' 'fcitx')
-    install=fcitx-gtk2.install
-    cd $srcdir/build/src/frontend/gtk2
-    make DESTDIR=$pkgdir install
-}
-
-package_fcitx-gtk3()
-{
-    pkgdesc='GTK3 IM Module for fcitx'
-    depends=('gtk3' 'fcitx')
-    install=fcitx-gtk3.install
-    cd $srcdir/build/src/frontend/gtk3
     make DESTDIR=$pkgdir install
 }
