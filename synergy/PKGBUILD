@@ -1,0 +1,54 @@
+#
+# Chakra Packages for Chakra, part of chakra-project.org
+#
+# maintainer (i686): Phil Miller <philm[at]chakra-project[dog]org>
+# maintainer (x86_64): Manuel Tortosa <manutortosa[at]chakra-project[dot]org>
+
+# include global config
+source ../_buildscripts/${current_repo}-${_arch}-cfg.conf
+
+pkgname=synergy
+pkgver=1.4.10
+pkgrel=1
+pkgdesc="Share your mouse and keyboard between several computers"
+url="http://synergy-foss.org"
+arch=('i686' 'x86_64')
+license=('GPL2')
+depends=('gcc-libs' 'libxtst' 'libxinerama' )
+makedepends=('libxt' 'cmake') # used by configure to test for libx11...
+provides=('synergy-plus')
+categories=('utils')
+backup=('etc/synergy.conf')
+source=("http://${pkgname}.googlecode.com/files/${pkgname}-${pkgver}-Source.tar.gz"
+        "synergys.socket"
+        "synergys.service")
+sha256sums=('06d5a2ceb4cf8808cdab22441897c7b54ec8b4bc8351ac116f9accf54c720fbe'
+            'aeb357ba161131524aa70a5303a17f78831c9a1ab17dbc7c97e4781a5c4bac44'
+            '846b7200a3bd83f270ca627c2c4601ef6c99bcd4460c514baaacadf0e25746b5')
+
+build() {
+  cd "${srcdir}/${pkgname}-${pkgver}-Source"
+
+  cmake -D CMAKE_INSTALL_PREFIX=/usr .
+  make
+}
+
+package() {
+  cd "${srcdir}/${pkgname}-${pkgver}-Source/bin"
+  
+  #make DESTDIR="${pkgdir}" install # doesn't work atm
+  
+  # install binary
+  install -d "$pkgdir/usr/bin/"
+  install -Dm755 synergyc "${pkgdir}/usr/bin/"
+  install -Dm755 synergys "${pkgdir}/usr/bin/"
+    
+  # Install systemd service and socket
+  install -d "${pkgdir}/usr/lib/systemd/system"
+  install -Dm644 "${srcdir}/synergys.service" "${pkgdir}/usr/lib/systemd/system/"
+  install -Dm644 "${srcdir}/synergys.socket" "${pkgdir}/usr/lib/systemd/system/"
+  
+  # install config
+  install -m755 -d "${pkgdir}/etc"
+  install -m644 "${srcdir}/${pkgname}-${pkgver}-Source/doc/${pkgname}.conf.example" "${pkgdir}/etc/"
+}
