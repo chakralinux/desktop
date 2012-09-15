@@ -4,8 +4,8 @@
 # maintainer abveritas@chakra-project.org
 
 pkgname=ufw
-pkgver=0.31.1
-pkgrel=6
+pkgver=0.33
+pkgrel=1
 pkgdesc="Uncomplicated and easy to use CLI tool for managing a netfilter firewall"
 arch=('any')
 url="https://launchpad.net/ufw"
@@ -19,15 +19,13 @@ backup=('etc/ufw/before.rules'
         'etc/ufw/user.rules'
         'etc/ufw/sysctl.conf'
         'etc/default/ufw'
-        'lib/ufw/user.rules'
-        'lib/ufw/user6.rules')
+        'usr/lib/ufw/user.rules'
+        'usr/lib/ufw/user6.rules')
 categories=('network')
-source=("http://launchpad.net/${pkgname}/0.31/${pkgver}/+download/${pkgname}-${pkgver}.tar.gz"
-        "${pkgname}.rc"
+source=("http://launchpad.net/${pkgname}/${pkgver}/${pkgver}/+download/${pkgname}-${pkgver}.tar.gz"
         "${pkgname}.service")
-md5sums=('74b49d4d06e26359a55bf4ff576833a7'
-         '3d32964a23e0d6b3b7002272154bfad3'
-         'd125e918ce9a832c528e6982cf6f6d98')
+sha256sums=('5f85a8084ad3539b547bec097286948233188c971f498890316dec170bdd1da8'
+            '4593cc83b4bb4a36e6a80ebc0aa9cdb389c772566e84b9dad5cb690a6356b83a')
 
 package() {
   cd "${srcdir}/${pkgname}-${pkgver}"
@@ -35,8 +33,7 @@ package() {
   sed -e 's|/lib|/usr/lib|' -i setup.py
   python2 setup.py install --root="${pkgdir}"
 
-  # Install sysvinit script and systemd unit
-  install -D -m755 "${srcdir}/${pkgname}.rc" "${pkgdir}/etc/rc.d/${pkgname}"
+  # Install systemd unit
   install -D -m644 "${srcdir}/${pkgname}.service" "${pkgdir}/usr/lib/systemd/system/${pkgname}.service"
 
   # Move ufw to /usr/bin
@@ -49,5 +46,3 @@ package() {
   # Absolute paths are bad!
   sed -e 's#/bin/echo#echo#g' -i "${pkgdir}/usr/lib/ufw/ufw-init-functions"
 }
-
-# vim:set ts=2 sw=2 et:
