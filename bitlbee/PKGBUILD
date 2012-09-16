@@ -8,47 +8,53 @@
 source ../_buildscripts/${current_repo}-${_arch}-cfg.conf
 
 pkgname=bitlbee
-pkgver=3.0
-pkgrel=1
+pkgver=3.0.5
+pkgrel=2
 pkgdesc="An IRC to IM gateway. Supports MSN, ICQ, Jabber, Yahoo!, and AIM"
 arch=('i686' 'x86_64')
 url="http://www.bitlbee.org/" 
 license=('GPL')
-depends=('gnutls' 'glib2')
-optdepends=('xinetd: to run bitlbee through xinetd')
+depends=('openssl' 'glib2')
+makedepends=('asciidoc' 'libotr')
+optdepends=('xinetd: to run bitlbee through xinetd'
+            'libotr: for OTR encryption support')
 categories=('communication')
 install=${pkgname}.install
-backup=(etc/bitlbee/bitlbee.conf etc/bitlbee/motd.txt etc/xinetd.d/bitlbee)
-source=(http://get.bitlbee.org/src/${pkgname}-${pkgver}.tar.gz
-	'bitlbee.xinetd'
-	'bitlbee.rcd')
-md5sums=('455fc8070d758c2bb3442ef4c709ad69'
-         '81e576369e31377f5217e636b00874b1'
-         '8cf7500982838f5273ee025eeabfa7fb')
+backup=('etc/bitlbee/bitlbee.conf'
+        'etc/bitlbee/motd.txt' 
+        'etc/xinetd.d/bitlbee')
+source=("http://get.bitlbee.org/src/${pkgname}-${pkgver}.tar.gz"
+        'sbindir.patch'
+        'bitlbee.xinetd'
+        'bitlbee.tmpfiles')
+sha256sums=('a2b18ae0355650b7ec326b8ea7082eb06bb8f8816ad3b4985fe97f729ce84e59'
+            'fed61bb919e0b4a0c6903abbaad90671c6aafdac2c06842c374c2d613187feca'
+            '893616045f956ffbbaa299d81e2cf2af8b06c72663837eb4b61a88b02c58a3fe'
+            '6714c6cc50d64a26166d9e0d15bb1bdf31b22589b6126b9bf6d0ee790ee7f7aa')
 
 build() { 
-	cd ${srcdir}/${pkgname}-${pkgver}
-	
-	./configure --prefix=/usr \
-		--ssl=gnutls \
-		--etcdir=/etc/bitlbee \
-		--pidfile=/var/run/bitlbee/bitlbee.pid \
-		--ipcsocket=/var/run/bitlbee/bitlbee.sock || return 1
-	make || return 1
+  cd "${srcdir}/${pkgname}-${pkgver}"
+
+  patch -p1 -i "${srcdir}/sbindir.patch"
+
+  ./configure --prefix=/usr \
+              --ssl=openssl \
+              --etcdir=/etc/bitlbee \
+              --pidfile=/var/run/bitlbee/bitlbee.pid \
+              --ipcsocket=/var/run/bitlbee/bitlbee.sock \
+              --systemdsystemunitdir=/usr/lib/systemd/system \
+              --strip=0 \
+              --otr=plugin 
+  make 
 }
 
 package() {
-	cd ${srcdir}/${pkgname}-${pkgver}
+  cd "${srcdir}/${pkgname}-${pkgver}"
 
-	install -dm755 ${pkgdir}/var/lib
-	install -o65 -g65 -dm0770 ${pkgdir}/var/lib/bitlbee
-	install -dm755 ${pkgdir}/var/run
-	install -o65 -g65 -dm755 ${pkgdir}/var/run/bitlbee
-	install -Dm644 ${srcdir}/bitlbee.xinetd \
-		${pkgdir}/etc/xinetd.d/bitlbee
-	install -Dm755 ${srcdir}/bitlbee.rcd \
-		${pkgdir}/etc/rc.d/bitlbee || return 1
-	make DESTDIR=${pkgdir} install || return 1
-	make DESTDIR=${pkgdir} install-etc || return 1
-	make DESTDIR=${pkgdir} install-dev || return 1
+  install -o65 -g65 -dm0770 "${pkgdir}/var/lib/bitlbee"
+  
+  make DESTDIR="${pkgdir}" install{,-etc,-dev}
+  
+  install -Dm644 "${srcdir}/bitlbee.xinetd" "${pkgdir}/etc/xinetd.d/bitlbee"
+  install -Dm644 "$srcdir/bitlbee.tmpfiles" "$pkgdir/usr/lib/tmpfiles.d/bitlbee.conf"
 }
