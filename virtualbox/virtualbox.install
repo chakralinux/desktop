@@ -21,7 +21,7 @@ post_install() {
 ==> # gpasswd -a USERNAME vboxusers
 ==>
 ==> To load virtualbox modules automatically you can add vboxdrv to a file /etc/modules-load.d/vbox.conf
-==> To start virtualbox web service automatically you can add vboxweb to this file, too
+==> To start virtualbox web service automatically you need to enable and start the service through systemctl
 ==>
 ==> To fix missing usb devices, you can call 'vboxsetup fixusb' or reboot your computer
 EOF
@@ -51,7 +51,14 @@ pre_remove() {
   fi
   
   # Remove modules
-  /usr/bin/vboxsetup remove
+  if [ $(vercmp $2 4.2.0-4) -lt 0 ]; then
+    /usr/bin/vboxsetup remove
+  elif [[ -f /etc/rc.d/vboxdrv && -f /usr/sbin/rc.d ]]; then
+    rc.d unload vboxdrv
+    rc.d remove vboxdrv
+  else
+    echo -e "\n==> Modules could not be deleted. Please check manually.\n"
+  fi
 }
 
 post_remove() {
