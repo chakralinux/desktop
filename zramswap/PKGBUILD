@@ -4,16 +4,25 @@
 # Maintainer: george <george[at]chakra-project[dot]org>
 
 pkgname=zramswap
-pkgver=0.2
+pkgver=0.3
 pkgrel=1
 pkgdesc="Sets up zram swap devices on boot."
 arch=('any')
 url="http://www.webupd8.org/2011/10/increased-performance-in-linux-with.html"
 license=('GPL')
-install=$pkgname.install
-source=('zramswap.rc.d')
-md5sums=('630d83824f13b192721a113aad862c57')
+install=${pkgname}.install
+source=('zram.service'
+        'zram'
+        'zramstart'
+        'zramstop')
+sha256sums=('3a921f765a4e4b2b80f85f07cbf8fdc7522f0f2ae5a1d19bd7f515e9580da9aa'
+            '9f578c92683684f77f6f5b13ac86ebdc7deaac2f679a6dd8210a08e8238ca31b'
+            'dc8bc88c2edf15ae9bcec432b4ff4371e43fa9bc780132d1dbc6a3cc5700b106'
+            '475150e74087dbc1e1013d5c11eff016e950d7dce7874fda633f25fb306d3f93')
 
 package() {
-        install -Dm755 zramswap.rc.d "$pkgdir/etc/rc.d/zramswap"
+  install -Dm644 "${srcdir}/zram.service" "${pkgdir}/usr/lib/systemd/system/zram.service"
+  install -Dm644 "${srcdir}/zram" "${pkgdir}/etc/default/zram"
+  install -Dm755 "${srcdir}/zramstart" "${pkgdir}/usr/sbin/zramstart"
+  install -Dm755 "${srcdir}/zramstop" "${pkgdir}/usr/sbin/zramstop"
 }

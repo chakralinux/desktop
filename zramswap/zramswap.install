@@ -1,7 +1,17 @@
 post_install() {
-  echo "Add zramswap to the DAEMONS array in rc.conf"
+  echo "==> To enable zramswap, run 'sudo systemctl enable zram.service'"
+  echo "==> To run the script now, start it with 'sudo systemctl start zram.service'"
 }
 
-post_remove() {
-  echo "Don't forget to remove zramswap from the DAEMONS array in rc.conf"
+pre_remove() {
+  # Stop running services
+  _service="zram.service"
+  systemctl is-active ${_service} &>/dev/null
+  if [[ $? -eq 0 ]] ; then
+    systemctl stop ${_service}
+  fi
+  systemctl is-enabled ${_service} &>/dev/null
+  if [[ $? -eq 0 ]] ; then
+    systemctl disable ${_service}
+  fi
 }
