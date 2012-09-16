@@ -4,34 +4,36 @@
 # maintainer (i686): Phil Miller <philm[at]chakra-project[dog]org>
 # maintainer (x86_64): Manuel Tortosa <manutortosa[at]chakra-project[dot]org>
 
-# include global config
-source ../_buildscripts/${current_repo}-${_arch}-cfg.conf
-
 pkgname=lighttpd
-pkgver=1.4.28
+pkgver=1.4.31
 pkgrel=1
-pkgdesc='A secure, fast, compliant and very flexible web-server'
+pkgdesc='A secure, fast, compliant and very flexible web-server.'
 license=('custom')
 arch=('i686' 'x86_64')
 url="http://www.lighttpd.net/"
-depends=('pcre' 'bzip2' 'libldap' 'util-linux-ng')
-makedepends=('php-cgi' 'libmysqlclient' 'lua' 'libxml2' 'e2fsprogs' 'sqlite3' 'gdbm' 'pkgconfig')
+depends=('pcre' 'bzip2' 'libldap' 'util-linux')
+makedepends=('fcgi' 'libmysqlclient' 'lua' 'libxml2' 'e2fsprogs' 'sqlite3' 'gdbm' 'pkgconfig')
 optdepends=('libxml2: mod_webdav'
             'lua: mod_cml/mod_magnet'
             'libmysqlclient: mod_mysql_vhost'
             'sqlite3: mod_webdav')
+categories=('network')
 backup=('etc/lighttpd/lighttpd.conf' 'etc/logrotate.d/lighttpd')
 options=('!libtool' 'emptydirs')
-categories=('system')
+install=${pkgname}.install
 source=("http://download.lighttpd.net/lighttpd/releases-1.4.x/lighttpd-${pkgver}.tar.bz2"
-        'lighttpd.rc.d' 'lighttpd.conf')
-md5sums=('586eb535d31ac299652495b058dd87c4'
-         '701141f42df90097bbfc5c7f1f63beb9'
-         #'913e2157fa78d990c32146f387d44c2b'
-         '2803a9ee7f20409c69f1566d2d90720e')
+        'lighttpd.tmpfiles'
+        'lighttpd.service'
+        'lighttpd.logrotate.d' 
+        'lighttpd.conf')
+sha256sums=('5209e7a25d3044cb21b34d6a2bb3a6f6c216ba903ea486a803d070582e5e26ac'
+            'd8a185145a7c08b4fd8c8e6c12dae3e176389dd9b1c66e239757b2ba5108c871'
+            '708cefe97541edba73f572ed3836bd056462b1467e45e1912c9d960139929696'
+            'c1159894cd1797e8421bb381c08df33560345ba15e20763cf8922fcc94c549d7'
+            '48b531fbcc58a40ec26716c93f0b0d4a33bed1667d8ef77c17b36d807b5c39a3')
 
 build() {
-	cd $srcdir/$pkgname-$pkgver
+	cd "${srcdir}/${pkgname}-${pkgver}"
 
 	./configure --prefix=/usr \
 		--libexecdir=/usr/lib/lighttpd/modules \
@@ -50,18 +52,24 @@ build() {
 	make
 }
 
-package() {
-	cd $srcdir/$pkgname-$pkgver
-	make DESTDIR=$pkgdir install
+check() {
+	cd "${srcdir}/${pkgname}-${pkgver}"
+	make check
+}
 
-	install -D -m755 $srcdir/lighttpd.rc.d $pkgdir/etc/rc.d/lighttpd
-	#install -D -m644 $srcdir/lighttpd.logrotate.d $pkgdir/etc/logrotate.d/lighttpd
-	install -D -m644 $srcdir/lighttpd.conf $pkgdir/etc/lighttpd/lighttpd.conf
-	install -d -m755 -o http -g http $pkgdir/var/{run,log,cache}/lighttpd/
+package() {
+	cd "${srcdir}/${pkgname}-${pkgver}"
+	make DESTDIR="${pkgdir}" install
+
+	install -D -m644 "${srcdir}/lighttpd.logrotate.d" "${pkgdir}/etc/logrotate.d/lighttpd"
+	install -D -m644 "${srcdir}/lighttpd.conf" "${pkgdir}/etc/lighttpd/lighttpd.conf"
+	install -d -m755 -o http -g http "${pkgdir}"/var/{run,log,cache}/lighttpd/
+	install -D -m644 "${srcdir}/lighttpd.tmpfiles" "${pkgdir}/usr/lib/tmpfiles.d/lighttpd.conf"
+	install -D -m644 "${srcdir}/lighttpd.service" "${pkgdir}/usr/lib/systemd/system/lighttpd.service"
 
 	pushd doc/config >/dev/null
-	find . -type f ! -name 'Makefile*' -exec install -D -m644 {} ${pkgdir}/usr/share/doc/lighttpd/config/{} \;
+	find . -type f ! -name 'Makefile*' -exec install -D -m644 {} "${pkgdir}"/usr/share/doc/lighttpd/config/{} \;
 	popd >/dev/null
 
-	install -D -m644 COPYING $pkgdir/usr/share/licenses/$pkgname/COPYING
+	install -D -m644 COPYING "${pkgdir}/usr/share/licenses/${pkgname}/COPYING"
 }
