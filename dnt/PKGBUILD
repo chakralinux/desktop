@@ -3,34 +3,33 @@
 #
 # Maintainer: Adrián Chaves Fernández (Gallaecio) <adriyetichaves gmail.com>
 
-pkgname=dccnitghtmare
-pkgver=0.9
+pkgname=dnt
+pkgver=0.10
 pkgrel=1
 pkgdesc="A sarcastic 3D single player RPG set in a post-apocalyptical world."
 arch=('i686' 'x86_64')
 url="http://dnt.dnteam.org/"
 license=('custom:code:GPL' 'custom:media:GPL, CC:BY-SA or Public Domain' )
 depends=('cal3d' 'mesa' 'libgl' 'libvorbis' 'openal' 'sdl' 'sdl_image' 'sdl_ttf')
+makedepends=(cmake)
+replaces=(dccnitghtmare)
 categories=('games')
 source=("http://downloads.sourceforge.net/$pkgname/$pkgname-$pkgver.tar.bz2"
-        "http://aur.archlinux.org/packages/dc/dccnitghtmare/dccnitghtmare.tar.gz")
-md5sums=('c7a1a8580482fa0e45e6da07bf92d1b7'
-         '487350a03a0cfb26cbdf22cb1329e0bd')
+        "http://aur.archlinux.org/packages/dn/$pkgname/$pkgname.tar.gz")
+md5sums=('82c76324634b7d4dc888033c3ba3a35e'
+         'e0ef13025a95341042b1899b092b0c4d')
 build() {
   cd $srcdir/$pkgname
-
-  ./configure \
-    --prefix=/usr
-
-  make \
-  LDFLAGS=""
+  cmake \
+    -DCMAKE_INSTALL_PREFIX=$pkgdir/usr \
+    .
+  make
 }
 
 package() {
   cd $srcdir/$pkgname
 
-  mkdir -p $pkgdir/usr/bin
-  make prefix=$pkgdir/usr install
+  make install
 
   # Desktop Integration.
   install -Dm644 $srcdir/$pkgname/$pkgname.desktop $pkgdir/usr/share/applications/$pkgname.desktop
