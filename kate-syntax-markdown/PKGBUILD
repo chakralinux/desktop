@@ -1,0 +1,24 @@
+# Chakra Packages for Chakra, part of chakra-project.org
+#
+# maintainer (x86_64): iruel (Lawrence Wu) <sagnessagiel@gmail.com>
+pkgname=kate-syntax-markdown
+pkgver=1.0
+pkgrel=1
+pkgdesc="Markdown syntax highlighting for the KDE Katepart."
+arch=('any')
+url="https://github.com/treeofsephiroth/kate-markdown"
+license=('GPL' 'BSD')
+source=("https://raw.github.com/treeofsephiroth/kate-markdown/master/markdown.xml")
+groups=()
+depends=()
+conflicts=('kate-syntax-markdown-git')
+makedepends=()
+md5sums=('1190ca802df54adc264b0fab9065a5aa')
+
+package() {
+  cd "$srcdir"
+  mkdir -p $pkgdir/usr/share/apps/katepart/syntax/
+  cp markdown.xml $pkgdir/usr/share/apps/katepart/syntax/markdown.xml
+}
+
+# vim:set ts=2 sw=2 et:
