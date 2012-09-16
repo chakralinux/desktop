@@ -7,7 +7,7 @@
 source ../_buildscripts/${current_repo}-${_arch}-cfg.conf
 
 pkgname=tor
-pkgver=0.2.1.30
+pkgver=0.2.2.39
 pkgrel=1
 pkgdesc="Anonymizing overlay network"
 arch=('i686' 'x86_64')
@@ -16,32 +16,40 @@ license=('BSD')
 depends=('openssl' 'libevent' 'tsocks' 'bash')
 backup=('etc/tor/torrc' 'etc/tor/torrc-dist' 'etc/tor/tor-tsocks.conf')
 categories=('network')
-install=tor.install
-source=(http://www.torproject.org/dist/${pkgname}-${pkgver}.tar.gz
-	'tor.conf'
-	'tor.rc')
-md5sums=('6c6d61e053af5969a245d025c4cfce9d'
+install=${pkgname}.install
+source=("http://www.torproject.org/dist/${pkgname}-${pkgver}.tar.gz"
+        'torrc'
+        'tor.conf.d'
+        'tor.service')
+md5sums=('9157a1f02fcda9d7d2c5744176373abd'
          'c97998c760c4351f12ad41d514071a9b'
-         '23348b8e3b38c6ed2a45b4be42a7de8e')
+         'f656f3e93f0c2ed46464d9b784876dbc'
+         'cf23b97a1da09670214da6229a3ecb09')
 
 build() {
-  cd ${srcdir}/${pkgname}-${pkgver}
-  
+  cd "${srcdir}/${pkgname}-${pkgver}"
+
   ./configure --prefix=/usr \
-    --sysconfdir=/etc \
-    --localstatedir=/var || return 1
-  make || return 1
+              --sysconfdir=/etc \
+              --localstatedir=/var 
+  make
 }
 
 package() {
-  cd ${srcdir}/${pkgname}-${pkgver}
-  make DESTDIR="$pkgdir" install || return 1
+  cd "${srcdir}/${pkgname}-${pkgver}"
+  
+  make DESTDIR="${pkgdir}" install 
 
-  install -d ${pkgdir}/var/lib/tor || return 1
+  install -dm0700 "${pkgdir}/var/lib/tor"
+
+  # Install config files
+  mv "${pkgdir}/etc/tor/torrc.sample" "${pkgdir}/etc/tor/torrc-dist" 
+  install -Dm0644 "${srcdir}/torrc" "${pkgdir}/etc/tor/torrc"
+  install -Dm0644 "${srcdir}/tor.conf.d" "${pkgdir}/etc/conf.d/tor"
   
-  mv "$pkgdir/etc/tor/torrc.sample" "$pkgdir/etc/tor/torrc-dist" || return 1
-  install -D -m644 "$srcdir/tor.conf" "$pkgdir/etc/tor/torrc" || return 1
-  install -D -m755 "$srcdir/tor.rc" "$pkgdir/etc/rc.d/tor" || return 1
-  
-  install -Dm644 LICENSE "$pkgdir/usr/share/licenses/${pkgname}/LICENSE" || return 1
+  # Install systemd service file
+  install -Dm0644 "${srcdir}/tor.service" "${pkgdir}/usr/lib/systemd/system/tor.service"
+
+  # Install license
+  install -Dm0644 LICENSE "${pkgdir}/usr/share/licenses/${pkgname}/LICENSE" 
 }
