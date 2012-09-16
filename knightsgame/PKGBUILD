@@ -7,7 +7,7 @@
 
 pkgname=knightsgame
 _pkgname=knights
-pkgver=019
+pkgver=021
 pkgrel=1
 pkgdesc='Action game that was originally released for Amiga in 1994.'
 arch=('i686' 'x86_64')
@@ -18,16 +18,18 @@ makedepends=(boost)
 options=('!makeflags')
 categories=('games')
 source=("http://www.knightsgame.org.uk/files/${_pkgname}_${pkgver}_src.tar.gz")
-md5sums=('f03496d3eddb3c20a0e590bbb8760363')
+md5sums=('8b93d460e86f79316374cc60da86c3be')
 
 build() {
   cd ${_pkgname}_${pkgver}_src
 
   sed \
-    -e 's|-lboost_thread-mt|-lboost_thread|g' \
+    -e 's/-mt//g' \
     -e "s/KNIGHTS_BINARY_NAME = knights/KNIGHTS_BINARY_NAME = $pkgname/" \
     -e "s/SERVER_BINARY_NAME = knights_server/SERVER_BINARY_NAME = $pkgname-server/" \
-    -i Makefile
+    -e "/^BOOST_LIBS/s|$| -lrt|" \
+    -i Makefile \
+    -i python/makemakefile.py
   make PREFIX=/usr
 }
 
