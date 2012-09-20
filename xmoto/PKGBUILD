@@ -4,26 +4,26 @@
 # Maintainer: Adrián Chaves Fernández (Gallaecio) <adriyetichaves gmail.com>
 
 pkgname=xmoto
-pkgver=0.5.9
-pkgrel=2
+pkgver=0.5.10
+pkgrel=1
 pkgdesc="A challenging 2D motocross platform game, where physics play an important role."
 arch=('i686' 'x86_64')
 url="http://xmoto.tuxfamily.org"
 license=('GPL')
-depends=('bzip2' 'libjpeg' 'libpng' 'lua' 'sdl_mixer' 'ode' 'curl' 
+depends=('bzip2' 'libjpeg' 'libpng' 'lua' 'sdl_mixer' 'ode' 'curl'
 	 'mesa' 'sqlite3' 'sdl_ttf' 'desktop-file-utils' 'sdl_net' 'libxdg-basedir')
+makedepends=('desktop-file-utils')
 categories=('games')
-source=("http://download.tuxfamily.org/$pkgname/$pkgname/$pkgver/$pkgname-$pkgver-src.tar.gz"
-        
-"$pkgname-$pkgver-libpng.patch::https://projects.archlinux.org/svntogit/community.git/plain/trunk/$pkgname-$pkgver-libpng15.patch?h=packages/$pkgname")
-md5sums=('d8d6b7a405139530650b8a9ae2ea6df3'
-         '454af72fa4daba55aa43a08bb1a30714')
+source=("http://download.tuxfamily.org/${pkgname}/${pkgname}/${pkgver}/${pkgname}-${pkgver}-src.tar.gz"
+        "${pkgname}-${pkgver}-libpng.patch::https://projects.archlinux.org/svntogit/community.git/plain/trunk/${pkgname}-${pkgver}-libpng15.patch?h=packages/${pkgname}")
+sha256sums=('2d2438e4685aa5fc1aa9f73bfbe26893d7fc97fadd6e1cc9fdb09c8d16df9e1e'
+            '06615615d5e27219bb1c9c74418eeac09dbbe177cbb56471bd068759b82972cd')
 
 build() {
-  cd $srcdir/$pkgname-$pkgver
+  cd "${srcdir}/${pkgname}-${pkgver}"
 
   # Patches
-  patch -Np1 -i "${srcdir}/$pkgname-$pkgver-libpng.patch"
+  patch -Np1 -i "${srcdir}/${pkgname}-${pkgver}-libpng.patch"
   sed \
     -e '/#include <vector>/ a\
 #include <unistd.h>' \
@@ -38,10 +38,16 @@ build() {
 }
 
 package() {
-  cd $srcdir/$pkgname-$pkgver
+  cd "${srcdir}/${pkgname}-${pkgver}"
 
-  make DESTDIR=$pkgdir mangdir=/usr/share/man/man6 install
+  make DESTDIR="${pkgdir}" mangdir=/usr/share/man/man6 install
 
-  install -Dm0644 $srcdir/$pkgname-$pkgver/extra/xmoto.xpm \
-        $pkgdir/usr/share/pixmaps/xmoto.xpm
+  # install desktop file
+  desktop-file-install --set-key=Icon --set-value=xmoto -m 0644 \
+    --dir="${pkgdir}/usr/share/applications" \
+    "${srcdir}/${pkgname}-${pkgver}/extra/xmoto.desktop"
+
+  # install icon
+  install -Dm0644 "${srcdir}/${pkgname}-${pkgver}/extra/xmoto.xpm" \
+    "${pkgdir}/usr/share/pixmaps/xmoto.xpm"
 }
