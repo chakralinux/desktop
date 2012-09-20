@@ -3,26 +3,24 @@
 #
 # Maintainer: Adrián Chaves Fernández (Gallaecio) <adriyetichaves@gmail.com>
 
-# include global config
-source ../_buildscripts/${current_repo}-${_arch}-cfg.conf
-
 pkgname=violetland
-pkgver=0.4.2
+pkgver=0.4.3
 pkgrel=1
 pkgdesc="Game where a girl, Violet, struggles with hordes of monsters."
 arch=('i686' 'x86_64')
 url="http://code.google.com/p/violetland/"
 license=('GPL3' 'CCPL:by-sa')
-depends=('sdl_image' 'sdl_mixer' 'sdl_ttf' 'libgl')
+depends=('sdl_image' 'sdl_mixer' 'sdl_ttf' 'libgl' 'mesa')
 makedepends=('cmake')
 conflicts=('violetland-dev' 'violetland-svn')
 categories=('games')
-changelog=ChangeLog
-source=(http://violetland.googlecode.com/files/$pkgname-v$pkgver-src.zip)
-md5sums=('a5f880e732e29c5c89f9b7306231dfa9')
+source=("http://violetland.googlecode.com/files/${pkgname}-v${pkgver}-src.zip")
+sha256sums=('790565a752fa10152f2c6f55676c3fa5ffbc45678822ac7d082d815b1798767e')
 
 build() {
-  cd $srcdir/$pkgname-v$pkgver
+  cd "${srcdir}/${pkgname}-v${pkgver}"
+
+  rm -rf build
   mkdir build && cd build
   cmake \
     -DCMAKE_INSTALL_PREFIX=/usr \
@@ -32,6 +30,19 @@ build() {
 }
 
 package() {
-  cd $srcdir/$pkgname-v$pkgver/build
-  make DESTDIR=$pkgdir install
+  cd "${srcdir}/${pkgname}-v${pkgver}/build"
+  
+  # Install icon
+  install -D -m0644 "${srcdir}/${pkgname}-v${pkgver}/icon-light.png" \
+    "${pkgdir}/usr/share/pixmaps/${pkgname}.png"
+  
+  # Install desktop file
+  desktop-file-install -m 0644 --dir="${pkgdir}/usr/share/applications" \
+    "${srcdir}/${pkgname}-v${pkgver}/${pkgname}.desktop"
+
+  # Install Readme
+  install -D -m0644 "${srcdir}/${pkgname}-v${pkgver}/CHANGELOG" \
+    "${pkgdir}/usr/share/doc/${pkgname}/CHANGELOG"
+    
+  make DESTDIR="${pkgdir}" install
 }
