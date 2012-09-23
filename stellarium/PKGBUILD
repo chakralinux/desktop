@@ -1,0 +1,40 @@
+#
+# Apps Packages for Chakra, part of chakra-project.org
+#
+# Maintainer: Martín González <koteccr at gmail dot com>
+
+pkgname=stellarium
+pkgver=0.11.4
+pkgrel=1
+pkgdesc="A stellarium with great graphics and a nice database of sky-objects"
+arch=("i686" "x86_64")
+url="http://www.stellarium.org/"
+screenshot="http://www.stellarium.org/img/screenshots/0.10-from-mars.jpg"
+license=('GPL2')
+depends=('libpng' 'mesa' 'libgl' 'freetype2' 'qt' 'openssl')
+makedepends=('cmake' 'boost')
+categories=('education')
+source=(http://downloads.sourceforge.net/$pkgname/$pkgname-$pkgver.tar.gz
+	http://wstaw.org/m/2012/09/01/stellarium.png
+	stellarium.desktop)
+md5sums=('f5b409745f393d80003d57fd276142f4'
+         '134ab08e73f4f5d995a7931a7957b7a3'
+         'b4f9ebd082c4e112c2bbfac9f2c8465d')
+build() {
+  cd ${srcdir}/${pkgname}-${pkgver}
+
+  cmake . -DCMAKE_INSTALL_PREFIX=/usr -DCMAKE_BUILD_TYPE=RELEASE
+  make
+}
+
+package() {
+  cd ${srcdir}/${pkgname}-${pkgver}
+ 
+  make DESTDIR=${pkgdir} install
+
+  # install desktop file & pixmap
+  install -Dm644 ${srcdir}/stellarium.desktop \
+	${pkgdir}/usr/share/applications/stellarium.desktop
+  install -Dm644 ${srcdir}/stellarium.png \
+	${pkgdir}/usr/share/pixmaps/stellarium.png
+}
