@@ -3,12 +3,9 @@
 #
 # contributor (x86_64): Giuseppe Calà <jiveaxe@gmail.com>
 
-# include global config
-source ../_buildscripts/${current_repo}-${_arch}-cfg.conf
-
 pkgname=tor
-pkgver=0.2.2.35
-pkgrel=1
+pkgver=0.2.2.39
+pkgrel=2
 pkgdesc="Anonymizing overlay network"
 arch=('i686' 'x86_64')
 url="http://www.torproject.org/"
@@ -16,32 +13,43 @@ license=('BSD')
 depends=('openssl' 'libevent' 'tsocks' 'bash')
 backup=('etc/tor/torrc' 'etc/tor/torrc-dist' 'etc/tor/tor-tsocks.conf')
 categories=('network')
-install=tor.install
-source=(http://www.torproject.org/dist/${pkgname}-${pkgver}.tar.gz
-	'tor.conf'
-	'tor.rc')
-md5sums=('dcecf699c4b929319d5f1ce0358d4835'
-         'c97998c760c4351f12ad41d514071a9b'
-         '23348b8e3b38c6ed2a45b4be42a7de8e')
+install=${pkgname}.install
+source=("http://www.torproject.org/dist/${pkgname}-${pkgver}.tar.gz"
+        'torrc'
+        'tor.rc'
+        'tor.conf.d'
+        'tor.service')
+sha256sums=('0d0c778d4697d5c5bd4f732ca179c22e8e359c634617ca9b6665e33d1863622a'
+            '95bfb5306228b67273cbe791631e7bb70f47e0fb5e73443934d133accc814557'
+            '1526a428af39f71f8c0a1a013d644be596b3a3b03d2d400a268ed99adb5be4c3'
+            'ef0de38f7b3b8d9897a2f308417bc5707886c24ba73b2fc569fafa4d6a785cf6'
+            '52761f39a7ae1082610321d0b95950a88c6230c2e226394d2125fdc06ca60a05')
 
 build() {
-  cd ${srcdir}/${pkgname}-${pkgver}
+  cd "${srcdir}/${pkgname}-${pkgver}"
   
   ./configure --prefix=/usr \
-    --sysconfdir=/etc \
-    --localstatedir=/var 
+              --sysconfdir=/etc \
+              --localstatedir=/var 
   make 
 }
 
 package() {
-  cd ${srcdir}/${pkgname}-${pkgver}
-  make DESTDIR="$pkgdir" install 
+  cd "${srcdir}/${pkgname}-${pkgver}"
 
-  install -d ${pkgdir}/var/lib/tor 
+  make DESTDIR="${pkgdir}" install 
+
+  install -dm0700 "${pkgdir}/var/lib/tor "
   
-  mv "$pkgdir/etc/tor/torrc.sample" "$pkgdir/etc/tor/torrc-dist" 
-  install -D -m644 "$srcdir/tor.conf" "$pkgdir/etc/tor/torrc" 
-  install -D -m755 "$srcdir/tor.rc" "$pkgdir/etc/rc.d/tor" 
-  
-  install -Dm644 LICENSE "$pkgdir/usr/share/licenses/${pkgname}/LICENSE" 
+  # Install config files
+  mv "${pkgdir}/etc/tor/torrc.sample" "${pkgdir}/etc/tor/torrc-dist" 
+  install -Dm0644 "${srcdir}/torrc" "$pkgdir/etc/tor/torrc"
+  install -Dm0644 "${srcdir}/tor.conf.d" "${pkgdir}/etc/conf.d/tor"
+  install -Dm0755 "${srcdir}/tor.rc" "$pkgdir/etc/rc.d/tor"
+
+  # Install systemd service file
+  install -Dm0644 "${srcdir}/tor.service" "${pkgdir}/usr/lib/systemd/system/tor.service"
+
+  # Install license  
+  install -Dm0644 LICENSE "$pkgdir/usr/share/licenses/${pkgname}/LICENSE" 
 }
