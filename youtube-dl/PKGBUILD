@@ -1,25 +1,30 @@
 #
-# Chakra Packages for Chakra, part of chakra-project.org
+# Apps Packages for Chakra, part of chakra-project.org
 #
 # maintainer abveritas@chakra-project.org
 
 pkgname=youtube-dl
-pkgver=2012.02.27
+pkgver=2012.09.27
 pkgrel=1
 pkgdesc='A small command-line program to download videos from YouTube.com'
 arch=('any')
 url='http://rg3.github.com/youtube-dl/'
 license=('custom')
 depends=('python2')
+makedepends=('unzip' 'zip')
 categories=('network')
-source=("https://github.com/rg3/${pkgname}/raw/${pkgver}/${pkgname}")
-md5sums=('bd2f1db2f3edafcbf207fab805d36e23')
+source=(${pkgname}-${pkgver}::https://github.com/rg3/${pkgname}/raw/${pkgver}/${pkgname})
+sha1sums=('f10d2b9348ab6f29579cdca5ee6723526d95c369')
 
 package() {
   cd "${srcdir}"
+# Ignoring non-zero exit status of unzip as extraction is successful
+  unzip -q ${pkgname}-${pkgver} || :
+  zip -q youtube-dl *.py
+  echo '#!/usr/bin/env python2' > youtube-dl
+  cat youtube-dl.zip >> youtube-dl
 
-  sed -i 's|#!/usr/bin/env python|#!/usr/bin/env python2|' youtube-dl
   install -D -m755 youtube-dl "${pkgdir}/usr/bin/youtube-dl"
   install -d "${pkgdir}/usr/share/licenses/${pkgname}"
-  grep license youtube-dl  > "${pkgdir}/usr/share/licenses/${pkgname}/LICENSE"
+  grep -i license __init__.py > "${pkgdir}/usr/share/licenses/${pkgname}/LICENSE"
 }
