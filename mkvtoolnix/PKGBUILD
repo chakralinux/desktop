@@ -1,0 +1,50 @@
+#
+# Apps Packages for Chakra, part of chakra-project.org
+#
+# Maintainer: Adrián Chaves Fernández (Gallaecio) <adriyetichaves gmail.com>
+
+pkgname=mkvtoolnix
+pkgver=5.8.0
+pkgrel=1
+pkgdesc="Set of tools to create, edit and inspect Matroska files."
+arch=('i686' 'x86_64')
+license=('GPL')
+url="http://www.bunkus.org/videotools/mkvtoolnix/index.html"
+depends=('flac' 'libmatroska' 'libogg' 'libvorbis' 'qt' 'xdg-utils' 'libebml' 'zlib')
+optdepends=('flac: for FLAC support (Free Lossless Audio Codec)'
+'lzo2: for additional compression capabilities'
+'bzip2: for additional compression capabilities'
+'file: for automatic content type detection'
+'curl: for online update checks')
+makedepends=('gcc>=4.6.0' 'boost>=1.46.0' 'ruby')
+categories=('multimedia')
+install=mkvtoolnix.install
+source=("http://www.bunkus.org/videotools/$pkgname/sources/$pkgname-$pkgver.tar.bz2")
+sha256sums=('3c9ec7e4c035b82a35850c5ada98a29904edc44a0d1c9b900ed05d56e6274960')
+
+build() {
+  cd "${srcdir}/${pkgname}-${pkgver}"
+  ./configure \
+    --enable-qt \
+    --prefix=/usr \
+    --with-boost-libdir=/usr/lib
+  rake
+}
+
+package () {
+  cd "${srcdir}/${pkgname}-${pkgver}"
+  rake DESTDIR="${pkgdir}" install
+
+  rm -rf "${pkgdir}"/usr/bin/mkvinfo
+  install -Dm755 src/mkvinfo "${pkgdir}"/usr/bin/mkvinfo
+
+  rm -rf "${pkgdir}"/usr/bin/mmg
+  rm -rf "${pkgdir}"/usr/share/man/ja/man1/mmg.1
+  rm -rf "${pkgdir}"/usr/share/man/man1/mmg.1
+  rm -rf "${pkgdir}"/usr/share/man/nl/man1/mmg.1
+  rm -rf "${pkgdir}"/usr/share/man/zh_CN/man1/mmg.1
+  rm -rf "${pkgdir}"/usr/share/man/uk/man1/mmg.1
+  rm -rf "${pkgdir}"/usr/share/applications
+  rm -rf "${pkgdir}"/usr/share/icons
+  rm -rf "${pkgdir}"/usr/share/mime
+}
