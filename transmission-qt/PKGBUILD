@@ -6,17 +6,18 @@
 
 pkgbase=transmission
 pkgname=('transmission-cli' 'transmission-qt')
-pkgver=2.61
+pkgver=2.71
 pkgrel=1
 arch=('i686' 'x86_64')
 url="http://www.transmissionbt.com/"
 license=('MIT')
 makedepends=('intltool' 'curl' 'pkgconfig' 'desktop-file-utils' 'qt' 'libevent' 'gettext')
 source=("http://mirrors.m0k.org/transmission/files/${pkgbase}-${pkgver}.tar.xz"
-        'transmissiond' 'transmissiond.conf')
-md5sums=('2ed5b7815ebda65223bac6bdb09dec42'
+        'transmissiond' 'transmissiond.conf' 'transmission.systemd')
+md5sums=('26d24de210076a7625e5fe37e3252f2a'
          '50b7c17300bc8b38f44fb6f681ba05d0'
-         'be39806c35b7544856fa4070b00fc960')
+         'be39806c35b7544856fa4070b00fc960'
+         '5c289c8901221a94be74665368ab5c2c')
 build() {
   cd "${srcdir}/${pkgbase}-${pkgver}"
 
@@ -45,6 +46,8 @@ package_transmission-cli() {
 
   install -D -m755 "${srcdir}/transmissiond" "${pkgdir}/etc/rc.d/transmissiond"
   install -D -m644 "${srcdir}/transmissiond.conf" "${pkgdir}/etc/conf.d/transmissiond"
+  install -D -m644 "$srcdir/transmission.systemd" "$pkgdir/usr/lib/systemd/system/transmission.service"
+  ln -s transmission.service "$pkgdir/usr/lib/systemd/system/transmissiond.service"
   install -D -m644 COPYING "${pkgdir}/usr/share/licenses/transmission-cli/COPYING"
 }
 
