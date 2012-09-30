@@ -4,11 +4,12 @@
 # Maintainer: Adrián Chaves Fernández (Gallaecio) <adriyetichaves@gmail.com>
 
 pkgname=flare
-pkgver=0.16
+_pkgname=flare-game
+pkgver=0.17
 _developer=clintbellanger
 _code=b3344302fd
 pkgrel=1
-pkgdesc="Action roleplaying game from an isometric perspective."
+pkgdesc="Action roleplaying game from an isometric perspective"
 arch=('i686' 'x86_64')
 url="http://clintbellanger.net/rpg/"
 license=('GPL2' 'CCPL-by-sa')
@@ -16,11 +17,11 @@ depends=('sdl' 'sdl_image' 'sdl_mixer' 'sdl_ttf')
 replaces=('osare')
 categories=('games')
 changelog=ChangeLog
-source=($pkgname-$pkgver.tar.gz::https://github.com/$_developer/$pkgname/tarball/v$pkgver)
-md5sums=('c902e2149cb640cceb2e7d41ebdd6bcb')
+source=($pkgname-$pkgver.tar.gz::https://github.com/$_developer/$_pkgname/tarball/v$pkgver)
+md5sums=('dd513533f78d522b24d10488b37e8683')
 
 build() {
-  cd $srcdir/$_developer-$pkgname-*
+  cd $srcdir/$_developer-$_pkgname-*
 
   # Some CMake changes.
   sed -i -e "s#share/games#share#" -e "s#/games#/bin#" CMakeLists.txt
@@ -37,7 +38,7 @@ build() {
 }
 
 package() {
-  cd $srcdir/$_developer-$pkgname-*
+  cd $srcdir/$_developer-$_pkgname-*
   cd build
   make DESTDIR=$pkgdir install
  
