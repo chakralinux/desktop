@@ -13,7 +13,7 @@ source ../_buildscripts/${current_repo}-${_arch}-cfg.conf
 pkgname="kdelibs"
 arch=('i686' 'x86_64')
 pkgver=${_kdever}
-pkgrel=1
+pkgrel=2
 pkgdesc="KDE Core Libraries"
 url="http://www.kde.org"
 license=('GPL' 'LGPL' 'FDL')
@@ -42,12 +42,12 @@ source=($_mirror/${pkgname}-$_kdever.tar.xz
 	01_chakra_tag.patch
 	02_kde_applications_menu.patch
 	03_chakra_menu.patch
-	KRatingPainter.diff)
+	MergeDir.patch)
 md5sums=(`grep ${pkgname}-$_kdever.tar.xz ../kde-sc.md5 | cut -d" " -f1`
          'e9ac43de85dc73309ab6c89ebcf5dc50'  # 01_chakra_tag.patch
          'e94450ba5430ea9c1e33bad9ae38ca2d'  # 02_kde_applications_menu.patch
-         '53b85403e4dd8f9146933c52ca23243e'   # 03_chakra_menu.path
-         '0c98515d1b9b74f21ebde92fcf388515')
+         '53b85403e4dd8f9146933c52ca23243e'  # 03_chakra_menu.path
+         'f442698bae9d4ffb26f6df9457d7fc5a') # MergeDir.patch
         
 #
 # build function
@@ -59,8 +59,8 @@ build() {
 	patch -Np1 -i ${srcdir}/01_chakra_tag.patch
 	patch -Np1 -i ${srcdir}/02_kde_applications_menu.patch
 	patch -Np1 -i ${srcdir}/03_chakra_menu.patch
-	# gwenview build fix 4.9.2
-	patch -p1 -i ${srcdir}/KRatingPainter.diff
+	# right positioning of applications' entries in kmenu
+	patch -p1 -i ${srcdir}/MergeDir.patch
 
         cd ..
 
