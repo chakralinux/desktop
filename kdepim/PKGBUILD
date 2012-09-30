@@ -40,15 +40,13 @@ makedepends=('pkg-config' 'cmake' 'automoc4' 'boost' "kdelibs>=${_kdever}" "kdep
 	     'kde-agent' 'libindicate-qt>=0.2.2' 'docbook-xml' 'dblatex')
 
 
-source=($_mirror/${pkgbase}-${pkgver}.tar.xz
-       'CMakeLists_new.diff')
-md5sums=(`grep ${pkgbase}-$_kdever.tar.xz ../kde-sc.md5 | cut -d" " -f1`
-         '630e944d4f7f8320742862128bfe333d')
+source=($_mirror/${pkgbase}-${pkgver}.tar.xz)
+md5sums=(`grep ${pkgbase}-$_kdever.tar.xz ../kde-sc.md5 | cut -d" " -f1`)
 
 build() {
 
 	cd ${srcdir}/${pkgbase}-${pkgver}
-	patch -p1 -N -i ${srcdir}/CMakeLists_new.diff
+
 	cmake . -DCMAKE_BUILD_TYPE=${_build_type} \
 		-DCMAKE_INSTALL_PREFIX=${_installprefix} \
 		-DCMAKE_SKIP_RPATH=ON \
