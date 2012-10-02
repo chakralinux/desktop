@@ -1,0 +1,53 @@
+# Maintainer: Daniele Cocca <jmc@chakra-project.org>
+
+pkgbase=requests
+pkgname=("python2-${pkgbase}" "python3-${pkgbase}")
+pkgver=0.14.0
+pkgrel=1
+pkgdesc="Requests is an ISC Licensed HTTP library, written in Python, for human beings."
+arch=('any')
+url="http://python-requests.org/"
+license=('custom:ISC License')
+makedepends=('python2' 'python3')
+source=("python-requests-${pkgver}.tar.gz"::"https://github.com/kennethreitz/requests/tarball/v${pkgver}")
+md5sums=('fdba3811d69828717a41c3055f1f49ec')
+
+build() {
+  # Start the Python 2.x build
+  cd "${srcdir}"
+  rm -rf "python2-requests-${pkgver}/"
+  cp -r kennethreitz-requests-*/ "python2-requests-${pkgver}/"
+
+  cd "python2-requests-${pkgver}"
+  python2 setup.py build
+
+  # Start the Python 3.x build
+  cd "${srcdir}"
+  rm -rf "python3-requests-${pkgver}/"
+  cp -r kennethreitz-requests-*/ "python3-requests-${pkgver}/"
+
+  cd "python3-requests-${pkgver}"
+  python3 setup.py build
+}
+
+package_python2-requests() {
+depends=('python2')
+
+  cd "${srcdir}/python2-requests-${pkgver}"
+  python2 setup.py install --prefix="${pkgdir}"
+
+  install -D -m644 LICENSE \
+                   "${pkgdir}/usr/share/licenses/${pkgname}/LICENSE"
+}
+
+package_python3-requests() {
+depends=('python3')
+
+  cd "${srcdir}/python3-requests-${pkgver}"
+  python3 setup.py install --prefix="${pkgdir}"
+
+  install -D -m644 LICENSE \
+                   "${pkgdir}/usr/share/licenses/${pkgname}/LICENSE"
+}
+
+# vim:set ts=2 sw=2 et:

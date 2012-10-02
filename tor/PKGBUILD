@@ -5,7 +5,7 @@
 
 pkgname=tor
 pkgver=0.2.2.39
-pkgrel=2
+pkgrel=3
 pkgdesc="Anonymizing overlay network"
 arch=('i686' 'x86_64')
 url="http://www.torproject.org/"
@@ -48,7 +48,7 @@ package() {
   install -Dm0755 "${srcdir}/tor.rc" "$pkgdir/etc/rc.d/tor"
 
   # Install systemd service file
-  install -Dm0644 "${srcdir}/tor.service" "${pkgdir}/usr/lib/systemd/system/tor.service"
+  #install -Dm0644 "${srcdir}/tor.service" "${pkgdir}/usr/lib/systemd/system/tor.service"
 
   # Install license  
   install -Dm0644 LICENSE "$pkgdir/usr/share/licenses/${pkgname}/LICENSE" 
