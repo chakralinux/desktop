@@ -1,12 +1,12 @@
 #
 # Apps Packages for Chakra, part of chakra-project.org
 #
-# maintainer (x86_64): Giuseppe Calà <jiveaxe@gmail.com>
+# maintainer: Giuseppe Calà <jiveaxe@gmail.com>
 
 
 pkgname=avogadro
-pkgver=1.0.3
-pkgrel=5
+pkgver=1.1.0
+pkgrel=1
 pkgdesc="An advanced molecular editor based on Qt"
 arch=('i686' 'x86_64')
 url="http://avogadro.openmolecules.net/wiki/Main_Page"
@@ -15,12 +15,10 @@ depends=('eigen' 'openbabel' 'pyqt' 'boost-libs' 'glew' 'python-numpy')
 makedepends=('cmake' 'boost')
 categories=('education')
 source=("http://downloads.sourceforge.net/${pkgname}/${pkgname}-${pkgver}.tar.bz2")
-md5sums=('92c2702c1980f70fb6d87a1a58147911')
+md5sums=('f4fbef5ffc69cc312b2316426c36a78d')
 
 build() {
   cd "${srcdir}/${pkgname}-${pkgver}"
-  patch -p1 -i ../../replace-qt4_automoc-with-qt4_wrap_cpp.patch
-  patch -p1 -i ../../fix-boost.patch
 
   cd ${srcdir}
   mkdir -p build
