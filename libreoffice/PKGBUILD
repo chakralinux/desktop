@@ -22,9 +22,9 @@ pkgname=('libreoffice-common'
 	'libreoffice-extension-report-builder'
 	'libreoffice-scripting-javascript'
 	'libreoffice-extension-scripting-python')
-_LOver=3.6.1.2
-pkgver=3.6.1
-_pkgver=3.6.1
+_LOver=3.6.2.2
+pkgver=3.6.2
+_pkgver=3.6.2
 _HIver=3.6
 pkgrel=1
 arch=('i686' 'x86_64')
@@ -40,7 +40,7 @@ makedepends=( # makedepends
              # libreoffice main pkg
              "curl>=7.20.0" "hunspell>=1.2.8" 'python2' 'libwpd>=0.9.0' 'libwps' 'libxaw' "neon>=0.28.6"
              'pango' 'nspr' 'libjpeg' 'libxrandr' 'libgl' 'dbus-glib' "icu>=4.6" 'libxslt'
-             'redland' 'graphite' 'hyphen' 'lpsolve' 'gcc-libs' 'sh'  'libtextcat' 'librsvg'
+             'redland' 'graphite' 'hyphen' 'lpsolve' 'gcc-libs' 'sh'  'libtextcat' 'librsvg' 'lcms2'
              'hicolor-icon-theme' 'desktop-file-utils' 'shared-mime-info' 'translate-toolkit' 'xdg-utils' 'ttf-dejavu' 'libcups')
 
 _mirror="http://mirror2.layerjet.com/tdf/libreoffice/src/$_pkgver"
@@ -142,14 +142,14 @@ build() {
 	cd ${srcdir}/libreoffice-core-$_LOver
 
 	# move external sources into place
-	mkdir ${srcdir}/ext_sources &&	pushd ${srcdir}/ext_sources
-	for source in "${noextract[@]}"; do
-	  ln -s ${srcdir}/$source .
-	done
-	popd
+	#mkdir ${srcdir}/ext_sources &&	pushd ${srcdir}/ext_sources
+	#for source in "${noextract[@]}"; do
+	#  ln -s ${srcdir}/$source .
+	#done
+	#popd
 
-	ln -s ../libreoffice-help-$_LOver/helpcontent2 .
-	ln -s ../libreoffice-translations-$_LOver/translations .
+	#ln -s ../libreoffice-help-$_LOver/helpcontent2 .
+	#ln -s ../libreoffice-translations-$_LOver/translations .
 	
 	patch -p1 -i ${srcdir}/buildfix.diff
 
@@ -240,7 +240,7 @@ build() {
 	#./download
 	make
 	# fake installation to create split file lists
-	mkdir $srcdir/fakeinstall
+	#mkdir $srcdir/fakeinstall
 	make DESTDIR=${srcdir}/fakeinstall distro-pack-install
 }
 
@@ -249,8 +249,8 @@ package_libreoffice-common() {
  pkgdesc="common files for LibreOffice - a productivity suite that is compatible with other major office suites"
  install=${pkgbase}.install
  depends=('libreoffice-langpack' "hunspell" "python2" "neon"
-          'nspr' "icu" 'libsm' 'redland' 'hyphen' 'graphite'
-          'hicolor-icon-theme' 'desktop-file-utils' 'shared-mime-info' 'xdg-utils')
+          'nspr' "icu" 'libsm' 'redland' 'hyphen' 'graphite' 'lcms2'
+          'hicolor-icon-theme' 'desktop-file-utils' 'shared-mime-info' 'xdg-utils' 'clucene')
           #'saxon'
  optdepends=('libreoffice-langpack: additional language support'
              'java-runtime:     adds java support'
@@ -350,28 +350,24 @@ package_libreoffice-postgresql-connector() {
  groups=('libreoffice')
  replaces=('libreoffice')
 
- # no file-list so far
- install -dm755 ${pkgdir}/usr/lib/libreoffice/program/services
- install -m644 ${srcdir}/fakeinstall/usr/lib/libreoffice/program/postgresql-sdbc.uno.so ${pkgdir}/usr/lib/libreoffice/program
- install -m644 ${srcdir}/fakeinstall/usr/lib/libreoffice/program/postgresql-sdbc-impl.uno.so ${pkgdir}/usr/lib/libreoffice/program
- install -m644 ${srcdir}/fakeinstall/usr/lib/libreoffice/program/postgresql-sdbc.ini ${pkgdir}/usr/lib/libreoffice/program
- install -m644 ${srcdir}/fakeinstall/usr/lib/libreoffice/program/services/postgresql-sdbc.rdb ${pkgdir}/usr/lib/libreoffice/program/services
- install -dm755 ${pkgdir}/usr/lib/libreoffice/share/registry
- install -m644 ${srcdir}/fakeinstall/usr/lib/libreoffice/share/registry/postgresqlsdbc.xcd ${pkgdir}/usr/lib/libreoffice/share/registry
+ # workaround double entries in the file list
+ mv ${srcdir}/libreoffice-core-$_LOver/file-lists/postgresql_list.txt ${srcdir}/libreoffice-core-$_LOver/file-lists/postgresql_list.txt.orig
+ sort ${srcdir}/libreoffice-core-$_LOver/file-lists/postgresql_list.txt.orig | uniq 1>& ${srcdir}/libreoffice-core-$_LOver/file-lists/postgresql_list.txt
 
-# # create directories from *list.txt file
-# for directory in `grep ^%dir ${srcdir}/libreoffice-core-$_LOver/file-lists/postgresql_list.txt`; do
-#   install -dm755 ${pkgdir}/${directory/\%dir/}
-# done
-# # install files into the pkg from fakeinstall dir
-# for file in `grep -v ^%dir $srcdir/libreoffice-core-$_LOver/file-lists/postgresql_list.txt`; do
-#   dirname=`dirname $file`
-#   # check if directory has been already been created - some are missing like manpages
-#   [ -d ${pkgdir}/$dirname ] || install -dm755 ${pkgdir}/$dirname
-#   # mv file from fakeinstall to pkgdir
-#   mv ${srcdir}/fakeinstall${file} ${pkgdir}$file
-# done
+ # create directories from *list.txt file
+ for directory in `grep ^%dir ${srcdir}/libreoffice-core-$_LOver/file-lists/postgresql_list.txt`; do
+   install -dm755 ${pkgdir}/${directory/\%dir/}
+ done
+ # install files into the pkg from fakeinstall dir
+ for file in `grep -v ^%dir $srcdir/libreoffice-core-$_LOver/file-lists/postgresql_list.txt`; do
+   dirname=`dirname $file`
+   # check if directory has been already been created - some are missing like manpages
+   [ -d ${pkgdir}/$dirname ] || install -dm755 ${pkgdir}/$dirname
+   # mv file from fakeinstall to pkgdir
+   mv ${srcdir}/fakeinstall${file} ${pkgdir}$file
+ done
 }
+
 
 package_libreoffice-calc() {
  pkgdesc="Spreadsheet application for LibreOffice."
