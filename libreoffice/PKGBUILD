@@ -142,14 +142,14 @@ build() {
 	cd ${srcdir}/libreoffice-core-$_LOver
 
 	# move external sources into place
-	#mkdir ${srcdir}/ext_sources &&	pushd ${srcdir}/ext_sources
-	#for source in "${noextract[@]}"; do
-	#  ln -s ${srcdir}/$source .
-	#done
-	#popd
+	mkdir ${srcdir}/ext_sources &&	pushd ${srcdir}/ext_sources
+	for source in "${noextract[@]}"; do
+	  ln -s ${srcdir}/$source .
+	done
+	popd
 
-	#ln -s ../libreoffice-help-$_LOver/helpcontent2 .
-	#ln -s ../libreoffice-translations-$_LOver/translations .
+	ln -s ../libreoffice-help-$_LOver/helpcontent2 .
+	ln -s ../libreoffice-translations-$_LOver/translations .
 	
 	patch -p1 -i ${srcdir}/buildfix.diff
 
@@ -240,7 +240,7 @@ build() {
 	#./download
 	make
 	# fake installation to create split file lists
-	#mkdir $srcdir/fakeinstall
+	mkdir $srcdir/fakeinstall
 	make DESTDIR=${srcdir}/fakeinstall distro-pack-install
 }
 
