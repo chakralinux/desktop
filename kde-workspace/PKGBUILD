@@ -71,9 +71,9 @@ source=($_mirror/${pkgname}-$_kdever.tar.xz
 	# fix kdm default user for greeter
 	#fix_kdm_configdef.patch
 	# "fix" some sytemsettings modules that need root access
-	fix_root-only-kcms.patch)
+	fix_root-only-kcms.patch
         # shutdown-fix.patch
-	#sensors-fix.patch)
+	systemd-inhibit.diff)
 
 md5sums=(`grep ${pkgname}-$_kdever.tar.xz ../kde-sc.md5 | cut -d" " -f1`
         `grep kde-wallpapers-$_kdever.tar.xz ../kde-sc.md5 | cut -d" " -f1` # kde-wallpapers
@@ -98,8 +98,8 @@ md5sums=(`grep ${pkgname}-$_kdever.tar.xz ../kde-sc.md5 | cut -d" " -f1`
         #'db2d8166f5ea80ecd291deb9c0e2bb71'  #  fix_kdm-increase-xserver-timeout-bnc#462478.patch
         '814350c52c135d6f7bdada1e29223d38'  #  fix_terminate-server.patch
 	#'97a5eb51e6f9d460f0d61bb322a1db5e'  #  fix_kdm_configdef.patch
-	'5f963f80a026f0600edae1b1c70411e5')  #  fix_root-only-kcms.patch
-        #'ecf3a9d6af9bdd3db0189e06ddf21034')  #  sensors-fix.patch
+	'5f963f80a026f0600edae1b1c70411e5'  #  fix_root-only-kcms.patch
+        'c10c55b880d6de129f85af0a701e6f4d')  #  systemd-inhibit.diff
 
 #
 # build function
@@ -117,9 +117,10 @@ build() {
 
 	msg "applying fixes ..."
 	#patch -Np0 -i ${srcdir}/fix_kdm-increase-xserver-timeout-bnc#462478.patch
-	patch -Np0 -i ${srcdir}/fix_terminate-server.patch
+	patch -p0 -i ${srcdir}/fix_terminate-server.patch
 	#patch -p0 -N -i ${srcdir}/fix_kdm_configdef.patch
-        patch -Np1 -i ${srcdir}/fix_root-only-kcms.patch
+        patch -p1 -i ${srcdir}/fix_root-only-kcms.patch
+        patch -p1 -i "${srcdir}"/systemd-inhibit.diff
 
 	msg "starting workspace build ..."
 	cmake . -DCMAKE_BUILD_TYPE=${_build_type} \
