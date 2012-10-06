@@ -5,7 +5,7 @@
 
 pkgname=polkit
 pkgver=0.107
-pkgrel=1
+pkgrel=2
 pkgdesc="Application development toolkit for controlling system-wide privileges"
 arch=('i686' 'x86_64')
 license=('LGPL')
@@ -16,16 +16,18 @@ replaces=('policykit')
 conflicts=('consolekit')
 options=('!libtool')
 install=polkit.install
-source=(http://www.freedesktop.org/software/polkit/releases/$pkgname-$pkgver.tar.gz
-        polkit.pam)
-        #disable-gtk-doc.patch)
+source=("http://www.freedesktop.org/software/polkit/releases/$pkgname-$pkgver.tar.gz"
+        'polkit.pam'
+        'polkit-0107-fall-back-to-uid0.patch')
 md5sums=('0e4f9c53f43fd1b25ac3f0d2e09b2ae1'
-         '6564f95878297b954f0572bc1610dd15')
-	 #'ad88086ef2b04fec5b69118ca3d47801')
+         '6564f95878297b954f0572bc1610dd15'
+	 'ff70b87eff8c97e436ce1754ed9891eb')
 
 build() {
   cd "${srcdir}/${pkgname}-${pkgver}"
-  #patch -Np1 -i "${srcdir}/disable-gtk-doc.patch"
+  # fix https://bugzilla.redhat.com/show_bug.cgi?id=834494
+  patch -p1 -i "${srcdir}/polkit-0107-fall-back-to-uid0.patch"
+  
   ./configure --prefix=/usr --sysconfdir=/etc \
       --localstatedir=/var --libexecdir=/usr/lib/polkit-1 \
       --with-systemdsystemunitdir=/usr/lib/systemd/system \
