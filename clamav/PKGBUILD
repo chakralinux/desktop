@@ -51,6 +51,9 @@ package() {
 	install -D -m644 ../clamav.confd "$pkgdir/etc/conf.d/clamav"
 	install -D -m755 ../clamav "$pkgdir/etc/rc.d/clamav"
 
+	# Test fix for http://www.chakra-project.org/bbs/viewtopic.php?pid=60823#p60823
+	install -d -m755 "$pkgdir/var/lib/clamav"
+
 	# un-distribute databases to require freshclam
 	#rm "$pkgdir"/var/lib/clamav/*.cvd
 }
