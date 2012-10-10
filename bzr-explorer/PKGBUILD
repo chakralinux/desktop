@@ -2,19 +2,20 @@
 # Contributer: Joshua L. Blocher <verbalshadow@gmail.com>
 
 pkgname=bzr-explorer
-pkgver=1.1.0beta1
+pkgver=1.2.3
 pkgrel=1
-pkgdesc="A desktop application for using the Bazaar Version Control System"
+pkgdesc="Bazaar Explorer is a desktop application for using the Bazaar Version Control System."
 arch=('i686' 'x86_64')
 url="http://doc.bazaar-vcs.org/explorer/en/index.html"
 license=('GPL')
-depends=("python" "bzr" "qbzr")
+depends=('python2' 'bzr>=2.3' 'qbzr>=0.22')
 categories=('programming')
-source=(http://launchpad.net/bzr-explorer/1.1/1.1beta1/+download/$pkgname-$pkgver.tar.gz)
-md5sums=('be3dc1998246fe0eae74a6e6058657db')
+source=("http://launchpad.net/${pkgname}/${pkgver%.*}/${pkgver}/+download/${pkgname}-${pkgver}.tar.gz")
+md5sums=('61fb78332f4b7e2fd921b6e8c1f704be')
 
-build() {
-  cd "${startdir}/src/${pkgname}-${pkgver}/"
-  python setup.py install --prefix'=/usr' --root="${startdir}/pkg" || return 1
+package() {
+  cd "${srcdir}/${pkgname}-${pkgver}"
+  python setup.py install --prefix=/usr --root="${pkgdir}"
 }
 
+# vim:set ts=2 sw=2 et:
