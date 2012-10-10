@@ -4,19 +4,25 @@
 # Contributer: Joshua L. Blocher <verbalshadow@gmail.com>
 
 pkgname=qbzr
-pkgver=0.19
+pkgver=0.22.4
 pkgrel=1
-pkgdesc="A GUI front end for Bazaar based on the Qt toolkit."
+pkgdesc="QBzr is a cross-platform GUI front end for Bazaar, based on the Qt toolkit."
 arch=('i686' 'x86_64')
-url="http://wiki.bazaar-vcs.org/QBzr"
+url="http://bazaar-vcs.org/QBzr"
 license=('GPL')
 depends=('pyqt>=4' 'bzr')
 categories=('programming')
-source=(http://launchpad.net/${pkgname}/0.19/${pkgver}/+download/${pkgname}-${pkgver}.tar.gz)
-md5sums=('7549324934fdda9b7066045a6bbd065a')
+source=("http://launchpad.net/${pkgname}/${pkgver%.*}/${pkgver}/+download/${pkgname}-${pkgver}.tar.gz")
+md5sums=('09157a217e4ae25fffd8a14e3e949db4')
 
 build() {
-cd $startdir/src/$pkgname
-./setup.py build || return 1
-./setup.py install --prefix=$startdir/pkg/usr install
+  cd "${srcdir}/${pkgname}"
+  python2 setup.py build
+}
+
+package() {
+  cd "${srcdir}/${pkgname}"
+  python2 setup.py install --prefix="${pkgdir}/usr"
 } 
+
+# vim:set ts=2 sw=2 et:
