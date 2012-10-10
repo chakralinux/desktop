@@ -1,15 +1,11 @@
 #
 # Apps Packages for Chakra, part of chakra-project.org
 #
-# maintainer (i686): Phil Miller <philm[at]chakra-project[dog]org>
-# maintainer (x86_64): Manuel Tortosa <manutortosa[at]chakra-project[dot]org>
-
-# include global config
-source ../_buildscripts/${current_repo}-${_arch}-cfg.conf
+# maintainer: Neophytos Kolokotronis <tetris4@gmail.com>
 
 pkgname=psi
-pkgver=0.14
-pkgrel=5
+pkgver=0.15
+pkgrel=1
 pkgdesc='Instant messaging application designed for the Jabber IM'
 url='http://psi-im.org/'
 license=('GPL')
@@ -19,14 +15,14 @@ categories=('communication')
 install='psi.install'
 source=("http://downloads.sourceforge.net/psi/psi-${pkgver}.tar.bz2"
         'chakralinux.patch')
-md5sums=('9d7dcce3bcab53b741a712199bd986be'
+md5sums=('aea15f17cf93e7cea52f305523f761be'
          '4f41758f1ddff5cb2ac3396895da3530')
 
 build() {
 	cd $srcdir/psi-${pkgver}
 	patch -p1 -i $srcdir/chakralinux.patch
-	./configure --prefix=/usr --disable-bundled-qca || return 1
-	make || return 1
+	./configure --prefix=/usr --release --no-separate-debug-info
+	make
 }
 
 package() {
