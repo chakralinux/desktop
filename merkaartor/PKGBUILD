@@ -7,22 +7,23 @@
 # Contributor: Brice Maron <brice bmaron net>
 
 pkgname=merkaartor
-pkgver=0.17.2
-pkgrel=2
+pkgver=0.18.1
+_pkgver=main
+pkgrel=1
 pkgdesc="An editor for the OpenStreetMap project"
 arch=('i686' 'x86_64')
 url="http://www.merkaartor.org/"
 license=('GPL2')
-depends=('exiv2' 'libxml2' 'libxslt' 'proj' 'qt>=4.6')
+depends=('exiv2' 'gdal' 'libxml2' 'libxslt' 'proj' 'qt')
 optdepends=('gpsd')
 makedepends=('boost')
 conflicts=('merkaartor-svn')
 categories=('network' 'education')
-source=("http://www.merkaartor.be/attachments/download/253/$pkgname-$pkgver.tar.bz2")
-md5sums=('44c49f73efa589a455bb9d3d0a284d09')
+source=("$pkgname-$pkgver.tar.gz::https://gitorious.org/$pkgname/main/archive-tarball/$pkgver")
+md5sums=('bf4fc33d43f169d7fa3d99ada8c0f1b6')
 
 build() {
-  cd $srcdir/$pkgname-$pkgver
+  cd $srcdir/$pkgname-$_pkgver
 
   lrelease ./src/src.pro
   qmake \
@@ -35,6 +36,6 @@ build() {
 }
 
 package() {
-  cd $srcdir/$pkgname-$pkgver
+  cd $srcdir/$pkgname-$_pkgver
   make INSTALL_ROOT=$pkgdir install
 }
