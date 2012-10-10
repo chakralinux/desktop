@@ -1,6 +1,6 @@
 diff -Naur a/Makefile.in b/Makefile.in
---- a/Makefile.in	2012-09-09 14:22:15.015528849 +0000
-+++ b/Makefile.in	2012-09-09 15:13:18.018935366 +0000
+--- a/Makefile.in	2012-10-09 00:30:11.534668663 +0000
++++ b/Makefile.in	2012-10-09 00:30:27.207914565 +0000
 @@ -107,8 +107,8 @@
  GLIB2_V_216_LIBS = @GLIB2_V_216_LIBS@
  GLIB_CFLAGS = @GLIB_CFLAGS@
@@ -30,399 +30,82 @@ diff -Naur a/Makefile.in b/Makefile.in
  @ENABLE_PLUGIN_TRUE@	  $(MOZILLA_LIBS)\
  @ENABLE_PLUGIN_TRUE@	  -shared -o $@
  
-diff -Naur a/configure b/configure
---- a/configure	2012-09-09 14:22:15.002195366 +0000
-+++ b/configure	2012-09-09 15:11:58.656031883 +0000
-@@ -604,8 +604,9 @@
- MOZILLA_CFLAGS
- GLIB_LIBS
- GLIB_CFLAGS
--GTK_LIBS
--GTK_CFLAGS
-+QT4_LIBS
-+QT4_CFLAGS
-+MOC
- PKG_CONFIG_LIBDIR
- PKG_CONFIG_PATH
- PKG_CONFIG
-@@ -755,7 +756,7 @@
- with_jarsigner
- with_pkgversion
- enable_plugin
--with_gtk
-+with_qt4
- with_jre_home
- with_java
- with_firefox
-@@ -783,8 +784,8 @@
- PKG_CONFIG
- PKG_CONFIG_PATH
- PKG_CONFIG_LIBDIR
--GTK_CFLAGS
--GTK_LIBS
-+QT4_CFLAGS
-+QT4_LIBS
- GLIB_CFLAGS
- GLIB_LIBS
- MOZILLA_CFLAGS
-@@ -1436,7 +1437,6 @@
-                           run-netx-dist
-   --with-pkgversion=PKG   Use PKG in the version string in addition to
-                           "IcedTea"
--  --with-gtk=2|3|default  the GTK+ version to use (default: 3)
-   --with-jre-home         jre home directory (default is the JRE under the
-                           JDK)
-   --with-java             specify location of the 1.5 java vm
-@@ -1469,8 +1469,8 @@
-               directories to add to pkg-config's search path
-   PKG_CONFIG_LIBDIR
-               path overriding pkg-config's built-in search path
--  GTK_CFLAGS  C compiler flags for GTK, overriding pkg-config
--  GTK_LIBS    linker flags for GTK, overriding pkg-config
-+  QT4_CFLAGS  C compiler flags for Qt 4, overriding pkg-config
-+  QT4_LIBS    linker flags for Qt 4, overriding pkg-config
-   GLIB_CFLAGS C compiler flags for GLIB, overriding pkg-config
-   GLIB_LIBS   linker flags for GLIB, overriding pkg-config
-   MOZILLA_CFLAGS
-@@ -6377,107 +6377,36 @@
+diff -Naur a/acinclude.m4 b/acinclude.m4
+--- a/acinclude.m4	2012-10-09 00:30:11.521335339 +0000
++++ b/acinclude.m4	2012-10-09 00:43:56.296867625 +0000
+@@ -359,34 +359,21 @@
+ AC_MSG_RESULT(${enable_plugin})
+ ])
  
- if test "x${enable_plugin}" = "xyes" ; then
+-dnl ITW_GTK_CHECK_VERSION([gtk version])
+-AC_DEFUN([ITW_GTK_CHECK_VERSION],
++dnl ITW_QT_CHECK_VERSION([])
++AC_DEFUN([ITW_QT_CHECK_VERSION],
+ [
+-  AC_MSG_CHECKING([for GTK$1 version])
+-  GTK_VER=`$PKG_CONFIG --modversion gtk+-$1.0`
+-  AC_MSG_RESULT([$GTK_VER])
++  AC_MSG_CHECKING([for Qt])
++  QT_VER=`$PKG_CONFIG --modversion QtGui`
++  AC_MSG_RESULT([$QT_VER])
+ ])
  
--# Check whether --with-gtk was given.
--if test "${with_gtk+set}" = set; then :
--  withval=$with_gtk; case "$with_gtk" in
--       2|3|default) ;;
--       *) as_fn_error $? "invalid GTK version specified" "$LINENO" 5 ;;
--     esac
--else
--  with_gtk=default
--fi
--
--
--  case "$with_gtk" in
+-dnl ITW_GTK_CHECK([gtk version])
+-AC_DEFUN([ITW_GTK_CHECK],
++dnl ITW_QT_CHECK([])
++AC_DEFUN([ITW_QT_CHECK],
+ [
+-  case "$1" in
 -    default)
--
--pkg_failed=no
--{ $as_echo "$as_me:${as_lineno-$LINENO}: checking for GTK" >&5
--$as_echo_n "checking for GTK... " >&6; }
--
--if test -n "$GTK_CFLAGS"; then
--    pkg_cv_GTK_CFLAGS="$GTK_CFLAGS"
-- elif test -n "$PKG_CONFIG"; then
--    if test -n "$PKG_CONFIG" && \
--    { { $as_echo "$as_me:${as_lineno-$LINENO}: \$PKG_CONFIG --exists --print-errors \"gtk+-3.0\""; } >&5
--  ($PKG_CONFIG --exists --print-errors "gtk+-3.0") 2>&5
--  ac_status=$?
--  $as_echo "$as_me:${as_lineno-$LINENO}: \$? = $ac_status" >&5
--  test $ac_status = 0; }; then
--  pkg_cv_GTK_CFLAGS=`$PKG_CONFIG --cflags "gtk+-3.0" 2>/dev/null`
--else
--  pkg_failed=yes
--fi
-- else
--    pkg_failed=untried
--fi
--if test -n "$GTK_LIBS"; then
--    pkg_cv_GTK_LIBS="$GTK_LIBS"
-- elif test -n "$PKG_CONFIG"; then
--    if test -n "$PKG_CONFIG" && \
--    { { $as_echo "$as_me:${as_lineno-$LINENO}: \$PKG_CONFIG --exists --print-errors \"gtk+-3.0\""; } >&5
--  ($PKG_CONFIG --exists --print-errors "gtk+-3.0") 2>&5
--  ac_status=$?
--  $as_echo "$as_me:${as_lineno-$LINENO}: \$? = $ac_status" >&5
--  test $ac_status = 0; }; then
--  pkg_cv_GTK_LIBS=`$PKG_CONFIG --libs "gtk+-3.0" 2>/dev/null`
--else
--  pkg_failed=yes
--fi
-- else
--    pkg_failed=untried
--fi
--
--
--
--if test $pkg_failed = yes; then
--   	{ $as_echo "$as_me:${as_lineno-$LINENO}: result: no" >&5
--$as_echo "no" >&6; }
--
--if $PKG_CONFIG --atleast-pkgconfig-version 0.20; then
--        _pkg_short_errors_supported=yes
--else
--        _pkg_short_errors_supported=no
--fi
--        if test $_pkg_short_errors_supported = yes; then
--	        GTK_PKG_ERRORS=`$PKG_CONFIG --short-errors --print-errors "gtk+-3.0" 2>&1`
--        else
--	        GTK_PKG_ERRORS=`$PKG_CONFIG --print-errors "gtk+-3.0" 2>&1`
--        fi
--	# Put the nasty error message in config.log where it belongs
--	echo "$GTK_PKG_ERRORS" >&5
--
--
- pkg_failed=no
--{ $as_echo "$as_me:${as_lineno-$LINENO}: checking for GTK" >&5
--$as_echo_n "checking for GTK... " >&6; }
-+{ $as_echo "$as_me:${as_lineno-$LINENO}: checking for Qt 4" >&5
-+$as_echo_n "checking for Qt 4... " >&6; }
- 
--if test -n "$GTK_CFLAGS"; then
--    pkg_cv_GTK_CFLAGS="$GTK_CFLAGS"
-+if test -n "$QT4_CFLAGS"; then
-+    pkg_cv_QT4_CFLAGS="$QT4_CFLAGS"
-  elif test -n "$PKG_CONFIG"; then
-     if test -n "$PKG_CONFIG" && \
--    { { $as_echo "$as_me:${as_lineno-$LINENO}: \$PKG_CONFIG --exists --print-errors \"gtk+-2.0\""; } >&5
--  ($PKG_CONFIG --exists --print-errors "gtk+-2.0") 2>&5
-+    { { $as_echo "$as_me:${as_lineno-$LINENO}: \$PKG_CONFIG --exists --print-errors \"QtGui >= 4.3 QtCore >= 4.3\""; } >&5
-+  ($PKG_CONFIG --exists --print-errors "QtGui >= 4.3 QtCore >= 4.3") 2>&5
-   ac_status=$?
-   $as_echo "$as_me:${as_lineno-$LINENO}: \$? = $ac_status" >&5
-   test $ac_status = 0; }; then
--  pkg_cv_GTK_CFLAGS=`$PKG_CONFIG --cflags "gtk+-2.0" 2>/dev/null`
-+  pkg_cv_GTK_CFLAGS=`$PKG_CONFIG --cflags "QtGui >= 4.3 QtCore >= 4.3" 2>/dev/null`
- else
-   pkg_failed=yes
- fi
-  else
-     pkg_failed=untried
- fi
--if test -n "$GTK_LIBS"; then
--    pkg_cv_GTK_LIBS="$GTK_LIBS"
-+if test -n "$QT4_LIBS"; then
-+    pkg_cv_QT4_LIBS="$QT4_LIBS"
-  elif test -n "$PKG_CONFIG"; then
-     if test -n "$PKG_CONFIG" && \
--    { { $as_echo "$as_me:${as_lineno-$LINENO}: \$PKG_CONFIG --exists --print-errors \"gtk+-2.0\""; } >&5
--  ($PKG_CONFIG --exists --print-errors "gtk+-2.0") 2>&5
-+    { { $as_echo "$as_me:${as_lineno-$LINENO}: \$PKG_CONFIG --exists --print-errors \"QtGui >= 4.3 QtCore >= 4.3\""; } >&5
-+  ($PKG_CONFIG --exists --print-errors "QtGui >= 4.3 QtCore >= 4.3") 2>&5
-   ac_status=$?
-   $as_echo "$as_me:${as_lineno-$LINENO}: \$? = $ac_status" >&5
-   test $ac_status = 0; }; then
--  pkg_cv_GTK_LIBS=`$PKG_CONFIG --libs "gtk+-2.0" 2>/dev/null`
-+  pkg_cv_QT4_LIBS=`$PKG_CONFIG --libs "QtGui >= 4.3 QtCore >= 4.3" 2>/dev/null`
- else
-   pkg_failed=yes
- fi
-@@ -6497,210 +6426,21 @@
-         _pkg_short_errors_supported=no
- fi
-         if test $_pkg_short_errors_supported = yes; then
--	        GTK_PKG_ERRORS=`$PKG_CONFIG --short-errors --print-errors "gtk+-2.0" 2>&1`
-+	        QT4_PKG_ERRORS=`$PKG_CONFIG --short-errors --print-errors "QtGui >= 4.3 QtCore >= 4.3" 2>&1`
-         else
--	        GTK_PKG_ERRORS=`$PKG_CONFIG --print-errors "gtk+-2.0" 2>&1`
-+	        QT4_PKG_ERRORS=`$PKG_CONFIG --print-errors "QtGui >= 4.3 QtCore >= 4.3" 2>&1`
-         fi
- 	# Put the nasty error message in config.log where it belongs
--	echo "$GTK_PKG_ERRORS" >&5
--
--	as_fn_error $? "GTK $with_gtk not found" "$LINENO" 5
-+	echo "$QT4_PKG_ERRORS" >&5
-+	as_fn_error $? "Qt 4 $with_qt4 not found" "$LINENO" 5
- 
- elif test $pkg_failed = untried; then
-      	{ $as_echo "$as_me:${as_lineno-$LINENO}: result: no" >&5
- $as_echo "no" >&6; }
--	as_fn_error $? "GTK $with_gtk not found" "$LINENO" 5
--
--else
--	GTK_CFLAGS=$pkg_cv_GTK_CFLAGS
--	GTK_LIBS=$pkg_cv_GTK_LIBS
--        { $as_echo "$as_me:${as_lineno-$LINENO}: result: yes" >&5
--$as_echo "yes" >&6; }
--
--  { $as_echo "$as_me:${as_lineno-$LINENO}: checking for GTK2 version" >&5
--$as_echo_n "checking for GTK2 version... " >&6; }
--  GTK_VER=`$PKG_CONFIG --modversion gtk+-2.0`
--  { $as_echo "$as_me:${as_lineno-$LINENO}: result: $GTK_VER" >&5
--$as_echo "$GTK_VER" >&6; }
-+	as_fn_error $? "Qt 4 $with_qt4 not found" "$LINENO" 5
- 
- fi
- 
--elif test $pkg_failed = untried; then
--     	{ $as_echo "$as_me:${as_lineno-$LINENO}: result: no" >&5
--$as_echo "no" >&6; }
--
--pkg_failed=no
--{ $as_echo "$as_me:${as_lineno-$LINENO}: checking for GTK" >&5
--$as_echo_n "checking for GTK... " >&6; }
--
--if test -n "$GTK_CFLAGS"; then
--    pkg_cv_GTK_CFLAGS="$GTK_CFLAGS"
-- elif test -n "$PKG_CONFIG"; then
--    if test -n "$PKG_CONFIG" && \
--    { { $as_echo "$as_me:${as_lineno-$LINENO}: \$PKG_CONFIG --exists --print-errors \"gtk+-2.0\""; } >&5
--  ($PKG_CONFIG --exists --print-errors "gtk+-2.0") 2>&5
--  ac_status=$?
--  $as_echo "$as_me:${as_lineno-$LINENO}: \$? = $ac_status" >&5
--  test $ac_status = 0; }; then
--  pkg_cv_GTK_CFLAGS=`$PKG_CONFIG --cflags "gtk+-2.0" 2>/dev/null`
--else
--  pkg_failed=yes
--fi
-- else
--    pkg_failed=untried
--fi
--if test -n "$GTK_LIBS"; then
--    pkg_cv_GTK_LIBS="$GTK_LIBS"
-- elif test -n "$PKG_CONFIG"; then
--    if test -n "$PKG_CONFIG" && \
--    { { $as_echo "$as_me:${as_lineno-$LINENO}: \$PKG_CONFIG --exists --print-errors \"gtk+-2.0\""; } >&5
--  ($PKG_CONFIG --exists --print-errors "gtk+-2.0") 2>&5
--  ac_status=$?
--  $as_echo "$as_me:${as_lineno-$LINENO}: \$? = $ac_status" >&5
--  test $ac_status = 0; }; then
--  pkg_cv_GTK_LIBS=`$PKG_CONFIG --libs "gtk+-2.0" 2>/dev/null`
--else
--  pkg_failed=yes
--fi
-- else
--    pkg_failed=untried
--fi
--
--
--
--if test $pkg_failed = yes; then
--   	{ $as_echo "$as_me:${as_lineno-$LINENO}: result: no" >&5
--$as_echo "no" >&6; }
--
--if $PKG_CONFIG --atleast-pkgconfig-version 0.20; then
--        _pkg_short_errors_supported=yes
--else
--        _pkg_short_errors_supported=no
--fi
--        if test $_pkg_short_errors_supported = yes; then
--	        GTK_PKG_ERRORS=`$PKG_CONFIG --short-errors --print-errors "gtk+-2.0" 2>&1`
--        else
--	        GTK_PKG_ERRORS=`$PKG_CONFIG --print-errors "gtk+-2.0" 2>&1`
--        fi
--	# Put the nasty error message in config.log where it belongs
--	echo "$GTK_PKG_ERRORS" >&5
--
--	as_fn_error $? "GTK $with_gtk not found" "$LINENO" 5
--
--elif test $pkg_failed = untried; then
--     	{ $as_echo "$as_me:${as_lineno-$LINENO}: result: no" >&5
--$as_echo "no" >&6; }
--	as_fn_error $? "GTK $with_gtk not found" "$LINENO" 5
--
--else
--	GTK_CFLAGS=$pkg_cv_GTK_CFLAGS
--	GTK_LIBS=$pkg_cv_GTK_LIBS
--        { $as_echo "$as_me:${as_lineno-$LINENO}: result: yes" >&5
--$as_echo "yes" >&6; }
--
--  { $as_echo "$as_me:${as_lineno-$LINENO}: checking for GTK2 version" >&5
--$as_echo_n "checking for GTK2 version... " >&6; }
--  GTK_VER=`$PKG_CONFIG --modversion gtk+-2.0`
--  { $as_echo "$as_me:${as_lineno-$LINENO}: result: $GTK_VER" >&5
--$as_echo "$GTK_VER" >&6; }
--
--fi
--
--else
--	GTK_CFLAGS=$pkg_cv_GTK_CFLAGS
--	GTK_LIBS=$pkg_cv_GTK_LIBS
--        { $as_echo "$as_me:${as_lineno-$LINENO}: result: yes" >&5
--$as_echo "yes" >&6; }
--
--  { $as_echo "$as_me:${as_lineno-$LINENO}: checking for GTK3 version" >&5
--$as_echo_n "checking for GTK3 version... " >&6; }
--  GTK_VER=`$PKG_CONFIG --modversion gtk+-3.0`
--  { $as_echo "$as_me:${as_lineno-$LINENO}: result: $GTK_VER" >&5
--$as_echo "$GTK_VER" >&6; }
--
--fi
+-      PKG_CHECK_MODULES(GTK, gtk+-3.0,
+-        [ITW_GTK_CHECK_VERSION([3])],
+-        [PKG_CHECK_MODULES(GTK, gtk+-2.0,
+-           [ITW_GTK_CHECK_VERSION([2])],
+-           [AC_MSG_ERROR([GTK $1 not found])]
+-        )]
+-      )
 -      ;;
 -    *)
--
--pkg_failed=no
--{ $as_echo "$as_me:${as_lineno-$LINENO}: checking for GTK" >&5
--$as_echo_n "checking for GTK... " >&6; }
--
--if test -n "$GTK_CFLAGS"; then
--    pkg_cv_GTK_CFLAGS="$GTK_CFLAGS"
-- elif test -n "$PKG_CONFIG"; then
--    if test -n "$PKG_CONFIG" && \
--    { { $as_echo "$as_me:${as_lineno-$LINENO}: \$PKG_CONFIG --exists --print-errors \"gtk+-\$with_gtk.0\""; } >&5
--  ($PKG_CONFIG --exists --print-errors "gtk+-$with_gtk.0") 2>&5
--  ac_status=$?
--  $as_echo "$as_me:${as_lineno-$LINENO}: \$? = $ac_status" >&5
--  test $ac_status = 0; }; then
--  pkg_cv_GTK_CFLAGS=`$PKG_CONFIG --cflags "gtk+-$with_gtk.0" 2>/dev/null`
--else
--  pkg_failed=yes
--fi
-- else
--    pkg_failed=untried
--fi
--if test -n "$GTK_LIBS"; then
--    pkg_cv_GTK_LIBS="$GTK_LIBS"
-- elif test -n "$PKG_CONFIG"; then
--    if test -n "$PKG_CONFIG" && \
--    { { $as_echo "$as_me:${as_lineno-$LINENO}: \$PKG_CONFIG --exists --print-errors \"gtk+-\$with_gtk.0\""; } >&5
--  ($PKG_CONFIG --exists --print-errors "gtk+-$with_gtk.0") 2>&5
--  ac_status=$?
--  $as_echo "$as_me:${as_lineno-$LINENO}: \$? = $ac_status" >&5
--  test $ac_status = 0; }; then
--  pkg_cv_GTK_LIBS=`$PKG_CONFIG --libs "gtk+-$with_gtk.0" 2>/dev/null`
--else
--  pkg_failed=yes
--fi
-- else
--    pkg_failed=untried
--fi
--
--
--
--if test $pkg_failed = yes; then
--   	{ $as_echo "$as_me:${as_lineno-$LINENO}: result: no" >&5
--$as_echo "no" >&6; }
--
--if $PKG_CONFIG --atleast-pkgconfig-version 0.20; then
--        _pkg_short_errors_supported=yes
--else
--        _pkg_short_errors_supported=no
--fi
--        if test $_pkg_short_errors_supported = yes; then
--	        GTK_PKG_ERRORS=`$PKG_CONFIG --short-errors --print-errors "gtk+-$with_gtk.0" 2>&1`
--        else
--	        GTK_PKG_ERRORS=`$PKG_CONFIG --print-errors "gtk+-$with_gtk.0" 2>&1`
--        fi
--	# Put the nasty error message in config.log where it belongs
--	echo "$GTK_PKG_ERRORS" >&5
--
--	as_fn_error $? "GTK $with_gtk not found" "$LINENO" 5
--
--elif test $pkg_failed = untried; then
--     	{ $as_echo "$as_me:${as_lineno-$LINENO}: result: no" >&5
--$as_echo "no" >&6; }
--	as_fn_error $? "GTK $with_gtk not found" "$LINENO" 5
--
--else
--	GTK_CFLAGS=$pkg_cv_GTK_CFLAGS
--	GTK_LIBS=$pkg_cv_GTK_LIBS
--        { $as_echo "$as_me:${as_lineno-$LINENO}: result: yes" >&5
--$as_echo "yes" >&6; }
--
--  { $as_echo "$as_me:${as_lineno-$LINENO}: checking for GTK$with_gtk version" >&5
--$as_echo_n "checking for GTK$with_gtk version... " >&6; }
--  GTK_VER=`$PKG_CONFIG --modversion gtk+-$with_gtk.0`
--  { $as_echo "$as_me:${as_lineno-$LINENO}: result: $GTK_VER" >&5
--$as_echo "$GTK_VER" >&6; }
--
--fi
+-      PKG_CHECK_MODULES(GTK, gtk+-$1.0,
+-        [ITW_GTK_CHECK_VERSION([$1])],
+-        [AC_MSG_ERROR([GTK $1 not found])]
+-      )
 -      ;;
 -  esac
--
++    PKG_CHECK_MODULES(QT, QtCore,
++        [ITW_QT_CHECK_VERSION([])],
++        [AC_MSG_ERROR([Qt not found])]
++    )
+ ])
  
- pkg_failed=no
- { $as_echo "$as_me:${as_lineno-$LINENO}: checking for GLIB" >&5
+ AC_DEFUN_ONCE([IT_CHECK_PLUGIN_DEPENDENCIES],
+@@ -395,20 +382,12 @@
+ dnl FIXME: use unstable
+ AC_REQUIRE([IT_CHECK_PLUGIN])
+ if test "x${enable_plugin}" = "xyes" ; then
+-  AC_ARG_WITH([gtk],
+-    [AS_HELP_STRING([--with-gtk=[2|3|default]],
+-    [the GTK+ version to use (default: 3)])],
+-    [case "$with_gtk" in
+-       2|3|default) ;;
+-       *) AC_MSG_ERROR([invalid GTK version specified]) ;;
+-     esac],
+-    [with_gtk=default])
+-  ITW_GTK_CHECK([$with_gtk])
++  ITW_QT_CHECK()
+   PKG_CHECK_MODULES(GLIB, glib-2.0)
+   AC_SUBST(GLIB_CFLAGS)
+   AC_SUBST(GLIB_LIBS)
+-  AC_SUBST(GTK_CFLAGS)
+-  AC_SUBST(GTK_LIBS)
++  AC_SUBST(QT_CFLAGS)
++  AC_SUBST(QT_LIBS)
+ 
+   PKG_CHECK_MODULES(MOZILLA, npapi-sdk, [
+     AC_CACHE_CHECK([for xulrunner version], [xulrunner_cv_collapsed_version],[
 diff -Naur a/plugin/icedteanp/IcedTeaNPPlugin.cc b/plugin/icedteanp/IcedTeaNPPlugin.cc
---- a/plugin/icedteanp/IcedTeaNPPlugin.cc	2012-09-09 14:22:15.045528649 +0000
-+++ b/plugin/icedteanp/IcedTeaNPPlugin.cc	2012-09-09 15:15:56.588075879 +0000
+--- a/plugin/icedteanp/IcedTeaNPPlugin.cc	2012-10-09 00:30:11.564668490 +0000
++++ b/plugin/icedteanp/IcedTeaNPPlugin.cc	2012-10-09 00:30:27.211248205 +0000
 @@ -145,7 +145,7 @@
  #define PLUGIN_FILE_EXTS "class,jar,zip"
  #define PLUGIN_MIME_COUNT 1
@@ -456,8 +139,8 @@ diff -Naur a/plugin/icedteanp/IcedTeaNPPlugin.cc b/plugin/icedteanp/IcedTeaNPPlu
    PLUGIN_DEBUG ("plugin_display_failure_dialog return\n");
  }
 diff -Naur a/plugin/icedteanp/IcedTeaNPPlugin.h b/plugin/icedteanp/IcedTeaNPPlugin.h
---- a/plugin/icedteanp/IcedTeaNPPlugin.h	2012-09-09 14:22:15.045528649 +0000
-+++ b/plugin/icedteanp/IcedTeaNPPlugin.h	2012-09-09 15:16:36.394510823 +0000
+--- a/plugin/icedteanp/IcedTeaNPPlugin.h	2012-10-09 00:30:11.564668490 +0000
++++ b/plugin/icedteanp/IcedTeaNPPlugin.h	2012-10-09 00:30:27.211248205 +0000
 @@ -51,8 +51,8 @@
  #include <glib.h>
  #include <glib/gstdio.h>
