@@ -4,44 +4,55 @@
 # Maintainer: Adrián Chaves Fernández (Gallaecio) <adriyetichaves@gmail.com>
 
 pkgname=acpid
-pkgver=2.0.15
+pkgver=2.0.17
 pkgrel=1
-pkgdesc="A daemon for delivering ACPI power management events."
+pkgdesc="A daemon for delivering ACPI power management events with netlink support."
 arch=('i686' 'x86_64')
 url="http://tedfelix.com/linux/acpid-netlink.html"
-license=('GPL2')
+license=('GPL')
 depends=('bash')
+opedepends=('perl: use perl based examples')
 backup=('etc/acpi/events/anything'
-	'etc/acpi/handler.sh'
-	'etc/conf.d/acpid')
-source=(http://www.tedfelix.com/linux/$pkgname-$pkgver.tar.xz
-    acpid
-    acpid.conf.d
-    anything
-    handler.sh)
+        'etc/acpi/handler.sh'
+        'etc/conf.d/acpid')
+source=("http://www.tedfelix.com/linux/${pkgname}-${pkgver}.tar.xz"
+         'acpid'
+         'acpid.conf.d'
+         'anything'
+         'handler.sh'
+         'acpid.socket'
+         'acpid.service')
 categories=('system')
-md5sums=('1b1c8775adab6a994a386c45af6b86dc'
-         'd9ca7f71f520238a0448fab105a23fe9'
-         '91fdb3709c878eed757d192a420251a1'
-         '2d37b98d6e74bab815604b8b48c6cfd4'
-         '0e8dd13793b1baa79a745f4034888367')
+sha256sums=('36b7d2c7deb6a44ae87b28026ff368f96e66b3ee8dd6b6cef4de2c3dbea17a3e'
+            'f23f57646d78bb22b282b9299c5528c6d906cd0c75b080c2606783839e56df49'
+            '1bd216409d7eaa7665d91bc9ed80a9dca7e2326ebe31bb342f8ae1d364b4e36a'
+            'eb5230affb9dba7653890655b94e83f377c689a39131b6b13c8202ba2382c275'
+            '6ae2b153c4ef9cbfd32c4428406fc63d931ea7fdfb2e45529f89b51f4d7ac17a'
+            'ac08f8c59cfcbf70d60a2fe51b50e8551e0212e42e5f392022f2aeae393ae706'
+            '35eda2808e6b0c138be793dd4158b8861f2361a7aa31fa626a700a59beb5285e')
 
 build() {
-  cd $pkgname-$pkgver
+  cd "${srcdir}/${pkgname}-${pkgver}"
   ./configure --prefix=/usr
   make
 }
 
 package() {
-  cd $pkgname-$pkgver
-  make DESTDIR="$pkgdir" install
-
+  cd "${srcdir}/${pkgname}-${pkgver}"
+  make DESTDIR="${pkgdir}" install
+  
+  cd "${srcdir}"
+    
   # Install supplementary scripts.
-  install -Dm755 ../acpid "$pkgdir/etc/rc.d/acpid"
-  install -Dm644 ../anything "$pkgdir/etc/acpi/events/anything"
-  install -Dm755 ../handler.sh "$pkgdir/etc/acpi/handler.sh"
-  install -Dm644 ../acpid.conf.d "$pkgdir/etc/conf.d/acpid"
+  install -Dm755 acpid "$pkgdir/etc/rc.d/acpid"
+  install -Dm644 anything "$pkgdir/etc/acpi/events/anything"
+  install -Dm755 handler.sh "$pkgdir/etc/acpi/handler.sh"
+  install -Dm644 acpid.conf.d "$pkgdir/etc/conf.d/acpid"
+  
+  # Systemd units
+  install -Dm0644 acpid.socket "${pkgdir}/usr/lib/systemd/system/acpid.socket"
+  install -Dm0644 acpid.service "${pkgdir}/usr/lib/systemd/system/acpid.service"
 
   # Set world readable bit on the acpid binary.
-  chmod 755 "$pkgdir"/usr/sbin/acpid
+  chmod 0755 "${pkgdir}"/usr/sbin/acpid
 }
