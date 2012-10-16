@@ -2,52 +2,70 @@
 # Apps Packages for Chakra, part of chakra-project.org
 #
 # Maintainer: Giuseppe Calà <jiveaxe@gmail.com>
+# Contributor from AUR: Meow < meow at linux dot cn >
 
 
 pkgname=mendeleydesktop
-pkgver=1.5.2
+pkgver=1.6
 pkgrel=1
 url="http://www.mendeley.com/"
 pkgdesc="The desktop client for managing and sharing research papers."
 license=('custom:mendeley_eula')
-depends=('python2' 'qt' 'libpng12')
+depends=('python2' 'qt')
 categories=('education')
-arch=(i686 x86_64)
-_filearch=$CARCH
-[[ $CARCH = i686 ]] && _filearch=i486
+arch=x86_64
+#_filearch=$CARCH
+#[[ $CARCH = i686 ]] && _filearch=i486
 
-source=("http://download.mendeley.com/linux/$pkgname-$pkgver-linux-${_filearch}.tar.bz2"
+source=("http://download.mendeley.com/linux/$pkgname-$pkgver-linux-$arch.tar.bz2"
         'mendeleydesktop.install')
-md5sums=('ddf57f741f5c6d399b0249e193449c03'
+md5sums=('606bd69fefa6a9da9b06447bb72906c8'
          '16358cd53dc258a72efcaeab5a415217')
 
-if [[ $CARCH = x86_64 ]]; then
-	md5sums[0]='1fb073e53ce2d795aa615656c736619e'
-fi
+#if [[ $CARCH = x86_64 ]]; then
+#	md5sums[0]='1fb073e53ce2d795aa615656c736619e'
+#fi
 
 package() {
-	cd "$pkgname-$pkgver-linux-${_filearch}"
+    cd "$pkgname-$pkgver-linux-$_arch"
 
-	find share/doc/mendeleydesktop/ -iname "*.txt" -delete
-	install -dm755 "$pkgdir/opt/$pkgname/bin"
-	mv lib share "$pkgdir/opt/$pkgname/"
+    rm -f share/doc/mendeleydesktop/*.txt
 
-	sed -i 's@^\s*subprocess\.Popen(\[MENDELEY_BASE_PATH+"/bin/install-mendeley-link-handler\.sh".*$@#&@' "bin/$pkgname"
-	install -Dm755 "bin/$pkgname" "$pkgdir/opt/$pkgname/bin/$pkgname"
-	install -Dm644 LICENSE "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
-	install -dm755 "$pkgdir/usr/bin/"
-	ln -s "/opt/$pkgname/bin/$pkgname" "$pkgdir/usr/bin/$pkgname"
+    install -dm755 "$pkgdir/opt/$pkgname/"
+    mv bin lib share "$pkgdir/opt/$pkgname/"
+    #ln -s "../lib/mendeleydesktop/libexec/mendeleydesktop.$_arch" "$pkgdir/opt/$pkgname/bin/$pkgname"
+    cd "$pkgdir"
+    sed -i '1s@^#!/usr/bin/python$@&2@' opt/"$pkgname"/bin/mendeleydesktop
+    #install -Dm755 "bin/mendeleydesktop" "$pkgdir/usr/bin/mendeleydesktop"
+    install -dm755 "$pkgdir"/usr/bin
+    ln -s /opt/"$pkgname"/bin/mendeleydesktop "$pkgdir/usr/bin/mendeleydesktop"
 
-	install -dm755 "$pkgdir/usr/share/applications"
-	ln -s "/opt/$pkgname/share/applications/mendeleydesktop.desktop" "$pkgdir/usr/share/applications/"
+    cd "$srcdir/$pkgname-$pkgver-linux-$_arch"
+    install -Dm644 LICENSE "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
 
-	# force bundled qt since mendeley crashes when using qt 4.8
-	#sed -i 's/^Exec.*$/& --force-bundled-qt/' "$pkgdir/opt/$pkgname/share/applications/mendeleydesktop.desktop"
-        sed -e 's/^Exec.*$/& --force-bundled-qt/g' -i "$pkgdir/opt/$pkgname/share/applications/mendeleydesktop.desktop"
+    install -dm755 "$pkgdir"/usr/share/applications
+    ln -s /opt/"$pkgname"/share/applications/mendeleydesktop.desktop "$pkgdir"/usr/share/applications/
 
-        for size in 16 22 32 48 64 128; do
-	    install -dm755 "$pkgdir/usr/share/icons/hicolor/${size}x${size}/apps"
-	    ln -s "/opt/$pkgname/share/icons/hicolor/${size}x${size}/apps/$pkgname.png" \
-		  "$pkgdir/usr/share/icons/hicolor/${size}x${size}/apps"
-	done
+    #Romove bundled Qt from package
+    cat << __EOF__
+Removing bundled Qt library.
+If you used "--force-bundled-qt" to start mendeley,
+make sure you remove any old versions of ".desktop" file of mendeley in ~/.local/share/applications/,
+because mendeley will automatically create one there.
+__EOF__
+    rm -rf "$pkgdir"/opt/"$pkgname"/lib/qt
+
+    #Remove unneeded lines if gconf is not installed.
+    if ! which gconftool-2 &>/dev/null;then
+    sed -i '6d;74d;75d' \
+        "$pkgdir"/opt/"$pkgname"/bin/install-mendeley-link-handler.sh
+    fi
+    #force mendeley to use bundled qt because which under qt 4.8 crashes at start point
+    #make sure you remove any old versions of ".desktop" file of mendeley in ~/.local/share/applications/
+#    sed -i 's/^Exec.*$/& --force-bundled-qt/' "$pkgdir"/opt/"$pkgname"/share/applications/mendeleydesktop.desktop
+    for size in 16 22 32 48 64 128;do
+        install -dm755 "$pkgdir"/usr/share/icons/hicolor/${size}x${size}/apps
+        ln -s /opt/"$pkgname"/share/icons/hicolor/${size}x${size}/apps/"${pkgname}".png \
+          "$pkgdir"/usr/share/icons/hicolor/${size}x${size}/apps
+    done
 }
