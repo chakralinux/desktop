@@ -5,53 +5,79 @@
 #
 # NOTE: The package must be built in a system with a matching architecture.
 
-pkgname=warsow
-pkgver=1.0
-pkgrel=2
-pkgdesc="A free online multiplayer competitive FPS based on the Qfusion engine"
+pkgbase=warsow
+pkgname=('warsow' 'warsow-data')
+pkgver=1.02 # Warsow data version
+_pkgver=1.0 # Launchpad version
+pkgrel=1
+arch=('i686' 'x86_64')
 url="http://www.warsow.net/"
-license=('GPL')
-arch=('i686' 'x86_64') 
-depends=('curl' 'libjpeg' 'libtheora' 'libvorbis' 'libxinerama' 'libxrandr' 'libxxf86dga' 'libxxf86vm' 'sdl' 'warsow-data')
-makedepends=('mesa' 'openal' 'imagemagick' 'gendesk')
-optdepends=('openal: for openal audio support')
+makedepends=('mesa' 'openal' 'imagemagick' 'gendesk' 'curl' 'libjpeg' 'libtheora' 'libvorbis'
+             'libxxf86dga' 'sdl' 'libxinerama' 'libxrandr' 'libxxf86vm')
 categories=('games')
-source=("https://launchpadlibrarian.net/111352130/${pkgname}_${pkgver}_sdk.tar.gz")
-md5sums=('35b9a8f530b51cda15c660b3a73f377e')
+source=("https://launchpadlibrarian.net/111352130/${pkgname}_${_pkgver}_sdk.tar.gz"
+        "${pkgname}-data_${pkgver}.tar.gz::http://www.warsow.net/download?dl=linux")
+sha256sums=('2e394b5c50ad206723a59636ab93448f69d8602e710ab334451badf746870e22'
+            'f933d251de4c92b6107d4db1eef5326baf4873d32a6e2f1c3daae14bc92e85ec')
 
 build() {
-  cd ${srcdir}
+  cd "${srcdir}"
   gendesk -n
 
   # Compile Warsow.
-  cd $srcdir/${pkgname}_${pkgver}_sdk/source/
+  cd "${srcdir}/${pkgname}_${_pkgver}_sdk/source/"
   make -j1 # Error finding a library if -j is higher.
 }
 
 generateAndInstall() {
-  echo "#!/bin/bash"             > $pkgdir/usr/bin/$1
-  echo "cd /usr/share/$pkgname" >> $pkgdir/usr/bin/$1
-  echo "./$1 \$*"               >> $pkgdir/usr/bin/$1
-  echo "exit \$?"               >> $pkgdir/usr/bin/$1
-  chmod +x $pkgdir/usr/bin/$1
+  echo "#!/bin/bash"             > "${pkgdir}"/usr/bin/$1
+  echo "cd /usr/share/$pkgname" >> "${pkgdir}"/usr/bin/$1
+  echo "./$1 \$*"               >> "${pkgdir}"/usr/bin/$1
+  echo "exit \$?"               >> "${pkgdir}"/usr/bin/$1
+  chmod +x "${pkgdir}"/usr/bin/$1
 }
 
-package() {
-  cd $srcdir/${pkgname}_${pkgver}_sdk/source/
+package_warsow-data() {
+  _pkgname=warsow
+  pkgdesc="A free online multiplayer competitive FPS based on the Qfusion engine (data files)"
+  arch=('any')
+  license=('custom:Warsow Content License')
+
+  echo "${pkgdir}"
+  
+  cd "${srcdir}"
+  
+  # Create the destination directories.
+  install -d "${pkgdir}/usr/share/${_pkgname}"
+
+    # Move Data to destination directory.
+  cp -r ${_pkgname}_${_pkgver}/basewsw "${pkgdir}/usr/share/${_pkgname}"
+
+  # Install custom license: Warsow Content License.
+  install -Dm 0644 ${_pkgname}_${_pkgver}/docs/license.txt "${pkgdir}/usr/share/licenses/${pkgname}/license.txt"
+}
+
+package_warsow() {
+  pkgdesc="A free online multiplayer competitive FPS based on the Qfusion engine"
+  arch=('i686' 'x86_64')
+  license=('GPL')
+  depends=('curl' 'libjpeg' 'libtheora' 'libvorbis' 'libxinerama' 'libxrandr' 'libxxf86dga' 'libxxf86vm' 'sdl' 'warsow-data')
+  optdepends=('openal: for openal audio support')
+  
+  cd "${srcdir}/${pkgname}_${_pkgver}_sdk/source/"
 
   # Manual installation.
-  install -d $pkgdir/usr/share/${pkgname}/
-  cp -r $srcdir/${pkgname}_${pkgver}_sdk/source/release/* \
-      $pkgdir/usr/share/${pkgname}
+  install -d "${pkgdir}/usr/share/${pkgname}/"
+  cp -r release/* "${pkgdir}/usr/share/${pkgname}"
 
   # Execution scripts:
-  install -d $pkgdir/usr/bin
+  install -d "${pkgdir}/usr/bin"
   for script in ${pkgname} wsw_server wswtv_server
   do
     generateAndInstall ${script}
   done
 
   # Desktop integration:
-  install -D -m 0644 $srcdir/${pkgname}.desktop $pkgdir/usr/share/applications/${pkgname}.desktop
-  install -Dm644 $srcdir/${pkgname}_${pkgver}_sdk/source/win32/${pkgname}.ico $pkgdir/usr/share/pixmaps/${pkgname}.png
+  install -Dm0644 "${srcdir}/${pkgname}.desktop" "${pkgdir}/usr/share/applications/${pkgname}.desktop"
+  install -Dm0644 unix/warsow128x128.xpm "${pkgdir}/usr/share/pixmaps/warsow.xpm"
 }
