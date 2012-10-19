@@ -2,14 +2,14 @@ post_install() {
 
     # bug: dbus reload here doesn't work
     # workaround: it seems to work if you do it a few seconds later, manually
-    /etc/rc.d/dbus reload > /dev/null 
+    reload_dbus
 
-	/usr/bin/getent group murmur > /dev/null || /usr/sbin/groupadd murmur
+	/usr/bin/getent group murmur > /dev/null || \
+		/usr/sbin/groupadd -r -g 86 murmur 1>/dev/null
 	/usr/bin/getent passwd murmur > /dev/null || \
-        /usr/sbin/useradd -d /var/lib/murmur -g murmur -s /bin/false murmur
+		/usr/sbin/useradd -r -u 86 -d /var/lib/murmur -g murmur -s /bin/false murmur 1>/dev/null
 
 	chown -R murmur:murmur /var/lib/murmur 
-	chown -R murmur:murmur /var/run/murmur
 	chown -R murmur:murmur /var/log/murmur
 
 	echo
@@ -22,12 +22,26 @@ post_upgrade() {
 }
 
 pre_remove() {
-	[ -f /var/run/daemons/murmur ] && /etc/rc.d/murmur stop > /dev/null
+	systemd-notify
+	
+	if [[ "$?" -eq 0 ]]; then
+		[ -f /var/run/daemons/murmur ] && systemctl stop murmur.service
+	else
+		[ -f /var/run/daemons/murmur ] && /etc/rc.d/murmur stop > /dev/null
+	fi
 	killall -u murmur -5
 	sleep 1
 }
 
 post_remove() {
-    /etc/rc.d/dbus reload > /dev/null
-	/usr/sbin/userdel murmur > /dev/null
+    reload_dbus
+    getent passwd murmur > /dev/null && userdel murmur 1>/dev/null
+	getent group murmur > /dev/null && groupdel murmur 1>/dev/null
+}
+
+reload_dbus() {
+    /usr/bin/dbus-send \
+        --system --type=method_call \
+        --dest=org.freedesktop.DBus \
+        /org.freedesktop.DBus.ReloadConfig
 }
