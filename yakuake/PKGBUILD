@@ -1,22 +1,22 @@
 #
 # KDE SC Packages for Chakra, part of chakra-project.org
 #
-# maintainer (i686): Phil Miller <philm[at]chakra-project[dog]org>
-# maintainer (x86_64): Manuel Tortosa <manutortosa[at]chakra-project[dot]org>
-
+# maintainer abveritas[at]chakra-project[dot]org>
 
 pkgname=yakuake
-pkgver=2.9.7
-pkgrel=2
+pkgver=2.9.9
+pkgrel=1
 pkgdesc="A KDE konsole application with the look and feel of that in the Quake engine"
 arch=('i686' 'x86_64')
 url="http://yakuake.kde.org"
 license=('GPL')
 depends=('kdebase-konsole')
 makedepends=('cmake' 'automoc4')
-categories=('utils')
-source=("http://download.berlios.de/${pkgname}/${pkgname}-${pkgver}.tar.bz2")
-md5sums=('c5a6d1f50ab9464d62563cdb18d6afb7')
+categories=('system')
+screenshots=('http://kde-apps.org/CONTENT/content-pre1/29153-1.png')
+install="${pkgname}.install"
+source=("http://download.kde.org/stable/${pkgname}/${pkgver}/src/${pkgname}-${pkgver}.tar.xz")
+md5sums=('ef97612710b28d62e43a58bed49cbead')
 
 build() {
   cd ${srcdir}
@@ -25,8 +25,11 @@ build() {
   cmake ../${pkgname}-${pkgver} \
     -DCMAKE_BUILD_TYPE=Release \
     -DCMAKE_SKIP_RPATH=ON \
-    -DCMAKE_{SHARED,MODULE,EXE}_LINKER_FLAGS='-Wl,--no-undefined -Wl,--as-needed' \
     -DCMAKE_INSTALL_PREFIX=/usr
   make
+}
+
+package() {
+  cd ${srcdir}/build
   make DESTDIR=${pkgdir} install
 }

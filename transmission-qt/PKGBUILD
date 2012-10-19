@@ -1,39 +1,64 @@
 #
-# Chakra Packages for Chakra, part of chakra-project.org
+# Apps Packages for Chakra, part of chakra-project.org
 #
-# maintainer (i686): Phil Miller <philm[at]chakra-project[dog]org>
-# maintainer (x86_64): Manuel Tortosa <manutortosa[at]chakra-project[dot]org>
+# maintainer abveritas@chakra-project.org
 # contributor : Stephen McIntosh <stephenmac7@gmail.com>
 
-# include global config
-source ../_buildscripts/${current_repo}-${_arch}-cfg.conf
-
 pkgbase=transmission
-pkgname=('transmission-qt')
-pkgdesc="Fast, easy, and free BitTorrent client (Qt GUI)"
-pkgver=2.21
+pkgname=('transmission-cli' 'transmission-qt')
+pkgver=2.72
 pkgrel=1
-arch=('i686' 'x86_64')
+arch=('x86_64')
 url="http://www.transmissionbt.com/"
 license=('MIT')
-makedepends=('intltool' 'curl' 'pkgconfig' 'desktop-file-utils' 'qt' 'libevent')
-depends=('curl' 'qt' 'libevent')
-optdepends=('transmission-cli: daemon and web support')
-categories=('network')
-source=(http://mirrors.m0k.org/transmission/files/${pkgbase}-${pkgver}.tar.bz2)
-md5sums=('65a00e3423834121c274717bde2b4dd9')
+makedepends=('intltool' 'curl' 'pkgconfig' 'desktop-file-utils' 'qt' 'libevent' 'gettext')
+source=("http://download.transmissionbt.com/files/${pkgbase}-${pkgver}.tar.xz"
+        'transmissiond' 'transmissiond.conf' 'transmission.systemd')
+md5sums=('86479f9bb378b793ce7a8a71f5b15904'
+         '50b7c17300bc8b38f44fb6f681ba05d0'
+         'be39806c35b7544856fa4070b00fc960'
+         '5c289c8901221a94be74665368ab5c2c')
 build() {
   cd "${srcdir}/${pkgbase}-${pkgver}"
 
   export CFLAGS="$CFLAGS -fno-strict-aliasing"
 
-  ./configure --prefix=/usr
+  ./configure --prefix=/usr --enable-nls
   make
   pushd qt
   qmake qtr.pro
   make
 }
-package() {
+
+package_transmission-cli() {
+  pkgdesc="Fast, easy, and free BitTorrent client (CLI tools, daemon and web client)"
+  depends=('curl' 'libevent')
+  categories=('network')
+  backup=('etc/conf.d/transmissiond')
+  install=transmission-cli.install
+
+  cd "${srcdir}/${pkgbase}-${pkgver}"
+
+  for dir in daemon cli web utils
+  do
+      make -C "${dir}" DESTDIR="${pkgdir}" install
+  done
+
+  install -D -m755 "${srcdir}/transmissiond" "${pkgdir}/etc/rc.d/transmissiond"
+  install -D -m644 "${srcdir}/transmissiond.conf" "${pkgdir}/etc/conf.d/transmissiond"
+  install -D -m644 "$srcdir/transmission.systemd" "$pkgdir/usr/lib/systemd/system/transmission.service"
+  ln -s transmission.service "$pkgdir/usr/lib/systemd/system/transmissiond.service"
+  install -D -m644 COPYING "${pkgdir}/usr/share/licenses/transmission-cli/COPYING"
+}
+
+package_transmission-qt() {
+  pkgdesc="Fast, easy, and free BitTorrent client (Qt GUI)"
+  depends=('curl' 'qt' 'libevent')
+  optdepends=('transmission-cli: daemon and web support')
+  categories=('network')
+  screenshot=('http://www.transmissionbt.com/images/screenshots/Qt-Large.jpg')
+  install=transmission-qt.install
+
   cd "${srcdir}/${pkgbase}-${pkgver}"
 
   make -C qt INSTALL_ROOT="${pkgdir}"/usr install
@@ -41,4 +66,13 @@ package() {
   install -D -m644 COPYING "${pkgdir}/usr/share/licenses/transmission-qt/COPYING"
   install -D -m644 qt/icons/transmission.png "${pkgdir}/usr/share/pixmaps/transmission-qt.png"
   install -D -m644 qt/transmission-qt.desktop "${pkgdir}/usr/share/applications/transmission-qt.desktop"
+ 
+  #mkdir -p "${pkgdir}/usr/share/transmission/i18n"
+  install -D -m644 qt/translations/transmission_en.ts "${pkgdir}/usr/share/transmission/i18n/transmission_en.ts"
+  install -D -m644 qt/translations/transmission_es.ts "${pkgdir}/usr/share/transmission/i18n/transmission_es.ts"
+  install -D -m644 qt/translations/transmission_eu.ts "${pkgdir}/usr/share/transmission/i18n/transmission_eu.ts"
+  install -D -m644 qt/translations/transmission_kk.ts "${pkgdir}/usr/share/transmission/i18n/transmission_kk.ts"
+  install -D -m644 qt/translations/transmission_lt.ts "${pkgdir}/usr/share/transmission/i18n/transmission_lt.ts"
+  install -D -m644 qt/translations/transmission_pt_BR.ts "${pkgdir}/usr/share/transmission/i18n/transmission_pt_BR.ts"
+  install -D -m644 qt/translations/transmission_ru.ts "${pkgdir}/usr/share/transmission/i18n/transmission_ru.ts"
 }
