@@ -6,7 +6,8 @@
 # contributor kote: martini438@gmail.com
 
 pkgname=umplayer
-pkgver=0.97
+_pkgname=UMPlayer
+pkgver=0.98.1
 pkgrel=1
 pkgdesc="The multimedia player that fills all your needs"
 arch=(i686 x86_64)
@@ -15,12 +16,15 @@ license=(GPL)
 depends=(qt mplayer)
 categories=('multimedia')
 install=umplayer.install
+source=(http://downloads.sourceforge.net/project/smplayer/${_pkgname}/${pkgver}/${pkgname}_${pkgver}.orig.tar.gz)
+md5sums=('ce7bea6965e1c53e0cf37c7d85ad9c08')
 
-build()
-{
-  wget -O umplayer.tar.gz "http://umplayer.svn.sourceforge.net/viewvc/umplayer/?view=tar"
-  bsdtar -xf umplayer.tar.gz
-  cd umplayer/umplayer/trunk
+build() {
+  cd $srcdir/${pkgname}-${pkgver}
   make PREFIX=/usr
+}
+
+package() {
+  cd $srcdir/${pkgname}-${pkgver}
   make PREFIX=/usr DESTDIR="${pkgdir}" install
 }

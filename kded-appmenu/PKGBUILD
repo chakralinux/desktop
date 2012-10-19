@@ -1,0 +1,28 @@
+# Mantainer: Fabian Kosmale <0inkane@googlemail.com>
+# Contributor: gnumdk
+pkgname=kded-appmenu
+pkgver=0.9.19
+pkgrel=1
+pkgdesc="kded module that exports applications menu through dbus"
+arch=('i686' 'x86_64')
+url='https://projects.kde.org/projects/kdereview/kded-appmenu'
+license=('GPL')
+depends=('libdbusmenu-qt' 'kdelibs')
+makedepends=('cmake' 'automoc4')
+conflicts=('kded-appmenu-git')
+source=("http://kde-apps.org/CONTENT/content-files/153882-kded-appmenu-$pkgver.tar.gz")
+sha1sums=('801b74e9bc7abfbeaa2366b2552d4d5d96fd10a1')
+
+build() {
+  cd "${srcdir}/${pkgname}-${pkgver}"
+  rm -fr build
+  mkdir build
+  cd build
+  cmake .. -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=$(kde4-config --prefix)
+  make
+}
+
+package() {
+  cd "${srcdir}/${pkgname}-${pkgver}/build"
+  make DESTDIR="$pkgdir/" install
+}
