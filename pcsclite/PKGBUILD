@@ -7,37 +7,37 @@
 
 pkgname=pcsclite
 _pkgname=pcsc-lite
-pkgver=1.7.4
+pkgver=1.8.6
 pkgrel=1
 pkgdesc="PC/SC Architecture smartcard middleware library"
 arch=('i686' 'x86_64')
 url="https://alioth.debian.org/projects/pcsclite/"
 license=('BSD')
 depends=('udev')
-source=(https://alioth.debian.org/frs/download.php/3598/$_pkgname-$pkgver.tar.bz2
-        pcscd)
-md5sums=('1caf0b8ca2ecbf82fe3b035b3fff22dd'
-         'c97b6bce695222efb0f003d8e8369010')
+options=('!libtool' '!docs')
+source=("https://alioth.debian.org/frs/download.php/3757/${_pkgname}-${pkgver}.tar.bz2")
+sha256sums=('1e44049168d1ce55fd56c175f61206955254df0f385455f2a20ec7e8a0e6a77a')
 
 build() {
-  cd $srcdir/$_pkgname-$pkgver
+  cd "${srcdir}/${_pkgname}-${pkgver}"
 
-  ./configure \
-    --enable-ipcdir=/run/pcscd \
-    --enable-libudev \
-    --enable-usbdropdir=/usr/lib/pcsc/drivers \
-    --prefix=/usr \
-    --sysconfdir=/etc
+  sed -i -e "s:python:python2:g" src/spy/pcsc-spy
+
+  ./configure --enable-ipcdir=/run/pcscd \
+              --enable-libudev \
+              --enable-usbdropdir=/usr/lib/pcsc/drivers \
+              --prefix=/usr \
+              --sysconfdir=/etc \
+              --with-systemdsystemunitdir=/usr/lib/systemd/system
 
   make
 }
 
 package() {
-  cd $srcdir/$_pkgname-$pkgver
+  cd "${srcdir}/${_pkgname}-${pkgver}"
 
-  make DESTDIR=$pkgdir install
+  make DESTDIR="${pkgdir}" install
 
-  install -D $srcdir/$_pkgname-$pkgver/COPYING $pkgdir/usr/share/licenses/$pkgname/license.txt
-  install -D -m755 $srcdir/pcscd $pkgdir/etc/rc.d/pcscd
-  install -d $pkgdir/usr/lib/pcsc/drivers
+  install -D "${srcdir}/${_pkgname}-${pkgver}/COPYING" "${pkgdir}/usr/share/licenses/${pkgname}/license.txt"
+  install -d "${pkgdir}/usr/lib/pcsc/drivers"
 }

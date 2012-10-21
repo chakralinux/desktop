@@ -1,62 +1,74 @@
 #
 # Apps Packages for Chakra, part of chakra-project.org
 #
-# Maintainer abveritas@chakra-project.org
+# Maintainer: Michael Haesel <michael[dot]haesel[at]gmail[dot]com>
 # Contributor: Sebastien Luttringer <seblu[plus]arch[at]seblu[dot]net>
 
-pkgname=virtualbox
+#
+# The VirtualBox Guest Additions are extracted into the ${srcdir}, but with
+# root rights. So a simple :cp can't delete them. Please remove the ${srcdir}
+# with sudo rm -R src.
+#
+
+pkgbase=virtualbox
+pkgname=('virtualbox' 'virtualbox-ext-oracle' 'virtualbox-guest-additions')
 pkgver=4.2.2
 _build=81494
-pkgrel=1
-pkgdesc='Oracle VM VirtualBox Binary Edition'
+pkgrel=2
 arch=('i686' 'x86_64')
 url='http://virtualbox.org/'
-screenshot='https://www.virtualbox.org/raw-attachment/wiki/Screenshots/gnome.png'
-license=('GPL2')
-depends=('libidl2' 'libxcursor' 'libxinerama' 'libxslt' 'curl' 'linux-headers'
-         'python2' 'make' 'gcc')
+license=('GPL2' 'custom:PUEL')
 options=('!strip')
-optdepends=('virtualbox-ext-oracle: for Oracle extensions'
-            'dkms: for handling kernel modules with dkms'
-            'qt: for GUI support'
-            'sdl: for VBoxSDL and GUI support'
-            'mesa: for OpenGL support'
-            'libgl: for shared OpenGL support'
-            'libxt: for shared clipboard support'
-            'alsa-lib: for ALSA support'
-            'pulseaudio: for PulseAudio support')
-provides=("virtualbox=${pkgver}")
-conflicts=('virtualbox' 'virtualbox-ose' 'virtualbox-modules')
-categories=('system')
-backup=('etc/vbox/vbox.cfg' 'etc/conf.d/vboxdrv' 'etc/conf.d/vboxweb' 'etc/modules-load.d/virtualbox.conf')
-install=${pkgname}.install
-
 _sarch='x86'
 [ "${CARCH}" = 'x86_64' ] && _sarch='amd64'
 
 source=("VirtualBox-${pkgver}-${_build}-Linux_${_sarch}.run::http://download.virtualbox.org/virtualbox/${pkgver}/VirtualBox-${pkgver}-${_build}-Linux_${_sarch}.run"
+        "http://download.virtualbox.org/virtualbox/${pkgver}/Oracle_VM_VirtualBox_Extension_Pack-${pkgver}-${_build}.vbox-extpack"
+        "http://download.virtualbox.org/virtualbox/${pkgver}/VBoxGuestAdditions_${pkgver}.iso"
         '10-vboxdrv.rules'
-        'vboxdrv.rc'
         'vboxdrv.conf'
-        'vboxweb.rc'
         'vboxweb.conf'
         'vboxweb.service'
         'virtualbox.conf'
-        'vboxsetup.sh')
+        'vboxsetup.sh'
+        'PUEL'
+        'vboxservice.service')
 sha256sums=('a4d1d1f3047fb3e242338dbaa59d781b189d58021a04d29aac0a3f8ab7b54733'
+            '2a0824a7f6b93842feb13fe15de16a1bb33c9221116d62ce759eed6878169c2b'
+            '26f5390b36a3bb9855846d194dcd287b8e53613b599c6ffd7aff1b451cc7f1f1'
             '69417a9e8855cab8e4878886abe138f559fd17ae487d4cd19c8a24974a8bbec2'
-            '7fc3a205575f0f1ae8875e8593bfb08959fd6ee45eed2edf25509e8bd225a3dc'
             '71740893a5f226f9d9fcc607ab9d39b7de816b2759625b34da19162bc7e579ff'
-            '656905de981ffa24f6f921c920538854a235225053f44baedacc07b46ca0cf56'
             '12dbba3b59991f2b68cddeeeda20236aeff63e11b7e2d1b08d9d6a82225f6651'
             'e6e875ef186578b53106d7f6af48e426cdaf1b4e86834f01696b8ef1c685787f'
             '9b3c4dc5385fb3b4aeb841043384879c5c7ee926f5343d6a4177e913604f869d'
-            '28833ef89fed96aa2cdb071c98687e8aa88e3c4c249b261f9b905e6621fa0e23')
+            '28833ef89fed96aa2cdb071c98687e8aa88e3c4c249b261f9b905e6621fa0e23'
+            '50658c653cde4dc43ba73a64c72761d2e996fd8e360fc682aa2844e1ad5b045f'
+            'aaa8d3d71c8585edf43ed11676ccd567cc85fc23752d3c3499506741cef3c9ba')
 
-[[ "${CARCH}" = i686 ]] && sha256sums[0]='e084db553064fb85136df22d13f262fef602daca56b95799cef7df761310a8d5'
+[[ "${CARCH}" = i686 ]] && sha256sums[0]='c9f1609d9df2f467e1b79ce483e21a912dc3a1431219d5e7528815517de1c175'
 _installdir='/opt/VirtualBox'
 
-package() {
+package_virtualbox() {
+  pkgdesc='Oracle VM VirtualBox Binary Edition'
+  arch=('i686' 'x86_64')
+  screenshot='https://www.virtualbox.org/raw-attachment/wiki/Screenshots/gnome.png'
+  license=('GPL2')
+  depends=('libidl2' 'libxcursor' 'libxinerama' 'libxslt' 'curl' 'linux-headers'
+           'python2' 'make' 'gcc')
+  optdepends=('virtualbox-ext-oracle: for Oracle extensions'
+              'dkms: for handling kernel modules with dkms'
+              'qt: for GUI support'
+              'sdl: for VBoxSDL and GUI support'
+              'mesa: for OpenGL support'
+              'libgl: for shared OpenGL support'
+              'libxt: for shared clipboard support'
+              'alsa-lib: for ALSA support'
+              'pulseaudio: for PulseAudio support')
+  provides=("virtualbox=${pkgver}")
+  conflicts=('virtualbox' 'virtualbox-ose' 'virtualbox-modules')
+  backup=('etc/vbox/vbox.cfg' 'etc/conf.d/vboxdrv' 'etc/conf.d/vboxweb' 'etc/modules-load.d/virtualbox.conf')
+  install=${pkgname}.install
+  
   # Check and unpack the run package via sh(1)
   sh "VirtualBox-${pkgver}-${_build}-Linux_${_sarch}.run" --check
   echo yes | sh "VirtualBox-${pkgver}-${_build}-Linux_${_sarch}.run" --target "${srcdir}" \
@@ -80,18 +92,14 @@ package() {
   sed -i 's#/usr/bin/python#\02#' "${pkgdir}/${_installdir}/vboxshell.py"
 
   # Update new initscripts way of life in VBox.sh
-  sed -i -e 's,sudo /etc/init.d/vboxdrv setup,/etc/rc.d/vboxdrv setup,g' \
+  sed -i -e 's,sudo /etc/init.d/vboxdrv setup,/usr/bin/vboxsetup setup,g' \
     "${pkgdir}/${_installdir}/VBox.sh"
-  sed -i -e 's,sudo /etc/init.d/vboxdrv restart,/etc/rc.d/vboxdrv restart,g' \
-    "${pkgdir}/${_installdir}/VBox.sh"
-
+  
   # Install vboxdrv initscript
-  install -D -m 0755 "${srcdir}/vboxdrv.rc" "${pkgdir}/etc/rc.d/vboxdrv"
   install -D -m 0644 "${srcdir}/vboxdrv.conf" "${pkgdir}/etc/conf.d/vboxdrv"
   install -D -m 0644 "${srcdir}/virtualbox.conf" "${pkgdir}/etc/modules-load.d/virtualbox.conf"  
 
   # Install vboxweb initscript
-  install -D -m 0755 "${srcdir}/vboxweb.rc" "${pkgdir}/etc/rc.d/vboxweb"
   install -D -m 0644 "${srcdir}/vboxweb.conf" "${pkgdir}/etc/conf.d/vboxweb"
   install -D -m 0755 "${srcdir}/vboxweb.service" "${pkgdir}/usr/lib/systemd/system/vboxweb.service"
 
@@ -159,4 +167,34 @@ package() {
 
   # Create the directory below if it doesn't exist
   install -d -m 0755 "${pkgdir}/var/run/VirtualBox"
+}
+
+package_virtualbox-ext-oracle() {
+  pkgdesc="Oracle VM VirtualBox Extension Pack"
+  arch=('any')
+  license=('custom:PUEL')
+  depends=("virtualbox")
+  install=${pkgname}.install
+  
+  cd "${srcdir}"
+  
+  install -D -m 644 "Oracle_VM_VirtualBox_Extension_Pack-${pkgver}-${_build}.vbox-extpack" \
+    "${pkgdir}/usr/share/virtualbox/extensions/Oracle_VM_VirtualBox_Extension_Pack-${pkgver}.vbox-extpack"
+  install -D -m 644 PUEL "${pkgdir}/usr/share/licenses/${pkgname}/PUEL"
+}
+
+package_virtualbox-guest-additions() {
+  pkgdesc="Oracle VM VirtualBox Guest Additions for Chakra"
+  arch=('i686' 'x86_64')
+  license=('GPL2')
+  depends=('linux-headers' 'make' 'gcc')
+  install=${pkgname}.install
+  
+  cd "${srcdir}"
+  
+  # Install VBoxLinuxAdditions
+  install -Dm0755 VBoxLinuxAdditions.run "${pkgdir}/usr/share/virtualbox/guest-additions/VBoxLinuxAdditions.run"
+  
+  # Install service file 
+  install -Dm0644 vboxservice.service "${pkgdir}/usr/lib/systemd/system/vboxservice.service"
 }

@@ -1,0 +1,29 @@
+# arg 1: the new package version
+post_install() {
+  
+  created=0
+  # workaround: create /etc/rc.local, if not exists
+  if [ ! -e /etc/rc.local ]; then
+	touch /etc/rc.local
+	created=1
+  fi
+  # Run the VBoxLinuxAdditions Skript
+  /usr/share/virtualbox/guest-additions/VBoxLinuxAdditions.run
+  
+  # If created, remove /etc/rc.local
+  if [ ${created} -eq 1 ]; then
+    rm -f /etc/rc.local
+  fi
+  # Remove rc.vbox* files
+  rm -f /etc/rc.d/rc.vbox*
+}
+
+# arg 1:  the new package version
+# arg 2:  the old package version
+post_upgrade() {
+  post_install "$1"
+}
+
+post_remove() {
+  groupdel vboxsf >/dev/null 2>&1 || true
+}
