@@ -1,14 +1,13 @@
 #
 # Chakra Packages for Chakra, part of chakra-project.org
 #
-# maintainer (i686): Phil Miller <philm[at]chakra-project[dog]org>
-# maintainer (x86_64): Manuel Tortosa <manutortosa[at]chakra-project[dot]org>
+# maintainer abveritas[at]chakra-project[dot]org>
 
 pkgname=bitlbee
-pkgver=3.0.5
-pkgrel=3
+pkgver=3.0.6
+pkgrel=1
 pkgdesc="An IRC to IM gateway. Supports MSN, ICQ, Jabber, Yahoo!, and AIM"
-arch=('i686' 'x86_64')
+arch=('x86_64')
 url="http://www.bitlbee.org/" 
 screenshot="http://www.bitlbee.org/img/screenshot-irssi_sawfish.png"
 license=('GPL')
@@ -22,20 +21,14 @@ backup=(etc/bitlbee/bitlbee.conf
         etc/bitlbee/motd.txt 
         etc/xinetd.d/bitlbee)
 source=("http://get.bitlbee.org/src/${pkgname}-${pkgver}.tar.gz"
-        'sbindir.patch'
 	'bitlbee.xinetd'
-	'bitlbee.rcd'
         'bitlbee.tmpfiles')
-sha256sums=('a2b18ae0355650b7ec326b8ea7082eb06bb8f8816ad3b4985fe97f729ce84e59'
-            '2629b95b1dd2032412d0b840fc988c3d059317f1cc0e541bba8f35a61a518c33'
+sha256sums=('4f3e169f9a8e0cdf7976d2e6f41b9a8f6020a262b5731aa0f91fdb66d17446e8'
             '893616045f956ffbbaa299d81e2cf2af8b06c72663837eb4b61a88b02c58a3fe'
-            '597a2c2118b11d4991347fd0c8d713d4e6f9d0a378466ff9202309b1401bc370'
             '47df3adcd6c3fa9e18e4a2b8433f49a717d1cb282f73cc293b64749f3a5e8b58')
 
 build() { 
   cd "${srcdir}/${pkgname}-${pkgver}"
-
-  patch -p1 -i "${srcdir}/sbindir.patch"
 	
   ./configure --prefix=/usr \
               --ssl=openssl \
@@ -55,6 +48,5 @@ package() {
 
   install -o65 -g65 -dm0770 "${pkgdir}/var/lib/bitlbee"
   install -Dm0644 "${srcdir}/bitlbee.xinetd" "${pkgdir}/etc/xinetd.d/bitlbee"
-  install -Dm0755 "${srcdir}/bitlbee.rcd" "${pkgdir}/etc/rc.d/bitlbee"
   install -Dm0644 "${srcdir}/bitlbee.tmpfiles" "${pkgdir}/usr/lib/tmpfiles.d/bitlbee.conf"
 }

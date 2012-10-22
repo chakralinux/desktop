@@ -1,26 +1,23 @@
 #
 # Apps Packages for Chakra, part of chakra-project.org
 #
-# maintainer (i686): Phil Miller <philm[at]chakra-project[dog]org>
-# maintainer (x86_64): Manuel Tortosa <manutortosa[at]chakra-project[dot]org>
-
-# include global config
-source ../_buildscripts/${current_repo}-${_arch}-cfg.conf
+# maintainer abveritas[at]chakra-project[dot]org>
 
 pkgname=krusader
-pkgver=2.4.0beta1
-_pkgver=2.4.0-beta1
+pkgver=2.4.0beta3
+_pkgver=2.4.0-beta3
 pkgrel=1
 pkgdesc="An alternative file manager for KDE resembling Midnight Commander"
 url="http://krusader.sourceforge.net/"
 arch=('i686' 'x86_64')
 license=('GPL')
-depends=('kdebase' 'kdelibs')
+depends=('kdebase' 'kde-runtime' 'kdeutils-ark')
 makedepends=('cmake' 'automoc4' 'docbook-xsl')
 categories=('system')
+screenshot=('http://www.krusader.org/static/img/slideshow/krusader-twinpanel-thumb.png')
 install=${pkgname}.install
 source=("http://downloads.sourceforge.net/${pkgname}/${pkgname}-${_pkgver}.tar.bz2")
-md5sums=('d2340718d05d69e7f2a7f0846471ee12')
+md5sums=('62a02db3f213bb76805ca6c958e9e263')
 
 build() {
   cd ${srcdir}
@@ -29,10 +26,10 @@ build() {
   cmake ../${pkgname}-${_pkgver} \
     -DCMAKE_BUILD_TYPE=Release \
     -DCMAKE_INSTALL_PREFIX=/usr
-  make || return 1
+  make 
 }
 
 package() {
   cd ${srcdir}/build
-  make DESTDIR=${pkgdir} install || return 1
+  make DESTDIR=${pkgdir} install 
 }
