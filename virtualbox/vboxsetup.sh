@@ -134,6 +134,7 @@ fixusb() {
 case "$1" in
   setup)
     setup
+    load
     ;;
   fixusb)
     fixusb

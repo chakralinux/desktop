@@ -12,7 +12,12 @@ post_install() {
   [[ -x =update-desktop-database ]] && update-desktop-database -q &>/dev/null
 
   # Build new module
-  /usr/bin/vboxsetup setup
+  systemd-notify --booted
+  if [[ "$?" -eq 0 ]]; then
+    /usr/bin/vboxsetup setup
+  else
+    /etc/rc.d/vboxdrv setup
+  fi
   
   # Show warnings
   /bin/cat <<EOF
@@ -20,10 +25,15 @@ post_install() {
 ==> Remember to add allowed users to the vboxusers group:
 ==> # gpasswd -a USERNAME vboxusers
 ==>
-==> To load virtualbox modules automatically you can add vboxdrv to a file /etc/modules-load.d/vbox.conf
+==> With systemd:
 ==> To start virtualbox web service automatically you need to enable and start the service through systemctl
-==>
 ==> To fix missing usb devices, you can call 'vboxsetup fixusb' or reboot your computer
+==>
+==> With sysvinit:
+==> To load virtualbox modules automatically you can add vboxdrv in your DAEMONS
+==> To start virtualbox web service automatically you can add vboxweb in your DAEMONS
+==> To fix missing usb devices, you can call rc.d fixusb vboxdrv or reboot your computer
+==>
 EOF
 }
 
@@ -40,18 +50,26 @@ post_upgrade() {
 
 pre_remove() {
   # Stop running services
-  _service="vboxweb.service"
-  systemctl is-active ${_service} &>/dev/null
-  if [[ $? -eq 0 ]] ; then
-	systemctl stop ${_service}
-  fi
-  systemctl is-enabled ${_service} &>/dev/null
-  if [[ $? -eq 0 ]] ; then
-	systemctl disable ${_service}
-  fi
   
+  systemd-notify --booted
+  if [[ "$?" -eq 0 ]]; then
+    _service="vboxweb.service"
+    systemctl is-active ${_service} &>/dev/null
+    if [[ "$?" -eq 0 ]]; then
+      systemctl stop ${_service}
+    fi
+    systemctl is-enabled ${_service} &>/dev/null
+    if [[ "$?" -eq 0 ]]; then
+      systemctl disable ${_service}
+    fi
+  else
+    [[ -x /etc/rc.d/vboxdrv ]] && /etc/rc.d/vboxdrv stop
+    [[ -x /etc/rc.d/vboxweb ]] && /etc/rc.d/vboxweb stop
+  fi
+
   # Remove modules
-  if [ $(vercmp $2 4.2.0-4) -lt 0 ]; then
+  systemd-notify --booted
+  if [[ "$?" -eq 0 ]]; then
     /usr/bin/vboxsetup remove
   elif [[ -f /etc/rc.d/vboxdrv && -f /usr/sbin/rc.d ]]; then
     rc.d unload vboxdrv
@@ -77,3 +95,5 @@ post_remove() {
   # remove vboxusers group
   groupdel vboxusers &>/dev/null || true
 }
+
+# vim:set ts=2 sw=2 ft=sh et:
