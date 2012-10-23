@@ -6,8 +6,8 @@
 # contributor Fabio Lima <fheday at dcc [dot] fc [dot] up [dot] pt>
 
 pkgname=netbeans
-_pkgdate=201207171143
-pkgver=7.2
+_pkgdate=201210100934
+pkgver=7.2.1
 pkgrel=1
 pkgdesc='Netbeans IDE development platform.'
 arch=('any')
@@ -18,31 +18,37 @@ optdepends=('php: for developing programs in php'
             'ruby: for developing programs in ruby'
             'python: for developing programs in python')
 categories=('programming')
+options=('!strip')
 install="${pkgname}.install"
 source=("http://download.netbeans.org/${pkgname}/${pkgver}/final/zip/${pkgname}-${pkgver}-${_pkgdate}-ml.zip"
         'netbeans.desktop')
-md5sums=('2870255966b864f63df3f55efdf4bf98'
+md5sums=('9a57b21f0d08d899a5ca775c12893a9d'
          '385f0c0f506880813f7b3afc239adb0c')
 
 package() {
-  cd "${srcdir}/${pkgname}"
+  cd "${srcdir}"
 
-  rm bin/*.exe
-
-  install -d -m755 "${pkgdir}/usr/share/${pkgname}"
-  cp -r * "${pkgdir}/usr/share/${pkgname}"
+  install -d -m755 "${pkgdir}/usr/share"
+  cp -r "${pkgname}" "${pkgdir}/usr/share"
+  rm -f "${pkgdir}/usr/share/${pkgname}/bin"/*.exe
 
   install -d -m755 "${pkgdir}/usr/bin"
-  ln -s /usr/share/netbeans/bin/netbeans \
-        "${pkgdir}/usr/bin/netbeans"
+  ln -s "/usr/share/${pkgname}/bin/${pkgname}" \
+        "${pkgdir}/usr/bin/${pkgname}"
 
   install -D -m644 "${srcdir}/netbeans.desktop" \
                    "${pkgdir}/usr/share/applications/netbeans.desktop"
 
+  install -D -m644 "${pkgname}/nb/${pkgname}.png" \
+                   "${pkgdir}/usr/share/pixmaps/${pkgname}.png"
+
+  install -D -m644 "${pkgname}/LICENSE.txt" \
+                   "${pkgdir}/usr/share/licenses/${pkgname}/LICENSE"
+
   # Globally enable antialiasing in NetBeans
   local __aaoptions="-J-Dswing.aatext=true -J-Dawt.useSystemAAFontSettings=on"
   sed -e "s:netbeans_default_options=\"\(.*\)\":netbeans_default_options=\"\1 ${__aaoptions}\":" \
-      -i "${pkgdir}/usr/share/netbeans/etc/netbeans.conf"
+      -i "${pkgdir}/usr/share/${pkgname}/etc/netbeans.conf"
 }
 
 # vim:set ts=2 sw=2 et:
