@@ -3,11 +3,8 @@
 #
 # Maintainer: Adrián Chaves Fernández (Gallaecio) <adriyetichaves@gmail.com>
 
-# include global config
-source ../_buildscripts/${current_repo}-${_arch}-cfg.conf
-
 pkgname=physfs
-pkgver=2.0.2
+pkgver=2.0.3
 pkgrel=1
 pkgdesc="A library to provide abstract access to various archives."
 arch=('i686' 'x86_64')
@@ -16,8 +13,8 @@ license=('ZLIB')
 depends=('zlib' 'readline')
 makedepends=('cmake' 'doxygen' 'man')
 changelog=ChangeLog
-source=(http://icculus.org/$pkgname/downloads/$pkgname-$pkgver.tar.gz)
-md5sums=('4e8927c3d30279b03e2592106eb9184a')
+source=(http://icculus.org/$pkgname/downloads/$pkgname-$pkgver.tar.bz2)
+md5sums=('c2c727a8a8deb623b521b52d0080f613')
 
 build() {
   cd $srcdir/$pkgname-$pkgver
@@ -44,7 +41,7 @@ package() {
   install -m644 docs/man/man3/* $pkgdir/usr/share/man/man3
 
   for i in author Deinit description extension Free Init major Malloc minor opaque patch Realloc url ; do
-    mv $pkgdir/usr/share/man/man3/_$i.3 $pkgdir/usr/share/man/man3/PHYSFS_$i.3
+    mv $pkgdir/usr/share/man/man3/$i.3 $pkgdir/usr/share/man/man3/PHYSFS_$i.3
   done
 
   # License:

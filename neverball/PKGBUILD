@@ -2,12 +2,12 @@
 
 pkgname=neverball
 pkgver=1.5.4
-pkgrel=1
+pkgrel=2
 pkgdesc="3D game similar to Super Monkey Ball or Marble Madness."
 arch=('i686' 'x86_64')
 url="http://neverball.org/"
 license=('GPL2')
-depends=('sdl_ttf' 'libgl' 'libpng' 'libjpeg>=7' 'libvorbis' 'physfs')
+depends=('sdl_ttf' 'libgl' 'libpng' 'libjpeg>=7' 'libvorbis' 'libx11' 'physfs')
 makedepends=('mesa')
 categories=('games')
 source=(http://neverball.org/$pkgname-$pkgver.tar.gz)
@@ -17,11 +17,7 @@ build() {
   cd "$srcdir/$pkgname-$pkgver"
   sed -i 's|#define CONFIG_LOCALE "./locale"|#define CONFIG_LOCALE "/usr/share/locale"|' share/base_config.h || return 1
 
-  if [ "${CARCH}" = "i686" ] ;then
-    make ENABLE_NLS=1 DATADIR=/usr/share/neverball SSE_CFLAGS="" || return 1
-  else
-    make ENABLE_NLS=1 DATADIR=/usr/share/neverball || return 1
-  fi
+  make LDFLAGS="-lX11 -lm" ENABLE_NLS=1 DATADIR=/usr/share/neverball || return 1
 
   install -D -m755 neverball "${pkgdir}/usr/bin/neverball" || return 1
   install -D -m755 neverputt "${pkgdir}/usr/bin/neverputt" || return 1

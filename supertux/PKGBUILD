@@ -5,7 +5,7 @@
 
 pkgname=supertux
 pkgver=0.3.3
-pkgrel=3
+pkgrel=4
 pkgdesc="A classic 2D jump'n run sidescroller game in a style similar to the original SuperMario games"
 arch=('i686' 'x86_64')
 url="http://super-tux.sourceforge.net/"
@@ -13,13 +13,18 @@ license=('GPL')
 depends=('sdl_image' 'curl' 'physfs' 'openal' 'libvorbis' 'libgl' 'glew')
 makedepends=('cmake' 'boost')
 categories=('games')
-source=(http://download.berlios.de/supertux/${pkgname}-${pkgver}.tar.bz2)
-md5sums=('f3f803e629ee51a9de0b366a036e393d')
+source=(http://download.berlios.de/supertux/${pkgname}-${pkgver}.tar.bz2
+        
+"supertux2-0.3.3-squirrel-gcc47.patch::https://projects.archlinux.org/svntogit/community.git/plain/trunk/supertux2-0.3.3-squirrel-gcc47.patch?h=packages/supertux")
+md5sums=('f3f803e629ee51a9de0b366a036e393d'
+         'eb06315514be4f200428f14b927beb66')
 
 build() {
   cd ${srcdir}/${pkgname}-${pkgver}
 
+  patch -p1 -i "${srcdir}/supertux2-0.3.3-squirrel-gcc47.patch"
   sed -i '1i#include <cstddef>' src/supertux/screen_manager.hpp
+  sed -i '/types\.h/d' src/addon/addon_manager.cpp
   cmake -D CMAKE_INSTALL_PREFIX=/usr -D INSTALL_SUBDIR_BIN=bin .
   make
 }
@@ -29,3 +34,5 @@ package() {
 
   make DESTDIR=${pkgdir} install
 }
+md5sums=('f3f803e629ee51a9de0b366a036e393d'
+         '2de311b985c24f962fe62c5801a0e734')
