@@ -29,6 +29,10 @@ post_install() {
 			echo "   kbuildsycoca4"
 			echo " "
 		fi
+		
+		groupadd -g 135 kdm &>/dev/null
+		useradd -u 135 -g kdm -d /var/lib/kdm -s /bin/false -r -M kdm &>/dev/null
+		chown -R 135:135 var/lib/kdm &>/dev/null
 }
 
 post_upgrade() {
@@ -57,6 +61,10 @@ post_upgrade() {
 			echo "   kbuildsycoca4"
 			echo " "
 		fi
+		
+		getent group kdm >/dev/null 2>&1 || groupadd -g 135 kdm &>/dev/null
+		getent passwd kdm >/dev/null 2>&1 || useradd -u 135 -g kdm -d /var/lib/kdm -s /bin/false -r -M kdm &>/dev/null
+		chown -R 135:135 var/lib/kdm &>/dev/null
 }
 
 post_remove() {
@@ -85,6 +93,13 @@ post_remove() {
 			echo "   sudo chakra-config-updater"
 			echo "   kbuildsycoca4"
 			echo " "
+		fi
+		
+		if getent passwd kdm >/dev/null 2>&1; then
+		  userdel kdm
+		fi
+		if getent group kdm >/dev/null 2>&1; then
+		  groupdel kdm
 		fi
 }
 
