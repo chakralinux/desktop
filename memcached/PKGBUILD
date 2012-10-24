@@ -2,11 +2,11 @@
 # Apps Packages for Chakra, part of chakra-project.org
 #
 # Maintainer: Adrián Chaves Fernández (Gallaecio) <adriyetichaves@gmail.com>
-# Contributor: Dan McGee <dan@archlinux.org>
-# Contributor: Michael Irwin <6d6469@gmail.com>
+# Contributors from Arch: Dan McGee <dan@archlinux.org>
+#                         Michael Irwin <6d6469@gmail.com>
 
 pkgname=memcached
-pkgver=1.4.11
+pkgver=1.4.15
 pkgrel=1
 pkgdesc="A distributed memory object caching system"
 arch=(i686 x86_64)
@@ -16,12 +16,10 @@ depends=('libevent')
 optdepends=('perl: for memcached-tool usage')
 backup=('etc/conf.d/memcached')
 source=(http://memcached.googlecode.com/files/$pkgname-$pkgver.tar.gz
-        memcached.conf
-		memcached.sh)
+        memcached.service)
 changelog=ChangeLog
-sha256sums=('e3dcc4ff29d2b3f3c66f2b5b95a1bcef0163a65b588d6ba92a56cd6c8d73e83e'
-            '0e57a0f528b387f1f04f628ec74856c615d82d44f4d6bc041c33b3814ce13d0a'
-            '72efa639c5a39c7c14f07cc51731ebbf82299870d9cf31cf3aaa981bc084b4eb')
+sha256sums=('169721ab7a7531add6ae9f6b14b6b5641725fe0b1f0bdf5c3a4327725901e2b4'
+            '2f45840b044e668fb790472c55dfbde89208733d55de39b737229302c0d17df9')
 
 build() {
   cd "$srcdir/$pkgname-$pkgver"
@@ -33,9 +31,6 @@ package() {
   cd "$srcdir/$pkgname-$pkgver"
   make DESTDIR="$pkgdir" install
   install -D -m 755 scripts/memcached-tool "$pkgdir"/usr/bin/memcached-tool
-  # This POS is entirely RedHat specific, so not including it now
-  #install -D -m 755 scripts/memcached.service "$pkgdir"/lib/systemd/system/memcached.service
-  #sed -i -e 's#^EnvironmentFile.*#EnvironmentFile=/etc/conf.d/memcached#' "$pkgdir"/lib/systemd/system/memcached.service
-  install -D -m 644 "$srcdir/memcached.conf" "$pkgdir"/etc/conf.d/memcached
-  install -D -m 755 "$srcdir/memcached.sh" "$pkgdir"/etc/rc.d/memcached
+  install -D -m 644 ../memcached.service "$pkgdir"/usr/lib/systemd/system/memcached.service
 }
+
