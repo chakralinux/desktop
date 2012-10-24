@@ -14,14 +14,14 @@ pkgbase=virtualbox
 pkgname=('virtualbox' 'virtualbox-ext-oracle' 'virtualbox-guest-additions')
 pkgver=4.2.2
 _build=81494
-pkgrel=2
+pkgrel=3
 arch=('i686' 'x86_64')
 url='http://virtualbox.org/'
 license=('GPL2' 'custom:PUEL')
 options=('!strip')
 _sarch='x86'
 [ "${CARCH}" = 'x86_64' ] && _sarch='amd64'
-
+makedepends=('libidl2' 'libxcursor' 'libxinerama' 'libxslt' 'curl' 'linux-headers' 'python2' 'make' 'gcc')
 source=("VirtualBox-${pkgver}-${_build}-Linux_${_sarch}.run::http://download.virtualbox.org/virtualbox/${pkgver}/VirtualBox-${pkgver}-${_build}-Linux_${_sarch}.run"
         "http://download.virtualbox.org/virtualbox/${pkgver}/Oracle_VM_VirtualBox_Extension_Pack-${pkgver}-${_build}.vbox-extpack"
         "http://download.virtualbox.org/virtualbox/${pkgver}/VBoxGuestAdditions_${pkgver}.iso"
@@ -29,6 +29,7 @@ source=("VirtualBox-${pkgver}-${_build}-Linux_${_sarch}.run::http://download.vir
         'vboxdrv.conf'
         'vboxweb.conf'
         'vboxweb.service'
+        'vboxusb.service'
         'virtualbox.conf'
         'vboxsetup.sh'
         'PUEL'
@@ -40,6 +41,7 @@ sha256sums=('a4d1d1f3047fb3e242338dbaa59d781b189d58021a04d29aac0a3f8ab7b54733'
             '71740893a5f226f9d9fcc607ab9d39b7de816b2759625b34da19162bc7e579ff'
             '12dbba3b59991f2b68cddeeeda20236aeff63e11b7e2d1b08d9d6a82225f6651'
             'e6e875ef186578b53106d7f6af48e426cdaf1b4e86834f01696b8ef1c685787f'
+            '251750f41d334ef9871194b3407c2ee2c0330eac92849c6b5d30c46e5c72b765'
             '9b3c4dc5385fb3b4aeb841043384879c5c7ee926f5343d6a4177e913604f869d'
             '28833ef89fed96aa2cdb071c98687e8aa88e3c4c249b261f9b905e6621fa0e23'
             '50658c653cde4dc43ba73a64c72761d2e996fd8e360fc682aa2844e1ad5b045f'
@@ -101,7 +103,8 @@ package_virtualbox() {
 
   # Install vboxweb initscript
   install -D -m 0644 "${srcdir}/vboxweb.conf" "${pkgdir}/etc/conf.d/vboxweb"
-  install -D -m 0755 "${srcdir}/vboxweb.service" "${pkgdir}/usr/lib/systemd/system/vboxweb.service"
+  install -D -m 0644 "${srcdir}/vboxweb.service" "${pkgdir}/usr/lib/systemd/system/vboxweb.service"
+  install -D -m 0644 "${srcdir}/vboxusb.service" "${pkgdir}/usr/lib/systemd/system/vboxusb.service"
 
   # Install udev rules
   install -D -m 0644 "${srcdir}/10-vboxdrv.rules" "${pkgdir}/lib/udev/rules.d/10-vboxdrv.rules"

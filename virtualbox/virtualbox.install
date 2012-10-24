@@ -13,7 +13,10 @@ post_install() {
 
   # Build new module
   /usr/bin/vboxsetup setup
-  
+
+  # (Re-)Create USB nodes
+  /usr/bin/vboxsetup fixusb
+
   # Show warnings
   /bin/cat <<EOF
 
@@ -21,6 +24,7 @@ post_install() {
 ==> # gpasswd -a USERNAME vboxusers
 ==>
 ==> To start virtualbox web service automatically you need to enable and start the service through systemctl
+==> To create missing USB devices, you can enable vboxusb.service by running 'systemctl enable vboxusb.service'
 ==> To fix missing usb devices, you can call 'vboxsetup fixusb' or reboot your computer
 ==>
 EOF
