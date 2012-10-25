@@ -1,11 +1,10 @@
 #
 # Chakra Packages for Chakra, part of chakra-project.org
 #
-# maintainer (i686): Phil Miller <philm[at]chakra-project[dog]org>
-# maintainer (x86_64): Manuel Tortosa <manutortosa[at]chakra-project[dot]org>
+# maintainer abveritas[at]chakra-project[dot]org>
 
 pkgname=sentinella
-pkgver=0.9.0
+pkgver=0.9.1
 pkgrel=1
 pkgdesc="Desktop application that watches your system activity and, in consequence, takes an action that you've chosen."
 url="http://sentinella.sourceforge.net/"
@@ -13,14 +12,19 @@ license=('GPL')
 arch=('i686' 'x86_64')
 depends=('oxygen-icons' 'libsysactivity' 'kdebase-workspace')
 makedepends=('cmake' 'hicolor-icon-theme' 'automoc4')
-install=('sentinella.install')
+install=sentinella.install
 categories=('utils')
-source=(http://sourceforge.net/projects/${pkgname}/files/0.9.x/sentinella-${pkgver}.tar.gz)
-md5sums=('a6a12e0b702f3b50232ea3e9e29655b6')
+source=("http://sourceforge.net/projects/${pkgname}/files/0.9.x/sentinella-${pkgver}.tar.gz")
+md5sums=('5ce329ff5edf9066fe02ecd26b907feb')
 
 build() {
   cd ${srcdir}/sentinella-${pkgver}
   cmake -DCMAKE_INSTALL_PREFIX=/usr -DCMAKE_BUILD_TYPE=release
   make
+}
+
+package() {
+  cd ${srcdir}/sentinella-${pkgver}
+  
   make  DESTDIR=${pkgdir} install
 }
