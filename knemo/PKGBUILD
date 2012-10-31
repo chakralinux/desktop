@@ -1,26 +1,23 @@
 #
-# KDE SC Packages for Chakra, part of chakra-project.org
+# Apps Packages for Chakra, part of chakra-project.org
 #
-# maintainer (i686): Phil Miller <philm[at]chakra-project[dog]org>
-# maintainer (x86_64): Manuel Tortosa <manutortosa[at]chakra-project[dot]org>
-
+# maintainer abveritas[at]chakra-project[dot]org>
 # include global config
-source ../_buildscripts/${current_repo}-${_arch}-cfg.conf
 
 pkgname=knemo
-pkgver=0.7.0
+pkgver=0.7.4
 pkgrel=1
 pkgdesc="The KDE Network Monitor"
 arch=('i686' 'x86_64')
 url="http://www.kde-apps.org/content/show.php?content=12956"
 license=('GPL')
-depends=('kdebase-workspace' 'wireless_tools' 'iw' 'networkmanager>=0.8')
+depends=('kde-workspace' 'wireless_tools' 'iw' 'networkmanager>=0.8' 'libnl3')
 makedepends=('cmake' 'automoc4')
-categories=('network')
 install=${pkgname}.install
+categories=('network')
 options=('libtool')
 source=(http://www.kde-apps.org/CONTENT/content-files/12956-$pkgname-$pkgver.tar.bz2)
-md5sums=('a69575a151292e2fcc2cb13ce38d85a4')
+md5sums=('e6e9aeef6e0fcd934abe000090771fd9')
 
 build() {
   cd ${srcdir}
@@ -30,10 +27,11 @@ build() {
     -DCMAKE_BUILD_TYPE=Release \
     -DCMAKE_SKIP_RPATH=ON \
     -DCMAKE_INSTALL_PREFIX=/usr    
-  make || return 1
+  make 
+
 }
 
 package() {
   cd ${srcdir}/build
-  make DESTDIR=${pkgdir} install || return 1
+  make DESTDIR=${pkgdir} install 
 }
