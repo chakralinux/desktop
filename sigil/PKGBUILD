@@ -5,22 +5,24 @@
 
 pkgname=sigil
 _pkgname=Sigil
-pkgver=0.5.3
+pkgver=0.6.0
 pkgrel=1
 pkgdesc="A multi-platform WYSIWYG ebook editor. It is designed to edit books in ePub format. "
-arch=('i686' 'x86_64') 
+arch=('i686' 'x86_64')
 url="http://code.google.com/p/sigil/"
 license=('GPL3')
-depends=('qt')
-makedepends=('cmake')
+depends=('qtwebkit' 'boost-libs')
+makedepends=('cmake' 'gendesk' 'boost')
 categories=('office')
 install=sigil.install
-source=(http://$pkgname.googlecode.com/files/$_pkgname-$pkgver-Code.zip
-        $pkgname.desktop)
-md5sums=('83c1a5608a2ec59a83c86ccc1429b5cc'
-         '83779d140d681fd18f3a8c917bfa7f2f')
+screenshot=('http://1.bp.blogspot.com/-K2Q-tdVbPRI/UI08v7LhzHI/AAAAAAAAABY/vZ5LHjM6nb4/s1600/Screen+Shot+2012-10-28+at+10.07.03+AM.png')
+source=(http://$pkgname.googlecode.com/files/$_pkgname-$pkgver-Code.zip)
+md5sums=('5f85f06077c572a4105398569fe7dfe6')
+
 
 build() {
+  gendesk -n
+
   mkdir build && cd build
   cmake -G "Unix Makefiles" \
     -DCMAKE_INSTALL_PREFIX=/usr \
@@ -34,6 +36,7 @@ build() {
 package() {
   cd build
   make install DESTDIR=$pkgdir
+  install -d -m 0755 "${pkgdir}"/usr/share/applications
 
   # Desktop integration.
   install -Dm0644 $srcdir/$pkgname.desktop $pkgdir/usr/share/applications/$pkgname.desktop
@@ -41,4 +44,6 @@ package() {
     install -Dm0644 ../src/Sigil/Resource_Files/icon/app_icon_$_pic.png \
       $pkgdir/usr/share/icons/hicolor/$_picx$_pic/apps/$pkgname.png
   done
+   install -Dm644 ../src/Sigil/Resource_Files/icon/app_icon_128.png \
+       "$pkgdir/usr/share/pixmaps/$pkgname.png"
 }
