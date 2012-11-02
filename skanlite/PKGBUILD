@@ -1,36 +1,35 @@
 #
 # Chakra Packages for Chakra, part of chakra-project.org
 #
-# maintainer (i686): Phil Miller <philm[at]chakra-project[dog]org>
-# maintainer (x86_64): Manuel Tortosa <manutortosa[at]chakra-project[dot]org>
-
-# include global config
-source ../_buildscripts/${current_repo}-${_arch}-cfg.conf
+# maintainer abveritas[at]chakra-project[dot]org>
 
 pkgname=skanlite
-pkgver=0.7
-pkgrel=1
+pkgver=0.9
+pkgrel=2
 pkgdesc="Image Scanning Application for KDE"
-arch=('i686' 'x86_64')
+arch=('x86_64')
 url='http://www.kde.org'
 license=('LGPL')
 depends=('kdegraphics-common' )
 makedepends=('pkgconfig' 'cmake' 'automoc4' 'docbook-xsl')
+categories=('graphics')
 options=('docs')
 source=("http://downloads.sourceforge.net/sanewidget/${pkgname}-${pkgver}.tar.bz2")
-md5sums=('cb256c392210c43d51e317c6a5ba9ad2')
+md5sums=('1ffd94bcfec532da052bc42d2c65c0b8')
 
 build() {
   cd ${srcdir}
+  
   mkdir build
   cd build
   cmake ../${pkgname}-${pkgver} \
     -DCMAKE_BUILD_TYPE=Release \
     -DCMAKE_INSTALL_PREFIX=/usr
-  make || return 1
+  make 
 }
 
 package() {
   cd ${srcdir}/build
+  
   make DESTDIR=${pkgdir} install
 }
