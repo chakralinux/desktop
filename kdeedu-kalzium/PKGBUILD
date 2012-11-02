@@ -27,12 +27,15 @@ categories=('education')
 options=('docs' '!splithdr' 'splitdbg' 'log')
 install=${pkgname}.install
 
-source=("$_mirror/${_pkgname}-$_kdever.tar.xz")
-md5sums=(`grep ${_pkgname}-$_kdever.tar.xz ../kde-sc.md5 | cut -d" " -f1`)
+source=("$_mirror/${_pkgname}-$_kdever.tar.xz"
+       openbabel.diff)
+md5sums=(`grep ${_pkgname}-$_kdever.tar.xz ../kde-sc.md5 | cut -d" " -f1`
+        'bc4d1811bcccbeb7c579fbb3d820c07d')
 
 build()
 {
 	cd ${srcdir}/${_pkgname}-${pkgver}
+	patch -p1 -i "${srcdir}/openbabel.diff" 
 	cmake . -DCMAKE_BUILD_TYPE=${_build_type} \
                 -DCMAKE_INSTALL_PREFIX=${_installprefix} \
                 -DCMAKE_SKIP_RPATH=ON \
