@@ -1,0 +1,34 @@
+#
+# Apps Packages for Chakra, part of chakra-project.org
+#
+# maintainer (x86_64): Neophytos Kolokotronis <tetris4@gmail.com>
+# contributors: Manuel Tortosa <manutortosa[at]chakra-project[dot]org>
+#               Steven Sroka <Sroka.Steven[at]gmail[dot]com>
+# contributors from Arch: Fabio Lima <fheday@dcc.fc.up.pt>
+#                         Tomàs Deltell <tdeltell@gmx.es>
+
+
+pkgname=texmaker
+pkgver=3.5.1
+pkgrel=1
+pkgdesc="Texmaker is a free, modern and cross-platform LaTeX editor for linux,
+macosx and windows systems that integrates many tools needed to develop documents
+with LaTeX, in just one application."
+arch=('i686' 'x86_64')
+url="http://www.xm1math.net/texmaker/"
+license=('GPL')
+depends=('qt' 'poppler-qt' 'lcms2' 'qtwebkit')
+categories=('office')
+source=(http://www.xm1math.net/texmaker/texmaker-$pkgver.tar.bz2)
+md5sums=('15f0ff5021bdfa948e342a79c1d02c5d')
+
+build() {
+    cd $srcdir/$pkgname-$pkgver
+    qmake texmaker.pro
+    make
+}
+
+package() {
+    cd $srcdir/$pkgname-$pkgver
+    make install INSTALL_ROOT="$pkgdir"
+}
