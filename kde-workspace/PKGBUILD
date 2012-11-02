@@ -73,7 +73,6 @@ source=($_mirror/${pkgname}-$_kdever.tar.xz
 	# "fix" some sytemsettings modules that need root access
 	fix_root-only-kcms.patch
         # shutdown-fix.patch
-	systemd-inhibit.diff
 	appmenu.diff)
 
 md5sums=(`grep ${pkgname}-$_kdever.tar.xz ../kde-sc.md5 | cut -d" " -f1`
@@ -100,7 +99,6 @@ md5sums=(`grep ${pkgname}-$_kdever.tar.xz ../kde-sc.md5 | cut -d" " -f1`
         '814350c52c135d6f7bdada1e29223d38'  #  fix_terminate-server.patch
 	#'97a5eb51e6f9d460f0d61bb322a1db5e'  #  fix_kdm_configdef.patch
 	'5f963f80a026f0600edae1b1c70411e5'  #  fix_root-only-kcms.patch
-        'c10c55b880d6de129f85af0a701e6f4d'  #  systemd-inhibit.diff
         'ca3877bf428d13eead45756fa94376b5')  #  appmenu.diff
 
 #
@@ -122,7 +120,6 @@ build() {
 	patch -p0 -i ${srcdir}/fix_terminate-server.patch
 	#patch -p0 -N -i ${srcdir}/fix_kdm_configdef.patch
         patch -p1 -i ${srcdir}/fix_root-only-kcms.patch
-        patch -p1 -i ${srcdir}/systemd-inhibit.diff
         patch -p1 -i ${srcdir}/appmenu.diff
 
 	msg "starting workspace build ..."
@@ -206,7 +203,7 @@ package() {
 	sed -i -e s,#ColorScheme=.*,ColorScheme=Oxygen,g ${pkgdir}/usr/share/config/kdm/kdmrc
 	sed -i -e s,Theme=/usr.*,Theme=/usr/share/apps/kdm/themes/horos,g ${pkgdir}/usr/share/config/kdm/kdmrc
 	sed -i -e s,MinShowUID=.*,MinShowUID=1000,g ${pkgdir}/usr/share/config/kdm/kdmrc
-	sed -i -e 's/halt/poweroff/' /usr/share/config/kdm/kdmrc
+	sed -i -e 's/halt/poweroff/' ${pkgdir}/usr/share/config/kdm/kdmrc
 
 	# WORKAROUND -> put ggl stuff into ggl package
 	rm -rf ${pkgdir}/usr/share/apps/plasma/plasmoids/ggl_photos
