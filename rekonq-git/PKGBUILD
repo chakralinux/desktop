@@ -1,35 +1,32 @@
 #
 # KDE SC Packages for Chakra, part of chakra-project.org
 #
-# maintainer (i686): Phil Miller <philm[at]chakra-project[dog]org>
-# maintainer (x86_64): Manuel Tortosa <manutortosa[at]chakra-project[dot]org>
-
-# include global config
-source ../_buildscripts/${current_repo}-${_arch}-cfg.conf
+# maintainer abveritas[at]chakra-project[dot]org>
 
 pkgname=rekonq-git
-pkgver=20111010
+pkgver=20121102
 pkgrel=1
 pkgdesc="rekonq is a KDE web browser based on QtWebKit."
 arch=('i686' 'x86_64')
 url="http://rekonq.sourceforge.net/"
 license=('GPL')
 groups=()
-depends=('kde-baseapps' 'qt')
+depends=('kde-baseapps' 'qoauth' 'qca-ossl')
 makedepends=('gcc' 'cmake' 'automoc4' 'git' 'docbook-xsl' 'bc')
-categories=('network')
 provides=(rekonq)
 conflicts=(rekonq)
 replaces=()
 backup=()
 options=()
-source=(rekonq-git.install patch)
+source=('background.png'
+        'background.diff')
+md5sums=('cd493df91e34030a8195eaf8b6d68140'
+         '5d7bab51b8f4b78c0f7cd94c885f22c3')
 noextract=()
-md5sums=('c354917df476f6ddfec82d0ccf7dfd85'                                     
-         '86515d857298456cb34d60588ae2311c')
+#md5sums=('c354917df476f6ddfec82d0ccf7dfd85')                                     
 
-_gitroot="git://anongit.kde.org/rekonq.git"
-_gitname="rekonq"
+_gitroot="git://anongit.kde.org/scratch/adjam/rekonq2.git"
+_gitname="rekonq2"
 
 
 build() {
@@ -50,9 +47,6 @@ build() {
   rm -rf ${srcdir}/build
   git clone ${srcdir}/${_gitname} ${srcdir}/build
   cd ${srcdir}/build
- 
-  # patch and run localization files
-  patch -Np1 -i ${srcdir}/patch
 
   export RK_SRCS="${srcdir}/build"
   cd scripts
@@ -60,14 +54,19 @@ build() {
   ./download_i18n.sh
   cd ..
   # end path and run localization files
-
+  
+  patch -p1 -i "${srcdir}/background.diff"
+  
   cmake . -DCMAKE_BUILD_TYPE=Release \
-          -DCMAKE_INSTALL_PREFIX=/usr \
-          -DWITH_WEBGL=ON 
+          -DCMAKE_INSTALL_PREFIX=/usr 
+ 
   make
 }
 
 package() {
   cd ${srcdir}/build
   make DESTDIR=${pkgdir} install
+  
+  rm ${pkgdir}/usr/share/apps/rekonq/pics/background.png
+  install -m 644 -p ${srcdir}/background.png ${pkgdir}/usr/share/apps/rekonq/pics/background.png
 }

@@ -1,26 +1,45 @@
 # Contributor: Neophytos Kolokotronis <tetris4@gmail.com>
+# Contributor: Fabian Kosmale <0inkane@googlemail.com>
 
 pkgname=qupzilla
-pkgver=1.0.1
-pkgrel=4
+pkgver=1.3.5
+pkgrel=2
+_commit=e59241f  
 pkgdesc="A very fast open source browser based on WebKit core"
-url="http://qt-apps.org/content/show.php?content=145693"
-arch=('i686' 'x86_64')
+url="http://www.qupzilla.com"
+arch=('x86_64')
 license=('GPL3')
-depends=('qt')
-categories=('network')
-source=(https://github.com/nowrep/QupZilla/zipball/master)
-md5sums=('7d397c6804d0a5147c8ac26f4dea9017')
+depends=('qt' 'qtwebkit')
+categories=('network') 
+source=("https://github.com/downloads/QupZilla/qupzilla/QupZilla-${pkgver}.tar.gz"
+        #"https://github.com/QupZilla/QupZilla/tarball/master/QupZilla-qupzilla-${pkgver}.tar.gz"
+        'searchenginesmanager.diff'
+        'speeddial.diff'
+        'preferences.diff'
+        'qupzilla.diff'
+        'start-white.png')
+md5sums=('b2ecf689d45af384c4557895dc43f4da'
+         '7e1b3743fba94b54ab0858e7588cca83'
+         'b58d03f2e52ea3391e63c0eeea3e82a4'
+         'ac98b9f9cc45df18070eabee518c0049'
+         'fc0aa2bef51e5488f129b4618ee18545'
+         'fc705d7aba952361a626a2c79726bbfa')
 
 build() {
-   cd $srcdir/nowrep-QupZilla-e24b4d3/src/
+   cd "${srcdir}/QupZilla-${pkgver}/"
+   patch -p0 -i "${srcdir}/searchenginesmanager.diff"
+   patch -p0 -i "${srcdir}/speeddial.diff"
+   patch -p0 -i "${srcdir}/preferences.diff"
+   patch -p0 -i "${srcdir}/qupzilla.diff"
    export USE_WEBGL="true"
+   export KDE="true"
    qmake QupZilla.pro
    make
 }
 
 package() {
-   cd $srcdir/nowrep-QupZilla-e24b4d3/src/
+   cd "${srcdir}/QupZilla-${pkgver}/"
+   mkdir -p ${pkgdir}/usr/share/icons
+   install -m 644 -p ${srcdir}/start-white.png ${pkgdir}/usr/share/icons/
    make INSTALL_ROOT=$pkgdir install
-
 }
