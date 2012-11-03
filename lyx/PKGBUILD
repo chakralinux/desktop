@@ -1,23 +1,23 @@
 #
 # Apps Packages for Chakra, part of chakra-project.org
 #
-# maintainer (i686): Phil Miller <philm[at]chakra-project[dog]org>
-# maintainer (x86_64): Manuel Tortosa <manutortosa[at]chakra-project[dot]org>
+# maintainer: Neophytos Kolokotronis <tetris4@gmail.com>
 
 pkgname=lyx
-pkgver=2.0.2
-pkgrel=3
+pkgver=2.0.4
+pkgrel=2
 pkgdesc="An advanced open-source document processor."
-arch=('i686' 'x86_64')
+arch=('x86_64')
 url="http://www.lyx.org"
 depends=('qt' 'texlive-core' 'python2' 'perl' 'imagemagick' 'aspell' 'boost-libs' 'icu')
 makedepends=('boost')
 optdepends=('texlive-latex3: pdf export')
 categories=('office')
 license=('GPL')
-source=(ftp://ftp.lyx.org/pub/lyx/stable/2.0.x/$pkgname-$pkgver.tar.xz \
-	lyx.desktop)
-md5sums=('f6421fdf118ace93d259220e6a3c4431'
+source=("ftp://ftp.lyx.org/pub/lyx/stable/2.0.x/$pkgname-$pkgver.tar.xz" \
+	'lyx.desktop')
+screenshot=('http://www.lyx.org/images/about/main_window.png')
+md5sums=('3c0a5216270d6ac8637c667ff59ca12b'
          '0a7a76d3d9682f8d18ef0ed002b6d6e8')
 
 build() {
@@ -25,7 +25,7 @@ build() {
 
   ./configure --prefix=/usr \
     --with-frontend=qt4 --without-included-boost
-  make 
+  make
 }
 
 package() {
