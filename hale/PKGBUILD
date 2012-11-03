@@ -5,7 +5,7 @@
 
 pkgname=hale
 pkgver=0.6.0
-pkgrel=1
+pkgrel=2
 pkgdesc="Role-playing game with a deep tactical combat system and storyline"
 arch=(any)
 url="http://sourceforge.net/apps/mediawiki/hale/index.php?title=Main_Page"
@@ -35,10 +35,8 @@ package() {
   install -Dm755 hale.sh $pkgdir/usr/share/$pkgname/hale.sh
   install -Dm755 hale.jar $pkgdir/usr/share/$pkgname/hale.jar
   install -Dm755 core.zip $pkgdir/usr/share/$pkgname/core.zip
-  install -d $pkgdir/usr/share/$pkgname/saves
-  install -d $pkgdir/usr/share/$pkgname/log
 
-  for FOLDER in gui characters campaigns docs
+  for FOLDER in campaigns characters core docs lib
   do
     cp -R $FOLDER $pkgdir/usr/share/$pkgname/
   done
@@ -46,24 +44,16 @@ package() {
   mkdir -p $pkgdir/usr/share/$pkgname/lib/native/linux
   cp lib/*.jar $pkgdir/usr/share/$pkgname/lib/
 
-  if [[ $CARCH == "x86_64" ]]; then
-    SUFFIX=64
-  fi
+  SUFFIX=64
   for FILE in libjinput-linux liblwjgl libopenal
   do
     cp lib/native/linux/${FILE}${SUFFIX}.so $pkgdir/usr/share/$pkgname/lib/native/linux/
   done
 
-  # Write permissions (not really safe…).
-  chmod -R 666 \
-    $pkgdir/usr/share/$pkgname/campaigns \
-    $pkgdir/usr/share/$pkgname/log \
-    $pkgdir/usr/share/$pkgname/saves
-
   # Execution script.
   install -d $pkgdir/usr/bin
-  echo "#!/bin/bash"					 > $pkgdir/usr/bin/$pkgname
-  echo "cd /usr/share/$pkgname && ./$pkgname.sh"	>> $pkgdir/usr/bin/$pkgname
+  echo "#!/bin/bash"                              > $pkgdir/usr/bin/$pkgname
+  echo "cd /usr/share/$pkgname && ./$pkgname.sh" >> $pkgdir/usr/bin/$pkgname
   chmod +x $pkgdir/usr/bin/$pkgname
 
   # Legal.
