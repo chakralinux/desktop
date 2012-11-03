@@ -1,14 +1,13 @@
 #
 # Chakra Packages for Chakra, part of chakra-project.org
 #
-# maintainer (i686): Phil Miller <philm[at]chakra-project[dog]org>
-# maintainer (x86_64): Manuel Tortosa <manutortosa[at]chakra-project[dot]org>
+# maintainer abveritas[at]chakra-project[dot]org>
 
 pkgname=dosbox
 pkgver=0.74
-pkgrel=4
+pkgrel=5
 pkgdesc="An emulator with builtin DOS for running DOS Games"
-arch=('i686' 'x86_64')
+arch=('x86_64')
 url="http://dosbox.sourceforge.net/"
 license=('GPL')
 depends=('sdl_net' 'sdl_sound' 'libgl' 'libpng' 'alsa-lib' 'gcc-libs' 'zlib')
@@ -22,7 +21,7 @@ md5sums=('b9b240fa87104421962d14eee71351e8'
 
 build(){
   cd ${srcdir}/${pkgname}-${pkgver}
-  patch -Np1 -i "$srcdir/gcc46.patch"
+  patch -p1 -i "$srcdir/gcc46.patch"
   sed -i 's/png_check_sig/png_sig_cmp/' configure 
   ./configure --prefix=/usr \
     --sysconfdir=/etc/dosbox 

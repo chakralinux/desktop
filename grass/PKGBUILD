@@ -1,19 +1,16 @@
 #
 # Apps Packages for Chakra, part of chakra-project.org
 #
-# maintainer (x86_64): Giuseppe Calà <jiveaxe@gmail.com>
-
-# include global config
-source ../_buildscripts/${current_repo}-${_arch}-cfg.conf
+# maintainer abveritas@chakra-project.org
 
 pkgname=grass
-pkgver=6.4.1
-pkgrel=2
+pkgver=6.4.2
+pkgrel=1
 pkgdesc='Geographic Information System (GIS) used for geospatial data management and analysis, image processing, graphics/maps production, spatial modeling, and visualization.'
-arch=('i686' 'x86_64')
+arch=('x86_64')
 url='http://grass.itc.it/index.php'
 license=('GPL')
-depends=('gdal' 'tk' 'sqlite3' 'python' 'mesa' 'swig' 'proj' 'libjpeg>=8' 'libpng>=1.4.0' 'libtiff')
+depends=('gdal' 'tk' 'sqlite3' 'python' 'mesa' 'swig' 'proj' 'libjpeg-turbo' 'libpng>=1.5.0' 'libtiff')
 makedepends=('mysql' 'postgresql>=8.4.1' 'r' 'fftw' 'freetype2' 'xorg-server')
 optdepends=('fftw: required for i.fft and i.ifft modules'
             'postgresql: PostgreSQL database interface'
@@ -23,13 +20,13 @@ optdepends=('fftw: required for i.fft and i.ifft modules'
             'xorg-server: required for the graphical interface')
 options=('!libtool' '!makeflags')
 categories=('graphics')
-install=grass.install
+install='grass.install'
 source=("http://grass.itc.it/grass64/source/${pkgname}-${pkgver}.tar.gz"
         "${pkgname}.desktop"
         "${pkgname}.sh"
         "${pkgname}.png")
 
-md5sums=('d8ca83d416b5b0cf2aa9d36c81a77b23'
+md5sums=('d3398d6b1e3a2ef19cfb6e39a5ae9919'
          '0323f2533f47cf75f1a0340bef546a11'
          'db93730dd330f1539bd31b4373e1c00e'
          'ae778ed261a40b078a8465994a0eb25e')

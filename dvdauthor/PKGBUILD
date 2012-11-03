@@ -1,14 +1,10 @@
 #
 # Chakra Packages for Chakra, part of chakra-project.org
 #
-# maintainer (i686): Phil Miller <philm[at]chakra-project[dog]org>
-# maintainer (x86_64): Manuel Tortosa <manutortosa[at]chakra-project[dot]org>
-
-# include global config
-source ../_buildscripts/${current_repo}-${_arch}-cfg.conf
+# maintainer abveritas@chakra-project.org
 
 pkgname=dvdauthor
-pkgver=0.7.0
+pkgver=0.7.1
 pkgrel=1
 pkgdesc="DVD authoring tools"
 arch=('i686' 'x86_64')
@@ -16,13 +12,19 @@ url="http://dvdauthor.sourceforge.net/"
 license=('GPL')
 depends=('libdvdread' 'imagemagick' 'libxml2' 'libpng' 'fribidi')
 categories=('multimedia')
-source=(http://downloads.sourceforge.net/${pkgname}/${pkgname}-${pkgver}.tar.gz)
-md5sums=('33a447fb98ab3293ac40f869eedc17ff')
+source=("http://downloads.sourceforge.net/${pkgname}/${pkgname}-${pkgver}.tar.gz")
+md5sums=('2694a5a3ef460106ea3caf0f7f60ff80')
 
 build() {
   cd "${srcdir}/${pkgname}"
+  
   ./configure --prefix=/usr \
-              --sysconfdir=/etc || return 1
-  make || return 1
-  make DESTDIR="${pkgdir}" install || return 1
+              --sysconfdir=/etc 
+  make 
+}
+
+package() {
+  cd "${srcdir}/${pkgname}"
+  
+  make DESTDIR="${pkgdir}" install 
 }
