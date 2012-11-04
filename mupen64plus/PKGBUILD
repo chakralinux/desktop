@@ -1,0 +1,28 @@
+#
+# Apps Packages for Chakra, part of chakra-project.org
+#
+# Maintainer: Adrián Chaves Fernández (Gallaecio) <adriyetichaves gmail.com>
+
+pkgname=mupen64plus
+pkgver=1.99.5
+pkgrel=2
+pkgdesc='Nintendo64™ Emulator.'
+arch=('x86_64')
+url='http://code.google.com/p/mupen64plus/'
+license=('GPL3')
+depends=('freetype2' 'mesa' 'libpng' 'libsamplerate' 'sdl')
+categories=('system')
+source=("http://mupen64plus.googlecode.com/files/$pkgname-bundle-src-$pkgver.tar.gz")
+md5sums=('93772a6d6fc6a63353462deae8a6db71')
+
+build() {
+  cd $srcdir/$pkgname-bundle-src-$pkgver
+  sh m64p_build.sh
+}
+
+package() {
+  cd $srcdir/$pkgname-bundle-src-$pkgver
+  
+  # Set LDCONFIG since we are using fakeroot and scripts. Run root commands by checking the uid.
+  ./m64p_install.sh DESTDIR=$pkgdir PREFIX=/usr MANDIR=/usr/share/man LDCONFIG=true
+}

@@ -1,0 +1,30 @@
+#
+# Apps Packages for Chakra, part of chakra-project.org
+#
+# Maintainer: Adrián Chaves Fernández (Gallaecio) <adriyetichaves gmail.com>
+# Contributor: G_Syme <demichan(at)mail(dot)upb(dot)de>
+# Contributor: Alexander 'hatred' Drozdov <adrozdoff@gmail.com>
+
+pkgname=libicns
+pkgver=0.8.1
+pkgrel=1
+pkgdesc="Library for manipulating MacOS X .icns icon files."
+arch=('x86_64')
+url="http://icns.sourceforge.net"
+license=('LGPL' 'GPL')
+depends=('jasper' 'libpng')
+source=("http://sourceforge.net/projects/icns/files/$pkgname-$pkgver.tar.gz")
+md5sums=('7a9b74b84ce08c5b11bdee3cad296dd3')
+
+build() {
+  cd $srcdir/$pkgname-$pkgver
+
+  ./configure --prefix=/usr
+  make
+}
+
+package() {
+  cd $srcdir/$pkgname-$pkgver
+  make DESTDIR=$pkgdir install
+}
+
