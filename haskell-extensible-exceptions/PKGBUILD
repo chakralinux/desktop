@@ -1,18 +1,18 @@
-# Maintainer: Stephen McIntosh <stephenmac7[at]gmail[dot]com>
-_hkgname=binary
-pkgname=haskell-binary
-pkgver=0.5.1.0
-pkgrel=2
-pkgdesc="Binary serialisation for Haskell values using lazy ByteStrings"
+# Maintainer: Stephen McIntosh <stephenmac7@gmail.com>
+_hkgname=extensible-exceptions
+pkgname=haskell-extensible-exceptions
+pkgver=0.1.1.4
+pkgrel=1
+pkgdesc="Extensible exceptions"
 url="http://hackage.haskell.org/package/${_hkgname}"
 license=('custom:BSD3')
 arch=('i686' 'x86_64')
 makedepends=()
-depends=('ghc' 'haskell-array' 'haskell-containers')
+depends=('ghc')
 options=('strip')
 source=(http://hackage.haskell.org/packages/archive/${_hkgname}/${pkgver}/${_hkgname}-${pkgver}.tar.gz)
 install=${pkgname}.install
-md5sums=('c61d77323255f23e413e84d4bcbd853a')
+md5sums=('fa1cadd15c1c7aa362618d41c6e17d8b')
 build() {
     cd ${srcdir}/${_hkgname}-${pkgver}
     runhaskell Setup configure -O ${PKGBUILD_HASKELL_ENABLE_PROFILING:+-p } --enable-split-objs --enable-shared \

@@ -1,37 +1,18 @@
-pkgname=haskell-vector
-HS_DIR=/usr/share/haskell/${pkgname}
-
-registerPackage() {
-    ${HS_DIR}/register.sh
-}
-
-unregisterPackage() {
-    ${HS_DIR}/unregister.sh
-}
-
-updatePackageIndex() {
-    (cd /usr/share/doc/ghc/html/libraries; ./gen_contents_index)
-}
-
+HS_DIR=usr/share/haskell/haskell-vector
 post_install() {
-    registerPackage
-    updatePackageIndex
+  ${HS_DIR}/register.sh
+  (cd usr/share/doc/ghc/html/libraries; ./gen_contents_index)
 }
-
 pre_upgrade() {
-    unregisterPackage
+  ${HS_DIR}/unregister.sh
 }
-
 post_upgrade() {
-    registerPackage
-    updatePackageIndex
+  ${HS_DIR}/register.sh
+  (cd usr/share/doc/ghc/html/libraries; ./gen_contents_index)
 }
-
 pre_remove() {
-    unregisterPackage
+  ${HS_DIR}/unregister.sh
 }
-
 post_remove() {
-    updatePackageIndex
+  (cd usr/share/doc/ghc/html/libraries; ./gen_contents_index)
 }
-

@@ -1,18 +1,18 @@
 # Maintainer: Stephen McIntosh <stephenmac7[at]gmail[dot]com>
 _hkgname=text
 pkgname=haskell-text
-pkgver=0.11.2.2
+pkgver=0.11.2.3
 pkgrel=1
 pkgdesc="An efficient packed Unicode text type."
 url="http://hackage.haskell.org/package/${_hkgname}"
 license=('custom:BSD3')
 arch=('i686' 'x86_64')
 makedepends=()
-depends=('ghc' 'haskell-array' 'haskell-bytestring' 'haskell-deepseq')
+depends=('ghc' 'haskell-deepseq')
 options=('strip')
 source=(http://hackage.haskell.org/packages/archive/${_hkgname}/${pkgver}/${_hkgname}-${pkgver}.tar.gz)
 install=${pkgname}.install
-md5sums=('a0609d6e1b2674aff49e276d46d8111a')
+md5sums=('7a469d49a7576fb3a18785cb64d4ee6c')
 build() {
     cd ${srcdir}/${_hkgname}-${pkgver}
     runhaskell Setup configure -O ${PKGBUILD_HASKELL_ENABLE_PROFILING:+-p } --enable-split-objs --enable-shared \

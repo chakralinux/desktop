@@ -1,18 +1,18 @@
-# Maintainer: Stephen McIntosh <stephenmac7[at]gmail[dot]com>
+# Maintainer: 
 _hkgname=hashed-storage
 pkgname=haskell-hashed-storage
-pkgver=0.5.9
-pkgrel=4
+pkgver=0.5.10
+pkgrel=1
 pkgdesc="Hashed file storage support code."
 url="http://hackage.haskell.org/package/${_hkgname}"
 license=('custom:BSD3')
 arch=('i686' 'x86_64')
 makedepends=()
-depends=('ghc' 'haskell-binary' 'haskell-bytestring' 'haskell-containers' 'haskell-dataenc' 'haskell-directory' 'haskell-extensible-exceptions' 'haskell-filepath' 'haskell-mmap' 'haskell-mtl' 'haskell-zlib')
+depends=('ghc' 'haskell-binary' 'haskell-dataenc' 'haskell-extensible-exceptions' 'haskell-mmap' 'haskell-mtl' 'haskell-zlib')
 options=('strip')
 source=(http://hackage.haskell.org/packages/archive/${_hkgname}/${pkgver}/${_hkgname}-${pkgver}.tar.gz)
 install=${pkgname}.install
-md5sums=('a3514e631d1f8b653526dbefacf34575')
+md5sums=('67d8661d191d4b7a8f3ac801783eca87')
 build() {
     cd ${srcdir}/${_hkgname}-${pkgver}
     runhaskell Setup configure -O ${PKGBUILD_HASKELL_ENABLE_PROFILING:+-p } --enable-split-objs --enable-shared \

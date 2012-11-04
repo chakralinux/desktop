@@ -1,18 +1,18 @@
 # Maintainer: Stephen McIntosh <stephenmac7[at]gmail[dot]com>
 _hkgname=dataenc
 pkgname=haskell-dataenc
-pkgver=0.14.0.3
-pkgrel=2
+pkgver=0.14.0.4
+pkgrel=1
 pkgdesc="Data encoding library"
 url="http://hackage.haskell.org/package/${_hkgname}"
 license=('custom:BSD3')
 arch=('i686' 'x86_64')
 makedepends=()
-depends=('ghc' 'haskell-array' 'haskell-containers')
+depends=('ghc')
 options=('strip')
 source=(http://hackage.haskell.org/packages/archive/${_hkgname}/${pkgver}/${_hkgname}-${pkgver}.tar.gz)
 install=${pkgname}.install
-md5sums=('643a8c022b9c840f801faf9a661fe637')
+md5sums=('26275b11cedca34e9972db775f078cfa')
 build() {
     cd ${srcdir}/${_hkgname}-${pkgver}
     runhaskell Setup configure -O ${PKGBUILD_HASKELL_ENABLE_PROFILING:+-p } --enable-split-objs --enable-shared \

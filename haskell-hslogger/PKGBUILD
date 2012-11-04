@@ -1,18 +1,18 @@
 # Maintainer: Stephen McIntosh <stephenmac7[at]gmail[dot]com>
 _hkgname=hslogger
 pkgname=haskell-hslogger
-pkgver=1.1.5
-pkgrel=2
+pkgver=1.2.1
+pkgrel=1
 pkgdesc="Versatile logging framework"
 url="http://hackage.haskell.org/package/${_hkgname}"
 license=('custom:BSD3')
 arch=('i686' 'x86_64')
 makedepends=()
-depends=('ghc' 'haskell-containers' 'haskell-directory' 'haskell-mtl' 'haskell-network' 'haskell-old-locale' 'haskell-process' 'haskell-time' 'haskell-unix')
+depends=('ghc' 'haskell-mtl' 'haskell-network')
 options=('strip')
 source=(http://hackage.haskell.org/packages/archive/${_hkgname}/${pkgver}/${_hkgname}-${pkgver}.tar.gz)
 install=${pkgname}.install
-md5sums=('cd3dfd6f88176bd53b333ea29130a857')
+md5sums=('d94e39cd6a262565cf0758a6ead74919')
 build() {
     cd ${srcdir}/${_hkgname}-${pkgver}
     runhaskell Setup configure -O ${PKGBUILD_HASKELL_ENABLE_PROFILING:+-p } --enable-split-objs --enable-shared \

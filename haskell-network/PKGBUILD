@@ -1,18 +1,18 @@
 # Maintainer: Stephen McIntosh stephenmac7[at]gmail[dot]com
 _hkgname=network
 pkgname=haskell-network
-pkgver=2.3.0.14
+pkgver=2.4.0.1
 pkgrel=1
 pkgdesc="Low-level networking interface"
 url="http://hackage.haskell.org/package/${_hkgname}"
 license=('custom:BSD3')
 arch=('i686' 'x86_64')
 makedepends=()
-depends=('ghc' 'haskell-bytestring' 'haskell-parsec')
+depends=('ghc' 'haskell-parsec')
 options=('strip')
 source=(http://hackage.haskell.org/packages/archive/${_hkgname}/${pkgver}/${_hkgname}-${pkgver}.tar.gz)
 install=${pkgname}.install
-md5sums=('1e45cc731647acff8b9c33bda085bf2a')
+md5sums=('b120c85d327ba9bca5a340db781a9b57')
 build() {
     cd ${srcdir}/${_hkgname}-${pkgver}
     runhaskell Setup configure -O ${PKGBUILD_HASKELL_ENABLE_PROFILING:+-p } --enable-split-objs --enable-shared \

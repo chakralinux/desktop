@@ -1,8 +1,8 @@
 # Maintainer: Stephen McIntosh <stephenmac7[at]gmail[dot]com>
 _hkgname=tar
 pkgname=haskell-tar
-pkgver=0.4.0.0
-pkgrel=2
+pkgver=0.4.0.1
+pkgrel=1
 pkgdesc="Reading, writing and manipulating \".tar\" archive files."
 url="http://hackage.haskell.org/package/${_hkgname}"
 license=('custom:BSD3')
@@ -12,7 +12,7 @@ depends=('ghc' 'haskell-bytestring' 'haskell-directory' 'haskell-filepath' 'hask
 options=('strip')
 source=(http://hackage.haskell.org/packages/archive/${_hkgname}/${pkgver}/${_hkgname}-${pkgver}.tar.gz)
 install=${pkgname}.install
-md5sums=('2294c54e598244268517b98bf7877739')
+md5sums=('a037976a434d6a55cad3e07f54686ffd')
 build() {
     cd ${srcdir}/${_hkgname}-${pkgver}
     runhaskell Setup configure -O ${PKGBUILD_HASKELL_ENABLE_PROFILING:+-p } --enable-split-objs --enable-shared \
