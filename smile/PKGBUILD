@@ -1,34 +1,37 @@
 #
 # Apps Packages for Chakra, part of chakra-project.org
 #
-# maintainer (i686): Phil Miller <philm[at]chakra-project[dog]org>
-# maintainer (x86_64): Manuel Tortosa <manutortosa[at]chakra-project[dot]org>
+# maintainer abveritas[at]chakra-project[dot]org>
 
 
 pkgname=smile
 pkgver=1.0
-pkgrel=1
+pkgrel=3
 _lang=all   #Available languages: { all, de, en, es, fr, it, pl, pt, ru }
 pkgdesc="Slideshow Maker In Linux Environnement"
 url="http://smile.tuxfamily.org/"
 license=('GPL')
 arch=('i686' 'x86_64')
-depends=('qt' 'sox' 'mplayer' 'imagemagick' 'perl')
+depends=('qtwebkit' 'sox' 'mplayer' 'imagemagick' 'perl')
+makedepends=('mesa')
 categories=('multimedia')
-install=smile.install
-source=(http://download.tuxfamily.org/smiletool/${pkgname}-${pkgver}.tar.gz
-	smile.desktop)
+install='smile.install'
+source=("http://ftp.pardus.org.tr/pub/source/2009/smile-1.0.tar.gz"
+        'smile.desktop')
 md5sums=('7f1fa1b1e0ab661d5a74ac4b8ee02511'
-	 'aefd88b769e18f5406647539ed953937')
+         'aefd88b769e18f5406647539ed953937')
 
 build() {
   cd ${startdir}/src/${pkgname}
   /usr/bin/qmake
   make clean
-  make || return 1
+  make 
+}
 
+package() {
+  cd ${startdir}/src/${pkgname}
   mkdir -p ${startdir}/pkg/opt/smile
-  cp -R BIB_ManSlide Interface smile fake.pl ${startdir}/pkg/opt/smile || return 1
+  cp -R BIB_ManSlide Interface smile fake.pl ${startdir}/pkg/opt/smile
   mkdir -p ${startdir}/pkg/usr/bin
   ln -sf /opt/smile/smile ${startdir}/pkg/usr/bin/smile
 
