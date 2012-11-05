@@ -1,44 +1,53 @@
 #
-# Chakra Packages for Chakra, part of chakra-project.org
+# Apps Packages for Chakra, part of chakra-project.org
 #
-# contributor (x86_64): Giuseppe Calà <jiveaxe@gmail.com>
-
-# include global config
-source ../_buildscripts/${current_repo}-${_arch}-cfg.conf
+# maintainer abveritas@chakra-project.org
 
 pkgname=graphviz
-pkgver=2.26.3
-pkgrel=1
+pkgver=2.28.0
+pkgrel=4
 pkgdesc="Creates acircular graph images"
-arch=('i686' 'x86_64')
+arch=('x86_64')
 license=('CPL')
-depends=('gd>=2.0.35' 'librsvg>=2.22.3' 'libxaw>=1.0.5' 'ghostscript>=9.00')
+depends=('gd' 'librsvg' 'libxaw' 'ghostscript' 'pango' 'libltdl')
+makedepends=('swig' 'guile' 'lua' 'ocaml' 'perl' 'php' 'python2' 'r' 'ruby' 'tk' 'qt')
+optdepends=('guile: guile bindings'
+            'lua: lua bindings'
+            'ocaml: ocaml bindings'
+            'perl: perl bindings'
+            'php: php bindings'
+            'python2: python bindings'
+            'r: r bindings'
+            'ruby: ruby bindings'
+            'tcl: tcl bindings'
+            'qt: gvedit')
 url="http://www.graphviz.org/"
 options=('!libtool')
 categories=('graphics')
-source=(${url}/pub/${pkgname}/stable/SOURCES/${pkgname}-${pkgver}.tar.gz)
-install=graphviz.install
-md5sums=('6f45946fa622770c45609778c0a982ee')
+source=(${url}/pub/${pkgname}/stable/SOURCES/${pkgname}-${pkgver}.tar.gz
+       'LICENSE')
+install='graphviz.install'
+sha1sums=('4725d88a13e071ee22e632de551d4a55ca08ee7d'
+          '5a83febc0974e17d6b2356a4b1be9a834b715378')
 
 build() {
-  cd "${srcdir}/${pkgname}-${pkgver}"
-  ./configure --prefix=/usr --without-gnomeui --docdir=/usr/share/doc/gvkp \
-    --disable-tcl --disable-sharp --disable-ruby --disable-python \
-    --disable-lua --disable-guile --disable-perl || return 1
+	cd "${srcdir}/${pkgname}-${pkgver}"
 
-#--bindir=/bindir --libdir=/libdir --includedir=/includedir --mandir=/mandir \
-#--infodir=/infodir \
-#--docdir=/docdir --htmldir=/htmldir --dvidir=/dvidir \
-#--pdfdir=/pdfdir --psdir=/psdir
+	sed \
+		-e '/"archdir"/s:$:+" '"$(echo -I/usr/include/ruby-1.9.1/{$CARCH-linux,ruby/backward,})"'":' \
+		-e '/CONFIG/s:site:vendor:' \
+		-i config/config_ruby.rb
+	sed -i '/LIBPOSTFIX="64"/d' configure
+	export PYTHON=python2
 
-  make || return 1
-  make DESTDIR="${pkgdir}" install || return 1
+	./configure --prefix=/usr --disable-swig
+	make
+}
 
-  #Fix a wrong file location for x86_64
-  rm -rf ${pkgdir}/usr/lib64
+package() {
+	cd "${srcdir}/${pkgname}-${pkgver}"
+	make DESTDIR="${pkgdir}" install
 
-  # Fix non-fhs doc files.
-  cd ${pkgdir}/usr/share
-  mkdir doc
-  mv graphviz/doc doc/graphviz
+	# cf. http://www.graphviz.org/License.php
+	install -Dm644 ../LICENSE "${pkgdir}"/usr/share/licenses/graphviz/LICENSE
 }
