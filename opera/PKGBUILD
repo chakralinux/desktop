@@ -3,8 +3,8 @@
 #
 
 pkgname=opera
-pkgver=12.02
-_buildver=1578
+pkgver=12.10
+_buildver=1652
 pkgrel=1
 pkgdesc="A fast and secure web browser and Internet suite."
 url="http://www.opera.com/browser/"
@@ -19,19 +19,12 @@ install=${pkgname}.install
 options=(!strip)
 license=('custom:opera')
 categories=('network')
-arch=('i686' 'x86_64')
+arch=('x86_64')
 
-if [ "$CARCH" = "i686" ]; then
-    __arch=i386
-    source=(http://ftp.opera.com/pub/opera/linux/${pkgver/./}/opera-${pkgver}-${_buildver}.${__arch}.linux.tar.xz)
-	md5sums=('892fa890e9945809dc5f6bc19b45b0d4')
-elif [ "$CARCH" = "x86_64" ]; then
-    __arch=$CARCH
-    source=(http://ftp.opera.com/pub/opera/linux/${pkgver/./}/opera-${pkgver}-${_buildver}.${__arch}.linux.tar.xz)
-	md5sums=('3e83561b0ecaae946dd29e0e47b476ef')
-fi
+source=(http://ftp.opera.com/pub/opera/linux/${pkgver/./}/opera-${pkgver}-${_buildver}.${arch}.linux.tar.xz)
+md5sums=('6b0b8818a0c43c940965267c32c5f20a')
 
 package() {
-        opera-${pkgver}-${_buildver}.${__arch}.linux/install --prefix /usr --repackage "${pkgdir}/usr"
+        opera-${pkgver}-${_buildver}.${arch}.linux/install --prefix /usr --repackage "${pkgdir}/usr"
         install -D -m 644 "${pkgdir}/usr/share/${pkgname}/defaults/license.txt" "${pkgdir}/usr/share/licenses/${pkgname}/license.txt"
 }
