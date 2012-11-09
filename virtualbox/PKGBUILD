@@ -14,7 +14,7 @@ pkgbase=virtualbox
 pkgname=('virtualbox' 'virtualbox-ext-oracle' 'virtualbox-guest-additions')
 pkgver=4.2.4
 _build=81684
-pkgrel=1
+pkgrel=2
 arch=('i686' 'x86_64')
 url='http://virtualbox.org/'
 license=('GPL2' 'custom:PUEL')
@@ -37,7 +37,7 @@ source=("VirtualBox-${pkgver}-${_build}-Linux_${_sarch}.run::http://download.vir
 sha256sums=('4dcd1609dc26c978e7d61e52ae166005e2220acaed159ad5af24c14c3051d51b'
             '62078e057a4ab56aec5ac086746522b3d94787333d0444169471fa5152c609ed'
             '3d7d909a0fe9ac5ffcca6afdd4142b88bad116d2ffed6e95588dbfbcf00ca5e9'
-            '280663dd9dc7d2e327116fdac24301bd890e6a5ddb6e835d1b51b180a1477205'
+            'f4182fa7c3f109aefb7da84f16bc40f34c46eb768144e7ab373b9311c41f175b'
             '71740893a5f226f9d9fcc607ab9d39b7de816b2759625b34da19162bc7e579ff'
             '12dbba3b59991f2b68cddeeeda20236aeff63e11b7e2d1b08d9d6a82225f6651'
             'e6e875ef186578b53106d7f6af48e426cdaf1b4e86834f01696b8ef1c685787f'
@@ -97,21 +97,24 @@ package_virtualbox() {
   sed -i -e 's,sudo /etc/init.d/vboxdrv setup,/usr/bin/vboxsetup setup,g' \
     "${pkgdir}/${_installdir}/VBox.sh"
   
-  # Install vboxdrv initscript
+  # Install vboxdrv configuration
   install -D -m 0644 "${srcdir}/vboxdrv.conf" "${pkgdir}/etc/conf.d/vboxdrv"
-  install -D -m 0644 "${srcdir}/virtualbox.conf" "${pkgdir}/etc/modules-load.d/virtualbox.conf"  
-
-  # Install vboxweb initscript
+  
+  # Install vboxweb configuration
   install -D -m 0644 "${srcdir}/vboxweb.conf" "${pkgdir}/etc/conf.d/vboxweb"
+  
+  # Install systemd units
   install -D -m 0644 "${srcdir}/vboxweb.service" "${pkgdir}/usr/lib/systemd/system/vboxweb.service"
   install -D -m 0644 "${srcdir}/vboxusb.service" "${pkgdir}/usr/lib/systemd/system/vboxusb.service"
 
   # Install udev rules
-  install -D -m 0644 "${srcdir}/10-vboxdrv.rules" "${pkgdir}/lib/udev/rules.d/10-vboxdrv.rules"
-  ln -s "${_installdir}/VBoxCreateUSBNode.sh" "${pkgdir}/lib/udev/VBoxCreateUSBNode.sh"
+  install -D -m 0644 "${srcdir}/10-vboxdrv.rules" "${pkgdir}/usr/lib/udev/rules.d/10-vboxdrv.rules"
+  install -d -m 0755 "${pkgdir}/usr/share/virtualbox"
+  ln -s "${_installdir}/VBoxCreateUSBNode.sh" "${pkgdir}/usr/share/virtualbox/VBoxCreateUSBNode.sh"
   
   # Install setup script for modules and usb devices
   install -D -m 0755 "${srcdir}/vboxsetup.sh" "${pkgdir}/usr/bin/vboxsetup"
+  install -D -m 0644 "${srcdir}/virtualbox.conf" "${pkgdir}/etc/modules-load.d/virtualbox.conf"  
 
   # Install the SDK
   cd "${pkgdir}/${_installdir}/sdk/installer"
