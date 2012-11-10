@@ -10,23 +10,21 @@ pkgname=fretsonfire
 _pkgname=FretsOnFire
 _pkgname2="Frets on Fire"
 pkgver=1.3.110
-pkgrel=1
+pkgrel=2
 pkgdesc="A game of musical skill where you play guitar with the keyboard as accurately as possible"
 url="http://fretsonfire.sourceforge.net/"
 arch=('any')
 license=('GPL')
-depends=('python-pygame' 'python-opengl' 'pil' 'python-numpy')
+depends=('python-pygame' 'python-opengl' 'python2-imaging' 'python-numpy')
 optdepends=('glew: Used for render-to-texture support' 
             'pyogg: Used for streaming OGG files from the disk'
             'vorbis-tools: Used to import Guitar Hero files')
 categories=('games')
 [ "$CARCH" = "i686" ] && optdepends[3]='psyco: Used for speed optimization'
 source=(http://downloads.sourceforge.net/$pkgname/$_pkgname-$pkgver.tar.gz
-        "$pkgname.desktop::http://projects.archlinux.org/svntogit/community.git/plain/trunk/fretsonfire.desktop?h=packages/fretsonfire"
-        "$pkgname.png::http://projects.archlinux.org/svntogit/community.git/plain/trunk/fretsonfire.png?h=packages/fretsonfire")
+        https://aur.archlinux.org/packages/fr/fretsonfire/fretsonfire.tar.gz)
 md5sums=('daa7e23ebc8ed5bc78aa5e9f4ca3471e'
-         'e792e7dfe01775c0034781393c457696'
-         '66668cad0211bf4e6ab1bd5efa8f65bf')
+         '5038d592d766350a5dc593794b079230')
 
 package() {
   cd $srcdir/"$_pkgname2"-$pkgver
@@ -57,6 +55,6 @@ package() {
   chmod +x $pkgdir/usr/bin/$pkgname
 
   # Desktop integration.
-  install -Dm 644 $srcdir/$pkgname.desktop $pkgdir/usr/share/applications/$pkgname.desktop
-  install -Dm 644 $srcdir/$pkgname.png $pkgdir/usr/share/pixmaps/$pkgname.png
+  install -Dm 644 $srcdir/$pkgname/$pkgname.desktop $pkgdir/usr/share/applications/$pkgname.desktop
+  install -Dm 644 $srcdir/$pkgname/$pkgname.png $pkgdir/usr/share/pixmaps/$pkgname.png
 }
