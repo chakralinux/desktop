@@ -6,7 +6,7 @@
 pkgname=cegui
 _pkgname=CEGUI
 pkgver=0.7.7
-pkgrel=1
+pkgrel=2
 pkgdesc="A free library providing windowing and widgets for graphics APIs/engines."
 arch=('i686' 'x86_64')
 url="http://crayzedsgui.sourceforge.net"
@@ -19,6 +19,9 @@ md5sums=('8b83577f86eaa1581765dd155c7c8f24')
 
 build() {
   cd "${srcdir}/${_pkgname}-${pkgver}"
+  
+  # Typo fixed in Irrlicht 1.8.0, whereas CEGUI 0.7.7 was based on Irrlicht 1.7.x.
+  sed -e "s#texureBlend#textureBlend#" -i cegui/src/RendererModules/Irrlicht/CEGUIIrrlichtGeometryBuffer.cpp
 
   ./bootstrap
   ./configure \

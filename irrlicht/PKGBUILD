@@ -1,0 +1,50 @@
+#
+# Games Packages for Chakra, part of chakra-project.org
+#
+# Maintainer: Adrian Chaves Fernandez (Gallaecio) <adriyetichaves@gmail.com>
+
+pkgname=irrlicht
+pkgver=1.8.0
+verpfx=${pkgver:0:(-2)}
+pkgrel=1
+pkgdesc="High performance realtime 3D graphics engine."
+arch=('i686' 'x86_64')
+url="http://irrlicht.sourceforge.net/"
+license=('ZLIB')
+depends=('bzip2' 'freeglut' 'libgl' 'libjpeg' 'libpng' 'zlib')
+provides=('irrlicht')
+conflicts=('irrlicht-svn')
+source=("http://downloads.sourceforge.net/irrlicht/irrlicht-1.8.zip"
+        "include-config.diff"
+        "makefile-systemlibs.diff")
+md5sums=('d06329d8f466658caaf4838ba349e393'
+         '7ff49d8ddc50deac316f4e2141828f31'
+         '2385b8b5ed3bf9588b2f5db9af3f4788')
+ 
+build() {
+  # Patches.
+  patch -uN $srcdir/$pkgname-$verpfx/include/IrrCompileConfig.h $srcdir/include-config.diff
+  patch -uN $srcdir/$pkgname-$verpfx/source/Irrlicht/Makefile $srcdir/makefile-systemlibs.diff
+
+  cd $srcdir/$pkgname-$verpfx/source/Irrlicht
+  sed -i "/^INSTALL_DIR/s:=.*:=$pkgdir/usr/lib:" \
+     Makefile
+
+  # Compilation.
+  make sharedlib NDEBUG=1
+}
+ 
+package() {
+  cd $srcdir/$pkgname-$verpfx/source/Irrlicht
+
+  make install
+ 
+  install -d $pkgdir/usr/share/licenses/$pkgname \
+             $pkgdir/usr/share/doc/$pkgname       
+
+  install -m644 $srcdir/$pkgname-$verpfx/readme.txt $pkgdir/usr/share/licenses/$pkgname
+
+  # Install documentation
+  cp -r $srcdir/$pkgname-$verpfx/doc/* $pkgdir/usr/share/doc/$pkgname
+  rm -f $pkgdir/usr/share/doc/$pkgname/*.txt
+}
