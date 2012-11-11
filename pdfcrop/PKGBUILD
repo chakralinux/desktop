@@ -1,16 +1,17 @@
 # Apps packages for Chakra
 
 pkgname=pdfcrop
-pkgver=1.31
+pkgver=1.38
 pkgrel=1
 pkgdesc="A Perl script that can crop PDF files."
-arch=('any')
+arch=('x86_64')
 url="http://www.ctan.org/tex-archive/help/Catalogue/entries/pdfcrop.html"
 license=('lppl')
 depends=('perl' 'texlive-bin' 'ghostscript')
+conflict=('texlive-core')
 categories=('office')
 source=("http://mirror.ctan.org/support/pdfcrop/pdfcrop.pl")
-md5sums=('312afdc9feb8738d42fe4db687312851')
+md5sums=('568c49d1d9922205645dc7713d7bc812')
 
 build() {
 	cd ${srcdir}/
@@ -20,5 +21,5 @@ build() {
 package() {
   cd ${srcdir}/
 
-  install -Dm755 ${pkgname} ${pkgdir}/usr/bin/${pkgname} || return 1
+  install -Dm755 ${pkgname} ${pkgdir}/usr/bin/${pkgname} 
 }
