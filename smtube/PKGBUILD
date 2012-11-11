@@ -1,0 +1,26 @@
+#
+# Apps Packages for Chakra, part of chakra-project.org
+#
+# Maintainer:  Adrián Chaves Fernández (Gallaecio) <adriyetichaves@gmail.com>
+# Contributor: redzion simobrinci@gmail.com
+
+pkgname=smtube
+pkgver=1.2.1
+pkgrel=1
+pkgdesc="Search and download videos from YouTube"
+arch=('i686' 'x86_64')
+url="http://smplayer.sourceforge.net"
+license=('GPL')
+depends=('smplayer')
+source=("http://downloads.sourceforge.net/smplayer/$pkgname-$pkgver.tar.bz2")
+md5sums=('04eab6c1034670bf4269eb1a3eb110ef')
+
+build() {
+  cd "$srcdir/$pkgname-$pkgver"
+  make PREFIX="/usr"
+}
+
+package() {
+  cd "$srcdir/$pkgname-$pkgver"
+  make PREFIX="/usr" DESTDIR="$pkgdir" install
+}
