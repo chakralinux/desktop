@@ -2,43 +2,45 @@
 # Apps Packages for Chakra, part of chakra-project.org
 #
 # Maintainer: Adrián Chaves Fernández (Gallaecio) <adriyetichaves gmail.com>
-# Contributor: Julien Humbert <julroy67 at gmail dot com>
-# Contributor: Sergej Pupykin <pupykin.s+arch at gmail dot com>
-# Contributor: Timm Preetz <timm at preetz dot us>
-# Contributor: Michael 'manveru' Fellinger <m.fellinger at gmail dot com>
-# Contributor: Dave Pretty <david dot pretty at gmail dot com>
 
 pkgname=anki
-pkgver=1.2.11
-pkgrel=2
+pkgver=2.0.3
+pkgrel=1
 pkgdesc='Helps you remember facts (like words/phrases in a foreign language) efficiently.'
 url='http://ankisrs.net/'
-license=(GPL3)
-arch=('any')
-screenshot="http://ankisrs.net/shots/sync.png"
-depends=('beautiful-soup' 'pyqt' 'python-pysqlite' 'python-simplejson' 'python-sqlalchemy')
+license=('GPL3')
+arch=('x86_64')
+categories=('utils')
+screenshot=("http://ankisrs.net/shots/sync.png")
+install='anki.install'
+depends=('beautiful-soup' 'pyqt' 'python-pysqlite' 'python2-simplejson' 'python-sqlalchemy')
 optdepends=('python-matplotlib: show graphs.'
 	    'sox: audio recording.'
 	    'pyaudio: audio recording.')
-makedepends=('desktop-file-utils' 'setuptools')
-source=("http://anki.googlecode.com/files/$pkgname-$pkgver.tgz")
-md5sums=('dcd43787bed2dbe63ffb6d153ee9dbe5')
-categories=('utils')
+source=("http://ankisrs.net/download/mirror/$pkgname-$pkgver.tgz")
+md5sums=('72791110c382e1dc65e944eaac51a2a0')
+
+build() {
+  cd $srcdir/anki-$pkgver
+  sed -i 's|#!/usr/bin/env python|#!/usr/bin/env python2|' anki
+  rm -f anki.bat
+}
 
 package() {
   cd "${srcdir}/${pkgname}-${pkgver}"
 
-  export PYTHONPATH="${srcdir}/${pkgname}-${pkgver}/libanki"
-  
-  (
-    cd libanki \
-    && python2 setup.py install --root "${pkgdir}"
-  )
-  python2 setup.py install --root "${pkgdir}"
+  mkdir -p $pkgdir/usr/{bin,share/{anki,pixmaps,applications,man/man1}}
+  cp -av * $pkgdir/usr/share/anki/
   
   # Desktop integration. KDE needs Qt in Categories
   desktop-file-install --dir "${pkgdir}/usr/share/applications" \
                        --add-category='Qt' \
                        ${pkgname}.desktop
-  install -D -m 644 icons/${pkgname}.png "${pkgdir}/usr/share/pixmaps/${pkgname}.png"
+  cd $pkgdir/usr/share/anki && (
+    mv anki ../../bin/
+    mv anki.xpm anki.png ../pixmaps/
+    mv anki.desktop ../applications/
+    mv anki.1 ../man/man1/
+  )
 }
+
