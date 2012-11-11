@@ -1,0 +1,27 @@
+#
+# Apps Packages for Chakra, part of chakra-project.org
+#
+# Maintainer:  Adrián Chaves Fernández (Gallaecio) <adriyetichaves@gmail.com>
+# Contributor: Anthony T. Brown <brown dot anthony dot t at gmail dot com>
+# Contributor: Renato Garcia <fgar.renatoATgmailDOTcom>
+
+pkgname=trash-cli
+pkgver=0.12.9.14
+pkgrel=1
+pkgdesc="Command line trashcan (recycle bin) interface"
+arch=('i686' 'x86_64')
+url="http://pypi.python.org/pypi/trash-cli/"
+license=('GPL')
+depends=('python2' 'python2-unipath>=0.2.1' 'python-distribute')
+source=(http://pypi.python.org/packages/source/t/${pkgname}/${pkgname}-${pkgver}.tar.gz)
+md5sums=('79135954bbe5d0c806d298c38e3e0527')
+
+build() {
+  cd "${srcdir}/${pkgname}-${pkgver}"
+  python2 setup.py build
+}
+
+package(){
+  cd "${srcdir}/${pkgname}-${pkgver}"
+  python2 setup.py install --root=${pkgdir}
+}
