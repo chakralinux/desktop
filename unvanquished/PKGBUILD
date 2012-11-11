@@ -1,0 +1,45 @@
+#
+# Games Packages for Chakra, part of chakra-project.org
+#
+# Maintainer:  Adrian Chaves Fernandez (Gallaecio) <adriyetichaves@gmail.com>
+# Contributor: Viech
+# Contributor: Martin F. Schumann <mfs@mfs.name>
+
+pkgname=unvanquished
+_pkgname=Unvanquished
+pkgver=0.9.0
+pkgrel=1
+pkgdesc="A team-based fps/rts hybrid game which pits aliens against humans"
+arch=('x86_64' 'i686')
+url="http://www.unvanquished.net"
+license=('GPL3')
+depends=('curl' 'freetype2' 'glew' 'gmp' 'libjpeg-turbo' 'ncurses' 'libogg' 'libpng' 'sdl' 'libvorbis' 'zlib' 'libwebp>=0.2.0' 'libtheora' 'nettle' 'speex' 'xvidcore' 'openal' 'xdg-utils' 'desktop-file-utils' 'shared-mime-info' 'hicolor-icon-theme' 'unvanquished-data')
+makedepends=('git' 'cmake')
+provides=('unvanquished')
+conflicts=('unvanquished-git')
+options=('emptydirs')
+source=("https://github.com/${_pkgname}/${_pkgname}/archive/v${pkgver}.tar.gz")
+md5sums=('64571cd06c475242f3c460d3902328e3')
+
+build() {
+    cd ${srcdir}/${_pkgname}-${pkgver}
+    
+    sed -e "s#$_pkgname#$pkgname#g" -i CMakeLists.txt
+    
+    mkdir -p build && cd build
+    cmake \
+        -DCMAKE_INSTALL_PREFIX=/usr/share \
+        ..
+    make
+}
+
+package() {
+    cd ${srcdir}/${_pkgname}-${pkgver}/build
+    make DESTDIR=${pkgdir} install
+    
+    install -d $pkgdir/usr/bin
+    echo "#!/bin/bash"               > $pkgdir/usr/bin/$pkgname
+    echo "cd /usr/share/$pkgname"   >> $pkgdir/usr/bin/$pkgname
+    echo "./daemon $@"              >> $pkgdir/usr/bin/$pkgname
+    chmod +x $pkgdir/usr/bin/$pkgname
+}
