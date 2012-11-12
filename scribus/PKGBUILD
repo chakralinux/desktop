@@ -1,17 +1,13 @@
 #
 # Apps Packages for Chakra, part of chakra-project.org
 #
-# maintainer (i686): Phil Miller <philm[at]chakra-project[dog]org>
-# maintainer (x86_64): Manuel Tortosa <manutortosa[at]chakra-project[dot]org>
-
-# include global config
-source ../_buildscripts/${current_repo}-${_arch}-cfg.conf
+# maintainer abveritas@chakra-project.org
 
 pkgname=scribus
-pkgver=1.4.0
-pkgrel=1
+pkgver=1.4.1
+pkgrel=2
 pkgdesc="A desktop publishing program"
-arch=('i686' 'x86_64')
+arch=('x86_64')
 url="http://www.scribus.net"
 license=('GPL')
 install=scribus.install
@@ -19,16 +15,16 @@ depends=('libcups' 'lcms' 'qt' 'ghostscript' \
          'libart-lgpl' 'python2' 'libxml2' 'cairo' \
          'desktop-file-utils' 'shared-mime-info' 'ruby')
 makedepends=('cmake')
-categories=('office')
+screenshot=('http://upload.wikimedia.org/wikipedia/commons/f/f4/Scribus-1.3-Linux.png')
 options=(!libtool !makeflags)
-source=(http://sourceforge.net/projects/scribus/files/scribus/${pkgver}/${pkgname}-${pkgver}.tar.bz2)
-sha1sums=('af38413420eaa783d20f2db189aef408be844048')
+source=("http://sourceforge.net/projects/scribus/files/scribus/${pkgver}/${pkgname}-${pkgver}.tar.xz")
+sha1sums=('fb48bc492d79abc2275b1903692defe9b3931adf')
 
 build() {
 	cd ${srcdir}
 	mkdir build
 	cd build
-	cmake ../${pkgname}-${pkgver} \
+	cmake ../Scribus \
 	   -DCMAKE_INSTALL_PREFIX=/usr \
 	   -DCMAKE_BUILD_TYPE=Release \
 	   -DCMAKE_SKIP_RPATH=ON \
@@ -43,8 +39,8 @@ package() {
 
 	# fix icon path in .desktop file
 	sed -i 's|Icon=scribus|Icon=/usr/share/scribus/icons/scribus.png|' \
-	   ${srcdir}/${pkgname}-${pkgver}/scribus.desktop
+	   ${srcdir}/Scribus/scribus.desktop
 
-	install -Dm644 ${srcdir}/${pkgname}-${pkgver}/scribus.desktop \
+	install -Dm644 ${srcdir}/Scribus/scribus.desktop \
 	   ${pkgdir}/usr/share/applications/scribus.desktop
 }
