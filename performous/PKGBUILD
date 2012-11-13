@@ -5,55 +5,34 @@
 
 pkgname=performous
 _pkgname=Performous
-pkgver=0.6.1
+pkgver=0.7.0
 pkgrel=1
-pkgdesc='A free game like Singstar™, Rockband™ or Stepmania™.'
+pkgdesc='A free game like Singstar™, Rockband™ or Stepmania™'
 arch=('i686' 'x86_64')
 url="http://$pkgname.org/"
 license=('GPL2' 'custom: Menu song: CC:BY-SA.')
-depends=('boost' 'sdl' 'jack' 'imagemagick' 'ffmpeg' 'glew' 'libxml++' 'portaudio' 'portmidi'
-         'opencv' 'librsvg' 'libjpeg' 'libpng' 'cairo')
-makedepends=('cmake' 'help2man')
-optdepends=('performous-songs: some songs for Performous.')
+depends=('boost-libs' 'cairo' 'ffmpeg' 'glew' 'imagemagick' 'jack' 'libjpeg' 'libpng' 'librsvg' 'libxml++' 'opencv' 'portaudio' 'portmidi' 'sdl')
+makedepends=('boost' 'cmake' 'help2man' 'tar')
+optdepends=('performous-songs: some songs for Performous')
 changelog=ChangeLog
-source=(http://sourceforge.net/projects/$pkgname/files/$pkgname/$pkgver/$_pkgname-$pkgver-Source.tar.bz2
-        boost-filesystem-v3.patch::https://projects.archlinux.org/svntogit/community.git/plain/trunk/boost-filesystem-v3.patch?h=packages/performous
-        "ffmpeg-0.8.patch::http://performous.git.sourceforge.net/git/gitweb.cgi?p=performous/performous;a=patch;h=18449f6e56451f68b980c8359a4d1dc06f82db1a"
-        png15.patch::https://projects.archlinux.org/svntogit/community.git/plain/trunk/png15.patch?h=packages/performous)
-md5sums=('451a759de77984b5a699e91107fe52e2'
-         'b985ac469c3dd65d8e5bfae1435135fe'
-         'ff0ffa681dfaa09c4f42133a65309bf0'
-         'f622fa6d698d917c92a1a611a5870590')
+source=("http://downloads.sourceforge.net/project/$pkgname/$pkgname/$pkgver/$pkgname-$pkgver.tar.bz2")
+md5sums=('60f3f72b51a630a4aa996484aedb9526')
 
 build() {
-  cd $srcdir/$_pkgname-$pkgver-Source
-  
-  # Fixes.
-  patch -Np1 -i ../boost-filesystem-v3.patch # Build against boost 1.46 and later, upstream (git) now support v3.
-  patch -Np1 -i ../ffmpeg-0.8.patch # Fix for FFMPEG 0.8.
-  patch -Np1 -i ../png15.patch # Fix for PNG 1.5.
-  sed -e "s|#include <glib/gconvert.h>|#include <glib.h>|" -i "game/unicode.cc" # Fix for glib.
-
-  mkdir build && cd build
-
-  # Fix config loading with libxml++:
-  export LDFLAGS=${LDFLAGS/-Wl,--as-needed/}
-
+  cd $srcdir/$pkgname-$pkgver
+  mkdir -p build && cd build
   cmake \
     -DCMAKE_INSTALL_PREFIX=/usr \
-    -DCMAKE_BUILD_TYPE=RelWithDebInfo \
     ..
   make
 }
 
 package() {
-  cd $srcdir/$_pkgname-$pkgver-Source/build
-
+  cd $srcdir/$pkgname-$pkgver/build
   make DESTDIR="$pkgdir" install
 
-  # Licensing information:
-  install -Dm644 $srcdir/$_pkgname-$pkgver-Source/docs/Authors.txt \
-	  $pkgdir/usr/share/licenses/$pkgname/Authors.txt
-  install -Dm644 $srcdir/$_pkgname-$pkgver-Source/docs/License.txt \
-	  $pkgdir/usr/share/licenses/$pkgname/License.txt
+  # Licensing information.
+  cd ..
+  install -Dm644 docs/Authors.txt $pkgdir/usr/share/licenses/$pkgname/Authors.txt
+  install -Dm644 docs/License.txt $pkgdir/usr/share/licenses/$pkgname/License.txt
 }
