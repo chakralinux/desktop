@@ -1,0 +1,38 @@
+# Maintainer: Inkane <0inkane@googlemail.com>
+# Contributor: Aleksey Ksenzov aka KsenZ <aksenzov@gmail.com>
+pkgname=qxneur
+pkgver=20121115
+pkgrel=1
+pkgdesc="Qt frontend for xneur"
+arch=('i686' 'x86_64')
+url="https://gitorious.org/qxneur"
+license=('GPLv2')
+depends=('qt' 'xneur' 'libxmu')
+makedepends=('gcc' 'make' 'cmake' 'git' 'pkgconfig')
+source=("qxneur-${pkgver}.tar.xz")
+md5sums=("7c7e903fcc366a44fce892b0675d8193")
+ 
+__gitroot="git://gitorious.org/~ksenz/qxneur/ksenz-qxneur.git"
+__gitname="ksenz-qxneur"
+ 
+mksource() {
+	git clone ${__gitroot}
+	cd ${__gitname}
+        git archive --prefix="${pkgname}-${pkgver}/" --format=tar HEAD\
+	| xz > "../${pkgname}-${pkgver}.tar.xz"
+	cd ..
+
+	md5sum "${pkgname}-${pkgver}.tar.xz"
+}
+
+package() {
+#build qxneur from git
+    cd $srcdir/${pkgname}-${pkgver}
+    ./configure --prefix=/usr --mode=release || return 1
+    make || return 1
+    install -Dm 755 qxneur $pkgdir/usr/bin/qxneur || return 1
+    install -Dm 644 qxneur_ru.qm $pkgdir/usr/share/qxneur/translations/qxneur_ru.qm || return 1
+    cp -R images $pkgdir/usr/share/qxneur || return 1
+}
+
+
