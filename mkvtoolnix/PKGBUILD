@@ -4,13 +4,13 @@
 # Maintainer: Adrián Chaves Fernández (Gallaecio) <adriyetichaves gmail.com>
 
 pkgname=mkvtoolnix
-pkgver=5.7.0
-pkgrel=1
+pkgver=5.8.0
+pkgrel=2
 pkgdesc="Set of tools to create, edit and inspect Matroska files."
 arch=('i686' 'x86_64')
 license=('GPL')
 url="http://www.bunkus.org/videotools/mkvtoolnix/index.html"
-depends=('flac' 'libmatroska' 'libogg' 'libvorbis' 'qt' 'xdg-utils' 'libebml' 'zlib')
+depends=('flac' 'libmatroska' 'libogg' 'libvorbis' 'qt' 'xdg-utils' 'libebml' 'zlib' 'boost-libs')
 optdepends=('flac: for FLAC support (Free Lossless Audio Codec)'
 'lzo2: for additional compression capabilities'
 'bzip2: for additional compression capabilities'
@@ -20,10 +20,10 @@ makedepends=('gcc>=4.6.0' 'boost>=1.46.0' 'ruby')
 categories=('multimedia')
 install=mkvtoolnix.install
 source=("http://www.bunkus.org/videotools/$pkgname/sources/$pkgname-$pkgver.tar.bz2")
-md5sums=('99ea44be570412dadafe4ccaee0cfe6e')
+sha256sums=('3c9ec7e4c035b82a35850c5ada98a29904edc44a0d1c9b900ed05d56e6274960')
 
 build() {
-  cd $srcdir/$pkgname-$pkgver
+  cd "${srcdir}/${pkgname}-${pkgver}"
   ./configure \
     --enable-qt \
     --prefix=/usr \
@@ -32,8 +32,8 @@ build() {
 }
 
 package () {
-  cd $srcdir/$pkgname-$pkgver
-  rake DESTDIR=$pkgdir install
+  cd "${srcdir}/${pkgname}-${pkgver}"
+  rake DESTDIR="${pkgdir}" install
 
   rm -rf "${pkgdir}"/usr/bin/mkvinfo
   install -Dm755 src/mkvinfo "${pkgdir}"/usr/bin/mkvinfo
