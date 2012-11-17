@@ -10,7 +10,7 @@ source ../_buildscripts/${current_repo}-${_arch}-cfg.conf
 # package info
 #
 pkgname="kdepimlibs"
-arch=('i686' 'x86_64')
+arch=('x86_64')
 pkgver=${_kdever}
 pkgrel=1
 
@@ -20,7 +20,7 @@ license=('GPL' 'LGPL' 'FDL')
 
 install=${pkgname}.install
 options=('docs' '!splithdr' 'splitdbg' 'log')
-depends=("kdelibs>=${_kdever}" 'akonadi>=1.7.2' 'libical' 'gpgme' 'prison')
+depends=("kdelibs>=${_kdever}" 'akonadi>=1.7.2' 'libical' 'gpgme' 'prison' 'qjson')
 makedepends=('pkg-config' 'cmake' 'automoc4' 'boost' 'cyrus-sasl' 'openldap' 'prison' 'docbook-xsl')
 
 groups=("kde" "kde-uninstall" "kde-minimal")
@@ -43,10 +43,10 @@ build() {
 		-DCMAKE_SKIP_RPATH=ON \
 		-DCMAKE_{SHARED,MODULE,EXE}_LINKER_FLAGS='-Wl,--no-undefined -Wl,--as-needed'
 
-	make || return 1
+	make
 }
 
 package() {
 	cd ${srcdir}/build
-	make DESTDIR=${pkgdir} install || return 1
+	make DESTDIR=${pkgdir} install
 }
