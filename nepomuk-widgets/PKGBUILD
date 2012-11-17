@@ -6,15 +6,15 @@
 # include global config
 source ../_buildscripts/${current_repo}-${_arch}-cfg.conf
 
-pkgname="nepomuk-core"    
+pkgname="nepomuk-widgets"    
 arch=('x86_64')
 pkgver=${_kdever}
 pkgrel=1
-pkgdesc="The core Nepomuk system"
+pkgdesc="Widgets for Nepomuk"
 url="http://www.kde.org"
 license=('GPL' 'LGPL' 'FDL')
 options=('docs' '!splithdr' 'splitdbg' 'log')
-depends=("kdelibs>=${_kdever}" 'poppler-qt')
+depends=("kdelibs>=${_kdever}" "nepomuk-core>=${kdever}")
 makedepends=('pkg-config' 'cmake' 'automoc4' 'doxygen')
 
 source=($_mirror/${pkgname}-$_kdever.tar.xz)
