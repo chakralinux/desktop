@@ -6,16 +6,13 @@
 # include global config
 source ../_buildscripts/${current_repo}-${_arch}-cfg.conf
 
-#
-# package info
-#
 pkgname=kdebindings-kross-interpreters
 _pkgname=kross-interpreters
 pkgver=${_kdever}
 pkgrel=1
 pkgdesc="KDE interpreters for Kross"
 url="http://kde.org/"
-arch=('i686' 'x86_64')
+arch=('x86_64')
 license=('GPL' 'LGPL' 'FDL')
 depends=("kdebindings-pykde4>=${_kdever}" "kdebindings-korundum>=${_kdever}")
 makedepends=('cmake' 'automoc4' 'ruby' 'python2' 'java-environment')
@@ -26,18 +23,24 @@ provides=('kross-interpreters')
 options=('docs' '!splithdr' 'splitdbg' 'log')
 
 build() {
-	cd ${srcdir}/${_pkgname}-${pkgver}
+  cd "${srcdir}"
+  mkdir build
+  cd build
 
-	# FIXME; ruby is not compiling atm
-	sed -i -e "s~macro_optional_add_subdirectory(ruby)~~g" CMakeLists.txt
-  
-	cmake . -DCMAKE_BUILD_TYPE=${_build_type} \
-                -DCMAKE_INSTALL_PREFIX=${_installprefix} 
-        make
+  # Temporary (and ugly) fix for OpenJDK-7	
+  export JAVA_HOME=/usr/lib/jvm/java-7-openjdk/ 
+
+  cmake ../kross-interpreters-${pkgver} \
+    -DCMAKE_BUILD_TYPE=Release \
+    -DCMAKE_INSTALL_PREFIX=/usr \
+    -DBUILD_ruby=OFF 
+  make
 }
 
 package() {
-	cd ${srcdir}/${_pkgname}-${pkgver}
-	make DESTDIR=${pkgdir} install || return 1
+        cd ${srcdir}/build/java
+        make DESTDIR=${pkgdir} install
 
+	cd ${srcdir}/build/python
+	make DESTDIR=${pkgdir} install
 }
