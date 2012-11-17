@@ -10,7 +10,7 @@ source ../_buildscripts/${current_repo}-${_arch}-cfg.conf
 # package info
 #
 pkgname="kde-runtime"    
-arch=('i686' 'x86_64')
+arch=('x86_64')
 pkgver=${_kdever}
 pkgrel=1
 pkgdesc="KDE Runtime"
@@ -31,23 +31,17 @@ noextract=(branding.svgz)
 
 source=($_mirror/${pkgname}-$_kdever.tar.xz
 	branding.svgz
-	01_disable_logout_sound.patch
-	FindKactivities.patch)
+	01_disable_logout_sound.patch)
 
 md5sums=(`grep ${pkgname}-$_kdever.tar.xz ../kde-sc.md5 | cut -d" " -f1`
         '68cd8eb57db22c2f2ed554b721253bc2'   #  branding.svgz
-        'a434bf282ee391b2f857184be59a3b6f'   #  01_disable_logout_sound.patch
-        '259d02a6fc6a1e2aa8ade4558250e9e4')  #  FIndKactivities.patch
+        'a434bf282ee391b2f857184be59a3b6f')  #  01_disable_logout_sound.patch
 
-#
-# build function
-#
 build() {
 	cd ${pkgname}-${pkgver}
 
 	msg "applying main patchset ..."
 	patch -Np1 -i ${srcdir}/01_disable_logout_sound.patch
-	#patch -p1 -i ${srcdir}/FindKactivities.patch
  
 	# copy our branding stuff
 	cp -f ${srcdir}/branding.svgz ${srcdir}/${pkgname}-${pkgver}/desktoptheme/oxygen/widgets/
@@ -73,28 +67,7 @@ package() {
 	# put kdesu into the path
 	cp ${pkgdir}/usr/lib/kde4/libexec/kdesu ${pkgdir}/usr/bin/kdesu
 
-	# use transparent panel svg's everywhere
-	for n in default oxygen; do
-		cp -f ${pkgdir}/usr/share/apps/desktoptheme/$n/widgets/panel-background.svgz ${pkgdir}/usr/share/apps/desktoptheme/$n/opaque/widgets/panel-background.svgz
-	done
-
-	# include our patches into the package
-	ls -1 ${startdir}/*.patch &>/dev/null 2>&1
-	if [ "$?" = "0" ]; then
-		warning "incuding patches into package"
-		mkdir -p ${pkgdir}/usr/share/chakra/patches/${pkgname} &>/dev/null
-		for i in ${startdir}/*.patch; do
-			msg "$i"
-			cp $i ${pkgdir}/usr/share/chakra/patches/${pkgname}/ &>/dev/null
-		done
-	else
-		warning "no patches found, skipping to include them into the package..."
-	fi
-	
 	# WORKAROUND, conflict with hicolor-icon-theme
 	rm -rf ${pkgdir}/usr/share/icons/hicolor/index.theme
 	rm -rf ${pkgdir}/usr/share/icons/default.kde4
-
-	# WORKAROUND, conflict with repomuk-core
-	rm -rf ${pkgdir}//usr/lib/libnepomukcommon.so 
 }
