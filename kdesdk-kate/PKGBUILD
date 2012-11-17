@@ -7,15 +7,12 @@
 # include global config
 source ../_buildscripts/${current_repo}-${_arch}-cfg.conf
 
-#
-# package info
-#
 pkgname=('kdesdk-kate')
 _pkgname=kate
 pkgver=${_kdever}
 pkgrel=1
 url="http://kde.org/"
-arch=('i686' 'x86_64')
+arch=('x86_64')
 license=('GPL' 'LGPL' 'FDL')
 pkgdesc="Advanced Text Editor"
 makedepends=("kdelibs>=${_kdever}" 'cmake' 'automoc4' 'docbook-xsl')
@@ -25,8 +22,7 @@ install='kdesdk-kate.install'
 source=("$_mirror/${_pkgname}-$_kdever.tar.xz"
         'pkgbuild-syntax-highlight.patch')
 md5sums=(`grep ${_pkgname}-$_kdever.tar.xz ../kde-sc.md5 | cut -d" " -f1`
-	 'bb189857e6d917ee8f9ecebab38c1b70')
-
+         '8bd4ccaf58c40b8020c37228659f9f21')
 
 options=('docs' '!splithdr' 'splitdbg' 'log')
 

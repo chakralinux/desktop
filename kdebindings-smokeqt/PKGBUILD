@@ -6,9 +6,6 @@
 # include global config
 source ../_buildscripts/${current_repo}-${_arch}-cfg.conf
 
-#
-# package info
-#
 pkgname=kdebindings-smokeqt
 _pkgname=smokeqt
 pkgver=${_kdever}
@@ -29,7 +26,7 @@ build() {
 	cd ${srcdir}/${_pkgname}-${pkgver}
 	cmake . -DCMAKE_BUILD_TYPE=${_build_type} \
                 -DCMAKE_INSTALL_PREFIX=${_installprefix} \
-                -DWITH_Qwt5=OFF
+                -DWITH_Qwt5=OFF 
         make
 }
 
