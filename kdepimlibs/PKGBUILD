@@ -20,7 +20,7 @@ license=('GPL' 'LGPL' 'FDL')
 
 install=${pkgname}.install
 options=('docs' '!splithdr' 'splitdbg' 'log')
-depends=("kdelibs>=${_kdever}" 'akonadi>=1.7.2' 'libical' 'gpgme' 'prison' 'qjson')
+depends=("kdelibs>=${_kdever}" 'akonadi>=1.8.80' 'libical' 'gpgme' 'prison' 'libdtmx' 'qrencode' 'qjson')
 makedepends=('pkg-config' 'cmake' 'automoc4' 'boost' 'cyrus-sasl' 'openldap' 'prison' 'docbook-xsl')
 
 groups=("kde" "kde-uninstall" "kde-minimal")
@@ -28,9 +28,6 @@ groups=("kde" "kde-uninstall" "kde-minimal")
 source=($_mirror/${pkgname}-$_kdever.tar.xz)
 md5sums=(`grep ${pkgname}-$_kdever.tar.xz ../kde-sc.md5 | cut -d" " -f1`)
 
-#
-# build and install
-#
 build() {
 	msg "starting build ..."
 	cd ${srcdir}
