@@ -10,11 +10,8 @@ source ../_buildscripts/${current_repo}-${_arch}-cfg.conf
 # Default wallpaper included in kde-workspace pkg
 _default_wp="Ariya"
 
-#
-# package info
-#
 pkgname="kde-workspace"
-arch=('i686' 'x86_64')
+arch=('x86_64')
 pkgver=${_kdever}
 pkgrel=1
 pkgdesc="KDE Workspace"
@@ -23,7 +20,8 @@ license=('GPL' 'LGPL' 'FDL')
 options=('docs' '!splithdr' 'splitdbg' 'log')
 install=${pkgname}.install
 depends=('polkit-kde-agent' "kdepimlibs>=${_kdever}" "kde-runtime>=${_kdever}" 'qimageblitz' 'mesa' "kactivities>=${_kdever}"
-	    'libxxf86misc' 'libxcomposite' 'libxss' 'lm_sensors' 'libxklavier' 'libxft' 'oxygen-icons' 'xkit' 'libxdamage' 'xorg-utils' 'libxrandr' 'libxres' 'libdmtx' 'libqalculate' 'prison' 'qrencode' "kdepim-runtime>=${_kdever}" "kde-base-artwork>=${_kdever}")
+	 'libxxf86misc' 'libxcomposite' 'xcb-util-image' 'xcb-util-renderutil' 'libxss' 'lm_sensors' 'libxklavier' 'libxft' 'oxygen-icons' 'xkit' 'libxdamage' 
+         'xorg-utils' 'libxrandr' 'libxres' 'libdmtx' 'libqalculate' 'prison' 'qrencode' "kdepim-runtime>=${_kdever}" "kde-base-artwork>=${_kdever}")
 makedepends=('pkgconfig' 'cmake' 'automoc4' 'networkmanager' 'bluez' "kdebindings-pykde4>=${_kdever}"
 	    'oxygen-icons' 'qedje' "kde-runtime>=${_kdever}" 'gpsd' 'samba' 
 	    'libraw1394' 'libdmtx' 'docbook-xsl' 'prison' 'qrencode') #google-gadgets-qt 
@@ -38,8 +36,6 @@ replaces=('guidance-power-manager' 'kdebase-workspace' 'kde-workspace-doc')
 conflicts=('kdebase-workspace' 'powerdevil' 'kcm_tablet' 'guidance-power-manager' 'kde-workspace-doc')
 groups=("kde" "kde-uninstall" "kde-minimal")
 backup=('usr/share/config/kdm/kdmrc'
-        #'etc/pam.d/kde'
-        #'etc/pam.d/kde-np'
         'etc/pam.d/kscreensaver')
 
 
@@ -57,22 +53,14 @@ source=($_mirror/${pkgname}-$_kdever.tar.xz
 
         # core patches
         01_kdm_zsh_profile.patch
-        02_sane_env_and_shutdown_path.patch
         03_plasma_menubutton_branding.patch
 	06_kickoff_default_favourites.patch
 	07_always_show_kickoff_subtext.patch
-	09_enable_start-shutdown-scripts.patch
 
-        # fixes
-        # let KDM wait a big longer for X to start up, fixes problems on some gfx hardware that needs a lot of time to initialize
-        #fix_kdm-increase-xserver-timeout-bnc#462478.patch
 	# restart xserver on logout
 	fix_terminate-server.patch
-	# fix kdm default user for greeter
-	#fix_kdm_configdef.patch
 	# "fix" some sytemsettings modules that need root access
 	fix_root-only-kcms.patch
-        # shutdown-fix.patch
 	appmenu.diff)
 
 md5sums=(`grep ${pkgname}-$_kdever.tar.xz ../kde-sc.md5 | cut -d" " -f1`
@@ -89,38 +77,27 @@ md5sums=(`grep ${pkgname}-$_kdever.tar.xz ../kde-sc.md5 | cut -d" " -f1`
         'c4b5f1b342b3dad38642318ca077daee'  #  kdm.service
 
         '721e97031b62aee8914e8617e86f9235'  #  01_kdm_zsh_profile.patch
-        'e2eb9d270fe0e93901b29256bdedd7e2'  #  02_sane_env_and_shutdown_path.patch
         '8e623bb5608025417ff9ed061e5a03f1'  #  03_plasma_menubutton_branding.patch
         'd4d7d3fc3ac072a8ca848e9c96e517dc'  #  06_kickoff_default_favourites.patch
         '89d96455c6a446ef59b0620d1b8606af'  #  07_always_show_kickoff_subtext.patch
-        '5eb9285268916492012151045bdebd26'  #  09_enable_start-shutdown-scripts.patch
 
-        #'db2d8166f5ea80ecd291deb9c0e2bb71'  #  fix_kdm-increase-xserver-timeout-bnc#462478.patch
         '814350c52c135d6f7bdada1e29223d38'  #  fix_terminate-server.patch
-	#'97a5eb51e6f9d460f0d61bb322a1db5e'  #  fix_kdm_configdef.patch
 	'5f963f80a026f0600edae1b1c70411e5'  #  fix_root-only-kcms.patch
-        'ca3877bf428d13eead45756fa94376b5')  #  appmenu.diff
+        'ca3877bf428d13eead45756fa94376b5') #  appmenu.diff
 
-#
-# build function
-#
 build() {
 	cd ${srcdir}/${pkgname}-${pkgver}
 
 	msg "applying main patchset ..."
 	patch -Np0 -i ${srcdir}/01_kdm_zsh_profile.patch
-	patch -Np0 -i ${srcdir}/02_sane_env_and_shutdown_path.patch
 	patch -Np1 -i ${srcdir}/03_plasma_menubutton_branding.patch
 	patch -Np1 -i ${srcdir}/06_kickoff_default_favourites.patch
 	patch -Np1 -i ${srcdir}/07_always_show_kickoff_subtext.patch
-	patch -Np1 -i ${srcdir}/09_enable_start-shutdown-scripts.patch
 
 	msg "applying fixes ..."
-	#patch -Np0 -i ${srcdir}/fix_kdm-increase-xserver-timeout-bnc#462478.patch
 	patch -p0 -i ${srcdir}/fix_terminate-server.patch
-	#patch -p0 -N -i ${srcdir}/fix_kdm_configdef.patch
         patch -p1 -i ${srcdir}/fix_root-only-kcms.patch
-        patch -p1 -i ${srcdir}/appmenu.diff
+        #patch -p1 -i ${srcdir}/appmenu.diff
 
 	msg "starting workspace build ..."
 	cmake . -DCMAKE_BUILD_TYPE=${_build_type} \
@@ -215,19 +192,6 @@ package() {
 	mkdir -p ${pkgdir}/usr/share/wallpapers
 	cp -rv ${srcdir}/kde-wallpapers-${_kdever}/${_default_wp} ${pkgdir}/usr/share/wallpapers
 
-	# include our patches into the package
-	ls -1 ${startdir}/*.patch &>/dev/null 2>&1
-	if [ "$?" = "0" ]; then
-		warning "incuding patches into package"
-		mkdir -p ${pkgdir}/usr/share/chakra/patches/${pkgname} &>/dev/null
-		for i in ${startdir}/*.patch; do
-			msg "$i"
-			cp $i ${pkgdir}/usr/share/chakra/patches/${pkgname}/ &>/dev/null
-		done
-	else
-		warning "no patches found, skipping to include them into the package..."
-	fi
-	
 	# Adding powerdevil option files
 	mkdir -p ${pkgdir}/usr/include/powerdevil
 	cp -rv ${srcdir}/${pkgname}-${_kdever}/powerdevil/daemon/powerdevilaction.h ${pkgdir}/usr/include/powerdevil
@@ -236,5 +200,4 @@ package() {
 	
 	# Systemd .service file
 	install -D -m644 "${srcdir}"/kdm.service "${pkgdir}"/usr/lib/systemd/system/kdm.service
-
 }
