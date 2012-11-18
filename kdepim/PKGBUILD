@@ -32,7 +32,7 @@ url="http://www.kde.org"
 license=('GPL' 'LGPL' 'FDL')
 options=('!docs' '!splithdr' 'splitdbg' 'log')
 
-makedepends=('pkg-config' 'cmake' 'automoc4' 'boost' "kdelibs>=${_kdever}" "kdepimlibs>=${_kdever}"
+makedepends=('pkg-config' 'cmake' 'automoc4' 'boost' "kdelibs>=${_kdever}" "kdepimlibs>=${_kdever}" "grantlee>=0.3.0"
              "kdepim-runtime>=${_kdever}" 'libxss' "kde-runtime" "libsamplerate" "qrencode" "libdmtx"
 	     "kde-common>=${_kdever}" 'libindicate-qt>=0.2.2' 'docbook-xml' 'dblatex' "nepomuk-widgets>=${_kdever}")
 
@@ -53,7 +53,7 @@ build() {
 
 package_kdepim-common() {
 	pkgdesc="KDE PIM - Common files and libraries"
-	depends=("kdepimlibs>=${_kdever}" 'libxss' "kde-runtime" 'kde-agent'
+	depends=("kdepimlibs>=${_kdever}" 'libxss' "kde-runtime" "kde-common>=${_kdever}"
                  'libxss' 'libindicate-qt>=0.2.2' "kdepim-runtime>=${_pkgver}")
         conflicts=('kdepim-doc')
 	groups=("kde" "kdepim" "kde" "kde-uninstall")
@@ -75,7 +75,7 @@ package_kdepim-common() {
 package_kdepim-akonadiconsole() {
 	pkgdesc="Akonadi console"
 	groups=("kde" "${pkgbase}" "kde-uninstall")
-	depends=("${pkgbase}-common>=${pkgver}")
+	depends=("${pkgbase}-common>=${pkgver}" "nepomuk-widgets>=${_kdever}")
 	install=${pkgbase}.install
 
 	splitdirs="akonadiconsole"
