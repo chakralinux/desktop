@@ -1,27 +1,29 @@
 #
 # Chakra Packages for Chakra, part of chakra-project.org
 #
+# maintainer Fabian Kosmale <0inkane@googlemail.com>
 # maintainer abveritas[at]chakra-project[dot]org>
 
+
 pkgname=clementine
-pkgver=1.1.0
+pkgver=1.1.1
 pkgrel=1
 pkgdesc="A modern music player and library organiser and a port of Amarok 1.4, with some features rewritten to take advantage of Qt4."
 url="http://www.clementine-player.org/"
 license="GPL"
 arch=('x86_64')
 depends=('gstreamer0.10' 'taglib' 'glew' 'liblastfm' 'libgpod' 'libmtp' 'libplist'
-         'hicolor-icon-theme' 'qt' 'libimobiledevice' 'qjson' 'glew' 'qca'
-         'qca-ossl' 'libcdio' 'protobuf')
+         'hicolor-icon-theme' 'qt' 'libimobiledevice' 'qjson' 'glew' 'qca' 'ffmpeg'
+         'qca-ossl' 'libcdio' 'protobuf' 'gstreamer0.10-base-plugins')
 makedepends=('cmake' 'boost' 'mesa')
-optdepends=('gstreamer0.10-base-plugins: for more open formats'
+optdepends=(
             'gstreamer0.10-good-plugins: for use with "Good" plugin libraries'
             'gstreamer0.10-bad-plugins: for use with "Bad" plugin libraries'
             'gstreamer0.10-ugly-plugins: for use with "Ugly" plugin libraries')
 categories=('multimedia')
 screenshot=('http://images.clementine-player.org/screenshots/clementine-1.1-4.png')
 source=("http://clementine-player.googlecode.com/files/${pkgname}-${pkgver}.tar.gz")
-md5sums=('bdf8ed777c65133cfb8cd81d8afc4275')
+md5sums=('28e4afb822388bd337a761db8f86febf')
 install="clementine.install"
 
 build() {
