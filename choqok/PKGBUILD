@@ -1,8 +1,7 @@
 #
 # Chakra Packages for Chakra, part of chakra-project.org
 #
-# maintainer (i686): Phil Miller <philm[at]chakra-project[dog]org>
-# maintainer (x86_64): Manuel Tortosa <manutortosa[at]chakra-project[dot]org>
+# maintainer abveritas[at]chakra-project[dot]org>
 
 pkgname=choqok
 pkgver=1.3
@@ -10,11 +9,12 @@ pkgrel=1
 pkgdesc="A Twitter/identi.ca/laconica client for KDE"
 url="http://choqok.gnufolks.org/"
 license=('GPL')
-arch=('i686' 'x86_64')
+arch=('x86_64')
 depends=('kdebase-runtime' 'qjson' 'qoauth' 'qca-ossl')
 makedepends=('cmake' 'automoc4' 'docbook-xsl')
 optdepends=('kdebase-konqueror: proxy support')
 categories=('communication')
+screenshot=('http://choqok.gnufolks.org/uploads/choqok.png')
 install="${pkgname}.install"
 source=("http://sourceforge.net/projects/choqok/files/Choqok/${pkgname}-${pkgver}.tar.bz2")
 md5sums=('87eea4f2c23467fb021e3e6b794eb37d')
@@ -25,8 +25,7 @@ build() {
   cd build
   cmake ../${pkgname}-${pkgver} \
     -DCMAKE_BUILD_TYPE=Release \
-    -DCMAKE_INSTALL_PREFIX=/usr \
-    -DKWEBKITPART_LIBRARIES=/usr/lib/kde4/
+    -DCMAKE_INSTALL_PREFIX=/usr 
   make
 }
 
