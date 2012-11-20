@@ -10,21 +10,26 @@ pkgname=python2-unipath
 _pkgname=Unipath
 _pkgname2=unipath
 pkgver=0.2.1
-pkgrel=1
+pkgrel=2
 pkgdesc="Python library for calculating pathname and filesystem access"
-arch=('i686' 'x86_64')
+arch=('x86_64')
 depends=('python2')
+conflicts=('python-unipath')
+replaces=('python-unipath')
+provides=('python-unipath')
 url="http://sluggo.scrapping.cc/python/${_pkgname2}/"
 license=('Python')
-source=(http://sluggo.scrapping.cc/python/${_pkgname2}/${_pkgname}-$pkgver.tar.gz)
+source=("http://sluggo.scrapping.cc/python/${_pkgname2}/${_pkgname}-$pkgver.tar.gz")
 md5sums=('da24f0e0d39931df3fc61f2db09d4e57')
 
 build() {
     cd $srcdir/${_pkgname}-$pkgver
+    
     python2 setup.py build
 }
 
 package() {
     cd $srcdir/${_pkgname}-$pkgver
+    
     python2 setup.py install --root=$pkgdir
 }
