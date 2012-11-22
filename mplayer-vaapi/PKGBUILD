@@ -1,20 +1,20 @@
 #
 # Apps Packages for Chakra, part of chakra-project.org
 #
-# contributor (x86_64): Giuseppe Calà <jiveaxe@gmail.com>
+# maintainer abveritas@chakra-project.org
 
 pkgname=mplayer-vaapi
 pkgver=35107
-pkgrel=4
+pkgrel=5
 pkgdesc="A movie player, compiled with vaapi support"
-arch=('i686' 'x86_64')
+arch=('x86_64')
 url="http://gitorious.org/vaapi/mplayer"
 license=('GPL')
 depends=('libxxf86dga' 'libxxf86vm' 'libmad' 'libcdio' 'libxinerama' 'sdl'
          'lame' 'fontconfig' 'libtheora' 'xvidcore' 'libmng' 'libxss' 'mesa'
          'smbclient' 'aalib' 'jack' 'libcaca' 'x264' 'faac' 'faad2'
          'lirc-utils' 'ttf-dejavu' 'libxvmc' 'enca' 'opencore-amr' 'libdca'
-         'a52dec' 'schroedinger' 'mpg123' 'libvpx' 'libpulse' 'fribidi' 'faad2'
+         'a52dec' 'schroedinger' 'mpg123' 'libvpx' 'pulseaudio' 'fribidi' 'faad2'
          'libva' 'desktop-file-utils' 'libbs2b' 'nas')
 optdepends=('libva-driver-intel: video acceleration for Intel graphic cards')
 makedepends=('unzip' 'live-media' 'yasm' 'ladspa' 'git')
@@ -32,7 +32,7 @@ sha256sums=('a6c645625cc2cd6ca48764db302c926049f831e757857ece351b37b674e05e56'
 build() {
   cd "${srcdir}/mplayer-vaapi-${pkgver}"
 
-  patch -d etc -Np0 -i "${srcdir}/tweak-desktop-file.patch"
+  patch -d etc -p0 -i "${srcdir}/tweak-desktop-file.patch"
 
   ./configure --prefix=/usr \
     --enable-runtime-cpudetection \
@@ -54,8 +54,6 @@ build() {
     --enable-vaapi \
     --language=all \
     --confdir=/etc/mplayer
-
-  [[ $CARCH == i686 ]] && sed -i 's|-march=i486|-march=i686|g' config.mak
 
   make
 }
