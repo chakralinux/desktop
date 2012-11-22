@@ -4,10 +4,11 @@
 # maintainer Neo Kolokotronis <tetris4@gmail.com>
 
 pkgname=spideroak
-pkgver=4.7.9948
+pkgver=4.8.0
 pkgrel=1
 pkgdesc="Secure and consolidated free online backup, storage, access, sharing & sync tool for Windows, Mac OS X, and Linux."
 url="https://spideroak.com/"
+arch=('x86_64')
 depends=('openssl' 'qt')
 optdepends=('dbus')
 license=('custom')
@@ -15,17 +16,12 @@ categories=('network')
 screenshot=('https://spideroak.com/static/v0.1/main/images/screenshots/new/view-versions.png')
 options=(!strip)
 install=spideroak.install
-_source_arch="i386"
-[ "$CARCH" = "x86_64" ] && _source_arch="x86_64"  
-source=("spideroak_${pkgver}_${_source_arch}.deb::https://spideroak.com/directdownload?platform=ubuntumaverick&arch=${_source_arch}")
-md5sums=('a35b8da34c7b85a3abc290f12336570b')
-[ "$CARCH" = "i686" ] && md5sums=('9ab7ebadf0b18c812bef40d41530d7c6')
-
-arch=('i686' 'x86_64')
+source=("spideroak_${pkgver}_x86_64.deb::https://spideroak.com/directdownload?platform=ubuntulucid&arch=x86_64")
+md5sums=('2cc1f5a74c670e21d3b89072d7d0fede')
 
 package() {
   cd "${srcdir}"
-  bsdtar -xf "spideroak_${pkgver}_${_source_arch}.deb" data.tar.gz
+  bsdtar -xf "spideroak_${pkgver}_x86_64.deb" data.tar.gz
   bsdtar -xf data.tar.gz
   rm data.tar.gz
   mv {usr,etc} "${pkgdir}"
