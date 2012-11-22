@@ -4,6 +4,7 @@
 # maintainer Neo Kolokotronis <tetris4@gmail.com>
 
 pkgname=spideroak
+_PkgName=SpiderOak
 pkgver=4.8.0
 pkgrel=1
 pkgdesc="Secure and consolidated free online backup, storage, access, sharing & sync tool for Windows, Mac OS X, and Linux."
@@ -16,14 +17,36 @@ categories=('network')
 screenshot=('https://spideroak.com/static/v0.1/main/images/screenshots/new/view-versions.png')
 options=(!strip)
 install=spideroak.install
-source=("spideroak_${pkgver}_x86_64.deb::https://spideroak.com/directdownload?platform=ubuntulucid&arch=x86_64")
-md5sums=('2cc1f5a74c670e21d3b89072d7d0fede')
+source=("${pkgname}_${pkgver}_x86_64.rpm"::"https://spideroak.com/directdownload?platform=fedora&arch=x86_64"
+        "terms.txt")
+md5sums=('8e9af91191fb865b644f1f9fc74b6e94'
+         '9338d3464e8ce876d7222099c22a205b')
 
 package() {
-  cd "${srcdir}"
-  bsdtar -xf "spideroak_${pkgver}_x86_64.deb" data.tar.gz
-  bsdtar -xf data.tar.gz
-  rm data.tar.gz
-  mv {usr,etc} "${pkgdir}"
-  msg "Done"
+    # install config files
+    install -Dm644 $srcdir/etc/dbus-1/system.d/$_PkgName.dbus.conf $pkgdir/etc/dbus-1/system.d/$pkgname.dbus.conf
+
+    # install app in /opt
+    install -d $pkgdir/opt/
+    cp -r $srcdir/opt/* $pkgdir/opt/
+
+    # install start script file
+    install -Dm755 $srcdir/usr/bin/SpiderOak $pkgdir/usr/bin/SpiderOak
+
+    # install desktop and pixmap files
+    install -Dm644 $srcdir/usr/share/applications/$_PkgName.desktop $pkgdir/usr/share/applications/$pkgname.desktop
+    install -Dm644 $srcdir/usr/share/pixmaps/$_PkgName.png $pkgdir/usr/share/pixmaps/$pkgname.png
+
+    # fix desktop file
+    sed -i \
+	-e "/Encoding=UTF-8/d" \
+	-e "/^Name=/s: Backup::" \
+	-e "/^Comment=/s:$_PkgName ::" \
+	-e "/^Categories=/s:$_PkgName;::" \
+	-e "/^Icon=/s:=.*$:=$pkgname:" \
+	-e "/^Exec=/s:=.*$:=$_PkgName:" \
+	$pkgdir/usr/share/applications/$pkgname.desktop
+
+    # install custom license file
+    install -Dm644 terms.txt $pkgdir/usr/share/licenses/$pkgname/terms.txt
 }
