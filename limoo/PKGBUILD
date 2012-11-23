@@ -1,0 +1,34 @@
+#
+# Apps Packages for Chakra, part of chakra-project.org
+#
+# maintainer: abveritas@chakra-project.org
+# contributor FranzMari <framarinucci@gmail.com>
+
+pkgname=limoo
+pkgver=1.3
+pkgrel=1
+pkgdesc="An image viewer using Qt, QML, C++."
+url="http://getsilicon.org/limoo/"
+arch=('x86_64')
+license=('GPLv3')
+screenshot="http://kde-apps.org/CONTENT/content-pre1/149806-1.jpg"
+depends=('qt' 'exiv2')
+makedepends=('cmake')
+source=("http://getsilicon.org/download/${pkgname}/${pkgname}-src-${pkgver}.tar.gz")
+md5sums=('27dc9d0b8f89a9aea31c9dff1e2f27c4')
+
+build() {
+  cd "${srcdir}/${pkgname}-src-${pkgver}"
+  
+  cmake . -DCMAKE_INSTALL_PREFIX=/usr \
+          -DCMAKE_BUILD_TYPE=release   
+  make
+}
+
+package() {
+  cd "${srcdir}/${pkgname}-src-${pkgver}"
+  
+  make DESTDIR="${pkgdir}" install
+}
+
+
