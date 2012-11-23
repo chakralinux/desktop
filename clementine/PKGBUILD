@@ -1,20 +1,20 @@
 #
-# Chakra Packages for Chakra, part of chakra-project.org
+# Apps Packages for Chakra, part of chakra-project.org
 #
 # maintainer abveritas@chakra-project.org
 # contributor (x86_64): Giuseppe Calà <jiveaxe@gmail.com>
 
 pkgname=clementine
 pkgver=1.1.1
-pkgrel=1
+pkgrel=2
 pkgdesc="A modern music player and library organiser and a port of Amarok 1.4, with some features rewritten to take advantage of Qt4."
 url="http://www.clementine-player.org/"
 screenshot="http://images.clementine-player.org/screenshots/clementine-1.0-3.png"
 license="GPL"
 arch=('x86_64')
 install="${pkgname}.install"
-depends=('gstreamer0.10' 'taglib' 'glew' 'liblastfm' 'libgpod' 'libmtp' 'libplist' 'hicolor-icon-theme' 'qt' 'libimobiledevice' 'qjson' 'glew' 'protobuf')
-makedepends=('cmake' 'boost' 'gdk-pixbuf2')
+depends=('gstreamer0.10-base' 'taglib' 'glew' 'liblastfm' 'libgpod' 'libmtp' 'libplist' 'hicolor-icon-theme' 'qt' 'libimobiledevice' 'qjson' 'glew' 'protobuf' 'libcdio' 'qca' 'qca-ossl' 'chromaprint' 'libindicate-qt')
+makedepends=('cmake' 'boost' 'mesa')
 optdepends=('gstreamer0.10-base-plugins: for more open formats'
             'gstreamer0.10-good-plugins: for use with "Good" plugin libraries'
             'gstreamer0.10-bad-plugins: for use with "Bad" plugin libraries'
@@ -29,7 +29,6 @@ build() {
   mkdir -p build && cd build
   cmake ../ -DCMAKE_INSTALL_PREFIX=/usr \
             -DCMAKE_BUILD_TYPE=Release \
-            -DENABLE_GIO=OFF \
             -DSTATIC_SQLITE=OFF
 
   make
@@ -39,5 +38,3 @@ package() {
   cd "${srcdir}/${pkgname}-${pkgver}/build"
   make install DESTDIR="${pkgdir}"
 }
-
-# vim:set ts=2 sw=2 et:
