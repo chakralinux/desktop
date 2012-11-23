@@ -5,13 +5,13 @@
 # contributor (x86_64): Giuseppe Calà <jiveaxe@gmail.com>
 
 pkgname=clementine
-pkgver=1.0.1.1
-pkgrel=2
+pkgver=1.1.1
+pkgrel=1
 pkgdesc="A modern music player and library organiser and a port of Amarok 1.4, with some features rewritten to take advantage of Qt4."
 url="http://www.clementine-player.org/"
 screenshot="http://images.clementine-player.org/screenshots/clementine-1.0-3.png"
 license="GPL"
-arch=('i686' 'x86_64')
+arch=('x86_64')
 install="${pkgname}.install"
 depends=('gstreamer0.10' 'taglib' 'glew' 'liblastfm' 'libgpod' 'libmtp' 'libplist' 'hicolor-icon-theme' 'qt' 'libimobiledevice' 'qjson' 'glew' 'protobuf')
 makedepends=('cmake' 'boost' 'gdk-pixbuf2')
@@ -20,29 +20,24 @@ optdepends=('gstreamer0.10-base-plugins: for more open formats'
             'gstreamer0.10-bad-plugins: for use with "Bad" plugin libraries'
             'gstreamer0.10-ugly-plugins: for use with "Ugly" plugin libraries')
 categories=('multimedia')
-source=("http://chakra-linux.org/sources/clementine/clementine-player.tar.xz"
-        "plasmarunner.patch")
-sha1sums=('bea8b626c5ca94279dddc2372ab68c7aaa3a5fc2'
-          '895a1e4679cdea2970d89b35ebfe805c0d59a654')
+source=("http://clementine-player.googlecode.com/files/${pkgname}-${pkgver}.tar.gz")
+sha1sums=('f8d3e9c8f54ac488323ab5a629c9accbe256378e')
 
 build() {
-  cd "${srcdir}/${pkgname}-player"
-  
-  # plasmarunner is buggy and will not be supported by clementine any more
-  # http://code.google.com/p/clementine-player/source/detail?r=5b3071e5f144
-  patch -p1 -i "${srcdir}/plasmarunner.patch"
+  cd "${srcdir}/${pkgname}-${pkgver}"
 
   mkdir -p build && cd build
   cmake ../ -DCMAKE_INSTALL_PREFIX=/usr \
             -DCMAKE_BUILD_TYPE=Release \
-            -DENABLE_GIO=OFF
+            -DENABLE_GIO=OFF \
+            -DSTATIC_SQLITE=OFF
+
   make
 }
 
 package() {
-  cd "${srcdir}/${pkgname}-player/build"
-   
-  make DESTDIR="${pkgdir}" install
+  cd "${srcdir}/${pkgname}-${pkgver}/build"
+  make install DESTDIR="${pkgdir}"
 }
 
 # vim:set ts=2 sw=2 et:
