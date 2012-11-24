@@ -5,7 +5,7 @@
 
 pkgname=flightgear
 _pkgname=FlightGear
-pkgver=2.6.0
+pkgver=2.8.0
 pkgrel=2
 pkgdesc="An open-source, multi-platform flight simulator."
 arch=(i686 x86_64)
@@ -17,7 +17,7 @@ url="http://www.flightgear.org"
 screenshot="http://www.flightgear.org/wp-content/gallery/gallery-v2-6/737-300_egkk_hom.jpg"
 categories=('games')
 source=(http://ftp.icm.edu.pl/packages/$pkgname/Source/$pkgname-$pkgver.tar.bz2)
-sha256sums=('1554efbe20ad5002ad169225605ae95fca46d381bdff03dd624d92cf24b1a40f')
+sha256sums=('bfda4f269d90128f4e4cb828de692a49dc0b93db41fe20a2b5272f3f271f3a01')
 
 build() {
   cd $srcdir/$pkgname-$pkgver
@@ -46,6 +46,6 @@ package() {
   
   # Desktop Integration.
   cd .. # From /build
-  install -Dm0644 package/$pkgname.desktop              $pkgdir/usr/share/applications/$pkgname.desktop
-  install -Dm0644 package/RedHat/$pkgname.48.png        $pkgdir/usr/share/icons/$pkgname.png
+  install -Dm0644 package/$pkgname.desktop    $pkgdir/usr/share/applications/$pkgname.desktop
+  install -Dm0644 package/$pkgname.ico        $pkgdir/usr/share/icons/$pkgname.ico
 }
