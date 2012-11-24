@@ -3,21 +3,18 @@
 #
 # maintainer (abveritas[at]chakra-project[dot]org>
 
-# include global config
-source ../_buildscripts/${current_repo}-${_arch}-cfg.conf
-
 pkgbase=avidemux
 pkgname=('avidemux-cli' 'avidemux')
 pkgver=2.6.0
-pkgrel=1
+pkgrel=2
 pkgdesc='Simple video editor for cutting, filtering and encoding tasks.'
-arch=('i686' 'x86_64')
+arch=('x86_64')
 license=('GPL')
 url="http://fixounet.free.fr/avidemux/"
 screenshot="http://upload.wikimedia.org/wikipedia/commons/7/77/Avidemux_Screenshot_Qt.png"
 makedepends=('cmake' 'libxslt' 'qt' 'jack' 'libvorbis' 'sdl' 'libxv'
              'alsa-lib' 'lame' 'xvidcore' 'faad2' 'faac' 'x264' 'libsamplerate' 
-             'opencore-amr' 'yasm' 'mesa' 'libvpx' 'libpulse' 'libva' 'desktop-file-utils')
+             'opencore-amr' 'yasm' 'mesa' 'libvpx' 'pulseaudio' 'libva' 'desktop-file-utils')
 categories=('multimedia')
 options=("!makeflags")
 source=("https://downloads.sourceforge.net/project/avidemux/avidemux/${pkgver}/${pkgbase}_${pkgver}.tar.gz")
@@ -73,7 +70,7 @@ package_avidemux-cli() {
 
 package_avidemux() {
   pkgdesc="A graphical tool to edit video (filter/re-encode/split)"
-  depends=('avidemux-cli' 'qt')
+  depends=('avidemux-cli' 'qt' 'mesa')
 
   cd "${srcdir}/${pkgbase}_${pkgver}/install"
   
