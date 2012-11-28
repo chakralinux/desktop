@@ -1,0 +1,28 @@
+# Apps packages for Chakra
+
+pkgname=kdiff3
+pkgver=0.9.97
+pkgrel=1
+pkgdesc="A KDE file comparator/merge tool"
+arch=('x86_64')
+url="http://kdiff3.sourceforge.net/"
+license=('GPL')
+depends=('kde-runtime')
+makedepends=('cmake' 'automoc4' 'kde-baseapps' 'docbook-xml')
+optdepends=('kdebase-lib: for the plugin')
+install=kdiff3.install
+source=(http://downloads.sourceforge.net/sourceforge/kdiff3/${pkgname}-${pkgver}.tar.gz)
+sha1sums=('1f2828c4b287b905bac64992b46a3e9231319547')
+
+build() {
+  cd "${srcdir}/${pkgname}-${pkgver}"
+
+  mkdir build && cd build
+  cmake .. -DCMAKE_INSTALL_PREFIX=/usr
+  make
+}
+
+package() {
+  cd "${srcdir}/${pkgname}-${pkgver}/build"
+  make DESTDIR="${pkgdir}" install
+}
