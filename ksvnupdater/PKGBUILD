@@ -1,0 +1,28 @@
+# Apps packages for Chakra
+
+pkgname=ksvnupdater
+pkgver=1.2.4
+pkgrel=1
+pkgdesc="ksvnupdater is a utility oriented to KDE translation teams."
+url="http://www.eloihr.net/ksvnupdater"
+license=('GPL')
+arch=('x86_64')
+depends=('qt' 'kdelibs')
+makedepends=('cmake' 'automoc4' 'pology' 'docbook-xsl')
+install=${pkgname}.install
+source=(http://www.eloihr.net/ksvnupdater/files/ksvnupdater-$pkgver.tar.bz2)
+md5sums=('f4230f8bc02ac1b16782f50ed3717e1e')
+
+build() {
+  cd ${srcdir}
+
+  mkdir build && cd build
+
+  cmake -DCMAKE_INSTALL_PREFIX=/usr ${srcdir}/${pkgname}-${pkgver}
+  make
+}
+
+package() {
+  cd ${srcdir}/build
+  make DESTDIR=${pkgdir} install
+}
