@@ -6,25 +6,19 @@
 
 
 pkgname=mendeleydesktop
-pkgver=1.7
+pkgver=1.7.1
 pkgrel=1
 url="http://www.mendeley.com/"
 pkgdesc="The desktop client for managing and sharing research papers."
 license=('custom:mendeley_eula')
 depends=('python2' 'qt')
 categories=('education')
-arch=x86_64
-#_filearch=$CARCH
-#[[ $CARCH = i686 ]] && _filearch=i486
-
+arch=('x86_64')
+screenshot=('http://www.timelordz.com/blog/wp-content/uploads/2010/08/MendeleyClient.png')
 source=("http://download.mendeley.com/linux/$pkgname-$pkgver-linux-$arch.tar.bz2"
         'mendeleydesktop.install')
-md5sums=('ea0c5d223a0c71b836187a2f9ac4a897'
+md5sums=('2ae61cfd704763df589fe9a2cd0a6cd2'
          '16358cd53dc258a72efcaeab5a415217')
-
-#if [[ $CARCH = x86_64 ]]; then
-#	md5sums[0]='1fb073e53ce2d795aa615656c736619e'
-#fi
 
 package() {
     cd "$pkgname-$pkgver-linux-$_arch"
