@@ -13,7 +13,7 @@ source ../_buildscripts/${current_repo}-${_arch}-cfg.conf
 pkgname="kdelibs"
 arch=('x86_64')
 pkgver=${_kdever}
-pkgrel=2
+pkgrel=1
 pkgdesc="KDE Core Libraries"
 url="http://www.kde.org"
 license=('GPL' 'LGPL' 'FDL')
@@ -47,8 +47,7 @@ md5sums=(`grep ${pkgname}-$_kdever.tar.xz ../kde-sc.md5 | cut -d" " -f1`
          'e9ac43de85dc73309ab6c89ebcf5dc50'  # 01_chakra_tag.patch
          'e94450ba5430ea9c1e33bad9ae38ca2d'  # 02_kde_applications_menu.patch
          '53b85403e4dd8f9146933c52ca23243e'  # 03_chakra_menu.path
-         'f442698bae9d4ffb26f6df9457d7fc5a'  # MergeDir.patch
-         '185181db5380b2604b94076c44c7a661')  # save_path_regression.diff
+         'f442698bae9d4ffb26f6df9457d7fc5a')  # MergeDir.patch
         
 #
 # build function
@@ -62,8 +61,6 @@ build() {
 	patch -Np1 -i ${srcdir}/03_chakra_menu.patch
 	# right positioning of applications' entries in kmenu
 	patch -p1 -i ${srcdir}/MergeDir.patch
-	# Issue https://git.reviewboard.kde.org/r/106475/
-	patch -p1 -i "${srcdir}"/save_path_regression.diff
 
         cd ..
 
