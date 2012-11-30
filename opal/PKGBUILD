@@ -4,29 +4,27 @@
 # Maintainer: Adrián Chaves Fernández (Gallaecio) <adriyetichaves@gmail.com>
 
 pkgname=opal
-pkgver=3.10.7
-_pkgver="Stable 7"
-_pkgver2="v3.10 Luyten"
+pkgver=3.10.9
 pkgrel=1
-pkgdesc="Open Phone Abstraction Library."
-arch=('i686' 'x86_64')
+pkgdesc="Open Phone Abstraction Library"
+arch=('x86_64')
 url="http://www.opalvoip.org/"
 license=('MPL')
-depends=('libtheora' 'ptlib' 'silc-toolkit' 'speex' 'x264>=20090416')
+depends=('gsm' 'libtheora' 'ptlib' 'silc-toolkit' 'speex' 'x264')
 makedepends=('ffmpeg')
 changelog=ChangeLog
-source=("http://downloads.sourceforge.net/project/opalvoip/$_pkgver2/$_pkgver/$pkgname-$pkgver.tar.bz2")
-md5sums=('8686bb930668067eefadab115d2ee1c2')
+source=("http://ftp.gnome.org/pub/GNOME/sources/$pkgname/${pkgver%.*}/$pkgname-$pkgver.tar.xz"
+        "$pkgname-ffmpeg.diff")
+md5sums=('bb8eeb28321035663738e4fc8d6eb852'
+         'b3655f313db17dfea44cbabe4cf850f5')
 
 build() {
   cd $srcdir/$pkgname-$pkgver
 
   # Patches.
-  sed "/#include \"..\/common\/platform.h\"/a\
-#include <unistd.h>" \
-    -i plugins/video/H.264/shared/x264wrap.h
+  patch -Np1 -i "${srcdir}/$pkgname-ffmpeg.diff"
 
-  CFLAGS="$CFLAGS -D__STDC_CONSTANT_MACROS" \
+  CXXFLAGS="$CXXFLAGS -fpermissive" \
   ./configure \
     --localstatedir=/var \
     --prefix=/usr \
@@ -37,4 +35,5 @@ build() {
 package() {
   cd $srcdir/$pkgname-$pkgver
   make DESTDIR=$pkgdir install
+  chmod 644 "${pkgdir}/usr/lib/libopal_s.a"
 }
