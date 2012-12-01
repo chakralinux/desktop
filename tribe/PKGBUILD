@@ -7,8 +7,8 @@
 # package info
 #
 pkgname=tribe
-pkgver=2012.11.27
-_rls_notes=20121028
+pkgver=2012.12.01
+_rls_notes=20121205
 pkgrel=1
 _codename=Claire
 pkgdesc="Tribe - Chakra LiveCD Installer"
@@ -22,8 +22,8 @@ options=('!splithdr' '!splitdbg')
 source=("tribe-${pkgver}.tar.xz"
         "http://chakra-linux.org/sources/tribe/RELEASE_NOTES_${_rls_notes}.html"
         'launch-tribe.sh')
-md5sums=('71e508e34ca09ca6f8d3384128370bbf'
-         '62cd5cff4f4e24c1a9654391ac087c25'
+md5sums=('046f6f63b9d5550eab3c5b1c420f8085'
+         'aa353a9d43421b44c544552f0d210d8c'
          'e31855da237a2c8029774831b3c04685')
 
 groups=('kde-uninstall')
@@ -34,9 +34,9 @@ install=tools-tribe.install
 
 mksource() {
 	  rm -vRf ${pkgname}-${pkgver}
-	  git clone git://gitorious.org/chakra/${pkgname}.git ${pkgname}-${pkgver}
+	  #git clone git://gitorious.org/chakra/${pkgname}.git ${pkgname}-${pkgver}
 	  #git clone git://github.com/abveritas/Tribe.git ${pkgname}-${pkgver}
-	  #git clone git://github.com/Inkane/Tribe.git -b expand_rootpwd ${pkgname}-${pkgver}
+	  git clone git://github.com/Inkane/Tribe.git ${pkgname}-${pkgver}
 	  rm -vRf ${pkgname}-${pkgver}/.git
 	  pushd ${pkgname}-${pkgver}
 	  popd
