@@ -1,26 +1,21 @@
-#
 # Apps Packages for Chakra, part of chakra-project.org
-#
 # maintainer abveritas@chakra-project.org
 # contributor nqn1976 @ gmail.com
 
 pkgname=soundkonverter
-pkgver=1.6.3
+pkgver=1.6.4
 pkgrel=1
 pkgdesc="soundKonverter is a frontend to various audio converters"
-arch=('i686' 'x86_64')
+arch=('x86_64')
 url="http://www.kde-apps.org/content/show.php?content=29024"
 license=('GPL')
-depends=('kdemultimedia-common' 'taglib')
+depends=('kde-runtime' 'libkcddb' 'taglib')
 makedepends=('cmake' 'automoc4')
-replaces=('soundKonverter-kde')
-provides=('soundKonverter-kde')
 categories=('multimedia')
 screenshot=('http://kde-apps.org/CONTENT/content-pre2/29024-2.png')
-#source=("https://gitorious.org/soundkonverter/soundkonverter/blobs/raw/6a527f4ea559795b31a93477217c107f40326053/release/soundkonverter-1.2.1.tar.gz")
 source=("http://kde-apps.org/CONTENT/content-files/29024-soundkonverter-${pkgver}.tar.gz")
-md5sums=('f617d9b73937d4576bc21fd359f4964b')
-         
+md5sums=('be01689be4c7e1811c57436ec45d7326')
+
 build() {
   cd "$srcdir"/$pkgname-$pkgver
   cmake . \
@@ -33,4 +28,3 @@ package() {
 	cd "$srcdir"/$pkgname-$pkgver
 	make DESTDIR="$pkgdir" install
 }
- 
