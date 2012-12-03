@@ -5,44 +5,21 @@
 
 pkgname=unvanquished-data
 _pkgname=unvanquished
-pkgver=0.9.0
+pkgver=0.10.0
 pkgrel=1
 pkgdesc="A team-based fps/rts hybrid game which pits aliens against humans (data files)"
 arch=('any')
 url="http://www.unvanquished.net"
 license=('CCPL-by-sa')
 options=('emptydirs')
-source=("http://downloads.sourceforge.net/project/unvanquished/Assets/pak8.pk3"
-        "http://downloads.sourceforge.net/project/unvanquished/Assets/pak7.pk3"
-        "http://downloads.sourceforge.net/project/unvanquished/Assets/pak6.pk3"
-        "http://downloads.sourceforge.net/project/unvanquished/Assets/pak5.pk3"
-        "http://downloads.sourceforge.net/project/unvanquished/Assets/pak4.pk3"
-        "http://downloads.sourceforge.net/project/unvanquished/Assets/pak3.pk3"
-        "http://downloads.sourceforge.net/project/unvanquished/Assets/pak2.pk3"
-        "http://downloads.sourceforge.net/project/unvanquished/Assets/pak1.pk3"
-        "http://downloads.sourceforge.net/project/unvanquished/Assets/pak0.pk3")
-md5sums=('6a03b6033ef6260c02de51c22fcc5c6b'
-         'b2f317bac918e2f84fbab6415158fccf'
-         '6ac698c1680bbac4c40876e0b1849d82'
-         'eebc9c8a485c00539717d4e5ee29b60d'
-         'a9c16f792133d6f997ea96fe0763c7e6'
-         '522bdb41e26b31ba00a7156df65b4b51'
-         '25551e1a43963113bba1ae8fa5cdca89'
-         '14aa78e706ee2f28861650ecc0b716a7'
-         'cae4f88956923ed116612052fa62b717')
-noextract=("pak8.pk3"
-           "pak7.pk3"
-           "pak6.pk3"
-           "pak5.pk3"
-           "pak4.pk3"
-           "pak3.pk3"
-           "pak2.pk3"
-           "pak1.pk3"
-           "pak0.pk3")
 
 package() {
     install -d $pkgdir/usr/share/$_pkgname/main
-    for file in pak{0..8}.pk3; do
-        cp $srcdir/$file $pkgdir/usr/share/$_pkgname/main/$file
+    let limit=${pkgver:2:2}-1
+    for i in $(seq 0 $limit)
+    do
+        file=pak${i}.pk3
+        wget http://downloads.sourceforge.net/project/unvanquished/Assets/${file} \
+        -O $pkgdir/usr/share/$_pkgname/main/$file
     done;
 }
