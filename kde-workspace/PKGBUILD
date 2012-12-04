@@ -13,7 +13,7 @@ _default_wp="Ariya"
 pkgname="kde-workspace"
 arch=('x86_64')
 pkgver=${_kdever}
-pkgrel=2
+pkgrel=1
 pkgdesc="KDE Workspace"
 url="http://www.kde.org"
 license=('GPL' 'LGPL' 'FDL')
@@ -42,7 +42,7 @@ backup=('usr/share/config/kdm/kdmrc'
 source=($_mirror/${pkgname}-$_kdever.tar.xz
 	$_mirror/kde-wallpapers-$_kdever.tar.xz
 	mishaaq-kcm_touchpad-00370b5.tar.gz
-        http://chakra.sourceforge.net/sources/kde-workspace/114856-kcm_tablet-1.1.3.tar.gz
+        http://chakra.sourceforge.net/sources/kde-workspace/114856-wacomtablet-1.3.7-2.tar.gz
         http://chakra.sourceforge.net/sources/kde-workspace/117639-favorites-0.1.tar.bz2
         kde.pam
         kde-np.pam
@@ -65,7 +65,7 @@ source=($_mirror/${pkgname}-$_kdever.tar.xz
 md5sums=(`grep ${pkgname}-$_kdever.tar.xz ../kde-sc.md5 | cut -d" " -f1`
         `grep kde-wallpapers-$_kdever.tar.xz ../kde-sc.md5 | cut -d" " -f1` # kde-wallpapers
         'f355a658d2e9267fdf4e8d8f88038bcf'  # mishaaq-kcm_touchpad-00370b5.tar.gz
-        'd4570491bcf9986d84aeb77c939090a9'  # 114856-kcm_tablet-1.1.3.tar.gz
+        '9d4cc6055b6506583dd3e4ded73d7ea9'  # 114856-wacomtablet-1.3.7-2.tar.gz
         'b60baabccbd302d00923e053db0dc0ae'  # 117639-favorites-0.1.tar.bz2
 
         '5b137f8b00c578ec324e72b455814fd0'  #  kde.pam
@@ -113,9 +113,9 @@ build() {
 		-DCMAKE_{SHARED,MODULE,EXE}_LINKER_FLAGS='-Wl,--no-undefined -Wl,--as-needed'
 
 	msg "starting kcm_tablet build ..."
-	cd ${srcdir}/kcm_tablet-1.1.3
+	cd ${srcdir}/wacomtablet-1.3.7-2
         # Fix desktop to the new layout
-        sed -i -e "s~keyboard-and-mouse~input-devices~g" ${srcdir}/kcm_tablet-1.1.3/src/kcm_tablet.desktop
+        sed -i -e "s~keyboard-and-mouse~input-devices~g" ${srcdir}/wacomtablet-1.3.7-2/src/kcmodule/kcm_wacomtablet.desktop
 	cmake . -DCMAKE_BUILD_TYPE=${_build_type} \
 		-DCMAKE_INSTALL_PREFIX=${_installprefix} \
 		-DCMAKE_{SHARED,MODULE,EXE}_LINKER_FLAGS='-Wl,--no-undefined -Wl,--as-needed'
@@ -137,7 +137,7 @@ package() {
 	cd ${srcdir}/mishaaq-kcm_touchpad-00370b5
 	make DESTDIR=${pkgdir} install
 
-	cd ${srcdir}/kcm_tablet-1.1.3
+	cd ${srcdir}/wacomtablet-1.3.7-2
 	make DESTDIR=${pkgdir} install
 
 	cd ${srcdir}/favorites-0.1
