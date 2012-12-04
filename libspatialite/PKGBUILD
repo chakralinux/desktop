@@ -1,0 +1,27 @@
+# Maintainer: Fabian Kosmale <0inkane@googlemail.com>
+# Contributions from Arch:https://aur.archlinux.org/packages/libspatialite/
+
+pkgname=libspatialite
+pkgver=4.0.0
+pkgrel=1
+pkgdesc="SQLite extension to support spatial data types and operations"
+arch=('x86_64')
+url="https://www.gaia-gis.it/fossil/libspatialite/index"
+license=('MPL')
+depends=('geos' 'proj' 'sqlite3' 'libfreexl')
+options=('!libtool')
+source=("http://www.gaia-gis.it/gaia-sins/$pkgname-$pkgver.tar.gz")
+md5sums=('8040ce4e39913e7d284675c0f15d270d')
+
+build() {
+    cd "$srcdir/$pkgname-$pkgver"
+    # we need to disable geosadvanced, because geos is outdated (needs >=3.3.0)
+    ./configure --prefix=/usr --disable-geosadvanced
+    make
+}
+
+package() {
+    cd "$srcdir/$pkgname-$pkgver"
+    make DESTDIR="$pkgdir/" install
+}
+
