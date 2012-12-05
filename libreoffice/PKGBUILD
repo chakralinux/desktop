@@ -22,9 +22,9 @@ pkgname=('libreoffice-common'
 	'libreoffice-extension-report-builder'
 	'libreoffice-scripting-javascript'
 	'libreoffice-extension-scripting-python')
-_LOver=3.6.3.2
-pkgver=3.6.3
-_pkgver=3.6.3
+_LOver=3.6.4.3
+pkgver=3.6.4
+_pkgver=3.6.4
 _HIver=3.6
 pkgrel=1
 arch=('x86_64')
@@ -33,22 +33,22 @@ license=('LGPL3')
 url="http://www.libreoffice.org/"
 screenshot="http://wstaw.org/m/2012/04/20/libre2.png"
 makedepends=( # makedepends
-             'sane' 'perl-archive-zip' 'zip' 'unzip' 'unixodbc' 'xulrunner' 'hsqldb-java' 'boost' # boost -> internal one for now that has some gcc4.6 fixes.
+             'sane' 'perl-archive-zip' 'zip' 'unzip' 'unixodbc' 'hsqldb-java' 'boost' # boost -> internal one for now that has some gcc4.6 fixes.
              'apache-ant' 'gperf' 'poppler' 'kdelibs' 'cppunit' #'libmysqlclient'
              'beanshell'  'vigra' 'libldap' 'lucene' 'libmythes' 'junit' 'libwpg' 'imagemagick'
-             'mesa' 'gstreamer0.10-base' 'java-runtime' 'postgresql-libs' 'clucene' 'doxygen'
+             'mesa' 'gstreamer0.10-base' 'java-runtime' 'postgresql-libs' 'clucene' 'doxygen' 'libvisio'
              # libreoffice main pkg
              "curl>=7.20.0" "hunspell>=1.2.8" 'python2' 'libwpd>=0.9.0' 'libwps' 'libxaw' "neon>=0.28.6"
-             'pango' 'nspr' 'libjpeg' 'libxrandr' 'libgl' 'dbus-glib' "icu>=4.6" 'libxslt'
+             'pango' 'nss' 'libjpeg' 'libxrandr' 'libgl' 'dbus-glib' "icu>=4.6" 'libxslt'
              'redland' 'graphite' 'hyphen' 'lpsolve' 'gcc-libs' 'sh'  'libtextcat' 'librsvg' 'lcms2'
              'hicolor-icon-theme' 'desktop-file-utils' 'shared-mime-info' 'translate-toolkit' 'xdg-utils' 'ttf-dejavu' 'libcups')
 
-_mirror="http://mirror2.layerjet.com/tdf/libreoffice/src/$_pkgver"
+_mirror="http://download.documentfoundation.org/libreoffice/src/$_pkgver"
 _additional_source_url="http://hg.services.openoffice.org/binaries"
 _additional_source_url="http://dev-www.libreoffice.org/src"
 source=(${_mirror}/${pkgbase}-{core,help,translations}-${_LOver}.tar.xz
 	${_additional_source_url}/18f577b374d60b3c760a3a3350407632-STLport-4.5.tar.gz
-	${_additional_source_url}/94e7f271e38c976462558b4278590178-libvisio-0.0.19.tar.bz2
+	#${_additional_source_url}/2d8c3b50f77c544f317ab0a8838fadcb-libvisio-0.0.20.tar.bz2  
 	${_additional_source_url}/1f24ab1d39f4a51faf22244c94a6203f-xmlsec1-1.2.14.tar.gz
 	${_additional_source_url}/35c94d2df8893241173de1d16b6034c0-swingExSrc.zip
 	${_additional_source_url}/798b2ffdc8bcfe7bca2cf92b62caf685-rhino1_5R5.zip
@@ -89,8 +89,7 @@ source=(${_mirror}/${pkgbase}-{core,help,translations}-${_LOver}.tar.xz
 	http://ooo.itc.hu/oxygenoffice/download/libreoffice/dbaafd21de055e582d92d7d32fe9da13-gdocs_2.3.1.oxt
 	http://ooo.itc.hu/oxygenoffice/download/libreoffice/b7b2d0e04e142f26dd96119c80757d1f-oooblogger_0.1.oxt
         buildfix.diff)
-	noextract=(94e7f271e38c976462558b4278590178-libvisio-0.0.19.tar.bz2
-	18f577b374d60b3c760a3a3350407632-STLport-4.5.tar.gz
+	noextract=(18f577b374d60b3c760a3a3350407632-STLport-4.5.tar.gz
         185d60944ea767075d27247c3162b3bc-unowinreg.dll
 	b4cae0700aa1c2aef7eb7f345365e6f1-translate-toolkit-1.8.1.tar.bz2
 	9f9e15966b5624834157fe3d748312bc-mdds_0.6.1.tar.bz2
@@ -204,10 +203,12 @@ build() {
 		--without-system-apache-commons \
 		--without-system-mdds \
 		--without-myspell-dicts \
-                 --without-system-libvisio \
+                 --with-system-libvisio \
                  --without-system-libcmis \
                  --without-system-libexttextcat \
-		--with-system-mozilla \
+		--disable-mozilla \
+		--without-system-mozilla \
+		--without-system-mozilla-headers \
 		--with-system-dicts \
 		--with-external-dict-dir=/usr/share/hunspell \
 		--with-external-hyph-dir=/usr/share/hyphen \
