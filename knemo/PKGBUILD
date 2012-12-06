@@ -1,23 +1,20 @@
-#
-# Apps Packages for Chakra, part of chakra-project.org
-#
+# Apps Packages for Chakra, part of chakra-project.org#
 # maintainer abveritas[at]chakra-project[dot]org>
-# include global config
 
 pkgname=knemo
-pkgver=0.7.4
+pkgver=0.7.6
 pkgrel=1
 pkgdesc="The KDE Network Monitor"
 arch=('i686' 'x86_64')
 url="http://www.kde-apps.org/content/show.php?content=12956"
 license=('GPL')
-depends=('kde-workspace' 'wireless_tools' 'iw' 'networkmanager>=0.8' 'libnl3')
+depends=('kde-workspace' 'wireless_tools' 'iw' 'networkmanager' 'libnl3')
 makedepends=('cmake' 'automoc4')
 install=${pkgname}.install
 categories=('network')
 options=('libtool')
 source=(http://www.kde-apps.org/CONTENT/content-files/12956-$pkgname-$pkgver.tar.bz2)
-md5sums=('e6e9aeef6e0fcd934abe000090771fd9')
+md5sums=('42b35d4d48698a2f514adeb2ca872408')
 
 build() {
   cd ${srcdir}
@@ -26,12 +23,12 @@ build() {
   cmake ../${pkgname}-${pkgver} \
     -DCMAKE_BUILD_TYPE=Release \
     -DCMAKE_SKIP_RPATH=ON \
-    -DCMAKE_INSTALL_PREFIX=/usr    
-  make 
+    -DCMAKE_INSTALL_PREFIX=/usr
+  make
 
 }
 
 package() {
   cd ${srcdir}/build
-  make DESTDIR=${pkgdir} install 
+  make DESTDIR=${pkgdir} install
 }
