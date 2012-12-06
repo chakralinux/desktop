@@ -13,7 +13,7 @@ source ../_buildscripts/${current_repo}-${_arch}-cfg.conf
 pkgname="kdelibs"
 arch=('x86_64')
 pkgver=${_kdever}
-pkgrel=2
+pkgrel=3
 pkgdesc="KDE Core Libraries"
 url="http://www.kde.org"
 license=('GPL' 'LGPL' 'FDL')
@@ -42,13 +42,15 @@ source=($_mirror/${pkgname}-$_kdever.tar.xz
 	02_kde_applications_menu.patch
 	03_chakra_menu.patch
 	MergeDir.patch
-	revert_mimetypes.diff)
+	revert_mimetypes.diff
+	open_with_fix.diff)
 md5sums=(`grep ${pkgname}-$_kdever.tar.xz ../kde-sc.md5 | cut -d" " -f1`
          'e9ac43de85dc73309ab6c89ebcf5dc50'  # 01_chakra_tag.patch
          'e94450ba5430ea9c1e33bad9ae38ca2d'  # 02_kde_applications_menu.patch
          '53b85403e4dd8f9146933c52ca23243e'  # 03_chakra_menu.path
          'f442698bae9d4ffb26f6df9457d7fc5a'  # MergeDir.patch
-         '38f1c3023dd439bba8bb7107bf1c6707') # revert_mimetypes.diff
+         '38f1c3023dd439bba8bb7107bf1c6707'  # revert_mimetypes.diff
+         '6080c9a2db0a3d4c05602ef38cc9c195') # open_with_fix.diff
         
 #
 # build function
@@ -64,6 +66,7 @@ build() {
 	patch -p1 -i ${srcdir}/MergeDir.patch
 	
 	patch -p1 -i "${srcdir}"/revert_mimetypes.diff
+	patch -p1 -i "${srcdir}"/open_with_fix.diff
 
         cd ..
 
