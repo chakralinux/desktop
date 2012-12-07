@@ -6,12 +6,12 @@
 _pkgname=feedparser
 pkgname="python2-${_pkgname}"
 pkgver=5.1.2
-pkgrel=2
+pkgrel=3
 pkgdesc="feedparser is a Python library that parses feeds in all known formats, including Atom, RSS, and RDF."
 arch=('any')
 url="http://code.google.com/p/feedparser/"
-license=(MIT)
-depends=('python2' 'libxml2' )
+license=('MIT')
+depends=('python2' 'libxml2')
 makedepends=('python-distribute')
 replaces=('python-feedparser')
 provides=('python-feedparser')
@@ -20,6 +20,10 @@ md5sums=('9f88692c7c1af1d47839eb2025984975')
 
 build() {
   cd "${srcdir}/${_pkgname}-${pkgver}"
+
+  # Fix permissions, or some files will be unreadable by the common users
+  chmod 644 feedparser/feedparser.egg-info/*
+
   python2 setup.py build
 }
 
