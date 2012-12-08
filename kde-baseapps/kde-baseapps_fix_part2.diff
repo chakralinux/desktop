@@ -1,0 +1,65 @@
+commit fe4bb558484be0ede909c197822ce81d409dfcca
+Author: Frank Reininghaus <frank78ac@googlemail.com>
+Date:   Fri Dec 7 22:38:57 2012 +0100
+
+    Correct value for autostart setting of Service-nepomukfileindexer, part2
+    
+    After 530c743a89bb5366ff9b6f8be1d7a37f23b46880, this fixes the other
+    places where the incorrect default value 'false' was used.
+    
+    Thanks to Luc Menut for noticing this problem!
+    
+    CCBUG: lmenut@free.fr
+
+diff --git a/dolphin/src/search/dolphinsearchinformation.cpp b/dolphin/src/search/dolphinsearchinformation.cpp
+index 7fa5f7b..31f6fcc 100644
+--- a/dolphin/src/search/dolphinsearchinformation.cpp
++++ b/dolphin/src/search/dolphinsearchinformation.cpp
+@@ -92,7 +92,7 @@ DolphinSearchInformation::DolphinSearchInformation() :
+ #ifdef HAVE_NEPOMUK
+     if (Nepomuk2::ResourceManager::instance()->initialized()) {
+         KConfig config("nepomukserverrc");
+-        m_indexingEnabled = config.group("Service-nepomukfileindexer").readEntry("autostart", false);
++        m_indexingEnabled = config.group("Service-nepomukfileindexer").readEntry("autostart", true);
+     }
+ #endif
+ }
+diff --git a/dolphin/src/settings/additionalinfodialog.cpp b/dolphin/src/settings/additionalinfodialog.cpp
+index dba1f92..0efa8a5 100644
+--- a/dolphin/src/settings/additionalinfodialog.cpp
++++ b/dolphin/src/settings/additionalinfodialog.cpp
+@@ -56,7 +56,7 @@ AdditionalInfoDialog::AdditionalInfoDialog(QWidget* parent,
+     nepomukRunning = (Nepomuk2::ResourceManager::instance()->initialized());
+     if (nepomukRunning) {
+         KConfig config("nepomukserverrc");
+-        indexingEnabled = config.group("Service-nepomukfileindexer").readEntry("autostart", false);
++        indexingEnabled = config.group("Service-nepomukfileindexer").readEntry("autostart", true);
+     }
+ #endif
+ 
+diff --git a/dolphin/src/views/dolphinview.cpp b/dolphin/src/views/dolphinview.cpp
+index 54c0faa..ea64a04 100644
+--- a/dolphin/src/views/dolphinview.cpp
++++ b/dolphin/src/views/dolphinview.cpp
+@@ -851,7 +851,7 @@ void DolphinView::slotHeaderContextMenuRequested(const QPointF& pos)
+     nepomukRunning = (Nepomuk2::ResourceManager::instance()->initialized());
+     if (nepomukRunning) {
+         KConfig config("nepomukserverrc");
+-        indexingEnabled = config.group("Service-nepomukfileindexer").readEntry("autostart", false);
++        indexingEnabled = config.group("Service-nepomukfileindexer").readEntry("autostart", true);
+     }
+ #endif
+ 
+diff --git a/dolphin/src/views/dolphinviewactionhandler.cpp b/dolphin/src/views/dolphinviewactionhandler.cpp
+index 88f1c82..c7832d7 100644
+--- a/dolphin/src/views/dolphinviewactionhandler.cpp
++++ b/dolphin/src/views/dolphinviewactionhandler.cpp
+@@ -240,7 +240,7 @@ QActionGroup* DolphinViewActionHandler::createFileItemRolesActionGroup(const QSt
+     nepomukRunning = (Nepomuk2::ResourceManager::instance()->initialized());
+     if (nepomukRunning) {
+         KConfig config("nepomukserverrc");
+-        indexingEnabled = config.group("Service-nepomukfileindexer").readEntry("autostart", false);
++        indexingEnabled = config.group("Service-nepomukfileindexer").readEntry("autostart", true);
+     }
+ #endif
+ 

@@ -15,7 +15,7 @@ pkgname=('kde-baseapps'
 
 arch=('x86_64')
 pkgver=${_kdever}
-pkgrel=1
+pkgrel=2
 
 pkgdesc="split package"
 url="http://www.kde.org"
@@ -26,13 +26,20 @@ options=('docs' '!splithdr' 'splitdbg' 'log')
 makedepends=("kde-workspace>=${_kdever}" 'pkg-config' 'cmake' 'automoc4' 'libraw1394' 'ruby' 'tidyhtml' 'docbook-xsl')
 
 source=("$_mirror/${pkgbase}-$_kdever.tar.xz"
-	"http://www.kde-apps.org/CONTENT/content-files/99752-kde_cdemu-0.3.1.tar.bz2")
+	"http://www.kde-apps.org/CONTENT/content-files/99752-kde_cdemu-0.3.1.tar.bz2"
+	'kde-baseapps_fix_part1.diff'
+	'kde-baseapps_fix_part2.diff')
 
 md5sums=(`grep ${pkgbase}-$_kdever.tar.xz ../kde-sc.md5 | cut -d" " -f1`
-         '6b68353583ee959fb61b3c68a07606ae') # 99752-kde_cdemu-0.3.1.tar.gz
+         '6b68353583ee959fb61b3c68a07606ae'  # 99752-kde_cdemu-0.3.1.tar.gz
+         'fd0b4754d0341c84f067deaf5e74d2d2'  # kde-baseapps_fix_part1
+         '0d60ac9c72895f63f2f99f9ed37d2296') # kde-baseapps_fix_part2
 
 build() {
 	cd ${pkgbase}-${pkgver}
+	
+	patch -p1 -i "${srcdir}"/kde-baseapps_fix_part1.diff
+	patch -p1 -i "${srcdir}"/kde-baseapps_fix_part2.diff
 
         msg "starting build ..."
 	cmake . -DCMAKE_BUILD_TYPE=${_build_type} \
