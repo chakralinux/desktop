@@ -1,6 +1,5 @@
-# Maintainer: abveritas <veritasfarm@gmail.com>
-
-#From AUR package http://aur.archlinux.org/packages.php?ID=40056
+# Apps Packages for Chakra, part of chakra-project.org
+# maintainer: abveritas@chakra-project.org
 
 pkgname=google-talkplugin
 pkgver=3.10.2.0
@@ -10,25 +9,16 @@ arch=('x86_64')
 url="http://www.google.com/chat/video"
 categories=('network')
 license=('unknown')
-
-if [ "${CARCH}" = 'x86_64' ]; then
-    ARCH='amd64'
-    md5sums=('76ae9b712759f5da4f9aa744c53c3829')
-else
-    ARCH='i386'
-    md5sums=('d9514d644a36886a7130453f4c1b8c83')
-fi
-
 depends=('libgl' 'glew' 'glib2' 'libpng12' 'libx11' 'libxfixes' 'libxt' 'openssl')
 optdepends=('libnotify' 'pulseaudio')
 install=google-talkplugin.install
+md5sums=('76ae9b712759f5da4f9aa744c53c3829')
 
-
-source=(http://dl.google.com/linux/direct/google-talkplugin_current_$ARCH.deb)
+source=(http://dl.google.com/linux/direct/google-talkplugin_current_amd64.deb)
 
 package() {
     msg "Extracting..."
-    ar -xv google-talkplugin_current_$ARCH.deb
+    ar -xv google-talkplugin_current_amd64.deb
     tar -xvf data.tar.gz
     msg2 "Done extracting!"
     msg "Moving files"
