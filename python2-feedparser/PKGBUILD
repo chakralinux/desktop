@@ -5,8 +5,8 @@
 
 _pkgname=feedparser
 pkgname="python2-${_pkgname}"
-pkgver=5.1.2
-pkgrel=3
+pkgver=5.1.3
+pkgrel=1
 pkgdesc="feedparser is a Python library that parses feeds in all known formats, including Atom, RSS, and RDF."
 arch=('any')
 url="http://code.google.com/p/feedparser/"
@@ -16,7 +16,7 @@ makedepends=('python-distribute')
 replaces=('python-feedparser')
 provides=('python-feedparser')
 source=("http://${_pkgname}.googlecode.com/files/${_pkgname}-${pkgver}.tar.bz2")
-md5sums=('9f88692c7c1af1d47839eb2025984975')
+md5sums=('6fb6372a1dc2f56d4d79d740b8f49f25')
 
 build() {
   cd "${srcdir}/${_pkgname}-${pkgver}"
@@ -32,5 +32,3 @@ package() {
   python2 setup.py install --root="${pkgdir}"
   install -D -m644 LICENSE "${pkgdir}/usr/share/licenses/${pkgname}/LICENSE"
 }
-
-# vim:set ts=2 sw=2 et:
