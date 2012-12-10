@@ -1,8 +1,7 @@
 #
 # KDE SC Packages for Chakra, part of chakra-project.org
 #
-# maintainer (i686): Phil Miller <philm[at]chakra-project[dog]org>
-# maintainer (x86_64): Manuel Tortosa <manutortosa[at]chakra-project[dot]org>
+# maintainer abveritas[at]chakra-project[dot]org>
 
 # include global config
 source ../_buildscripts/${current_repo}-${_arch}-cfg.conf
@@ -12,15 +11,16 @@ source ../_buildscripts/${current_repo}-${_arch}-cfg.conf
 #
 pkgbase=kdepim-runtime
 pkgname=${pkgbase}
-arch=('i686' 'x86_64')
+arch=('x86_64')
 pkgver=${_kdever}
-pkgrel=1
+pkgrel=2
 pkgdesc="KDE Pim Runtime"
 url="http://www.kde.org"
 license=('GPL' 'LGPL' 'FDL')
 install=${pkgbase}.install
 options=('docs' '!splithdr' 'splitdbg' 'log')
-depends=("kdepimlibs>=${_kdever}" "kde-runtime>=${_kdever}" "kdelibs>=${_kdever}" 'prison' 'libdmtx' 'qrencode' 'libkgapi')
+depends=("kdepimlibs>=${_kdever}" "kde-runtime>=${_kdever}" "kdelibs>=${_kdever}" 'prison'
+         'libdmtx' 'qrencode' 'libkgapi' 'libkolab')
 makedepends=('pkg-config' 'cmake' 'automoc4')
 groups=("kde" "kdepim" "kde-uninstall" "kde-minimal")
 
