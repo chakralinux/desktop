@@ -25,18 +25,18 @@ pkgname=('calligra-filters'
          'calligra-handbook'
          'calligra-braindump'
          'calligra-flow')
-pkgver=2.5.3
-pkgrel=2
+pkgver=2.5.92
+pkgrel=1
 arch=('x86_64')
 url='http://www.calligra-suite.org'
 license=('FDL1.2' 'GPL2' 'LGPL')
-makedepends=('kdepimlibs' 'eigen' 'freetds' 'kdegraphics-okular' 'kdeedu-marble' 'xbase'
+makedepends=('kdepimlibs' 'eigen' 'freetds' 'kdegraphics-okular' 'kdeedu-marble' 'xbase' 'libpqxx<4' 'libvisio'
              'libgsf' 'libwpd' 'libwpg' 'libwps' 'pstoedit' 'glew' 'gsl' 'cmake' 'automoc4' 'libspnav' 'libqtgtl'
-             'boost' 'libkdcraw' 'libpqxx' 'fftw' 'opengtl' 'docbook-xsl' 'create-resources' 'lcms2' 'qrencode' 'libdmtx')
+             'boost' 'libkdcraw' 'fftw' 'opengtl' 'docbook-xsl' 'create-resources' 'lcms2' 'qrencode' 'libdmtx')
 groups=('calligra')
-source=("http://mirrors.mit.edu/kde/stable/${pkgbase}-${pkgver}/${pkgbase}-${pkgver}.tar.bz2")
+source=("http://mirrors.mit.edu/kde/unstable/${pkgbase}-${pkgver}/${pkgbase}-${pkgver}.tar.bz2")
 screenshot=("http://upload.wikimedia.org/wikipedia/commons/thumb/3/3e/Calligra_Stage_2.4.png/800px-Calligra_Stage_2.4.png")
-md5sums=('83e2679b7ecb923b953ace06db7ca4c2')
+md5sums=('a8f7718b500686f45470f42d6aa718f8')
 
 
 build() {
@@ -50,6 +50,7 @@ build() {
     -DCMAKE_INSTALL_PREFIX=/usr \
     -DBUILD_active=OFF \
     -DBUILD_mysql=OFF \
+    -DKDE4_BUILD_TESTS=OFF \
     -DKDCRAW_LOCAL_FOUND=/usr/lib/libkdcraw.so 
   make
 }
@@ -81,7 +82,7 @@ package_calligra-interfaces() {
 
 package_calligra-libs() {
   pkgdesc="Libraries for the Calligra office suite"
-  depends=('kdepimlibs' 'lcms2' 'calligra-servicetypes' 'kdeedu-marble' 'create-resources' 'libspnav')
+  depends=('kdepimlibs' 'lcms2' 'calligra-servicetypes' 'kdeedu-marble' 'create-resources' 'libspnav' 'libvisio')
   conflicts=('koffice-common' 'calligra-libs-git')
   replaces=('koffice-common' 'calligra-libs-git')
 
