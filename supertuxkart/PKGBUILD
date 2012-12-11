@@ -1,67 +1,60 @@
 #
 # Games Packages for Chakra, part of chakra-project.org
 #
-# Maintainer: Adrián Chaves Fernández (Gallaecio) <adriyetichaves gmail.com>
+# Maintainer: Adrian Chaves Fernandez (Gallaecio) <adriyetichaves gmail.com>
 
 pkgname=supertuxkart
 _pkgname=SuperTuxKart
-pkgver=0.7.3
-pkgrel=5
+pkgver=0.8
+pkgrel=1
 pkgdesc="Kart racing game featuring Tux and friends."
 url="http://supertuxkart.sourceforge.net/"
-arch=('i686' 'x86_64')
-license=('GPL3' 'GPL2' 'CCPL-by' 'CCPL-by-sa' 'custom:Creative Commons Sampling Plus 1.0' 'custom:SoundSnap license' 'custom:Public Domain')
-depends=('bzip2' 'enet' 'freeglut' 'irrlicht' 'libgl' 'libjpeg' 'libogg' 'libpng' 'libvorbis' 'openal')
+arch=('x86_64')
+license=('GPL3' 'GPL2' 'CCPL-by' 'CCPL-by-sa' 'custom:Public Domain')
+depends=('bullet' 'bzip2' 'curl' 'enet' 'fribidi' 'freeglut' 'irrlicht' 'libgl' 'libjpeg' 'libogg' 'libpng' 'libvorbis' 'openal' 'wiiuse')
 conflicts=('supertuxkart-svn')
 categories=('games')
 changelog=ChangeLog
-source=("http://downloads.sourceforge.net/project/${pkgname}/${_pkgname}/${pkgver}/${pkgname}-${pkgver}-src.tar.bz2")
-md5sums=('502664b2ec9ad5ab88b1882fef4c074d')
+source=("http://downloads.sourceforge.net/project/${pkgname}/${_pkgname}/${pkgver}/${pkgname}-${pkgver}-src.tar.bz2"
+        "$pkgname-system-libs.diff"
+        "FindEnet.cmake"
+        "FindIrrlicht.cmake"
+        "FindWiiUse.cmake")
+md5sums=('0b939ce601374758938119e0b0dd1fec'
+         '4e7c61ed4b76ee06fd08e8765ff57eeb'
+         'f63b2d5fbac6c53699aaaf97ed7f89d6'
+         '78735ca4da9c04422a09f385561f5d9d'
+         'b23cdd616cb27e2c114bbb1e3840274c')
 
 build() {
-  cd "${srcdir}/${pkgname}-${pkgver}"
+  cd "${srcdir}/${_pkgname}-${pkgver}"
   
-  # Typo fixed in Irrlicht 1.8.0, already fixed in STK 0.8.0.
-  sed -e "s#texureBlend#textureBlend#g" -i "src/graphics/material.cpp"
+  # Patches.
   
-  # http://sourceforge.net/apps/trac/supertuxkart/changeset/10229
-  sed -e "s#virtual video::SColor const \& getOverrideColor(#virtual video::SColor getOverrideColor(#" -i "src/guiengine/widgets/CGUIEditBox.h"
-  sed -e "s#video::SColor const\& CGUIEditBox::getOverrideColor(#video::SColor CGUIEditBox::getOverrideColor(#" -i "src/guiengine/widgets/CGUIEditBox.cpp" 
+    # For using system libraries.
+    patch -uN CMakeLists.txt $srcdir/$pkgname-system-libs.diff
+    sed -e "s#wiiuse/wiiuse.h#wiiuse.h#" -i src/input/wiimote_manager.cpp
+    cp $srcdir/*.cmake cmake/
   
-  LDFLAGS="-lpng -ljpeg -lpthread" \
-  LIBS="-lbz2" \
-  ./configure \
-    --prefix=/usr \
-    --datadir=/usr/share
-
+  mkdir -p build && cd build
+  cmake \
+    -DCMAKE_INSTALL_PREFIX=/usr \
+    -DUSE_WIIUSE=ON \
+    -DUSE_FRIBIDI=ON \
+    ..
   make
 }
 
 package() {
-  cd "${srcdir}/${pkgname}-${pkgver}"
+  cd "${srcdir}/${_pkgname}-${pkgver}/build"
   
   make DESTDIR="${pkgdir}" install
+  
+  # Desktop Integration
+  sed -e "s@/usr/games@/usr/bin@" -i $pkgdir/usr/share/applications/$pkgname.desktop
 
-  # Add executable link from ‘/usr/bin’.
-  mkdir -p "${pkgdir}/usr/bin"
-  echo '#!/bin/bash'                     > "${pkgdir}/usr/bin/${pkgname}"
-  echo "/usr/games/${pkgname} \"\${@}\"" >> "${pkgdir}/usr/bin/${pkgname}"
-  chmod +x "${pkgdir}/usr/bin/${pkgname}"
-
-  # Set right game version in .desktop file.
-  sed -i -e "s/0.5/${pkgver}/" "${pkgdir}/usr/share/applications/${pkgname}.desktop"
-
-  # Remove AUTHORS file from documentation folder.
-  rm "${pkgdir}/usr/share/doc/${pkgname}/AUTHORS"
-
-  # Create license folder.
+  # Licensing
   install -d "${pkgdir}/usr/share/licenses/${pkgname}"
-
-  # Link credits from license folder.
   ln -s "${pkgdir}/usr/share/games/${pkgname}/data/CREDITS" "${pkgdir}/usr/share/licenses/${pkgname}/AUTHORS"
-
-  # Move license from documentation folder to license folder.
   mv "${pkgdir}/usr/share/doc/${pkgname}/COPYING" "${pkgdir}/usr/share/licenses/${pkgname}/LICENSE"
 }
-
-# vim:set ts=2 sw=2 et:

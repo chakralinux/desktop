@@ -1,0 +1,71 @@
+--- CMakeLists.txt	2012-12-11 00:21:40.000000000 +0100
++++ ../../CMakeLists.txt	2012-12-11 08:26:57.000000000 +0100
+@@ -25,17 +25,17 @@
+     STRING "Install data folder to this directory, absolute or relative to CMAKE_INSTALL_PREFIX")
+ 
+ # Build the Bullet physics library
+-add_subdirectory("${PROJECT_SOURCE_DIR}/lib/bullet")
+-include_directories("${PROJECT_SOURCE_DIR}/lib/bullet/src")
++find_package(Bullet REQUIRED)
++include_directories(${BULLET_INCLUDE_DIRS})
+ 
+ # Build the ENet UDP network library
+-add_subdirectory("${PROJECT_SOURCE_DIR}/lib/enet")
+-include_directories("${PROJECT_SOURCE_DIR}/lib/enet/include")
++find_package(Enet REQUIRED)
++include_directories(${ENET_INCLUDE_DIRS})
+ 
+ # Build the Wiiuse library
+ if(USE_WIIUSE)
+-    add_subdirectory("${PROJECT_SOURCE_DIR}/lib/wiiuse")
+-    include_directories("${PROJECT_SOURCE_DIR}/lib/wiiuse")
++    find_package(WiiUse REQUIRED)
++    include_directories(${WIIUSE_INCLUDE_DIRS})
+ endif()
+ 
+ # Set include paths
+@@ -86,11 +86,8 @@
+ 
+ 
+ # Irrlicht
+-if (APPLE)
+-    set(IRRLICHT_LIBRARY "/Library/Frameworks/IrrFramework.framework")
+-else()
+-    set(IRRLICHT_LIBRARY ${PROJECT_SOURCE_DIR}/lib/irrlicht/lib/Linux/libIrrlicht.a)
+-endif()
++find_package(Irrlicht REQUIRED)
++include_directories(${IRRLICHT_INCLUDE_DIRS})
+ 
+     
+ # Set some compiler options
+@@ -181,19 +178,14 @@
+ #)
+ #add_dependencies(supertuxkart stkirrlicht)
+ 
+-include_directories(${PROJECT_SOURCE_DIR}/lib/irrlicht/include)
+-
+ 
+ # Common library dependencies
+ target_link_libraries(supertuxkart
+-    bulletdynamics
+-    bulletcollision
+-    bulletmath
+-    enet
++    ${BULLET_LIBRARIES}
++    ${ENET_LIBRARIES}
+     ${CURL_LIBRARIES}
+     ${IRRLICHT_LIBRARIES}
+     ${OGGVORBIS_LIBRARIES}
+-    ${IRRLICHT_LIBRARY}
+     ${IRRLICHT_XF86VM_LIBRARY}
+     ${OPENAL_LIBRARY}
+     ${OPENGL_LIBRARIES})
+@@ -204,7 +196,7 @@
+ endif()
+ 
+ if(USE_WIIUSE)
+-    target_link_libraries(supertuxkart wiiuse bluetooth)
++    target_link_libraries(supertuxkart ${WIIUSE_LIBRARIES})
+     add_definitions(-DENABLE_WIIUSE)
+ endif()
+ 
