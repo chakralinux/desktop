@@ -1,21 +1,19 @@
 #
-# <Repo> Packages for Chakra, part of chakra-project.org
+# Apps Packages for Chakra, part of chakra-project.org
 #
-# Maintainer: <Maintainer contact information>
-
-# include global config
-source ../_buildscripts/${current_repo}-${_arch}-cfg.conf
+# Maintainer: abveritas@chakra-project.org
 
 pkgname=protobuf
-pkgver=2.4.0a
-pkgrel=2
+pkgver=2.4.1
+pkgrel=1
 pkgdesc="A way of encoding structured data in an efficient yet extensible format."
-arch=('i686' 'x86_64')
+arch=('x86_64')
 url="http://code.google.com/p/protobuf/"
 license=('APACHE')
 depends=('gcc-libs' 'zlib')
-source=(http://$pkgname.googlecode.com/files/$pkgname-$pkgver.tar.bz2)
-md5sums=('61df3f63ec284fc6f57a68c67e4918c6')
+makedepends=('python2' 'setuptools')
+source=("http://$pkgname.googlecode.com/files/$pkgname-$pkgver.tar.bz2")
+md5sums=('ed436802019c9e1f40cc750eaf78f318')
 
 build() {
   cd $srcdir/$pkgname-$pkgver
