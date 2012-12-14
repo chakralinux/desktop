@@ -1,19 +1,12 @@
 #
-# Chakra Packages for Chakra, part of chakra-project.org
+# Apps Packages for Chakra, part of chakra-project.org
 #
-# maintainer (i686): Phil Miller <philm[at]chakra-project[dog]org>
-# maintainer (x86_64): Manuel Tortosa <manutortosa[at]chakra-project[dot]org>
-# (c) 2010 Drake Justice
-# contributor: Giuseppe Calà <jiveaxe@gmail.com>
-
-# include global config
-source ../_buildscripts/${current_repo}-${_arch}-cfg.conf
 
 pkgname=qmmp
-pkgver=0.5.0
-pkgrel=2.1
+pkgver=0.6.5
+pkgrel=1
 pkgdesc="Qt4 based audio-player"
-arch=('i686' 'x86_64')
+arch=('x86_64')
 url="http://qmmp.ylsoftware.com/"
 license=('GPL')
 depends=('alsa-lib' 'curl' 'hicolor-icon-theme' 'libmad' 'libvorbis' 'libogg'  'qt>=4.3' 'taglib' 'xdg-utils')
@@ -25,14 +18,20 @@ optdepends=('flac: native FLAC support'
             'libsndfile: sampled sound support'
             'ffmpeg' 'libsamplerate' 'wavpack')
 categories=('multimedia')
+screenshot=('http://qmmp.ylsoftware.com/images/qmmp-0.3.0_full_1.png')
 install=$pkgname.install
-source=(http://qmmp.ylsoftware.com/files/$pkgname-$pkgver.tar.bz2)
-sha256sums=('0fc75012546744657c2cdcea7f30f1be371a9d812811b6901019faa9427f7ba9')
+source=("http://qmmp.ylsoftware.com/files/$pkgname-$pkgver.tar.bz2")
+md5sums=('139d28e9131702dfa976cc79ab751a3d')
 
 build() {
   cd ${srcdir}/$pkgname-$pkgver
 
-  cmake . -DCMAKE_INSTALL_PREFIX=/usr || return 1
-  make || return 1
+  cmake . -DCMAKE_INSTALL_PREFIX=/usr
+  make
+}
+
+package() {
+  cd ${srcdir}/$pkgname-$pkgver
+
   make DESTDIR=${pkgdir} install
 }
