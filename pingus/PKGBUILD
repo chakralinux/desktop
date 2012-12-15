@@ -5,7 +5,7 @@
 
 pkgname=pingus
 pkgver=0.7.6
-pkgrel=1
+pkgrel=2
 pkgdesc="A Lemmings clone, i.e. a level-based puzzle game."
 arch=('i686' 'x86_64')
 url="http://pingus.seul.org"
@@ -13,11 +13,14 @@ license=('GPL')
 depends=('gcc-libs' 'sdl_image' 'sdl_mixer' 'boost-libs>=1.46')
 makedepends=('boost>=1.46' 'scons')
 categories=('games')
-source=("http://pingus.googlecode.com/files/${pkgname}-${pkgver}.tar.bz2")
-md5sums=('561798686f34d3fa4e69135d655f47ac')
+source=("http://pingus.googlecode.com/files/${pkgname}-${pkgver}.tar.bz2"
+        "$pkgname-$pkgver-gcc470-udl.patch::https://projects.archlinux.org/svntogit/community.git/plain/trunk/$pkgname-$pkgver-gcc470-udl.patch?h=packages/$pkgname")
+md5sums=('561798686f34d3fa4e69135d655f47ac'
+         '332b280b65f63aff03b4028057b1b7d5')
 
 build() {
   cd "${srcdir}/${pkgname}-${pkgver}"
+  patch -Np0 -i ${srcdir}/$pkgname-$pkgver-gcc470-udl.patch
   scons prefix=/usr
 }
 
@@ -26,9 +29,9 @@ package() {
   make install PREFIX="${pkgdir}/usr"
 
   # This is needed... the standard installation method it TOTALLY broken in this script creation.
-  cat > "${pkgdir}/usr/bin/pingus" <<EOF
+  cat > "${pkgdir}/usr/bin/$pkgname" <<EOF
 #!/bin/sh
-exec "/usr/bin/pingus.bin" --datadir "/usr/share/pingus"
+exec "/usr/bin/$pkgname.bin" --datadir "/usr/share/$pkgname"
 EOF
-  chmod 755 "${pkgdir}/usr/bin/pingus"
+  chmod 755 "${pkgdir}/usr/bin/$pkgname"
 }
