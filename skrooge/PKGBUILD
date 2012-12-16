@@ -1,38 +1,36 @@
 #
-# Chakra Packages for Chakra, part of chakra-project.org
+# Apps Packages for Chakra, part of chakra-project.org
 #
-# maintainer (i686): Phil Miller <philm[at]chakra-project[dog]org>
-# maintainer (x86_64): Manuel Tortosa <manutortosa[at]chakra-project[dot]org>
+# maintainer abveritas@chakra-project.org
 # contributor (x86_64): Giuseppe Calà <jiveaxe@gmail.com>
 
-# include global config
-source ../_buildscripts/${current_repo}-${_arch}-cfg.conf
-
 pkgname=skrooge
-pkgver=1.0.0
+pkgver=1.4.0
 pkgrel=1
 pkgdesc="Allows you to manage your personal finances in KDE"
 arch=('i686' 'x86_64')
 url="http://skrooge.org"
 license=('GPL')
-depends=('kdebase-runtime' 'libofx' 'qca-ossl')
-makedepends=('cmake' 'automoc4' 'docbook-xsl')
-install=${pkgname}.install
-source=(http://skrooge.org/files/${pkgname}-${pkgver}.tar.bz2)
-md5sums=('900da5dd41b940272941ee71e78cf8b4')
+depends=('grantlee' 'kdepimlibs' 'kde-runtime' 'libofx' 'qca-ossl')
+makedepends=('automoc4' 'cmake' 'docbook-xsl')
+categories=('office')
+install=$pkgname.install
+source=(http://skrooge.org/files/$pkgname-$pkgver.tar.bz2)
+md5sums=('70840369b54ae4faf257c73ac822939b')
 
 build() {
-  cd "$srcdir/$pkgname-$pkgver"
+  cd $srcdir/$pkgname-$pkgver
 
-  cmake . -DCMAKE_BUILD_TYPE=Release \
-	  -DCMAKE_INSTALL_PREFIX=/usr
-
+  [[ -d build ]] && rm -r build
+  mkdir build && cd build
+  cmake \
+    -DCMAKE_INSTALL_PREFIX=/usr \
+    -DCMAKE_BUILD_TYPE=RelWithDebInfo \
+    ..
   make
 }
-
+ 
 package() {
-  cd "$srcdir/$pkgname-$pkgver"
-
-  make DESTDIR="$pkgdir/" install
+  cd $srcdir/$pkgname-$pkgver/build
+  make DESTDIR=$pkgdir install
 }
-
