@@ -1,14 +1,13 @@
 #
 # Apps Packages for Chakra, part of chakra-project.org
 #
-# maintainer (i686): Phil Miller <philm[at]chakra-project[dog]org>
-# maintainer (x86_64): Manuel Tortosa <manutortosa[at]chakra-project[dot]org>
+# maintainer abveritas[at]chakra-project[dot]org>
 
 pkgname=kdenlive
 pkgver=0.9.2
-pkgrel=2
+pkgrel=3
 pkgdesc="A non-linear video editor for Linux"
-arch=('i686' 'x86_64')
+arch=('x86_64')
 url="http://www.kdenlive.org/"
 license=('GPL')
 depends=('kdelibs' 'mlt' 'dvgrab' 'kdebase-runtime' 'frei0r-plugins' 'qjson' 'qimageblitz')
@@ -16,7 +15,7 @@ optdepends=("dvdauthor: for creating dvds"
 	    "recordmydesktop: for desktop-recordings")
 makedepends=('automoc4' 'cmake' 'gettext' 'docbook-xsl')
 categories=('multimedia')
-source=(http://download.kde.org/stable/$pkgname/$pkgver/src/$pkgname-$pkgver.tar.bz2)
+source=("http://download.kde.org/stable/$pkgname/$pkgver/src/$pkgname-$pkgver.tar.bz2")
 md5sums=('40f108f26e2c2e08807a1c183d8764ec')
 screenshot=('http://kdenlive.org/sites/default/files/kdenlive-090a_0.png')
 
@@ -28,8 +27,7 @@ build() {
   cmake \
     -DCMAKE_BUILD_TYPE=Release \
     -DCMAKE_INSTALL_PREFIX=/usr \
-    -DLIB_INSTALL_DIR=/usr/lib \
-    -DLINK_LIBRARIES=-lX11
+    -DLIB_INSTALL_DIR=/usr/lib 
   make
 }
 
