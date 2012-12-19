@@ -53,6 +53,7 @@ source=($_mirror/${pkgname}-$_kdever.tar.xz
 
         # core patches
         01_kdm_zsh_profile.patch
+        02_sane_env_and_shutdown_path.patch
         03_plasma_menubutton_branding.patch
 	06_kickoff_default_favourites.patch
 	07_always_show_kickoff_subtext.patch
@@ -76,6 +77,7 @@ md5sums=(`grep ${pkgname}-$_kdever.tar.xz ../kde-sc.md5 | cut -d" " -f1`
         'c4b5f1b342b3dad38642318ca077daee'  #  kdm.service
 
         '721e97031b62aee8914e8617e86f9235'  #  01_kdm_zsh_profile.patch
+        'e2eb9d270fe0e93901b29256bdedd7e2'  #  02_sane_env_and_shutdown_path.patch
         '8e623bb5608025417ff9ed061e5a03f1'  #  03_plasma_menubutton_branding.patch
         'd4d7d3fc3ac072a8ca848e9c96e517dc'  #  06_kickoff_default_favourites.patch
         '89d96455c6a446ef59b0620d1b8606af'  #  07_always_show_kickoff_subtext.patch
@@ -88,6 +90,7 @@ build() {
 
 	msg "applying main patchset ..."
 	patch -Np0 -i ${srcdir}/01_kdm_zsh_profile.patch
+	patch -Np0 -i ${srcdir}/02_sane_env_and_shutdown_path.patch
 	patch -Np1 -i ${srcdir}/03_plasma_menubutton_branding.patch
 	patch -Np1 -i ${srcdir}/06_kickoff_default_favourites.patch
 	patch -Np1 -i ${srcdir}/07_always_show_kickoff_subtext.patch
