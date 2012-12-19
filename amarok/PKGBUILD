@@ -6,14 +6,15 @@
 pkgname=amarok
 replaces=('amarok-base' 'amarok-engine-xine' 'amarok-base-mysqlfree')
 pkgver=2.6.0
-pkgrel=2
+pkgrel=5
 pkgdesc="A media player for KDE"
-arch=("i686" "x86_64")
+arch=('x86_64')
 url="http://amarok.kde.org"
 screenshot="http://amarok.kde.org/files/Amarok-2.6-InDulciJubilo-screenie4.png"
 license=('GPL2' 'LGPL2' 'FDL')
-depends=('kde-runtime' 'mysql' 'qtscriptgenerator' 'taglib-extras' 'liblastfm' 'ffmpeg' 'libofa' 'qjson' 'loudmouth')
-makedepends=('pkgconfig' 'automoc4' 'cmake' 'libgpod' 'libmtp' 'loudmouth' 'docbook-xsl' 'libmygpo-qt' )
+depends=('kde-runtime' 'mysql' 'qtscriptgenerator' 'taglib-extras' 'liblastfm' 'ffmpeg' 'libofa'
+         'qjson' 'mesa' 'loudmouth')
+makedepends=('pkgconfig' 'automoc4' 'cmake' 'libgpod' 'libmtp' 'docbook-xsl' 'libmygpo-qt' )
 optdepends=("libgpod: support Apple iPod audio devices"
             "libmtp: support for portable media devices"
             "libmygpo-qt: support for gpodder.net"
@@ -21,15 +22,10 @@ optdepends=("libgpod: support Apple iPod audio devices"
 categories=('multimedia')
 install="${pkgname}.install"
 source=("http://mirrors.mit.edu/kde/stable/${pkgname}/${pkgver}/src/${pkgname}-${pkgver}.tar.bz2")
-#	"liblastfm.patch")
 md5sums=('116f53c1109c7acd1ac7d78ec75c01c4')
-#         '6e0894b4598207d4849c053bfd0f1316')
 
 build() {
   cd "${srcdir}/${pkgname}-${pkgver}"
-
-  #Patch to use liblastfm-1
-#  patch -p1 -i "$srcdir/liblastfm.patch"
 
   mkdir build
   cd build
