@@ -3,25 +3,21 @@
 #
 # maintainer: Lukas Appelhans
 
-source ../_buildscripts/${current_repo}-${_arch}-cfg.conf
-
 pkgname=('akabei')
 
-pkgver=0.1alpha1
-pkgrel=4
+pkgver=0.1alpha2
+pkgrel=1
 epoch=1
 pkgdesc='The package manager of The Chakra Project'
-arch=('i686' 'x86_64')
+arch=('x86_64')
 url='http://gitorious.org/chakra/akabei'
 license=('LGPL')
 
-depends=('qt' 'akabeicore' 'akabeiclient' 'kdelibs' 'python-pysqlite')
+depends=('qt' "akabeicore=1:${pkgver}" "akabeiclient=1:${pkgver}" 'kdelibs' 'python-pysqlite')
 makedepends=('automoc4')
 
-source=("https://gitorious.org/chakra/akabei/archive-tarball/akabei-alpha1")
-
-md5sums=('0a20248451b7e53dc3fb5e5a48daefdf')
-
+source=("https://gitorious.org/chakra/akabei/archive-tarball/akabei_alpha2")
+md5sums=('48d12e8242b12389eb67aa69a5b5511c')
 install=akabei.install
 
 build() {
