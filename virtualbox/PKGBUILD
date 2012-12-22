@@ -1,7 +1,7 @@
 #
 # Apps Packages for Chakra, part of chakra-project.org
 #
-# Maintainer: Michael Haesel <michael[dot]haesel[at]gmail[dot]com>
+# Controbutor: Michael Haesel <michael[dot]haesel[at]gmail[dot]com>
 # Contributor: Sebastien Luttringer <seblu[plus]arch[at]seblu[dot]net>
 
 #
@@ -14,7 +14,7 @@ pkgbase=virtualbox
 pkgname=('virtualbox' 'virtualbox-ext-oracle' 'virtualbox-guest-additions')
 pkgver=4.2.6
 _build=82870
-pkgrel=1
+pkgrel=2
 arch=('x86_64')
 url='http://virtualbox.org/'
 license=('GPL2' 'custom:PUEL')
@@ -53,7 +53,7 @@ package_virtualbox() {
   screenshot='https://www.virtualbox.org/raw-attachment/wiki/Screenshots/gnome.png'
   license=('GPL2')
   depends=('libidl2' 'libxcursor' 'libxinerama' 'libxslt' 'curl' 'linux-headers'
-           'python2' 'make' 'gcc')
+           'python2' 'make' 'gcc' 'qt')
   optdepends=('virtualbox-ext-oracle: for Oracle extensions'
               'dkms: for handling kernel modules with dkms'
               'qt: for GUI support'
@@ -170,6 +170,17 @@ package_virtualbox() {
 
   # Create the directory below if it doesn't exist
   install -d -m 0755 "${pkgdir}/var/run/VirtualBox"
+
+  # Use system's Qt
+  rm ${pkgdir}/opt/VirtualBox/libQtCoreVBox.so.4 
+  rm ${pkgdir}/opt/VirtualBox/libQtGuiVBox.so.4 
+  rm ${pkgdir}/opt/VirtualBox/libQtOpenGLVBox.so.4 
+  rm ${pkgdir}/opt/VirtualBox/libQtNetworkVBox.so.4 
+  cd ${pkgdir}/opt/VirtualBox
+  ln -s /usr/lib/libQtCore.so.4 libQtCoreVBox.so.4
+  ln -s /usr/lib/libQtGui.so.4 libQtGuiVBox.so.4
+  ln -s /usr/lib/libQtOpenGL.so.4 libQtOpenGLVBox.so.4
+  ln -s /usr/lib/libQtNetwork.so.4 libQtNetworkVBox.so.4
 }
 
 package_virtualbox-ext-oracle() {
