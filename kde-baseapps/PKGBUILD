@@ -15,7 +15,7 @@ pkgname=('kde-baseapps'
 
 arch=('x86_64')
 pkgver=${_kdever}
-pkgrel=1
+pkgrel=2
 
 pkgdesc="split package"
 url="http://www.kde.org"
@@ -70,6 +70,8 @@ package_kde-baseapps() {
 	
 	# prepare konqueror
 	msg "splitting konqueror ..."
+        rm -vR ${pkgdir}/usr/bin/kfmclient
+ 	rm -vR ${pkgdir}/usr/share/applications/kde4/kfmclient*
 	rm -vR ${pkgdir}/usr/include/konqsidebarplugin.h 
 	rm -vR ${pkgdir}/usr/lib/libkonqsidebarplugin.so*
 	rm -vR ${pkgdir}/usr/lib/libkdeinit4_konqueror.so*
@@ -140,7 +142,6 @@ package_kde-baseapps-konqueror() {
 		done
 
 	msg "remove conflicting files ..."
-	rm -vR ${pkgdir}/usr/bin/kfmclient
 	rm -vR ${pkgdir}/usr/lib/kde4/kcm_history.so*
 	rm -vR ${pkgdir}/usr/lib/kde4/kcm_kio.so*
 	rm -vR ${pkgdir}/usr/lib/kde4/kcm_konq.so*
@@ -149,7 +150,6 @@ package_kde-baseapps-konqueror() {
 	rm -vR ${pkgdir}/usr/lib/kde4/kcm_performance.so*
 	rm -vR ${pkgdir}/usr/lib/libkdeinit4_kfmclient.so*
 	rm -vR ${pkgdir}/usr/share/applications/kde4/Home.desktop
-	rm -vR ${pkgdir}/usr/share/applications/kde4/kfmclient*
 	rm -vR ${pkgdir}/usr/share/apps/kcmcss
 	#rm -vR ${pkgdir}/usr/share/apps/kconf_update
 	rm -vR ${pkgdir}/usr/share/apps/kcontrol
