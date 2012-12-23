@@ -5,20 +5,24 @@
 
 pkgname=quassel
 pkgver=0.8.0
-pkgrel=1
+pkgrel=2
 pkgdesc="QT4 irc client with a separated core"
 url="http://quassel-irc.org"
-arch=('i686' 'x86_64')
+arch=('x86_64')
 license=('GPL')
 depends=('kdelibs' 'oxygen-icons' 'hicolor-icon-theme' 'libindicate-qt')
 makedepends=('cmake' 'automoc4')
 categories=('communication')
+screenshot=('http://quassel-irc.org/files/images/snapshot13.preview.png')
 source=("http://quassel-irc.org/pub/quassel-${pkgver}.tar.bz2"
-	'rc.quassel'
+	'quassel.service'
         'quassel.conf')
 install=quassel.install
 backup=(etc/conf.d/quassel.conf)
-
+md5sums=('546e2a950f44c4c0262c09d48f14e998'
+         '95045bafa9bf965d0e2febd5b49514ea'
+         '479229556ba0dd94e3ce28e31e5deea9')
+         
 build() {
   [[ ! -d build ]] && mkdir build
   cd build
@@ -38,11 +42,7 @@ package() {
 
   make DESTDIR=${pkgdir} install
 
-  install -D ${srcdir}/rc.$pkgname \
-    ${pkgdir}/etc/rc.d/$pkgname
-  install -D -m644 ${srcdir}/$pkgname.conf \
-    ${pkgdir}/etc/conf.d/$pkgname
+  install -D ${srcdir}/$pkgname.service ${pkgdir}/usr/lib/systemd/system/$pkgname.service
+  install -D -m644 ${srcdir}/$pkgname.conf ${pkgdir}/etc/conf.d/$pkgname
 }
-md5sums=('546e2a950f44c4c0262c09d48f14e998'
-         '91e414cb313430a2360f1a594b1d6ed3'
-         '479229556ba0dd94e3ce28e31e5deea9')
+
