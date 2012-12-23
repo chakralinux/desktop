@@ -1,13 +1,9 @@
-# Maintainer: arlx_ignacy <ziphims@gmail.com>
+# Maintainer: Fabian Kosmale <0inkane@googlemail.com>
+# Contributor: arlx_ignacy <ziphims@gmail.com>
 # Contributor: Matthias Maennich <arch@maennich.net>
 
-# modify these two to whatever Python 3 interpreter you're targetting; on my
-# system I use the vanilla python3
-_pyver=3
-_pyexec=/usr/bin/python$_pyver
-
 pkgname=python3-shiboken
-pkgver=1.1.1
+pkgver=1.1.2
 pkgrel=1
 pkgdesc='Python binding generator that uses API Extractor and outputs CPython code. (Python 3 build)'
 arch=('i686' 'x86_64')
@@ -16,48 +12,37 @@ url='http://www.pyside.org'
 depends=('python3' 'qt>=4.7' 'openssl')
 makedepends=('cmake' 'automoc4' 'sed' 'patch')
 replaces=('shibokengenerator-py3', 'python-libshiboken')
-source=("http://www.pyside.org/files/shiboken-$pkgver.tar.bz2"
+source=("http://www.qt-project.org/uploads/pyside/shiboken-$pkgver.tar.bz2"
+        'cmake.patch'
         'cmake_fixes.patch'
         'cmake_vars.patch')
-md5sums=('fa451b6c4f3e06cce283a84550a96fd2'
+md5sums=('0a37b5011b3a7276bf4584317412a4b6'
+         'e21f354434c2c43b8ebdcf582d512de5'
          'c434168b591c27d2b3b18cfca92189af'
          '3ba4a76129899a2508fec517888bf6e8')
 
 build() {
+    patch $srcdir/shiboken-$pkgver/cmake/Modules/FindPython3Libs.cmake cmake.patch
     cd "$srcdir/shiboken-$pkgver"
-
-    msg "Applying patches ..."
-    # this patch is to fix cmake to make python's and python2's version coexistence
+    # this patch is to fix cmake to make python's and python2's version coexistence (needed for the prefix to work)
     patch -p1 -N < ../cmake_fixes.patch
     # this patch is to make it much easier to veriables from cmake
     patch -p1 -N < ../cmake_vars.patch
 
-#    # of course, if you want to undo the patches you can use:
-#    #  $ patch -p1 -R < ../cmake_vars.patch
-#    #  $ patch -p1 -R < ../cmake_fixes.patch
+    mkdir -p build && cd build
 
-    cd ..
-    if [ -d build ] ; then
-        msg "Removing last build ..."
-        rm -rf build
-    fi
+    cmake .. -DCMAKE_INSTALL_PREFIX=/usr  \
+             -DCMAKE_BUILD_TYPE=Release   \
+             -DBUILD_TESTS=FALSE          \
+             -DUSE_PYTHON3=TRUE \
+             -Dshiboken_SUFFIX=-python3   
 
-    mkdir -p build
-    cd build
-
-    cmake ../shiboken-$pkgver -DCMAKE_INSTALL_PREFIX=/usr  \
-                              -DCMAKE_BUILD_TYPE=Release   \
-                              -DBUILD_TESTS=FALSE          \
-                              -DPYTHON_EXECUTABLE=$_pyexec \
-                              -Dshiboken_SUFFIX=-python3   \
-                              -DUSE_PYTHON3=TRUE
-
-    # this will generate shiboken-python3
     make shiboken
-    # this will create libshiboken to work with Python 3
     make libshiboken
+    # generator does not build this way
 }
 
+package() {
 package() {
     # install generator
     cd "$srcdir/build/generator"
@@ -86,4 +71,5 @@ package() {
 
     mkdir -m 755 -p $pkgdir/usr/lib/pkgconfig/
     install -m 755 ../data/shiboken$SHIBOKEN_SUFFIX.pc $pkgdir/usr/lib/pkgconfig/
+}
 }
