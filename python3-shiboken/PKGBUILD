@@ -4,7 +4,7 @@
 
 pkgname=python3-shiboken
 pkgver=1.1.2
-pkgrel=1
+pkgrel=2
 pkgdesc='Python binding generator that uses API Extractor and outputs CPython code. (Python 3 build)'
 arch=('i686' 'x86_64')
 license=('LGPL')
@@ -43,12 +43,11 @@ build() {
 }
 
 package() {
-package() {
     # install generator
-    cd "$srcdir/build/generator"
+    cd "$srcdir/shiboken-${pkgver}/build/generator"
     make DESTDIR=$pkgdir install
     # install libshiboken
-    cd "$srcdir/build/libshiboken"
+    cd "$srcdir/shiboken-${pkgver}/build/libshiboken"
     make DESTDIR=$pkgdir install
 
     # get some variables for our purpose
@@ -71,5 +70,4 @@ package() {
 
     mkdir -m 755 -p $pkgdir/usr/lib/pkgconfig/
     install -m 755 ../data/shiboken$SHIBOKEN_SUFFIX.pc $pkgdir/usr/lib/pkgconfig/
-}
 }
