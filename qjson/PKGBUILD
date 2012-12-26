@@ -1,24 +1,22 @@
 #
 # KDE SC Packages for Chakra, part of chakra-project.org
 #
-# maintainer (i686): Phil Miller <philm[at]chakra-project[dog]org>
-# maintainer (x86_64): Manuel Tortosa <manutortosa[at]chakra-project[dot]org>
+# abveritas[at]chakra-project[dot]org>
 
 # include global config
 source ../_buildscripts/${current_repo}-${_arch}-cfg.conf
 
 pkgname=qjson
-_origname=qjson
-pkgver=0.7.1
-pkgrel=2
+pkgver=0.8.1
+pkgrel=1
 pkgdesc="A qt-based library that maps JSON data to QVariant objects."
-arch=('i686' 'x86_64')
+arch=('x86_64')
 license=('GPL')
 url="http://qjson.sourceforge.net"
 depends=('qt')
 makedepends=('cmake')
-source=("http://downloads.sourceforge.net/${_origname}/${_origname}-${pkgver}.tar.bz2")
-md5sums=('5a833ad606c164ed8aa69f0873366ace')
+source=(${pkgname}-${pkgver}.tar.gz::"https://github.com/flavio/${pkgname}/archive/${pkgver}.tar.gz")
+md5sums=('4eef13da988edf8f91c260a3e1baeea9')
 options=('!splitdbg' '!splithdr')
 groups=("kde-uninstall" "kde-support")
 
@@ -26,8 +24,12 @@ build() {
   cd $srcdir
   mkdir -p build
   cd build
-  cmake ../${_origname} \
+  cmake ../${pkgname}-${pkgver} \
     -DCMAKE_INSTALL_PREFIX=/usr
-  make || return 1
-  make DESTDIR=${pkgdir} install || return 1
+  make 
+}
+
+package() {
+  cd $srcdir/build
+  make DESTDIR=${pkgdir} install 
 }
