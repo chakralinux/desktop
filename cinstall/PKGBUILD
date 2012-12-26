@@ -5,7 +5,7 @@
 # (c) 2010 Drake Justice
 
 pkgname=cinstall
-pkgver=0.4.8.1
+pkgver=0.4.8.2
 pkgrel=2
 depends=('cbundle' 'kdelibs' 'qjson')
 makedepends=('qt' 'automoc4' 'libcroco')
@@ -17,7 +17,7 @@ install=$pkgname.install
 url="http://chakra-project.org/"
 
 source=("http://chakra-linux.org/sources/cinstall/cinstall-$pkgver.tar.xz")
-md5sums=('73126c5120e00f580d07bf208425473b')
+md5sums=('0ad05bce85012c3ea480bbe34f818570')
 
 # create tarball: source PKGBUILD && mksource
 
@@ -30,7 +30,7 @@ mksource() {
 }
 
 build() {
-        cd "${srcdir}/cinstall"
+        cd "${srcdir}/cinstall-$pkgver"
         
         cmake  \
           -DCMAKE_INSTALL_PREFIX=/usr \
@@ -38,6 +38,6 @@ build() {
         make 
 }
 package() {
-        cd "${srcdir}/cinstall"
+        cd "${srcdir}/cinstall-$pkgver"
         make DESTDIR=${pkgdir} install 
 }
