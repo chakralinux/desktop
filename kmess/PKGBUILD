@@ -1,28 +1,38 @@
 #
 # Chakra Packages for Chakra, part of chakra-project.org
 #
-# maintainer (i686): Phil Miller <philm[at]chakra-project[dog]org>
-# maintainer (x86_64): Manuel Tortosa <manutortosa[at]chakra-project[dot]org>
+# maintainer abveritas[at]chakra-project[dot]org>
 
 pkgname=kmess
-pkgver=2.0.5
+pkgver=2.0.6.2
 pkgrel=2
 pkgdesc="KMess is a MSN Messenger client for Linux."
-arch=('i686' 'x86_64')
+arch=('x86_64')
 url="http://kmess.sourceforge.net/"
 license=('GPL')
-depends=('libxss' 'libxslt' 'giflib' 'kdebase-runtime' 'xdg-utils' 'qt')
-makedepends=('automoc4' 'cmake' 'docbook-xml')
+depends=('kde-baseapps')
+makedepends=('automoc4' 'cmake' 'docbook-xsl')
 optdepends=('cabextract: provides winks support')
 categories=('communication')
-install=kmess.install
-source=(http://downloads.sourceforge.net/sourceforge/kmess/kmess-$pkgver.tar.bz2)
-md5sums=('e54db163ab499b98795a288b19f28268')
+install="kmess.install"
+source=("http://downloads.sourceforge.net/sourceforge/${pkgname}/${pkgname}-${pkgver}.tar.bz2"
+        'contactlistmode.diff')
+md5sums=('a2e57911713308bef81b9347135cc5dd'
+         'ff2c234b2536eff4c7b013d29616f920')
 
 build() {
   cd "${srcdir}/${pkgname}-${pkgver}"
-  cmake -DCMAKE_INSTALL_PREFIX=/usr .
-  make || return 1
-  make DESTDIR=$startdir/pkg install || return 1
+  patch -p0 -i "${srcdir}/contactlistmode.diff" 
+
+  mkdir -p build
+  cd build
+  cmake ../ -DCMAKE_INSTALL_PREFIX=/usr \
+            -DCMAKE_BUILD_TYPE=RelWithDebInfo
+  make
 }
 
+package() {
+  cd "${srcdir}/${pkgname}-${pkgver}/build"
+  
+  make DESTDIR="${pkgdir}" install
+}

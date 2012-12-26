@@ -1,0 +1,14 @@
+Index: src/model/contactlistmodelitem.cpp
+===================================================================
+--- src/model/contactlistmodelitem.cpp	(revision a0089b2ce5727e1553b06eb00e1c6871d6a30e61)
++++ src/model/contactlistmodelitem.cpp	(revision e10ebb8bd33cf807e2edfa56c465b40f3237102e)
+@@ -80,5 +80,9 @@
+ ContactListModelItem::~ContactListModelItem()
+ {
+-  qDeleteAll( childItems_ );
++  while( !childItems_.isEmpty() )
++  {
++    delete childItems_.takeFirst();
++  }
++
+   childItems_.clear();
