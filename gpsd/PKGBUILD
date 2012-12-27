@@ -1,30 +1,26 @@
 #
 # KDE SC Packages for Chakra, part of chakra-project.org
 #
-# maintainer (x86_64): Manuel Tortosa <manutortosa[at]chakra-project[dot]org>
+# maintainer Manuel Tortosa <manutortosa[at]chakra-project[dot]org>
 
 pkgname=gpsd
-pkgver=3.4
+pkgver=3.7
 pkgrel=1
 pkgdesc="GPS daemon and library to support USB/serial GPS devices"
-arch=('i686' 'x86_64')
+arch=('x86_64')
 url="http://catb.org/gpsd/"
 screenshot="http://www.catb.org/gpsd/gpsd2.png"
 license=('BSD')
 depends=('python2' 'libusb' 'bluez' 'desktop-file-utils')
 optdepends=('php: generate a PHP status page for your GPS'
-            'php-gd: image support for the PHP status page'
-            'pygtk: GUI frontends')
+            'php-gd: image support for the PHP status page')
 makedepends=('scons' 'docbook-xsl' 'chrpath')
 backup=('etc/conf.d/gpsd')
 options=('!libtool')
 install="${pkgname}.install"
-source=("http://download.savannah.gnu.org/releases/${pkgname}/${pkgname}-${pkgver}.tar.gz"{,.sig}
-        'gpsd' 'gpsd.conf.d')
-md5sums=('c01353459faa68834309109d4e868460'
-         '8aea27e1b0c23f254f94861f7d898106'
-         '1f3402f8e33a7032b9ae6dfd077234f7'
-         '3e963df3f9f7ef3572ecc648ae829315')
+source=("http://download.savannah.gnu.org/releases/${pkgname}/${pkgname}-${pkgver}.tar.gz"{,.sig})
+md5sums=('52d9785eaf1a51298bb8900dbde88f98'
+         '07fa4bf23aa998dcb951790b63dbebff')
 
 build() {
   cd "${srcdir}/${pkgname}-${pkgver}"
@@ -46,13 +42,13 @@ build() {
 package() {
   cd "${srcdir}/${pkgname}-${pkgver}"
 
-  # Fix man pages path (FS#21715)
+  # Fix man pages path 
   sed -i 's|.so gps.1|.so man1/gps.1|' cgps.1 lcdgps.1 xgps.1 xgpsspeed.1
 
   export DESTDIR="${pkgdir}"
   scons install
 
-  install -D -m644 "${srcdir}/gpsd.conf.d" "${pkgdir}/etc/conf.d/gpsd"
+  sed -i 's|/lib/udev/gpsd|/usr/lib/udev/gpsd|' gpsd.rules
 
   install -D -m644 "gpsd.rules" "${pkgdir}/usr/lib/udev/rules.d/99-gpsd-usb.rules"
 
@@ -72,7 +68,8 @@ package() {
   install -D -m644 packaging/X11/gpsd-logo.png \
     "${pkgdir}/usr/share/gpsd/gpsd-logo.png"
 
-  install -D -m755 "${srcdir}/gpsd" "${pkgdir}/etc/rc.d/gpsd"
+  install -D -m644 systemd/gpsd.service "${pkgdir}/usr/lib/systemd/system/gpsd.service"
+  install -D -m644 systemd/gpsd.socket "${pkgdir}/usr/lib/systemd/system/gpsd.socket"
 
   install -D -m644 COPYING "${pkgdir}/usr/share/licenses/${pkgname}/LICENSE"
 }
