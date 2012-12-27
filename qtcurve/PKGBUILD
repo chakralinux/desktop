@@ -1,12 +1,13 @@
 #
 # Apps Packages for Chakra, part of chakra-project.org
 #
-# contributor (x86_64): Giuseppe Calà <jiveaxe@gmail.com>
+# maintainer abveritas@chakra-project.org
+# contributor Giuseppe Calà <jiveaxe@gmail.com>
 
 pkgname=qtcurve
-pkgver=1.8.13
-pkgrel=2
-arch=('i686' 'x86_64')
+pkgver=1.8.14
+pkgrel=1
+arch=('x86_64')
 license=('GPL')
 pkgdesc='A configurable set of widget styles for KDE'
 url='http://www.kde-look.org/content/show.php?content=40492'
@@ -15,22 +16,21 @@ makedepends=('cmake' 'automoc4')
 categories=('system')
 source=("http://craigd.wikispaces.com/file/view/QtCurve-KDE4-${pkgver}.tar.bz2"
         'fix-kwin_decoration-macro.patch')
-md5sums=('94ba22bc487a18f585249c2967878189'
+md5sums=('b4d7924806058f39e842ce7ffe47a4f8'
          '7366e45ef9f24f53a36f87a539a937d6')
 
 build() {
   cd "${srcdir}/QtCurve-KDE4-${pkgver}"
-  patch -Np1 -i "${srcdir}/fix-kwin_decoration-macro.patch"
+  patch -p1 -i "${srcdir}/fix-kwin_decoration-macro.patch"
 
-  mkdir -p "${srcdir}/build"
-  cd "${srcdir}/build"
-  cmake "${srcdir}/QtCurve-KDE4-${pkgver}" \
-        -DCMAKE_BUILD_TYPE=Release \
-        -DCMAKE_INSTALL_PREFIX=/usr \
-        -DQTC_KWIN=true \
-        -DQTC_STYLE_SUPPORT=true \
-  || return 1
-
+  cd "${srcdir}"
+  mkdir build
+  cd build
+  cmake ../QtCurve-KDE4-${pkgver} \
+	-DCMAKE_BUILD_TYPE=Release \
+	-DCMAKE_INSTALL_PREFIX=/usr \
+	-DQTC_KWIN=true \
+        -DQTC_STYLE_SUPPORT=true 
   make
 }
 
@@ -39,4 +39,3 @@ package() {
   make DESTDIR="${pkgdir}" install
 }
 
-# vim:set ts=2 sw=2 et:
