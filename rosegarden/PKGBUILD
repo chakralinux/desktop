@@ -1,21 +1,16 @@
 #
 # Chakra Packages for Chakra, part of chakra-project.org
 #
-# maintainer (i686): Phil Miller <philm[at]chakra-project[dog]org>
-# maintainer (x86_64): Manuel Tortosa <manutortosa[at]chakra-project[dot]org>
-
-# include global config
-source ../_buildscripts/${current_repo}-${_arch}-cfg.conf
+# maintainer abveritas@chakra-project.org
 
 pkgname=rosegarden
-pkgver=11.11.1
+pkgver=12.12.25
 pkgrel=1
 pkgdesc="MIDI/audio sequencer and notation editor"
-arch=('i686' 'x86_64')
+arch=('x86_64')
 url="http://www.rosegardenmusic.com/"
 license=('GPL')
-depends=('liblrdf' 'dssi' 'fftw' 'lirc-utils'
-         'perl' 'qt' 'shared-mime-info')
+depends=('liblrdf' 'dssi' 'fftw' 'lirc-utils' 'perl' 'qt' 'shared-mime-info')
 makedepends=('pkgconfig' 'imake')
 optdepends=('lilypond: notation display'
             'cups: printing support'
@@ -24,17 +19,14 @@ optdepends=('lilypond: notation display'
             'flac'
             'wavpack')
 categories=('multimedia')
-[ "$CARCH" = "i686" ] && optdepends=("${optdepends[@]}"
-                                     'dssi-vst: win32 VST support')
+screenshot=('http://www.rosegardenmusic.com/images/snap-10.02-1.png')
 install=$pkgname.install
-source=(http://downloads.sourceforge.net/$pkgname/$pkgname-$pkgver.tar.bz2)
-md5sums=('f3701c3a7f4cb284a3e59c731fbad5b1')
+source=("http://downloads.sourceforge.net/$pkgname/$pkgname-$pkgver.tar.bz2")
+md5sums=('8c98e7d3d448b07d9dc079b28bd37eba')
 
 build() {
   cd "$srcdir/$pkgname-$pkgver"
 
-  # lrdf + raptor2 compatibility
-  export lrdf_CFLAGS="$(pkg-config --cflags raptor2)"
   ./configure --prefix=/usr
   make
 }
@@ -44,4 +36,3 @@ package() {
 
   make DESTDIR="$pkgdir/" install
 }
-
