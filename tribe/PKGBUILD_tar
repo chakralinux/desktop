@@ -7,7 +7,7 @@
 # package info
 #
 pkgname=tribe
-pkgver=2012.12.29
+pkgver=2012.12.30
 _rls_notes=20121205
 pkgrel=1
 _codename=Claire
@@ -19,10 +19,10 @@ depends=('kdelibs' 'kdeedu-marble>=4.9.3' 'squashfs-tools' 'tribe-partitionmanag
         'cinstall>=0.4.6.10' 'rsync' 'mkinitcpio-nfs-utils' 'ntfs-3g' 'libpwquality')
 makedepends=('cmake' 'kde-workspace' 'automoc4')
 options=('!splithdr' '!splitdbg')
-source=("tribe-${pkgver}.tar.xz"
+source=("chakra-tribe.tar.xz"
         "http://chakra-linux.org/sources/tribe/RELEASE_NOTES_${_rls_notes}.html"
         'launch-tribe.sh')
-md5sums=('7bee379bf95b4ad0779ebf7600646041'
+md5sums=('c0ee28f7130b802c77ddf8080c0bc777'
          'eaff8819f7f0c8fcb7ab5ec658d54e78'
          'e31855da237a2c8029774831b3c04685')
 
@@ -49,7 +49,7 @@ mksource() {
 #
 build()
 {
-        cd "${srcdir}/${pkgname}-${pkgver}"
+        cd "${srcdir}/chakra-tribe"
 
 	# proper bootmnt folder
 	sed -i -e "s/@ARCH@/${CARCH}/g" config-tribe.h.cmake
@@ -69,7 +69,7 @@ build()
 
 package()
 {
-        cd "${srcdir}/${pkgname}-${pkgver}"
+        cd "${srcdir}/chakra-tribe"
 	msg "Make successful, installing..."
 	make DESTDIR=$startdir/pkg install 
         install -Dm755 ${srcdir}/launch-tribe.sh \
