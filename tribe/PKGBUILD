@@ -7,7 +7,7 @@
 # package info
 #
 pkgname=tribe
-pkgver=2012.12.29
+pkgver=2013.01.01
 _rls_notes=20121205
 pkgrel=1
 _codename=Claire
@@ -22,7 +22,7 @@ options=('!splithdr' '!splitdbg')
 source=("tribe-${pkgver}.tar.xz"
         "http://chakra-linux.org/sources/tribe/RELEASE_NOTES_${_rls_notes}.html"
         'launch-tribe.sh')
-md5sums=('7bee379bf95b4ad0779ebf7600646041'
+md5sums=('d4799fe4107b65ea368ef21775a6411e'
          'eaff8819f7f0c8fcb7ab5ec658d54e78'
          'e31855da237a2c8029774831b3c04685')
 
@@ -34,7 +34,7 @@ install=tools-tribe.install
 
 mksource() {
 	  rm -vRf ${pkgname}-${pkgver}
-	  git clone git://gitorious.org/chakra/${pkgname}.git ${pkgname}-${pkgver}
+	  git clone -b bash-backend git://gitorious.org/chakra/${pkgname}.git ${pkgname}-${pkgver}
 	  #git clone git://github.com/abveritas/Tribe.git ${pkgname}-${pkgver}
 	  #git clone git://github.com/Inkane/Tribe.git ${pkgname}-${pkgver}
 	  rm -vRf ${pkgname}-${pkgver}/.git
