@@ -10,7 +10,7 @@ source ../_buildscripts/${current_repo}-${_arch}-cfg.conf
 pkgname=('kdesdk-kate')
 _pkgname=kate
 pkgver=${_kdever}
-pkgrel=1
+pkgrel=2
 url="http://kde.org/"
 arch=('x86_64')
 license=('GPL' 'LGPL' 'FDL')
@@ -22,14 +22,14 @@ install='kdesdk-kate.install'
 source=("$_mirror/${_pkgname}-$_kdever.tar.xz"
         'pkgbuild-syntax-highlight.patch')
 md5sums=(`grep ${_pkgname}-$_kdever.tar.xz ../kde-sc.md5 | cut -d" " -f1`
-         '8bd4ccaf58c40b8020c37228659f9f21')
+         'be69aac51d31e1c2452116c935251464')
 
 options=('docs' '!splithdr' 'splitdbg' 'log')
 
 build() {
 	cd ${srcdir}/${_pkgname}-${pkgver}
 
-	#patch -p1 -i "${srcdir}"/pkgbuild-syntax-highlight.patch
+	patch -p1 -i "${srcdir}"/pkgbuild-syntax-highlight.patch
 
         rm -rf build
         mkdir build && cd build
