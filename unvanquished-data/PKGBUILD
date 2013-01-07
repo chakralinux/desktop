@@ -5,12 +5,13 @@
 
 pkgname=unvanquished-data
 _pkgname=unvanquished
-pkgver=0.10.0
+pkgver=0.11.0
 pkgrel=1
 pkgdesc="A team-based fps/rts hybrid game which pits aliens against humans (data files)"
 arch=('any')
 url="http://www.unvanquished.net"
 license=('CCPL-by-sa')
+makedepends=('bc')
 options=('emptydirs')
 
 package() {
@@ -18,7 +19,7 @@ package() {
     let limit=${pkgver:2:2}-1
     for i in $(seq 0 $limit)
     do
-        file=pak${i}.pk3
+        file=pak$(echo "obase=16;${i}" | bc).pk3
         wget http://downloads.sourceforge.net/project/unvanquished/Assets/${file} \
         -O $pkgdir/usr/share/$_pkgname/main/$file
     done;
