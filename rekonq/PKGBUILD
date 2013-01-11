@@ -5,7 +5,7 @@
 
 pkgname=rekonq
 pkgver=2.0
-pkgrel=1
+pkgrel=2
 pkgdesc='A WebKit based web browser for KDE'
 arch=('x86_64')
 url='http://rekonq.sourceforge.net/'
@@ -28,8 +28,6 @@ build(){
   cd ${srcdir}/${pkgname}-${pkgver}  
   # Chakra theme:
   patch -p1 -i "${srcdir}/background.diff"
-  # Default search bug (not an issue for kde 4.8)
-  #patch -p1 -i "${srcdir}/searchengine.diff"
   
   cd ${srcdir}
   mkdir -p build 
