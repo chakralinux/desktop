@@ -4,22 +4,22 @@
 # maintainer abveritas@chakra-project.org
 
 pkgname=youtube-dl
-pkgver=2012.12.11
+pkgver=2013.01.08
 pkgrel=1
 pkgdesc='A small command-line program to download videos from YouTube.com'
 arch=('x86_64')
 url='http://rg3.github.com/youtube-dl/'
 license=('custom')
 depends=('python2')
-makedepends=('unzip' 'zip')
+makedepends=('python-distribute')
 categories=('network')
-source=(${pkgname}-${pkgver}::https://github.com/downloads/rg3/youtube-dl/youtube-dl)
-sha1sums=('aa45f8e32c637a2342674f32d1ca9e8f70bf695c')
+source=("http://youtube-dl.org/downloads/${pkgver}/${pkgname}-${pkgver}.tar.gz")
+sha1sums=('ca1e2443c1a7834ee0ceca105c2fffd0cc2df462')
 
 package() {
-  cd "${srcdir}"
-
-  install -D -m755 youtube-dl-${pkgver} "${pkgdir}/usr/bin/youtube-dl"
-  install -d "${pkgdir}/usr/share/licenses/${pkgname}"
-  grep -i license __init__.py > "${pkgdir}/usr/share/licenses/${pkgname}/LICENSE"
+  cd "${srcdir}/${pkgname}"
+  sed -i -e 's|etc/bash_completion.d|share/bash-completion/completions|' \
+         -e 's|youtube-dl.bash-completion|youtube-dl|' setup.py
+  python2 setup.py install --root="${pkgdir}/" --optimize=1
+  install -Dm644 LICENSE "${pkgdir}/usr/share/licenses/${pkgname}/LICENSE"
 }
