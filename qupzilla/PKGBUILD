@@ -1,32 +1,36 @@
-# Contributor: Neophytos Kolokotronis <tetris4@gmail.com>
-# Contributor: Fabian Kosmale <0inkane@googlemail.com>
+#
+# Apps Packages for Chakra, part of chakra-project.org
+#
+# maintainer: Anke Boersma <abveritas@chakra-project.org>
+# contributor: Neophytos Kolokotronis <tetris4@gmail.com>
+# contributor: Fabian Kosmale <0inkane@googlemail.com>
 
 pkgname=qupzilla
 pkgver=1.3.5
-pkgrel=2
-_commit=e59241f  
+pkgrel=4
+_commit=68b03d6  
 pkgdesc="A very fast open source browser based on WebKit core"
 url="http://www.qupzilla.com"
 arch=('x86_64')
 license=('GPL3')
-depends=('qt' 'qtwebkit')
+depends=('qtwebkit')
 categories=('network') 
-source=("https://github.com/downloads/QupZilla/qupzilla/QupZilla-${pkgver}.tar.gz"
-        #"https://github.com/QupZilla/QupZilla/tarball/master/QupZilla-qupzilla-${pkgver}.tar.gz"
+source=("https://github.com/QupZilla/QupZilla/tarball/master/QupZilla-qupzilla-${pkgver}.tar.gz"
+        #"https://github.com/downloads/QupZilla/qupzilla/QupZilla-${pkgver}.tar.gz"
         'searchenginesmanager.diff'
         'speeddial.diff'
         'preferences.diff'
         'qupzilla.diff'
         'start-white.png')
-md5sums=('b2ecf689d45af384c4557895dc43f4da'
-         '7e1b3743fba94b54ab0858e7588cca83'
+md5sums=('5895c5142ca6943a4b79851e27c8f80b'
+         'c5c0f9e3640d0f5695034aef63648967'
          'b58d03f2e52ea3391e63c0eeea3e82a4'
-         'ac98b9f9cc45df18070eabee518c0049'
-         'fc0aa2bef51e5488f129b4618ee18545'
+         'c2bf22cac2fcdd6ea82ab7fcdd08a706'
+         '152c8168e80e3a1c8987aa895d9f0d48'
          'fc705d7aba952361a626a2c79726bbfa')
 
 build() {
-   cd "${srcdir}/QupZilla-${pkgver}/"
+   cd "${srcdir}/QupZilla-qupzilla-${_commit}/"
    patch -p0 -i "${srcdir}/searchenginesmanager.diff"
    patch -p0 -i "${srcdir}/speeddial.diff"
    patch -p0 -i "${srcdir}/preferences.diff"
@@ -38,7 +42,7 @@ build() {
 }
 
 package() {
-   cd "${srcdir}/QupZilla-${pkgver}/"
+   cd "${srcdir}/QupZilla-qupzilla-${_commit}/"
    mkdir -p ${pkgdir}/usr/share/icons
    install -m 644 -p ${srcdir}/start-white.png ${pkgdir}/usr/share/icons/
    make INSTALL_ROOT=$pkgdir install

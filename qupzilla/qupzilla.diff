@@ -1,6 +1,6 @@
---- src/lib/app/qupzilla.cpp.orig	2012-03-05 08:33:24.000000000 -0500
-+++ src/lib/app/qupzilla.cpp	2012-03-05 14:33:05.027117810 -0500
-@@ -549,7 +549,7 @@
+--- src/lib/app/qupzilla.cpp.orig	2012-11-29 11:13:29.713925058 -0500
++++ src/lib/app/qupzilla.cpp	2012-11-29 11:14:38.660600110 -0500
+@@ -560,7 +560,7 @@
  
      //Url settings
      settings.beginGroup("Web-URL-Settings");
@@ -9,12 +9,12 @@
      settings.endGroup();
  
      QWebSettings* websettings = mApp->webSettings();
-@@ -563,7 +563,7 @@
-     bool showBackForwardIcons = settings.value("showBackForwardButtons", true).toBool();
+@@ -576,7 +576,7 @@
+     bool showWebSearchBar = settings.value("showWebSearchBar", true).toBool();
      bool showBookmarksToolbar = settings.value("showBookmarksToolbar", true).toBool();
      bool showNavigationToolbar = settings.value("showNavigationToolbar", true).toBool();
 -    bool showMenuBar = settings.value("showMenubar", true).toBool();
 +    bool showMenuBar = settings.value("showMenubar", false).toBool();
-     bool showAddTab = settings.value("showAddTabButton", false).toBool();
      bool makeTransparent = settings.value("useTransparentBackground", false).toBool();
      m_sideBarWidth = settings.value("SideBarWidth", 250).toInt();
+     m_webViewWidth = settings.value("WebViewWidth", 2000).toInt();
