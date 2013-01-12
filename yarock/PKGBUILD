@@ -5,23 +5,23 @@
 
 pkgname=yarock
 _pkgname=Yarock
-pkgver=0.0.59
+pkgver=0.0.60
 pkgrel=1
 pkgdesc="A Qt4 Modern Music Player with collection browser based on cover art."
 arch=('x86_64')
 url="http://qt-apps.org/content/show.php?content=129372"
 screenshot="http://qt-apps.org/CONTENT/content-pre2/129372-2.png"
 license=('GPL3')
-depends=('qt' 'taglib' 'phonon' 'boost')
+depends=('qt' 'taglib' 'phonon' 'boost' 'qjson' 'libxext')
 categories=('multimedia')
 source=("http://launchpad.net/$pkgname/trunk/$pkgver/+download/${_pkgname}_${pkgver}_source.tar.gz")
 screenshot=('http://qt-apps.org/CONTENT/content-pre1/129372-1.png')
-md5sums=('ff6b950b1a83280e5965049eeb606a10')
+md5sums=('f9fc8f3ed195b5392814aba79ae0ff30')
 
 build() {
   cd $srcdir/${_pkgname}_${pkgver}_source
-  sed -i '27s/#LIBS/LIBS/' yarock.pro
-
+  sed -i -e 's/#LIBS += -lX11/LIBS += -lX11/' yarock.pro
+  
   qmake PREFIX=/usr
 }
 
