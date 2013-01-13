@@ -13,7 +13,7 @@ _default_wp="Elarun"
 pkgname="kde-workspace"
 arch=('x86_64')
 pkgver=${_kdever}
-pkgrel=1
+pkgrel=3
 pkgdesc="KDE Workspace"
 url="http://www.kde.org"
 license=('GPL' 'LGPL' 'FDL')
@@ -51,7 +51,7 @@ source=($_mirror/${pkgname}-$_kdever.tar.xz
 
         # core patches
         01_kdm_zsh_profile.patch
-        02_sane_env_and_shutdown_path.patch
+        #02_sane_env_and_shutdown_path.patch
         03_plasma_menubutton_branding.patch
 	06_kickoff_default_favourites.patch
 	07_always_show_kickoff_subtext.patch
@@ -75,11 +75,11 @@ md5sums=(`grep ${pkgname}-$_kdever.tar.xz ../kde-sc.md5 | cut -d" " -f1`
         'c4b5f1b342b3dad38642318ca077daee'  #  kdm.service
 
         '721e97031b62aee8914e8617e86f9235'  #  01_kdm_zsh_profile.patch
-        '4515dd57d5ba395f03708129d56db7e1'  #  02_sane_env_and_shutdown_path.patch
+        #'8e526f7b4e7f8f02bc7c0c0214314109'  #  02_sane_env_and_shutdown_path.patch
         '8e623bb5608025417ff9ed061e5a03f1'  #  03_plasma_menubutton_branding.patch
         'd4d7d3fc3ac072a8ca848e9c96e517dc'  #  06_kickoff_default_favourites.patch
         '89d96455c6a446ef59b0620d1b8606af'  #  07_always_show_kickoff_subtext.patch
-        '5eb9285268916492012151045bdebd26'  #  09_enable_start-shutdown-scripts.patch
+        '3ee0002192f6f0a2e1d15c813f520f81'  #  09_enable_start-shutdown-scripts.patch
 
         '814350c52c135d6f7bdada1e29223d38'  #  fix_terminate-server.patch
 	'5f963f80a026f0600edae1b1c70411e5')  #  fix_root-only-kcms.patch
@@ -89,11 +89,12 @@ build() {
 
 	msg "applying main patchset ..."
 	patch -Np0 -i ${srcdir}/01_kdm_zsh_profile.patch
-	patch -Np0 -i ${srcdir}/02_sane_env_and_shutdown_path.patch
+	# 02 is merged in 09, Jan 2013
+	#patch -Np0 -i ${srcdir}/02_sane_env_and_shutdown_path.patch
 	patch -Np1 -i ${srcdir}/03_plasma_menubutton_branding.patch
 	patch -Np1 -i ${srcdir}/06_kickoff_default_favourites.patch
 	patch -Np1 -i ${srcdir}/07_always_show_kickoff_subtext.patch
-	patch -Np1 -i ${srcdir}/09_enable_start-shutdown-scripts.patch
+	patch -Np0 -i ${srcdir}/09_enable_start-shutdown-scripts.patch
 
 	msg "applying fixes ..."
 	patch -p0 -i ${srcdir}/fix_terminate-server.patch
