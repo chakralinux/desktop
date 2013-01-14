@@ -1,13 +1,14 @@
 #
-# Chakra Packages for Chakra, part of chakra-project.org
+# Apps Packages for Chakra, part of chakra-project.org
 #
-# contributor (x86_64): Giuseppe Calà <jiveaxe@gmail.com>
+# maintainer abveritas@chakra-project.org
+# contributor Giuseppe Calà <jiveaxe@gmail.com>
 
 pkgname=tor
-pkgver=0.2.2.39
-pkgrel=3
+pkgver=0.2.3.25
+pkgrel=1
 pkgdesc="Anonymizing overlay network"
-arch=('i686' 'x86_64')
+arch=('x86_64')
 url="http://www.torproject.org/"
 license=('BSD')
 depends=('openssl' 'libevent' 'tsocks' 'bash')
@@ -16,40 +17,37 @@ categories=('network')
 install=${pkgname}.install
 source=("http://www.torproject.org/dist/${pkgname}-${pkgver}.tar.gz"
         'torrc'
-        'tor.rc'
         'tor.conf.d'
         'tor.service')
-sha256sums=('0d0c778d4697d5c5bd4f732ca179c22e8e359c634617ca9b6665e33d1863622a'
-            '95bfb5306228b67273cbe791631e7bb70f47e0fb5e73443934d133accc814557'
-            '1526a428af39f71f8c0a1a013d644be596b3a3b03d2d400a268ed99adb5be4c3'
-            'ef0de38f7b3b8d9897a2f308417bc5707886c24ba73b2fc569fafa4d6a785cf6'
-            '52761f39a7ae1082610321d0b95950a88c6230c2e226394d2125fdc06ca60a05')
+md5sums=('a1c364189a9a66ed9daa8e6436489daf'
+         'c97998c760c4351f12ad41d514071a9b'
+         'f656f3e93f0c2ed46464d9b784876dbc'
+         'cf23b97a1da09670214da6229a3ecb09')
 
 build() {
   cd "${srcdir}/${pkgname}-${pkgver}"
-  
+
   ./configure --prefix=/usr \
               --sysconfdir=/etc \
               --localstatedir=/var 
-  make 
+  make
 }
 
 package() {
   cd "${srcdir}/${pkgname}-${pkgver}"
-
+  
   make DESTDIR="${pkgdir}" install 
 
-  install -dm0700 "${pkgdir}/var/lib/tor "
-  
+  install -dm0700 "${pkgdir}/var/lib/tor"
+
   # Install config files
   mv "${pkgdir}/etc/tor/torrc.sample" "${pkgdir}/etc/tor/torrc-dist" 
-  install -Dm0644 "${srcdir}/torrc" "$pkgdir/etc/tor/torrc"
+  install -Dm0644 "${srcdir}/torrc" "${pkgdir}/etc/tor/torrc"
   install -Dm0644 "${srcdir}/tor.conf.d" "${pkgdir}/etc/conf.d/tor"
-  install -Dm0755 "${srcdir}/tor.rc" "$pkgdir/etc/rc.d/tor"
-
+  
   # Install systemd service file
-  #install -Dm0644 "${srcdir}/tor.service" "${pkgdir}/usr/lib/systemd/system/tor.service"
+  install -Dm0644 "${srcdir}/tor.service" "${pkgdir}/usr/lib/systemd/system/tor.service"
 
-  # Install license  
-  install -Dm0644 LICENSE "$pkgdir/usr/share/licenses/${pkgname}/LICENSE" 
+  # Install license
+  install -Dm0644 LICENSE "${pkgdir}/usr/share/licenses/${pkgname}/LICENSE" 
 }

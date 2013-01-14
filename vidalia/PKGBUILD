@@ -1,23 +1,22 @@
 #
-# Chakra Packages for Chakra, part of chakra-project.org
+# Apps Packages for Chakra, part of chakra-project.org
 #
-# contributor (x86_64): Giuseppe Calà <jiveaxe@gmail.com>
-
-# include global config
-source ../_buildscripts/${current_repo}-${_arch}-cfg.conf
+# maintainer abveritas@chakra-project.org
+# contributor Giuseppe Calà <jiveaxe@gmail.com>
 
 pkgname=vidalia
-pkgver=0.2.17
+pkgver=0.2.21
 pkgrel=1
 pkgdesc="Controller GUI for Tor"
 url="https://www.torproject.org/vidalia"
-arch=('i686' 'x86_64')
+arch=('x86_64')
 license="GPL"
-depends=('qt>=4.3.0' 'tor>=0.2.0.35')
+depends=('qt' 'tor>=0.2.3.25')
 makedepends=('cmake>=2.4.0')
 categories=('network')
-source=(https://www.torproject.org/vidalia/dist/$pkgname-$pkgver.tar.gz vidalia.png)
-md5sums=('dcfd49e7f2ff73702e6007091cbe33d6' 
+source=("https://www.torproject.org/vidalia/dist/$pkgname-$pkgver.tar.gz"
+        'vidalia.png')
+md5sums=('8d3079a66d79c79ccfefb929b820f9ac' 
          '5ec703cf17d75f880b2494495a5d2a58')
 
 build() {
@@ -25,7 +24,12 @@ build() {
 
   cd $pkgname-$pkgver
   cmake -D CMAKE_INSTALL_PREFIX=/usr . 
-  make || return 1
+  make 
+}
+
+package() {
+  cd $pkgname-$pkgver
+  
   make DESTDIR=$pkgdir install 
   install -Dm644 doc/vidalia.1.in $pkgdir/usr/share/man/man1/vidalia.1 
   install -Dm644 $srcdir/vidalia.png $pkgdir/usr/share/pixmaps/vidalia.png 
