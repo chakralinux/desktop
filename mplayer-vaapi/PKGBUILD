@@ -5,7 +5,7 @@
 
 pkgname=mplayer-vaapi
 pkgver=35107
-pkgrel=8
+pkgrel=9
 pkgdesc="A movie player, compiled with vaapi support"
 arch=('x86_64')
 url="http://gitorious.org/vaapi/mplayer"
@@ -48,7 +48,7 @@ build() {
 package() {
   cd "${srcdir}/mplayer-vaapi-${pkgver}"
 
-  make -j1 DESTDIR="${pkgdir}" install-mplayer install-mplayer-man
+  make -j1 DESTDIR="${pkgdir}" install
   install -Dm644 etc/{codecs.conf,input.conf,example.conf} "${pkgdir}/etc/mplayer/"
   install -Dm644 etc/mplayer.desktop "${pkgdir}/usr/share/applications/mplayer.desktop"
   install -d "${pkgdir}/usr/share/mplayer/"
