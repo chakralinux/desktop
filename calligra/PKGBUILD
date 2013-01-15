@@ -25,7 +25,7 @@ pkgname=('calligra-filters'
          'calligra-handbook'
          'calligra-braindump'
          'calligra-flow')
-pkgver=2.5.93
+pkgver=2.5.94
 pkgrel=1
 arch=('x86_64')
 url='http://www.calligra-suite.org'
@@ -36,13 +36,13 @@ makedepends=('kdepimlibs' 'eigen' 'freetds' 'kdegraphics-okular' 'kdeedu-marble'
 groups=('calligra')
 source=("http://mirrors.mit.edu/kde/unstable/${pkgbase}-${pkgver}/${pkgbase}-${pkgver}.tar.bz2")
 screenshot=("http://upload.wikimedia.org/wikipedia/commons/thumb/3/3e/Calligra_Stage_2.4.png/800px-Calligra_Stage_2.4.png")
-md5sums=('48d6474b9c2a96f472451b21de274492')
+md5sums=('1b13df1e7a2c5d37f7e0bb5c7840db0f')
 
 
 build() {
   cd "${srcdir}"
 
-  #mkdir build
+  mkdir build
   cd build
   cmake ../${pkgbase}-${pkgver} \
     -DCMAKE_BUILD_TYPE=RelWithDebInfo \
@@ -50,8 +50,8 @@ build() {
     -DCMAKE_INSTALL_PREFIX=/usr \
     -DBUILD_active=OFF \
     -DBUILD_mysql=OFF \
-    -DKDE4_BUILD_TESTS=OFF \
-    -DKDCRAW_LOCAL_FOUND=/usr/lib/libkdcraw.so 
+    -DKDE4_BUILD_TESTS=OFF 
+    #-DKDCRAW_LOCAL_FOUND=/usr/lib/libkdcraw.so 
   make
 }
 
@@ -213,7 +213,8 @@ package_calligra-stage() {
 
 package_calligra-krita() {
   pkgdesc="Edit and paint images"
-  depends=('calligra-libs' 'calligra-templates' 'calligra-plugins' 'glew' 'qimageblitz' 'poppler-qt' 'openexr' 'opengtl' 'hicolor-icon-theme' 'shared-mime-info' 'lcms2' 'libqtgtl')
+  depends=('calligra-libs' 'calligra-templates' 'calligra-plugins' 'glew' 'qimageblitz' 'poppler-qt'
+           'openexr' 'opengtl' 'hicolor-icon-theme' 'shared-mime-info' 'lcms2' 'libqtgtl')
   optdepends=('calligra-filters: import/export filters')
   provides=('krita')
   conflicts=('koffice-krita' 'calligra-krita-git')
