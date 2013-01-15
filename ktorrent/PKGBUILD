@@ -3,26 +3,25 @@
 #
 
 pkgname=ktorrent
-pkgver=4.3.0
+pkgver=4.3.1
 pkgrel=1
-ktorver=4.3.0
+ktorver=4.3.1
 pkgdesc="A BitTorrent program for KDE"
-arch=('i686' 'x86_64')
+arch=('x86_64')
 url="http://ktorrent.org"
 license=('GPL2')
-depends=('kdelibs' 'kde-runtime' 'kdepimlibs' 'qca' 'gmp' 'taglib' 'libktorrent')
+depends=('kde-workspace' 'qca' 'gmp' 'taglib' 'libktorrent')
 makedepends=('cmake' 'automoc4' 'docbook-xsl')
 categories=('network')
-source=(http://ktorrent.org/downloads/${ktorver}/ktorrent-${pkgver}.tar.bz2)
+source=("http://ktorrent.org/downloads/${ktorver}/ktorrent-${pkgver}.tar.bz2")
 categories=('network')
 options=('libtool')
 screenshot=('http://ktorrent.org/images/screenshots/KT-normal-o-files.png')
-md5sums=('1520e67d2e64808daff90dc7fc2e42b1')
+md5sums=('696852076315d3aa8ccc8745482872dd')
 
 build() {
-	cd "${srcdir}/${pkgname}-${pkgver}"
-
 	cd "${srcdir}"
+	
 	mkdir build
 	cd build
 	cmake ../${pkgname}-${pkgver} \
