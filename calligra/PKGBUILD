@@ -43,7 +43,7 @@ md5sums=('1b13df1e7a2c5d37f7e0bb5c7840db0f')
 build() {
   cd "${srcdir}"
 
-  #mkdir build
+  mkdir build
   cd build
   cmake ../${pkgbase}-${pkgver} \
     -DCMAKE_BUILD_TYPE=RelWithDebInfo \
@@ -51,7 +51,6 @@ build() {
     -DCMAKE_INSTALL_PREFIX=/usr \
     -DBUILD_active=OFF \
     -DBUILD_mysql=OFF \
-    -DBUILD_kdgantt=ON \
     -DKDE4_BUILD_TESTS=OFF  
   make
 }
@@ -196,7 +195,7 @@ package_calligra-kounavail() {
 
 package_calligra-plan() {
   pkgdesc="Calligra Project Management Component"
-  depends=('calligra-words' 'hicolor-icon-theme' 'calligra-libs' 'kdepim-common' 'calligra-templates' \
+  depends=('calligra-words' 'hicolor-icon-theme' 'calligra-libs' 'kdepimlibs' 'calligra-templates' \
 		'calligra-plugins')
   conflicts=('koffice-kplato' 'calligra-kplato-git')
   replaces=('koffice-kplato' 'calligra-kplato-git')
