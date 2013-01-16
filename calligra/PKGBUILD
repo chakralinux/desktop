@@ -7,7 +7,8 @@
 source ../_buildscripts/${current_repo}-${_arch}-cfg.conf
 
 pkgbase=calligra
-pkgname=('calligra-filters'
+pkgname=('calligra-3rdparty'
+         'calligra-filters'
          'calligra-interfaces'
          'calligra-libs'
          'calligra-plugins'
@@ -26,7 +27,7 @@ pkgname=('calligra-filters'
          'calligra-braindump'
          'calligra-flow')
 pkgver=2.5.94
-pkgrel=1
+pkgrel=2
 arch=('x86_64')
 url='http://www.calligra-suite.org'
 license=('FDL1.2' 'GPL2' 'LGPL')
@@ -42,7 +43,7 @@ md5sums=('1b13df1e7a2c5d37f7e0bb5c7840db0f')
 build() {
   cd "${srcdir}"
 
-  mkdir build
+  #mkdir build
   cd build
   cmake ../${pkgbase}-${pkgver} \
     -DCMAKE_BUILD_TYPE=RelWithDebInfo \
@@ -50,9 +51,17 @@ build() {
     -DCMAKE_INSTALL_PREFIX=/usr \
     -DBUILD_active=OFF \
     -DBUILD_mysql=OFF \
-    -DKDE4_BUILD_TESTS=OFF 
-    #-DKDCRAW_LOCAL_FOUND=/usr/lib/libkdcraw.so 
+    -DBUILD_kdgantt=ON \
+    -DKDE4_BUILD_TESTS=OFF  
   make
+}
+
+package_calligra-3rdparty() {
+  pkgdesc="3dparty plugins for the Calligra office suite"
+  depends=('kdepimlibs')
+
+  cd "${srcdir}"/build/3rdparty
+  make DESTDIR="${pkgdir}" install
 }
 
 package_calligra-filters() {
@@ -82,7 +91,7 @@ package_calligra-interfaces() {
 
 package_calligra-libs() {
   pkgdesc="Libraries for the Calligra office suite"
-  depends=('kdepimlibs' 'lcms2' 'calligra-servicetypes' 'kdeedu-marble' 'create-resources' 'libspnav' 'libvisio')
+  depends=('kdepimlibs' 'lcms2' 'calligra-3rdparty' 'calligra-servicetypes' 'kdeedu-marble' 'create-resources' 'libspnav' 'libvisio')
   conflicts=('koffice-common' 'calligra-libs-git')
   replaces=('koffice-common' 'calligra-libs-git')
 
@@ -187,7 +196,7 @@ package_calligra-kounavail() {
 
 package_calligra-plan() {
   pkgdesc="Calligra Project Management Component"
-  depends=('calligra-words' 'hicolor-icon-theme' 'calligra-libs' 'kdepimlibs' 'calligra-templates' \
+  depends=('calligra-words' 'hicolor-icon-theme' 'calligra-libs' 'kdepim-common' 'calligra-templates' \
 		'calligra-plugins')
   conflicts=('koffice-kplato' 'calligra-kplato-git')
   replaces=('koffice-kplato' 'calligra-kplato-git')
