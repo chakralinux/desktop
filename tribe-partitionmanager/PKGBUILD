@@ -19,8 +19,8 @@ optdepends=('e2fsprogs: ext2/3/4 support'
 	    'dosfstools: FAT32 support')
 conflict=('partitionmanager')
 install=partitionmanager.install	    
-source=(tribe1.patch) # disable-gpt.patch)
-md5sums=('748fcb71ac661cc06001d589ed5fa688') # '30c6cdf25c23c6fc33c21b3b48b28ed0')
+source=(tribe.patch) # disable-gpt.patch)
+md5sums=('b15678e85f2da8bbf6accbcaa5996a68')
 
 #_svntrunk=svn://anonsvn.kde.org/home/kde/trunk/extragear/sysadmin/partitionmanager
 _svnmod=partitionmanager-svn
@@ -47,6 +47,4 @@ build() {
 package() {
   cd "${srcdir}/$_svnmod-build"
   make DESTDIR="${pkgdir}" install
-
 }
-
