@@ -6,7 +6,7 @@
 pkgbase=digikam
 pkgname=('digikam' 'kipi-plugins' 'libkvkontakte')
 pkgver=2.9.9
-pkgrel=1
+pkgrel=2
 url="http://digikam.sourceforge.net"
 arch=('x86_64')
 license=('GPL')
@@ -21,7 +21,7 @@ md5sums=('251aedbf5a9619205d1b0ca63f5aa2f7')
 build() {
    cd ${srcdir}
  
-   mkdir -p build
+   #mkdir -p build
    cd build
    cmake ../${pkgname}-3.0.0-rc \
      -DCMAKE_BUILD_TYPE=Release \
@@ -45,6 +45,7 @@ package_digikam() {
       make DESTDIR="${pkgdir}" install
   done
   rm -rf "${pkgdir}/usr/share/icons/oxygen"
+  rm -rf "${pkgdir}/usr/share/locale"
 }
 
 package_libkvkontakte() {
