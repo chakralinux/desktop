@@ -1,0 +1,34 @@
+# Maintainer: Neophytos Kolokotronis <tetris4@gmail.com>
+# Contributions from AUR: https://aur.archlinux.org/packages/kdeplasma-applets-homerun/
+
+pkgname=kdeplasma-applets-homerun
+_pkgname=homerun
+pkgver=0.1.1
+pkgrel=1
+pkgdesc="An application launcher for KDE Plasma desktop"
+arch=('x86_64')
+url="http://userbase.kde.org/Homerun"
+license=('GPL' 'LGPL' 'BSD')
+depends=('kde-workspace')
+makedepends=('cmake' 'automoc4')
+conflicts=('kdeplasma-applets-homerun-git')
+source=("http://download.kde.org/unstable/$_pkgname/src/$_pkgname-$pkgver.tar.bz2")
+install=$pkgname.install
+screenshot=('https://lh5.googleusercontent.com/-axerTR3fGvY/UExd_g_qByI/AAAAAAAAhlE/wKm_W5XtwWY/homerun.png')
+md5sums=('d8bef43d16eb445a1ea6969c28ad16a2')
+
+build() {
+  cd "$srcdir"
+  mkdir build
+  cd build
+  cmake ../$_pkgname-$pkgver \
+    -DCMAKE_INSTALL_PREFIX=/usr \
+    -DCMAKE_BUILD_TYPE=Release
+  make
+}
+
+package() {
+  cd "$srcdir"/build
+  make DESTDIR="$pkgdir" install
+  install -Dm644 "$srcdir/$_pkgname-$pkgver/LICENSE.BSD" "$pkgdir/usr/share/licenses/$pkgname/LICENCE"
+}
