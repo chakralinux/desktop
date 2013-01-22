@@ -4,39 +4,31 @@
 # maintainer abveritas@chakra-project.org
 
 pkgname=kid3
-pkgver=2.1
+pkgver=2.2.1
 pkgrel=2
 pkgdesc="An MP3, Ogg/Vorbis and FLAC tag editor for KDE"
-arch=('i686' 'x86_64')
+arch=('x86_64')
 url="http://kid3.sourceforge.net/"
 license=('GPL')
 depends=('id3lib' 'kdelibs' 'libmp4v2' 'chromaprint')
-makedepends=('automoc4' 'cmake' 'taglib' 'docbook-xsl' 'ffmpeg')
+makedepends=('automoc4' 'cmake' 'taglib' 'docbook-xsl')
 categories=('multimedia')
 screenshot=('http://pkgs.org/images/linux-software/kid3/kid3-screenshot.png')
 install=${pkgname}.install
-source=("http://sourceforge.net/projects/$pkgname/files/$pkgname/$pkgver/$pkgname-$pkgver.tar.gz"
-        "ffmpeg-0.11.diff")
-sha1sums=('bdfad021123d41cdbe38dc02f92869786d9cdff6'
-          '80855ee0099964fa52b816797a9fe2eceeec8b5c')
+source=("http://sourceforge.net/projects/$pkgname/files/$pkgname/$pkgver/$pkgname-$pkgver.tar.gz")
+md5sums=('79a4e1e4d18672337539a15256cc52f4')
 
 build() {
-  cd "${srcdir}/${pkgname}-${pkgver}"
-
-  patch -p1 -i "${srcdir}/ffmpeg-0.11.diff"
-
-  cd "${srcdir}"
-
+  cd ${srcdir}
   mkdir build
   cd build
-  cmake "../${pkgname}-${pkgver}" \
+  cmake ../${pkgname}-${pkgver} \
     -DCMAKE_INSTALL_PREFIX=/usr \
-    -DCMAKE_BUILD_TYPE=Release \
-    -DWITH_TUNEPIMP=OFF
+    -DCMAKE_BUILD_TYPE=Release 
   make 
 }
 
 package() {
-  cd "${srcdir}/build"
-  make DESTDIR="${pkgdir}" install
+  cd ${srcdir}/build
+  make DESTDIR=${pkgdir} install
 }
