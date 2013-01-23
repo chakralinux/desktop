@@ -7,7 +7,7 @@
 # package info
 #
 pkgname=tribe
-pkgver=2013.01.16
+pkgver=2013.01.19
 _rls_notes=20130106
 pkgrel=1
 _codename=Benz
@@ -15,14 +15,14 @@ pkgdesc="Tribe - Chakra LiveCD Installer"
 url="http://git.chakra-project.org/chakra/"
 license="GPL"
 arch=('x86_64')
-depends=('kdelibs' 'kdeedu-marble>=4.9.97' 'squashfs-tools' 'tribe-partitionmanager'
+depends=('kdelibs' 'kdeedu-marble>=4.9.98' 'squashfs-tools' 'tribe-partitionmanager'
         'cinstall>=0.4.6.10' 'rsync' 'mkinitcpio-nfs-utils' 'ntfs-3g' 'libpwquality')
 makedepends=('cmake' 'kde-workspace' 'automoc4')
 options=('!splithdr' '!splitdbg')
 source=("tribe-${pkgver}.tar.xz"
         "http://chakra-linux.org/sources/tribe/RELEASE_NOTES_${_rls_notes}.html"
         'launch-tribe.sh')
-md5sums=('dbac9be2e4c9f4db95bd8d208972b802'
+md5sums=('5d08ed012143b65e364446328b38fa7b'
          '5d6efaa28eda5324ace5edfa79bbef69'
          'e31855da237a2c8029774831b3c04685')
 
@@ -34,7 +34,8 @@ install=tools-tribe.install
 
 mksource() {
 	  rm -vRf ${pkgname}-${pkgver}
-	  git clone -b manu git://gitorious.org/chakra/${pkgname}.git ${pkgname}-${pkgver}
+	  git clone git://gitorious.org/chakra/${pkgname}.git ${pkgname}-${pkgver}
+	  #git clone -b manu git://gitorious.org/chakra/${pkgname}.git ${pkgname}-${pkgver}
 	  #git clone git://github.com/abveritas/Tribe.git ${pkgname}-${pkgver}
 	  #git clone git://github.com/Inkane/Tribe.git ${pkgname}-${pkgver}
 	  rm -vRf ${pkgname}-${pkgver}/.git
