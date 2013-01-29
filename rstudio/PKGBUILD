@@ -13,21 +13,13 @@ arch=('x86_64')
 url="http://www.rstudio.org/"
 license=('AGPL')
 depends=('boost-libs' 'java-environment' 'qtwebkit' 'r')
-makedepends=('apache-ant' 'boost' 'bzip2' 'cmake' 'git' 'icu' 'openssl' 'pam' 'unzip' 'wget')
+makedepends=('apache-ant' 'boost' 'bzip2' 'cmake' 'git' 'icu' 'openssl' 'pam' 'unzip' 'wget' 'libcups')
 provides=('rstudio-desktop')
 categories=('programming')
 source=("https://github.com/$pkgname/$pkgname/tarball/v$pkgver")
 md5sums=('2714b2f1bdd6de50f4d0cb1764d55332')
 
 build() {
-  cd $srcdir/$_pkgname-$_pkgver
-  
-  source /etc/profile.d/apache-ant.sh
- #Checking for ANT and Java can be found.
- which ant > /dev/null
- which java > /dev/null
-
-  # Install gwt
   cd $srcdir/$_pkgname-$_pkgver/dependencies/common
   sh install-gwt
   sh install-dictionaries
@@ -36,7 +28,7 @@ build() {
   # Configure and build.
   cd $srcdir/$_pkgname-$_pkgver
 
-  mkdir build 
+  #mkdir build 
   cd build
   unset LDFLAGS
   cmake \
