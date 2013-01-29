@@ -1,24 +1,23 @@
 #
 # Apps Packages for Chakra, part of chakra-project.org
 #
-# maintainer (i686): Phil Miller <philm[at]chakra-project[dog]org>
-# maintainer (x86_64): Manuel Tortosa <manutortosa[at]chakra-project[dot]org>
+# maintainer abveritas[at]chakra-project[dot]org>
 # contributor Fabien Valthier <hcoohb[at]gmail[dog]com>
 
 pkgname=mp3diags
-pkgver=1.0.08.053
+pkgver=1.0.12.079
 pkgrel=1
 pkgdesc="GUI-based application that allows end-users to identify issues with their MP3 files, fix some of the issues and make other changes."
 url="http://mp3diags.sourceforge.net/"
 license=('GPL')
-arch=('i686' 'x86_64')
+arch=('x86_64')
 depends=('qt' 'phonon' 'boost-libs')
 makedepends=('make' 'gcc' 'boost')
 optdepends=('mp3gain: MP3 normalization support')
 categories=('multimedia')
 install=mp3diags.install
-source=(http://sourceforge.net/projects/mp3diags/files/mp3diags-src/MP3Diags-${pkgver}.tar.gz)
-md5sums=('2fd572837eff9410e4c04122a0e9c0db')
+source=("http://sourceforge.net/projects/mp3diags/files/mp3diags-src/MP3Diags-${pkgver}.tar.gz")
+md5sums=('ee7234b9c06072a0cdc6f8ca91738afb')
 
 build() {
   cd ${srcdir}/MP3Diags-$pkgver
@@ -30,9 +29,13 @@ build() {
 }
 
 package() {
-  cd ${srcdir}/MP3Diags-$pkgver
-  install -d ${pkgdir}/usr/share/{applications,pixmaps}
-  install -D bin/MP3Diags ${pkgdir}/usr/bin/MP3Diags
-  install -D desktop/MP3Diags.desktop ${pkgdir}/usr/share/applications
-  install -D desktop/MP3Diags48.png ${pkgdir}/usr/share/pixmaps/MP3Diags.png
+  cd "${srcdir}/MP3Diags-${pkgver}"
+  mkdir -p "${pkgdir}/usr/bin" "${pkgdir}/usr/share/applications"
+  install -p -m755 "bin/MP3Diags" "${pkgdir}/usr/bin/"
+  install -p -m644 "desktop/MP3Diags.desktop" "${pkgdir}/usr/share/applications/"
+
+  for i in "16" "22" "24" "32" "36" "40" "48"; do
+	mkdir -p "${pkgdir}/usr/share/icons/hicolor/${i}x${i}/apps"
+	install -p -m644 "desktop/MP3Diags${i}.png" "${pkgdir}/usr/share/icons/hicolor/${i}x${i}/apps/MP3Diags.png"
+  done
 }

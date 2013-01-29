@@ -1,30 +1,29 @@
 #
-# Chakra Packages for Chakra, part of chakra-project.org
+# Apps Packages for Chakra, part of chakra-project.org
 #
-# maintainer (i686): Phil Miller <philm[at]chakra-project[dog]org>
-# maintainer (x86_64): Manuel Tortosa <manutortosa[at]chakra-project[dot]org>
+# Maintainer: Neophytos Kolokotronis <tetris4@gmail.com>
 # Contributor:Renan Biegelmeyer (RenanBS) <renan.biegel[at]gmail[.dot]com
 
 pkgname=libtorrent-rasterbar
-pkgver=0.15.9
-pkgrel=1
+pkgver=0.16.7
+pkgrel=2
 pkgdesc="A C++ library that aims to be a good alternative to all the other bittorrent implementations around"
 url="http://www.rasterbar.com/products/libtorrent/"
-arch=('i686' 'x86_64')
+arch=('x86_64')
 license=('custom')
 depends=('boost-libs' 'python2')
 makedepends=('boost')
-source=(http://libtorrent.googlecode.com/files/${pkgname}-${pkgver}.tar.gz)
-sha1sums=('d86eb9d4452d07715a355d3a67312f162d6eff3a')
+source=("http://libtorrent.googlecode.com/files/${pkgname}-${pkgver}.tar.gz")
+sha1sums=('94b132a17d8f6a5345937731343398be8d31f170')
 
 build() {
-  cd "$srcdir/$pkgname-$pkgver"
+  cd "${srcdir}/${pkgname}-${pkgver}"
   ./configure --prefix=/usr --enable-python-binding
   make
 }
 
 package() {
-  cd "$srcdir/$pkgname-$pkgver"
-  make DESTDIR="$pkgdir" install
-  install -D COPYING "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
+  cd "${srcdir}/${pkgname}-${pkgver}"
+  make DESTDIR="${pkgdir}" install
+  install -D COPYING "${pkgdir}/usr/share/licenses/$pkgname/LICENSE"
 }
