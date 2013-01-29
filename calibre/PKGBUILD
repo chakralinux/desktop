@@ -1,12 +1,10 @@
-#
 # Apps Packages for Chakra, part of chakra-project.org
-#
 # maintainer: abveritas@chakra-project.org
 # contributor: Fabian Kosmale <0inkane@googlemail.com>
 
 pkgname=calibre
-pkgver=0.9.6
-pkgrel=1
+pkgver=0.9.16
+pkgrel=2
 pkgdesc="Ebook management application"
 arch=('x86_64')
 url="http://calibre.kovidgoyal.net/"
@@ -16,13 +14,13 @@ depends=('python2' 'python2-imaging' 'libusb' 'pyqt' 'python-mechanize'
          'python-cssutils' 'desktop-file-utils' 'python-dnspython' 'libmtp'
          'podofo' 'xdg-utils' 'cherrypy' 'python-pypdf' 'unrar' 'chmlib' 'poppler'
          'poppler-qt' 'icu' 'libwmf' 'libffi' 'python2-six' 'python2-netifaces' 'python2-cssselect')
-makedepends=('python-pycountry')
+makedepends=('python-pycountry' 'qt-private-headers')
 optdepends=('ipython: to use calibre-debug')
 screenshot=('https://lh5.googleusercontent.com/_lG58t3XWd3c/TcNwiXkAx_I/AAAAAAAAAEc/M34I4uY9UUY/s800/gui.jpeg')
 install=calibre.install
 source=("http://calibre-ebook.googlecode.com/files/${pkgname}-${pkgver}.tar.xz"
         'desktop_integration.patch')
-md5sums=('c7282772d4643bbbeb3b57a4f623d9ee'
+md5sums=('ee66d836fad40a184792cee3c5c6755b'
          'cbf6da95f3885e80d3d8b0ae2733674d')
 
 build() {
@@ -33,9 +31,8 @@ build() {
   sed -i -e 's:\(#!/usr/bin/env[ ]\+python$\|#!/usr/bin/python$\):\12:g' \
     $(find . -regex ".*.py\|.*.recipe")
 
-  python2 setup.py build
-  #python setup.py resources
-  python2 setup.py translations
+  LANG='en_US.UTF-8' python2 setup.py build
+  LANG='en_US.UTF-8' python2 setup.py translations
 }
 
 package() {
@@ -60,5 +57,8 @@ package() {
     --staging-sharedir=${pkgdir}/usr/share
 
   find ${pkgdir} -type d -empty -delete
+  
+  python2 -m compileall "${pkgdir}/usr/lib/calibre/"
+  python2 -O -m compileall "${pkgdir}/usr/lib/calibre/"
 }
 
