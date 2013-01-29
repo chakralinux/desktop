@@ -1,0 +1,62 @@
+#
+# Apps Packages for Chakra, part of chakra-project.org
+#
+# Maintainer: Adrián Chaves Fernández (Gallaecio) <adriyetichaves gmail.com>
+# Contributors from AUR:
+# Giuseppe Borzi <gborzi@ieee.org>
+# Brice M<E9>alier <mealier_brice@yahoo.fr>
+# Michele Mocciola <mickele>
+
+pkgname=opencascade
+pkgver=6.5.4
+pkgrel=1
+pkgdesc="Open CASCADE Technology, 3D modeling & numerical simulation"
+arch=('x86_64')
+url="http://www.opencascade.org"
+license=('custom')
+depends=('tk' 'mesa' 'java-runtime' 'libxmu' 'ftgl')
+makedepends=('java-environment')
+options=(!libtool)
+source=("http://files.opencascade.com/OCCT/OCC_${pkgver}_release/OpenCASCADE654.tar.gz"
+        'env.sh' 'opencascade.sh' 'opencascade.conf' 'fix-tcl8.6.patch' )
+md5sums=('413acc554e6187b38588b4c1cf48452a'
+         'acf8ad1e470cd7d1c2033954c1b0f03a'
+         'd9368b8d348ced3ec4462012977552d2'
+         '2924ecf57c95d25888f51071fdc72ad0'
+         'b0249e0d107c249b52857713902a543e')
+
+build() {
+  cd "$srcdir/ros"
+  patch -p2 -i "${srcdir}/fix-tcl8.6.patch"
+
+  export CPLUS_INCLUDE_PATH=/usr/include/FTGL:/usr/include/freetype2
+  export CASROOT="$srcdir/ros"
+  export CFLAGS="$CFLAGS -fpermissive"
+  export CXXFLAGS="$CXXFLAGS -fpermissive"
+  if [ ! -d $JAVA_HOME/include ]; then
+    [ -e /etc/profile.d/openjdk6.sh ] && source /etc/profile.d/openjdk6.sh
+    [ -e /etc/profile.d/jdk.sh ] && source /etc/profile.d/jdk.sh
+  fi
+  
+  # fix for automake 1.12
+  sed -i -e '/AM_C_PROTOTYPES/d' configure.ac
+  # fix for automake 1.13
+  sed -i -e 's/AM_CONFIG_HEADER/AC_CONFIG_HEADERS/' configure.ac
+
+  ./build_configure
+  ./configure --disable-debug --enable-production \
+    --with-java-include=${JAVA_HOME}/include --prefix="$pkgdir/opt/$pkgname"
+  make
+}
+
+package() {
+  cd "$srcdir/ros"
+
+  make install
+  install -D -m644 "${srcdir}/opencascade.conf" "${pkgdir}/etc/ld.so.conf.d/opencascade.conf"
+  install -D -m 755 "${srcdir}/opencascade.sh" "${pkgdir}/etc/profile.d/opencascade.sh"
+  install -m 755 "${srcdir}/env.sh" "${pkgdir}/opt/$pkgname"
+  install -Dm644 "$srcdir/LICENSE" "$pkgdir/usr/share/licenses/$pkgname/License.txt"
+}
+
+# vim:set ts=2 sw=2 et:
