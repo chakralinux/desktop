@@ -1,0 +1,28 @@
+#
+# Apps Packages for Chakra, part of chakra-project.org
+#
+# Maintainer: Weng Xuetian <wengxt@gmail.com>
+
+pkgname=brise
+pkgver=0.16
+pkgrel=1
+pkgdesc="Rime schema repository"
+arch=('i686' 'x86_64')
+url="http://code.google.com/p/rimeime/"
+license=('GPL3')
+depends=()
+makedepends=('cmake' 'librime>=0.9.3')
+provides=('librime-data')
+conflicts=('librime<0.9.3' 'ibus-rime<0.9.3')
+source=("http://rimeime.googlecode.com/files/$pkgname-$pkgver.tar.gz")
+
+build() {
+  cd "${srcdir}/$pkgname"
+  make
+}
+
+package() {
+  cd "${srcdir}/$pkgname"
+  make DESTDIR="$pkgdir" install
+}
+md5sums=('bc45f42852fd7bed59a171233d50cb79')

@@ -8,7 +8,7 @@
 source ../_buildscripts/${current_repo}-${_arch}-cfg.conf
 
 pkgname=fcitx
-pkgver=4.2.6.1
+pkgver=4.2.7
 pkgrel=1
 pkgdesc="A Flexible Input Method Framework"
 arch=("i686" "x86_64")
@@ -17,9 +17,8 @@ url="http://code.google.com/p/fcitx"
 depends=('pango' 'dbus-core' 'opencc' 'lua' 'iso-codes' 'icu' 'libxkbfile')
 replaces=('fcitx-qt' 'fcitx-gtk2' 'fcitx-gtk3' 'fcitx-keyboard')
 conflicts=('fcitx-utf8-svn' 'fcitx-svn' 'fcitx-hg' 'fcitx-keyboard' 'fcitx-qt' 'fcitx-gtk2' 'fcitx-gtk3')
-makedepends=('libxkbfile' 'intltool' 'cmake' 'pango' 'qt' 'icu' 'dbus-core' 'wget' 'gtk2' 'gtk3' 'opencc' 'lua' 'iso-codes' 'enchant')
+makedepends=('cmake' 'qt' 'icu' 'wget' 'gtk2' 'gtk3' 'opencc' 'lua' 'iso-codes' 'enchant')
 source=("http://fcitx.googlecode.com/files/${pkgname}-${pkgver}.tar.xz")
-md5sums=('8a8fd129cdc7afc61fe6c4badec0a9db')
 categories=('localization')
 install=fcitx.install
 
@@ -46,3 +45,4 @@ package(){
     cd $srcdir/build
     make DESTDIR=$pkgdir install
 }
+md5sums=('fb96dec8b023b59913082eac40f8ff1c')

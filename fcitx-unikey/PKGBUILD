@@ -7,16 +7,15 @@
 source ../_buildscripts/${current_repo}-${_arch}-cfg.conf
 
 pkgname=fcitx-unikey
-pkgver=0.1.1
+pkgver=0.2.0
 pkgrel=1
 pkgdesc="Fcitx Wrapper for Unikey (Vietnamese)."
 arch=('i686' 'x86_64')
 url="http://code.google.com/p/fcitx"
 license=('GPL')
-depends=('fcitx>=4.2.3')
-makedepends=('cmake' 'intltool' 'qt')
+depends=('fcitx>=4.2.7' 'qt')
+makedepends=('cmake')
 source=(http://fcitx.googlecode.com/files/${pkgname}-${pkgver}.tar.xz)
-md5sums=('91dc7bd6991df3c975a0b51a246836bf')
 
 build(){
     cd "$srcdir/${pkgname}-${pkgver}"
@@ -33,3 +32,4 @@ package ()
     cd "$srcdir/${pkgname}-${pkgver}/build"
     make DESTDIR=${pkgdir} install
 }
+md5sums=('f1ffd6c8439e4d277eace994052d91da')
