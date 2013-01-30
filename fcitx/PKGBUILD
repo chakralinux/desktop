@@ -9,15 +9,15 @@ source ../_buildscripts/${current_repo}-${_arch}-cfg.conf
 
 pkgname=fcitx
 pkgver=4.2.7
-pkgrel=1
+pkgrel=2
 pkgdesc="A Flexible Input Method Framework"
 arch=("i686" "x86_64")
 license=('GPL')
 url="http://code.google.com/p/fcitx"
 depends=('pango' 'dbus-core' 'opencc' 'lua' 'iso-codes' 'icu' 'libxkbfile')
-replaces=('fcitx-qt' 'fcitx-gtk2' 'fcitx-gtk3' 'fcitx-keyboard')
-conflicts=('fcitx-utf8-svn' 'fcitx-svn' 'fcitx-hg' 'fcitx-keyboard' 'fcitx-qt' 'fcitx-gtk2' 'fcitx-gtk3')
-makedepends=('cmake' 'qt' 'icu' 'wget' 'gtk2' 'gtk3' 'opencc' 'lua' 'iso-codes' 'enchant')
+replaces=('fcitx-qt' 'fcitx-keyboard')
+conflicts=('fcitx-utf8-svn' 'fcitx-svn' 'fcitx-hg' 'fcitx-keyboard' 'fcitx-qt')
+makedepends=('cmake' 'qt' 'icu' 'wget' 'opencc' 'lua' 'iso-codes' 'enchant')
 source=("http://fcitx.googlecode.com/files/${pkgname}-${pkgver}.tar.xz")
 categories=('localization')
 install=fcitx.install
@@ -33,8 +33,8 @@ build() {
   cd $srcdir/build
   cmake ../${pkgname}-${pkgver} -DCMAKE_INSTALL_PREFIX=/usr -DCMAKE_BUILD_TYPE=Release \
       -DENABLE_QT_IM_MODULE=On \
-      -DENABLE_GTK2_IM_MODULE=On \
-      -DENABLE_GTK3_IM_MODULE=On \
+      -DENABLE_GTK2_IM_MODULE=Off \
+      -DENABLE_GTK3_IM_MODULE=Off \
       -DENABLE_OPENCC=On \
       -DENABLE_LUA=On \
       -DENABLE_GIR=Off
