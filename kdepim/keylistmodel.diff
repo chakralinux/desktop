@@ -1,0 +1,29 @@
+commit 942c9bd5213862a89c5afacc28c39a2d4f6da5fd
+Author: Montel Laurent <montel@kde.org>
+Date:   Thu Jan 31 10:58:48 2013 +0100
+
+    Fix Bug 304111 - Kleopatra fails to build
+    
+    Apply patch from Andrea Scarpino
+    It compiles on boost 1.49 too.
+    
+    FIXED-IN: 4.10.1
+    
+    BUG: 304111
+
+diff --git a/kleopatra/models/keylistmodel.cpp b/kleopatra/models/keylistmodel.cpp
+index e9f5cd1..26c65c7 100644
+--- a/kleopatra/models/keylistmodel.cpp
++++ b/kleopatra/models/keylistmodel.cpp
+@@ -60,10 +60,10 @@
+ #ifdef _WIN32_WCE
+ #define BOOST_ALL_NO_LIB
+ #endif
+-#include <boost/graph/adjacency_list.hpp>
+ 
+ #ifndef Q_MOC_RUN // QTBUG-22829
+ #include <boost/graph/topological_sort.hpp>
++#include <boost/graph/adjacency_list.hpp>
+ #endif
+ 
+ #include <algorithm>
