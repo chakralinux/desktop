@@ -1,0 +1,41 @@
+#
+# Apps Packages for Chakra, part of chakra-project.org
+#
+# maintainer: abveritas@chakra-project.org
+
+pkgname=goldendict
+pkgver=1.0.1
+pkgrel=5
+pkgdesc="Feature-rich dictionary lookup program"
+arch=('x86_64')
+url="http://goldendict.berlios.de/"
+license=('GPL3')
+depends=('hunspell' 'libvorbis' 'libxtst' 'libzip' 'qt' 'phonon')
+provides=('stardict')
+source=(http://downloads.sourceforge.net/$pkgname/$pkgname-$pkgver-src.tar.bz2
+        $pkgname-paths.diff
+	fix-compile.patch)
+m5sums=('d56bb854936015104029d1f0b98b61bb'
+         '4488d4353e5522796c00785f0ce265e1'
+         '37c953c0a63447000dbada4c5c40cc60')
+
+build(){
+  cd ${srcdir}
+
+  patch -p0 -i ${srcdir}/$pkgname-paths.diff
+  patch -p0 -i ${srcdir}/fix-compile.patch
+
+  qmake
+  make
+  qmake
+}
+
+package() {
+  cd ${srcdir}
+
+  make INSTALL_ROOT=${pkgdir} install
+
+  #removing unneeded
+  rm -rf ${pkgdir}/usr/share/app-install
+}
+
