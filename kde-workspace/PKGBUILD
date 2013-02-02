@@ -13,7 +13,7 @@ _default_wp="Elarun"
 pkgname="kde-workspace"
 arch=('x86_64')
 pkgver=${_kdever}
-pkgrel=2
+pkgrel=3
 pkgdesc="KDE Workspace"
 url="http://www.kde.org"
 license=('GPL' 'LGPL' 'FDL')
@@ -54,6 +54,7 @@ source=($_mirror/${pkgname}-$_kdever.tar.xz
         01_kdm_zsh_profile.patch
         #02_sane_env_and_shutdown_path.patch
         03_plasma_menubutton_branding.patch
+        04_plasma_kickoff_url.patch
 	06_kickoff_default_favourites.patch
 	07_always_show_kickoff_subtext.patch
 	09_enable_start-shutdown-scripts.patch
@@ -75,11 +76,13 @@ md5sums=(`grep ${pkgname}-$_kdever.tar.xz ../kde-sc.md5 | cut -d" " -f1`
          'c4b5f1b342b3dad38642318ca077daee'
          '721e97031b62aee8914e8617e86f9235'
          '8e623bb5608025417ff9ed061e5a03f1'
+         '13e71d63e345ddd54eed6b6853ced1fb'
          'd4d7d3fc3ac072a8ca848e9c96e517dc'
          '89d96455c6a446ef59b0620d1b8606af'
          '3ee0002192f6f0a2e1d15c813f520f81'
          '814350c52c135d6f7bdada1e29223d38'
          '5f963f80a026f0600edae1b1c70411e5')
+
 build() {
 	cd ${srcdir}/${pkgname}-${pkgver}
 
@@ -88,6 +91,7 @@ build() {
 	# 02 is merged in 09, Jan 2013
 	#patch -Np0 -i ${srcdir}/02_sane_env_and_shutdown_path.patch
 	patch -Np1 -i ${srcdir}/03_plasma_menubutton_branding.patch
+        patch -Np0 -i ${srcdir}/04_plasma_kickoff_url.patch
 	patch -Np1 -i ${srcdir}/06_kickoff_default_favourites.patch
 	patch -Np1 -i ${srcdir}/07_always_show_kickoff_subtext.patch
 	patch -Np0 -i ${srcdir}/09_enable_start-shutdown-scripts.patch
