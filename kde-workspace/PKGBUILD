@@ -13,7 +13,7 @@ _default_wp="Elarun"
 pkgname="kde-workspace"
 arch=('x86_64')
 pkgver=${_kdever}
-pkgrel=1
+pkgrel=2
 pkgdesc="KDE Workspace"
 url="http://www.kde.org"
 license=('GPL' 'LGPL' 'FDL')
@@ -25,7 +25,8 @@ depends=('polkit-kde-agent' "kdepimlibs>=${_kdever}" "kde-runtime>=${_kdever}" '
 makedepends=('pkgconfig' 'cmake' 'automoc4' 'networkmanager' 'bluez' "kdebindings-pykde4>=${_kdever}"
 	    'oxygen-icons' "kde-runtime>=${_kdever}" 'gpsd' 'samba' 
 	    'libraw1394' 'libdmtx' 'docbook-xsl' 'prison' 'qrencode')  
-optdepends=("kdebindings-pykde4: Python Support for Plasma"
+optdepends=("appmenu-qt:         Global menu support"
+            "kdebindings-pykde4: Python Support for Plasma"
 	    "kdeedu-marble:      Marble Wallpaper Plugin"
 	    "gpsd:               Plasma geolocation support"
 	    "ntp:                Time/date sync support"
@@ -63,27 +64,22 @@ source=($_mirror/${pkgname}-$_kdever.tar.xz
 	fix_root-only-kcms.patch)
 
 md5sums=(`grep ${pkgname}-$_kdever.tar.xz ../kde-sc.md5 | cut -d" " -f1`
-        `grep kde-wallpapers-$_kdever.tar.xz ../kde-sc.md5 | cut -d" " -f1` # kde-wallpapers
-        'f355a658d2e9267fdf4e8d8f88038bcf'  # mishaaq-kcm_touchpad-00370b5.tar.gz
-        '9d4cc6055b6506583dd3e4ded73d7ea9'  # 114856-wacomtablet-1.3.7-2.tar.gz
-        'b60baabccbd302d00923e053db0dc0ae'  # 117639-favorites-0.1.tar.bz2
-
-        '5b137f8b00c578ec324e72b455814fd0'  #  kde.pam
-        'ce53d3a059f5ccbf7429058f935ee9a4'  #  kde-np.pam
-        '367a3538f54db71f108b34cfa31088ac'  #  kscreensaver.pam
-        '169c6fc83d5562b5d7249db7fc46d8d6'  #  chakra-branding.tar.gz
-        'c4b5f1b342b3dad38642318ca077daee'  #  kdm.service
-
-        '721e97031b62aee8914e8617e86f9235'  #  01_kdm_zsh_profile.patch
-        #'8e526f7b4e7f8f02bc7c0c0214314109'  #  02_sane_env_and_shutdown_path.patch
-        '8e623bb5608025417ff9ed061e5a03f1'  #  03_plasma_menubutton_branding.patch
-        'd4d7d3fc3ac072a8ca848e9c96e517dc'  #  06_kickoff_default_favourites.patch
-        '89d96455c6a446ef59b0620d1b8606af'  #  07_always_show_kickoff_subtext.patch
-        '3ee0002192f6f0a2e1d15c813f520f81'  #  09_enable_start-shutdown-scripts.patch
-
-        '814350c52c135d6f7bdada1e29223d38'  #  fix_terminate-server.patch
-	'5f963f80a026f0600edae1b1c70411e5')  #  fix_root-only-kcms.patch
-
+         `grep kde-wallpapers-$_kdever.tar.xz ../kde-sc.md5 | cut -d" " -f1` # kde-wallpapers
+         'f355a658d2e9267fdf4e8d8f88038bcf'
+         '9d4cc6055b6506583dd3e4ded73d7ea9'
+         'b60baabccbd302d00923e053db0dc0ae'
+         '5b137f8b00c578ec324e72b455814fd0'
+         'ce53d3a059f5ccbf7429058f935ee9a4'
+         '367a3538f54db71f108b34cfa31088ac'
+         '7c52d1bf3a124e46aab8a5ba93a09ac3'
+         'c4b5f1b342b3dad38642318ca077daee'
+         '721e97031b62aee8914e8617e86f9235'
+         '8e623bb5608025417ff9ed061e5a03f1'
+         'd4d7d3fc3ac072a8ca848e9c96e517dc'
+         '89d96455c6a446ef59b0620d1b8606af'
+         '3ee0002192f6f0a2e1d15c813f520f81'
+         '814350c52c135d6f7bdada1e29223d38'
+         '5f963f80a026f0600edae1b1c70411e5')
 build() {
 	cd ${srcdir}/${pkgname}-${pkgver}
 
@@ -165,15 +161,19 @@ package() {
 	cd ${srcdir}/${pkgname}-${pkgver}/kdm 
 	make DESTDIR=${pkgdir} GENKDMCONF_FLAGS="--no-old --no-backup --no-in-notice" install
 
-	# TODO: This should be recreated to remove the KDEmod tag and probably remove some outdated stuff
 	# copy branding stuff
 	mkdir -p ${pkgdir}/usr/share/icons/oxygen/scalable/places/
-	cp -f ${srcdir}/kdemod-branding/start-here-branding.svgz ${pkgdir}/usr/share/icons/oxygen/scalable/places/start-here-branding.svgz
-	cp -f ${srcdir}/kdemod-branding/branding-icon.png ${pkgdir}/usr/share/apps/kdm/themes/oxygen/branding-icon.png
-	cd ${srcdir}/kdemod-branding/
+	
+	cp -f ${srcdir}/chakra-branding/start-here-branding.svgz ${pkgdir}/usr/share/icons/oxygen/scalable/places/start-here-branding.svgz
+	cp -f ${srcdir}/chakra-branding/kdemod-start-here-branding.svgz ${pkgdir}/usr/share/icons/oxygen/scalable/places/kdemod-start-here-branding.svgz
+	
+	cp -f ${srcdir}/chakra-branding/branding-icon.png ${pkgdir}/usr/share/apps/kdm/themes/oxygen/branding-icon.png
+	
+	cd ${srcdir}/chakra-branding/
 	for i in 256 128 64 48 32 22 16; do
 		mkdir -p ${pkgdir}/usr/share/icons/oxygen/${i}x${i}/places/
 		install -D -m644 start-here-branding-${i}.png ${pkgdir}/usr/share/icons/oxygen/${i}x${i}/places/start-here-branding.png
+		install -D -m644 kdemod-start-here-branding-${i}.png ${pkgdir}/usr/share/icons/oxygen/${i}x${i}/places/kdemod-start-here-branding.png
 	done
 	
 	# edit kdmrc
