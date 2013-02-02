@@ -23,7 +23,8 @@ license=('GPL' 'LGPL' 'FDL')
 
 options=('docs' '!splithdr' 'splitdbg' 'log')
 
-makedepends=("kde-workspace>=${_kdever}" 'pkg-config' 'cmake' 'automoc4' 'libraw1394' 'ruby' 'tidyhtml' 'docbook-xsl')
+makedepends=("kde-workspace>=${_kdever}" 'pkg-config' 'cmake' 'automoc4' 'libraw1394' 'ruby'
+             'tidyhtml' 'docbook-xsl' 'nepomuk-widgets')
 
 source=("$_mirror/${pkgbase}-$_kdever.tar.xz"
 	"http://www.kde-apps.org/CONTENT/content-files/99752-kde_cdemu-0.3.1.tar.bz2")
@@ -45,7 +46,7 @@ build() {
 
 package_kde-baseapps() {
 	pkgdesc="KDE Base Applications"
-	depends=("kde-runtime>=${_kdever}" 'libraw1394')
+	depends=("kde-runtime>=${_kdever}" 'libraw1394' 'nepomuk-widgets')
 	optdepends=("cdemu-client: Support transparent CD/DVD image mounting in KDE")
 	conflicts=("kdebase" 'kde-baseapps-doc')
         replaces=('kdebase' 'kde-baseapps-doc')
@@ -151,7 +152,7 @@ package_kde-baseapps-konqueror() {
 	rm -vR ${pkgdir}/usr/lib/libkdeinit4_kfmclient.so*
 	rm -vR ${pkgdir}/usr/share/applications/kde4/Home.desktop
 	rm -vR ${pkgdir}/usr/share/apps/kcmcss
-	rm -vR ${pkgdir}/usr/share/apps/kconf_update
+	#rm -vR ${pkgdir}/usr/share/apps/kconf_update
 	rm -vR ${pkgdir}/usr/share/apps/kcontrol
 	rm -vR ${pkgdir}/usr/share/kde4/service*
   

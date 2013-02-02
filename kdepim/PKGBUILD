@@ -7,9 +7,6 @@
 # include global config
 source ../_buildscripts/${current_repo}-${_arch}-cfg.conf
 
-#
-# package info
-#
 pkgbase="kdepim"
 pkgname=('kdepim-common'
 	 'kdepim-akonadiconsole'
@@ -35,32 +32,33 @@ url="http://www.kde.org"
 license=('GPL' 'LGPL' 'FDL')
 options=('!docs' '!splithdr' 'splitdbg' 'log')
 
-makedepends=('pkg-config' 'cmake' 'automoc4' 'boost' "kdelibs>=${_kdever}" "kdepimlibs>=${_kdever}"
+makedepends=('pkg-config' 'cmake' 'automoc4' 'boost' "kdelibs>=${_kdever}" "kdepimlibs>=${_kdever}" "grantlee>=0.3.0"
              "kdepim-runtime>=${_kdever}" 'libxss' "kde-runtime" "libsamplerate" "qrencode" "libdmtx"
-	     'kde-common' 'libindicate-qt>=0.2.2' 'docbook-xml' 'dblatex')
+	     "kde-common>=${_kdever}" 'libindicate-qt>=0.2.2' 'docbook-xml' 'dblatex' "nepomuk-widgets>=${_kdever}")
 
 
-source=($_mirror/${pkgbase}-${pkgver}.tar.xz)
-md5sums=(`grep ${pkgbase}-$_kdever.tar.xz ../kde-sc.md5 | cut -d" " -f1`)
+source=($_mirror/${pkgbase}-${pkgver}.tar.xz
+       'keylistmodel.diff')
+md5sums=(`grep ${pkgbase}-$_kdever.tar.xz ../kde-sc.md5 | cut -d" " -f1`
+         '00d0ad48d9faf4ba4ff8d7e2621db70e')
 
 build() {
-
 	cd ${srcdir}/${pkgbase}-${pkgver}
+	# boost 1.52 issue:
+	patch -p1 -i ${srcdir}/keylistmodel.diff
 
 	cmake . -DCMAKE_BUILD_TYPE=${_build_type} \
 		-DCMAKE_INSTALL_PREFIX=${_installprefix} \
+		-DKDE4_BUILD_TESTS=OFF \
 		-DCMAKE_SKIP_RPATH=ON \
 		-DCMAKE_{SHARED,MODULE,EXE}_LINKER_FLAGS='-Wl,--no-undefined -Wl,--as-needed'
 
 	make || return 1
 }
 
-#
-# split-install functions
-#
 package_kdepim-common() {
 	pkgdesc="KDE PIM - Common files and libraries"
-	depends=("kdepimlibs>=${_kdever}" 'libxss' "kde-runtime" 'kde-common'
+	depends=("kdepimlibs>=${_kdever}" 'libxss' "kde-runtime" "kde-common>=${_kdever}"
                  'libxss' 'libindicate-qt>=0.2.2' "kdepim-runtime>=${_pkgver}")
         conflicts=('kdepim-doc')
 	groups=("kde" "kdepim" "kde" "kde-uninstall")
@@ -68,7 +66,8 @@ package_kdepim-common() {
 
 	splitdirs=(akonadi_next calendarsupport calendarviews console icons importwizard incidenceeditor-ng kdgantt2 kresources ksendemail libkdepim 
                    libkdepimdbusinterfaces libkleo libkpgp libksieve mailcommon mailfilteragent mailimporter messagecore messagecomposer messagecore messagelist 
-		   messageviewer ontologies plugins strigi-analyzer templateparser doc/kwatchgnupg doc/kabcclient doc/kioslave doc/konsolekalendar)
+		   messageviewer ontologies plugins pimcommon pimsettingexporter strigi-analyzer templateparser doc/kwatchgnupg doc/kabcclient doc/kioslave 
+		   doc/konsolekalendar)
 
 		for i in ${splitdirs[@]} ; do
 			cd ${srcdir}/${pkgbase}-${pkgver}/${i}
@@ -82,7 +81,7 @@ package_kdepim-common() {
 package_kdepim-akonadiconsole() {
 	pkgdesc="Akonadi console"
 	groups=("kde" "${pkgbase}" "kde-uninstall")
-	depends=("${pkgbase}-common>=${pkgver}")
+	depends=("${pkgbase}-common>=${pkgver}" "nepomuk-widgets>=${_kdever}")
 	install=${pkgbase}.install
 
 	splitdirs="akonadiconsole"
