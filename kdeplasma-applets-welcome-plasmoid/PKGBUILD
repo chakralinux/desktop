@@ -1,7 +1,6 @@
 #
 # Chakra Packages for Chakra, part of chakra-project.org
 #
-# maintainer (i686): Phil Miller <philm[at]chakra-project[dog]org>
 # maintainer (x86_64): Manuel Tortosa <manutortosa[at]chakra-project[dot]org>
 
 pkgname=kdeplasma-applets-welcome-plasmoid
@@ -41,3 +40,10 @@ build() {
         make || return 1
         make DESTDIR=${pkgdir} install || return 1
 }
+
+package() {
+   # TODO: fix me in the source code
+   # Move translations inside the package contents itself
+   mv ${pkgdir}/usr/share/locale ${pkgdir}/usr/share/apps/plasma/plasmoids/org.chakra.welcome-chakra/contents/
+}
+
