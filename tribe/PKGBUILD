@@ -3,14 +3,12 @@
 #
 # maintainer abveritas@chakra-project.org
 
-#
-# package info
-#
 pkgname=tribe
 pkgver=2013.02.04
 _rls_notes=20130106
 pkgrel=1
 _codename=Benz
+branch="benz"
 pkgdesc="Tribe - Chakra LiveCD Installer"
 url="http://git.chakra-project.org/chakra/"
 license="GPL"
@@ -19,10 +17,11 @@ depends=('kdelibs' 'kdeedu-marble>=4.9.98' 'squashfs-tools' 'tribe-partitionmana
         'cinstall>=0.4.6.10' 'rsync' 'mkinitcpio-nfs-utils' 'ntfs-3g' 'libpwquality')
 makedepends=('cmake' 'kde-workspace' 'automoc4')
 options=('!splithdr' '!splitdbg')
-source=("tribe-${pkgver}.tar.xz"
+
+source=("${pkgname}-${pkgver}.tar.gz"::"http://gitorious.org/chakra/tribe/archive-tarball/${branch}"
         "http://chakra-linux.org/sources/tribe/RELEASE_NOTES_${_rls_notes}.html"
-        'launch-tribe.sh')
-md5sums=('7ae396953d7014504e892413f24cc49d'
+        "launch-tribe.sh")
+md5sums=('ee2b9ce57aae22907c15361f581304d0'
          '5d6efaa28eda5324ace5edfa79bbef69'
          'e31855da237a2c8029774831b3c04685')
 
@@ -45,12 +44,9 @@ mksource() {
 	  md5sum ${pkgname}-${pkgver}.tar.xz
 }
 
-#
-# build function
-#
-build()
-{
-        cd "${srcdir}/${pkgname}-${pkgver}"
+build() {        
+ 
+        cd "${srcdir}/chakra-${pkgname}"
 
 	# proper bootmnt folder
 	sed -i -e "s/@ARCH@/${CARCH}/g" config-tribe.h.cmake
@@ -68,9 +64,8 @@ build()
 	make 
 }
 
-package()
-{
-        cd "${srcdir}/${pkgname}-${pkgver}"
+package() {
+        cd "${srcdir}/chakra-${pkgname}"
 	msg "Make successful, installing..."
 	make DESTDIR=$startdir/pkg install 
         install -Dm755 ${srcdir}/launch-tribe.sh \
