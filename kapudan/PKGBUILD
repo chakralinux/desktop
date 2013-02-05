@@ -4,9 +4,10 @@
 # Maintainer: george <george[at]chakra-project.org>
 
 pkgname=kapudan
-_pkgname=chakra-kapudan  # seems some tags add chakra-
-pkgver=0.4.90
+_pkgname=chakra-kapudan  
+pkgver=2013.02
 pkgrel=1
+branch="benz"
 pkgdesc="Chakra's desktop greeter, a fork of Pardus's Kaptan."
 arch=('x86_64')
 url='http://gitorious.org/chakra/kapudan/'
@@ -19,13 +20,17 @@ depends=('python2' 'kde-baseapps-konsole' 'kde-runtime'
 makedepends=('python-distribute' 'git')
 optdepends=('spun: update notifications'
             'clamav: for the security page')
-source=("${pkgname}-${pkgver}.tar.gz"::"http://gitorious.org/chakra/kapudan/archive-tarball/${pkgver}")
-md5sums=('dedf3178a67d45083b898371a0244e3c')
+source=("${pkgname}-${pkgver}.tar.gz"::"http://gitorious.org/chakra/kapudan/archive-tarball/${branch}")
+md5sums=('df4c60fbd14bd3931a92568d72529d74')
 
 # create tarball: source PKGBUILD && mksource
 
 mksource() {
-    git clone git://gitorious.org/chakra/${pkgname}.git ${pkgname}
+    if [ "${1}" = "" ] ; then
+        git clone git://gitorious.org/chakra/${pkgname}.git ${pkgname}
+    else
+        git clone -b "${1}" git://gitorious.org/chakra/${pkgname}.git ${pkgname}
+    fi
     pushd ${pkgname}
     popd
     rm ${pkgname}/PKGBUILD
