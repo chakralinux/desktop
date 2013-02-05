@@ -4,18 +4,18 @@
 # maintainer (x86_64): Manuel Tortosa <manutortosa[at]chakra-project[dot]org>
 
 pkgname=kdeplasma-applets-welcome-plasmoid
-pkgver=0.4.1
+pkgver=2013.02
 pkgrel=1
-depends=('kdebase-workspace')
+branch="benz"
+depends=('kde-workspace')
 makedepends=('make' 'cmake' 'automoc4')
 pkgdesc="Chakra's Welcome plasmoid, for live ISO info sharing"
 arch=("i686" "x86_64")
 license=('GPL')
 #install=$pkgname.install
 url="http://chakra-project.org/"
-
-source=("http://chakra.sourceforge.net/sources/welcome-plasmoid/welcome-plasmoid-$pkgver.tar.xz")
-md5sums=('52c4c835c6f721c9ff4c2dbf08909c2c')
+source=("${pkgname}-${pkgver}.tar.gz"::"http://gitorious.org/chakra/welcome-plasmoid/archive-tarball/${branch}")
+md5sums=('b7b801a6a87d81dd3c39425e86084780')
 
 # create tarball: source PKGBUILD && mksource <git-branch>
 
@@ -32,12 +32,16 @@ mksource() {
 }
 
 build() {
-        cd "${srcdir}/welcome-plasmoid"
+        cd "${srcdir}/chakra-welcome-plasmoid"
         
         cmake  \
           -DCMAKE_INSTALL_PREFIX=/usr \
           -DCMAKE_BUILD_TYPE=Release
-        make || return 1
-        make DESTDIR=${pkgdir} install || return 1
+        make
+}
+
+package() {
+        cd  "${srcdir}/chakra-welcome-plasmoid"
+        make DESTDIR=${pkgdir} install
 }
 
