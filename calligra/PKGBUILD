@@ -7,7 +7,8 @@
 source ../_buildscripts/${current_repo}-${_arch}-cfg.conf
 
 pkgbase=calligra
-pkgname=('calligra-filters'
+pkgname=('calligra-3rdparty'
+         'calligra-filters'
          'calligra-interfaces'
          'calligra-libs'
          'calligra-plugins'
@@ -25,18 +26,18 @@ pkgname=('calligra-filters'
          'calligra-handbook'
          'calligra-braindump'
          'calligra-flow')
-pkgver=2.5.5
+pkgver=2.6.0
 pkgrel=1
 arch=('x86_64')
 url='http://www.calligra-suite.org'
 license=('FDL1.2' 'GPL2' 'LGPL')
-makedepends=('kdepimlibs' 'eigen' 'freetds' 'kdegraphics-okular' 'kdeedu-marble' 'xbase' 'libpqxx<4'
+makedepends=('kdepimlibs' 'eigen' 'freetds' 'kdegraphics-okular' 'kdeedu-marble' 'xbase' 'libpqxx<4' 'libvisio'
              'libgsf' 'libwpd' 'libwpg' 'libwps' 'pstoedit' 'glew' 'gsl' 'cmake' 'automoc4' 'libspnav' 'libqtgtl'
              'boost' 'libkdcraw' 'fftw' 'opengtl' 'docbook-xsl' 'create-resources' 'lcms2')
 groups=('calligra')
 source=("http://mirrors.mit.edu/kde/stable/${pkgbase}-${pkgver}/${pkgbase}-${pkgver}.tar.bz2")
 screenshot=("http://upload.wikimedia.org/wikipedia/commons/thumb/3/3e/Calligra_Stage_2.4.png/800px-Calligra_Stage_2.4.png")
-md5sums=('0fcf72319d0a5a806aed50e3a2f3ceb4')
+md5sums=('df7c2816d2bbe5e2fe87ea0be3fe668c')
 
 
 build() {
@@ -49,9 +50,16 @@ build() {
     -DCMAKE_SKIP_RPATH=ON \
     -DCMAKE_INSTALL_PREFIX=/usr \
     -DBUILD_active=OFF \
-    -DBUILD_mysql=OFF \
-    -DKDCRAW_LOCAL_FOUND=/usr/lib/libkdcraw.so 
+    -DBUILD_mysql=OFF  
   make
+}
+
+package_calligra-3rdparty() {
+  pkgdesc="3dparty plugins for the Calligra office suite"
+  depends=('kdepimlibs')
+
+  cd "${srcdir}"/build/3rdparty
+  make DESTDIR="${pkgdir}" install
 }
 
 package_calligra-filters() {
@@ -81,7 +89,7 @@ package_calligra-interfaces() {
 
 package_calligra-libs() {
   pkgdesc="Libraries for the Calligra office suite"
-  depends=('kdepimlibs' 'lcms2' 'calligra-servicetypes' 'kdeedu-marble' 'create-resources' 'libspnav')
+  depends=('kdepimlibs' 'lcms2' 'calligra-3rdparty' 'calligra-servicetypes' 'kdeedu-marble' 'create-resources' 'libspnav' 'libvisio')
   conflicts=('koffice-common' 'calligra-libs-git')
   replaces=('koffice-common' 'calligra-libs-git')
 
@@ -212,7 +220,8 @@ package_calligra-stage() {
 
 package_calligra-krita() {
   pkgdesc="Edit and paint images"
-  depends=('calligra-libs' 'calligra-templates' 'calligra-plugins' 'glew' 'qimageblitz' 'poppler-qt' 'openexr' 'opengtl' 'hicolor-icon-theme' 'shared-mime-info' 'lcms2' 'libqtgtl')
+  depends=('calligra-libs' 'calligra-templates' 'calligra-plugins' 'glew' 'qimageblitz' 'poppler-qt'
+           'openexr' 'opengtl' 'hicolor-icon-theme' 'shared-mime-info' 'lcms2' 'libqtgtl')
   optdepends=('calligra-filters: import/export filters')
   provides=('krita')
   conflicts=('koffice-krita' 'calligra-krita-git')
