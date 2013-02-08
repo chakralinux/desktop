@@ -5,8 +5,8 @@
 
 pkgbase=digikam
 pkgname=('digikam' 'kipi-plugins' 'libkvkontakte')
-pkgver=2.9.9
-pkgrel=2
+pkgver=3.0.0
+pkgrel=1
 url="http://digikam.sourceforge.net"
 arch=('x86_64')
 license=('GPL')
@@ -15,15 +15,15 @@ makedepends=('kde-runtime' 'kdegraphics-kgamma' 'kdepimlibs' 'lensfun' 'kdeedu-m
              'liblqr' 'opencv' 'lapack' 'libgpod' 'pkgconfig' 'cmake' 'automoc4'
              'doxygen' 'docbook-xsl' 'qjson' 'kdegraphics-libkexiv2' 'kdegraphics-libkdcraw'
              'kdegraphics-libksane' 'qt-gstreamer' 'boost' 'hugin-tools')
-source=("http://download.kde.org/unstable/${pkgname}/${pkgname}-3.0.0-rc.tar.bz2")
-md5sums=('251aedbf5a9619205d1b0ca63f5aa2f7')
+source=("http://download.kde.org/stable/${pkgname}/${pkgname}-${pkgver}.tar.bz2")
+md5sums=('e1325fa3f8d2ab2e14ca0af7261967db')
 
 build() {
    cd ${srcdir}
  
-   #mkdir -p build
+   mkdir -p build
    cd build
-   cmake ../${pkgname}-3.0.0-rc \
+   cmake ../${pkgname}-${pkgver} \
      -DCMAKE_BUILD_TYPE=Release \
      -DCMAKE_INSTALL_PREFIX=/usr \
      -DDIGIKAMSC_USE_PRIVATE_KDEGRAPHICS=ON
