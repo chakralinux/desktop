@@ -1,7 +1,7 @@
 #
 # KDE SC Packages for Chakra, part of chakra-project.org
 #
-# maintainer (x86_64): Manuel Tortosa <manutortosa[at]chakra-project[dot]org>
+# maintainer: Manuel Tortosa <manutortosa[at]chakra-project[dot]org>
 
 # include global config
 source ../_buildscripts/${current_repo}-${_arch}-cfg.conf
@@ -9,7 +9,7 @@ source ../_buildscripts/${current_repo}-${_arch}-cfg.conf
 pkgname="nepomuk-core"    
 arch=('x86_64')
 pkgver=${_kdever}
-pkgrel=1
+pkgrel=2
 pkgdesc="The core Nepomuk system"
 url="http://www.kde.org"
 license=('GPL' 'LGPL' 'FDL')
@@ -17,11 +17,14 @@ options=('docs' '!splithdr' 'splitdbg' 'log')
 depends=("kdelibs>=${_kdever}" 'poppler-qt' 'ffmpeg')
 makedepends=('pkg-config' 'cmake' 'automoc4' 'doxygen')
 
-source=($_mirror/${pkgname}-$_kdever.tar.xz)
-md5sums=(`grep ${pkgname}-$_kdever.tar.xz ../kde-sc.md5 | cut -d" " -f1`)
+source=($_mirror/${pkgname}-$_kdever.tar.xz
+       'basicindexingqueue.diff')
+md5sums=(`grep ${pkgname}-$_kdever.tar.xz ../kde-sc.md5 | cut -d" " -f1`
+         '2199b16711cf1c5f6c16e64d740dca50')
 
 build() {
 	cd ${pkgname}-${pkgver}
+	patch -p1 -i ${srcdir}/basicindexingqueue.diff
 	
         rm -rf build 
         mkdir -p build && cd build
