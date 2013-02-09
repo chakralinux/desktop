@@ -5,7 +5,7 @@
 
 pkgname=rekonq
 pkgver=2.1
-pkgrel=1
+pkgrel=3
 pkgdesc='A WebKit based web browser for KDE'
 arch=('x86_64')
 url='http://rekonq.sourceforge.net/'
@@ -21,7 +21,7 @@ source=("http://downloads.sourceforge.net/${pkgname}/${pkgname}-${pkgver}.tar.bz
        'searchengine.diff')
 md5sums=('90b3737246feb22a8f142f9c45d31512'
          'cd493df91e34030a8195eaf8b6d68140'
-         '5d7bab51b8f4b78c0f7cd94c885f22c3'
+         'fa0b5074c87e3ad1364e9123d6a9cdfc'
          '7ab9dc2e4397a66c7a64e08265171996')
 
 build(){
@@ -43,5 +43,5 @@ package() {
   
   make DESTDIR=${pkgdir} install
   rm ${pkgdir}/usr/share/apps/rekonq/pics/background.png
-  install -m 644 -p ${srcdir}/background.png ${pkgdir}/usr/share/apps/rekonq/pics/background.png
+  #install -m 644 -p ${srcdir}/background.png ${pkgdir}/usr/share/apps/rekonq/pics/background.png
 }
