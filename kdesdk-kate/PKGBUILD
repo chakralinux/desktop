@@ -10,7 +10,7 @@ source ../_buildscripts/${current_repo}-${_arch}-cfg.conf
 pkgname=('kdesdk-kate')
 _pkgname=kate
 pkgver=${_kdever}
-pkgrel=1
+pkgrel=2
 url="http://kde.org/"
 arch=('x86_64')
 license=('GPL' 'LGPL' 'FDL')
@@ -20,9 +20,11 @@ groups=('kde' 'kdesdk' 'kde-minimal' 'kde-uninstall')
 provides=('kate')
 install='kdesdk-kate.install'
 source=("$_mirror/${_pkgname}-$_kdever.tar.xz"
-        'pkgbuild-syntax-highlight.patch')
+        'pkgbuild-syntax-highlight.patch'
+        'katepartpluginmanager.diff')
 md5sums=(`grep ${_pkgname}-$_kdever.tar.xz ../kde-sc.md5 | cut -d" " -f1`
-         'be69aac51d31e1c2452116c935251464')
+         'be69aac51d31e1c2452116c935251464'
+         '9d3199d20067835bbcf3f85699513913')
 
 options=('docs' '!splithdr' 'splitdbg' 'log')
 
@@ -30,6 +32,8 @@ build() {
 	cd ${srcdir}/${_pkgname}-${pkgver}
 
 	patch -p1 -i "${srcdir}"/pkgbuild-syntax-highlight.patch
+	# https://bugs.kde.org/show_bug.cgi?id=314530
+	patch -p1 -i "${srcdir}"/katepartpluginmanager.diff
 
         rm -rf build
         mkdir build && cd build
