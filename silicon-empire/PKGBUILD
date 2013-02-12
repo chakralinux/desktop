@@ -1,47 +1,32 @@
-#
 # Apps Packages for Chakra, part of chakra-project.org
-#
 # Maintainer: Adrián Chaves Fernández (Gallaecio) <adriyetichaves gmail.com>
+# Contributions from: https://aur.archlinux.org/packages/silicon-empire/
 
 pkgname=silicon-empire
 _pkgname=silicon
-_pkgname2=Silicon
-pkgver=1.7.3
+pkgver=1.8.1
 pkgrel=1
 pkgdesc="Set of tools to manage and organize your optical discs like CDs, DVDs and Blu-rays."
-arch=('i686' 'x86_64')
+arch=('x86_64')
 url="http://getsilicon.org/"
 license=('GPL3')
-depends=('fuseiso' 'phonon' 'taglib' 'qt')
+depends=('fuseiso' 'phonon' 'taglib' 'qt' 'cdrkit')
 conflicts=('silicon-empire-git')
 categories=('multimedia')
 screenshot="http://getsilicon.org/wp-content/uploads/big-screeshot.png"
-source=(http://getsilicon.org/download/${_pkgname}_${pkgver}_src.tar.gz)
-md5sums=('3608f1ef5698c286caa4184ba0089cfe')
+source=("http://getsilicon.org/download/${_pkgname}-${pkgver}-src.tar.gz"
+        'qtlocalpeer.diff')
+md5sums=('005bb243efd7fd4216f478fbc6665167'
+         '19fd34c24398f0ff2df99599b67fbda8')
 
 build() {
-  cd $srcdir/$_pkgname2
-
-  sed -i '48d' Makefile
-
-  # Fix Makefile(qmake-qt4 -> qmake)
-  # sed -i 's/qmake-qt4/qmake/' Makefile
-
+  cd "$srcdir/$_pkgname-${pkgver}-src"
+  patch -p0 < ../qtlocalpeer.diff
+  cmake -DCMAKE_BUILD_TYPE=release -DCMAKE_INSTALL_PREFIX=/usr .
   make
 }
 
 package() { 
-  cd $srcdir/$_pkgname2/build-linux
-
-  install -Dm755 bin/$_pkgname $pkgdir/usr/bin/$_pkgname
-  cp -R lib/ share/ $pkgdir/usr
-
-  # Desktop icon
-  cd $srcdir/$_pkgname2/src/Files
-  install -Dm644 $_pkgname.desktop $pkgdir/usr/share/applications/$_pkgname.desktop
-  install -Dm644 icons/silicon_22.png $pkgdir/usr/share/icons/hicolor/22x22/apps/$_pkgname.png
-  install -Dm644 icons/silicon_32.png $pkgdir/usr/share/icons/hicolor/32x32/apps/$_pkgname.png
-  install -Dm644 icons/silicon_48.png $pkgdir/usr/share/icons/hicolor/48x48/apps/$_pkgname.png
-  install -Dm644 icons/silicon_64.png $pkgdir/usr/share/icons/hicolor/64x64/apps/$_pkgname.png
-  install -Dm644 icons/silicon_128.png $pkgdir/usr/share/icons/hicolor/128x128/apps/$_pkgname.png
+  cd "$srcdir/$_pkgname-${pkgver}-src"
+  make DESTDIR=${pkgdir} install
 }
