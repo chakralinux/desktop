@@ -3,23 +3,23 @@
 #
 # contributor (x86_64): Giuseppe Calà <jiveaxe@gmail.com>
 
-# include global config
-source ../_buildscripts/${current_repo}-${_arch}-cfg.conf
-
-pkgname=beautiful-soup
-pkgver=3.2.0
+pkgname=python2-beautifulsoup
+pkgver=3.2.1
 pkgrel=1
 pkgdesc="A Python HTML/XML parser designed for quick turnaround projects like screen-scraping."
-arch=('i686' 'x86_64')
+arch=('any')
 url="http://www.crummy.com/software/BeautifulSoup/index.html"
 license=('PSF')
 depends=('python2')
+replaces=('beautiful-soup')
+provides=('beautiful-soup')
+conflicts=('beautiful-soup')
 
 source=(http://www.crummy.com/software/BeautifulSoup/download/3.x/BeautifulSoup-$pkgver.tar.gz)
-md5sums=('ef1e78f7689ea61314f7bddebcfde88c')
+md5sums=('5ad1a8550a19bfc945baac23eb8293ed')
 
 build() {
     cd $startdir/src/BeautifulSoup-$pkgver
-    python2 setup.py install --root=$startdir/pkg
+    python2 setup.py install --root=${pkgdir} -O1
 }
  
