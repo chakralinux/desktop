@@ -1,33 +1,29 @@
 #
-# Packages for Chakra, part of chakra-project.org
+# Apps Packages for Chakra, part of chakra-project.org
 #
-# maintainer (i686): Phil Miller <philm[at]chakra-project[dog]org>
-# maintainer (x86_64): Manuel Tortosa <manutortosa[at]chakra-project[dot]org>
+# maintainer abveritas[at]chakra-project[dot]org>
 
 pkgname=oxygen-gtk3
 pkgver=1.1.4
-_pkgver=1.0.4
-pkgrel=7
+_pkgver=1.1.2 # remove as soon as upstream reaches 1.1.4
+pkgrel=8
 pkgdesc="The Oxygen engine for GTK3, for better Qt/GKT+ integration."
-arch=('i686' 'x86_64')
+arch=('x86_64')
 url=("http://projects.kde.org/projects/playground/artwork/oxygen-gtk/")
 license=('LGPL3' 'GPL')
-
 depends=('cairo' 'dbus-glib')
 makedepends=('gcc' 'cmake' 'gtk3')
 categories=('system')
 groups=('gtk-integration')
-
 source=("http://download.kde.org/stable/${pkgname}/${_pkgver}/src/${pkgname}-${_pkgver}.tar.bz2")
-md5sums=('793786ee97f2d0601ed50a82fc95db25')
+md5sums=('2a251c52a7799e67a4af70adc4ed3c60')
 
 build() {
 	cd $srcdir/$pkgname-$_pkgver
 	rm -rf build
 	mkdir build && cd build
 	cmake -DCMAKE_BUILD_TYPE=Release \
-	      -DCMAKE_SKIP_RPATH=ON \
-	      -DCMAKE_INSTALL_PREFIX=/usr .. || return 1
+	      -DCMAKE_INSTALL_PREFIX=/usr .. 
 	make
 }
 
