@@ -10,23 +10,23 @@ pkgname=tribe-netinst
 provides=tribe
 replaces=tribe
 conflicts=tribe
-pkgver=2013.01.14
-_rls_notes=20130106
+pkgver=2013.02.14
+_rls_notes=20130209
 pkgrel=1
-_codename=Claire
+_codename=Benz
 pkgdesc="Tribe - Chakra LiveCD Installer"
 url="http://git.chakra-project.org/chakra/"
 license="GPL"
 arch=('x86_64')
-depends=('kdelibs' 'kdeedu-marble>=4.9.5' 'squashfs-tools' 'tribe-partitionmanager'
+depends=('kdelibs' 'kdeedu-marble>=4.10.0' 'squashfs-tools' 'tribe-partitionmanager'
         'cinstall>=0.4.6.10' 'rsync' 'mkinitcpio-nfs-utils' 'ntfs-3g' 'libpwquality')
 makedepends=('cmake' 'kde-workspace' 'automoc4')
 options=('!splithdr' '!splitdbg')
-source=("${pkgname}-${pkgver}.tar.gz"
+source=("${pkgname}-${pkgver}.tar.xz"
         "http://chakra-linux.org/sources/tribe/RELEASE_NOTES_${_rls_notes}.html"
         'launch-tribe.sh')
-md5sums=('fa71ee5818d2e5196af1bfa2dd991c17'
-         '5d6efaa28eda5324ace5edfa79bbef69'
+md5sums=('41deca571e62a48894b74c0a2577f396'
+         'd7bf7d3628d4cff05711f842e61c0417'
          'e31855da237a2c8029774831b3c04685')
 
 groups=('kde-uninstall')
@@ -37,7 +37,7 @@ install=tools-tribe.install
 
 mksource() {
 	  rm -vRf ${pkgname}-${pkgver}
-	  git clone -b info git://gitorious.org/chakra/${pkgname}.git ${pkgname}-${pkgver}
+	  git clone git://gitorious.org/chakra/tribe.git ${pkgname}-${pkgver}
 	  #git clone git://github.com/abveritas/Tribe.git ${pkgname}-${pkgver}
 	  #git clone git://github.com/Inkane/Tribe.git ${pkgname}-${pkgver}
 	  rm -vRf ${pkgname}-${pkgver}/.git
@@ -82,6 +82,3 @@ package()
 	# remove nasty files
 	find $startdir/pkg/ -name ".git" -type d -exec rm -fr {} +
 }
-md5sums=('de0a01f581e44ae94a4f045773a32fc8'
-         '5d6efaa28eda5324ace5edfa79bbef69'
-         'e31855da237a2c8029774831b3c04685')
