@@ -1,25 +1,21 @@
 #
 # Chakra Packages for Chakra, part of chakra-project.org
 #
-# maintainer (i686): Phil Miller <philm[at]chakra-project[dog]org>
 # maintainer (x86_64): Manuel Tortosa <manutortosa[at]chakra-project[dot]org>
 
 # from AUR package http://aur.archlinux.org/packages.php?ID=12130
 
-# include global config
-source ../_buildscripts/${current_repo}-${_arch}-cfg.conf
-
 pkgname=cgdb
-pkgver=0.6.6
+pkgver=0.6.7
 pkgrel=1
 pkgdesc="Curses-based interface to the GNU Debugger"
-arch=('i686' 'x86_64')
+arch=('x86_64')
 url="http://cgdb.sourceforge.net/"
 license=('GPL')
-depends=('readline>=5.1' 'ncurses' 'gdb')
+depends=('readline' 'ncurses' 'gdb')
 categories=('programming')
-source=("http://downloads.sourceforge.net/cgdb/$pkgname-$pkgver.tar.gz")
-md5sums=('394b542b495755ab8392b7e88dace744')
+source=("http://cgdb.me/files//$pkgname-$pkgver.tar.gz")
+md5sums=('e2d9a973d2683faf8130a82703bf6a31')
 
 build() {
   cd $startdir/src/$pkgname-$pkgver
