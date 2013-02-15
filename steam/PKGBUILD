@@ -1,0 +1,44 @@
+#
+# Chakra Packages for Chakra, part of chakra-project.org
+#
+# maintainer (x86_64): AlmAck <gluca86 [at] gmail.com>
+# contributor (ccr): blablub <spamalicious.steve@gmail.com>
+
+pkgname=steam
+pkgver=1.0.0.27
+pkgrel=1
+pkgdesc="Installer for the Steam software distribution service"
+arch=('x86_64')
+url="http://steampowered.com/"
+license=('custom')
+depends=('bash' 'desktop-file-utils' 'hicolor-icon-theme' 'curl'
+      'dbus' 'freetype2'  'gdk-pixbuf2' 'ttf-liberation'
+      'lib32-sdl' 'lib32-libvorbis' 'lib32-alsa-lib'
+      'lib32-libgcrypt' 'lib32-nss' 'lib32-openal'
+      'lib32-libgl' 'lib32-gcc-libs' 'lib32-libx11')
+      
+optdepends=(
+      'lib32-ati-dri: for open source ATI driver users'
+      'lib32-catalyst-utils: for AMD Catalyst users'
+      'lib32-intel-dri: for open source Intel driver users'
+      'lib32-nouveau-dri: for Nouveau users'
+      'lib32-nvidia-utils-bumblebee: for NVIDIA + Bumblebee users'
+      'lib32-nvidia-utils: for NVIDIA proprietary blob users')
+
+install=steam.install  
+source=("http://repo.steampowered.com/$pkgname/pool/$pkgname/s/$pkgname/${pkgname}_$pkgver.tar.gz")
+md5sums=('b7ff967f7848cfa625ff51150fc67e1d')
+  
+  
+package() {
+    cd "$srcdir/steam-$pkgver"
+    make DESTDIR=${pkgdir} install
+    
+    # Install license
+    install -Dm644 "$pkgdir/usr/share/doc/steam/steam_install_agreement.txt" "$pkgdir/usr/share/licenses/steam/LICENSE"
+
+    # blank steamdeps because apt-get
+    ln -sf /bin/true "$pkgdir/usr/bin/steamdeps"
+}
+  
+
