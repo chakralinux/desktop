@@ -24,7 +24,7 @@ pkgname=('libreoffice-af'    'libreoffice-ar'    'libreoffice-as'    'libreoffic
 	 'libreoffice-uz'    'libreoffice-ve'    'libreoffice-vi'    'libreoffice-xh'    'libreoffice-zh-CN' 'libreoffice-zh-TW'
 	 'libreoffice-zu')
 pkgver=4.0.0
-pkgrel=1
+pkgrel=2
 pkgdesc="LibreOffice language/localisation files"
 arch=('any')
 url="http://www.documentfoundation.org"
@@ -354,6 +354,8 @@ package_libreoffice-ca() {
   mkdir -p "${pkgdir}"/usr/lib/libreoffice
   cp -R opt/libreoffice4.0/* "${pkgdir}"/usr/lib/libreoffice
   chown root:root -R "${pkgdir}"/usr/lib/libreoffice
+  # conflict with libreoffice-es
+  rm -rf "${pkgdir}"/usr/lib/libreoffice/share/extensions/dict-an
 }
 
 package_libreoffice-ca-XV() {
