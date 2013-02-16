@@ -1,35 +1,55 @@
 #
 # Chakra Packages for Chakra, part of chakra-project.org
 #
-# maintainer (i686): Phil Miller <philm[at]chakra-project[dog]org>
 # maintainer (x86_64): Manuel Tortosa <manutortosa[at]chakra-project[dot]org>
+# contributor (x86_64): AlmAck <gluca86[at]google[dot]com>
 
 pkgname=backintime-kde
-pkgver=1.0.8
+pkgver=1.0.20
+_bzrversion=830
 pkgrel=1
 pkgdesc="Back In Time is a simple backup system for Linux inspired from 'flyback project' and 'TimeVault'. KDE 4 version"
-arch=('i686' 'x86_64')
-url="http://backintime.le-web.org/"
+arch=('x86_64')
+url="https://launchpad.net/backintime"
 license="GPL"
 depends=('rsync' 'cron' 'python' 'xorg-utils' 'pyqt' 'kdebindings-python')
+makedepends=('bzr')
 categories=('utils' 'backup')
-source=(http://backintime.le-web.org/download/backintime/backintime-${pkgver}_src.tar.gz)
-md5sums=('676c743cb64fdc646c290c62e45640ff')
+
+_bzrbranch=lp:backintime 
+_bzrmod=trunk
 
 build() {
-cd $startdir/src/backintime-$pkgver/common
-./configure
-make || return 1
-make DESTDIR=${pkgdir} install || return 1
-sed -i -e 's/python/python2/g' ${pkgdir}/usr/bin/backintime
 
-cd $startdir/src/backintime-$pkgver/kde4
-./configure
-make || return 1
+  msg "Connecting to the server...."
+  cd ${srcdir}
+
+  if [[ -d "$_bzrmod" ]]; then
+    cd "$_bzrmod" && bzr pull "$_bzrbranch" -r "$_bzrversion"
+    msg "The local files are updated."
+  else
+    #bzr branch "$_bzrbranch" -q -r "$_bzrversion"
+    bzr branch ${_bzrbranch} ${_bzrmod} -q -r ${_bzrversion}
+  fi
+ 
+  msg "BZR checkout done or server timeout"
+  msg "Starting make..."
+  
+  cd $srcdir/$_bzrmod/common
+  ./configure
+  make || return 1
+
+  cd $srcdir/$_bzrmod/kde4
+  ./configure
+  make || return 1
 }
 
 package(){
-cd $startdir/src/backintime-$pkgver/kde4
-make DESTDIR=${pkgdir} install || return 1
-sed -i -e 's/python/python2/g' ${pkgdir}/usr/bin/backintime-kde4
+  cd $srcdir/$_bzrmod/common
+  make DESTDIR=${pkgdir} install || return 1
+  sed -i -e 's/python/python2/g' ${pkgdir}/usr/bin/backintime
+  
+  cd $srcdir/$_bzrmod/kde4
+  make DESTDIR=${pkgdir} install || return 1
+  sed -i -e 's/python/python2/g' ${pkgdir}/usr/bin/backintime-kde4
 }
