@@ -4,37 +4,25 @@
 # Maintainer: Adrián Chaves Fernández (Gallaecio) <adriyetichaves@gmail.com>
 
 pkgname=django-simple-captcha
-_dev=mbi
-pkgver=20120811
+pkgver=0.3.6
 pkgrel=1
 pkgdesc="A simple customizable application to add captcha images to Django forms"
-url="https://github.com/$_dev/$pkgname"
-arch=('i686' 'x86_64')
+arch=('x86_64')
+url="http://pypi.python.org/pypi/django-simple-captcha"
 license=('BSD')
-depends=('django' 'python2')
- 
-_gitroot="git://github.com/$_dev/$pkgname.git"
-_gitname="$pkgname"
+depends=('django' 'python2' 'python2-imaging' 'python-distribute')
+source=(http://pypi.python.org/packages/source/d/django-simple-captcha/django-simple-captcha-${pkgver}.tar.gz)
+md5sums=('83e0608342fb85968fd7539affa73226')
 
 build() {
-    cd $srcdir
-    
-    if [ -d $_gitname ] ; then
-        cd $_gitname && git pull origin
-    else
-        git clone $_gitroot $_gitname
-        cd $_gitname
-    fi
-    
-    # Get to the target commit.
-    git checkout 71d8d55e68
-    
+    cd "${srcdir}/django-simple-captcha-${pkgver}"
+   
     # Build.
     python2 setup.py build
 }
 
 package() {
-    cd $srcdir/$_gitname
+    cd "${srcdir}/django-simple-captcha-${pkgver}"
     python2 setup.py install --prefix=/usr --root=$pkgdir
     
     # License.
