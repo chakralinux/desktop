@@ -4,21 +4,23 @@
 # Maintainer: Adrián Chaves Fernández (Gallaecio) <adriyetichaves@gmail.com>
 
 pkgname=sumwars
-pkgver=0.5.4
-_pkgver=0-5-4
-pkgrel=7
+pkgver=0.5.6
+pkgrel=1
 pkgdesc="Summoning Wars is a role-playing game, featuring both a single-player and a multiplayer mode for about 2 to 8 players."
 arch=('i686' 'x86_64')
 url="http://sumwars.org/"
 license=('GPL3')
-depends=('cegui>=0.7.0' 'freealut' 'libogg' 'libvorbis' 'lua>=5.1.0' 'ogre>=1.7.0' 'ois' 'openal')
+depends=('cegui>=0.7.0' 'freealut' 'libogg' 'libvorbis' 'lua>=5.1.0' 'ogre>=1.7.0' 'ois' 'openal' 'poco')
 categories=('games')
-source=("http://downloads.sourceforge.net/project/$pkgname/$pkgver/${pkgname}_${_pkgver}_src.tgz")
-md5sums=('98fe18a749614b5a640f2b36fa819f47')
+source=("http://downloads.sourceforge.net/project/$pkgname/$pkgver/${pkgname}-${pkgver}-src.tar.bz2")
+md5sums=('89f53fe1023072785e039bdef312a04b')
 
 build() {
-  cd $srcdir/${pkgname}_${_pkgver}_src
-  mkdir build && cd build
+  cd $srcdir/${pkgname}-${pkgver}
+
+  sed -e "s#TARGET_LINK_LIBRARIES(sumwars \${LINK_LIBS})#TARGET_LINK_LIBRARIES(sumwars \${LINK_LIBS} \"boost_system\")#" -i CMakeLists.txt
+
+  mkdir -p build && cd build
   cmake \
     -DCMAKE_INSTALL_PREFIX=/usr \
     -DCMAKE_BUILD_TYPE=RelWithDebInfo \
@@ -27,35 +29,38 @@ build() {
 }
  
 package() {
-  cd $srcdir/${pkgname}_${_pkgver}_src/build
+  cd $srcdir/${pkgname}-${pkgver}
 
   #make install is broken
   #make DESTDIR=$pkgdir install
 
-  install -dm 775 $pkgdir/usr/share/$pkgname/save
+  # Executable.
+  install -Dm755 build/$pkgname $pkgdir/usr/share/$pkgname/$pkgname
+  
+  # Credits.
+  install -Dm644 AUTHORS $pkgdir/usr/share/$pkgname/authors.txt
+
+  # Savegames.
+  install -dm775 $pkgdir/usr/share/$pkgname/save
   chown :games $pkgdir/usr/share/$pkgname/save
 
-  install -dm 755 $pkgdir/usr/{bin,share/pixmaps}
-
-  install -m755 $pkgname $pkgdir/usr/share/$pkgname/$pkgname
-
-  cd $srcdir/${pkgname}_${_pkgver}_src/
-
-  for filename in authors.txt ogre.cfg plugins.cfg resources.cfg
-  do
-    install -m644 $filename $pkgdir/usr/share/$pkgname/$filename
+  # Desktop Integration.
+  install -Dm644 share/icon/SumWarsIcon_128x128.png $pkgdir/usr/share/pixmaps/$pkgname.png
+  install -Dm755 packaging/$pkgname.desktop $pkgdir/usr/share/applications/$pkgname.desktop
+  sed \
+    -e "s#/games/#/bin/#g" \
+    -e "s#icons/hicolor/128x128/$pkgname.png#/pixmaps/$pkgname.png#" \
+    -i $pkgdir/usr/share/applications/$pkgname.desktop
+  
+  cp -r share/* $pkgdir/usr/share/$pkgname
+  
+  for filename in CEGUI Ogre $pkgname; do
+    touch $pkgdir/usr/share/$pkgname/$filename.log
   done
-
-  install -m644 resources/itempictures/shield.png $pkgdir/usr/share/pixmaps/sumwars.png
-
-  cp -r data $pkgdir/usr/share/$pkgname/
-  cp -r resources $pkgdir/usr/share/$pkgname
-  touch $pkgdir/usr/share/$pkgname/CEGUI.log
-  touch $pkgdir/usr/share/$pkgname/Ogre.log
-  touch $pkgdir/usr/share/$pkgname/sumwars.log
   chmod 777 $pkgdir/usr/share/$pkgname/*.log
 
   # Execution script.
+  install -dm755 $pkgdir/usr/bin
   echo "#!/bin/bash"		>  $pkgdir/usr/bin/$pkgname
   echo "cd /usr/share/$pkgname"	>> $pkgdir/usr/bin/$pkgname
   echo "./$pkgname"		>> $pkgdir/usr/bin/$pkgname
