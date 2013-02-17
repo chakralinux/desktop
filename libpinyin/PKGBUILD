@@ -1,0 +1,30 @@
+#
+# Apps Packages for Chakra, part of chakra-project.org
+#
+# Maintainer: Weng Xuetian <wengxt@gmail.com>
+
+pkgname=libpinyin
+pkgver=0.8.1
+pkgrel=1
+pkgdesc="Library to deal with pinyin."
+arch=('x86_64')
+url="https://github.com/libpinyin/libpinyin"
+license=('GPL')
+depends=('db')
+makedepends=('automake' 'libtool' 'autoconf')
+options=(!libtool)
+source=("https://github.com/libpinyin/libpinyin/archive/${pkgver}.tar.gz")
+md5sums=('5127f673efe08dd27dc96ef8a7953956')
+
+build() {
+  cd ${srcdir}/libpinyin-$pkgver
+
+  (aclocal && libtoolize --force && autoheader && automake -a && autoconf) 
+  (./configure --prefix=/usr && make) 
+}
+
+package() {
+  cd ${srcdir}/libpinyin-$pkgver
+  
+  make DESTDIR=${pkgdir} install 
+}
