@@ -1,19 +1,18 @@
 #
-# Chakra Packages for Chakra, part of chakra-project.org
+# Apps packages for Chakra, part of chakra-project.org
 #
-# contributor (x86_64): Giuseppe Calà <jiveaxe@gmail.com>
-
-# include global config
-source ../_buildscripts/${current_repo}-${_arch}-cfg.conf
+# maintainer abveritas[at]chakra-project[dot]org>
+# contributor Giuseppe Calà <jiveaxe@gmail.com>
 
 pkgname=kdeplasma-applets-menubar
-pkgver=0.1.16
-pkgrel=2
+pkgver=0.2.0
+
+pkgrel=1
 pkgdesc="Plasmoid to display menubar of application windows"
 url="https://launchpad.net/plasma-widget-menubar"
-arch=('i686' 'x86_64')
+arch=('x86_64')
 license=('GPL')
-depends=('kdebase-workspace' 'appmenu-qt' 'qjson')
+depends=('kde-workspace' 'appmenu-qt' 'qjson')
 makedepends=('cmake' 'automoc4')
 conflicts=('plasma-widget-menubar')
 replaces=('plasma-widget-menubar')
@@ -21,14 +20,19 @@ provides=('plasma-widget-menubar')
 categories=('accessories')
 source=("http://launchpad.net/plasma-widget-menubar/trunk/${pkgver}/+download/plasma-widget-menubar-${pkgver}.tar.bz2"
         "https://bugs.launchpad.net/plasma-widget-menubar/+bug/762865/+attachment/2111453/+files/fix_gtk_apps.diff")
-sha1sums=('be5a904bd73d8021b7d4909083931f1fbabe985c'
-          'f874222526e7b00848ad104c41bfa0254ce085cd')
+md5sums=('68852bf8612b9a1336fc2485b268445e'
+         'e8f8f06f7f0b648027737c7759710ca4')
 
 build() {
-  cd ${srcdir}/plasma-widget-menubar-${pkgver}
+  mkdir build
+  cd build
+  cmake ../plasma-widget-menubar-${pkgver} \
+    -DCMAKE_BUILD_TYPE=Release \
+    -DCMAKE_INSTALL_PREFIX=$(kde4-config --prefix)
+  make
+}
 
-  cmake -DCMAKE_INSTALL_PREFIX=`kde4-config --prefix`
-
-  make || return 1
-  make DESTDIR=${pkgdir} install || return 1
+package() {
+  cd build
+  make DESTDIR="${pkgdir}" install
 }
