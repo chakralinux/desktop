@@ -6,30 +6,33 @@
 
 pkgname=sigil
 _pkgname=Sigil
-pkgver=0.6.2
+pkgver=0.7.0
 pkgrel=1
 pkgdesc="A multi-platform WYSIWYG ebook editor. It is designed to edit books in ePub format. "
 arch=('x86_64')
 url="http://code.google.com/p/sigil/"
 license=('GPL3')
-depends=('qtwebkit' 'boost-libs')
+depends=('qt5' 'boost-libs')
 makedepends=('cmake' 'gendesk' 'boost')
 categories=('office')
 install=sigil.install
 screenshot=('http://1.bp.blogspot.com/-K2Q-tdVbPRI/UI08v7LhzHI/AAAAAAAAABY/vZ5LHjM6nb4/s1600/Screen+Shot+2012-10-28+at+10.07.03+AM.png')
 source=("http://$pkgname.googlecode.com/files/$_pkgname-$pkgver-Code.zip")
-md5sums=('78615dc007c12cc34271243d82783a36')
+md5sums=('06ba5ace506e01adf4a37534fa276cec')
 
 
 build() {
   gendesk -n
 
-  mkdir build && cd build
+  mkdir build 
+  cd build
+
   cmake -G "Unix Makefiles" \
     -DCMAKE_INSTALL_PREFIX=/usr \
     -DCMAKE_C_FLAGS:STRING="$CFLAGS" \
     -DCMAKE_CXX_FLAGS:STRING="$CXXFLAGS" \
     -DCMAKE_BUILD_TYPE=Release \
+    -DCMAKE_PREFIX_PATH=/opt/qt5/lib/cmake \
     -DCMAKE_SKIP_RPATH=ON ..
   make
 }
