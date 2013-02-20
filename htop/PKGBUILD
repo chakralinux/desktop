@@ -1,33 +1,45 @@
 #
 # Chakra Packages for Chakra, part of chakra-project.org
 #
-# maintainer (i686): Phil Miller <philm[at]chakra-project[dog]org>
 # maintainer (x86_64): Manuel Tortosa <manutortosa[at]chakra-project[dot]org>
 
 pkgname=htop
-pkgver=1.0.1
+pkgver=1.0.2
 pkgrel=1
 pkgdesc="Interactive process viewer"
-arch=('i686' 'x86_64')
+arch=('x86_64')
 url="http://htop.sourceforge.net/"
 license=('GPL')
 depends=('ncurses')
 makedepends=('python2')
 options=('!emptydirs')
 categories=('utils')
-source=(http://downloads.sourceforge.net/htop/${pkgname}-${pkgver}.tar.gz)
-md5sums=('d3b80d905a6bff03f13896870787f901')
+source=("http://downloads.sourceforge.net/htop/${pkgname}-${pkgver}.tar.gz"
+	'tree-crash.patch')
+md5sums=('0d01cca8df3349c74569cefebbd9919e'
+	 '50268637db53c4beb18c9b63eb4db281')
 
 build() {
-	cd ${srcdir}/${pkgname}-${pkgver}
-	sed -i 's|ncursesw/curses.h|curses.h|' RichString.h RichString.c configure 
-	sed -i 's|python|python2|' scripts/MakeHeader.py
-	./configure --prefix=/usr --enable-unicode --enable-openvz \
-	    --enable-vserver 
-	make 
+  cd ${srcdir}/${pkgname}-${pkgver}
+  
+  sed -i 's|ncursesw/curses.h|curses.h|' RichString.h RichString.c configure 
+  sed -i 's|python|python2|' scripts/MakeHeader.py
+  
+  # Boost field buffer size - crashes when trying to draw very deep UTF-8 trees
+  # Test by nesting 30 shells (Arch import)
+  patch -N -i ../tree-crash.patch
+  
+  ./configure \
+      --prefix=/usr  \
+      --enable-unicode  \
+      --enable-openvz \
+      --enable-vserver \
+      --enable-cgroup
+      
+  make 
 }
 
 package() {
-	cd ${srcdir}/${pkgname}-${pkgver}
-	make DESTDIR=${pkgdir} install 
+  cd ${srcdir}/${pkgname}-${pkgver}
+  make DESTDIR=${pkgdir} install 
 }
