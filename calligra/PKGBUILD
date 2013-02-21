@@ -27,13 +27,14 @@ pkgname=('calligra-3rdparty'
          'calligra-braindump'
          'calligra-flow')
 pkgver=2.6.1
-pkgrel=2
+pkgrel=3
 arch=('x86_64')
 url='http://www.calligra-suite.org'
 license=('FDL1.2' 'GPL2' 'LGPL')
 makedepends=('kdepimlibs' 'eigen' 'freetds' 'kdegraphics-okular' 'kdeedu-marble' 'xbase' 'libpqxx<4' 'libvisio'
              'libgsf' 'libwpd' 'libwpg' 'libwps' 'pstoedit' 'glew' 'gsl' 'cmake' 'automoc4' 'libspnav' 'libqtgtl'
-             'boost' 'libkdcraw' 'fftw' 'opengtl' 'docbook-xsl' 'create-resources' 'lcms2' 'libmariadbclient')
+             'boost' 'libkdcraw' 'fftw' 'opengtl' 'docbook-xsl' 'create-resources' 'lcms2' 'libmariadbclient'
+             'vc' 'opencolorio')
 groups=('calligra')
 source=("http://mirrors.mit.edu/kde/stable/${pkgbase}-${pkgver}/${pkgbase}-${pkgver}.tar.bz2")
 screenshot=("http://upload.wikimedia.org/wikipedia/commons/thumb/3/3e/Calligra_Stage_2.4.png/800px-Calligra_Stage_2.4.png")
@@ -220,7 +221,9 @@ package_calligra-krita() {
   pkgdesc="Edit and paint images"
   depends=('calligra-libs' 'calligra-templates' 'calligra-plugins' 'glew' 'qimageblitz' 'poppler-qt'
            'openexr' 'opengtl' 'hicolor-icon-theme' 'shared-mime-info' 'lcms2' 'libqtgtl')
-  optdepends=('calligra-filters: import/export filters')
+  optdepends=('calligra-filters: import/export filters'
+              'vc: Required by the Krita for vectorization'
+              'opencolorio: Required by the Krita LUT docker')
   provides=('krita')
   conflicts=('koffice-krita' 'calligra-krita-git')
   replaces=('koffice-krita' 'calligra-krita-git')
