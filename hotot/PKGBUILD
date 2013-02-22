@@ -1,0 +1,40 @@
+#
+# Apps Packages for Chakra, part of chakra-project.org
+#
+# maintainer abveritas[at]chakra-project[dot]org>
+
+pkgname=hotot
+pkgver=0.9.8.98
+pkgrel=1
+pkgdesc="A lightweight & open source microblogging software (twitter identi.ca)"
+arch=('x86_64')
+url="http://www.hotot.org/"
+license=('LGPL3')
+depends=('qt5')
+makedepends=('cmake' 'intltool' 'python2')
+install="hotot.install"
+source=("https://github.com/lyricat/Hotot/tarball/master/${pkgver}.tar.gz")
+md5sums=('464eb6b3b805d49a17089e579be9f2cb')
+
+build() {
+  cd ${srcdir}/lyricat-Hotot-6f87ed7
+  mkdir build 
+  cd build
+
+  cmake .. -DCMAKE_INSTALL_PREFIX=/usr \
+           -DWITH_GTK=OFF \
+           -DWITH_QT=OFF \
+           -DWITH_QT5=ON \
+           -DWITH_CHROME=OFF 
+  make
+}
+
+package() {
+  cd ${srcdir}/lyricat-Hotot-6f87ed7/build
+
+  make DESTDIR="$pkgdir/" install
+
+  # remove google analytics tracking 
+  find "$pkgdir" -name hotot.js -exec \
+    sed -i '/\/\/ 7. run track code/,+12d' {} \;
+}
