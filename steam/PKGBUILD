@@ -5,7 +5,7 @@
 # contributor (ccr): blablub <spamalicious.steve@gmail.com>
 
 pkgname=steam
-pkgver=1.0.0.29
+pkgver=1.0.0.33
 pkgrel=1
 pkgdesc="Installer for the Steam software distribution service"
 arch=('x86_64')
@@ -23,22 +23,25 @@ optdepends=(
       'lib32-catalyst-legacy-utils: for AMD Catalyst Legacy users'
       'lib32-nvidia-utils-bumblebee: for NVIDIA + Bumblebee users'
       'lib32-nvidia-utils: for NVIDIA proprietary blob users'
-      'lib32-nvidia-304xx-utils: for NVIDIA 304xx series proprietary users')
+      'lib32-nvidia-304xx-utils: for NVIDIA 304xx series proprietary users'
+      'flashplugin: for flash video')
 
 install=steam.install  
 source=("http://repo.steampowered.com/$pkgname/pool/$pkgname/s/$pkgname/${pkgname}_$pkgver.tar.gz")
-md5sums=('7398145b6db6a2fa6e922259bc08bb24')
+md5sums=('b8c2e74b0017d4d4fbcba801b8cb907b')
   
   
 package() {
-    cd "$srcdir/steam-$pkgver"
+    cd "$srcdir/$pkgname"
     make DESTDIR=${pkgdir} install
     
     # Install license
     install -Dm644 "$pkgdir/usr/share/doc/steam/steam_install_agreement.txt" "$pkgdir/usr/share/licenses/steam/LICENSE"
 
-    # blank steamdeps because apt-get
-    ln -sf /bin/true "$pkgdir/usr/bin/steamdeps"
+    # remove steamdeps not needed for chakra linux
+    rm "$pkgdir/usr/bin/steamdeps"
 }
   
-
+# Todo:
+# Makefile need a review/patch, because is ubuntu specific
+# remove bootstraplinux_ubuntu12_32.tar.xz from usr/lib/
