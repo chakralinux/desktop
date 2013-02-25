@@ -9,7 +9,7 @@ source ../_buildscripts/${current_repo}-${_arch}-cfg.conf
 pkgname="nepomuk-core"    
 arch=('x86_64')
 pkgver=${_kdever}
-pkgrel=2
+pkgrel=3
 pkgdesc="The core Nepomuk system"
 url="http://www.kde.org"
 license=('GPL' 'LGPL' 'FDL')
@@ -18,13 +18,20 @@ depends=("kdelibs>=${_kdever}" 'poppler-qt' 'ffmpeg')
 makedepends=('pkg-config' 'cmake' 'automoc4' 'doxygen')
 
 source=($_mirror/${pkgname}-$_kdever.tar.xz
-       'basicindexingqueue.diff')
+       'basicindexingqueue.diff'
+       'empty_path.diff'
+       'index_cleaner.diff')
 md5sums=(`grep ${pkgname}-$_kdever.tar.xz ../kde-sc.md5 | cut -d" " -f1`
-         '2199b16711cf1c5f6c16e64d740dca50')
+         '2199b16711cf1c5f6c16e64d740dca50'
+         'bf4b31329278d76708ebfec015ad1a49'
+         'ad051a33545c1627501dcc1c82b78788')
 
 build() {
 	cd ${pkgname}-${pkgver}
+	# crash fixes available in 4.10.1
 	patch -p1 -i ${srcdir}/basicindexingqueue.diff
+	patch -p1 -i ${srcdir}/empty_path.diff
+	patch -p1 -i ${srcdir}/index_cleaner.diff
 	
         rm -rf build 
         mkdir -p build && cd build
