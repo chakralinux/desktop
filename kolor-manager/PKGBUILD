@@ -1,21 +1,19 @@
 # Platform Packages for Chakra, part of chakra-project.org
 #
-# maintainer (i686): Phil Miller <philm[at]chakra-project[dog]org>
-# maintainer (x86_64): Manuel Tortosa <manutortosa[at]chakra-project[dot]org>
+# maintainer abveritas[at]chakra-project[dot]org>
 
 pkgname=kolor-manager
-pkgver=20120222
+pkgver=20130227
 pkgrel=1
 pkgdesc="Oyranos CMS cross desktop settings for the KDE system settings panel."
 url="http://quickgit.kde.org/?p=kolor-manager.git&a=summary"
-arch=('i686' 'x86_64')   
-makedepends=('automoc4' 'icc_examin')
-depends=('oyranos' 'kde-workspace')
-optdepends=('icc_examin')
+arch=('x86_64') 
+license=('GPL')  
+depends=('oyranos' 'kde-workspace' 'icc_examin')
+makedepends=('automoc4')
 categories=('graphics')
 source=("http://chakra-linux.org/sources/$pkgname/$pkgname-$pkgver.tar.xz")
-license=('GPL')
-
+md5sums=('ce4b0f52ea335eff4dce2213861b76af')
 # create tarball: source PKGBUILD && mksource
 
 mksource() {
@@ -44,4 +42,3 @@ package() {
 	cd "${srcdir}/build"
 	make DESTDIR="${pkgdir}" install
 }
-md5sums=('f6e1480637b6f4d06ed95115acc06267')
