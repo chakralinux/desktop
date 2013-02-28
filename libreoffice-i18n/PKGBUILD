@@ -24,7 +24,7 @@ pkgname=('libreoffice-af'    'libreoffice-ar'    'libreoffice-as'    'libreoffic
 	 'libreoffice-uz'    'libreoffice-ve'    'libreoffice-vi'    'libreoffice-xh'    'libreoffice-zh-CN' 'libreoffice-zh-TW'
 	 'libreoffice-zu')
 pkgver=4.0.0
-pkgrel=2
+pkgrel=3
 pkgdesc="LibreOffice language/localisation files"
 arch=('any')
 url="http://www.documentfoundation.org"
@@ -220,7 +220,7 @@ build() {
     # the helppack rpm goes also into the langpack dir - so far we don't want to split the helppacks separate
 #     rpmextract.sh ${srcdir}/LibreOffice_${_oover/-/}_Linux_x86_helppack-rpm_${_pkglang}/RPMS/libobasis3.3-${_pkglang}-help-${_helpver}.i586.rpm
     #rpmextract.sh ${srcdir}/LibreOffice_${_oover/-/}_Linux_x86_helppack-rpm_${_pkglang}/RPMS/*.rpm
-    rpmextract.sh ${srcdir}/LibreOffice_${_dirver/-/}_Linux_x86_helppack-rpm_${_pkglang}/RPMS/*.rpm || /bin/true
+    rpmextract.sh ${srcdir}/LibreOffice_${_dirver}_Linux_x86_rpm_helppack_${_pkglang}/RPMS/*.rpm || /bin/true
   done
 }
 
