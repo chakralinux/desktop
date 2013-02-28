@@ -4,7 +4,7 @@
 # maintainer: abveritas@chakra-project.org
 
 pkgname=rekonq
-pkgver=2.1
+pkgver=2.2
 pkgrel=2
 pkgdesc='A WebKit based web browser for KDE'
 arch=('x86_64')
@@ -16,27 +16,22 @@ categories=('network')
 screenshot=('http://rekonq.kde.org/sites/rekonq.kde.org/files/images/Rekonq-0.6.0.png')
 install=${pkgname}.install
 source=("http://downloads.sourceforge.net/${pkgname}/${pkgname}-${pkgver}.tar.bz2"
-        'background.png'
-        'background.diff'
-        'searchengine.diff')
-md5sums=('90b3737246feb22a8f142f9c45d31512'
+       'background.png'
+       'background.diff'
+       'searchengine.diff'
+       'bookmark_toolbar.diff')
+md5sums=('33b21c40b08c87182c5dbfef2bf4aa4c'
          'cd493df91e34030a8195eaf8b6d68140'
          '5d7bab51b8f4b78c0f7cd94c885f22c3'
-         '7ab9dc2e4397a66c7a64e08265171996')
-         
-# source PKGBUILD && mksource
-mksource() {
-  git clone git://anongit.kde.org/rekonq.git
-  pushd rekonq
-  popd
-  tar -cvJf rekonq-${pkgver}.tar.xz rekonq/*
-  md5sum rekonq-${pkgver}.tar.xz
-}
+         '7ab9dc2e4397a66c7a64e08265171996'
+         'ff05ee74c0014682265083a74fc94444')
 
 build(){
   cd ${srcdir}/${pkgname}-${pkgver}  
   # Chakra theme:
   patch -p1 -i "${srcdir}/background.diff"
+  
+  patch -Rp1 -i "${srcdir}/bookmark_toolbar.diff"
   
   cd ${srcdir}
   mkdir -p build 
@@ -52,5 +47,5 @@ package() {
   
   make DESTDIR=${pkgdir} install
   rm ${pkgdir}/usr/share/apps/rekonq/pics/background.png
-  install -m 644 -p ${srcdir}/background.png ${pkgdir}/usr/share/apps/rekonq/pics/background.png
+  #install -m 644 -p ${srcdir}/background.png ${pkgdir}/usr/share/apps/rekonq/pics/background.png
 }
