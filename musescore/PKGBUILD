@@ -2,16 +2,13 @@
 # Apps Packages for Chakra, part of chakra-project.org
 #
 # Maintainer: Neophytos Kolokotronis <tetris4@gmail.com>
-# Contributor: tefan Husmann <stefan-husmann@t-online.de
-# Contributor: Cristian Maureira <saint [at] archlinux.cl>
-# Contributor: Dr.Egg <rwhite @ archlinux . us>
 
 pkgname=musescore
 _pkgname=mscore
-pkgver=1.2
-pkgrel=2
+pkgver=1.3
+pkgrel=1
 pkgdesc="A music score editor written in Qt"
-arch=('i686' 'x86_64')
+arch=('x86_64')
 url="http://www.musescore.org/en/"
 license=('GPL')
 depends=('qtwebkit' 'libsndfile' 'qtscriptgenerator' 'portaudio')
@@ -20,17 +17,16 @@ optdepends=('jack')
 categories=('multimedia')
 install=musescore.install
 source=("http://downloads.sourceforge.net/${_pkgname}/${_pkgname}-${pkgver}.tar.bz2"
-paths.patch 64bit.patch)
-md5sums=('9dd182ab3b6a80dae33d3cfe3ff08ef9'
-         'a0419cbe08b655820d52ea440653b1d3'
-         '7f98c6f97ccc6c5ed3f1641c49cb7358')
+        'paths.patch')
+md5sums=('e5fde2bef0d40ee7542e1f515a3919d1'
+         'a0419cbe08b655820d52ea440653b1d3')
 
 build() {
   cd $srcdir/${_pkgname}-${pkgver}
   export QT_PLUGINS_DIR=/usr/lib/qt/plugins 
   [ -d build ] && make clean
   patch -p1 < $srcdir/paths.patch
-  patch -p1 < $srcdir/64bit.patch
+
   make PREFIX=/usr release 
 }
 package() {
