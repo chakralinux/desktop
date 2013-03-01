@@ -5,17 +5,18 @@
 # Maintainer: Adrián Chaves Fernández (Gallaecio) <adriyetichaves@gmail.com>
 
 pkgname=fife
-pkgver=0.3.3r3
-pkgrel=2
+pkgver=0.3.4
+pkgrel=1
 pkgdesc="Flexible Isometric Free Engine is a cross platform game creation framework"
 arch=(i686 x86_64)
 url="http://fifengine.net/"
 license=('GPL')
-depends=('boost-libs' 'guichan' 'libpng' 'libvorbis' 'libxcursor' 'mesa' 'tinyxml' 'openal' 'python2' 'sdl_image' 'sdl_ttf')
+depends=('boost-libs' 'guichan' 'libvorbis' 'libxcursor' 'mesa' 'tinyxml'
+         'openal' 'python2' 'sdl_image' 'sdl_ttf')
 makedepends=('scons' 'boost' 'swig' 'zlib')
 conflicts=("$pkgname-svn")
 source=("http://downloads.sourceforge.net/project/$pkgname/active/src/${pkgname}_$pkgver.tar.gz")
-md5sums=('ee39612009e124263dc79d1f0fa7ca7c')
+md5sums=('f1d29ad8e13581eb015fa26b6838db49')
 
 build() {
   cd $srcdir/${pkgname}_$pkgver
@@ -28,7 +29,6 @@ package() {
   cd $srcdir/${pkgname}_$pkgver
 
   export PYTHON="python2"
-  export CXXFLAGS="-DBOOST_FILESYSTEM_VERSION=2"
 
   scons \
     --prefix="/usr" \
