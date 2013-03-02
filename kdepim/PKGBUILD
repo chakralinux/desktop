@@ -37,15 +37,11 @@ makedepends=('pkg-config' 'cmake' 'automoc4' 'boost' "kdelibs>=${_kdever}" "kdep
 	     "kde-common>=${_kdever}" 'docbook-xml' 'dblatex' "nepomuk-widgets>=${_kdever}")
 
 
-source=($_mirror/${pkgbase}-${pkgver}.tar.xz
-       'keylistmodel.diff')
-md5sums=(`grep ${pkgbase}-$_kdever.tar.xz ../kde-sc.md5 | cut -d" " -f1`
-         '00d0ad48d9faf4ba4ff8d7e2621db70e')
+source=($_mirror/${pkgbase}-${pkgver}.tar.xz)
+md5sums=(`grep ${pkgbase}-$_kdever.tar.xz ../kde-sc.md5 | cut -d" " -f1`)
 
 build() {
 	cd ${srcdir}/${pkgbase}-${pkgver}
-	# boost 1.52 issue:
-	patch -p1 -i ${srcdir}/keylistmodel.diff
 
 	cmake . -DCMAKE_BUILD_TYPE=${_build_type} \
 		-DCMAKE_INSTALL_PREFIX=${_installprefix} \
