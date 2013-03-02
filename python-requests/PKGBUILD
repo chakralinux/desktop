@@ -3,44 +3,44 @@
 pkgbase=requests
 pkgname=("python2-${pkgbase}" "python3-${pkgbase}")
 pkgver=1.1.0
-pkgrel=2
+pkgrel=3
 pkgdesc="Requests is an Apache2 Licensed HTTP library, written in Python, for human beings."
 arch=('any')
 url="http://python-requests.org/"
 license=('APACHE')
 makedepends=('python2' 'python3')
-source=("python-requests-${pkgver}.tar.gz"::"https://github.com/kennethreitz/requests/tarball/v${pkgver}")
-md5sums=('89b4958831c4c3276ffe5d21ed53dec8')
+source=("https://pypi.python.org/packages/source/r/requests/${pkgbase}-${pkgver}.tar.gz")
+md5sums=('a0158815af244c32041a3147ee09abf3')
 
 build() {
   # Start the Python 2.x build
   cd "${srcdir}"
-  rm -rf "python2-requests-${pkgver}/"
-  cp -r kennethreitz-requests-*/ "python2-requests-${pkgver}/"
+  rm -rf "python2-${pkgbase}-${pkgver}"
+  cp -r "${pkgbase}-${pkgver}" "python2-${pkgbase}-${pkgver}"
 
-  cd "python2-requests-${pkgver}"
+  cd "python2-${pkgbase}-${pkgver}"
   python2 setup.py build
 
   # Start the Python 3.x build
   cd "${srcdir}"
-  rm -rf "python3-requests-${pkgver}/"
-  cp -r kennethreitz-requests-*/ "python3-requests-${pkgver}/"
+  rm -rf "python3-${pkgbase}-${pkgver}"
+  cp -r "${pkgbase}-${pkgver}" "python3-${pkgbase}-${pkgver}"
 
-  cd "python3-requests-${pkgver}"
+  cd "python3-${pkgbase}-${pkgver}"
   python3 setup.py build
 }
 
 package_python2-requests() {
 depends=('python2')
 
-  cd "${srcdir}/python2-requests-${pkgver}"
+  cd "${srcdir}/python2-${pkgbase}-${pkgver}"
   python2 setup.py install --prefix="${pkgdir}/usr"
 }
 
 package_python3-requests() {
 depends=('python3')
 
-  cd "${srcdir}/python3-requests-${pkgver}"
+  cd "${srcdir}/python3-${pkgbase}-${pkgver}"
   python3 setup.py install --prefix="${pkgdir}/usr"
 }
 
