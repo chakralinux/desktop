@@ -4,29 +4,34 @@
 # Maintainer: Giuseppe Calà <jiveaxe@gmail.com>
 
 pkgname=freeimage
-pkgver=3.15.1
+pkgver=3.15.4
 pkgrel=1
 pkgdesc="Library project for developers who would like to support popular graphics image formats."
-arch=('i686' 'x86_64')
+arch=('x86_64')
 license=('GPL' 'custom:FIPL')
 url="http://freeimage.sourceforge.net/"
 depends=('gcc-libs')
 makedepends=('hd2u')
 categories=('programming')
 source=("http://downloads.sourceforge.net/project/freeimage/Source%20Distribution/${pkgver}/FreeImage${pkgver//./}.zip"
-        'gcc4.5_ln.patch')
-md5sums=('450d2ff278690b0d1d7d7d58fad083cc'
-         'f85279b2572a0a9e03775909cd9cd759')
+        'ImfAutoArray_cstring.patch')
+md5sums=('9f9a3b2c3c1b4fd24fe479e8aaee86b1'
+         '8153b95f571e43547e2be2b6f129df92')
 
 build() {
   cp -r FreeImage FreeImagefip
 
+  # added -fpermissive option to hide compile errors like notified here
+  # http://sourceforge.net/p/freeimage/discussion/36110/thread/93d4ecd7/?limit=50
+  export CFLAGS="$CFLAGS -fPIC -fexceptions -fpermissive -fvisibility=hidden -DNO_LCMS"
+  export CXXFLAGS="$CXXFLAGS -fPIC -fexceptions -fpermissive -fvisibility=hidden -DNO_LCMS" 
+
+  patch -Np1 < "$srcdir/ImfAutoArray_cstring.patch"
+  
   cd FreeImage
-  patch -Np1 < $srcdir/gcc4.5_ln.patch
   make
 
   cd ${srcdir}/FreeImagefip
-  patch -Np1 < $srcdir/gcc4.5_ln.patch
   make -f Makefile.fip 
 }
 
