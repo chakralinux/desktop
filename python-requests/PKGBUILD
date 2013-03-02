@@ -13,7 +13,7 @@ source=("https://pypi.python.org/packages/source/r/requests/${pkgbase}-${pkgver}
 md5sums=('a0158815af244c32041a3147ee09abf3')
 
 build() {
-  # Start the Python 2.x build
+  msg2 "Starting the Python 2.x build"
   cd "${srcdir}"
   rm -rf "python2-${pkgbase}-${pkgver}"
   cp -r "${pkgbase}-${pkgver}" "python2-${pkgbase}-${pkgver}"
@@ -21,7 +21,7 @@ build() {
   cd "python2-${pkgbase}-${pkgver}"
   python2 setup.py build
 
-  # Start the Python 3.x build
+  msg2 "Starting the Python 3.x build"
   cd "${srcdir}"
   rm -rf "python3-${pkgbase}-${pkgver}"
   cp -r "${pkgbase}-${pkgver}" "python3-${pkgbase}-${pkgver}"
