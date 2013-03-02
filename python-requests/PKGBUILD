@@ -3,7 +3,7 @@
 pkgbase=requests
 pkgname=("python2-${pkgbase}" "python3-${pkgbase}")
 pkgver=1.1.0
-pkgrel=1
+pkgrel=2
 pkgdesc="Requests is an Apache2 Licensed HTTP library, written in Python, for human beings."
 arch=('any')
 url="http://python-requests.org/"
@@ -34,14 +34,14 @@ package_python2-requests() {
 depends=('python2')
 
   cd "${srcdir}/python2-requests-${pkgver}"
-  python2 setup.py install --prefix="${pkgdir}"
+  python2 setup.py install --prefix="${pkgdir}/usr"
 }
 
 package_python3-requests() {
 depends=('python3')
 
   cd "${srcdir}/python3-requests-${pkgver}"
-  python3 setup.py install --prefix="${pkgdir}"
+  python3 setup.py install --prefix="${pkgdir}/usr"
 }
 
 # vim:set ts=2 sw=2 et:
