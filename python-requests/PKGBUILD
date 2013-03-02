@@ -2,15 +2,15 @@
 
 pkgbase=requests
 pkgname=("python2-${pkgbase}" "python3-${pkgbase}")
-pkgver=0.14.0
+pkgver=1.1.0
 pkgrel=1
-pkgdesc="Requests is an ISC Licensed HTTP library, written in Python, for human beings."
+pkgdesc="Requests is an Apache2 Licensed HTTP library, written in Python, for human beings."
 arch=('any')
 url="http://python-requests.org/"
-license=('custom:ISC License')
+license=('APACHE')
 makedepends=('python2' 'python3')
 source=("python-requests-${pkgver}.tar.gz"::"https://github.com/kennethreitz/requests/tarball/v${pkgver}")
-md5sums=('fdba3811d69828717a41c3055f1f49ec')
+md5sums=('89b4958831c4c3276ffe5d21ed53dec8')
 
 build() {
   # Start the Python 2.x build
@@ -35,9 +35,6 @@ depends=('python2')
 
   cd "${srcdir}/python2-requests-${pkgver}"
   python2 setup.py install --prefix="${pkgdir}"
-
-  install -D -m644 LICENSE \
-                   "${pkgdir}/usr/share/licenses/${pkgname}/LICENSE"
 }
 
 package_python3-requests() {
@@ -45,9 +42,6 @@ depends=('python3')
 
   cd "${srcdir}/python3-requests-${pkgver}"
   python3 setup.py install --prefix="${pkgdir}"
-
-  install -D -m644 LICENSE \
-                   "${pkgdir}/usr/share/licenses/${pkgname}/LICENSE"
 }
 
 # vim:set ts=2 sw=2 et:
