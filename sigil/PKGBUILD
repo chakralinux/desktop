@@ -1,12 +1,8 @@
-#
-# Apps Packages for Chakra, part of chakra-project.org
-#
 # maintainer abveritas@chakra-project.org
-# contributor Giuseppe Calà <jiveaxe@gmail.com>
 
 pkgname=sigil
 _pkgname=Sigil
-pkgver=0.7.0
+pkgver=0.7.1
 pkgrel=1
 pkgdesc="A multi-platform WYSIWYG ebook editor. It is designed to edit books in ePub format. "
 arch=('x86_64')
@@ -18,7 +14,7 @@ categories=('office')
 install=sigil.install
 screenshot=('http://1.bp.blogspot.com/-K2Q-tdVbPRI/UI08v7LhzHI/AAAAAAAAABY/vZ5LHjM6nb4/s1600/Screen+Shot+2012-10-28+at+10.07.03+AM.png')
 source=("http://$pkgname.googlecode.com/files/$_pkgname-$pkgver-Code.zip")
-md5sums=('06ba5ace506e01adf4a37534fa276cec')
+md5sums=('e6c281b6702a8f9d79cc85703dc8d3ea')
 
 
 build() {
@@ -32,7 +28,6 @@ build() {
     -DCMAKE_C_FLAGS:STRING="$CFLAGS" \
     -DCMAKE_CXX_FLAGS:STRING="$CXXFLAGS" \
     -DCMAKE_BUILD_TYPE=Release \
-    -DCMAKE_PREFIX_PATH=/opt/qt5/lib/cmake \
     -DCMAKE_SKIP_RPATH=ON ..
   make
 }
