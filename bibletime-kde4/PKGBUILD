@@ -1,36 +1,30 @@
-#
-# Apps Packages for Chakra, part of chakra-project.org
-#
-# maintainer (x86_64): Giuseppe Calà <jiveaxe@gmail.com>
-# contributor: Alois Nespor <Alois.Nespor@gmail.com>
-
-# include global config
-source ../_buildscripts/${current_repo}-${_arch}-cfg.conf
+# maintainer abveritas[at]chakra-project[dot]org>
 
 pkgname=bibletime-kde4
-origname=bibletime
+_pkgname=bibletime
 pkgver=2.9.1
-pkgrel=1
+pkgrel=3
 pkgdesc="Bible software that uses the Sword Engine for KDE4"
-arch=('i686' 'x86_64')
+arch=('x86_64')
 url=("http://www.blog.bibletime.info")
 license=('GPL2')
-depends=('qt' 'sword' 'openssl')
+depends=('qtwebkit' 'sword' 'openssl')
 makedepends=('cmake' 'boost')
 categories=('education')
-source=(http://sourceforge.net/projects/bibletime/files/bibletime-$pkgver.tar.bz2)
-md5sums=('ff89f440418f3e23c0bf039810f21479')
+source=('http://gitorious.org/bibletime/bibletime/archive-tarball/master')
+md5sums=('9c431081610aa1947c0b0a31ec78a364')
 
 build() {
-  cd $srcdir/bibletime-$pkgver
+  cd "$srcdir/$_pkgname-$_pkgname"
   cmake -DCMAKE_INSTALL_PREFIX=/usr \
-	-DCMAKE_BUILD_TYPE=Release ${srcdir}/$origname-$pkgver 
-  make 
+	-DCMAKE_BUILD_TYPE=Release ${srcdir}/$_pkgname-$_pkgname 
+
+	make
 }
 
 package() {
-  cd $srcdir/bibletime-$pkgver
-  make DESTDIR="${pkgdir}" install 
+        cd "$srcdir/$_pkgname-$_pkgname"
+        make DESTDIR="${pkgdir}" install 
 
 }
 
