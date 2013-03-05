@@ -5,7 +5,7 @@
 
 pkgname=blender
 pkgver=2.66
-_pkgver=2.66
+_pkgver=2.66a
 pkgrel=1
 pkgdesc="A fully integrated 3D graphics creation suite"
 arch=('x86_64')
@@ -14,17 +14,17 @@ url="http://www.blender.org"
 depends=('libpng' 'libtiff' 'openexr' 'sdl' 'python3' 'desktop-file-utils' 'shared-mime-info'
          'hicolor-icon-theme' 'xdg-utils' 'glew' 'libxi' 'libxmu' 'mesa' 'freetype2' 'jack'
          'openal' 'libsndfile' 'libsamplerate' 'ffmpeg' 'fftw' 'openimageio' 'boost-libs'
-         'opencollada' 'opencolorio')
+         'opencollada' 'opencolorio' 'libspnav')
 makedepends=('cmake' 'boost' 'mesa')
 screenshot=('http://www.blender.org/index.php?eID=tx_cms_showpic&file=uploads%2Fpics%2Fblender_screenshot3_03.png&width=800m&height=600m&bodyTag=%3Cbody%20style%3D%22margin%3A0%3B%20background%3A%23fff%3B%22%3E&wrap=%3Ca%20href%3D%22javascript%3Aclose%28%29%3B%22%3E%20%7C%20%3C%2Fa%3E&md5=cddc8ef0fbe1e90d0d22e78b4911860b')
 install=blender.install
 source=("http://download.blender.org/source/$pkgname-$_pkgver.tar.gz")
-md5sums=('159aedda89693321c5055819fa8e91cf')
+md5sums=('83e061a854c909f976c1ecd1eb57bba4')
 
 build() {
   cd "$srcdir/$pkgname-$_pkgver"
   
-  #mkdir -p build
+  mkdir -p build
   cd build
 
   cmake .. \
