@@ -6,16 +6,18 @@
 
 pkgname=tuxpaint
 pkgver=0.9.21
-pkgrel=4
+pkgrel=5
 pkgdesc="Tux Paint is a free drawing program designed for young children."
-arch=('i686' 'x86_64')
+arch=('x86_64')
 url="http://www.tuxpaint.org"
 license=('GPL3')
-depends=('fribidi' 'libpaper' 'librsvg' 'python2' 'sdl_image' 'sdl_mixer' 'sdl_pango' 'sdl_ttf')
+depends=('fribidi' 'libpaper' 'librsvg' 'libpng' 'python2' 'sdl_image' 'sdl_mixer' 'sdl_pango' 'sdl_ttf')
 backup=('etc/tuxpaint/tuxpaint.conf')
 categories=('education')
-source=(http://downloads.sourceforge.net/sourceforge/$pkgname/$pkgname-$pkgver.tar.gz)
-md5sums=('a88401d1860648098eeed819cff038fa')
+source=("http://downloads.sourceforge.net/sourceforge/$pkgname/$pkgname-$pkgver.tar.gz"
+	'tuxpaint-0.9.21-libpng1.5.patch')
+md5sums=('a88401d1860648098eeed819cff038fa'
+	 'e3e6908f87b7c0c50ac4791e16971284')
 
 build() {
   cd $srcdir/$pkgname-$pkgver
@@ -25,12 +27,14 @@ build() {
       sed -i 's_#!/usr/bin/env python_#!/usr/bin/env python2_' $file
   done
   
+  patch -p0 -i ../tuxpaint-0.9.21-libpng1.5.patch
+  sed -i 's:$(ARCH_LINKS):$(ARCH_LINKS) -lpng:' Makefile
+  
   # Add categories to .desktop file.
   echo "Categories=Game;KidsGame;Graphics;RasterGraphics;" >> src/tuxpaint.desktop
 
   # Build.
-  make \
-    PREFIX=/usr
+  make PREFIX=/usr
 }
 
 package() {
