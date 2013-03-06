@@ -5,7 +5,7 @@
 
 pkgname=rekonq
 pkgver=2.2
-pkgrel=2
+pkgrel=3
 pkgdesc='A WebKit based web browser for KDE'
 arch=('x86_64')
 url='http://rekonq.sourceforge.net/'
@@ -24,14 +24,14 @@ md5sums=('33b21c40b08c87182c5dbfef2bf4aa4c'
          'cd493df91e34030a8195eaf8b6d68140'
          '5d7bab51b8f4b78c0f7cd94c885f22c3'
          '7ab9dc2e4397a66c7a64e08265171996'
-         'ff05ee74c0014682265083a74fc94444')
+         '41625a90d2fb3c7f4cff09286dd5b326')
 
 build(){
   cd ${srcdir}/${pkgname}-${pkgver}  
   # Chakra theme:
   patch -p1 -i "${srcdir}/background.diff"
   
-  patch -Rp1 -i "${srcdir}/bookmark_toolbar.diff"
+  patch -p1 -i "${srcdir}/bookmark_toolbar.diff"
   
   cd ${srcdir}
   mkdir -p build 
