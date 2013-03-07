@@ -1,34 +1,43 @@
-#
-# Apps Packages for Chakra, part of chakra-project.org
-#
-# Maintainer: Fabian Kosmale <0inkane@googlemail.com>
-# Contributor (x86_64): Manuel Tortosa <manutortosa[at]chakra-project[dot]org>
-
-# include global config
+# Maintainer: abveritas[at]chakra-project[dot]org>
 
 pkgname=proftpd
-pkgver=1.3.4
-_pkgver=1.3.4b
-pkgrel=2
+pkgver=1.3.4.1
+_pkgver=1.3.4c
+pkgrel=1
 pkgdesc="A high-performance, scalable FTP server"
-arch=('i686' 'x86_64')
+arch=('x86_64')
 url="http://www.proftpd.org"
 license=('GPL')
-depends=('libldap' 'libmysqlclient' 'postgresql-libs')
+depends=('libldap' 'libmariadbclient' 'postgresql-libs')
 backup=('etc/proftpd.conf' 'etc/conf.d/proftpd')
 categories=('network')
-source=(ftp://ftp.proftpd.org/distrib/source/${pkgname}-${_pkgver}.tar.gz
-	'proftpd'
+install=proftpd.install
+source=("ftp://ftp.proftpd.org/distrib/source/${pkgname}-${_pkgver}.tar.gz"
+	'proftpd.service'
         'proftpd.logrotate'
-	'proftpd.conf.d')
+	'proftpd.conf.d'
+	'proftpd.tmpfiles')
+md5sums=('65f61e953bea249f8377e681594143a5'
+         '2bf74515d84036cb0acd60406fcd25b0'
+         'ddb09eb13131becdf0e081eef413116b'
+         '2a1a9bab12655bd8694ac49d48c6f0e4'
+         '907b149a120b046f05647c73502e23c9')
 build() {
 	cd ${srcdir}/${pkgname}-${_pkgver}
 
-	./configure --prefix=/usr --mandir=/usr/share/man --disable-pam \
+	./configure --prefix=/usr \
+	    --mandir=/usr/share/man \
+	    --libexecdir=/usr/lib \
+	    --disable-pam \
 	    --with-modules=mod_quotatab:mod_quotatab_file:mod_tls:mod_ldap:mod_sql:mod_sql_mysql:mod_sql_postgres \
-	    --sysconfdir=/etc --localstatedir=/var/run --enable-ctrls --enable-ipv6 \
+	    --sysconfdir=/etc \
+	    --localstatedir=/run/proftpd \
+	    --enable-ctrls \
+	    --enable-ipv6 \
 	    --with-includes=/usr/include/mysql:/usr/include/postgresql \
-	    --with-libraries=/usr/lib/mysql:/usr/lib/postgresql --enable-nls
+	    --with-libraries=/usr/lib/mysql:/usr/lib/postgresql \
+	    --enable-nls \
+	    --with-systemd
 	make
 }
 
@@ -38,14 +47,11 @@ package() {
 	make DESTDIR=${pkgdir} install
 	install -Dm644 ../proftpd.logrotate ${pkgdir}/etc/logrotate.d/proftpd
 	install -Dm644 ../proftpd.conf.d ${pkgdir}/etc/conf.d/proftpd
-	install -Dm755 ../proftpd ${pkgdir}/etc/rc.d/proftpd
-	install -Dm755 contrib/xferstats.holger-preiss \
-	   ${pkgdir}/usr/bin/ftpstats
-	cd ${pkgdir}/etc
-	sed -i 's|nogroup|nobody|g' proftpd.conf
-	rmdir ${pkgdir}/usr/libexec
+	install -Dm755 contrib/xferstats.holger-preiss ${pkgdir}/usr/bin/ftpstats
+	
+	install -d ${pkgdir}/usr/lib/systemd/system/
+        install -m644 ${srcdir}/proftpd.service ${pkgdir}/usr/lib/systemd/system/
+        install -Dm644 ${srcdir}/proftpd.tmpfiles ${pkgdir}/usr/lib/tmpfiles.d/proftpd.conf
+	rmdir ${pkgdir}/run/{proftpd,}
 }
-md5sums=('0871e0b93c9c3c88ca950b6d9a04aed2'
-         '03434e92fbf9250275bfb510a68f66bc'
-         'ddb09eb13131becdf0e081eef413116b'
-         '2a1a9bab12655bd8694ac49d48c6f0e4')
+
