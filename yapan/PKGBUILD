@@ -1,23 +1,19 @@
 #
 # Apps Packages for Chakra, part of chakra-project.org
 #
-# maintainer (i686): Phil Miller <philm[at]chakra-project[dog]org>
-# maintainer (x86_64): Manuel Tortosa <manutortosa[at]chakra-project[dot]org>
-
-# include global config
-source ../_buildscripts/${current_repo}-${_arch}-cfg.conf
+# maintainer : Manuel Tortosa <manutortosa[at]chakra-project[dot]org>
 
 pkgname=yapan
-pkgver=0.4.1
-pkgrel=2
+pkgver=0.4.3
+pkgrel=1
 pkgdesc="Yet Another Package mAnager Notifier."
-arch=('i686' 'x86_64')
-url="https://bitbucket.org/otsug/yapan/wiki/Home"
+arch=('x86_64')
+url="http://code.google.com/p/arch-yapan/"
 license=('GPL')
-depends=('qt' 'phonon' 'sudo')
+depends=('qt' 'phonon')
 categories=('utils')
-source=("https://bitbucket.org/otsug/${pkgname}/downloads/${pkgname}-${pkgver}.tar.bz2")
-sha256sums=('60a03e332aae35fd329ae4457f10317c6b35f82f36e72d717588eda5f5a5f6b3')
+source=("https://arch-yapan.googlecode.com/files/$pkgname-$pkgver.tar.lzma")
+sha256sums=('97df42269a58af63db1f0afafedd227bd5b8a6fb5241199b6c359096226ac9d9')
 
 build() {
   cd "${srcdir}/${pkgname}-${pkgver}"
@@ -31,5 +27,3 @@ package() {
   cd "${srcdir}/${pkgname}-${pkgver}"
   make INSTALL_ROOT="${pkgdir}" install
 }
-
-# vim:set ts=2 sw=2 et:
