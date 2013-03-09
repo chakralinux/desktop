@@ -1,33 +1,29 @@
-# Moved from CCR
-# Contributor: farid abdelnour <farid at archlinux-br.org>
-# Contributor: Eneko Sarasola <eneko.sarasola@gmail.com>
+#
+# Apps Packages for Chakra, part of chakra-project.org
+#
+# Maintainer: AlmAck <gluca86 [at] gmail [dot] com>
+
 pkgname=vmpk
-pkgver=0.3.3
+pkgver=0.5.1
 pkgrel=1
 pkgdesc="MIDI event generator and receiver"
-arch=('i686' 'x86_64')
+arch=('x86_64')
 url="http://vmpk.sourceforge.net/"
-depends=('qt' 'hicolor-icon-theme')
+depends=('qt' 'jack')
 makedepends=('cmake')
-optdepends=('timidity')
-categories=('multimedia')
 license=('GPL3')
 install="$pkgname.install"
 source=("http://downloads.sourceforge.net/project/$pkgname/$pkgname/$pkgver/$pkgname-$pkgver.tar.bz2")
-md5sums=('f3d4e86975c948afe94702964ce73a86')
+md5sums=('07e376936c38c7c244374ff9ddca6a72')
 
 build() {
-
   cd "$srcdir/$pkgname-$pkgver"
-
-  cmake . -DCMAKE_INSTALL_PREFIX=/usr
-
+  cmake . -DCMAKE_INSTALL_PREFIX=/usr \
+	  -DCMAKE_BUILD_TYPE=release
   make
 }
 
 package() {
-
   cd "$srcdir/$pkgname-$pkgver"
-
   make DESTDIR="$pkgdir/" install
 }
