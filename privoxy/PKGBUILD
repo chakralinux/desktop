@@ -1,12 +1,10 @@
-# Chakra Packages for Chakra, part of chakra-project.org
-#
-# contributor (x86_64): Giuseppe Calà <jiveaxe@gmail.com>
+# Maintainer: abveritas@chakra-project.org
 
 pkgname=privoxy
-pkgver=3.0.19
-pkgrel=2
+pkgver=3.0.21
+pkgrel=1
 pkgdesc='A web proxy with advanced filtering capabilities.'
-arch=('i686' 'x86_64')
+arch=('x86_64')
 url='http://www.privoxy.org'
 license=('GPL')
 depends=('pcre' 'zlib')
@@ -18,22 +16,20 @@ backup=('etc/conf.d/privoxy'
 categories=('network')
 install=${pkgname}.install
 source=("http://downloads.sourceforge.net/ijbswa/${pkgname}-${pkgver}-stable-src.tar.gz"
-        'privoxy'
         'privoxy-logrotate' # renamed the entry, because *.log is in gitignore
         'privoxy.conf.d'
         'privoxy.service')
-sha256sums=('816e627b31caa3d9e71d0a8b83ac9ea7dcbeaaafef3c9a9c792696aa56255232'
-            '5b81aac349a83cd0892d4f0952b97e8d9ddbb8b7e0f73c5ab31a20437fd46a48'
-            '21323dcfb6b3e571e23112a437db66208f73e32a400b40c192fbb30d7489ce28'
-            'c47c327b0fb91f08f46ec474f4aa551025e4a8dfdf18230a6977646b04ef5638'
-            '5b89f59d2550c22fde4b5e74521ab5b4f41226abcd1d12379671ca5f5bffa8aa')
+md5sums=('79558f2545cfcf9731f7de611646d837'
+         'fc3046377137003726a151ee27b142a2'
+         '27830ef79418e277b90c1c1fa933f876'
+         '4c154a126ec17b02c623e3d451e062d9')
 
 build() {
   cd "${srcdir}/${pkgname}-${pkgver}-stable"
 
   autoheader
   autoconf
-  ./configure --prefix=/usr --sysconfdir=/etc/privoxy
+  ./configure --prefix=/usr --sysconfdir=/etc/privoxy --enable-compression
 
   make
 }
@@ -48,12 +44,9 @@ package() {
   rm "${pkgdir}/var/log/privoxy/"*
 
   # Install start scripts and config files
-  install -Dm0755 "${srcdir}/privoxy" "${pkgdir}/etc/rc.d/privoxy"
+  install -Dm0644 "${srcdir}/privoxy.service" "${pkgdir}/usr/lib/systemd/system/privoxy.service"
   install -Dm0644 "${srcdir}/privoxy-logrotate" "${pkgdir}/etc/logrotate.d/privoxy"
   install -Dm0644 "${srcdir}/privoxy.conf.d" "${pkgdir}/etc/conf.d/privoxy"
-  
-  # systemd unit file
-  install -Dm0644 "${srcdir}/privoxy.service" "${pkgdir}/usr/lib/systemd/system/privoxy.service"
 
   # Fix config paths.
   sed -i -e 's#^confdir.*$#confdir /etc/privoxy#' -e 's#^logdir.*$#logdir /var/log/privoxy#' \
