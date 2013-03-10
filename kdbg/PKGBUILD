@@ -1,0 +1,32 @@
+# Maintainer: abveritas[at]chakra-project[dot]org>
+
+pkgname=kdbg
+pkgver=2.5.2
+pkgrel=1
+pkgdesc="A gdb GUI for KDE."
+arch=('x86_64')
+url="http://www.kdbg.org"
+license=("GPL")
+depends=('kde-runtime' 'gdb')
+makedepends=('automoc4')
+options=('libtool')
+categories=('programming')
+screenshots=('http://www.kdbg.org/kdbgtotal.png')
+source=("http://downloads.sourceforge.net/kdbg/$pkgname-$pkgver.tar.gz")
+md5sums=('392f477f0a4c1f1b921ce7d6c7128fcb')
+
+build() {
+  cd $srcdir
+  mkdir -p build
+  cd build
+  cmake ../${pkgbase}-${pkgver} \
+    -DCMAKE_BUILD_TYPE=Release \
+    -DCMAKE_INSTALL_PREFIX=/usr
+
+  make 
+}
+
+package() {
+  cd $srcdir/build
+  make DESTDIR=$startdir/pkg install
+}
