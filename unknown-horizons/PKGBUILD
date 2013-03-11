@@ -9,7 +9,7 @@
 
 pkgname=unknown-horizons
 pkgver=2013.1
-pkgrel=2
+pkgrel=3
 pyver=2.7
 pkgdesc="A 2D realtime strategy simulation with an emphasis on economy and city building"
 arch=('i686' 'x86_64')
@@ -22,9 +22,9 @@ source=("https://github.com/unknown-horizons/unknown-horizons/archive/$pkgver.ta
 md5sums=('1302263a3c4158f0d85b26dde1618cdc')
 
 package() {
-  cd $srcdir/$pkgname
+  cd $srcdir/$pkgname-$pkgver
 
-  sed -i 's/env python/env python2/' run_uh.py
+  sed -i 's/env python$/env python2/' run_uh.py
 
   python2 setup.py build_i18n
 
