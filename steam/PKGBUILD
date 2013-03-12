@@ -5,7 +5,7 @@
 # contributor (ccr): blablub <spamalicious.steve@gmail.com>
 
 pkgname=steam
-pkgver=1.0.0.35
+pkgver=1.0.0.36
 pkgrel=1
 pkgdesc="Installer for the Steam software distribution service"
 arch=('x86_64')
@@ -30,20 +30,11 @@ makedepends=('librsvg')
 install=steam.install  
 source=("http://repo.steampowered.com/$pkgname/pool/$pkgname/s/$pkgname/${pkgname}_$pkgver.tar.gz"
 	'steam.svg')
-md5sums=('0d0e0bc6a185a035cf6bf71a5dafc0c4'
+md5sums=('85b0e502ee7842225935348da85e4c85 '
 	 '89204aaf2b4f7cb37fed255c32f4e5e3')
-  
-  
+
 package() {
     cd "$srcdir/$pkgname"
-    
-    # replace default logo with a monochromatic version (system tray)
-    # source: https://github.com/tiagovarela/steam-mono-dark
-    for size in 16 24 32 48 256; do
-      rm "${srcdir}/${pkgname}/icons/${size}/steam.png"
-      rsvg-convert -w ${size} -h ${size} "$srcdir/steam.svg" \
-    		   -o "${srcdir}/${pkgname}/icons/${size}/steam.png"
-    done
 
     # Install
     make DESTDIR=${pkgdir} install
