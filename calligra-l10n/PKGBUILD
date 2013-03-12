@@ -9,7 +9,7 @@ source ../_buildscripts/${current_repo}-${_arch}-cfg.conf
 pkgbase=calligra-l10n
 pkgname=('calligra-l10n-bs'
          'calligra-l10n-ca'
-	 #'calligra-l10n-ca@valencia'
+	 'calligra-l10n-ca@valencia'
 	 #'calligra-l10n-cs'
 	 'calligra-l10n-da'
 	 'calligra-l10n-de'
@@ -47,7 +47,7 @@ license=('LGPL')
 makedepends=('cmake' 'automoc4' 'kdelibs' 'docbook-xsl')                    
 source=(ftp://ftp.kde.org/pub/kde/stable/calligra-${pkgver}/calligra-l10n/calligra-l10n-bs-${pkgver}.tar.bz2
         ftp://ftp.kde.org/pub/kde/stable/calligra-${pkgver}/calligra-l10n/calligra-l10n-ca-${pkgver}.tar.bz2
-        #ftp://ftp.kde.org/pub/kde/stable/calligra-${pkgver}/calligra-l10n/calligra-l10n-ca@valencia-${pkgver}.tar.bz2
+        ftp://ftp.kde.org/pub/kde/stable/calligra-${pkgver}/calligra-l10n/calligra-l10n-ca@valencia-${pkgver}.tar.bz2
         #ftp://ftp.kde.org/pub/kde/stable/calligra-${pkgver}/calligra-l10n/calligra-l10n-cs-${pkgver}.tar.bz2
         ftp://ftp.kde.org/pub/kde/stable/calligra-${pkgver}/calligra-l10n/calligra-l10n-da-${pkgver}.tar.bz2
         ftp://ftp.kde.org/pub/kde/stable/calligra-${pkgver}/calligra-l10n/calligra-l10n-de-${pkgver}.tar.bz2
@@ -77,6 +77,7 @@ source=(ftp://ftp.kde.org/pub/kde/stable/calligra-${pkgver}/calligra-l10n/callig
 	ftp://ftp.kde.org/pub/kde/stable/calligra-${pkgver}/calligra-l10n/calligra-l10n-zh_TW-${pkgver}.tar.bz2)
 md5sums=('7ddca1b8d4180eb94431ef56ac3db994'
          '3e292c679d0dcd3d12c8961f1414cfef'
+         'dca2966e1782c537d6b9ce69b15ccbfe'
          '27a457ac994d875b1628c5c615194b59'
          '311eba00ab825389a4aef93ff09bac51'
          '7c038ea37a2480ff167a07fd9d6b2b04'
@@ -105,7 +106,7 @@ md5sums=('7ddca1b8d4180eb94431ef56ac3db994'
 
 build() {
   cd $srcdir
-  langs="bs ca da de el en_GB es et fi fr gl hu it kk nb nds nl pl pt pt_BR ru sk sl sv uk zh_CN zh_TW" 
+  langs="bs ca ca@valencia da de el en_GB es et fi fr gl hu it kk nb nds nl pl pt pt_BR ru sk sl sv uk zh_CN zh_TW" 
   for lang in $langs; do
     install -d build/${lang}
     pushd build/${lang}
