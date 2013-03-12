@@ -1,12 +1,7 @@
-#
-# Apps Packages for Chakra, part of chakra-project.org
-#
-# Maintainer: Giuseppe Calà <jiveaxe@gmail.com>
-# Contributor from AUR: Meow < meow at linux dot cn >
-
+# Maintainer: abveritas@chakra-project.org
 
 pkgname=mendeleydesktop
-pkgver=1.7.1
+pkgver=1.8.2
 pkgrel=1
 url="http://www.mendeley.com/"
 pkgdesc="The desktop client for managing and sharing research papers."
@@ -15,26 +10,26 @@ depends=('python2' 'qt')
 categories=('education')
 arch=('x86_64')
 screenshot=('http://www.timelordz.com/blog/wp-content/uploads/2010/08/MendeleyClient.png')
-source=("http://download.mendeley.com/linux/$pkgname-$pkgver-linux-$arch.tar.bz2"
+source=("http://download.mendeley.com/linux/$pkgname-$pkgver-linux-x86_64.tar.bz2"
         'mendeleydesktop.install')
-md5sums=('2ae61cfd704763df589fe9a2cd0a6cd2'
+md5sums=('604064aaf68d85054c4c31c57febe30a'
          '16358cd53dc258a72efcaeab5a415217')
 
 package() {
-    cd "$pkgname-$pkgver-linux-$_arch"
+    cd "$pkgname-$pkgver-linux-x86_64"
 
     rm -f share/doc/mendeleydesktop/*.txt
 
     install -dm755 "$pkgdir/opt/$pkgname/"
     mv bin lib share "$pkgdir/opt/$pkgname/"
-    #ln -s "../lib/mendeleydesktop/libexec/mendeleydesktop.$_arch" "$pkgdir/opt/$pkgname/bin/$pkgname"
+    #ln -s "../lib/mendeleydesktop/libexec/mendeleydesktop.x86_64" "$pkgdir/opt/$pkgname/bin/$pkgname"
     cd "$pkgdir"
     sed -i '1s@^#!/usr/bin/python$@&2@' opt/"$pkgname"/bin/mendeleydesktop
     #install -Dm755 "bin/mendeleydesktop" "$pkgdir/usr/bin/mendeleydesktop"
     install -dm755 "$pkgdir"/usr/bin
     ln -s /opt/"$pkgname"/bin/mendeleydesktop "$pkgdir/usr/bin/mendeleydesktop"
 
-    cd "$srcdir/$pkgname-$pkgver-linux-$_arch"
+    cd "$srcdir/$pkgname-$pkgver-linux-x86_64"
     install -Dm644 LICENSE "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
 
     install -dm755 "$pkgdir"/usr/share/applications
