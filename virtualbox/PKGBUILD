@@ -1,6 +1,3 @@
-#
-# Apps Packages for Chakra, part of chakra-project.org
-#
 # Maintainer: Michael Haesel <michael[dot]haesel[at]gmail[dot]com>
 # Contributor: Sebastien Luttringer <seblu[plus]arch[at]seblu[dot]net>
 
@@ -12,17 +9,15 @@
 
 pkgbase=virtualbox
 pkgname=('virtualbox' 'virtualbox-ext-oracle' 'virtualbox-guest-additions')
-pkgver=4.2.4
-_build=81684
-pkgrel=2
-arch=('i686' 'x86_64')
+pkgver=4.2.10
+_build=84104
+pkgrel=1
+arch=('x86_64')
 url='http://virtualbox.org/'
 license=('GPL2' 'custom:PUEL')
 options=('!strip')
-_sarch='x86'
-[ "${CARCH}" = 'x86_64' ] && _sarch='amd64'
 makedepends=('libidl2' 'libxcursor' 'libxinerama' 'libxslt' 'curl' 'linux-headers' 'python2' 'make' 'gcc')
-source=("VirtualBox-${pkgver}-${_build}-Linux_${_sarch}.run::http://download.virtualbox.org/virtualbox/${pkgver}/VirtualBox-${pkgver}-${_build}-Linux_${_sarch}.run"
+source=("VirtualBox-${pkgver}-${_build}-Linux_amd64.run::http://download.virtualbox.org/virtualbox/${pkgver}/VirtualBox-${pkgver}-${_build}-Linux_amd64.run"
         "http://download.virtualbox.org/virtualbox/${pkgver}/Oracle_VM_VirtualBox_Extension_Pack-${pkgver}-${_build}.vbox-extpack"
         "http://download.virtualbox.org/virtualbox/${pkgver}/VBoxGuestAdditions_${pkgver}.iso"
         '10-vboxdrv.rules'
@@ -34,29 +29,28 @@ source=("VirtualBox-${pkgver}-${_build}-Linux_${_sarch}.run::http://download.vir
         'vboxsetup.sh'
         'PUEL'
         'vboxservice.service')
-sha256sums=('4dcd1609dc26c978e7d61e52ae166005e2220acaed159ad5af24c14c3051d51b'
-            '62078e057a4ab56aec5ac086746522b3d94787333d0444169471fa5152c609ed'
-            '3d7d909a0fe9ac5ffcca6afdd4142b88bad116d2ffed6e95588dbfbcf00ca5e9'
-            'f4182fa7c3f109aefb7da84f16bc40f34c46eb768144e7ab373b9311c41f175b'
-            '71740893a5f226f9d9fcc607ab9d39b7de816b2759625b34da19162bc7e579ff'
-            '12dbba3b59991f2b68cddeeeda20236aeff63e11b7e2d1b08d9d6a82225f6651'
-            'e6e875ef186578b53106d7f6af48e426cdaf1b4e86834f01696b8ef1c685787f'
-            '251750f41d334ef9871194b3407c2ee2c0330eac92849c6b5d30c46e5c72b765'
-            '9b3c4dc5385fb3b4aeb841043384879c5c7ee926f5343d6a4177e913604f869d'
-            '28833ef89fed96aa2cdb071c98687e8aa88e3c4c249b261f9b905e6621fa0e23'
-            '50658c653cde4dc43ba73a64c72761d2e996fd8e360fc682aa2844e1ad5b045f'
-            'aaa8d3d71c8585edf43ed11676ccd567cc85fc23752d3c3499506741cef3c9ba')
+md5sums=('9d8c857869305b40d32e1f2902564db4'
+         '8531d8aa584829496ce825cee43b9db5'
+         'e49046cd56398f9f9b8410154f1a0393'
+         'cee0c968c923760181ae060eab1c2e58'
+         '564ceec89e559bd98987f08e86f74825'
+         '3ac185709bfe688bb753c46e170d0546'
+         'bc9efed88e0469cd7fc460d5a5cd7b4b'
+         '4fbd284d87fa4413aec85ca60628ab9e'
+         'f2200ed91b6ec089d16cc3ada5418c73'
+         'e9c49d382d797dae72827b18353adbd1'
+         '08b28b82d0ebd6962025100d4b5414a1'
+         'f50243f38c6dd103e7e944f635d66fa0')
 
-[[ "${CARCH}" = i686 ]] && sha256sums[0]='e691b5ca67d625463c6337ec491a6752f0784a85e3c0f9a6550cd02b508e3f5c'
 _installdir='/opt/VirtualBox'
 
 package_virtualbox() {
   pkgdesc='Oracle VM VirtualBox Binary Edition'
-  arch=('i686' 'x86_64')
+  arch=('x86_64')
   screenshot='https://www.virtualbox.org/raw-attachment/wiki/Screenshots/gnome.png'
   license=('GPL2')
   depends=('libidl2' 'libxcursor' 'libxinerama' 'libxslt' 'curl' 'linux-headers'
-           'python2' 'make' 'gcc')
+           'python2' 'make' 'gcc' 'qt')
   optdepends=('virtualbox-ext-oracle: for Oracle extensions'
               'dkms: for handling kernel modules with dkms'
               'qt: for GUI support'
@@ -72,8 +66,8 @@ package_virtualbox() {
   install=${pkgname}.install
   
   # Check and unpack the run package via sh(1)
-  sh "VirtualBox-${pkgver}-${_build}-Linux_${_sarch}.run" --check
-  echo yes | sh "VirtualBox-${pkgver}-${_build}-Linux_${_sarch}.run" --target "${srcdir}" \
+  sh "VirtualBox-${pkgver}-${_build}-Linux_amd64.run" --check
+  echo yes | sh "VirtualBox-${pkgver}-${_build}-Linux_amd64.run" --target "${srcdir}" \
     --nox11 --noexec &> /dev/null
 
   # Unpack bundled files
@@ -173,6 +167,17 @@ package_virtualbox() {
 
   # Create the directory below if it doesn't exist
   install -d -m 0755 "${pkgdir}/var/run/VirtualBox"
+
+  # Use system's Qt
+  rm ${pkgdir}/opt/VirtualBox/libQtCoreVBox.so.4 
+  rm ${pkgdir}/opt/VirtualBox/libQtGuiVBox.so.4 
+  rm ${pkgdir}/opt/VirtualBox/libQtOpenGLVBox.so.4 
+  rm ${pkgdir}/opt/VirtualBox/libQtNetworkVBox.so.4 
+  cd ${pkgdir}/opt/VirtualBox
+  ln -s /usr/lib/libQtCore.so.4 libQtCoreVBox.so.4
+  ln -s /usr/lib/libQtGui.so.4 libQtGuiVBox.so.4
+  ln -s /usr/lib/libQtOpenGL.so.4 libQtOpenGLVBox.so.4
+  ln -s /usr/lib/libQtNetwork.so.4 libQtNetworkVBox.so.4
 }
 
 package_virtualbox-ext-oracle() {
@@ -191,7 +196,7 @@ package_virtualbox-ext-oracle() {
 
 package_virtualbox-guest-additions() {
   pkgdesc="Oracle VM VirtualBox Guest Additions for Chakra"
-  arch=('i686' 'x86_64')
+  arch=('x86_64')
   license=('GPL2')
   depends=('linux-headers' 'make' 'gcc')
   install=${pkgname}.install
