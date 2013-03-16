@@ -3,7 +3,7 @@
 pkgbase=digikam
 pkgname=('digikam' 'kipi-plugins' 'libkvkontakte')
 pkgver=3.1.0
-pkgrel=1
+pkgrel=2
 url="http://digikam.sourceforge.net"
 arch=('x86_64')
 license=('GPL')
@@ -23,7 +23,8 @@ build() {
    cmake ../${pkgname}-${pkgver} \
      -DCMAKE_BUILD_TYPE=Release \
      -DCMAKE_INSTALL_PREFIX=/usr \
-     -DCMAKE_SKIP_RPATH=ON
+     -DCMAKE_SKIP_RPATH=ON \
+     -DDIGIKAMSC_USE_PRIVATE_KDEGRAPHICS=OFF
    make 
 }
 
