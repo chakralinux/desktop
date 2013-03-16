@@ -1,9 +1,8 @@
-# KDE Packages for Chakra
-#
 # maintainer: Manuel tortosa <manutortosa@chakra-project.org>
 
 pkgname=kde-gtk-config
-pkgver=2.2rc1
+pkgver=2.2.1
+_pkgver=2.2
 pkgrel=1
 pkgdesc="A KCM for Configuring the GTK2 and GTK3 look&feel"
 arch=('x86_64')
@@ -17,15 +16,15 @@ conflicts=('kde-gtk-config-git' 'chakra-gtk-config' 'chakra-gtk-config-git')
 provides=('chakra-gtk-config')
 replaces=('chakra-gtk-config')
 groups=('gtk-integration')
-source=("ftp://ftp.kde.org/pub/kde/stable/$pkgname/$pkgver/src/$pkgname-$pkgver.tar.bz2")
+source=("http://download.kde.org/stable/$pkgname/$_pkgver/$pkgname-2.2-1.tar.bz2")
 install=$pkgname.install
-md5sums=('12c6c1ac3ee10c81e8a856f6ebf6850d')
+md5sums=('e033914fb449d0f89a5a4e094c597876')
 
 build() {
   cd "$srcdir"
   mkdir build
   cd build
-  cmake ../$pkgname-$pkgver \
+  cmake ../$pkgname-$_pkgver \
     -DCMAKE_BUILD_TYPE=Release \
     -DCMAKE_INSTALL_PREFIX=/usr
   make
