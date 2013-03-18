@@ -4,10 +4,10 @@
 # maintainer abveritas@chakra-project.org
 
 pkgname=polkit
-pkgver=0.107
-pkgrel=4
+pkgver=0.110
+pkgrel=1
 pkgdesc="Application development toolkit for controlling system-wide privileges"
-arch=('i686' 'x86_64')
+arch=('x86_64')
 license=('LGPL')
 url="http://www.freedesktop.org/wiki/Software/polkit"
 depends=('glib2' 'pam' 'expat>=2.0.1' 'systemd' 'js')
@@ -18,16 +18,12 @@ conflicts=('consolekit' 'hal' 'hal-cups-utils')
 options=('!libtool')
 install=polkit.install
 source=("http://www.freedesktop.org/software/polkit/releases/$pkgname-$pkgver.tar.gz"
-        'polkit.pam'
-        'polkit-0107-fall-back-to-uid0.patch')
-md5sums=('0e4f9c53f43fd1b25ac3f0d2e09b2ae1'
-         '6564f95878297b954f0572bc1610dd15'
-	 'ff70b87eff8c97e436ce1754ed9891eb')
+        'polkit.pam')
+md5sums=('06e0d3b72e566ac277fc35c8206d2a28'
+         '6564f95878297b954f0572bc1610dd15')
 
 build() {
   cd "${srcdir}/${pkgname}-${pkgver}"
-  # fix https://bugzilla.redhat.com/show_bug.cgi?id=834494
-  patch -p1 -i "${srcdir}/polkit-0107-fall-back-to-uid0.patch"
   
   ./configure --prefix=/usr --sysconfdir=/etc \
       --localstatedir=/var --libexecdir=/usr/lib/polkit-1 \
