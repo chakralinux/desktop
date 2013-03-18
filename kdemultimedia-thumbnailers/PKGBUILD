@@ -10,7 +10,7 @@ pkgname="kdemultimedia-thumbnailers"
 pkgdesc='KDE Thumbnailers for several formats'
 arch=('x86_64')
 pkgver=${_kdever}
-pkgrel=1
+pkgrel=2
 depends=('mplayer' 'ffmpeg' 'kdelibs')
 provides=('ffmpegthumbs' 'mplayerthumbs')
 groups=("kde" "kdemultimedia" "kde-uninstall")
@@ -18,6 +18,8 @@ install=kdemultimedia.install
 url="http://www.kde.org"
 license=('GPL' 'LGPL' 'FDL')
 options=('docs' '!splithdr' 'splitdbg' 'log')
+conflicts=('audiothumbs')
+provides=('audiothumbs')
 makedepends=('pkg-config' 'cmake' 'automoc4' 'docbook-xsl')
 source=($_mirror/ffmpegthumbs-$_kdever.tar.xz
 	$_mirror/mplayerthumbs-$_kdever.tar.xz
