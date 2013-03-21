@@ -1,30 +1,24 @@
-#
-# Chakra Packages for Chakra, part of chakra-project.org
-#
-# maintainer (i686): Phil Miller <philm[at]chakra-project[dog]org>
-# maintainer (x86_64): Manuel Tortosa <manutortosa[at]chakra-project[dot]org>
-
-# include global config
-source ../_buildscripts/${current_repo}-${_arch}-cfg.conf
+# Maintainer: abveritas[at]chakra-project[dot]org>
 
 pkgname=kffmpegthumbnailer
 pkgver=1.1.0
-pkgrel=3
+pkgrel=4
 pkgdesc="kffmpegthumbnailer is a video thumbnailer for kde based on ffmpegthumbnailer"
-arch=('i686' 'x86_64')
+arch=('x86_64')
 url="http://code.google.com/p/ffmpegthumbnailer"
 license=('GPL2')
 groups=('multimedia')
-depends=('kdebase-workspace' 'ffmpeg' 'ffmpegthumbnailer>=2.0.0')
-makedepends=('cmake')
+depends=('kdebase-workspace' 'ffmpeg' 'ffmpegthumbnailer')
+makedepends=('cmake' 'automoc4')
 categories=('accessories')
-source=(http://ffmpegthumbnailer.googlecode.com/files/$pkgname-$pkgver.tar.gz)
+source=("http://ffmpegthumbnailer.googlecode.com/files/$pkgname-$pkgver.tar.gz")
 md5sums=('fa897450ee691b6d225d8f79a6cfd409')
+
 build() {
    cd $startdir/src/$pkgname-$pkgver
    mkdir build
    cd build
-    cmake -DCMAKE_INSTALL_PREFIX=`kde4-config --prefix` -DCMAKE_BUILD_TYPE=release ..
-    make || return 1
-    make DESTDIR=$pkgdir install || return 1
+   cmake -DCMAKE_INSTALL_PREFIX=`kde4-config --prefix` -DCMAKE_BUILD_TYPE=release ..
+   make 
+   make DESTDIR=$pkgdir install 
 }
