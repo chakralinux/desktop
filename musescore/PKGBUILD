@@ -6,7 +6,7 @@
 pkgname=musescore
 _pkgname=mscore
 pkgver=1.3
-pkgrel=1
+pkgrel=2
 pkgdesc="A music score editor written in Qt"
 arch=('x86_64')
 url="http://www.musescore.org/en/"
@@ -17,9 +17,11 @@ optdepends=('jack')
 categories=('multimedia')
 install=musescore.install
 source=("http://downloads.sourceforge.net/${_pkgname}/${_pkgname}-${pkgver}.tar.bz2"
-        'paths.patch')
+        'paths.patch'
+        'musescore.conf')
 md5sums=('e5fde2bef0d40ee7542e1f515a3919d1'
-         'a0419cbe08b655820d52ea440653b1d3')
+         'a0419cbe08b655820d52ea440653b1d3'
+         '289539133bfcd06bed8ca115b33524e5')
 
 build() {
   cd $srcdir/${_pkgname}-${pkgver}
@@ -29,12 +31,16 @@ build() {
 
   make PREFIX=/usr release 
 }
+
 package() {
   cd $srcdir/${_pkgname}-${pkgver}
   make DESTDIR="$pkgdir" install
-# avoid file conflict with "qtscriptgenerator" 
+
+  # avoid file conflict with "qtscriptgenerator" 
   for _i in gui network core uitools xml
   do 
     rm $pkgdir/usr/lib/qt/plugins/script/libqtscript_${_i}.so
   done
+
+  install -D -m 0644 "${srcdir}/musescore.conf" "${pkgdir}/etc/modules-load.d/musescore.conf"  
 }

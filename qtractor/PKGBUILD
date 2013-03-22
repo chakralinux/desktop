@@ -1,26 +1,22 @@
-#
-# Apps Packages for Chakra, part of chakra-project.org
-#
-# maintainer: Neophytos Kolokotronis <tetris4@gmail.com>
+# Maintainer: Neophytos Kolokotronis <tetris4@gmail.com>
 
 pkgname=qtractor
-pkgver=0.5.7
+pkgver=0.5.8
 pkgrel=1
 pkgdesc="Audio/MIDI multitrack sequencer"
 arch=('x86_64')
 url="http://qtractor.sourceforge.net/"
 license=('GPL')
-depends=('qt' 'jack' 'slv2' 'libmad' 'libsamplerate'
-         'rubberband' 'liblo')
+depends=('qt' 'jack' 'slv2' 'libmad' 'libsamplerate' 'rubberband' 'liblo')
 makedepends=('ladspa' 'dssi')
 categories=('multimedia')
 source=("http://downloads.sourceforge.net/$pkgname/$pkgname-$pkgver.tar.gz")
-md5sums=('a3f42dc1125d6ec0bd88286fe7738f04')
+md5sums=('22abf4de4d5736f794e174ef06fe3a3c')
 
 build() {
   cd "$srcdir/$pkgname-$pkgver"
 
-  ./configure --prefix=/usr --disable-lv2-gtk-ui --enable-debug
+  ./configure --prefix=/usr --enable-debug
   make
 }
 

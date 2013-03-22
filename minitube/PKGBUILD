@@ -4,29 +4,32 @@
 # maintainer abveritas[at]chakra-project[dog]org>
 
 pkgname=minitube
-pkgver=1.9
-pkgrel=1
+pkgver=2.0
+pkgrel=2
 pkgdesc="A native YouTube client in QT. Watch YouTube videos without Flash Player"
-arch=('i686' 'x86_64')
+arch=('x86_64')
 url="http://flavio.tordini.org/minitube"
 license=('GPL')
-depends=('phonon' 'qt>=4.5.0')
-optdepends=('phonon-xine: for xine backend (default by chakra)'
-            'phonon-gstreamer: for gstreamer backend'
-            'gstreamer0.10-plugins: to get all videos to play with phonon-gstreamer'
+depends=('phonon' 'qt')
+optdepends=('phonon-xine: for xine backend'
             'phonon-mplayer: for mplayer backend'
             'phonon-vlc: for vlc backend')
 categories=('multimedia')
 install=minitube.install
-source=(http://flavio.tordini.org/files/${pkgname}/${pkgname}-${pkgver}.tar.gz
-	gcc47.patch)
-md5sums=('a60bb568519eb91035d5d6dc27ff1406'
-         '799785b01a9d3d2e93770c33fffbcda0')
+source=("http://flavio.tordini.org/files/${pkgname}/${pkgname}-${pkgver}.tar.gz"
+        'main_new.diff')
+md5sums=('0da4cb8940034aad832e41acc52df365'
+         '83df5dd2d65186e5b81295f13c00e43a')
+
 build() {
         cd "${srcdir}/${pkgname}"
+        patch -p1 -i "${srcdir}/main_new.diff"
+        
+        qmake 
+}
 
-	patch -p1 < "${srcdir}/gcc47.patch"
-
-        qmake PREFIX="/usr" 
+package() {
+        cd "${srcdir}/${pkgname}"
+        
         make install INSTALL_ROOT="${pkgdir}" 
 }
