@@ -4,8 +4,8 @@
 # Maintainer: Adrián Chaves Fernández (Gallaecio) <adriyetichaves gmail.com>
 
 pkgname=redeclipse
-pkgver=1.3.1
-pkgrel=4
+pkgver=1.4
+pkgrel=1
 pkgdesc='A first-person shooter, built as a total conversion of Cube Engine 2'
 arch=(i686 x86_64)
 url=http://redeclipse.net
@@ -13,27 +13,28 @@ license=(CCPL-by-sa ZLIB)
 depends=(enet libgl mesa sdl sdl_image sdl_mixer zlib hicolor-icon-theme)
 makedepends=('mesa' 'gzip')
 categories=('games')
-source=(http://downloads.sourceforge.net/$pkgname/${pkgname}_${pkgver}_nix_bsd.tar.bz2
-        system-libs.diff)
-md5sums=('ef11041eb9ef49c9a4b278ccfd544fe4'
-         '06757915ad76d693b38852fb4f9d1a11')
+source=(http://downloads.sourceforge.net/$pkgname/${pkgname}_${pkgver}_nix.tar.bz2)
+md5sums=('3d478f5cf4838adcf5cde8d3421f2ffe')
 
 build() {
-  cd "$srcdir/$pkgname/src"
+  cd "$srcdir/$pkgname-$pkgver/src"
 
-  # Patches.
-  patch -uN Makefile $srcdir/system-libs.diff # System enet.
+  # System Enet.
+  sed \
+    -e "s#-Ienet/include#-I/usr/share/enet/include#" \
+    -e "s#-Lenet/.libs##" \
+    -e "s#client: libenet#client:#" \
+    -e "s#server: libenet#server:#" \
+    -i core.mk
 
   # Compilation.
   make
 }
 
 package() {
-  cd "$srcdir/$pkgname"
+  cd "$srcdir/$pkgname-$pkgver"
   make -C src/ DESTDIR="$pkgdir" prefix=/usr system-install
 
   # License.
   install -Dm644 doc/all-licenses.txt "$pkgdir/usr/share/licenses/$pkgname/license.txt"
 }
-md5sums=('7b320932965e61bf14ad115ac6f6e94b'
-         '06757915ad76d693b38852fb4f9d1a11')
