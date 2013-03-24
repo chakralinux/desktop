@@ -17,7 +17,8 @@ source=("https://github.com/aarnt/octopi/tarball/master/octopi-${pkgver}.tar.gz"
         'mainwindow_init.diff'
         'strconstants.diff'
         'unixcommand.diff'
-        'unixcommand_h.diff')
+        'unixcommand_h.diff'
+        'launch-konsole-for-updates.patch')
 md5sums=('8f7518126df9b267cb68aa583923f517'
          '2d9c64cd6402be69d2ee9fde5acc439e'
          '09b4271cb0eee3ecc7f4080d145726d9'
@@ -35,7 +36,7 @@ build() {
    patch -p0 -i ${srcdir}/strconstants.diff
    patch -p0 -i ${srcdir}/unixcommand.diff
    patch -p0 -i ${srcdir}/unixcommand_h.diff
-   
+   patch -p1 -i ${srcdir}/launch-konsole-for-updates.patch
    qmake 
    make
 }

@@ -1,0 +1,25 @@
+From de86e2adf19a28111920abba086ae97ae0e48be6 Mon Sep 17 00:00:00 2001
+From: manu tortosa <manutortosa@gmail.com>
+Date: Sun, 24 Mar 2013 19:03:09 +0100
+Subject: [PATCH 2/2] launch konsole for updates
+
+---
+ src/mainwindow_transaction.cpp | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/src/mainwindow_transaction.cpp b/src/mainwindow_transaction.cpp
+index b9af9ae..22da8ce 100644
+--- a/src/mainwindow_transaction.cpp
++++ b/src/mainwindow_transaction.cpp
+@@ -548,7 +548,7 @@ void MainWindow::doSystemUpgrade(bool syncDatabase)
+ 
+ 
+       QString command;
+-      command = "pacman -Su --noconfirm";
++      command = "konsole -e sudo pacman -Su";
+       m_unixCommand->executeCommand(command);
+       m_commandQueued = ectn_NONE;
+     }
+-- 
+1.8.0.2
+
