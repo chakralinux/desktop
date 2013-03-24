@@ -13,6 +13,7 @@ categories=('network')
 source=("https://github.com/aarnt/octopi/tarball/master/octopi-${pkgver}.tar.gz"
         'octopi.desktop'
         'help_en_US.diff'
+        'main.diff'
         'mainwindow_init.diff'
         'strconstants.diff'
         'unixcommand.diff'
@@ -20,6 +21,7 @@ source=("https://github.com/aarnt/octopi/tarball/master/octopi-${pkgver}.tar.gz"
 md5sums=('8f7518126df9b267cb68aa583923f517'
          '2d9c64cd6402be69d2ee9fde5acc439e'
          '09b4271cb0eee3ecc7f4080d145726d9'
+         '4d0a34c238400699864c1cdccdc4916b'
          '98b4dfbd1a80cbed4d078d5e4ec6d03b'
          '2cf50990b29b29ff94b53bc8436ec701'
          'f7d8652690d135f5b1122d3eede1e31a'
@@ -28,6 +30,7 @@ md5sums=('8f7518126df9b267cb68aa583923f517'
 build() {
    cd "${srcdir}/aarnt-octopi-${_commit}/"
    patch -p0 -i ${srcdir}/help_en_US.diff
+   patch -p0 -i ${srcdir}/main.diff
    patch -p0 -i ${srcdir}/mainwindow_init.diff
    patch -p0 -i ${srcdir}/strconstants.diff
    patch -p0 -i ${srcdir}/unixcommand.diff
