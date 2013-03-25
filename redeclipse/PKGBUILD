@@ -1,11 +1,11 @@
 #
 # Games Packages for Chakra, part of chakra-project.org
 #
-# Maintainer: Adrián Chaves Fernández (Gallaecio) <adriyetichaves gmail.com>
+# Maintainer: Adrián Chaves Fernández (Gallaecio) <adriyetichaves@gmail.com>
 
 pkgname=redeclipse
 pkgver=1.4
-pkgrel=1
+pkgrel=2
 pkgdesc='A first-person shooter, built as a total conversion of Cube Engine 2'
 arch=(i686 x86_64)
 url=http://redeclipse.net
@@ -18,6 +18,9 @@ md5sums=('3d478f5cf4838adcf5cde8d3421f2ffe')
 
 build() {
   cd "$srcdir/$pkgname-$pkgver/src"
+
+  # Fix .desktop icon (fixed upstream after Red Eclipse 1.4).
+  sed 's/"@APPNAME@"/@APPNAME@/' -i src/install/nix/redeclipse.desktop.am
 
   # System Enet.
   sed \
