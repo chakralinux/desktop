@@ -1,0 +1,26 @@
+# maintainer Inkane <neoinkaneglade@aol.com> 
+# contribtutor Justinas Lelys <justinas@lelys.lt>
+ 
+pkgname=whois
+pkgver=5.0.20
+pkgrel=1
+pkgdesc="The whois client by Marco d'Itri"
+arch=('x86_64')
+url="http://www.linux.it/~md/software/"
+license=('GPL')
+depends=('libidn')
+makedepends=('perl')
+source=("http://ftp.debian.org/debian/pool/main/w/whois/whois_${pkgver}.tar.xz")
+md5sums=('2e33c03536082ae8156b2cbe78c0299d')
+ 
+build() {
+  cd "${srcdir}/whois-${pkgver}"
+ 
+  make prefix=/usr CFLAGS="$CFLAGS" HAVE_LIBIDN=1
+}
+ 
+package() {
+  cd "${srcdir}/whois-${pkgver}"
+ 
+  make prefix=/usr BASEDIR="${pkgdir}" install-whois
+}
