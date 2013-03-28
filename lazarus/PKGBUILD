@@ -5,8 +5,9 @@
 # Mantainer: Fabian Kosmale <0inkane@googlemail.com>
 
 pkgname=lazarus
-pkgver=1.0.4
+pkgver=1.0.6
 pkgrel=1
+_pkgsubver=0
 pkgdesc='Delphi-like IDE for FreePascal'
 url='http://www.lazarus.freepascal.org/'
 license=('GPL2' 'MPL' 'custom:LGPL')
@@ -14,8 +15,8 @@ arch=('i686' 'x86_64')
 depends=('fpc' 'fpc-src' 'fpc-qtbindings' 'qt' 'qtwebkit') #'gdk-pixbuf' 'gtk2'
 options=('!emptydirs' '!makeflags')
 categories=('programming')
-source=(http://downloads.sourceforge.net/project/lazarus/Lazarus%20Zip%20_%20GZip/Lazarus%20${pkgver}/${pkgname}-${pkgver}-1.tar.gz)
-md5sums=('738ee29686de71cd599b468eabf034e8')
+source=(http://downloads.sourceforge.net/project/lazarus/Lazarus%20Zip%20_%20GZip/Lazarus%20$pkgver/lazarus-$pkgver-${_pkgsubver}.tar.gz)
+md5sums=('bfab7c877996df911d883ca749c7cc4e')
 
 build() {
   cd $srcdir/${pkgname}
@@ -60,4 +61,3 @@ package() {
   install -Dm644 install/lazarus.desktop $pkgdir/usr/share/applications/lazarus.desktop
   install -Dm644 images/ide_icon48x48.png $pkgdir/usr/share/pixmaps/lazarus.png
 }
-md5sums=('a3dea4ba0c74c35bd7078acd1d5de4fc')
