@@ -1,4 +1,5 @@
-# Maintainer: ponsfoot <cabezon dot hashimoto at gmail dot com>
+# Maintainer: Weng Xuetian <wengxt@gmail.com>
+# Contributor: ponsfoot <cabezon dot hashimoto at gmail dot com>
 
 ## Mozc compile option
 _bldtype=Release
@@ -11,7 +12,7 @@ pkgdesc="A Japanese Input Method for Chromium OS, Windows, Mac and Linux (the Op
 pkgname=('mozc' 'fcitx-mozc')
 pkgver=1.6.1187.102
 _patchver=${pkgver}.1
-pkgrel=1
+pkgrel=2
 arch=('i686' 'x86_64')
 url="http://code.google.com/p/mozc/"
 license=('BSD' 'custom')
@@ -64,11 +65,10 @@ package_mozc() {
   pkgdesc="A Japanese Input Method for Chromium OS, Windows, Mac and Linux (the Open Source Edition of Google Japanese Input)"
   arch=('i686' 'x86_64')
   groups=('mozc-im')
-  depends=('curl' 'qt')
+  depends=('curl' 'qt' 'zinnia')
   replaces=('mozc-server' 'mozc-utils-gui')
   conflicts=('mozc-server' 'mozc-utils-gui')
-  optdepends=('zinnia: hand-writing recognition support'
-              'tegaki-models-zinnia-japanese: hand-writing recognition support')
+  optdepends=('tegaki-models-zinnia-japanese: hand-writing recognition support')
 
   cd "${srcdir}/${pkgbase}-${pkgver}"
   install -D -m 755 out_linux/${_bldtype}/mozc_server "${pkgdir}/usr/lib/mozc/mozc_server"
