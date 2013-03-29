@@ -6,7 +6,7 @@
 
 pkgname=emacs-nox
 pkgver=24.3
-pkgrel=1
+pkgrel=2
 pkgdesc='The Emacs Editor, without X11 support'
 arch=('x86_64')
 url="http://www.gnu.org/software/emacs/emacs.html"
@@ -47,4 +47,7 @@ package() {
   chmod 775 ${pkgdir}/var/games/emacs
   chmod 664 ${pkgdir}/var/games/emacs/*
   chown -R root:games ${pkgdir}/var/games
+
+  # fix conflict with texinfo
+  rm ${pkgdir}/usr/share/info/info.info.gz
 }
