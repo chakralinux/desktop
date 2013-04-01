@@ -4,7 +4,7 @@
 
 pkgname=2mandvd
 pkgver=1.8.4
-pkgrel=2
+pkgrel=3
 pkgdesc="DVD Authoring Maker In Linux Environnement"
 url="http://2mandvd.tuxfamily.org/"
 license=('GPL')
@@ -24,6 +24,10 @@ build() {
   cd build
 
   qmake "${srcdir}/2ManDVD/2ManDVD.pro"
+
+  #Temporary fix for libavformat version (added by boom1992)
+  sed -i "41s|#ifdef|//#ifdef|" $srcdir/2ManDVD/videowrapper.cpp
+  sed -i '42i #if LIBAVFORMAT_VERSION_MAJOR >= 53' $srcdir/2ManDVD/videowrapper.cpp
 
   # Fix those damn absolute paths!
   sed -e 's,chmod -R 755 /usr/share/2ManDVD,chmod -R 755 \$(INSTALL_ROOT)/usr/share/2ManDVD,g' \
