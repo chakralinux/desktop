@@ -1,33 +1,32 @@
-#
-# Apps Packages for Chakra, part of chakra-project.org
-#
+#maintainer: Neophytos Kolokotronis <tetris4@gmail.com>
 
 pkgname=2mandvd
 pkgver=1.8.4
-pkgrel=3
-pkgdesc="DVD Authoring Maker In Linux Environnement"
+pkgrel=5
+pkgdesc="DVD Authoring Maker In Linux Environment."
 url="http://2mandvd.tuxfamily.org/"
 license=('GPL')
-arch=('i686' 'x86_64')
-depends=('qt>=4.6' 'sox' 'mplayer' 'perl' 'netpbm' 'transcode' 'ffmpegthumbnailer' 'dvdauthor' 'mjpegtools' 'ttf-dejavu' 'dvd+rw-tools' 'exif' 'python-opengl')
+arch=('x86_64')
+depends=('qt' 'sox' 'mencoder' 'perl' 'netpbm' 'transcode' 'ffmpegthumbnailer' 'dvdauthor' 'mjpegtools' 'ttf-dejavu' 'dvd+rw-tools' 'exif' 'python-opengl')
 optdepends=('xine-ui: to preview the result')
 categories=('multimedia')
 screenshot=('http://i1-linux.softpedia-static.com/screenshots/2ManDVD_1.jpg')
-source=("http://download.tuxfamily.org/${pkgname}/2ManDVD-${pkgver}.tar.gz")
-md5sums=('2e362b6d963b0698ee4911d28865d50d')
+source=("http://download.tuxfamily.org/2mandvd/2ManDVD-${pkgver}.tar.gz"
+        "ffmpeg-0.11.diff")
+sha1sums=('3ed5b79e88c05159ac05cb40a39a702e3c400c79'
+          'e8bfd4adb11f5641a55719ff7d346f061281e8b2')
 
 build() {
   cd "${srcdir}"
+  
+  # Patch 2ManDVD for ffmpeg
+  patch -p0 -i "${srcdir}/ffmpeg-0.11.diff"
 
   # Prepare the build directory and configure the project
   rm -rf build && mkdir -p build
   cd build
 
   qmake "${srcdir}/2ManDVD/2ManDVD.pro"
-
-  #Temporary fix for libavformat version (added by boom1992)
-  sed -i "41s|#ifdef|//#ifdef|" $srcdir/2ManDVD/videowrapper.cpp
-  sed -i '42i #if LIBAVFORMAT_VERSION_MAJOR >= 53' $srcdir/2ManDVD/videowrapper.cpp
 
   # Fix those damn absolute paths!
   sed -e 's,chmod -R 755 /usr/share/2ManDVD,chmod -R 755 \$(INSTALL_ROOT)/usr/share/2ManDVD,g' \
@@ -37,9 +36,8 @@ build() {
   make
 }
 
-package() {
+package(){
   cd "${srcdir}/build"
-  make install INSTALL_ROOT="${pkgdir}"
-}
 
-# vim:set ts=2 sw=2 et:
+  make INSTALL_ROOT="${pkgdir}" install
+}
