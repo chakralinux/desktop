@@ -5,9 +5,7 @@
 
 pkgname=flare
 _pkgname=flare-game
-pkgver=0.17.1
-_developer=clintbellanger
-_code=b3344302fd
+pkgver=0.18
 pkgrel=1
 pkgdesc="Action roleplaying game from an isometric perspective"
 arch=('i686' 'x86_64')
@@ -17,11 +15,11 @@ depends=('sdl' 'sdl_image' 'sdl_mixer' 'sdl_ttf')
 replaces=('osare')
 categories=('games')
 changelog=ChangeLog
-source=($pkgname-$pkgver.tar.gz::https://github.com/$_developer/$_pkgname/tarball/v$pkgver)
-md5sums=('7ba84ad26b11790dbd22747389def5af')
+source=(http://downloads.sourceforge.net/project/flare-game/$pkgname-$pkgver.tar.gz)
+md5sums=('4775a845694798f7df8b60b1303b8c37')
 
 build() {
-  cd $srcdir/$_developer-$_pkgname-*
+  cd $srcdir/$pkgname-$pkgver
 
   # Some CMake changes.
   sed -i -e "s#share/games#share#" -e "s#/games#/bin#" CMakeLists.txt
@@ -38,10 +36,10 @@ build() {
 }
 
 package() {
-  cd $srcdir/$_developer-$_pkgname-*
-  cd build
+  cd $srcdir/$pkgname-$pkgver/build
   make DESTDIR=$pkgdir install
  
   # Documentation.
   install -Dm644 ../README $pkgdir/usr/share/doc/$pkgname/readme.txt
 }
+
