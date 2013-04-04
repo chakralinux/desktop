@@ -1,9 +1,7 @@
-# Platform Packages for Chakra, part of chakra-project.org
 # Maintainer: Neophytos Kolokotronis <tetris4@gmail.com>
-# Contributor: George Brooke <george+arch.aur@george-brooke.co.uk>
 
 pkgname=telepathy-logger-qt
-pkgver=0.5.3
+pkgver=0.6.0
 pkgrel=1
 pkgdesc="Qt bindings for telepathy logger"
 arch=('x86_64')
@@ -12,21 +10,21 @@ license=('GPL')
 depends=('telepathy-qt' 'qt-gstreamer' 'telepathy-logger' 'boost-libs')
 makedepends=('automoc4' 'cmake' 'python2' 'boost')
 group=('kde-telepathy')
-source=("ftp://mirrors.mit.edu/kde/unstable/kde-telepathy/${pkgver}/src/${pkgname}-${pkgver}.tar.bz2")
-md5sums=('c0a009422e6db904627c2c39b6d572a5')
+source=("ftp://mirrors.mit.edu/kde/stable/kde-telepathy/${pkgver}/src/${pkgname}-${pkgver}.tar.bz2")
+md5sums=('7dfe075ed66c0c62e54478ba834bb3c9')
 
 build() {
-  cd "${srcdir}"
-  rm -rf build && mkdir build
+  mkdir build
   cd build
 
   cmake ../${pkgname}-${pkgver} \
+    -DCMAKE_BUILD_TYPE=Release \
     -DCMAKE_INSTALL_PREFIX=/usr \
     -DPYTHON_EXECUTABLE=/usr/bin/python2
   make
 }
 
 package() {
-  cd "${srcdir}/build"
-  make DESTDIR="$pkgdir/" install
+  cd build
+  make DESTDIR="$pkgdir" install
 }
