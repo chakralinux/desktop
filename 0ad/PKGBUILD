@@ -6,7 +6,7 @@
 pkgname=0ad
 pkgver=0.0.13
 _pkgver=$pkgver-alpha
-pkgrel=1
+pkgrel=2
 pkgdesc="Cross-platform, 3D and historically-based real-time strategy game"
 screenshot=http://www.wildfiregames.com/0ad/images/news_images/dynamic-borders.jpg
 arch=('i686' 'x86_64')
@@ -54,11 +54,7 @@ package() {
   install -Dm755 ${srcdir}/${pkgbase}-${_pkgver}/binaries/system/*.so{,.1.0} ${pkgdir}/usr/lib
 
   # Execution script.
-  install -d $pkgdir/usr/bin/
-  local scriptname="${pkgbase}"
-  echo "#!/bin/sh"		>  $pkgdir/usr/bin/$scriptname
-  echo "pyrogenesis $*"		>> $pkgdir/usr/bin/$scriptname
-  chmod +x $pkgdir/usr/bin/$scriptname
+  install -Dm755 ./build/resources/$pkgname.sh $pkgdir/usr/bin/$pkgname
 
   # Desktop Integration.
   install -D ./build/resources/$pkgname.desktop $pkgdir/usr/share/applications/$pkgname.desktop
