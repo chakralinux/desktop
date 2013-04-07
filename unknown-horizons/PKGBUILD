@@ -8,7 +8,7 @@
 # Maintainer: Adrián Chaves Fernández (Gallaecio) <adriyetichaves@gmail.com>
 
 pkgname=unknown-horizons
-pkgver=2013.1b
+pkgver=2013.2
 pkgrel=1
 pyver=2.7
 pkgdesc="A 2D realtime strategy simulation with an emphasis on economy and city building"
@@ -18,11 +18,11 @@ license=('GPL' 'CCPL')
 depends=('python2'  'python2-yaml' 'fife' 'python-distutils-extra')
 categories=('games')
 options=(!strip)
-source=("https://github.com/unknown-horizons/unknown-horizons/archive/$pkgver.tar.gz")
-md5sums=('d848b516cafd4f64181b48ecb2c6426f')
+source=(http://downloads.sourceforge.net/project/unknownhorizons/Unknown%20Horizons/$pkgver/$pkgname-$pkgver.tar.xz)
+md5sums=('8835e1c3493db20658677e82f29fe5bb')
 
 package() {
-  cd $srcdir/$pkgname-$pkgver
+  cd $srcdir/$pkgname
 
   sed -i 's/env python$/env python2/' run_uh.py
 
