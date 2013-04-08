@@ -9,7 +9,7 @@ source ../_buildscripts/${current_repo}-${_arch}-cfg.conf
 
 pkgname=fcitx
 pkgver=4.2.7
-pkgrel=2
+pkgrel=3
 pkgdesc="A Flexible Input Method Framework"
 arch=("i686" "x86_64")
 license=('GPL')
@@ -18,19 +18,23 @@ depends=('pango' 'dbus-core' 'opencc' 'lua' 'iso-codes' 'icu' 'libxkbfile')
 replaces=('fcitx-qt' 'fcitx-keyboard')
 conflicts=('fcitx-utf8-svn' 'fcitx-svn' 'fcitx-hg' 'fcitx-keyboard' 'fcitx-qt')
 makedepends=('cmake' 'qt' 'icu' 'wget' 'opencc' 'lua' 'iso-codes' 'enchant')
-source=("http://fcitx.googlecode.com/files/${pkgname}-${pkgver}.tar.xz")
+source=("http://fcitx.googlecode.com/files/${pkgname}-${pkgver}.tar.xz"
+"https://github.com/fcitx/fcitx/commit/9937b68bad3a7e9465e17b711ce9c0a072d3071f.patch")
 categories=('localization')
 install=fcitx.install
 
 build() {
-  cd $srcdir/
-
   msg "Creating make environment..."
   
-  mkdir -p $srcdir/build
+  pushd .
+  cd "${pkgname}-${pkgver}"
+  patch -Np1 -i "$srcdir/9937b68bad3a7e9465e17b711ce9c0a072d3071f.patch"
+  popd
+
+  mkdir -p build
 
   msg "Starting make..."
-  cd $srcdir/build
+  cd build
   cmake ../${pkgname}-${pkgver} -DCMAKE_INSTALL_PREFIX=/usr -DCMAKE_BUILD_TYPE=Release \
       -DENABLE_QT_IM_MODULE=On \
       -DENABLE_GTK2_IM_MODULE=Off \
@@ -42,7 +46,9 @@ build() {
 }
 
 package(){
-    cd $srcdir/build
+    cd build
     make DESTDIR=$pkgdir install
 }
 md5sums=('fb96dec8b023b59913082eac40f8ff1c')
+md5sums=('fb96dec8b023b59913082eac40f8ff1c'
+         'ce299aa5b596cc52dc9e66b47795e627')
