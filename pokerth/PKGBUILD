@@ -5,7 +5,7 @@
 
 pkgname=pokerth
 _realname=PokerTH
-pkgver=1.0
+pkgver=1.0.1
 pkgrel=1
 pkgdesc="PokerTH is a Texas Holdem poker game written in C++/Qt."
 arch=('x86_64')
@@ -14,14 +14,14 @@ depends=('boost-libs' 'curl' 'gnutls' 'libgsasl' 'libircclient' 'qt' 'sdl_mixer'
 makedepends=('boost')
 url="http://www.pokerth.net/"
 source=("http://downloads.sourceforge.net/sourceforge/${pkgname}/${_realname}-${pkgver}-src.tar.bz2")
-md5sums=('1d8686b8968475cfc76e873a17a53efc')
+md5sums=('c6dcf0ed68ab50af91371348ffad5d00')
 
 build() {
   cd "${srcdir}/${_realname}-${pkgver}-src"
 
   # Fix missing include
-  sed -e '31 i #include <libircclient/libirc_rfcnumeric.h>' \
-      -i src/net/common/ircthread.cpp
+  #sed -e '31 i #include <libircclient/libirc_rfcnumeric.h>' \
+  #    -i src/net/common/ircthread.cpp
 
   qmake "${pkgname}.pro"
   make
@@ -38,5 +38,3 @@ package() {
   install -D -m644 data/data-copyright.txt "${pkgdir}/usr/share/licenses/pokerth/data-copyright.txt"
   rm -f "${pkgdir}/usr/share/pokerth/data/data-copyright.txt"
 }
-
-# vim:set ts=2 sw=2 et:
