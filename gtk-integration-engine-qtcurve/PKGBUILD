@@ -1,26 +1,20 @@
-#
-# Packages for Chakra, part of chakra-project.org
-#
 # maintainer: Manuel Tortosa <manutortosa[at]chakra-project[dot]org>
 
-# include global config
-source ../_buildscripts/${current_repo}-${_arch}-cfg.conf
-
 pkgname=gtk-integration-engine-qtcurve
-pkgver=1.8.13
+pkgver=1.8.16
 pkgrel=1
-arch=('i686' 'x86_64')
+arch=('x86_64')
 license=('GPL')
 pkgdesc='QtCurve-Gtk2 Add-on for Gtk-integration.'
 url='http://www.kde-look.org/content/show.php?content=40492'
-depends=('chakra-gtk-config' 'gtk2')
+depends=('kde-gtk-config' 'gtk2')
 provides=('qtcurve-gtk2')
 conflicts=('qtcurve-gtk2')
 makedepends=('pkgconfig' 'cmake')
 categories=('system')
 options=('!libtool')
 source=("http://craigd.wikispaces.com/file/view/QtCurve-Gtk2-${pkgver}.tar.bz2")
-md5sums=('11cee806fd3f78d375498d5bd304799e')
+md5sums=('8923caaa0704f6a30252a5eadb015d76')
 
 build() {
   cd "${srcdir}"
@@ -30,7 +24,6 @@ build() {
   cmake "${srcdir}/QtCurve-Gtk2-${pkgver}" \
         -DCMAKE_BUILD_TYPE=Release \
         -DCMAKE_INSTALL_PREFIX=/usr \
-  || return 1
 
   make
 }
@@ -39,5 +32,3 @@ package() {
   cd "${srcdir}/build"
   make DESTDIR="${pkgdir}" install
 }
-
-# vim:set ts=2 sw=2 et:
