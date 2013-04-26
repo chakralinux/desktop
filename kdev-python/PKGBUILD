@@ -5,7 +5,8 @@
 # contributor Jakub Kozisek <nodevel at gmail dot com>
 
 pkgname=kdev-python
-pkgver=1.4.1
+pkgver=1.4.90
+_branch=unstable
 pkgrel=1
 pkgdesc="KDevelop plugin that starts a script by opening a webbrowser"
 arch=('x86_64')
@@ -13,15 +14,14 @@ url="http://www.kdevelop.org/"
 license=('GPL')
 depends=('kdevelop')
 makedepends=('cmake' 'automoc4' 'kdevelop-pg-qt')
-source=("http://master.kde.org/stable/kdevelop/${pkgname}/${pkgver}/src/${pkgname}-v${pkgver}.tar.bz2")
-md5sums=('8980b2cdb955f8f34f7560ffc940ef1b')
+source=("http://master.kde.org/${_branch}/kdevelop/${pkgname}/${pkgver}/src/${pkgname}-v${pkgver}.tar.bz2")
+sha1sums=('1538afe47ae8b597dfa0a6b816a96a9139bd5782')
 
 build() {
     cd "${srcdir}"
     mkdir build
     cd build 
     cmake ../${pkgname}-v${pkgver} \
-        -DCMAKE_SKIP_RPATH=ON \
         -DCMAKE_BUILD_TYPE=RELWITHDEBINFO \
         -DCMAKE_{SHARED,MODULE,EXE}_LINKER_FLAGS='-Wl,--no-undefined -Wl,--as-needed' \
         -DCMAKE_INSTALL_PREFIX=/usr

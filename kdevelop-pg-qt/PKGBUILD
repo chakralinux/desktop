@@ -1,0 +1,33 @@
+#
+# Chakra Packages for Chakra, part of chakra-project.org
+#
+# maintainer (i686): Phil Miller <philm[at]chakra-project[dog]org>
+# maintainer (x86_64): Manuel Tortosa <manutortosa[at]chakra-project[dot]org>
+
+pkgname=kdevelop-pg-qt
+pkgver=1.0.0
+pkgrel=2
+pkgdesc="KDevelop Parser Generator, a LL(1) parser generator used by KDevelop language plugins"
+arch=('i686' 'x86_64')
+url="http://www.kdevelop.org/"
+license=('GPL')
+depends=('kdelibs')
+makedepends=('cmake' 'automoc4')
+categories=('programming')
+source=("http://download.kde.org/stable/${pkgname}/${pkgver}/src/${pkgname}-${pkgver}.tar.bz2")
+sha1sums=('468bc91c5be16061dc265e9471f75462b32b73d5')
+
+build() {
+  cd ${srcdir}
+  mkdir build
+  cd build 
+  cmake ../${pkgname}-${pkgver} \
+    -DCMAKE_INSTALL_PREFIX=/usr \
+    -DCMAKE_BUILD_TYPE=Release
+  make
+}
+
+package() {
+  cd ${srcdir}/build
+  make DESTDIR=${pkgdir} install
+}

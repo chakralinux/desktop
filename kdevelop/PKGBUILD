@@ -1,24 +1,23 @@
 #
 # Chakra Package
 #
-# Phil Miller <philm[at]chakra-project[dog]org>
-# Manuel Tortosa <manutortosa[at]chakra-project[dot]org>
+# abveritas@chakra-project.org
 # Drake Justice <djustice[at]chakra-project[dot]org>
 #
 
 pkgname=kdevelop
-pkgver=4.2.3
-pkgrel=3
+pkgver=4.5.0
+pkgrel=1
 pkgdesc="A C/C++ development environment for KDE"
-arch=('i686' 'x86_64')
+arch=('x86_64')
 url="http://www.kdevelop.org/"
 license=('GPL')
 depends=('kdebase-workspace' 'kdevplatform')
-makedepends=('cmake' 'automoc4' 'perl')
+makedepends=('cmake' 'automoc4' 'perl' 'docbook-xsl')
 categories=('programming')
 install=${pkgname}.install
 source=("http://download.kde.org/stable/${pkgname}/${pkgver}/src/${pkgname}-${pkgver}.tar.bz2")      
-sha1sums=('e87ae29b343df3fea9bda7d8d85ec696e57b68e4')
+sha1sums=('21cdff814b5840d4b62b105b53c0b128e35c3c9f')
 
 build() {
   cd ${srcdir}
@@ -28,10 +27,10 @@ build() {
     -DCMAKE_INSTALL_PREFIX=/usr \
     -DCMAKE_BUILD_TYPE=Release \
     -DCMAKE_SKIP_RPATH=ON
-  make || return 1
+  make 
 }
 
 package() {
   cd ${srcdir}/build
-  make DESTDIR=${pkgdir} install || return 1
+  make DESTDIR=${pkgdir} install
 }
