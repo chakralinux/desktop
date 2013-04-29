@@ -6,7 +6,7 @@
 pkgname=performous
 _pkgname=Performous
 pkgver=0.7.0
-pkgrel=1
+pkgrel=4
 pkgdesc='A free game like Singstar™, Rockband™ or Stepmania™'
 arch=('i686' 'x86_64')
 url="http://$pkgname.org/"
@@ -20,9 +20,11 @@ md5sums=('60f3f72b51a630a4aa996484aedb9526')
 
 build() {
   cd $srcdir/$pkgname-$pkgver
+  
   mkdir -p build && cd build
   cmake \
     -DCMAKE_INSTALL_PREFIX=/usr \
+    -DCMAKE_BUILD_TYPE=RelWithDebInfo \
     ..
   make
 }
