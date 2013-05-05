@@ -91,8 +91,8 @@ url="http://www.kde.org/"
 license=('GPL' 'LGPL' 'FDL')
 options=('docs' '!splithdr' 'splitdbg' 'log')
 depends=("kde-workspace>=${_kdever}" 'libqalculate' "kdeedu-marble>=${_kdever}" 'qwt')
-makedepends=('pkg-config' 'cmake' 'automoc4' 'libqalculate' 'qoauth'
-             "kdegraphics-libkexiv2>=${_kdever}" "kdeedu-marble>=${_kdever}" 'eigen' 'scim' 'qwt')
+makedepends=('pkg-config' 'cmake' 'automoc4' 'libqalculate' 'qoauth' 'fcitx' 'scim'
+             "kdegraphics-libkexiv2>=${_kdever}" "kdeedu-marble>=${_kdever}" 'eigen' 'qwt')
 
 source=("$_mirror/${pkgbase}-$_kdever.tar.xz")
 md5sums=(`grep ${pkgbase}-$_kdever.tar.xz ../kde-sc.md5 | cut -d" " -f1`)
@@ -289,8 +289,7 @@ package_kdeplasma-addons-applets-kimpanel() {
         pkgdesc='A generic input method panel for Oriental languages'
         depends=('kde-workspace')
         groups=("kde" "kde-uninstall" "kdeplasma-addons")
-        optdepends=('scim: SCIM backend'
-                'fcitx: FCITX backend')
+        optdepends=('fcitx: FCITX backend')
         cd $srcdir/build/applets/kimpanel
         make DESTDIR=$pkgdir install
 }
