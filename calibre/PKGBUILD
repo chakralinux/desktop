@@ -1,7 +1,7 @@
 # maintainer: abveritas@chakra-project.org
 
 pkgname=calibre
-pkgver=0.9.27
+pkgver=0.9.29
 pkgrel=1
 pkgdesc="Ebook management application"
 arch=('x86_64')
@@ -17,9 +17,11 @@ optdepends=('ipython: to use calibre-debug')
 screenshot=('https://lh5.googleusercontent.com/_lG58t3XWd3c/TcNwiXkAx_I/AAAAAAAAAEc/M34I4uY9UUY/s800/gui.jpeg')
 install=calibre.install
 source=("http://calibre-ebook.googlecode.com/files/${pkgname}-${pkgver}.tar.xz"
-        'desktop_integration.patch')
-md5sums=('1d5bbe102e3ec6ec71399aad5d074137'
-         'cbf6da95f3885e80d3d8b0ae2733674d')
+        'desktop_integration.patch'
+        "${pkgname}-0.9.29-l10n.patch::http://bazaar.launchpad.net/~kovid/calibre/trunk/diff/14916")
+md5sums=('37642daf3744374cf1d0cc169b4be7e3'
+         'cbf6da95f3885e80d3d8b0ae2733674d'
+         '38015d4a11698ebec1722fb8419f9b8a')
 
 build() {
   cd "${srcdir}/${pkgname}"
@@ -28,6 +30,10 @@ build() {
   sed -i -e "s/ldflags = shlex.split(ldflags)/ldflags = shlex.split(ldflags) + ['-fPIC']/" setup/extensions.py
   sed -i -e 's:\(#!/usr/bin/env[ ]\+python$\|#!/usr/bin/python$\):\12:g' \
     $(find . -regex ".*.py\|.*.recipe")
+
+  # Patch for 0.9.29 only.
+  # See: https://bugs.launchpad.net/calibre/+bug/1176336
+  patch -uNp0 -i ${srcdir}/${pkgname}-0.9.29-l10n.patch
 
   LANG='en_US.UTF-8' python2 setup.py build
   LANG='en_US.UTF-8' python2 setup.py translations
@@ -59,4 +65,3 @@ package() {
   python2 -m compileall "${pkgdir}/usr/lib/calibre/"
   python2 -O -m compileall "${pkgdir}/usr/lib/calibre/"
 }
-
