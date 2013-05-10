@@ -4,7 +4,7 @@
 
 pkgname="system-config-printer"
 pkgver=1.4.0
-pkgrel=2
+pkgrel=4
 pkgdesc="A CUPS printer configuration tool and status applet"
 url="http://cyberelk.net/tim/software/system-config-printer/"
 arch=('any')
@@ -38,5 +38,6 @@ package() {
   cd ${pkgname}-${pkgver}
   make DESTDIR="${pkgdir}" install
 
-  sed -i -e "s~#!/bin/sh~#!/bin/sh\nexport GI_TYPELIB_PATH=/extra/usr/lib/girepository-1.0/~g" ${pkgdir}/usr/bin/system-config-printer
+  sed -i -e "s~#!/bin/sh~#!/bin/sh\nexport GI_TYPELIB_PATH=/extra/usr/lib/girepository-1.0/:/usr/lib/girepository-1.0/~g" ${pkgdir}/usr/bin/system-config-printer
+  sed -i -e "s~#!/bin/sh~#!/bin/sh\nexport GI_TYPELIB_PATH=/extra/usr/lib/girepository-1.0/:/usr/lib/girepository-1.0/~g" ${pkgdir}/usr/bin/scp-dbus-service
 }
