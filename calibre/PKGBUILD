@@ -1,39 +1,37 @@
 # maintainer: abveritas@chakra-project.org
 
 pkgname=calibre
-pkgver=0.9.29
+pkgver=0.9.30
 pkgrel=1
 pkgdesc="Ebook management application"
 arch=('x86_64')
 url="http://calibre.kovidgoyal.net/"
 license=('GPL3')
 depends=('python2' 'python2-imaging' 'libusb' 'pyqt' 'python-mechanize'
-         'imagemagick' 'dbus-python' 'python-lxml' 'python2-beautifulsoup' 'python-dateutil'
-         'python-cssutils' 'desktop-file-utils' 'python-dnspython' 'libmtp'
+         'imagemagick' 'dbus-python' 'python-lxml' 'python2-beautifulsoup' 'python2-dateutil'
+         'python-cssutils' 'desktop-file-utils' 'python2-dns' 'libmtp'
          'podofo' 'xdg-utils' 'cherrypy' 'python2-pdf' 'unrar' 'chmlib' 'poppler'
          'poppler-qt' 'icu' 'libwmf' 'libffi' 'python2-six' 'python2-netifaces' 'python2-cssselect')
 makedepends=('python2-pycountry' 'qt-private-headers')
-optdepends=('ipython: to use calibre-debug')
+#optdepends=('ipython: to use calibre-debug')
 screenshot=('https://lh5.googleusercontent.com/_lG58t3XWd3c/TcNwiXkAx_I/AAAAAAAAAEc/M34I4uY9UUY/s800/gui.jpeg')
 install=calibre.install
 source=("http://calibre-ebook.googlecode.com/files/${pkgname}-${pkgver}.tar.xz"
-        'desktop_integration.patch'
-        "${pkgname}-0.9.29-l10n.patch::http://bazaar.launchpad.net/~kovid/calibre/trunk/diff/14916")
-md5sums=('37642daf3744374cf1d0cc169b4be7e3'
-         'cbf6da95f3885e80d3d8b0ae2733674d'
-         '38015d4a11698ebec1722fb8419f9b8a')
+        'desktop_integration.patch')
+md5sums=('4b0e4aeb0ebac5d5319a97cbd5163deb'
+         '8353d1878c5a498b3e49eddef473605f')
 
 build() {
   cd "${srcdir}/${pkgname}"
 
   rm -rf src/cherrypy
+  rm -rf resources/${pkgname}-portable.*
+  
   sed -i -e "s/ldflags = shlex.split(ldflags)/ldflags = shlex.split(ldflags) + ['-fPIC']/" setup/extensions.py
+  
   sed -i -e 's:\(#!/usr/bin/env[ ]\+python$\|#!/usr/bin/python$\):\12:g' \
     $(find . -regex ".*.py\|.*.recipe")
 
-  # Patch for 0.9.29 only.
-  # See: https://bugs.launchpad.net/calibre/+bug/1176336
-  patch -uNp0 -i ${srcdir}/${pkgname}-0.9.29-l10n.patch
 
   LANG='en_US.UTF-8' python2 setup.py build
   LANG='en_US.UTF-8' python2 setup.py translations
