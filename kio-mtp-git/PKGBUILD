@@ -1,0 +1,46 @@
+pkgname=kio-mtp-git
+_pkgname=kio-mtp
+pkgver=20130517
+pkgrel=1
+pkgdesc="Provides mtp  protocol support."
+arch=('x86_64')
+url="https://projects.kde.org/projects/playground/base/kio-mtp"
+license=('GPL2')
+depends=('kdelibs' 'libmtp')
+makedepends=('cmake' 'git')
+conflicts=('kio-mtp')
+provides=('kio-mtp')
+ 
+_gitroot="git://anongit.kde.org/$_pkgname"
+_gitname="$_pkgname"
+ 
+build() {
+  cd $srcdir
+ 
+  msg "Connecting to GIT server...."
+ 
+  if [ -d $_gitname ] ; then
+    cd $_gitname && git pull origin
+    msg "The local files are updated."
+  else
+    git clone $_gitroot $_gitname --depth=1
+  fi
+ 
+  msg "GIT checkout done or server timeout"
+  msg "Starting make..."
+ 
+  rm -rf $srcdir/$_gitname-build
+  cp -R $srcdir/$_gitname $srcdir/$_gitname-build
+  cd $srcdir/$_gitname-build
+ 
+  cmake -DCMAKE_INSTALL_PREFIX=`kde4-config --prefix` \
+        -DCMAKE_BUILD_TYPE=RelWithDebInfo \
+        .
+  make
+}
+ 
+package() {
+  cd $srcdir/$_gitname-build
+ 
+  make DESTDIR=$pkgdir install
+}
