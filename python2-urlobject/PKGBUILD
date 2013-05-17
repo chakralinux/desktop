@@ -1,0 +1,28 @@
+# Original source: https://aur.archlinux.org/packages/py/python2-urlobject/PKGBUILD
+
+pkgname=python2-urlobject
+_pkgname=URLObject
+pkgver=2.3.4
+pkgrel=1
+pkgdesc="A utility class for manipulating URLs."
+arch=(any)
+url="http://github.com/zacharyvoase/urlobject"
+license=('custom:Public Domain')
+depends=('python2')
+makedepends=('python2-distribute')
+source=("http://pypi.python.org/packages/source/U/${_pkgname}/${_pkgname}-${pkgver}.tar.gz")
+md5sums=('df81709eca2041d40f511ffba4da88d1')
+
+build() {
+    cd $srcdir/$_pkgname-$pkgver
+    python2 setup.py build
+}
+
+package() {
+    cd $srcdir/$_pkgname-$pkgver
+    python2 setup.py install --prefix=/usr --root=$pkgdir
+    
+    # License.
+    install -d $pkgdir/usr/share/licenses/$pkgname
+    cp UNLICENSE $pkgdir/usr/share/licenses/$pkgname/license.txt
+}
