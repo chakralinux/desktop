@@ -4,16 +4,17 @@
 # maintainer abveritas@chakra-project.org
 
 pkgname=powertop
-pkgver=2.0
+pkgver=2.3
 pkgrel=1
 pkgdesc="Tool that finds the software that makes your laptop use more power than necessary"
-arch=('i686' 'x86_64')
+arch=('x86_64')
 url="https://01.org/powertop/"
 license=('GPL2')
-depends=('ncurses' 'libnl')
+depends=('gcc-libs' 'libnl' 'ncurses' 'pciutils')
 categories=('utils')
-source=(https://01.org/powertop/sites/default/files/downloads/$pkgname-$pkgver.tar.bz2)
-md5sums=('8f27e2b0bf1c68b1f5a9a98294238bb2')
+screenshot=('https://01.org/powertop/sites/default/files/resize/users/u8/powertop20_overview-640x381.png')
+source=("https://01.org/powertop/sites/default/files/downloads/$pkgname-$pkgver.tar.gz")
+md5sums=('dc03608f20e56cdc99d121a6191556f6')
 
 build() {
   cd ${srcdir}/powertop-$pkgver
