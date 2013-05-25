@@ -4,8 +4,8 @@
 # Contributor: William Rea <sillywilly@gmail.com>
 
 pkgname=chromium-bsu
-pkgver=0.9.15
-pkgrel=3
+pkgver=0.9.15.1
+pkgrel=1
 pkgdesc="A fast paced top scrolling shooter"
 arch=('i686' 'x86_64')
 url="http://chromium-bsu.sourceforge.net/"
@@ -13,8 +13,9 @@ screenshot="http://chromium-bsu.sourceforge.net/images/chrom-scr-112400a.jpg"
 license=('custom:artistic')
 depends=('freeglut' 'sdl' 'openal' 'freealut' 'ftgl' 'fontconfig' 'sdl_image')
 # we use the patched version from debian to avoid glpng
-source=("http://ftp.de.debian.org/debian/pool/main/c/chromium-bsu/chromium-bsu_$pkgver.orig.tar.gz")
-md5sums=('d57137a1ac2292363b35192724c7e3be')
+#source=("http://ftp.de.debian.org/debian/pool/main/c/chromium-bsu/chromium-bsu_$pkgver.orig.tar.gz")
+source=("http://downloads.sourceforge.net/project/chromium-bsu/Chromium%20B.S.U.%20source%20code/chromium-bsu-${pkgver}.tar.gz")
+md5sums=('bd332a890ae9e5115f2808198a51a92b')
 
 build(){
   cd $srcdir/$pkgname-$pkgver
@@ -28,4 +29,3 @@ package() {
 
   install -Dm644 COPYING $pkgdir/usr/share/licenses/chromium-bsu/LICENSE
 }
-
