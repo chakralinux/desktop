@@ -2,7 +2,7 @@
 # Original CCR maintainer: Inkane <neoinkaneglade@aol.com>
 
 pkgname=nodejs
-pkgver=0.10.5
+pkgver=0.10.8
 pkgrel=1
 pkgdesc="Node.js is a platform built on Chrome's JavaScript runtime for easily building fast, scalable network applications."
 arch=('x86_64')
@@ -12,11 +12,11 @@ depends=('python2' 'openssl')
 checkdepends=('curl') # curl used for check()
 options=('!emptydirs')
 source=("http://nodejs.org/dist/v${pkgver}/node-v${pkgver}.tar.gz")
-md5sums=('f6b1c363f75185d57c8486cd63c42e14')
+md5sums=('c99a48ddb5c6d4a0d8624e081a97050c')
 
 build() {
   cd "node-v${pkgver}"
-
+  
   export PYTHON=python2
   ./configure --prefix=/usr
 
@@ -25,7 +25,8 @@ build() {
 
 check() {
   cd "node-v${pkgver}"
-  make test || true
+  # Added true because the test are successfully done but exit with a fail
+  make test || true 
 }
 
 package() {
