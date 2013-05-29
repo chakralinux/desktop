@@ -1,7 +1,6 @@
 #
 # KDE SC Packages for Chakra, part of chakra-project.org
 #
-# maintainer abveritas@chakra-project.org
 # maintainer Manuel Tortosa <manutortosa[at]chakra-project[dot]org>
 
 # include global config
@@ -10,7 +9,7 @@ source ../_buildscripts/${current_repo}-${_arch}-cfg.conf
 pkgname="kdelibs"
 arch=('x86_64')
 pkgver=${_kdever}
-pkgrel=1
+pkgrel=2
 pkgdesc="KDE Core Libraries"
 url="http://www.kde.org"
 license=('GPL' 'LGPL' 'FDL')
@@ -21,7 +20,7 @@ depends=("${_qtpkg}>=${_qtver}" "kde-common>=${_kdever}" "oxygen-icons>=${_kdeve
 	    'libxss' 'phonon' 'shared-desktop-ontologies>=0.7' 'attica>=0.2.0' 'krb5' 'libxcursor' 'libutempter'
 	    'hicolor-icon-theme' 'libdbusmenu-qt' 'grantlee>=0.3.0' 'media-player-info' 'qtwebkit' 'systemd')
 makedepends=('pkg-config' 'cmake' 'automoc4' 'intltool' 'avahi' 'libgl' 'aspell' 'hspell' 'shared-mime-info' 
-             'docbook-xsl' 'docbook-xml' 'bzip2>=1.0.6' 'libzip')
+             'docbook-xsl' 'docbook-xml' 'bzip2>=1.0.6' 'libzip' 'libpulse')
 optdepends=('phonon-gstreamer: GStreamer Phonon backend (default)'
 	    'phonon-xine:      Xine Phonon backend'
 	    'phonon-mplayer:   MPlayer Phonon backend'
@@ -38,12 +37,15 @@ source=($_mirror/${pkgname}-$_kdever.tar.xz
 	01_chakra_tag.patch
 	02_kde_applications_menu.patch
 	03_chakra_menu.patch
-	MergeDir.patch)
+	MergeDir.patch
+        # Upstream patches
+        changeset_r9323adac35d40da69e3cb18504340e984c4afd05.diff)
 md5sums=(`grep ${pkgname}-$_kdever.tar.xz ../kde-sc.md5 | cut -d" " -f1`
          'e9ac43de85dc73309ab6c89ebcf5dc50'   # 01_chakra_tag.patch
          'e94450ba5430ea9c1e33bad9ae38ca2d'   # 02_kde_applications_menu.patch
          '53b85403e4dd8f9146933c52ca23243e'   # 03_chakra_menu.path
-         'f442698bae9d4ffb26f6df9457d7fc5a')  # MergeDir.patch
+         'f442698bae9d4ffb26f6df9457d7fc5a'   # MergeDir.patch
+         '1c8c5c3bc5676c7dbee10c2a8fd655fd')
         
 build() {
 	# main patches
@@ -54,6 +56,9 @@ build() {
 	patch -Np1 -i ${srcdir}/03_chakra_menu.patch
 	# right positioning of applications' entries in kmenu
 	patch -p1 -i ${srcdir}/MergeDir.patch
+
+        # Upstream patches
+        patch -p1 -i ${srcdir}/changeset_r9323adac35d40da69e3cb18504340e984c4afd05.diff
 
         cd ..
 	rm -rf build
