@@ -7,21 +7,19 @@
 # include global config
 source ../_buildscripts/${current_repo}-${_arch}-cfg.conf
 
-pkgname=fcitx
+pkgbase=fcitx
+pkgname=('fcitx' 'fcitx-pinyin' 'fcitx-table')
 pkgver=4.2.7
-pkgrel=4
-pkgdesc="A Flexible Input Method Framework"
+pkgrel=5
 arch=("i686" "x86_64")
 license=('GPL')
 url="http://code.google.com/p/fcitx"
-depends=('pango' 'dbus-core' 'opencc' 'lua' 'iso-codes' 'icu' 'libxkbfile')
 replaces=('fcitx-qt' 'fcitx-keyboard')
 conflicts=('fcitx-utf8-svn' 'fcitx-svn' 'fcitx-hg' 'fcitx-keyboard' 'fcitx-qt')
 makedepends=('cmake' 'qt' 'icu' 'wget' 'opencc' 'lua' 'iso-codes' 'enchant')
 source=("http://fcitx.googlecode.com/files/${pkgname}-${pkgver}.tar.xz"
 "https://github.com/fcitx/fcitx/commit/9937b68bad3a7e9465e17b711ce9c0a072d3071f.patch")
 categories=('localization')
-install=fcitx.install
 
 build() {
   msg "Creating make environment..."
@@ -45,9 +43,57 @@ build() {
   make
 }
 
-package(){
+package_fcitx(){
+    pkgdesc="A Flexible Input Method Framework"
+    depends=('pango' 'dbus-core' 'opencc' 'lua' 'iso-codes' 'icu' 'libxkbfile')
+    install=fcitx.install
     cd build
     make DESTDIR=$pkgdir install
+
+    # remove table
+    rm ${pkgdir}/usr/lib/fcitx/fcitx-table.so
+    rm -r ${pkgdir}/usr/share/fcitx/table/
+    rm ${pkgdir}/usr/share/fcitx/*/fcitx-table.*
+    rm ${pkgdir}/usr/share/fcitx/configdesc/table.desc
+
+    # remove pinyin
+    rm ${pkgdir}/usr/lib/fcitx/fcitx-pinyin.so
+    rm -r ${pkgdir}/usr/share/fcitx/pinyin/
+    rm ${pkgdir}/usr/share/fcitx/*/fcitx-pinyin.*
+    rm -r ${pkgdir}/usr/include/fcitx/module/pinyin/ -r
+    rm ${pkgdir}/usr/share/fcitx/inputmethod/{pinyin,shuangpin}.conf
 }
+
+package_fcitx-pinyin() {
+    pkgdesc="Pinyin Support for Fcitx"
+    depends=('fcitx')
+    pushd .
+    cd build/src/im/pinyin
+    make DESTDIR=$pkgdir install
+    popd
+
+    pushd .
+    cd build/data
+    mkdir $pkgdir/usr/share/fcitx/pinyin/
+    install -m644 pybase.mb $pkgdir/usr/share/fcitx/pinyin/
+    install -m644 pyphrase.mb $pkgdir/usr/share/fcitx/pinyin/
+    popd
+}
+
+package_fcitx-table() {
+    pkgdesc="Table Support for Fcitx"
+    depends=('fcitx' 'fcitx-pinyin')
+
+    pushd .
+    cd build/src/im/table
+    make DESTDIR=$pkgdir install
+    popd
+
+    pushd .
+    cd build/data/table
+    make DESTDIR=$pkgdir install
+    popd
+}
+
 md5sums=('fb96dec8b023b59913082eac40f8ff1c'
          '246e36c2232f107ed1692a52ebc43c39')

@@ -1,6 +1,10 @@
 post_install() {
-    echo "fcitx doesn't provides gtk im module anymore in this package."
-    echo "please install fcitx-gtk2 and fcitx-gtk3 from ccr if you need them."
+    printf "=============================================================\n"
+    printf "fcitx doesn't provides gtk im module anymore in this package.\n"
+    printf "please install fcitx-gtk2 and fcitx-gtk3 from [extra].\n"
+    printf "\e[01;33mfcitx-pinyin and fcitx-table are splitted from fcitx, please\n"
+    printf "install them separately.\n\e[00m"
+    printf "=============================================================\n"
     
     update-desktop-database -q
     update-mime-database usr/share/mime &> /dev/null
