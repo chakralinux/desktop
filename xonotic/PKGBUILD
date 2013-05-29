@@ -1,15 +1,12 @@
-#
-# Games Packages for Chakra, part of chakra-project.org
-#
 # Maintainer: Adrián Chaves Fernández (Gallaecio) <adriyetichaves@gmail.com>
 
 pkgbase=xonotic
 _pkgbase=Xonotic
 pkgname=($pkgbase $pkgbase-data)
 pkgver=0.6.0
-pkgrel=1
+pkgrel=2
 pkgdesc="A free, fast-paced crossplatform first-person shooter"
-arch=('i686' 'x86_64')
+arch=('x86_64')
 url="http://xonotic.org"
 license=('GPL2')
 depends=('alsa-lib' 'curl' 'libjpeg' 'libmodplug' 'libpng' 'libvorbis' 'libxpm' 'libxxf86dga'
@@ -62,8 +59,7 @@ EOF
 
 package_xonotic-data() {
   pkgdesc="A free, fast-paced crossplatform first-person shooter (data files)"
-  depends=""
-  arch=(any)
+  arch=('x86_64')
 
   install -d $pkgdir/usr/share/$pkgbase
   cp -R $srcdir/$_pkgbase/data $pkgdir/usr/share/$pkgbase/data
