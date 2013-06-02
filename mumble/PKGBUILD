@@ -4,9 +4,9 @@
 # Maintainer: Michael Haesel <michael[dot]haesel[at]gmail[dot]com>
 
 pkgname=mumble
-pkgver=1.2.3
-pkgrel=5
-arch=('i686' 'x86_64')
+pkgver=1.2.4
+pkgrel=1
+arch=('x86_64')
 pkgdesc="A voice chat application similar to TeamSpeak."
 license=('GPL')
 depends=('qt' 'speex' 'lsb-release' 'libxi' 'avahi' 'libsndfile' 'protobuf' 'libpulse')
@@ -15,12 +15,8 @@ options=('!libtool')
 categories=('communication')
 url="http://mumble.sourceforge.net/"
 screenshot="http://mumble.sourceforge.net/static/Mumble%20--%201.2.3.png"
-source=("http://downloads.sourceforge.net/mumble/${pkgname}-${pkgver}.tar.gz"
-        "mumble11x.desktop"
-        "mumble.protocol")
-sha256sums=('05895122ae4abec3fb62ef24ed9d167ffd768e7080ed179c8bf3afca96d18a5c'
-            '8f76b983cf497a4f4c8d68cc524a0c386657267b3da2fd013634092de906426f'
-            'd1779e85055b707127b0136554508d7c404dae61462f769d883612be158f4bd9')
+source=("http://downloads.sourceforge.net/project/${pkgname}/${pkgname^}/${pkgver}/${pkgname}-${pkgver}.tar.gz")
+sha256sums=('a1cf8383d99a02719b16c5440e3a5fb5375a8aa060f203bfa5d25bc69f919c9b')
 
 build() {
   cd "${srcdir}/${pkgname}-${pkgver}"
@@ -37,7 +33,6 @@ package() {
 
   # bin stuff
   install -m755 -D ./release/mumble "${pkgdir}/usr/bin/mumble"
-  install -m755 -D ./release/mumble11x "${pkgdir}/usr/bin/mumble11x"
   install -m755 -D ./scripts/mumble-overlay "${pkgdir}/usr/bin/mumble-overlay"
 
   # lib stuff
@@ -52,11 +47,10 @@ package() {
 
   # other stuff
   install -m644 -D ./scripts/mumble.desktop "${pkgdir}/usr/share/applications/mumble.desktop"
-  install -m644 -D "${srcdir}/mumble11x.desktop" "${pkgdir}/usr/share/applications/mumble11x.desktop"
+  install -m644 -D ./scripts/mumble.protocol "${pkgdir}/usr/share/kde4/services/mumble.protocol"
   install -m755 -d "${pkgdir}/usr/share/man/man1"
   install -m644 -D ./man/mum* "${pkgdir}/usr/share/man/man1/"
   install -m644 -D ./icons/mumble.svg "${pkgdir}/usr/share/icons/hicolor/scalable/apps/mumble.svg"
-  install -m644 -D "${srcdir}/mumble.protocol" "${pkgdir}/usr/share/kde4/services/mumble.protocol"
 
   # License.
   install -m644 -D "${srcdir}/${pkgname}-${pkgver}/LICENSE" "${pkgdir}/usr/share/licenses/${pkgname}/LICENSE"
