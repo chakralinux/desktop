@@ -1,0 +1,25 @@
+pkgname=django-oauth2-provider
+pkgver=0.2.4
+pkgrel=1
+pkgdesc="Django application that provides customizable OAuth2_ authentication for your Django projects"
+url="https://github.com/caffeinehit/django-oauth2-provider"
+arch=('x86_64')
+license=('BSD')
+depends=('django' 'python2')
+makedepends=('python2-distribute')
+source=("https://pypi.python.org/packages/source/d/$pkgname/$pkgname-$pkgver.tar.gz")
+md5sums=('7306a1ca8e103a8e8d4053cc00817b49')
+
+build() {
+    cd $srcdir/$pkgname-$pkgver
+    python2 setup.py build
+}
+
+package() {
+    cd $srcdir/$pkgname-$pkgver
+    python2 setup.py install --prefix=/usr --root=$pkgdir
+    
+    # License.
+    install -d $pkgdir/usr/share/licenses/$pkgname
+    cp LICENSE $pkgdir/usr/share/licenses/$pkgname/license.txt
+}

@@ -8,28 +8,42 @@ source ../_buildscripts/${current_repo}-${_arch}-cfg.conf
 
 pkgname=recorditnow
 pkgver=0.8.1
-pkgrel=4
+pkgrel=5
 pkgdesc="A plugin based desktop recorder for KDE SC 4"
 arch=('i686' 'x86_64')
 url="http://kde-apps.org/content/show.php/RecordItNow?content=114610"
 license=('GPL')
-depends=('kdebase-runtime' 'recordmydesktop' 'ffmpeg')
+depends=('kde-runtime' 'recordmydesktop' 'ffmpeg')
 makedepends=('cmake' 'automoc4')
 optdepends=('mencoder: for mencoder encoder plugin'\
 	    'xfixes: for mouse cursor in screenshots')
 provides=('recorditnow' 'joschy')
 conflicts=('joschy-git')
 categories=('multimedia')
-source=(http://downloads.sourceforge.net/project/recorditnow/${pkgname}-${pkgver}.tar.bz2)
-md5sums=('6619b4048545adbab1d13a790189e80f')
+source=("http://downloads.sourceforge.net/project/recorditnow/${pkgname}-${pkgver}.tar.bz2" "cmake.patch")
+md5sums=('6619b4048545adbab1d13a790189e80f'
+         '74ea0ababc2291e2a62e5d045c62616a')
 
 build() {
-    cd ${srcdir}/$pkgname-$pkgver/
+    pushd .
+    cd "$pkgname-$pkgver"
+    patch -i "../cmake.patch" -p0 || return 1
+    popd
+
     if [[ ! -d build ]]; then
-	       mkdir build
-	fi
+         mkdir build
+    fi
     cd build
-    cmake -DCMAKE_INSTALL_PREFIX=/usr -DCMAKE_BUILD_TYPE=release -DLINGUAS="de hu cs pt_BR fr it" ../
+    cmake -DCMAKE_INSTALL_PREFIX=/usr \
+          -DCMAKE_BUILD_TYPE=release \
+          -DLINGUAS="de hu cs pt_BR fr it" \
+          -DJOSCHY_LIBRARY_INSTALL_DIR=/usr/lib \
+          -DJOSCHY_PLUGIN_INSTALL_DIR=/usr/lib/joschy \
+          ../$pkgname-$pkgver/
     make  || return 1
-    make DESTDIR=${startdir}/pkg/ install
+}
+
+package () {
+    cd build
+    make DESTDIR=${pkgdir} install
 }

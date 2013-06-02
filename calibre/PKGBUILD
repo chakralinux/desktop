@@ -1,33 +1,37 @@
-# maintainer: abveritas@chakra-project.org
+# maintainer: almack
 
 pkgname=calibre
-pkgver=0.9.27
+pkgver=0.9.32
 pkgrel=1
 pkgdesc="Ebook management application"
 arch=('x86_64')
 url="http://calibre.kovidgoyal.net/"
 license=('GPL3')
 depends=('python2' 'python2-imaging' 'libusb' 'pyqt' 'python-mechanize'
-         'imagemagick' 'dbus-python' 'python-lxml' 'python2-beautifulsoup' 'python-dateutil'
-         'python-cssutils' 'desktop-file-utils' 'python-dnspython' 'libmtp'
+         'imagemagick' 'dbus-python' 'python-lxml' 'python2-beautifulsoup' 'python2-dateutil'
+         'python-cssutils' 'desktop-file-utils' 'python2-dns' 'libmtp'
          'podofo' 'xdg-utils' 'cherrypy' 'python2-pdf' 'unrar' 'chmlib' 'poppler'
          'poppler-qt' 'icu' 'libwmf' 'libffi' 'python2-six' 'python2-netifaces' 'python2-cssselect')
 makedepends=('python2-pycountry' 'qt-private-headers')
-optdepends=('ipython: to use calibre-debug')
+#optdepends=('ipython: to use calibre-debug')
 screenshot=('https://lh5.googleusercontent.com/_lG58t3XWd3c/TcNwiXkAx_I/AAAAAAAAAEc/M34I4uY9UUY/s800/gui.jpeg')
 install=calibre.install
 source=("http://calibre-ebook.googlecode.com/files/${pkgname}-${pkgver}.tar.xz"
         'desktop_integration.patch')
-md5sums=('1d5bbe102e3ec6ec71399aad5d074137'
-         'cbf6da95f3885e80d3d8b0ae2733674d')
+md5sums=('3b1c89a84872df900b9cfb706027df67'
+         '8353d1878c5a498b3e49eddef473605f')
 
 build() {
   cd "${srcdir}/${pkgname}"
 
   rm -rf src/cherrypy
+  rm -rf resources/${pkgname}-portable.*
+  
   sed -i -e "s/ldflags = shlex.split(ldflags)/ldflags = shlex.split(ldflags) + ['-fPIC']/" setup/extensions.py
+  
   sed -i -e 's:\(#!/usr/bin/env[ ]\+python$\|#!/usr/bin/python$\):\12:g' \
     $(find . -regex ".*.py\|.*.recipe")
+
 
   LANG='en_US.UTF-8' python2 setup.py build
   LANG='en_US.UTF-8' python2 setup.py translations
@@ -59,4 +63,3 @@ package() {
   python2 -m compileall "${pkgdir}/usr/lib/calibre/"
   python2 -O -m compileall "${pkgdir}/usr/lib/calibre/"
 }
-

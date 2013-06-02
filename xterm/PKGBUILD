@@ -2,23 +2,20 @@
 # KDE SC Packages for Chakra, part of chakra-project.org
 #
 # contributor (x86_64): Giuseppe Calà <jiveaxe@gmail.com>
-
-# include global config
-source ../_buildscripts/${current_repo}-${_arch}-cfg.conf
  
 pkgname=xterm
-pkgver=267
+pkgver=292
 pkgrel=1
 pkgdesc="X Terminal Emulator"
-arch=('i686' 'x86_64')
+arch=('x86_64')
 url="http://invisible-island.net/xterm/"
 license=('custom')
-depends=('libxft' 'libxaw' 'ncurses' 'xorg-apps' 'xbitmaps')
+depends=('libxft' 'libxaw' 'ncurses' 'xorg-apps' 'xbitmaps' 'libutempter')
 groups=('xorg')
 categories=('system')
 source=(ftp://invisible-island.net/${pkgname}/${pkgname}-${pkgver}.tgz
         LICENSE)
-md5sums=('3945ab70cfa2a9e95804157ee1b0f8e8'
+md5sums=('d6e7d1bd31b23fb58ca213c912f32009'
          '10ecc3f8ee91e3189863a172f68282d2')
 
 build() {
@@ -48,7 +45,8 @@ build() {
       --enable-mini-luit \
       --enable-narrowproto \
       --enable-exec-xterm \
-      --with-tty-group=tty
+      --with-tty-group=tty \
+      --with-utempter
   make
 }
 
@@ -60,4 +58,6 @@ package() {
   install -m755 -d "${pkgdir}/usr/share/licenses/${pkgname}"
   install -m644 "${srcdir}/LICENSE" \
       "${pkgdir}/usr/share/licenses/${pkgname}/"
+  install -m755 -d ${pkgdir}/usr/share/applications
+  install -m644 ${srcdir}/${pkgname}-${pkgver}/{xterm,uxterm}.desktop ${pkgdir}/usr/share/applications/
 }

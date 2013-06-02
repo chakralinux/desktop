@@ -1,32 +1,31 @@
 #
 # Chakra Packages for Chakra, part of chakra-project.org
 #
-# maintainer (i686): Phil Miller <philm[at]chakra-project[dog]org>
-# maintainer (x86_64): Manuel Tortosa <manutortosa[at]chakra-project[dot]org>
 
 pkgname=nmap
-pkgver=6.01
+pkgver=6.25
 pkgrel=1
 pkgdesc="A network exploration tool and security/port scanner"
-arch=('i686' 'x86_64')
+arch=('x86_64')
 url="http://nmap.org"
 license=('custom:GPL')
 depends=('pcre' 'openssl' 'libpcap>=1.0.0' 'lua')
-# python is needed for zenmap
+# pygtk is needed for zenmap
 makedepends=('python2')
-optdepends=('pygtk: gui for nmap')
+optdepends=('pygtk: gui for nmap - zenmap')
 options=('!makeflags')
 source=(http://nmap.org/dist/${pkgname}-${pkgver}.tar.bz2)
-md5sums=('a1a71940f238abb835dbf3ee7412bcea')
+md5sums=('fcc80f94ff3adcb11eedf91092ea6f5e')
 
 build() {
   cd "${srcdir}/${pkgname}-${pkgver}"
 
-  echo "TryExec=/usr/bin/pygtk-demo" >> zenmap/install_scripts/unix/zenmap.desktop || return 1
-  echo "TryExec=/usr/bin/pygtk-demo" >> zenmap/install_scripts/unix/zenmap-root.desktop || return 1
-
-  ./configure --prefix=/usr --mandir=/usr/share/man \
-    --libexecdir=/usr/lib
+  export PYTHON=python2
+  ./configure \
+	  --prefix=/usr \
+	  --libexecdir=/usr/lib \
+	  --mandir=/usr/share/man
+		
   make
 }
 

@@ -1,23 +1,24 @@
 # Maintainer: Anke Boersma <abveritas@chakra-project.org>
 
 pkgname=qupzilla
-pkgver=1.4.1
+pkgver=1.4.3
 pkgrel=1
-_commit=d4c6dbd
+#_commit=812437d
 pkgdesc="A very fast open source browser based on WebKit core"
 url="http://www.qupzilla.com"
 arch=('x86_64')
 license=('GPL3')
 depends=('qtwebkit' 'qtwebkit-plugins')
 categories=('network') 
-source=("https://github.com/QupZilla/QupZilla/tarball/master/QupZilla-qupzilla-${pkgver}.tar.gz"
+source=("https://github.com/QupZilla/qupzilla/archive/v${pkgver}.tar.gz"
+        #https://github.com/QupZilla/QupZilla/tarball/master/QupZilla-qupzilla-${pkgver}.tar.gz"
         #"https://github.com/downloads/QupZilla/qupzilla/QupZilla-${pkgver}.tar.gz"
         'searchenginesmanager.diff'
         'speeddial.diff'
         'preferences.diff'
         'qupzilla.diff'
         'start-white.png')
-md5sums=('674cecbe5ccbf11f71650665ae2e0e8e'
+md5sums=('95167f098b2322609aa78349d250b7d2'
          'c5c0f9e3640d0f5695034aef63648967'
          '7dc447b9ef93186c8fa3b8f1f0ce806e'
          'b028e33ad46bf9c74cfb759f480f170a'
@@ -25,7 +26,7 @@ md5sums=('674cecbe5ccbf11f71650665ae2e0e8e'
          'fc705d7aba952361a626a2c79726bbfa')
 
 build() {
-   cd "${srcdir}/QupZilla-qupzilla-${_commit}/"
+   cd "${srcdir}/${pkgname}-${pkgver}/"
    patch -p0 -i "${srcdir}/searchenginesmanager.diff"
    patch -p0 -i "${srcdir}/speeddial.diff"
    patch -p0 -i "${srcdir}/preferences.diff"
@@ -38,7 +39,7 @@ build() {
 }
 
 package() {
-   cd "${srcdir}/QupZilla-qupzilla-${_commit}/"
+   cd "${srcdir}/${pkgname}-${pkgver}/"
    mkdir -p ${pkgdir}/usr/share/icons
    install -m 644 -p ${srcdir}/start-white.png ${pkgdir}/usr/share/icons/
    make INSTALL_ROOT=$pkgdir install

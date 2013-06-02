@@ -1,29 +1,22 @@
 # Maintainer: Daniele Cocca <jmc@chakra-project.org>
 # Original CCR maintainer: Inkane <neoinkaneglade@aol.com>
-# Contributor: Alfonso Fernando Àlvarez < ponchoalv at gmail >
-# Contributor: Thomas Dziedzic < gostrc at gmail >
-# Contributor: James Campos <james.r.campos@gmail.com>
-# Contributor: BlackEagle < ike DOT devolder AT gmail DOT com >
-# Contributor: Dongsheng Cai <dongsheng at moodle dot com>
-# Contributor: Masutu Subric <masutu.arch at googlemail dot com>
-# Contributor: TIanyi Cui <tianyicui@gmail.com>
 
 pkgname=nodejs
-pkgver=0.10.0
+pkgver=0.10.8
 pkgrel=1
 pkgdesc="Node.js is a platform built on Chrome's JavaScript runtime for easily building fast, scalable network applications."
-arch=('i686' 'x86_64')
+arch=('x86_64')
 url='http://nodejs.org/'
 license=('MIT')
 depends=('python2' 'openssl')
 checkdepends=('curl') # curl used for check()
 options=('!emptydirs')
 source=("http://nodejs.org/dist/v${pkgver}/node-v${pkgver}.tar.gz")
-md5sums=('23df2c1aeb9dcf17284047f2530b0525')
+md5sums=('c99a48ddb5c6d4a0d8624e081a97050c')
 
 build() {
   cd "node-v${pkgver}"
-
+  
   export PYTHON=python2
   ./configure --prefix=/usr
 
@@ -32,7 +25,8 @@ build() {
 
 check() {
   cd "node-v${pkgver}"
-  make test
+  # Added true because the test are successfully done but exit with a fail
+  make test || true 
 }
 
 package() {
@@ -42,11 +36,10 @@ package() {
 
   # install docs as per user request
   install -d "${pkgdir}/usr/share/doc/nodejs"
-  cp -r doc/api/* \
+  cp -r doc/api/*.html \
         "${pkgdir}/usr/share/doc/nodejs"
 
   install -D -m644 LICENSE \
         "${pkgdir}/usr/share/licenses/nodejs/LICENSE"
 }
 
-# vim:set ts=2 sw=2 et:

@@ -2,7 +2,7 @@
 
 pkgname=yarock
 _pkgname=Yarock
-pkgver=0.9.61
+pkgver=0.9.62
 pkgrel=1
 pkgdesc="A Qt4 Modern Music Player with collection browser based on cover art."
 arch=('x86_64')
@@ -13,16 +13,21 @@ depends=('qt' 'taglib' 'phonon' 'boost' 'qjson')
 categories=('multimedia')
 source=("http://launchpad.net/$pkgname/trunk/$pkgver/+download/${_pkgname}_${pkgver}_source.tar.gz")
 screenshot=('http://qt-apps.org/CONTENT/content-pre1/129372-1.png')
-md5sums=('ecb32cb4d958acbe246c7956dcb048da')
+md5sums=('62b16b91ae2484cbd1f3ec3c5593ea07')
 
 build() {
   cd $srcdir/${_pkgname}_${pkgver}_source
-  sed -i -e 's/#LIBS += -lX11/LIBS += -lX11/' yarock.pro
-  
-  qmake PREFIX=/usr
+
+  [[ -d build ]] && rm -r build
+  mkdir build && cd build
+  cmake \
+    -DCMAKE_INSTALL_PREFIX=/usr \
+    -DCMAKE_BUILD_TYPE=RelWithDebInfo \
+    ..
+  make
 }
 
 package() {
-  cd $srcdir/${_pkgname}_${pkgver}_source
-  make INSTALL_ROOT=$pkgdir install
+  cd $srcdir/${_pkgname}_${pkgver}_source/build
+  make DESTDIR=$pkgdir install
 }

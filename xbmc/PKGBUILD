@@ -6,7 +6,7 @@
 _prefix=/usr
 
 pkgname=xbmc
-pkgver=11.0
+pkgver=12.1
 pkgrel=2
 pkgdesc="XBMC Media Center"
 arch=('i686' 'x86_64')
@@ -17,7 +17,8 @@ depends=( 'bzip2' 'curl' 'enca' 'faac' 'faad2' 'fontconfig' 'fribidi' 'python2' 
           'libmpeg2' 'libmysqlclient' 'libsamplerate' 'libxinerama' 'libpng' 'libbluedevil'
           'libxrandr' 'libxtst' 'lzo2' 'sdl_image' 'sdl_mixer' 'libvorbis' 'libpulse'
           'smbclient' 'wavpack' 'mesa-demos' 'xorg-utils' 'libmicrohttpd' 'libjpeg-turbo'
-          'libssh' 'libva' 'libmodplug' 'rtmpdump' 'lsb-release' 'sqlite3' 'libbluray')
+          'libssh' 'libva' 'libmodplug' 'rtmpdump' 'lsb-release' 'sqlite3' 
+          'libbluray' 'swig' 'openjdk' 'tinyxml' 'taglib')
 makedepends=('boost' 'cmake' 'gperf' 'nasm' 'libvdpau' 'unzip' 'zip' 'cvs' 'autoconf' 'automake')
 optdepends=('lirc: remote controller support'
             'unrar: access compressed files without unpacking them'
@@ -27,12 +28,14 @@ optdepends=('lirc: remote controller support'
             'lcms'
             'tk')
 categories=('multimedia')
-install=("${pkgname}.install")
+install="${pkgname}.install"
 options=(makeflags)
 source=("http://mirrors.xbmc.org/releases/source/xbmc-$pkgver.tar.gz"
-        "FEH.sh")
-md5sums=('9e8a26ee25173c7268abea7f1d82d428'
-         'c3e2ab79b9965f1a4a048275d5f222c4')
+        "FEH.sh"
+        "${pkgname}.install")
+md5sums=('8955473f84cb2a0513c0f3efd7e68843'
+         'c3e2ab79b9965f1a4a048275d5f222c4'
+         'f227d9ee506e774ec1be2879571d5ccc')
 
 build() {
     cd "${srcdir}/xbmc-$pkgver"
