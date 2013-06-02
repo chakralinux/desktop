@@ -1,40 +1,34 @@
-
-# contirbutor Jakub Kozisek <nodevel at gmail dot com>
+# maintainer: Neophytos Kolokotronis <tetris4@gmail.com>
+# contributor: Jakub Kozisek <nodevel at gmail dot com>
 
 pkgname=kdev-python
-pkgver=1.4.1
+pkgver=1.5.1
+_branch=stable
 pkgrel=1
-pkgdesc='Python plugin for KDevelop - stable version'
+pkgdesc="KDevelop plugin that starts a script by opening a webbrowser"
 arch=('x86_64')
-url="https://projects.kde.org/projects/playground/devtools/plugins/kdev-python"
+url="http://www.kdevelop.org/"
 license=('GPL')
-groups=('kde' 'kdevelop-plugins')
 depends=('kdevelop')
-makedepends=('kdevelop-pg-qt' 'cmake' 'automoc4')
-conflicts=('kdevelop-python-beta' 'kdevelop-python')
-replaces=('kdevelop-python-beta' 'kdevelop-python')
-provides=('kdevelop-python')
-source=("http://download.kde.org/stable/kdevelop/$pkgname/$pkgver/src/$pkgname-v$pkgver.tar.bz2")
-sha256sums=('8743844c6bcf09b3f9db05891539973633049470eb7c046b75b3cfe4542da1e2')
+makedepends=('cmake' 'automoc4' 'kdevelop-pg-qt')
+source=("http://master.kde.org/${_branch}/kdevelop/${pkgname}/${pkgver}/src/${pkgname}-v${pkgver}.tar.bz2")
+md5sums=('d163e18ad75489f8ba0f0736b43f6642')
 
 build() {
-	cd "$srcdir/$pkgname-v$pkgver"
-	sed -i 's|#!.*python$|&2|' python-src/Parser/asdl_c.py
-	
-	mkdir -p "$srcdir/build"
-	cd "$srcdir/build"
-	
-	cmake "../$pkgname-v$pkgver" \
-		-DCMAKE_SKIP_RPATH=ON \
-		-DCMAKE_BUILD_TYPE=RELWITHDEBINFO \
-		-DCMAKE_{SHARED,MODULE,EXE}_LINKER_FLAGS='-Wl,--no-undefined -Wl,--as-needed' \
-		-DCMAKE_INSTALL_PREFIX=/usr
-	
-	make parser
-	make
+    cd "${srcdir}"
+    mkdir build
+    cd build 
+    cmake ../${pkgname}-v${pkgver} \
+        -DCMAKE_BUILD_TYPE=RELWITHDEBINFO \
+        -DCMAKE_{SHARED,MODULE,EXE}_LINKER_FLAGS='-Wl,--no-undefined -Wl,--as-needed' \
+        -DCMAKE_INSTALL_PREFIX=/usr
+
+    make parser
+    make
 }
 
 package() {
-	cd "$srcdir/build"
-	make DESTDIR="$pkgdir" install
+    cd "${srcdir}"/build
+
+    make DESTDIR="${pkgdir}" install
 }
