@@ -1,24 +1,19 @@
-#
-# Chakra Packages for Chakra, part of chakra-project.org
-#
-# maintainer (i686): Phil Miller <philm[at]chakra-project[dog]org>
-# maintainer (x86_64): Manuel Tortosa <manutortosa[at]chakra-project[dot]org>
+#maintainer: Neophytos Kolokotronis <tetris4@gmail.com>
+#contributions from Arch: https://www.archlinux.org/packages/community/x86_64/mixxx/
 
 pkgname=mixxx
-pkgver=1.10.0
-_rel=release-1.10.x~bzr2720
+pkgver=1.11.0
 pkgrel=1
 pkgdesc="Digital DJ mixing software with cpu optimization enabled"
-arch=('i686' 'x86_64')
+arch=('x86_64')
 url="http://www.mixxx.org/"
 license=('GPL2')
-depends=('libsndfile' 'libogg' 'taglib' 'libid3tag' 'libmad' 'libvorbis' 'portaudio' 'portmidi' 'qt>=4.7.0' 'libshout')
-makedepends=('bzr' 'scons>=0.98' 'pkgconfig>=0.15.0')
+depends=('fftw' 'libsndfile' 'libogg' 'taglib' 'libid3tag' 'libmad' 'libvorbis' 'portaudio' 'portmidi' 'qtwebkit' 'libshout' 'vamp-plugin-sdk' 'libusbx' 'protobuf')
+makedepends=('bzr' 'scons' 'pkgconfig')
 categories=('multimedia')
-#optdepends=('lib32-faad2' 'mp4v2')
-provides=(mixxx)
+screenshot=("http://www.mixxx.org/images/splash1.png")
 source=(http://downloads.mixxx.org/mixxx-${pkgver}/mixxx-${pkgver}-src.tar.gz)
-md5sums=(d92bf422491fa92adf7ed6c2998e67fb)
+md5sums=('89ee8ba60824919d8dd1194287bda259')
 
 build() {
   cd "${srcdir}/${pkgname}-${pkgver}"
@@ -29,5 +24,4 @@ build() {
 package() {
   cd "${srcdir}/${pkgname}-${pkgver}"
   scons qtdir=/usr/lib/qt prefix=/usr install_root=$pkgdir/usr install 
-  sed -i -e "s~Exec=pasuspender mixxx~Exec=mixxx~g" "$pkgdir/usr/share/applications/mixxx.desktop"
 }
