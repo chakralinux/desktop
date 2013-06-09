@@ -1,32 +1,27 @@
 # Maintainer: Daniele Cocca <jmc@chakra-project.org>
+# Contributor: Ernesto Manríquez <alejandronova@gmail.com>
 
 _pkgname=ZynAddSubFX
 pkgname=zynaddsubfx
-pkgver=2.4.1
-pkgrel=3
-pkgdesc="Open source software synthesizer capable of making a countless number of instruments, from some common heard from expensive hardware to interesting sounds that you'll boost to an amazing universe of sounds."
-arch=('i686' 'x86_64')
+pkgver=2.4.3
+pkgrel=1
+pkgdesc="Open source additive and substractive software synthesizer, with an integrated effect engine."
+arch=('x86_64')
 url="http://zynaddsubfx.sourceforge.net/"
 license=('GPL2')
-depends=('fftw' 'mxml' 'zlib' 'fltk')
+depends=('fftw' 'mxml' 'zlib' 'fltk' 'lash' 'dssi')
 makedepends=('oss' 'jack')
 source=("https://downloads.sourceforge.net/project/${pkgname}/${pkgname}/${pkgver}/${_pkgname}-${pkgver}.tar.bz2"
-        'gentoo-zynaddsubfx-2.4.1-docs.patch'
-        'gentoo-zynaddsubfx-2.4.1-fltk.patch'
-        'gentoo-zynaddsubfx-2.4.1-fltk13.patch')
+        'gentoo-zynaddsubfx-2.4.1-docs.patch')
 categories=('multimedia')
-md5sums=('59eb69ce24d6f8c605f8ba43958d0526'
-         '1cc79aea2033fab472f35a5fec60167e'
-         'eb95d339ff5deac8c6b54965f04a8c60'
-         '49464a33ab9c4250520eda0df7705663')
+sha256sums=('b84b595660ccec3ebc364c29c2d29def7d28a6947fc1dfb26bd8c34ca0e7f54d'
+            '379c61a8f911d4794f3369f5b12b46142b46fb771d2cd2877e220c33e6891ec2')
 
 build() {
   # Patch it first
   cd "${srcdir}/${_pkgname}-${pkgver}"
 
   patch -Np1 -i "${srcdir}/gentoo-zynaddsubfx-2.4.1-docs.patch"
-  patch -Np1 -i "${srcdir}/gentoo-zynaddsubfx-2.4.1-fltk.patch"
-  patch -Np1 -i "${srcdir}/gentoo-zynaddsubfx-2.4.1-fltk13.patch"
 
   # Then, prepare the build directory
   cd "${srcdir}"
@@ -39,7 +34,8 @@ build() {
   cmake "${srcdir}/${_pkgname}-${pkgver}" \
         -DCMAKE_BUILD_TYPE=RelWithDebInfo \
         -DCMAKE_INSTALL_PREFIX=/usr \
-        -DGuiModule=fltk
+        -DGuiModule=fltk \
+        -DDssiEnable=true
   
   make
 }
@@ -50,8 +46,8 @@ package() {
 
   # Also copy the data files...
   install -d -m755 "${pkgdir}/usr/share/${pkgname}"
-  cp -a "${srcdir}/${_pkgname}-${pkgver}/banks" "${pkgdir}/usr/share/${pkgname}"
-  cp -a "${srcdir}/${_pkgname}-${pkgver}/examples" "${pkgdir}/usr/share/${pkgname}"
+  cp -a "${srcdir}/${_pkgname}-${pkgver}/instruments/banks" "${pkgdir}/usr/share/${pkgname}"
+  cp -a "${srcdir}/${_pkgname}-${pkgver}/instruments/examples" "${pkgdir}/usr/share/${pkgname}"
 }
 
 # vim:set ts=2 sw=2 et:
