@@ -7,31 +7,24 @@
 # include global config
 
 pkgname=imagewriter
-pkgver=1.8
-pkgrel=1
-pkgrelsuse=1.11
+pkgver=1.10
+pkgrel=5
+pkgrelsuse=2.1.2
 pkgdesc="SUSE Studio Imagewriter"
-arch=('i686' 'x86_64')
+arch=('x86_64')
 url="http://kiwi.berlios.de"
 license=('GPLv2')
-depends=('coreutils' 'syslinux')
+depends=('coreutils' 'syslinux' 'udisks2')
 makedepends=('rpmextract')
 provides=('imagewriter')
 categories=('utils')
-source=(http://download.opensuse.org/distribution/11.3/repo/oss/suse/i586/$pkgname-$pkgver-$pkgrelsuse.i586.rpm)
-md5sums=('559e2a4bd84efac657ea618f3ac39ad0')
-
-[ "$CARCH" = "x86_64" ] && source=(http://download.opensuse.org/distribution/11.3/repo/oss/suse/x86_64/$pkgname-$pkgver-$pkgrelsuse.x86_64.rpm)
-[ "$CARCH" = "x86_64" ] && md5sums=('0b68baf0e8065fa7cabd593fe0b65f98')
+source=(http://download.opensuse.org/distribution/12.3/repo/oss/suse/x86_64/$pkgname-$pkgver-$pkgrelsuse.x86_64.rpm)
+sha256sums=('0bb2a7585a2edd74803d1ea56d2ed77b37c165f6dc164258115f538dccba213c')
 
 build() {
     cd $startdir/pkg/
 
-    if [ "$CARCH" = "x86_64" ]; then
-        rpmextract.sh ${startdir}/src/$pkgname-$pkgver-$pkgrelsuse.x86_64.rpm
-    else
-        rpmextract.sh ${startdir}/src/$pkgname-$pkgver-$pkgrelsuse.i586.rpm
-    fi
+    rpmextract.sh ${startdir}/src/$pkgname-$pkgver-$pkgrelsuse.x86_64.rpm
 
     chmod a+rx -R *
     find . -type f -exec chmod -x \{\} \;
