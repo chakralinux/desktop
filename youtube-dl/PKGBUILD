@@ -5,23 +5,25 @@
 # maintainer (x86_64): Manuel Tortosa <manutortosa[at]chakra-project[dot]org>
 
 pkgname=youtube-dl
-pkgver=2012.02.27
-pkgrel=1
+pkgver=2013.05.23
+pkgrel=2
 pkgdesc='A small command-line program to download videos from YouTube.com'
 arch=('any')
-url='http://bitbucket.org/rg3/youtube-dl/'
+url='http://rg3.github.io/youtube-dl/'
 license=('MIT')
 depends=('python2')
+makedepends=('python2-distribute')
 categories=('network')
-source=("https://github.com/rg3/${pkgname}/raw/${pkgver}/${pkgname}")
-md5sums=('bd2f1db2f3edafcbf207fab805d36e23')
+source=("http://youtube-dl.org/downloads/${pkgver}/${pkgname}-${pkgver}.tar.gz")
+sha256sums=('5d31a5f5371dd7852acf68dd49bfb8068fe73a885fdb544ea28a9055369f6392')
 
-build()  {
-   install -Dm755 ${srcdir}/$pkgname $pkgdir/usr/bin/$pkgname
+prepare() {
+  cd ${pkgname}
+  sed -i 's|etc/bash_completion.d|share/bash-completion/completions|' setup.py
+}
 
-  # install MIT license
-  install -d ${pkgdir}/usr/share/licenses/$pkgname
-
-  awk /Copy/,/import/ youtube-dl  | grep -v import \
-    | sed -re 's/#?//'  > ${pkgdir}/usr/share/licenses/youtube-dl/COPYING
+package() {
+  cd ${pkgname}
+  python setup.py install --root="${pkgdir}/" --optimize=1
+  install -Dm644 LICENSE "${pkgdir}/usr/share/licenses/${pkgname}/LICENSE"
 }
