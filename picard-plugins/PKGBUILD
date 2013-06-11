@@ -1,0 +1,76 @@
+# Maintainer: Christian Menard <ReaperMan333@gmx.net>
+# Contributor: Johannes Dewender  arch at JonnyJD dot net
+pkgname=picard-plugins
+pkgver=1.2
+pkgrel=2
+pkgdesc="Plugins for MusicBrainz Picard"
+arch=('any')
+url="http://musicbrainz.org/doc/MusicBrainz_Picard/Plugins"
+license=('GPL')
+depends=('picard')
+replaces=('picard-plugins-lastfmplus')
+conflicts=('picard-plugins-lastfmplus')
+source=(
+http://users.musicbrainz.org/~luks/picard-plugins/addrelease.py
+http://users.musicbrainz.org/~luks/picard-plugins/classicdiscnumber.py
+http://users.musicbrainz.org/~luks/picard-plugins/cuesheet.py
+http://users.musicbrainz.org/~luks/picard-plugins/discnumber.py
+http://users.musicbrainz.org/~luks/picard-plugins/featartist.py
+http://users.musicbrainz.org/~luks/picard-plugins/featartistsintitles.py
+lastfm_init.py::http://users.musicbrainz.org/~luks/picard-plugins/lastfm/__init__.py
+http://users.musicbrainz.org/~luks/picard-plugins/lastfm/ui_options_lastfm.py
+http://users.musicbrainz.org/~luks/picard-plugins/lastfm/options_lastfm.ui
+lastfmplus_init.py::http://users.musicbrainz.org/~luks/picard-plugins/lastfmplus/__init__.py
+lastfmplus_options.py::http://users.musicbrainz.org/~luks/picard-plugins/lastfmplus/ui_options_lastfm.py
+http://users.musicbrainz.org/~luks/picard-plugins/no_release.py
+http://users.musicbrainz.org/~luks/picard-plugins/open_in_gui.py
+http://users.musicbrainz.org/~luks/picard-plugins/release_type.py
+replaygain_init.py::http://users.musicbrainz.org/~luks/picard-plugins/replaygain/__init__.py
+http://users.musicbrainz.org/~luks/picard-plugins/replaygain/ui_options_replaygain.py
+http://users.musicbrainz.org/~luks/picard-plugins/replaygain/options_replaygain.ui
+http://users.musicbrainz.org/~luks/picard-plugins/swapprefix.py
+http://users.musicbrainz.org/~luks/picard-plugins/titlecase.py
+http://users.musicbrainz.org/~luks/picard-plugins/tracks2clipboard.py
+)
+md5sums=('c2afb50404efc5b4d9b4d9fcd866ce96'
+         'd62bc82233010d5b039a4d3c194367f6'
+         '43ae8b593320253cf98bf88fe7f20304'
+         '919ce971e3a5ca1deeabe51aaf05f527'
+         'de06b1650dba020c4a0a89e4fcdf1510'
+         'be6bd2c1e7a32a74cbee13c2cb803739'
+         'f81b8685811644fc8ae49d9b5fff6a03'
+         '691cb36b7724362a9986c7a8fbb559f2'
+         '258ec7b5d26a381edfee7547435d527f'
+         '659d6481e0ce680d0366070435bbc150'
+         '01f6f22386d026a7454d37610ade025d'
+         'de0a69756d33001908682564060fe916'
+         'd584d9b97c77d01bdbe011b64ae23aa5'
+         '804ec2d65ad8ce53a5bbb8298ef9efa5'
+         '26465628e54ae7a440ec75bf0182befb'
+         '08b87120f4d72e34deca30850320bff6'
+         '04af5f23ec34309e438a0ec405333697'
+         '8c0d2bd8d3a1593aea050064c274f915'
+         '4a7a4a929c1945ac134addd67dfbaf05'
+         'fa5a21f109dcfb4e57865856e3aebb02')
+ 
+package() {
+  plugindir="${pkgdir}/usr/lib/python2.7/site-packages/picard/plugins"
+  cd "$srcdir"
+  install -d "$plugindir"
+  install -m644 -t "$plugindir" \
+    addrelease.py classicdiscnumber.py cuesheet.py discnumber.py \
+    featartist.py featartistsintitles.py no_release.py \
+    open_in_gui.py release_type.py swapprefix.py \
+    titlecase.py tracks2clipboard.py
+ 
+  install -m644 -D lastfm_init.py "$plugindir/lastfm/__init__.py"
+  install -m644 ui_options_lastfm.py "$plugindir/lastfm/"
+ 
+  install -m644 -D lastfmplus_options.py \
+                              "$plugindir/lastfmplus/ui_options_lastfm.py"
+  install -m644 lastfmplus_init.py "$plugindir/lastfmplus/__init__.py"
+ 
+  install -m644 -D replaygain_init.py "$plugindir/replaygain/__init__.py"
+  install -m644 -t "$plugindir/replaygain" \
+    ui_options_replaygain.py options_replaygain.ui
+}

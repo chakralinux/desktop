@@ -1,0 +1,30 @@
+# Maintainer: Christian Menard <ReaperMan333@gmx.net>
+# Contributor: Ernesto Manríquez <alejandronova@gmail.com>
+ 
+pkgname=picard
+pkgver=1.2
+pkgrel=1
+pkgdesc="MusicBrainz tagging application"
+arch=('x86_64')
+url="http://musicbrainz.org"
+license=('GPL')
+depends=('python2' 'pyqt' 'mutagen' 'libofa' 'ffmpeg' )
+optdepends=('libdiscid: CD-Lookup feature'
+            'picard-plugins: Plugins for MusicBrainz Picard' 
+		    'chromaprint: fingerprinting')
+source=( http://ftp.musicbrainz.org/pub/musicbrainz/$pkgname/$pkgname-$pkgver.tar.gz )
+ 
+build() {
+    cd "$srcdir/$pkgname-$pkgver"
+    python2 setup.py config
+    python2 setup.py build
+}
+ 
+package() {
+    cd "$srcdir/$pkgname-$pkgver"
+    python2 setup.py install --root=$pkgdir
+} 
+ 
+md5sums=('d1086687b7f7b0d359a731b1a25e7b66')  
+ 
+ 
