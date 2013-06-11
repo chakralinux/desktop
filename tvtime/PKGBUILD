@@ -1,32 +1,75 @@
-# Maintainer: Igor Isaias Banlian <igorisaiasbanlian[at]gmail[dot]com>
-# <alejandronova@gmail.com>: This is tvtime-fixed, the other one won't compile
+# Arch Maintainer: Milos Pejovic (pejovic@gmail.com)
+# Chakra: Ernesto Manríquez <alejandronova@gmail.com>
 
 pkgname=tvtime
-_pkgname=tvtime-fixed
-pkgver=1.0.2
-pkgrel=5
-pkgdesc="A high quality television application to use with video capture cards - FIXED!"
-url="http://tvtime.sourceforge.net/"
-arch=('x86_64')
-license=('GPLv2' 'LGPLv2')
-depends=('gcc-libs' 'libpng' 'libxml2' 'freetype2' 'libxtst' 'libxinerama' 'libxv' 'libsm' 'libxxf86vm')
+_tvtime_hgrev=111b28cca42d
+pkgver=1.0.2_p20110131
+pkgrel=6
+pkgdesc="tvtime with ALSA patches from Gentoo"
+depends=('libpng' 'libxml2' 'freetype2' 'libxss' 'libxinerama' 'libxv' 'libsm' 'libxxf86vm' 'alsa-lib')
+url='http://tvtime.sourceforge.net/'
 provides=('tvtime-fixed')
-makedepends=('libxt')
 conflicts=('tvtime-fixed')
-source=("https://tvtime-fixed.googlecode.com/files/${_pkgname}-${pkgver}.tar.gz")
-md5sums=('de18457adf773d7f24a0c884bcc6aee8')
- 
+arch=('x86_64')
+license=('GPL')
+source=(http://tvtime-fixed.googlecode.com/files/${_tvtime_hgrev}.tar.bz2
+        tvtime-pic.patch
+        tvtime-1.0.2-xinerama.patch
+        tvtime-1.0.2_p20110131-libsupc++.patch
+        tvtime-1.0.2_p20110131-autotools.patch
+        tvtime-1.0.2_p20110131-gettext.patch
+        tvtime-libpng-1.5.patch
+        tvtime-1.0.2_p20110131-underlinking.patch
+        tvtime-1.0.2-alsamixer-r1.patch
+        tvtime-1.0.2-alsa-r1.patch
+        tvtime-1.0.2-alsa-fixes.patch)
+md5sums=('3f68ec60da6cc0d73339fb4ccc1b4a04'
+         '4bc08a98c7cc134accb89aea3018c2f6'
+         '7716009f7064bdae850d1464e33f455d'
+         '5546ca7925e090bf96e9bc39e7a3966b'
+         'e5eba913001bd1818774214ba6b8d089'
+         '1d4da6032609e0c85decb7853f338eb3'
+         '2d450f35002c5da5f2591b59ab69a470'
+         'e74e1b88af101a9e2091cee732b4025e'
+         '6c2f03bfc75a189cb73cba123696e442'
+         '906f46b391ac2d6e8b2c1d1cc501e122'
+         '482aee09364762cfa16bd7ece2af5c4b')
+
+
 build() {
-  cd "${srcdir}/${_pkgname}-${pkgver}"
+  cd $srcdir/tvtime-$_tvtime_hgrev
+
+  # Rename the desktop file
+  mv docs/net-tvtime.desktop docs/tvtime.desktop
+  sed -i -e "s/net-tvtime.desktop/tvtime.desktop/g" docs/Makefile.am
+
+  # use 'tvtime' for the application icon
+  sed -i -e "s/tvtime.png/tvtime/" docs/tvtime.desktop
+
+  # patch to adapt to PIC or __PIC__ for pic support
+  patch -Np1 -i "${startdir}/tvtime-pic.patch"
+
+  patch -Np1 -i "${startdir}/tvtime-1.0.2-xinerama.patch"
+
+  patch -Np1 -i "${startdir}/tvtime-1.0.2_p20110131-libsupc++.patch"
+
+  patch -Np1 -i "${startdir}/tvtime-1.0.2_p20110131-autotools.patch"
+  patch -Np1 -i "${startdir}/tvtime-1.0.2_p20110131-gettext.patch"
+  patch -Np1 -i "${startdir}/tvtime-libpng-1.5.patch"
+  patch -Np0 -i "${startdir}/tvtime-1.0.2_p20110131-underlinking.patch"
+
+  patch -Np1 -i "${startdir}/tvtime-1.0.2-alsa-r1.patch"
+  patch -Np1 -i "${startdir}/tvtime-1.0.2-alsamixer-r1.patch"
+  patch -Np1 -i "${startdir}/tvtime-1.0.2-alsa-fixes.patch"
+
+  autoreconf -i -f
   ./configure --prefix=/usr --mandir=/usr/share/man --localstatedir=/var --sysconfdir=/etc
   make
 }
- 
+
 package() {
-  cd "${srcdir}/${_pkgname}-${pkgver}"
-  make DESTDIR="${pkgdir}" install
-  install -Dm644 docs/html/default.tvtime.xml $pkgdir/usr/share/tvtime/default.tvtime.xml
-  install -Dm644 COPYING "$pkgdir/usr/share/licenses/$pkgname/COPYING"
-  install -Dm644 COPYING.LGPL "$pkgdir/usr/share/licenses/$pkgname/COPYING.LGPL"
+  cd $srcdir/tvtime-$_tvtime_hgrev
+  make DESTDIR=$pkgdir install
+  install -D -m644 docs/html/default.tvtime.xml $pkgdir/usr/share/tvtime/default.tvtime.xml
 }
- 
+
