@@ -8,7 +8,7 @@
 pkgname=unvanquished
 _pkgname=Unvanquished
 pkgver=0.16.0
-pkgrel=1
+pkgrel=2
 pkgdesc="A team-based fps/rts hybrid game which pits aliens against humans"
 arch=('x86_64' 'i686')
 url="http://www.unvanquished.net"
@@ -19,7 +19,7 @@ provides=('unvanquished')
 conflicts=('unvanquished-git')
 options=('emptydirs')
 source=("https://github.com/${_pkgname}/${_pkgname}/archive/v${pkgver}.tar.gz")
-md5sums=('b68e498f1eb53b38f73dff572a3e3eba')
+md5sums=('dbc1ba410d9058410c7227694b25f80b')
 
 build() {
     cd ${srcdir}/${_pkgname}-${pkgver}
@@ -37,9 +37,29 @@ package() {
     cd ${srcdir}/${_pkgname}-${pkgver}/build
     make DESTDIR=${pkgdir} install
     
+    # Executable.
     install -d $pkgdir/usr/bin
     echo "#!/bin/bash"               > $pkgdir/usr/bin/$pkgname
     echo "cd /usr/share/$pkgname"   >> $pkgdir/usr/bin/$pkgname
     echo "./daemon $@"              >> $pkgdir/usr/bin/$pkgname
     chmod +x $pkgdir/usr/bin/$pkgname
+    
+    # Desktop integration.
+    cd ${srcdir}/${_pkgname}-${pkgver}/debian
+    
+    mkdir -p $pkgdir/usr/share/applications
+    sed -e "s#/usr/games/$pkgname#/usr/bin/$pkgname#" -i $pkgname.desktop
+    install -m 644 $pkgname.desktop $pkgdir/usr/share/applications/$pkgname.desktop
+    
+    mkdir -p $pkgdir/usr/share/pixmaps
+    install -m 644 $pkgname.png $pkgdir/usr/share/pixmaps/$pkgname.png
+    
+    # Translations.
+    cd ${srcdir}/${_pkgname}-${pkgver}/main
+    mkdir -p $pkgdir/usr/share/$pkgname/main
+    cp -R translation $pkgdir/usr/share/$pkgname/main/translation
+    rm -rf $pkgdir/usr/share/$pkgname/main/translation/*.pot
+    
+    # Clean unneeded files.
+    rm -rf $pkgdir/usr/share/$pkgname/main/vm
 }
