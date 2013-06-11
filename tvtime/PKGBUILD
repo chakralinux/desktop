@@ -1,0 +1,32 @@
+# Maintainer: Igor Isaias Banlian <igorisaiasbanlian[at]gmail[dot]com>
+# <alejandronova@gmail.com>: This is tvtime-fixed, the other one won't compile
+
+pkgname=tvtime
+_pkgname=tvtime-fixed
+pkgver=1.0.2
+pkgrel=5
+pkgdesc="A high quality television application to use with video capture cards - FIXED!"
+url="http://tvtime.sourceforge.net/"
+arch=('x86_64')
+license=('GPLv2' 'LGPLv2')
+depends=('gcc-libs' 'libpng' 'libxml2' 'freetype2' 'libxtst' 'libxinerama' 'libxv' 'libsm' 'libxxf86vm')
+provides=('tvtime-fixed')
+makedepends=('libxt')
+conflicts=('tvtime-fixed')
+source=("https://tvtime-fixed.googlecode.com/files/${_pkgname}-${pkgver}.tar.gz")
+md5sums=('de18457adf773d7f24a0c884bcc6aee8')
+ 
+build() {
+  cd "${srcdir}/${_pkgname}-${pkgver}"
+  ./configure --prefix=/usr --mandir=/usr/share/man --localstatedir=/var --sysconfdir=/etc
+  make
+}
+ 
+package() {
+  cd "${srcdir}/${_pkgname}-${pkgver}"
+  make DESTDIR="${pkgdir}" install
+  install -Dm644 docs/html/default.tvtime.xml $pkgdir/usr/share/tvtime/default.tvtime.xml
+  install -Dm644 COPYING "$pkgdir/usr/share/licenses/$pkgname/COPYING"
+  install -Dm644 COPYING.LGPL "$pkgdir/usr/share/licenses/$pkgname/COPYING.LGPL"
+}
+ 
