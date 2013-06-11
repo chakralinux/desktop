@@ -1,0 +1,51 @@
+# Maintainer: Michael Haesel <michael[dot]haesel[at]gmail[dot]com>
+# Contributor:  eyome <baikalink@hotmail.fr>
+# Contributor: Carlos García carlos-lbs  <carlos.garcia(at)logicalbricks(dot)com>
+# Contributor: Giuseppe Calà <jiveaxe@gmail.com>
+# http://gitorious.org/chakra-packages/apps/trees/master/owncloud-client
+ 
+_name=mirall
+pkgname=owncloud-client
+pkgver=1.2.5
+pkgrel=1
+pkgdesc="ownCloud client based on mirall"
+arch=('x86_64')
+url="http://owncloud.org/"
+screenshot="http://en.opensuse.org/images/b/bb/New_oc_connect.png"
+license=('GPL2')
+depends=('qt' 'csync-owncloud>=0.70.0' 'neon')
+makedepends=('cmake' 'libssh' 'smbclient')
+provides=('mirall' 'owncloud-client')
+conflicts=('mirall-git' 'mirall')
+categories=('network')
+options=()
+backup=('etc/owncloud-client/sync-exclude.lst')
+install=${pkgname}.install
+_buildtype="Release"
+source=("http://download.owncloud.com/download/${_name}-${pkgver}.tar.bz2"
+        "${pkgname}.desktop")
+sha256sums=('ff3e45b6e681363eb435deed55cc654c903f04597270cb1b966b0ac8d72758b8'
+            'e0c1fa75171148ff3025508531a51244f54a835596595942b99131a745c588ca')
+ 
+build() {
+  cd "${srcdir}/${_name}-${pkgver}"
+ 
+  if [[ -e "${srcdir}/${_name}-${pkgver}-build" ]]; then rm -rf "${srcdir}/${_name}-${pkgver}-build"; fi
+  mkdir "${srcdir}/${_name}-${pkgver}-build"
+  cd "${srcdir}/${_name}-${pkgver}-build"
+ 
+  cmake -DCMAKE_INSTALL_PREFIX=/usr \
+        -DCMAKE_INSTALL_LIBDIR=/usr/lib \
+        -DCSYNC_INCLUDE_PATH=/usr/include/ocsync \
+        -DCMAKE_INSTALL_SYSCONFDIR=/etc/${pkgname} \
+        -DCMAKE_BUILD_TYPE=${_buildtype} \
+        ../${_name}-${pkgver}
+  make
+}
+ 
+package() {
+  cd "${srcdir}/${_name}-${pkgver}-build"
+ 
+  make DESTDIR="${pkgdir}" install
+  install -Dm644 "${srcdir}/${pkgname}.desktop" "${pkgdir}/usr/share/applications/${pkgname}.desktop"
+}

@@ -1,0 +1,39 @@
+# Maintainer: Michael Haesel <michael[dot]haesel[at]gmail[dot]com>
+# Contributor: Carlos García carlos-lbs  <carlos.garcia(at)logicalbricks(dot)com>
+# Contributor: Kuba Serafinowski <zizzfizzix(at)gmail(dot)com>
+# https://github.com/zizzfizzix/pkgbuilds
+ 
+_name=ocsync
+pkgname=csync-owncloud
+pkgver=0.70.7
+pkgrel=1
+pkgdesc="A file synchronizer especially designed for you, the normal user."
+arch=("x86_64")
+url="http://www.csync.org"
+license=('GPL2')
+depends=('sqlite3' 'iniparser' 'neon' 'libssh' 'smbclient')
+makedepends=('cmake')
+provides=('csync')
+conflicts=('csync')
+source=("http://download.owncloud.com/download/${_name}-${pkgver}.tar.bz2")
+sha256sums=('571c7a822a8e30966c3a7e61a5218b49e8d52e70e8a8ec80d16db786d60bb324')
+_buildtype="Release"
+ 
+build() {
+  if [[ -e ${srcdir}/${_name}-${pkgver}-build ]]; then rm -rf ${srcdir}/${_name}-${pkgver}-build; fi
+  mkdir ${srcdir}/${_name}-${pkgver}-build
+  cd "${srcdir}/${_name}-${pkgver}-build"
+ 
+  cmake -DCMAKE_BUILD_TYPE=${_buildtype} \
+        -DCMAKE_INSTALL_PREFIX=/usr \
+	-DSYSCONF_INSTALL_DIR=/etc \
+        ../${_name}-${pkgver}
+  make
+}
+ 
+package() {
+  cd "${srcdir}/${_name}-${pkgver}-build"
+ 
+  make DESTDIR="${pkgdir}" install
+}
+ 
