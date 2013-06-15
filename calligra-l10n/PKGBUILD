@@ -3,13 +3,11 @@
 #
 # maintainer abveritas@chakra-project.org
 
-# include global config
-source ../_buildscripts/${current_repo}-${_arch}-cfg.conf
-
 pkgbase=calligra-l10n
-pkgname=('calligra-l10n-ca'
+pkgname=('calligra-l10n-bs'
+         'calligra-l10n-ca'
 	 'calligra-l10n-ca@valencia'
-	 'calligra-l10n-cs'
+	 #'calligra-l10n-cs'
 	 'calligra-l10n-da'
 	 'calligra-l10n-de'
 	 'calligra-l10n-el'
@@ -18,10 +16,10 @@ pkgname=('calligra-l10n-ca'
 	 'calligra-l10n-et'
 	 'calligra-l10n-fi'
 	 'calligra-l10n-fr'
-#	 'calligra-l10n-gl'
+	 'calligra-l10n-gl'
 	 'calligra-l10n-hu'
 	 'calligra-l10n-it'
-#	 'calligra-l10n-ja'
+	 #'calligra-l10n-ja'
 	 'calligra-l10n-kk'
 	 'calligra-l10n-nb'
 	 'calligra-l10n-nds'
@@ -31,21 +29,23 @@ pkgname=('calligra-l10n-ca'
 	 'calligra-l10n-pt_BR'
 	 'calligra-l10n-ru'
          'calligra-l10n-sk'
+         'calligra-l10n-sl'
 	 'calligra-l10n-sv'
 #	 'calligra-l10n-tr'
 	 'calligra-l10n-uk'
 	 'calligra-l10n-zh_CN'
 	 'calligra-l10n-zh_TW')
-pkgver=2.4.1
+pkgver=2.6.3
 pkgrel=1
 pkgdesc="Localization for Calligra"
 arch=('any')
 url="www.calligra-suite.org/"
 license=('LGPL')
 makedepends=('cmake' 'automoc4' 'kdelibs' 'docbook-xsl')                    
-source=(ftp://ftp.kde.org/pub/kde/stable/calligra-${pkgver}/calligra-l10n/calligra-l10n-ca-${pkgver}.tar.bz2
+source=(ftp://ftp.kde.org/pub/kde/stable/calligra-${pkgver}/calligra-l10n/calligra-l10n-bs-${pkgver}.tar.bz2
+        ftp://ftp.kde.org/pub/kde/stable/calligra-${pkgver}/calligra-l10n/calligra-l10n-ca-${pkgver}.tar.bz2
         ftp://ftp.kde.org/pub/kde/stable/calligra-${pkgver}/calligra-l10n/calligra-l10n-ca@valencia-${pkgver}.tar.bz2
-        ftp://ftp.kde.org/pub/kde/stable/calligra-${pkgver}/calligra-l10n/calligra-l10n-cs-${pkgver}.tar.bz2
+        #ftp://ftp.kde.org/pub/kde/stable/calligra-${pkgver}/calligra-l10n/calligra-l10n-cs-${pkgver}.tar.bz2
         ftp://ftp.kde.org/pub/kde/stable/calligra-${pkgver}/calligra-l10n/calligra-l10n-da-${pkgver}.tar.bz2
         ftp://ftp.kde.org/pub/kde/stable/calligra-${pkgver}/calligra-l10n/calligra-l10n-de-${pkgver}.tar.bz2
         ftp://ftp.kde.org/pub/kde/stable/calligra-${pkgver}/calligra-l10n/calligra-l10n-el-${pkgver}.tar.bz2
@@ -54,8 +54,10 @@ source=(ftp://ftp.kde.org/pub/kde/stable/calligra-${pkgver}/calligra-l10n/callig
         ftp://ftp.kde.org/pub/kde/stable/calligra-${pkgver}/calligra-l10n/calligra-l10n-et-${pkgver}.tar.bz2
         ftp://ftp.kde.org/pub/kde/stable/calligra-${pkgver}/calligra-l10n/calligra-l10n-fi-${pkgver}.tar.bz2
         ftp://ftp.kde.org/pub/kde/stable/calligra-${pkgver}/calligra-l10n/calligra-l10n-fr-${pkgver}.tar.bz2
+        ftp://ftp.kde.org/pub/kde/stable/calligra-${pkgver}/calligra-l10n/calligra-l10n-gl-${pkgver}.tar.bz2
         ftp://ftp.kde.org/pub/kde/stable/calligra-${pkgver}/calligra-l10n/calligra-l10n-hu-${pkgver}.tar.bz2
         ftp://ftp.kde.org/pub/kde/stable/calligra-${pkgver}/calligra-l10n/calligra-l10n-it-${pkgver}.tar.bz2
+        #ftp://ftp.kde.org/pub/kde/stable/calligra-${pkgver}/calligra-l10n/calligra-l10n-ja-${pkgver}.tar.bz2
         ftp://ftp.kde.org/pub/kde/stable/calligra-${pkgver}/calligra-l10n/calligra-l10n-kk-${pkgver}.tar.bz2
         ftp://ftp.kde.org/pub/kde/stable/calligra-${pkgver}/calligra-l10n/calligra-l10n-nb-${pkgver}.tar.bz2
         ftp://ftp.kde.org/pub/kde/stable/calligra-${pkgver}/calligra-l10n/calligra-l10n-nds-${pkgver}.tar.bz2
@@ -65,40 +67,43 @@ source=(ftp://ftp.kde.org/pub/kde/stable/calligra-${pkgver}/calligra-l10n/callig
         ftp://ftp.kde.org/pub/kde/stable/calligra-${pkgver}/calligra-l10n/calligra-l10n-pt_BR-${pkgver}.tar.bz2
         ftp://ftp.kde.org/pub/kde/stable/calligra-${pkgver}/calligra-l10n/calligra-l10n-ru-${pkgver}.tar.bz2
         ftp://ftp.kde.org/pub/kde/stable/calligra-${pkgver}/calligra-l10n/calligra-l10n-sk-${pkgver}.tar.bz2
+        ftp://ftp.kde.org/pub/kde/stable/calligra-${pkgver}/calligra-l10n/calligra-l10n-sl-${pkgver}.tar.bz2
         ftp://ftp.kde.org/pub/kde/stable/calligra-${pkgver}/calligra-l10n/calligra-l10n-sv-${pkgver}.tar.bz2
         ftp://ftp.kde.org/pub/kde/stable/calligra-${pkgver}/calligra-l10n/calligra-l10n-uk-${pkgver}.tar.bz2
         ftp://ftp.kde.org/pub/kde/stable/calligra-${pkgver}/calligra-l10n/calligra-l10n-zh_CN-${pkgver}.tar.bz2
 	ftp://ftp.kde.org/pub/kde/stable/calligra-${pkgver}/calligra-l10n/calligra-l10n-zh_TW-${pkgver}.tar.bz2)
-md5sums=('31044b33e41ebd2ffb59d3dc6d756df3'  #calligra-l10n/calligra-l10n-ca-2.4.1.tar.bz2
-         'a5034274b80de761500b6dbaee04c359'  #calligra-l10n/calligra-l10n-ca@valencia-2.4.1.tar.bz2
-         '86057c23f3cceae89d74247109c2416d'  #calligra-l10n/calligra-l10n-cs-2.4.1.tar.bz2
-         '90f7504d7d4120365f6a3a342226336a'  #calligra-l10n/calligra-l10n-da-2.4.1.tar.bz2
-         'a4e72c08b68f48eecd7fd9179f1418be'  #calligra-l10n/calligra-l10n-de-2.4.1.tar.bz2
-         '0189c952c0c9388ff7ba7ae466681b74'  #calligra-l10n/calligra-l10n-el-2.4.1.tar.bz2
-         'f29e17d36bce66b1bd26dc990a652f6c'  #calligra-l10n/calligra-l10n-en_GB-2.4.1.tar.bz2
-         '4d32ca25eae5b89795a8bd46eac28d53'  #calligra-l10n/calligra-l10n-es-2.4.1.tar.bz2
-         'deb69452843b94417c1858b8331a2af5'  #calligra-l10n/calligra-l10n-et-2.4.1.tar.bz2
-         '976c8a6af1cbee5af72d4e3b4be7f227'  #calligra-l10n/calligra-l10n-fi-2.4.1.tar.bz2
-         'af418a18954a4208f25407348e007577'  #calligra-l10n/calligra-l10n-fr-2.4.1.tar.bz2
-         '675e838ccdfd175bbd87f08560b2a36c'  #calligra-l10n/calligra-l10n-hu-2.4.1.tar.bz2
-         'f0eb1c3878795a712bf489f3f133d2f2'  #calligra-l10n/calligra-l10n-it-2.4.1.tar.bz2
-         '035be0941e3408ff8bd20e1c3a0a54ef'  #calligra-l10n/calligra-l10n-kk-2.4.1.tar.bz2
-         '49149f6da5e2ea2236fa7ef257d5e75d'  #calligra-l10n/calligra-l10n-nb-2.4.1.tar.bz2
-         'fa97ff850aed8eacf69a981865221506'  #calligra-l10n/calligra-l10n-nds-2.4.1.tar.bz2
-         'b920577256de96b1df49ab4150ce0e47'  #calligra-l10n/calligra-l10n-nl-2.4.1.tar.bz2
-         'fd880147da2f3c162646d80d573d6ddb'  #calligra-l10n/calligra-l10n-pl-2.4.1.tar.bz2
-         '52b6cff9931ae1a2b243314d9777cbd6'  #calligra-l10n/calligra-l10n-pt-2.4.1.tar.bz2
-         'aecb7e130878ab65d2ae9142b99be729'  #calligra-l10n/calligra-l10n-pt_BR-2.4.1.tar.bz2
-         '20c679e023c29fa527d4dfd0017d87b9'  #calligra-l10n/calligra-l10n-ru-2.4.1.tar.bz2
-         'bd8769f116ae5483e78b97b1dfebf855'  #calligra-l10n/calligra-l10n-sk-2.4.1.tar.bz2
-         '0ef4675b10a6b567b0b3c76ac42a615d'  #calligra-l10n/calligra-l10n-sv-2.4.1.tar.bz2
-         '44bb422a097a07ad58a02f1ef49b761a'  #calligra-l10n/calligra-l10n-uk-2.4.1.tar.bz2
-         '947992837cad5044dae481fe1d878609'  #calligra-l10n/calligra-l10n-zh_CN-2.4.1.tar.bz2
-         '9b0da85c04b4feb380d63d8a3cdeb385') #calligra-l10n/calligra-l10n-zh_TW-2.4.1.tar.bz2
+md5sums=('7ddca1b8d4180eb94431ef56ac3db994'
+         '3e292c679d0dcd3d12c8961f1414cfef'
+         'dca2966e1782c537d6b9ce69b15ccbfe'
+         '27a457ac994d875b1628c5c615194b59'
+         '311eba00ab825389a4aef93ff09bac51'
+         '7c038ea37a2480ff167a07fd9d6b2b04'
+         'b733e8fff6545e8f1b5354f2d3838ba3'
+         '3f4ab0be39eba28cc879e74000955a0b'
+         '0507c641863a555e127c981ae8801279'
+         '7f2bd38f2d85125436b551e1c04ca197'
+         '5f3d5fd47597307fd381085e3b23982d'
+         '8d911601af920f8d41ccf22b0218329c'
+         '5a0a9f8b6cf2c606116f79af99aa0540'
+         'be2e65292c788d9ccc5af08ba323ccf6'
+         '02e85dc8fc18b31c3c17b078e42d930d'
+         '444a46e6870aaa22ebdff58b9285fd79'
+         'b8b791110d984b54552417a4c75a287b'
+         '72dd9ba1fb64c749ba6c516b50fd661a'
+         '6ed9b8eea10719fbfa138803add0e93c'
+         'b805aa811d604e8888188c1a0a696388'
+         'b333a4a0fea64a469e08bdd84920bc01'
+         '91b7ceee16f3111355ff368f8b66b78d'
+         '826d4536b197a5126824072514b874d4'
+         '5eccd5a106b607bc075a421eeb64f408'
+         'b8bc692d993c25925b3a97836e016dc2'
+         '8ae4951e2af470598e87c215c551ec20'
+         '7b43dc50f060f587cda8586fc8266bae'
+         'fce15e764f816ce69aa6c40af931151d')
 
 build() {
   cd $srcdir
-  langs="ca ca@valencia cs da de el en_GB es et fi fr hu it kk nb nds nl pl pt pt_BR ru sk sv uk zh_CN zh_TW" 
+  langs="bs ca ca@valencia da de el en_GB es et fi fr gl hu it kk nb nds nl pl pt pt_BR ru sk sl sv uk zh_CN zh_TW" 
   for lang in $langs; do
     install -d build/${lang}
     pushd build/${lang}
@@ -108,6 +113,13 @@ build() {
       make 
     popd
   done
+}
+
+package_calligra-l10n-bs() {
+        pkgdesc=('Bosnian Localization for calligra')
+        categories=('localization')
+        cd $srcdir/build/bs
+        make DESTDIR=$pkgdir install
 }
 
 package_calligra-l10n-ca() {
@@ -179,11 +191,11 @@ package_calligra-l10n-fr() {
         cd $srcdir/build/fr
         make DESTDIR=$pkgdir install
 }
-#package_calligra-l10n-gl() {
-#        pkgdesc=('Galician Localization for calligra')
-#        cd $srcdir/build/gl
-#        make DESTDIR=$pkgdir install
-#}
+package_calligra-l10n-gl() {
+        pkgdesc=('Galician Localization for calligra')
+        cd $srcdir/build/gl
+        make DESTDIR=$pkgdir install
+}
 package_calligra-l10n-hu() {
         pkgdesc=('Hungarian Localization for calligra')
         cd $srcdir/build/hu
@@ -195,11 +207,11 @@ package_calligra-l10n-it() {
         cd $srcdir/build/it
         make DESTDIR=$pkgdir install
 }
-#package_calligra-l10n-ja() {
-#        pkgdesc=('Japanese Localization for calligra')
-#        cd $srcdir/build/ja
-#        make DESTDIR=$pkgdir install
-#}
+package_calligra-l10n-ja() {
+        pkgdesc=('Japanese Localization for calligra')
+        cd $srcdir/build/ja
+        make DESTDIR=$pkgdir install
+}
 package_calligra-l10n-kk() {
         pkgdesc=('Kazakh Localization for calligra')
         categories=('localization')
@@ -251,6 +263,12 @@ package_calligra-l10n-sk() {
         pkgdesc=('Slovak Localization for calligra')
         categories=('localization')
         cd $srcdir/build/sk
+        make DESTDIR=$pkgdir install
+}
+package_calligra-l10n-sl() {
+        pkgdesc=('Slovenian Localization for calligra')
+        categories=('localization')
+        cd $srcdir/build/sl
         make DESTDIR=$pkgdir install
 }
 package_calligra-l10n-sv() {

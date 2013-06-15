@@ -1,13 +1,8 @@
-#
-# KDE SC Packages for Chakra, part of chakra-project.org
-#
-# maintainer abveritas@chakra-project.org
-
-# include global config
-source ../_buildscripts/${current_repo}-${_arch}-cfg.conf
+# Maintainer: Manuel Tortosa
 
 pkgbase=calligra
-pkgname=('calligra-filters'
+pkgname=('calligra-3rdparty'
+         'calligra-filters'
          'calligra-interfaces'
          'calligra-libs'
          'calligra-plugins'
@@ -17,54 +12,53 @@ pkgname=('calligra-filters'
          'calligra-tools'
          'calligra-karbon'
          'calligra-kexi'
-         'calligra-kounavail'
          'calligra-plan'
          'calligra-stage'
          'calligra-krita'
          'calligra-sheets'
          'calligra-words'
          'calligra-handbook'
-         'calligra-thesaurus-doc'
          'calligra-braindump'
          'calligra-flow')
-pkgver=2.4.1
-pkgrel=3
-arch=('i686' 'x86_64')
+pkgver=2.6.3
+pkgrel=1
+arch=('x86_64')
 url='http://www.calligra-suite.org'
 license=('FDL1.2' 'GPL2' 'LGPL')
-makedepends=('kdepimlibs' 'eigen' 'freetds' 'kdegraphics-okular' 'kdeedu-marble' 'xbase'
-             'libgsf' 'libwpd' 'libwpg' 'pstoedit' 'glew' 'gsl' 'cmake' 'automoc4' 'libspnav' 'libqtgtl'
-             'boost' 'libkdcraw' 'libpqxx' 'fftw' 'opengtl' 'docbook-xsl' 'create-resources' 'lcms2' 'qrencode' 'libdmtx')
+makedepends=('kdepimlibs' 'eigen' 'freetds' 'kdegraphics-okular' 'kdeedu-marble' 'xbase' 'libpqxx<4' 'libvisio'
+             'libgsf' 'libwpd' 'libwpg' 'libwps' 'pstoedit' 'glew' 'gsl' 'cmake' 'automoc4' 'libspnav' 'libqtgtl'
+             'boost' 'libkdcraw' 'fftw' 'opengtl' 'docbook-xsl' 'create-resources' 'lcms2' 'libmariadbclient'
+             'vc' 'opencolorio')
 groups=('calligra')
-source=("http://mirrors.mit.edu/kde/stable/${pkgbase}-${pkgver}/${pkgbase}-${pkgver}.tar.bz2"
-        'KoColorSetwithQPointer.diff' 'Make_KoColorSet_QObject.diff')
+source=("http://mirrors.mit.edu/kde/stable/${pkgbase}-${pkgver}/${pkgbase}-${pkgver}.tar.bz2")
 screenshot=("http://upload.wikimedia.org/wikipedia/commons/thumb/3/3e/Calligra_Stage_2.4.png/800px-Calligra_Stage_2.4.png")
-md5sums=('a4da7e1181e1539850a4fcae466d7d75'
-         '4fec7b571f43e1418855b77a29393e93'
-         'd4f068106218ebe97a3a8792151b993a')
+md5sums=('90d6bb619191abbcc94094379d47e225')
+
 
 build() {
   cd "${srcdir}"
-  patch -p1 -i "${srcdir}/KoColorSetwithQPointer.diff"
-  patch -p1 -i "${srcdir}/Make_KoColorSet_QObject.diff"
+
   mkdir build
   cd build
   cmake ../${pkgbase}-${pkgver} \
     -DCMAKE_BUILD_TYPE=RelWithDebInfo \
-    -DCMAKE_SKIP_RPATH=ON \
     -DCMAKE_INSTALL_PREFIX=/usr \
-    -DBUILD_active=OFF \
-    -DBUILD_mobile=OFF \
-    -DBUILD_mysql=OFF \
-    -DKDCRAW_LOCAL_FOUND=/usr/lib/libkdcraw.so \
-    -DIHAVEPATCHEDQT=1
+    -DBUILD_active=OFF
   make
+}
+
+package_calligra-3rdparty() {
+  pkgdesc="3dparty plugins for the Calligra office suite"
+  depends=('kdepimlibs')
+
+  cd "${srcdir}"/build/3rdparty
+  make DESTDIR="${pkgdir}" install
 }
 
 package_calligra-filters() {
   pkgdesc="Filters for the Calligra office suite"
   optdepends=('libgsf: Microsoft Word document importer'
-              'libwpd: WordPerfect document importer'
+              'libwps: WordPerfect document importer'
               'libwpg: Corel WordPerfect Graphics image importer'
               'pstoedit: Karbon EPS import filter'
               'libkdcraw: support for raw images')
@@ -88,7 +82,7 @@ package_calligra-interfaces() {
 
 package_calligra-libs() {
   pkgdesc="Libraries for the Calligra office suite"
-  depends=('kdepimlibs' 'lcms2' 'calligra-servicetypes' 'kdeedu-marble' 'create-resources' 'libspnav')
+  depends=('kdepimlibs' 'lcms2' 'calligra-3rdparty' 'calligra-servicetypes' 'kdeedu-marble' 'create-resources' 'libspnav' 'libvisio')
   conflicts=('koffice-common' 'calligra-libs-git')
   replaces=('koffice-common' 'calligra-libs-git')
 
@@ -168,7 +162,7 @@ package_calligra-karbon() {
 
 package_calligra-kexi() {
   pkgdesc="Develop desktop database applications"
-  depends=('calligra-libs' 'calligra-sheets' 'sqlite3' 'xbase')
+  depends=('calligra-libs' 'calligra-sheets' 'sqlite3' 'xbase' 'libmariadbclient')
   provides=('kexi')
   conflicts=('koffice-kexi' 'calligra-kexi-git')
   replaces=('koffice-kexi' 'calligra-kexi-git')
@@ -219,8 +213,11 @@ package_calligra-stage() {
 
 package_calligra-krita() {
   pkgdesc="Edit and paint images"
-  depends=('calligra-libs' 'calligra-templates' 'calligra-plugins' 'glew' 'qimageblitz' 'poppler-qt' 'openexr' 'opengtl' 'hicolor-icon-theme' 'shared-mime-info' 'lcms2' 'libqtgtl')
-  optdepends=('calligra-filters: import/export filters')
+  depends=('calligra-libs' 'calligra-templates' 'calligra-plugins' 'glew' 'qimageblitz' 'poppler-qt'
+           'openexr' 'opengtl' 'hicolor-icon-theme' 'shared-mime-info' 'lcms2' 'libqtgtl')
+  optdepends=('calligra-filters: import/export filters'
+              'vc: Required by the Krita for vectorization'
+              'opencolorio: Required by the Krita LUT docker')
   provides=('krita')
   conflicts=('koffice-krita' 'calligra-krita-git')
   replaces=('koffice-krita' 'calligra-krita-git')
@@ -247,7 +244,7 @@ package_calligra-sheets() {
 package_calligra-words() {
   pkgdesc="Word Processor"
   depends=('calligra-libs' 'calligra-templates' 'calligra-plugins' 'calligra-pics'
-           'calligra-kounavail' 'hicolor-icon-theme')
+           'hicolor-icon-theme')
   optdepends=('calligra-filters: import/export filters')
   conflicts=('koffice-kword' 'calligra-words-git')
   replaces=('koffice-kword' 'calligra-words-git')
@@ -292,7 +289,7 @@ package_calligra-braindump() {
 
 package_calligra-flow() {
   pkgdesc="Flowchart & Diagram Editing"
-  depends=('calligra-libs')
+  depends=('calligra-words' 'kde-runtime')
   install=calligra-flow.install
   conflict=('calligra-flow-git')
   replaces=('calligra-flow-git')

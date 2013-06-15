@@ -1,20 +1,19 @@
-#
-# Apps Packages for Chakra, part of chakra-project.org
-#
 # maintainer abveritas@chakra-project.org
 
-kgbase=digikam
+pkgbase=digikam
 pkgname=('digikam' 'kipi-plugins' 'libkvkontakte')
-pkgver=2.7.0
+pkgver=3.1.0
 pkgrel=2
 url="http://digikam.sourceforge.net"
-arch=('i686' 'x86_64')
+arch=('x86_64')
 license=('GPL')
 screenshot=('http://i.imgur.com/6YnUM.png')
-makedepends=('kde-runtime' 'kdegraphics-kgamma' 'kdepimlibs' 'lensfun' 'kdeedu-marble' 'liblqr' 'opencv' 'lapack' 'libgpod'
-	     'pkgconfig' 'cmake' 'automoc4' 'doxygen' 'docbook-xsl' 'qjson')
-source=("http://sourceforge.net/projects/digikam/files/${pkgname}/${pkgver}/${pkgname}-${pkgver}.tar.bz2")
-md5sums=('428e5234fa4daa6f154bf23c63787bdd')
+makedepends=('kde-runtime' 'kdegraphics-kgamma' 'kdepimlibs' 'lensfun' 'kdeedu-marble'
+             'liblqr' 'opencv' 'lapack' 'libgpod' 'pkgconfig' 'cmake' 'automoc4'
+             'doxygen' 'docbook-xsl' 'qjson' 'kdegraphics-libkexiv2' 'kdegraphics-libkdcraw'
+             'kdegraphics-libksane' 'qt-gstreamer' 'boost' 'hugin-tools')
+source=("http://download.kde.org/stable/${pkgname}/${pkgname}-${pkgver}.tar.bz2")
+md5sums=('b51de5ae2fc0a4b0aa97b1c43d83ee30')
 
 build() {
    cd ${srcdir}
@@ -22,14 +21,17 @@ build() {
    mkdir -p build
    cd build
    cmake ../${pkgname}-${pkgver} \
+     -DCMAKE_BUILD_TYPE=Release \
      -DCMAKE_INSTALL_PREFIX=/usr \
-     -DCMAKE_SKIP_RPATH=ON
+     -DCMAKE_SKIP_RPATH=ON \
+     -DDIGIKAMSC_USE_PRIVATE_KDEGRAPHICS=OFF
    make 
 }
 
 package_digikam() {
   pkgdesc="Digital photo management application for kde"
-  depends=('kde-runtime' 'kdegraphics-kgamma' 'kdepimlibs' 'lensfun' 'kdeedu-marble' 'liblqr' 'opencv' 'kipi-plugins' 'lapack' 'libgpod')
+  depends=('kde-runtime' 'kdegraphics-kgamma' 'kdepimlibs' 'lensfun' 'kdeedu-marble'
+           'liblqr' 'opencv' 'kipi-plugins' 'lapack' 'libgpod')
   install=digikam.install
   replaces=('digikamimageplugins')
   categories=('graphics')
@@ -41,6 +43,7 @@ package_digikam() {
       make DESTDIR="${pkgdir}" install
   done
   rm -rf "${pkgdir}/usr/share/icons/oxygen"
+  rm "${pkgdir}"/usr/share/locale/*/LC_MESSAGES/libkipi.mo
 }
 
 package_libkvkontakte() {
@@ -53,7 +56,9 @@ package_libkvkontakte() {
 
 package_kipi-plugins() {
   pkgdesc="Kipi plugins and additional libs for digikam and kde apps"
-  depends=('kdegraphics-kgamma' 'kdepimlibs' 'opencv' 'libgpod' 'sane' 'hugin-tools' 'libgphoto2-nolimit' 'libkvkontakte')
+  depends=('kdegraphics-kgamma' 'kdepimlibs' 'opencv' 'libgpod' 'sane' 'hugin-tools'
+           'libgphoto2-nolimit' 'libkvkontakte' 'kdegraphics-libkexiv2' 'kdegraphics-libkdcraw'
+           'kdegraphics-libksane' 'qt-gstreamer')
   optdepends=('imagemagick: for picture manipulation'
 	      'qca: for shwup webservice support')
   install=kipi-plugins.install

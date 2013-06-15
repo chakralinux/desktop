@@ -1,22 +1,18 @@
 #
 # KDE SC Packages for Chakra, part of chakra-project.org
 #
-# maintainer abveritas@chakra-project.org
 # maintainer Manuel Tortosa <manutortosa[at]chakra-project[dot]org>
 
 # include global config
 source ../_buildscripts/${current_repo}-${_arch}-cfg.conf
 
-#
-# package info
-#
 pkgbase="kde-baseapps"
 pkgname=('kde-baseapps'
 	 'kde-baseapps-dolphin'
 	 'kde-baseapps-konqueror'
 	 'kde-baseapps-konq-plugins')
 
-arch=('i686' 'x86_64')
+arch=('x86_64')
 pkgver=${_kdever}
 pkgrel=1
 
@@ -26,21 +22,17 @@ license=('GPL' 'LGPL' 'FDL')
 
 options=('docs' '!splithdr' 'splitdbg' 'log')
 
-makedepends=("kde-workspace>=${_kdever}" 'pkg-config' 'cmake' 'automoc4' 'libraw1394' 'ruby' 'tidyhtml' 'docbook-xsl')
+makedepends=("kde-workspace>=${_kdever}" 'pkg-config' 'cmake' 'automoc4' 'libraw1394' 'ruby'
+             'tidyhtml' 'docbook-xsl' 'nepomuk-widgets')
 
 source=("$_mirror/${pkgbase}-$_kdever.tar.xz"
-	"http://www.kde-apps.org/CONTENT/content-files/99752-kde_cdemu-0.3.1.tar.bz2")
+	"http://www.kde-apps.org/CONTENT/content-files/99752-kde_cdemu-0.5.0.tar.bz2")
 
 md5sums=(`grep ${pkgbase}-$_kdever.tar.xz ../kde-sc.md5 | cut -d" " -f1`
-         '6b68353583ee959fb61b3c68a07606ae') # 99752-kde_cdemu-0.3.1.tar.gz
+         'c0e56401e2c2f2c4652915a44af128b8')  # 99752-kde_cdemu-0.5.0.tar.gz
 
-#
-# build function
-#
 build() {
 	cd ${pkgbase}-${pkgver}
-
-        # msg "aplying upstream fixes..."
 
         msg "starting build ..."
 	cmake . -DCMAKE_BUILD_TYPE=${_build_type} \
@@ -51,12 +43,9 @@ build() {
 	make || return 1
 }
 
-#
-# split-install functions
-#
 package_kde-baseapps() {
 	pkgdesc="KDE Base Applications"
-	depends=("kde-runtime>=${_kdever}" 'libraw1394')
+	depends=("kde-runtime>=${_kdever}" 'libraw1394' 'nepomuk-widgets')
 	optdepends=("cdemu-client: Support transparent CD/DVD image mounting in KDE")
 	conflicts=("kdebase" 'kde-baseapps-doc')
         replaces=('kdebase' 'kde-baseapps-doc')
@@ -81,6 +70,8 @@ package_kde-baseapps() {
 	
 	# prepare konqueror
 	msg "splitting konqueror ..."
+        rm -vR ${pkgdir}/usr/bin/kfmclient
+ 	rm -vR ${pkgdir}/usr/share/applications/kde4/kfmclient*
 	rm -vR ${pkgdir}/usr/include/konqsidebarplugin.h 
 	rm -vR ${pkgdir}/usr/lib/libkonqsidebarplugin.so*
 	rm -vR ${pkgdir}/usr/lib/libkdeinit4_konqueror.so*
@@ -101,6 +92,10 @@ package_kde-baseapps() {
 	rm -vR ${pkgdir}/usr/share/applications/kde4/konqbrowser.desktop
 	rm -vR ${pkgdir}/usr/share/apps/konqsidebartng
 	rm -vR ${pkgdir}/usr/share/apps/konqueror
+
+        # Don't ship the Konqueror desktop file
+        mv -v ${pkgdir}/usr/share/kde4/services/konqueror.desktop ${srcdir}/konqueror.desktop
+
 	rm -vR ${pkgdir}/usr/share/icons/
 	rm -vR ${pkgdir}/usr/share/dbus-1/interfaces/org.kde.Konq*
 	rm -vR ${pkgdir}/usr/share/dbus-1/interfaces/org.kde.konq*
@@ -147,7 +142,6 @@ package_kde-baseapps-konqueror() {
 		done
 
 	msg "remove conflicting files ..."
-	rm -vR ${pkgdir}/usr/bin/kfmclient
 	rm -vR ${pkgdir}/usr/lib/kde4/kcm_history.so*
 	rm -vR ${pkgdir}/usr/lib/kde4/kcm_kio.so*
 	rm -vR ${pkgdir}/usr/lib/kde4/kcm_konq.so*
@@ -156,16 +150,19 @@ package_kde-baseapps-konqueror() {
 	rm -vR ${pkgdir}/usr/lib/kde4/kcm_performance.so*
 	rm -vR ${pkgdir}/usr/lib/libkdeinit4_kfmclient.so*
 	rm -vR ${pkgdir}/usr/share/applications/kde4/Home.desktop
-	rm -vR ${pkgdir}/usr/share/applications/kde4/kfmclient*
 	rm -vR ${pkgdir}/usr/share/apps/kcmcss
-	rm -vR ${pkgdir}/usr/share/apps/kconf_update
+	#rm -vR ${pkgdir}/usr/share/apps/kconf_update
 	rm -vR ${pkgdir}/usr/share/apps/kcontrol
 	rm -vR ${pkgdir}/usr/share/kde4/service*
+  
+        # Move back the Konqueror Desktop file
+        mkdir -pv ${pkgdir}/usr/share/kde4/services
+        cp -v ${srcdir}/konqueror.desktop ${pkgdir}/usr/share/kde4/services/konqueror.desktop
 }
 
 package_kde-baseapps-konq-plugins() {
 	pkgdesc="KDE Base Applications - Extra plugins for Konqueror"
-	depends=("${pkgbase}-konqueror>=${_kdever}")
+	depends=("${pkgbase}-konqueror>=${_kdever}" 'tidyhtml')
 	groups=("${pkgbase}" "kde" "kde-minimal" "kde-uninstall")
 	conflicts=('konq-plugins')
 	provides=("konq-plugins")
