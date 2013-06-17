@@ -5,7 +5,7 @@
 # contributor Michael Kutschall <michaelkutschall@web.de>
  
 pkgname=nepoogle
-pkgver=1.0
+pkgver=0.9.3
 pkgrel=1
 pkgdesc="A search utility for Nepomuk inspired in Google's search syntax."
 arch=('any')
@@ -13,14 +13,15 @@ url="http://kde-apps.org/content/show.php/Nepoogle?content=145505"
 screenshot="http://opendesktop.org/CONTENT/content-pre2/145505-2.jpeg"
 license=('GPL')
 depends=('kdebindings-pykde4')
-source=("http://kde-apps.org/CONTENT/content-files/145505-$pkgname-v.$pkgver.tar.gz"
+source=("https://codeload.github.com/serantes/$pkgname/zip/v$pkgver"
 	'nepoogle.desktop')
-md5sums=('6bae197574922bab0ee2d27b1e4b7df3'
+md5sums=('41091886e3f54650a7f23688faed3543'
          'ceb6bb8059658686b4e13abd66a61445')
 
+
 package() {
-  install -Dm644 ${srcdir}/nepoogle.desktop \
+  install -Dm644 ${srcdir}/$pkgname-$pkgver/nepoogle.desktop \
     $pkgdir/usr/share/applications/kde4/nepoogle.desktop
 
-  install -Dm755 ${srcdir}/nepoogle $pkgdir/usr/bin/nepoogle
+  install -Dm755 ${srcdir}/$pkgname-$pkgver/nepoogle $pkgdir/usr/bin/nepoogle
 }
