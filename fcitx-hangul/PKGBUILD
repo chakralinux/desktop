@@ -1,0 +1,30 @@
+# Maintainer: Neo Kolokotronis <tetris4@gmail.com>
+# Contributor: csslayer <wengxt AT gmail com>
+
+pkgname=fcitx-hangul
+pkgver=0.2.1
+pkgrel=2
+pkgdesc="Fcitx Wrapper for Hangul."
+arch=('x86_64')
+url="http://code.google.com/p/fcitx"
+license=('GPL')
+depends=('fcitx' 'libhangul')
+makedepends=('cmake' 'intltool')
+source=(http://fcitx.googlecode.com/files/${pkgname}-${pkgver}.tar.xz)
+md5sums=('d3dac52b1a1697a4f8256e383c889216')
+
+build(){
+    cd "$srcdir/${pkgname}-${pkgver}"
+    rm -rf build
+    mkdir build
+    cd build
+    
+    cmake -DCMAKE_INSTALL_PREFIX=/usr -DCMAKE_BUILD_TYPE=Release ..
+    make
+}
+
+package ()
+{
+    cd "$srcdir/${pkgname}-${pkgver}/build"
+    make DESTDIR=${pkgdir} install
+}
