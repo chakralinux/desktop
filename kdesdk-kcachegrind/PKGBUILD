@@ -1,0 +1,41 @@
+#
+# KDE SC Packages for Chakra, part of chakra-project.org
+#
+# maintainer Manuel Tortosa <manutortosa[at]chakra-project[dot]org>
+
+# include global config
+source ../_buildscripts/${current_repo}-${_arch}-cfg.conf
+
+_pkgname="kcachegrind"
+pkgname="kdesdk-kcachegrind"
+arch=('x86_64')
+pkgver=${_kdever}
+pkgrel=1
+pkgdesc="KDE profiler visualization"
+screenshot="http://www.kde.org/images/screenshots/kcachegrind.png"
+depends=("kde-runtime>=${_kdever}" "python2")
+groups=("kde" "kde-devel" "kde-uninstall" "kdesdk")
+categories=('programming')
+conflicts=('kdesdk-doc')
+provides="kcachegrind"
+install=kdesdk.install
+license=('GPL' 'LGPL' 'FDL')
+options=('docs' '!splithdr' 'splitdbg' 'log')
+makedepends=('pkg-config' 'cmake' 'automoc4')
+source=("$_mirror/${_pkgname}-$_kdever.tar.xz")
+md5sums=(`grep ${_pkgname}-$_kdever.tar.xz ../kde-sc.md5 | cut -d" " -f1`)
+
+build() {
+  cd ${srcdir}/${_pkgname}-${pkgver}
+
+  msg "starting build ..."
+  cmake . -DCMAKE_BUILD_TYPE=${_build_type} \
+          -DCMAKE_INSTALL_PREFIX=${_installprefix} \
+          -DCMAKE_SKIP_RPATH=ON 
+  make 
+}
+
+package() {
+  cd ${srcdir}/${_pkgname}-${pkgver}
+  make DESTDIR=${pkgdir} install 
+}
