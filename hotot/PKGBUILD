@@ -4,33 +4,34 @@
 # maintainer abveritas[at]chakra-project[dot]org>
 
 pkgname=hotot
-pkgver=0.9.8.98
+pkgver=0.9.8.5
+_pkgtag=ed2ff01
 pkgrel=1
 pkgdesc="A lightweight & open source microblogging software (twitter identi.ca)"
 arch=('x86_64')
 url="http://www.hotot.org/"
 license=('LGPL3')
-depends=('qt5')
+depends=('qt')
 makedepends=('cmake' 'intltool' 'python2')
 install="hotot.install"
 source=("https://github.com/lyricat/Hotot/tarball/master/${pkgver}.tar.gz")
-md5sums=('464eb6b3b805d49a17089e579be9f2cb')
+md5sums=('6c433803c37bb7e540e667c498591e3a')
 
 build() {
-  cd ${srcdir}/lyricat-Hotot-6f87ed7
+  cd ${srcdir}/lyricat-Hotot-$_pkgtag
   mkdir build 
   cd build
 
   cmake .. -DCMAKE_INSTALL_PREFIX=/usr \
            -DWITH_GTK=OFF \
-           -DWITH_QT=OFF \
-           -DWITH_QT5=ON \
+           -DWITH_QT=ON \
+           -DWITH_QT5=OFF \
            -DWITH_CHROME=OFF 
   make
 }
 
 package() {
-  cd ${srcdir}/lyricat-Hotot-6f87ed7/build
+  cd ${srcdir}/lyricat-Hotot-$_pkgtag/build
 
   make DESTDIR="$pkgdir/" install
 
