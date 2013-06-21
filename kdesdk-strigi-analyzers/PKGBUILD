@@ -1,0 +1,38 @@
+#
+# KDE SC Packages for Chakra, part of chakra-project.org
+#
+# maintainer Manuel Tortosa <manutortosa[at]chakra-project[dot]org>
+
+# include global config
+source ../_buildscripts/${current_repo}-${_arch}-cfg.conf
+
+pkgname="kdesdk-strigi-analyzers"
+arch=('x86_64')
+pkgver=${_kdever}
+pkgrel=1
+pkgdesc='Strigi-Analyzer for KDE SDK'
+depends=("kdelibs>=${_kdever}")
+provides=('kdesdk-strigi-analyzer')
+replaces=('kdesdk-strigi-analyzer')
+conflicts=('kdesdk-common' 'kdesdk-strigi-analyzer')
+url="http://www.kde.org"
+license=('GPL' 'LGPL' 'FDL')
+options=('docs' '!splithdr' 'splitdbg' 'log')
+makedepends=('pkg-config' 'cmake' 'automoc4')
+source=("$_mirror/${pkgname}-$_kdever.tar.xz")
+md5sums=(`grep ${pkgname}-$_kdever.tar.xz ../kde-sc.md5 | cut -d" " -f1`)
+
+build() {
+  cd ${srcdir}/${pkgname}-${pkgver}
+
+  msg "starting build ..."
+  cmake . -DCMAKE_BUILD_TYPE=${_build_type} \
+          -DCMAKE_INSTALL_PREFIX=${_installprefix} \
+	  -DCMAKE_SKIP_RPATH=ON 
+  make 
+}
+
+package() {
+  cd ${srcdir}/${pkgname}-${pkgver}
+  make DESTDIR=${pkgdir} install 
+}
