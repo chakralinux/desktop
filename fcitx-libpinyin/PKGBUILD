@@ -7,16 +7,15 @@
 source ../_buildscripts/${current_repo}-${_arch}-cfg.conf
 
 pkgname=fcitx-libpinyin
-pkgver=0.2.0
+pkgver=0.3.0
 pkgrel=1
 pkgdesc="Fcitx Wrapper for libpinyin."
 arch=('i686' 'x86_64')
 url="http://code.google.com/p/fcitx"
 license=('GPL')
-depends=('fcitx>=4.2.1' 'libpinyin>=0.7.1')
-makedepends=('cmake' 'intltool')
-source=(http://fcitx.googlecode.com/files/${pkgname}-${pkgver}.tar.xz)
-md5sums=('f2d3bf9feac3e0a230632d8b5860f412')
+depends=('fcitx>=4.2.8' 'libpinyin>=0.9.92' 'qt')
+makedepends=('cmake')
+source=(http://download.fcitx-im.org/${pkgname}/${pkgname}-${pkgver}.tar.xz)
 
 build(){
     cd "$srcdir/${pkgname}-${pkgver}"
@@ -33,3 +32,4 @@ package ()
     cd "$srcdir/${pkgname}-${pkgver}/build"
     make DESTDIR=${pkgdir} install
 }
+md5sums=('852346c5eafe7689b35fcd4aba284ffa')

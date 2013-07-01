@@ -3,29 +3,26 @@
 #
 # Maintainer: Weng Xuetian <wengxt@gmail.com>
 
-pkgname=yaml-cpp0.3
-_pkgname=yaml-cpp
-pkgver=0.3.0
-pkgrel=2
+pkgname=yaml-cpp
+pkgver=0.5.1
+pkgrel=1
 pkgdesc="YAML parser and emitter in C++, written around the YAML 1.2 spec"
 url="http://code.google.com/p/yaml-cpp/"
 arch=('i686' 'x86_64')
 license=('MIT')
-conflicts=('yaml-cpp')
-provides=('yaml-cpp=0.3')
-makedepends=('cmake')
-source=(http://yaml-cpp.googlecode.com/files/$_pkgname-$pkgver.tar.gz)
-md5sums=('9aa519205a543f9372bf4179071c8ac6')
+makedepends=('cmake' 'boost')
+source=(http://yaml-cpp.googlecode.com/files/$pkgname-$pkgver.tar.gz)
+md5sums=('0fa47a5ed8fedefab766592785c85ee7')
 
 build() {
-    cd $srcdir/$_pkgname
+    cd $srcdir/$pkgname-$pkgver
 
     cmake . -DCMAKE_INSTALL_PREFIX=/usr -DBUILD_SHARED_LIBS=ON
     make
 }
 
 package() {
-    cd $srcdir/$_pkgname
+    cd $srcdir/$pkgname-$pkgver
 
     make DESTDIR=$pkgdir install
 }

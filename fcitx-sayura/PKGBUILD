@@ -7,16 +7,15 @@
 source ../_buildscripts/${current_repo}-${_arch}-cfg.conf
 
 pkgname=fcitx-sayura
-pkgver=0.1.0
+pkgver=0.1.1
 pkgrel=1
 pkgdesc="Sinhala for fcitx."
 arch=('i686' 'x86_64')
 url="http://code.google.com/p/fcitx"
 license=('GPL')
 depends=('fcitx>=4.2.5')
-makedepends=('cmake' 'intltool')
-source=(http://fcitx.googlecode.com/files/${pkgname}-${pkgver}.tar.xz)
-md5sums=('66c3a797cdc1f5a5ae19690cc8fd7cbd')
+makedepends=('cmake')
+source=(http://download.fcitx-im.org/${pkgname}/${pkgname}-${pkgver}.tar.xz)
 
 build(){
     cd "$srcdir/${pkgname}-${pkgver}"
@@ -33,3 +32,5 @@ package ()
     cd "$srcdir/${pkgname}-${pkgver}/build"
     make DESTDIR=${pkgdir} install
 }
+md5sums=('66c3a797cdc1f5a5ae19690cc8fd7cbd')
+md5sums=('62dfcb1fe9a5658c95f3cb5c3713a7de')

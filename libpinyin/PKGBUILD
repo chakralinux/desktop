@@ -7,7 +7,7 @@
 source ../_buildscripts/${current_repo}-${_arch}-cfg.conf
 
 pkgname=libpinyin
-pkgver=0.7.1
+pkgver=0.9.93
 pkgrel=1
 pkgdesc="Library to deal with pinyin."
 arch=('i686' 'x86_64')
@@ -17,14 +17,12 @@ depends=('db')
 makedepends=('automake' 'libtool' 'autoconf')
 options=(!libtool)
 
-source=(https://github.com/downloads/libpinyin/libpinyin/${pkgname}-${pkgver}.tar.gz)
-
-md5sums=('efd3eb322da3ff6a712879e4b4a9e874')
+source=("https://github.com/libpinyin/libpinyin/archive/${pkgver}.tar.gz")
 
 build() {
   cd ${srcdir}/libpinyin-$pkgver
 
-  (aclocal && libtoolize --force && autoheader && automake -a && autoconf) || return 1
+  aclocal && libtoolize --force && autoheader && automake -a && autoconf
   (./configure --prefix=/usr && make) || return 1
 }
 
@@ -32,3 +30,4 @@ package() {
   cd ${srcdir}/libpinyin-$pkgver
   make DESTDIR=${pkgdir} install || return 1
 }
+md5sums=('5d7391267780f1a585b4c08c56929ec7')

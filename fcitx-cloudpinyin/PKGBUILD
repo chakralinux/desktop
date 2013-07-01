@@ -8,7 +8,7 @@
 source ../_buildscripts/${current_repo}-${_arch}-cfg.conf
 
 pkgname=fcitx-cloudpinyin
-pkgver=0.3.1
+pkgver=0.3.2
 pkgrel=1
 pkgdesc="This is a standalone module for fcitx, it can use pinyin API on the internet to input."
 arch=('i686' 'x86_64')
@@ -16,7 +16,7 @@ url="https://github.com/csslayer/fcitx-cloudpinyin"
 license=('GPL')
 depends=('fcitx>=4.2.7')
 makedepends=('cmake')
-source=(http://fcitx.googlecode.com/files/${pkgname}-${pkgver}.tar.xz)
+source=(http://download.fcitx-im.org/${pkgname}/${pkgname}-${pkgver}.tar.xz)
 
 build(){
     cd "$srcdir/${pkgname}-${pkgver}"
@@ -32,4 +32,4 @@ package ()
     cd "$srcdir/${pkgname}-${pkgver}/build"
     make DESTDIR=${pkgdir} install
 }
-md5sums=('3690930d1412258ad37524448268534e')
+md5sums=('3a60a887ccd8171510d2c3518100d098')

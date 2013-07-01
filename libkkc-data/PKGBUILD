@@ -1,0 +1,28 @@
+pkgname=libkkc-data
+pkgver=0.2.0
+pkgrel=1
+pkgdesc="Japanese Kana-string to Kana-Kanji-mixed-string converter"
+arch=("i686" "x86_64")
+license=('GPL')
+url="http://fcitx-im.org/wiki/Fcitx"
+makedepends=('marisa')
+conflicts=()
+provides=()
+source=("https://bitbucket.org/libkkc/libkkc-data/downloads/${pkgname}-${pkgver}.tar.xz")
+
+build() {
+  pushd .
+  cd ${pkgname}-${pkgver}
+  ./configure --prefix=/usr
+  make -j1
+  popd
+}
+
+package() {
+  pushd .
+  cd ${pkgname}-${pkgver}
+  make DESTDIR="$pkgdir" install
+  popd
+}
+
+md5sums=('c89c4a67b38d4edac7896c41e56e537b')

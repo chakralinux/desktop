@@ -1,0 +1,29 @@
+pkgname=libkkc
+pkgver=0.2.4
+pkgrel=1
+pkgdesc="Japanese Kana-string to Kana-Kanji-mixed-string converter"
+arch=("i686" "x86_64")
+license=('GPL')
+url="https://gitorious.org/libkkc/libkkc"
+depends=('marisa' 'libgee06' 'json-glib')
+makedepends=('gobject-introspection' 'intltool' 'vala')
+conflicts=()
+provides=()
+source=("https://bitbucket.org/${pkgname}/${pkgname}/downloads/${pkgname}-${pkgver}.tar.gz")
+
+build() {
+  pushd .
+  cd ${pkgname}-${pkgver}
+  ./configure --prefix=/usr --disable-static
+  make
+  popd
+}
+
+package() {
+  pushd .
+  cd ${pkgname}-${pkgver}
+  make DESTDIR="$pkgdir" install
+  popd
+}
+
+md5sums=('8526b39b59fe1663f195519131a63fc7')
