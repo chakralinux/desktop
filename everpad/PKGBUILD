@@ -1,0 +1,34 @@
+# Maintainer: Ernesto Manríquez <alejandronova@gmail.com>
+
+pkgname=everpad
+pkgver=2.5.4
+pkgrel=2
+pkgdesc="An Evernote client"
+arch=('i686' 'x86_64')
+url="http://github.com/nvbn/everpad"
+license=('MIT')
+depends=('pyside' 'python2-magic' 'python2-oauth2' 'python2-sqlalchemy' 'python2-beautifulsoup' 'qtwebkit' 'python2-html2text' 'shiboken' 'dbus-python' 'python-pysqlite' 'python2-keyring' 'python2-regex' 'py-oauth2')
+makedepends=('python2-distribute')
+install=everpad.install
+source=("https://github.com/nvbn/$pkgname/archive/$pkgver.zip")
+sha256sums=('eefb58ba7ebc4015af2a05d4f503c8a23f5700a02defb930c4e012864eab44ba')
+
+build() {
+  cd "$srcdir/$pkgname-$pkgver"
+
+  python2 setup.py build
+}
+
+package() {
+  cd "$srcdir/$pkgname-$pkgver"
+
+  python2 setup.py install --root=$pkgdir
+
+  mkdir -p $pkgdir/usr/share/licenses/$pkgname
+  cp docs/license.txt $pkgdir/usr/share/licenses/$pkgname/
+
+  mkdir -p $pkgdir/usr/lib/python2.7/site-packages/share/everpad/
+  cp everpad/pad/editor/editor.html $pkgdir/usr/lib/python2.7/site-packages/share/everpad/
+}
+
+# vim:set ts=2 sw=2 et:
