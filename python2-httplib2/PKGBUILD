@@ -1,0 +1,20 @@
+# Maintainer: Ernesto Manríquez <alejandronova@gmail.com>
+
+pkgname=python2-httplib2
+_pkgname=httplib2
+pkgver=0.8
+pkgrel=1
+pkgdesc="A comprehensive HTTP client library"
+arch=('any')
+url="http://code.google.com/p/httplib2"
+license=('MIT')
+depends=('python2')
+replaces=('python-httplib2')
+source=("http://$_pkgname.googlecode.com/files/$_pkgname-$pkgver.tar.gz")
+md5sums=('a143657998f6752be998e2ec740e7dec')
+
+package() {
+  cd "$srcdir/$_pkgname-$pkgver"
+  python2 setup.py install --prefix=/usr -O2 --root="$pkgdir"
+  chmod 644 $pkgdir/usr/lib/python2.7/site-packages/httplib2/*
+}
