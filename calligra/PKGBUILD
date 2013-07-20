@@ -1,7 +1,4 @@
-# Maintainer: abveritas@chakra-project.org
-
-# include global config
-source ../_buildscripts/${current_repo}-${_arch}-cfg.conf
+# Maintainer: Manuel Tortosa
 
 pkgbase=calligra
 pkgname=('calligra-3rdparty'
@@ -23,7 +20,7 @@ pkgname=('calligra-3rdparty'
          'calligra-handbook'
          'calligra-braindump'
          'calligra-flow')
-pkgver=2.6.2
+pkgver=2.6.3
 pkgrel=1
 arch=('x86_64')
 url='http://www.calligra-suite.org'
@@ -35,7 +32,7 @@ makedepends=('kdepimlibs' 'eigen' 'freetds' 'kdegraphics-okular' 'kdeedu-marble'
 groups=('calligra')
 source=("http://mirrors.mit.edu/kde/stable/${pkgbase}-${pkgver}/${pkgbase}-${pkgver}.tar.bz2")
 screenshot=("http://upload.wikimedia.org/wikipedia/commons/thumb/3/3e/Calligra_Stage_2.4.png/800px-Calligra_Stage_2.4.png")
-md5sums=('1c2feb12677ee71eb2e428e589b33862')
+md5sums=('90d6bb619191abbcc94094379d47e225')
 
 
 build() {
@@ -46,7 +43,7 @@ build() {
   cmake ../${pkgbase}-${pkgver} \
     -DCMAKE_BUILD_TYPE=RelWithDebInfo \
     -DCMAKE_INSTALL_PREFIX=/usr \
-    -DBUILD_active=OFF  
+    -DBUILD_active=OFF
   make
 }
 
