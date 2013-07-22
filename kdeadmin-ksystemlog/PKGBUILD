@@ -25,8 +25,8 @@ makedepends=('pkg-config' 'cmake' 'automoc4' 'docbook-xsl')
 
 source=("$_mirror/${_pkgname}-$_kdever.tar.xz" 
         "syslog-path.patch")
-md5sums=(`grep ${_pkgname}-$_kdever.tar.xz ../kde-sc.md5 | cut -d" " -f1`
-         '4b0c3e0a7b7561185e20014fcbc1118e')
+sha1sums=(`grep ${_pkgname}-$_kdever.tar.xz ../kde-sc.md5 | cut -d" " -f1`
+          '20095ce6e0f3e5b6800a7c6e52de6fddba62c031')
 
 build() {
   cd ${srcdir}/${_pkgname}-${pkgver}
@@ -50,4 +50,3 @@ package() {
   cd ${srcdir}/build
   make DESTDIR=${pkgdir} install 
 }
-

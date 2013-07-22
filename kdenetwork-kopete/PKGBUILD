@@ -14,7 +14,7 @@ pkgdesc="Kopete, the instant messenger"
 url="http://kde.org/applications/internet/kopete/"
 depends=("kde-runtime>=${_kdever}" "kdepimlibs>=${_kdever}"
 	 'qca-ossl' 'libotr' 'libmsn' 'libidn' 'qimageblitz' 'libxss'
-         'libv4l' 'mediastreamer' 'msilbc' 'libgadu')
+         'libv4l' 'msilbc' 'libgadu')
 groups=("kde" "kdenetwork" "kde-uninstall")
 categories=('communication')
 conflicts=("kdenetwork-common" "kdenetwork-doc")
@@ -24,7 +24,7 @@ options=('docs' '!splithdr' 'splitdbg' 'log')
 makedepends=('pkg-config' 'cmake' 'automoc4' 'docbook-xsl')
 
 source=("$_mirror/${_pkgname}-$_kdever.tar.xz")
-md5sums=(`grep ${_pkgname}-$_kdever.tar.xz ../kde-sc.md5 | cut -d" " -f1`)
+sha1sums=(`grep ${_pkgname}-$_kdever.tar.xz ../kde-sc.md5 | cut -d" " -f1`)
 
 build() {
   cd ${srcdir}/${_pkgname}-${pkgver}
