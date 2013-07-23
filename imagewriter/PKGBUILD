@@ -8,7 +8,7 @@
 
 pkgname=imagewriter
 pkgver=1.10
-pkgrel=7
+pkgrel=8
 pkgrelsuse=2.1.2
 pkgdesc="SUSE Studio Imagewriter"
 arch=('x86_64')
@@ -29,4 +29,8 @@ build() {
     chmod a+rx -R *
     find . -type f -exec chmod -x \{\} \;
     chmod +x usr/bin/imagewriter
+}
+
+package() {
+    sed s/xdg-su/kdesu/ -i $pkgdir/usr/share/applications/imagewriter.desktop
 }
