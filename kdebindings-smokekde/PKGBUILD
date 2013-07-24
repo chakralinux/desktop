@@ -21,10 +21,11 @@ sha1sums=(`grep ${_pkgname}-$_kdever.tar.xz ../kde-sc.md5 | cut -d" " -f1`)
 replaces=('kdebindings-common')
 groups=("kde" "kdebindings" "kde-uninstall")
 provides=('smokekde')
-options=('docs' '!splithdr' 'debug' 'log')
+options=('docs' '!header' 'debug' 'log')
 
 build() {
   cd "${srcdir}"
+  rm -rf build
   mkdir build
   cd build
   cmake ../smokekde-${pkgver} \

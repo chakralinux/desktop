@@ -17,12 +17,13 @@ url="http://www.kde.org"
 license=('GPL' 'LGPL' 'FDL')
 screenshot="http://www.kde.org/images/screenshots/cervisia.png"
 depends=("kde-runtime>=${_kdever}")
+makedepends=("automoc4")
 groups=("kde" "kde-devel" "kde-uninstall" "kdesdk")
 categories=('programming')
 conflicts=('kdesdk-doc')
 provides="cervisia"
 install=kdesdk.install
-options=('docs' '!splithdr' 'debug' 'log')
+options=('docs' '!header' 'debug' 'log')
 
 source=("$_mirror/${_pkgname}-$_kdever.tar.xz")
 sha1sums=(`grep ${_pkgname}-$_kdever.tar.xz ../kde-sc.md5 | cut -d" " -f1`)

@@ -16,21 +16,19 @@ arch=('i686' 'x86_64')
 license=('GPL' 'LGPL' 'FDL')
 depends=("kdebindings-qtruby>=${_kdever}" "kdebindings-smokekde>=${_kdever}")
 makedepends=('cmake' 'automoc4' "kdebindings-smokegen>=${_kdever}" "boost" "kdepimlibs>=${_kdever}" "kdegraphics-okular>=${_kdever}")
-source=("$_mirror/${_pkgname}-$_kdever.tar.xz"
-        'krubypluginfactory.diff')
-sha1sums=(`grep ${_pkgname}-$_kdever.tar.xz ../kde-sc.md5 | cut -d" " -f1`
-          'f92073505f45e00931604ae56bf3b959c739639f')
+source=("$_mirror/${_pkgname}-$_kdever.tar.xz")
+sha1sums=(`grep ${_pkgname}-$_kdever.tar.xz ../kde-sc.md5 | cut -d" " -f1`)
 conflicts=('kdebindings-ruby')
 groups=("kde" "kdebindings" "kde-uninstall")
 provides=('kdebindings-ruby' 'korundum')
 replaces=('kdebindings-ruby')
 conflicts=('kdebindings-ruby')
 
-options=('docs' '!splithdr' 'debug' 'log')
+options=('docs' '!header' 'debug' 'log')
 
 build() {
 	cd ${srcdir}/${_pkgname}-${pkgver}
-        patch -p1 -i "${srcdir}/krubypluginfactory.diff"
+        #patch -p1 -i "${srcdir}/krubypluginfactory.diff"
 	cmake . -DCMAKE_BUILD_TYPE=${_build_type} \
                 -DCMAKE_INSTALL_PREFIX=${_installprefix} 
         make

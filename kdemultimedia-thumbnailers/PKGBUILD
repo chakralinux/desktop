@@ -17,7 +17,7 @@ groups=("kde" "kdemultimedia" "kde-uninstall")
 install=kdemultimedia.install
 url="http://www.kde.org"
 license=('GPL' 'LGPL' 'FDL')
-options=('docs' '!splithdr' 'debug' 'log')
+options=('docs' '!header' 'debug' 'log')
 conflicts=('audiothumbs')
 provides=('audiothumbs')
 makedepends=('pkg-config' 'cmake' 'automoc4' 'docbook-xsl')
@@ -32,13 +32,13 @@ source=($_mirror/ffmpegthumbs-$_kdever.tar.xz
 	sprocket-small.png)
 sha1sums=(`grep ffmpegthumbs-$_kdever.tar.xz ../kde-sc.md5 | cut -d" " -f1`
 	  `grep mplayerthumbs-$_kdever.tar.xz ../kde-sc.md5 | cut -d" " -f1`
-          'b8304d0719be703a48f46ad4ce061cf93ff990b6' # kde-odf-thumbnail-1.0.0.tar.gz
-          '3fc4ca2dd833e8c0b29c349ff9776437221fa4db' # 107128-GimpResourcesThumbnailer-2.1.0.tar.gz
-          '3d1e0cc84c38f817f150c1bb067328dc2388db90' # 114885-AudioThumbs-0.1.tar.gz
-          '8ef3787b0f3f03e6791088172b5fd4999827fd69' # mplayerthumbs-horizontal.patch
-          'e4b5fd3fa97b70ab0904fb8073f99fb9739a10bc' # sprocket-large.png
-          '27cf3454d8708bac021a03eb7809695804f11286' # sprocket-medium.png
-          'c7cf1ee783f2e0ad7be6bd31e5408877438b08f1')# sprocket-small.png
+          'b8304d0719be703a48f46ad4ce061cf93ff990b6'  # kde-odf-thumbnail-1.0.0.tar.gz
+          '3fc4ca2dd833e8c0b29c349ff9776437221fa4db'  # 107128-GimpResourcesThumbnailer-2.1.0.tar.gz
+          '3d1e0cc84c38f817f150c1bb067328dc2388db90'  # 114885-AudioThumbs-0.1.tar.gz
+          '8ef3787b0f3f03e6791088172b5fd4999827fd69'  # mplayerthumbs-horizontal.patch
+          'e4b5fd3fa97b70ab0904fb8073f99fb9739a10bc'  # sprocket-large.png
+          '27cf3454d8708bac021a03eb7809695804f11286'  # sprocket-medium.png
+          'c7cf1ee783f2e0ad7be6bd31e5408877438b08f1') # sprocket-small.png
 
 build() {
         pushd ${srcdir}/ffmpegthumbs-${pkgver}
@@ -101,5 +101,3 @@ package() {
 	cd $srcdir/AudioThumbs-0.1
 	make DESTDIR=${pkgdir} install 
 }
-sha1sums=('a1bab60a626f800f56ae0646b038df7ed5c7fb0a'
-          'a2cecfafc79512b67d8937267a15ee356429c92a'

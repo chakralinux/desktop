@@ -20,8 +20,8 @@ pkgname=('kdepim-common'
          'kdepim-knotes'
          'kdepim-kontact'
          'kdepim-korganizer'
-         'kdepim-ktimetracker'
-         'kdepim-mobile')
+         'kdepim-ktimetracker')
+         # 'kdepim-mobile') needs to be reenabled later
    
 arch=('x86_64')
 pkgver=${_kdever}
@@ -29,7 +29,7 @@ pkgrel=2
 pkgdesc="split package"
 url="http://www.kde.org"
 license=('GPL' 'LGPL' 'FDL')
-options=('!docs' '!splithdr' 'debug' 'log')
+options=('!docs' '!header' 'debug' 'log')
 
 makedepends=('pkg-config' 'cmake' 'automoc4' 'boost' "kdelibs>=${_kdever}" "kdepimlibs>=${_kdever}" "grantlee>=0.3.0"
              "kdepim-runtime>=${_kdever}" 'libxss' "kde-runtime" "libsamplerate" "qrencode" "libdmtx"
@@ -205,7 +205,7 @@ package_kdepim-kmail() {
 		done
 }
 
-package_kdepim-mobile() {
+do_not_package_kdepim-mobile() {
 	pkgdesc="The KDEPim Suite for mobile devices"
 	groups=("kde-mobile")
 	categories=('network')
