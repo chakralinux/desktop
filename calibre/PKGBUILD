@@ -1,38 +1,41 @@
-# Apps Packages for Chakra, part of chakra-project.org
-# maintainer: abveritas@chakra-project.org
-# contributor: Fabian Kosmale <0inkane@googlemail.com>
+# maintainer: almack
 
 pkgname=calibre
-pkgver=0.9.21
-pkgrel=1
+pkgver=0.9.40
+pkgrel=2
 pkgdesc="Ebook management application"
 arch=('x86_64')
 url="http://calibre.kovidgoyal.net/"
 license=('GPL3')
 depends=('python2' 'python2-imaging' 'libusb' 'pyqt' 'python-mechanize'
-         'imagemagick' 'dbus-python' 'python-lxml' 'python2-beautifulsoup' 'python-dateutil'
-         'python-cssutils' 'desktop-file-utils' 'python-dnspython' 'libmtp'
+         'imagemagick' 'dbus-python' 'python-lxml' 'python2-beautifulsoup' 'python2-dateutil'
+         'python-cssutils' 'desktop-file-utils' 'python2-dns' 'libmtp'
          'podofo' 'xdg-utils' 'cherrypy' 'python2-pdf' 'unrar' 'chmlib' 'poppler'
          'poppler-qt' 'icu' 'libwmf' 'libffi' 'python2-six' 'python2-netifaces' 'python2-cssselect')
 makedepends=('python2-pycountry' 'qt-private-headers')
-optdepends=('ipython: to use calibre-debug')
+#optdepends=('ipython: to use calibre-debug')
 screenshot=('https://lh5.googleusercontent.com/_lG58t3XWd3c/TcNwiXkAx_I/AAAAAAAAAEc/M34I4uY9UUY/s800/gui.jpeg')
 install=calibre.install
-source=("http://calibre-ebook.googlecode.com/files/${pkgname}-${pkgver}.tar.xz"
+source=("http://sourceforge.net/projects/calibre/files/${pkgver}/calibre-${pkgver}.tar.xz"
         'desktop_integration.patch')
-md5sums=('ee0e2d2dc735efcc573d1f77d64acf7e'
-         'cbf6da95f3885e80d3d8b0ae2733674d')
+md5sums=('f63b0e5697c5e997ecaaeaa82a14cd60'
+         '8353d1878c5a498b3e49eddef473605f')
 
 build() {
   cd "${srcdir}/${pkgname}"
 
   rm -rf src/cherrypy
+  rm -rf resources/${pkgname}-portable.*
+  mkdir -p src/calibre/plugins
+  
   sed -i -e "s/ldflags = shlex.split(ldflags)/ldflags = shlex.split(ldflags) + ['-fPIC']/" setup/extensions.py
+  
   sed -i -e 's:\(#!/usr/bin/env[ ]\+python$\|#!/usr/bin/python$\):\12:g' \
     $(find . -regex ".*.py\|.*.recipe")
 
+
   LANG='en_US.UTF-8' python2 setup.py build
-  LANG='en_US.UTF-8' python2 setup.py translations
+  #LANG='en_US.UTF-8' python2 setup.py translations
 }
 
 package() {
@@ -61,4 +64,3 @@ package() {
   python2 -m compileall "${pkgdir}/usr/lib/calibre/"
   python2 -O -m compileall "${pkgdir}/usr/lib/calibre/"
 }
-
