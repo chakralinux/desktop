@@ -4,7 +4,7 @@
 # Maintainer: Neophytos Kolokotronis <tetris4@gmail.com>
 
 pkgname=converseen
-pkgver=0.6.3
+pkgver=0.6.4
 pkgrel=1
 pkgdesc="The batch image converter and resizer. It supports more than 100 image formats."
 arch=('x86_64')
@@ -14,15 +14,21 @@ categories=('graphics')
 depends=('imagemagick' 'qt' 'libwmf' 'openexr')
 source=("http://downloads.sourceforge.net/sourceforge/${pkgname}/${pkgname}-${pkgver}.tar.bz2")
 screenshot=('http://converseen.sourceforge.net/res/converseen1.png')
-md5sums=('33b0b1e3649c075ab7ad970ee4ed465c')
+md5sums=('072cb40a495e539661ea789131555f79')
 
 build() {
   cd "${srcdir}"
-  mkdir build
+  mkdir -p build
   cd build
   cmake ../${pkgname}-${pkgver} \
           -DCMAKE_BUILD_TYPE=Release \
-          -DCMAKE_INSTALL_PREFIX=/usr
+          -DCMAKE_INSTALL_PREFIX=/usr \
+          -DImageMagick_Magick++_INCLUDE_DIR:PATH=/usr/include/ImageMagick-6 \
+          -DImageMagick_Magick++_LIBRARY:FILEPATH=/usr/lib/libMagick++-6.Q16.so \
+          -DImageMagick_MagickWand_INCLUDE_DIR:PATH=/usr/include/ImageMagick-6 \
+          -DImageMagick_MagickWand_LIBRARY:FILEPATH=/usr/lib/libMagickWand-6.Q16.so \
+          -DImageMagick_MagickCore_INCLUDE_DIR:PATH=/usr/include/ImageMagick-6 \
+          -DImageMagick_MagickCore_LIBRARY:FILEPATH=/usr/lib/libMagickCore-6.Q16.so
   make
 }
 
