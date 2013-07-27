@@ -5,15 +5,25 @@
 # contributor Martín González <koteccr[at]gmail[dot]com>
 
 pkgname=xautomation
-pkgver=1.06
+pkgver=1.07
 pkgrel=1
 pkgdesc='Controls X from the command line and does "visual scraping".'
 url='http://hoopajoo.net/projects/xautomation.html'
 arch=('x86_64')
 license=('GPL')
-depends=('libpng' 'libxtst')
-source=("http://hoopajoo.net/static/projects/${pkgname}-${pkgver}.tar.gz")
-md5sums=('89cb18c15c0c177ce044c9d566a7ddfe')
+depends=('libpng' 'libxtst' 'libxi')
+source=("http://hoopajoo.net/static/projects/${pkgname}-${pkgver}.tar.gz"
+	"fix-libs.patch")
+sha1sums=('1b99da6a4c384546e8566e8822ebaa6f385a53af'
+          '350b59bd779643ab074fa9e8c9fe0a853ab89e2e')
+
+prepare() {
+  cd "${srcdir}/${pkgname}-${pkgver}"
+
+  patch -p0 -i ${srcdir}/fix-libs.patch
+
+  autoreconf
+}
 
 build() {
   cd "${srcdir}/${pkgname}-${pkgver}"
