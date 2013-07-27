@@ -9,26 +9,20 @@ source ../_buildscripts/${current_repo}-${_arch}-cfg.conf
 
 pkgbase=fcitx
 pkgname=('fcitx' 'fcitx-pinyin' 'fcitx-table')
-pkgver=4.2.7
-pkgrel=5
+pkgver=4.2.8.1
+pkgrel=1
 arch=("i686" "x86_64")
 license=('GPL')
 url="http://code.google.com/p/fcitx"
 replaces=('fcitx-qt' 'fcitx-keyboard')
 conflicts=('fcitx-utf8-svn' 'fcitx-svn' 'fcitx-hg' 'fcitx-keyboard' 'fcitx-qt')
 makedepends=('cmake' 'qt' 'icu' 'wget' 'opencc' 'lua' 'iso-codes' 'enchant')
-source=("http://fcitx.googlecode.com/files/${pkgname}-${pkgver}.tar.xz"
-"https://github.com/fcitx/fcitx/commit/9937b68bad3a7e9465e17b711ce9c0a072d3071f.patch")
+source=("http://download.fcitx-im.org/${pkgname}/${pkgname}-${pkgver}.tar.xz")
 categories=('localization')
 
 build() {
   msg "Creating make environment..."
   
-  pushd .
-  cd "${pkgname}-${pkgver}"
-  patch -Np1 -i "$srcdir/9937b68bad3a7e9465e17b711ce9c0a072d3071f.patch"
-  popd
-
   mkdir -p build
 
   msg "Starting make..."
@@ -71,13 +65,6 @@ package_fcitx-pinyin() {
     cd build/src/im/pinyin
     make DESTDIR=$pkgdir install
     popd
-
-    pushd .
-    cd build/data
-    mkdir $pkgdir/usr/share/fcitx/pinyin/
-    install -m644 pybase.mb $pkgdir/usr/share/fcitx/pinyin/
-    install -m644 pyphrase.mb $pkgdir/usr/share/fcitx/pinyin/
-    popd
 }
 
 package_fcitx-table() {
@@ -88,12 +75,6 @@ package_fcitx-table() {
     cd build/src/im/table
     make DESTDIR=$pkgdir install
     popd
-
-    pushd .
-    cd build/data/table
-    make DESTDIR=$pkgdir install
-    popd
 }
 
-md5sums=('fb96dec8b023b59913082eac40f8ff1c'
-         '246e36c2232f107ed1692a52ebc43c39')
+md5sums=('318da13bee2d4ea2a6467228984ec07e')

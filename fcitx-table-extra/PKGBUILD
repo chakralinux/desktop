@@ -7,16 +7,15 @@
 source ../_buildscripts/${current_repo}-${_arch}-cfg.conf
 
 pkgname=fcitx-table-extra
-pkgver=0.3.3
-pkgrel=2
+pkgver=0.3.4
+pkgrel=1
 pkgdesc="Extra table data for fcitx, including Zhengma, Cangjie, Boshiamy"
 arch=('i686' 'x86_64')
 url="http://code.google.com/p/fcitx"
 license=('GPL')
-depends=('fcitx-table>=4.2.4')
+depends=('fcitx-table>=4.2.7')
 makedepends=('cmake')
-source=(http://fcitx.googlecode.com/files/${pkgname}-${pkgver}.tar.xz)
-md5sums=('cfd6e70ad99a37937e0f1d0588136bc4')
+source=(http://download.fcitx-im.org/${pkgname}/${pkgname}-${pkgver}.tar.xz)
 
 build(){
     cd "$srcdir/${pkgname}-${pkgver}"
@@ -33,3 +32,4 @@ package ()
     cd "$srcdir/${pkgname}-${pkgver}/build"
     make DESTDIR=${pkgdir} install
 }
+md5sums=('c3f215f2ccbbbece108d98c5ed4a6bbf')

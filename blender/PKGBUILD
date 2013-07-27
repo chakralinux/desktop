@@ -2,7 +2,6 @@
 
 pkgname=blender
 pkgver=2.68
-_pkgver=2.68
 pkgrel=1
 pkgdesc="A fully integrated 3D graphics creation suite"
 arch=('x86_64')
@@ -18,7 +17,7 @@ source=("http://download.blender.org/source/$pkgname-$pkgver.tar.gz")
 sha1sums=('8fe1b64dee5bfc3d429510084a04ca00d4035603')
 
 build() {
-  cd "$srcdir/$pkgname-$_pkgver"
+  cd "$srcdir/$pkgname-$pkgver"
   
   mkdir -p build
   cd build
@@ -49,7 +48,7 @@ build() {
 }
 
 package() {
-  cd "$srcdir/$pkgname-$_pkgver/build"
+  cd "$srcdir/$pkgname-$pkgver/build"
 
   make DESTDIR="${pkgdir}" install
   python3 -m compileall "${pkgdir}/usr/share/blender"

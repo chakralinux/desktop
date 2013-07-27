@@ -4,8 +4,8 @@
 # contributor (x86_64): Giuseppe Calà <jiveaxe@gmail.com>
 
 pkgname=clamav
-pkgver=0.97.6
-pkgrel=3
+pkgver=0.97.8
+pkgrel=1
 pkgdesc='Anti-virus toolkit for Unix'
 arch=('i686' 'x86_64')
 depends=('bzip2' 'zlib' 'libtool')
@@ -22,14 +22,13 @@ source=("http://downloads.sourceforge.net/sourceforge/$pkgname/$pkgname-$pkgver.
         'service'
         'service.fresh'
         'tmpfiles.d')
-
-sha1sums=('528f774b14b95fdfb8b377f8b41859c48b165e34'
-          'cb116cdab49a810381a515cbcfb6a6c148547f07'
-          'be3310d2b41a68ce06e33c84ab68ffe59fdce104'
-          '701a61571788d10ff7af01597785835c6bfea918'
-          'df522b0488f3901e491f148c9300f6bae348c605'
-          'cda9a087e5593992150cb456e34c5f6f589aca82'
-          'a224ea9b4d0f4f196827347d54bed51e11c197ea')
+sha256sums=('d872bdfd692d440bc2ade2f4e5a7befc37feb8885cd81adfb6346a8214aafc12'
+            'f615973896b066307fcd9be2d250ecef975b62bf16d6a39871d23b8073a9c23e'
+            'd0a118610f0f3a5e70633028d52741fcbbcf1b6cf89e4c73cd037169465b72b3'
+            'ac93476c805cf88597432c52c323d14085f2cfdca0e8a0cb1c11b2e1d7b45592'
+            'cfeec88b227a60314826939512dd77586adabccdee7dfcf4d9106c867f41ead8'
+            'dd5ff6c79ee360da5f2221c4d9110a2a8886d86293f6c93c16bf74fdb126593c'
+            '0a61abee3b9bba94126afe3344e7d8e82da5120ca6dbd2b413b10f75da5b0b0d')
 
 build() {
 	cd "$srcdir/$pkgname-$pkgver"
@@ -53,8 +52,7 @@ package() {
 	install -D -m644 ../tmpfiles.d "${pkgdir}/usr/lib/tmpfiles.d/clamav.conf"
 	install -D -m644 ../clamav.logrotate "$pkgdir/etc/logrotate.d/clamav"
 	install -D -m644 ../clamav.confd "$pkgdir/etc/conf.d/clamav"
-	#install -D -m755 ../clamav "$pkgdir/etc/rc.d/clamav"
-
+	
 	# Test fix for http://www.chakra-project.org/bbs/viewtopic.php?pid=60823#p60823
 	install -d -m755 "${pkgdir}/var/lib/clamav"
 

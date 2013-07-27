@@ -3,14 +3,11 @@
 #
 # Maintainer: Adrián Chaves Fernández (Gallaecio)
 
-# include global config
-source ../_buildscripts/${current_repo}-${_arch}-cfg.conf
-
 pkgname=kshutdown
-pkgver=2.0
+pkgver=3.0
 pkgrel=1
 pkgdesc="Advanced shut down utility."
-arch=(i686 x86_64)
+arch=('x86_64')
 url="http://kshutdown.sourceforge.net/"
 license=('GPL2')
 depends=('kdelibs' 'kdebase-workspace')
@@ -18,7 +15,7 @@ makedepends=('cmake' 'automoc4')
 categories=('utils')
 install=$pkgname.install
 source=(http://switch.dl.sourceforge.net/sourceforge/$pkgname/$pkgname-source-$pkgver.zip)
-md5sums=('af9d2bfda919e7712319e14e6ca89610')
+md5sums=('8597fb8b5918b7ccc40eb04499021b03')
 
 build() {
   cd $srcdir/$pkgname-$pkgver
@@ -34,3 +31,4 @@ package() {
   cd $srcdir/$pkgname-$pkgver/build
   make DESTDIR=$pkgdir install
 }
+

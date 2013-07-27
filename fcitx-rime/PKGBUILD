@@ -4,7 +4,7 @@
 # Maintainer: Weng Xuetian <wengxt@gmail.com>
 
 pkgname=fcitx-rime
-pkgver=0.2.0
+pkgver=0.2.2
 pkgrel=1
 pkgdesc="Fcitx Wrapper for librime"
 arch=('i686' 'x86_64')
@@ -12,9 +12,7 @@ url="http://code.google.com/p/fcitx"
 license=('GPL')
 depends=('fcitx>=4.2.7' "librime>=0.9.4" "brise")
 makedepends=('cmake')
-source=(
-  "http://fcitx.googlecode.com/files/$pkgname-$pkgver.tar.xz"
-)
+source=(http://download.fcitx-im.org/${pkgname}/${pkgname}-${pkgver}.tar.xz)
 
 build() {
   cd "$srcdir"
@@ -36,4 +34,4 @@ package() {
   make DESTDIR="$pkgdir" install
 }
 
-md5sums=('34e9bd76f96d93dd99a6af2ed25d8e26')
+md5sums=('11555818119ae78e5608fba9998365fa')

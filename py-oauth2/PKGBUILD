@@ -1,0 +1,32 @@
+# Maintainer: Ernesto Manríquez <alejandronova@gmail.com>
+
+pkgname=py-oauth2
+pkgver=0.0.6
+pkgrel=1
+pkgdesc="A Python wrapper for the OAuth2 specification"
+arch=('x86_64')
+url=("http://liluo.org/py-oauth2/")
+license=('MIT')
+depends=('python2-magic' 'python2-oauth2' 'python2-sqlalchemy' 'python2-beautifulsoup')
+makedepends=('python2-distribute')
+source=("https://github.com/liluo/$pkgname/archive/v$pkgver.zip")
+sha256sums=('3dddabec379c2d0f7ceac6f04297b03590befa4561c659512fbfa59dc2bf896a')
+
+build() {
+  cd "$srcdir/$pkgname-$pkgver"
+
+  python2 setup.py build
+}
+
+package() {
+  cd "$srcdir/$pkgname-$pkgver"
+
+  python2 setup.py install --root=$pkgdir
+
+}
+
+# vim:set ts=2 sw=2 et:
+
+
+
+

@@ -1,0 +1,13 @@
+#!/bin/sh
+
+# Shared folders workaround
+cp -ru /usr/share/higan ~/.config/
+
+# Check for profiles and prompt user with a GUI
+profile="$(kdialog --title "higan" --radiolist "Choose a profile:" accuracy "Accuracy" on balanced "Balanced" off performance "Performance" off)"
+
+# Launch selected profile
+exec higan-$profile "$@"
+
+
+

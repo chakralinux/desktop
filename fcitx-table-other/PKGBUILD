@@ -7,16 +7,15 @@
 source ../_buildscripts/${current_repo}-${_arch}-cfg.conf
 
 pkgname=fcitx-table-other
-pkgver=0.2.1
-pkgrel=2
+pkgver=0.2.2
+pkgrel=1
 pkgdesc="Extra non-chinese table data for fcitx"
 arch=('i686' 'x86_64')
 url="http://code.google.com/p/fcitx"
 license=('GPL')
-depends=('fcitx-table>=4.2.4')
-makedepends=('cmake' 'intltool')
-source=(http://fcitx.googlecode.com/files/${pkgname}-${pkgver}.tar.xz)
-md5sums=('f68accc4cb4e45da81a38517be236c14')
+depends=('fcitx-table>=4.2.7')
+makedepends=('cmake')
+source=(http://download.fcitx-im.org/${pkgname}/${pkgname}-${pkgver}.tar.xz)
 
 build(){
     cd "$srcdir/${pkgname}-${pkgver}"
@@ -25,7 +24,7 @@ build(){
     cd build
     
     cmake -DCMAKE_INSTALL_PREFIX=/usr -DCMAKE_BUILD_TYPE=Release ..
-    make
+    make -j1
 }
 
 package ()
@@ -33,3 +32,4 @@ package ()
     cd "$srcdir/${pkgname}-${pkgver}/build"
     make DESTDIR=${pkgdir} install
 }
+md5sums=('b2827e5ddb962cdbdb2ede59d3c5752f')
