@@ -6,9 +6,9 @@
 
 pkgname=dosbox
 pkgver=0.74
-pkgrel=4
+pkgrel=5
 pkgdesc="An emulator with builtin DOS for running DOS Games"
-arch=('i686' 'x86_64')
+arch=('x86_64')
 url="http://dosbox.sourceforge.net/"
 license=('GPL')
 depends=('sdl_net' 'sdl_sound' 'libgl' 'libpng' 'alsa-lib' 'gcc-libs' 'zlib')
@@ -21,10 +21,15 @@ md5sums=('b9b240fa87104421962d14eee71351e8'
          '85169ca599028bee8e29e0b3b7b34dd8'
          '3fba2e3c7c43290319b2928f40ed30e5')
 
-build(){
+prepare() {
   cd ${srcdir}/${pkgname}-${pkgver}
   patch -Np1 -i "$srcdir/gcc46.patch"
   sed -i 's/png_check_sig/png_sig_cmp/' configure 
+}
+
+build(){
+  cd ${srcdir}/${pkgname}-${pkgver}
+
   ./configure --prefix=/usr \
     --sysconfdir=/etc/dosbox 
   make 
