@@ -4,18 +4,19 @@
 # Maintainer: Neophytos Kolokotronis <tetris4@gmail.com>
 
 pkgname=feh
-pkgver=2.9.1
+pkgver=2.9.3
 pkgrel=1
 pkgdesc="A fast, lightweight image viewer which uses imlib2"
 arch=('x86_64')
 url="http://feh.finalrewind.org"
 license=('MIT')
-depends=('libxinerama' 'giblib' 'perl')
+depends=('libxinerama' 'giblib' 'libexif')
+optdepends=('perl: feh-cam, webcam wrapper for feh'
+            'imagemagick: support more file formats')
 makedepends=('libxt')
 categories=('graphics')
 source=("http://feh.finalrewind.org/${pkgname}-${pkgver}.tar.bz2")
-categories=('graphics')
-md5sums=('725df7d86fe6e630e4967c61bbc22514')
+sha1sums=('6e93c9bbc339d36002ead189d0a94880f58876bd')
 
 build() {
 	cd "${srcdir}/${pkgname}-${pkgver}"
