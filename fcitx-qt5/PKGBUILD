@@ -7,9 +7,10 @@ pkgdesc="QT5 IM Module for Fcitx"
 arch=('i686' 'x86_64')
 url="http://code.google.com/p/fcitx"
 license=('GPL')
-depends=('fcitx>=4.2.7' 'qt5')
+depends=('fcitx>=4.2.7' 'qt5-base')
 makedepends=('cmake')
 source=("http://fcitx.googlecode.com/files/${pkgname}-${pkgver}.tar.xz")
+sha1sums=('384765da0416bd1adc7ffa61998ff115a0d049f7')
 
 build() {
   cd "$srcdir/${pkgname}-${pkgver}"
@@ -25,4 +26,3 @@ package() {
   cd "$srcdir/${pkgname}-${pkgver}/build"
   make install DESTDIR="${pkgdir}"
 }
-md5sums=('c93a4922ddc4f042749e707673f0fa41')
