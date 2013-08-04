@@ -3,7 +3,7 @@
 pkgname=tribe
 pkgver=2013.05.19
 _rls_notes=20130519
-pkgrel=1
+pkgrel=3
 _codename=Benz
 branch="benz"
 pkgdesc="Tribe - Chakra LiveCD Installer"
@@ -64,11 +64,15 @@ build() {
 package() {
         cd "${srcdir}/${pkgname}-${pkgver}"
 	msg "Make successful, installing..."
-	make DESTDIR=$startdir/pkg install 
+	make DESTDIR=$pkgdir install 
         install -Dm755 ${srcdir}/launch-tribe.sh \
         ${pkgdir}/usr/bin/launch-tribe.sh
+        mkdir -p $pkgdir/usr/share/tribe/config/
 	cp -vf ${srcdir}/RELEASE_NOTES_${_rls_notes}.html $pkgdir/usr/share/tribe/config/RELEASE_NOTES.html
 
 	# remove nasty files
 	find $startdir/pkg/ -name ".git" -type d -exec rm -fr {} +
 }
+md5sums=('5a124d7cf095e78337f6646415891fb7'
+         '881e1708a9990df998abc644be66b602'
+         'e31855da237a2c8029774831b3c04685')
