@@ -30,8 +30,8 @@ groups=("kde-uninstall" "kde-support")
 
 build() 
 {
-	cd $startdir/src/$_origname-$pkgver
+	cd ${srcdir}/$_origname-$pkgver
 	./configure --prefix=${_installprefix}
 	make || return 1
-	make DESTDIR=$startdir/pkg install
+	make DESTDIR=${pkgdir} install
 } 

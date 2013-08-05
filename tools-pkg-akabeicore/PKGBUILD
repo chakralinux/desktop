@@ -59,8 +59,8 @@ package()
 {
         cd "${srcdir}/$pkgname"
 	msg "Make successful, installing..."
-	make DESTDIR=$startdir/pkg install || return 1
+	make DESTDIR=${pkgdir} install || return 1
 
 	# remove nasty files
-	find $startdir/pkg/ -name ".git" -type d -exec rm -fr {} +
+	find ${pkgdir}/ -name ".git" -type d -exec rm -fr {} +
 }
