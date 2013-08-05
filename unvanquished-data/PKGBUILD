@@ -5,7 +5,7 @@
 
 pkgname=unvanquished-data
 _pkgname=unvanquished
-pkgver=0.17.0
+pkgver=0.18.0
 pkgrel=1
 pkgdesc="A team-based fps/rts hybrid game which pits aliens against humans (data files)"
 arch=('any')
@@ -22,11 +22,12 @@ package() {
 	if [ $i -lt 10 ]; then
             code=$i
         else
-            let ASCII=$i+91
+            let ASCII=$i+067
+            ASCII=$(echo "obase=8;$ASCII" | bc)
             code=$(printf "\\$ASCII")
         fi
         file=pak$code.pk3
-        wget http://downloads.sourceforge.net/project/unvanquished/Assets/${file} \
-        -O $pkgdir/usr/share/$_pkgname/main/$file
+        wget -nc http://downloads.sourceforge.net/project/unvanquished/Assets/${file} \
+        -P $pkgdir/usr/share/$_pkgname/main/
     done;
 }
