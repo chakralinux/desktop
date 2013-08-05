@@ -14,14 +14,14 @@ source=("http://cgdb.me/files//$pkgname-$pkgver.tar.gz")
 md5sums=('e2d9a973d2683faf8130a82703bf6a31')
 
 build() {
-  cd $startdir/src/$pkgname-$pkgver
+  cd ${srcdir}/$pkgname-$pkgver
   
   ./configure --prefix=/usr
   make 
 }
 
 package() {
-  cd $startdir/src/$pkgname-$pkgver
+  cd ${srcdir}/$pkgname-$pkgver
   
-  make DESTDIR=$startdir/pkg install
+  make DESTDIR=${pkgdir} install
 }

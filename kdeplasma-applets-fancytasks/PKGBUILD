@@ -21,10 +21,10 @@ source=(http://www.kde-look.org/CONTENT/content-files/99737-fancytasks-${pkgver}
 md5sums=('1e9b9c36a5fc227ce441a6f5618b83e6')
 
 build() {
-	cd $startdir/src/fancytasks-${pkgver}
+	cd ${srcdir}/fancytasks-${pkgver}
         mkdir build
         cd build
 	cmake ../ -DCMAKE_INSTALL_PREFIX=`kde4-config --prefix`
 	make || return 1
-        make DESTDIR=$startdir/pkg install || return 1
+        make DESTDIR=${pkgdir} install || return 1
 }

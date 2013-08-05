@@ -19,13 +19,13 @@ source=(http://qt-apps.org/CONTENT/content-files/158787-qtfm.zip)
 sha256sums=('07ffd61dd5d4aa7c16f1c544804517b621e3ef1a30eeda97c087219a3cb35128')
 
 build() {
-  	cd "$startdir/src/$pkgname"
-   	qmake
-   	make
+  cd "${srcdir}/$pkgname"
+  qmake
+  make
 }
 
 package() {
-	cd "$startdir/src/$pkgname"
-        make INSTALL_ROOT="${pkgdir}" install
+  cd "${srcdir}/$pkgname"
+  make INSTALL_ROOT="${pkgdir}" install
 }
 
