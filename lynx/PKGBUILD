@@ -20,14 +20,14 @@ md5sums=('e36d70f3f09b2d502055ca67f09e363c')
 screenshot=('http://upload.wikimedia.org/wikipedia/commons/d/d5/Lynx-wikipedia.png')
 
 build() {
-  cd $startdir/src/${pkgname}2-8-7
+  cd ${srcdir}/${pkgname}2-8-7
   ./configure --prefix=/usr --sysconfdir=/etc --with-ssl --enable-nls \
     --mandir=/usr/share/man
   make
 }
 
 package() {
-  cd $startdir/src/${pkgname}2-8-7
-  make DESTDIR=$startdir/pkg install
+  cd ${srcdir}/${pkgname}2-8-7
+  make DESTDIR=$pkgdir install
 }
 

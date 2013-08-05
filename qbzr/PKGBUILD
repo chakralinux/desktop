@@ -16,7 +16,7 @@ source=(http://launchpad.net/${pkgname}/0.19/${pkgver}/+download/${pkgname}-${pk
 md5sums=('e8dbcf7404e5e2325e6ae6ea303cec57')
 
 build() {
-cd $startdir/src/$pkgname
+cd ${srcdir}/$pkgname
 ./setup.py build || return 1
-./setup.py install --prefix=$startdir/pkg/usr install
+./setup.py install --prefix=${pkgdir}/usr install
 } 
