@@ -3,18 +3,18 @@
 #
 # contributor (x86_64): Giuseppe Calà <jiveaxe@gmail.com>
 
-# include global config
-source ../_buildscripts/${current_repo}-${_arch}-cfg.conf
-
 pkgname=graphviz
-pkgver=2.28.0
-pkgrel=3
+pkgver=2.30.1
+pkgrel=1
 pkgdesc="Creates acircular graph images"
-arch=('i686' 'x86_64')
+url="http://www.graphviz.org/"
+categories=('graphics')
+arch=('x86_64')
 license=('CPL')
-depends=('gd' 'librsvg' 'libxaw' 'ghostscript' 'pango')
-makedepends=('swig' 'guile' 'lua' 'ocaml' 'perl' 'php' 'python2' 'r' 'ruby' 'tk' 'qt')
-optdepends=('guile: guile bindings'
+depends=('libltdl' 'gd' 'librsvg' 'libxaw' 'ghostscript' 'pango')
+makedepends=('swig' 'mono' 'guile' 'lua' 'ocaml' 'perl' 'php' 'python2' 'r' 'ruby' 'tk' 'qt')
+optdepends=('mono: sharp bindings'
+            'guile: guile bindings'
             'lua: lua bindings'
             'ocaml: ocaml bindings'
             'perl: perl bindings'
@@ -24,21 +24,35 @@ optdepends=('guile: guile bindings'
             'ruby: ruby bindings'
             'tcl: tcl bindings'
             'qt: gvedit')
-url="http://www.graphviz.org/"
 options=('!libtool')
-categories=('graphics')
 source=(${url}/pub/${pkgname}/stable/SOURCES/${pkgname}-${pkgver}.tar.gz
-       'LICENSE')
+        'LICENSE')
 install=graphviz.install
-sha1sums=('4725d88a13e071ee22e632de551d4a55ca08ee7d'
-          '5a83febc0974e17d6b2356a4b1be9a834b715378')
+sha1sums=('96739220c4bbcf1bd3bd52e7111f4e60497185c6'
+          '5a83febc0974e17d6b2356a4b1be9a834b715378'
+          '8aab7295d1c59e4076c8ca7bcc6cd230edaa547c')
+
+prepare() {
+	cd "${srcdir}/${pkgname}-${pkgver}"
+	sed \
+		-e 's: qw(\([^)]*\)): (qw(\1)):g' \
+		-i config/config_perl.pl
+	sed \
+		-e '/"archdir"/s:$:+" '"$(echo -I/usr/include/ruby-1.9.1/{$CARCH-linux,ruby/backward,})"'":' \
+		-e '/CONFIG/s:site:vendor:' \
+		-i config/config_ruby.rb
+	sed \
+		-e '/LIBPOSTFIX="64"/d' \
+		-i configure
+}
 
 build() {
 	cd "${srcdir}/${pkgname}-${pkgver}"
 
-	sed -i "/RUBY_INCLUDES=\"/s|\"$| `eval echo -I/usr/include/ruby-1.9.1/{$CARCH-linux,ruby/backward,}`\"|" configure
-	sed -i '/LIBPOSTFIX="64"/d' configure
 	export PYTHON=python2
+
+	# install the graph and cgraph api alongside
+	sed 's/@WITH_CGRAPH_FALSE@//g' -i lib/graph/Makefile.in
 
 	./configure --prefix=/usr
 	make
@@ -50,4 +64,7 @@ package() {
 
 	# cf. http://www.graphviz.org/License.php
 	install -Dm644 ../LICENSE "${pkgdir}"/usr/share/licenses/graphviz/LICENSE
+
+	# everything has been built against cgraph, but use graph as default api
+	sed '/#define WITH_CGRAPH 1/d' -i "${pkgdir}"/usr/include/graphviz/types.h
 }

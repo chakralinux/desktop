@@ -22,9 +22,9 @@ source=(http://download.opensuse.org/distribution/12.3/repo/oss/suse/x86_64/$pkg
 sha256sums=('0bb2a7585a2edd74803d1ea56d2ed77b37c165f6dc164258115f538dccba213c')
 
 build() {
-    cd $startdir/pkg/
+    cd ${pkgdir}/
 
-    rpmextract.sh ${startdir}/src/$pkgname-$pkgver-$pkgrelsuse.x86_64.rpm
+    rpmextract.sh ${srcdir}/$pkgname-$pkgver-$pkgrelsuse.x86_64.rpm
 
     chmod a+rx -R *
     find . -type f -exec chmod -x \{\} \;

@@ -2,20 +2,19 @@
 
 pkgname=blender
 pkgver=2.68
-pkgrel=1
+pkgrel=2
 pkgdesc="A fully integrated 3D graphics creation suite"
 arch=('x86_64')
 license=('GPL')
 url="http://www.blender.org"
 depends=('libpng' 'libtiff' 'openexr' 'sdl' 'python3' 'desktop-file-utils' 'shared-mime-info'
-         'hicolor-icon-theme' 'xdg-utils' 'glew' 'libxi' 'libxmu' 'mesa' 'freetype2' 'jack'
-         'openal' 'libsndfile' 'libsamplerate' 'ffmpeg' 'fftw' 'openimageio' 'boost-libs'
-         'opencollada' 'opencolorio' 'libspnav')
+         'hicolor-icon-theme' 'xdg-utils' 'glew' 'freetype2' 'jack' 'openal' 'libsndfile' 
+	 'libsamplerate' 'ffmpeg' 'fftw' 'openimageio' 'boost-libs' 'opencollada' 'opencolorio' 'llvm')
 makedepends=('cmake' 'boost' 'mesa' 'subversion')
 screenshot=('http://www.blender.org/index.php?eID=tx_cms_showpic&file=uploads%2Fpics%2Fblender_screenshot3_03.png&width=800m&height=600m&bodyTag=%3Cbody%20style%3D%22margin%3A0%3B%20background%3A%23fff%3B%22%3E&wrap=%3Ca%20href%3D%22javascript%3Aclose%28%29%3B%22%3E%20%7C%20%3C%2Fa%3E&md5=cddc8ef0fbe1e90d0d22e78b4911860b')
 install=blender.install
 source=("http://download.blender.org/source/$pkgname-$pkgver.tar.gz")
-md5sums=('93fffb5fcbdcc44c41c0426d79b6f5c1')
+sha1sums=('8fe1b64dee5bfc3d429510084a04ca00d4035603')
 
 build() {
   cd "$srcdir/$pkgname-$pkgver"
@@ -24,30 +23,33 @@ build() {
   cd build
 
   cmake .. \
-    -DCMAKE_INSTALL_PREFIX:PATH=/usr \
-    -DCMAKE_BUILD_TYPE:STRING=Release \
-    -DWITH_INSTALL_PORTABLE:BOOL=OFF \
-    -DWITH_PYTHON_INSTALL:BOOL=OFF \
-    -DWITH_OPENCOLLADA:BOOL=ON \
-    -DWITH_GAMEENGINE:BOOL=ON \
-    -DWITH_JACK:BOOL=ON \
-    -DWITH_PLAYER:BOOL=ON \
-    -DWITH_CODEC_FFMPEG:BOOL=ON \
-    -DWITH_IMAGE_OPENJPEG:BOOL=ON \
-    -DWITH_IMAGE_REDCODE:BOOL=ON \
-    -DWITH_MOD_OCEANSIM:BOOL=ON \
-    -DPYTHON_LIBPATH:STRING=/usr/lib \
-    -DPYTHON_LIBRARY:STRING=python3.3m \
-    -DPYTHON_INCLUDE_DIRS:STRING=/usr/include/python3.3m \
-    $ENABLESSE2
-
-  make $MAKEFLAGS
+    -DCMAKE_INSTALL_PREFIX=/usr \
+    -DCMAKE_BUILD_TYPE=Release \
+    -DWITH_INSTALL_PORTABLE=OFF \
+    -DWITH_PYTHON_INSTALL=OFF \
+    -DWITH_OPENCOLLADA=ON \
+    -DOPENIMAGEIO_ROOT_DIR=/usr \
+    -DWITH_GAMEENGINE=ON \
+    -DWITH_JACK=ON \
+    -DWITH_PLAYER=ON \
+    -DWITH_CODEC_FFMPEG=ON \
+    -DWITH_CODEC_SNDFILE=ON \
+    -DWITH_CYCLES=ON \
+    -DWITH_FFTW3=ON \
+    -DWITH_MOD_OCEANSIM=ON \
+    -DPYTHON_VERSION=3.3 \
+    -DPYTHON_LIBPATH=/usr/lib \
+    -DPYTHON_LIBRARY=python3.3m \
+    -DPYTHON_INCLUDE_DIRS=/usr/include/python3.3m \
+    -DOPENJPEG_INCLUDE_DIR=/usr/include/openjpeg-1.5
+    # Remove the openjpeg line once blender accepts my patch
 
   make
 }
 
 package() {
   cd "$srcdir/$pkgname-$pkgver/build"
+
   make DESTDIR="${pkgdir}" install
   python3 -m compileall "${pkgdir}/usr/share/blender"
 }

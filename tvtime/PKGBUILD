@@ -1,0 +1,46 @@
+# Arch Maintainer: Milos Pejovic (pejovic@gmail.com)
+# Chakra: Ernesto Manríquez <alejandronova@gmail.com>
+
+pkgname=tvtime
+pkgver=1.0.2
+pkgrel=1
+pkgdesc="A high quality television application for use with video capture cards"
+arch=('x86_64')
+url='http://tvtime.sourceforge.net/'
+depends=('libpng' 'libxml2' 'freetype2' 'libxss' 'libxinerama' 'libxv' 'libsm' 'libxxf86vm' 'alsa-lib')
+license=('GPL' 'LGPL')
+makedepends=('libxt' 'v4l-utils')
+source=(http://downloads.sourceforge.net/sourceforge/tvtime/$pkgname-$pkgver.tar.gz
+	tvtime-1.0.2+linux-headers-2.6.18.patch
+	tvtime-1.0.2-gcc41.patch
+	tvtime-1.0.2-locale_t.patch)
+sha1sums=('ea609876084b2d627a84a1f77bf81cc2175ee58e'
+          '3038f965f03eef988b6d46a442b8d48f0ca2b81a'
+          '79d97ba94d2832584f55ccfc7b2e1edf609151eb'
+          '3328e88638163660ff37e568aeae5ca991d4c1e1')
+
+prepare() {
+  cd $srcdir/$pkgname-$pkgver
+
+  patch -p1 < ../tvtime-1.0.2+linux-headers-2.6.18.patch
+  patch -p1 < ../tvtime-1.0.2-gcc41.patch
+  patch -p1 < ../tvtime-1.0.2-locale_t.patch
+  sed -i '1,1i#include <zlib.h>' src/pngoutput.c
+  echo "StartupWMClass=tvtime" >>docs/net-tvtime.desktop
+}
+  
+build() {
+  cd $srcdir/$pkgname-$pkgver
+
+  ./configure --prefix=/usr \
+    --mandir=/usr/share/man \
+    --localstatedir=/var \
+    --sysconfdir=/etc
+  make
+}
+
+package() {
+  cd $srcdir/$pkgname-$pkgver
+  make DESTDIR=$pkgdir install
+  install -D -m644 docs/html/default.tvtime.xml $pkgdir/usr/share/tvtime/default.tvtime.xml
+}

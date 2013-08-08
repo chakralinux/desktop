@@ -22,26 +22,26 @@ md5sums=('7f1fa1b1e0ab661d5a74ac4b8ee02511'
          'aefd88b769e18f5406647539ed953937')
 
 build() {
-  cd ${startdir}/src/${pkgname}
+  cd ${srcdir}/${pkgname}
   /usr/bin/qmake
   make clean
   make || return 1
 
-  mkdir -p ${startdir}/pkg/opt/smile
-  cp -R BIB_ManSlide Interface smile fake.pl ${startdir}/pkg/opt/smile || return 1
-  mkdir -p ${startdir}/pkg/usr/bin
-  ln -sf /opt/smile/smile ${startdir}/pkg/usr/bin/smile
+  mkdir -p ${pkgdir}/opt/smile
+  cp -R BIB_ManSlide Interface smile fake.pl ${pkgdir}/opt/smile || return 1
+  mkdir -p ${pkgdir}/usr/bin
+  ln -sf /opt/smile/smile ${pkgdir}/usr/bin/smile
 
   # Installing language(s)
   if [ ${_lang} != "fr" ]; then
 	  if [ ${_lang} = "all" ]; then
-		  cp ${startdir}/src/${pkgname}/smile_??.qm ${startdir}/pkg/opt/smile/
+		  cp ${srcdir}/${pkgname}/smile_??.qm ${pkgdir}/opt/smile/
 	  else
-		  install -D -m644 ${startdir}/src/${pkgname}/smile_${_lang}.qm ${startdir}/pkg/opt/smile
+		  install -D -m644 ${srcdir}/${pkgname}/smile_${_lang}.qm ${pkgdir}/opt/smile
 	  fi
   fi
 
   # Creating menu item
-  install -D -m644 ${startdir}/src/smile/Interface/Theme/logostart.png ${startdir}/pkg/usr/share/pixmaps/smile.png
-  install -D -m644 ${startdir}/src/smile.desktop ${startdir}/pkg/usr/share/applications/smile.desktop
+  install -D -m644 ${srcdir}/smile/Interface/Theme/logostart.png ${pkgdir}/usr/share/pixmaps/smile.png
+  install -D -m644 ${srcdir}/smile.desktop ${pkgdir}/usr/share/applications/smile.desktop
 }
