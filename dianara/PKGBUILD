@@ -1,0 +1,57 @@
+# Contributor: speps <speps at aur dot archlinux dot org>
+# Contributor: aur2ccr (http://ddg.gg/?q=!ccr+aur2ccr&t=chakra)
+# Contributor: aur2ccr (http://ddg.gg/?q=!ccr+aur2ccr&t=chakra)
+
+pkgname=dianara
+pkgver=0.9
+pkgrel=1
+pkgdesc="A Qt pump.io client"
+arch=(i686 x86_64)
+url="http://dianara.nongnu.org/"
+license=('GPL')
+depends=('qjson' 'qoauth' 'qca-ossl')
+install="$pkgname.install"
+source=("http://download-mirror.savannah.gnu.org/releases/$pkgname/$pkgname-v$pkgver.tar.gz")
+md5sums=('db035f682fe5d75240672d5426760d3a')
+
+prepare() {
+  cd "$srcdir/$pkgname-v$pkgver"
+
+  # translation path fix
+  sed -i 's|:/translations|/usr/share/locale|' src/main.cpp
+
+  # resources path fix
+  sed -e 's|:/icon/64x64|/usr/share/pixmaps|' \
+      -e 's|:/images|/usr/share/dianara|' \
+      -i src/mainwindow.cpp
+}
+
+build() {
+  cd "$srcdir/$pkgname-v$pkgver"
+  [ -d bld ] || mkdir bld && cd bld
+  qmake ..
+  make
+}
+
+package() {
+  cd "$srcdir/$pkgname-v$pkgver"
+
+  # bin
+  install -Dm755 bld/$pkgname \
+    "$pkgdir/usr/bin/$pkgname"
+
+  # desktop file
+  install -Dm644 $pkgname.desktop \
+    "$pkgdir/usr/share/applications/$pkgname.desktop"
+
+  # icon
+  install -Dm644 icon/64x64/$pkgname.png \
+    "$pkgdir/usr/share/pixmaps/$pkgname.png"
+
+  # translations
+  install -d "$pkgdir/usr/share/locale"
+  install -Dm644 translations/*.qm \
+    "$pkgdir/usr/share/locale"
+}
+
+# vim:set ts=2 sw=2 et:
