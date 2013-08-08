@@ -4,10 +4,10 @@
 # Maintainer: Adrián Chaves Fernández (Gallaecio) <adriyetichaves gmail.com>
 
 pkgname=frostwire
-pkgver=5.5.2
+pkgver=5.6.3
 pkgrel=1
 pkgdesc="BitTorrent client with integrated search"
-arch=('any')
+arch=('x86_64')
 url="http://www.frostwire.com"
 license=('GPL3')
 depends=('java-runtime' 'hicolor-icon-theme' 'desktop-file-utils')
@@ -15,29 +15,23 @@ optdepends=('mplayer: audio playback.'
             'vlc: video playback.')
 makedepends=('libicns')
 categories=('network')
-source=(http://dl.frostwire.com/$pkgname/$pkgver/$pkgname-$pkgver.noarch.tar.gz)
-# noextract=($pkgname-$pkgver.noarch.tar.gz)	# Extraction fails because of wrong ends of line.
-md5sums=('dba8f99e92dfa7df809174c290cad402')
+source=(http://dl.frostwire.com/$pkgname/$pkgver/$pkgname-$pkgver.noarch.tar.gz
+        $pkgname.png)
+
+md5sums=('3fbf09b276afbcb93a6d74425d873174'
+         '3a9ca2d81ffed338556ce6feaaf57114')
 
 package() {
-  # Extraction.
-#   tar -xf $pkgname-$pkgver.noarch.tar.gz &> /dev/null || true
 
   cd $srcdir/$pkgname-$pkgver.noarch
 
-  # Fix Java version detection.
-#   sed \
-#     -e 's/head -n 1/grep version/' \
-#     -i $pkgname
-
   # Install files.
   install -d $pkgdir/usr/share/$pkgname
-  cp -r $pkgname *.gif *.jar *.properties $pkgdir/usr/share/$pkgname
+  cp -r $pkgname *.jar $pkgdir/usr/share/$pkgname
 
   # Desktop integration.
   install -Dm644 $pkgname.desktop		$pkgdir/usr/share/applications/$pkgname.desktop
-  icns2png -x -d 32 -s 512x512 FrostWire.icns &> /dev/null	# Extract 512×512 PNG icon.
-  install -Dm644 FrostWire_512x512x32.png	$pkgdir/usr/share/pixmaps/$pkgname.png
+  install -Dm644 "$srcdir/$pkgname.png" "$pkgdir/usr/share/pixmaps/$pkgname.png"
   
   # Execution script.
   install -dm755 $pkgdir/usr/bin
