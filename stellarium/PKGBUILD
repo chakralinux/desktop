@@ -4,23 +4,23 @@
 # Maintainer: Martín González <koteccr at gmail dot com>
 
 pkgname=stellarium
-pkgver=0.12.1
+pkgver=0.12.2
 pkgrel=1
 pkgdesc="A stellarium with great graphics and a nice database of sky-objects"
 arch=('x86_64')
 url="http://www.stellarium.org/"
 screenshot=('http://www.stellarium.org/img/screenshots/0.10-from-mars.jpg')
 license=('GPL2')
-depends=('libpng' 'libgl' 'qt' 'openssl' 'zlib' 'gettext')
+depends=('libpng' 'libgl' 'qt' 'openssl' 'zlib' 'gettext' 'phonon')
 makedepends=('cmake' 'boost' 'mesa')
 categories=('education')
 source=("http://downloads.sourceforge.net/$pkgname/$pkgname-$pkgver.tar.gz")
-md5sums=('59ecd6cefed44909b4cd77e51d97583a')
+md5sums=('63572e71e15ffad4001d6c93bbc34180')
 
 build() {
   cd ${srcdir}/${pkgname}-${pkgver}
 
-  cmake . -DCMAKE_INSTALL_PREFIX=/usr -DCMAKE_BUILD_TYPE=RELEASE
+  cmake . -DCMAKE_INSTALL_PREFIX=/usr -DCMAKE_BUILD_TYPE=RELEASE -DENABLE_SOUND=1
   make
 }
 
