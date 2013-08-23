@@ -10,8 +10,8 @@ _protobuf_ver=2.5.0
 pkgbase=mozc
 pkgdesc="A Japanese Input Method for Chromium OS, Windows, Mac and Linux (the Open Source Edition of Google Japanese Input)"
 pkgname=('mozc' 'fcitx-mozc')
-pkgver=1.10.1390.102
-_patchver=${pkgver}.2
+pkgver=1.11.1502.102
+_patchver=${pkgver}.1
 pkgrel=1
 arch=('i686' 'x86_64')
 url="http://code.google.com/p/mozc/"
@@ -21,14 +21,15 @@ source=(http://mozc.googlecode.com/files/mozc-${pkgver}.tar.bz2
         http://downloads.sourceforge.net/pnsft-aur/ken_all-${_zipcoderel}.zip
         http://downloads.sourceforge.net/pnsft-aur/jigyosyo-${_zipcoderel}.zip
 	http://protobuf.googlecode.com/files/protobuf-${_protobuf_ver}.tar.bz2
-	http://fcitx.googlecode.com/files/fcitx-mozc-${_patchver}.patch
-	http://fcitx.googlecode.com/files/fcitx-mozc-icon.tar.gz
+	http://download.fcitx-im.org/fcitx-mozc/fcitx-mozc-${_patchver}.patch
+	http://download.fcitx-im.org/fcitx-mozc/fcitx-mozc-icon.tar.gz
 )
-sha1sums=('93a4918acc5115847efbaea91f05962c4ccf4bba'
-          'f2dca1f3b4386d768b5b04ffe1f5e6103ef5bd08'
-          'e52272cc5e75c59e8491d1caf00edc9b35fe44ae'
-          'df5867e37a4b51fb69f53a8baf5b994938691d6d'
-          '8bd15a29c13b49563265f113689d007a04223930')
+sha1sums=('72c06d409da957d6696bbe1341c118ba4c267877'
+          '00d7d3fa1233ef75b0f919b9e4c10c9692d7743b'
+          'cdb8f3535cdac0c25d24c103107889b9fb4b9e18'
+          '62c10dcdac4b69cc8c6bb19f73db40c264cb2726'
+          '52da3ae38605bfcdc303734ac991ff29e17902dc'
+          '883f4fc489a9ed1c07d2d2ec37ca72509f04ea5d')
 
 
 build() {
@@ -54,7 +55,7 @@ build() {
   _targets="server/server.gyp:mozc_server gui/gui.gyp:mozc_tool "
   _targets+="unix/fcitx/fcitx.gyp:fcitx-mozc "
 
-  python2 build_mozc.py gyp --channel_dev=0
+  GYP_DEFINES="enable_gtk_renderer=0" python2 build_mozc.py gyp --channel_dev=0
   python2 build_mozc.py build_tools -c $_bldtype -j $_jobs
   python2 build_mozc.py build -c $_bldtype -j $_jobs $_targets
 
@@ -111,9 +112,3 @@ package_fcitx-mozc() {
   install -m 644 "$srcdir/fcitx-mozc-icons/mozc-properties.png" "${pkgdir}/usr/share/fcitx/mozc/icon/mozc-properties.png"
   install -m 644 "$srcdir/fcitx-mozc-icons/mozc-tool.png" "${pkgdir}/usr/share/fcitx/mozc/icon/mozc-tool.png"
 }
-sha1sums=('d6ae2cf93eeecad93565f4bb9b51a32ce94ac9d6'
-          '00d7d3fa1233ef75b0f919b9e4c10c9692d7743b'
-          'cdb8f3535cdac0c25d24c103107889b9fb4b9e18'
-          '62c10dcdac4b69cc8c6bb19f73db40c264cb2726'
-          '7eb4a53c862a2705623b1bf1fe4bcb93f797cabd'
-          '883f4fc489a9ed1c07d2d2ec37ca72509f04ea5d')
