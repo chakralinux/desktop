@@ -1,7 +1,7 @@
 # maintainer: almack
 
 pkgname=calibre
-pkgver=0.9.44
+pkgver=1.0.0
 pkgrel=1
 pkgdesc="Ebook management application"
 arch=('x86_64')
@@ -11,18 +11,21 @@ depends=('python2' 'python2-imaging' 'libusb' 'pyqt4-python2' 'python-mechanize'
          'imagemagick' 'dbus-python' 'python-lxml' 'python2-beautifulsoup' 'python2-dateutil'
          'python-cssutils' 'desktop-file-utils' 'python2-dns' 'libmtp'
          'podofo' 'xdg-utils' 'cherrypy' 'python2-pdf' 'unrar' 'chmlib' 'poppler'
-         'poppler-qt' 'icu' 'libwmf' 'libffi' 'python2-six' 'python2-netifaces' 'python2-cssselect')
+         'poppler-qt' 'icu' 'libwmf' 'libffi' 'python2-six' 'python2-netifaces' 'python2-cssselect'
+         'python2-apsw')
 makedepends=('python2-pycountry' 'qt-private-headers')
 #optdepends=('ipython: to use calibre-debug')
 screenshot=('https://lh5.googleusercontent.com/_lG58t3XWd3c/TcNwiXkAx_I/AAAAAAAAAEc/M34I4uY9UUY/s800/gui.jpeg')
-install=calibre.install
-source=("http://sourceforge.net/projects/calibre/files/${pkgver}/calibre-${pkgver}.tar.xz"
-        'desktop_integration.patch')
-md5sums=('5598d6717ce568a32ea2a4a1c173016b'
-         '8353d1878c5a498b3e49eddef473605f')
+install=${pkgname}.install
+source=("http://sourceforge.net/projects/${pkgname}/files/${pkgver}/${pkgname}-${pkgver}.tar.xz"
+        'desktop_integration.patch'
+        'calibre-mount-helper')
+sha256sums=('c23493eb2041f16ad8a664b52fecb5e5fa05f690dbf2b796445346436c32e363'
+            '6f236dcf44f3c5d1f227302a2a0b51dd82043cf8f3eb9efb1150b7acac9b945b'
+            '1cdbd23edfea0b08f7bd089e3302ca9601737aac18537406f0408b449aea32d1')
 
-build() {
-  cd "${srcdir}/${pkgname}"
+prepare() {
+  cd "${pkgname}"
 
   rm -rf src/cherrypy
   rm -rf resources/${pkgname}-portable.*
@@ -32,14 +35,17 @@ build() {
   
   sed -i -e 's:\(#!/usr/bin/env[ ]\+python$\|#!/usr/bin/python$\):\12:g' \
     $(find . -regex ".*.py\|.*.recipe")
+}
 
-
+build() {
+  cd "${pkgname}"
+  
   LANG='en_US.UTF-8' python2 setup.py build
   #LANG='en_US.UTF-8' python2 setup.py translations
 }
 
 package() {
-  cd ${pkgname}
+  cd "${pkgname}"
 
   patch -p1 -i "${srcdir}/desktop_integration.patch"
 
@@ -53,13 +59,18 @@ package() {
   # Fix the environment module location
   sed -i -e "s|(prefix=.*)|(prefix='$pkgdir/usr')|g" setup/install.py
 
-  mkdir -p ${pkgdir}/usr/lib/python2.7/site-packages
-  python2 setup.py install --root=${pkgdir}/ --prefix=/usr \
-    --staging-bindir=${pkgdir}/usr/bin \
-    --staging-libdir=${pkgdir}/usr/lib \
-    --staging-sharedir=${pkgdir}/usr/share
+  install -d "${pkgdir}/usr/lib/python2.7/site-packages"
+  install -d "${pkgdir}/usr/share/zsh/site-functions"
+  python2 setup.py install --root="${pkgdir}" --prefix=/usr \
+    --staging-bindir="${pkgdir}/usr/bin" \
+    --staging-libdir="${pkgdir}/usr/lib" \
+    --staging-sharedir="${pkgdir}/usr/share"
 
-  find ${pkgdir} -type d -empty -delete
+  find "${pkgdir}" -type d -empty -delete
+  
+  # See http://lwn.net/SubscriberLink/465311/7c299471a5399167/
+  rm -rf "${pkgdir}/usr/bin/calibre-mount-helper"
+  install -m 755 "${srcdir}/calibre-mount-helper" "${pkgdir}/usr/bin"
   
   python2 -m compileall "${pkgdir}/usr/lib/calibre/"
   python2 -O -m compileall "${pkgdir}/usr/lib/calibre/"
