@@ -1,0 +1,22 @@
+# Maintainer: Michael Haesel <michael.haesel@gmail.com>
+
+pkgname=python2-apsw
+pkgver=3.7.15.2_r1
+pkgrel=1
+pkgdesc="Python wrapper for SQLite"
+arch=('i686' 'x86_64')
+url="http://code.google.com/p/apsw/"
+license=('MIT')
+depends=('python2' 'sqlite3')
+source=("http://apsw.googlecode.com/files/apsw-${pkgver//_/-}.zip"
+        'LICENSE')
+sha256sums=('2c0e66506aa8f0101252a3768c0592735f6b87876098774db6acfdbe32394855'
+            '511345641f72270dc3e1867f37cbb6ac16b140a1ad4ab0bccbf46029ba007404')
+
+package() {
+  cd apsw-${pkgver//_/-}
+  
+  python2 setup.py install --root="${pkgdir}/"
+
+  install -D -m644 "${srcdir}/LICENSE" "${pkgdir}/usr/share/licenses/${pkgname}/LICENSE"
+}
