@@ -1,8 +1,10 @@
-# $Id: PKGBUILD 168343 2012-10-09 04:08:52Z tdziedzic $
-# Maintainer: Thomas Dziedzic <gostrc@gmail.com>
-# Maintainer: Vesa Kaihlavirta <vesa@archlinux.org>
-# Special note for devs looking to upgrade this package:
-#   ghc places a unique hash for each library when it is built.
+# Apps Packages for Chakra, part of www.chakra-project.org
+# Maintainer: H W Tovetjärn (totte) <totte@tott.es>
+# Contributors: Thomas Dziedzic <gostrc@gmail.com>
+#               Vesa Kaihlavirta <vesa@archlinux.org>
+
+# Note:
+#   GHC places a unique hash for each library when it is built.
 #   Libraries depend on versions specified by those hashes.
 #   This implies that all libraries need to be rebuilt when ghc is rebuilt.
 
@@ -18,7 +20,8 @@ depends=('perl' 'gmp>=5.0' 'gcc') # 'libffi')
 makedepends=('ghc' 'perl' 'libxslt' 'docbook-xsl')
 checkdepends=('python2')
 install='ghc.install'
-# keep this otherwise a lot of tests will show as unexpected failures... need to investigate why using -jn for n > 1 does this...
+# Keep this, otherwise a lot of tests will show as unexpected failures.
+# Investigate why using -jn for n > 1 does this.
 #options=('!makeflags')
 # missing rtl?
 provides=('haskell-array=0.4.0.1'
@@ -75,18 +78,19 @@ md5sums=('e9d892d2970550ec5e70130b3621f6b6'
          'c367ef26300648ee9b8aca3dee5c9669')
 
 build() {
-  cd ghc-${pkgver}
+    cd ghc-${pkgver}
 
-  cp ${srcdir}/build.mk mk/build.mk
+    cp ${srcdir}/build.mk mk/build.mk
 
-  ./configure \
-    --prefix=/usr
+    ./configure \
+        --prefix=/usr
 
-  make
+    make
 }
 
 check() {
-  # keep this otherwise a lot of tests will show as unexpected failures... need to investigate why using -jn for n > 1 does this...
+    # Keep this, otherwise a lot of tests will show as unexpected failures.
+    # Investigate why using -jn for n > 1 does this.
   unset MAKEFLAGS
 
   cd ghc-${pkgver}

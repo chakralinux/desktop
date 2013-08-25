@@ -1,0 +1,41 @@
+# Apps Packages for Chakra, part of www.chakra-project.org
+# Maintainer: H W Tovetjärn (totte) <totte@tott.es>
+
+pkgname=kdeplasma-applets-xmonad-log-plasmoid
+pkgver=20130825
+pkgrel=1
+pkgdesc="Applet that prints messages sent from XMonad's DBus-based logHook"
+arch=('x86_64')
+url="https://github.com/igoralmeida/xmonad-log-plasmoid"
+license=('GPL3')
+depends=('xmonad' 'pyqt4-python2' 'kdebindings-pykde4')
+makedepends=('git')
+
+_gitroot="git://github.com/igoralmeida/xmonad-log-plasmoid.git"
+_gitname="xmonad-log-plasmoid"
+
+build() {
+    cd $srcdir
+    msg "Connecting to Git server..."
+
+    if [ -d $_gitname ] ; then
+    cd $_gitname && git pull origin
+    msg "The local files are updated."
+    else
+        git clone $_gitroot $_gitname --depth=1
+    fi
+ 
+    msg "Git checkout done or server timeout"
+    msg "Starting make..."
+ 
+    rm -rf $srcdir/$_gitname-build
+    cp -R $srcdir/$_gitname $srcdir/$_gitname-build
+    cd $srcdir/$_gitname-build
+ 
+    make
+}
+ 
+package() {
+    cd $srcdir/$_gitname-build
+    make DESTDIR=$pkgdir install
+}
