@@ -14,18 +14,17 @@ makedepends=()
 depends=('ghc')
 options=('strip')
 source=(http://hackage.haskell.org/packages/archive/${_hkgname}/${pkgver}/${_hkgname}-${pkgver}.tar.gz)
+install=${pkgname}.install
 sha256sums=('526c9d4d06b7b379cb1aaffeffbb30bef810e771f29617ef6d0d99df711f4313')
-install='${pkgname}.install'
 
 build() {
     cd ${srcdir}/${_hkgname}-${pkgver}
-    
-    runhaskell Setup configure -O -p --enable-split-objs --enable-shared \
+    runhaskell Setup configure -O ${PKGBUILD_HASKELL_ENABLE_PROFILING:+-p } --enable-split-objs --enable-shared \
         --prefix=/usr --docdir=/usr/share/doc/${pkgname} \
         --libsubdir=\$compiler/site-local/\$pkgid
     runhaskell Setup build
     runhaskell Setup haddock
-    runhaskell Setup register --gen-script
+    runhaskell Setup register   --gen-script
     runhaskell Setup unregister --gen-script
     sed -i -r -e "s|ghc-pkg.*unregister[^ ]* |&'--force' |" unregister.sh
 }
