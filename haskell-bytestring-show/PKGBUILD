@@ -1,24 +1,20 @@
 # Apps Packages for Chakra, part of www.chakra-project.org
 # Maintainer: H W Tovetjärn (totte) <totte@tott.es>
-
-#
-# Apps Packages for Chakra, part of chakra-project.org
-#
-# Maintainer: Adrian Chaves Fernandez (Gallaecio) <adriyetichaves@gmail.com>
+# Contributor: Adrian Chaves Fernandez (Gallaecio) <adriyetichaves@gmail.com>
 
 _hkgname=bytestring-show
 pkgname=haskell-bytestring-show
 pkgver=0.3.5.4
 pkgrel=1
-pkgdesc="Efficient conversion of values into readable byte strings."
-url="http://hackage.haskell.org/package/bytestring-show"
-license=("custom:BSD3")
+pkgdesc='Efficient conversion of values into readable byte strings'
+url='http://hackage.haskell.org/package/bytestring-show'
+license=('custom:BSD3')
 arch=('x86_64')
 makedepends=()
-depends=("ghc")
-source=("http://hackage.haskell.org/packages/archive/${_hkgname}/${pkgver}/${_hkgname}-${pkgver}.tar.gz")
+depends=('ghc')
+source=('http://hackage.haskell.org/packages/archive/${_hkgname}/${pkgver}/${_hkgname}-${pkgver}.tar.gz')
 sha256sums=('2eeca94d240e5ea4f2676a3d1f8e291c00979dbad8dacc4d8f1d32a638d2dac3')
-install="${pkgname}.install"
+install='${pkgname}.install'
 
 build() {
     cd ${srcdir}/${_hkgname}-${pkgver}
@@ -41,7 +37,7 @@ package() {
     ln -s /usr/share/doc/${pkgname}/html ${pkgdir}/usr/share/doc/ghc/html/libraries/${_hkgname}
     runhaskell Setup copy --destdir=${pkgdir}
 
-    # Lincese.
+    # License
     install -D -m644 LICENSE ${pkgdir}/usr/share/licenses/${pkgname}/LICENSE
     rm -f ${pkgdir}/usr/share/doc/${pkgname}/LICENSE
 }
