@@ -70,8 +70,8 @@ replaces=('haskell-array<0.4.0.1'
           'haskell-time<1.4.0.1'
           'haskell-unix<2.6.0.1'
           'haskell-cabal<1.16.0')
-source=("http://www.haskell.org/ghc/dist/${pkgver}/ghc-${pkgver}-src.tar.bz2"
-        "http://www.haskell.org/ghc/dist/${pkgver}/ghc-${pkgver}-testsuite.tar.bz2"
+source=('http://www.haskell.org/ghc/dist/${pkgver}/ghc-${pkgver}-src.tar.bz2'
+        'http://www.haskell.org/ghc/dist/${pkgver}/ghc-${pkgver}-testsuite.tar.bz2'
         'build.mk')
 md5sums=('986d1f90ca30d60f7b2820d75c6b8ea7'
          '66aa6177a31cc4b9d7eeb55cb1514918'
@@ -96,8 +96,8 @@ check() {
     cd ghc-${pkgver}
 
     # Python 2 rename
-    sed -e 's/PYTHON = python/&2/' -i testsuite/mk/boilerplate.mk
-    sed -e 's_#!/usr/bin/env python_&2_' -i testsuite/timeout/calibrate testsuite/timeout/timeout.py
+    sed -e "s/PYTHON = python/&2/" -i testsuite/mk/boilerplate.mk
+    sed -e "s_#!/usr/bin/env python_&2_" -i testsuite/timeout/calibrate testsuite/timeout/timeout.py
 
     # upstream known failures on both i686 and x86_64:
     #    ghci.debugger/scripts     break011 [bad stderr] (ghci)
@@ -117,7 +117,7 @@ check() {
     #make THREADS=9 test
 
     # will most likely cause lots of failures
-    # enable this when upstream has 0 test failures from a simple 'make test'
+    # enable this when upstream has 0 test failures from a simple "make test"
     # zero unexpected failures on all tier 1 platforms - http://hackage.haskell.org/trac/ghc/ticket/5757
     #make fulltest
 }
