@@ -15,9 +15,8 @@ source=(http://downloads.sourceforge.net/sourceforge/${pkgname}/${pkgname}-${pkg
 md5sums=('c00f82ecdcc357434731913e5b48630d')
 
 build() {
-  cd ${srcdir}/${pkgname}-${pkgver}
-  ./configure --prefix=/usr
-  make || return 1
-  make prefix=${pkgdir}/usr install
+    cd ${srcdir}/${pkgname}-${pkgver}
+    ./configure --prefix=/usr
+    make || return 1
+    make prefix=${pkgdir}/usr install
 }
-
