@@ -6,27 +6,27 @@ pkgver=20130825
 pkgrel=1
 pkgdesc="Applet that prints messages sent from XMonad's DBus-based logHook"
 arch=('x86_64')
-url="https://github.com/igoralmeida/xmonad-log-plasmoid"
+url='https://github.com/igoralmeida/xmonad-log-plasmoid'
 license=('GPL3')
 depends=('xmonad' 'pyqt4-python2' 'kdebindings-pykde4')
 makedepends=('git')
 
-_gitroot="git://github.com/igoralmeida/xmonad-log-plasmoid.git"
-_gitname="xmonad-log-plasmoid"
+_gitroot='git://github.com/igoralmeida/xmonad-log-plasmoid.git'
+_gitname='xmonad-log-plasmoid'
 
 build() {
     cd $srcdir
-    msg "Connecting to Git server..."
+    msg 'Connecting to Git server...'
 
     if [ -d $_gitname ] ; then
     cd $_gitname && git pull origin
-    msg "The local files are updated."
+    msg 'The local files are updated.'
     else
         git clone $_gitroot $_gitname --depth=1
     fi
  
-    msg "Git checkout done or server timeout"
-    msg "Starting make..."
+    msg 'Git checkout done or server timeout'
+    msg 'Starting make...'
  
     rm -rf $srcdir/$_gitname-build
     cp -R $srcdir/$_gitname $srcdir/$_gitname-build
