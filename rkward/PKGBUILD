@@ -1,17 +1,13 @@
 #
 # Chakra Packages for Chakra, part of chakra-project.org
 #
-# maintainer (i686): Phil Miller <philm[at]chakra-project[dog]org>
-# maintainer (x86_64): Manuel Tortosa <manutortosa[at]chakra-project[dot]org>
+# maintainer: Manuel Tortosa <manutortosa[at]chakra-project[dot]org>
 
 # from AUR package http://aur.archlinux.org/packages.php?ID=4277
 
-# include global config
-source ../_buildscripts/${current_repo}-${_arch}-cfg.conf
-
 pkgname=rkward
 pkgver=0.6.1
-pkgrel=1
+pkgrel=2
 pkgdesc="Easy to use transparent frontend to R for KDE4"
 arch=('x86_64')
 url="http://rkward.sourceforge.net/"
@@ -21,21 +17,17 @@ categories=('programming')
 makedepends=('cmake' 'automoc4' 'icu')
 source=(http://downloads.sourceforge.net/sourceforge/${pkgname}/${pkgname}-${pkgver}.tar.gz)
 md5sums=('aa2c16c4b76f729289bd2853fa4da2a8')
+screenshot="http://sourceforge.net/apps/mediawiki/rkward/nfs/project/r/rk/rkward/0/0a/RKWard_060_450.png"
 	 
 build() {
 	cd "${srcdir}/${pkgname}-${pkgver}"
-	# Dir for rkward R package
-	mkdir -p "${pkgdir}/usr/lib/R/library"
-	cmake -DCMAKE_INSTALL_PREFIX="${pkgdir}/usr" \
-		-DR_LIBDIR="${pkgdir}/usr/lib/R/library"
+	mkdir -p build
+	cd build
+	cmake .. -DCMAKE_INSTALL_PREFIX=`kde4-config --prefix` -DCMAKE_BUILD_TYPE=Release
 	make 
 }
 
 package(){
-	cd "${srcdir}/${pkgname}-${pkgver}"
-	make install
-
-	# Some cleanup
-	rm -vf "${pkgdir}/usr/lib/R/library/R.css"
-	rm -vf "${pkgdir}/usr/share/apps/katepart/syntax/r.xml"
+	cd "${srcdir}/${pkgname}-${pkgver}/build"
+	make DESTDIR="$pkgdir" install
 }
