@@ -17,14 +17,19 @@ source=(http://hackage.haskell.org/packages/archive/${_hkgname}/${pkgver}/${_hkg
 md5sums=('272df719d3dbbc354e969683a9090fda')
 build() {
     cd ${srcdir}/${_hkgname}-${pkgver}
-    runhaskell Setup configure --prefix=/usr --docdir=/usr/share/doc/${pkgname} -O
+    runhaskell Setup configure \
+        -O \
+        --prefix=/usr \
+        --docdir=/usr/share/doc/${pkgname}
     runhaskell Setup build
 }
 package() {
     cd ${srcdir}/${_hkgname}-${pkgver}
-    runhaskell Setup copy --destdir=${pkgdir}
+    runhaskell Setup copy \
+        --destdir=${pkgdir}
 
     # License
-    install -D -m644 LICENSE ${pkgdir}/usr/share/licenses/${pkgname}/LICENSE
+    install -D -m644 LICENSE \
+        ${pkgdir}/usr/share/licenses/${pkgname}/LICENSE
     rm -f ${pkgdir}/usr/share/doc/${pkgname}/LICENSE
 }

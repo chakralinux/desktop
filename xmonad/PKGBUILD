@@ -12,7 +12,12 @@ pkgdesc='A lightweight X11 tiled window manager written in Haskell'
 arch=('i686' 'x86_64')
 url='http://xmonad.org/'
 license=('BSD')
-depends=('ghc=7.4.1' 'gmp' 'haskell-x11' 'sh' 'haskell-mtl=2.0.1.0' 'haskell-utf8-string')
+depends=('ghc'
+         'gmp'
+         'haskell-x11'
+         'haskell-mtl'
+         'haskell-utf8-string'
+         'sh')
 optdepends=('xorg-xmessage: for displaying visual error messages')
 install='xmonad.install'
 source=(http://hackage.haskell.org/packages/archive/$pkgname/$pkgver/$pkgname-$pkgver.tar.gz
@@ -26,7 +31,11 @@ md5sums=('f8381e1ec15137863558a454d4466467'
 
 build() {
     cd $srcdir/$pkgname-$pkgver
-    runhaskell Setup.lhs configure --ghc --enable-shared --enable-split-objs --prefix=/usr \
+    runhaskell Setup.lhs configure \
+        --ghc \
+        --enable-shared \
+        --enable-split-objs \
+        --prefix=/usr \
         --libsubdir=\$compiler/site-local/\$pkgid
     runhaskell Setup build
     runhaskell Setup register --gen-script
@@ -36,16 +45,20 @@ build() {
 
 package() {
     cd $srcdir/$pkgname-$pkgver
-    install -D -m744 register.sh $pkgdir/usr/share/haskell/$pkgname/register.sh
-    install -m744 unregister.sh $pkgdir/usr/share/haskell/$pkgname/unregister.sh
+    install -D -m744 register.sh \
+        $pkgdir/usr/share/haskell/$pkgname/register.sh
+    install -m744 unregister.sh \
+        $pkgdir/usr/share/haskell/$pkgname/unregister.sh
     runhaskell Setup.lhs copy --destdir=$pkgdir
     #runhaskell util/GenerateManpage.hs
-
-    install -D -m644 man/xmonad.1 $pkgdir/usr/share/man/man1/xmonad.1
-
-    install -D -m644 LICENSE $pkgdir/usr/share/licenses/xmonad/LICENSE
-
-    install -D -m644 $srcdir/xmonad.desktop $pkgdir/usr/share/xsessions/xmonad.desktop
-    install -D -m644 $srcdir/xmonad.session $pkgdir/usr/share/gnome-session/sessions/xmonad.session
-    install -D -m644 $srcdir/xmonad.svg $pkgdir/usr/share/pixmaps/xmonad.svg
+    install -D -m644 man/xmonad.1 \
+        $pkgdir/usr/share/man/man1/xmonad.1
+    install -D -m644 LICENSE \
+        $pkgdir/usr/share/licenses/xmonad/LICENSE
+    install -D -m644 $srcdir/xmonad.desktop \
+        $pkgdir/usr/share/xsessions/xmonad.desktop
+    install -D -m644 $srcdir/xmonad.session \
+        $pkgdir/usr/share/gnome-session/sessions/xmonad.session
+    install -D -m644 $srcdir/xmonad.svg \
+        $pkgdir/usr/share/pixmaps/xmonad.svg
 }
