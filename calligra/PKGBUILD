@@ -2,26 +2,26 @@
 
 pkgbase=calligra
 pkgname=('calligra-3rdparty'
+         'calligra-braindump'
+         'calligra-extras'
          'calligra-filters'
+         'calligra-flow'
          'calligra-interfaces'
-         'calligra-libs'
-         'calligra-plugins'
-         'calligra-pics'
-         'calligra-servicetypes'
-         'calligra-templates'
-         'calligra-tools'
+         'calligra-handbook'
          'calligra-karbon'
          'calligra-kexi'
-         'calligra-plan'
-         'calligra-stage'
          'calligra-krita'
+         'calligra-libs'
+         'calligra-pics'
+         'calligra-plan'
+         'calligra-plugins'
+         'calligra-servicetypes'
          'calligra-sheets'
-         'calligra-words'
-         'calligra-handbook'
-         'calligra-braindump'
-         'calligra-flow')
-pkgver=2.6.3
-pkgrel=1
+         'calligra-stage'
+         'calligra-templates'
+         'calligra-words')
+pkgver=2.7.1
+pkgrel=3
 arch=('x86_64')
 url='http://www.calligra-suite.org'
 license=('FDL1.2' 'GPL2' 'LGPL')
@@ -30,9 +30,9 @@ makedepends=('kdepimlibs' 'eigen' 'freetds' 'kdegraphics-okular' 'kdeedu-marble'
              'boost' 'libkdcraw' 'fftw' 'opengtl' 'docbook-xsl' 'create-resources' 'lcms2' 'libmariadbclient'
              'vc' 'opencolorio')
 groups=('calligra')
-source=("http://mirrors.mit.edu/kde/stable/${pkgbase}-${pkgver}/${pkgbase}-${pkgver}.tar.bz2")
+source=("http://mirrors.mit.edu/kde/stable/${pkgbase}-${pkgver}/${pkgbase}-${pkgver}.tar.xz")
 screenshot=("http://upload.wikimedia.org/wikipedia/commons/thumb/3/3e/Calligra_Stage_2.4.png/800px-Calligra_Stage_2.4.png")
-md5sums=('90d6bb619191abbcc94094379d47e225')
+md5sums=('9cf909ddf57ecb16d4370cc1062d0f7f')
 
 
 build() {
@@ -132,14 +132,14 @@ package_calligra-templates() {
   make DESTDIR="${pkgdir}" install
 }
 
-package_calligra-tools() {
-  pkgdesc="Tools for the Calligra office suite"
-  depends=('calligra-sheets' 'calligra-words')
-  conflicts=('koffice-common' 'calligra-tools-git')
-  replaces=('koffice-common' 'calligra-tools-git')
-  install=calligra-tools.install
+package_calligra-extras() {
+  pkgdesc="Tools/Extras for the Calligra office suite"
+  depends=('calligra-libs')
+  conflicts=('koffice-common' 'calligra-tools-git' 'calligra-tools')
+  replaces=('koffice-common' 'calligra-tools-git' 'calligra-tools')
+  install=calligra-extras.install
 
-  cd "${srcdir}"/build/tools
+  cd "${srcdir}"/build/extras
   make DESTDIR="${pkgdir}" install
 }
 

@@ -15,12 +15,12 @@ conflicts=("libhupnp-svn")
 
 
 build() {
-  cd $startdir/src/${pkgname}-${pkgver}/
+  cd ${srcdir}/${pkgname}-${pkgver}/
   qmake PREFIX=/usr
   make
 }
 
 package() {
-  cd  $startdir/src/${pkgname}-${pkgver}
+  cd  ${srcdir}/${pkgname}-${pkgver}
   make INSTALL_ROOT=${pkgdir} install
 }

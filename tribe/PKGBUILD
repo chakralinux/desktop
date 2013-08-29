@@ -64,11 +64,11 @@ build() {
 package() {
         cd "${srcdir}/${pkgname}-${pkgver}"
 	msg "Make successful, installing..."
-	make DESTDIR=$startdir/pkg install 
+	make DESTDIR=${pkgdir} install
         install -Dm755 ${srcdir}/launch-tribe.sh \
         ${pkgdir}/usr/bin/launch-tribe.sh
 	cp -vf ${srcdir}/RELEASE_NOTES_${_rls_notes}.html $pkgdir/usr/share/tribe/config/RELEASE_NOTES.html
 
 	# remove nasty files
-	find $startdir/pkg/ -name ".git" -type d -exec rm -fr {} +
+	find ${pkgdir}/ -name ".git" -type d -exec rm -fr {} +
 }
