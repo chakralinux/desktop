@@ -12,7 +12,7 @@ _default_wp="Elarun"
 pkgname="kde-workspace"
 arch=('x86_64')
 pkgver=${_kdever}
-pkgrel=1
+pkgrel=3
 pkgdesc="KDE Workspace"
 url="http://www.kde.org"
 license=('GPL' 'LGPL' 'FDL')
@@ -70,8 +70,8 @@ sha1sums=(`grep ${pkgname}-$_kdever.tar.xz ../kde-sc.md5 | cut -d" " -f1`
           'e5cdf487940030c2aec83498d324fd4c7af2ea47'
           '53bb8d20edb1ffd34d1977d06c92d9e8635889c3'
           '47af1613c1e4c724049971a4a7db3db11ca395b1'
-          'f6351756c51350805952104576792936f685d1c9'
-          'ba75287e51ffeca91e83a68f57bb3f56efcc3a6c'
+          '660eae40a707d2711d8d7f32a93214865506b795'
+          '6aeecc9e0e221f0515c6bf544f9a3c11cb6961fe'
           '106635aa1aae51d6f0668b1853f6c49a4fe9d3d8'
           '07dd142fba8bd4b0892036529fcf4cecb329396e'
           'b6f8e8692737b11eec1f8022ce74b5b23e247b1b'
@@ -107,6 +107,7 @@ build() {
 		-DCMAKE_INSTALL_PREFIX=${_installprefix} \
 		-DWITH_Xmms=OFF \
 		-DCMAKE_SKIP_RPATH=ON \
+                -DWITH_CkConnector=OFF \
 		-DCMAKE_{SHARED,MODULE,EXE}_LINKER_FLAGS='-Wl,--no-undefined -Wl,--as-needed'
 	make
 
@@ -207,7 +208,4 @@ package() {
 	
 	# Systemd .service file
 	install -D -m644 "${srcdir}"/kdm.service "${pkgdir}"/usr/lib/systemd/system/kdm.service
-	
-	# kde-base-artwork conflict, will be corrected in RC 2
-	rm -rf ${pkgdir}/usr/share/apps/ksplash/Themes/Default/
 }
