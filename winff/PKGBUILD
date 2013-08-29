@@ -1,7 +1,8 @@
 # Maintainer: Daniele Cocca <jmc@chakra-project.org>
 
 pkgname=winff
-pkgver=1.5.1
+_pkgname=WinFF
+pkgver=1.5.2
 pkgrel=1
 pkgdesc="WinFF is a GUI for the command line video converter, FFMPEG. It will convert most any video file that FFmpeg will convert. WinFF does multiple files in multiple formats at one time."
 arch=('x86_64')
@@ -9,30 +10,30 @@ url="http://winff.org/"
 license=('GPL')
 depends=('fpc-qtbindings' 'ffmpeg')
 makedepends=('lazarus' 'fpc')
-source=("http://winff.googlecode.com/files/${pkgname}-${pkgver}-source.tar.gz"
+source=("http://winff.googlecode.com/files/${_pkgname}-${pkgver}-source.tar.gz"
         'winff.desktop')
-md5sums=('7003e30dd448648d1d1261cec0843c61'
+md5sums=('07b940091401193b8705625942b6cc0c'
          'd74b924cd98995ada520f3333c845459')
 screenshot="http://winff.org/images/2013/screenshot-1.5-ubuntu.jpg"
 
 build() {
-  cd $srcdir/$pkgname
+  cd $srcdir
   lazbuild --lazarusdir=/usr/lib/lazarus winff.lpr --ws=qt
 }
 
 package() {
   cd ${srcdir}/
-  install -Dm 755 $srcdir/$pkgname/$pkgname $pkgdir/usr/bin/winff
+  install -Dm 755 $srcdir/$pkgname $pkgdir/usr/bin/winff
   install -dm 755 ${pkgdir}/usr/share/winff/
   find . -name "*.xml" -exec install -Dm 644 {} ${pkgdir}/usr/share/winff/ \; &> /dev/null
   install -Dm 644 $srcdir/winff.desktop $pkgdir/usr/share/applications/winff.desktop
-  install -Dm 644 $srcdir/$pkgname/winff-icons/16x16/winff.png $pkgdir/usr/share/icons/hicolor/16x16/apps/winff.png
-  install -Dm 644 $srcdir/$pkgname/winff-icons/24x24/winff.png $pkgdir/usr/share/icons/hicolor/24x24/apps/winff.png
-  install -Dm 644 $srcdir/$pkgname/winff-icons/32x32/winff.png $pkgdir/usr/share/icons/hicolor/32x32/apps/winff.png
-  install -Dm 644 $srcdir/$pkgname/winff-icons/48x48/winff.png $pkgdir/usr/share/icons/hicolor/48x48/apps/winff.png
+  install -Dm 644 $srcdir/winff-icons/16x16/winff.png $pkgdir/usr/share/icons/hicolor/16x16/apps/winff.png
+  install -Dm 644 $srcdir/winff-icons/24x24/winff.png $pkgdir/usr/share/icons/hicolor/24x24/apps/winff.png
+  install -Dm 644 $srcdir/winff-icons/32x32/winff.png $pkgdir/usr/share/icons/hicolor/32x32/apps/winff.png
+  install -Dm 644 $srcdir/winff-icons/48x48/winff.png $pkgdir/usr/share/icons/hicolor/48x48/apps/winff.png
   install -dm 755 ${pkgdir}/usr/share/winff/languages/
   find . -name "*.po"  -exec install -Dm 644 {} ${pkgdir}/usr/share/winff/languages/ \; &> /dev/null
-  rm ${srcdir}/$pkgname/presets.xml
+  rm ${srcdir}/presets.xml
 }
 
 # vim:set ts=2 sw=2 et:
