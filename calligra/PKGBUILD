@@ -20,8 +20,8 @@ pkgname=('calligra-3rdparty'
          'calligra-stage'
          'calligra-templates'
          'calligra-words')
-pkgver=2.7.1
-pkgrel=3
+pkgver=2.7.2
+pkgrel=4
 arch=('x86_64')
 url='http://www.calligra-suite.org'
 license=('FDL1.2' 'GPL2' 'LGPL')
@@ -29,16 +29,22 @@ makedepends=('kdepimlibs' 'eigen' 'freetds' 'kdegraphics-okular' 'kdeedu-marble'
              'libgsf' 'libwpd' 'libwpg' 'libwps' 'pstoedit' 'glew' 'gsl' 'cmake' 'automoc4' 'libspnav' 'libqtgtl'
              'boost' 'libkdcraw' 'fftw' 'opengtl' 'docbook-xsl' 'create-resources' 'lcms2' 'libmariadbclient'
              'vc' 'opencolorio')
+options=("debug")
 groups=('calligra')
-source=("http://mirrors.mit.edu/kde/stable/${pkgbase}-${pkgver}/${pkgbase}-${pkgver}.tar.xz")
+source=("http://mirrors.mit.edu/kde/stable/${pkgbase}-${pkgver}/${pkgbase}-${pkgver}.tar.xz" "0001-words-crash.patch")
 screenshot=("http://upload.wikimedia.org/wikipedia/commons/thumb/3/3e/Calligra_Stage_2.4.png/800px-Calligra_Stage_2.4.png")
-md5sums=('9cf909ddf57ecb16d4370cc1062d0f7f')
+sha1sums=('d3f1fdc2339da637bb8443ddf25f19e7135c9eeb'
+          '1d98a26ea69d6a923b4e867a40885ce44cc95d28')
 
+prepare() {
+  cd "${srcdir}/${pkgbase}-${pkgver}"
+  patch -p1 < ${srcdir}/0001-words-crash.patch
+}
 
 build() {
   cd "${srcdir}"
 
-  mkdir build
+  mkdir -p build
   cd build
   cmake ../${pkgbase}-${pkgver} \
     -DCMAKE_BUILD_TYPE=RelWithDebInfo \
@@ -298,4 +304,3 @@ package_calligra-flow() {
   cd "${srcdir}"/build/flow
   make DESTDIR="${pkgdir}" install
 }
-
