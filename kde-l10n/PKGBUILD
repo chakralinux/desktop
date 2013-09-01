@@ -3,10 +3,13 @@
 #
 # maintainer: Manuel Tortosa <manutortosa[at]chakra-project[dot]org>
 
+# How to enable a language:
+# check the web page http://l10n.kde.org/stats/gui/trunk-kde4/team/
+# and enable only languages with more then 80% translation of kde-runtime
+
+
 # include global config
 source ../_buildscripts/${current_repo}-${_arch}-cfg.conf
-
-
 
 # original name (used for the source and pkgnames)
 _origname=kde-l10n
@@ -25,14 +28,14 @@ pkgname=('kde-l10n-ar'
 #	 'kde-l10n-csb'
 	 'kde-l10n-da'
 	 'kde-l10n-de'
-#	 'kde-l10n-el'
-#	 'kde-l10n-en_gb'
+	 'kde-l10n-el'
+	 'kde-l10n-en_gb'
 #	 'kde-l10n-eo'
-#	 'kde-l10n-es'
-#	 'kde-l10n-et'
-#	 'kde-l10n-eu'
-#	 'kde-l10n-fa'
-#	 'kde-l10n-fi'
+	 'kde-l10n-es'
+	 'kde-l10n-et'
+	 'kde-l10n-eu'
+	 'kde-l10n-fa'
+	 'kde-l10n-fi'
 	 'kde-l10n-fr'
 #	 'kde-l10n-fy'
 	 'kde-l10n-ga'
@@ -67,13 +70,13 @@ pkgname=('kde-l10n-ar'
 	 'kde-l10n-pt_BR'
 	 'kde-l10n-ro'
 	 'kde-l10n-ru'
-	 'kde-l10n-si'
+#	 'kde-l10n-si'
 	 'kde-l10n-sk'
 	 'kde-l10n-sl'
 	 'kde-l10n-sr'
 	 'kde-l10n-sv'
 	 'kde-l10n-tg'
-	 'kde-l10n-th'
+#	 'kde-l10n-th'
 	 'kde-l10n-tr'
 	 'kde-l10n-ug'
 	 'kde-l10n-uk'
@@ -81,7 +84,6 @@ pkgname=('kde-l10n-ar'
 	 'kde-l10n-wa'
 	 'kde-l10n-zh_CN'
 	 'kde-l10n-zh_TW')
-
 
 arch=('any')
 pkgver=${_kdever}
@@ -95,71 +97,71 @@ depends=("kdelibs>=${_kdever}" 'automoc4' 'docbook-xsl')
 options=('docs' 'log')
          
          
-source=(${_mirror}/kde-l10n-ar-${pkgver}.tar.xz
-	${_mirror}/kde-l10n-bg-${pkgver}.tar.xz
-	${_mirror}/kde-l10n-bs-${pkgver}.tar.xz
-	${_mirror}/kde-l10n-ca-${pkgver}.tar.xz
-	${_mirror}/kde-l10n-ca@valencia-${pkgver}.tar.xz
-	${_mirror}/kde-l10n-cs-${pkgver}.tar.xz
-#	${_mirror}/kde-l10n-csb-${pkgver}.tar.xz
-	${_mirror}/kde-l10n-da-${pkgver}.tar.xz
-	${_mirror}/kde-l10n-de-${pkgver}.tar.xz
-#	${_mirror}/kde-l10n-el-${pkgver}.tar.xz
-#	${_mirror}/kde-l10n-en_GB-${pkgver}.tar.xz
-#	${_mirror}/kde-l10n-eo-${pkgver}.tar.xz
-#	${_mirror}/kde-l10n-es-${pkgver}.tar.xz
-#	${_mirror}/kde-l10n-et-${pkgver}.tar.xz
-#	${_mirror}/kde-l10n-eu-${pkgver}.tar.xz
-#	${_mirror}/kde-l10n-fa-${pkgver}.tar.xz
-#	${_mirror}/kde-l10n-fi-${pkgver}.tar.xz
-	${_mirror}/kde-l10n-fr-${pkgver}.tar.xz
-#	${_mirror}/kde-l10n-fy-${pkgver}.tar.xz
-	${_mirror}/kde-l10n-ga-${pkgver}.tar.xz
-	${_mirror}/kde-l10n-gl-${pkgver}.tar.xz
-#	${_mirror}/kde-l10n-gu-${pkgver}.tar.xz
-	${_mirror}/kde-l10n-he-${pkgver}.tar.xz
-	${_mirror}/kde-l10n-hi-${pkgver}.tar.xz
-	${_mirror}/kde-l10n-hr-${pkgver}.tar.xz
-	${_mirror}/kde-l10n-hu-${pkgver}.tar.xz
-	${_mirror}/kde-l10n-ia-${pkgver}.tar.xz
-#	${_mirror}/kde-l10n-id-${pkgver}.tar.xz
-	${_mirror}/kde-l10n-is-${pkgver}.tar.xz
-	${_mirror}/kde-l10n-it-${pkgver}.tar.xz
-	${_mirror}/kde-l10n-ja-${pkgver}.tar.xz
-	${_mirror}/kde-l10n-kk-${pkgver}.tar.xz
-	${_mirror}/kde-l10n-km-${pkgver}.tar.xz
-#	${_mirror}/kde-l10n-kn-${pkgver}.tar.xz
-	${_mirror}/kde-l10n-ko-${pkgver}.tar.xz
-	${_mirror}/kde-l10n-lt-${pkgver}.tar.xz
-	${_mirror}/kde-l10n-lv-${pkgver}.tar.xz
-#	${_mirror}/kde-l10n-mai-${pkgver}.tar.xz
-#	${_mirror}/kde-l10n-mk-${pkgver}.tar.xz
-#	${_mirror}/kde-l10n-ml-${pkgver}.tar.xz
-	${_mirror}/kde-l10n-mr-${pkgver}.tar.xz
-	${_mirror}/kde-l10n-nb-${pkgver}.tar.xz
-	${_mirror}/kde-l10n-nds-${pkgver}.tar.xz
-	${_mirror}/kde-l10n-nl-${pkgver}.tar.xz
-	${_mirror}/kde-l10n-nn-${pkgver}.tar.xz
-	${_mirror}/kde-l10n-pa-${pkgver}.tar.xz
-	${_mirror}/kde-l10n-pl-${pkgver}.tar.xz
-	${_mirror}/kde-l10n-pt-${pkgver}.tar.xz
-	${_mirror}/kde-l10n-pt_BR-${pkgver}.tar.xz
-	${_mirror}/kde-l10n-ro-${pkgver}.tar.xz
-	${_mirror}/kde-l10n-ru-${pkgver}.tar.xz
-	${_mirror}/kde-l10n-si-${pkgver}.tar.xz
-	${_mirror}/kde-l10n-sk-${pkgver}.tar.xz
-	${_mirror}/kde-l10n-sl-${pkgver}.tar.xz
-	${_mirror}/kde-l10n-sr-${pkgver}.tar.xz
-	${_mirror}/kde-l10n-sv-${pkgver}.tar.xz
-	${_mirror}/kde-l10n-tg-${pkgver}.tar.xz
-	${_mirror}/kde-l10n-th-${pkgver}.tar.xz
-	${_mirror}/kde-l10n-tr-${pkgver}.tar.xz
-	${_mirror}/kde-l10n-ug-${pkgver}.tar.xz
-	${_mirror}/kde-l10n-uk-${pkgver}.tar.xz
-	${_mirror}/kde-l10n-vi-${pkgver}.tar.xz
-	${_mirror}/kde-l10n-wa-${pkgver}.tar.xz
-	${_mirror}/kde-l10n-zh_CN-${pkgver}.tar.xz
-	${_mirror}/kde-l10n-zh_TW-${pkgver}.tar.xz)
+source=(${_mirror}/${pkgbase}/kde-l10n-ar-${pkgver}.tar.xz
+	${_mirror}/${pkgbase}/kde-l10n-bg-${pkgver}.tar.xz
+	${_mirror}/${pkgbase}/kde-l10n-bs-${pkgver}.tar.xz
+	${_mirror}/${pkgbase}/kde-l10n-ca-${pkgver}.tar.xz
+	${_mirror}/${pkgbase}/kde-l10n-ca@valencia-${pkgver}.tar.xz
+	${_mirror}/${pkgbase}/kde-l10n-cs-${pkgver}.tar.xz
+#	${_mirror}/${pkgbase}/kde-l10n-csb-${pkgver}.tar.xz
+	${_mirror}/${pkgbase}/kde-l10n-da-${pkgver}.tar.xz
+	${_mirror}/${pkgbase}/kde-l10n-de-${pkgver}.tar.xz
+	${_mirror}/${pkgbase}/kde-l10n-el-${pkgver}.tar.xz
+	${_mirror}/${pkgbase}/kde-l10n-en_GB-${pkgver}.tar.xz
+#	${_mirror}/${pkgbase}/kde-l10n-eo-${pkgver}.tar.xz
+	${_mirror}/${pkgbase}/kde-l10n-es-${pkgver}.tar.xz
+	${_mirror}/${pkgbase}/kde-l10n-et-${pkgver}.tar.xz
+	${_mirror}/${pkgbase}/kde-l10n-eu-${pkgver}.tar.xz
+	${_mirror}/${pkgbase}/kde-l10n-fa-${pkgver}.tar.xz
+	${_mirror}/${pkgbase}/kde-l10n-fi-${pkgver}.tar.xz
+	${_mirror}/${pkgbase}/kde-l10n-fr-${pkgver}.tar.xz
+#	${_mirror}/${pkgbase}/kde-l10n-fy-${pkgver}.tar.xz
+	${_mirror}/${pkgbase}/kde-l10n-ga-${pkgver}.tar.xz
+	${_mirror}/${pkgbase}/kde-l10n-gl-${pkgver}.tar.xz
+#	${_mirror}/${pkgbase}/kde-l10n-gu-${pkgver}.tar.xz
+	${_mirror}/${pkgbase}/kde-l10n-he-${pkgver}.tar.xz
+	${_mirror}/${pkgbase}/kde-l10n-hi-${pkgver}.tar.xz
+	${_mirror}/${pkgbase}/kde-l10n-hr-${pkgver}.tar.xz
+	${_mirror}/${pkgbase}/kde-l10n-hu-${pkgver}.tar.xz
+	${_mirror}/${pkgbase}/kde-l10n-ia-${pkgver}.tar.xz
+#	${_mirror}/${pkgbase}/kde-l10n-id-${pkgver}.tar.xz
+	${_mirror}/${pkgbase}/kde-l10n-is-${pkgver}.tar.xz
+	${_mirror}/${pkgbase}/kde-l10n-it-${pkgver}.tar.xz
+	${_mirror}/${pkgbase}/kde-l10n-ja-${pkgver}.tar.xz
+	${_mirror}/${pkgbase}/kde-l10n-kk-${pkgver}.tar.xz
+	${_mirror}/${pkgbase}/kde-l10n-km-${pkgver}.tar.xz
+#	${_mirror}/${pkgbase}/kde-l10n-kn-${pkgver}.tar.xz
+	${_mirror}/${pkgbase}/kde-l10n-ko-${pkgver}.tar.xz
+	${_mirror}/${pkgbase}/kde-l10n-lt-${pkgver}.tar.xz
+	${_mirror}/${pkgbase}/kde-l10n-lv-${pkgver}.tar.xz
+#	${_mirror}/${pkgbase}/kde-l10n-mai-${pkgver}.tar.xz
+#	${_mirror}/${pkgbase}/kde-l10n-mk-${pkgver}.tar.xz
+#	${_mirror}/${pkgbase}/kde-l10n-ml-${pkgver}.tar.xz
+	${_mirror}/${pkgbase}/kde-l10n-mr-${pkgver}.tar.xz
+	${_mirror}/${pkgbase}/kde-l10n-nb-${pkgver}.tar.xz
+	${_mirror}/${pkgbase}/kde-l10n-nds-${pkgver}.tar.xz
+	${_mirror}/${pkgbase}/kde-l10n-nl-${pkgver}.tar.xz
+	${_mirror}/${pkgbase}/kde-l10n-nn-${pkgver}.tar.xz
+	${_mirror}/${pkgbase}/kde-l10n-pa-${pkgver}.tar.xz
+	${_mirror}/${pkgbase}/kde-l10n-pl-${pkgver}.tar.xz
+	${_mirror}/${pkgbase}/kde-l10n-pt-${pkgver}.tar.xz
+	${_mirror}/${pkgbase}/kde-l10n-pt_BR-${pkgver}.tar.xz
+	${_mirror}/${pkgbase}/kde-l10n-ro-${pkgver}.tar.xz
+	${_mirror}/${pkgbase}/kde-l10n-ru-${pkgver}.tar.xz
+#	${_mirror}/${pkgbase}/kde-l10n-si-${pkgver}.tar.xz
+	${_mirror}/${pkgbase}/kde-l10n-sk-${pkgver}.tar.xz
+	${_mirror}/${pkgbase}/kde-l10n-sl-${pkgver}.tar.xz
+	${_mirror}/${pkgbase}/kde-l10n-sr-${pkgver}.tar.xz
+	${_mirror}/${pkgbase}/kde-l10n-sv-${pkgver}.tar.xz
+	${_mirror}/${pkgbase}/kde-l10n-tg-${pkgver}.tar.xz
+#	${_mirror}/${pkgbase}/kde-l10n-th-${pkgver}.tar.xz
+	${_mirror}/${pkgbase}/kde-l10n-tr-${pkgver}.tar.xz
+	${_mirror}/${pkgbase}/kde-l10n-ug-${pkgver}.tar.xz
+	${_mirror}/${pkgbase}/kde-l10n-uk-${pkgver}.tar.xz
+	${_mirror}/${pkgbase}/kde-l10n-vi-${pkgver}.tar.xz
+	${_mirror}/${pkgbase}/kde-l10n-wa-${pkgver}.tar.xz
+	${_mirror}/${pkgbase}/kde-l10n-zh_CN-${pkgver}.tar.xz
+	${_mirror}/${pkgbase}/kde-l10n-zh_TW-${pkgver}.tar.xz)
 
 sha1sums=(`grep kde-l10n-ar-${pkgver}.tar.xz ../kde-sc.md5 | cut -d" " -f1`
 	`grep kde-l10n-bg-${pkgver}.tar.xz ../kde-sc.md5 | cut -d" " -f1`
@@ -287,13 +289,13 @@ packs=('ar'
        'pt_BR'
        'ro'
        'ru'
-       'si'
+#       'si'
        'sk'
        'sl'
        'sr'
        'sv'
        'tg'
-       'th'
+#       'th'
        'tr'
        'ug'
        'uk'
@@ -782,8 +784,6 @@ package_kde-l10n-it()
 	groups=("kde-uninstall" "kde-l10n")
 	categories=('localization')
 
-	# FIXME
-	touch ${srcdir}/kde-l10n-it-${pkgver}/docs/kdeaccessibility/kmag/kmag.1
 	pushd ${srcdir}/kde-l10n-it-${pkgver}
 		make DESTDIR=${pkgdir} install || return 1
 	popd
