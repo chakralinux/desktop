@@ -1,50 +1,58 @@
 # Apps Packages for Chakra, part of www.chakra-project.org
 # Maintainer: H W Tovetjärn (totte) <totte@tott.es>
-# Contributor: Stephen McIntosh <stephenmac7[at]gmail[dot]com>
+# Contributors: Stephen McIntosh <stephenmac7[at]gmail[dot]com>
+#               Thomas Dziedzic <gostrc@gmail.com>
+#               Vesa Kaihlavirta <vesa@archlinux.org>
+#               Arch Haskell Team <arch-haskell@haskell.org>
 
 _hkgname=terminfo
 pkgname=haskell-terminfo
-pkgver=0.3.2.3
-pkgrel=3
-pkgdesc='Haskell bindings to the terminfo library'
-url='http://hackage.haskell.org/package/${_hkgname}'
+pkgver=0.3.2.5
+pkgrel=1
+pkgdesc="Haskell bindings to the terminfo library"
+url="http://hackage.haskell.org/package/terminfo"
 license=('custom:BSD3')
-arch=('i686' 'x86_64')
+arch=('x86_64' 'i686')
 makedepends=()
-depends=('ghc' 'haskell-extensible-exceptions')
+depends=('ghc=7.6.3-1' 'haskell-base>=4.0' 'haskell-base<5')
 options=('strip')
-source=(http://hackage.haskell.org/packages/archive/${_hkgname}/${pkgver}/${_hkgname}-${pkgver}.tar.gz)
-install=${pkgname}.install
-md5sums=('706f546c629ac100a402c9c2629c25fa')
+source=("http://hackage.haskell.org/packages/archive/terminfo/0.3.2.5/terminfo-0.3.2.5.tar.gz")
+install="haskell-terminfo.install"
+sha512sums=('68a882e6abb6a2e3ee70398761b899d635bfd96118b47437efeb6bc7b1a1d81a3c3e1a7f696d86057d2f8a8dece270ae9005d7905a6da97f12bcf8113ac70203')
+
 build() {
-    cd ${srcdir}/${_hkgname}-${pkgver}
+    cd "${srcdir}/terminfo-0.3.2.5"
     runhaskell Setup configure \
         -O \
         ${PKGBUILD_HASKELL_ENABLE_PROFILING:+-p } \
         --enable-split-objs \
         --enable-shared \
-        --prefix=/usr \
-        --docdir=/usr/share/doc/${pkgname} \
-        --libsubdir=\$compiler/site-local/\$pkgid
+        --prefix="/usr" \
+        --docdir="/usr/share/doc/haskell-terminfo" \
+        --libsubdir='$compiler/site-local/$pkgid'
     runhaskell Setup build
     runhaskell Setup haddock
     runhaskell Setup register   --gen-script
     runhaskell Setup unregister --gen-script
     sed -i -r -e "s|ghc-pkg.*unregister[^ ]* |&'--force' |" unregister.sh
 }
+
 package() {
-    cd ${srcdir}/${_hkgname}-${pkgver}
+    cd "${srcdir}/terminfo-0.3.2.5"
     install -D -m744 register.sh \
-        ${pkgdir}/usr/share/haskell/${pkgname}/register.sh
+        "${pkgdir}/usr/share/haskell/haskell-terminfo/register.sh"
     install -m744 unregister.sh \
-        ${pkgdir}/usr/share/haskell/${pkgname}/unregister.sh
-    install -d -m755 ${pkgdir}/usr/share/doc/ghc/html/libraries
-    ln -s /usr/share/doc/${pkgname}/html \
-        ${pkgdir}/usr/share/doc/ghc/html/libraries/${_hkgname}
-    runhaskell Setup copy --destdir=${pkgdir}
+        "${pkgdir}/usr/share/haskell/haskell-terminfo/unregister.sh"
+    install -d -m755 "${pkgdir}/usr/share/doc/ghc/html/libraries"
+
+    # Documentation
+    ln -s "/usr/share/doc/haskell-terminfo/html" \
+        "${pkgdir}/usr/share/doc/ghc/html/libraries/terminfo"
 
     # License
     install -D -m644 LICENSE \
-        ${pkgdir}/usr/share/licenses/${pkgname}/LICENSE
-    rm -f ${pkgdir}/usr/share/doc/${pkgname}/LICENSE
+        "${pkgdir}/usr/share/licenses/haskell-terminfo/LICENSE"
+    rm -f "${pkgdir}/usr/share/doc/haskell-terminfo/LICENSE"
+
+    runhaskell Setup copy --destdir="${pkgdir}"
 }

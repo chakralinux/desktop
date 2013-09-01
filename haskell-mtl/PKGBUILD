@@ -1,50 +1,58 @@
 # Apps Packages for Chakra, part of www.chakra-project.org
 # Maintainer: H W Tovetjärn (totte) <totte@tott.es>
-# Contributor: Stephen McIntosh <stephenmac7[at]gmail[dot]com>
+# Contributors: Stephen McIntosh <stephenmac7[at]gmail[dot]com>
+#               Thomas Dziedzic <gostrc@gmail.com>
+#               Vesa Kaihlavirta <vesa@archlinux.org>
+#               Arch Haskell Team <arch-haskell@haskell.org>
 
 _hkgname=mtl
 pkgname=haskell-mtl
 pkgver=2.1.2
-pkgrel=2
-pkgdesc='Monad classes, using functional dependencies'
-url='http://hackage.haskell.org/package/${_hkgname}'
+pkgrel=3
+pkgdesc="Monad classes, using functional dependencies"
+url="http://hackage.haskell.org/package/mtl"
 license=('custom:BSD3')
-arch=('i686' 'x86_64')
+arch=('x86_64' 'i686')
 makedepends=()
-depends=('ghc' 'haskell-transformers')
+depends=('ghc=7.6.3-1' 'haskell-base<6' 'haskell-transformers>=0.3.0')
 options=('strip')
-source=(http://hackage.haskell.org/packages/archive/${_hkgname}/${pkgver}/${_hkgname}-${pkgver}.tar.gz)
-install=${pkgname}.install
-md5sums=('943c110524d96126bfa0e61f7df1ebcd')
+source=("http://hackage.haskell.org/packages/archive/mtl/2.1.2/mtl-2.1.2.tar.gz")
+install="haskell-mtl.install"
+sha512sums=('ef8043adeb2746c770bebd4683c95c399bdc047c278b619d89230f342d13c33f0a9275c6be399e6da329f385ff209ff537e002b82d5075684202e8703fc5e29d')
+
 build() {
-    cd ${srcdir}/${_hkgname}-${pkgver}
+    cd "${srcdir}/mtl-2.1.2"
     runhaskell Setup configure \
         -O \
         ${PKGBUILD_HASKELL_ENABLE_PROFILING:+-p } \
         --enable-split-objs \
         --enable-shared \
-        --prefix=/usr \
-        --docdir=/usr/share/doc/${pkgname} \
-        --libsubdir=\$compiler/site-local/\$pkgid
+        --prefix="/usr" \
+        --docdir="/usr/share/doc/haskell-mtl" \
+        --libsubdir='$compiler/site-local/$pkgid'
     runhaskell Setup build
     runhaskell Setup haddock
     runhaskell Setup register   --gen-script
     runhaskell Setup unregister --gen-script
     sed -i -r -e "s|ghc-pkg.*unregister[^ ]* |&'--force' |" unregister.sh
 }
+
 package() {
-    cd ${srcdir}/${_hkgname}-${pkgver}
+    cd "${srcdir}/mtl-2.1.2"
     install -D -m744 register.sh \
-        ${pkgdir}/usr/share/haskell/${pkgname}/register.sh
+        "${pkgdir}/usr/share/haskell/haskell-mtl/register.sh"
     install -m744 unregister.sh \
-        ${pkgdir}/usr/share/haskell/${pkgname}/unregister.sh
-    install -d -m755 ${pkgdir}/usr/share/doc/ghc/html/libraries
-    ln -s /usr/share/doc/${pkgname}/html \
-        ${pkgdir}/usr/share/doc/ghc/html/libraries/${_hkgname}
-    runhaskell Setup copy --destdir=${pkgdir}
+        "${pkgdir}/usr/share/haskell/haskell-mtl/unregister.sh"
+    install -d -m755 "${pkgdir}/usr/share/doc/ghc/html/libraries"
+
+    # Documentation
+    ln -s "/usr/share/doc/haskell-mtl/html" \
+        "${pkgdir}/usr/share/doc/ghc/html/libraries/mtl"
 
     # License
     install -D -m644 LICENSE \
-        ${pkgdir}/usr/share/licenses/${pkgname}/LICENSE
-    rm -f ${pkgdir}/usr/share/doc/${pkgname}/LICENSE
+        "${pkgdir}/usr/share/licenses/haskell-mtl/LICENSE"
+    rm -f "${pkgdir}/usr/share/doc/haskell-mtl/LICENSE"
+
+    runhaskell Setup copy --destdir="${pkgdir}"
 }

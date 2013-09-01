@@ -1,50 +1,58 @@
 # Apps Packages for Chakra, part of www.chakra-project.org
 # Maintainer: H W Tovetjärn (totte) <totte@tott.es>
-# Contributor: Stephen McIntosh <stephenmac7[at]gmail[dot]com>
+# Contributors: Stephen McIntosh <stephenmac7[at]gmail[dot]com>
+#               Thomas Dziedzic <gostrc@gmail.com>
+#               Vesa Kaihlavirta <vesa@archlinux.org>
+#               Arch Haskell Team <arch-haskell@haskell.org>
 
 _hkgname=utf8-string
 pkgname=haskell-utf8-string
 pkgver=0.3.7
-pkgrel=5
-pkgdesc='Support for reading and writing UTF8 Strings'
-url='http://hackage.haskell.org/package/${_hkgname}'
+pkgrel=6
+pkgdesc="Support for reading and writing UTF8 strings"
+url="http://hackage.haskell.org/package/utf8-string"
 license=('custom:BSD3')
-arch=('i686' 'x86_64')
+arch=('x86_64' 'i686')
 makedepends=()
-depends=('ghc')
+depends=('ghc=7.6.3-1' 'haskell-base>=3' 'haskell-bytestring>=0.9')
 options=('strip')
-source=(http://hackage.haskell.org/packages/archive/${_hkgname}/${pkgver}/${_hkgname}-${pkgver}.tar.gz)
-install=${pkgname}.install
-md5sums=('50e5c395713e716e0e4a56da73f87ccd')
+source=("http://hackage.haskell.org/packages/archive/utf8-string/0.3.7/utf8-string-0.3.7.tar.gz")
+install="haskell-utf8-string.install"
+sha512sums=('44e64e5ff42a2e4defe97d78468d070791ad82f0405173046666de398b14e55b8758a34ae624086dfa597d46a67eb12886375e04d58255e18e6d1b446c7efd79')
+
 build() {
-    cd ${srcdir}/${_hkgname}-${pkgver}
+    cd "${srcdir}/utf8-string-0.3.7"
     runhaskell Setup configure \
         -O \
         ${PKGBUILD_HASKELL_ENABLE_PROFILING:+-p } \
         --enable-split-objs \
         --enable-shared \
-        --prefix=/usr \
-        --docdir=/usr/share/doc/${pkgname} \
-        --libsubdir=\$compiler/site-local/\$pkgid
+        --prefix="/usr" \
+        --docdir="/usr/share/doc/haskell-utf8-string" \
+        --libsubdir='$compiler/site-local/$pkgid'
     runhaskell Setup build
     runhaskell Setup haddock
     runhaskell Setup register   --gen-script
     runhaskell Setup unregister --gen-script
     sed -i -r -e "s|ghc-pkg.*unregister[^ ]* |&'--force' |" unregister.sh
 }
+
 package() {
-    cd ${srcdir}/${_hkgname}-${pkgver}
+    cd "${srcdir}/utf8-string-0.3.7"
     install -D -m744 register.sh \
-        ${pkgdir}/usr/share/haskell/${pkgname}/register.sh
+        "${pkgdir}/usr/share/haskell/haskell-utf8-string/register.sh"
     install -m744 unregister.sh \
-        ${pkgdir}/usr/share/haskell/${pkgname}/unregister.sh
-    install -d -m755 ${pkgdir}/usr/share/doc/ghc/html/libraries
-    ln -s /usr/share/doc/${pkgname}/html \
-        ${pkgdir}/usr/share/doc/ghc/html/libraries/${_hkgname}
-    runhaskell Setup copy --destdir=${pkgdir}
+        "${pkgdir}/usr/share/haskell/haskell-utf8-string/unregister.sh"
+    install -d -m755 "${pkgdir}/usr/share/doc/ghc/html/libraries"
+
+    # Documentation
+    ln -s "/usr/share/doc/haskell-utf8-string/html" \
+        "${pkgdir}/usr/share/doc/ghc/html/libraries/utf8-string"
 
     # License
     install -D -m644 LICENSE \
-        ${pkgdir}/usr/share/licenses/${pkgname}/LICENSE
-    rm -f ${pkgdir}/usr/share/doc/${pkgname}/LICENSE
+        "${pkgdir}/usr/share/licenses/haskell-utf8-string/LICENSE"
+    rm -f "${pkgdir}/usr/share/doc/haskell-utf8-string/LICENSE"
+
+    runhaskell Setup copy --destdir="${pkgdir}"
 }

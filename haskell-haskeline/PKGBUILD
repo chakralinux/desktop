@@ -1,55 +1,58 @@
 # Apps Packages for Chakra, part of www.chakra-project.org
 # Maintainer: H W Tovetjärn (totte) <totte@tott.es>
-# Contributor: Stephen McIntosh <stephenmac7[at]gmail[dot]com>
+# Contributors: Stephen McIntosh <stephenmac7[at]gmail[dot]com>
+#               Thomas Dziedzic <gostrc@gmail.com>
+#               Vesa Kaihlavirta <vesa@archlinux.org>
+#               Arch Haskell Team <arch-haskell@haskell.org>
 
 _hkgname=haskeline
 pkgname=haskell-haskeline
 pkgver=0.7.0.3
-pkgrel=2
-pkgdesc='A command-line interface for user input, written in Haskell.'
-url='http://hackage.haskell.org/package/${_hkgname}'
+pkgrel=3
+pkgdesc="A command-line interface for user input, written in Haskell"
+url="http://hackage.haskell.org/package/haskeline"
 license=('custom:BSD3')
-arch=('i686' 'x86_64')
+arch=('x86_64' 'i686')
 makedepends=()
-depends=('ghc'
-         'haskell-extensible-exceptions'
-         'haskell-mtl'
-         'haskell-terminfo'
-         'haskell-unix'
-         'haskell-utf8-string')
+depends=('ghc=7.6.3-1' 'haskell-base>=4.1' 'haskell-base<4.7' 'haskell-bytestring>=0.9' 'haskell-bytestring<0.11' 'haskell-containers>=0.1' 'haskell-containers<0.6' 'haskell-directory>=1.0' 'haskell-directory<1.3' 'haskell-filepath>=1.1' 'haskell-filepath<1.4' 'haskell-transformers>=0.2' 'haskell-transformers<0.4' 'haskell-unix>=2.0' 'haskell-unix<2.7')
 options=('strip')
-source=(http://hackage.haskell.org/packages/archive/${_hkgname}/${pkgver}/${_hkgname}-${pkgver}.tar.gz)
-install=${pkgname}.install
-md5sums=('3a78043dc80b5510202e71e77c0a9923')
+source=("http://hackage.haskell.org/packages/archive/haskeline/0.7.0.3/haskeline-0.7.0.3.tar.gz")
+install="haskell-haskeline.install"
+sha512sums=('85c4749d2f8daa05731dd28ff645dfbd7e9c694b8e199af0312a2c8f1dc86fa2911e50a0906dd58ee019545b0bb63108aabdab36ba5ae9417e365717ad824a6e')
+
 build() {
-    cd ${srcdir}/${_hkgname}-${pkgver}
+    cd "${srcdir}/haskeline-0.7.0.3"
     runhaskell Setup configure \
         -O \
         ${PKGBUILD_HASKELL_ENABLE_PROFILING:+-p } \
         --enable-split-objs \
         --enable-shared \
-        --prefix=/usr \
-        --docdir=/usr/share/doc/${pkgname} \
-        --libsubdir=\$compiler/site-local/\$pkgid
+        --prefix="/usr" \
+        --docdir="/usr/share/doc/haskell-haskeline" \
+        --libsubdir='$compiler/site-local/$pkgid'
     runhaskell Setup build
     runhaskell Setup haddock
     runhaskell Setup register   --gen-script
     runhaskell Setup unregister --gen-script
     sed -i -r -e "s|ghc-pkg.*unregister[^ ]* |&'--force' |" unregister.sh
 }
+
 package() {
-    cd ${srcdir}/${_hkgname}-${pkgver}
+    cd "${srcdir}/haskeline-0.7.0.3"
     install -D -m744 register.sh \
-        ${pkgdir}/usr/share/haskell/${pkgname}/register.sh
+        "${pkgdir}/usr/share/haskell/haskell-haskeline/register.sh"
     install -m744 unregister.sh \
-        ${pkgdir}/usr/share/haskell/${pkgname}/unregister.sh
-    install -d -m755 ${pkgdir}/usr/share/doc/ghc/html/libraries
-    ln -s /usr/share/doc/${pkgname}/html \
-        ${pkgdir}/usr/share/doc/ghc/html/libraries/${_hkgname}
-    runhaskell Setup copy --destdir=${pkgdir}
+        "${pkgdir}/usr/share/haskell/haskell-haskeline/unregister.sh"
+    install -d -m755 "${pkgdir}/usr/share/doc/ghc/html/libraries"
+
+    # Documentation
+    ln -s "/usr/share/doc/haskell-haskeline/html" \
+        "${pkgdir}/usr/share/doc/ghc/html/libraries/haskeline"
 
     # License
     install -D -m644 LICENSE \
-        ${pkgdir}/usr/share/licenses/${pkgname}/LICENSE
-    rm -f ${pkgdir}/usr/share/doc/${pkgname}/LICENSE
+        "${pkgdir}/usr/share/licenses/haskell-haskeline/LICENSE"
+    rm -f "${pkgdir}/usr/share/doc/haskell-haskeline/LICENSE"
+
+    runhaskell Setup copy --destdir="${pkgdir}"
 }

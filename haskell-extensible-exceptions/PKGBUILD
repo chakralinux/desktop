@@ -1,50 +1,58 @@
 # Apps Packages for Chakra, part of www.chakra-project.org
 # Maintainer: H W Tovetjärn (totte) <totte@tott.es>
-# Contributor: Stephen McIntosh <stephenmac7@gmail.com>
+# Contributors: Stephen McIntosh <stephenmac7[at]gmail[dot]com>
+#               Thomas Dziedzic <gostrc@gmail.com>
+#               Vesa Kaihlavirta <vesa@archlinux.org>
+#               Arch Haskell Team <arch-haskell@haskell.org>
 
 _hkgname=extensible-exceptions
 pkgname=haskell-extensible-exceptions
 pkgver=0.1.1.4
-pkgrel=2
-pkgdesc='Extensible exceptions'
-url='http://hackage.haskell.org/package/${_hkgname}'
+pkgrel=3
+pkgdesc="Extensible exceptions"
+url="http://hackage.haskell.org/package/extensible-exceptions"
 license=('custom:BSD3')
-arch=('i686' 'x86_64')
+arch=('x86_64' 'i686')
 makedepends=()
-depends=('ghc')
+depends=('ghc=7.6.3-1' 'haskell-base>=4.0')
 options=('strip')
-source=(http://hackage.haskell.org/packages/archive/${_hkgname}/${pkgver}/${_hkgname}-${pkgver}.tar.gz)
-install=${pkgname}.install
-md5sums=('fa1cadd15c1c7aa362618d41c6e17d8b')
+source=("http://hackage.haskell.org/packages/archive/extensible-exceptions/0.1.1.4/extensible-exceptions-0.1.1.4.tar.gz")
+install="haskell-extensible-exceptions.install"
+sha512sums=('b63bb6b8bc846571db37c23801b711748a10a27a6a6b25035e992013f6705ad9b3ad86e61a7de839c9ac61c26ad3640b9642a8747d6b76a03336834c39e93dca')
+
 build() {
-    cd ${srcdir}/${_hkgname}-${pkgver}
+    cd "${srcdir}/extensible-exceptions-0.1.1.4"
     runhaskell Setup configure \
         -O \
         ${PKGBUILD_HASKELL_ENABLE_PROFILING:+-p } \
         --enable-split-objs \
         --enable-shared \
-        --prefix=/usr \
-        --docdir=/usr/share/doc/${pkgname} \
-        --libsubdir=\$compiler/site-local/\$pkgid
+        --prefix="/usr" \
+        --docdir="/usr/share/doc/haskell-extensible-exceptions" \
+        --libsubdir='$compiler/site-local/$pkgid'
     runhaskell Setup build
     runhaskell Setup haddock
     runhaskell Setup register   --gen-script
     runhaskell Setup unregister --gen-script
     sed -i -r -e "s|ghc-pkg.*unregister[^ ]* |&'--force' |" unregister.sh
 }
+
 package() {
-    cd ${srcdir}/${_hkgname}-${pkgver}
+    cd "${srcdir}/extensible-exceptions-0.1.1.4"
     install -D -m744 register.sh \
-        ${pkgdir}/usr/share/haskell/${pkgname}/register.sh
+        "${pkgdir}/usr/share/haskell/haskell-extensible-exceptions/register.sh"
     install -m744 unregister.sh \
-        ${pkgdir}/usr/share/haskell/${pkgname}/unregister.sh
-    install -d -m755 ${pkgdir}/usr/share/doc/ghc/html/libraries
-    ln -s /usr/share/doc/${pkgname}/html \
-        ${pkgdir}/usr/share/doc/ghc/html/libraries/${_hkgname}
-    runhaskell Setup copy --destdir=${pkgdir}
+        "${pkgdir}/usr/share/haskell/haskell-extensible-exceptions/unregister.sh"
+    install -d -m755 "${pkgdir}/usr/share/doc/ghc/html/libraries"
+
+    # Documentation
+    ln -s "/usr/share/doc/haskell-extensible-exceptions/html" \
+        "${pkgdir}/usr/share/doc/ghc/html/libraries/extensible-exceptions"
 
     # License
     install -D -m644 LICENSE \
-        ${pkgdir}/usr/share/licenses/${pkgname}/LICENSE
-    rm -f ${pkgdir}/usr/share/doc/${pkgname}/LICENSE
+        "${pkgdir}/usr/share/licenses/haskell-extensible-exceptions/LICENSE"
+    rm -f "${pkgdir}/usr/share/doc/haskell-extensible-exceptions/LICENSE"
+
+    runhaskell Setup copy --destdir="${pkgdir}"
 }

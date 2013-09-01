@@ -1,50 +1,58 @@
 # Apps Packages for Chakra, part of www.chakra-project.org
 # Maintainer: H W Tovetjärn (totte) <totte@tott.es>
-# Contributor: Stephen McIntosh <stephenmac7[at]gmail[dot]com>
+# Contributors: Stephen McIntosh <stephenmac7[at]gmail[dot]com>
+#               Thomas Dziedzic <gostrc@gmail.com>
+#               Vesa Kaihlavirta <vesa@archlinux.org>
+#               Arch Haskell Team <arch-haskell@haskell.org>
 
 _hkgname=mmap
 pkgname=haskell-mmap
 pkgver=0.5.8
-pkgrel=2
-pkgdesc='Memory mapped files for POSIX and Windows'
-url='http://hackage.haskell.org/package/${_hkgname}'
+pkgrel=3
+pkgdesc="Memory mapped files for POSIX and Windows"
+url="http://hackage.haskell.org/package/mmap"
 license=('custom:BSD3')
-arch=('i686' 'x86_64')
+arch=('x86_64' 'i686')
 makedepends=()
-depends=('ghc' 'haskell-bytestring')
+depends=('ghc=7.6.3-1' 'haskell-base<5' 'haskell-bytestring')
 options=('strip')
-source=(http://hackage.haskell.org/packages/archive/${_hkgname}/${pkgver}/${_hkgname}-${pkgver}.tar.gz)
-install=${pkgname}.install
-md5sums=('737e0f0a82dcfbc71e69c1b7b52de07e')
+source=("http://hackage.haskell.org/packages/archive/mmap/0.5.8/mmap-0.5.8.tar.gz")
+install="haskell-mmap.install"
+sha512sums=('6c8b526ec9fedba195ce021f86eeb3fa35f7c95b9299d17503ad7d7e91b9485b3d9980e0ccbdc3876ec465ec8aa07cf9d0521c62e2c8a652a36df11b9badffb5')
+
 build() {
-    cd ${srcdir}/${_hkgname}-${pkgver}
+    cd "${srcdir}/mmap-0.5.8"
     runhaskell Setup configure \
         -O \
         ${PKGBUILD_HASKELL_ENABLE_PROFILING:+-p } \
         --enable-split-objs \
         --enable-shared \
-        --prefix=/usr \
-        --docdir=/usr/share/doc/${pkgname} \
-        --libsubdir=\$compiler/site-local/\$pkgid
+        --prefix="/usr" \
+        --docdir="/usr/share/doc/haskell-mmap" \
+        --libsubdir='$compiler/site-local/$pkgid'
     runhaskell Setup build
     runhaskell Setup haddock
     runhaskell Setup register   --gen-script
     runhaskell Setup unregister --gen-script
     sed -i -r -e "s|ghc-pkg.*unregister[^ ]* |&'--force' |" unregister.sh
 }
+
 package() {
-    cd ${srcdir}/${_hkgname}-${pkgver}
+    cd "${srcdir}/mmap-0.5.8"
     install -D -m744 register.sh \
-        ${pkgdir}/usr/share/haskell/${pkgname}/register.sh
+        "${pkgdir}/usr/share/haskell/haskell-mmap/register.sh"
     install -m744 unregister.sh \
-        ${pkgdir}/usr/share/haskell/${pkgname}/unregister.sh
-    install -d -m755 ${pkgdir}/usr/share/doc/ghc/html/libraries
-    ln -s /usr/share/doc/${pkgname}/html \
-        ${pkgdir}/usr/share/doc/ghc/html/libraries/${_hkgname}
-    runhaskell Setup copy --destdir=${pkgdir}
+        "${pkgdir}/usr/share/haskell/haskell-mmap/unregister.sh"
+    install -d -m755 "${pkgdir}/usr/share/doc/ghc/html/libraries"
+
+    # Documentation
+    ln -s "/usr/share/doc/haskell-mmap/html" \
+        "${pkgdir}/usr/share/doc/ghc/html/libraries/mmap"
 
     # License
     install -D -m644 LICENSE \
-        ${pkgdir}/usr/share/licenses/${pkgname}/LICENSE
-    rm -f ${pkgdir}/usr/share/doc/${pkgname}/LICENSE
+        "${pkgdir}/usr/share/licenses/haskell-mmap/LICENSE"
+    rm -f "${pkgdir}/usr/share/doc/haskell-mmap/LICENSE"
+
+    runhaskell Setup copy --destdir="${pkgdir}"
 }

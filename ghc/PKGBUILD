@@ -6,29 +6,34 @@
 # Note:
 #   GHC places a unique hash for each library when it is built.
 #   Libraries depend on versions specified by those hashes.
-#   This implies that all libraries need to be rebuilt when ghc is rebuilt.
+#   This implies that all libraries need to be rebuilt when GHC is rebuilt.
 
 pkgname=ghc
 pkgver=7.6.3
 pkgrel=1
-pkgdesc='The Glasgow Haskell Compiler'
+pkgdesc="The Glasgow Haskell Compiler"
 arch=('i686' 'x86_64')
-url='http://www.haskell.org/ghc/'
+url="http://www.haskell.org/ghc/"
 license=('custom')
-# libffi might be needed in the future: http://hackage.haskell.org/trac/ghc/ticket/4496
-depends=('perl' 'gmp>=5.0' 'gcc') # 'libffi')
-makedepends=('ghc' 'perl' 'libxslt' 'docbook-xsl')
+# Depends on base-devel (gcc, docbook-xsl, ... )
+# libffi might be needed in the future: http://hackage.haskell.org/trac/ghc/ticket/4496,
+# http://ghc.haskell.org/trac/ghc/changeset/3005e90936c47c1f71672bf6c84fff20cb14014b/ghc,
+# http://ghc.haskell.org/trac/ghc/changeset/7ee5bedc5e5039c9bb3ba06b50a4395e579a4b0e/ghc
+depends=('perl' 'gmp>=5.0')
+# Make depends on libedit > 2.6.9
+makedepends=('ghc>=7.0.1' 'perl>=5.6' 'libxslt' 'sed>=4.2.1' 'libedit')
 checkdepends=('python2')
-install='ghc.install'
+install="ghc.install"
 # Keep this, otherwise a lot of tests will show as unexpected failures
 # (investigate why using -jn for n > 1 does this).
 #options=('!makeflags')
-# missing rtl?
+# Missing haskell-rtl?
 provides=('haskell-array=0.4.0.1'
           'haskell-base=4.6.0.1'
-          'haskell-binary=0.5.1.1'
           'haskell-bin-package-db=0.0.0.0'
+          'haskell-binary=0.5.1.1'
           'haskell-bytestring=0.10.0.2'
+          'haskell-cabal=1.16.0'
           'haskell-containers=0.5.0.0'
           'haskell-deepseq=1.3.0.1'
           'haskell-directory=1.2.0.1'
@@ -45,13 +50,13 @@ provides=('haskell-array=0.4.0.1'
           'haskell-process=1.1.0.2'
           'haskell-template-haskell=2.8.0.0'
           'haskell-time=1.4.0.1'
-          'haskell-unix=2.6.0.1'
-          'haskell-cabal=1.16.0')
+          'haskell-unix=2.6.0.1')
 replaces=('haskell-array<0.4.0.1'
           'haskell-base<4.6.0.1'
-          'haskell-binary<0.5.1.1'
           'haskell-bin-package-db<0.0.0.0'
+          'haskell-binary<0.5.1.1'
           'haskell-bytestring<0.10.0.2'
+          'haskell-cabal<1.16.0'
           'haskell-containers<0.5.0.0'
           'haskell-deepseq<1.3.0.1'
           'haskell-directory<1.2.0.1'
@@ -68,23 +73,19 @@ replaces=('haskell-array<0.4.0.1'
           'haskell-process<1.1.0.2'
           'haskell-template-haskell<2.8.0.0'
           'haskell-time<1.4.0.1'
-          'haskell-unix<2.6.0.1'
-          'haskell-cabal<1.16.0')
-source=('http://www.haskell.org/ghc/dist/${pkgver}/ghc-${pkgver}-src.tar.bz2'
-        'http://www.haskell.org/ghc/dist/${pkgver}/ghc-${pkgver}-testsuite.tar.bz2'
-        'build.mk')
+          'haskell-unix<2.6.0.1')
+source=("http://www.haskell.org/ghc/dist/${pkgver}/ghc-${pkgver}-src.tar.bz2"
+        "http://www.haskell.org/ghc/dist/${pkgver}/ghc-${pkgver}-testsuite.tar.bz2"
+        "build.mk")
 md5sums=('986d1f90ca30d60f7b2820d75c6b8ea7'
          '66aa6177a31cc4b9d7eeb55cb1514918'
          'c367ef26300648ee9b8aca3dee5c9669')
 
 build() {
-    cd ghc-${pkgver}
-
-    cp ${srcdir}/build.mk mk/build.mk
-
+    cd "ghc-${pkgver}"
+    cp "${srcdir}/build.mk" "mk/build.mk"
     ./configure \
         --prefix=/usr
-
     make
 }
 
@@ -93,41 +94,46 @@ check() {
     # (investigate why using -jn for n > 1 does this).
     unset MAKEFLAGS
 
-    cd ghc-${pkgver}
+    cd "ghc-${pkgver}"
 
     # Python 2 rename
-    sed -e "s/PYTHON = python/&2/" -i testsuite/mk/boilerplate.mk
-    sed -e "s_#!/usr/bin/env python_&2_" -i testsuite/timeout/calibrate testsuite/timeout/timeout.py
+    sed -e "s/PYTHON = python/&2/" -i \
+        testsuite/mk/boilerplate.mk
+    sed -e "s_#!/usr/bin/env python_&2_" -i \
+        testsuite/timeout/calibrate testsuite/timeout/timeout.py
 
-    # upstream known failures on both i686 and x86_64:
-    #    ghci.debugger/scripts     break011 [bad stderr] (ghci)
-    #    perf/compiler             parsing001 [stat not good enough] (normal)
-    #    simplCore/should_compile  spec-inline [stderr mismatch] (optasm)
-    # upstream known failures on i686 only:
-    #    numrun012 test fails on i686 works on x86_64 - http://hackage.haskell.org/trac/ghc/ticket/5856
+    # Upstream known failures on both i686 and x86_64:
+    #   ghci.debugger/scripts   break011 [bad stderr] (ghci)
+    #   perf/compiler           parsing001 [stat not good enough] (normal)
+    #   simplCore/should_compile  spec-inline [stderr mismatch] (optasm)
+    # Upstream known failures on i686 only:
+    #   numrun012 test fails on i686 works on x86_64 
+    #       (http://hackage.haskell.org/trac/ghc/ticket/5856)
     make test
 
-    # enabling threads to speed up
-    # causes more failures than make test, need to investigate
-    # upstream known failures on both i686 and x86_64:
-    #    perf/compiler             parsing001 [stat not good enough] (normal)
-    #    simplCore/should_compile  spec-inline [stderr mismatch] (optasm)
-    # upstream known failures on i686 only:
-    #    numrun012 test fails on i686 works on x86_64 - http://hackage.haskell.org/trac/ghc/ticket/5856
+    # Enabling threads to speed up causes more failures than make test,
+    # need to investigate.
+    # Upstream known failures on both i686 and x86_64:
+    #   perf/compiler           parsing001 [stat not good enough] (normal)
+    #   simplCore/should_compile  spec-inline [stderr mismatch] (optasm)
+    # Upstream known failures on i686 only:
+    #   numrun012 test fails on i686 works on x86_64
+    #       (http://hackage.haskell.org/trac/ghc/ticket/5856)
     #make THREADS=9 test
 
-    # will most likely cause lots of failures
-    # enable this when upstream has 0 test failures from a simple "make test"
-    # zero unexpected failures on all tier 1 platforms - http://hackage.haskell.org/trac/ghc/ticket/5757
+    # fulltest will most likely cause lots of failures. Enable this when
+    # upstream has 0 test failures from a simple "make test".
+    #   Zero unexpected failures on all tier 1 platforms
+    #       (http://hackage.haskell.org/trac/ghc/ticket/5757)
     #make fulltest
 }
 
 package() {
-    cd ghc-${pkgver}
+    cd "ghc-${pkgver}"
+    make DESTDIR="${pkgdir}/" install
 
-    make DESTDIR=${pkgdir} install
-
-    install -d ${pkgdir}/usr/share/licenses/ghc
+    # License
+    install -d "${pkgdir}/usr/share/licenses/ghc"
     install -m644 LICENSE \
-        ${pkgdir}/usr/share/licenses/ghc
+        "${pkgdir}/usr/share/licenses/ghc"
 }

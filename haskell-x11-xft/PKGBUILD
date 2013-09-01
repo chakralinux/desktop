@@ -1,50 +1,58 @@
 # Apps Packages for Chakra, part of www.chakra-project.org
 # Maintainer: H W Tovetjärn (totte) <totte@tott.es>
-# Contributor: Stephen McIntosh <stephenmac7@gmail.com>
+# Contributors: Stephen McIntosh <stephenmac7[at]gmail[dot]com>
+#               Thomas Dziedzic <gostrc@gmail.com>
+#               Vesa Kaihlavirta <vesa@archlinux.org>
+#               Arch Haskell Team <arch-haskell@haskell.org>
 
 _hkgname=X11-xft
 pkgname=haskell-x11-xft
 pkgver=0.3.1
-pkgrel=2
-pkgdesc='Bindings to the Xft, X Free Type interface library, and some Xrender parts'
-url='http://hackage.haskell.org/package/${_hkgname}'
+pkgrel=3
+pkgdesc="Bindings to the Xft, X Free Type interface library, and some Xrender parts"
+url="http://hackage.haskell.org/package/X11-xft"
 license=('LGPL')
-arch=('i686' 'x86_64')
+arch=('x86_64' 'i686')
 makedepends=()
-depends=('ghc' 'haskell-x11' 'haskell-utf8-string>=0.1' 'libxft')
+depends=('ghc=7.6.3-1' 'haskell-x11>=1.2.1' 'haskell-base<5' 'haskell-utf8-string>=0.1' 'libxft')
 options=('strip')
-source=(http://hackage.haskell.org/packages/archive/${_hkgname}/${pkgver}/${_hkgname}-${pkgver}.tar.gz)
-install=${pkgname}.install
-md5sums=('ad885150a59f63de328e73abe5ffc79e')
+source=("http://hackage.haskell.org/packages/archive/X11-xft/0.3.1/X11-xft-0.3.1.tar.gz")
+install="haskell-x11-xft.install"
+sha512sums=('8f40db25453227ef9ce53b05a0c6af869e3a2efdb1d9b9ad683baf52601f320c85b09f0e514bb6ffeb17516d9b75c6772aa49613bb96272d56f06788118b7cfe')
+
 build() {
-    cd ${srcdir}/${_hkgname}-${pkgver}
+    cd "${srcdir}/X11-xft-0.3.1"
     runhaskell Setup configure \
         -O \
         ${PKGBUILD_HASKELL_ENABLE_PROFILING:+-p } \
         --enable-split-objs \
         --enable-shared \
-        --prefix=/usr \
-        --docdir=/usr/share/doc/${pkgname} \
-        --libsubdir=\$compiler/site-local/\$pkgid
+        --prefix="/usr" \
+        --docdir="/usr/share/doc/haskell-x11-xft" \
+        --libsubdir='$compiler/site-local/$pkgid'
     runhaskell Setup build
     runhaskell Setup haddock
     runhaskell Setup register   --gen-script
     runhaskell Setup unregister --gen-script
     sed -i -r -e "s|ghc-pkg.*unregister[^ ]* |&'--force' |" unregister.sh
 }
+
 package() {
-    cd ${srcdir}/${_hkgname}-${pkgver}
+    cd "${srcdir}/X11-xft-0.3.1"
     install -D -m744 register.sh \
-        ${pkgdir}/usr/share/haskell/${pkgname}/register.sh
+        "${pkgdir}/usr/share/haskell/haskell-x11-xft/register.sh"
     install -m744 unregister.sh \
-        ${pkgdir}/usr/share/haskell/${pkgname}/unregister.sh
-    install -d -m755 ${pkgdir}/usr/share/doc/ghc/html/libraries
-    ln -s /usr/share/doc/${pkgname}/html \
-        ${pkgdir}/usr/share/doc/ghc/html/libraries/${_hkgname}
-    runhaskell Setup copy --destdir=${pkgdir}
+        "${pkgdir}/usr/share/haskell/haskell-x11-xft/unregister.sh"
+    install -d -m755 "${pkgdir}/usr/share/doc/ghc/html/libraries"
+
+    # Documentation
+    ln -s "/usr/share/doc/haskell-x11-xft/html" \
+        "${pkgdir}/usr/share/doc/ghc/html/libraries/X11-xft"
 
     # License
     install -D -m644 LICENSE \
-        ${pkgdir}/usr/share/licenses/${pkgname}/LICENSE
-    rm -f ${pkgdir}/usr/share/doc/${pkgname}/LICENSE
+        "${pkgdir}/usr/share/licenses/haskell-x11-xft/LICENSE"
+    rm -f "${pkgdir}/usr/share/doc/haskell-x11-xft/LICENSE"
+
+    runhaskell Setup copy --destdir="${pkgdir}"
 }
