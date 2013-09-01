@@ -1,7 +1,7 @@
 # maintainer: almack
 
 pkgname=calibre
-pkgver=1.0.0
+pkgver=1.1.0
 pkgrel=1
 pkgdesc="Ebook management application"
 arch=('x86_64')
@@ -20,7 +20,7 @@ install=${pkgname}.install
 source=("http://sourceforge.net/projects/${pkgname}/files/${pkgver}/${pkgname}-${pkgver}.tar.xz"
         'desktop_integration.patch'
         'calibre-mount-helper')
-sha256sums=('c23493eb2041f16ad8a664b52fecb5e5fa05f690dbf2b796445346436c32e363'
+sha256sums=('c699e5a0aaed7484a2b3549944ee4753b4985bd675f6b27b58453a61a58166bd'
             '6f236dcf44f3c5d1f227302a2a0b51dd82043cf8f3eb9efb1150b7acac9b945b'
             '1cdbd23edfea0b08f7bd089e3302ca9601737aac18537406f0408b449aea32d1')
 
@@ -31,7 +31,8 @@ prepare() {
   rm -rf resources/${pkgname}-portable.*
   mkdir -p src/calibre/plugins
   
-  sed -i -e "s/ldflags = shlex.split(ldflags)/ldflags = shlex.split(ldflags) + ['-fPIC']/" setup/extensions.py
+  sed -i -e "s/ldflags = shlex.split(ldflags)/ldflags = shlex.split(ldflags) + ['-fPIC']/" \
+    setup/extensions.py
   
   sed -i -e 's:\(#!/usr/bin/env[ ]\+python$\|#!/usr/bin/python$\):\12:g' \
     $(find . -regex ".*.py\|.*.recipe")
