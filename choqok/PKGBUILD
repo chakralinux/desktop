@@ -1,8 +1,8 @@
 # maintainer abveritas[at]chakra-project[dot]org>
 
 pkgname=choqok
-pkgver=1.3
-pkgrel=4
+pkgver=1.4
+pkgrel=1
 pkgdesc="A Twitter/identi.ca/laconica client for KDE"
 url="http://choqok.gnufolks.org/"
 license=('GPL')
@@ -12,14 +12,20 @@ makedepends=('cmake' 'automoc4' 'docbook-xsl')
 optdepends=('kde-baseapps-konqueror: proxy support')
 categories=('communication')
 screenshot=('http://choqok.gnufolks.org/uploads/choqok.png')
-install="${pkgname}.install"
-source=("http://sourceforge.net/projects/choqok/files/Choqok/${pkgname}-${pkgver}.tar.bz2")
-md5sums=('87eea4f2c23467fb021e3e6b794eb37d')
+install=${pkgname}.install
+changelog=${pkgname}.changelog
+source=("http://sourceforge.net/projects/choqok/files/Choqok/${pkgname}-${pkgver}.tar.xz")
+sha256sums=('70c8cfab14a691514d12c9c75d7009f27e3c26364ccbd81a541fea0ab76a92b7')
+
+prepare() {
+  cd ${pkgname}-${pkgver}
+  # Install current changelog.
+  install -Dm644 changelog "${startdir}/${pkgname}.changelog"
+}
 
 build() {
-  cd ${srcdir}
-  mkdir build
-  cd build
+  mkdir -p build && cd build
+  
   cmake ../${pkgname}-${pkgver} \
     -DCMAKE_BUILD_TYPE=Release \
     -DCMAKE_INSTALL_PREFIX=/usr 
@@ -27,9 +33,7 @@ build() {
 }
 
 package() {
-  cd ${srcdir}/build
-  make DESTDIR=${pkgdir} install
+  cd build
   
-  # Conflicts with KDEPimLibs on KDE 4.10
-  rm -v ${pkgdir}/usr/share/apps/cmake/modules/FindQtOAuth.cmake
+  make DESTDIR="${pkgdir}" install
 }
