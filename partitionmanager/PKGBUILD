@@ -7,8 +7,8 @@
 source ../_buildscripts/${current_repo}-${_arch}-cfg.conf
 
 pkgname=partitionmanager
-pkgver=1330962
-pkgrel=1
+pkgver=1358151
+pkgrel=2
 arch=('x86_64')
 url="https://sourceforge.net/projects/partitionman"
 license=('GPL2')
@@ -40,7 +40,7 @@ build() {
   #patch -p1 < ${srcdir}/tribe.patch
   #patch -p1 < ${srcdir}/disable-gpt.patch
 
-  cmake -DCMAKE_INSTALL_PREFIX=/usr -DCMAKE_BUILD_TYPE=RelWithDebInfo
+  cmake -DCMAKE_INSTALL_PREFIX=/usr -DCMAKE_BUILD_TYPE=RelWithDebInfo -DENABLE_UDISKS2=on
 
   make 
 }
