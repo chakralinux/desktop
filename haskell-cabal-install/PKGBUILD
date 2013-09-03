@@ -14,7 +14,7 @@ url="http://hackage.haskell.org/package/cabal-install"
 license=('custom:BSD3')
 arch=('x86_64' 'i686')
 makedepends=()
-depends=('ghc=7.6.3-1' 'haskell-cabal>=1.16.0' 'haskell-cabal<1.18' 'haskell-http>=4000.0.2' 'haskell-http<4001' 'haskell-base>=2.0' 'haskell-base<2.2' 'haskell-filepath>=1.0' 'haskell-filepath<1.4' 'haskell-mtl>=2.0' 'haskell-mtl<3' 'haskell-network>=1' 'haskell-network<3' 'haskell-time>=1.1' 'haskell-time<1.5' 'haskell-unix>=1.0' 'haskell-unix<2.7' 'haskell-zlib>=0.4' 'haskell-zlib<0.6' 'gmp' 'zlib')
+depends=('ghc=7.6.3-1' 'haskell-cabal>=1.16.0' 'haskell-cabal<1.18' 'haskell-http>=4000.0.2' 'haskell-http<4001' 'haskell-base>=2.0' 'haskell-base<5' 'haskell-filepath>=1.0' 'haskell-filepath<1.4' 'haskell-mtl>=2.0' 'haskell-mtl<3' 'haskell-network>=1' 'haskell-network<3' 'haskell-random>=1' 'haskell-random<1.1' 'haskell-time>=1.1' 'haskell-time<1.5' 'haskell-zlib>=0.4' 'haskell-zlib<0.6' 'gmp' 'zlib')
 options=()
 source=("http://hackage.haskell.org/packages/archive/cabal-install/1.16.0.2/cabal-install-1.16.0.2.tar.gz")
 install="haskell-cabal-install.install"
@@ -27,37 +27,22 @@ build() {
         ${PKGBUILD_HASKELL_ENABLE_PROFILING:+-p } \
         --enable-split-objs \
         --enable-shared \
-        --prefix="/usr" \
-        --docdir="/usr/share/doc/haskell-cabal-install" \
-        --libsubdir='$compiler/site-local/$pkgid'
+        --enable-executable-stripping \
+        --prefix="/usr"
     runhaskell Setup build
-    runhaskell Setup haddock
-    runhaskell Setup register   --gen-script
-    runhaskell Setup unregister --gen-script
-    sed -i -r -e "s|ghc-pkg.*unregister[^ ]* |&'--force' |" unregister.sh
 }
 
 package() {
     cd "${srcdir}/cabal-install-1.16.0.2"
-    install -D -m744 register.sh \
-        "${pkgdir}/usr/share/haskell/haskell-cabal-install/register.sh"
-    install -m744 unregister.sh \
-        "${pkgdir}/usr/share/haskell/haskell-cabal-install/unregister.sh"
-    install -d -m755 "${pkgdir}/usr/share/doc/ghc/html/libraries"
+    runhaskell Setup copy --destdir="${pkgdir}"
 
-    # Documentation
-    ln -s "/usr/share/doc/haskell-cabal-install/html" \
-        "${pkgdir}/usr/share/doc/ghc/html/libraries/cabal-install"
+    # Remove license installed to wrong location
+    rm -rf ${pkgdir}/usr/share/doc
 
-    # License
-    install -D -m644 LICENSE \
-        "${pkgdir}/usr/share/licenses/haskell-cabal-install/LICENSE"
-    rm -f "${pkgdir}/usr/share/doc/haskell-cabal-install/LICENSE"
+    install -D -m644 LICENSE $pkgdir/usr/share/licenses/$pkgname/LICENSE
 
     # Add bash completion
     install -d ${pkgdir}/usr/share/bash-completion/completions
     install -m644 bash-completion/cabal \
         ${pkgdir}/usr/share/bash-completion/completions
-
-    runhaskell Setup copy --destdir="${pkgdir}"
 }
