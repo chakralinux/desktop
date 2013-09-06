@@ -9,7 +9,7 @@ source ../_buildscripts/${current_repo}-${_arch}-cfg.conf
 pkgname="kde-runtime"    
 arch=('x86_64')
 pkgver=${_kdever}
-pkgrel=1
+pkgrel=2
 pkgdesc="KDE Runtime"
 url="http://www.kde.org"
 license=('GPL' 'LGPL' 'FDL')
@@ -28,10 +28,12 @@ install=kde-runtime.install
 noextract=(branding.svgz)
 
 source=($_mirror/${pkgname}-$_kdever.tar.xz
-	'branding.svgz')
+	'branding.svgz'
+        '0001-no-ignore-events-backport-4.11.2.diff')
 
-sha256sums=1`grep ${pkgname}-$_kdever.tar.xz ../kde-sc.md5 | cut -d" " -f1`
-          'e9a8617448523aacd70dd66f2ffc62a827af027b')   #  branding.svgz
+sha256sums=(`grep ${pkgname}-$_kdever.tar.xz ../kde-sc.md5 | cut -d" " -f1`
+            '586c5461d66ef13d5c43fb269e16c4da51812ae25a0d1b132f0bbbcdb22505e5'  #  branding.svgz
+	    '4b9d274643f7c495e2bdf0d4243c3829bf654e895220ff24935c45ef826b52a7')
 
 build() {
 	cd ${pkgname}-${pkgver}
@@ -39,6 +41,9 @@ build() {
 	# copy our branding stuff
 	cp -f ${srcdir}/branding.svgz ${srcdir}/${pkgname}-${pkgver}/desktoptheme/oxygen/widgets/
 	cp -f ${srcdir}/branding.svgz ${srcdir}/${pkgname}-${pkgver}/desktoptheme/air/widgets/
+
+        # backport a fix, recommend by upstream
+        patch -p1 -i  ${srcdir}/0001-no-ignore-events-backport-4.11.2.diff
 
         rm -rf build
         mkdir build && cd build
