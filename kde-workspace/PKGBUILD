@@ -12,7 +12,7 @@ _default_wp="Elarun"
 pkgname="kde-workspace"
 arch=('x86_64')
 pkgver=${_kdever}
-pkgrel=1
+pkgrel=2
 pkgdesc="KDE Workspace"
 url="http://www.kde.org"
 license=('GPL' 'LGPL' 'FDL')
@@ -29,6 +29,7 @@ optdepends=("appmenu-qt:         Global menu support"
             "kdebindings-pykde4: Python Support for Plasma"
 	    "kdeedu-marble:      Marble Wallpaper Plugin"
 	    "gpsd:               Plasma geolocation support"
+            "ksreen:             Multiple monitors made easy"
 	    "ntp:                Time/date sync support"
 	    "opentp:             Optional time/date sync support"
 	    "xf86-input-wacom:   Wacom tablet support")
@@ -65,24 +66,24 @@ source=($_mirror/${pkgname}-$_kdever.tar.xz
 	# "fix" some sytemsettings modules that need root access
 	fix_root-only-kcms.patch)
 
-sha256sums=1`grep ${pkgname}-$_kdever.tar.xz ../kde-sc.md5 | cut -d" " -f1`
+sha256sums=(`grep ${pkgname}-$_kdever.tar.xz ../kde-sc.md5 | cut -d" " -f1`
          `grep kde-wallpapers-$_kdever.tar.xz ../kde-sc.md5 | cut -d" " -f1` # kde-wallpapers
-          'e5cdf487940030c2aec83498d324fd4c7af2ea47'
-          '53bb8d20edb1ffd34d1977d06c92d9e8635889c3'
-          '47af1613c1e4c724049971a4a7db3db11ca395b1'
-          '660eae40a707d2711d8d7f32a93214865506b795'
-          '6aeecc9e0e221f0515c6bf544f9a3c11cb6961fe'
-          '106635aa1aae51d6f0668b1853f6c49a4fe9d3d8'
-          '07dd142fba8bd4b0892036529fcf4cecb329396e'
-          'b6f8e8692737b11eec1f8022ce74b5b23e247b1b'
-          '8c2bdefb23a03b753b78d16944d03fa3939d2d99'
-          '6abf814689cf876e8648abd73faef7327b3f7edf'
-          '96ca52d2a5307b55d00efeb4c5bf4c5c604bf5f9'
-          '95b9c19e285178dd6309e7962cd35d4b7c12c570'
-          '0c53c7ce9bd2d94ee876a5d562d4c303930277be'
-          'f7d4564b8877f7f383c0dae174399f537c7b46ad'
-          'ac7bc292c865bc1ab8c02e6341aa7aeaf1a3eeee'
-          'f9699cb2a2259849d3ff635ef0cd335b0d335eef')
+	 '85b45195048fc1219ebe0496588404abcca0d9c9e88e2da6653c6e0326c4be51'
+	 'b68bafa854064a2a4a35b6f47ad2f38f4296e186848e2f9eedc0e1f9529281a5'
+	 '33615a51586dc57975b70cef528570e5ae7128d3c8501e13ac06eeb21e023e6c'
+	 '812111f166fdf9ab7ef9400c4414cbe26fac5210f2292399d4446fe6e89eea54'
+	 '3ca72a5f34d29747d12b9b41888d0e369956ba383478850c578e3aa109444214'
+	 '0a985e3b699578de3e22b25ee72abe4e24ca8730e4afb37dfeed367823bdb0d5'
+	 'e5f970c550ce5d1397ae05692162d4c70d193ecac54369ec92a4fad1646c6394'
+	 'b932b7761651df48746b7e5e178fd4c7d322e9f6c41dcf2ec2c51f91a6440d85'
+	 'b33bb32aaef3c25bd3bda458ec569c500a8e636481e2010de4c82488f1634581'
+	 '9b3e7905a8382e46b72830fd6adf311200c5c30cadcfd71b1f0adf34cad251eb'
+	 '6729768a9c645f3f1b4901500beaeb8367aa3f5b4f3589c512e7fe7798b25dfd'
+	 '26b5495def4edc9317af23b9f4720c442e3e61d6937b3b168f0aa681b63681a2'
+	 '57e52bbe7fd9553fd6ed969edef4cc709aa8109f9d5ef44203da6e8d7ede46b4'
+	 'a47f603f27269b7b224373f84b886a55f0b1028548079f5d977dc3f1ce79e3f9'
+	 'e5329c87f14ce04f80291f1f7a2be47994f3d54425b572c308b38e2718390959'
+	 'b38959520a3ecafe6f5628849e29d7e8b0dc030622fa12e77eb8461ad7187a78')
 
 
 build() {
@@ -101,6 +102,9 @@ build() {
 	msg "applying fixes ..."
 	patch -p0 -i ${srcdir}/fix_terminate-server.patch
         patch -p1 -i ${srcdir}/fix_root-only-kcms.patch
+
+        # disable krandr
+        sed -i "s/add_subdirectory(randr)//g" ./kcontrol/CMakeLists.txt
 
 	msg "starting workspace build ..."
 	cmake . -DCMAKE_BUILD_TYPE=${_build_type} \
