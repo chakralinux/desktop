@@ -12,7 +12,7 @@ _default_wp="Elarun"
 pkgname="kde-workspace"
 arch=('x86_64')
 pkgver=${_kdever}
-pkgrel=3
+pkgrel=4
 pkgdesc="KDE Workspace"
 url="http://www.kde.org"
 license=('GPL' 'LGPL' 'FDL')
@@ -64,7 +64,10 @@ source=($_mirror/${pkgname}-$_kdever.tar.xz
 	# restart xserver on logout
 	fix_terminate-server.patch
 	# "fix" some sytemsettings modules that need root access
-	fix_root-only-kcms.patch)
+	fix_root-only-kcms.patch
+	
+	# fix icon loading on kde 4.11.1 (implemented in 4.11.2)
+	qguiplatformplugin_kde_fix_icon_loading.patch)
 
 sha256sums=(`grep ${pkgname}-$_kdever.tar.xz ../kde-sc.md5 | cut -d" " -f1`
          `grep kde-wallpapers-$_kdever.tar.xz ../kde-sc.md5 | cut -d" " -f1` # kde-wallpapers
@@ -83,7 +86,8 @@ sha256sums=(`grep ${pkgname}-$_kdever.tar.xz ../kde-sc.md5 | cut -d" " -f1`
 	 '57e52bbe7fd9553fd6ed969edef4cc709aa8109f9d5ef44203da6e8d7ede46b4'
 	 'a47f603f27269b7b224373f84b886a55f0b1028548079f5d977dc3f1ce79e3f9'
 	 'e5329c87f14ce04f80291f1f7a2be47994f3d54425b572c308b38e2718390959'
-	 'b38959520a3ecafe6f5628849e29d7e8b0dc030622fa12e77eb8461ad7187a78')
+	 'b38959520a3ecafe6f5628849e29d7e8b0dc030622fa12e77eb8461ad7187a78'
+	 '17dda77efdec76b1620d70c237821a9a53a1d7fef10054e7f481d49a4a05712a')
 
 
 build() {
@@ -102,6 +106,7 @@ build() {
 	msg "applying fixes ..."
 	patch -p0 -i ${srcdir}/fix_terminate-server.patch
         patch -p1 -i ${srcdir}/fix_root-only-kcms.patch
+        patch -p1 -i ${srcdir}/qguiplatformplugin_kde_fix_icon_loading.patch
 
         # disable krandr
         sed -i "s/add_subdirectory(randr)//g" ./kcontrol/CMakeLists.txt
