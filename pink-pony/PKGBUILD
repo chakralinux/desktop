@@ -4,26 +4,26 @@
 # Maintainer: Adrián Chaves Fernández (Gallaecio) <adriyetichaves gmail.com>
 
 pkgname=pink-pony
-pkgver=1.2.1
-pkgrel=4
+pkgver=1.3
+pkgrel=1
 pkgdesc="Tron-like multiplayer racing game with ponies."
 arch=(i686 x86_64)
 url="http://code.google.com/p/pink-pony/"
 license=('GPL3')
-depends=('glfw' 'ilmbase' 'devil' 'protobuf' 'audiere' 'ftgl' 'libsigc++2.0')
+depends=('glfw' 'ilmbase' 'devil' 'libxrandr' 'protobuf' 'audiere' 'ftgl' 'libsigc++2.0')
 makedepends=('scons')
 categories=('games')
 source=(http://pink-pony.googlecode.com/files/$pkgname-$pkgver.tar.bz2)
-md5sums=('3acdab21d3368e0f0e931abcecb916d5')
+md5sums=('c87cb63df13bbc1c3753fd6438b84b34')
 
 build() {
-  cd $srcdir/$pkgname
+  cd $srcdir/$pkgname-$pkgver
 
   scons
 }
 
 package() {
-  cd $srcdir/$pkgname
+  cd $srcdir/$pkgname-$pkgver
 
   mkdir -p $pkgdir/usr/share/$pkgname
   mkdir -p $pkgdir/usr/bin
