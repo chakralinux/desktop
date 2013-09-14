@@ -4,25 +4,19 @@
 # Maintainer: Adrián Chaves Fernández (Gallaecio) <adriyetichaves gmail.com>
 
 pkgname=extremetuxracer
-pkgver=0.4
+_pkgname=etr
+pkgver=0.6.0
 pkgrel=1
 pkgdesc="Downhill racing game starring Tux."
 arch=('i686' 'x86_64')
 url="http://www.extremetuxracer.com"
 license=('GPL')
-depends=('sdl_mixer' 'tcl>=8.5.0' 'mesa' 'libpng>=1.4.0' 'freetype2' 'libxi' 'libxmu')
+depends=('sdl_image' 'sdl_mixer' 'tcl>=8.5.0' 'mesa' 'libpng>=1.4.0' 'freetype2' 'libxi' 'libxmu')
 categories=('games')
-source=(http://downloads.sourceforge.net/$pkgname/$pkgname-$pkgver.tar.gz \
-       libpng14.patch)
-md5sums=('6830eb4e1ca7c5a541f286ded3853f9f'
-         '0c16eb309df6413397cd886f63361fcc')
+source=(http://downloads.sourceforge.net/$pkgname/${_pkgname}-$pkgver.tar.xz)
 
 build() {
-  cd $srcdir/$pkgname-$pkgver
-
-  patch -Np1 -i $srcdir/libpng14.patch
-
-  sed -i -e 's/libpng12/libpng14/g' configure
+  cd $srcdir/${_pkgname}-$pkgver
 
   ./configure \
     --prefix=/usr
@@ -31,7 +25,8 @@ build() {
 }
 
 package() {
-  cd $srcdir/$pkgname-$pkgver
+  cd $srcdir/${_pkgname}-$pkgver
 
   make DESTDIR=$pkgdir install
 }
+md5sums=('c85690864b14f9d422b73025cb01aa8d')
