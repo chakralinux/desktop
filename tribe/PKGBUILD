@@ -1,10 +1,10 @@
 # Chakra Tools
 
 pkgname=tribe
-pkgver=2013.05.19
-_rls_notes=20130519
+pkgver=2013.09.16
+_rls_notes=20130916
 pkgrel=1
-_codename=Benz
+_codename=Fritz
 branch="benz"
 pkgdesc="Tribe - Chakra LiveCD Installer"
 url="http://git.chakra-project.org/chakra/"
@@ -18,8 +18,8 @@ options=('!header' '!debug')
 source=("${pkgname}-${pkgver}.tar.xz"
         "http://chakra.sourceforge.net/sources/tribe/RELEASE_NOTES_${_rls_notes}.html"
         "launch-tribe.sh")
-md5sums=('87bb1530829b9ff8daf3bdea5a798bb2'
-         '881e1708a9990df998abc644be66b602'
+md5sums=('c5a182d44b5e27ca77e1f48358d17efb'
+         '7655ee2f7ab805f2126f3e819dfc9cab'
          'e31855da237a2c8029774831b3c04685')
 
 groups=('kde-uninstall')
@@ -64,11 +64,12 @@ build() {
 package() {
         cd "${srcdir}/${pkgname}-${pkgver}"
 	msg "Make successful, installing..."
-	make DESTDIR=$startdir/pkg install 
+	make DESTDIR=${pkgdir} install
         install -Dm755 ${srcdir}/launch-tribe.sh \
         ${pkgdir}/usr/bin/launch-tribe.sh
 	cp -vf ${srcdir}/RELEASE_NOTES_${_rls_notes}.html $pkgdir/usr/share/tribe/config/RELEASE_NOTES.html
 
 	# remove nasty files
-	find $startdir/pkg/ -name ".git" -type d -exec rm -fr {} +
+	find ${pkgdir}/ -name ".git" -type d -exec rm -fr {} +
 }
+
