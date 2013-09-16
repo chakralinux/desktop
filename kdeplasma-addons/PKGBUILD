@@ -84,7 +84,7 @@ pkgname=('kdeplasma-addons-applets-bball'
 
 arch=('x86_64')
 pkgver=${_kdever}
-pkgrel=1
+pkgrel=2
 
 pkgdesc="KDE Plasma Addons"
 url="http://www.kde.org/"
@@ -94,15 +94,27 @@ depends=("kde-workspace>=${_kdever}" 'libqalculate' "kdeedu-marble>=${_kdever}" 
 makedepends=('pkg-config' 'cmake' 'automoc4' 'libqalculate' 'qoauth' 'fcitx' 
              "kdegraphics-libkexiv2>=${_kdever}" "kdeedu-marble>=${_kdever}" 'eigen' 'qwt')
 
-source=("$_mirror/${pkgbase}-$_kdever.tar.xz")
-sha1sums=(`grep ${pkgbase}-$_kdever.tar.xz ../kde-sc.md5 | cut -d" " -f1`)
+source=("$_mirror/${pkgbase}-$_kdever.tar.xz"
+        "${pkgver}-icontasks-spin-event-loop.patch"
+        "${pkgver}-icontasks-fix-for-non-running.patch")
+sha256sums=(`grep ${pkgbase}-$_kdever.tar.xz ../kde-sc.md5 | cut -d" " -f1`
+            '75531ddd3634bf1c987b9da225450c44328b14b9846aba3b892ea7058ad8f92f'
+            '96d93011f488d9b9024a43ac3c35cc794dcf266ea4ea8ac87bd61b6283fe6d4d')
 
-build() {
-	cd $srcdir/$pkgbase-$pkgver
+prepare() {
+        cd $srcdir/$pkgbase-$pkgver
+
+        patch -p1 < ${srcdir}/"${pkgver}-icontasks-spin-event-loop.patch"
+        patch -p1 < ${srcdir}/"${pkgver}-icontasks-fix-for-non-running.patch"
 
 	cd ..
         rm -rf build
 	mkdir -p build && cd build
+
+}
+
+build() {
+	cd $srcdir/build
 
 	cmake ../${pkgbase}-${pkgver} \
 		-DCMAKE_BUILD_TYPE=Release \
