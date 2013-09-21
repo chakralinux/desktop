@@ -6,17 +6,17 @@
 pkgname=flightgear-data
 _pkgname=flightgear
 _pkgname2=FlightGear
-pkgver=2.10.0
+pkgver=2.12.0
 pkgrel=1
 pkgdesc="FlightGear base data."
 arch=(any)
 license=(GPL3)
 url=http://www.flightgear.org
-source=(http://ftp.icm.edu.pl/packages/$_pkgname/Shared/$_pkgname2-data-$pkgver.tar.bz2)
-sha256sums=('2fa0280ea9a1a0bee3eab27f034ec45d4cf44a2b818a7036b481da6668f7229f')
+source=(ftp://flightgear.wo0t.de/ftp/Shared/$_pkgname2-data-$pkgver.tar.bz)
+sha256sums=('136dfd24c8a28aa8a6a444ecaf2eb881a1e708d19c96b44352d79fcf84645b62')
 
 package() {
   mkdir -p $pkgdir/usr/share/$_pkgname
-  mv $srcdir/data $pkgdir/usr/share/$_pkgname
+  mv $srcdir/fgdata $pkgdir/usr/share/$_pkgname/data
   chown root:users $pkgdir/usr/share/$_pkgname/data
 }
