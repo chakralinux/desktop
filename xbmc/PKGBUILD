@@ -7,7 +7,7 @@ _prefix=/usr
 
 pkgname=xbmc
 pkgver=12.2
-pkgrel=1
+pkgrel=4
 pkgdesc="XBMC Media Center"
 arch=('x86_64')
 url="http://xbmc.org"
@@ -15,10 +15,10 @@ license=('GPL' 'custom')
 depends=( 'bzip2' 'curl' 'enca' 'faac' 'faad2' 'fontconfig' 'fribidi' 'python2' 'python-pysqlite'
           'glew' 'jasper' 'libcdio' 'libgl' 'libmad' 'libmms' 'libass' 'yajl'
           'libmpeg2' 'libmariadbclient' 'libsamplerate' 'libxinerama' 'libpng' 'libbluedevil'
-          'libxrandr' 'libxtst' 'lzo2' 'sdl_image' 'sdl_mixer' 'libvorbis' 'libpulse'
-          'smbclient' 'wavpack' 'mesa-demos' 'xorg-utils' 'libmicrohttpd' 'libjpeg-turbo'
-          'libssh' 'libva' 'libmodplug' 'rtmpdump' 'lsb-release' 'sqlite3' 
-          'libbluray' 'swig' 'openjdk' 'tinyxml' 'taglib')
+          'libxrandr' 'libxtst' 'lzo2' 'sdl_image' 'sdl_mixer' 'libvorbis' 'libpulse' 'libdvdcss'
+          'samba' 'wavpack' 'mesa-demos' 'xorg-utils' 'libmicrohttpd' 'libjpeg-turbo' 'mesa' 'swig'
+          'libssh' 'libva' 'libmodplug' 'rtmpdump' 'lsb-release' 'sqlite3' 'libbluray' 'java-runtime'
+          'tinyxml' 'taglib' 'libcap')
 makedepends=('boost' 'cmake' 'gperf' 'nasm' 'libvdpau' 'unzip' 'zip' 'cvs' 'autoconf' 'automake'
              'udisks' 'upower' 'mesa' 'doxygen' 'swig')
 optdepends=('lirc: remote controller support'
@@ -29,14 +29,15 @@ optdepends=('lirc: remote controller support'
             'lcms'
             'tk')
 categories=('multimedia')
-install="${pkgname}.install"
+screenshot=('http://xbmc.org/wp-content/gallery/back-row/screenshot000.jpg')
+install=${pkgname}.install
 options=('makeflags')
 source=("http://mirrors.xbmc.org/releases/source/xbmc-$pkgver.tar.gz"
         "FEH.sh"
-        "${pkgname}.install")
+        "${pkgname}.service")
 sha256sums=('b2330634fc513d27a44b131bbbe4ca6b61d60a1fe6c7ca27a7dc749df0bcea1c'
             '1b391dfbaa07f81e5a5a7dfd1288bf2bdeab8dc50bbb6dbf39a80d8797dfaeb0'
-            '70886bbe96b1049e66170092887d935529b275269ab75d453a7e119e920a2809')
+            '547e06f3141866cd34b1df34025517e9826992b67543af7621d954bcdfa0ba94')
 
 build() {
     cd "${srcdir}/xbmc-$pkgver"
@@ -48,11 +49,11 @@ build() {
     ./configure --prefix=${_prefix} \
 	--enable-vdpau \
 	--enable-pulse \
-	--disable-hal \
 	--disable-avahi \
 	--disable-external-ffmpeg \
 	--enable-rtmp \
 	--enable-libbluray \
+	--enable-dvdcss \
 	--disable-debug
 
     msg "Running make"
@@ -96,4 +97,6 @@ package() {
     rm -f "${pkgdir}/usr/share/xbmc/FEH.py"
     rm -f "${pkgdir}/usr/share/icons/hicolor/icon-theme.cache"
 
+    # Systemd service
+    install -Dm0644 "${srcdir}/xbmc.service" "${pkgdir}/usr/lib/systemd/system/xbmc.service"
 }
