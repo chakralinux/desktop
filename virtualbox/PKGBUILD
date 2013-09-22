@@ -10,15 +10,16 @@
 pkgbase=virtualbox
 pkgname=('virtualbox' 'virtualbox-ext-oracle' 'virtualbox-guest-additions')
 pkgver=4.2.18
-_build=88780
-pkgrel=1
+_build_virtualbox=88781
+_build_extension=88780
+pkgrel=2
 arch=('x86_64')
 url='http://virtualbox.org/'
 license=('GPL2' 'custom:PUEL')
 options=('!strip')
 makedepends=('libidl2' 'libxcursor' 'libxinerama' 'libxslt' 'curl' 'linux-headers' 'python2' 'make' 'gcc')
-source=("VirtualBox-${pkgver}-${_build}-Linux_amd64.run::http://download.virtualbox.org/virtualbox/${pkgver}/VirtualBox-${pkgver}-${_build}-Linux_amd64.run"
-        "http://download.virtualbox.org/virtualbox/${pkgver}/Oracle_VM_VirtualBox_Extension_Pack-${pkgver}-${_build}.vbox-extpack"
+source=("VirtualBox-${pkgver}-${_build_virtualbox}-Linux_amd64.run::http://download.virtualbox.org/virtualbox/${pkgver}/VirtualBox-${pkgver}-${_build_virtualbox}-Linux_amd64.run"
+        "http://download.virtualbox.org/virtualbox/${pkgver}/Oracle_VM_VirtualBox_Extension_Pack-${pkgver}-${_build_extension}.vbox-extpack"
         "http://download.virtualbox.org/virtualbox/${pkgver}/VBoxGuestAdditions_${pkgver}.iso"
         '10-vboxdrv.rules'
         'vboxdrv.conf'
@@ -26,10 +27,11 @@ source=("VirtualBox-${pkgver}-${_build}-Linux_amd64.run::http://download.virtual
         'vboxweb.service'
         'vboxusb.service'
         'virtualbox.conf'
+        'vboxclient.conf'
         'vboxsetup.sh'
         'PUEL'
         'vboxservice.service')
-sha256sums=('98d396a3ea9b6f2253c068f4f41c87bf3b3fe83594552bbc39ae9fbe14adde6f'
+sha256sums=('2fdc201bb24fe7268dd034b8f22f1d245ed7c9ea2fcbe34f512615e56590abc2'
             '1d1737b59d0f30f5d42beeabaff168bdc0a75b8b28df685979be6173e5adbbba'
             'f11a7f13dfe7bf9f246fb877144bb467fe6deadcd876568ec79b6ccd3b59d767'
             'f4182fa7c3f109aefb7da84f16bc40f34c46eb768144e7ab373b9311c41f175b'
@@ -38,6 +40,7 @@ sha256sums=('98d396a3ea9b6f2253c068f4f41c87bf3b3fe83594552bbc39ae9fbe14adde6f'
             'e6e875ef186578b53106d7f6af48e426cdaf1b4e86834f01696b8ef1c685787f'
             '251750f41d334ef9871194b3407c2ee2c0330eac92849c6b5d30c46e5c72b765'
             '9b3c4dc5385fb3b4aeb841043384879c5c7ee926f5343d6a4177e913604f869d'
+            '399c63efe01e57bfe12ddc843bc55ad0a7489bfa530acf568f66f31a4054c05e'
             '28833ef89fed96aa2cdb071c98687e8aa88e3c4c249b261f9b905e6621fa0e23'
             '50658c653cde4dc43ba73a64c72761d2e996fd8e360fc682aa2844e1ad5b045f'
             'aaa8d3d71c8585edf43ed11676ccd567cc85fc23752d3c3499506741cef3c9ba')
@@ -66,8 +69,8 @@ package_virtualbox() {
   install=${pkgname}.install
   
   # Check and unpack the run package via sh(1)
-  sh "VirtualBox-${pkgver}-${_build}-Linux_amd64.run" --check
-  echo yes | sh "VirtualBox-${pkgver}-${_build}-Linux_amd64.run" --target "${srcdir}" \
+  sh "VirtualBox-${pkgver}-${_build_virtualbox}-Linux_amd64.run" --check
+  echo yes | sh "VirtualBox-${pkgver}-${_build_virtualbox}-Linux_amd64.run" --target "${srcdir}" \
     --nox11 --noexec &> /dev/null
 
   # Unpack bundled files
@@ -162,7 +165,7 @@ package_virtualbox() {
   echo "INSTALL_DIR='${_installdir}'" >> "${pkgdir}/etc/vbox/vbox.cfg"
   echo "# VirtualBox version" >> "${pkgdir}/etc/vbox/vbox.cfg"
   echo "INSTALL_VER='${pkgver}'" >> "${pkgdir}/etc/vbox/vbox.cfg"
-  echo "INSTALL_REV='${_build}'" >> "${pkgdir}/etc/vbox/vbox.cfg"
+  echo "INSTALL_REV='${_build_virtualbox}'" >> "${pkgdir}/etc/vbox/vbox.cfg"
   chmod 0644 "${pkgdir}/etc/vbox/vbox.cfg"
 
   # Create the directory below if it doesn't exist
@@ -189,7 +192,7 @@ package_virtualbox-ext-oracle() {
   
   cd "${srcdir}"
   
-  install -D -m 644 "Oracle_VM_VirtualBox_Extension_Pack-${pkgver}-${_build}.vbox-extpack" \
+  install -D -m 644 "Oracle_VM_VirtualBox_Extension_Pack-${pkgver}-${_build_extension}.vbox-extpack" \
     "${pkgdir}/usr/share/virtualbox/extensions/Oracle_VM_VirtualBox_Extension_Pack-${pkgver}.vbox-extpack"
   install -D -m 644 PUEL "${pkgdir}/usr/share/licenses/${pkgname}/PUEL"
 }
@@ -208,5 +211,8 @@ package_virtualbox-guest-additions() {
   
   # Install service file 
   install -Dm0644 vboxservice.service "${pkgdir}/usr/lib/systemd/system/vboxservice.service"
+  
+  # Install vboxclient.conf for vboxsf module
+  install -Dm0644 "${srcdir}/vboxclient.conf" "${pkgdir}/etc/modules-load.d/vboxclient.conf"
 }
 
