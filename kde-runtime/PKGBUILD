@@ -28,12 +28,10 @@ install=kde-runtime.install
 noextract=(branding.svgz)
 
 source=($_mirror/${pkgname}-$_kdever.tar.xz
-	'branding.svgz'
-        '0001-no-ignore-events-backport-4.11.2.diff')
+	'branding.svgz')
 
-sha256sums=(`grep ${pkgname}-$_kdever.tar.xz ../kde-sc.md5 | cut -d" " -f1`
-            '586c5461d66ef13d5c43fb269e16c4da51812ae25a0d1b132f0bbbcdb22505e5'  #  branding.svgz
-	    '4b9d274643f7c495e2bdf0d4243c3829bf654e895220ff24935c45ef826b52a7')
+sha1sums=(`grep ${pkgname}-$_kdever.tar.xz ../kde-sc.md5 | cut -d" " -f1`
+            '586c5461d66ef13d5c43fb269e16c4da51812ae25a0d1b132f0bbbcdb22505e5')  #  branding.svgz
 
 build() {
 	cd ${pkgname}-${pkgver}
