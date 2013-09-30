@@ -9,7 +9,7 @@ source ../_buildscripts/${current_repo}-${_arch}-cfg.conf
 pkgname="kde-runtime"    
 arch=('x86_64')
 pkgver=${_kdever}
-pkgrel=2
+pkgrel=1
 pkgdesc="KDE Runtime"
 url="http://www.kde.org"
 license=('GPL' 'LGPL' 'FDL')
@@ -31,7 +31,7 @@ source=($_mirror/${pkgname}-$_kdever.tar.xz
 	'branding.svgz')
 
 sha1sums=(`grep ${pkgname}-$_kdever.tar.xz ../kde-sc.md5 | cut -d" " -f1`
-            '586c5461d66ef13d5c43fb269e16c4da51812ae25a0d1b132f0bbbcdb22505e5')  #  branding.svgz
+          'e9a8617448523aacd70dd66f2ffc62a827af027b')  #  branding.svgz
 
 build() {
 	cd ${pkgname}-${pkgver}
@@ -67,3 +67,5 @@ package() {
 	rm -rf ${pkgdir}/usr/share/icons/hicolor/index.theme
 	rm -rf ${pkgdir}/usr/share/icons/default.kde4
 }
+sha1sums=('b896ef9d8fe770720dc16ae3eae33538e4e699da'
+          'e9a8617448523aacd70dd66f2ffc62a827af027b')
