@@ -6,24 +6,27 @@
 
 pkgname=avogadro
 pkgver=1.1.0
-pkgrel=2
+pkgrel=3
 pkgdesc="An advanced molecular editor based on Qt"
 arch=('x86_64')
 url="http://avogadro.openmolecules.net/wiki/Main_Page"
 license=('GPL2')
-depends=('eigen' 'openbabel' 'pyqt' 'boost-libs' 'glew' 'python-numpy')
+depends=('eigen' 'openbabel' 'pyqt4-python2' 'boost-libs' 'glew' 'python-numpy')
 makedepends=('cmake' 'boost')
 categories=('education')
 screenshot=('http://avogadro.openmolecules.net/w/images/7/75/Avogadro-unitcell.png')
-source=("http://downloads.sourceforge.net/${pkgname}/${pkgname}-${pkgver}.tar.bz2")
-md5sums=('f4fbef5ffc69cc312b2316426c36a78d')
+source=("http://downloads.sourceforge.net/${pkgname}/${pkgname}-${pkgver}.tar.bz2" "boost.patch")
+md5sums=('f4fbef5ffc69cc312b2316426c36a78d'
+         'aa2573f78d5dbd85b3cb79e08acde8ab')
+
+prepare() {
+  mkdir -p build
+  cd "${srcdir}/${pkgname}-${pkgver}"
+  patch -p1 -i "${srcdir}"/boost.patch
+}
 
 build() {
-  cd "${srcdir}/${pkgname}-${pkgver}"
-
-  cd ${srcdir}
-  mkdir -p build
-  cd build
+  cd ${srcdir}/build
 
   # use the cmake module in system to enable python 2.7 support
   rm ../${pkgname}-${pkgver}/cmake/modules/FindPythonLibs.cmake
