@@ -1,28 +1,29 @@
 #
 # Chakra Packages for Chakra, part of chakra-project.org
 #
-# maintainer: Ernesto Manríquez <alejandronova@gmail.com>
+# maintainer abveritas@chakra-project.org
 
 pkgname=openimageio
 _pkgname=OpenImageIO
-pkgver=1.1.10
-pkgrel=1
+pkgver=1.2.0
+pkgrel=2
 pkgdesc="A library for reading and writing images, including classes, utilities, and applications."
-arch=('x86_64')
+arch=(x86_64)
 url="http://www.openimageio.org/"
 license=('custom')
-makedepends=('cmake' 'qt' 'python2' 'boost' 'mesa')
+depends=('openexr' 'boost-libs' 'jasper' 'glew')
+makedepends=('cmake' 'qt' 'python2' 'boost')
 optdepends=('qt: iv image viewer'
             'python2: bindings support')
 source=("https://github.com/OpenImageIO/oiio/tarball/Release-${pkgver}")
-md5sums=('e5c5cd77238f74c3a6a3610c211430f2')
+sha1sums=('a64980cdae4df8d23c0e0591963fdd7bbe3ad1f8')
 
 build() {
   cd "$srcdir"/$_pkgname*/src
 
   [[ -d build ]] && rm -r build
   mkdir build && cd build
-  cmake -DCMAKE_INSTALL_PREFIX=/usr .. -DPYLIB_INSTALL_DIR=lib/python2.7/site-packages ..
+  cmake -DCMAKE_INSTALL_PREFIX=/usr ..
   make
 }
 
@@ -30,6 +31,8 @@ package() {
   cd "$srcdir"/$_pkgname*/src/build
 
   make DESTDIR=$pkgdir install
+
+  mv $pkgdir/usr/lib/python $pkgdir/usr/lib/python2.7
 
   # license
   cd ../..
