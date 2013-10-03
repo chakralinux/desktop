@@ -1,0 +1,19 @@
+#
+# maintainer: Giuseppe Calà <jiveaxe@gmail.com>
+ 
+pkgname=mathjax
+pkgver=2.1
+pkgrel=1
+pkgdesc='An open source JavaScript display engine for mathematics that works in all modern browsers'
+url='http://www.mathjax.org/'
+arch=('any')
+license=('apache')
+options=('!strip')
+source=('https://github.com/mathjax/MathJax/archive/v2.1-latest.tar.gz')
+md5sums=('fcc8854146cdea83ded07137de441785')
+ 
+package() {
+    mkdir -p $pkgdir/usr/share
+    mv $srcdir/MathJax-* $pkgdir/usr/share/mathjax
+}
+ 
