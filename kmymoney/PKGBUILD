@@ -2,7 +2,7 @@
 
 pkgname=kmymoney
 pkgver=4.6.3
-pkgrel=2
+pkgrel=3
 pkgdesc="An finance manager for KDE4 with HBCI support"
 arch=('x86_64')
 url="http://kmymoney2.sourceforge.net"
@@ -15,8 +15,15 @@ conflicts=(kmymoney2)
 replaces=(kmymoney2)
 categories=('office')
 
-source=("http://sourceforge.net/projects/kmymoney2/files/KMyMoney-KDE4/$pkgver/$pkgname-$pkgver.tar.bz2")
-sha1sums=('52faa3938c77b1ef513d1a46f5545ed823595c51')
+source=("http://sourceforge.net/projects/kmymoney2/files/KMyMoney-KDE4/$pkgver/$pkgname-$pkgver.tar.bz2" "git-fixes.diff")
+sha1sums=('52faa3938c77b1ef513d1a46f5545ed823595c51'
+          '0b6876cee094b90083400f1de36e162b6617d9aa')
+
+prepare() {
+  cd "${srcdir}/${pkgname}-${pkgver}"
+
+  patch -Np1 -i ../git-fixes.diff
+}
 
 build() {
   cd ${srcdir}/$pkgname-$pkgver
