@@ -16,11 +16,10 @@ pkgname=('libreoffice-common'
 	'libreoffice-writer'
 	'libreoffice-en-US'
 	'libreoffice-postgresql-connector'
-	'libreoffice-extension-presentation-minimizer'
-	'libreoffice-extension-report-builder')
-_LOver=4.0.5.2
-pkgver=4.0.5
-_pkgver=4.0.5
+	'libreoffice-extension-presentation-minimizer')
+_LOver=4.1.2.3
+pkgver=4.1.2
+_pkgver=4.1.2
 _HIver=4.0
 pkgrel=1
 arch=('x86_64')
@@ -37,23 +36,22 @@ makedepends=( # makedepends
              "curl>=7.20.0" "hunspell>=1.2.8" 'python3' 'libwpd>=0.9.2' 'libwps' 'libxaw' "neon>=0.28.6"
              'pango' 'nss' 'libjpeg' 'libxrandr' 'libgl' 'dbus-glib' "icu>=4.6" 'libxslt'
              'redland' 'graphite' 'hyphen' 'lpsolve' 'gcc-libs' 'sh'  'libtextcat' 'librsvg' 'lcms2'
-             'hicolor-icon-theme' 'desktop-file-utils' 'shared-mime-info' 'translate-toolkit' 'xdg-utils' 'ttf-dejavu' 'libcups')
+             'hicolor-icon-theme' 'desktop-file-utils' 'shared-mime-info' 'translate-toolkit' 'xdg-utils' 'ttf-dejavu' 'libcups' 'libodfgen' 'libmwaw')
 
 _mirror="http://download.documentfoundation.org/libreoffice/src/${pkgver}"
 #_mirror="http://dev-builds.libreoffice.org/pre-releases/src"
 _additional_source_url="http://dev-www.libreoffice.org/src"
 _additional_source_url2="http://dev-www.libreoffice.org/extern"
 source=(${_mirror}/${pkgbase}{,-help,-translations}-${_LOver}.tar.xz
-	${_additional_source_url}/f02578f5218f217a9f20e9c30e119c6a-boost_1_44_0.tar.bz2
 	${_additional_source_url}/1f24ab1d39f4a51faf22244c94a6203f-xmlsec1-1.2.14.tar.gz
 	${_additional_source_url}/35c94d2df8893241173de1d16b6034c0-swingExSrc.zip
 	${_additional_source_url}/798b2ffdc8bcfe7bca2cf92b62caf685-rhino1_5R5.zip
 	${_additional_source_url}/2a177023f9ea8ec8bd00837605c5df1b-jakarta-tomcat-5.0.30-src.tar.gz
 	${_additional_source_url}/a7983f859eafb2677d7ff386a023bc40-xsltml_2.1.2.zip
 	${_additional_source_url}/3c219630e4302863a9a83d0efde889db-commons-logging-1.1.1-src.tar.gz
-	${_additional_source_url}/2ae988b339daec234019a7066f96733e-commons-lang-2.3-src.tar.gz
+	${_additional_source_url}/625ff5f2f968dd908bca43c9469d6e6b-commons-lang-2.4-src.tar.gz
 	${_additional_source_url}/2c9b0f83ed5890af02c0df1c1776f39b-commons-httpclient-3.1-src.tar.gz
-	${_additional_source_url}/af3c3acf618de6108d65fcdc92b492e1-commons-codec-1.3-src.tar.gz
+	${_additional_source_url}/2e482c7567908d334785ce7d69ddfff7-commons-codec-1.6-src.tar.gz
 	${_additional_source_url}/eeb2c7ddf0d302fba4bfc6e97eac9624-libbase-1.1.6.zip
 	${_additional_source_url}/39bb3fcea1514f1369fcfc87542390fd-sacjava-1.3.zip
 	${_additional_source_url}/3404ab6b1792ae5f16bbd603bd1e1d03-libformula-1.1.7.zip
@@ -65,31 +63,31 @@ source=(${_mirror}/${pkgbase}{,-help,-translations}-${_LOver}.tar.xz
 	${_additional_source_url}/ace6ab49184e329db254e454a010f56d-libxml-1.1.7.zip
 	${_additional_source_url}/db60e4fde8dd6d6807523deb71ee34dc-liblayout-0.2.10.zip
 	${_additional_source_url}/ba2930200c9f019c2d93a8c88c651a0f-flow-engine-0.9.4.zip
-	${_additional_source_url}/9f9e15966b5624834157fe3d748312bc-mdds_0.6.1.tar.bz2
+	${_additional_source_url}/08c85a6d6d793daee14e10e22eefdc4b-mdds_0.8.1.tar.bz2
 	${_additional_source_url}/dc3d21a3921931096d6e80f6701f6763-libexttextcat-3.4.0.tar.bz2
 	${_additional_source_url}/b2371dc7cf4811c9d32146eec913d296-libcmis-0.3.0.tar.gz
-	${_additional_source_url}/8755aac23317494a9028569374dc87b2-liborcus_0.3.0.tar.bz2
-	${_additional_source_url}/54e578c91b1b68e69c72be22adcb2195-liblangtag-0.4.0.tar.bz2
+	${_additional_source_url}/ea2acaf140ae40a87a952caa75184f4d-liborcus-0.5.1.tar.bz2
+	${_additional_source_url}/36271d3fa0d9dec1632029b6d7aac925-liblangtag-0.5.1.tar.bz2
 	${_additional_source_url}/0168229624cfac409e766913506961a8-ucpp-1.3.2.tar.gz
 	${_additional_source_url}/17410483b5b5f267aa18b7e00b65e6e0-hsqldb_1_8_0.zip
 	${_additional_source_url2}/185d60944ea767075d27247c3162b3bc-unowinreg.dll
 	${_additional_source_url}/libcdr-0.0.14.tar.bz2
 	${_additional_source_url}/libmspub-0.0.6.tar.bz2
-	${_additional_source_url}/libvisio-0.0.30.tar.bz2
+	${_additional_source_url}/libvisio-0.0.31.tar.bz2
 	make-pyuno-work-with-system-wide-module-install.diff)
-md5sums=('6cb30bf61cc264f0593a11fffa5cd7ee'
-         'a9ddcbde6d7b1148c8fdb626b26c0c69'
-         '914c5ea3f433643387593cb96d6c119b'
-         'f02578f5218f217a9f20e9c30e119c6a'
+
+md5sums=('bb2fe0056ae92e70ee8816a36dd0696c'
+         '761323fae73ef156f5cf188d8bd983f1'
+         '54f36cf305ae018ad685c331587d83e3'
          '1f24ab1d39f4a51faf22244c94a6203f'
          '35c94d2df8893241173de1d16b6034c0'
          '798b2ffdc8bcfe7bca2cf92b62caf685'
          '2a177023f9ea8ec8bd00837605c5df1b'
          'a7983f859eafb2677d7ff386a023bc40'
          '3c219630e4302863a9a83d0efde889db'
-         '2ae988b339daec234019a7066f96733e'
+         '625ff5f2f968dd908bca43c9469d6e6b'
          '2c9b0f83ed5890af02c0df1c1776f39b'
-         'af3c3acf618de6108d65fcdc92b492e1'
+         '2e482c7567908d334785ce7d69ddfff7'
          'eeb2c7ddf0d302fba4bfc6e97eac9624'
          '39bb3fcea1514f1369fcfc87542390fd'
          '3404ab6b1792ae5f16bbd603bd1e1d03'
@@ -101,32 +99,29 @@ md5sums=('6cb30bf61cc264f0593a11fffa5cd7ee'
          'ace6ab49184e329db254e454a010f56d'
          'db60e4fde8dd6d6807523deb71ee34dc'
          'ba2930200c9f019c2d93a8c88c651a0f'
-         '9f9e15966b5624834157fe3d748312bc'
+         '08c85a6d6d793daee14e10e22eefdc4b'
          'dc3d21a3921931096d6e80f6701f6763'
          'b2371dc7cf4811c9d32146eec913d296'
-         '8755aac23317494a9028569374dc87b2'
-         '54e578c91b1b68e69c72be22adcb2195'
+         'ea2acaf140ae40a87a952caa75184f4d'
+         '36271d3fa0d9dec1632029b6d7aac925'
          '0168229624cfac409e766913506961a8'
          '17410483b5b5f267aa18b7e00b65e6e0'
          '185d60944ea767075d27247c3162b3bc'
          'd88f9b94df880d2c05be943b000ca112'
          '1120705cd0f0d9bd5506360bf57b6c2e'
-         '9d9eb3ae6bee763c161228b2b12e25f8'
+         '82628333418f101a20cd21f980cf9f40'
          '07d2bf5ad839a394cca008b3ec6e7bb1')
-noextract=(f02578f5218f217a9f20e9c30e119c6a-boost_1_44_0.tar.bz2
-	185d60944ea767075d27247c3162b3bc-unowinreg.dll
-	9f9e15966b5624834157fe3d748312bc-mdds_0.6.1.tar.bz2
-	798b2ffdc8bcfe7bca2cf92b62caf685-rhino1_5R5.zip
+
+noextract=(
 	1f24ab1d39f4a51faf22244c94a6203f-xmlsec1-1.2.14.tar.gz
-	dc3d21a3921931096d6e80f6701f6763-libexttextcat-3.4.0.tar.bz2
-	b2371dc7cf4811c9d32146eec913d296-libcmis-0.3.0.tar.gz
 	35c94d2df8893241173de1d16b6034c0-swingExSrc.zip
+	798b2ffdc8bcfe7bca2cf92b62caf685-rhino1_5R5.zip
 	2a177023f9ea8ec8bd00837605c5df1b-jakarta-tomcat-5.0.30-src.tar.gz
 	a7983f859eafb2677d7ff386a023bc40-xsltml_2.1.2.zip
 	3c219630e4302863a9a83d0efde889db-commons-logging-1.1.1-src.tar.gz
-	2ae988b339daec234019a7066f96733e-commons-lang-2.3-src.tar.gz
+	625ff5f2f968dd908bca43c9469d6e6b-commons-lang-2.4-src.tar.gz
 	2c9b0f83ed5890af02c0df1c1776f39b-commons-httpclient-3.1-src.tar.gz
-	af3c3acf618de6108d65fcdc92b492e1-commons-codec-1.3-src.tar.gz
+	2e482c7567908d334785ce7d69ddfff7-commons-codec-1.6-src.tar.gz
 	eeb2c7ddf0d302fba4bfc6e97eac9624-libbase-1.1.6.zip
 	39bb3fcea1514f1369fcfc87542390fd-sacjava-1.3.zip
 	3404ab6b1792ae5f16bbd603bd1e1d03-libformula-1.1.7.zip
@@ -138,17 +133,20 @@ noextract=(f02578f5218f217a9f20e9c30e119c6a-boost_1_44_0.tar.bz2
 	ace6ab49184e329db254e454a010f56d-libxml-1.1.7.zip
 	db60e4fde8dd6d6807523deb71ee34dc-liblayout-0.2.10.zip
 	ba2930200c9f019c2d93a8c88c651a0f-flow-engine-0.9.4.zip
-	8755aac23317494a9028569374dc87b2-liborcus_0.3.0.tar.bz2
-	54e578c91b1b68e69c72be22adcb2195-liblangtag-0.4.0.tar.bz2
+	08c85a6d6d793daee14e10e22eefdc4b-mdds_0.8.1.tar.bz2
+	dc3d21a3921931096d6e80f6701f6763-libexttextcat-3.4.0.tar.bz2
+	b2371dc7cf4811c9d32146eec913d296-libcmis-0.3.0.tar.gz
+	ea2acaf140ae40a87a952caa75184f4d-liborcus-0.5.1.tar.bz2
+	36271d3fa0d9dec1632029b6d7aac925-liblangtag-0.5.1.tar.bz2
 	0168229624cfac409e766913506961a8-ucpp-1.3.2.tar.gz
 	17410483b5b5f267aa18b7e00b65e6e0-hsqldb_1_8_0.zip
+	185d60944ea767075d27247c3162b3bc-unowinreg.dll
 	libcdr-0.0.14.tar.bz2
 	libmspub-0.0.6.tar.bz2
-	libvisio-0.0.28.tar.bz2)
+	libvisio-0.0.31.tar.bz2)
 
 
-build() {
-
+prepare() {
     cd ${srcdir}/libreoffice-$_LOver
     
     # fix exttextcat build error
@@ -175,11 +173,16 @@ build() {
 	done
 
 
+}
+
+
+build() {
+
+    cd libreoffice-$_LOver
+
     ./autogen.sh --with-build-version="${_LOver} Chakra GNU/Linux-${pkgrel}" --with-vendor="Chakra GNU/Linux" \
-		--with-unix-wrapper="libreoffice" \
 		--enable-split-app-modules \
 		--with-parallelism=${MAKEFLAGS/-j/} \
-		--with-max-jobs=${MAKEFLAGS/-j/} --with-num-cpus=${MAKEFLAGS/-j/} \
 		--with-external-tar="${srcdir}/ext_sources" \
 		--disable-fetch-external \
 		--prefix=/usr --exec-prefix=/usr --sysconfdir=/etc \
@@ -205,8 +208,6 @@ build() {
 		--enable-python=system \
 		--enable-scripting-beanshell \
 		--enable-scripting-javascript \
-		--disable-ext-mysql-connector \
-		--with-system-mysql \
 		--without-fonts \
 		--without-afms \
 		--without-ppds \
@@ -222,7 +223,6 @@ build() {
 		--without-system-libexttextcat \
 		--without-system-orcus \
 		--without-system-liblangtag \
-		--without-system-mozilla \
 		--without-system-npapi-headers \
 		--with-system-dicts \
 		--with-external-dict-dir=/usr/share/hunspell \
@@ -234,9 +234,8 @@ build() {
 		--with-system-libwpg \
 		--with-system-libwps \
 		--with-system-redland \
-		--without-system-saxon \
 		--with-ant-home="/usr/share/java/apache-ant"\
-		--without-system-boost \
+		--with-system-boost \
 		--with-system-cairo \
 		--with-system-libs \
 		--with-system-mythes \
@@ -260,7 +259,7 @@ package_libreoffice-common() {
  install=${pkgbase}.install
  depends=('libreoffice-langpack' "hunspell" "python3" "neon"
           'nspr' "icu" 'libsm' 'redland' 'hyphen' 'graphite' 'lcms2' 'poppler'
-          'hicolor-icon-theme' 'desktop-file-utils' 'shared-mime-info' 'xdg-utils' 'clucene')
+          'hicolor-icon-theme' 'desktop-file-utils' 'shared-mime-info' 'xdg-utils' 'clucene' 'libodfgen' 'libmwaw')
           #'saxon'
  optdepends=('libreoffice-langpack: additional language support'
              'java-runtime:     adds java support'
@@ -296,11 +295,14 @@ replaces=('libreoffice'
           'libreoffice-extension-watch-window'
           'libreoffice-extension-wiki-publisher'
           'libreoffice-extension-pdfimport'
-          'libreoffice-extension-presenter-screen')
+          'libreoffice-extension-presenter-screen'
+          'libreoffice-extensions-report-builder'
+)
 provides=('libreoffice-extension-pdfimport'
           'libreoffice-extension-presenter-screen'
           'libreoffice-scripting-beanshell'
           'libreoffice-scripting-javascript'
+          'libreoffice-extensions-report-builder'
           'libreoffice-extension-scripting-python')
 
  # create directories from *list.txt file
@@ -335,6 +337,13 @@ provides=('libreoffice-extension-pdfimport'
  rm -f ${pkgdir}/usr/lib/libreoffice/program/classes/ScriptProviderForJavaScript.jar
  rm -f ${pkgdir}/usr/lib/libreoffice/program/classes/js.jar
  rm -f ${pkgdir}/usr/lib/libreoffice/program/services/scriptproviderforjavascript.rdb
+
+ # workaround all packages now depend on that file
+ cp ${srcdir}/fakeinstall/usr/lib/libreoffice/share/registry/writer.xcd ${pkgdir}/usr/lib/libreoffice/share/registry/writer.xcd
+
+ # move dicts to en-US langpack to avoid file conflicts with en-GBen-ZA packages
+ mv ${pkgdir}/usr/lib/libreoffice/share/wordbook/en-GB.dic ${srcdir}/
+ mv ${pkgdir}/usr/lib/libreoffice/share/wordbook/en-US.dic ${srcdir}/
 }
 
 package_libreoffice-base() {
@@ -587,15 +596,4 @@ package_libreoffice-extension-presentation-minimizer() {
 
 	install -dm755 ${pkgdir}/usr/lib/libreoffice/share/extensions
 	unzip -q ${srcdir}/libreoffice-$_LOver/solver/unxlng*/bin/presentation-minimizer.oxt -d ${pkgdir}/usr/lib/libreoffice/share/extensions/presentation-minimizer
-}
-
-package_libreoffice-extension-report-builder() {
-
- pkgdesc="This extension creates smart-looking database reports"
- arch=('any')
- depends=('libreoffice-common' 'libreoffice-kde4' 'java-environment')
- groups=('libreoffice-extensions')
-
-	install -dm755 ${pkgdir}/usr/lib/libreoffice/share/extensions
-	unzip -q ${srcdir}/libreoffice-$_LOver/solver/unxlng*/bin/report-builder.oxt -d ${pkgdir}/usr/lib/libreoffice/share/extensions/report-builder
 }
