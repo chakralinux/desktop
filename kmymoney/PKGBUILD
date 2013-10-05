@@ -1,8 +1,8 @@
 # Maintainer: abveritas@chakra-project.org
 
 pkgname=kmymoney
-pkgver=4.6.3
-pkgrel=3
+pkgver=4.6.4
+pkgrel=1
 pkgdesc="An finance manager for KDE4 with HBCI support"
 arch=('x86_64')
 url="http://kmymoney2.sourceforge.net"
@@ -10,25 +10,24 @@ license=('GPL')
 depends=('kde-workspace' 'aqbanking-qt4' 'shared-mime-info' 'boost-libs' 'pulseaudio'
          'libofx' 'alkimia')
 makedepends=('cmake' 'automoc4' 'gwenhywfar' 'docbook-xsl' 'boost' 'doxygen')
-provides=()
 conflicts=(kmymoney2)
 replaces=(kmymoney2)
 categories=('office')
 
-source=("http://sourceforge.net/projects/kmymoney2/files/KMyMoney-KDE4/$pkgver/$pkgname-$pkgver.tar.bz2" "git-fixes.diff")
-sha1sums=('52faa3938c77b1ef513d1a46f5545ed823595c51'
-          '0b6876cee094b90083400f1de36e162b6617d9aa')
+source=("http://sourceforge.net/projects/kmymoney2/files/KMyMoney-KDE4/$pkgver/$pkgname-$pkgver.tar.xz/download")
+sha1sums=('3e4b17574684fd717fc75963d0a0c4d31aa81b71')
 
 prepare() {
-  cd "${srcdir}/${pkgname}-${pkgver}"
-
-  patch -Np1 -i ../git-fixes.diff
+  cd "${srcdir}"
+  rm -rf build
+  mkdir build
 }
 
 build() {
-  cd ${srcdir}/$pkgname-$pkgver
+  cd ${srcdir}/build
 
-  cmake -DCMAKE_INSTALL_PREFIX=/usr \
+  cmake "${srcdir}/${pkgname}-${pkgver}" \
+        -DCMAKE_INSTALL_PREFIX=/usr \
         -DCMAKE_BUILD_TYPE=RELEASE \
         -DCMAKE_SKIP_RPATH=YES \
         -DKDE4_BUILD_TESTS=OFF
@@ -36,7 +35,7 @@ build() {
 }
 
 package() {
-  cd ${srcdir}/$pkgname-$pkgver
+  cd ${srcdir}/build
 
   make DESTDIR=${pkgdir} install
 }
