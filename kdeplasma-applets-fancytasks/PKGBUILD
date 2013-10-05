@@ -5,7 +5,7 @@
 
 pkgname=kdeplasma-applets-fancytasks
 pkgver=1.1.2
-pkgrel=1
+pkgrel=2
 pkgdesc="Plasmoid Binary"
 arch=('x86_64')
 url="http://www.kde-look.org/content/show.php/Fancy+Tasks?content=99737"
@@ -18,16 +18,15 @@ source=("https://opendesktop.org/CONTENT/content-files/99737-fancytasks-${pkgver
 sha256sums=('80ecc4956b76da68578544be56e3fdc0315f6d682d1e3404bce84236976c709c')
 
 build() {
-  cd "${srcdir}/fancytasks-${pkgver}"
+  cd fancytasks-${pkgver}
   [[ -d build ]] && rm -fR build
-  mkdir build
-  cd build
+  mkdir build && cd build
   cmake ../ -DCMAKE_INSTALL_PREFIX=`kde4-config --prefix`
   make
 }
 
 package() {
-  cd "${srcdir}/fancytasks-${pkgver}/build"
+  cd fancytasks-${pkgver}/build
   make DESTDIR="${pkgdir}" install
 }
 

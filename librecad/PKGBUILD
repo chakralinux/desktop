@@ -1,41 +1,48 @@
-#
-# Apps Packages for Chakra, part of chakra-project.org
-#
-# Maintainer: Adrián Chaves Fernández (Gallaecio) <adriyetichaves@gmail.com>
+# Maintainer: Christian Hesse <mail@eworm.de>
+# Contributor: mickele <mimocciola at yahoo dot com> (librecad-git PKGBUILD)
+# Contributor: Ilmari Repo <ilmari at gmail dot com> (librecad-svn PKGBUILD)
+# Contributor: GazJ Gary James <garyjames82 at gmail dot com> (CADuntu PKGBUILD)
 
 pkgname=librecad
-_pkgname=LibreCAD
-pkgver=1.0.2
-_pkgtag=a5c34b2
+pkgver=2.0.0rc2
 pkgrel=1
 pkgdesc="A 2D CAD drawing tool based on the community edition of QCad"
 arch=('x86_64')
 url="http://www.librecad.org/"
-license=('GPL3')
-depends=('qt' 'boost' 'muparser')
-categories=('graphics')
-source=("${pkgname}-${pkgver}.tar.bz2::https://github.com/$_pkgname/$_pkgname/tarball/v${pkgver}"
-	"http://aur.archlinux.org/packages/li/$pkgname/$pkgname.tar.gz")
-md5sums=('afaa38dc54fc9a694b17aed19b1a3269'
-         'e70c1d87fee314e7291a83db4e545285')
+license=('GPL')
+depends=('qt' 'muparser' 'boost')
+makedepends=('imagemagick')
+conflicts=('librecad-git')
+replaces=('librecad-svn' 'caduntu' 'caduntu-svn')
+install=librecad.install
+source=("LibreCAD-${pkgver}::https://github.com/LibreCAD/LibreCAD/archive/2.0.0rc2.tar.gz")
+sha256sums=('5b645854809e7fb2b4945b64bd2132edef1253feca9fc94a03c3288e01cdb882')
 
 build() {
-  cd "${srcdir}/$_pkgname-$_pkgname-${_pkgtag}"
-  qmake
-  make
+	cd "${srcdir}/LibreCAD-${pkgver}"
+
+	qmake librecad.pro
+	make
 }
 
 package() {
-  cd "${srcdir}/$_pkgname-$_pkgname-${_pkgtag}"
+	cd "${srcdir}/LibreCAD-${pkgver}"
 
-  # Executable.
-  install -D -m 755 unix/$pkgname ${pkgdir}/usr/bin/$pkgname
+	install -D -m 755 unix/librecad "${pkgdir}/usr/bin/librecad"
+	install -D -m 755 unix/ttf2lff "${pkgdir}/usr/bin/ttf2lff"
 
-  # Desktop Integration.
-  install -D -m 644 "${srcdir}/$pkgname/$pkgname.desktop" "${pkgdir}/usr/share/applications/$pkgname.desktop"
-  install -D -m 644 res/main/$pkgname.png "${pkgdir}/usr/share/pixmaps/$pkgname.png"
+	install -D -m 644 desktop/librecad.desktop "${pkgdir}/usr/share/applications/librecad.desktop"
+	install -D -m 644 desktop/librecad.1 "${pkgdir}/usr/share/man/man1/librecad.1"
 
-  # Resources.
-  mkdir -p "${pkgdir}/usr/share/$pkgname/"
-  cp -r unix/resources/{library,patterns,fonts,qm} "${pkgdir}/usr/share/$pkgname/"
+	for SIZE in 16 24 32 48 64 96 128; do
+		convert -scale ${SIZE} \
+			desktop/graphics_icons_and_splash/Icon\ LibreCAD/Icon_Librecad.svg \
+			${srcdir}/librecad.png
+		install -D -m 644 ${srcdir}/librecad.png "${pkgdir}/usr/share/icons/hicolor/${SIZE}x${SIZE}/apps/librecad.png"
+	done
+	install -D -m 644 desktop/graphics_icons_and_splash/Icon\ LibreCAD/Icon_Librecad.svg "${pkgdir}/usr/share/icons/hicolor/scalable/apps/librecad.svg"
+
+	mkdir -p "${pkgdir}/usr/share/librecad/"
+	cp -r unix/resources/{library,patterns,fonts,qm} "${pkgdir}/usr/share/librecad/"
 }
+

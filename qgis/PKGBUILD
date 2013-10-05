@@ -3,13 +3,14 @@
 #
 
 pkgname=qgis
-pkgver=1.8.0
+pkgver=2.0.1
 pkgrel=1
 pkgdesc='A Geographic Information System (GIS) that supports vector, raster & database formats.'
 url='http://qgis.org/'
 license=('GPL')
-arch=('i686' 'x86_64')
-depends=('libmysqlclient' 'postgresql-libs' 'sqlite3' 'jasper' 'curl' 'qt' 'python2' 'pyqt' 'giflib' 'xerces-c' 'cfitsio' 'qwt' 'gdal' 'flex' 'bison' 'graphviz' 'libspatialite' 'spatialindex')
+arch=('x86_64')
+depends=('libmysqlclient' 'postgresql-libs' 'sqlite3' 'jasper' 'curl' 'qt' 'python2' 'pyqt4-python2' 'giflib' 'xerces-c' 'cfitsio' 'qwt' 'gdal' 'flex' 'bison' 
+'graphviz' 'libspatialite' 'spatialindex' 'python2-psycopg2')
 makedepends=('grass' 'gsl' 'postgis' 'netcdf' 'cmake' 'fcgi' 'sip')
 optdepends=('postgis: postgis support and SPIT plugin'
             'fcgi: qgis mapserver'
@@ -20,7 +21,7 @@ optdepends=('postgis: postgis support and SPIT plugin'
 categories=('education')
 source=("http://qgis.org/downloads/${pkgname}-${pkgver}.tar.bz2"
         'qgis.desktop')
-md5sums=('1d60520f81d7763c026d0af887ac9a05'
+md5sums=('3822c7dd70e2d893a0f1baa9c72316d2'
          '8ab66039f2aba519b92f52272ec3c13e')
 
 build() {

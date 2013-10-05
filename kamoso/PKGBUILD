@@ -1,24 +1,30 @@
-#
-# Chakra Packages for Chakra, part of chakra-project.org
-#
-# contributor: alex@eyeos.org, aleixpol@kde.org
-
-# include global config
-source ../_buildscripts/${current_repo}-${_arch}-cfg.conf
+# Maintainer: Neophytos Kolokotronis <tetris4@gmail.com>
 
 pkgname=kamoso
-pkgver=2.0.3
+pkgver=2.0.3.3
 pkgrel=1
 pkgdesc="Kamoso is an application to take pictures and videos out of your webcam."
 url="https://projects.kde.org/projects/playground/multimedia/kamoso/"
-arch=('i686' 'x86_64')
+arch=('x86_64')
 license=('GPL')
-depends=('kde-workspace' 'qtgstreamer-git' 'kipi-plugins')
+depends=('kde-workspace' 'qt-gstreamer' 'kipi-plugins')
 makedepends=('cmake' 'git' 'automoc4')
 conflicts=('kamoso-git')
 categories=('multimedia')
-source=("http://www.chakra-linux.org/sources/$pkgname/$pkgname-$pkgver.tar.xz")
-md5sums=('bb4beeb2326857f5492ff4fb68ea15a3')
+screenshot=('http://kde-apps.org/CONTENT/content-pre1/111750-1.png')
+source=("$pkgname-$pkgver.tar.bz2"::"http://quickgit.kde.org/?p=kamoso.git&a=snapshot&h=060845e7e13114fa422e8107687aabac8f70a118&fmt=tbz2")
+md5sums=('7ef8a58dcc3a9410787ff9550bcebf88')
+
+# create tarball: source PKGBUILD && mksource
+#
+#mksource() {
+#  git clone git://anongit.kde.org/kamoso
+#  pushd kamoso
+#  popd
+#  tar -cvJf kamoso-${pkgver}.tar.xz kamoso/*
+#  md5sum kamoso-${pkgver}.tar.xz
+#}
+
 
 build() {
     cd "$srcdir/$pkgname"

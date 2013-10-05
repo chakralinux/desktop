@@ -6,21 +6,30 @@
 
 pkgbase=transmission
 pkgname=('transmission-cli' 'transmission-qt')
-pkgver=2.81
-pkgrel=1
+pkgver=2.82
+pkgrel=3
 arch=('x86_64')
 url="http://www.transmissionbt.com/"
 license=('MIT')
 makedepends=('intltool' 'curl' 'pkgconfig' 'desktop-file-utils' 'qt' 'libevent' 'gettext')
 source=("http://mirrors.m0k.org/transmission/files/${pkgbase}-${pkgver}.tar.xz"
-        'transmission.systemd' 'transmission.tmpfiles')
-md5sums=('db1ad10ecff07150486dab2365ccb3a8'
+        'transmission.systemd'
+        'transmission.tmpfiles'
+        'build-against-qt-4-and-5.patch')
+md5sums=('a5ef870c0410b12d10449c2d36fa4661'
          '5c289c8901221a94be74665368ab5c2c'
-         '23f2320361ad54373c3a4551ef634fe8')
+         '23f2320361ad54373c3a4551ef634fe8'
+         'd747baff383df78e6544d5a0a5106268')
 
 build() {
   cd "${srcdir}/${pkgbase}-${pkgver}"
 
+  # with this patch can be build against qt4
+  # upstream included from version > 2.82
+  pushd qt
+  patch -Np0 -i "$srcdir/build-against-qt-4-and-5.patch"
+  popd
+  
   export CFLAGS="$CFLAGS -fno-strict-aliasing"
 
   ./configure --prefix=/usr --enable-nls
@@ -50,7 +59,7 @@ package_transmission-cli() {
 
 package_transmission-qt() {
   pkgdesc="Fast, easy, and free BitTorrent client (Qt GUI)"
-  depends=('curl' 'qt' 'libevent')
+  depends=('curl' 'qt' 'libevent' 'qt5-base')
   optdepends=('transmission-cli: daemon and web support')
   categories=('network')
   screenshot=('http://www.transmissionbt.com/images/screenshots/Qt-Large.jpg')

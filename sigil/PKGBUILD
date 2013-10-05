@@ -1,26 +1,30 @@
+#
+# Apps Packages for Chakra, part of chakra-project.org
+#
 # maintainer abveritas@chakra-project.org
+# contributor Giuseppe CalÃ  <jiveaxe@gmail.com>
 
 pkgname=sigil
 _pkgname=Sigil
-pkgver=0.7.1
+pkgver=0.7.3
 pkgrel=1
 pkgdesc="A multi-platform WYSIWYG ebook editor. It is designed to edit books in ePub format. "
 arch=('x86_64')
 url="http://code.google.com/p/sigil/"
 license=('GPL3')
-depends=('qt5' 'boost-libs')
-makedepends=('cmake' 'gendesk' 'boost')
+depends=('qt5-base' 'qt5-webkit' 'boost-libs')
+makedepends=('cmake' 'gendesk' 'boost' 'qt5-tools' 'qt5-svg')
 categories=('office')
 install=sigil.install
 screenshot=('http://1.bp.blogspot.com/-K2Q-tdVbPRI/UI08v7LhzHI/AAAAAAAAABY/vZ5LHjM6nb4/s1600/Screen+Shot+2012-10-28+at+10.07.03+AM.png')
 source=("http://$pkgname.googlecode.com/files/$_pkgname-$pkgver-Code.zip")
-md5sums=('e6c281b6702a8f9d79cc85703dc8d3ea')
+sha1sums=('65ffc915a191e4d91dc57bfb56f5397f76c72f27')
 
 
 build() {
   gendesk -n
 
-  mkdir build 
+  mkdir -p build 
   cd build
 
   cmake -G "Unix Makefiles" \

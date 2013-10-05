@@ -1,8 +1,8 @@
 # maintainer: almack
 
 pkgname=calibre
-pkgver=1.0.0
-pkgrel=1
+pkgver=1.5.0
+pkgrel=2
 pkgdesc="Ebook management application"
 arch=('x86_64')
 url="http://calibre.kovidgoyal.net/"
@@ -17,10 +17,10 @@ makedepends=('python2-pycountry' 'qt-private-headers')
 #optdepends=('ipython: to use calibre-debug')
 screenshot=('https://lh5.googleusercontent.com/_lG58t3XWd3c/TcNwiXkAx_I/AAAAAAAAAEc/M34I4uY9UUY/s800/gui.jpeg')
 install=${pkgname}.install
-source=("http://sourceforge.net/projects/${pkgname}/files/${pkgver}/${pkgname}-${pkgver}.tar.xz"
+source=("http://download.calibre-ebook.com/${pkgver}/${pkgname}-${pkgver}.tar.xz"
         'desktop_integration.patch'
         'calibre-mount-helper')
-sha256sums=('c23493eb2041f16ad8a664b52fecb5e5fa05f690dbf2b796445346436c32e363'
+sha256sums=('f6eaf0d44ceb82fd80f5cde19c3be409ce268d28b443824a850f887088fc579e'
             '6f236dcf44f3c5d1f227302a2a0b51dd82043cf8f3eb9efb1150b7acac9b945b'
             '1cdbd23edfea0b08f7bd089e3302ca9601737aac18537406f0408b449aea32d1')
 
@@ -30,9 +30,13 @@ prepare() {
   rm -rf src/cherrypy
   rm -rf resources/${pkgname}-portable.*
   mkdir -p src/calibre/plugins
-  
-  sed -i -e "s/ldflags = shlex.split(ldflags)/ldflags = shlex.split(ldflags) + ['-fPIC']/" setup/extensions.py
-  
+
+  sed -i -e "s/ldflags = shlex.split(ldflags)/ldflags = shlex.split(ldflags) + ['-fPIC']/" \
+    setup/extensions.py
+
+  # Fix for shebang in meta.py
+  sed -i -e "s:#!usr:#!/usr:g" src/calibre/ebooks/markdown/extensions/meta.py
+
   sed -i -e 's:\(#!/usr/bin/env[ ]\+python$\|#!/usr/bin/python$\):\12:g' \
     $(find . -regex ".*.py\|.*.recipe")
 }
