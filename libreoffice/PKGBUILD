@@ -21,7 +21,7 @@ _LOver=4.1.2.3
 pkgver=4.1.2
 _pkgver=4.1.2
 _HIver=4.0
-pkgrel=1
+pkgrel=2
 arch=('x86_64')
 _OFFICEUPD="340"
 license=('LGPL3')
@@ -567,6 +567,9 @@ package_libreoffice-writer() {
    # mv file from fakeinstall to pkgdir
    mv ${srcdir}/fakeinstall${file} ${pkgdir}$file
  done
+
+ # workaround all packages now depend on that file
+ rm ${pkgdir}/usr/lib/libreoffice/share/registry/writer.xcd
 }
 
 package_libreoffice-en-US() {
