@@ -3,7 +3,7 @@
 
 pkgname=clementine
 pkgver=1.1.1
-pkgrel=4
+pkgrel=5
 pkgdesc="A modern music player and library organiser and a port of Amarok 1.4, with some features rewritten to take advantage of Qt4."
 url="http://www.clementine-player.org/"
 screenshot="http://images.clementine-player.org/screenshots/clementine-1.0-3.png"
@@ -19,8 +19,16 @@ optdepends=('gstreamer0.10-base-plugins: for more open formats'
             'gstreamer0.10-bad-plugins: for use with "Bad" plugin libraries'
             'gstreamer0.10-ugly-plugins: for use with "Ugly" plugin libraries')
 categories=('multimedia')
-source=("http://clementine-player.googlecode.com/files/${pkgname}-${pkgver}.tar.gz")
-sha1sums=('f8d3e9c8f54ac488323ab5a629c9accbe256378e')
+source=("http://clementine-player.googlecode.com/files/${pkgname}-${pkgver}.tar.gz"
+      'clementine-1.1.1-libimobiledevice-fix.patch')
+sha1sums=('f8d3e9c8f54ac488323ab5a629c9accbe256378e'
+          'c9ee820249792806088f4c6f298f575217ed90d4')
+
+prepare() {
+  cd "${srcdir}/${pkgname}-${pkgver}"
+
+  patch -Np1 -i ../clementine-1.1.1-libimobiledevice-fix.patch
+}
 
 build() {
   cd "${srcdir}/${pkgname}-${pkgver}"
