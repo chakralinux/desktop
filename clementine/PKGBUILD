@@ -3,7 +3,7 @@
 
 pkgname=clementine
 pkgver=1.1.1
-pkgrel=5
+pkgrel=6
 pkgdesc="A modern music player and library organiser and a port of Amarok 1.4, with some features rewritten to take advantage of Qt4."
 url="http://www.clementine-player.org/"
 screenshot="http://images.clementine-player.org/screenshots/clementine-1.0-3.png"
@@ -20,28 +20,27 @@ optdepends=('gstreamer0.10-base-plugins: for more open formats'
             'gstreamer0.10-ugly-plugins: for use with "Ugly" plugin libraries')
 categories=('multimedia')
 source=("http://clementine-player.googlecode.com/files/${pkgname}-${pkgver}.tar.gz"
-      'clementine-1.1.1-libimobiledevice-fix.patch')
-sha1sums=('f8d3e9c8f54ac488323ab5a629c9accbe256378e'
-          'c9ee820249792806088f4c6f298f575217ed90d4')
+        "clementine-1.1.1-libimobiledevice-fix.patch")
+sha256sums=('a94dfbd4732155ff1d4f24bb792d9e4def5bf4a42dd6678638c0400217a6fda9'
+            '688bdd15c898cb198dc85d58e2dedcca33771e374b4c6b621be723bafc167590')
 
 prepare() {
-  cd "${srcdir}/${pkgname}-${pkgver}"
+  cd ${pkgname}-${pkgver}
 
   patch -Np1 -i ../clementine-1.1.1-libimobiledevice-fix.patch
 }
 
 build() {
-  cd "${srcdir}/${pkgname}-${pkgver}"
+  cd ${pkgname}-${pkgver}
 
   mkdir -p build && cd build
   cmake ../ -DCMAKE_INSTALL_PREFIX=/usr \
             -DCMAKE_BUILD_TYPE=Release \
             -DSTATIC_SQLITE=OFF
-
   make
 }
 
 package() {
-  cd "${srcdir}/${pkgname}-${pkgver}/build"
+  cd ${pkgname}-${pkgver}/build
   make install DESTDIR="${pkgdir}"
 }
