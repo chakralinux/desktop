@@ -8,7 +8,7 @@
 pkgname=knightsgame
 _pkgname=knights
 pkgver=022
-pkgrel=1
+pkgrel=2
 pkgdesc='Action game that was originally released for Amiga in 1994.'
 arch=('i686' 'x86_64')
 url='http://www.knightsgame.org.uk/'
@@ -17,8 +17,14 @@ depends=(boost-libs curl 'directfb' fontconfig sdl)
 makedepends=(boost)
 options=('!makeflags')
 categories=('games')
-source=("http://www.knightsgame.org.uk/files/${_pkgname}_${pkgver}_src.tar.gz")
-md5sums=('e840dacb0ccda4bd48768bd4e7068be0')
+source=("http://www.knightsgame.org.uk/files/${_pkgname}_${pkgver}_src.tar.gz" "boost.patch")
+md5sums=('e840dacb0ccda4bd48768bd4e7068be0'
+         'a74cf2b78a176385081d5d9d99024dee')
+
+prepare() {
+  cd ${_pkgname}_${pkgver}_src
+  patch  -R -p2 < ${srcdir}/boost.patch # -R because I created the patch the wrong way around...
+}
 
 build() {
   cd ${_pkgname}_${pkgver}_src
