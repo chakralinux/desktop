@@ -1,0 +1,32 @@
+# maintainer abveritas@chakra-project.org
+# Contributor: Sandro Andrade <sandroandrade at kde.org>
+
+pkgname=snowshoe
+pkgver=1.0
+_pkgver=f131998
+pkgrel=2
+pkgdesc="Cross platform browser application with multiple user interfaces based on Qt5 and WebKit2 technologies"
+arch=('x86_64')
+url="http://snowshoe.openbossa.org/"
+license=('LGPL')
+depends=('qt5-quick1')
+source=("https://github.com/snowshoe/snowshoe/tarball/master")
+md5sums=('e0151a51ba788d9cfb64a15cfafbcf64')
+
+build() {
+  cd $srcdir/snowshoe-snowshoe-${_pkgver}
+
+  mkdir build
+  cd build
+  
+  export QML_IMPORT_PATH=/usr/lib/qt5/imports/
+ 
+  /usr/lib/qt5/bin/qmake ../
+  make 
+}
+ 
+package() {
+  cd $srcdir/snowshoe-snowshoe-${_pkgver}/build
+  make INSTALL_ROOT=${pkgdir} install
+}
+
