@@ -13,7 +13,7 @@ pkgname=('kdebindings-python-common'
 	 'kdebindings-python2'
          'kdebindings-python3')
 pkgver=${_kdever}
-pkgrel=9
+pkgrel=11
 url="https://projects.kde.org/projects/kde/kdebindings/pykde4"
 arch=('x86_64')
 license=('GPL' 'LGPL' 'FDL')
@@ -33,10 +33,6 @@ source=("$_mirror/pykde4-$_kdever.tar.xz")
 sha1sums=(`grep pykde4-$_kdever.tar.xz ../kde-sc.md5 | cut -d" " -f1`)
 groups=("kde" "kdebindings" "kde-uninstall")
 options=('docs' '!header' 'debug' 'log')
-
-#provides=('kdebindings-python' 'pykde4')
-#replaces=('kdebindings-python')
-#conflicts=('kdebindings-python')
 
 prepare() {
 	cd "${srcdir}" 
@@ -89,8 +85,8 @@ package_kdebindings-python2() {
            "kdepim-runtime>=${_kdever}"
            "kdebindings-python-common")
   conflicts=('kdebindings-pykde4<4.11.2')
-  provides=("kdebindings-pykde4=${pkgver}")
-  replaces=('kdebindings-pykde4')
+  provides=("kdebindings-pykde4=${pkgver}" 'kdebindings-python' 'pykde4')
+  replaces=('kdebindings-pykde4' 'kdebindings-pykde4-python2')
  
   cd "${srcdir}"/build-python2
   make DESTDIR="${pkgdir}" install
@@ -102,11 +98,11 @@ package_kdebindings-python2() {
 
 package_kdebindings-python-common() {
   pkgdesc="Common files shared between python2 and python3 kdebindings-pykde"
-  conflicts=('kdebindings-pykde<4.11.2')
+  conflicts=('kdebindings-pykde<4.11.2' 'kdebindings-pykde4-common')
+  replaces=('kdebindings-pykde4-common')
 
   cd ${srcdir}/build-python2
   make DESTDIR="${pkgdir}" install
 
   rm -r "${pkgdir}"/usr/{bin,lib}
 }
-
