@@ -1,0 +1,31 @@
+
+# Apps Packages for Chakra, part of chakra-project.org
+#
+# Maintainer: FranzMari <franzmari[at]chakra-project[dot]it>
+
+pkgname=ctemplate
+pkgver=2.2
+pkgrel=2
+pkgdesc="A library implementing a simple but powerful template language for C++"
+arch=('x86_64')
+url="http://code.google.com/p/ctemplate/"
+license=('BSD')
+depends=('gcc-libs')
+options=('!libtool')
+source=(http://ctemplate.googlecode.com/files/$pkgname-$pkgver.tar.gz)
+md5sums=('1de89d9073f473c1e31862c4581636f3')
+
+build() {
+  cd "${srcdir}/$pkgname-$pkgver"
+
+  CXXFLAGS="$CXXFLAGS" ./configure --prefix=/usr
+  make
+}
+
+package() {
+  cd "${srcdir}/$pkgname-$pkgver"
+  make DESTDIR="${pkgdir}" install
+
+  #license
+  install -D -m644 COPYING "${pkgdir}/usr/share/licenses/$pkgname/LICENSE"
+}
