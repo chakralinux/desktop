@@ -3,10 +3,12 @@
 #
 # Maintainer: Adrián Chaves Fernández (Gallaecio) <adriyetichaves gmail.com>
 
-pkgname=capitalism
-_pkgname=Capitalism
-pkgver=0.5.1
-_pkgver=0.5
+pkgname=capicity
+_pkgname=CapiCity
+_pkgname2="Capi City"
+_projectname=capitalism
+pkgver=1.0
+_pkgver=${pkgver}
 pkgrel=1
 pkgdesc="Interface to play board games like Monopoly™ online."
 arch=('i686' 'x86_64')
@@ -15,17 +17,17 @@ screenshot="http://qt-apps.org/CONTENT/content-pre1/113173-1.png"
 license=('GPL2')
 depends=('qt')
 categories=('games')
-source=(http://downloads.sourceforge.net/project/$pkgname/$_pkgname/$_pkgver/$pkgname-$pkgver.tbz)
-md5sums=('f232647ecee3c2bd9ae53822812e2dd2')
+source=("http://downloads.sourceforge.net/project/$_projectname/$_pkgname2/$_pkgver/${_pkgname}_${pkgver}.tar.gz")
+md5sums=('366bef3eb982bf35c63b8b9cb583ad61')
 
 build() {
-  cd $srcdir/$_pkgname-$pkgver
+  cd $srcdir/${_pkgname}_${pkgver}
   qmake -makefile
   make
 }
 
 package() {
-  cd $srcdir/$_pkgname-$pkgver
+  cd $srcdir/${_pkgname}_${pkgver}
 
   # Binary and data.
   install -d $pkgdir/usr/share/$pkgname
@@ -35,7 +37,7 @@ package() {
   install -d $pkgdir/usr/bin/
   echo "#!/bin/bash"		 > $pkgdir/usr/bin/$pkgname
   echo "cd /usr/share/$pkgname"	>> $pkgdir/usr/bin/$pkgname
-  echo "./$_pkgname \$@"	>> $pkgdir/usr/bin/$pkgname
+  echo "./${_pkgname} \$@"	>> $pkgdir/usr/bin/$pkgname
   chmod +x $pkgdir/usr/bin/$pkgname
 
   # Documentation.
