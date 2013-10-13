@@ -7,17 +7,31 @@
 pkgname=backintime-kde
 pkgver=1.0.26
 _bzrversion=876
-pkgrel=1
+pkgrel=3
 pkgdesc="Back In Time is a simple backup system for Linux inspired from 'flyback project' and 'TimeVault'. KDE 4 version"
 arch=('x86_64')
 url="https://launchpad.net/backintime"
 license="GPL"
-depends=('rsync' 'cron' 'python' 'xorg-utils' 'pyqt' 'kdebindings-python' 'python2-keyring')
+depends=('rsync' 'cron' 'python' 'xorg-utils' 'pyqt' 'kdebindings-python2' 'python2-keyring')
+source=("http://backintime.le-web.org/wp-content/uploads/2009/03/backintime-$pkgver.tar.gz"
+        'fix_spaces_in_anacron_jobs.patch'
+	'fix_AttributeError_with_python-keyring_gt1.6.1.patch'
+	'fix_kde4.patch')
+md5sums=('76f6fb5f44e04866fd7667f522f6b3d4'
+         'caa9f7dcdc16442e4f0a4ef28e84f36b'
+         '2c9bcab4a90f1e5d58773f8ca6912b8e'
+         'e3775996c91584d10aacb3fb2f13fb62')
 makedepends=('bzr')
 categories=('utils' 'backup')
 
 _bzrbranch=lp:backintime 
 _bzrmod=trunk
+
+prepare() {
+  patch -Np1 -i "${srcdir}/fix_spaces_in_anacron_jobs.patch"
+  patch -Np1 -i "${srcdir}/fix_kde4.patch"
+  patch -Np1 -i "${srcdir}/fix_AttributeError_with_python-keyring_gt1.6.1.patch"
+}
 
 build() {
 
