@@ -1,64 +1,58 @@
 # Apps Packages for Chakra, part of www.chakra-project.org
 # Maintainer: H W Tovetjärn (totte) <totte@tott.es>
-# Contributors: Inkane <neoinkaneglade@aol.com>
-#               Sergej Pupykin <pupykin.s+arch@gmail.com>
-#               Vesa Kaihlavirta <vegai@iki.fi>
-#               shild <shildv@gmail.com>
+# Contributors: Stephen McIntosh <stephenmac7[at]gmail[dot]com>
+#               Thomas Dziedzic <gostrc@gmail.com>
+#               Vesa Kaihlavirta <vesa@archlinux.org>
+#               Arch Haskell Team <arch-haskell@haskell.org>
 
+_hkgname=xmonad
 pkgname=xmonad
-pkgver=0.10
-pkgrel=4
-pkgdesc='A lightweight X11 tiled window manager written in Haskell'
-arch=('i686' 'x86_64')
-url='http://xmonad.org/'
-license=('BSD')
-depends=('ghc'
-         'gmp'
-         'haskell-x11'
-         'haskell-mtl'
-         'haskell-utf8-string'
-         'sh')
-optdepends=('xorg-xmessage: for displaying visual error messages')
-install='xmonad.install'
-source=(http://hackage.haskell.org/packages/archive/$pkgname/$pkgver/$pkgname-$pkgver.tar.gz
-        xmonad.desktop
-        xmonad.session
-        xmonad.svg)
-md5sums=('f8381e1ec15137863558a454d4466467'
-         'f8e3d84a9f154d1b5d7fcffbc0a058c9'
-         '9d1bc84a7f32897d32f3fc71ef76228e'
-         '72bfa5e62e4e44fe7fa59b6a7593d993')
+pkgver=0.11
+pkgrel=1
+pkgdesc="A lightweight X11 tiled window manager written in Haskell"
+url="http://hackage.haskell.org/package/xmonad"
+license=('custom:BSD3')
+arch=('x86_64' 'i686')
+makedepends=()
+depends=('ghc=7.6.3-1' 'haskell-X11>=1.5' 'haskell-X11<1.7' 'haskell-base>=3' 'haskell-base<5' 'haskell-containers' 'haskell-directory' 'haskell-extensible-exceptions' 'haskell-filepath' 'haskell-mtl' 'haskell-process' 'haskell-unix' 'haskell-utf8-string>=0.3.0' 'gmp' 'sh')
+options=()
+source=("http://hackage.haskell.org/packages/archive/xmonad/0.11/xmonad-0.11.tar.gz")
+install="xmonad.install"
+sha512sums=('34740f032508584f34f6b138d21394eca17e8020bccc4d8c6e8b3cb6b7ca64b153077cfd16636a6130768ebd145fe993569f8a229862d7816d0c89c905ee08bc')
 
 build() {
-    cd $srcdir/$pkgname-$pkgver
-    runhaskell Setup.lhs configure \
-        --ghc \
-        --enable-shared \
+    cd "${srcdir}/xmonad-0.11"
+    runhaskell Setup configure \
+        -O \
+        ${PKGBUILD_HASKELL_ENABLE_PROFILING:+-p } \
         --enable-split-objs \
-        --prefix=/usr \
-        --libsubdir=\$compiler/site-local/\$pkgid
+        --enable-shared \
+        --prefix="/usr" \
+        --docdir="/usr/share/doc/xmonad" \
+        --libsubdir='$compiler/site-local/$pkgid'
     runhaskell Setup build
-    runhaskell Setup register --gen-script
+    runhaskell Setup haddock
+    runhaskell Setup register   --gen-script
     runhaskell Setup unregister --gen-script
     sed -i -r -e "s|ghc-pkg.*unregister[^ ]* |&'--force' |" unregister.sh
 }
 
 package() {
-    cd $srcdir/$pkgname-$pkgver
+    cd "${srcdir}/xmonad-0.11"
     install -D -m744 register.sh \
-        $pkgdir/usr/share/haskell/$pkgname/register.sh
+        "${pkgdir}/usr/share/haskell/xmonad/register.sh"
     install -m744 unregister.sh \
-        $pkgdir/usr/share/haskell/$pkgname/unregister.sh
-    runhaskell Setup.lhs copy --destdir=$pkgdir
-    #runhaskell util/GenerateManpage.hs
-    install -D -m644 man/xmonad.1 \
-        $pkgdir/usr/share/man/man1/xmonad.1
+        "${pkgdir}/usr/share/haskell/xmonad/unregister.sh"
+    install -d -m755 "${pkgdir}/usr/share/doc/ghc/html/libraries"
+
+    # Documentation
+    ln -s "/usr/share/doc/xmonad/html" \
+        "${pkgdir}/usr/share/doc/ghc/html/libraries/xmonad"
+
+    # License
     install -D -m644 LICENSE \
-        $pkgdir/usr/share/licenses/xmonad/LICENSE
-    install -D -m644 $srcdir/xmonad.desktop \
-        $pkgdir/usr/share/xsessions/xmonad.desktop
-    install -D -m644 $srcdir/xmonad.session \
-        $pkgdir/usr/share/gnome-session/sessions/xmonad.session
-    install -D -m644 $srcdir/xmonad.svg \
-        $pkgdir/usr/share/pixmaps/xmonad.svg
+        "${pkgdir}/usr/share/licenses/xmonad/LICENSE"
+    rm -f "${pkgdir}/usr/share/doc/xmonad/LICENSE"
+
+    runhaskell Setup copy --destdir="${pkgdir}"
 }

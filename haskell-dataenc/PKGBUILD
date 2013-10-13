@@ -1,50 +1,58 @@
 # Apps Packages for Chakra, part of www.chakra-project.org
 # Maintainer: H W Tovetjärn (totte) <totte@tott.es>
-# Contributor: Stephen McIntosh <stephenmac7[at]gmail[dot]com>
+# Contributors: Stephen McIntosh <stephenmac7[at]gmail[dot]com>
+#               Thomas Dziedzic <gostrc@gmail.com>
+#               Vesa Kaihlavirta <vesa@archlinux.org>
+#               Arch Haskell Team <arch-haskell@haskell.org>
 
 _hkgname=dataenc
 pkgname=haskell-dataenc
-pkgver=0.14.0.4
-pkgrel=2
-pkgdesc='Data encoding library'
-url='http://hackage.haskell.org/package/${_hkgname}'
+pkgver=0.14.0.5
+pkgrel=1
+pkgdesc="Data encoding library"
+url="http://hackage.haskell.org/package/dataenc"
 license=('custom:BSD3')
-arch=('i686' 'x86_64')
+arch=('x86_64' 'i686')
 makedepends=()
-depends=('ghc')
+depends=('ghc=7.6.3-1' 'haskell-array>=0.1.0' 'haskell-array<0.5' 'haskell-base>=3.0.0' 'haskell-base<4.7' 'haskell-containers>=0.1.0' 'haskell-containers<0.6')
 options=('strip')
-source=(http://hackage.haskell.org/packages/archive/${_hkgname}/${pkgver}/${_hkgname}-${pkgver}.tar.gz)
-install=${pkgname}.install
-md5sums=('26275b11cedca34e9972db775f078cfa')
+source=("http://hackage.haskell.org/packages/archive/dataenc/0.14.0.5/dataenc-0.14.0.5.tar.gz")
+install="haskell-dataenc.install"
+sha512sums=('b73e5060a3b9c00fbcdadb6dd8ca890c4a6f8ef862822e7d71bde1c0a99de1199cfa384cd8c219f41218f8eef4e9017ecc2c1c186516d7a809aadb599530bf88')
+
 build() {
-    cd ${srcdir}/${_hkgname}-${pkgver}
+    cd "${srcdir}/dataenc-0.14.0.5"
     runhaskell Setup configure \
         -O \
         ${PKGBUILD_HASKELL_ENABLE_PROFILING:+-p } \
         --enable-split-objs \
         --enable-shared \
-        --prefix=/usr \
-        --docdir=/usr/share/doc/${pkgname} \
-        --libsubdir=\$compiler/site-local/\$pkgid
+        --prefix="/usr" \
+        --docdir="/usr/share/doc/haskell-dataenc" \
+        --libsubdir='$compiler/site-local/$pkgid'
     runhaskell Setup build
     runhaskell Setup haddock
     runhaskell Setup register   --gen-script
     runhaskell Setup unregister --gen-script
     sed -i -r -e "s|ghc-pkg.*unregister[^ ]* |&'--force' |" unregister.sh
 }
+
 package() {
-    cd ${srcdir}/${_hkgname}-${pkgver}
+    cd "${srcdir}/dataenc-0.14.0.5"
     install -D -m744 register.sh \
-        ${pkgdir}/usr/share/haskell/${pkgname}/register.sh
+        "${pkgdir}/usr/share/haskell/haskell-dataenc/register.sh"
     install -m744 unregister.sh \
-        ${pkgdir}/usr/share/haskell/${pkgname}/unregister.sh
-    install -d -m755 ${pkgdir}/usr/share/doc/ghc/html/libraries
-    ln -s /usr/share/doc/${pkgname}/html \
-        ${pkgdir}/usr/share/doc/ghc/html/libraries/${_hkgname}
-    runhaskell Setup copy --destdir=${pkgdir}
+        "${pkgdir}/usr/share/haskell/haskell-dataenc/unregister.sh"
+    install -d -m755 "${pkgdir}/usr/share/doc/ghc/html/libraries"
+
+    # Documentation
+    ln -s "/usr/share/doc/haskell-dataenc/html" \
+        "${pkgdir}/usr/share/doc/ghc/html/libraries/dataenc"
 
     # License
     install -D -m644 LICENSE \
-        ${pkgdir}/usr/share/licenses/${pkgname}/LICENSE
-    rm -f ${pkgdir}/usr/share/doc/${pkgname}/LICENSE
+        "${pkgdir}/usr/share/licenses/haskell-dataenc/LICENSE"
+    rm -f "${pkgdir}/usr/share/doc/haskell-dataenc/LICENSE"
+
+    runhaskell Setup copy --destdir="${pkgdir}"
 }
