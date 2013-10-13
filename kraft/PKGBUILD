@@ -1,0 +1,37 @@
+
+# Apps Packages for Chakra, part of chakra-project.org
+#
+# Maintainer: FranzMari <franzmari[at]chakra-project[dot]it>
+
+pkgname=kraft
+pkgver=0.53
+pkgrel=1
+pkgdesc="A program suitable for all trades or crafts"
+arch=('x86_64')
+url="http://www.volle-kraft-voraus.de/"
+screenshot="http://kde-apps.org/content/preview.php?preview=3&id=54172&file1=54172-1.jpg&file2=54172-2.jpg&file3=54172-3.jpg&name=Kraft"
+license=('GPL')
+depends=('kdepimlibs' 'ctemplate' 'python-reportlab' 'python2-pdf')
+makedepends=('cmake' 'automoc4' 'boost')
+source=("http://downloads.sourceforge.net/${pkgname}/${pkgname}-${pkgver}.tar.bz2")
+md5sums=('6f61f3399507e039009c55f038a17000')
+
+build() {
+  cd "${srcdir}"
+  rm -rf build
+  mkdir -p build
+  cd build
+  cmake "../${pkgname}-${pkgver}" \
+    -DCMAKE_BUILD_TYPE=Release \
+    -DCMAKE_INSTALL_PREFIX=/usr
+  make
+
+  # fix wrong exception raising (shouldn't be fatal)
+  sed -i 's/raise ValueError, "Not enough space"/raise ValueError("Not enough space")/' "${srcdir}/${pkgname}-${pkgver}/tools/erml2pdf.py"
+}
+
+package() {
+  cd "${srcdir}/build"
+  make "DESTDIR=${pkgdir}" install
+}
+
