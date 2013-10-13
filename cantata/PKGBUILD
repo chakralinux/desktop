@@ -1,0 +1,39 @@
+#
+# Apps packages for Chakra, part of www.chakra-project.org
+#
+# Maintainer:   H W Tovetjärn (totte) <totte@tott.es>
+# Contributors: (Mcder3) <mcder3@gmail.com>
+#               (SteveK) <stevekej@gmail.com>
+ 
+pkgname=cantata
+pkgver=1.1.3
+pkgdesc="Cantata is a client for Music Player Daemon (MPD)"
+pkgrel=1
+arch=(x86_64)
+url="http://kde-apps.org/content/show.php/Cantata?content=147733"
+license=(GPL)
+screenshot='http://kde-apps.org/CONTENT/content-pre1/147733-1.png'
+makedepends=('cmake' 'automoc4')
+depends=('kdelibs')
+optdepends=('taglib: tag edit dialog and UMS device support'
+            'libmtp: MTP device support'
+            'ffmpeg: ReplayGain detection'
+            'mpg123: ReplayGain detection'
+            'perl-uri: Dynamic playlist support'
+            'cdparanoia: Read/rip Audio CDs'
+            'libcddb: Audio CD support'
+            'libmusicbrainz: Audio CD support')
+source=(http://cantata.googlecode.com/files/${pkgname}-${pkgver}.tar.bz2)
+sha512sums=('22691c1ba9e0f94200f6cdb849be726a')
+
+build() {
+    cd "$srcdir/${pkgname}-${pkgver}"
+    mkdir build && cd build
+    cmake -DCMAKE_INSTALL_PREFIX=/usr .. -DENABLE_HTTP_STREAM_PLAYBACK=ON -DENABLE_REMOTE_DEVICES=ON
+    make
+}
+
+package() {
+    cd "${srcdir}/${pkgname}-${pkgver}/build"
+    make DESTDIR=${pkgdir} install
+}
