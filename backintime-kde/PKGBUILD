@@ -7,36 +7,27 @@
 pkgname=backintime-kde
 pkgver=1.0.26
 _bzrversion=876
-pkgrel=3
+pkgrel=4
 pkgdesc="Back In Time is a simple backup system for Linux inspired from 'flyback project' and 'TimeVault'. KDE 4 version"
 arch=('x86_64')
 url="https://launchpad.net/backintime"
 license="GPL"
 depends=('rsync' 'cron' 'python' 'xorg-utils' 'pyqt' 'kdebindings-python2' 'python2-keyring')
-source=("http://backintime.le-web.org/wp-content/uploads/2009/03/backintime-$pkgver.tar.gz"
-        'fix_spaces_in_anacron_jobs.patch'
-	'fix_AttributeError_with_python-keyring_gt1.6.1.patch'
-	'fix_kde4.patch')
-md5sums=('76f6fb5f44e04866fd7667f522f6b3d4'
-         'caa9f7dcdc16442e4f0a4ef28e84f36b'
-         '2c9bcab4a90f1e5d58773f8ca6912b8e'
-         'e3775996c91584d10aacb3fb2f13fb62')
 makedepends=('bzr')
 categories=('utils' 'backup')
+#source=("http://backintime.le-web.org/wp-content/uploads/2009/03/backintime-${pkgver}.tar.gz"
+source=('fix_spaces_in_anacron_jobs.patch'
+        'fix_AttributeError_with_python-keyring_gt1.6.1.patch'
+        'fix_kde4.patch')
+sha256sums=('01a43ba204ee91de1490bc9670466c62fd6974d3eea06f77097f43bc59c34b1b'
+            '5f6f1e28694fc50dfea3ac65f989763642d95606a253c7f6714c99a1f7c778b8'
+            '7018ac0a97b0d681bcff983c4c9ea4a954e3f76e3be5c4bf842ef1cc74f74585')
 
 _bzrbranch=lp:backintime 
 _bzrmod=trunk
 
 prepare() {
-  patch -Np1 -i "${srcdir}/fix_spaces_in_anacron_jobs.patch"
-  patch -Np1 -i "${srcdir}/fix_kde4.patch"
-  patch -Np1 -i "${srcdir}/fix_AttributeError_with_python-keyring_gt1.6.1.patch"
-}
-
-build() {
-
   msg "Connecting to the server...."
-  cd ${srcdir}
 
   if [[ -d "$_bzrmod" ]]; then
     cd "$_bzrmod" && bzr pull "$_bzrbranch" -r "$_bzrversion"
@@ -47,23 +38,30 @@ build() {
   fi
  
   msg "BZR checkout done or server timeout"
-  msg "Starting make..."
-  
-  cd $srcdir/$_bzrmod/common
-  ./configure
-  make || return 1
 
-  cd $srcdir/$_bzrmod/kde4
+  patch -p0 -i "${srcdir}/fix_spaces_in_anacron_jobs.patch"
+  patch -p0 -i "${srcdir}/fix_AttributeError_with_python-keyring_gt1.6.1.patch"
+  patch -p0 -i "${srcdir}/fix_kde4.patch"
+}
+
+build() {
+msg "Starting make..."
+  
+  cd "${srcdir}/$_bzrmod/common"
   ./configure
-  make || return 1
+  make
+
+  cd "${srcdir}/$_bzrmod/kde4"
+  ./configure
+  make
 }
 
 package(){
-  cd $srcdir/$_bzrmod/common
-  make DESTDIR=${pkgdir} install || return 1
-  sed -i -e 's/python/python2/g' ${pkgdir}/usr/bin/backintime
+  cd "${srcdir}/$_bzrmod/common"
+  make DESTDIR="${pkgdir}" install
+  sed -i -e 's/python/python2/g' "${pkgdir}/usr/bin/backintime"
   
-  cd $srcdir/$_bzrmod/kde4
-  make DESTDIR=${pkgdir} install || return 1
-  sed -i -e 's/python/python2/g' ${pkgdir}/usr/bin/backintime-kde4
+  cd "${srcdir}/$_bzrmod/kde4"
+  make DESTDIR="${pkgdir}" install
+  sed -i -e 's/python/python2/g' "${pkgdir}/usr/bin/backintime-kde4"
 }

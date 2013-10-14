@@ -25,7 +25,7 @@ sha256sums=('51e752967824992d75738551bf7b6ed7fde54e10cef01460f370aa37bd11e6ca'
             '1cdbd23edfea0b08f7bd089e3302ca9601737aac18537406f0408b449aea32d1')
 
 prepare() {
-  cd "${pkgname}"
+  cd ${pkgname}
 
   rm -rf src/cherrypy
   rm -rf resources/${pkgname}-portable.*
@@ -42,14 +42,14 @@ prepare() {
 }
 
 build() {
-  cd "${pkgname}"
+  cd ${pkgname}
   
   LANG='en_US.UTF-8' python2 setup.py build
   #LANG='en_US.UTF-8' python2 setup.py translations
 }
 
 package() {
-  cd "${pkgname}"
+  cd ${pkgname}
 
   patch -p1 -i "${srcdir}/desktop_integration.patch"
 
