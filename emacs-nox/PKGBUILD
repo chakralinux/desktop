@@ -1,13 +1,13 @@
 #
-# Apps Packages for Chakra, part of chakra-project.org
+# Apps packages for Chakra, part of www.chakra-project.org
 #
-# maintainer (x86_64): Manuel Tortosa <manutortosa[at]chakra-project[dot]org>
-
+# Maintainer:   H W Tovetjärn (totte) <totte@tott.es>
+# Contributors: M Tortosa <manutortosa@chakra-project.org>
 
 pkgname=emacs-nox
 pkgver=24.3
-pkgrel=2
-pkgdesc='The Emacs Editor, without X11 support'
+pkgrel=3
+pkgdesc='The extensible, customizable, self-documenting real-time display editor (without X11 support)'
 arch=('x86_64')
 url="http://www.gnu.org/software/emacs/emacs.html"
 license=('GPL3')
@@ -17,37 +17,44 @@ conflicts=('emacs' 'emacs-cvs')
 options=('docs')
 install=$pkgname.install
 source=(ftp://ftp.gnu.org/gnu/emacs/emacs-${pkgver}.tar.gz)
-md5sums=('d20441025efd4931ef64cc2bb18eddc9')
+sha512sums=('d20441025efd4931ef64cc2bb18eddc9')
 
 build() {
-  cd ${srcdir}/emacs-$pkgver
+    cd ${srcdir}/emacs-$pkgver
 
-  ./configure --prefix=/usr --sysconfdir=/etc --libexecdir=/usr/lib \
-    --localstatedir=/var --without-x --without-sound
-  make
+    ./configure \
+        --prefix=/usr \
+        --sysconfdir=/etc \
+        --libexecdir=/usr/lib \
+        --localstatedir=/var \
+        --without-x \
+        --without-sound
+    make
 }
 
 package() {
-  cd ${srcdir}/emacs-$pkgver
-  make DESTDIR=${pkgdir} install
+    cd ${srcdir}/emacs-$pkgver
+    make DESTDIR=${pkgdir} install
 
-  #remove conflict with ctags package
-  mv ${pkgdir}/usr/bin/{ctags,ctags.emacs}
-  mv ${pkgdir}/usr/share/man/man1/{ctags.1.gz,ctags.emacs.1}
-  
-  #fix all the 777 perms on directories
-  find ${pkgdir}/usr/share/emacs/$pkgver -type d -exec chmod 755 {} \;
-  #fix user/root permissions on usr/share files
-  find ${pkgdir}/usr/share/emacs/$pkgver -exec chown root.root {} \;
-  #remove .desktop file and icons
-  rm -rf ${pkgdir}/usr/share/{applications,icons}
+    # Remove conflict with ctags package
+    mv ${pkgdir}/usr/bin/{ctags,ctags.emacs}
+    mv ${pkgdir}/usr/share/man/man1/{ctags.1.gz,ctags.emacs.1}
+    
+    # Fix all the 777 perms on directories
+    find ${pkgdir}/usr/share/emacs/$pkgver -type d -exec chmod 755 {} \;
+    
+    # Fix user/root permissions on usr/share files
+    find ${pkgdir}/usr/share/emacs/$pkgver -exec chown root.root {} \;
+    
+    # Remove .desktop file and icons
+    rm -rf ${pkgdir}/usr/share/{applications,icons}
 
-  # fix perms on /var/games
-  chmod 775 ${pkgdir}/var/games
-  chmod 775 ${pkgdir}/var/games/emacs
-  chmod 664 ${pkgdir}/var/games/emacs/*
-  chown -R root:games ${pkgdir}/var/games
+    # Fix perms on /var/games
+    chmod 775 ${pkgdir}/var/games
+    chmod 775 ${pkgdir}/var/games/emacs
+    chmod 664 ${pkgdir}/var/games/emacs/*
+    chown -R root:games ${pkgdir}/var/games
 
-  # fix conflict with texinfo
-  rm ${pkgdir}/usr/share/info/info.info.gz
+    # Fix conflict with texinfo
+    rm ${pkgdir}/usr/share/info/info.info.gz
 }
