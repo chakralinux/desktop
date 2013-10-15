@@ -4,18 +4,18 @@
 # maintainer abveritas[at]chakra-project[dot]org>
 
 pkgname=sentinella
-pkgver=0.9.1
+pkgver=0.9.2
 pkgrel=1
 pkgdesc="Desktop application that watches your system activity and, in consequence, takes an action that you've chosen."
 url="http://sentinella.sourceforge.net/"
 license=('GPL')
-arch=('i686' 'x86_64')
-depends=('oxygen-icons' 'libsysactivity' 'kdebase-workspace')
+arch=('x86_64')
+depends=('oxygen-icons' 'libsysactivity' 'kde-workspace')
 makedepends=('cmake' 'hicolor-icon-theme' 'automoc4')
 install=sentinella.install
 categories=('utils')
-source=("http://sourceforge.net/projects/${pkgname}/files/0.9.x/sentinella-${pkgver}.tar.gz")
-md5sums=('5ce329ff5edf9066fe02ecd26b907feb')
+source=("http://sourceforge.net/projects/${pkgname}/files/0.9.x/sentinella-${pkgver}.tar.xz")
+md5sums=('c64eb476dd58a31b1f3158121256cc50')
 
 build() {
   cd ${srcdir}/sentinella-${pkgver}
@@ -28,3 +28,4 @@ package() {
   
   make  DESTDIR=${pkgdir} install
 }
+
