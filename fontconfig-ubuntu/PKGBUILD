@@ -1,16 +1,16 @@
 #
 # Apps Packages for Chakra, part of chakra-project.org
 #
-# Maintainer: Adrián Chaves Fernández (Gallaecio) <adriyetichaves gmail.com>
-# Contributor: Paul Bredbury <brebs@sent.com>
-# Contributor: Biru Ionut <biru.ionut at gmail.com>
-# Contributor: Andrea Fagiani <andfagiani {at} gmail {dot} com>
+# Maintainer: Giuseppe Calà <jiveaxe@gmail.com>
 
-pkgname=fontconfig-ubuntu
 _pkgname=fontconfig
+<<<<<<< HEAD
+pkgname=$_pkgname-ubuntu
+=======
+>>>>>>> 6b4cd7a001aa3f8e380d4292040f28c89821ed82
 pkgver=2.10.93
 _pkgver=$pkgver-2ubuntu1
-pkgrel=1
+pkgrel=2
 pkgdesc="A library for configuring and customizing font access, with Ubuntu's LCD rendering patches."
 arch=('x86_64')
 url="http://packages.ubuntu.com/lucid/fontconfig"
@@ -20,6 +20,41 @@ conflicts=($_pkgname)
 provides=("$_pkgname=$pkgver")
 options=('!libtool')
 install=fontconfig.install
+<<<<<<< HEAD
+source=(http://archive.ubuntu.com/ubuntu/pool/main/f/$_pkgname/${_pkgname}_$pkgver.orig.tar.bz2
+        00_old_diff_gz.patch
+        01_fonts_nanum.patch
+        04_ubuntu_monospace_lcd_filter_conf.patch
+        05_lcdfilterlegacy.patch
+        05_ubuntu_add_hinting_and_antialiasing_confs.patch
+        06_ubuntu_lcddefault.patch
+        07_no_bitmaps.patch
+        70-yes-bitmaps.conf)
+md5sums=('0f8e5c63c2d6931626185c02802375a3'
+         'ac9453d43dc7fc75b8ddc0d46681bd62'
+         '280253acebdb15c75d65f491cad5ad69'
+         '2ba467103536560e79278db7be33770d'
+         '6383b5569af71c11019c377c3594dbd9'
+         '508a1a638082c6c33d2ab8e724e16596'
+         'b0217eec55ef504e9c8740ec368b734f'
+         '0695f64eff965df2500dc12f0fd21ad2'
+         '91c414090c7d8bfe557785fe845cb6bd')
+
+build() {
+  cd $srcdir/$_pkgname-$pkgver
+  
+  # apply ubuntu patches
+  patch -Np1 -i ../00_old_diff_gz.patch
+  patch -Np1 -i ../01_fonts_nanum.patch
+  patch -Np1 -i ../04_ubuntu_monospace_lcd_filter_conf.patch
+  patch -Np1 -i ../05_lcdfilterlegacy.patch
+  patch -Np1 -i ../05_ubuntu_add_hinting_and_antialiasing_confs.patch
+  patch -Np1 -i ../06_ubuntu_lcddefault.patch
+  patch -Np1 -i ../07_no_bitmaps.patch
+  
+  libtoolize -f
+  autoreconf -fi
+=======
 source=(http://archive.ubuntu.com/ubuntu/pool/main/f/$_pkgname/${_pkgname}_$pkgver.orig.tar.bz2)
 md5sums=('0f8e5c63c2d6931626185c02802375a3')
 
@@ -28,12 +63,17 @@ build() {
 
   # Enable Position Independent Code for prelinking
   export CFLAGS="${CFLAGS} -fPIC"
+>>>>>>> 6b4cd7a001aa3f8e380d4292040f28c89821ed82
 
   # Configure and build.
-  ./configure \
+  ./configure --prefix=/usr \
+    --sysconfdir=/etc \
+    --with-templatedir=/etc/fonts/conf.avail \
+    --with-xmldir=/etc/fonts \
     --localstatedir=/var \
-    --prefix=/usr \
-    --sysconfdir=/etc
+    --disable-static \
+    --with-default-fonts=/usr/share/fonts \
+    --with-add-fonts=/usr/share/fonts
   make
 }
 
@@ -42,14 +82,24 @@ package() {
 
   # Installation.
   make DESTDIR=$pkgdir install
-
+  
+  # use ubuntu 70-yes-bitmaps.conf
+  mv ${pkgdir}/etc/fonts/conf.avail/70-yes-bitmaps.conf ${pkgdir}/etc/fonts/conf.avail/70-force-bitmaps.conf
+  install -m644 "${srcdir}/70-yes-bitmaps.conf" "${pkgdir}/etc/fonts/conf.avail"
+  
   # Remove configuration files.
   rm -f ${pkgdir}/etc/fonts/conf.d/*.conf
+  
+  # Ubuntu not installs 10-scale-bitmap-fonts.conf
+  rm ${pkgdir}/etc/fonts/conf.avail/10-scale-bitmap-fonts.conf
 
   # License.
   install -Dm0644 COPYING $pkgdir/usr/share/licenses/$pkgname/license.txt
+<<<<<<< HEAD
+=======
 
   # Documentation.
   install -Dm0644 $srcdir/$_pkgname-$pkgver/ChangeLog $pkgdir/usr/share/doc/$pkgname/ChangeLog
+>>>>>>> 6b4cd7a001aa3f8e380d4292040f28c89821ed82
 }
 
