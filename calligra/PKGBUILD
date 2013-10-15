@@ -20,25 +20,27 @@ pkgname=('calligra-3rdparty'
          'calligra-stage'
          'calligra-templates'
          'calligra-words')
-pkgver=2.7.1
-pkgrel=3
+pkgver=2.7.3
+pkgrel=1
 arch=('x86_64')
 url='http://www.calligra-suite.org'
+screenshot=("http://upload.wikimedia.org/wikipedia/commons/thumb/3/3e/Calligra_Stage_2.4.png/800px-Calligra_Stage_2.4.png")
 license=('FDL1.2' 'GPL2' 'LGPL')
-makedepends=('kdepimlibs' 'eigen' 'freetds' 'kdegraphics-okular' 'kdeedu-marble' 'xbase' 'libpqxx<4' 'libvisio'
+makedepends=('kdepimlibs' 'eigen2' 'freetds' 'kdegraphics-okular' 'kdeedu-marble' 'xbase' 'libpqxx' 'libvisio'
              'libgsf' 'libwpd' 'libwpg' 'libwps' 'pstoedit' 'glew' 'gsl' 'cmake' 'automoc4' 'libspnav' 'libqtgtl'
              'boost' 'libkdcraw' 'fftw' 'opengtl' 'docbook-xsl' 'create-resources' 'lcms2' 'libmariadbclient'
-             'vc' 'opencolorio')
+             'vc' 'opencolorio' 'icu' 'poppler-qt')
+options=("debug")
 groups=('calligra')
 source=("http://mirrors.mit.edu/kde/stable/${pkgbase}-${pkgver}/${pkgbase}-${pkgver}.tar.xz")
-screenshot=("http://upload.wikimedia.org/wikipedia/commons/thumb/3/3e/Calligra_Stage_2.4.png/800px-Calligra_Stage_2.4.png")
-md5sums=('9cf909ddf57ecb16d4370cc1062d0f7f')
+sha256sums=('f990916379490e0243944c98c4c5950e08ae719258bdaa790c4a34a9d3f737c3')
 
+prepare() {
+  cd ${pkgbase}-${pkgver}
+}
 
 build() {
-  cd "${srcdir}"
-
-  mkdir build
+  mkdir -p build
   cd build
   cmake ../${pkgbase}-${pkgver} \
     -DCMAKE_BUILD_TYPE=RelWithDebInfo \
@@ -51,7 +53,7 @@ package_calligra-3rdparty() {
   pkgdesc="3dparty plugins for the Calligra office suite"
   depends=('kdepimlibs')
 
-  cd "${srcdir}"/build/3rdparty
+  cd build/3rdparty
   make DESTDIR="${pkgdir}" install
 }
 
@@ -66,27 +68,28 @@ package_calligra-filters() {
   replaces=('koffice-common' 'calligra-filters-git')
   install=calligra-filters.install
 
-  cd "${srcdir}"/build/filters
+  cd build/filters
   make DESTDIR="${pkgdir}" install
 }
 
 package_calligra-interfaces() {
   pkgdesc="Interfaces for the Calligra office suite"
-  depends=('calligra-libs')
+  depends=('calligra-libs' 'kactivities')
   conflicts=('koffice-common' 'calligra-interfaces-git')
   replaces=('koffice-common' 'calligra-interfaces-git')
 
-  cd "${srcdir}"/build/interfaces
+  cd build/interfaces
   make DESTDIR="${pkgdir}" install
 }
 
 package_calligra-libs() {
   pkgdesc="Libraries for the Calligra office suite"
-  depends=('kdepimlibs' 'lcms2' 'calligra-3rdparty' 'calligra-servicetypes' 'kdeedu-marble' 'create-resources' 'libspnav' 'libvisio')
+  depends=('kdepimlibs' 'lcms2' 'calligra-3rdparty' 'calligra-servicetypes' 
+           'kdeedu-marble' 'create-resources' 'libspnav' 'libvisio' 'icu')
   conflicts=('koffice-common' 'calligra-libs-git')
   replaces=('koffice-common' 'calligra-libs-git')
 
-  cd "${srcdir}"/build/libs
+  cd build/libs
   make DESTDIR="${pkgdir}" install
 }
 
@@ -97,7 +100,7 @@ package_calligra-plugins() {
   replaces=('koffice-common' 'calligra-plugins-git')
   categories=('office')
 
-  cd "${srcdir}"/build/plugins
+  cd build/plugins
   make DESTDIR="${pkgdir}" install
 }
 
@@ -109,17 +112,18 @@ package_calligra-pics() {
   categories=('office')
   install=calligra.install
 
-  cd "${srcdir}"/build/pics
+  cd build/pics
   make DESTDIR="${pkgdir}" install
 }
 
 package_calligra-servicetypes() {
   pkgdesc="Servicetypes for the Calligra office suite"
+  depends=('kactivities')
   conflicts=('koffice-common' 'calligra-servicetypes-git')
   replaces=('koffice-common' 'calligra-servicetypes-git')
   install=calligra.install
 
-  cd "${srcdir}"/build/servicetypes
+  cd build/servicetypes
   make DESTDIR="${pkgdir}" install
 }
 
@@ -128,7 +132,7 @@ package_calligra-templates() {
   conflicts=('koffice-common' 'calligra-templates-git')
   replaces=('koffice-common' 'calligra-templates-git')
 
-  cd "${srcdir}"/build/templates
+  cd build/templates
   make DESTDIR="${pkgdir}" install
 }
 
@@ -139,7 +143,7 @@ package_calligra-extras() {
   replaces=('koffice-common' 'calligra-tools-git' 'calligra-tools')
   install=calligra-extras.install
 
-  cd "${srcdir}"/build/extras
+  cd build/extras
   make DESTDIR="${pkgdir}" install
 }
 
@@ -156,20 +160,20 @@ package_calligra-karbon() {
   categories=('graphics')
   install=calligra-karbon.install
 
-  cd "${srcdir}"/build/karbon
+  cd build/karbon
   make DESTDIR="${pkgdir}" install
 }
 
 package_calligra-kexi() {
   pkgdesc="Develop desktop database applications"
-  depends=('calligra-libs' 'calligra-sheets' 'sqlite3' 'xbase' 'libmariadbclient')
+  depends=('calligra-libs' 'calligra-sheets' 'sqlite3' 'xbase' 'libmariadbclient' 'icu')
   provides=('kexi')
   conflicts=('koffice-kexi' 'calligra-kexi-git')
   replaces=('koffice-kexi' 'calligra-kexi-git')
   categories=('office')
   install=calligra-kexi.install
 
-  cd "${srcdir}"/build/kexi
+  cd build/kexi
   make DESTDIR="${pkgdir}" install
 }
 
@@ -181,7 +185,7 @@ package_calligra-kounavail() {
   replaces=('koffice-kounavail' 'calligra-kounavail-git')
   categories=('office')
 
-  cd "${srcdir}"/build/kounavail
+  cd build/kounavail
   make DESTDIR="${pkgdir}" install
 }
 
@@ -194,7 +198,7 @@ package_calligra-plan() {
   categories=('office')
   install=calligra-plan.install
 
-  cd "${srcdir}"/build/plan
+  cd build/plan
   make DESTDIR="${pkgdir}" install
 }
 
@@ -207,7 +211,7 @@ package_calligra-stage() {
   categories=('office')
   install=calligra-stage.install
 
-  cd "${srcdir}"/build/stage
+  cd build/stage
   make DESTDIR="${pkgdir}" install
 }
 
@@ -224,7 +228,7 @@ package_calligra-krita() {
   categories=('graphics')
   install=calligra-krita.install
 
-  cd "${srcdir}"/build/krita
+  cd build/krita
   make DESTDIR="${pkgdir}" install
 }
 
@@ -237,7 +241,7 @@ package_calligra-sheets() {
   categories=('office')
   install=calligra-sheets.install
 
-  cd "${srcdir}"/build/sheets
+  cd build/sheets
   make DESTDIR="${pkgdir}" install
 }
 
@@ -251,7 +255,7 @@ package_calligra-words() {
   categories=('office')
   install=calligra-words.install
 
-  cd "${srcdir}"/build/words
+  cd build/words
   make DESTDIR="${pkgdir}" install
 }
 
@@ -261,7 +265,7 @@ package_calligra-handbook() {
   replaces=('koffice-doc' 'koffice-common' 'calligra-handbook-git')
   categories=('documentation')
 
-  cd "${srcdir}"/build/doc/calligra
+  cd build/doc/calligra
   make DESTDIR="${pkgdir}" install
 }
 
@@ -271,7 +275,7 @@ package_calligra-thesaurus-doc() {
   replaces=('koffice-doc' 'calligra-thesaurus-doc-git')
   categories=('documentation')
 
-  cd "${srcdir}"/build/doc/thesaurus
+  cd build/doc/thesaurus
   make DESTDIR="${pkgdir}" install
 }
 
@@ -283,7 +287,7 @@ package_calligra-braindump() {
   categories=('office')
   install=calligra-braindump.install
 
-  cd "${srcdir}"/build/braindump
+  cd build/braindump
   make DESTDIR="${pkgdir}" install
 }
 
@@ -295,7 +299,6 @@ package_calligra-flow() {
   replaces=('calligra-flow-git')
   categories=('office')
 
-  cd "${srcdir}"/build/flow
+  cd build/flow
   make DESTDIR="${pkgdir}" install
 }
-
