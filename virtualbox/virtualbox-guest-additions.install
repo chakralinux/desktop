@@ -3,9 +3,11 @@ created_rclocal=0
 # arg 1: the new package version
 post_install() {
   vbox_create_workaround  
-  
+
   # Run the VBoxLinuxAdditions Skript
   /usr/share/virtualbox/guest-additions/VBoxLinuxAdditions.run
+  
+  modprobe vboxsf
   
   vbox_remove_workaround
   
