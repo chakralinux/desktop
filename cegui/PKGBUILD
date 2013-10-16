@@ -5,43 +5,40 @@
 
 pkgname=cegui
 _pkgname=CEGUI
-pkgver=0.8.2
-_pkgver=0.8
-pkgrel=1
+pkgver=0.7.9
+pkgrel=5
 pkgdesc="A free library providing windowing and widgets for graphics APIs/engines."
 arch=('i686' 'x86_64')
 url="http://crayzedsgui.sourceforge.net"
 license=("MIT")
-depends=('boost-libs' 'devil' 'expat' 'freeglut' 'freetype2' 'glew' 'glfw' 'irrlicht' 'libxml2' 'lua' 'ogre' 'pcre' 'python2' 'silly' 'toluapp')
-makedepends=('boost' 'cmake' 'doxygen' 'graphviz' 'irrlicht' 'mesa' 'ogre' 'python2')
-optdepends=("python2: python bindings"
-            "ogre: ogre module"
-            "irrlicht: irrlicht module")
-source=("http://downloads.sourceforge.net/crayzedsgui/CEGUI Mk-2/${pkgname}-${pkgver}.tar.gz")
-md5sums=('f72951f0cc0374bb2294035cb639bb83')
+depends=('boost-libs' 'devil' 'expat' 'freeglut' 'freetype2' 'glew' 'irrlicht' 'libxml2' 'lua' 'ogre' 'pcre' 'python2' 'silly' 'toluapp')
+makedepends=('boost' 'doxygen' 'graphviz')
+options=(!libtool)
+source=("http://downloads.sourceforge.net/crayzedsgui/${_pkgname}-${pkgver}.tar.gz")
+md5sums=('a8b682daf82e383edc169c2e6eb2b321')
 
 build() {
-  cd "${srcdir}/${pkgname}-${pkgver}"
-
-  sed -i "s/lib64/lib/g" CMakeLists.txt
-  sed -i "s/lib32/lib/g" CMakeLists.txt
+  cd "${srcdir}/${_pkgname}-${pkgver}"
   
-  [[ -d build ]] && rm -r build
-  mkdir build && cd build
-  cmake \
-    -DCMAKE_INSTALL_PREFIX=/usr \
-    -DCEGUI_LIB_INSTALL_DIR=lib \
-    -DPYTHON_EXECUTABLE=/usr/bin/python2 \
-    -DCMAKE_BUILD_TYPE=RelWithDebInfo \
-    ..
+  # Typo fixed in Irrlicht 1.8.0, whereas CEGUI 0.7.7 was based on Irrlicht 1.7.x.
+#  sed -e "s#texureBlend#textureBlend#" -i cegui/src/RendererModules/Irrlicht/CEGUIIrrlichtGeometryBuffer.cpp
 
-  make -j5
-  make html
+  ./bootstrap
+  ./configure \
+    --enable-null-renderer \
+    --prefix=/usr \
+    --sysconfdir=/etc
+  make
 }
 
 package() {
-  cd "${srcdir}/${pkgname}-${pkgver}/build"
+  cd "${srcdir}/${_pkgname}-${pkgver}"
   make DESTDIR="${pkgdir}" install
 
-  install -Dm644 ../doc/COPYING "${pkgdir}/usr/share/licenses/$pkgname/LICENSE"
+  # Documentation.
+  cd doc/doxygen && doxygen
+  cd .. && make DESTDIR=${pkgdir} install-html
+
+  # License.
+  install -D -m644 "${srcdir}/${_pkgname}-${pkgver}/doc/COPYING" "${pkgdir}/usr/share/licenses/${pkgname}/LICENSE"
 }
