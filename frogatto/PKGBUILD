@@ -4,8 +4,8 @@
 # Maintainer: Adrián Chaves Fernández (Gallaecio) <adriyetichaves gmail.com>
 
 pkgname=frogatto
-pkgver=1.2
-pkgrel=2
+pkgver=1.3
+pkgrel=1
 pkgdesc="An old-school 2D platformer game, starring a certain quixotic frog."
 arch=('i686' 'x86_64')
 url="http://www.frogatto.com"
@@ -15,7 +15,7 @@ makedepends=('boost')
 categories=('games')
 source=("$pkgname.zip::https://github.com/$pkgname/$pkgname/zipball/${pkgver}_stable"
         "$pkgname.desktop")
-md5sums=('9dcf7f30111c5d8628f7699cf6b6cbff'
+md5sums=('b9fa73d471f3208c3f1a5c22413d9b17'
          'e31563b04748a39292a59aaad633ff58')
 
 build() {
@@ -41,8 +41,8 @@ package() {
   mkdir -p $pkgdir/usr/share/frogatto/
   cp -r data $pkgdir/usr/share/frogatto/
   cp -r images $pkgdir/usr/share/frogatto/
+  cp -r modules $pkgdir/usr/share/frogatto/
   cp -r music $pkgdir/usr/share/frogatto/
-  cp -r sounds $pkgdir/usr/share/frogatto/
   install -D -m644 FreeMono.ttf $pkgdir/usr/share/frogatto/FreeMono.ttf
   install -D -m644 DejaVuSans.ttf $pkgdir/usr/share/frogatto/DejaVuSans.ttf
 
