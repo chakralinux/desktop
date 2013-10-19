@@ -13,7 +13,7 @@ pkgname=('kdebindings-python-common'
          'kdebindings-python2'
          'kdebindings-python3')
 pkgver=${_kdever}
-pkgrel=13
+pkgrel=14
 url="https://projects.kde.org/projects/kde/kdebindings/pykde4"
 arch=('x86_64')
 license=('GPL' 'LGPL' 'FDL')
@@ -74,7 +74,7 @@ package_kdebindings-python3() {
     make DESTDIR="${pkgdir}" install
 
     # Fix issue with wrong number of given arguments
-    sed 's/winfo = comp.compileUi(uifile, output, None)/winfo = comp.compileUi(uifile, output, None, "")/g' \
+    sed -i 's/winfo = comp.compileUi(uifile, output, None)/winfo = comp.compileUi(uifile, output, None, "")/g' \
         "${pkgdir}"/usr/lib/python3.3/site-packages/PyQt4/uic/pykdeuic4.py
 
     # Provided by common
@@ -101,11 +101,10 @@ package_kdebindings-python2() {
     make DESTDIR="${pkgdir}" install
 
     # Fix issue with wrong number of given arguments
-    sed 's/winfo = comp.compileUi(uifile, output, None)/winfo = comp.compileUi(uifile, output, None, "")/g' \
-        "${pkgdir}"/usr/lib/python2.7/site-packages/PyQt4/uic/pykdeuic4.py
+    sed -i 's/winfo = comp.compileUi(uifile, output, None)/winfo = comp.compileUi(uifile, output, None, "")/g' "${pkgdir}"/usr/lib/python2.7/site-packages/PyQt4/uic/pykdeuic4.py
 
     # Symlink
-    ln -s /usr/bin/pykdeuic4 "${pkgdir}"/usr/bin/pykdeuic4-2.7
+    ln -s /usr/bin/pykdeuic4-2.7 "${pkgdir}"/usr/bin/pykdeuic4
 
     # Provided by common
     #rm -r "${pkgdir}"/usr/share/apps/pykde4/examples
