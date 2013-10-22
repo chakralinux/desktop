@@ -4,29 +4,28 @@
 # Contributor: Giuseppe Calà <jiveaxe@gmail.com>
 
 pkgname=alienarena
-pkgver=7.65
+pkgver=7.66
 pkgrel=1
-_verdate=20130207
+_verdate=20130827
 pkgdesc="Multiplayer retro sci-fi deathmatch game"
-arch=('i686' 'x86_64')
+arch=('x86_64')
 url='http://icculus.org/alienarena/rpa/'
 license=('GPL' 'LGPL' 'custom:Non-free data')
 depends=('curl' 'freetype2' 'libgl' 'libjpeg' 'libvorbis' 'libxxf86dga' 'libxxf86vm' 'mesa' 'ode' 'sdl' 'openal')
 categories=('games')
-source=("http://icculus.org/alienarena/Files/alienarena-${pkgver}-linux${_verdate}.tar.gz"
+source=("http://red.planetarena.org/files/${pkgname}-${pkgver}-linux${_verdate}.tar.gz"
         'alienarena.desktop')
-sha256sums=('ef4594897afde951aa66cc972b4bf21aadc6ac545a432000c85cd72e2ad9d60e'
-            '1b872db6d5544e5537592ba19d08c1016ba1816e134f2ebbf0266a9468c753e4')
- 
-build() {
-  cd "${srcdir}/${pkgname}-${pkgver}"
+ sha256sums=('29086098eacb18319e6dcc9156355c44db4b1aa8a4f7b0bb63e6856d8128b012'
+            '139506ee00ccae23748c257ababebb87dd509ad83f87d545d776f62501b6f04a')
 
+build() {
+  cd ${pkgname}-${pkgver}
   ./configure --prefix=/usr
   make
 }
 
 package() {
-  cd "${srcdir}/${pkgname}-${pkgver}"
+  cd ${pkgname}-${pkgver}
 
   make DESTDIR="${pkgdir}" install
   install -d -m755 "${pkgdir}/usr/share/pixmaps"
