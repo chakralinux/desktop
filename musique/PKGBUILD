@@ -5,7 +5,7 @@
 # Contributor: dieghen89 <dieghen89@gmail.com>
 
 pkgname=musique
-pkgver=1.1
+pkgver=1.3
 pkgrel=1
 pkgdesc="Just another music player, only better"
 arch=('i686' 'x86_64')
@@ -20,17 +20,22 @@ optdepends=('gstreamer0.10-plugins: for gstreamer backend'
 conflicts=('$pkgname-git')
 replaces=('minitunes' 'minitunes-git')
 categories=('multimedia')
-source=(http://flavio.tordini.org/files/musique/${pkgname}-${pkgver}.tar.gz)
-md5sums=('cca6cdfb5099ccc82b943b034fa2e5ae')
+source=("http://flavio.tordini.org/files/musique/${pkgname}-${pkgver}.tar.gz")
+sha256sums=('401643ad9c750270a89d431806044c626dee3fe7ebc14d0ac72917197cdd0592')
+
+prepare() {
+  cd ${pkgname}
+  # Disable GTK integration (will not build in Chakra otherwise).
+  sed -e "/Fall back to gconf/,+3d" -i src/main.cpp
+}
 
 build() {
-  cd ${srcdir}/${pkgname}
+  cd ${pkgname}
   qmake PREFIX=/usr
 }
 
 package() {
-  cd ${srcdir}/${pkgname}
-  make INSTALL_ROOT=${pkgdir} install
-  sed -i -e 's/Icon=minitunes/Icon=musique/g' ${pkgdir}/usr/share/applications/musique.desktop
-  install -Dm644 ${srcdir}/${pkgname}/data/128x128/${pkgname}.png ${pkgdir}/usr/share/pixmaps/${pkgname}.png
+  cd ${pkgname}
+  make INSTALL_ROOT="${pkgdir}" install
+  install -Dm644 "${srcdir}/${pkgname}/data/128x128/${pkgname}.png" "${pkgdir}/usr/share/pixmaps/${pkgname}.png"
 }
