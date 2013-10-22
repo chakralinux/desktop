@@ -7,8 +7,9 @@
 # Contributor: Nathan Owe < ndowens04 at gmail dot com>
 
 pkgname=poco
-pkgver=1.4.6p2
+pkgver=1.4.6.2
 _pkgver=1.4.6
+_pkgver2=1.4.6p2
 pkgrel=1
 pkgdesc="C++ class libraries for network-centric, portable applications, complete edition"
 arch=('i686' 'x86_64')
@@ -18,22 +19,20 @@ depends=('unixodbc' 'libmysqlclient' 'openssl')
 makedepends=('gcc' 'make' 'unixodbc' 'libmysqlclient' 'openssl' 'chrpath')
 source=(
   
-"${pkgname}-${pkgver}-all.tar.gz"::"http://pocoproject.org/releases/${pkgname}-${_pkgver}/${pkgname}-${pkgver}-all.tar.gz"
+"${pkgname}-${pkgver}-all.tar.gz"::"http://pocoproject.org/releases/${pkgname}-${_pkgver}/${pkgname}-${_pkgver2}-all.tar.gz"
 )
-sha256sums=(
-  'cf8229310f047e731cc6273a8df55e03b76f0ed7d5b5d251f99a0f80f6c2c763'
-)
+sha256sums=('8d22dbea89a26563076d5f55fa201b26b66025f89c21ccb93fa08695f342364d')
 
 build()
 {
-  cd "${srcdir}/${pkgname}-${pkgver}-all"
+  cd "${srcdir}/${pkgname}-${_pkgver2}-all"
   ./configure --prefix=/usr --no-samples --no-tests
   make ODBCLIBDIR="/usr/lib"
 }
 
 package()
 {
-  cd "${srcdir}/${pkgname}-${pkgver}-all"
+  cd "${srcdir}/${pkgname}-${_pkgver2}-all"
   make ODBCLIBDIR="/usr/lib" DESTDIR="${pkgdir}" install
   install -Dm644 'LICENSE' "${pkgdir}/usr/share/licenses/${pkgname}/LICENSE"
   # remove rpath information from binaries
@@ -44,5 +43,3 @@ package()
   # remove debugging libraries
   rm "${pkgdir}/usr/lib/libPoco"*"d.so"*
 }
-
-sha256sums=('8d22dbea89a26563076d5f55fa201b26b66025f89c21ccb93fa08695f342364d')
