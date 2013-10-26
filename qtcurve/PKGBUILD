@@ -1,41 +1,49 @@
-#
-# Apps Packages for Chakra, part of chakra-project.org
-#
-# maintainer abveritas@chakra-project.org
-# contributor Giuseppe Calà <jiveaxe@gmail.com>
+# maintainer: Neophytos Kolokotronis <tetris4@gmail.com>
+# contributions from Arch: https://projects.archlinux.org/svntogit/community.git/tree/trunk?h=packages/qtcurve
 
-pkgname=qtcurve
-pkgver=1.8.14
+pkgbase=qtcurve
+pkgname=('qtcurve-utils' 'qtcurve-kde4') #'qtcurve-gtk2' )
+pkgver=1.8.17
 pkgrel=1
 arch=('x86_64')
 license=('GPL')
-pkgdesc='A configurable set of widget styles for KDE'
-url='http://www.kde-look.org/content/show.php?content=40492'
+pkgdesc='A configurable set of widget styles for KDE' #and gtk2
+url='https://github.com/QtCurve/qtcurve'
 depends=('kde-workspace')
-makedepends=('cmake' 'automoc4')
+makedepends=('cmake' 'automoc4' 'qt' 'kde-workspace') #'gtk2')
 categories=('system')
-source=("http://craigd.wikispaces.com/file/view/QtCurve-KDE4-${pkgver}.tar.bz2"
-        'fix-kwin_decoration-macro.patch')
-md5sums=('b4d7924806058f39e842ce7ffe47a4f8'
-         '7366e45ef9f24f53a36f87a539a937d6')
+source=("$pkgbase-$pkgver.tar.gz::$url/archive/$pkgver.tar.gz")
+md5sums=('c4f2e9bc296398b42bfc132b88a3b989')
 
 build() {
-  cd "${srcdir}/QtCurve-KDE4-${pkgver}"
-  patch -p1 -i "${srcdir}/fix-kwin_decoration-macro.patch"
-
-  cd "${srcdir}"
+  cd $pkgbase-$pkgver
   mkdir build
   cd build
-  cmake ../QtCurve-KDE4-${pkgver} \
-	-DCMAKE_BUILD_TYPE=Release \
-	-DCMAKE_INSTALL_PREFIX=/usr \
-	-DQTC_KWIN=true \
-        -DQTC_STYLE_SUPPORT=true 
+  cmake .. -DCMAKE_BUILD_TYPE=Release \
+           -DCMAKE_INSTALL_PREFIX=/usr \
+           -DENABLE_GTK2=false \
+           -DENABLE_QT5=false
   make
 }
 
-package() {
-  cd "${srcdir}/build"
-  make DESTDIR="${pkgdir}" install
+package_qtcurve-utils() {
+  depends=('libx11')
+  cd $pkgbase-$pkgver/build/qtcurve-utils
+  make DESTDIR="$pkgdir" install
 }
+
+package_qtcurve-kde4() {
+  depends=('qtcurve-utils' 'kde-workspace')
+  provides=qtcurve
+  replaces=qtcurve
+  conflicts=qtcurve
+  
+  cd $pkgbase-$pkgver/build/qt4
+  make DESTDIR="$pkgdir" install
+  cd ../po
+  make DESTDIR="$pkgdir" install
+}
+
+
+
 
