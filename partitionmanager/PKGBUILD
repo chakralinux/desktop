@@ -1,16 +1,11 @@
-#
-# Chakra Packages for Chakra, part of chakra-project.org
-#
-# maintainer abveritas[at]chakra-project[dot]org>
-
-# include global config
-source ../_buildscripts/${current_repo}-${_arch}-cfg.conf
+# Maintainer: Neophytos Kolokotronis <tetris4@gmail.com>
 
 pkgname=partitionmanager
-pkgver=1330962
-pkgrel=1
+pkgver=1358163
+pkgrel=2
 arch=('x86_64')
 url="https://sourceforge.net/projects/partitionman"
+pkgdesc="A KDE utility that allows you to manage disks, partitions, and file systems"
 license=('GPL2')
 depends=('kdebase-runtime' 'parted' 'libatasmart')
 makedepends=('cmake' 'automoc4' 'pkgconfig' 'svn')
@@ -40,7 +35,7 @@ build() {
   #patch -p1 < ${srcdir}/tribe.patch
   #patch -p1 < ${srcdir}/disable-gpt.patch
 
-  cmake -DCMAKE_INSTALL_PREFIX=/usr -DCMAKE_BUILD_TYPE=RelWithDebInfo
+  cmake -DCMAKE_INSTALL_PREFIX=/usr -DCMAKE_BUILD_TYPE=RelWithDebInfo -DENABLE_UDISKS2=on
 
   make 
 }
@@ -49,4 +44,5 @@ package() {
   cd "${srcdir}/$_svnmod-build"
   make DESTDIR="${pkgdir}" install 
 }
+
 
