@@ -1,0 +1,48 @@
+# Maintainer: Neophytos Kolokotronis <tetris4@gmail.com>
+# Contributions from AUR: https://aur.archlinux.org/packages/kdeconnect/
+
+# The section below can be adjusted to suit your needs
+# What type of build do you want? Default is Release.
+# See http://techbase.kde.org/Development/CMake/Addons_for_KDE#Buildtypes to check what is supported.
+ 
+_buildtype='Release'
+  
+pkgname=kdeconnect
+pkgver=0.3.2
+_pkgver=0.3
+pkgrel=1
+pkgdesc='KDE Connect - kded and kcm'
+url='https://albertvaka.wordpress.com/2013/08/05/introducing-kde-connect/'
+license=('GPL')
+arch=('x86_64')
+depends=('kdelibs' 'qjson')
+makedepends=('automoc4' 'cmake')
+provides=('kdeconnect')
+conflicts=('kdeconnect-git')
+install=kdeconnect.install
+source=("http://download.kde.org/unstable/kdeconnect/0.3/src/${pkgname}-kde-${_pkgver}.tar.xz")
+md5sums=('43ba5f532bd4e03cb8575a4ca227299a')
+ 
+if [[ ! ${_buildtype} == 'Release' ]] && [[ ! ${_buildtype} == 'release' ]]; then
+  options=(debug)
+fi
+ 
+prepare() {
+  if [[ -e ${pkgname}-kde-${_pkgver}-build ]]; then rm -rf ${pkgname}-build; fi
+  mkdir ${pkgname}-kde-${_pkgver}-build
+}
+ 
+build() {
+  cd ${pkgname}-kde-${_pkgver}-build
+ 
+  cmake -DCMAKE_INSTALL_PREFIX=/usr \
+        -DKDE4_BUILD_TESTS=OFF \
+        -DCMAKE_BUILD_TYPE=${_buildtype} \
+        ../${pkgname}-kde-${_pkgver}
+  make
+}
+ 
+package() {
+  cd ${pkgname}-kde-${_pkgver}-build
+  make DESTDIR=${pkgdir} install
+}
