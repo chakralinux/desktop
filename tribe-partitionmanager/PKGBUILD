@@ -1,11 +1,9 @@
-#
-# Chakra Packages for Chakra, part of chakra-project.org
-#
-# maintainer abveritas@chakra-project.org
+# maintainer: Neophytos Kolokotronis <tetris4@gmail.com>
 
 pkgname=tribe-partitionmanager
-pkgver=1330962
-pkgrel=1
+pkgver=1358163
+pkgrel=6
+pkgdesc="A KDE utility that allows you to manage disks, partitions, and file systems - Patched for Chakra Live ISO"
 arch=('x86_64')
 url="https://sourceforge.net/projects/partitionman"
 license=('GPL2')
@@ -39,7 +37,7 @@ build() {
   patch -p1 < ${srcdir}/tribe.patch
   #patch -p1 < ${srcdir}/disable-gpt.patch
 
-  cmake -DCMAKE_INSTALL_PREFIX=/usr -DCMAKE_BUILD_TYPE=RelWithDebInfo
+  cmake -DCMAKE_INSTALL_PREFIX=/usr -DCMAKE_BUILD_TYPE=RelWithDebInfo -DENABLE_UDISKS2=on
 
   make 
 }
@@ -48,3 +46,4 @@ package() {
   cd "${srcdir}/$_svnmod-build"
   make DESTDIR="${pkgdir}" install
 }
+
