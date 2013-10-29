@@ -1,7 +1,7 @@
 # Maintainer: abveritas@chakra-project.org
 
 pkgname=kid3
-pkgver=3.0
+pkgver=3.0.1
 pkgrel=1
 pkgdesc="An MP3, Ogg/Vorbis and FLAC tag editor for KDE"
 arch=('x86_64')
@@ -13,11 +13,10 @@ categories=('multimedia')
 screenshot=('http://pkgs.org/images/linux-software/kid3/kid3-screenshot.png')
 install=${pkgname}.install
 source=("http://sourceforge.net/projects/$pkgname/files/$pkgname/$pkgver/$pkgname-$pkgver.tar.gz")
-md5sums=('9efc2d14ea6217d7e543b1fe79c13815')
+sha256sums=('ebbae8b277c14083f87d49bcde5a86295c1874c4004fc5db2d5764ff53f15d59')
 
 build() {
-  cd ${srcdir}
-  mkdir build
+  mkdir -p build
   cd build
   cmake ../${pkgname}-${pkgver} \
     -DWITH_APPS=KDE \
@@ -27,6 +26,6 @@ build() {
 }
 
 package() {
-  cd ${srcdir}/build
-  make DESTDIR=${pkgdir} install
+  cd build
+  make DESTDIR="${pkgdir}" install
 }
