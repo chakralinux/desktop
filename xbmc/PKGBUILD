@@ -7,7 +7,7 @@ _prefix=/usr
 
 pkgname=xbmc
 pkgver=12.2
-pkgrel=5
+pkgrel=6
 pkgdesc="XBMC Media Center"
 arch=('x86_64')
 url="http://xbmc.org"
@@ -18,7 +18,7 @@ depends=( 'bzip2' 'curl' 'enca' 'faac' 'faad2' 'fontconfig' 'fribidi' 'python2' 
           'libxrandr' 'libxtst' 'lzo2' 'sdl_image' 'sdl_mixer' 'libvorbis' 'libpulse' 'libdvdcss'
           'samba' 'wavpack' 'mesa-demos' 'xorg-utils' 'libmicrohttpd' 'libjpeg-turbo' 'mesa' 'swig'
           'libssh' 'libva' 'libmodplug' 'rtmpdump' 'lsb-release' 'sqlite3' 'libbluray' 'java-runtime'
-          'tinyxml' 'taglib' 'libcap' 'avahi' 'libshairport' 'glu' 'libplist')
+          'tinyxml' 'taglib' 'libcap' 'avahi' 'libshairport' 'glu' 'libplist' 'libnfs')
 makedepends=('boost' 'cmake' 'gperf' 'nasm' 'libvdpau' 'unzip' 'zip' 'cvs' 'autoconf' 'automake'
              'udisks' 'upower' 'mesa' 'doxygen' 'swig')
 optdepends=('lirc: remote controller support'
@@ -57,6 +57,8 @@ build() {
       --enable-projectm \
       --enable-x11 \
       --enable-pulse \
+      --enable-samba \
+      --enable-nfs \
       --enable-avahi \
       --enable-airplay \
       --enable-airtunes \
