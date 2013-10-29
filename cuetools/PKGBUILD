@@ -1,0 +1,36 @@
+# Maintainer: Neophytos Kolokotronis <tetris4@gmail.com>
+# Contributions from Arch: https://projects.archlinux.org/svntogit/community.git/tree/trunk?h=packages/cuetools
+
+pkgname=cuetools
+pkgver=1.4.0
+pkgrel=1
+pkgdesc="Cue and toc file parsers and utilities"
+arch=('x86_64')
+url="https://github.com/svend/cuetools"
+#url="http://developer.berlios.de/projects/cuetools/"
+license=('GPL')
+depends=('glibc')
+source=("https://github.com/svend/cuetools/archive/${pkgver}.tar.gz")
+md5sums=('4492dae2b3f9e077f6455a1f1cddef3b')
+
+prepare() {
+  cd "$srcdir/$pkgname-$pkgver"
+
+  aclocal
+  autoheader
+  automake --force-missing --add-missing
+  autoconf
+}
+
+build() {
+  cd "$srcdir/$pkgname-$pkgver"
+
+  ./configure --prefix=/usr
+  make
+}
+
+package() {
+  cd "$srcdir/$pkgname-$pkgver"
+
+  make DESTDIR="$pkgdir" install
+}
