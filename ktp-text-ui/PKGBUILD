@@ -1,0 +1,33 @@
+# Maintainer: Neophytos Kolokotronis <tetris4@gmail.com>
+
+pkgname=ktp-text-ui
+pkgver=0.7.0
+pkgrel=3
+pkgdesc="Telepathy text chat handler"
+arch=('x86_64')
+url="http://www.kde.org"
+license=('GPL')
+depends=('ktp-common-internals' 'ktp-contact-list' 'telepathy-logger-qt')
+makedepends=('cmake' 'automoc4' 'boost' 'qjson')
+optdepends=('telepathy-logger-qt: enables logging of chats, causes issues for some users')
+conflicts=('telepathy-kde-text-ui')
+replaces=('telepathy-kde-text-ui')
+provides=('telepathy-kde-text-ui')
+groups=('kde-telepathy')
+source=("ftp://mirrors.mit.edu/kde/stable/kde-telepathy/${pkgver}/src/${pkgname}-${pkgver}.tar.bz2")
+md5sums=('27b55e763ffc7448401e7db7bfbcf9ec')
+
+build() {
+  cd "${srcdir}"
+  mkdir build
+  cd build
+  cmake ../${pkgname}-${pkgver} \
+    -DCMAKE_INSTALL_PREFIX=/usr \
+    -DCMAKE_BUILD_TYPE=Release
+  make
+}
+
+package() {
+  cd "${srcdir}"/build
+  make DESTDIR="${pkgdir}" install
+}

@@ -1,0 +1,31 @@
+# maintainer: Neophytos Kolokotronis <tetris4@gmail.com>
+
+pkgname=ktp-accounts-kcm
+pkgver=0.7.0
+pkgrel=3
+pkgdesc="KCM Module for configuring Telepathy Instant Messaging Accounts"
+arch=('x86_64')
+url="http://www.kde.org"
+license=('GPL')
+depends=('kdelibs' 'ktp-common-internals' 'ktp-contact-list')
+makedepends=('cmake' 'automoc4')
+optdepends=('telepathy-gabble: XMPP/Jabber/GTalk support'
+            'telepathy-haze: all protocols supported by libpurple')
+groups=('kde-telepathy')
+source=("ftp://mirrors.mit.edu/kde/stable/kde-telepathy/${pkgver}/src/${pkgname}-${pkgver}.tar.bz2")
+md5sums=('b73acce8f1900d33eefd00ba4bcdf378')
+
+build() {
+  cd "${srcdir}"
+  mkdir build
+  cd build
+  cmake ../${pkgname}-${pkgver} \
+    -DCMAKE_INSTALL_PREFIX=/usr \
+    -DCMAKE_BUILD_TYPE=Release
+  make
+}
+
+package() {
+  cd "${srcdir}"/build
+  make DESTDIR="${pkgdir}" install
+}

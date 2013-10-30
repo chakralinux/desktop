@@ -1,0 +1,29 @@
+# Maintainer: Neophytos Kolokotronis <tetris4@gmail.com>
+
+pkgname=ktp-auth-handler
+pkgver=0.7.0
+pkgrel=3
+pkgdesc="Telepathy contact list application "
+arch=('x86_64')
+url="http://www.kde.org"
+license=('GPL')
+depends=('ktp-common-internals' 'qjson' 'qca-ossl')
+makedepends=('cmake' 'automoc4')
+groups=('kde-telepathy')
+source=("ftp://mirrors.mit.edu/kde/stable/kde-telepathy/${pkgver}/src/${pkgname}-${pkgver}.tar.bz2")
+md5sums=('a602f804a0a73eb4bbe7b5cfb7057d18')
+
+build() {
+  cd "${srcdir}"
+  mkdir build
+  cd build
+  cmake ../${pkgname}-${pkgver} \
+    -DCMAKE_INSTALL_PREFIX=/usr \
+    -DCMAKE_BUILD_TYPE=Release
+  make
+}
+
+package() {
+  cd "${srcdir}"/build
+  make DESTDIR="${pkgdir}" install
+}

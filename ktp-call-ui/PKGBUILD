@@ -1,0 +1,33 @@
+# Maintainer: Neophytos Kolokotronis <tetris4@gmail.com>
+
+pkgname=ktp-call-ui
+pkgver=0.7.0
+pkgrel=3
+pkgdesc="Telepathy call handler "
+arch=('x86_64')
+url="http://www.kde.org"
+license=('GPL')
+depends=('ktp-common-internals' 'telepathy-farstream'
+         'telepathy-mission-control' 'telepathy-gabble' 'gstreamer0.10-base-plugins'
+         'gstreamer0.10-good-plugins' 'qt-gstreamer'  'gstreamer0.10-ugly-plugins'
+         'gstreamer0.10-bad-plugins' 'gstreamer0.10-ffmpeg' )
+makedepends=('boost' 'cmake' 'automoc4' )
+groups=('kde-telepathy')
+categories=('communication')
+source=("ftp://mirrors.mit.edu/kde/stable/kde-telepathy/${pkgver}/src/${pkgname}-${pkgver}.tar.bz2")
+md5sums=('0e16654ed45a5217db0dc725682d8d0f')
+
+build() {
+  cd "${srcdir}"
+  mkdir build
+  cd build
+  cmake ../${pkgname}-${pkgver} \
+    -DCMAKE_INSTALL_PREFIX=/usr \
+    -DCMAKE_BUILD_TYPE=Release
+  make
+}
+
+package() {
+  cd "${srcdir}"/build
+  make DESTDIR="${pkgdir}" install
+}
