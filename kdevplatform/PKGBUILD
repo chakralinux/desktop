@@ -1,13 +1,9 @@
-#
-# Chakra Package
-#
-# Manuel Tortosa <manutortosa[at]chakra-project[dot]org>
-# Drake Justice <djustice[at]chakra-project[dot]org>
+# Neophytos Kolokotronis <tetris4@gmail.com>
 
 pkgname=kdevplatform
-pkgver=1.5.0
-_pkgver=4.5.0
-pkgrel=3
+pkgver=1.5.2
+_pkgver=4.5.2
+pkgrel=1
 pkgdesc="A C/C++ development platform for KDE"
 arch=('x86_64')
 url="http://www.kdevelop.org/"
@@ -16,19 +12,10 @@ depends=('kdelibs' 'boost' 'subversion' 'qjson')
 optdepends=("kdesdk-kompare: difference checking")
 makedepends=('cmake' 'automoc4')
 install=${pkgname}.install
-source=("http://download.kde.org/stable/kdevelop/${_pkgver}/src/${pkgname}-${pkgver}.tar.bz2"
-        
-"${pkgname}-1.5.0-codeutils.patch::http://quickgit.kde.org/?p=kdevplatform.git&a=commitdiff&h=3c7a20f39e30cda794d8f2b6b85d034a50b93807&o=plain")
-sha1sums=('c5b887fdd9fe065ff8be5641859c80c020ba625e'
-          'e746c9cd42c8147a9eb7ed43f7ed36adf8baacbc')
+source=("http://download.kde.org/stable/kdevelop/${_pkgver}/src/${pkgname}-${pkgver}.tar.xz")
+sha1sums=('a2fa1f765e992739546fa04d0aaffc4f2200c520')
 
 build() {
-  cd "${srcdir}"/${pkgname}-${pkgver}
-
-  # Patch for 1.5.0 only.
-  sed -e "s#.desktop.cmake#.desktop#" -i ${srcdir}/${pkgname}-1.5.0-codeutils.patch
-  patch -uNp1 -i ${srcdir}/${pkgname}-1.5.0-codeutils.patch
-
   cd ${srcdir}
   mkdir build
   cd build 
