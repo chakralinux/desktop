@@ -1,40 +1,27 @@
-# Contributor: speps <speps at aur dot archlinux dot org>
-# Contributor: aur2ccr (http://ddg.gg/?q=!ccr+aur2ccr&t=chakra)
-# Contributor: aur2ccr (http://ddg.gg/?q=!ccr+aur2ccr&t=chakra)
+# Maintainer: Neophytos Kolokotronis <tetris4@gmail.com>
+# Contributions from AUR: https://aur.archlinux.org/packages/dianara/
 
 pkgname=dianara
-pkgver=0.9
+pkgver=1.0
 pkgrel=1
 pkgdesc="A Qt pump.io client"
-arch=(i686 x86_64)
+arch=(x86_64)
 url="http://dianara.nongnu.org/"
 license=('GPL')
 depends=('qjson' 'qoauth' 'qca-ossl')
 install="$pkgname.install"
+screenshot=('http://dianara.nongnu.org/images/dianara-v0.9-release-main.png')
 source=("http://download-mirror.savannah.gnu.org/releases/$pkgname/$pkgname-v$pkgver.tar.gz")
-md5sums=('db035f682fe5d75240672d5426760d3a')
-
-prepare() {
-  cd "$srcdir/$pkgname-v$pkgver"
-
-  # translation path fix
-  sed -i 's|:/translations|/usr/share/locale|' src/main.cpp
-
-  # resources path fix
-  sed -e 's|:/icon/64x64|/usr/share/pixmaps|' \
-      -e 's|:/images|/usr/share/dianara|' \
-      -i src/mainwindow.cpp
-}
-
+md5sums=('3578b9c7c455a157d37ead15f5d68260')
 build() {
-  cd "$srcdir/$pkgname-v$pkgver"
+  cd $pkgname-v$pkgver
   [ -d bld ] || mkdir bld && cd bld
   qmake ..
   make
 }
 
 package() {
-  cd "$srcdir/$pkgname-v$pkgver"
+  cd $pkgname-v$pkgver
 
   # bin
   install -Dm755 bld/$pkgname \
@@ -44,14 +31,18 @@ package() {
   install -Dm644 $pkgname.desktop \
     "$pkgdir/usr/share/applications/$pkgname.desktop"
 
-  # icon
+  # icons
+  install -Dm644 icon/32x32/$pkgname.png \
+    "$pkgdir/usr/share/icons/hicolor/32x32/apps/$pkgname.png"
   install -Dm644 icon/64x64/$pkgname.png \
-    "$pkgdir/usr/share/pixmaps/$pkgname.png"
+    "$pkgdir/usr/share/icons/hicolor/64x64/apps/$pkgname.png"
 
   # translations
   install -d "$pkgdir/usr/share/locale"
   install -Dm644 translations/*.qm \
     "$pkgdir/usr/share/locale"
-}
 
-# vim:set ts=2 sw=2 et:
+  # man (why 7?)
+  install -Dm644 manual/$pkgname.7 \
+    "$pkgdir/usr/share/man/man1/$pkgname.1"
+}
