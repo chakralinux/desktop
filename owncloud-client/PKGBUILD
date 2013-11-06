@@ -7,14 +7,14 @@
 _buildtype="Release"
 _name=mirall
 pkgname=owncloud-client
-pkgver=1.4.1
+pkgver=1.4.2
 pkgrel=1
 pkgdesc="ownCloud client based on mirall"
 arch=('x86_64')
 url="http://owncloud.org/"
 screenshot="http://en.opensuse.org/images/b/bb/New_oc_connect.png"
 license=('GPL2')
-depends=('qtwebkit' 'csync-owncloud>=0.90.0' 'neon' 'sqlite3')
+depends=('qtwebkit' 'csync-owncloud' 'neon' 'sqlite3')
 makedepends=('cmake' 'libssh' 'smbclient' 'desktop-file-utils')
 provides=('mirall' 'owncloud-client')
 conflicts=('mirall-git' 'mirall')
@@ -23,7 +23,7 @@ options=()
 backup=('etc/owncloud-client/sync-exclude.lst')
 install=${pkgname}.install
 source=("http://download.owncloud.com/download/${_name}-${pkgver}.tar.bz2")
-sha256sums=('b51a0f7e637258f4d4769a3164f8dcd6e40914ee9dc76940766d3d63dfa3962b')
+sha256sums=('381915dd9f39d6f731cb4ed2964c33945c4b5ad99f3746d83d812ac2995f9380')
 
 if [[ ! ${_buildtype} == "Release" ]] && [[ ! ${_buildtype} == "release" ]]; then
   options=(!strip)
