@@ -5,23 +5,19 @@
 # contributor (x86_64): AlmAck <gluca86[at]google[dot]com>
 
 pkgname=backintime-kde
-pkgver=1.0.26
-_bzrversion=876
-pkgrel=4
+pkgver=1.0.28
+_bzrversion=881
+pkgrel=1
 pkgdesc="Back In Time is a simple backup system for Linux inspired from 'flyback project' and 'TimeVault'. KDE 4 version"
 arch=('x86_64')
 url="https://launchpad.net/backintime"
 license="GPL"
-depends=('rsync' 'cron' 'python' 'xorg-utils' 'pyqt' 'kdebindings-python2' 'python2-keyring')
+depends=('rsync' 'cron' 'python' 'xorg-utils' 'python2-pyqt4' 'kdebindings-python2' 'python2-keyring')
 makedepends=('bzr')
 categories=('utils' 'backup')
 #source=("http://backintime.le-web.org/wp-content/uploads/2009/03/backintime-${pkgver}.tar.gz"
-source=('fix_spaces_in_anacron_jobs.patch'
-        'fix_AttributeError_with_python-keyring_gt1.6.1.patch'
-        'fix_kde4.patch')
-sha256sums=('01a43ba204ee91de1490bc9670466c62fd6974d3eea06f77097f43bc59c34b1b'
-            '5f6f1e28694fc50dfea3ac65f989763642d95606a253c7f6714c99a1f7c778b8'
-            '7018ac0a97b0d681bcff983c4c9ea4a954e3f76e3be5c4bf842ef1cc74f74585')
+source=('fix_spaces_in_anacron_jobs.patch')
+sha256sums=('01a43ba204ee91de1490bc9670466c62fd6974d3eea06f77097f43bc59c34b1b')
 
 _bzrbranch=lp:backintime 
 _bzrmod=trunk
@@ -39,9 +35,6 @@ prepare() {
  
   msg "BZR checkout done or server timeout"
 
-  patch -p0 -i "${srcdir}/fix_spaces_in_anacron_jobs.patch"
-  patch -p0 -i "${srcdir}/fix_AttributeError_with_python-keyring_gt1.6.1.patch"
-  patch -p0 -i "${srcdir}/fix_kde4.patch"
 }
 
 build() {
