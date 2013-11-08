@@ -8,18 +8,20 @@ source ../_buildscripts/${current_repo}-${_arch}-cfg.conf
 
 # Default wallpaper included in kde-workspace pkg
 _default_wp="Elarun"
-
+_kdever=4.11.2
+_build_type=Release
+_installprefix=/usr
 pkgname="kde-workspace"
 arch=('x86_64')
 pkgver=${_kdever}
-pkgrel=6
+pkgrel=7
 pkgdesc="KDE Workspace"
 url="http://www.kde.org"
 license=('GPL' 'LGPL' 'FDL')
-options=('docs' '!splithdr' 'splitdbg' 'log')
+options=('docs' 'debug' 'log')
 install=${pkgname}.install
 depends=('polkit-kde-agent' "kdepimlibs>=${_kdever}" "kde-runtime>=${_kdever}" 'qimageblitz' 'mesa' "kactivities>=${_kdever}" 
-         'libxxf86misc' 'libxcomposite' 'xcb-util-image' 'xcb-util-renderutil' 'libxss' 'lm_sensors' 'libxklavier' 'libxft' 
+         'libxxf86misc' 'libxcomposite' 'xcb-util-image' 'xcb-util-renderutil' 'xcb-util-keysyms' 'libxss' 'lm_sensors' 'libxklavier' 'libxft' 
          'oxygen-icons' 'xkit' 'libxdamage' 'xorg-utils' 'libxrandr' 'libxres' 'libdmtx' 'libqalculate' 'prison' 'qrencode' 
          "kdepim-runtime>=${_kdever}" "kde-base-artwork>=${_kdever}" 'otf-source-sans-pro')
 makedepends=('pkgconfig' 'cmake' 'automoc4' 'networkmanager' 'bluez' "kdebindings-pykde4>=${_kdever}"
@@ -69,8 +71,8 @@ source=($_mirror/${pkgname}-$_kdever.tar.xz
         kcmfonts
         kdeglobals)
 
-md5sums=(`grep ${pkgname}-$_kdever.tar.xz ../kde-sc.md5 | cut -d" " -f1`
-         `grep kde-wallpapers-$_kdever.tar.xz ../kde-sc.md5 | cut -d" " -f1` # kde-wallpapers
+md5sums=('23f6204a3e3e6d2ad213af13d708c751'
+         'a1df0fc9896ef49037b9ecd0cb8155ee'
          'f355a658d2e9267fdf4e8d8f88038bcf'
          '452bde7f31f20afe2ffae9cd19260e29'
          'b60baabccbd302d00923e053db0dc0ae'
