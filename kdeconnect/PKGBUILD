@@ -8,8 +8,8 @@
 _buildtype='Release'
   
 pkgname=kdeconnect
-pkgver=0.4
-_pkgver=0.4
+pkgver=0.4.1
+#_pkgver=0.4
 pkgrel=1
 pkgdesc='KDE Connect - kded and kcm'
 url='https://albertvaka.wordpress.com/2013/08/05/introducing-kde-connect/'
@@ -21,29 +21,29 @@ provides=('kdeconnect')
 conflicts=('kdeconnect-git')
 install=kdeconnect.install
 screenshot=('http://albertvaka.files.wordpress.com/2013/08/kcm.png')
-source=("http://download.kde.org/unstable/kdeconnect/${_pkgver}/src/${pkgname}-kde-${pkgver}.tar.xz")
-md5sums=('374d35d154c296a9808bb32a9709e93d')
+source=("http://download.kde.org/unstable/kdeconnect/${pkgver}/src/${pkgname}-kde-${pkgver}.tar.xz")
+md5sums=('73e2cf015a236a451b05559f2bb7e7b3')
  
 if [[ ! ${_buildtype} == 'Release' ]] && [[ ! ${_buildtype} == 'release' ]]; then
   options=(debug)
 fi
  
 prepare() {
-  if [[ -e ${pkgname}-kde-${_pkgver}-build ]]; then rm -rf ${pkgname}-build; fi
-  mkdir ${pkgname}-kde-${_pkgver}-build
+  if [[ -e ${pkgname}-kde-${pkgver}-build ]]; then rm -rf ${pkgname}-build; fi
+  mkdir ${pkgname}-kde-${pkgver}-build
 }
  
 build() {
-  cd ${pkgname}-kde-${_pkgver}-build
+  cd ${pkgname}-kde-${pkgver}-build
  
   cmake -DCMAKE_INSTALL_PREFIX=/usr \
         -DKDE4_BUILD_TESTS=OFF \
         -DCMAKE_BUILD_TYPE=${_buildtype} \
-        ../${pkgname}-kde-${_pkgver}
+        ../${pkgname}-kde-${pkgver}
   make
 }
  
 package() {
-  cd ${pkgname}-kde-${_pkgver}-build
+  cd ${pkgname}-kde-${pkgver}-build
   make DESTDIR=${pkgdir} install
 }
