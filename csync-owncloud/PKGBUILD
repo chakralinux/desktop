@@ -5,8 +5,8 @@
  
 _name=ocsync
 pkgname=csync-owncloud
-pkgver=0.70.7
-pkgrel=1
+pkgver=0.90.4
+pkgrel=2
 pkgdesc="A file synchronizer especially designed for you, the normal user."
 arch=("x86_64")
 url="http://www.csync.org"
@@ -16,24 +16,25 @@ makedepends=('cmake')
 provides=('csync')
 conflicts=('csync')
 source=("http://download.owncloud.com/download/${_name}-${pkgver}.tar.bz2")
-sha256sums=('571c7a822a8e30966c3a7e61a5218b49e8d52e70e8a8ec80d16db786d60bb324')
+sha256sums=('f2146577c977dc82a24e0baf84f3970efc3b004f2730669aae3816f48ff15728')
 _buildtype="Release"
- 
+
+prepare() {
+  if [[ -e ${_name}-${pkgver}-build ]]; then rm -rf ${_name}-${pkgver}-build; fi
+  mkdir ${_name}-${pkgver}-build
+}
+
 build() {
-  if [[ -e ${srcdir}/${_name}-${pkgver}-build ]]; then rm -rf ${srcdir}/${_name}-${pkgver}-build; fi
-  mkdir ${srcdir}/${_name}-${pkgver}-build
-  cd "${srcdir}/${_name}-${pkgver}-build"
- 
+  cd ${_name}-${pkgver}-build
   cmake -DCMAKE_BUILD_TYPE=${_buildtype} \
         -DCMAKE_INSTALL_PREFIX=/usr \
-	-DSYSCONF_INSTALL_DIR=/etc \
+        -DSYSCONF_INSTALL_DIR=/etc \
         ../${_name}-${pkgver}
   make
 }
  
 package() {
-  cd "${srcdir}/${_name}-${pkgver}-build"
- 
-  make DESTDIR="${pkgdir}" install
+  cd ${_name}-${pkgver}-build
+   make DESTDIR="${pkgdir}" install
 }
- 
+  
