@@ -1,0 +1,50 @@
+# Maintainer: Neophytos Kolokotronis <tetris AT @gmail DOT com>
+# Contributions from AUR: https://aur.archlinux.org/packages/kfilebox/
+
+pkgname=kfilebox-gtkfree
+_pkgname=kfilebox
+pkgver=0.4.9
+pkgrel=2
+pkgdesc="KDE4 Dropbox client (with own daemon)"
+arch=('x86_64')
+url="http://kdropbox.deuteros.es"
+license=('GPL')
+depends=('kde-workspace' 'gettext')
+provides=('dropbox')
+replaces=('kdropbox')
+categories=('network' 'backup' 'cloud')
+source=(${_pkgname}-${pkgver}.tar.gz::http://downloads.sourceforge.net/project/kdropbox/kfilebox-${pkgver}/Source/${_pkgname}_${pkgver}.tar.gz)
+install=$_pkgname.install
+noextract=(${_pkgname}-${pkgver}.tar.gz})
+md5sums=('4b40b7a2e52c0d3d126dd4f8c404efdd')
+
+build() {
+    cd "$srcdir"
+    gunzip -f "${_pkgname}-${pkgver}.tar.gz"
+    mv "${_pkgname}-${pkgver}.tar" "${_pkgname}-${pkgver}.tar.gz"
+    tar fxvz "${_pkgname}-${pkgver}.tar.gz"
+    cd "${_pkgname}_${pkgver}" 
+    qmake
+    make
+}
+
+package() {
+    cd "${srcdir}/${_pkgname}_${pkgver}"
+    # install binary
+    install -m 755 -p -D "${srcdir}/${_pkgname}_${pkgver}/bin/kfilebox" "${pkgdir}/usr/bin/kfilebox"
+    # create data directory
+    install -m 755 -d "${pkgdir}/usr/share/kfilebox"
+    # copy all icons
+    cp -pr "${srcdir}/${_pkgname}_${pkgver}/img/"* "${pkgdir}/usr/share/kfilebox"
+    # install notifyrc file
+    install -m 644 -p -D "${srcdir}/${_pkgname}_${pkgver}/kfilebox.notifyrc" "${pkgdir}/usr/share/apps/kfilebox/kfilebox.notifyrc"
+    # install desktop file
+    install -m 644 -p -D "${srcdir}/${_pkgname}_${pkgver}/kfilebox.desktop" "${pkgdir}/usr/share/applications/kde4/kfilebox.desktop"
+    #install locales
+    for language in `ls "${srcdir}/${_pkgname}_${pkgver}/locale"`
+    do
+      if [ -e ${srcdir}/${_pkgname}_${pkgver}/locale/$language/kfilebox.mo ]; then
+	install -m 644 -p -D ${srcdir}/${_pkgname}_${pkgver}/locale/$language/kfilebox.mo ${pkgdir}/usr/share/locale/$language/LC_MESSAGES/kfilebox.mo
+      fi
+    done
+}
