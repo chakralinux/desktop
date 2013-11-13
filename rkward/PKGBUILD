@@ -1,35 +1,34 @@
-#
-# Chakra Packages for Chakra, part of chakra-project.org
-#
-# maintainer abveritas@chakra-project.org
+# Maintainer: Neophytos Kolokotronis <tetris4 AT gmail DOT com>
+# Contributions from AUR: http://aur.archlinux.org/packages.php?ID=4277
 
 pkgname=rkward
-pkgver=0.6.0
-pkgrel=1
+pkgver=0.6.1
+pkgrel=3
 pkgdesc="Easy to use transparent frontend to R for KDE4"
-arch=('i686' 'x86_64')
+arch=('x86_64')
 url="http://rkward.sourceforge.net/"
 license=('GPL')
-depends=('kde-runtime' 'qt' 'r' 'docbook-xsl')
+depends=('kdelibs' 'qt' 'r' 'docbook-xsl')
+categories=('programming')
 makedepends=('cmake' 'automoc4' 'icu')
-categories=('education')
-screenshot=('http://sourceforge.net/apps/mediawiki/rkward/nfs/project/r/rk/rkward/thumb/4/44/ScriptEditor1.png/800px-ScriptEditor1.png')
-source=("http://downloads.sourceforge.net/sourceforge/${pkgname}/${pkgname}-${pkgver}.tar.gz")
-md5sums=('9ad0b6a3e70496ec164d9e74cfcb721a')
- 
+source=(http://downloads.sourceforge.net/sourceforge/${pkgname}/${pkgname}-${pkgver}.tar.gz)
+md5sums=('aa2c16c4b76f729289bd2853fa4da2a8')
+screenshot="http://sourceforge.net/apps/mediawiki/rkward/nfs/project/r/rk/rkward/0/0a/RKWard_060_450.png"
+	 
 build() {
 	cd "${srcdir}/${pkgname}-${pkgver}"
-	# Dir for rkward R package
-	mkdir -p "${pkgdir}/usr/lib/R/library"
-	cmake -DCMAKE_INSTALL_PREFIX="/usr" -DR_LIBDIR="/usr/lib/R/library"
+	mkdir -p build
+	cd build
+	cmake .. -DCMAKE_INSTALL_PREFIX=`kde4-config --prefix` -DCMAKE_BUILD_TYPE=Release
 	make 
 }
 
 package(){
-	cd "${srcdir}/${pkgname}-${pkgver}"
-	make install DESTDIR="${pkgdir}"
-
+	cd "${srcdir}/${pkgname}-${pkgver}/build"
+	make DESTDIR="$pkgdir" install
+	
 	# Some cleanup
 	rm -vf "${pkgdir}/usr/lib/R/library/R.css"
 	rm -vf "${pkgdir}/usr/share/apps/katepart/syntax/r.xml"
+	rm -vf "${pkgdir}/usr/share/doc/kde/html/en/rkward/common"	
 }
