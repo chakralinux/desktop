@@ -4,8 +4,8 @@
 # Maintainer: Weng Xuetian <wengxt@gmail.com>
 
 pkgname=librime
-pkgver=0.9.9
-pkgrel=3
+pkgver=1.0
+pkgrel=1
 pkgdesc="Rime input method engine"
 arch=('i686' 'x86_64')
 url="http://code.google.com/p/rimeime/"
@@ -13,11 +13,10 @@ license=('GPL3')
 depends=('boost' 'google-glog' 'kyotocabinet' 'opencc' 'yaml-cpp>=0.5.0')
 optdepends=('brise: Rime schema repository')
 makedepends=('cmake')
-source=("http://rimeime.googlecode.com/files/$pkgname-$pkgver.tar.gz" "librime-0.9.9-fail_gtest.patch")
+source=("http://rimeime.googlecode.com/files/$pkgname-$pkgver.tar.gz")
 
 build() {
   cd "${srcdir}/$pkgname"
-  patch -i ../librime-0.9.9-fail_gtest.patch -p1 || return 1
   mkdir -p build
   cd build
   cmake -DCMAKE_INSTALL_PREFIX=/usr -DCMAKE_BUILD_TYPE=Release ..
@@ -29,5 +28,4 @@ package() {
   make DESTDIR="$pkgdir" install
 }
 
-md5sums=('bd705cd3e4c7ab6e47d983b07044769f'
-         '4f65057e15ae3a60987a01ca260e205d')
+md5sums=('9ade135afaf88a9e1c76ebf478070725')
