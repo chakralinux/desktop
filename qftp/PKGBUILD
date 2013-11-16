@@ -1,20 +1,18 @@
-#
-# Chakra Packages for Chakra, part of chakra-project.org
-#
-# maintainer abveritas[at]chakra-project[dot]org>
+# Maintainer: Neophytos Kolokotronis <tetris4 AT gmail DOT com>
+# contributor: abveritas[at]chakra-project[dot]org>
 
 pkgname=qftp
-pkgver=1.4.5
+pkgver=1.5.2
 pkgrel=1
 pkgdesc="A Qt client for FTP file transfers."
-arch=('i686' 'x86_64')
-url="http://www.phenix.bnl.gov/WWW/publish/hpereira/software/index.php?page=package&package_list=software_list_qt4&package=qftp-qt4&full=1"
+arch=('x86_64')
+url="http://www.phenix.bnl.gov/WWW/publish/hpereira/software/index.php?page=package&package_list=software_list_qt4&package=qftp&full=1"
 license=('GPL')
-depends=('qt')
+depends=('qt5-base')
 categories=('network')
 screenshot=('http://www.phenix.bnl.gov/WWW/publish/hpereira/software/screenshot/qftp_connect.png')
 source=("http://www.phenix.bnl.gov/WWW/publish/hpereira/software/tgz/${pkgname}-${pkgver}.tar.gz")
-md5sums=('15ab369a80e5e76952a5bb9e79ea9b61')
+md5sums=('afaeb21dba650b27688246328b76712e')
 
 build() {
   cd "${srcdir}"
@@ -25,11 +23,12 @@ build() {
   # The default LDFLAGS="-Wl,--hash-style=gnu -Wl,--as-needed" specified
   # in /etc/makepkg.conf will break the linkage procedure.
   unset LDFLAGS
-
+  
   cmake "${srcdir}/${pkgname}-${pkgver}" \
         -DCMAKE_BUILD_TYPE=RelWithDebInfo \
-        -DCMAKE_INSTALL_PREFIX=/usr
-
+        -DCMAKE_INSTALL_PREFIX=/usr \
+        -DUSE_QT5=ON
+     
   make
 }
 
@@ -38,4 +37,3 @@ package() {
   make install DESTDIR="${pkgdir}"
 }
 
-# vim:set ts=2 sw=2 et:
