@@ -1,22 +1,24 @@
-# Maintainer: abveritas@chakra-project.org
+# Maintainer: Neophytos Kolokotronis <tetris4 AT gmail DOT com>
+# Contributor abveritas@chakra-project.org
 
 _prefix=/usr
 
 pkgname=xbmc
 pkgver=12.2
-pkgrel=3
+pkgrel=7
 pkgdesc="XBMC Media Center"
 arch=('x86_64')
 url="http://xbmc.org"
 license=('GPL' 'custom')
 depends=( 'bzip2' 'curl' 'enca' 'faac' 'faad2' 'fontconfig' 'fribidi' 'python2' 'python-pysqlite'
-          'glew' 'jasper' 'libcdio' 'libgl' 'libmad' 'libmms' 'libass' 'yajl' 'libpng12'
+          'glew' 'jasper' 'libcdio' 'libgl' 'libmad' 'libmms' 'libass' 'yajl' 'libtiff'
           'libmpeg2' 'libmariadbclient' 'libsamplerate' 'libxinerama' 'libpng' 'libbluedevil'
-          'libxrandr' 'libxtst' 'lzo2' 'sdl_image' 'sdl_mixer' 'libvorbis' 'pulseaudio' 'libdvdcss'
-          'samba' 'wavpack' 'mesa-demos' 'xorg-utils' 'libmicrohttpd' 'libjpeg-turbo' 'mesa' 'swig'
+          'libxrandr' 'libxtst' 'lzo2' 'sdl_image' 'sdl_mixer' 'libvorbis' 'libpulse' 'libdvdcss'
+          'smbclient' 'wavpack' 'mesa-demos' 'xorg-utils' 'libmicrohttpd' 'libjpeg-turbo' 'mesa' 'swig'
           'libssh' 'libva' 'libmodplug' 'rtmpdump' 'lsb-release' 'sqlite3' 'libbluray' 'java-runtime'
-          'tinyxml' 'taglib' 'libcap')
-makedepends=('boost' 'cmake' 'gperf' 'nasm' 'libvdpau' 'unzip' 'zip' 'cvs' 'autoconf' 'automake' 'doxygen')
+          'tinyxml' 'taglib' 'libcap' 'avahi' 'libshairport' 'glu' 'libplist' 'libnfs')
+makedepends=('boost' 'cmake' 'gperf' 'nasm' 'libvdpau' 'unzip' 'zip' 'cvs' 'autoconf' 'automake'
+             'udisks' 'upower' 'mesa' 'doxygen' 'swig')
 optdepends=('lirc: remote controller support'
             'unrar: access compressed files without unpacking them'
             'udisks: automount external drives'
@@ -26,32 +28,53 @@ optdepends=('lirc: remote controller support'
             'tk')
 categories=('multimedia')
 screenshot=('http://xbmc.org/wp-content/gallery/back-row/screenshot000.jpg')
-install='xbmc.install'
-options=(makeflags)
-source=("http://mirrors.xbmc.org/releases/source/xbmc-$pkgver.tar.gz"
-        'FEH.sh'
-        'xbmc.service')
-md5sums=('489f3877decae4e265ece54f9eaef0ba'
-         'c3e2ab79b9965f1a4a048275d5f222c4'
-         '76fae229ebc3bcfaab7e7f27e4fb51f5')
+install=${pkgname}.install
+options=('makeflags')
+source=("http://mirrors.xbmc.org/releases/source/xbmc-${pkgver}.tar.gz"
+        "FEH.sh"
+        "${pkgname}.service")
+sha256sums=('b2330634fc513d27a44b131bbbe4ca6b61d60a1fe6c7ca27a7dc749df0bcea1c'
+            '1b391dfbaa07f81e5a5a7dfd1288bf2bdeab8dc50bbb6dbf39a80d8797dfaeb0'
+            '547e06f3141866cd34b1df34025517e9826992b67543af7621d954bcdfa0ba94')
 
 build() {
-    cd "${srcdir}/xbmc-$pkgver"
+    cd xbmc-${pkgver}
+    sed -i -e 's:#include <libsmbclient.h>:#include <samba-4.0/libsmbclient.h>:' xbmc/filesystem/{SmbFile,SMBDirectory}.cpp
 
+    
     msg "Bootstrapping XBMC"
     ./bootstrap
-    
-    export PYTHON_VERSION=2 
+
     msg "Configuring XBMC"
     ./configure --prefix=${_prefix} \
-	--enable-vdpau \
-	--enable-pulse \
-	--disable-avahi \
-	--disable-external-ffmpeg \
-	--enable-rtmp \
-	--enable-libbluray \
-	--enable-dvdcss \
-	--disable-debug
+      --enable-optimizations \
+      --enable-gl \
+      --enable-sdl \
+      --enable-vaapi \
+      --enable-vdpau \
+      --enable-xrandr \
+      --enable-rsxs \
+      --enable-projectm \
+      --enable-x11 \
+      --enable-pulse \
+      --enable-samba \
+      --enable-nfs \
+      --enable-avahi \
+      --enable-airplay \
+      --enable-airtunes \
+      --enable-ffmpeg-libvorbis \
+      --enable-rtmp \
+      --enable-libbluray \
+      --enable-dvdcss \
+      --enable-webserver \
+      --enable-optical-drive \
+      --enable-texturepacker \
+      --enable-udev \
+      --enable-libusb \
+      --enable-external-libraries \
+      --disable-hal \
+      --disable-external-ffmpeg \
+      --disable-debug
 
     msg "Running make"
     make 
@@ -59,7 +82,7 @@ build() {
 }
 
 package() {
-    cd "${srcdir}/xbmc-$pkgver"
+    cd xbmc-${pkgver}
     msg "Running make install"
     make prefix="${pkgdir}${_prefix}" install
 
@@ -88,13 +111,12 @@ package() {
     # Docs
     install -d -m 0755 "${pkgdir}${_prefix}/share/doc/${pkgname}"
 
-    # Cleanup 
+    # cleanup some stuff
     msg "Cleanup unneeded files"
     rm -rf "${pkgdir}/usr/share/xsessions"
     rm -f "${pkgdir}/usr/share/xbmc/FEH.py"
     rm -f "${pkgdir}/usr/share/icons/hicolor/icon-theme.cache"
-    
-    # Systemd service
-    install -Dm0644 $srcdir/xbmc.service $pkgdir/usr/lib/systemd/system/xbmc.service
 
+    # Systemd service
+    install -Dm0644 "${srcdir}/xbmc.service" "${pkgdir}/usr/lib/systemd/system/xbmc.service"
 }
