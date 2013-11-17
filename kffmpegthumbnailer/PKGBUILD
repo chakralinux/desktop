@@ -1,14 +1,15 @@
-# Maintainer: abveritas[at]chakra-project[dot]org>
+# Maintainer: Neophytos Kolokotronis <tetris4 AT gmail DOT com>
+# Contributor: abveritas[at]chakra-project[dot]org>
 
 pkgname=kffmpegthumbnailer
 pkgver=1.1.0
-pkgrel=4
+pkgrel=5
 pkgdesc="kffmpegthumbnailer is a video thumbnailer for kde based on ffmpegthumbnailer"
 arch=('x86_64')
 url="http://code.google.com/p/ffmpegthumbnailer"
 license=('GPL2')
 groups=('multimedia')
-depends=('kdebase-workspace' 'ffmpeg' 'ffmpegthumbnailer')
+depends=('kde-workspace' 'ffmpeg' 'ffmpegthumbnailer')
 makedepends=('cmake' 'automoc4')
 categories=('accessories')
 source=("http://ffmpegthumbnailer.googlecode.com/files/$pkgname-$pkgver.tar.gz")
@@ -20,5 +21,9 @@ build() {
    cd build
    cmake -DCMAKE_INSTALL_PREFIX=`kde4-config --prefix` -DCMAKE_BUILD_TYPE=release ..
    make 
+}
+
+package() {
+   cd ${srcdir}/$pkgname-$pkgver/build
    make DESTDIR=$pkgdir install 
 }
