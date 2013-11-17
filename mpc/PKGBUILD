@@ -1,26 +1,17 @@
-#
-# Apps packages for Chakra, part of www.chakra-project.org
-#
 # Maintainer:   H W Tovetjärn (totte) <totte@tott.es>
-# Contributors: (SteveK) <stevekej@gmail.com>
-#               Benjamin Mtz (cruznick) <cruznick at archlinux dot us>
-#               Gaetan Bisson <bisson@archlinux.org>
-#               Angel Velasquez <angvp@archlinux.org>
-#               Andrea Scarpino <andrea@archlinux.org>
-#               Alexander Fehr <pizzapunk gmail com>
-#               Link Dupont <link@subpop.net>
+# Contributions from Arch: 
 
 pkgname=mpc
-pkgver=0.22
+pkgver=0.25
 pkgrel=1
 pkgdesc="Minimalist command line interface to MPD"
-arch=('i686' 'x86_64')
+arch=('x86_64')
 url="http://mpd.wikia.com/wiki/Client:Mpc"
 license=('GPL2')
 depends=('libmpdclient')
 options=('!emptydirs')
-source=(http://downloads.sourceforge.net/musicpd/${pkgname}-$pkgver.tar.bz2)
-sha512sums=('64492267e17ca33d4fd191ce0222011b6c807ad330aa877bafee83c3027d3a6e6f663f0c4aec96d5980777537f877f355f27605791bc8e61e51a20d74afaa4d1')
+source=("http://www.musicpd.org/download/${pkgname}/${pkgver%.*}/${pkgname}-${pkgver}.tar.xz")
+sha512sums=('7752dd35027b6075d96a27808556af8b2b6e1ac5bb8069515f5baadf25ff31d46409749163634c668da132428b9686ba01a04051f4d41d4cd5e782e57a07b2cb')
 
 build() {
     cd "$srcdir/$pkgname-$pkgver"
