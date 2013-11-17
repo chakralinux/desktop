@@ -1,23 +1,27 @@
-#
-# Apps Packages for Chakra, part of chakra-project.org
-#
-# maintainer (i686): Phil Miller <philm[at]chakra-project[dog]org>
-# maintainer (x86_64): Manuel Tortosa <manutortosa[at]chakra-project[dot]org>
+# Maintainer: Neophytos Kolokotronis <tetris4 AT gmail DOT com>
+# Contributions from Arch: https://projects.archlinux.org/svntogit/packages.git/tree/trunk?h=packages/kaffeine
 
 pkgname=kaffeine
 pkgver=1.2.2
-pkgrel=2
+pkgrel=3
 pkgdesc='KDE media player'
 license=('GPL')
-arch=('i686' 'x86_64')
+arch=('x86_64')
 url="http://kaffeine.kde.org"
-depends=('kdelibs' 'kdebase-runtime' 'xine-lib')
+depends=('kde-runtime' 'xine-lib')
 makedepends=('pkg-config' 'cmake' 'automoc4')
 categories=('multimedia')
 install=kaffeine.install
-source=("http://downloads.sourceforge.net/${pkgname}/${pkgname}-${pkgver}.tar.gz")
-md5sums=('690e48d2e5fe123887109aa9b1bc1c31')
+source=("http://downloads.sourceforge.net/${pkgname}/${pkgname}-${pkgver}.tar.gz"
+        'dvbfix.patch')
+md5sums=('690e48d2e5fe123887109aa9b1bc1c31'
+         'f82890d4164d29fae518268165f06960')
 
+  prepare() {
+  cd ${pkgname}-${pkgver}
+  patch -p1 -i "${srcdir}/dvbfix.patch"
+}       
+         
 build() {
 	cd "$srcdir"
 	mkdir -p build
