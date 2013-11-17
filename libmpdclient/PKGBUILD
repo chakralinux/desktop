@@ -1,0 +1,28 @@
+# Maintainer: Neophytos Kolokotronis <tetris4 AT gmail DOT com>
+
+pkgname=libmpdclient
+pkgver=2.9
+pkgrel=1
+pkgdesc='Asynchronous API library for interfacing MPD in the C, C++ & Objective C languages'
+arch=('x86_64')
+url='http://www.musicpd.org/libs/libmpdclient/'
+license=('custom')
+depends=('doxygen')
+options=('!libtool')
+source=("http://www.musicpd.org/download/${pkgname}/2/${pkgname}-${pkgver}.tar.gz")
+md5sums=('310ccdb82c809ee1191f2f107e92bf22')
+
+build() {
+	cd "${srcdir}/${pkgname}-${pkgver}"
+	./configure --prefix=/usr --disable-static
+	make
+}
+
+package() {
+	cd "${srcdir}/${pkgname}-${pkgver}"
+	make DESTDIR="${pkgdir}" install
+	
+	cd "${pkgdir}"
+	install -d usr/share/licenses/libmpdclient
+	ln -s ../../doc/libmpdclient/COPYING usr/share/licenses/libmpdclient/COPYING
+}
