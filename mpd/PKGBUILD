@@ -1,59 +1,36 @@
-#
-# Apps packages for Chakra, part of www.chakra-project.org
-#
 # Maintainer:   H W Tovetjärn (totte) <totte@tott.es>
-# Contributors: (SteveK) <stevekej@gmail.com>
-#               Gaetan Bisson <bisson@archlinux.org>
-#               Angel Velasquez <angvp@archlinux.org>
-#               Andrea Scarpino <andrea@archlinux.org>
-#               Damir Perisa <damir.perisa@bluewin.ch>
-#               Ben <ben@benmazer.net>
+# Contributions from Arch: https://projects.archlinux.org/svntogit/packages.git/tree/trunk/PKGBUILD?h=packages/mpd
 
 pkgname=mpd
-pkgver=0.17.3
+pkgver=0.18.4
 pkgrel=1
 pkgdesc='Flexible, powerful, server-side application for playing music'
 url='http://mpd.wikia.com/wiki/Music_Player_Daemon_Wiki'
 license=('GPL')
-arch=('i686' 'x86_64')
-depends=('audiofile'
-         'avahi'
-         'curl'
-         'faad2'
-         'ffmpeg'
-         'jack'
-         'libao'
-         'libid3tag'
-         'libmad'
-         'libmms'
-         'libmodplug'
-         'libmpcdec'
-         'libpulse'
-         'libshout'
-         'sqlite3'
-         'wavpack')
+arch=('x86_64')
+depends=('audiofile' 'avahi' 'curl' 'faad2' 'ffmpeg' 'jack' 'libao' 'libid3tag' 'libmad' 'libmms' 'libmodplug'
+         'libpulse' 'libshout' 'sqlite3' 'wavpack' 'libmpdclient' 'yajl' 'opus')
 makedepends=('doxygen')
-source=("http://downloads.sourceforge.net/musicpd/${pkgname}-${pkgver}.tar.bz2"
-        'tmpfiles.d'
-        'rc.d') 
-sha512sums=('e421e723cd7d46b87c07d5a3be5aaa592453b6c7d2fa02440cc8ac5a1f931126f5011b0fed9c8d0fcfb142dd7290db67ca2638f75fa8b41d38f2a825816621e1'
-            '3608f8b0418aa5527917c35308aeca80357c3cf1834cceeade2eaab7fa736117c0b3143cf225478441ffc533b45ff1e8c5579a2e1aa432a4db5ca4cef2dd04e1'
-            '519cd5b0e64511ff4e5e9a34f343a80d2ebf87e3207c0e9fbf4f591f3f731b7adaa659d769b1c658ecdba66b71e0f78c09b9b6e1caedae5c208082f8d85ff743')
-
+source=("http://www.musicpd.org/download/mpd/stable/${pkgname}-${pkgver}.tar.xz"
+        'tmpfiles.d') 
 backup=('etc/mpd.conf')
 install=install
+sha512sums=('f12e3bca60be59ad45493c03ef49284807ab5ed5401a476407361f69d093e71ffa22004b55c18b633833e982524815335b14cce5bdfdee90b82abac3a3c347da'
+            '3608f8b0418aa5527917c35308aeca80357c3cf1834cceeade2eaab7fa736117c0b3143cf225478441ffc533b45ff1e8c5579a2e1aa432a4db5ca4cef2dd04e1')
+
 
 build() {
     cd "${srcdir}/${pkgname}-${pkgver}"
+
     ./configure \
         --prefix=/usr \
         --sysconfdir=/etc \
-        --enable-lastfm \
         --enable-jack \
+        --enable-soundcloud \
         --enable-pulse \
+	--enable-libmpdclient \
         --disable-sidplay \
-        --with-systemdsystemunitdir=/usr/lib/systemd/system \
-        --disable-libwrap
+        --with-systemdsystemunitdir=/usr/lib/systemd/system 
     make
 }
 
@@ -67,8 +44,10 @@ package() {
         -e '/^#state_file/c state_file "/var/lib/mpd/mpdstate"' \
         -e '/^#user/c user "mpd"' \
         -i doc/mpdconf.example
-    install -Dm755 ../rc.d "${pkgdir}"/etc/rc.d/mpd
     install -d -g 45 -o 45 "${pkgdir}"/var/lib/mpd/playlists
     install -Dm644 doc/mpdconf.example "${pkgdir}"/etc/mpd.conf
     install -Dm644 ../tmpfiles.d "${pkgdir}"/usr/lib/tmpfiles.d/mpd.conf
+    install -d "${pkgdir}"/usr/lib/systemd/user
+    ln -s ../system/mpd.service "${pkgdir}"/usr/lib/systemd/user/mpd.service
+
 }
