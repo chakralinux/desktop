@@ -1,15 +1,14 @@
-# Support packages for Desktop
-#
-# Maintainer: Manuel Tortosa <manutortosa@chakra-project.org>
+# Maintainer: Neophytos Kolokotronis <tetris4 AT gmail DOT com>
+# Contributor: Manuel Tortosa <manutortosa@chakra-project.org>
 
 pkgname="system-config-printer"
 pkgver=1.4.0
-pkgrel=4
+pkgrel=6
 pkgdesc="A CUPS printer configuration tool and status applet"
 url="http://cyberelk.net/tim/software/system-config-printer/"
 arch=('any')
 license=('GPL')
-depends=('pycups' 'dbus-python' 'pysmbc' 'libusb-compat' 'python-pycurl')
+depends=('pycups' 'python2-dbus' 'pysmbc' 'libusb-compat' 'python-pycurl')
 makedepends=('intltool' 'python2' 'xmlto' 'docbook-xsl' 'desktop-file-utils' 'libcups' 'libxml2')
 optdepends=('kdeadmin-print-manager: for the administration tool in KDE System Settings')
 provides=('system-config-printer-common')
@@ -38,6 +37,6 @@ package() {
   cd ${pkgname}-${pkgver}
   make DESTDIR="${pkgdir}" install
 
-  sed -i -e "s~#!/bin/sh~#!/bin/sh\nexport GI_TYPELIB_PATH=/extra/usr/lib/girepository-1.0/:/usr/lib/girepository-1.0/~g" ${pkgdir}/usr/bin/system-config-printer
-  sed -i -e "s~#!/bin/sh~#!/bin/sh\nexport GI_TYPELIB_PATH=/extra/usr/lib/girepository-1.0/:/usr/lib/girepository-1.0/~g" ${pkgdir}/usr/bin/scp-dbus-service
+  sed -i -e "s~#!/bin/sh~#!/bin/sh\nexport GI_TYPELIB_PATH=/usr/lib/girepository-1.0/:/usr/lib/girepository-1.0/~g" ${pkgdir}/usr/bin/system-config-printer
+  sed -i -e "s~#!/bin/sh~#!/bin/sh\nexport GI_TYPELIB_PATH=/usr/lib/girepository-1.0/:/usr/lib/girepository-1.0/~g" ${pkgdir}/usr/bin/scp-dbus-service
 }
