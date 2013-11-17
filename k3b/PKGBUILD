@@ -1,35 +1,42 @@
-#
-# Apps Packages for Chakra, part of chakra-project.org
-#
-# maintainer abveritas[at]chakra-project[dot]org>
+# Maintainer: Neophytos Kolokotronis <tetris4 AT gmail DOT com>
 
 pkgname=k3b
 pkgver=2.0.2
-pkgrel=5
+pkgrel=7
 depends=('kde-runtime' 'libkcddb' 'libkcompactdisc' 'libsamplerate' 'libmad'
-         'ffmpeg>=0.5' 'taglib>=1.4' 'libmpcdec>=1.2.5' 'libdvdread>=4.1.3'
+         'ffmpeg' 'taglib' 'libmpcdec' 'libdvdread'
          'cdrdao' 'cdrkit' 'shared-mime-info' 'libxft' 'libmusicbrainz3' 'docbook-xsl')
 makedepends=('cmake' 'pkgconfig' 'automoc4' 'dvd+rw-tools')
 pkgdesc="Feature-rich and easy to handle CD burning application"
-arch=("i686" "x86_64")
+arch=("x86_64")
 license=('GPL')
 install=$pkgname.install
-url="http://k3b.sourceforge.net/"
+url="http://www.k3b.org"
 optdepends=('dvd+rw-tools: for dvd burning support'
             'vcdimager:    for vcd burning support'
             'transcode:    for advanced mpeg conversion support'
             'emovix:       for bootable multimedia cd/dvd support')
 categories=('multimedia')
-options=(!libtool)
-source=(http://downloads.sourceforge.net/${pkgname}/${pkgname}-${pkgver}.tar.bz2 \
-        k3b-2.0.2-ffmpeg.patch)
-sha1sums=('8b30a4d07942e82559b01bc07dea6bcf2defd532'
-          '48f494363e7f423ee5d32f979d48e3d5731fe2ae')
+options=('!libtool')
+screenshot=("http://k3b.plainblack.com/uploads/YG/sD/YGsDcV6bDsyuBRt42GWFSA/welcome_screenshot1.png")
+source=("http://downloads.sourceforge.net/${pkgname}/${pkgname}-${pkgver}.tar.bz2"
+        "k3b-2.0.2-ffmpeg.patch"
+        "k3b-2.0.2-libav9.patch"
+        "k3b-2.0.2-libavformat54.patch")
+sha256sums=('af176f29c1d2339c4648d461476227cb07bcd0c75056f2a4006f253e3ef5b7cd'
+            '741b069ba4ffab7cef2cd5c3908030ee26e546478bacae20fa29b1ad0f8f207a'
+            'c2dd0aec1dedf2b1cc8ef1633ad74495e8d555a77b1088f7e48f692bcd42c6ae'
+            '26f32012a3ee8017435decdd8d5d5ec1fabfd479e0c3e5f08eecb2bc013c9dde')
 
+prepare() {
+  cd ${pkgname}-${pkgver}
+  patch -p1 -i "${srcdir}/k3b-2.0.2-ffmpeg.patch"
+  patch -p1 -i "${srcdir}/k3b-2.0.2-libav9.patch"
+  patch -p1 -i "${srcdir}/k3b-2.0.2-libavformat54.patch"
+}
+          
 build() {
-  cd "${srcdir}"
-  (cd ${pkgname}-${pkgver}; patch -p1 -i "${srcdir}/k3b-2.0.2-ffmpeg.patch")
-  mkdir build
+  mkdir -p build
   cd build
   cmake ../${pkgname}-${pkgver} \
     -DCMAKE_INSTALL_PREFIX=/usr \
@@ -38,7 +45,6 @@ build() {
 }
 
 package() {
-  cd "${srcdir}/build"
+  cd build
   make DESTDIR="${pkgdir}" install
 }
-
