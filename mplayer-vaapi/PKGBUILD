@@ -1,14 +1,15 @@
-# Maintainer abveritas@chakra-project.org
+# Maintainer: Neophytos Kolokotronis <tetris4 AT gmail DOT com>
+# Contributor: abveritas@chakra-project.org
 
 pkgname=mplayer-vaapi
-pkgver=35107
-pkgrel=11
+pkgver=36265
+pkgrel=1
 pkgdesc="A movie player, compiled with vaapi support"
 arch=('x86_64')
 url="http://gitorious.org/vaapi/mplayer"
 license=('GPL')
 depends=('libxxf86dga' 'libxxf86vm' 'libmad' 'libcdio' 'libxinerama' 'sdl' 'lame' 'fontconfig'
-         'libtheora' 'xvidcore' 'libmng' 'libxss' 'mesa' 'samba' 'aalib' 'jack' 'libcaca' 'x264'
+         'libtheora' 'xvidcore' 'libmng' 'libxss' 'mesa' 'smbclient' 'aalib' 'jack' 'libcaca' 'x264'
          'faac' 'faad2' 'lirc-utils' 'ttf-dejavu' 'libxvmc' 'enca' 'opencore-amr' 'libdca' 'a52dec'
          'schroedinger' 'mpg123' 'libvpx' 'pulseaudio' 'fribidi' 'faad2' 'libva' 'desktop-file-utils'
          'libbs2b' 'nas' 'libass')
@@ -21,14 +22,22 @@ categories=('multimedia')
 options=('!buildflags' '!emptydirs')
 install=${pkgname}.install
 source=("http://pkgbuild.com/~foutrelis/sources/${pkgname}/${pkgname}-${pkgver}.tar.xz"
-        "tweak-desktop-file.patch")
-md5sums=('4625684ca3e10411d7cb4aa604b5932f'
-         '5e9a31281933ab5fd1c0c2b094eae4a7')
+        'tweak-desktop-file.patch'
+        'subreader-fix-srt-parsing.patch')
+md5sums=('dda55251fd65c046ddeaf5927c676ec2'
+         '5e9a31281933ab5fd1c0c2b094eae4a7'
+         '4f2b5b0a5801ca607c8dbbe62047feab')
+
+
+    prepare() {
+  cd "$srcdir/$pkgname-$pkgver"
+  patch -d etc -Np0 -i "$srcdir/tweak-desktop-file.patch"
+  # http://bugzilla.mplayerhq.hu/show_bug.cgi?id=2139
+  patch -Np0 -i "$srcdir/subreader-fix-srt-parsing.patch"
+}
 
 build() {
   cd "${srcdir}/mplayer-vaapi-${pkgver}"
-
-  patch -d etc -p0 -i "${srcdir}/tweak-desktop-file.patch"
 
   ./configure --prefix=/usr \
     --enable-runtime-cpudetection \
