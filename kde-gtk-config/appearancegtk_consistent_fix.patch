@@ -1,0 +1,47 @@
+From: Aleix Pol <aleixpol@kde.org>
+Date: Fri, 22 Mar 2013 13:31:13 +0000
+Subject: Be consistent regarding the loading and saving of the boolean properties
+X-Git-Url: http://quickgit.kde.org/?p=kde-gtk-config.git&a=commitdiff&h=f47a8380c76f42d7807fcd1e5bf82a540faa8d84
+---
+Be consistent regarding the loading and saving of the boolean properties
+---
+
+
+--- a/src/appearancegtk2.cpp
++++ b/src/appearancegtk2.cpp
+@@ -108,8 +108,8 @@
+     flow << "gtk-icon-theme-name=\""<< m_settings["icon"] << "\"\n";
+     flow << "gtk-fallback-icon-theme=\"" << m_settings["icon_fallback"] << "\"\n";
+     flow << "gtk-toolbar-style=" << m_settings["toolbar_style"] << "\n";
+-    flow << "gtk-menu-images=" << m_settings["show_icons_buttons"] << "\n";
+-    flow << "gtk-button-images=" << m_settings["show_icons_menus"] << "\n";
++    flow << "gtk-menu-images=" << m_settings["show_icons_menus"] << "\n";
++    flow << "gtk-button-images=" << m_settings["show_icons_buttons"] << "\n";
+     
+     //we're done with the  ~/.gtk-2.0 file
+     gtkrc.close();
+
+--- a/src/appearancegtk3.cpp
++++ b/src/appearancegtk3.cpp
+@@ -61,7 +61,6 @@
+         kDebug() << "Couldn't open GTK3 config file for writing at:" << file_gtk3.fileName();
+         return false;
+     }
+-    
+     QTextStream flow3(&file_gtk3);
+     flow3 << "[Settings]\n";
+     flow3 << "gtk-font-name=" << m_settings["font"] << "\n";
+@@ -69,9 +68,8 @@
+     flow3 << "gtk-icon-theme-name="<< m_settings["icon"] << "\n";
+     flow3 << "gtk-fallback-icon-theme=" << m_settings["icon_fallback"] << "\n";
+     flow3 << "gtk-toolbar-style=" << m_settings["toolbar_style"] << "\n";
+-    flow3 << "gtk-menu-images=" << m_settings["show_icons_buttons"] << "\n";
+-    flow3 << "gtk-button-images=" << m_settings["show_icons_menus"] << "\n";
+-    
++    flow3 << "gtk-menu-images=" << m_settings["show_icons_menus"] << "\n";
++    flow3 << "gtk-button-images=" << m_settings["show_icons_buttons"] << "\n";
+     return true;
+ }
+ 
+
+ 

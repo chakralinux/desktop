@@ -2,7 +2,7 @@
 
 pkgname=kde-gtk-config
 pkgver=2.2.1
-pkgrel=2
+pkgrel=3
 pkgdesc="A KCM for Configuring the GTK2 and GTK3 look&feel"
 arch=('x86_64')
 url="https://projects.kde.org/projects/kdereview/kde-gtk-config"
@@ -15,9 +15,18 @@ conflicts=('kde-gtk-config-git' 'chakra-gtk-config' 'chakra-gtk-config-git')
 provides=('chakra-gtk-config')
 replaces=('chakra-gtk-config')
 groups=('gtk-integration')
-source=("http://download.kde.org/stable/$pkgname/$pkgver/src/$pkgname-$pkgver.tar.xz")
+source=("http://download.kde.org/stable/$pkgname/$pkgver/src/$pkgname-$pkgver.tar.xz"
+	appearancegtk_consistent_fix.patch)
 install=$pkgname.install
-md5sums=('d155ed431d509e54a60383a70b700e1c')
+md5sums=('d155ed431d509e54a60383a70b700e1c'
+         'd843bdd4fb14621d4b79e709446c2f1f')
+
+prepare(){
+  cd $pkgbase-$pkgver
+  
+  # fix: Be consistent regarding the loading and saving of the boolean properties
+  patch -Np1 -i ${srcdir}/appearancegtk_consistent_fix.patch
+}
 
 build() {
   cd "$srcdir"
