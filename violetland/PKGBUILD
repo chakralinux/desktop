@@ -1,13 +1,10 @@
-#
-# Games Packages for Chakra, part of chakra-project.org
-#
 # Maintainer: Adrián Chaves Fernández (Gallaecio) <adriyetichaves@gmail.com>
 
 pkgname=violetland
 pkgver=0.4.3
-pkgrel=2
+pkgrel=3
 pkgdesc="Game where a girl, Violet, struggles with hordes of monsters."
-arch=('i686' 'x86_64')
+arch=('x86_64')
 url="http://code.google.com/p/violetland/"
 license=('GPL3' 'CCPL:by-sa')
 depends=('boost' 'intltool' 'sdl_image' 'sdl_mixer' 'sdl_ttf' 'libgl' 'mesa')
@@ -52,15 +49,15 @@ package() {
   cd "${srcdir}/${_gitname}-build"
   
   # Install icon
-  install -D -m0644 "${srcdir}/${pkgname}-master/icon-light.png" \
+  install -D -m0644 "${srcdir}/${pkgname}/icon-light.png" \
     "${pkgdir}/usr/share/pixmaps/${pkgname}.png"
   
   # Install desktop file
   desktop-file-install -m 0644 --dir="${pkgdir}/usr/share/applications" \
-    "${srcdir}/${pkgname}-master/${pkgname}.desktop"
+    "${srcdir}/${pkgname}/${pkgname}.desktop"
 
   # Install Readme
-  install -D -m0644 "${srcdir}/${pkgname}-master/CHANGELOG.md" \
+  install -D -m0644 "${srcdir}/${pkgname}/CHANGELOG.md" \
     "${pkgdir}/usr/share/doc/${pkgname}/CHANGELOG.md"
     
   make DESTDIR="${pkgdir}" install
