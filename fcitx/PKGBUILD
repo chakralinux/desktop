@@ -9,7 +9,7 @@
 pkgbase=fcitx
 pkgname=('fcitx' 'fcitx-pinyin' 'fcitx-table')
 pkgver=4.2.8.3
-pkgrel=1
+pkgrel=2
 arch=("i686" "x86_64")
 license=('GPL')
 url="http://code.google.com/p/fcitx"
@@ -27,6 +27,7 @@ build() {
   msg "Starting make..."
   cd build
   cmake ../${pkgname}-${pkgver} -DCMAKE_INSTALL_PREFIX=/usr -DCMAKE_BUILD_TYPE=Release \
+      -DSYSCONFDIR=/etc \
       -DENABLE_QT_IM_MODULE=On \
       -DENABLE_GTK2_IM_MODULE=Off \
       -DENABLE_GTK3_IM_MODULE=Off \
