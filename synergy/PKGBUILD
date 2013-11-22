@@ -1,47 +1,62 @@
-#
-# Chakra Packages for Chakra, part of chakra-project.org
-#
-# maintainer (i686): Phil Miller <philm[at]chakra-project[dog]org>
-# maintainer (x86_64): Manuel Tortosa <manutortosa[at]chakra-project[dot]org>
-
-# include global config
-source ../_buildscripts/${current_repo}-${_arch}-cfg.conf
+# Maintainer: Neophytos Kolokotronis <tetris4 AT gmail DOT com>
+# contributor: Ernesto Manriquez <alejandronova@gmail.com>
 
 pkgname=synergy
-pkgver=1.3.8
-pkgrel=1
-pkgdesc="Share a single mouse and keyboard between multiple computers"
+pkgver=1.4.15
+pkgrel=2
+pkgdesc="Share your mouse and keyboard between several computers"
 url="http://synergy-foss.org"
-arch=('i686' 'x86_64')
-depends=('gcc-libs' 'libxtst' 'libxinerama' )
+arch=('x86_64')
 license=('GPL2')
-makedepends=('libxt' 'cmake')       # used by configure to test for libx11...
+depends=('gcc-libs' 'libxtst' 'libxinerama' )
+makedepends=('libxt' 'cmake' 'qt' 'unzip' )
+optdepends=('qt: gui support')
 provides=('synergy-plus')
 categories=('utils')
 backup=('etc/synergy.conf')
-source=("http://synergy.googlecode.com/files/$pkgname-$pkgver-Source.tar.gz" "${pkgname}s.rc" )
-md5sums=('3534c65ecfa6e47d7899c57975442f03'
-         '8f8c01add9bf6e3ae9f37a36ca6345b6')
+source=("http://${pkgname}.googlecode.com/files/${pkgname}-${pkgver}-Source.tar.gz"
+        "synergys.socket"
+        "synergys.service")
+sha256sums=('643745888ec6150e74cb6da9813f8c7572f2f87cf35f0bd4f64cc1e467ef3550'
+            'aeb357ba161131524aa70a5303a17f78831c9a1ab17dbc7c97e4781a5c4bac44'
+            '846b7200a3bd83f270ca627c2c4601ef6c99bcd4460c514baaacadf0e25746b5')
 
 build() {
   cd "${srcdir}/${pkgname}-${pkgver}-Source"
-
-  cmake  -D CMAKE_INSTALL_PREFIX=/usr . 
+  
+ # Unzip the crypto library
+  unzip -d tools/cryptopp562 tools/cryptopp562.zip
+  
+  cmake -D CMAKE_INSTALL_PREFIX=/usr .
+  make
+  
+  cd src/gui
+  qmake
   make
 }
 
 package() {
   cd "${srcdir}/${pkgname}-${pkgver}-Source/bin"
-
-#  make DESTDIR="$pkgdir" install # doesn't work atm
-
+  
+  #make DESTDIR="${pkgdir}" install # doesn't work atm
+  
   # install binary
-  install -d "$pkgdir/usr/bin/"
-  install -Dm755 synergyc $pkgdir/usr/bin/
-  install -Dm755 synergys $pkgdir/usr/bin/
-
-  # install rc.d script  and config
-  install -d "${pkgdir}/etc/rc.d"
-  install -Dm644 $srcdir/$pkgname-$pkgver-Source/doc/${pkgname}.conf.example "${pkgdir}/etc"
-  install -Dm755 $srcdir/${pkgname}s.rc "${pkgdir}/etc/rc.d/${pkgname}s"
+  install -Dm755 synergy "$pkgdir/usr/bin/synergy"
+  install -Dm755 synergyc "${pkgdir}/usr/bin/"
+  install -Dm755 synergys "${pkgdir}/usr/bin/"
+    
+  # Install systemd service and socket
+  install -d "${pkgdir}/usr/lib/systemd/system"
+  install -Dm644 "${srcdir}/synergys.service" "${pkgdir}/usr/lib/systemd/system/"
+  install -Dm644 "${srcdir}/synergys.socket" "${pkgdir}/usr/lib/systemd/system/"
+  
+  # install config
+  install -m755 -d "${pkgdir}/etc"
+  install -m644 "${srcdir}/${pkgname}-${pkgver}-Source/doc/${pkgname}.conf.example" "${pkgdir}/etc/"
+  
+   # install desktop/icon stuff
+  cd ../res
+  sed -i 's/icons/pixmaps/' synergy.desktop
+  install -Dm644 "synergy.ico" "$pkgdir/usr/share/pixmaps/synergy.ico"
+  install -Dm644 "synergy.desktop" "$pkgdir/usr/share/applications/synergy.desktop"
 }
