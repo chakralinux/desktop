@@ -9,13 +9,13 @@ source ../_buildscripts/${current_repo}-${_arch}-cfg.conf
 pkgname="kde-runtime"    
 arch=('x86_64')
 pkgver=${_kdever}
-pkgrel=1
+pkgrel=2
 pkgdesc="KDE Runtime"
 url="http://www.kde.org"
 license=('GPL' 'LGPL' 'FDL')
-options=('docs' '!splithdr' 'splitdbg' 'log')
+options=('docs' '!header' 'debug' 'log')
 depends=("kdelibs>=${_kdever}" "nepomuk-core>=${_kdever}" "kactivities>=${_kdever}" 'oxygen-icons'
-         'xorg-xauth' 'hicolor-icon-theme' 'samba' 'rarian' 'libssh' 'libpulse' 'libssh'
+         'xorg-xauth' 'hicolor-icon-theme' 'smbclient' 'rarian' 'libssh' 'libpulse' 'libssh'
          'libcanberra' 'sound-theme-freedesktop')
 makedepends=('pkgconfig' 'cmake' 'automoc4' "kdepimlibs>=${_kdever}" 'openslp' 'docbook-xsl'
              'networkmanager' 'xine-lib' 'libcanberra-pulse' 'soprano')
@@ -28,18 +28,13 @@ install=kde-runtime.install
 noextract=(branding.svgz)
 
 source=($_mirror/${pkgname}-$_kdever.tar.xz
-	'branding.svgz'
-	'01_disable_logout_sound.patch')
+	'branding.svgz')
 
-md5sums=(`grep ${pkgname}-$_kdever.tar.xz ../kde-sc.md5 | cut -d" " -f1`
-        '68cd8eb57db22c2f2ed554b721253bc2'   #  branding.svgz
-        'a434bf282ee391b2f857184be59a3b6f')  #  01_disable_logout_sound.patch
+sha1sums=(`grep ${pkgname}-$_kdever.tar.xz ../kde-sc.md5 | cut -d" " -f1`
+          'e9a8617448523aacd70dd66f2ffc62a827af027b')  #  branding.svgz
 
 build() {
 	cd ${pkgname}-${pkgver}
-
-	msg "applying main patchset ..."
-	patch -p1 -i ${srcdir}/01_disable_logout_sound.patch
  
 	# copy our branding stuff
 	cp -f ${srcdir}/branding.svgz ${srcdir}/${pkgname}-${pkgver}/desktoptheme/oxygen/widgets/
@@ -69,3 +64,4 @@ package() {
 	rm -rf ${pkgdir}/usr/share/icons/hicolor/index.theme
 	rm -rf ${pkgdir}/usr/share/icons/default.kde4
 }
+
