@@ -3,7 +3,7 @@
 
 pkgname=qt-gstreamer
 pkgver=0.10.3
-pkgrel=1
+pkgrel=2
 pkgdesc="Qt bindings for GStreamer"
 arch=('x86_64')
 url="http://gstreamer.freedesktop.org/modules/qt-gstreamer.html"
@@ -24,9 +24,10 @@ build() {
 
   cmake "$srcdir/${pkgname}-$pkgver" \
     -DCMAKE_INSTALL_PREFIX=/usr \
+    -DCMAKE_INSTALL_LIBDIR=/usr/lib \
     -DCMAKE_BUILD_TYPE=Release \
     -DQTGSTREAMER_EXAMPLES=OFF \
-    -DQTGSTREAMER_TESTS=OFF
+    -DQTGSTREAMER_TESTS=OFF     
   make
 }
 
