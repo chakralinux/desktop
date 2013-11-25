@@ -1,6 +1,6 @@
 pkgname=wallpapers-caledonia
-pkgver=1.0
-pkgrel=2
+pkgver=1.5
+pkgrel=1
 pkgdesc="Official wallpapers for the Caledonia theme."
 arch=('any')
 url='http://malcer.deviantart.com/'
@@ -8,13 +8,14 @@ license=('CC-BY')
 groups=('caledonia')
 depends=('kde-workspace')
 conflicts=('caledonia-bundle')
-source=('http://www.deviantart.com/download/220705168/caledonia_official_wallpapers_by_malcer-d3neh74.zip')
-md5sums=('cc8e3c369fa81ec14405eb8470e192f8')
+source=('http://sourceforge.net/projects/caledonia/files/Caledonia%20Official%20Wallpapers/Caledonia_Official_Wallpaper_Collection.tar.gz')
+md5sums=('a42ad0df323c54b80d533d696cd74c0d')
 
 package() {
-  mkdir -p $pkgdir/usr/share/wallpapers
-  chmod 755 -R $pkgdir/usr/share/wallpapers
+  install -dm 755 $pkgdir/usr/share/wallpapers
   cd ${srcdir}/Caledonia_Official_Wallpaper_Collection
-  rm README
+  rm {README,CHANGELOG}
   cp -rf * $pkgdir/usr/share/wallpapers
 }
+
+
