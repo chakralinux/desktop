@@ -1,44 +1,38 @@
 #
 # Chakra Packages for Chakra, part of chakra-project.org
 #
-# maintainer (i686): Phil Miller <philm[at]chakra-project[dog]org>
-# maintainer (x86_64): Manuel Tortosa <manutortosa[at]chakra-project[dot]org>
+# maintainer (x86_64): Francesco Marinucci <franzmari[at]chakra-project[dot]it>
 
-# include global config
-source ../_buildscripts/${current_repo}-${_arch}-cfg.conf
 
 pkgname=subtitlecomposer
-pkgver=0.5.3
-pkgrel=5
-pkgdesc="A KDE subtitle editor"
-arch=('i686' 'x86_64')
-url="http://sourceforge.net/projects/subcomposer"
+pkgver=0.5.6
+pkgrel=1
+pkgdesc="A text-based subtitles editor for KDE"
+arch=('x86_64')
+url="http://kde-apps.org/content/show.php/Subtitle+Composer?content=162048"
 license=('GPL')
 depends=('kdelibs' 'gettext' 'gstreamer0.10-base')
 makedepends=('cmake' 'automoc4')
-optdepends=("mplayer: for MPlayer backend")
+optdepends=("mplayer: for MPlayer backend"
+            "mplayer2: for MPlayer backend"
+            "xine-lib: for Xine backend")
 categories=('multimedia')
-source=(http://downloads.sourceforge.net/subcomposer/${pkgname}-${pkgver}.tar.bz2
-        subtitlecomposer-build-fixes.patch
-		subtitlecomposer-linkage.patch)
-md5sums=('f660ed2ce4490a8705c883a9c57e39e5'
-         '136ae2b4af3956bb9929b25bfe4f80ad'
-         '92e8c545a8a4b0f513a32c1163574311')
+screenshot="http://kde-apps.org/CONTENT/content-pre1/162048-1.png"
+source=(https://github.com/maxrd2/$pkgname/archive/v$pkgver.tar.gz) 
+md5sums=('8b48fbb99f5e10312670367024aa6fe2')
 
-# Many thanks for the linkage patch to the Gentoo guys.
-# http://packages.gentoo.org/package/media-video/subtitlecomposer
 
 build()
 {
 	cd ${srcdir}/${pkgname}-${pkgver}
-
-    # Patches
-    patch -Np1 -i "${srcdir}/subtitlecomposer-build-fixes.patch" || return 1
-    patch -Np0 -i "${srcdir}/subtitlecomposer-linkage.patch" || return 1
-
 	mkdir build
 	cd build
-	cmake .. -DCMAKE_INSTALL_PREFIX=/usr || return 1
-	make || return 1
-	make DESTDIR=${pkgdir} install || return 1
+	cmake .. -DCMAKE_INSTALL_PREFIX=/usr
+	make
+}
+
+package()
+{ 
+	cd ${srcdir}/${pkgname}-${pkgver}/build
+	make DESTDIR=${pkgdir} install
 }
