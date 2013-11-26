@@ -1,0 +1,18 @@
+# Maintainer: Neophytos Kolokotronis <tetris4 AT gmail DOT com>
+# Contributions from AUR: https://aur.archlinux.org/packages/ks/ksplash-caledonia/PKGBUILD
+
+pkgname=kde-ksplash-themes-caledonia
+_themename=Caledonia-KSplash
+pkgver=1.3
+pkgrel=1
+pkgdesc="Simple and lightweight splash screen for KDE. Official part of Caledonia Theme."
+arch=('x86_64')
+url="http://sourceforge.net/projects/caledonia/files/Caledonia%20KSplash/"
+license=('CCPL')
+source=("http://downloads.sourceforge.net/project/caledonia/Caledonia%20KSplash/Caledonia-KSplash.tar.gz")
+md5sums=('5e0ba7c05ce081f3e147539bc72567b1')
+
+package() {
+  mkdir -p $pkgdir/usr/share/apps/ksplash/Themes
+  mv $srcdir/$_themename $pkgdir/usr/share/apps/ksplash/Themes
+}

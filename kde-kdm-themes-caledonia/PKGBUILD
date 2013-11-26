@@ -1,0 +1,18 @@
+# Maintainer: Neophytos Kolokotronis <tetris4 AT gmail DOT com>
+# Contributions from AUR: https://aur.archlinux.org/packages/kd/kdm-theme-caledonia/PKGBUILD
+
+pkgname=kde-kdm-themes-caledonia
+_themename=Caledonia-KDM
+pkgver=1.3
+pkgrel=1
+pkgdesc="The official KDM theme for Caledonia"
+arch=('x86_64')
+url="http://sourceforge.net/projects/caledonia/files/Caledonia%20KDM/"
+license=('CCPL')
+source=(http://downloads.sourceforge.net/project/caledonia/Caledonia%20KDM/Caledonia-KDM.tar.gz)
+md5sums='cae19fca991dc620ae0bd4b0a67c85bf'
+
+package() {
+  mkdir -p $pkgdir/usr/share/apps/kdm/themes/
+  mv $srcdir/$_themename $pkgdir/usr/share/apps/kdm/themes/
+}
