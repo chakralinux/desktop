@@ -1,0 +1,31 @@
+pkgname=kde-plasma-themes-caledonia
+pkgver=1.5
+pkgrel=1
+arch=('x86_64')
+pkgdesc="Malcer's dark Caledonia Plasma theme with Chakra branding"
+url=("http://caledonia.sourceforge.net/")
+license='Creative-Commons-BY-ND'
+screenshot="http://caledonia.sourceforge.net/img/slideshow/caledonia-04.png"
+source=("http://sourceforge.net/projects/caledonia/files/Caledonia%20%28Plasma-KDE%20Theme%29/Caledonia.tar.gz"
+        'branding.svgz')
+md5sums=('b0e48488731c42c75aee26c6f98b1a4f'
+         '1fe61d30ea19c2985df905b8d645addc')
+
+package() {
+  mkdir -p $pkgdir/usr/share/licenses/caledonia
+  mv ${srcdir}/Caledonia/LICENSE $pkgdir/usr/share/licenses/caledonia
+  chmod 644 -R ${pkgdir}/usr/share/licenses/caledonia/LICENSE
+
+  mkdir -p $pkgdir/usr/share/apps/desktoptheme/caledonia/
+  cd $srcdir/Caledonia
+  cp -R * $pkgdir/usr/share/apps/desktoptheme/caledonia/
+  # fix file rights
+  chmod 755 -R $pkgdir/usr/share/apps/desktoptheme/caledonia
+  # remove nasty files
+  find $pkgdir/ -name ".directory" -type f -exec rm -fr {} +
+  
+  # replace with Chakra branding
+  rm ${pkgdir}/usr/share/apps/desktoptheme/caledonia/widgets/branding.svgz
+  install -Dm644 ${srcdir}/branding.svgz ${pkgdir}/usr/share/apps/desktoptheme/caledonia/widgets/branding.svgz
+}
+ 
