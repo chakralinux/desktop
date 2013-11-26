@@ -1,6 +1,6 @@
---- CMakeLists.txt	2012-12-11 00:21:40.000000000 +0100
-+++ ../../CMakeLists.txt	2012-12-11 08:26:57.000000000 +0100
-@@ -25,17 +25,17 @@
+--- CMakeLists.txt	2013-11-24 21:54:13.000000000 +0000
++++ CMakeLists-new.txt	2013-11-26 20:03:34.778184706 +0000
+@@ -37,12 +37,12 @@
      STRING "Install data folder to this directory, absolute or relative to CMAKE_INSTALL_PREFIX")
  
  # Build the Bullet physics library
@@ -15,35 +15,31 @@
 +find_package(Enet REQUIRED)
 +include_directories(${ENET_INCLUDE_DIRS})
  
- # Build the Wiiuse library
+ # Build the irrlicht library
+ add_subdirectory("${PROJECT_SOURCE_DIR}/lib/irrlicht")
+@@ -53,10 +53,8 @@
+ # (at least on VS) irrlicht will find wiiuse io.h file because
+ # of the added include directory.
  if(USE_WIIUSE)
--    add_subdirectory("${PROJECT_SOURCE_DIR}/lib/wiiuse")
+-    if(WIIUSE_BUILD)
+-        add_subdirectory("${PROJECT_SOURCE_DIR}/lib/wiiuse")
+-    endif()
 -    include_directories("${PROJECT_SOURCE_DIR}/lib/wiiuse")
 +    find_package(WiiUse REQUIRED)
 +    include_directories(${WIIUSE_INCLUDE_DIRS})
  endif()
  
- # Set include paths
-@@ -86,11 +86,8 @@
  
- 
- # Irrlicht
--if (APPLE)
--    set(IRRLICHT_LIBRARY "/Library/Frameworks/IrrFramework.framework")
--else()
--    set(IRRLICHT_LIBRARY ${PROJECT_SOURCE_DIR}/lib/irrlicht/lib/Linux/libIrrlicht.a)
--endif()
-+find_package(Irrlicht REQUIRED)
-+include_directories(${IRRLICHT_INCLUDE_DIRS})
- 
+@@ -135,8 +133,6 @@
+ else()
+     set(IRRLICHT_XF86VM_LIBRARY "")
+ endif()
+-
+-
      
  # Set some compiler options
-@@ -181,19 +178,14 @@
- #)
- #add_dependencies(supertuxkart stkirrlicht)
- 
--include_directories(${PROJECT_SOURCE_DIR}/lib/irrlicht/include)
--
+ if(UNIX)
+@@ -222,17 +218,15 @@
  
  # Common library dependencies
  target_link_libraries(supertuxkart
@@ -53,19 +49,23 @@
 -    enet
 +    ${BULLET_LIBRARIES}
 +    ${ENET_LIBRARIES}
+     stkirrlicht
      ${CURL_LIBRARIES}
-     ${IRRLICHT_LIBRARIES}
      ${OGGVORBIS_LIBRARIES}
--    ${IRRLICHT_LIBRARY}
      ${IRRLICHT_XF86VM_LIBRARY}
      ${OPENAL_LIBRARY}
      ${OPENGL_LIBRARIES})
-@@ -204,7 +196,7 @@
- endif()
- 
- if(USE_WIIUSE)
--    target_link_libraries(supertuxkart wiiuse bluetooth)
-+    target_link_libraries(supertuxkart ${WIIUSE_LIBRARIES})
+-
++    
+ if(APPLE)
+     # In theory it would be cleaner to let CMake detect the right dependencies. In practice, this means that if a OSX user has
+     # unix-style installs of Vorbis/Ogg/OpenAL/etc. they will be picked up over our frameworks. This is blocking when I make releases :
+@@ -261,7 +255,7 @@
+             target_link_libraries(supertuxkart ${PROJECT_SOURCE_DIR}/dependencies/lib/wiiuse.lib)
+         endif()
+     else()
+-        target_link_libraries(supertuxkart wiiuse bluetooth)
++        target_link_libraries(supertuxkart ${WIIUSE_LIBRARIES})
+     endif()
      add_definitions(-DENABLE_WIIUSE)
- endif()
  
