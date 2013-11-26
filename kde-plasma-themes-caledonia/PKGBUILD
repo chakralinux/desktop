@@ -1,15 +1,17 @@
 pkgname=kde-plasma-themes-caledonia
 pkgver=1.5
-pkgrel=1
+pkgrel=2
 arch=('x86_64')
 pkgdesc="Malcer's dark Caledonia Plasma theme with Chakra branding"
 url=("http://caledonia.sourceforge.net/")
 license='Creative-Commons-BY-ND'
 screenshot="http://caledonia.sourceforge.net/img/slideshow/caledonia-04.png"
 source=("http://sourceforge.net/projects/caledonia/files/Caledonia%20%28Plasma-KDE%20Theme%29/Caledonia.tar.gz"
-        'branding.svgz')
+        'branding.svgz'
+        'shutdowndialog.svgz')
 md5sums=('b0e48488731c42c75aee26c6f98b1a4f'
-         '1fe61d30ea19c2985df905b8d645addc')
+         '770cb602a01378a67235ecb093c25380'
+         'ff786108cc2f544dd6069d1efc2027ad')
 
 package() {
   mkdir -p $pkgdir/usr/share/licenses/caledonia
@@ -27,5 +29,7 @@ package() {
   # replace with Chakra branding
   rm ${pkgdir}/usr/share/apps/desktoptheme/caledonia/widgets/branding.svgz
   install -Dm644 ${srcdir}/branding.svgz ${pkgdir}/usr/share/apps/desktoptheme/caledonia/widgets/branding.svgz
+  rm ${pkgdir}/usr/share/apps/desktoptheme/caledonia/dialogs/shutdowndialog.svgz
+  install -Dm644 ${srcdir}/shutdowndialog.svgz ${pkgdir}/usr/share/apps/desktoptheme/caledonia/dialogs/shutdowndialog.svgz
 }
  
