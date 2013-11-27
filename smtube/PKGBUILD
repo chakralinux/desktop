@@ -5,7 +5,7 @@
 # Contributor: redzion simobrinci@gmail.com
 
 pkgname=smtube
-pkgver=1.7
+pkgver=1.8
 pkgrel=1
 pkgdesc="Search and download videos from YouTube"
 arch=('i686' 'x86_64')
@@ -13,14 +13,14 @@ url="http://smplayer.sourceforge.net"
 license=('GPL')
 depends=('smplayer')
 source=("http://downloads.sourceforge.net/smplayer/SMTube/${pkgver:0:3}/$pkgname-$pkgver.tar.bz2")
-md5sums=('d9a954e1b337f0c850dcfc6063255056')
+md5sums=('b80d4d085a8e7350619d65f0f0786037')
 
 build() {
   cd "$srcdir/$pkgname-$pkgver"
-  make PREFIX="/usr"
+  make PREFIX=/usr
 }
 
 package() {
   cd "$srcdir/$pkgname-$pkgver"
-  make PREFIX="/usr" DESTDIR="$pkgdir" install
+  make DESTDIR="$pkgdir" install
 }
