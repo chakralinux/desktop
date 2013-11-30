@@ -6,31 +6,34 @@
 pkgname=opengoo
 _pkgname=OpenGOO
 _developer=Mandarancio
-pkgver=20111231
+pkgver=20131130
 pkgrel=1
 pkgdesc="Clone of World of GOO™"
 arch=('i686' 'x86_64')
 url="http://qt-apps.org/content/show.php/OpenGOO?content=147716"
 screenshot="http://qt-apps.org/CONTENT/content-pre1/147716-1.png"
 license=('GPL3')
-depends=('box2d' 'qt')
+depends=('box2d' 'qt5-base')
 categories=('games')
 source=($pkgname-$pkgver.tar.gz::https://github.com/$_developer/$_pkgname/tarball/master)
-md5sums=('4b6d758fcff4429cd31dc78404c2bd08')
+md5sums=('c351bdc91b85040b6f6746abcccac133')
 
 build() {
   cd $srcdir/$_developer-$_pkgname*
-  qmake
+  qmake-qt5
   make
 }
 
 package() {
   cd $srcdir/$_developer-$_pkgname*
+#  make DESTDIR="$pkgdir" install
 
   # Game.
   install -Dm755 $_pkgname      $pkgdir/usr/share/$pkgname/$_pkgname
-  install -Dm644 l01.level      $pkgdir/usr/share/$pkgname/l01.level
-  install -Dm644 menu.index     $pkgdir/usr/share/$pkgname/menu.index
+  for item in Artworks properties res resources
+  do
+    cp -R $item $pkgdir/usr/share/$pkgname/$item
+  done
   
   # Execution script.
   mkdir -p $pkgdir/usr/bin
