@@ -1,15 +1,15 @@
 #
 # Chakra Packages for Chakra, part of chakra-project.org
 #
-# contributor (x86_64): Giuseppe Calà <jiveaxe@gmail.com>
+# maintainer abveritas[at]chakra-project[dot]org>
+
 
 pkgbase=ogre
 pkgname=('ogre' 'ogre-docs')
 pkgver=1.8.1
-_pkgver=$pkgver
-pkgrel=1
+pkgrel=2
 pkgdesc="A scene-oriented, flexible 3D engine written in C++"
-arch=('i686' 'x86_64')
+arch=('x86_64')
 url='http://www.ogre3d.org'
 license=('custom:MIT')
 depends=('boost-libs' 'freeimage' 'freetype2' 'libxaw' 'libxrandr' 
@@ -19,26 +19,28 @@ optdepends=('cppunit: unit testing'
             'intel-tbb: better threading support'
             'poco: portability'
             'boost: for developing using ogre')
+categories=('graphics')
 install=ogre.install
-source=("http://downloads.sourceforge.net/${pkgname}/${pkgname}_src_v${_pkgver//./-}.tar.bz2")
+source=("http://downloads.sourceforge.net/${pkgname}/${pkgname}_src_v${pkgver//./-}.tar.bz2")
 md5sums=('b85e3dcf370a46b3a8624d4fdd722d39')
 
 build() {
-  cd ${srcdir}/${pkgname}_src_v${_pkgver//./-}
+  cd ${srcdir}/${pkgname}_src_v${pkgver//./-}
 
   # get a clean build dir
   [[ -d build ]] && rm -rf build
-	mkdir build
-	cd build
+  mkdir build
+  cd build
 
   # generate CMake Makefile
-  cmake \
-    -DCMAKE_INSTALL_PREFIX=/usr \
-    -DOGRE_INSTALL_SAMPLES=TRUE \
-    -DOGRE_INSTALL_DOCS=TRUE \
-    -DOGRE_INSTALL_SAMPLES_SOURCE=TRUE \
-    -DCMAKE_BUILD_TYPE=Release \
-    ..
+  cmake .. \
+ 	 -DCMAKE_INSTALL_PREFIX=/usr \
+	 -DOGRE_INSTALL_PLUGINS_HEADERS=TRUE \
+	 -DOGRE_INSTALL_SAMPLES=TRUE \
+	 -DOGRE_INSTALL_DOCS=TRUE \
+         -DOGRE_INSTALL_MEDIA=TRUE \
+	 -DOGRE_INSTALL_SAMPLES_SOURCE=TRUE \
+         -DCMAKE_BUILD_TYPE=Release # set =Debug for debugging version
 
   # compile
   make
@@ -51,9 +53,8 @@ build() {
 
 package_ogre() {
   optdepends=('ogre-docs: documentation')
-  categories=('graphics')
 
-  cd ${srcdir}/${pkgname}_src_v${_pkgver//./-}/build
+  cd ${srcdir}/${pkgname}_src_v${pkgver//./-}/build
 
   # install the bugger
   make DESTDIR=${pkgdir} install
@@ -78,8 +79,7 @@ package_ogre() {
 package_ogre-docs() {
   pkgdesc="Documentation for ogre"
   depends=()
-  categories=('documentation')
-  cd ${srcdir}/${pkgname}_src_v${_pkgver//./-}/build
+  cd ${srcdir}/${pkgbase}_src_v${pkgver//./-}/build
 
   # move docs into this package
   install -dm755 ${pkgdir}/usr/share/doc
@@ -90,3 +90,4 @@ package_ogre-docs() {
   cd ${pkgdir}/usr/share
   ln -s doc/OGRE/ OGRE/docs
 }
+
