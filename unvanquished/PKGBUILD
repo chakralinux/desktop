@@ -1,65 +1,89 @@
-#
-# Games Packages for Chakra, part of chakra-project.org
-#
-# Maintainer:  Adrian Chaves Fernandez (Gallaecio) <adriyetichaves@gmail.com>
-# Contributor: Viech
+# Maintainer: Viech <viech unvanquished net>
+# Contributor: Gereon Schomber
 # Contributor: Martin F. Schumann <mfs@mfs.name>
 
 pkgname=unvanquished
-_pkgname=Unvanquished
-pkgver=0.21.0
+pkgver=0.22.1
 pkgrel=1
-pkgdesc="A team-based fps/rts hybrid game which pits aliens against humans"
+pkgdesc='A team-based fps/rts hybrid game which pits aliens against humans. Monthly release that can be played on official servers.'
 arch=('x86_64' 'i686')
-url="http://www.unvanquished.net"
+url='http://www.unvanquished.net'
 license=('GPL3')
-depends=('curl' 'freetype2' 'glew' 'gmp' 'libjpeg-turbo' 'ncurses' 'libogg' 'libpng' 'sdl' 'libvorbis' 'zlib' 'libwebp>=0.2.0' 'libtheora' 'nettle' 'speex' 'xvidcore' 'openal' 'xdg-utils' 'desktop-file-utils' 'shared-mime-info' 'hicolor-icon-theme' 'unvanquished-data')
-makedepends=('git' 'cmake')
+makedepends=('cmake')
+depends=('curl'               'freetype2' 'glew'               'gmp'
+         'libjpeg-turbo'      'ncurses'   'libogg'             'libpng'
+         'sdl2'               'libvorbis' 'zlib'               'libwebp>=0.2.0'
+         'libtheora'          'nettle'    'speex'              'xvidcore'
+         'openal'             'xdg-utils' 'desktop-file-utils' 'shared-mime-info'
+         'hicolor-icon-theme' 'geoip'     'opusfile')
 provides=('unvanquished')
-conflicts=('unvanquished-git')
+conflicts=('unvanquished-maps' 'unvanquished-git')
 options=('emptydirs')
-source=("https://github.com/${_pkgname}/${_pkgname}/archive/v${pkgver}.tar.gz")
-md5sums=('177392c247fb1309e721414727d6c90f')
+backup=('etc/unvanquished/main/server.cfg' 'etc/unvanquished/main/maprotation.cfg')
+changelog='ChangeLog'
+install='unvanquished.install'
+source=("unvanquished::git+https://github.com/Unvanquished/Unvanquished.git#tag=v${pkgver}"
+        'ChangeLog'                   'unvanquished.install' 'unvanquished.sh'   'unvanquished-tty.sh'
+        'unvanquished-update-paks.sh' 'unvanquished.service' 'unvanquished.conf' 'unvanquished.desktop')
 
 build() {
-    cd ${srcdir}/${_pkgname}-${pkgver}
-    
-    sed -e "s#$_pkgname#$pkgname#g" -i CMakeLists.txt
-    
-    mkdir -p build && cd build
-    cmake \
-        -DCMAKE_INSTALL_PREFIX=/usr/share \
-        ..
-    make
+	cd $srcdir/unvanquished
+
+	cmake -D GAME_QVM=OFF -D BUILD_TTY_CLIENT=ON .
+	make
 }
 
 package() {
-    cd ${srcdir}/${_pkgname}-${pkgver}/build
-    make DESTDIR=${pkgdir} install
-    
-    # Executable.
-    install -d $pkgdir/usr/bin
-    echo "#!/bin/bash"               > $pkgdir/usr/bin/$pkgname
-    echo "cd /usr/share/$pkgname"   >> $pkgdir/usr/bin/$pkgname
-    echo "./daemon $@"              >> $pkgdir/usr/bin/$pkgname
-    chmod +x $pkgdir/usr/bin/$pkgname
-    
-    # Desktop integration.
-    cd ${srcdir}/${_pkgname}-${pkgver}/debian
-    
-    mkdir -p $pkgdir/usr/share/applications
-    sed -e "s#/usr/games/$pkgname#/usr/bin/$pkgname#" -i $pkgname.desktop
-    install -m 644 $pkgname.desktop $pkgdir/usr/share/applications/$pkgname.desktop
-    
-    mkdir -p $pkgdir/usr/share/pixmaps
-    install -m 644 $pkgname.png $pkgdir/usr/share/pixmaps/$pkgname.png
-    
-    # Translations.
-    cd ${srcdir}/${_pkgname}-${pkgver}/main
-    mkdir -p $pkgdir/usr/share/$pkgname/main
-    cp -R translation $pkgdir/usr/share/$pkgname/main/translation
-    rm -rf $pkgdir/usr/share/$pkgname/main/translation/*.pot
-    
-    # Clean unneeded files.
-    rm -rf $pkgdir/usr/share/$pkgname/main/vm
+	# create installation directories
+	cd $pkgdir
+
+	install -d     etc/conf.d \
+	               etc/unvanquished/main \
+	               usr/bin \
+	               usr/lib/systemd/system \
+	               usr/lib/unvanquished/main \
+	               usr/share/applications \
+	               usr/share/icons/hicolor/128x128/apps \
+	               usr/share/licenses/unvanquished \
+	               var/cache/unvanquished/update-paks \
+	               var/lib/unvanquished/main \
+	               var/lib/unvanquished-server/main
+
+	# install content
+	cd $srcdir/unvanquished
+
+	install -m 755 daemon                      \
+	               daemon-tty                  \
+	               daemonded                   \
+	               *.so                        \
+		       download-pk3.sh             $pkgdir/usr/lib/unvanquished/
+	install -m 755 main/*.so                   $pkgdir/usr/lib/unvanquished/main/
+	install -m 644 debian/unvanquished.png     $pkgdir/usr/share/icons/hicolor/128x128/apps/
+	install -m 644 COPYING.txt                 $pkgdir/usr/share/licenses/unvanquished/
+	install -m 644 debian/configfiles/*        $pkgdir/etc/unvanquished/main/
+
+	# install starters
+	cd $srcdir
+
+	install -m 644 unvanquished.conf           $pkgdir/etc/conf.d/
+	install -m 755 unvanquished.sh             $pkgdir/usr/bin/unvanquished
+	install -m 755 unvanquished-tty.sh         $pkgdir/usr/bin/unvanquished-tty
+	install -m 755 unvanquished-update-paks.sh $pkgdir/usr/bin/unvanquished-update-paks
+	install -m 644 unvanquished.service        $pkgdir/usr/lib/systemd/system/
+	install -m 644 unvanquished.desktop        $pkgdir/usr/share/applications/
+	
+	# setup server home directory
+	cd $pkgdir/var/lib/unvanquished-server/main
+
+	ln -s ../../../../etc/unvanquished/main configuration.pk3dir
 }
+
+md5sums=('SKIP'
+         'ce9371c1cd22e58ddf744f64b96583b6'
+         '7d8d5e1d05978745abdcaa624be7c47b'
+         'ac9c54f828edbbf236156431991f6c82'
+         '7a10dca92e352e6f47d99a0434681f4e'
+         '2e82941e47422fdb3cee4ccfca346458'
+         '1842789de67de55b8027c51cad22f778'
+         'ce04c7e8423b2da0ea0d8df8be4c8ea4'
+         'ac69d49b3c665d274d0ab58870220522')
