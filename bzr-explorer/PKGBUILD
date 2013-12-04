@@ -1,20 +1,18 @@
-# Contributor: Martin Stolpe <martinstolpe [at] gmail ... com>
-# Contributer: Joshua L. Blocher <verbalshadow@gmail.com>
+# Maintainer: Francesco Marinucci <franzmari[at]chakra-project[dot]it>
 
 pkgname=bzr-explorer
-pkgver=1.1.2
+pkgver=1.3.0
 pkgrel=1
-pkgdesc="A desktop application for using the Bazaar Version Control System"
-arch=('i686' 'x86_64')
+pkgdesc="Bazaar Explorer is a desktop application for using the Bazaar Version Control System."
+arch=('x86_64')
 url="http://doc.bazaar-vcs.org/explorer/en/index.html"
 license=('GPL')
-depends=("python2" "bzr" "qbzr")
+depends=('python2' 'bzr>=2.3' 'qbzr>=0.22')
 categories=('programming')
-source=(http://launchpad.net/bzr-explorer/1.1/1.1.2/+download/$pkgname-$pkgver.tar.gz)
-md5sums=('d23eb88d1a72b705fdafc4e462447092')
+source=("http://launchpad.net/${pkgname}/${pkgver%.*}/${pkgver}/+download/${pkgname}-${pkgver}.tar.gz")
+md5sums=('7d1de6a744a1daf4b194885209cf67c4')
 
-build() {
-  cd "${srcdir}/explorer/"
-  python setup.py install --prefix'=/usr' --root="${pkgdir}" || return 1
+package() {
+  cd "${srcdir}/${pkgname}-${pkgver}"
+  python setup.py install --prefix=/usr --root="${pkgdir}"
 }
-
