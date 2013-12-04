@@ -1,0 +1,22 @@
+#
+# Apps Packages for Chakra, part of chakra-project.org
+#
+# Maintainer: Samir Benmendil <samir.benmendil@gmail.com>
+
+pkgname=colordiff
+pkgver=1.0.13
+pkgrel=1
+pkgdesc="A tool to colorize diff output"
+arch=('x86_64')
+url="http://www.colordiff.org/"
+license=('GPL')
+depends=('diffutils')
+makedepends=('xmlto')
+install="colordiff.install"
+source=("http://colordiff.org/${pkgname}-${pkgver}.tar.gz")
+md5sums=('77093f7b31b84622bb59e75a12259ca5')
+
+package() {
+  cd "$srcdir/$pkgname-$pkgver"
+  make DESTDIR="$pkgdir" INSTALL_DIR="/usr/bin" MAN_DIR="/usr/share/man/man1" install
+}
