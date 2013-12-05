@@ -7,7 +7,8 @@
 pkgname=opensc-opendnie
 _pkgname=opensc
 pkgver=0.12.2
-pkgrel=1
+_code=1332
+pkgrel=2
 pkgdesc="Access smart cards that support cryptographic operations (with open DNIe driver)"
 arch=('i686' 'x86_64')
 url="http://forja.cenatic.es/projects/opendnie/"
@@ -15,7 +16,7 @@ license=("LGPL")
 depends=('openssl' 'ccid' 'pinentry')
 provides=('opensc')
 conflicts=('opensc')
-source=(http://forja.cenatic.es/frs/download.php/1332/$pkgname-$pkgver.tar.gz)
+source=(https://forja.cenatic.es/frs/download.php/file/${_code}/$pkgname-$pkgver.tar.gz)
 md5sums=('5e9db0ecaeec8748fcfa8e149b9ff236')
 
 build() {
@@ -28,6 +29,9 @@ build() {
 }
 
 package() {
+  # workaround broken make install
+  install -d $pkgdir/{etc,usr/lib/pkcs11}
+
   cd $srcdir/$_pkgname-$pkgver
   make DESTDIR=$pkgdir install
 }
