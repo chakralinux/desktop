@@ -1,8 +1,11 @@
+#
+# Apps packages for Chakra, part of chakra-project.org
+#
 # Maintainer: Ernesto Manríquez <alejandronova@gmail.com>
 
 pkgname=everpad
-pkgver=2.5.4
-pkgrel=2
+pkgver=2.5.7
+pkgrel=1
 pkgdesc="An Evernote client"
 arch=('i686' 'x86_64')
 url="http://github.com/nvbn/everpad"
@@ -10,25 +13,26 @@ license=('MIT')
 depends=('pyside' 'python2-magic' 'python2-oauth2' 'python2-sqlalchemy' 'python2-beautifulsoup' 'qtwebkit' 'python2-html2text' 'shiboken' 'dbus-python' 'python-pysqlite' 'python2-keyring' 'python2-regex' 'py-oauth2')
 makedepends=('python2-distribute')
 install=everpad.install
-source=("https://github.com/nvbn/$pkgname/archive/$pkgver.zip")
-sha256sums=('eefb58ba7ebc4015af2a05d4f503c8a23f5700a02defb930c4e012864eab44ba')
+options=('!docs')
+#source=("https://github.com/nvbn/$pkgname/archive/$pkgver.zip")
+source=("https://launchpad.net/~nvbn-rm/+archive/ppa/+files/everpad_2.5.7.orig.tar.xz") # change to launchpad for temerorary no tag on github
+sha256sums=('571c69a7348dda2041ab16fd1ecd2849a988f0f3ffce08e2d9484dcf0cb6b1c2')
 
 build() {
-  cd "$srcdir/$pkgname-$pkgver"
+  cd "${srcdir}/${pkgname}"
 
   python2 setup.py build
 }
 
 package() {
-  cd "$srcdir/$pkgname-$pkgver"
+  cd "${srcdir}/${pkgname}"
 
   python2 setup.py install --root=$pkgdir
 
-  mkdir -p $pkgdir/usr/share/licenses/$pkgname
-  cp docs/license.txt $pkgdir/usr/share/licenses/$pkgname/
+  install -dm 755 ${pkgdir}/usr/share/licenses/${pkgname}
+  install -Dm644  docs/license.txt $pkgdir/usr/share/licenses/$pkgname/
 
-  mkdir -p $pkgdir/usr/lib/python2.7/site-packages/share/everpad/
-  cp everpad/pad/editor/editor.html $pkgdir/usr/lib/python2.7/site-packages/share/everpad/
+  install -dm 755 $pkgdir/usr/lib/python2.7/site-packages/share/everpad/
+  install -Dm 644 everpad/pad/editor/editor.html $pkgdir/usr/lib/python2.7/site-packages/share/everpad/
 }
 
-# vim:set ts=2 sw=2 et:
