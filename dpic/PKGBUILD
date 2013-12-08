@@ -5,15 +5,16 @@
 # Contributor: Matteo Agostinelli <matteo@agostinelli.me>
 
 pkgname=dpic
-pkgver=20121104
+pkgver=2013.09.30
 pkgrel=1
 pkgdesc="A pic language interpreter"
 arch=('x86_64')
 url="http://www.ece.uwaterloo.ca/~aplevich/dpic/"
 license=('BSD')
 makedepends=('gcc')
-source=('http://www.ece.uwaterloo.ca/~aplevich/dpic/dpic-2012.11.04.tar.gz')
-md5sums=('574eb4318ba132be98f64a97c122ec78')
+source=("http://www.ece.uwaterloo.ca/~aplevich/${pkgname}/${pkgname}-${pkgver}.tar.gz")
+md5sums=('d870622cdc574d99397fdababf94677f')
+options=('!docs')
 
 build() {
   cd $srcdir/$pkgname
@@ -21,10 +22,11 @@ build() {
 }
 
 package() {
-  # Documentation.
-  mkdir -p $pkgdir/usr/share/man/man1
-  mv dpic/doc/dpic.1 $pkgdir/usr/share/man/man1
+  # Documentation
+  install -dm 755 ${pkgdir}/usr/share/man/man1
+  install -Dm644 ${srcdir}/${pkgname}/doc/dpic.1 $pkgdir/usr/share/man/man1
 
   cd $srcdir/$pkgname
   make DESTDIR=$pkgdir/usr install
 }
+
