@@ -3,32 +3,32 @@
 #
 # Maintainer: Adrián Chaves Fernández (Gallaecio) <adriyetichaves@gmail.com>
 
-pkgname=django_simple_captcha
-pkgver=0.3.8
+pkgname=django-simple-captcha
+pkgver=0.4.0
 pkgrel=1
 pkgdesc="A simple customizable application to add captcha images to Django forms"
 arch=('x86_64')
 url="http://pypi.python.org/pypi/django-simple-captcha"
 license=('BSD')
 depends=('django' 'python2' 'python2-imaging' 'python-distribute')
-provides=('django-simple-captcha')
-conflicts=('django-simple-captcha')
-replaces=('django-simple-captcha')
-source=(http://pypi.python.org/packages/source/d/django-simple-captcha/django-simple-captcha-${pkgver}.tar.gz)
-md5sums=('35eaba33237e98c062a7fef420e53de7')
+provides=('django_simple_captcha')
+conflicts=('django_simple_captcha')
+replaces=('django_simple_captcha')
+source=(http://pypi.python.org/packages/source/d/django-simple-captcha/${pkgname}-${pkgver}.tar.gz)
+md5sums=('daccb7fbe693e8e7ce90ed40dc8df5a7')
 
 build() {
-    cd "${srcdir}/django-simple-captcha-${pkgver}"
+    cd "${srcdir}/${pkgname}-${pkgver}"
    
     # Build.
     python2 setup.py build
 }
 
 package() {
-    cd "${srcdir}/django-simple-captcha-${pkgver}"
-    python2 setup.py install --prefix=/usr --root=$pkgdir
+    cd "${srcdir}/${pkgname}-${pkgver}"
+    python2 setup.py install --prefix=/usr --root=${pkgdir}
     
     # License.
-    install -d $pkgdir/usr/share/licenses/$pkgname
-    cp LICENSE $pkgdir/usr/share/licenses/$pkgname/license.txt
+    install -d ${pkgdir}/usr/share/licenses/${pkgname}
+    install -Dm644 LICENSE ${pkgdir}/usr/share/licenses/${pkgname}/LICENSE
 }
