@@ -1,20 +1,17 @@
 #
-# Chakra Packages for Chakra, part of chakra-project.org
+# Apps Packages for Chakra, part of chakra-project.org
 #
-# contributor (x86_64): Giuseppe Calà <jiveaxe@gmail.com>
+# maintainer abveritas@chakra-project.org
 
 pkgname=graphviz
-pkgver=2.30.1
+pkgver=2.34.0
 pkgrel=1
 pkgdesc="Creates acircular graph images"
-url="http://www.graphviz.org/"
-categories=('graphics')
 arch=('x86_64')
 license=('CPL')
-depends=('libltdl' 'gd' 'librsvg' 'libxaw' 'ghostscript' 'pango')
-makedepends=('swig' 'mono' 'guile' 'lua' 'ocaml' 'perl' 'php' 'python2' 'r' 'ruby' 'tk' 'qt')
-optdepends=('mono: sharp bindings'
-            'guile: guile bindings'
+depends=('gd' 'librsvg' 'libxaw' 'ghostscript' 'pango' 'libltdl')
+makedepends=('swig' 'guile' 'lua' 'ocaml' 'perl' 'php' 'python2' 'r' 'ruby' 'tk' 'qt')
+optdepends=('guile: guile bindings'
             'lua: lua bindings'
             'ocaml: ocaml bindings'
             'perl: perl bindings'
@@ -24,37 +21,26 @@ optdepends=('mono: sharp bindings'
             'ruby: ruby bindings'
             'tcl: tcl bindings'
             'qt: gvedit')
+url="http://www.graphviz.org/"
 options=('!libtool')
+categories=('graphics')
 source=(${url}/pub/${pkgname}/stable/SOURCES/${pkgname}-${pkgver}.tar.gz
-        'LICENSE')
-install=graphviz.install
-sha1sums=('96739220c4bbcf1bd3bd52e7111f4e60497185c6'
-          '5a83febc0974e17d6b2356a4b1be9a834b715378'
-          '8aab7295d1c59e4076c8ca7bcc6cd230edaa547c')
-
-prepare() {
-	cd "${srcdir}/${pkgname}-${pkgver}"
-	sed \
-		-e 's: qw(\([^)]*\)): (qw(\1)):g' \
-		-i config/config_perl.pl
-	sed \
-		-e '/"archdir"/s:$:+" '"$(echo -I/usr/include/ruby-1.9.1/{$CARCH-linux,ruby/backward,})"'":' \
-		-e '/CONFIG/s:site:vendor:' \
-		-i config/config_ruby.rb
-	sed \
-		-e '/LIBPOSTFIX="64"/d' \
-		-i configure
-}
+       'LICENSE')
+install='graphviz.install'
+sha1sums=('5a0c00bebe7f4c7a04523db21f40966dc9f0d441'
+          '5a83febc0974e17d6b2356a4b1be9a834b715378')
 
 build() {
 	cd "${srcdir}/${pkgname}-${pkgver}"
 
+	sed \
+		-e '/"archdir"/s:$:+" '"$(echo -I/usr/include/ruby-1.9.1/{$CARCH-linux,ruby/backward,})"'":' \
+		-e '/CONFIG/s:site:vendor:' \
+		-i config/config_ruby.rb
+	sed -i '/LIBPOSTFIX="64"/d' configure
 	export PYTHON=python2
 
-	# install the graph and cgraph api alongside
-	sed 's/@WITH_CGRAPH_FALSE@//g' -i lib/graph/Makefile.in
-
-	./configure --prefix=/usr
+	./configure --prefix=/usr --disable-swig
 	make
 }
 
@@ -64,7 +50,4 @@ package() {
 
 	# cf. http://www.graphviz.org/License.php
 	install -Dm644 ../LICENSE "${pkgdir}"/usr/share/licenses/graphviz/LICENSE
-
-	# everything has been built against cgraph, but use graph as default api
-	sed '/#define WITH_CGRAPH 1/d' -i "${pkgdir}"/usr/include/graphviz/types.h
 }
