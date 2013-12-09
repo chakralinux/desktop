@@ -1,29 +1,33 @@
 #
 # Chakra Packages for Chakra, part of chakra-project.org
 #
-# contributor (x86_64): Giuseppe Calà <jiveaxe@gmail.com>
+# Contributor: Giuseppe Calà <jiveaxe@gmail.com>
+# Maintainer: Bruce Liu <rainman59118@gmail.com>
 
 # include global config
 source ../_buildscripts/${current_repo}-${_arch}-cfg.conf
 
+_pkgname=tbb42
+_ver=20131118
+
 pkgname=intel-tbb
-pkgver=3.0_20101215
+pkgver=4.2u2
 pkgrel=1
 pkgdesc='An award-winning C++ runtime library that abstracts the low-level threading details necessary for optimal multi-core performance.'
 arch=('i686' 'x86_64')
-url='http://www.threadingbuildingblocks.org/'
+url='https://www.threadingbuildingblocks.org/'
 license=('GPL')
-source=("http://www.threadingbuildingblocks.org/uploads/77/164/3.0%20Update%205/tbb30_20101215oss_src.tgz")
-md5sums=('d1f65b7ba8bafda5a8616dfc8159ea05')
+source=("${url}/sites/default/files/software_releases/source/${_pkgname}_${_ver}oss_src.tgz")
+md5sums=('df3cf93f8a4c1d9f67d5d25c68499717')
 
 build() {
-  cd tbb${pkgver/\./}oss
+  cd ${_pkgname}_${_ver}oss
 
   make
 }
 
 package() {
-  cd tbb${pkgver/\./}oss
+  cd ${_pkgname}_${_ver}oss
 
   install -d ${pkgdir}/usr/lib
   install -m755 build/linux_*/*.so* ${pkgdir}/usr/lib
