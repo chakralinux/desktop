@@ -1,9 +1,11 @@
-# $Id$
+# 
+# Apps packages for Chakra, part of chakra-project.org
+#
 # Maintainer: Felix Yan <felixonmars@gmail.com>
 # Contributor: Ian Yang <doit.ian@gmail.com>
 
 pkgname=google-glog
-pkgver=0.3.2
+pkgver=0.3.3
 pkgrel=1
 pkgdesc="Logging library for C++"
 arch=('i686' 'x86_64')
@@ -13,7 +15,7 @@ depends=('gcc-libs')
 makedepends=('make' 'gcc')
 options=('!libtool')
 source=("http://google-glog.googlecode.com/files/glog-${pkgver}.tar.gz")
-md5sums=('897fbff90d91ea2b6d6e78c8cea641cc')
+sha1sums='ed40c26ecffc5ad47c618684415799ebaaa30d65'
 
 build() {
   cd "$srcdir/glog-${pkgver}"
@@ -27,7 +29,8 @@ package() {
   make DESTDIR="$pkgdir" install
 
   # Lazy way of dealing with conflicting man and info pages...
-  rm -rf "${pkgdir}/usr/share"
+  #rm -rf "${pkgdir}/usr/share"
 
   install -Dm644 COPYING "$pkgdir/usr/share/licenses/$pkgname/COPYING"
 }
+
