@@ -1,10 +1,10 @@
 #
-# KDE SC Packages for Chakra, part of chakra-project.org
+# Apps Packages for Chakra, part of chakra-project.org
 #
 # contributor (x86_64): Giuseppe Calà <jiveaxe@gmail.com>
  
 pkgname=xterm
-pkgver=292
+pkgver=300
 pkgrel=1
 pkgdesc="X Terminal Emulator"
 arch=('x86_64')
@@ -13,9 +13,9 @@ license=('custom')
 depends=('libxft' 'libxaw' 'ncurses' 'xorg-apps' 'xbitmaps' 'libutempter')
 groups=('xorg')
 categories=('system')
-source=(ftp://invisible-island.net/${pkgname}/${pkgname}-${pkgver}.tgz
+source=("http://invisible-island.net/datafiles/release/${pkgname}.tar.gz"
         LICENSE)
-md5sums=('d6e7d1bd31b23fb58ca213c912f32009'
+md5sums=('6adc7c7f39ab2a71fd83747049d60358'
          '10ecc3f8ee91e3189863a172f68282d2')
 
 build() {
@@ -61,3 +61,4 @@ package() {
   install -m755 -d ${pkgdir}/usr/share/applications
   install -m644 ${srcdir}/${pkgname}-${pkgver}/{xterm,uxterm}.desktop ${pkgdir}/usr/share/applications/
 }
+
