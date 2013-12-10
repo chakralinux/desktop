@@ -1,21 +1,19 @@
-#
-# Chakra Packages for Chakra, part of chakra-project.org
-#
-# maintainer abveritas@chakra-project.org
+# maintainer Neophytos Kolokotronis <tetris4 AT gmail DOT com>
+# contributor: abveritas@chakra-project.org
 
 pkgname=josm
-pkgver=6238
+pkgver=6388
 pkgrel=1
 pkgdesc="An editor for OpenStreetMap written in Java."
-arch=('any')
+arch=('x86_64')
 url="http://josm.openstreetmap.de/"
 license=('GPL')
 depends=('java-runtime' 'intltool')
 screenshot=('http://wiki.openstreetmap.org/w/images/thumb/4/4e/JOSM-Jan-2009.jpg/800px-JOSM-Jan-2009.jpg')
 source=("http://josm.openstreetmap.de/download/${pkgname}-tested.jar" 
         "${pkgname}.desktop")
-sha256sums=('9df689fb0a35f1884b57c7cc73967319c67236cae972ade4bdda8803ce9b24cc'
-            '40c1b223d28258ced7e1eaa2cc0daf72bd2bd2bda29e9626eb1ea541585dd353')
+sha256sums=('e21d389a0a59d8968ed70a393b86e4ca6f140d50094f773528418774fcdaf151'
+            '942de16cefdabb7d597d4bd398b733f2fc306f8d50b38ceebe42952b6695af03')
 
 package() {
   install -D -m644 ${pkgname}-tested.jar "${pkgdir}/usr/share/java/${pkgname}/${pkgname}.jar"
