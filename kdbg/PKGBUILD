@@ -1,33 +1,33 @@
-#
-# Apps Packages for Chakra, part of chakra-project.org
-#
-# maintainer (i686): Phil Miller <philm[at]chakra-project[dog]org>
-# maintainer (x86_64): Manuel Tortosa <manutortosa[at]chakra-project[dot]org>
+# Maintainer: Neophytos Kolokotronis <tetris4 AT gmail DOT com>
+# Contributor: abveritas[at]chakra-project[dot]org>
 
 pkgname=kdbg
-pkgver=2.5.1
+pkgver=2.5.4
 pkgrel=1
 pkgdesc="A gdb GUI for KDE."
-arch=('i686' 'x86_64')
+arch=('x86_64')
 url="http://www.kdbg.org"
 license=("GPL")
-depends=('kdebase-runtime' 'gdb')
+depends=('kde-runtime' 'gdb')
 makedepends=('automoc4')
 options=('libtool')
 categories=('programming')
-source=(http://downloads.sourceforge.net/kdbg/$pkgname-$pkgver.tar.gz)
-md5sums=('a19095dce4cb5df0dbaa9368d400fc30')
+screenshots=('http://www.kdbg.org/kdbgtotal.png')
+source=("http://downloads.sourceforge.net/kdbg/$pkgname-$pkgver.tar.gz")
+md5sums=('715219a810f39e02b493cab9c4a845a1')
 
 build() {
-  cd $srcdir/$pkgname-$pkgver
+  cd $srcdir
+  mkdir -p build
+  cd build
   cmake ../${pkgbase}-${pkgver} \
     -DCMAKE_BUILD_TYPE=Release \
     -DCMAKE_INSTALL_PREFIX=/usr
 
-  make || return 1
+  make 
 }
 
 package() {
-  cd $srcdir/$pkgname-$pkgver
-  make DESTDIR=$pkgdir install
+  cd $srcdir/build
+  make DESTDIR=${pkgdir} install
 }
