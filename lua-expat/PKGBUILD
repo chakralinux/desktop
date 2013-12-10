@@ -1,0 +1,30 @@
+pkgname=lua-expat 
+_pkgname=luaexpat
+pkgver=1.2.0
+pkgrel=1
+pkgdesc='SAX XML parser based on the Expat library'
+arch=('x86_64')
+url='http://matthewwild.co.uk/projects/luaexpat/'
+license=('MIT')
+depends=('lua' 'expat')
+source=("http://matthewwild.co.uk/projects/luaexpat/luaexpat-$pkgver.tar.gz"
+	'config.51')
+md5sums=('03efe50c7f30a34580701e6527d7bfee'
+         '64abbf5b602e0e31b68db2925a5e6b2f')
+
+prepare() {
+ cd ${_pkgname}-${pkgver}
+ cp -L "$srcdir/config.51" config
+}
+         
+build() {
+ cd ${_pkgname}-${pkgver}
+ make
+}
+
+package() {
+ cd ${_pkgname}-${pkgver}
+ make DESTDIR="$pkgdir" install
+ mv usr "$pkgdir"
+ install -Dm0644 doc/us/license.html "$pkgdir/usr/share/licenses/$pkgname/license.html"
+}
