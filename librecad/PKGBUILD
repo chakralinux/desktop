@@ -1,27 +1,25 @@
-# Maintainer: Christian Hesse <mail@eworm.de>
-# Contributor: mickele <mimocciola at yahoo dot com> (librecad-git PKGBUILD)
-# Contributor: Ilmari Repo <ilmari at gmail dot com> (librecad-svn PKGBUILD)
-# Contributor: GazJ Gary James <garyjames82 at gmail dot com> (CADuntu PKGBUILD)
+# Maintainer: Neophytos Kolokotronis <tetris4 AT gmail DOT com>
+# Contributions from AUR: https://aur.archlinux.org/packages/librecad/
 
 pkgname=librecad
-pkgver=2.0.0rc2
-pkgrel=2
+pkgver=2.0.0rc3
+pkgrel=1
 pkgdesc="A 2D CAD drawing tool based on the community edition of QCad"
 arch=('x86_64')
 url="http://www.librecad.org/"
 license=('GPL')
-depends=('qt' 'muparser' 'boost')
-makedepends=('imagemagick')
+depends=('qt5-base' 'qt5-svg' 'qt5-tools' 'muparser')
+makedepends=('boost' 'imagemagick')
 conflicts=('librecad-git')
 replaces=('librecad-svn' 'caduntu' 'caduntu-svn')
 install=librecad.install
-source=("LibreCAD-${pkgver}::https://github.com/LibreCAD/LibreCAD/archive/2.0.0rc2.tar.gz")
-sha256sums=('c5e68c9ce539d84f1738b28f06faea7999b63693302d28133ce1c6d15a26b129')
+source=("LibreCAD-${pkgver}::https://github.com/LibreCAD/LibreCAD/archive/${pkgver}.tar.gz")
+sha256sums=('f2374e61d9c28e38ba188277510ca37eefbedc4743bd64fa0df0566d55c66ecc')
 
 build() {
 	cd "${srcdir}/LibreCAD-${pkgver}"
-
-	qmake librecad.pro
+	export CPPFLAGS="-std=c++0x"
+        qmake-qt5 librecad.pro
 	make
 }
 
@@ -33,7 +31,11 @@ package() {
 
 	install -D -m 644 desktop/librecad.desktop "${pkgdir}/usr/share/applications/librecad.desktop"
 	install -D -m 644 desktop/librecad.1 "${pkgdir}/usr/share/man/man1/librecad.1"
-
+        
+        install -D -m0644 librecad/support/doc/README "${pkgdir}/usr/share/doc/librecad/index.README"
+	install -D -m0644 librecad/support/doc/index.html "${pkgdir}/usr/share/doc/librecad/index.html"
+	install -D -m0644 librecad/support/doc/style.css "${pkgdir}/usr/share/doc/librecad/style.css"
+	install -D -m0644 librecad/support/doc/img/librecadlogo.png "${pkgdir}/usr/share/doc/librecad/img/librecadlogo.png"
 	for SIZE in 16 24 32 48 64 96 128; do
 		convert -scale ${SIZE} \
 			desktop/graphics_icons_and_splash/Icon\ LibreCAD/Icon_Librecad.svg \
