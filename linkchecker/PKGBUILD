@@ -6,24 +6,26 @@
 
 pkgname=linkchecker
 _pkgname=LinkChecker
-pkgver=7.4
+pkgver=8.4
 pkgrel=1
 pkgdesc="An utility to check HTML documents for broken links."
-arch=('i686' 'x86_64')
+arch=('x86_64')
 url="http://linkchecker.sourceforge.net/"
 license=('GPL')
-depends=('python' 'python-dnspython')
+depends=('python2' 'python2-dns')
 makedepends=('qt')
 optdepends=('python-qscintilla: for gui version')
-source=(http://downloads.sourceforge.net/$pkgname/${_pkgname}-$pkgver.tar.bz2)
-md5sums=('c767071b4d909f9f510b4cd7096f305a')
+source=(http://github.com/downloads/wummel/${pkgname}/${_pkgname}-${pkgver}.tar.xz)
+md5sums=('470c35cef8353d65069c14e13a2e83e4')
 
 build() {
   cd $srcdir/${_pkgname}-$pkgver
   python2 setup.py sdist --manifest-only
   (cd doc/html; make)
   python2 setup.py build
-  python2 setup.py install --root=$pkgdir
-  # fix conflicting files
-  rm -rv $pkgdir/usr/lib/python2.7/site-packages/dns
 }
+package() {
+  cd $srcdir/${_pkgname}-$pkgver
+  python2 setup.py install --root=$pkgdir
+}
+
