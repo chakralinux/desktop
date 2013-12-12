@@ -4,7 +4,7 @@
 # maintainer abveritas@chakra-project.org
 
 pkgname=qtcreator
-pkgver=2.8.1
+pkgver=3.0.0
 pkgrel=1
 pkgdesc="Lightweight, cross-platform integrated development environment."
 arch=('x86_64')
@@ -23,9 +23,10 @@ optdepends=('qt-docs: for the integrated Qt documentation'
 categories=('programming')
 screenshot=("http://qt.nokia.com/images/products/qt-creator-breakdown-screenshot")
 options=(docs)
-source=("http://download.qt-project.org/official_releases/qtcreator/2.8/${pkgver}/qt-creator-${pkgver}-src.tar.gz"
+#source=("http://download.qt-project.org/official_releases/qtcreator/2.8/${pkgver}/qt-creator-${pkgver}-src.tar.gz"
+source=("http://ftp.fau.de/qtproject/official_releases/${pkgname}/3.0/${pkgver}/qt-creator-opensource-src-${pkgver}.tar.gz"
         'qtcreator.desktop')
-sha256sums=('d5ae007a297a4288d0e95fd605edbfb8aee80f6788c7a6cfb9cb297f50c364b9'
+sha256sums=('db14c3706803917c8fb8aa578a67e8d5e2bcfabeba968f7669141df795410d99'
             '1f70efa02ea457a4df21243d3e8d68b6c66ad194400beb1f26f954536d4e7c90')
         
 
@@ -35,7 +36,7 @@ build() {
   mkdir build
   cd build
 
-  qmake "${srcdir}/qt-creator-${pkgver}-src/qtcreator.pro"
+  qmake "${srcdir}/qt-creator-opensource-src-${pkgver}/qtcreator.pro"
   make
   make docs -j1
 }
@@ -48,6 +49,6 @@ package() {
 
   install -Dm644 "${srcdir}/qtcreator.desktop" \
     "${pkgdir}/usr/share/applications/qtcreator.desktop"
-  install -Dm644 "${srcdir}/qt-creator-${pkgver}-src/LGPL_EXCEPTION.TXT" \
+  install -Dm644 "${srcdir}/qt-creator-opensource-src-${pkgver}/LGPL_EXCEPTION.TXT" \
     "${pkgdir}/usr/share/licenses/qtcreator/LGPL_EXCEPTION.TXT"
 }
