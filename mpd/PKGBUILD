@@ -1,0 +1,52 @@
+# Maintainer:   H W Tovetjärn (totte) <totte@tott.es>
+# Contributions from Arch: https://projects.archlinux.org/svntogit/packages.git/tree/trunk/PKGBUILD?h=packages/mpd
+
+pkgname=mpd
+pkgver=0.18.5
+pkgrel=1
+pkgdesc='Flexible, powerful, server-side application for playing music'
+url='http://mpd.wikia.com/wiki/Music_Player_Daemon_Wiki'
+license=('GPL')
+arch=('x86_64')
+depends=('audiofile' 'avahi' 'curl' 'faad2' 'ffmpeg' 'jack' 'libao' 'libid3tag' 'libmad' 'libmms' 'libmodplug'
+         'libpulse' 'libshout' 'sqlite3' 'wavpack' 'libmpdclient' 'yajl' 'opus')
+makedepends=('doxygen')
+source=("http://www.musicpd.org/download/mpd/stable/${pkgname}-${pkgver}.tar.xz"
+        'mpd.conf')
+backup=('etc/mpd.conf')
+install=install
+sha1sums=('4078755d77b7de4135458ae7db2518d2e057e745'
+		  'f4d5922abb69abb739542d8e93f4dfd748acdad7')
+
+build() {
+    cd "${srcdir}/${pkgname}-${pkgver}"
+
+    ./configure \
+        --prefix=/usr \
+        --sysconfdir=/etc \
+        --enable-jack \
+        --enable-soundcloud \
+        --enable-pulse \
+	--enable-libmpdclient \
+        --disable-sidplay \
+        --with-systemdsystemunitdir=/usr/lib/systemd/system 
+    make
+}
+
+package() {
+    cd "${srcdir}/${pkgname}-${pkgver}"
+    make DESTDIR="${pkgdir}" install
+    sed \
+        -e '/^#playlist_directory/c playlist_directory "/var/lib/mpd/playlists"' \
+        -e '/^#db_file/c db_file "/var/lib/mpd/mpd.db"' \
+        -e '/^#pid_file/c pid_file "/run/mpd/mpd.pid"' \
+        -e '/^#state_file/c state_file "/var/lib/mpd/mpdstate"' \
+        -e '/^#user/c user "mpd"' \
+        -i doc/mpdconf.example
+    install -d -g 45 -o 45 "${pkgdir}"/var/lib/mpd/playlists
+    install -Dm644 doc/mpdconf.example "${pkgdir}"/etc/mpd.conf
+    install -Dm644 ../mpd.conf "${pkgdir}"/usr/lib/tmpfiles.d/mpd.conf
+    install -d "${pkgdir}"/usr/lib/systemd/user
+    ln -s ../system/mpd.service "${pkgdir}"/usr/lib/systemd/user/mpd.service
+
+}
