@@ -6,7 +6,7 @@
 #                         Michael Irwin <6d6469@gmail.com>
 
 pkgname=memcached
-pkgver=1.4.15
+pkgver=1.4.16
 pkgrel=1
 pkgdesc="A distributed memory object caching system"
 arch=(i686 x86_64)
@@ -15,11 +15,10 @@ license=('GPL')
 depends=('libevent')
 optdepends=('perl: for memcached-tool usage')
 backup=('etc/conf.d/memcached')
-source=(http://memcached.googlecode.com/files/$pkgname-$pkgver.tar.gz
+source=("http://www.memcached.org/files/$pkgname-$pkgver.tar.gz"
         memcached.service)
-changelog=ChangeLog
-sha256sums=('169721ab7a7531add6ae9f6b14b6b5641725fe0b1f0bdf5c3a4327725901e2b4'
-            '2f45840b044e668fb790472c55dfbde89208733d55de39b737229302c0d17df9')
+sha1sums=('fdf071b5fd9972bf74f91d43f0b4cba980b83acb'
+          '5bc721d21991c2ec50ef01231527a280374d6477')
 
 build() {
   cd "$srcdir/$pkgname-$pkgver"
@@ -33,4 +32,3 @@ package() {
   install -D -m 755 scripts/memcached-tool "$pkgdir"/usr/bin/memcached-tool
   install -D -m 644 ../memcached.service "$pkgdir"/usr/lib/systemd/system/memcached.service
 }
-
