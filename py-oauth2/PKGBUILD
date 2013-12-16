@@ -1,32 +1,37 @@
 # Maintainer: Ernesto Manríquez <alejandronova@gmail.com>
 
-pkgname=py-oauth2
-pkgver=0.0.6
-pkgrel=1
-pkgdesc="A Python wrapper for the OAuth2 specification"
+pkgbase=py-oauth2
+pkgname=("python2-${pkgbase}" "python3-${pkgbase}")
+pkgver=0.0.7
+pkgrel=2
 arch=('x86_64')
-url=("http://liluo.org/py-oauth2/")
+url=("http://liluo.org/${pkgbase}/")
 license=('MIT')
-depends=('python2-magic' 'python2-oauth2' 'python2-sqlalchemy' 'python2-beautifulsoup')
-makedepends=('python2-distribute')
-source=("https://github.com/liluo/$pkgname/archive/v$pkgver.zip")
-sha256sums=('3dddabec379c2d0f7ceac6f04297b03590befa4561c659512fbfa59dc2bf896a')
+makedepends=('python2-setuptools' 'python3-setuptools')
+source=("https://pypi.python.org/packages/source/p/py-oauth2/${pkgbase}-${pkgver}.tar.gz")
+md5sums=('78ed4410a25fc73764b496851161b166')
 
 build() {
-  cd "$srcdir/$pkgname-$pkgver"
-
-  python2 setup.py build
+  install -d ${srcdir}/build{2,3} && for i in 2 3; do
+  cp -r "${srcdir}/${pkgbase}-${pkgver}" ${srcdir}/build${i}
+  cd ${srcdir}/build${i}/${pkgbase}-${pkgver}/
+  python${i} setup.py build
+  done
 }
 
-package() {
-  cd "$srcdir/$pkgname-$pkgver"
-
+package_python2-py-oauth2() {
+  depends=('python2-magic' 'python2-oauth2' 'python2-sqlalchemy' 'python2-beautifulsoup')
+  pkgdesc="A Python wrapper for the OAuth2 specification - Python2 version"
+  provides="${pkgbase}"
+  conflicts="${pkgbase}"
+  replaces="${pkgbase}"
+  cd "${srcdir}/build2/${pkgbase}-${pkgver}/"
   python2 setup.py install --root=$pkgdir
-
 }
 
-# vim:set ts=2 sw=2 et:
-
-
-
-
+package_python3-py-oauth2() {
+  depends=('python3-magic' 'python3-oauth2' 'python3-sqlalchemy' 'python3-beautifulsoup')
+  pkgdesc="A Python wrapper for the OAuth2 specification - Python3 version"
+  cd "${srcdir}/build3/${pkgbase}-${pkgver}/"
+  python3 setup.py install --root=$pkgdir
+}
