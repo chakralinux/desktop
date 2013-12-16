@@ -1,37 +1,29 @@
 #
 # Apps Packages for Chakra, part of chakra-project.org
 #
-# maintainer (i686): Phil Miller <philm[at]chakra-project[dog]org>
-# maintainer (x86_64): Manuel Tortosa <manutortosa[at]chakra-project[dot]org>
+# maintainer abveritas[at]chakra-project[dot]org>
 
 pkgname=rstudio
 _pkgname=rstudio-rstudio
-pkgver=0.95.110
-_pkgver=bbadd49
+pkgver=0.98.490
+_pkgver=79af91e
 pkgrel=1
 pkgdesc="A new integrated development environment (IDE) for R - The Desktop Client"
-arch=('i686' 'x86_64')
+arch=('x86_64')
 url="http://www.rstudio.org/"
 license=('AGPL')
-depends=('boost-libs' 'java-environment' 'qt' 'r')
-makedepends=('apache-ant' 'boost' 'bzip2' 'cmake' 'git' 'icu' 'openssl' 'pam' 'unzip')
+depends=('boost-libs' 'java-environment' 'qtwebkit' 'r')
+makedepends=('apache-ant' 'boost' 'bzip2' 'cmake' 'git' 'icu' 'openssl' 'pam' 'unzip' 'wget' 'libcups')
 provides=('rstudio-desktop')
 categories=('programming')
-source=("https://github.com/$pkgname/$pkgname/tarball/v$pkgver" 'cmakelists.diff')
-md5sums=('813991c03a842ed97339fea80ee7b56e'
-         '0dcfba94a8cdfd02c3eb92c3c70203e2')
+source=("https://github.com/$pkgname/$pkgname/tarball/v$pkgver")
+md5sums=('910a5257cbc6f0c63bde7a2a07cabb97')
 
 build() {
-  cd $srcdir/$_pkgname-$_pkgver
-  patch -Np1 -i "$srcdir/cmakelists.diff"
-  source /etc/profile.d/apache-ant.sh
- #Checking for ANT and Java can be found.
- which ant > /dev/null
- which java > /dev/null
-
-  # Install gwt
   cd $srcdir/$_pkgname-$_pkgver/dependencies/common
-  ./install-gwt
+  sh install-gwt
+  sh install-dictionaries
+  sh install-mathjax
 
   # Configure and build.
   cd $srcdir/$_pkgname-$_pkgver
