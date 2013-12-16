@@ -1,20 +1,18 @@
-#
-# Chakra Packages for Chakra, part of chakra-project.org
-#
-# maintainer abveritas@chakra-project.org
+# Contributor: abveritas@chakra-project.org
+# Maintainer: Bruce Liu <brli@user.sourceforge.net>
 
 pkgname=powertop
-pkgver=2.4
+pkgver=2.5
 pkgrel=1
 pkgdesc="Tool that finds the software that makes your laptop use more power than necessary"
 arch=('x86_64')
-url="https://01.org/powertop/"
+url="https://01.org/powertop"
 license=('GPL2')
 depends=('gcc-libs' 'libnl' 'ncurses' 'pciutils')
 categories=('utils')
 screenshot=('https://01.org/powertop/sites/default/files/resize/users/u8/powertop20_overview-640x381.png')
-source=("https://01.org/powertop/sites/default/files/downloads/$pkgname-$pkgver.tar.gz")
-md5sums=('3aa686bb245d6683b86cba9a6a4b8c6d')
+source=("${url}/sites/default/files/downloads/${pkgname}-${pkgver}.tar.gz")
+md5sums=('806bbcbd44fcea1f807c9582fc1f7d3e')
 
 build() {
   cd ${srcdir}/powertop-$pkgver
@@ -28,3 +26,4 @@ package() {
 
   make DESTDIR=${pkgdir} install
 }
+
