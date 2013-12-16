@@ -3,7 +3,7 @@
 pkgbase=py-oauth2
 pkgname=("python2-${pkgbase}" "python3-${pkgbase}")
 pkgver=0.0.7
-pkgrel=1
+pkgrel=2
 arch=('x86_64')
 url=("http://liluo.org/${pkgbase}/")
 license=('MIT')
@@ -22,6 +22,9 @@ build() {
 package_python2-py-oauth2() {
   depends=('python2-magic' 'python2-oauth2' 'python2-sqlalchemy' 'python2-beautifulsoup')
   pkgdesc="A Python wrapper for the OAuth2 specification - Python2 version"
+  provides="${pkgbase}"
+  conflicts="${pkgbase}"
+  replaces="${pkgbase}"
   cd "${srcdir}/build2/${pkgbase}-${pkgver}/"
   python2 setup.py install --root=$pkgdir
 }
@@ -32,8 +35,3 @@ package_python3-py-oauth2() {
   cd "${srcdir}/build3/${pkgbase}-${pkgver}/"
   python3 setup.py install --root=$pkgdir
 }
-# vim:set ts=2 sw=2 et:
-
-
-
-
