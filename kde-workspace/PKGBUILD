@@ -9,7 +9,7 @@ _default_wp="Elarun"
 
 pkgname="kde-workspace"
 arch=('x86_64')
-pkgver=${_kdever}
+pkgver=${_kdeworkspacever}
 pkgrel=6
 pkgdesc="KDE Workspace"
 url="http://www.kde.org"
@@ -54,7 +54,7 @@ makedepends=('pkgconfig'
              'automoc4'
              'networkmanager'
              'bluez'
-             "kdebindings-pykde4>=${_kdever}"
+             "kdebindings-python2>=${_kdever}"
              'oxygen-icons'
              "kde-runtime>=${_kdever}"
              'gpsd'
@@ -66,14 +66,16 @@ makedepends=('pkgconfig'
              'prison'
              'qrencode')
 optdepends=('appmenu-qt:           Global menu support'
-            'kdebindings-python3:  Python Support for Plasma'
-            'kdeedu-marble:        Marble Wallpaper Plugin'
+            'kdebindings-python2:  Python 2 support for Plasma'
+            'kdebindings-python3:  Python 3 support for Plasma'
+            'kdeedu-marble:        Marble wallpaper Plugin'
             'gpsd:                 Plasma geolocation support'
-            'kscreen:              Multiple monitors made easy'
+            'kscreen:              Monitor configuration'
             'ntp:                  Time/date sync support'
             'opentp:               Optional time/date sync support'
             'xf86-input-wacom:     Wacom tablet support')
 provides=('kdebase-workspace'
+          "kdebase-workspace-latest-stable=$_kdeworkspacever"
           'powerdevil'
           'kcm_tablet=1.1.3'
           'kde-workspace-doc'
@@ -94,7 +96,7 @@ groups=('kde'
         'kde-minimal')
 backup=('usr/share/config/kdm/kdmrc'
         'etc/pam.d/kscreensaver')
-source=("$_mirror/${pkgname}-$_kdever.tar.xz"
+source=("http://download.kde.org/stable/${_kdeworkspacever}/src/${pkgname}-$_kdeworkspacever.tar.xz"
         "$_mirror/kde-wallpapers-$_kdever.tar.xz"
         'mishaaq-kcm_touchpad-00370b5.tar.gz'
         'http://chakra.sourceforge.net/sources/kdebase-workspace/114856-wacomtablet-1.99.3.tar.bz2'
@@ -135,17 +137,15 @@ sha1sums=(`grep ${pkgname}-$_kdever.tar.xz ../kde-sc.md5 | cut -d " " -f1`
 prepare() {
     cd ${srcdir}/${pkgname}-${pkgver}
 
-    msg "Applying main patchset..."
+    msg "Applying patches..."
     patch -Np0 -i ${srcdir}/01_kdm_zsh_profile.patch
-    # 02 is merged in 09, Jan 2013
+    # 02 was merged in upstream 2013-01-09
     #patch -Np0 -i ${srcdir}/02_sane_env_and_shutdown_path.patch
     patch -Np1 -i ${srcdir}/03_plasma_menubutton_branding.patch
     patch -Np0 -i ${srcdir}/04_plasma_kickoff_url.patch
     patch -Np1 -i ${srcdir}/06_kickoff_default_favourites.patch
     patch -Np1 -i ${srcdir}/07_always_show_kickoff_subtext.patch
     patch -Np0 -i ${srcdir}/09_enable_start-shutdown-scripts.patch
-
-    msg "Applying fixes..."
     patch -p0 -i ${srcdir}/fix_terminate-server.patch
     patch -p1 -i ${srcdir}/fix_root-only-kcms.patch
 
@@ -156,7 +156,7 @@ prepare() {
 build() {
     cd ${srcdir}/${pkgname}-${pkgver}
 
-    msg "Starting workspace build..."
+    msg "Building workspace..."
     cmake . -DCMAKE_BUILD_TYPE=${_build_type} \
         -DCMAKE_INSTALL_PREFIX=${_installprefix} \
         -DWITH_Xmms=OFF \
@@ -165,7 +165,7 @@ build() {
         -DCMAKE_{SHARED,MODULE,EXE}_LINKER_FLAGS='-Wl,--no-undefined -Wl,--as-needed'
     make
 
-    msg "Starting kcm_touchpad build..."
+    msg "Building kcm_touchpad..."
     cd ${srcdir}/mishaaq-kcm_touchpad-00370b5
     # Fix desktop to the new layout
     sed -i -e "s~keyboard-and-mouse~input-devices~g" touchpad.desktop
@@ -173,7 +173,7 @@ build() {
         -DCMAKE_INSTALL_PREFIX=${_installprefix} \
         -DCMAKE_{SHARED,MODULE,EXE}_LINKER_FLAGS='-Wl,--no-undefined -Wl,--as-needed'
 
-    msg "Starting kcm_tablet build..."
+    msg "Building kcm_tablet..."
     cd ${srcdir}/wacomtablet-1.99.3
     # Fix desktop to the new layout
     sed -i -e "s~keyboard-and-mouse~input-devices~g" ${srcdir}/wacomtablet-1.99.3/src/kcmodule/kcm_wacomtablet.desktop
@@ -181,7 +181,7 @@ build() {
         -DCMAKE_INSTALL_PREFIX=${_installprefix} \
         -DCMAKE_{SHARED,MODULE,EXE}_LINKER_FLAGS='-Wl,--no-undefined -Wl,--as-needed'
 
-    msg "Starting favourites launcher build..."
+    msg "Building favourites launcher..."
     cd ${srcdir}/favorites-0.1
     cmake . -DCMAKE_BUILD_TYPE=${_build_type} \
         -DCMAKE_INSTALL_PREFIX=${_installprefix} \
