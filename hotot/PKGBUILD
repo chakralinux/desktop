@@ -1,10 +1,7 @@
-#
-# Apps Packages for Chakra, part of chakra-project.org
-#
-# maintainer <franzmari[at]chakra-project[dot]it>
+# Maintainer: <franzmari[at]chakra-project[dot]it>
 
 pkgname=hotot
-pkgver=0.9.8.14
+pkgver=0.9.8.16
 pkgrel=1
 epoch=1
 pkgdesc="A lightweight & open source microblogging software (twitter identi.ca)"
@@ -14,8 +11,8 @@ license=('LGPL3')
 depends=('hicolor-icon-theme' 'kde-runtime' 'qt5-base')
 makedepends=('cmake' 'intltool' 'python2')
 install="hotot.install"
-source=("https://github.com/lyricat/Hotot/archive/${pkgver}.tar.gz")
-md5sums=('7437f5132a50f7239e1b4bd09f410a17')
+source=("https://github.com/ManiacTwister/Hotot/archive/${pkgver}.tar.gz")
+md5sums=('5cae5f3b757dfdd476f68697959121f2')
 
 build() {
   cd ${srcdir}/Hotot-${pkgver}
@@ -40,4 +37,10 @@ package() {
   # remove google analytics tracking 
   find "$pkgdir" -name hotot.js -exec \
     sed -i '/\/\/ 7. run track code/,+12d' {} \;
+
+  # fix user retweets error
+  find "$pkgdir" -name lib.twitter.js -exec \
+    sed -i 's/1\/statuses\/retweeted_by/1.1\/statuses\/retweets_of/' {} \;
+  find "$pkgdir" -name lib.twitter.js -exec \
+    sed -i 's/1\/statuses\/retweeted_to_me/1.1\/statuses\/retweets_of_me/' {} \;  
 }
