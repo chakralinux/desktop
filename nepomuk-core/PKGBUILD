@@ -1,9 +1,7 @@
-#
-# KDE SC Packages for Chakra, part of chakra-project.org
-#
-# maintainer: Manuel Tortosa <manutortosa[at]chakra-project[dot]org>
+# Maintainer:   Manuel Tortosa <manutortosa@chakra-project.org>
+# Contributors: H W Tovetjärn (totte) <totte@tott.es>
 
-# include global config
+# Include global configuration
 source ../_buildscripts/${current_repo}-${_arch}-cfg.conf
 
 pkgname="nepomuk-core"    
@@ -12,30 +10,38 @@ pkgver=${_kdever}
 pkgrel=1
 pkgdesc="The core Nepomuk system"
 url="http://www.kde.org"
-license=('GPL' 'LGPL' 'FDL')
-options=('docs' '!header' 'debug' 'log')
-depends=("kdelibs>=${_kdever}" 'poppler-qt' 'ffmpeg' 'shared-desktop-ontologies>=0.11.0' 'ebook-tools')
-makedepends=('pkg-config' 'cmake' 'automoc4' 'doxygen')
-
+license=('GPL'
+         'LGPL'
+         'FDL')
+options=('docs'
+         '!header'
+         'debug'
+         'log')
+depends=("kdelibs>=${_kdever}"
+         'poppler-qt'
+         'ffmpeg'
+         'shared-desktop-ontologies>=0.11.0'
+         'ebook-tools')
+makedepends=('pkg-config'
+             'cmake'
+             'automoc4'
+             'doxygen')
 source=($_mirror/${pkgname}-$_kdever.tar.xz)
 sha1sums=(`grep ${pkgname}-$_kdever.tar.xz  ../checksums.txt | cut -d" " -f1`)
 
 build() {
-	cd ${pkgname}-${pkgver}
-	
-        rm -rf build 
-        mkdir -p build && cd build
-
-	msg "starting build ..."
-	cmake .. -DCMAKE_BUILD_TYPE=${_build_type} \
-		-DCMAKE_INSTALL_PREFIX=${_installprefix} \
-		-DCMAKE_SKIP_RPATH=ON \
-		-DCMAKE_{SHARED,MODULE,EXE}_LINKER_FLAGS='-Wl,--no-undefined -Wl,--as-needed'
-
-	make
+    cd ${pkgname}-${pkgver}
+    rm -rf build 
+    mkdir -p build && cd build
+    cmake .. \
+        -DCMAKE_BUILD_TYPE=${_build_type} \
+        -DCMAKE_INSTALL_PREFIX=${_installprefix} \
+        -DCMAKE_SKIP_RPATH=ON \
+        -DCMAKE_{SHARED,MODULE,EXE}_LINKER_FLAGS='-Wl,--no-undefined -Wl,--as-needed'
+    make
 }
 
 package() {
-	cd ${srcdir}/${pkgname}-${pkgver}/build
-	make DESTDIR=${pkgdir} install
+    cd ${srcdir}/${pkgname}-${pkgver}/build
+    make DESTDIR=${pkgdir} install
 }
