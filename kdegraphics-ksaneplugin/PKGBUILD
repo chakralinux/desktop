@@ -1,7 +1,5 @@
-
-
-
-# Maintainer: Manuel Tortosa <manutortosa@chakra-project@org>
+# Maintainer:   Manuel Tortosa <manutortosa@chakra-project@org>
+# Contributors: H W Tovetjärn (totte) <totte@tott.es>
 
 # Include global configuration
 source ../_buildscripts/${current_repo}-${_arch}-cfg.conf
@@ -10,29 +8,36 @@ pkgname=kdegraphics-ksaneplugin
 _pkgname=ksaneplugin
 pkgver=${_kdever}
 pkgrel=1
-pkgdesc="A scan plugin that implements the scanning"
+pkgdesc='A scan plugin that implements the scanning'
 arch=('x86_64')
-url='http://www.kde.org'
-license=('GPL' 'LGPL' 'FDL')
+url='https://projects.kde.org/projects/kde/kdegraphics/ksaneplugin'
+license=('GPL'
+         'LGPL'
+         'FDL')
 depends=("kdegraphics-libksane>=${_kdever}")
-makedepends=('cmake' 'automoc4')
+makedepends=('cmake'
+             'automoc4')
 source=("$_mirror/${_pkgname}-$_kdever.tar.xz")
 sha1sums=(`grep ${_pkgname}-$_kdever.tar.xz  ../checksums.txt | cut -d " " -f1`)
-groups=("kde" "kdegraphics" "kde-uninstall")
-provices=('ksaneplugin')
-options=('docs' '!header' 'debug' 'log')
+groups=('kde'
+        'kdegraphics'
+        'kde-uninstall')
+provides=('ksaneplugin')
+options=('docs'
+         '!header'
+         'debug'
+         'log')
 
 build() {
-	cd ${srcdir}/${_pkgname}-${pkgver}
-	cmake . -DCMAKE_BUILD_TYPE=${_build_type} \
-                -DCMAKE_INSTALL_PREFIX=${_installprefix} \
-                -DCMAKE_SKIP_RPATH=ON \
-                -DCMAKE_{SHARED,MODULE,EXE}_LINKER_FLAGS='-Wl,--no-undefined -Wl,--as-needed'
-
+    cd ${srcdir}/${_pkgname}-${pkgver}
+    cmake . \
+        -DCMAKE_BUILD_TYPE=${_build_type} \
+        -DCMAKE_INSTALL_PREFIX=${_installprefix} \
+        -DCMAKE_SKIP_RPATH=ON \
+        -DCMAKE_{SHARED,MODULE,EXE}_LINKER_FLAGS='-Wl,--no-undefined -Wl,--as-needed'
 }
 
 package() {
-	cd ${srcdir}/${_pkgname}-${pkgver}
-	make DESTDIR=${pkgdir} install || return 1
-
+    cd ${srcdir}/${_pkgname}-${pkgver}
+    make DESTDIR=${pkgdir} install
 }
