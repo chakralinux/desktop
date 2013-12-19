@@ -9,8 +9,8 @@
 
 pkgbase=virtualbox
 pkgname=('virtualbox' 'virtualbox-ext-oracle' 'virtualbox-guest-additions')
-pkgver=4.3.4
-_build_virtualbox=91027
+pkgver=4.3.6
+_build_virtualbox=91406
 pkgrel=1
 arch=('x86_64')
 url='http://virtualbox.org/'
@@ -30,9 +30,9 @@ source=("VirtualBox-${pkgver}-${_build_virtualbox}-Linux_amd64.run::http://downl
         'vboxsetup.sh'
         'PUEL'
         'vboxservice.service')
-sha256sums=('a5020a4b2282745c691a42cc0e03ce4d713c51d1da601e64b0ac77736c8abd1b'
-            '8d192cf3c045817e3a89383aaad9ea992ccb7f47ae820c885caa182996a0f30d'
-            'f120793fa35050a8280eacf9c930cf8d9b88795161520f6515c0cc5edda2fe8a'
+sha256sums=('841f92ec157d99bc55863b82a7d52b356005e1224862570750929148c29a64dd'
+            '983f87e4746a2e6739090d0ce905c24a71e209e87f11c449bdc3d0ca5bb4fde2'
+            '95648fcdb5d028e64145a2fe2f2f28c946d219da366389295a61fed296ca79f0'
             'f4182fa7c3f109aefb7da84f16bc40f34c46eb768144e7ab373b9311c41f175b'
             '71740893a5f226f9d9fcc607ab9d39b7de816b2759625b34da19162bc7e579ff'
             '12dbba3b59991f2b68cddeeeda20236aeff63e11b7e2d1b08d9d6a82225f6651'
@@ -63,7 +63,6 @@ package_virtualbox() {
               'alsa-lib: for ALSA support'
               'pulseaudio: for PulseAudio support')
   provides=("virtualbox=${pkgver}")
-  conflicts=('virtualbox' 'virtualbox-ose' 'virtualbox-modules')
   backup=('etc/vbox/vbox.cfg' 'etc/conf.d/vboxdrv' 'etc/conf.d/vboxweb' 'etc/modules-load.d/virtualbox.conf')
   install=${pkgname}.install
   
