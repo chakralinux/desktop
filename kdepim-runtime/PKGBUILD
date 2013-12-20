@@ -46,11 +46,11 @@ prepare() {
 build() {
     cd "${srcdir}/build"
     cmake ../${pkgbase}-${pkgver} \
-    -DCMAKE_BUILD_TYPE=${_build_type} \
-      -DCMAKE_INSTALL_PREFIX=${_installprefix} \
-      -DCMAKE_SKIP_RPATH=ON \
-      -DKDE4_BUILD_TESTS=OFF \
-      -DCMAKE_{SHARED,MODULE,EXE}_LINKER_FLAGS='-Wl,--no-undefined -Wl,--as-needed'
+        -DCMAKE_BUILD_TYPE=${_build_type} \
+        -DCMAKE_INSTALL_PREFIX=${_installprefix} \
+        -DCMAKE_SKIP_RPATH=ON \
+        -DKDE4_BUILD_TESTS=OFF \
+        -DCMAKE_{SHARED,MODULE,EXE}_LINKER_FLAGS='-Wl,--no-undefined -Wl,--as-needed'
     make
 }
 
