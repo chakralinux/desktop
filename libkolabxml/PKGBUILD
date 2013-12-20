@@ -1,0 +1,39 @@
+# Maintainer:
+# Contributors: H W Tovetjärn (totte) <totte@tott.es>
+#               Andrea Scarpino <andrea@archlinux.org>
+
+pkgname=libkolabxml
+pkgver=0.8.4
+pkgrel=1
+pkgdesc="Kolab XML Format Schema Definitions Library"
+url='http://git.kolab.org/libkolabxml/'
+arch=('x86_64')
+license=('GPL')
+depends=('xerces-c'
+         'boost-libs')
+makedepends=('cmake'
+             'boost'
+             'xsd'
+             'qt'
+             'swig')
+source=("http://mirror.kolabsys.com/pub/releases/${pkgname}-${pkgver}.tar.gz"{,.gpg})
+sha512sums=('992f989df1a5b1a844050463b2bfaa22a843961f7959d17a56a4648675c120d4b0f215b4215b7a173a54f48c7819e15b122609f91684bacc535483e701af996e'
+            '79438941697edb5554fae538bcdbea97d5534038144de08a5a827881f0a89a65408f864d6ad914e239b232f7186ad5ed91996de8f82915559964dcbc64370661')
+
+prepare() {
+    mkdir "${srcdir}/build"
+}
+
+build() {
+    cd "${srcdir}/build"
+    cmake "../${pkgname}-${pkgver}" \
+        -DCMAKE_BUILD_TYPE=Release \
+        -DCMAKE_INSTALL_PREFIX=/usr \
+        -DQT_QMAKE_EXECUTABLE=qmake
+    make
+}
+
+package() {
+    cd "${srcdir}/build"
+    make DESTDIR="${pkgdir}" install
+}
