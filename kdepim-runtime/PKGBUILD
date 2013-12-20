@@ -1,7 +1,5 @@
-
-
-
-# Maintainer: Manuel Tortosa <manutortosa@chakra-project@org>
+# Maintainer:   Manuel Tortosa <manutortosa@chakra-project@org>
+# Contributors: H W Tovetjarn (totte) <totte@tott.es>
 
 # Include global configuration
 source ../_buildscripts/${current_repo}-${_arch}-cfg.conf
@@ -11,38 +9,52 @@ pkgname=${pkgbase}
 arch=('x86_64')
 pkgver=${_kdever}
 pkgrel=1
-pkgdesc="KDE Pim Runtime"
-url="http://www.kde.org"
-license=('GPL' 'LGPL' 'FDL')
+pkgdesc='Extends the functionality of KDE PIM'
+url='https://projects.kde.org/projects/kde/kdepim-runtime'
+license=('GPL'
+         'LGPL'
+         'FDL')
 install=${pkgbase}.install
-options=('docs' '!header' 'debug' 'log')
-depends=("kdepimlibs>=${_kdever}" "kde-runtime>=${_kdever}" "kdelibs>=${_kdever}" 'prison'
-         'libdmtx' 'qrencode' 'libkgapi>=2.0.1' 'libkolab')
-makedepends=('pkg-config' 'cmake' 'automoc4')
-groups=("kde" "kdepim" "kde-uninstall" "kde-minimal")
-
+options=('docs'
+         '!header'
+         'debug'
+         'log')
+depends=("kdepimlibs>=${_kdever}"
+         "kde-runtime>=${_kdever}"
+         "kdelibs>=${_kdever}"
+         'prison'
+         'libdmtx'
+         'qrencode'
+         'libkgapi'
+         'libkfbapi'
+         'libkolab')
+makedepends=('pkg-config'
+             'cmake'
+             'automoc4')
+groups=('kde'
+        'kdepim'
+        'kde-uninstall'
+        'kde-minimal')
 source=($_mirror/${pkgbase}-$_kdever.tar.xz)
 sha1sums=(`grep ${pkgbase}-$_kdever.tar.xz  ../checksums.txt | cut -d" " -f1`)
 
+prepare() {
+    cd "${srcdir}"
+    mkdir build
+}
+
 build() {
-    cd "${srcdir}"/${pkgbase}-${pkgver}
-
-    msg "starting build ..."
-  
-    cd ${srcdir}
-    mkdir -p build 
-    cd build
-
+    cd "${srcdir}/build"
     cmake ../${pkgbase}-${pkgver} \
-          -DCMAKE_BUILD_TYPE=${_build_type} \
-	  -DCMAKE_INSTALL_PREFIX=${_installprefix} \
-	  -DCMAKE_SKIP_RPATH=ON \
-	  -DCMAKE_{SHARED,MODULE,EXE}_LINKER_FLAGS='-Wl,--no-undefined -Wl,--as-needed'
-
+    -DCMAKE_BUILD_TYPE=${_build_type} \
+      -DCMAKE_INSTALL_PREFIX=${_installprefix} \
+      -DCMAKE_SKIP_RPATH=ON \
+      -DKDE4_BUILD_TESTS=OFF \
+      -DCMAKE_{SHARED,MODULE,EXE}_LINKER_FLAGS='-Wl,--no-undefined -Wl,--as-needed'
     make
 }
 
 package() {
-    cd ${srcdir}/build
+    cd "${srcdir}/build"
     make DESTDIR=${pkgdir} install
 }

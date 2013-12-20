@@ -1,22 +1,21 @@
 # Maintainer:
 # Contributors: H W Tovetjärn (totte) <totte@tott.es>
 #               Andrea Scarpino <andrea@archlinux.org>
+#               birdflesh <antkoul@gmail.com>
 
-pkgname=libkolab
-pkgver=0.4.2
+pkgname=libkfbapi
+pkgver=1.0
 pkgrel=1
-pkgdesc='Advanced Kolab Object Handling Library'
-url='http://git.kolab.org/libkolab/'
+pkgdesc="KDE library for accessing Facebook services"
 arch=('x86_64')
+url='https://projects.kde.org/projects/extragear/libs/libkfbapi'
 license=('GPL')
-depends=('libkolabxml'
-         'kdepimlibs')
+depends=('kdepimlibs')
 makedepends=('cmake'
              'automoc4'
              'boost')
-source=("http://mirror.kolabsys.com/pub/releases/${pkgname}-${pkgver}.tar.gz"{,.gpg})
-sha512sums=('3ba23bc11c3fb1c852e5b7b9788fed6d'
-            '56052090b7fb89813c3bae1cb5b104c5')
+source=("http://download.kde.org/stable/$pkgname/$pkgver/src/$pkgname-$pkgver.tar.bz2")
+sha512sums=('05ce3213a1383796a02115705c2bf829')
 
 prepare() {
     mkdir "${srcdir}/build"
@@ -24,9 +23,9 @@ prepare() {
 
 build() {
     cd "${srcdir}/build"
-    cmake "../${pkgname}-${pkgver}" \
+    cmake "../$pkgname-$pkgver" \
+        -DQT_QMAKE_EXECUTABLE=qmake-qt4 \
         -DCMAKE_BUILD_TYPE=Release \
-        -DCMAKE_SKIP_RPATH=ON \
         -DCMAKE_INSTALL_PREFIX=/usr
     make
 }

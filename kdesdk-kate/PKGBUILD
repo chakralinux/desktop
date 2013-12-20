@@ -1,57 +1,103 @@
-
-
-
-# Maintainer Manuel Tortosa <manutortosa@chakra-project@org>
+# Maintainer:   Manuel Tortosa <manutortosa@chakra-project@org>
+# Contributors: H W Tovetjarn (totte) <totte@tott.es>
+#               Andrea Scarpino <andrea@archlinux.org>
 
 # Include global configuration
 source ../_buildscripts/${current_repo}-${_arch}-cfg.conf
 
-pkgname=('kdesdk-kate')
+pkgbase='kdesdk-kate'
+pkgname=('kdesdk-kate'
+         'kdebase-kwrite'
+         'kdebase-katepart')
 _pkgname=kate
 pkgver=${_kdever}
-pkgrel=2
-url="http://kde.org/"
+pkgrel=1
 arch=('x86_64')
-license=('GPL' 'LGPL' 'FDL')
-pkgdesc="Advanced Text Editor"
-makedepends=("kdelibs>=${_kdever}" 'cmake' 'automoc4' 'docbook-xsl' "kdebindings-pykde4>=${_kdever}")
-groups=('kde' 'kdesdk' 'kde-minimal' 'kde-uninstall')
-provides=('kate')
-install='kdesdk-kate.install'
+license=('GPL'
+         'LGPL'
+         'FDL')
+makedepends=("kdelibs>=${_kdever}"
+             'cmake'
+             'automoc4'
+             'docbook-xsl'
+             "kdebindings-python2>=${_kdever}"
+             "kdebindings-python3>=${_kdever}")
+options=('docs'
+         '!header'
+         'debug'
+         'log')
 source=("$_mirror/${_pkgname}-$_kdever.tar.xz"
         'pkgbuild-syntax-highlight.patch')
 sha1sums=(`grep ${_pkgname}-$_kdever.tar.xz  ../checksums.txt | cut -d " " -f1`
           '80c324c9db81c07a02374e7a092d75e0bdd6b4ea')
 
-options=('docs' '!header' 'debug' 'log')
-
-build() {
-	cd ${srcdir}/${_pkgname}-${pkgver}
-
-	patch -p1 -i "${srcdir}"/pkgbuild-syntax-highlight.patch
-
-        rm -rf build
-        mkdir build && cd build
-
-	msg "starting build ..."
-	cmake .. -DCMAKE_BUILD_TYPE=${_build_type} \
-	         -DCMAKE_INSTALL_PREFIX=${_installprefix} \
-	  	 -DBUILD_KTEXTEDITOR=OFF \
-		 -DCMAKE_{SHARED,MODULE,EXE}_LINKER_FLAGS='-Wl,--no-undefined -Wl,--as-needed'
-
-	make
+prepare() {
+    mkdir "${srcdir}/build"
+    cd "${srcdir}/${_pkgname}-${pkgver}"
+    patch -p1 -i "${srcdir}"/pkgbuild-syntax-highlight.patch
 }
 
-package() {
-	cd ${srcdir}/${_pkgname}-${pkgver}/build/kate
-	make DESTDIR="${pkgdir}" install
+build() {
+    cd "${srcdir}/build"
+    cmake "../${_pkgname}-${pkgver}" \
+        -DCMAKE_BUILD_TYPE=${_build_type} \
+        -DKDE4_BUILD_TESTS=OFF \
+        -DCMAKE_INSTALL_PREFIX=${_installprefix} \
+        -DCMAKE_{SHARED,MODULE,EXE}_LINKER_FLAGS='-Wl,--no-undefined -Wl,--as-needed'
+    make
+}
 
-        cd ${srcdir}/${_pkgname}-${pkgver}/build/part
-        make DESTDIR="${pkgdir}" install
+package_kdebase-katepart() {
+    pkgdesc='A fast and feature-rich text editor component'
+    depends=('kdelibs')
+    url='http://kate-editor.org/about-katepart/'
+    install='kdebase-katepart.install'
 
-	cd ${srcdir}/${_pkgname}-${pkgver}/build/doc/kate
-	make DESTDIR="${pkgdir}" install
+    cd "${srcdir}/build/part"
+    make DESTDIR="${pkgdir}" install
+}
 
-	cd ${srcdir}/${_pkgname}-${pkgver}/build/addons
-	make DESTDIR="${pkgdir}" install
+package_kdebase-kwrite() {
+    pkgdesc='KDE text editor'
+    depends=('kde-runtime'
+             'kdebase-katepart')
+    groups=('kde'
+            'kde-baseapps'
+            'kde-uninstall')
+    conflicts='kde-baseapps-kwrite'
+    provides='kde-baseapps-kwrite'
+    replaces='kde-baseapps-kwrite'
+    url='http://www.kde.org/applications/utilities/kwrite/'
+    install='kdebase-kwrite.install'
+
+    cd "${srcdir}/build/kwrite"
+    make DESTDIR="${pkgdir}" install
+
+    cd "${srcdir}/build/doc/kwrite"
+    make DESTDIR="${pkgdir}" install
+}
+
+package_kdesdk-kate() {
+    pkgdesc='KDE advanced text editor'
+    depends=('kde-runtime'
+             'kdebase-katepart'
+             'qjson')
+    groups=('kde'
+            'kdesdk'
+            'kde-minimal'
+            'kde-uninstall')
+    url='http://www.kde.org/applications/utilities/kate/'
+    install='kdesdk-kate.install'
+    optdepends=('kdebase-konsole: Open a terminal in Kate'
+                'kdebindings-python2: Python 2 bindings'
+                'kdebindings-python3: Python 3 bindings')
+
+    cd "${srcdir}/build/kate"
+    make DESTDIR="${pkgdir}" install
+
+    cd "${srcdir}/build/doc/kate"
+    make DESTDIR="${pkgdir}" install
+
+    cd "${srcdir}/build/addons"
+    make DESTDIR="${pkgdir}" install
 }
