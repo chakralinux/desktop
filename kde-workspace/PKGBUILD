@@ -76,7 +76,6 @@ optdepends=('appmenu-qt:           Global menu support'
             'opentp:               Optional time/date sync support'
             'xf86-input-wacom:     Wacom tablet support')
 provides=('kdebase-workspace'
-          "kdebase-workspace-latest-stable=${pkgver}"
           'powerdevil'
           'kcm_tablet=1.1.3'
           'kde-workspace-doc'
@@ -117,7 +116,7 @@ source=("http://download.kde.org/stable/${pkgver}/src/${pkgname}-$pkgver.tar.xz"
         'fix_terminate-server.patch'
         'fix_root-only-kcms.patch')
 #sha1sums=(`grep ${pkgname}-$_kdever.tar.xz  ../checksums.txt | cut -d " " -f1`
-sha1sums=('20266e6cc89a3fa96619c69452c78108'
+sha1sums=('c1e2b669f5a1607bcce7e92d9213af1ee809d79e'
           `grep kde-wallpapers-$_kdever.tar.xz  ../checksums.txt | cut -d " " -f1`
           'e5cdf487940030c2aec83498d324fd4c7af2ea47'
           '53bb8d20edb1ffd34d1977d06c92d9e8635889c3'
@@ -128,6 +127,7 @@ sha1sums=('20266e6cc89a3fa96619c69452c78108'
           '07dd142fba8bd4b0892036529fcf4cecb329396e'
           'b6f8e8692737b11eec1f8022ce74b5b23e247b1b'
           '8c2bdefb23a03b753b78d16944d03fa3939d2d99'
+          'c079ebd157c836ba996190f0d2bcea1a7828d02c'
           '6abf814689cf876e8648abd73faef7327b3f7edf'
           '96ca52d2a5307b55d00efeb4c5bf4c5c604bf5f9'
           '95b9c19e285178dd6309e7962cd35d4b7c12c570'
@@ -137,7 +137,7 @@ sha1sums=('20266e6cc89a3fa96619c69452c78108'
           'f9699cb2a2259849d3ff635ef0cd335b0d335eef')
 
 prepare() {
-    cd ${srcdir}/${pkgname}-${pkgver}
+    cd "${srcdir}/${pkgname}-${pkgver}"
 
     msg "Applying patches..."
     patch -Np0 -i ${srcdir}/01_kdm_zsh_profile.patch
@@ -156,7 +156,7 @@ prepare() {
 }
 
 build() {
-    cd ${srcdir}/${pkgname}-${pkgver}
+    cd "${srcdir}/${pkgname}-${pkgver}"
 
     msg "Building workspace..."
     cmake . -DCMAKE_BUILD_TYPE=${_build_type} \
@@ -168,7 +168,7 @@ build() {
     make
 
     msg "Building kcm_touchpad..."
-    cd ${srcdir}/mishaaq-kcm_touchpad-00370b5
+    cd "${srcdir}/mishaaq-kcm_touchpad-00370b5"
     # Fix desktop to the new layout
     sed -i -e "s~keyboard-and-mouse~input-devices~g" touchpad.desktop
     cmake . -DCMAKE_BUILD_TYPE=${_build_type} \
@@ -176,7 +176,7 @@ build() {
         -DCMAKE_{SHARED,MODULE,EXE}_LINKER_FLAGS='-Wl,--no-undefined -Wl,--as-needed'
 
     msg "Building kcm_tablet..."
-    cd ${srcdir}/wacomtablet-1.99.3
+    cd "${srcdir}/wacomtablet-1.99.3"
     # Fix desktop to the new layout
     sed -i -e "s~keyboard-and-mouse~input-devices~g" ${srcdir}/wacomtablet-1.99.3/src/kcmodule/kcm_wacomtablet.desktop
     cmake . -DCMAKE_BUILD_TYPE=${_build_type} \
@@ -184,7 +184,7 @@ build() {
         -DCMAKE_{SHARED,MODULE,EXE}_LINKER_FLAGS='-Wl,--no-undefined -Wl,--as-needed'
 
     msg "Building favourites launcher..."
-    cd ${srcdir}/favorites-0.1
+    cd "${srcdir}/favorites-0.1"
     cmake . -DCMAKE_BUILD_TYPE=${_build_type} \
         -DCMAKE_INSTALL_PREFIX=${_installprefix} \
         -DCMAKE_{SHARED,MODULE,EXE}_LINKER_FLAGS='-Wl,--no-undefined -Wl,--as-needed'
@@ -193,16 +193,16 @@ build() {
 }
 
 package() {
-    cd ${srcdir}/${pkgname}-${pkgver}
+    cd "${srcdir}/${pkgname}-${pkgver}"
     make DESTDIR=${pkgdir} install
 
-    cd ${srcdir}/mishaaq-kcm_touchpad-00370b5
+    cd "${srcdir}/mishaaq-kcm_touchpad-00370b5"
     make DESTDIR=${pkgdir} install
 
-    cd ${srcdir}/wacomtablet-1.99.3
+    cd "${srcdir}/wacomtablet-1.99.3"
     make DESTDIR=${pkgdir} install
 
-    cd ${srcdir}/favorites-0.1
+    cd "${srcdir}/favorites-0.1"
     make DESTDIR=${pkgdir} install
 
     # Install PAM configuration
@@ -220,7 +220,7 @@ package() {
     ${pkgdir}/etc/X11/sessions/kde-plasma-safe.desktop
 
     # Install KDM clean default configuration
-    cd ${srcdir}/${pkgname}-${pkgver}/kdm 
+    cd "${srcdir}/${pkgname}-${pkgver}/kdm"
     make DESTDIR=${pkgdir} GENKDMCONF_FLAGS="--no-old --no-backup --no-in-notice" install
 
     # Copy branding stuff
@@ -256,9 +256,12 @@ package() {
 
     # Adding powerdevil option files
     mkdir -p ${pkgdir}/usr/include/powerdevil
-    cp -rv ${srcdir}/${pkgname}-${_kdever}/powerdevil/daemon/powerdevilaction.h ${pkgdir}/usr/include/powerdevil
-    cp -rv ${srcdir}/${pkgname}-${_kdever}/powerdevil/daemon/powerdevilactionconfig.h ${pkgdir}/usr/include/powerdevil
-    cp -rv ${srcdir}/${pkgname}-${_kdever}/powerdevil/daemon/powerdevilpolicyagent.h ${pkgdir}/usr/include/powerdevil
+    #cp -rv ${srcdir}/${pkgname}-${_kdever}/powerdevil/daemon/powerdevilaction.h ${pkgdir}/usr/include/powerdevil
+    #cp -rv ${srcdir}/${pkgname}-${_kdever}/powerdevil/daemon/powerdevilactionconfig.h ${pkgdir}/usr/include/powerdevil
+    #cp -rv ${srcdir}/${pkgname}-${_kdever}/powerdevil/daemon/powerdevilpolicyagent.h ${pkgdir}/usr/include/powerdevil
+    cp -rv ${srcdir}/${pkgname}-${pkgver}/powerdevil/daemon/powerdevilaction.h ${pkgdir}/usr/include/powerdevil
+    cp -rv ${srcdir}/${pkgname}-${pkgver}/powerdevil/daemon/powerdevilactionconfig.h ${pkgdir}/usr/include/powerdevil
+    cp -rv ${srcdir}/${pkgname}-${pkgver}/powerdevil/daemon/powerdevilpolicyagent.h ${pkgdir}/usr/include/powerdevil
     
     # Systemd .service file
     install -D -m644 "${srcdir}"/kdm.service "${pkgdir}"/usr/lib/systemd/system/kdm.service
