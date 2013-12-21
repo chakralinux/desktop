@@ -1,0 +1,28 @@
+#maintainer: Neophytos Kolokotronis <tetris4@gmail.com>
+
+pkgname=plasma-mediacenter
+pkgver=1.2.0
+pkgrel=1
+pkgdesc="A Media Center for the KDE Software Compilation based on plasma technology"
+arch=('x86_64')
+url="https://projects.kde.org/projects/extragear/multimedia/plasma-mediacenter"
+screenshot="https://lh4.googleusercontent.com/-XcKN699oYps/TlUtlEZ6X6I/AAAAAAAAAD0/L84wlkRWmH8/s912/welcome.png"
+license=('GPL3')
+depends=('kde-workspace' 'qt-mobility' 'kdemultimedia-thumbnailers' 'taglib')
+makedepends=('cmake' 'automoc4')	
+source=("http://download.kde.org/stable/plasma-mediacenter/$pkgver/src/${pkgname}-${pkgver}.tar.bz2")
+md5sums=('2cb45d02eba7566fe029b5459800c47d')
+
+build() {
+   cd "${srcdir}"/"${pkgname}"
+   mkdir build
+   cd build
+   cmake .. -DCMAKE_INSTALL_PREFIX=`kde4-config --prefix`
+   make
+}
+
+package() {
+   cd "${srcdir}"/"${pkgname}"/build
+   make DESTDIR=$pkgdir install
+}
+
