@@ -1,7 +1,5 @@
-
-
-
-# Maintainer: Manuel Tortosa <manutortosa@chakra-project@org>
+# Maintainer:   Manuel Tortosa <manutortosa@chakra-project@org>
+# Contributor:  H W Tovetjärn (totte) <totte@tott.es>
 
 # Include global configuration
 source ../_buildscripts/${current_repo}-${_arch}-cfg.conf
@@ -12,11 +10,9 @@ pkgname=('kdeartwork-colorschemes'
          'kdeartwork-emoticons'
          'kdeartwork-iconthemes'
          'kdeartwork-screensavers'
-         'kdeartwork-sounds'
          'kdeartwork-styles'
          'kdeartwork-wallpapers'
-	 'kdeartwork-weatherwallpapers')
-
+         'kdeartwork-weatherwallpapers')
 arch=('x86_64')
 pkgver=${_kdever}
 pkgrel=1
@@ -24,178 +20,167 @@ pkgdesc="split package"
 url="http://www.kde.org/"
 license=('GPL' 'LGPL' 'FDL')
 install=${pkgbase}.install
-makedepends=('pkg-config' 'cmake' 'automoc4' 'xscreensaver' 'eigen' "kde-workspace=4.11.4")
-
+makedepends=('pkg-config'
+             'cmake'
+             'automoc4'
+             'xscreensaver'
+             'eigen'
+             "kde-workspace=4.11.4")
 source=($_mirror/${pkgbase}-$_kdever.tar.xz
-	http://www.kde-look.org/CONTENT/content-files/92545-xscreensaver.tar.bz2)
-
+    http://www.kde-look.org/CONTENT/content-files/92545-xscreensaver.tar.bz2)
 sha1sums=(`grep ${pkgbase}-$_kdever.tar.xz  ../checksums.txt | cut -d" " -f1`
           '4956cb2c8e9435a7e7d618edbbcbae5437298545') # 92545-xscreensaver.tar.bz2
 
 build() {
-	cd ${srcdir}/${pkgbase}-${pkgver}
+    cd ${srcdir}/${pkgbase}-${pkgver}
 
-	msg "starting build ..."
-	cmake . -DCMAKE_BUILD_TYPE=${_build_type} \
-		-DCMAKE_INSTALL_PREFIX=${_installprefix} \
-		-DCMAKE_SKIP_RPATH=ON \
-		-DCMAKE_{SHARED,MODULE,EXE}_LINKER_FLAGS='-Wl,--no-undefined -Wl,--as-needed'
-
-	make || return 1
+    cmake . \
+        -DCMAKE_BUILD_TYPE=${_build_type} \
+        -DCMAKE_INSTALL_PREFIX=${_installprefix} \
+        -DCMAKE_SKIP_RPATH=ON \
+        -DCMAKE_{SHARED,MODULE,EXE}_LINKER_FLAGS='-Wl,--no-undefined -Wl,--as-needed'
+    make
 }
 
 package_kdeartwork-aurorae() {
-        pkgdesc='An Aurorae theme based on the Oxygen plasma theme'
-        depends=("kde-workspace=4.11.4")
-        groups=("${pkgbase}" "kde" "kde-uninstall")
-	conflicts=("kdeartwork-common")
+    pkgdesc='An Aurorae theme based on the Oxygen plasma theme'
+    depends=("kde-workspace=4.11.4")
+    groups=("${pkgbase}" "kde" "kde-uninstall")
+    conflicts=("kdeartwork-common")
 
-	splitdirs="aurorae"
-		for i in ${splitdirs} ; do
-			cd ${srcdir}/${pkgbase}-${pkgver}/${i}
-			make DESTDIR=${pkgdir} install || return 1
-		done
+    splitdirs="aurorae"
+        for i in ${splitdirs} ; do
+            cd ${srcdir}/${pkgbase}-${pkgver}/${i}
+            make DESTDIR=${pkgdir} install
+        done
 }
 
 package_kdeartwork-colorschemes() {
-	pkgdesc="KDE Artwork - Color Schemes"
-        depends=("kde-workspace=4.11.4")
-        groups=("${pkgbase}" "kde" "kde-uninstall")
-	conflicts=("kdeartwork-common")
+    pkgdesc="KDE Artwork - Color Schemes"
+    depends=("kde-workspace=4.11.4")
+    groups=("${pkgbase}" "kde" "kde-uninstall")
+    conflicts=("kdeartwork-common")
 
-	splitdirs="ColorSchemes"
-		for i in ${splitdirs} ; do
-			cd ${srcdir}/${pkgbase}-${pkgver}/${i}
-			make DESTDIR=${pkgdir} install || return 1
-		done
+    splitdirs="ColorSchemes"
+        for i in ${splitdirs} ; do
+            cd ${srcdir}/${pkgbase}-${pkgver}/${i}
+            make DESTDIR=${pkgdir} install
+        done
 }
 
 package_kdeartwork-desktopthemes() {
-	pkgdesc="KDE Artwork - Additional Desktop Themes"
-        depends=("kde-workspace=4.11.4")
-        groups=("${pkgbase}" "kde" "kde-uninstall")
-	conflicts=("kdeartwork-common")
+    pkgdesc="KDE Artwork - Additional Desktop Themes"
+    depends=("kde-workspace=4.11.4")
+    groups=("${pkgbase}" "kde" "kde-uninstall")
+    conflicts=("kdeartwork-common")
 
-	splitdirs="desktopthemes"
-		for i in ${splitdirs} ; do
-			cd ${srcdir}/${pkgbase}-${pkgver}/${i}
-			make DESTDIR=${pkgdir} install || return 1
-		done
+    splitdirs="desktopthemes"
+        for i in ${splitdirs} ; do
+            cd ${srcdir}/${pkgbase}-${pkgver}/${i}
+            make DESTDIR=${pkgdir} install
+        done
 
-	# use transparent panel svg's everywhere
-	# FIXME Elegance Silicon Clean-Blend Aya heron
-	for n in slim-glow; do
-		echo "Debug: We are in theme $n"
-		cp -fv ${pkgdir}/usr/share/apps/desktoptheme/$n/widgets/panel-background.svgz ${pkgdir}/usr/share/apps/desktoptheme/$n/opaque/widgets/panel-background.svgz
-	done
+    # use transparent panel svg's everywhere
+    # FIXME Elegance Silicon Clean-Blend Aya heron
+    for n in slim-glow; do
+        echo "Debug: We are in theme $n"
+        cp -fv ${pkgdir}/usr/share/apps/desktoptheme/$n/widgets/panel-background.svgz ${pkgdir}/usr/share/apps/desktoptheme/$n/opaque/widgets/panel-background.svgz
+    done
 }
 
 package_kdeartwork-emoticons() {
-	pkgdesc="KDE Artwork - Additional Emoticons"
-        depends=("kde-workspace=4.11.4")
-        groups=("${pkgbase}" "kde" "kde-uninstall")
-	conflicts=("kdeartwork-common")
+    pkgdesc="KDE Artwork - Additional Emoticons"
+    depends=("kde-workspace=4.11.4")
+    groups=("${pkgbase}" "kde" "kde-uninstall")
+    conflicts=("kdeartwork-common")
 
-	splitdirs="emoticons"
-		for i in ${splitdirs} ; do
-			cd ${srcdir}/${pkgbase}-${pkgver}/${i}
-			make DESTDIR=${pkgdir} install || return 1
-		done
+    splitdirs="emoticons"
+        for i in ${splitdirs} ; do
+            cd ${srcdir}/${pkgbase}-${pkgver}/${i}
+            make DESTDIR=${pkgdir} install
+        done
 }
 
 package_kdeartwork-iconthemes() {
-	pkgdesc="KDE Artwork - Additional Icon Themes"
-        depends=("kde-workspace=4.11.4")
-        groups=("${pkgbase}" "kde" "kde-uninstall")
-	conflicts=("kdeartwork-common")
+    pkgdesc="KDE Artwork - Additional Icon Themes"
+    depends=("kde-workspace=4.11.4")
+    groups=("${pkgbase}" "kde" "kde-uninstall")
+    conflicts=("kdeartwork-common")
 
-	splitdirs="IconThemes"
-		for i in ${splitdirs} ; do
-			cd ${srcdir}/${pkgbase}-${pkgver}/${i}
-			make DESTDIR=${pkgdir} install || return 1
-		done
+    splitdirs="IconThemes"
+        for i in ${splitdirs} ; do
+            cd ${srcdir}/${pkgbase}-${pkgver}/${i}
+            make DESTDIR=${pkgdir} install
+        done
 }
 
 package_kdeartwork-screensavers() {
-	pkgdesc="KDE Artwork - Screen Savers"
-	depends=("kde-workspace=4.11.4" "eigen")
-        groups=("${pkgbase}" "kde" "kde-uninstall")
-	conflicts=("kdeartwork-common")
-	optdepends=('xscreensaver: More screensavers')
+    pkgdesc="KDE Artwork - Screen Savers"
+    depends=("kde-workspace=4.11.4" "eigen")
+    groups=("${pkgbase}" "kde" "kde-uninstall")
+    conflicts=("kdeartwork-common")
+    optdepends=('xscreensaver: More screensavers')
 
-	splitdirs="kscreensaver"
-		for i in ${splitdirs} ; do
-			cd ${srcdir}/${pkgbase}-${pkgver}/${i}
-			make DESTDIR=${pkgdir} install || return 1
-		done
+    splitdirs="kscreensaver"
+        for i in ${splitdirs} ; do
+            cd ${srcdir}/${pkgbase}-${pkgver}/${i}
+            make DESTDIR=${pkgdir} install
+        done
 
-	pushd $srcdir/xscreensaver
-	mkdir -p ${pkgdir}/usr/share/kde4/services/ScreenSavers
-	cp -f *.desktop ${pkgdir}/usr/share/kde4/services/ScreenSavers
-	popd
+    pushd $srcdir/xscreensaver
+    mkdir -p ${pkgdir}/usr/share/kde4/services/ScreenSavers
+    cp -f *.desktop ${pkgdir}/usr/share/kde4/services/ScreenSavers
+    popd
 }
 
 package_kdeartwork-kwinstyles() {
-	pkgdesc="KDE Artwork - Window Decoration Styles for KWin"
-        depends=("kde-workspace=4.11.4")
-        groups=("${pkgbase}" "kde" "kde-uninstall")
-	conflicts=("kdeartwork-common")
+    pkgdesc="KDE Artwork - Window Decoration Styles for KWin"
+    depends=("kde-workspace=4.11.4")
+    groups=("${pkgbase}" "kde" "kde-uninstall")
+    conflicts=("kdeartwork-common")
 
-	splitdirs="kwin-styles"
-		for i in ${splitdirs} ; do
-			cd ${srcdir}/${pkgbase}-${pkgver}/${i}
-			make DESTDIR=${pkgdir} install || return 1
-		done
-}
-
-package_kdeartwork-sounds() {
-	pkgdesc="KDE Artwork - Sounds"
-        depends=("kde-workspace=4.11.4")
-        groups=("${pkgbase}" "kde" "kde-uninstall")
-	conflicts=("kdeartwork-common")
-
-	splitdirs="sounds"
-		for i in ${splitdirs} ; do
-			cd ${srcdir}/${pkgbase}-${pkgver}/${i}
-			make DESTDIR=${pkgdir} install || return 1
-		done
+    splitdirs="kwin-styles"
+        for i in ${splitdirs} ; do
+            cd ${srcdir}/${pkgbase}-${pkgver}/${i}
+            make DESTDIR=${pkgdir} install
+        done
 }
 
 package_kdeartwork-styles() {
-	pkgdesc="KDE Artwork - Additional Widget Styles"
-	depends=("kde-workspace=4.11.4")
-        groups=("${pkgbase}" "kde" "kde-uninstall")
-	conflicts=("kdeartwork-common")
+    pkgdesc="KDE Artwork - Additional Widget Styles"
+    depends=("kde-workspace=4.11.4")
+    groups=("${pkgbase}" "kde" "kde-uninstall")
+    conflicts=("kdeartwork-common")
 
-	splitdirs="styles"
-		for i in ${splitdirs} ; do
-			cd ${srcdir}/${pkgbase}-${pkgver}/${i}
-			make DESTDIR=${pkgdir} install || return 1
-		done
+    splitdirs="styles"
+        for i in ${splitdirs} ; do
+            cd ${srcdir}/${pkgbase}-${pkgver}/${i}
+            make DESTDIR=${pkgdir} install
+        done
 }
 
 package_kdeartwork-wallpapers() {
-	pkgdesc="KDE Artwork - Additional Wallpapers"
-	depends=("kde-workspace=4.11.4")
-        groups=("${pkgbase}" "kde" "kde-uninstall")
-	conflicts=("kdeartwork-common")
+    pkgdesc="KDE Artwork - Additional Wallpapers"
+    depends=("kde-workspace=4.11.4")
+    groups=("${pkgbase}" "kde" "kde-uninstall")
+    conflicts=("kdeartwork-common")
 
-	splitdirs="wallpapers"
-		for i in ${splitdirs} ; do
-			cd ${srcdir}/${pkgbase}-${pkgver}/${i}
-			make DESTDIR=${pkgdir} install || return 1
-		done
+    splitdirs="wallpapers"
+        for i in ${splitdirs} ; do
+            cd ${srcdir}/${pkgbase}-${pkgver}/${i}
+            make DESTDIR=${pkgdir} install
+        done
 }
 
 package_kdeartwork-weatherwallpapers() {
-	pkgdesc="KDE Artwork - Additional Wallpapers for the Plasma weather plugin"
-	depends=("kde-workspace=4.11.4")
-        groups=("${pkgbase}" "kde" "kde-uninstall")
-	conflicts=("kdeartwork-common")
+    pkgdesc="KDE Artwork - Additional Wallpapers for the Plasma weather plugin"
+    depends=("kde-workspace=4.11.4")
+    groups=("${pkgbase}" "kde" "kde-uninstall")
+    conflicts=("kdeartwork-common")
 
-	splitdirs="WeatherWallpapers"
-		for i in ${splitdirs} ; do
-			cd ${srcdir}/${pkgbase}-${pkgver}/${i}
-			make DESTDIR=${pkgdir} install || return 1
-		done
+    splitdirs="WeatherWallpapers"
+        for i in ${splitdirs} ; do
+            cd ${srcdir}/${pkgbase}-${pkgver}/${i}
+            make DESTDIR=${pkgdir} install
+        done
 }
