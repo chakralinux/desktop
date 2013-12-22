@@ -1,25 +1,29 @@
 #
 # Chakra Packages for Chakra, part of chakra-project.org
 #
-# maintainer abveritas@chakra-project.org
+# maintainer: Francesco Marinucci <franzmari[at]chakra-project[dot]it>
 
 pkgname=semantik
-pkgver=0.8.4
+pkgver=0.9.0
 pkgrel=1
 pkgdesc="A mind-mapping tool that helps creating documents such as reports or presentions."
-arch=('i686' 'x86_64')
+arch=('x86_64')
 url="http://kde-apps.org/content/show.php/Semantik?content=55242"
 license=('GPL')
 depends=('kdelibs' 'python2' 'qt')
 makedepends=('kdelibs' 'ocaml' 'kde-workspace')
 screenshot=('http://www.freehackers.org/~tnagy/semantik.png')
 source=("http://semantik.googlecode.com/files/semantik-${pkgver}.tar.bz2")
-sha1sums=('7e024fd7521980838f0c16ba380b6f38e6490ecd')
+sha1sums=('c51ac02781544a6d52ce33c5a9a54a01316d6925')
 
 build() {
   cd "$srcdir/$pkgname-$pkgver"
   ./waf --prefix=/usr configure
   sudo ln -s /usr/lib/ocaml/libcamlstr.a /usr/lib/ocaml/libstr.a
   ./waf 
+}
+
+package() {
+  cd "$srcdir/$pkgname-$pkgver"
   ./waf --destdir="$pkgdir" install
 }
