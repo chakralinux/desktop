@@ -22,7 +22,7 @@ pkgname=('kdepim-common'
          'kdepim-korganizer'
          'kdepim-ktimetracker')
 pkgver=${_kdever}
-pkgrel=1
+pkgrel=3
 arch=('x86_64')
 url="http://pim.kde.org"
 license=('GPL'
@@ -54,7 +54,7 @@ source=($_mirror/${pkgbase}-${pkgver}.tar.xz)
 sha1sums=(`grep ${pkgbase}-$_kdever.tar.xz  ../checksums.txt | cut -d" " -f1`)
 
 prepare() {
-    mkdir "${srcdir}/build}"
+    mkdir "${srcdir}/build"
 }
 
 build() {
@@ -64,7 +64,7 @@ build() {
         -DCMAKE_INSTALL_PREFIX=${_installprefix} \
         -DKDE4_BUILD_TESTS=OFF \
         -DCMAKE_SKIP_RPATH=ON \
-        -DKDEPIM_BUILD_MOBILE=OFF
+        -DKDEPIM_BUILD_MOBILE=OFF \
         -DCMAKE_{SHARED,MODULE,EXE}_LINKER_FLAGS='-Wl,--no-undefined -Wl,--as-needed'
     make
 }
@@ -296,7 +296,7 @@ package_kdepim-ktnef() {
     categories=('accessories')
     depends=("kdebase-runtime>=${pkgver}"
              "kdepimlibs>=${pkgver}")
-    install=kdepim-ktnef.install
+    install=${pkgbase}.install
 
     cd "${srcdir}"/build/ktnef
     make DESTDIR="${pkgdir}" install
@@ -308,7 +308,6 @@ package_kdepim-common() {
              "kde-runtime>=${_kdever}"
              "kde-common>=${_kdever}"
              "kdepim-runtime>=${_pkgver}"
-             'kde-agent'
              'libxss'
              'link-grammar')
     groups=("kde"
