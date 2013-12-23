@@ -1,8 +1,9 @@
 # Maintainer: Adrián Chaves Fernández (Gallaecio) <adriyetichaves@gmail.com>
+# Contributions from: https://www.archlinux.org/packages/community/x86_64/sfml/
 
 pkgname=sfml
 _pkgname=SFML
-pkgver=2.0
+pkgver=2.1
 pkgrel=1
 pkgdesc="A simple, fast, cross-platform and object-oriented multimedia API."
 arch=('x86_64')
@@ -10,19 +11,25 @@ url="http://www.sfml-dev.org"
 license=('ZLIB')
 depends=('freetype2' 'glew' 'libjpeg-turbo' 'libsndfile' 'libxrandr' 'openal' 'soil')
 makedepends=('mesa' 'doxygen' 'cmake')
-source=("http://www.sfml-dev.org/download/sfml/$pkgver/SFML-$pkgver-sources.zip")
-md5sums=('fd40dad518fdda52244475a2007dd584')
+install="${pkgname}.install"
+source=("${pkgname}-${pkgver}::https://github.com/LaurentGomila/SFML/archive/${pkgver}.tar.gz")
+md5sums=('6457a5903b156390012773e9ef33f65f')
+
+prepare() {
+  cd "$srcdir/$_pkgname-$pkgver/src/${_pkgname}/Window/Linux"
+  sed -i '26a #define GLXContextID XID' GlxContext.hpp
+}
 
 build() {
   cd "$srcdir/$_pkgname-$pkgver"
 
   mkdir build && cd build
-  cmake \
+  cmake .. \
     -DCMAKE_INSTALL_PREFIX=/usr \
-    -DSFML_BUILD_EXAMPLES=ON \
-    -DSFML_BUILD_DOC=ON \
-    ..
+    -DSFML_BUILD_EXAMPLES=true \
+    -DSFML_BUILD_DOC=true
   make
+  make doc
 }
 
 package() {
