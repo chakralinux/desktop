@@ -1,0 +1,54 @@
+# Maintainer (Chakra): msx <msx[at]archlinux[dot]us>
+
+pkgname=kcm-about-distro
+_pkgname=about-distro
+pkgver=1.0.0
+pkgrel=3
+pkgdesc="KCM displaying distribution and system information"
+arch=('x86_64')
+url='https://projects.kde.org/about-distro'
+screenshot="http://i.imgur.com/ZidApNr.png"
+license=('GPL3')
+depends=('kdelibs')
+makedepends=('cmake' 'automoc4')
+source=("http://download.kde.org/stable/$_pkgname/$pkgver/src/$_pkgname-$pkgver.tar.xz"
+        'kcm-about-distrorc'
+        'chakra-label.png'
+        'Module_Chakra.patch'
+        'kcm-about-distro.install')
+md5sums=('786171692e67535e10740a7714ef76b8'
+         '8ad607452f80603c36f5ba28e30f51d6'
+         '704189e87c9cd0f08974372fd58443f8'
+         'f0c4012841d4dc68fe54f3b25982abaf'
+         'cc0ce36d58e8f8e33561de4853279ecc')
+install="kcm-about-distro.install"
+
+prepare(){
+  cd ${srcdir}/about-distro-*
+  
+  patch -Np1 -i ${srcdir}/Module_Chakra.patch
+  
+  # Let's remove Chakra's release date to make space for the whole name's project
+  sed -i 's/%1\ %2/%1/g' src/Module.cpp
+  
+}
+
+
+build() {
+  cd "${srcdir}"
+  
+  mkdir -p build
+  cd build
+  cmake ../$_pkgname-$pkgver \
+    -DQT_QMAKE_EXECUTABLE=/usr/bin/qmake \
+    -DCMAKE_BUILD_TYPE=Release \
+    -DCMAKE_INSTALL_PREFIX=/usr
+  make
+}
+
+package() {
+  cd "${srcdir}/build"
+  make DESTDIR="$pkgdir" install
+  install -Dm644 "$srcdir/kcm-about-distrorc" "$pkgdir/usr/share/config/kcm-about-distrorc"
+  install -Dm644 "$srcdir/chakra-label.png" "$pkgdir/usr/share/apps/$_pkgname/chakra-label.png"
+}
