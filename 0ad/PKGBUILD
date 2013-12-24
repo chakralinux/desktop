@@ -4,7 +4,7 @@
 # Maintainer: Adrian Chaves Fernandez (Gallaecio) <adriyetichaves@gmail.com>
 
 pkgname=0ad
-pkgver=0.0.14
+pkgver=0.0.15
 _pkgver=$pkgver-alpha
 pkgrel=1
 pkgdesc="Cross-platform, 3D and historically-based real-time strategy game"
@@ -12,13 +12,13 @@ screenshot=http://www.wildfiregames.com/0ad/images/news_images/dynamic-borders.j
 arch=('i686' 'x86_64')
 url="http://wildfiregames.com/0ad"
 license=('GPL2' 'custom:MIT') # source licenses.
-depends=('boost-libs' 'curl' 'enet' 'gamin' 'libogg' 'libpng' 'libvorbis' 'libxcursor' 'libxml2' 'mesa' 'nvidia-texture-tools' 'openal' 'sdl' 'zip' 'zlib' 0ad-data=$pkgver)
+depends=('boost-libs' 'curl' 'enet' 'gamin' 'gloox' 'libogg' 'libpng' 'libvorbis' 'libxcursor' 'libxml2' 'mesa' 'nvidia-texture-tools' 'openal' 'sdl' 'zip' 'zlib' 0ad-data=$pkgver)
 makedepends=('boost' 'python2')
 replaces=(0ad-debug) # If someone wants a debug version, they should rebuild 0ad with config=debug.
 categories=('games')
 changelog=ChangeLog
-source=(http://downloads.sourceforge.net/project/zero-ad/$pkgname-$_pkgver-unix-build.tar.xz)
-md5sums=('5bbaffa02b6e9082cbd5142d43f9b700')
+source=(http://downloads.sourceforge.net/project/zero-ad/releases/$pkgname-$_pkgver-unix-build.tar.xz)
+md5sums=('a651d81eb9b31da01e376ddaa597e954')
 
 build() {
   cd $srcdir/$pkgname-$_pkgver/build/workspaces
