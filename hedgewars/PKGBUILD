@@ -1,29 +1,30 @@
-#
-# Games Packages for Chakra, part of chakra-project.org
-#
 # Maintainer: Adrian Chaves Fernandez (Gallaecio) <adriyetichaves@gmail.com>
 
 pkgname=hedgewars
-pkgver=0.9.19
+pkgver=0.9.20
 _pkgver=${pkgver}
 pkgrel=1
 pkgdesc="Free turn based strategy game similar to Worms"
-arch=('i686' 'x86_64')
+arch=('x86_64')
 url="http://hedgewars.org"
 license=('GPL2')
-depends=('ffmpeg' 'lua' 'qt' 'sdl' 'sdl_mixer' 'sdl_image' 'sdl_net' 'sdl_ttf' 'ttf-dejavu')
+depends=('ffmpeg' 'lua' 'qt' 'sdl' 'sdl_mixer' 'sdl_image' 'sdl_net' 'sdl_ttf' 'ttf-dejavu' 'freeglut')
 makedepends=('fpc' 'cmake' 'ghc' 'haskell-bytestring-show' 'haskell-utf8-string' 'haskell-dataenc' 'haskell-network' 
 'haskell-hslogger' 'haskell-random' 'haskell-vector')
 categories=('games')
-source=(http://download.gna.org/$pkgname/$pkgname-src-${_pkgver}.tar.bz2)
-md5sums=('51d84ad6ea00e9894e6119b118b4a523')
+source=("http://download.gna.org/$pkgname/$pkgname-src-${_pkgver}.tar.bz2"
+        'ffmpeg2.0.patch')
+md5sums=('7ee1b23e51053d34feb84464184f60fa'
+         'da84d64a252579236d3ff0cc6e008e72')
 
+prepare() {
+  cd $pkgname-src-$pkgver
+  patch -p1 <$srcdir/ffmpeg2.0.patch      
+  sed -e "/^instance NFData B.ByteString\$/d" -i "gameServer/Actions.hs"
+}
+      
 build() {
   cd $srcdir/$pkgname-src-$pkgver
-  
-  # Patches.
-  sed -e "/^instance NFData B.ByteString\$/d" -i "gameServer/Actions.hs"
-  
   mkdir -p build && cd build
   cmake \
         -DCMAKE_INSTALL_PREFIX=/usr \
