@@ -1,35 +1,58 @@
-# Maintainer: Stephen McIntosh stephenmac7[at]gmail[dot]com
+# Apps Packages for Chakra, part of www.chakra-project.org
+# Maintainer: H W Tovetjärn (totte) <totte@tott.es>
+# Contributors: Stephen McIntosh <stephenmac7[at]gmail[dot]com>
+#               Thomas Dziedzic <gostrc@gmail.com>
+#               Vesa Kaihlavirta <vesa@archlinux.org>
+#               Arch Haskell Team <arch-haskell@haskell.org>
+
 _hkgname=network
 pkgname=haskell-network
-pkgver=2.4.0.1
+pkgver=2.4.2.1
 pkgrel=1
 pkgdesc="Low-level networking interface"
-url="http://hackage.haskell.org/package/${_hkgname}"
+url="http://hackage.haskell.org/package/network"
 license=('custom:BSD3')
-arch=('i686' 'x86_64')
+arch=('x86_64' 'i686')
 makedepends=()
-depends=('ghc' 'haskell-parsec')
+depends=('ghc=7.6.3-1' 'haskell-base>=3' 'haskell-base<5' 'haskell-bytestring' 'haskell-parsec>=3.0')
 options=('strip')
-source=(http://hackage.haskell.org/packages/archive/${_hkgname}/${pkgver}/${_hkgname}-${pkgver}.tar.gz)
-install=${pkgname}.install
-md5sums=('b120c85d327ba9bca5a340db781a9b57')
+source=("http://hackage.haskell.org/packages/archive/network/${pkgver}/network-${pkgver}.tar.gz")
+install="haskell-network.install"
+sha512sums=('75dab2aac2b2b566018bc70abc332afb8b3e15c825b8654e9a3c785cc1ac472270794a404e0918f9eaaecc6b56c4a6ec6a375a4cb6357feb6fec4408ba5f651e')
+
 build() {
-    cd ${srcdir}/${_hkgname}-${pkgver}
-    runhaskell Setup configure -O ${PKGBUILD_HASKELL_ENABLE_PROFILING:+-p } --enable-split-objs --enable-shared \
-       --prefix=/usr --docdir=/usr/share/doc/${pkgname} --libsubdir=\$compiler/site-local/\$pkgid
+    cd "${srcdir}/network-${pkgver}"
+    runhaskell Setup configure \
+        -O \
+        ${PKGBUILD_HASKELL_ENABLE_PROFILING:+-p } \
+        --enable-split-objs \
+        --enable-shared \
+        --prefix="/usr" \
+        --docdir="/usr/share/doc/haskell-network" \
+        --libsubdir='$compiler/site-local/$pkgid'
     runhaskell Setup build
     runhaskell Setup haddock
     runhaskell Setup register   --gen-script
     runhaskell Setup unregister --gen-script
     sed -i -r -e "s|ghc-pkg.*unregister[^ ]* |&'--force' |" unregister.sh
 }
+
 package() {
-    cd ${srcdir}/${_hkgname}-${pkgver}
-    install -D -m744 register.sh   ${pkgdir}/usr/share/haskell/${pkgname}/register.sh
-    install    -m744 unregister.sh ${pkgdir}/usr/share/haskell/${pkgname}/unregister.sh
-    install -d -m755 ${pkgdir}/usr/share/doc/ghc/html/libraries
-    ln -s /usr/share/doc/${pkgname}/html ${pkgdir}/usr/share/doc/ghc/html/libraries/${_hkgname}
-    runhaskell Setup copy --destdir=${pkgdir}
-    install -D -m644 LICENSE ${pkgdir}/usr/share/licenses/${pkgname}/LICENSE
-    rm -f ${pkgdir}/usr/share/doc/${pkgname}/LICENSE
+    cd "${srcdir}/network-${pkgver}"
+    install -D -m744 register.sh \
+        "${pkgdir}/usr/share/haskell/haskell-network/register.sh"
+    install -m744 unregister.sh \
+        "${pkgdir}/usr/share/haskell/haskell-network/unregister.sh"
+    install -d -m755 "${pkgdir}/usr/share/doc/ghc/html/libraries"
+
+    # Documentation
+    ln -s "/usr/share/doc/haskell-network/html" \
+        "${pkgdir}/usr/share/doc/ghc/html/libraries/network"
+
+    # License
+    install -D -m644 LICENSE \
+        "${pkgdir}/usr/share/licenses/haskell-network/LICENSE"
+    rm -f "${pkgdir}/usr/share/doc/haskell-network/LICENSE"
+
+    runhaskell Setup copy --destdir="${pkgdir}"
 }

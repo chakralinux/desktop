@@ -1,35 +1,58 @@
-# Maintainer: Stephen McIntosh <stephenmac7[at]gmail[dot]com>
+# Apps Packages for Chakra, part of www.chakra-project.org
+# Maintainer: H W Tovetjärn (totte) <totte@tott.es>
+# Contributors: Stephen McIntosh <stephenmac7[at]gmail[dot]com>
+#               Thomas Dziedzic <gostrc@gmail.com>
+#               Vesa Kaihlavirta <vesa@archlinux.org>
+#               Arch Haskell Team <arch-haskell@haskell.org>
+
 _hkgname=HTTP
 pkgname=haskell-http
-pkgver=4000.2.6
-pkgrel=1
+pkgver=4000.2.8
+pkgrel=2
 pkgdesc="A library for client-side HTTP"
-url="http://hackage.haskell.org/package/${_hkgname}"
+url="http://hackage.haskell.org/package/HTTP"
 license=('custom:BSD3')
-arch=('i686' 'x86_64')
+arch=('x86_64' 'i686')
 makedepends=()
-depends=('ghc' 'haskell-mtl' 'haskell-network' 'haskell-parsec')
+depends=('ghc=7.6.3-1' 'haskell-array' 'haskell-base>=3' 'haskell-base<4.7' 'haskell-bytestring' 'haskell-mtl>=2.0' 'haskell-mtl<2.2' 'haskell-network<2.5' 'haskell-old-time' 'haskell-parsec')
 options=('strip')
-source=(http://hackage.haskell.org/packages/archive/${_hkgname}/${pkgver}/${_hkgname}-${pkgver}.tar.gz)
-install=${pkgname}.install
-md5sums=('0b3433b470e2ae114b356719d3928e0c')
+source=("http://hackage.haskell.org/packages/archive/HTTP/4000.2.8/HTTP-4000.2.8.tar.gz")
+install="haskell-http.install"
+sha512sums=('f7ada9000837a06ce06f9d6aaf83158d48fa5bb4fea812d093eece3b36e9bd4b25df205948c66a4e4b60df3ceb41181f4bdf13415e86ec805239f43421518872')
+
 build() {
-    cd ${srcdir}/${_hkgname}-${pkgver}
-    runhaskell Setup configure -O ${PKGBUILD_HASKELL_ENABLE_PROFILING:+-p } --enable-split-objs --enable-shared \
-       --prefix=/usr --docdir=/usr/share/doc/${pkgname} --libsubdir=\$compiler/site-local/\$pkgid
+    cd "${srcdir}/HTTP-4000.2.8"
+    runhaskell Setup configure \
+        -O \
+        ${PKGBUILD_HASKELL_ENABLE_PROFILING:+-p } \
+        --enable-split-objs \
+        --enable-shared \
+        --prefix="/usr" \
+        --docdir="/usr/share/doc/haskell-http" \
+        --libsubdir='$compiler/site-local/$pkgid'
     runhaskell Setup build
     runhaskell Setup haddock
     runhaskell Setup register   --gen-script
     runhaskell Setup unregister --gen-script
     sed -i -r -e "s|ghc-pkg.*unregister[^ ]* |&'--force' |" unregister.sh
 }
+
 package() {
-    cd ${srcdir}/${_hkgname}-${pkgver}
-    install -D -m744 register.sh   ${pkgdir}/usr/share/haskell/${pkgname}/register.sh
-    install    -m744 unregister.sh ${pkgdir}/usr/share/haskell/${pkgname}/unregister.sh
-    install -d -m755 ${pkgdir}/usr/share/doc/ghc/html/libraries
-    ln -s /usr/share/doc/${pkgname}/html ${pkgdir}/usr/share/doc/ghc/html/libraries/${_hkgname}
-    runhaskell Setup copy --destdir=${pkgdir}
-    install -D -m644 LICENSE ${pkgdir}/usr/share/licenses/${pkgname}/LICENSE
-    rm -f ${pkgdir}/usr/share/doc/${pkgname}/LICENSE
+    cd "${srcdir}/HTTP-4000.2.8"
+    install -D -m744 register.sh \
+        "${pkgdir}/usr/share/haskell/haskell-http/register.sh"
+    install -m744 unregister.sh \
+        "${pkgdir}/usr/share/haskell/haskell-http/unregister.sh"
+    install -d -m755 "${pkgdir}/usr/share/doc/ghc/html/libraries"
+
+    # Documentation
+    ln -s "/usr/share/doc/haskell-http/html" \
+        "${pkgdir}/usr/share/doc/ghc/html/libraries/HTTP"
+
+    # License
+    install -D -m644 LICENSE \
+        "${pkgdir}/usr/share/licenses/haskell-http/LICENSE"
+    rm -f "${pkgdir}/usr/share/doc/haskell-http/LICENSE"
+
+    runhaskell Setup copy --destdir="${pkgdir}"
 }
