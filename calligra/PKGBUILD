@@ -1,4 +1,5 @@
-# Maintainer: Manuel Tortosa
+# Maintainer:   H W Tovetjärn (totte) <totte@tott.es>
+# Contributors: Manuel Tortosa (manutortosa) <manuel.tortosa@chakra-project.org>
 
 pkgbase=calligra
 pkgname=('calligra-3rdparty'
@@ -6,8 +7,8 @@ pkgname=('calligra-3rdparty'
          'calligra-extras'
          'calligra-filters'
          'calligra-flow'
-         'calligra-interfaces'
          'calligra-handbook'
+         'calligra-interfaces'
          'calligra-karbon'
          'calligra-kexi'
          'calligra-krita'
@@ -25,280 +26,388 @@ pkgrel=2
 arch=('x86_64')
 url='http://www.calligra-suite.org'
 screenshot=("http://upload.wikimedia.org/wikipedia/commons/thumb/3/3e/Calligra_Stage_2.4.png/800px-Calligra_Stage_2.4.png")
-license=('FDL1.2' 'GPL2' 'LGPL')
-makedepends=('kdepimlibs' 'eigen2' 'freetds' 'kdegraphics-okular' 'kdeedu-marble' 'xbase' 'libpqxx' 'libvisio'
-             'libgsf' 'libwpd' 'libwpg' 'libwps' 'pstoedit' 'glew' 'gsl' 'cmake' 'automoc4' 'libspnav' 'libqtgtl'
-             'boost' 'libkdcraw' 'fftw' 'opengtl' 'docbook-xsl' 'create-resources' 'lcms2' 'libmariadbclient'
-             'vc' 'opencolorio' 'icu' 'poppler-qt')
+license=('FDL1.2'
+         'GPL2'
+         'LGPL')
+makedepends=('automoc4'
+             'boost'
+             'cmake'
+             'create-resources'
+             'docbook-xsl'
+             'eigen2'
+             'fftw'
+             'freetds'
+             'glew'
+             'gsl'
+             'icu'
+             'kdeedu-marble'
+             'kdegraphics-okular'
+             'kdepimlibs'
+             'lcms2'
+             'libgsf'
+             'libkdcraw'
+             'libmariadbclient'
+             'libpqxx'
+             'libqtgtl'
+             'libspnav'
+             'libvisio'
+             'libwpd'
+             'libwpg'
+             'libwps'
+             'opencolorio'
+             'opengtl'
+             'openjpeg'
+             'poppler-qt'
+             'pstoedit'
+             'vc'
+             'xbase')
 options=("debug")
 groups=('calligra')
-source=("http://mirrors.mit.edu/kde/stable/${pkgbase}-${pkgver}/${pkgbase}-${pkgver}.tar.xz")
-md5sums=('05d1d0bac970d6dc68ffabc12fca2eb7')
+source=("http://download.kde.org/stable/${pkgbase}-${pkgver}/${pkgbase}-${pkgver}.tar.xz")
+sha512sums=('05d1d0bac970d6dc68ffabc12fca2eb7')
 
 prepare() {
-  cd ${pkgbase}-${pkgver}
+    mkdir -p "${srcdir}/build"
 }
 
 build() {
-  mkdir -p build
-  cd build
-  cmake ../${pkgbase}-${pkgver} \
-    -DCMAKE_BUILD_TYPE=RelWithDebInfo \
-    -DCMAKE_INSTALL_PREFIX=/usr \
-    -DBUILD_active=OFF
-  make
+    cd "${srcdir}/build"
+    cmake "../${pkgbase}-${pkgver}" \
+        -DCMAKE_BUILD_TYPE=Release \
+        -DCMAKE_INSTALL_PREFIX=/usr \
+        -DBUILD_active=OFF
+    make
 }
 
 package_calligra-3rdparty() {
-  pkgdesc="3dparty plugins for the Calligra office suite"
-  depends=('kdepimlibs')
+    pkgdesc="Third-party plugins for the Calligra office suite"
+    depends=('kdepimlibs')
 
-  cd build/3rdparty
-  make DESTDIR="${pkgdir}" install
+    cd build/3rdparty
+    make DESTDIR="${pkgdir}" install
 }
 
 package_calligra-filters() {
-  pkgdesc="Filters for the Calligra office suite"
-  optdepends=('libgsf: Microsoft Word document importer'
-              'libwps: WordPerfect document importer'
-              'libwpg: Corel WordPerfect Graphics image importer'
-              'pstoedit: Karbon EPS import filter'
-              'libkdcraw: support for raw images')
-  conflicts=('koffice-common' 'calligra-filters-git')
-  replaces=('koffice-common' 'calligra-filters-git')
-  install=calligra-filters.install
+    pkgdesc="Filters for the Calligra office suite"
+    optdepends=('libgsf: Microsoft Word document importer'
+                'libwps: WordPerfect document importer'
+                'libwpg: Corel WordPerfect Graphics image importer'
+                'pstoedit: Karbon EPS import filter'
+                'libkdcraw: support for raw images')
+    conflicts=('koffice-common'
+               'calligra-filters-git')
+    replaces=('koffice-common'
+              'calligra-filters-git')
+    install=calligra-filters.install
 
-  cd build/filters
-  make DESTDIR="${pkgdir}" install
+    cd build/filters
+    make DESTDIR="${pkgdir}" install
 }
 
 package_calligra-interfaces() {
-  pkgdesc="Interfaces for the Calligra office suite"
-  depends=('calligra-libs' 'kactivities')
-  conflicts=('koffice-common' 'calligra-interfaces-git')
-  replaces=('koffice-common' 'calligra-interfaces-git')
+    pkgdesc="Interfaces for the Calligra office suite"
+    depends=('calligra-libs'
+             'kactivities')
+    conflicts=('koffice-common'
+               'calligra-interfaces-git')
+    replaces=('koffice-common'
+              'calligra-interfaces-git')
 
-  cd build/interfaces
-  make DESTDIR="${pkgdir}" install
+    cd build/interfaces
+    make DESTDIR="${pkgdir}" install
 }
 
 package_calligra-libs() {
-  pkgdesc="Libraries for the Calligra office suite"
-  depends=('kdepimlibs' 'lcms2' 'calligra-3rdparty' 'calligra-servicetypes' 
-           'kdeedu-marble' 'create-resources' 'libspnav' 'libvisio' 'icu')
-  conflicts=('koffice-common' 'calligra-libs-git')
-  replaces=('koffice-common' 'calligra-libs-git')
+    pkgdesc="Libraries for the Calligra office suite"
+    depends=('kdepimlibs'
+             'lcms2'
+             'calligra-3rdparty'
+             'calligra-servicetypes' 
+             'kdeedu-marble'
+             'create-resources'
+             'libspnav'
+             'libvisio'
+             'icu')
+    conflicts=('koffice-common'
+               'calligra-libs-git')
+    replaces=('koffice-common'
+              'calligra-libs-git')
 
-  cd build/libs
-  make DESTDIR="${pkgdir}" install
+    cd build/libs
+    make DESTDIR="${pkgdir}" install
 }
 
 package_calligra-plugins() {
-  pkgdesc="Plugins for the Calligra office suite"
-  depends=('calligra-libs')
-  conflicts=('koffice-common' 'calligra-plugins-git')
-  replaces=('koffice-common' 'calligra-plugins-git')
-  categories=('office')
+    pkgdesc="Plugins for the Calligra office suite"
+    depends=('calligra-libs')
+    conflicts=('koffice-common'
+               'calligra-plugins-git')
+    replaces=('koffice-common'
+              'calligra-plugins-git')
+    categories=('office')
 
-  cd build/plugins
-  make DESTDIR="${pkgdir}" install
+    cd build/plugins
+    make DESTDIR="${pkgdir}" install
 }
 
 package_calligra-pics() {
-  pkgdesc="Icons for the Calligra office suite"
-  depends=('calligra-libs')
-  conflicts=('koffice-common' 'calligra-pics-git')
-  replaces=('koffice-common' 'calligra-pics-git')
-  categories=('office')
-  install=calligra.install
+    pkgdesc="Icons for the Calligra office suite"
+    depends=('calligra-libs')
+    conflicts=('koffice-common'
+               'calligra-pics-git')
+    replaces=('koffice-common'
+              'calligra-pics-git')
+    categories=('office')
+    install=calligra.install
 
-  cd build/pics
-  make DESTDIR="${pkgdir}" install
+    cd build/pics
+    make DESTDIR="${pkgdir}" install
 }
 
 package_calligra-servicetypes() {
-  pkgdesc="Servicetypes for the Calligra office suite"
-  depends=('kactivities')
-  conflicts=('koffice-common' 'calligra-servicetypes-git')
-  replaces=('koffice-common' 'calligra-servicetypes-git')
-  install=calligra.install
+    pkgdesc="Servicetypes for the Calligra office suite"
+    depends=('kactivities')
+    conflicts=('koffice-common'
+               'calligra-servicetypes-git')
+    replaces=('koffice-common'
+              'calligra-servicetypes-git')
+    install=calligra.install
 
-  cd build/servicetypes
-  make DESTDIR="${pkgdir}" install
+    cd build/servicetypes
+    make DESTDIR="${pkgdir}" install
 }
 
 package_calligra-templates() {
-  pkgdesc="Templates for the Calligra office suite"
-  conflicts=('koffice-common' 'calligra-templates-git')
-  replaces=('koffice-common' 'calligra-templates-git')
+    pkgdesc="Templates for the Calligra office suite"
+    conflicts=('koffice-common'
+               'calligra-templates-git')
+    replaces=('koffice-common'
+              'calligra-templates-git')
 
-  cd build/templates
-  make DESTDIR="${pkgdir}" install
+    cd build/templates
+    make DESTDIR="${pkgdir}" install
 }
 
 package_calligra-extras() {
-  pkgdesc="Tools/Extras for the Calligra office suite"
-  depends=('calligra-libs')
-  conflicts=('koffice-common' 'calligra-tools-git' 'calligra-tools')
-  replaces=('koffice-common' 'calligra-tools-git' 'calligra-tools')
-  install=calligra-extras.install
+    pkgdesc="Extras for the Calligra office suite"
+    depends=('calligra-libs')
+    conflicts=('koffice-common'
+               'calligra-tools-git'
+               'calligra-tools')
+    replaces=('koffice-common'
+              'calligra-tools-git'
+              'calligra-tools')
+    install=calligra-extras.install
 
-  cd build/extras
-  make DESTDIR="${pkgdir}" install
+    cd build/extras
+    make DESTDIR="${pkgdir}" install
 }
 
-#### package common files #####
-
-#### package apps and their docs #####
-
 package_calligra-karbon() {
-  pkgdesc="Create scalable vector drawings"
-  depends=('calligra-libs' 'calligra-templates' 'hicolor-icon-theme')
-  provides=('karbon')
-  conflicts=('koffice-karbon' 'calligra-karbon-git')
-  replaces=('koffice-karbon' 'calligra-karbon-git')
-  categories=('graphics')
-  install=calligra-karbon.install
+    pkgdesc="Vector graphics editor"
+    depends=('calligra-libs'
+             'calligra-templates'
+             'hicolor-icon-theme')
+    provides=('karbon')
+    conflicts=('koffice-karbon'
+               'calligra-karbon-git')
+    replaces=('koffice-karbon'
+              'calligra-karbon-git')
+    categories=('graphics')
+    install=calligra-karbon.install
 
-  cd build/karbon
-  make DESTDIR="${pkgdir}" install
+    cd build/karbon
+    make DESTDIR="${pkgdir}" install
 }
 
 package_calligra-kexi() {
-  pkgdesc="Develop desktop database applications"
-  depends=('calligra-libs' 'calligra-sheets' 'sqlite3' 'xbase' 'libmariadbclient' 'icu')
-  provides=('kexi')
-  conflicts=('koffice-kexi' 'calligra-kexi-git')
-  replaces=('koffice-kexi' 'calligra-kexi-git')
-  categories=('office')
-  install=calligra-kexi.install
+    pkgdesc="Visual database management frontend"
+    depends=('calligra-libs'
+             'calligra-sheets'
+             'sqlite3'
+             'xbase'
+             'libmariadbclient'
+             'icu')
+    provides=('kexi')
+    conflicts=('koffice-kexi'
+               'calligra-kexi-git')
+    replaces=('koffice-kexi'
+              'calligra-kexi-git')
+    categories=('office')
+    install=calligra-kexi.install
 
-  cd build/kexi
-  make DESTDIR="${pkgdir}" install
+    cd build/kexi
+    make DESTDIR="${pkgdir}" install
 }
 
 package_calligra-kounavail() {
-  pkgdesc="Unavailable Calligra Document"
-  depends=('calligra-libs')
-  provides=('kounavail')
-  conflicts=('koffice-kounavail' 'calligra-kounavail-git')
-  replaces=('koffice-kounavail' 'calligra-kounavail-git')
-  categories=('office')
+    pkgdesc="Unavailable Calligra Document"
+    depends=('calligra-libs')
+    provides=('kounavail')
+    conflicts=('koffice-kounavail'
+               'calligra-kounavail-git')
+    replaces=('koffice-kounavail'
+              'calligra-kounavail-git')
+    categories=('office')
 
-  cd build/kounavail
-  make DESTDIR="${pkgdir}" install
+    cd build/kounavail
+    make DESTDIR="${pkgdir}" install
 }
 
 package_calligra-plan() {
-  pkgdesc="Calligra Project Management Component"
-  depends=('calligra-words' 'hicolor-icon-theme' 'calligra-libs' 'kdepimlibs' 'calligra-templates' \
-		'calligra-plugins')
-  conflicts=('koffice-kplato' 'calligra-kplato-git')
-  replaces=('koffice-kplato' 'calligra-kplato-git')
-  categories=('office')
-  install=calligra-plan.install
+    pkgdesc="Project management application"
+    depends=('calligra-words'
+             'hicolor-icon-theme'
+             'calligra-libs'
+             'kdepimlibs'
+             'calligra-templates'
+             'calligra-plugins')
+    conflicts=('koffice-kplato'
+               'calligra-kplato-git')
+    replaces=('koffice-kplato'
+              'calligra-kplato-git')
+    categories=('office')
+    install=calligra-plan.install
 
-  cd build/plan
-  make DESTDIR="${pkgdir}" install
+    cd build/plan
+    make DESTDIR="${pkgdir}" install
 }
 
 package_calligra-stage() {
-  pkgdesc="Write presentation documents"
-  depends=('calligra-libs' 'calligra-templates' 'hicolor-icon-theme')
-  optdepends=('calligra-filters: import/export filters')
-  conflicts=('koffice-kpresenter' 'calligra-stage-git')
-  replaces=('koffice-kpresenter' 'calligra-stage-git')
-  categories=('office')
-  install=calligra-stage.install
+    pkgdesc="Presentation application"
+    depends=('calligra-libs'
+             'calligra-templates'
+             'hicolor-icon-theme')
+    optdepends=('calligra-filters: import/export filters')
+    conflicts=('koffice-kpresenter'
+               'calligra-stage-git')
+    replaces=('koffice-kpresenter'
+              'calligra-stage-git')
+    categories=('office')
+    install=calligra-stage.install
 
-  cd build/stage
-  make DESTDIR="${pkgdir}" install
+    cd build/stage
+    make DESTDIR="${pkgdir}" install
 }
 
 package_calligra-krita() {
-  pkgdesc="Edit and paint images"
-  depends=('calligra-libs' 'calligra-templates' 'calligra-plugins' 'glew' 'qimageblitz' 'poppler-qt'
-           'openexr' 'opengtl' 'hicolor-icon-theme' 'shared-mime-info' 'lcms2' 'libqtgtl')
-  optdepends=('calligra-filters: import/export filters'
-              'vc: Required by the Krita for vectorization'
-              'opencolorio: Required by the Krita LUT docker')
-  provides=('krita')
-  conflicts=('koffice-krita' 'calligra-krita-git')
-  replaces=('koffice-krita' 'calligra-krita-git')
-  categories=('graphics')
-  install=calligra-krita.install
+    pkgdesc="Digital painting application"
+    depends=('calligra-libs'
+             'calligra-templates'
+             'calligra-plugins'
+             'glew'
+             'qimageblitz'
+             'poppler-qt'
+             'openexr'
+             'opengtl'
+             'hicolor-icon-theme'
+             'shared-mime-info'
+             'lcms2'
+             'libqtgtl')
+    optdepends=('calligra-filters: import/export filters'
+                'vc: Required by the Krita for vectorization'
+                'opencolorio: Required by the Krita LUT docker')
+    provides=('krita')
+    conflicts=('koffice-krita'
+               'calligra-krita-git')
+    replaces=('koffice-krita'
+              'calligra-krita-git')
+    categories=('graphics')
+    install=calligra-krita.install
 
-  cd build/krita
-  make DESTDIR="${pkgdir}" install
+    cd build/krita
+    make DESTDIR="${pkgdir}" install
 }
 
 package_calligra-sheets() {
-  pkgdesc="Write spreadsheet documents"
-  depends=('calligra-libs' 'calligra-templates' 'calligra-plugins' 'gsl' 'hicolor-icon-theme')
-  optdepends=('calligra-filters: import/export filters')
-  conflicts=('koffice-kspread' 'calligra-tables-doc' 'calligra-tables' 'kformula')
-  replaces=('koffice-kspread' 'calligra-tables-doc' 'calligra-tables' 'kformula')
-  categories=('office')
-  install=calligra-sheets.install
+    pkgdesc="Spreadsheet application"
+    depends=('calligra-libs'
+             'calligra-templates'
+             'calligra-plugins'
+             'gsl'
+             'hicolor-icon-theme')
+    optdepends=('calligra-filters: import/export filters')
+    conflicts=('koffice-kspread'
+               'calligra-tables-doc'
+               'calligra-tables'
+               'kformula')
+    replaces=('koffice-kspread'
+              'calligra-tables-doc'
+              'calligra-tables'
+              'kformula')
+    categories=('office')
+    install=calligra-sheets.install
 
-  cd build/sheets
-  make DESTDIR="${pkgdir}" install
+    cd build/sheets
+    make DESTDIR="${pkgdir}" install
 }
 
 package_calligra-words() {
-  pkgdesc="Word Processor"
-  depends=('calligra-libs' 'calligra-templates' 'calligra-plugins' 'calligra-pics'
-           'hicolor-icon-theme')
-  optdepends=('calligra-filters: import/export filters')
-  conflicts=('koffice-kword' 'calligra-words-git')
-  replaces=('koffice-kword' 'calligra-words-git')
-  categories=('office')
-  install=calligra-words.install
+    pkgdesc="Word processor"
+    depends=('calligra-libs'
+             'calligra-templates'
+             'calligra-plugins'
+             'calligra-pics'
+             'hicolor-icon-theme')
+    optdepends=('calligra-filters: import/export filters')
+    conflicts=('koffice-kword'
+               'calligra-words-git')
+    replaces=('koffice-kword'
+              'calligra-words-git')
+    categories=('office')
+    install=calligra-words.install
 
-  cd build/words
-  make DESTDIR="${pkgdir}" install
+    cd build/words
+    make DESTDIR="${pkgdir}" install
 }
 
 package_calligra-handbook() {
-  pkgdesc="Documentation for Calligra"
-  conflicts=('koffice-doc' 'koffice-common' 'calligra-handbook-git')
-  replaces=('koffice-doc' 'koffice-common' 'calligra-handbook-git')
-  categories=('documentation')
+    pkgdesc="Documentation for Calligra"
+    conflicts=('koffice-doc'
+               'koffice-common'
+               'calligra-handbook-git')
+    replaces=('koffice-doc'
+              'koffice-common'
+              'calligra-handbook-git')
+    categories=('documentation')
 
-  cd build/doc/calligra
-  make DESTDIR="${pkgdir}" install
+    cd build/doc/calligra
+    make DESTDIR="${pkgdir}" install
 }
 
 package_calligra-thesaurus-doc() {
-  pkgdesc="Documentation for Thesaurus"
-  conflicts=('koffice-doc' 'calligra-thesaurus-doc-git')
-  replaces=('koffice-doc' 'calligra-thesaurus-doc-git')
-  categories=('documentation')
+    pkgdesc="Documentation for Thesaurus"
+    conflicts=('koffice-doc'
+               'calligra-thesaurus-doc-git')
+    replaces=('koffice-doc'
+              'calligra-thesaurus-doc-git')
+    categories=('documentation')
 
-  cd build/doc/thesaurus
-  make DESTDIR="${pkgdir}" install
+    cd build/doc/thesaurus
+    make DESTDIR="${pkgdir}" install
 }
 
 package_calligra-braindump() {
-  pkgdesc="Notes and idea gathering"
-  depends=('calligra-libs')
-  conflicts=('calligra-braindump-git')
-  replaces=('calligra-braindump-git')
-  categories=('office')
-  install=calligra-braindump.install
+    pkgdesc="Notetaking and mindmapping application"
+    depends=('calligra-libs')
+    conflicts=('calligra-braindump-git')
+    replaces=('calligra-braindump-git')
+    categories=('office')
+    install=calligra-braindump.install
 
-  cd build/braindump
-  make DESTDIR="${pkgdir}" install
+    cd build/braindump
+    make DESTDIR="${pkgdir}" install
 }
 
 package_calligra-flow() {
-  pkgdesc="Flowchart & Diagram Editing"
-  depends=('calligra-words' 'kde-runtime')
-  install=calligra-flow.install
-  conflict=('calligra-flow-git')
-  replaces=('calligra-flow-git')
-  categories=('office')
+    pkgdesc="Flowchart drawing application"
+    depends=('calligra-words'
+             'kde-runtime')
+    install=calligra-flow.install
+    conflict=('calligra-flow-git')
+    replaces=('calligra-flow-git')
+    categories=('office')
 
-  cd build/flow
-  make DESTDIR="${pkgdir}" install
+    cd build/flow
+    make DESTDIR="${pkgdir}" install
 }
