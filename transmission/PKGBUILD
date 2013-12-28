@@ -7,7 +7,7 @@
 pkgbase=transmission
 pkgname=('transmission-cli' 'transmission-qt' 'transmission-qt5')
 pkgver=2.82
-pkgrel=4
+pkgrel=5
 arch=('x86_64')
 url="http://www.transmissionbt.com/"
 license=('MIT')
@@ -23,6 +23,7 @@ prepare() {
   cd "${srcdir}/${pkgbase}-${pkgver}/qt"
   patch -Np0 -i "$srcdir/build-against-qt-4-and-5.patch"
 }
+
 build() {
   cd "${srcdir}/${pkgbase}-${pkgver}"
 
@@ -30,9 +31,9 @@ build() {
   export CFLAGS="$CFLAGS -fno-strict-aliasing"
 
   ./configure --prefix=/usr \
-		--enable-nls \
-		--enable-static=no \
-		--localedir=/usr/share/transmission/i18n
+              --enable-nls \
+              --enable-static=no \
+              --localedir=/usr/share/transmission/i18n
   make
   
   cd "${srcdir}/${pkgbase}-${pkgver}/qt"
@@ -58,14 +59,14 @@ package_transmission-cli() {
       make -C "${dir}" DESTDIR="${pkgdir}" install
   done
 
-  install -D -m644 "${srcdir}/${pkgbase}-${pkgver}/daemon/transmission-daemon.service" "$pkgdir/usr/lib/systemd/system/transmission-daemon.service"
+  install -D -m644 "daemon/transmission-daemon.service" "$pkgdir/usr/lib/systemd/system/transmission.service"
   install -D -m644 "$srcdir/transmission.tmpfiles" "$pkgdir/usr/lib/tmpfiles.d/transmission.conf"
   install -D -m644 COPYING "${pkgdir}/usr/share/licenses/transmission-cli/COPYING"
 }
 
 package_transmission-qt() {
   pkgdesc="Fast, easy, and free BitTorrent client (Qt GUI)"
-  depends=('curl' 'qt' 'libevent')
+  depends=('curl' 'qt' 'libevent' 'miniupnpc')
   optdepends=('transmission-cli: daemon and web support')
   categories=('network')
   screenshot=('http://www.transmissionbt.com/images/screenshots/Qt-Large.jpg')
