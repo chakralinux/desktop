@@ -1,24 +1,19 @@
 # Maintainer: Adrián Chaves Fernández (Gallaecio) <adriyetichaves@gmail.com>
 
 pkgname=opal
-pkgver=3.10.10
+pkgver=3.12.8
 pkgrel=1
 pkgdesc="Open Phone Abstraction Library"
 arch=('x86_64')
 url="http://www.opalvoip.org/"
 license=('MPL')
 depends=('gsm' 'libtheora' 'ptlib' 'silc-toolkit' 'speex' 'x264')
-makedepends=('ffmpeg')
-source=("http://ftp.gnome.org/pub/GNOME/sources/$pkgname/${pkgver%.*}/$pkgname-$pkgver.tar.xz"
-        "$pkgname-ffmpeg.diff")
-md5sums=('6efa1b4c5e0ad6460019b4c6df0898d7'
-         'b3655f313db17dfea44cbabe4cf850f5')
+makedepends=('ffmpeg-compat')
+source=(http://downloads.sourceforge.net/opalvoip/$pkgname-$pkgver.tar.bz2)
+md5sums=('db928c30ae0de43b6063a17dc6fe5106')
 
 build() {
   cd $srcdir/$pkgname-$pkgver
-
-  # Patches.
-  patch -Np1 -i "${srcdir}/$pkgname-ffmpeg.diff"
 
   CXXFLAGS="$CXXFLAGS -fpermissive" \
   ./configure \

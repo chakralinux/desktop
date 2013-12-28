@@ -1,0 +1,48 @@
+# Apps Packages for Chakra, part of www.chakra-project.org
+# Maintainer: H W Tovetjärn (totte) <totte@tott.es>
+# Contributors: Stephen McIntosh <stephenmac7[at]gmail[dot]com>
+#               Thomas Dziedzic <gostrc@gmail.com>
+#               Vesa Kaihlavirta <vesa@archlinux.org>
+#               Arch Haskell Team <arch-haskell@haskell.org>
+
+_hkgname=cabal-install
+pkgname=haskell-cabal-install
+pkgver=1.16.0.2
+pkgrel=2
+pkgdesc="Command-line interface for Cabal and Hackage"
+url="http://hackage.haskell.org/package/cabal-install"
+license=('custom:BSD3')
+arch=('x86_64' 'i686')
+makedepends=()
+depends=('ghc=7.6.3-1' 'haskell-cabal>=1.16.0' 'haskell-cabal<1.18' 'haskell-http>=4000.0.2' 'haskell-http<4001' 'haskell-base>=2.0' 'haskell-base<5' 'haskell-filepath>=1.0' 'haskell-filepath<1.4' 'haskell-mtl>=2.0' 'haskell-mtl<3' 'haskell-network>=1' 'haskell-network<3' 'haskell-random>=1' 'haskell-random<1.1' 'haskell-time>=1.1' 'haskell-time<1.5' 'haskell-zlib>=0.4' 'haskell-zlib<0.6' 'gmp' 'zlib')
+options=()
+source=("http://hackage.haskell.org/packages/archive/cabal-install/1.16.0.2/cabal-install-1.16.0.2.tar.gz")
+install="haskell-cabal-install.install"
+sha512sums=('3fa29de625741d243778bd7309720fe492ee83ac0d9197155d3467bae956839cde4e387bd56d6633a1723197d81cd9104198ea7ec7fe42ccc9a86a5b2ed5a1df')
+
+build() {
+    cd "${srcdir}/cabal-install-1.16.0.2"
+    runhaskell Setup configure \
+        -O \
+        ${PKGBUILD_HASKELL_ENABLE_PROFILING:+-p } \
+        --enable-split-objs \
+        --enable-shared \
+        --enable-executable-stripping \
+        --prefix="/usr"
+    runhaskell Setup build
+}
+
+package() {
+    cd "${srcdir}/cabal-install-1.16.0.2"
+    runhaskell Setup copy --destdir="${pkgdir}"
+
+    # Remove license installed to wrong location
+    rm -rf ${pkgdir}/usr/share/doc
+
+    install -D -m644 LICENSE $pkgdir/usr/share/licenses/$pkgname/LICENSE
+
+    # Add bash completion
+    install -d ${pkgdir}/usr/share/bash-completion/completions
+    install -m644 bash-completion/cabal \
+        ${pkgdir}/usr/share/bash-completion/completions
+}
