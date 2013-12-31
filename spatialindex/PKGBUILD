@@ -1,17 +1,15 @@
-#Maintainer: Fabian Kosmale <0inkane@googlemail.com>
+# Maintainer: Fabian Kosmale <0inkane@googlemail.com>
 # Contributor: Lantald  <lantald at Gmx dot com>
 pkgname=spatialindex
-pkgver=1.7.1
+pkgver=1.8.1
 pkgrel=1
 pkgdesc="An extensible framework that supports robust spatial indexing methods and sophisticated spatial queries."
-arch=('i686' 'x86_64')
+arch=('x86_64')
 url="http://libspatialindex.github.com/"
-license=('(L)GPL')
+license=('MIT')
 depends=(gcc-libs)
-provides=(spatialindex)
-conflicts=("libspatialindex-git")
 source=("http://download.osgeo.org/libspatialindex/$pkgname-src-$pkgver.tar.gz")
-md5sums=('8599243d5d8204f0f8d92cd55ab120f5')
+md5sums=('29fb6ac7b23748816cdbd128b0be4e85')
 
 build() {
   cd "$srcdir/$pkgname-src-$pkgver/"
@@ -29,4 +27,3 @@ package() {
   make DESTDIR="$pkgdir/" install
 }
 
-# vim:set ts=2 sw=2 et:
