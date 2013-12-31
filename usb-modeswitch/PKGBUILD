@@ -18,9 +18,9 @@ backup=("etc/$_pkgname.conf")
 source=("http://www.draisberghof.de/$_pkgname/$pkgname-$pkgver.tar.bz2"
 	"http://www.draisberghof.de/$_pkgname/$pkgname-data-$_pkgdata.tar.bz2"
 	"usb-modeswitch-${pkgver}-device_reference.txt::http://www.draisberghof.de/$_pkgname/device_reference.txt")
-md5sums=('c393603908eceab95444c5bde790f6f0'
-         'a7d23a03157871013a0d708ab2b1b6df'
-         '9918bbdc0f68873410688604c80d25c4')
+md5sums=('e48d4419d0574d342bb183f7465556d0'
+         '7b5ac1226b360ddc366c286e62b3c3a4'
+         '1ec5054e071d6af9ab5b862197222455')
 
 build() {
   cd $srcdir/usb-modeswitch-$pkgver/
@@ -42,6 +42,4 @@ package() {
   cd $srcdir/usb-modeswitch-data-${_pkgdata}
   make DESTDIR=$pkgdir install RULESDIR=${pkgdir}/usr/lib/udev/rules.d
 }
-md5sums=('e48d4419d0574d342bb183f7465556d0'
-         '7b5ac1226b360ddc366c286e62b3c3a4'
-         '1ec5054e071d6af9ab5b862197222455')
+
