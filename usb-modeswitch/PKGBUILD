@@ -1,18 +1,15 @@
-#
-# Apps Packages for Chakra, part of chakra-project.org
-#
 # Maintainer: Adrián Chaves Fernández (Gallaecio) <adriyetichaves gmail.com>
 
 pkgname=usb-modeswitch
 _pkgname=usb_modeswitch
-pkgver=1.2.5
+pkgver=2.0.1
 pkgrel=1
-_pkgdata=20121109
+_pkgdata=20131113
 pkgdesc="Activating switchable USB devices on Linux."
-arch=('i686' 'x86_64')
+arch=('x86_64')
 url="http://www.draisberghof.de/usb_modeswitch/"
 license=('GPL3')
-depends=('libusb-compat' 'tcl')
+depends=('libusb' 'tcl')
 makedepends=('gcc' 'make')
 conflicts=(usb_modeswitch)
 replaces=(usb_modeswitch)
@@ -45,3 +42,6 @@ package() {
   cd $srcdir/usb-modeswitch-data-${_pkgdata}
   make DESTDIR=$pkgdir install RULESDIR=${pkgdir}/usr/lib/udev/rules.d
 }
+md5sums=('e48d4419d0574d342bb183f7465556d0'
+         '7b5ac1226b360ddc366c286e62b3c3a4'
+         '1ec5054e071d6af9ab5b862197222455')
