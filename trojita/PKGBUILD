@@ -1,31 +1,29 @@
-# Apps Packages for Chakra, part of chakra-project.org
 # maintainer abveritas[at]chakra-project[dot]org>
 # contributor Neo Kolokotronis <tetris4@gmail.com>
 
 pkgname=trojita
-pkgver=0.3.93
+pkgver=0.3.96
 pkgrel=1
 pkgdesc="Trojita is a Qt IMAP e-mail client."
 arch=('x86_64')
 url="http://trojita.flaska.net"
 license=('GPL')
 depends=('qtwebkit')
-makedepends=('make')
+makedepends=('cmake')
 categories=('network')
 screenshot=('http://trojita.flaska.net/trojita-2013-01-09--overview.png')
 source=("http://downloads.sourceforge.net/$pkgname/$pkgname-$pkgver.tar.bz2")
-md5sums=('6a3490d8b3a94fd6bb18cb5c99cd861f')
+md5sums=('fa27ba25fad34df4a532cc70823d3da9')
 
 build() {
   cd "$srcdir/$pkgname-$pkgver"
-  qmake trojita.pro
+  mkdir build ;  cd build
+  cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=/usr ..
   make
 }
 
 package() {
-  cd "$srcdir/$pkgname-$pkgver"
-  install -D -m755 src/Gui/trojita "${pkgdir}/usr/bin/trojita"  
-  install -Dm644 src/Gui/trojita.desktop "$pkgdir/usr/share/applications/trojita.desktop"
-  install -Dm644 src/icons/trojita.svg "$pkgdir/usr/share/icons/hicolor/scalable/apps/trojita.svg"
+  cd "$srcdir/$pkgname-$pkgver"/build/
+  make DESTDIR=${pkgdir} install
 }
 
