@@ -1,13 +1,9 @@
-#
-# Chakra Packages for Chakra, part of chakra-project.org
-#
-# maintainer abveritas@chakra-project.org
-
-_prefix=/usr
+# Maintainer: Neophytos Kolokotronis <tetris4 AT gmail DOT com>
+# Contributor abveritas@chakra-project.org
 
 pkgname=xbmc
-pkgver=12.2
-pkgrel=6
+pkgver=12.3
+pkgrel=1
 pkgdesc="XBMC Media Center"
 arch=('x86_64')
 url="http://xbmc.org"
@@ -16,7 +12,7 @@ depends=( 'bzip2' 'curl' 'enca' 'faac' 'faad2' 'fontconfig' 'fribidi' 'python2' 
           'glew' 'jasper' 'libcdio' 'libgl' 'libmad' 'libmms' 'libass' 'yajl' 'libtiff'
           'libmpeg2' 'libmariadbclient' 'libsamplerate' 'libxinerama' 'libpng' 'libbluedevil'
           'libxrandr' 'libxtst' 'lzo2' 'sdl_image' 'sdl_mixer' 'libvorbis' 'libpulse' 'libdvdcss'
-          'samba' 'wavpack' 'mesa-demos' 'xorg-utils' 'libmicrohttpd' 'libjpeg-turbo' 'mesa' 'swig'
+          'smbclient' 'wavpack' 'mesa-demos' 'xorg-utils' 'libmicrohttpd' 'libjpeg-turbo' 'mesa' 'swig'
           'libssh' 'libva' 'libmodplug' 'rtmpdump' 'lsb-release' 'sqlite3' 'libbluray' 'java-runtime'
           'tinyxml' 'taglib' 'libcap' 'avahi' 'libshairport' 'glu' 'libplist' 'libnfs')
 makedepends=('boost' 'cmake' 'gperf' 'nasm' 'libvdpau' 'unzip' 'zip' 'cvs' 'autoconf' 'automake'
@@ -35,18 +31,20 @@ options=('makeflags')
 source=("http://mirrors.xbmc.org/releases/source/xbmc-${pkgver}.tar.gz"
         "FEH.sh"
         "${pkgname}.service")
-sha256sums=('b2330634fc513d27a44b131bbbe4ca6b61d60a1fe6c7ca27a7dc749df0bcea1c'
+sha256sums=('3e15c960d034efdea5f92a7b74716cb48094842d077b076025fd8640754ede73'
             '1b391dfbaa07f81e5a5a7dfd1288bf2bdeab8dc50bbb6dbf39a80d8797dfaeb0'
             '547e06f3141866cd34b1df34025517e9826992b67543af7621d954bcdfa0ba94')
 
 build() {
-    cd xbmc-${pkgver}
+    cd xbmc-${pkgver}-Frodo
+    sed -i -e 's:#include <libsmbclient.h>:#include <samba-4.0/libsmbclient.h>:' xbmc/filesystem/{SmbFile,SMBDirectory}.cpp
 
+    
     msg "Bootstrapping XBMC"
     ./bootstrap
 
     msg "Configuring XBMC"
-    ./configure --prefix=${_prefix} \
+    ./configure --prefix=/usr \
       --enable-optimizations \
       --enable-gl \
       --enable-sdl \
@@ -82,34 +80,34 @@ build() {
 }
 
 package() {
-    cd xbmc-${pkgver}
+    cd xbmc-${pkgver}-Frodo
     msg "Running make install"
-    make prefix="${pkgdir}${_prefix}" install
+    make prefix="${pkgdir}/usr" install
 
     # Replace FEH.py with FEH.sh (and thus remove external python dependency)
-    install -D -m 0755 "${srcdir}/FEH.sh" "${pkgdir}${_prefix}/share/xbmc/FEH.sh"
-    sed -i -e 's/^python \(.*\)FEH.py \(.*\)$/\1FEH.sh \2/' "${pkgdir}${_prefix}/bin/xbmc"
+    install -D -m 0755 "${srcdir}/FEH.sh" "${pkgdir}/usr/share/xbmc/FEH.sh"
+    sed -i -e 's/^python \(.*\)FEH.py \(.*\)$/\1FEH.sh \2/' "${pkgdir}/usr/bin/xbmc"
 
     # lsb_release fix
-    sed -i -e 's/which lsb_release &> \/dev\/null/\[ -f \/etc\/arch-release ]/g' "${pkgdir}${_prefix}/bin/xbmc"
-    sed -i -e "s/lsb_release -a 2> \/dev\/null | sed -e 's\/\^\/    \/'/cat \/etc\/arch-release/g" "${pkgdir}${_prefix}/bin/xbmc"
+    sed -i -e 's/which lsb_release &> \/dev\/null/\[ -f \/etc\/arch-release ]/g' "${pkgdir}/usr/bin/xbmc"
+    sed -i -e "s/lsb_release -a 2> \/dev\/null | sed -e 's\/\^\/    \/'/cat \/etc\/arch-release/g" "${pkgdir}/usr/bin/xbmc"
 
     # .desktop files
-    install -D -m 0644 "${srcdir}/xbmc-$pkgver/tools/Linux/xbmc.desktop" "${pkgdir}${_prefix}/share/applications/xbmc.desktop"
-    install -D -m 0644 "${srcdir}/xbmc-$pkgver/tools/Linux/xbmc-48x48.png" "${pkgdir}${_prefix}/share/pixmaps/xbmc.png"
+    install -D -m 0644 "${srcdir}/xbmc-$pkgver-Frodo/tools/Linux/xbmc.desktop" "${pkgdir}/usr/share/applications/xbmc.desktop"
+    install -D -m 0644 "${srcdir}/xbmc-$pkgver-Frodo/tools/Linux/xbmc-48x48.png" "${pkgdir}/usr/share/pixmaps/xbmc.png"
 
     # Tools
-    install -D -m 0755 "${srcdir}/xbmc-$pkgver/xbmc-xrandr" "${pkgdir}${_prefix}/share/xbmc/xbmc-xrandr"
-    install -D -m 0755 "${srcdir}/xbmc-$pkgver/tools/TexturePacker/TexturePacker" "${pkgdir}${_prefix}/share/xbmc/"
+    install -D -m 0755 "${srcdir}/xbmc-$pkgver-Frodo/xbmc-xrandr" "${pkgdir}/usr/share/xbmc/xbmc-xrandr"
+    install -D -m 0755 "${srcdir}/xbmc-$pkgver-Frodo/tools/TexturePacker/TexturePacker" "${pkgdir}/usr/share/xbmc/"
 
     # Licenses
-    install -d -m 0755 "${pkgdir}${_prefix}/share/licenses/${pkgname}"
+    install -d -m 0755 "${pkgdir}/usr/share/licenses/${pkgname}"
     for licensef in LICENSE.GPL copying.txt; do
-        mv "${pkgdir}${_prefix}/share/doc/xbmc/${licensef}" "${pkgdir}${_prefix}/share/licenses/${pkgname}"
+        mv "${pkgdir}/usr/share/doc/xbmc/${licensef}" "${pkgdir}/usr/share/licenses/${pkgname}"
     done
 
     # Docs
-    install -d -m 0755 "${pkgdir}${_prefix}/share/doc/${pkgname}"
+    install -d -m 0755 "${pkgdir}/usr/share/doc/${pkgname}"
 
     # cleanup some stuff
     msg "Cleanup unneeded files"
