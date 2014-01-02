@@ -1,8 +1,9 @@
-# Maintainer: Anke Boersma <abveritas@chakra-project.org>
+# Contributor: Anke Boersma <abveritas@chakra-project.org>
+# Maintainer: Bruce Liu <brli@users.sourceforge.net>
 
 pkgname=qupzilla
-pkgver=1.4.4
-pkgrel=2
+pkgver=1.6.0
+pkgrel=1
 pkgdesc="A very fast open source browser based on WebKit core"
 url="http://www.qupzilla.com"
 arch=('x86_64')
@@ -10,34 +11,21 @@ license=('GPL3')
 depends=('qtwebkit' 'qtwebkit-plugins')
 optdepends=('bash-completion: bash completion support')
 categories=('network') 
-changelog=${pkgname}.changelog
 install=${pkgname}.install
 screenshot='http://www.qupzilla.com/screens/kde.png'
 source=("https://github.com/QupZilla/qupzilla/archive/v${pkgver}.tar.gz"
-        #https://github.com/QupZilla/QupZilla/tarball/master/QupZilla-qupzilla-${pkgver}.tar.gz"
-        #"https://github.com/downloads/QupZilla/qupzilla/QupZilla-${pkgver}.tar.gz"
-        'searchenginesmanager.diff'
-        'speeddial.diff'
-        'preferences.diff'
-        'qupzilla.diff'
-        'start-white.png'
+	'qupzilla.patch'
+	'start-white.png'
         'qupzilla.changelog')
-sha256sums=('a41d324d42922ff0046faefd1e191b197de30793ee3e07b644f2d01e44c83851'
-		  '9ade9f0dfe46f50367a7a1b70f54720585a3bf4b34cd0b0fddf0773d069a6b62'
-		  'd226776426f14299ad2fa1b8786097cc1bab3c6f1b89d4d8be479e49f1b52433'
-		  '9c2bcca5aa9449abbbb7c579a5fbc1705866180c2e5853e1fbea2172c1f27c36'
-		  '1f18e92505674026448a29a257f627a7160d8ccb554bac561b6547af2369d341'
-		  '5bdac9f329c5d240e9aa58d7960f5f8b4c372e8908e2cf1080a02619a4695f09'
-		  '6f3b069561d2b5512f10618f6b986a2e075901112da4c33febb083bc7679a309')
+sha256sums=('67a12326c55de32434b3381f0574bf1be5858ca9f20eaa513feb720fd8f67dc4'
+	    '932f0b84eaebbbc1b7f09877c100130bde0c56606f0c11b4a1876a2d3b4981e9'
+            '5bdac9f329c5d240e9aa58d7960f5f8b4c372e8908e2cf1080a02619a4695f09'
+            '6f3b069561d2b5512f10618f6b986a2e075901112da4c33febb083bc7679a309')
 
 prepare() {
-  cd "${pkgname}-${pkgver}"
-  
-  patch -p0 -i "${srcdir}/searchenginesmanager.diff"
-  patch -p1 -i "${srcdir}/speeddial.diff"
-  patch -p0 -i "${srcdir}/preferences.diff"
-  patch -p0 -i "${srcdir}/qupzilla.diff"
-}
+  cd "${pkgname}-${pkgver}/src/lib"
+  patch -uNp1 -i $srcdir/qupzilla.patch
+ }
          
 build() {
   cd "${pkgname}-${pkgver}"
@@ -56,10 +44,7 @@ package() {
   
   install -Dm 644 "${srcdir}/start-white.png" "${pkgdir}/usr/share/icons/start-white.png"
   
-  # zsh completion
-  install -Dm644 linux/completion/zsh_completion.sh \
-    "${pkgdir}/usr/share/zsh/site-functions/_${pkgname}"
-  
-  # install changelog
-  install -Dm644 CHANGELOG "${startdir}/qupzilla.changelog"
+  # shell completion
+  install -Dm644 linux/completion/_${pkgname} "${pkgdir}/usr/share/zsh/site-functions/_${pkgname}"
+  install -Dm644 linux/completion/${pkgname} "${pkgdir}/usr/share/bash-completion/completions/${pkgname}"
 }
