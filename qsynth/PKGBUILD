@@ -1,21 +1,28 @@
-# Moved from CCR
+#
+# Apps Packages for Chakra, part of chakra-project.org
+#
+# Maintainer (x86_64): Francesco Marinucci <franzmari[at]chakra-project[dot]it>
 
 pkgname=qsynth
-pkgver=0.3.7
+pkgver=0.3.8
 pkgrel=1
 pkgdesc="Qt GUI for fluidsynth"
-arch=('i686' 'x86_64')
+arch=('x86_64')
 url="http://qsynth.sourceforge.net/qsynth-index.html"
 license=('GPL')
 depends=('fluidsynth' 'qt' 'portaudio')
 categories=('multimedia')
 options=('!makeflags')
 source=(http://downloads.sourceforge.net/${pkgname}/${pkgname}-${pkgver}.tar.gz)
-md5sums=('a101a50a7ecfb7319482a5022df1d58b')
+md5sums=('affdd9ddff4798b1d3dae3c99b57bc5a')
 
 build() {
   cd "${srcdir}/${pkgname}-${pkgver}"
   ./configure --prefix=/usr
-  make || return 1
-  make DESTDIR="${pkgdir}" install
+  make
 }
+
+package() {
+  cd "${srcdir}/${pkgname}-${pkgver}"
+  make DESTDIR="${pkgdir}" install
+}  
