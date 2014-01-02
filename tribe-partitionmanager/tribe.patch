@@ -544,7 +544,7 @@ diff -ru partitionmanager-svn/src/util/capacity.h partitionmanager-svn-build/src
 diff -ru partitionmanager-svn/src/util/helpers.cpp partitionmanager-svn-build/src/util/helpers.cpp
 --- partitionmanager-svn/src/util/helpers.cpp	2013-01-16 17:10:20.653871970 +0000
 +++ partitionmanager-svn-build/src/util/helpers.cpp	2013-01-16 17:11:24.645227940 +0000
-@@ -191,14 +191,14 @@
+@@ -191,14 +191,14 @@ void showColumnsContextMenu(const QPoint
  
  bool loadBackend()
  {
@@ -561,7 +561,7 @@ diff -ru partitionmanager-svn/src/util/helpers.cpp partitionmanager-svn-build/sr
  				i18nc("@title:window", "Error: Could Not Load Backend Plugin"));
  			Config::setBackend(CoreBackendManager::defaultBackendName());
  		}
-@@ -207,7 +207,7 @@
+@@ -207,7 +207,7 @@ bool loadBackend()
  			KMessageBox::error(NULL,
  				i18nc("@info", "<para>Neither the configured (\"%1\") nor the default (\"%2\") backend "
  					"plugin could be loaded.</para><para>Please check your installation.</para>",
@@ -570,3 +570,58 @@ diff -ru partitionmanager-svn/src/util/helpers.cpp partitionmanager-svn-build/sr
  				i18nc("@title:window", "Error: Could Not Load Backend Plugin"));
  			return false;
  		}
+@@ -241,30 +241,30 @@ QList<Solid::Device> getSolidDeviceList(
+                 "[ StorageDrive.driveType == 'SdMmc' OR StorageDrive.driveType == 'Xd'] ]";
+ #endif
+ 
+-	KCmdLineArgs* args = KCmdLineArgs::parsedArgs();
+-	if (args->count() > 0)
+-	{
+-		predicate = " [ " + predicate + " AND ";
+-
+-		qint32 brackets = (args->count() + 1) / 2;
+-		brackets = args->count() == 1 ? 0 : brackets;
+-		for (qint32 i = 0; i < brackets; i++)
+-			predicate += "[ ";
+-
+-		bool right_bracket = false;
+-		for (qint32 i = 0; i < args->count(); i++, right_bracket =! right_bracket)
+-		{
+-			predicate += QString("Block.device == '%1' ").arg(args->arg(i));
+-
+-			if (right_bracket)
+-				predicate += i == 1 ? "] " : "] ] ";
+-			if (i < args->count() - 1)
+-				predicate += "OR ";
+-			if (right_bracket && i != args->count() - 2 && i != args->count()-1)
+-				predicate += "[ ";
+-		}
+-		predicate += right_bracket && brackets > 0 ? "] ]" : "]";
+-	}
++//	KCmdLineArgs* args = KCmdLineArgs::parsedArgs();
++//	if (args->count() > 0)
++//	{
++//		predicate = " [ " + predicate + " AND ";
++//
++//		qint32 brackets = (args->count() + 1) / 2;
++//		brackets = args->count() == 1 ? 0 : brackets;
++//		for (qint32 i = 0; i < brackets; i++)
++//			predicate += "[ ";
++//
++//		bool right_bracket = false;
++//		for (qint32 i = 0; i < args->count(); i++, right_bracket =! right_bracket)
++//		{
++//			predicate += QString("Block.device == '%1' ").arg(args->arg(i));
++//
++//			if (right_bracket)
++//				predicate += i == 1 ? "] " : "] ] ";
++//			if (i < args->count() - 1)
++//				predicate += "OR ";
++//			if (right_bracket && i != args->count() - 2 && i != args->count()-1)
++//				predicate += "[ ";
++//		}
++//		predicate += right_bracket && brackets > 0 ? "] ]" : "]";
++//	}
+ 
+ 	return Solid::Device::listFromQuery(predicate);
+ }
