@@ -2,7 +2,7 @@
 pkgbase=digikam
 pkgname=('digikam' 'kipi-plugins' 'libkvkontakte')
 pkgver=3.5.0
-pkgrel=4
+pkgrel=5
 url="http://digikam.sourceforge.net"
 arch=('x86_64')
 license=('GPL')
@@ -11,8 +11,18 @@ makedepends=('kde-runtime' 'kdegraphics-kgamma' 'kdepimlibs' 'lensfun' 'kdeedu-m
              'liblqr' 'opencv' 'lapack' 'libgpod' 'pkgconfig' 'cmake' 'automoc4'
              'doxygen' 'docbook-xsl' 'qjson' 'kdegraphics-libkexiv2' 'kdegraphics-libkdcraw'
              'kdegraphics-libksane' 'qt-gstreamer' 'boost' 'hugin-tools' 'eigen3')
-source=("http://download.kde.org/stable/${pkgname}/${pkgname}-${pkgver}.tar.bz2")
-md5sums=('16d570269883652487516a77c9d7d6f8')
+source=("http://download.kde.org/stable/${pkgname}/${pkgname}-${pkgver}.tar.bz2"
+	'panorama_lastpage.patch')
+md5sums=('16d570269883652487516a77c9d7d6f8'
+	 '1f14b528d5601ca0dee2021caafba104')
+
+prepare(){
+    cd "${srcdir}/${pkgname}-${pkgver}"
+    # Panorama: bugfix lastpage (only for v3.5.0)
+    pushd "${srcdir}/${pkgname}-${pkgver}/extra/kipi-plugins/"
+    patch -Np1 -i ${srcdir}/panorama_lastpage.patch
+    popd
+}
 
 build() {
    cd ${srcdir}
