@@ -5,14 +5,14 @@
 
 pkgname=conky
 pkgver=1.9.0
-pkgrel=1
+pkgrel=2
 pkgdesc="An advanced, highly configurable system monitor for X based on torsmo"
-arch=('i686' 'x86_64')
+arch=('x86_64')
 url="http://conky.sourceforge.net/"
 license=('custom')
 replaces=('torsmo')
-depends=('alsa-lib' 'libxml2' 'curl' 'wireless_tools' 'libxft' 'glib2' 'libxdamage' 'imlib2')
-makedepends=('pkgconfig')
+depends=('glib2' 'curl' 'lua' 'wireless_tools' 'libxml2' 'libxft' 'libxdamage' 'imlib2')
+makedepends=('docbook2x')
 categories=('utils')
 backup=(etc/conky/conky.conf etc/conky/conky_no_x11.conf)
 source=(http://downloads.sourceforge.net/project/${pkgname}/${pkgname}/${pkgver}/${pkgname}-${pkgver}.tar.bz2)
@@ -20,13 +20,15 @@ md5sums=('d3de615f43aadc98d555e05ad9e902c2')
 
 build() {
   cd "${srcdir}/${pkgname}-${pkgver}"
-  ./configure --prefix=/usr \
+  CPPFLAGS="${CXXFLAGS}" LIBS="${LDFLAGS}" ./configure \
+              --prefix=/usr \
               --sysconfdir=/etc \
+              --enable-curl \
+              --enable-wheather-xoap \
               --enable-wlan \
-	      --enable-rss \
-	      --enable-ibm \
-	      --enable-imlib2 \
-	      --disable-lua
+              --enable-rss \
+              --enable-ibm \
+              --enable-imlib2
   make 
 }
 
