@@ -7,7 +7,7 @@ source ../_buildscripts/${current_repo}-${_arch}-cfg.conf
 pkgname='kde-runtime'
 arch=('x86_64')
 pkgver=${_kdever}
-pkgrel=2
+pkgrel=3
 pkgdesc='Plugins and applications necessary for the running of KDE applications'
 url='http://www.kde.org'
 license=('GPL'
@@ -54,16 +54,25 @@ conflicts=('kdebase-runtime'
 install=kde-runtime.install
 noextract=(branding.svgz)
 source=("$_mirror/${pkgname}-$_kdever.tar.xz"
-        'branding.svgz')
+        'branding.svgz'
+        'Remove-volume-control-from-KNotify.patch')
 sha1sums=(`grep ${pkgname}-$_kdever.tar.xz  ../checksums.txt | cut -d" " -f1`
-          'e9a8617448523aacd70dd66f2ffc62a827af027b')
+          'e9a8617448523aacd70dd66f2ffc62a827af027b'
+          '4fd852d4ceabb98724f6ceb3df3edf9ae7c72736')
 
-build() {
-    cd ${pkgname}-${pkgver}
+prepare() {
+    cd "${srcdir}/${pkgname}-${pkgver}"
+    rm -rf "${srcdir}/${pkgname}-${pkgver}/build"
+    mkdir "${srcdir}/${pkgname}-${pkgver}/build"
     cp -f ${srcdir}/branding.svgz ${srcdir}/${pkgname}-${pkgver}/desktoptheme/oxygen/widgets/
     cp -f ${srcdir}/branding.svgz ${srcdir}/${pkgname}-${pkgver}/desktoptheme/air/widgets/
-    rm -rf build
-    mkdir build && cd build
+
+    msg "Applying patches..."
+    patch -p1 -i ${srcdir}/Remove-volume-control-from-KNotify.patch
+}
+
+build() {
+    cd "${srcdir}/${pkgname}-${pkgver}/build"
     cmake .. \
         -DCMAKE_BUILD_TYPE=${_build_type} \
         -DCMAKE_INSTALL_PREFIX=${_installprefix} \
@@ -74,7 +83,7 @@ build() {
 }
 
 package() {
-    cd ${srcdir}/${pkgname}-${pkgver}/build
+    cd "${srcdir}/${pkgname}-${pkgver}/build"
     make DESTDIR=${pkgdir} install
     # put kdesu into the path
     cp ${pkgdir}/usr/lib/kde4/libexec/kdesu ${pkgdir}/usr/bin/kdesu
