@@ -1,32 +1,24 @@
 # Contributor: Inkane <neoinkaneglade@aol.com>
-# Contributer: Alexander Rødseth <rodseth@gmail.com>
+# Contributions from Arch: https://www.archlinux.org/packages/community/any/setconf/
 
 pkgname=setconf
-pkgver=0.4
+pkgver=0.6.2
 pkgrel=1
 pkgdesc="A utility to easily change settings in Makefiles and other configuration files"
-arch=('x86_64' 'i686')
+arch=('x86_64')
 url="http://setconf.roboticoverlords.org/"
 license=('GPL')
-depends=('pcre' 'gc' 'gcc')
-makedepends=('shedskin')
-source=("http://$pkgname.roboticoverlords.org/$pkgname-$pkgver.tbz2")
-md5sums=('5a254ed63e332fab63b48c558aef215c')
+depends=('python2')
+source=("http://$pkgname.roboticoverlords.org/$pkgname-$pkgver.tar.xz")
+sha256sums=('8f91dc5cc24cc9d4f7c34fbc657259384f99d7222b6df9375bac5436d601d0c2')
 
-build() {
-  cd "$srcdir/$pkgname-$pkgver"
-
-  shedskin ${pkgname}.py
-  make CPPFLAGS="-march=native -fomit-frame-pointer"
+prepare() {
+  sed -i 's:usr/bin/python:usr/bin/python2:' "$pkgname-$pkgver/$pkgname.py"
 }
 
 package() {
-  cd "$srcdir/$pkgname-$pkgver"
+  cd "$pkgname-$pkgver"
 
-  install -Dm 755 "$pkgname" "$pkgdir/usr/bin/$pkgname"
-  install -Dm 644 "$pkgname.1.gz" \
-    "$pkgdir/usr/share/man/man1/$pkgname.1.gz"
-  install -Dm 644 COPYING \
-    "$pkgdir/usr/share/licenses/$pkgname/COPYING"
+  install -Dm755 "$pkgname.py" "$pkgdir/usr/bin/$pkgname"
+  install -Dm644 "$pkgname.1.gz" "$pkgdir/usr/share/man/man1/$pkgname.1.gz"
 }
-
