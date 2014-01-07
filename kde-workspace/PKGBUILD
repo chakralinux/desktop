@@ -11,7 +11,7 @@ pkgname="kde-workspace"
 arch=('x86_64')
 #pkgver=${_kdever}
 pkgver=4.11.4
-pkgrel=9
+pkgrel=11
 pkgdesc="KDE Workspace"
 url="http://www.kde.org"
 license=('GPL'
@@ -264,4 +264,14 @@ package() {
     
     # Systemd .service file
     install -D -m644 "${srcdir}"/kdm.service "${pkgdir}"/usr/lib/systemd/system/kdm.service
+
+    # Remove krandr files
+    #rm -rf ${pkgdir}/usr/lib/debug/usr/bin/krandrtray.debug
+    #rm -rf ${pkgdir}/usr/bin/krandrtray
+    #rm -rf ${pkgdir}/usr/bin/krandrstartup
+    #rm -rf ${pkgdir}/usr/lib/kde4/kded_randrmonitor.so
+    rm -rf ${pkgdir}/usr/lib/kde4/kcm_randr.so
+    #rm -rf ${pkgdir}/usr/share/applications/kde4/krandrtray.desktop
+    rm -rf ${pkgdir}/usr/share/kde4/services/randr.desktop
+    #rm -rf ${pkgdir}/usr/share/kde4/services/kded/randrmonitor.desktop
 }
