@@ -10,6 +10,15 @@ diff -Naur lib.orig/app/qupzilla.cpp lib/app/qupzilla.cpp
      settings.endGroup();
  
      QWebSettings* websettings = mApp->webSettings();
+@@ -795,7 +795,7 @@
+     bool showWebSearchBar = settings.value("showWebSearchBar", true).toBool();
+     bool showBookmarksToolbar = settings.value("showBookmarksToolbar", true).toBool();
+     bool showNavigationToolbar = settings.value("showNavigationToolbar", true).toBool();
+-    bool showMenuBar = settings.value("showMenubar", true).toBool();
++    bool showMenuBar = settings.value("showMenubar", false).toBool();
+     bool makeTransparent = settings.value("useTransparentBackground", false).toBool();
+     m_sideBarWidth = settings.value("SideBarWidth", 250).toInt();
+     m_webViewWidth = settings.value("WebViewWidth", 2000).toInt();
 diff -Naur lib.orig/opensearch/searchenginesmanager.cpp lib/opensearch/searchenginesmanager.cpp
 --- lib.orig/opensearch/searchenginesmanager.cpp	2014-01-02 03:55:33.000000000 +0800
 +++ lib/opensearch/searchenginesmanager.cpp	2014-01-02 08:41:23.306313965 +0800
