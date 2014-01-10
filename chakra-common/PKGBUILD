@@ -4,43 +4,53 @@
 # Include global configuration
 source ../_buildscripts/${current_repo}-${_arch}-cfg.conf
 
-_origname=common
-pkgname=kde-common
+pkgname=chakra-common
 arch=('x86_64')
 pkgver=${_kdever}
-pkgrel=2
-pkgdesc="KDE common configuration files, scripts and artwork"
+pkgrel=1
+pkgdesc="Common configuration files, scripts and artwork"
 url="http://www.kde.org"
 license=('GPL')
-options=('!debug' '!header' 'strip')
-groups=("kde" "kde-minimal" "kde-uninstall")
-depends=("${_qtpkg}>=${_qtver}" 'pinentry' 'openssh' 'bash>=4.2' 'glibc>=2.15')
-provides=('tcp_wrappers')
-install=kde-common.install
+options=('!debug'
+         '!header'
+         'strip')
+groups=("kde"
+        "kde-minimal"
+        "kde-uninstall")
+depends=("${_qtpkg}>=${_qtver}"
+         'pinentry'
+         'openssh'
+         'bash>=4.2'
+         'glibc>=2.15')
+provides=('kde-common'
+          'tcp_wrappers')
+replaces=('kde-common')
+conflicts=('kde-common')
+install=chakra-common.install
 source=(http://www.kde-apps.org/CONTENT/content-files/48411-rootactions_servicemenu_2.4.10.tar.gz
-    servicemenu-copy-path.desktop
-    http://www.kde-apps.org/CONTENT/content-files/102825-compressattach.desktop.bz2
-    servicemenu-rootactions.patch
-    Chakra-Bugs.desktop
-    Chakra-ChangeLog.desktop
-    Chakra-Code.desktop
-    Chakra-Documentation.desktop
-    Chakra-Donate.desktop
-    Chakra-Forum.desktop
-    Chakra-Homepage.desktop
-    Chakra.directory
-    chakra-config-updater.sh
-    chakra-update-icons.sh
-    chakra-update-mime.sh
-    chakra-update-sycoca.sh
-    chakra-update-user-sycoca.sh
-    chakra-sysinfo.sh
-    chakra-backup.sh
-    Chakra-backup.desktop
-    updates.conf
-    chakra-icons.tar.gz
-    agent-startup.sh
-    agent-shutdown.sh)
+        servicemenu-copy-path.desktop
+        http://www.kde-apps.org/CONTENT/content-files/102825-compressattach.desktop.bz2
+        servicemenu-rootactions.patch
+        Chakra-Bugs.desktop
+        Chakra-ChangeLog.desktop
+        Chakra-Code.desktop
+        Chakra-Documentation.desktop
+        Chakra-Donate.desktop
+        Chakra-Forum.desktop
+        Chakra-Homepage.desktop
+        Chakra.directory
+        chakra-config-updater.sh
+        chakra-update-icons.sh
+        chakra-update-mime.sh
+        chakra-update-sycoca.sh
+        chakra-update-user-sycoca.sh
+        chakra-sysinfo.sh
+        chakra-backup.sh
+        Chakra-backup.desktop
+        updates.conf
+        chakra-icons.tar.gz
+        agent-startup.sh
+        agent-shutdown.sh)
 md5sums=('2afd86671ad0db31718157aecd46d528'
          '0fe13835c8d796c9973cda670860ce19'
          '630ffe7118eef8608a9e5e393a0b1e12'
