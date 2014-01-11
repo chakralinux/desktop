@@ -22,7 +22,7 @@ pkgname=('kdepim-common'
          'kdepim-korganizer'
          'kdepim-ktimetracker')
 pkgver=${_kdever}
-pkgrel=4
+pkgrel=5
 arch=('x86_64')
 url="http://pim.kde.org"
 license=('GPL'
@@ -45,13 +45,13 @@ makedepends=('pkg-config'
              'libsamplerate'
              'qrencode'
              'libdmtx'
-             "kde-common>=${_kdever}"
+             "chakra-common>=${_kdever}"
              'docbook-xml'
              'dblatex'
              "nepomuk-widgets>=${_kdever}"
              'link-grammar')
 source=($_mirror/${pkgbase}-${pkgver}.tar.xz)
-sha1sums=(`grep ${pkgbase}-$_kdever.tar.xz  ../checksums.txt | cut -d" " -f1`)
+sha256sums=(`grep ${pkgbase}-$_kdever.tar.xz  ../checksums.txt | cut -d" " -f1`)
 
 prepare() {
     mkdir "${srcdir}/build"
@@ -306,7 +306,7 @@ package_kdepim-common() {
     pkgdesc="KDE PIM common files and libraries"
     depends=("kdepimlibs>=${_kdever}"
              "kde-runtime>=${_kdever}"
-             "kde-common>=${_kdever}"
+             "chakra-common>=${_kdever}"
              "kdepim-runtime>=${_pkgver}"
              'libxss'
              'link-grammar')

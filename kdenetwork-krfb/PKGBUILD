@@ -9,7 +9,7 @@ _pkgname="krfb"
 pkgname="kdenetwork-krfb"
 arch=('x86_64')
 pkgver=${_kdever}
-pkgrel=3
+pkgrel=5
 pkgdesc="Desktop Sharing Server"
 # note on libxdamage:
 #       not detected by namcap because libgl depends on it
@@ -25,7 +25,7 @@ options=('docs' '!header' 'debug' 'log')
 makedepends=('pkg-config' 'cmake' 'automoc4' 'docbook-xsl')
 
 source=("$_mirror/${_pkgname}-$_kdever.tar.xz")
-sha1sums=(`grep ${_pkgname}-$_kdever.tar.xz  ../checksums.txt | cut -d " " -f1`)
+sha256sums=(`grep ${_pkgname}-$_kdever.tar.xz  ../checksums.txt | cut -d " " -f1`)
 
 build() {
   cd ${srcdir}/${_pkgname}-${pkgver}

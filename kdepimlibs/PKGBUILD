@@ -6,7 +6,7 @@ source ../_buildscripts/${current_repo}-${_arch}-cfg.conf
 pkgname="kdepimlibs"
 arch=('x86_64')
 pkgver=${_kdever}
-pkgrel=2
+pkgrel=3
 pkgdesc="KDE Pim libraries"
 url="http://www.kde.org"
 license=('GPL'
@@ -38,7 +38,7 @@ groups=('kde'
         'kde-uninstall'
         'kde-minimal')
 source=($_mirror/${pkgname}-$_kdever.tar.xz)
-sha1sums=(`grep ${pkgname}-$_kdever.tar.xz  ../checksums.txt | cut -d" " -f1`)
+sha256sums=(`grep ${pkgname}-$_kdever.tar.xz  ../checksums.txt | cut -d" " -f1`)
 
 build() {
     cd ${srcdir}
