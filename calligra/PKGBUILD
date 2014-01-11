@@ -19,10 +19,9 @@ pkgname=('calligra-3rdparty'
          'calligra-servicetypes'
          'calligra-sheets'
          'calligra-stage'
-         'calligra-templates'
          'calligra-words')
-pkgver=2.7.5
-pkgrel=3
+pkgver=2.7.90
+pkgrel=1
 arch=('x86_64')
 url='http://www.calligra-suite.org'
 screenshot=("http://upload.wikimedia.org/wikipedia/commons/thumb/3/3e/Calligra_Stage_2.4.png/800px-Calligra_Stage_2.4.png")
@@ -67,7 +66,7 @@ makedepends=('automoc4'
 options=("debug")
 groups=('calligra')
 source=("http://download.kde.org/stable/${pkgbase}-${pkgver}/${pkgbase}-${pkgver}.tar.xz")
-sha512sums=('2438add98f173732b93ccd5ad1f237fa6982e220521b2c64056cfb5e14f16cd3859ff2e64926a657b51454154f255a46f3ad6aaebb67532a31ec98d366672dad')
+sha512sums=('277a24f862b43de415f011890943e29b7759220b80274607de13afb2738f5dd8047e9ca27164883311200f05be6a3c17a3896e9bd9951abd6e6d526a89a2811c')
 
 prepare() {
     mkdir -p "${srcdir}/build"
@@ -156,13 +155,6 @@ package_calligra-servicetypes() {
     make DESTDIR="${pkgdir}" install
 }
 
-package_calligra-templates() {
-    pkgdesc="Templates for the Calligra office suite"
-
-    cd build/templates
-    make DESTDIR="${pkgdir}" install
-}
-
 package_calligra-extras() {
     pkgdesc="Extras for the Calligra office suite"
     depends=('calligra-libs')
@@ -175,7 +167,6 @@ package_calligra-extras() {
 package_calligra-karbon() {
     pkgdesc="Vector graphics editor"
     depends=('calligra-libs'
-             'calligra-templates'
              'hicolor-icon-theme')
     provides=('karbon')
     categories=('graphics')
@@ -217,7 +208,6 @@ package_calligra-plan() {
              'hicolor-icon-theme'
              'calligra-libs'
              'kdepimlibs'
-             'calligra-templates'
              'calligra-plugins')
     categories=('office')
     install=calligra-plan.install
@@ -229,7 +219,6 @@ package_calligra-plan() {
 package_calligra-stage() {
     pkgdesc="Presentation application"
     depends=('calligra-libs'
-             'calligra-templates'
              'hicolor-icon-theme')
     optdepends=('calligra-filters: import/export filters')
     categories=('office')
@@ -242,7 +231,6 @@ package_calligra-stage() {
 package_calligra-krita() {
     pkgdesc="Digital painting application"
     depends=('calligra-libs'
-             'calligra-templates'
              'calligra-plugins'
              'glew'
              'qimageblitz'
@@ -267,7 +255,6 @@ package_calligra-krita() {
 package_calligra-sheets() {
     pkgdesc="Spreadsheet application"
     depends=('calligra-libs'
-             'calligra-templates'
              'calligra-plugins'
              'gsl'
              'hicolor-icon-theme')
@@ -282,7 +269,6 @@ package_calligra-sheets() {
 package_calligra-words() {
     pkgdesc="Word processor"
     depends=('calligra-libs'
-             'calligra-templates'
              'calligra-plugins'
              'calligra-pics'
              'hicolor-icon-theme')
