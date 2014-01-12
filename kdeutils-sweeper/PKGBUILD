@@ -1,10 +1,6 @@
 # Maintainer:   H W Tovetjärn (totte) <totte@tott.es>
 # Contributors: Manuel Tortosa <manutortosa@chakra-project.org>
 
-
-
-# Maintainer: Manuel Tortosa <manutortosa@chakra-project@org>
-
 # Include global configuration
 source ../_buildscripts/${current_repo}-${_arch}-cfg.conf
 
@@ -12,7 +8,7 @@ pkgname="kdeutils-sweeper"
 _pkgname="sweeper"
 arch=('x86_64')
 pkgver=${_kdever}
-pkgrel=3
+pkgrel=1
 pkgdesc="Clean unwanted traces the user leaves on the system"
 url="http://www.kde.org"
 license=('GPL' 'LGPL' 'FDL')
@@ -24,23 +20,20 @@ categories=('utils')
 install=kdeutils.install
 provides=("sweeper")
 makedepends=('pkg-config' 'cmake' 'automoc4' "kdelibs>=${_kdever}")
-
 source=($_mirror/${_pkgname}-$_kdever.tar.xz)
 sha256sums=(`grep ${_pkgname}-$_kdever.tar.xz  ../checksums.txt | cut -d " " -f1`)
 
 build() {
-	cd ${srcdir}/${_pkgname}-${pkgver}
-
-	msg "starting build ..."
-	cmake . -DCMAKE_BUILD_TYPE=${_build_type} \
-		-DCMAKE_INSTALL_PREFIX=${_installprefix} \
-		-DCMAKE_SKIP_RPATH=ON \
-		-DCMAKE_{SHARED,MODULE,EXE}_LINKER_FLAGS='-Wl,--no-undefined -Wl,--as-needed'
-	make 
+    cd ${srcdir}/${_pkgname}-${pkgver}
+    cmake . \
+        -DCMAKE_BUILD_TYPE=${_build_type} \
+        -DCMAKE_INSTALL_PREFIX=${_installprefix} \
+        -DCMAKE_SKIP_RPATH=ON \
+        -DCMAKE_{SHARED,MODULE,EXE}_LINKER_FLAGS='-Wl,--no-undefined -Wl,--as-needed'
+    make
 }
 
 package() {
-	cd ${srcdir}/${_pkgname}-${pkgver}
-	make DESTDIR=${pkgdir} install
+    cd ${srcdir}/${_pkgname}-${pkgver}
+    make DESTDIR=${pkgdir} install
 }
-sha256sums=('617a3433a36a9c6ab9818f348eb18db03072d8ae06d9184cc4b8dc5d36e2f192')

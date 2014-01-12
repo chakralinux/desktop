@@ -1,16 +1,13 @@
 # Maintainer:   H W Tovetjärn (totte) <totte@tott.es>
 # Contributors: Manuel Tortosa <manutortosa@chakra-project.org>
 
-
-
-
 # Include global configuration
 source ../_buildscripts/${current_repo}-${_arch}-cfg.conf
 
 pkgname="kdenetwork-filesharing"
 arch=('x86_64')
 pkgver=${_kdever}
-pkgrel=3
+pkgrel=1
 pkgdesc='Konqueror properties dialog plugin to share a directory with the local network'
 depends=("kdelibs>=${_kdever}" 'smbclient')
 conflicts=("kdenetwork-common" "kdenetwork-doc")
@@ -20,22 +17,20 @@ url="http://www.kde.org"
 license=('GPL' 'LGPL' 'FDL')
 options=('docs' '!header' 'debug' 'log')
 makedepends=('pkg-config' 'cmake' 'automoc4' 'docbook-xsl')
-
 source=("$_mirror/${pkgname}-$_kdever.tar.xz")
 sha256sums=(`grep ${pkgname}-$_kdever.tar.xz  ../checksums.txt | cut -d" " -f1`)
 
 build() {
-  cd ${srcdir}/${pkgname}-${pkgver}
-	
-  cmake . -DCMAKE_BUILD_TYPE=${_build_type} \
-          -DCMAKE_INSTALL_PREFIX=${_installprefix} \
-          -DCMAKE_SKIP_RPATH=ON \
-          -DCMAKE_{SHARED,MODULE,EXE}_LINKER_FLAGS='-Wl,--no-undefined -Wl,--as-needed'
-  make 
+    cd ${srcdir}/${pkgname}-${pkgver}
+    cmake . \
+        -DCMAKE_BUILD_TYPE=${_build_type} \
+        -DCMAKE_INSTALL_PREFIX=${_installprefix} \
+        -DCMAKE_SKIP_RPATH=ON \
+        -DCMAKE_{SHARED,MODULE,EXE}_LINKER_FLAGS='-Wl,--no-undefined -Wl,--as-needed'
+    make
 }
 
 package() {
-  cd ${srcdir}/${pkgname}-${pkgver}
-  make DESTDIR=${pkgdir} install 
+    cd ${srcdir}/${pkgname}-${pkgver}
+    make DESTDIR=${pkgdir} install
 }
-sha256sums=('21d16909011028047b4dd95e7514588557858cd2a992e9c3f5e3ad49a5ead4c3')

@@ -1,7 +1,5 @@
 # Maintainer:   H W Tovetjärn (totte) <totte@tott.es>
 # Contributors: Manuel Tortosa <manutortosa@chakra-project.org>
-# Maintainer:   Manuel Tortosa <manutortosa@chakra-project@org>
-# Contributor:  H W Tovetjärn (totte) <totte@tott.es>
 
 # Include global configuration
 source ../_buildscripts/${current_repo}-${_arch}-cfg.conf
@@ -17,7 +15,7 @@ pkgname=('kdeartwork-colorschemes'
          'kdeartwork-weatherwallpapers')
 arch=('x86_64')
 pkgver=${_kdever}
-pkgrel=3
+pkgrel=1
 pkgdesc="split package"
 url="http://www.kde.org/"
 license=('GPL' 'LGPL' 'FDL')
@@ -35,7 +33,6 @@ sha256sums=(`grep ${pkgbase}-$_kdever.tar.xz  ../checksums.txt | cut -d" " -f1`
 
 build() {
     cd ${srcdir}/${pkgbase}-${pkgver}
-
     cmake . \
         -DCMAKE_BUILD_TYPE=${_build_type} \
         -DCMAKE_INSTALL_PREFIX=${_installprefix} \
@@ -51,10 +48,10 @@ package_kdeartwork-aurorae() {
     conflicts=("kdeartwork-common")
 
     splitdirs="aurorae"
-        for i in ${splitdirs} ; do
-            cd ${srcdir}/${pkgbase}-${pkgver}/${i}
-            make DESTDIR=${pkgdir} install
-        done
+    for i in ${splitdirs} ; do
+        cd ${srcdir}/${pkgbase}-${pkgver}/${i}
+        make DESTDIR=${pkgdir} install
+    done
 }
 
 package_kdeartwork-colorschemes() {
@@ -64,10 +61,10 @@ package_kdeartwork-colorschemes() {
     conflicts=("kdeartwork-common")
 
     splitdirs="ColorSchemes"
-        for i in ${splitdirs} ; do
-            cd ${srcdir}/${pkgbase}-${pkgver}/${i}
-            make DESTDIR=${pkgdir} install
-        done
+    for i in ${splitdirs} ; do
+        cd ${srcdir}/${pkgbase}-${pkgver}/${i}
+        make DESTDIR=${pkgdir} install
+    done
 }
 
 package_kdeartwork-desktopthemes() {
@@ -77,10 +74,10 @@ package_kdeartwork-desktopthemes() {
     conflicts=("kdeartwork-common")
 
     splitdirs="desktopthemes"
-        for i in ${splitdirs} ; do
-            cd ${srcdir}/${pkgbase}-${pkgver}/${i}
-            make DESTDIR=${pkgdir} install
-        done
+    for i in ${splitdirs} ; do
+        cd ${srcdir}/${pkgbase}-${pkgver}/${i}
+        make DESTDIR=${pkgdir} install
+    done
 
     # use transparent panel svg's everywhere
     # FIXME Elegance Silicon Clean-Blend Aya heron
@@ -97,10 +94,10 @@ package_kdeartwork-emoticons() {
     conflicts=("kdeartwork-common")
 
     splitdirs="emoticons"
-        for i in ${splitdirs} ; do
-            cd ${srcdir}/${pkgbase}-${pkgver}/${i}
-            make DESTDIR=${pkgdir} install
-        done
+    for i in ${splitdirs} ; do
+        cd ${srcdir}/${pkgbase}-${pkgver}/${i}
+        make DESTDIR=${pkgdir} install
+    done
 }
 
 package_kdeartwork-iconthemes() {
@@ -110,10 +107,10 @@ package_kdeartwork-iconthemes() {
     conflicts=("kdeartwork-common")
 
     splitdirs="IconThemes"
-        for i in ${splitdirs} ; do
-            cd ${srcdir}/${pkgbase}-${pkgver}/${i}
-            make DESTDIR=${pkgdir} install
-        done
+    for i in ${splitdirs} ; do
+        cd ${srcdir}/${pkgbase}-${pkgver}/${i}
+        make DESTDIR=${pkgdir} install
+    done
 }
 
 package_kdeartwork-screensavers() {
@@ -124,10 +121,10 @@ package_kdeartwork-screensavers() {
     optdepends=('xscreensaver: More screensavers')
 
     splitdirs="kscreensaver"
-        for i in ${splitdirs} ; do
-            cd ${srcdir}/${pkgbase}-${pkgver}/${i}
-            make DESTDIR=${pkgdir} install
-        done
+    for i in ${splitdirs} ; do
+        cd ${srcdir}/${pkgbase}-${pkgver}/${i}
+        make DESTDIR=${pkgdir} install
+    done
 
     pushd $srcdir/xscreensaver
     mkdir -p ${pkgdir}/usr/share/kde4/services/ScreenSavers
@@ -142,10 +139,10 @@ package_kdeartwork-kwinstyles() {
     conflicts=("kdeartwork-common")
 
     splitdirs="kwin-styles"
-        for i in ${splitdirs} ; do
-            cd ${srcdir}/${pkgbase}-${pkgver}/${i}
-            make DESTDIR=${pkgdir} install
-        done
+    for i in ${splitdirs} ; do
+        cd ${srcdir}/${pkgbase}-${pkgver}/${i}
+        make DESTDIR=${pkgdir} install
+    done
 }
 
 package_kdeartwork-styles() {
@@ -155,10 +152,10 @@ package_kdeartwork-styles() {
     conflicts=("kdeartwork-common")
 
     splitdirs="styles"
-        for i in ${splitdirs} ; do
-            cd ${srcdir}/${pkgbase}-${pkgver}/${i}
-            make DESTDIR=${pkgdir} install
-        done
+    for i in ${splitdirs} ; do
+        cd ${srcdir}/${pkgbase}-${pkgver}/${i}
+        make DESTDIR=${pkgdir} install
+    done
 }
 
 package_kdeartwork-wallpapers() {
@@ -168,10 +165,10 @@ package_kdeartwork-wallpapers() {
     conflicts=("kdeartwork-common")
 
     splitdirs="wallpapers"
-        for i in ${splitdirs} ; do
-            cd ${srcdir}/${pkgbase}-${pkgver}/${i}
-            make DESTDIR=${pkgdir} install
-        done
+    for i in ${splitdirs} ; do
+        cd ${srcdir}/${pkgbase}-${pkgver}/${i}
+        make DESTDIR=${pkgdir} install
+    done
 }
 
 package_kdeartwork-weatherwallpapers() {
@@ -181,10 +178,8 @@ package_kdeartwork-weatherwallpapers() {
     conflicts=("kdeartwork-common")
 
     splitdirs="WeatherWallpapers"
-        for i in ${splitdirs} ; do
-            cd ${srcdir}/${pkgbase}-${pkgver}/${i}
-            make DESTDIR=${pkgdir} install
-        done
+    for i in ${splitdirs} ; do
+        cd ${srcdir}/${pkgbase}-${pkgver}/${i}
+        make DESTDIR=${pkgdir} install
+    done
 }
-sha256sums=('dc94c60d80d35a9142684e7d6a09dcef8dac63449c574af03aa3be2da4caf873'
-            'f6f500b66b97b62d08f885662da7c3deca5b00d01431f3692693b9b29bdd4779')
