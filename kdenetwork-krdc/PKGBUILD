@@ -11,14 +11,29 @@ pkgver=${_kdever}
 pkgrel=1
 pkgdesc="Desktop Sharing Client"
 url="http://kde.org/applications/internet/krdc/"
-depends=("kde-runtime>=${_kdever}" 'libvncserver' 'rdesktop' 'telepathy-qt' 'freerdp')
-groups=("kde" "kdenetwork" "kde-uninstall")
+depends=("kde-runtime>=${_kdever}"
+         'libvncserver'
+         'rdesktop'
+         'telepathy-qt'
+         'freerdp')
+groups=("kde"
+        "kdenetwork"
+        "kde-uninstall")
 categories=('network')
-conflicts=("kdenetwork-common" "kdenetwork-doc")
+conflicts=("kdenetwork-common"
+           "kdenetwork-doc")
 install=kdenetwork.install
-license=('GPL' 'LGPL' 'FDL')
-options=('docs' '!header' 'debug' 'log')
-makedepends=('pkg-config' 'cmake' 'automoc4' 'docbook-xsl')
+license=('GPL'
+         'LGPL'
+         'FDL')
+options=('docs'
+         '!header'
+         'debug'
+         'log')
+makedepends=('pkg-config'
+             'cmake'
+             'automoc4'
+             'docbook-xsl')
 source=("$_mirror/${_pkgname}-$_kdever.tar.xz")
 sha256sums=(`grep ${_pkgname}-$_kdever.tar.xz  ../checksums.txt | cut -d " " -f1`)
 

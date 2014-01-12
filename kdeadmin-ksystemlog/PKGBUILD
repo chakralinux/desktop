@@ -11,24 +11,36 @@ pkgrel=1
 pkgdesc="Log viewer"
 screenshot="http://www.kde.org/images/screenshots/ksystemlog.png"
 depends=("kde-runtime>=${_kdever}")
-groups=("kdeadmin" "kde" "kde-uninstall")
+groups=("kdeadmin"
+        "kde"
+        "kde-uninstall")
 conflicts=("kdeadmin-doc")
 categories=('system')
 url="http://www.kde.org/"
-license=('GPL' 'LGPL' 'FDL')
+license=('GPL'
+         'LGPL'
+         'FDL')
 install=kdeadmin.install
-options=('docs' '!header' 'debug' 'log')
-makedepends=('pkg-config' 'cmake' 'automoc4' 'docbook-xsl')
+options=('docs'
+         '!header'
+         'debug'
+         'log')
+makedepends=('pkg-config'
+             'cmake'
+             'automoc4'
+             'docbook-xsl')
 source=("$_mirror/${_pkgname}-$_kdever.tar.xz" 
         "syslog-path.patch")
 sha256sums=(`grep ${_pkgname}-$_kdever.tar.xz  ../checksums.txt | cut -d " " -f1`
             '20095ce6e0f3e5b6800a7c6e52de6fddba62c031')
 
+prepare() {
+  rm -rf "${srcdir}/build"
+  mkdir "${srcdir}/build"
+}
+
 build() {
-  cd ${srcdir}/${_pkgname}-${pkgver}
-  cd ${srcdir}
-  rm -rf build
-  mkdir build && cd build
+  cd "${srcdir}/build"
   cmake ../${_pkgname}-${pkgver} \
         -DCMAKE_BUILD_TYPE=${_build_type} \
         -DCMAKE_INSTALL_PREFIX=${_installprefix} \

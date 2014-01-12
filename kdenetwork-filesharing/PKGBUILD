@@ -8,15 +8,27 @@ pkgname="kdenetwork-filesharing"
 arch=('x86_64')
 pkgver=${_kdever}
 pkgrel=1
-pkgdesc='Konqueror properties dialog plugin to share a directory with the local network'
-depends=("kdelibs>=${_kdever}" 'smbclient')
-conflicts=("kdenetwork-common" "kdenetwork-doc")
-groups=("kde" "kdenetwork" "kde-uninstall")
+pkgdesc='Konqueror plugin to share a directory with the local network'
+depends=("kdelibs>=${_kdever}"
+         'smbclient')
+conflicts=("kdenetwork-common"
+           "kdenetwork-doc")
+groups=("kde"
+        "kdenetwork"
+        "kde-uninstall")
 categories=('network')
 url="http://www.kde.org"
-license=('GPL' 'LGPL' 'FDL')
-options=('docs' '!header' 'debug' 'log')
-makedepends=('pkg-config' 'cmake' 'automoc4' 'docbook-xsl')
+license=('GPL'
+         'LGPL'
+         'FDL')
+options=('docs'
+         '!header'
+         'debug'
+         'log')
+makedepends=('pkg-config'
+             'cmake'
+             'automoc4'
+             'docbook-xsl')
 source=("$_mirror/${pkgname}-$_kdever.tar.xz")
 sha256sums=(`grep ${pkgname}-$_kdever.tar.xz  ../checksums.txt | cut -d" " -f1`)
 

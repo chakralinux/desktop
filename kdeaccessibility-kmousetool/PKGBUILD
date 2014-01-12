@@ -11,14 +11,24 @@ pkgver=${_kdever}
 pkgrel=1
 pkgdesc="Automatic mouse clicker"
 url="http://www.kde.org"
-license=('GPL' 'LGPL' 'FDL')
-depends=("kde-runtime>=${_kdever}" "kdelibs>=${_kdever}" "libxtst")
+license=('GPL'
+         'LGPL'
+         'FDL')
+depends=("kde-runtime>=${_kdever}"
+         "kdelibs>=${_kdever}"
+         "libxtst")
 makedepends=("automoc4")
 conflicts=("kdeaccessibility-doc")
 provides=('kmousetool')
 install='kdeaccessibility.install'
-groups=("kdeaccessibility" "kde" "kde-uninstall" "kde-doc")
-options=('docs' '!header' 'debug' 'log')
+groups=("kdeaccessibility"
+        "kde"
+        "kde-uninstall"
+        "kde-doc")
+options=('docs'
+         '!header'
+         'debug'
+         'log')
 categories=('accessibility')
 source=($_mirror/${_pkgname}-$_kdever.tar.xz)
 sha256sums=(`grep ${_pkgname}-$_kdever.tar.xz  ../checksums.txt | cut -d " " -f1`)

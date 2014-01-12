@@ -11,14 +11,27 @@ pkgver=${_kdever}
 pkgrel=1
 pkgdesc="Desktop widgets"
 url="http://www.kde.org"
-license=('GPL' 'LGPL' 'FDL')
-options=('docs' '!header' 'debug' 'log')
-depends=('qimageblitz' 'python')
+license=('GPL'
+         'LGPL'
+         'FDL')
+options=('docs'
+         '!header'
+         'debug'
+         'log')
+depends=('qimageblitz'
+         'python2')
 conflicts=("kdeutils-common")
-groups=("kde" "kdeutils" "kde-uninstall")
+groups=("kde"
+        "kdeutils"
+        "kde-uninstall")
 categories=('utils')
 install=kdeutils.install
-makedepends=('pkg-config' 'cmake' 'automoc4' "kdelibs>=${_kdever}" 'qimageblitz' 'python')
+makedepends=('pkg-config'
+             'cmake'
+             'automoc4'
+             "kdelibs>=${_kdever}"
+             'qimageblitz'
+             'python2')
 source=($_mirror/${_pkgname}-$_kdever.tar.xz)
 sha256sums=(`grep ${_pkgname}-$_kdever.tar.xz  ../checksums.txt | cut -d " " -f1`)
 

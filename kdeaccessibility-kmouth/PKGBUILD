@@ -11,14 +11,29 @@ pkgver=${_kdever}
 pkgrel=1
 pkgdesc="Speech synthesizer"
 url="http://www.kde.org"
-license=('GPL' 'LGPL' 'FDL')
-depends=("kde-runtime>=${_kdever}" "kdelibs>=${_kdever}")
+license=('GPL'
+         'LGPL'
+         'FDL')
+depends=("kde-runtime>=${_kdever}"
+         "kdelibs>=${_kdever}")
 conflicts=("kdeaccessibility-doc")
 provides=('kmouth')
 install='kdeaccessibility.install'
-groups=("kdeaccessibility" "kde" "kde-uninstall" "kde-doc")
-options=('docs' '!header' 'debug' 'log')
-makedepends=('pkgconfig' 'cmake' 'automoc4' "kde-runtime>=${_kdever}" "kdelibs>=${_kdever}" "speech-dispatcher>=0.6.7" 'docbook-xsl')
+groups=("kdeaccessibility"
+        "kde"
+        "kde-uninstall"
+        "kde-doc")
+options=('docs'
+         '!header'
+         'debug'
+         'log')
+makedepends=('pkgconfig'
+             'cmake'
+             'automoc4'
+             "kde-runtime>=${_kdever}"
+             "kdelibs>=${_kdever}"
+             "speech-dispatcher>=0.6.7"
+             'docbook-xsl')
 categories=('accessibility')
 source=($_mirror/${_pkgname}-$_kdever.tar.xz)
 sha256sums=(`grep ${_pkgname}-$_kdever.tar.xz  ../checksums.txt | cut -d " " -f1`)
