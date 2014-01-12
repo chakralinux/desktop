@@ -1,19 +1,14 @@
 # Maintainer:   H W Tovetjärn (totte) <totte@tott.es>
 # Contributors: Manuel Tortosa <manutortosa@chakra-project.org>
 
-
-
-# Maintainer Manuel Tortosa <manutortosa@chakra-project@org>
-
 # Include global configuration
 source ../_buildscripts/${current_repo}-${_arch}-cfg.conf
 
 _pkgname="cervisia"
 pkgname="kdesdk-cervisia"
-
 arch=('x86_64')
 pkgver=${_kdever}
-pkgrel=3
+pkgrel=1
 pkgdesc="A CVS GUI frontend for KDE"
 url="http://www.kde.org"
 license=('GPL' 'LGPL' 'FDL')
@@ -26,23 +21,19 @@ conflicts=('kdesdk-doc')
 provides="cervisia"
 install=kdesdk.install
 options=('docs' '!header' 'debug' 'log')
-
 source=("$_mirror/${_pkgname}-$_kdever.tar.xz")
 sha256sums=(`grep ${_pkgname}-$_kdever.tar.xz  ../checksums.txt | cut -d " " -f1`)
 
 build() {
-  cd ${srcdir}/${_pkgname}-${pkgver}
-
-  msg "starting build ..."
-  cmake . -DCMAKE_BUILD_TYPE=${_build_type} \
-          -DCMAKE_INSTALL_PREFIX=${_installprefix} \
-          -DCMAKE_SKIP_RPATH=ON 
-  make 
+    cd "${srcdir}/${_pkgname}-${pkgver}"
+    cmake . \
+        -DCMAKE_BUILD_TYPE=${_build_type} \
+        -DCMAKE_INSTALL_PREFIX=${_installprefix} \
+        -DCMAKE_SKIP_RPATH=ON 
+    make 
 }
 
 package() {
-  cd ${srcdir}/${_pkgname}-${pkgver}
-  make DESTDIR=${pkgdir} install 
+    cd "${srcdir}/${_pkgname}-${pkgver}"
+    make DESTDIR=${pkgdir} install 
 }
-
-sha256sums=('f03e4de856e047dd2f55635b525d6f286d12eb7be8f37cc583b1af396a9f69e4')

@@ -1,17 +1,13 @@
 # Maintainer:   H W Tovetjärn (totte) <totte@tott.es>
 # Contributors: Manuel Tortosa <manutortosa@chakra-project.org>
 
-
-
-# Maintainer Manuel Tortosa <manutortosa@chakra-project@org>
-
 # Include global configuration
 source ../_buildscripts/${current_repo}-${_arch}-cfg.conf
 
 pkgname="kde-dev-scripts"
 arch=('x86_64')
 pkgver=${_kdever}
-pkgrel=3
+pkgrel=1
 pkgdesc="Extra scripts for the KDE SDK"
 depends=("kde-runtime>=${_kdever}" 'python')
 conflicts=("kdesdk-doc" "kdesdk-scripts")
@@ -28,16 +24,14 @@ source=("$_mirror/${pkgname}-$_kdever.tar.xz")
 sha256sums=(`grep ${pkgname}-$_kdever.tar.xz  ../checksums.txt | cut -d" " -f1`)
 
 build() {
-  cd ${srcdir}/${pkgname}-${pkgver}
-
-  msg "starting build ..."
-  cmake . -DCMAKE_BUILD_TYPE=${_build_type} \
-          -DCMAKE_INSTALL_PREFIX=${_installprefix} 
-  make 
+    cd "${srcdir}/${pkgname}-${pkgver}"
+    cmake . \
+        -DCMAKE_BUILD_TYPE=${_build_type} \
+        -DCMAKE_INSTALL_PREFIX=${_installprefix} 
+    make 
 }
 
 package() {
-  cd ${srcdir}/${pkgname}-${pkgver}
+  cd "${srcdir}/${pkgname}-${pkgver}"
   make DESTDIR=${pkgdir} install 
 }
-sha256sums=('31c7b248d2ed693ac508aac35617e46558260d9fc300f36cf4e7ea3024512dc8')
