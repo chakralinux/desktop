@@ -1,0 +1,27 @@
+# Maintainer
+# previous CCR-Maintainer: Simone Gaiarin <simgunz@gmail.com>
+
+pkgname=rbtools
+verprefix=0.5
+pkgver=${verprefix}.3
+pkgrel=1
+pkgdesc="Client tools for Review Board"
+arch=('any')
+url="http://www.reviewboard.org/"
+license=('custom:MIT')
+depends=('python2')
+makedepends=('python2-setuptools')
+source=("http://downloads.reviewboard.org/releases/RBTools/${verprefix}/RBTools-${pkgver}.tar.gz")
+sha1sums=('73183dda2c72c7d138e7d41c1627800529ae678f')
+
+build() {
+  cd "$srcdir/RBTools-$pkgver"
+  python2 setup.py build
+}
+
+package() {
+  cd "$srcdir/RBTools-$pkgver"
+  python2 setup.py install --root "${pkgdir}"
+  install -d -m755 "${pkgdir}/usr/share/licenses/${pkgname}"
+  install -m644 COPYING "${pkgdir}/usr/share/licenses/${pkgname}/LICENSE"
+}
