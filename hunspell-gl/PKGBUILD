@@ -1,0 +1,48 @@
+# Maintainer: Adrián Chaves Fernández (Gallaecio) <adriyetichaves@gmail.com>, 2009-2010.
+
+pkgbase=hunspell-gl
+pkgname=(hunspell-gl-comunidade hunspell-gl-volg)
+pkgver=13.10
+pkgrel=1
+pkgdesc="Galician spellchecker for Hunspell"
+arch=('any')
+url="http://trasno.net/"
+license=('GPL3')
+provides=(hunspell-gl)
+conflicts=(hunspell-gl)
+depends=('hunspell')
+source=("http://downloads.sourceforge.net/project/hunspell-gl/estables/hunspell-gl-comunidade-$pkgver.tar.xz"
+        "http://downloads.sourceforge.net/project/hunspell-gl/estables/hunspell-gl-volg-$pkgver.tar.xz")
+md5sums=('ec1732a53504f7e737cba1ae51c89f8a'
+         '54d1b0b3806767804a8b85077c0b26f9')
+
+lang="gl"
+lang2="gl_ES"
+
+package_hunspell-gl-comunidade() {
+
+  # Creation of necesary folders...
+  mkdir -p $pkgdir/usr/share/myspell
+  mkdir -p $pkgdir/usr/share/enchant
+    
+  # Fix so Enchant can use dictionaries for Hunspell too.  
+  ln -s /usr/share/myspell $pkgdir/usr/share/enchant/hunspell
+  
+  # Actual installation...
+  install -D -m644 "$srcdir/$pkgname-$pkgver/$lang2.aff"	"$pkgdir/usr/share/myspell/$lang.aff"
+  install -D -m644 "$srcdir/$pkgname-$pkgver/$lang2.dic"	"$pkgdir/usr/share/myspell/$lang.dic"
+}
+
+package_hunspell-gl-volg() {
+
+  # Creation of necesary folders...
+  mkdir -p $pkgdir/usr/share/myspell
+  mkdir -p $pkgdir/usr/share/enchant
+    
+  # Fix so Enchant can use dictionaries for Hunspell too.  
+  ln -s /usr/share/myspell $pkgdir/usr/share/enchant/hunspell
+  
+  # Actual installation...
+  install -D -m644 "$srcdir/$pkgname-$pkgver/$lang2.aff"	"$pkgdir/usr/share/myspell/$lang.aff"
+  install -D -m644 "$srcdir/$pkgname-$pkgver/$lang2.dic"	"$pkgdir/usr/share/myspell/$lang.dic"
+}
