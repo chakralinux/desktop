@@ -37,8 +37,8 @@ build() {
 
   cmake $startdir/src/dbusmenu-qt -DCMAKE_BUILD_TYPE=Release \
                 -DCMAKE_INSTALL_PREFIX=/usr 
-  make || return 1
-  make DESTDIR=$pkgdir install || return 1
+  make
+  make DESTDIR=$pkgdir install
   
   rm -rf $srcdir/dbusmenu-qt-build
 }

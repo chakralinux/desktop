@@ -19,9 +19,9 @@ md5sums=('7bcad4fa54570f80c612012bce66f60f'
 
 build() {
   cd "${srcdir}/${pkgname}-${pkgver}"
-  ./configure --prefix=/usr || return 1
-  make || return 1
-  make DESTDIR="${pkgdir}" install || return 1
+  ./configure --prefix=/usr
+  make
+  make DESTDIR="${pkgdir}" install
   install -m755 -d "${pkgdir}/usr/share/licenses/${pkgname}"
-  install -m644 "${srcdir}/CREDITS" "${pkgdir}/usr/share/licenses/${pkgname}/" || return 1
+  install -m644 "${srcdir}/CREDITS" "${pkgdir}/usr/share/licenses/${pkgname}/"
 }

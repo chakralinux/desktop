@@ -27,7 +27,7 @@ build() {
   cp ${srcdir}/Makefile ${srcdir}/${pkgname}-${pkgver}
   cd ${srcdir}/${pkgname}-${pkgver}
   awk -f ${srcdir}/extract-cfile.awk ${srcdir}/rfc3951.txt  
-  make || return 1
+  make
   make DESTDIR=${pkgdir} install
   install -d ${pkgdir}/usr/share/licenses/ilbc
   install -D ${srcdir}/gips_iLBClicense.txt ${pkgdir}/usr/share/licenses/ilbc

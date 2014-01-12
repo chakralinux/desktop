@@ -45,11 +45,11 @@ build() {
 
   cmake -DCMAKE_INSTALL_PREFIX=/usr -DCMAKE_BUILD_TYPE=RelWithDebInfo
 
-  make || return 1
+  make
 }
 
 package() {
   cd "${srcdir}/$_svnmod-build"
-  make DESTDIR="${pkgdir}" install || return 1
+  make DESTDIR="${pkgdir}" install
 }
 
