@@ -1,5 +1,5 @@
-# Maintainer:   Manuel Tortosa <manutortosa@chakra-project@org>
-# Contributors: H W Tovetjärn (totte) <totte@tott.es>
+# Maintainer:   H W Tovetjärn (totte) <totte@tott.es>
+# Contributors: Manuel Tortosa <manutortosa@chakra-project.org>
 
 # Include global configuration
 source ../_buildscripts/${current_repo}-${_arch}-cfg.conf
@@ -7,7 +7,7 @@ source ../_buildscripts/${current_repo}-${_arch}-cfg.conf
 pkgname=kdegraphics-svgpart
 _pkgname=svgpart
 pkgver=${_kdever}
-pkgrel=3
+pkgrel=1
 pkgdesc="A KPart for viewing SVGs"
 arch=('x86_64')
 url='https://projects.kde.org/projects/kde/kdegraphics/svgpart'
@@ -18,8 +18,6 @@ depends=("kdelibs>=${_kdever}")
 makedepends=('pkg-config'
              'cmake'
              'automoc4')
-source=("$_mirror/${_pkgname}-$_kdever.tar.xz")
-sha256sums=(`grep ${_pkgname}-$_kdever.tar.xz  ../checksums.txt | cut -d " " -f1`)
 groups=('kde'
         'kdegraphics'
         'kde-uninstall')
@@ -28,6 +26,8 @@ options=('docs'
          '!header'
          'debug'
          'log')
+source=("$_mirror/${_pkgname}-$_kdever.tar.xz")
+sha256sums=(`grep ${_pkgname}-$_kdever.tar.xz  ../checksums.txt | cut -d " " -f1`)
 
 build() {
     cd "${srcdir}/${_pkgname}-${pkgver}"
@@ -35,7 +35,7 @@ build() {
         -DCMAKE_BUILD_TYPE=${_build_type} \
         -DCMAKE_INSTALL_PREFIX=${_installprefix} \
         -DCMAKE_SKIP_RPATH=ON \
-        -DKDE4_BUILD_TESTS=OFF \
+        -DKDE4_BUILD_TESTS=ON \
         -DCMAKE_{SHARED,MODULE,EXE}_LINKER_FLAGS='-Wl,--no-undefined -Wl,--as-needed'
     make
 }
@@ -44,4 +44,3 @@ package() {
     cd "${srcdir}/${_pkgname}-${pkgver}"
     make DESTDIR=${pkgdir} install
 }
-sha256sums=('b2fd4656a2ea7adcc6b1518a8038623d717ffa72781b47869416ed6cbf1514f5')

@@ -1,5 +1,5 @@
-
-
+# Maintainer:   H W Tovetjärn (totte) <totte@tott.es>
+# Contributors: Manuel Tortosa <manutortosa@chakra-project.org>
 
 # Include global configuration
 source ../_buildscripts/${current_repo}-${_arch}-cfg.conf
@@ -7,29 +7,32 @@ source ../_buildscripts/${current_repo}-${_arch}-cfg.conf
 pkgname=kdebindings-smokeqt
 _pkgname=smokeqt
 pkgver=${_kdever}
-pkgrel=3
+pkgrel=1
 pkgdesc="Language independent library for Qt bindings"
 url="http://kde.org/"
 arch=('x86_64')
 license=('GPL' 'LGPL' 'FDL')
-depends=("kde-runtime>=${_kdever}" 'qimageblitz' 'qscintilla-python2' 'qwt' "kdebindings-smokegen>=${_kdever}")
-makedepends=('cmake' 'automoc4')
-source=("$_mirror/${_pkgname}-$_kdever.tar.xz")
-sha256sums=(`grep ${_pkgname}-$_kdever.tar.xz  ../checksums.txt | cut -d " " -f1`)
+depends=("kde-runtime>=${_kdever}"
+         'qimageblitz'
+         'qscintilla-python2'
+         'qwt'
+         "kdebindings-smokegen>=${_kdever}")
 groups=("kde" "kdebindings" "kde-uninstall")
 provides=('smokeqt')
 options=('docs' '!header' 'debug' 'log')
+makedepends=('cmake' 'automoc4')
+source=("$_mirror/${_pkgname}-$_kdever.tar.xz")
+sha256sums=(`grep ${_pkgname}-$_kdever.tar.xz  ../checksums.txt | cut -d " " -f1`)
 
 build() {
-	cd ${srcdir}/${_pkgname}-${pkgver}
-	cmake . -DCMAKE_BUILD_TYPE=${_build_type} \
-                -DCMAKE_INSTALL_PREFIX=${_installprefix}  
-        make
+    cd "${srcdir}/${_pkgname}-${pkgver}"
+    cmake . \
+        -DCMAKE_BUILD_TYPE=${_build_type} \
+        -DCMAKE_INSTALL_PREFIX=${_installprefix}  
+    make
 }
 
 package() {
-	cd ${srcdir}/${_pkgname}-${pkgver}
-	make DESTDIR=${pkgdir} install 
-
+    cd "${srcdir}/${_pkgname}-${pkgver}"
+    make DESTDIR=${pkgdir} install 
 }
-sha256sums=('f5b9c292815ed1e2bc3f15c892a0d518c7d41fd69e4c9091e188d7953422e07b')

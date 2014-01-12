@@ -1,5 +1,5 @@
-# Maintainer:   Manuel Tortosa <manutortosa@chakra-project@org>
-# Contributors: H W Tovetjarn (totte) <totte@tott.es>
+# Maintainer:   H W Tovetjärn (totte) <totte@tott.es>
+# Contributors: Manuel Tortosa <manutortosa@chakra-project.org>
 
 # Include global configuration
 source ../_buildscripts/${current_repo}-${_arch}-cfg.conf
@@ -8,7 +8,7 @@ pkgbase=kdepim-runtime
 pkgname=${pkgbase}
 arch=('x86_64')
 pkgver=${_kdever}
-pkgrel=3
+pkgrel=1
 pkgdesc='Extends the functionality of KDE PIM'
 url='https://projects.kde.org/projects/kde/kdepim-runtime'
 license=('GPL'
@@ -49,7 +49,7 @@ build() {
         -DCMAKE_BUILD_TYPE=${_build_type} \
         -DCMAKE_INSTALL_PREFIX=${_installprefix} \
         -DCMAKE_SKIP_RPATH=ON \
-        -DKDE4_BUILD_TESTS=OFF \
+        -DKDE4_BUILD_TESTS=ON \
         -DCMAKE_{SHARED,MODULE,EXE}_LINKER_FLAGS='-Wl,--no-undefined -Wl,--as-needed'
     make
 }
@@ -58,4 +58,3 @@ package() {
     cd "${srcdir}/build"
     make DESTDIR=${pkgdir} install
 }
-sha256sums=('1e8b6d85aba0764535a19c3b0cdb393ddeb9558755c74c0226f14265976edde9')

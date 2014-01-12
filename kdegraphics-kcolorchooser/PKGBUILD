@@ -1,5 +1,5 @@
-# Maintainer:   Manuel Tortosa <manutortosa@chakra-project@org>
-# Contributors: H W Tovetjärn (totte) <totte@tott.es>
+# Maintainer:   H W Tovetjärn (totte) <totte@tott.es>
+# Contributors: Manuel Tortosa <manutortosa@chakra-project.org>
 
 # Include global configuration
 source ../_buildscripts/${current_repo}-${_arch}-cfg.conf
@@ -7,8 +7,8 @@ source ../_buildscripts/${current_repo}-${_arch}-cfg.conf
 pkgname=kdegraphics-kcolorchooser
 _pkgname=kcolorchooser
 pkgver=${_kdever}
-pkgrel=3
-pkgdesc='Color chooser'
+pkgrel=1
+pkgdesc='Colour chooser'
 url='http://kde.org/applications/graphics/kcolorchooser/'
 arch=('x86_64')
 license=('GPL'
@@ -17,9 +17,6 @@ license=('GPL'
 depends=("kde-runtime>=${_kdever}")
 makedepends=('cmake'
              'automoc4')
-source=("$_mirror/${_pkgname}-$_kdever.tar.xz")
-sha256sums=(`grep ${_pkgname}-$_kdever.tar.xz  ../checksums.txt | cut -d " " -f1`)
-install=${pkgname}.install
 groups=('kde'
         'kdegraphics'
         'kde-uninstall')
@@ -28,6 +25,9 @@ options=('docs'
          '!header'
          'debug'
          'log')
+install=${pkgname}.install
+source=("$_mirror/${_pkgname}-$_kdever.tar.xz")
+sha256sums=(`grep ${_pkgname}-$_kdever.tar.xz  ../checksums.txt | cut -d " " -f1`)
 
 build() {
     cd ${srcdir}/${_pkgname}-${pkgver}
@@ -35,7 +35,7 @@ build() {
         -DCMAKE_BUILD_TYPE=${_build_type} \
         -DCMAKE_INSTALL_PREFIX=${_installprefix} \
         -DCMAKE_SKIP_RPATH=ON \
-        -DKDE4_BUILD_TESTS=OFF \
+        -DKDE4_BUILD_TESTS=ON \
         -DCMAKE_{SHARED,MODULE,EXE}_LINKER_FLAGS='-Wl,--no-undefined -Wl,--as-needed'
     make
 }
@@ -44,4 +44,3 @@ package() {
     cd ${srcdir}/${_pkgname}-${pkgver}
     make DESTDIR=${pkgdir} install
 }
-sha256sums=('29798f926640a54a570726ab175036d6e20ec0e4cdeca618178ce29b043022d9')

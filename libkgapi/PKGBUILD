@@ -1,10 +1,10 @@
-# Maintainer:
-# Contributors: H W Tovetjärn (totte) <totte@tott.es>
+# Maintainer:   H W Tovetjärn (totte) <totte@tott.es>
+# Contributors: Manuel Tortosa <manutortosa@chakra-project.org>
 #               Andrea Scarpino <andrea@archlinux.org>
 
 pkgname=libkgapi
 pkgver=2.0.2
-pkgrel=3
+pkgrel=4
 pkgdesc='A KDE-based library for accessing various Google services via their public API'
 url='https://projects.kde.org/projects/kdereview/libkgapi'
 arch=('x86_64')
@@ -28,7 +28,7 @@ build() {
     cmake "../${pkgname}-${pkgver}" \
         -DCMAKE_BUILD_TYPE=Release \
         -DCMAKE_INSTALL_PREFIX=/usr \
-        -DKDE4_BUILD_TESTS=OFF
+        -DKDE4_BUILD_TESTS=ON
     make
 }
 
@@ -36,4 +36,3 @@ package() {
     cd "${srcdir}/build"
     make DESTDIR="${pkgdir}" install
 }
-sha512sums=('da3a496afd99f25000cf146c0ff034e2a8b0a14b7fbaf89a83ed61460aec97d5f64669031ee3697c54d465dcf2a528a0bc9fde6cbf130bb62d96f683df677bea')

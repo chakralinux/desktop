@@ -1,5 +1,5 @@
-# Maintainer:   Manuel Tortosa <manutortosa@chakra-project@org>
-# Contributors: H W Tovetjärn (totte) <totte@tott.es>
+# Maintainer:   H W Tovetjärn (totte) <totte@tott.es>
+# Contributors: Manuel Tortosa <manutortosa@chakra-project.org>
 #               Andrea Scarpino <andrea@archlinux.org>
 
 # Include global configuration
@@ -8,7 +8,7 @@ source ../_buildscripts/${current_repo}-${_arch}-cfg.conf
 pkgname=kdegraphics-kgamma
 _pkgname=kgamma
 pkgver=${_kdever}
-pkgrel=3
+pkgrel=1
 pkgdesc='A monitor calibration tool'
 arch=('x86_64')
 url='http://kde.org/applications/graphics/kgamma/'
@@ -29,8 +29,6 @@ depends=("kde-runtime>=${_kdever}"
          "kdegraphics-svgpart>=${_kdever}")
 makedepends=('cmake'
              'automoc4')
-source=("$_mirror/${_pkgname}-$_kdever.tar.xz")
-sha256sums=(`grep ${_pkgname}-$_kdever.tar.xz  ../checksums.txt | cut -d " " -f1`)
 groups=('kde'
         'kdegraphics'
         'kde-uninstall')
@@ -43,6 +41,8 @@ options=('docs'
          '!header'
          'debug'
          'log')
+source=("$_mirror/${_pkgname}-$_kdever.tar.xz")
+sha256sums=(`grep ${_pkgname}-$_kdever.tar.xz  ../checksums.txt | cut -d " " -f1`)
 
 build() {
     cd "${srcdir}/${_pkgname}-${pkgver}"
@@ -50,7 +50,7 @@ build() {
         -DCMAKE_BUILD_TYPE=${_build_type} \
         -DCMAKE_INSTALL_PREFIX=${_installprefix} \
         -DCMAKE_SKIP_RPATH=ON \
-        -DKDE4_BUILD_TESTS=OFF \
+        -DKDE4_BUILD_TESTS=ON \
         -DCMAKE_{SHARED,MODULE,EXE}_LINKER_FLAGS='-Wl,--no-undefined -Wl,--as-needed'
     make
 }
@@ -59,4 +59,3 @@ package() {
     cd "${srcdir}/${_pkgname}-${pkgver}"
     make DESTDIR=${pkgdir} install
 }
-sha256sums=('d9e8a814a99c91b5f916882f8c604f045b9d10a7c8292241b062fb51e5d423ed')

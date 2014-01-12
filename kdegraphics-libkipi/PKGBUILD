@@ -1,5 +1,5 @@
-# Maintainer:   Manuel Tortosa <manutortosa@chakra-project@org>
-# Contributors: H W Tovetjärn (totte) <totte@tott.es>
+# Maintainer:   H W Tovetjärn (totte) <totte@tott.es>
+# Contributors: Manuel Tortosa <manutortosa@chakra-project.org>
 
 # Include global configuration
 source ../_buildscripts/${current_repo}-${_arch}-cfg.conf
@@ -7,7 +7,7 @@ source ../_buildscripts/${current_repo}-${_arch}-cfg.conf
 pkgname=kdegraphics-libkipi
 _pkgname=libkipi
 pkgver=${_kdever}
-pkgrel=3
+pkgrel=1
 pkgdesc='An interface to use kipi-plugins from a KDE application'
 arch=('x86_64')
 url='https://projects.kde.org/projects/kde/kdegraphics/libs/libkipi'
@@ -18,8 +18,6 @@ depends=("kdelibs>=${_kdever}")
 makedepends=('cmake'
              'automoc4'
              'pkg-config')
-source=("$_mirror/${_pkgname}-$_kdever.tar.xz")
-sha256sums=(`grep ${_pkgname}-$_kdever.tar.xz  ../checksums.txt | cut -d " " -f1`)
 groups=('kde'
         'kdegraphics'
         'kde-uninstall')
@@ -29,6 +27,8 @@ options=('docs'
          '!header'
          'debug'
          'log')
+source=("$_mirror/${_pkgname}-$_kdever.tar.xz")
+sha256sums=(`grep ${_pkgname}-$_kdever.tar.xz  ../checksums.txt | cut -d " " -f1`)
 
 build() {
     cd ${srcdir}/${_pkgname}-${pkgver}
@@ -43,4 +43,3 @@ package() {
     cd ${srcdir}/${_pkgname}-${pkgver}
     make DESTDIR=${pkgdir} install
 }
-sha256sums=('d55c983f82af514e5c5e52ee640c4c4ea6ea20d916b52ebc3ee19bf86c9c4006')

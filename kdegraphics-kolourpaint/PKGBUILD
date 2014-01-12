@@ -1,5 +1,5 @@
-# Maintainer:   Manuel Tortosa <manutortosa@chakra-project@org>
-# Contributors: H W Tovetjärn (totte) <totte@tott.es>
+# Maintainer:   H W Tovetjärn (totte) <totte@tott.es>
+# Contributors: Manuel Tortosa <manutortosa@chakra-project.org>
 
 # Include global configuration
 source ../_buildscripts/${current_repo}-${_arch}-cfg.conf
@@ -7,7 +7,7 @@ source ../_buildscripts/${current_repo}-${_arch}-cfg.conf
 pkgname=kdegraphics-kolourpaint
 _pkgname=kolourpaint
 pkgver=${_kdever}
-pkgrel=3
+pkgrel=1
 pkgdesc='A simple painting program to quickly create raster images'
 url='http://kde.org/applications/graphics/kolourpaint/'
 arch=('x86_64')
@@ -24,9 +24,6 @@ depends=("kde-runtime>=${_kdever}"
 makedepends=('cmake'
              'automoc4'
              'docbook-xsl')
-source=("$_mirror/${_pkgname}-$_kdever.tar.xz")
-sha256sums=(`grep ${_pkgname}-$_kdever.tar.xz  ../checksums.txt | cut -d " " -f1`)
-install=${pkgname}.install
 groups=('kde'
         'kdegraphics'
         'kde-uninstall')
@@ -36,6 +33,9 @@ options=('docs'
          '!header'
          'debug'
          'log')
+install=${pkgname}.install
+source=("$_mirror/${_pkgname}-$_kdever.tar.xz")
+sha256sums=(`grep ${_pkgname}-$_kdever.tar.xz  ../checksums.txt | cut -d " " -f1`)
 
 build() {
     cd "${srcdir}/${_pkgname}-${pkgver}"
@@ -43,7 +43,7 @@ build() {
         -DCMAKE_BUILD_TYPE=${_build_type} \
         -DCMAKE_INSTALL_PREFIX=${_installprefix} \
         -DCMAKE_SKIP_RPATH=ON \
-        -DKDE4_BUILD_TESTS=OFF \
+        -DKDE4_BUILD_TESTS=ON \
         -DCMAKE_{SHARED,MODULE,EXE}_LINKER_FLAGS='-Wl,--no-undefined -Wl,--as-needed'
     make
 }
@@ -52,4 +52,3 @@ package() {
     cd "${srcdir}/${_pkgname}-${pkgver}"
     make DESTDIR=${pkgdir} install
 }
-sha256sums=('80639034016ec634f83da8ccbf56dc598acc58205768ca2a0def8e5d59f6cc0e')

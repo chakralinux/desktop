@@ -1,39 +1,36 @@
-
-
-
-# Maintainer: Manuel Tortosa <manutortosa@chakra-project@org>
+# Maintainer:   H W Tovetjärn (totte) <totte@tott.es>
+# Contributors: Manuel Tortosa <manutortosa@chakra-project.org>
 
 # Include global configuration
 source ../_buildscripts/${current_repo}-${_arch}-cfg.conf
 
 pkgname=libkcompactdisc
 pkgver=${_kdever}
-pkgrel=3
+pkgrel=1
 pkgdesc="A library for interfacing with CDs"
 url='https://projects.kde.org/projects/kde/kdemultimedia/libkcompactdisc'
 arch=('x86_64')
 license=('GPL' 'LGPL' 'FDL')
 depends=("kdelibs>=${_kdever}")
 makedepends=('cmake' 'automoc4')
-source=("$_mirror/${pkgname}-$_kdever.tar.xz")
-sha256sums=(`grep ${pkgname}-$_kdever.tar.xz  ../checksums.txt | cut -d" " -f1`)
 groups=("kde" "kdemultimedia" "kde-uninstall")
 conflicts=('kdemultimedia-common')
 replaces=('kdemultimedia-common')
 options=('docs' '!header' 'debug' 'log')
+source=("$_mirror/${pkgname}-$_kdever.tar.xz")
+sha256sums=(`grep ${pkgname}-$_kdever.tar.xz  ../checksums.txt | cut -d" " -f1`)
 
 build() {
-	cd ${srcdir}/${pkgname}-${pkgver}
-	cmake . -DCMAKE_BUILD_TYPE=${_build_type} \
-                -DCMAKE_INSTALL_PREFIX=${_installprefix} \
-                -DCMAKE_SKIP_RPATH=ON \
-                -DCMAKE_{SHARED,MODULE,EXE}_LINKER_FLAGS='-Wl,--no-undefined -Wl,--as-needed'
-
+    cd "${srcdir}/${pkgname}-${pkgver}"
+    cmake . \
+        -DCMAKE_BUILD_TYPE=${_build_type} \
+        -DCMAKE_INSTALL_PREFIX=${_installprefix} \
+        -DCMAKE_SKIP_RPATH=ON \
+        -DCMAKE_{SHARED,MODULE,EXE}_LINKER_FLAGS='-Wl,--no-undefined -Wl,--as-needed'
+    make
 }
 
 package() {
-	cd ${srcdir}/${pkgname}-${pkgver}
-	make DESTDIR=${pkgdir} install || return 1
-
+    cd ${srcdir}/${pkgname}-${pkgver}
+    make DESTDIR=${pkgdir} install
 }
-sha256sums=('ad810113f46ea21e4ac67bdc433d2030405962dcc506be7c831f334ffafba659')

@@ -1,5 +1,5 @@
-# Maintainer:   Manuel Tortosa <manutortosa@chakra-project@org>
-# Contributors: H W Tovetjärn (totte) <totte@tott.es>
+# Maintainer:   H W Tovetjärn (totte) <totte@tott.es>
+# Contributors: Manuel Tortosa <manutortosa@chakra-project.org>
 #               Andrea Scarpino <andrea@archlinux.org>
 
 # Include global configuration
@@ -8,7 +8,7 @@ source ../_buildscripts/${current_repo}-${_arch}-cfg.conf
 pkgname=kdegraphics-libkexiv2
 _pkgname=libkexiv2
 pkgver=${_kdever}
-pkgrel=3
+pkgrel=1
 pkgdesc='Wrapper around the Exiv2 library for image metadata manipulation'
 arch=('x86_64')
 url='https://projects.kde.org/projects/kde/kdegraphics/libs/libkexiv2'
@@ -22,8 +22,6 @@ depends=("kdelibs>=${_kdever}"
 makedepends=('pkg-config'
              'cmake'
              'automoc4')
-source=("$_mirror/${_pkgname}-$_kdever.tar.xz")
-sha256sums=(`grep ${_pkgname}-$_kdever.tar.xz  ../checksums.txt | cut -d " " -f1`)
 groups=('kde'
         'kdegraphics'
         'kde-uninstall')
@@ -33,6 +31,8 @@ options=('docs'
          '!header'
          'debug'
          'log')
+source=("$_mirror/${_pkgname}-$_kdever.tar.xz")
+sha256sums=(`grep ${_pkgname}-$_kdever.tar.xz  ../checksums.txt | cut -d " " -f1`)
 
 build() {
     cd ${srcdir}/${_pkgname}-${pkgver}
@@ -47,4 +47,3 @@ package() {
     cd ${srcdir}/${_pkgname}-${pkgver}
     make DESTDIR=${pkgdir} install
 }
-sha256sums=('7e479e7748cbddf714c2e2adf5fc5e48bd0f2ac0853beacb8085a96d3705cde5')

@@ -1,7 +1,5 @@
-
-
-
-# Maintainer: Manuel Tortosa <manutortosa@chakra-project@org>
+# Maintainer:   H W Tovetjärn (totte) <totte@tott.es>
+# Contributors: Manuel Tortosa <manutortosa@chakra-project.org>
 
 # Include global configuration
 source ../_buildscripts/${current_repo}-${_arch}-cfg.conf
@@ -9,32 +7,30 @@ source ../_buildscripts/${current_repo}-${_arch}-cfg.conf
 pkgname=kdemultimedia-kscd
 _pkgname=kscd
 pkgver=${_kdever}
-pkgrel=3
+pkgrel=1
 pkgdesc="KDE CD player"
 url='http://kde.org/applications/multimedia/kscd/'
 arch=('x86_64')
 license=('GPL' 'LGPL' 'FDL')
 depends=("kde-runtime>=${_kdever}" 'libmusicbrainz3')
 makedepends=('cmake' 'automoc4')
-source=("$_mirror/${_pkgname}-$_kdever.tar.xz")
-sha256sums=(`grep ${_pkgname}-$_kdever.tar.xz  ../checksums.txt | cut -d " " -f1`)
 groups=("kde" "kdemultimedia" "kde-uninstall")
 provides=('kscd')
 options=('docs' '!header' 'debug' 'log')
+source=("$_mirror/${_pkgname}-$_kdever.tar.xz")
+sha256sums=(`grep ${_pkgname}-$_kdever.tar.xz  ../checksums.txt | cut -d " " -f1`)
 
 build() {
-	cd ${srcdir}/${_pkgname}-${pkgver}
-	cmake . -DCMAKE_BUILD_TYPE=${_build_type} \
-                -DCMAKE_INSTALL_PREFIX=${_installprefix} \
-                -DCMAKE_SKIP_RPATH=ON \
-	        -DCMAKE_{SHARED,MODULE,EXE}_LINKER_FLAGS='-Wl,--no-undefined -Wl,--as-needed'
-	make
+    cd ${srcdir}/${_pkgname}-${pkgver}
+    cmake . \
+        -DCMAKE_BUILD_TYPE=${_build_type} \
+        -DCMAKE_INSTALL_PREFIX=${_installprefix} \
+        -DCMAKE_SKIP_RPATH=ON \
+        -DCMAKE_{SHARED,MODULE,EXE}_LINKER_FLAGS='-Wl,--no-undefined -Wl,--as-needed'
+    make
 }
 
 package() {
-	cd ${srcdir}/${_pkgname}-${pkgver}
-	make DESTDIR=${pkgdir} install 
-	
-
+    cd ${srcdir}/${_pkgname}-${pkgver}
+    make DESTDIR=${pkgdir} install 
 }
-sha256sums=('e68f7a2d32a5cedb8027f98f5d449d62ee0cfad7e750f76fcf754d37a496784f')

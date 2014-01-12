@@ -1,5 +1,5 @@
-# Maintainer:   Manuel Tortosa <manutortosa@chakra-project@org>
-# Contributors: H W Tovetjarn (totte) <totte@tott.es>
+# Maintainer:   H W Tovetjärn (totte) <totte@tott.es>
+# Contributors: Manuel Tortosa <manutortosa@chakra-project.org>
 
 # Include global configuration
 source ../_buildscripts/${current_repo}-${_arch}-cfg.conf
@@ -7,7 +7,7 @@ source ../_buildscripts/${current_repo}-${_arch}-cfg.conf
 pkgname=kdebindings-smokegen
 _pkgname=smokegen
 pkgver=${_kdever}
-pkgrel=3
+pkgrel=1
 pkgdesc='A general purpose C++ parser with a plugin infrastructure'
 url='https://projects.kde.org/projects/kde/kdebindings/smoke/smokegen'
 arch=('x86_64')
@@ -17,8 +17,6 @@ license=('GPL'
 depends=("kde-runtime>=${_kdever}")
 makedepends=('cmake'
              'automoc4')
-source=("$_mirror/${_pkgname}-$_kdever.tar.xz")
-sha256sums=(`grep ${_pkgname}-$_kdever.tar.xz  ../checksums.txt | cut -d " " -f1`)
 groups=('kde'
         'kdebindings'
         'kde-uninstall')
@@ -27,13 +25,15 @@ options=('docs'
          '!header'
          'debug'
          'log')
+source=("$_mirror/${_pkgname}-$_kdever.tar.xz")
+sha256sums=(`grep ${_pkgname}-$_kdever.tar.xz  ../checksums.txt | cut -d " " -f1`)
 
 build() {
     cd "${srcdir}/${_pkgname}-${pkgver}"
     cmake . \
         -DCMAKE_BUILD_TYPE=${_build_type} \
         -DCMAKE_INSTALL_PREFIX=${_installprefix} \
-        -DKDE4_BUILD_TESTS=OFF
+        -DKDE4_BUILD_TESTS=ON
     make
 }
 
@@ -41,4 +41,3 @@ package() {
     cd "${srcdir}/${_pkgname}-${pkgver}"
     make DESTDIR=${pkgdir} install
 }
-sha256sums=('f07ce559aa8fda4d2ed48b40e21c34c2b03e55b9ec4e4ea39f2e33490e8b4bbc')

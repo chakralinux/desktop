@@ -1,5 +1,5 @@
-# Maintainer:   Manuel Tortosa <manutortosa@chakra-project@org>
-# Contributors: H W Tovetjärn (totte) <totte@tott.es>
+# Maintainer:   H W Tovetjärn (totte) <totte@tott.es>
+# Contributors: Manuel Tortosa <manutortosa@chakra-project.org>
 
 # Include global configuration
 source ../_buildscripts/${current_repo}-${_arch}-cfg.conf
@@ -7,7 +7,7 @@ source ../_buildscripts/${current_repo}-${_arch}-cfg.conf
 pkgname=kdegraphics-ksaneplugin
 _pkgname=ksaneplugin
 pkgver=${_kdever}
-pkgrel=3
+pkgrel=1
 pkgdesc='A scan plugin that implements the scanning'
 arch=('x86_64')
 url='https://projects.kde.org/projects/kde/kdegraphics/ksaneplugin'
@@ -17,8 +17,6 @@ license=('GPL'
 depends=("kdegraphics-libksane>=${_kdever}")
 makedepends=('cmake'
              'automoc4')
-source=("$_mirror/${_pkgname}-$_kdever.tar.xz")
-sha256sums=(`grep ${_pkgname}-$_kdever.tar.xz  ../checksums.txt | cut -d " " -f1`)
 groups=('kde'
         'kdegraphics'
         'kde-uninstall')
@@ -27,6 +25,8 @@ options=('docs'
          '!header'
          'debug'
          'log')
+source=("$_mirror/${_pkgname}-$_kdever.tar.xz")
+sha256sums=(`grep ${_pkgname}-$_kdever.tar.xz  ../checksums.txt | cut -d " " -f1`)
 
 build() {
     cd ${srcdir}/${_pkgname}-${pkgver}
@@ -41,4 +41,3 @@ package() {
     cd ${srcdir}/${_pkgname}-${pkgver}
     make DESTDIR=${pkgdir} install
 }
-sha256sums=('a15491fb97b3b58bffa98dd8dff046b0f6ea3065c46c84a3083dd9e49f074a5c')

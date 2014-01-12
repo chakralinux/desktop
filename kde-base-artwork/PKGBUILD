@@ -1,14 +1,12 @@
-
-
-
-# Maintainer: Manuel Tortosa <manutortosa@chakra-project@org>
+# Maintainer:   H W Tovetjärn (totte) <totte@tott.es>
+# Contributors: Manuel Tortosa <manutortosa@chakra-project.org>
 
 # Include global configuration
 source ../_buildscripts/${current_repo}-${_arch}-cfg.conf
 
 pkgname=kde-base-artwork
 pkgver=${_kdever}
-pkgrel=3
+pkgrel=1
 pkgdesc="KDE KSplash theme"
 arch=('any')
 url='http://www.kde.org/'
@@ -18,17 +16,16 @@ source=("$_mirror/${pkgname}-$_kdever.tar.xz")
 sha256sums=(`grep ${pkgname}-$_kdever.tar.xz  ../checksums.txt | cut -d" " -f1`)
 
 build() {
-	cd $srcdir
-	mkdir build
-	cd build
-	cmake ../${pkgname}-${pkgver} \
-		-DCMAKE_BUILD_TYPE=Release \
-		-DCMAKE_INSTALL_PREFIX=/usr
-	make
+    cd $srcdir
+    mkdir build
+    cd build
+    cmake ../${pkgname}-${pkgver} \
+        -DCMAKE_BUILD_TYPE=Release \
+        -DCMAKE_INSTALL_PREFIX=/usr
+    make
 }
 
 package() {
-	cd $srcdir/build
-	make DESTDIR=$pkgdir install
+    cd $srcdir/build
+    make DESTDIR=$pkgdir install
 }
-sha256sums=('b6d6b3c44847243294b43bcecd5d884a5c331feec26da434c80dfb6896a1a1a6')

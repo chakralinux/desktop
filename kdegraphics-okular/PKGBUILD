@@ -1,5 +1,5 @@
-# Maintainer:   Manuel Tortosa <manutortosa@chakra-project@org>
-# Contributors: H W Tovetjärn (totte) <totte@tott.es>
+# Maintainer:   H W Tovetjärn (totte) <totte@tott.es>
+# Contributors: Manuel Tortosa <manutortosa@chakra-project.org>
 #               Anke Boersma (abveritas) <abveritas@chakra-project.org>
 
 # Include global configuration
@@ -9,7 +9,7 @@ pkgname=kdegraphics-okular
 _pkgname=okular
 arch=('x86_64')
 pkgver=${_kdever}
-pkgrel=3
+pkgrel=1
 pkgdesc='Universal document viewer'
 url='http://kde.org/applications/graphics/okular/'
 license=('GPL'
@@ -24,7 +24,6 @@ groups=('kde'
         'kde-uninstall')
 provides=('okular')
 categories=('office')
-install=okular.install
 # note on libxxf86vm:
 #       not detected by namcap because libgl depends on it
 #       but nvidia providing libgl does not depend on libxxf86vm
@@ -45,6 +44,7 @@ makedepends=('pkg-config'
              'cmake'
              'automoc4'
              'qca')
+install=okular.install
 source=("$_mirror/${_pkgname}-$_kdever.tar.xz")
 sha256sums=(`grep ${_pkgname}-$_kdever.tar.xz  ../checksums.txt | cut -d " " -f1`)
 
@@ -54,7 +54,7 @@ build() {
         -DCMAKE_BUILD_TYPE=${_build_type} \
         -DCMAKE_INSTALL_PREFIX=${_installprefix} \
         -DCMAKE_SKIP_RPATH=ON \
-        -DKDE4_BUILD_TESTS=OFF \
+        -DKDE4_BUILD_TESTS=ON \
         -DWITH_ActiveApp=OFF \
         -DCMAKE_{SHARED,MODULE,EXE}_LINKER_FLAGS='-Wl,--no-undefined -Wl,--as-needed'
     make
@@ -64,4 +64,3 @@ package() {
     cd ${srcdir}/${_pkgname}-${pkgver}
     make DESTDIR=${pkgdir} install
 }
-sha256sums=('e7f9f3071a1a47261da6e2efed9df9653ba7d60a1f5b834c67e5f2d877f8bb15')

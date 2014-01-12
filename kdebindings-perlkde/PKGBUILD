@@ -1,7 +1,5 @@
-
-
-
-# Maintainer: Manuel Tortosa <manutortosa@chakra-project@org>
+# Maintainer:   H W Tovetjärn (totte) <totte@tott.es>
+# Contributors: Manuel Tortosa <manutortosa@chakra-project.org>
 
 # Include global configuration
 source ../_buildscripts/${current_repo}-${_arch}-cfg.conf
@@ -9,29 +7,28 @@ source ../_buildscripts/${current_repo}-${_arch}-cfg.conf
 pkgname=kdebindings-perlkde
 _pkgname=perlkde
 pkgver=${_kdever}
-pkgrel=3
+pkgrel=1
 pkgdesc="Perl bindings for the KDE libraries"
 url="http://kde.org/"
 arch=('x86_64')
 license=('GPL' 'LGPL' 'FDL')
 depends=("kdebindings-perlqt>=${_kdever}" "kdebindings-smokekde>=${_kdever}")
-makedepends=('cmake' 'automoc4' "kdebindings-smokegen>=${_kdever}" "kdepimlibs>=${_kdever}" "kdegraphics-okular>=${_kdever}" "kdesdk-kate>=${_kdever}")
-source=("$_mirror/${_pkgname}-$_kdever.tar.xz")
-sha256sums=(`grep ${_pkgname}-$_kdever.tar.xz  ../checksums.txt | cut -d " " -f1`)
+makedepends=('cmake' 'automoc4' "kdebindings-smokegen>=${_kdever}" "kdepimlibs>=${_kdever}" "kdegraphics-okular>=${_kdever}" "kate>=${_kdever}")
 groups=("kde" "kdebindings" "kde-uninstall")
 provides=('perlkde')
 options=('docs' '!header' 'debug' 'log')
+source=("$_mirror/${_pkgname}-$_kdever.tar.xz")
+sha256sums=(`grep ${_pkgname}-$_kdever.tar.xz  ../checksums.txt | cut -d " " -f1`)
 
 build() {
-	cd ${srcdir}/${_pkgname}-${pkgver}
-	cmake . -DCMAKE_BUILD_TYPE=${_build_type} \
-                -DCMAKE_INSTALL_PREFIX=${_installprefix} 
-        make
+    cd "${srcdir}/${_pkgname}-${pkgver}"
+    cmake . \
+        -DCMAKE_BUILD_TYPE=${_build_type} \
+        -DCMAKE_INSTALL_PREFIX=${_installprefix} 
+    make
 }
 
 package() {
-	cd ${srcdir}/${_pkgname}-${pkgver}
-	make DESTDIR=${pkgdir} install || return 1
-
+    cd "${srcdir}/${_pkgname}-${pkgver}"
+    make DESTDIR=${pkgdir} install
 }
-sha256sums=('94c4ffd0e4e386b0d8274f206e9b6f859705b78e8e73abf5c40cca11f12fca7f')

@@ -1,16 +1,14 @@
-
-
-
-# Maintainer: Manuel Tortosa <manutortosa@chakra-project@org>
+# Maintainer:   H W Tovetjärn (totte) <totte@tott.es>
+# Contributors: Manuel Tortosa <manutortosa@chakra-project.org>
 
 # Include global configuration
 source ../_buildscripts/${current_repo}-${_arch}-cfg.conf
 
 pkgname="kdemultimedia-thumbnailers"
-pkgdesc='KDE Thumbnailers for several formats'
+pkgdesc='KDE thumbnailers for several formats'
 arch=('x86_64')
 pkgver=${_kdever}
-pkgrel=3
+pkgrel=1
 depends=('mplayer' 'ffmpeg' 'kdelibs')
 provides=('ffmpegthumbs' 'mplayerthumbs')
 groups=("kde" "kdemultimedia" "kde-uninstall")
@@ -21,92 +19,84 @@ options=('docs' '!header' 'debug' 'log')
 conflicts=('audiothumbs')
 provides=('audiothumbs')
 makedepends=('pkg-config' 'cmake' 'automoc4' 'docbook-xsl')
-source=($_mirror/ffmpegthumbs-$_kdever.tar.xz
-	$_mirror/mplayerthumbs-$_kdever.tar.xz
-	http://kenai.com/projects/kde-odf-thumbnail/downloads/download/1.0.0/kde-odf-thumbnail-1.0.0.tar.gz
-	http://kde-apps.org/CONTENT/content-files/107128-GimpResourcesThumbnailer-2.1.0.tar.gz
-	http://kde-apps.org/CONTENT/content-files/114885-AudioThumbs-0.1.tar.gz
-	mplayerthumbs-horizontal.patch
-	sprocket-large.png
-	sprocket-medium.png
-	sprocket-small.png)
+source=("$_mirror/ffmpegthumbs-$_kdever.tar.xz"
+        "$_mirror/mplayerthumbs-$_kdever.tar.xz"
+        'http://kenai.com/projects/kde-odf-thumbnail/downloads/download/1.0.0/kde-odf-thumbnail-1.0.0.tar.gz'
+        'http://kde-apps.org/CONTENT/content-files/107128-GimpResourcesThumbnailer-2.1.0.tar.gz'
+        'http://kde-apps.org/CONTENT/content-files/114885-AudioThumbs-0.1.tar.gz'
+        'mplayerthumbs-horizontal.patch'
+        'sprocket-large.png'
+        'sprocket-medium.png'
+        'sprocket-small.png')
 sha256sums=(`grep ffmpegthumbs-$_kdever.tar.xz  ../checksums.txt | cut -d" " -f1`
-	  `grep mplayerthumbs-$_kdever.tar.xz  ../checksums.txt | cut -d" " -f1`
-          'b8304d0719be703a48f46ad4ce061cf93ff990b6'  # kde-odf-thumbnail-1.0.0.tar.gz
-          '3fc4ca2dd833e8c0b29c349ff9776437221fa4db'  # 107128-GimpResourcesThumbnailer-2.1.0.tar.gz
-          '3d1e0cc84c38f817f150c1bb067328dc2388db90'  # 114885-AudioThumbs-0.1.tar.gz
-          '8ef3787b0f3f03e6791088172b5fd4999827fd69'  # mplayerthumbs-horizontal.patch
-          'e4b5fd3fa97b70ab0904fb8073f99fb9739a10bc'  # sprocket-large.png
-          '27cf3454d8708bac021a03eb7809695804f11286'  # sprocket-medium.png
-          'c7cf1ee783f2e0ad7be6bd31e5408877438b08f1') # sprocket-small.png
+            `grep mplayerthumbs-$_kdever.tar.xz  ../checksums.txt | cut -d" " -f1`
+            'b8304d0719be703a48f46ad4ce061cf93ff990b6'
+            '3fc4ca2dd833e8c0b29c349ff9776437221fa4db'
+            '3d1e0cc84c38f817f150c1bb067328dc2388db90'
+            '8ef3787b0f3f03e6791088172b5fd4999827fd69'
+            'e4b5fd3fa97b70ab0904fb8073f99fb9739a10bc'
+            '27cf3454d8708bac021a03eb7809695804f11286'
+            'c7cf1ee783f2e0ad7be6bd31e5408877438b08f1')
 
 build() {
-        pushd ${srcdir}/ffmpegthumbs-${pkgver}
-        cmake . -DCMAKE_BUILD_TYPE=${_build_type} \
-                -DCMAKE_INSTALL_PREFIX=${_installprefix} \
-                -DCMAKE_{SHARED,MODULE,EXE}_LINKER_FLAGS='-Wl,--no-undefined -Wl,--as-needed'
+    pushd ${srcdir}/ffmpegthumbs-${pkgver}
+    cmake . \
+        -DCMAKE_BUILD_TYPE=${_build_type} \
+        -DCMAKE_INSTALL_PREFIX=${_installprefix} \
+        -DCMAKE_{SHARED,MODULE,EXE}_LINKER_FLAGS='-Wl,--no-undefined -Wl,--as-needed'
+    make VERBOSE=1
+    popd
 
-        make VERBOSE=1 || return 1
-        popd
+    pushd ${srcdir}/mplayerthumbs-${pkgver}
+    msg "Applying patch..."
+    patch -Np2 -i ${srcdir}/mplayerthumbs-horizontal.patch 
+    cmake . \
+        -DCMAKE_BUILD_TYPE=${_build_type} \
+        -DCMAKE_INSTALL_PREFIX=${_installprefix} \
+        -DCMAKE_{SHARED,MODULE,EXE}_LINKER_FLAGS='-Wl,--no-undefined -Wl,--as-needed'
+    make VERBOSE=1
+    popd
 
+    pushd $srcdir/kde-odf-thumbnail-1.0.0
+    cmake . \
+        -DCMAKE_BUILD_TYPE=${_build_type} \
+        -DCMAKE_INSTALL_PREFIX=${_installprefix} \
+        -DCMAKE_SKIP_RPATH=ON \
+        -DCMAKE_{SHARED,MODULE,EXE}_LINKER_FLAGS='-Wl,--no-undefined -Wl,--as-needed'
+    popd
 
-	pushd ${srcdir}/mplayerthumbs-${pkgver}
-	msg "applying patches ..."
-	patch -Np2 -i ${srcdir}/mplayerthumbs-horizontal.patch 
-        
-	cmake . -DCMAKE_BUILD_TYPE=${_build_type} \
-		-DCMAKE_INSTALL_PREFIX=${_installprefix} \
-		-DCMAKE_{SHARED,MODULE,EXE}_LINKER_FLAGS='-Wl,--no-undefined -Wl,--as-needed'
+    pushd $srcdir/GimpResourcesThumbnailer-2.1.0
+    cmake . \
+        -DCMAKE_BUILD_TYPE=${_build_type} \
+        -DCMAKE_INSTALL_PREFIX=${_installprefix} \
+        -DCMAKE_{SHARED,MODULE,EXE}_LINKER_FLAGS='-Wl,--no-undefined -Wl,--as-needed'
+    popd
 
-	make VERBOSE=1 || return 1
-	popd
-
-	pushd $srcdir/kde-odf-thumbnail-1.0.0
-	cmake . -DCMAKE_BUILD_TYPE=${_build_type} \
-		-DCMAKE_INSTALL_PREFIX=${_installprefix} \
-		-DCMAKE_SKIP_RPATH=ON \
-		-DCMAKE_{SHARED,MODULE,EXE}_LINKER_FLAGS='-Wl,--no-undefined -Wl,--as-needed'
-	popd
-
-	pushd $srcdir/GimpResourcesThumbnailer-2.1.0
-	cmake . -DCMAKE_BUILD_TYPE=${_build_type} \
-		-DCMAKE_INSTALL_PREFIX=${_installprefix} \
-		-DCMAKE_{SHARED,MODULE,EXE}_LINKER_FLAGS='-Wl,--no-undefined -Wl,--as-needed'
-	popd
-
-	pushd $srcdir/AudioThumbs-0.1
-	cmake . -DCMAKE_BUILD_TYPE=${_build_type} \
-		-DCMAKE_INSTALL_PREFIX=${_installprefix} \
-		-DCMAKE_{SHARED,MODULE,EXE}_LINKER_FLAGS='-Wl,--no-undefined -Wl,--as-needed'
-	popd
+    pushd $srcdir/AudioThumbs-0.1
+    cmake . \
+        -DCMAKE_BUILD_TYPE=${_build_type} \
+        -DCMAKE_INSTALL_PREFIX=${_installprefix} \
+        -DCMAKE_{SHARED,MODULE,EXE}_LINKER_FLAGS='-Wl,--no-undefined -Wl,--as-needed'
+    popd
 }
 
 package() {
-	splitdirs="mplayerthumbs ffmpegthumbs"
-		for i in ${splitdirs} ; do
-			cd ${srcdir}/${i}-${pkgver}
-			make DESTDIR=${pkgdir} install
-		done
+    splitdirs="mplayerthumbs ffmpegthumbs"
+    for i in ${splitdirs}; do
+        cd ${srcdir}/${i}-${pkgver}
+        make DESTDIR=${pkgdir} install
+    done
 
-	install -D -m644 ${srcdir}/sprocket-large.png ${pkgdir}/usr/share/apps/videothumbnail/sprocket-large.png
-	install -D -m644 ${srcdir}/sprocket-medium.png ${pkgdir}/usr/share/apps/videothumbnail/sprocket-medium.png
-	install -D -m644 ${srcdir}/sprocket-small.png ${pkgdir}/usr/share/apps/videothumbnail/sprocket-small.png
+    install -D -m644 ${srcdir}/sprocket-large.png ${pkgdir}/usr/share/apps/videothumbnail/sprocket-large.png
+    install -D -m644 ${srcdir}/sprocket-medium.png ${pkgdir}/usr/share/apps/videothumbnail/sprocket-medium.png
+    install -D -m644 ${srcdir}/sprocket-small.png ${pkgdir}/usr/share/apps/videothumbnail/sprocket-small.png
 
-	cd $srcdir/kde-odf-thumbnail-1.0.0
-	make DESTDIR=${pkgdir} install 
+    cd $srcdir/kde-odf-thumbnail-1.0.0
+    make DESTDIR=${pkgdir} install 
 
-	cd $srcdir/GimpResourcesThumbnailer-2.1.0
-	make DESTDIR=${pkgdir} install 
+    cd $srcdir/GimpResourcesThumbnailer-2.1.0
+    make DESTDIR=${pkgdir} install 
 
-	cd $srcdir/AudioThumbs-0.1
-	make DESTDIR=${pkgdir} install 
+    cd $srcdir/AudioThumbs-0.1
+    make DESTDIR=${pkgdir} install 
 }
-sha256sums=('0d403d76580d7e3d536f090b39a5f41005a2c9465e792788fd6fc14173ed42c4'
-            'e38cdd168f42986c07c91bdd647f05a5690addee701013273f2df46d490e23b1'
-            'e1e38ad52e992934576cf04c32b99f08a361a841bd9e582088f6b000d2d87c50'
-            '3ad00c63f797d01788a425b9b00adcd45ac56d6422f7783f64975413e1761c3a'
-            'ea2660f0d09cc2fc1e7a890c2f45bde0a311e3e1a458f978d9dd9c90c4a4cf6d'
-            'a559b6196c2fdca6afcbfc2dbdf1105c8bbdecdb88f6130f93e930f890819d56'
-            '7250534c556dda3e09b57498fd4a8c4cbdff75f4d315ccb2f233f5c7e87aa66f'
-            '9dcf342c7068e973285e9ea252584372fde841686877a3bbaecbf9732446fb7d'
-            'a043b85535c69181b5a7562dd55784831a9601c05d6f80404cfb7fea01057726')

@@ -1,12 +1,10 @@
-# Maintainer:   Manuel Tortosa <manutortosa@chakra-project.org>
-# Contributors: H W Tovetjärn (totte) <totte@tott.es>
+# Maintainer:   H W Tovetjärn (totte) <totte@tott.es>
+# Contributors: Manuel Tortosa <manutortosa@chakra-project.org>
 
 # Include global configuration
 source ../_buildscripts/${current_repo}-${_arch}-cfg.conf
 
-# Default wallpaper included in kde-workspace package
 _default_wp="Elarun"
-
 pkgname="kde-workspace"
 arch=('x86_64')
 #pkgver=${_kdever}
@@ -114,26 +112,25 @@ source=("http://download.kde.org/stable/${pkgver}/src/${pkgname}-$pkgver.tar.xz"
         '09_enable_start-shutdown-scripts.patch'
         'fix_terminate-server.patch'
         'fix_root-only-kcms.patch')
-#sha256sums=(`grep ${pkgname}-$_kdever.tar.xz  ../checksums.txt | cut -d " " -f1`
-sha1sums=('4292288f7636a082f95072c4188015c041b424d3'
-          `grep kde-wallpapers-$_kdever.tar.xz  ../checksums.txt | cut -d " " -f1`
-          'e5cdf487940030c2aec83498d324fd4c7af2ea47'
-          '53bb8d20edb1ffd34d1977d06c92d9e8635889c3'
-          '47af1613c1e4c724049971a4a7db3db11ca395b1'
-          '660eae40a707d2711d8d7f32a93214865506b795'
-          '6aeecc9e0e221f0515c6bf544f9a3c11cb6961fe'
-          '106635aa1aae51d6f0668b1853f6c49a4fe9d3d8'
-          '07dd142fba8bd4b0892036529fcf4cecb329396e'
-          'b6f8e8692737b11eec1f8022ce74b5b23e247b1b'
-          '8c2bdefb23a03b753b78d16944d03fa3939d2d99'
-          'c079ebd157c836ba996190f0d2bcea1a7828d02c'
-          '6abf814689cf876e8648abd73faef7327b3f7edf'
-          '96ca52d2a5307b55d00efeb4c5bf4c5c604bf5f9'
-          '95b9c19e285178dd6309e7962cd35d4b7c12c570'
-          '0c53c7ce9bd2d94ee876a5d562d4c303930277be'
-          'f7d4564b8877f7f383c0dae174399f537c7b46ad'
-          'ac7bc292c865bc1ab8c02e6341aa7aeaf1a3eeee'
-          'f9699cb2a2259849d3ff635ef0cd335b0d335eef')
+sha256sums=(`grep ${pkgname}-$_kdever.tar.xz  ../checksums.txt | cut -d " " -f1`
+            `grep kde-wallpapers-$_kdever.tar.xz  ../checksums.txt | cut -d " " -f1`
+            'e5cdf487940030c2aec83498d324fd4c7af2ea47'
+            '53bb8d20edb1ffd34d1977d06c92d9e8635889c3'
+            '47af1613c1e4c724049971a4a7db3db11ca395b1'
+            '660eae40a707d2711d8d7f32a93214865506b795'
+            '6aeecc9e0e221f0515c6bf544f9a3c11cb6961fe'
+            '106635aa1aae51d6f0668b1853f6c49a4fe9d3d8'
+            '07dd142fba8bd4b0892036529fcf4cecb329396e'
+            'b6f8e8692737b11eec1f8022ce74b5b23e247b1b'
+            '8c2bdefb23a03b753b78d16944d03fa3939d2d99'
+            'c079ebd157c836ba996190f0d2bcea1a7828d02c'
+            '6abf814689cf876e8648abd73faef7327b3f7edf'
+            '96ca52d2a5307b55d00efeb4c5bf4c5c604bf5f9'
+            '95b9c19e285178dd6309e7962cd35d4b7c12c570'
+            '0c53c7ce9bd2d94ee876a5d562d4c303930277be'
+            'f7d4564b8877f7f383c0dae174399f537c7b46ad'
+            'ac7bc292c865bc1ab8c02e6341aa7aeaf1a3eeee'
+            'f9699cb2a2259849d3ff635ef0cd335b0d335eef')
 
 prepare() {
     cd "${srcdir}/${pkgname}-${pkgver}"
@@ -173,6 +170,7 @@ build() {
     cmake . -DCMAKE_BUILD_TYPE=${_build_type} \
         -DCMAKE_INSTALL_PREFIX=${_installprefix} \
         -DCMAKE_{SHARED,MODULE,EXE}_LINKER_FLAGS='-Wl,--no-undefined -Wl,--as-needed'
+    make
 
     msg "Building kcm_tablet..."
     cd "${srcdir}/wacomtablet-1.99.3"
@@ -181,13 +179,13 @@ build() {
     cmake . -DCMAKE_BUILD_TYPE=${_build_type} \
         -DCMAKE_INSTALL_PREFIX=${_installprefix} \
         -DCMAKE_{SHARED,MODULE,EXE}_LINKER_FLAGS='-Wl,--no-undefined -Wl,--as-needed'
+    make
 
     msg "Building favourites launcher..."
     cd "${srcdir}/favorites-0.1"
     cmake . -DCMAKE_BUILD_TYPE=${_build_type} \
         -DCMAKE_INSTALL_PREFIX=${_installprefix} \
         -DCMAKE_{SHARED,MODULE,EXE}_LINKER_FLAGS='-Wl,--no-undefined -Wl,--as-needed'
-
     make
 }
 
@@ -275,22 +273,3 @@ package() {
     rm -rf ${pkgdir}/usr/share/kde4/services/randr.desktop
     #rm -rf ${pkgdir}/usr/share/kde4/services/kded/randrmonitor.desktop
 }
-sha1sums=('4292288f7636a082f95072c4188015c041b424d3'
-          '71f2e6383045a9534108fa2c19d47711876b6a03'
-          'e5cdf487940030c2aec83498d324fd4c7af2ea47'
-          '53bb8d20edb1ffd34d1977d06c92d9e8635889c3'
-          '47af1613c1e4c724049971a4a7db3db11ca395b1'
-          '660eae40a707d2711d8d7f32a93214865506b795'
-          '6aeecc9e0e221f0515c6bf544f9a3c11cb6961fe'
-          '106635aa1aae51d6f0668b1853f6c49a4fe9d3d8'
-          '07dd142fba8bd4b0892036529fcf4cecb329396e'
-          'b6f8e8692737b11eec1f8022ce74b5b23e247b1b'
-          '8c2bdefb23a03b753b78d16944d03fa3939d2d99'
-          'c079ebd157c836ba996190f0d2bcea1a7828d02c'
-          '6abf814689cf876e8648abd73faef7327b3f7edf'
-          '96ca52d2a5307b55d00efeb4c5bf4c5c604bf5f9'
-          '95b9c19e285178dd6309e7962cd35d4b7c12c570'
-          '0c53c7ce9bd2d94ee876a5d562d4c303930277be'
-          'f7d4564b8877f7f383c0dae174399f537c7b46ad'
-          'ac7bc292c865bc1ab8c02e6341aa7aeaf1a3eeee'
-          'f9699cb2a2259849d3ff635ef0cd335b0d335eef')

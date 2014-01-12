@@ -1,5 +1,5 @@
-# Maintainer:   Manuel Tortosa <manutortosa@chakra-project@org>
-# Contributors: H W Tovetjärn (totte) <totte@tott.es>
+# Maintainer:   H W Tovetjärn (totte) <totte@tott.es>
+# Contributors: Manuel Tortosa <manutortosa@chakra-project.org>
 
 # Include global configuration
 source ../_buildscripts/${current_repo}-${_arch}-cfg.conf
@@ -7,7 +7,7 @@ source ../_buildscripts/${current_repo}-${_arch}-cfg.conf
 pkgname=kdegraphics-mobipocket
 arch=('x86_64')
 pkgver=${_kdever}
-pkgrel=3
+pkgrel=1
 pkgdesc='A collection of plugins to handle mobipocket files'
 url='https://projects.kde.org/projects/kde/kdegraphics/kdegraphics-mobipocket'
 license=('GPL'
@@ -24,8 +24,8 @@ provides=('mobipocket')
 depends=("kdegraphics-okular>=${_kdever}"
          'strigi')
 makedepends=('automoc4')
-source=("$_mirror/${pkgname}-$_kdever.tar.xz")
 install=${pkgname}.install
+source=("$_mirror/${pkgname}-$_kdever.tar.xz")
 sha256sums=(`grep ${pkgname}-$_kdever.tar.xz  ../checksums.txt | cut -d" " -f1`)
 
 build() {
@@ -34,7 +34,7 @@ build() {
         -DCMAKE_BUILD_TYPE=${_build_type} \
         -DCMAKE_INSTALL_PREFIX=${_installprefix} \
         -DCMAKE_SKIP_RPATH=ON \
-        -DKDE4_BUILD_TESTS=OFF \
+        -DKDE4_BUILD_TESTS=ON \
         -DCMAKE_{SHARED,MODULE,EXE}_LINKER_FLAGS='-Wl,--no-undefined -Wl,--as-needed'
     make
 }
@@ -43,4 +43,3 @@ package() {
     cd "${srcdir}/${pkgname}-${pkgver}"
     make DESTDIR=${pkgdir} install
 }
-sha256sums=('c6a9c8fe823c00f23a803921203cfad7954b33766f4972d3fd6fcd76f17ce632')
