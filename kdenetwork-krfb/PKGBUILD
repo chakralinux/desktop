@@ -1,19 +1,13 @@
 # Maintainer:   H W Tovetjärn (totte) <totte@tott.es>
 # Contributors: Manuel Tortosa <manutortosa@chakra-project.org>
-# Maintainer:   H W Tovetjärn (totte) <totte@tott.es>
-# Contributors: Manuel Tortosa <manutortosa@chakra-project.org>
-
-
-
 
 # Include global configuration
 source ../_buildscripts/${current_repo}-${_arch}-cfg.conf
 
-_pkgname="krfb"
-pkgname="kdenetwork-krfb"
+pkgname="krfb"
 arch=('x86_64')
 pkgver=${_kdever}
-pkgrel=5
+pkgrel=1
 pkgdesc="Desktop Sharing Server"
 # note on libxdamage:
 #       not detected by namcap because libgl depends on it
@@ -21,30 +15,28 @@ pkgdesc="Desktop Sharing Server"
 depends=("kde-runtime>=${_kdever}" "kdelibs>=${_kdever}" 'libvncserver' 'libxdamage')
 groups=("kde" "kdenetwork" "kde-uninstall")
 categories=('network')
-conflicts=("kdenetwork-common" "kdenetwork-doc")
+conflicts=("kdenetwork-common" "kdenetwork-doc" "kdenetwork-krfb")
+replaces=("kdenetwork-krfb")
+provides=("kdenetwork-krfb")
 install=kdenetwork.install
 url="http://www.kde.org"
 license=('GPL' 'LGPL' 'FDL')
 options=('docs' '!header' 'debug' 'log')
 makedepends=('pkg-config' 'cmake' 'automoc4' 'docbook-xsl')
-
 source=("$_mirror/${_pkgname}-$_kdever.tar.xz")
 sha256sums=(`grep ${_pkgname}-$_kdever.tar.xz  ../checksums.txt | cut -d " " -f1`)
 
 build() {
-  cd ${srcdir}/${_pkgname}-${pkgver}
-	
-  cmake . -DCMAKE_BUILD_TYPE=${_build_type} \
-          -DCMAKE_INSTALL_PREFIX=${_installprefix} \
-          -DCMAKE_SKIP_RPATH=ON \
-          -DCMAKE_{SHARED,MODULE,EXE}_LINKER_FLAGS='-Wl,--no-undefined -Wl,--as-needed'
-  make 
+    cd ${srcdir}/${_pkgname}-${pkgver}
+    cmake . \
+        -DCMAKE_BUILD_TYPE=${_build_type} \
+        -DCMAKE_INSTALL_PREFIX=${_installprefix} \
+        -DCMAKE_SKIP_RPATH=ON \
+        -DCMAKE_{SHARED,MODULE,EXE}_LINKER_FLAGS='-Wl,--no-undefined -Wl,--as-needed'
+    make 
 }
-
 
 package() {
-  cd ${srcdir}/${_pkgname}-${pkgver}
-  make DESTDIR=${pkgdir} install 
+    cd ${srcdir}/${_pkgname}-${pkgver}
+    make DESTDIR=${pkgdir} install 
 }
-sha256sums=('c1887f84c45d148978fc69ab38a7e74e0feafdd6e2efe8e4aeab537efb7c411c')
-sha256sums=('c1887f84c45d148978fc69ab38a7e74e0feafdd6e2efe8e4aeab537efb7c411c')
