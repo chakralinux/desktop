@@ -20,7 +20,7 @@ makedepends=("kde-workspace=4.11.5" 'pkg-config' 'cmake' 'automoc4' 'libraw1394'
 source=("$_mirror/${pkgbase}-$_kdever.tar.xz"
         "http://www.kde-apps.org/CONTENT/content-files/99752-kde_cdemu-0.5.0.tar.bz2")
 sha256sums=(`grep ${pkgbase}-$_kdever.tar.xz  ../checksums.txt | cut -d" " -f1`
-            '59813c931ea72bb427419824412b699adb92c095')
+            'd93744048cf7ae6b86861d26e2c38c27fafd4a7d6e5703e03ed09d776273303a')
 
 build() {
     cd ${pkgbase}-${pkgver}
@@ -116,7 +116,7 @@ package_dolphin() {
 
 package_konqueror() {
     pkgdesc="The default KDE web browser"
-    depends=("${pkgbase}>=${_kdever}" "${pkgbase}-dolphin>=${_kdever}")
+    depends=("${pkgbase}>=${_kdever}" "dolphin>=${_kdever}")
     groups=("${pkgbase}" "kde" "kde-minimal" "kde-uninstall")
     conflicts=("kdebase-konqueror" "kde-baseapps-konqueror")
     provides=("kdebase-konqueror" "kde-baseapps-konqueror")
@@ -151,7 +151,7 @@ package_konqueror() {
 
 package_konqueror-plugins() {
     pkgdesc="KDE Base Applications - Extra plugins for Konqueror"
-    depends=("${pkgbase}-konqueror>=${_kdever}" 'tidyhtml')
+    depends=("konqueror>=${_kdever}" 'tidyhtml')
     groups=("${pkgbase}" "kde" "kde-minimal" "kde-uninstall")
     conflicts=("konq-plugins" "kde-baseapps-konq-plugins")
     provides=("konq-plugins" "kde-baseapps-konq-plugins")

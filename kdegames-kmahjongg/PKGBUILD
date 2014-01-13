@@ -28,7 +28,7 @@ options=('docs'
          'debug'
          'log')
 source=("$_mirror/${_pkgname}-$_kdever.tar.xz")
-sha256sums=(`grep " ${_pkgname}-$_kdever.tar.xz"  ../checksums.txt | cut -d" " -f1`)
+sha256sums=(`grep ${_pkgname}-$_kdever.tar.xz  ../checksums.txt | cut -d " " -f1`)
 
 build() {
     cd ${srcdir}/${_pkgname}-${pkgver}
@@ -44,3 +44,4 @@ package() {
     cd ${srcdir}/${_pkgname}-${pkgver}
     make DESTDIR=${pkgdir} install
 }
+sha256sums=('aa6aaf35885151a2c4ca807895c2aac8e66bcb2369ecb37c5096006b3f239915')
