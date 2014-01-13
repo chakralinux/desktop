@@ -4,30 +4,27 @@
 # Include global configuration
 source ../_buildscripts/${current_repo}-${_arch}-cfg.conf
 
-pkgname="dolphin-plugins"
+pkgname="kdesdk-dolphin-plugins"
 arch=('x86_64')
 pkgver=${_kdever}
 pkgrel=1
 pkgdesc='Dolphin plugins'
 url="http://www.kde.org"
 license=('GPL' 'LGPL' 'FDL')
-depends=("dolphin>=${_kdever}" 'subversion' 'git' "kdesdk-kompare>=${_kdever}")
+depends=("kde-baseapps-dolphin>=${_kdever}" 'subversion' 'git' "kdesdk-kompare>=${_kdever}")
 optdepends=('bzr: bazaar support'
             'git: git support'
             'mercurial: hg support'
             'subversion: svn support')
-provides=('kdesdk-dolphin-plugins')
-conflicts=('kdesdk-dolphin-plugins')
-replaces=('kdesdk-dolphin-plugins')
 categories=('programming')
-install=dolphin-plugins.install
+install=${pkgname}.install
 options=('docs' '!header' 'debug' 'log')
 makedepends=('pkg-config' 'cmake' 'automoc4' 'docbook-xsl')
-source=("$_mirror/$pkgname-$_kdever.tar.xz")
-sha256sums=(`grep $pkgname-$_kdever.tar.xz  ../checksums.txt | cut -d " " -f1`)
+source=("$_mirror/dolphin-plugins-$_kdever.tar.xz")
+sha256sums=(`grep dolphin-plugins-$_kdever.tar.xz  ../checksums.txt | cut -d " " -f1`)
 
 build() {
-    cd ${srcdir}/$pkgname-${pkgver}
+    cd ${srcdir}/dolphin-plugins-${pkgver}
     cmake . \
         -DCMAKE_BUILD_TYPE=${_build_type} \
         -DCMAKE_INSTALL_PREFIX=${_installprefix} \
@@ -36,6 +33,6 @@ build() {
 }
 
 package() {
-    cd ${srcdir}/$pkgname-${pkgver}
+    cd ${srcdir}/dolphin-plugins-${pkgver}
     make DESTDIR=${pkgdir} install 
 }

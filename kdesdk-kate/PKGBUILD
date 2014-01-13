@@ -6,9 +6,9 @@
 source ../_buildscripts/${current_repo}-${_arch}-cfg.conf
 
 pkgbase='kate'
-pkgname=('kate'
-         'kwrite'
-         'katepart')
+pkgname=('kdesdk-kate'
+         'kde-baseapps-kwrite'
+         'kde-baseapps-katepart')
 pkgver=${_kdever}
 pkgrel=1
 arch=('x86_64')
@@ -46,7 +46,7 @@ build() {
     make
 }
 
-package_katepart() {
+package_kde-baseapps-katepart() {
     pkgdesc='A fast and feature-rich text editor component'
     url='http://kate-editor.org/about-katepart/'
     depends=('kdelibs')
@@ -59,7 +59,7 @@ package_katepart() {
     make DESTDIR="${pkgdir}" install
 }
 
-package_kwrite() {
+package_kde-baseapps-kwrite() {
     pkgdesc='KDE text editor'
     depends=('kde-runtime'
              'katepart')
@@ -78,16 +78,13 @@ package_kwrite() {
     make DESTDIR="${pkgdir}" install
 }
 
-package_kate() {
+package_kdesdk-kate() {
     pkgdesc='KDE Advanced Text Editor'
     depends=('kde-runtime'
              'katepart'
              'qjson')
     groups=('kde'
             'kde-uninstall')
-    provides=("kdesdk-kate")
-    replaces=("kdesdk-kate")
-    conflicts=("kdesdk-kate")
     url='http://www.kde.org/applications/utilities/kate/'
     install='kate.install'
     optdepends=('konsole: Open a terminal in Kate'

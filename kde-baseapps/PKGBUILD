@@ -6,9 +6,9 @@ source ../_buildscripts/${current_repo}-${_arch}-cfg.conf
 
 pkgbase="kde-baseapps"
 pkgname=('kde-baseapps'
-        'dolphin'
-        'konqueror'
-        'konqueror-plugins')
+        'kde-baseapps-dolphin'
+        'kde-baseapps-konqueror'
+        'kde-baseapps-konqueror-plugins')
 arch=('x86_64')
 pkgver=${_kdever}
 pkgrel=1
@@ -97,13 +97,13 @@ package_kde-baseapps() {
     sed -i -e "s~Icon=kfind~Icon=edit-find~g" ${pkgdir}/usr/share/applications/kde4/kfind.desktop
 }
 
-package_dolphin() {
+package_kde-baseapps-dolphin() {
     pkgdesc="The default KDE file manager"
     depends=("${pkgbase}>=${_kdever}")
     groups=("${pkgbase}" "kde" "kde-complete" "kde-uninstall")
-    conflicts=("kdebase-dolphin" "kde-baseapps-dolphin")
-    provides=("kdebase-dolphin" "kde-baseapps-dolphin")
-    replaces=("kdebase-dolphin" "kde-baseapps-dolphin")
+    conflicts=("kdebase-dolphin")
+    provides=("kdebase-dolphin")
+    replaces=("kdebase-dolphin")
     categories=('system')
     install=dolphin.install
 
@@ -114,13 +114,13 @@ package_dolphin() {
     done
 }
 
-package_konqueror() {
+package_kde-baseapps-konqueror() {
     pkgdesc="The default KDE web browser"
     depends=("${pkgbase}>=${_kdever}" "dolphin>=${_kdever}")
     groups=("${pkgbase}" "kde" "kde-minimal" "kde-uninstall")
-    conflicts=("kdebase-konqueror" "kde-baseapps-konqueror")
-    provides=("kdebase-konqueror" "kde-baseapps-konqueror")
-    replaces=("kdebase-konqueror" "kde-baseapps-konqueror")
+    conflicts=("kdebase-konqueror")
+    provides=("kdebase-konqueror")
+    replaces=("kdebase-konqueror")
     categories=('network')
     install=konqueror.install
 
@@ -149,7 +149,7 @@ package_konqueror() {
     cp -v ${srcdir}/konqueror.desktop ${pkgdir}/usr/share/kde4/services/konqueror.desktop
 }
 
-package_konqueror-plugins() {
+package_kde-baseapps-konqueror-plugins() {
     pkgdesc="KDE Base Applications - Extra plugins for Konqueror"
     depends=("konqueror>=${_kdever}" 'tidyhtml')
     groups=("${pkgbase}" "kde" "kde-minimal" "kde-uninstall")

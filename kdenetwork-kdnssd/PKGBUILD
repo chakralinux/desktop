@@ -4,27 +4,24 @@
 # Include global configuration
 source ../_buildscripts/${current_repo}-${_arch}-cfg.conf
 
-pkgname="kppp"
+pkgname="kdenetwork-kdnssd"
 arch=('x86_64')
 pkgver=${_kdever}
 pkgrel=1
-pkgdesc="PPP client"
-url="http://kde.org/applications/internet/kppp/"
-depends=("kde-runtime>=${_kdever}" 'ppp')
+pkgdesc='Monitors the network for DNS-SD services'
+depends=("kdelibs>=${_kdever}")
+conflicts=("kdenetwork-common" "kdenetwork-doc")
 groups=("kde" "kdenetwork" "kde-uninstall")
 categories=('network')
-conflicts=("kdenetwork-common" "kdenetwork-doc" "kdenetwork-kppp")
-provides=("kdenetwork-kppp")
-replaces=("kdenetwork-kppp")
-install=kdenetwork.install
+url="http://www.kde.org"
 license=('GPL' 'LGPL' 'FDL')
 options=('docs' '!header' 'debug' 'log')
 makedepends=('pkg-config' 'cmake' 'automoc4' 'docbook-xsl')
-source=("$_mirror/$pkgname-$_kdever.tar.xz")
-sha256sums=(`grep $pkgname-$_kdever.tar.xz  ../checksums.txt | cut -d " " -f1`)
+source=("$_mirror/kdnssd-$_kdever.tar.xz")
+sha256sums=(`grep kdnssd-$_kdever.tar.xz  ../checksums.txt | cut -d " " -f1`)
 
 build() {
-    cd ${srcdir}/$pkgname-$pkgver
+    cd ${srcdir}/kdnssd-$pkgver
     cmake . \
         -DCMAKE_BUILD_TYPE=${_build_type} \
         -DCMAKE_INSTALL_PREFIX=${_installprefix} \
@@ -34,6 +31,6 @@ build() {
 }
 
 package() {
-    cd ${srcdir}/$pkgname-$pkgver
+    cd ${srcdir}/kdnssd-$pkgver
     make DESTDIR=${pkgdir} install
 }
