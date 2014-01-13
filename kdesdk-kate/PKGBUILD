@@ -50,9 +50,9 @@ package_kde-baseapps-katepart() {
     pkgdesc='A fast and feature-rich text editor component'
     url='http://kate-editor.org/about-katepart/'
     depends=('kdelibs')
-    provides=("kdebase-katepart")
-    replaces=("kdebase-katepart")
-    conflicts=("kdebase-katepart")
+    provides=("kdebase-katepart" "kate-syntax-markdown")
+    replaces=("kdebase-katepart" "kate-syntax-markdown")
+    conflicts=("kdebase-katepart" "kate-syntax-markdown")
     install='katepart.install'
 
     cd "${srcdir}/build/part"
@@ -87,7 +87,7 @@ package_kdesdk-kate() {
             'kde-uninstall')
     url='http://www.kde.org/applications/utilities/kate/'
     install='kate.install'
-    optdepends=('konsole: Open a terminal in Kate'
+    optdepends=('kde-baseapps-konsole: Open a terminal in Kate'
                 'kdebindings-python2: Python 2 bindings'
                 'kdebindings-python3: Python 3 bindings')
 
