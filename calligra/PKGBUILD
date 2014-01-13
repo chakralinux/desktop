@@ -20,7 +20,7 @@ pkgname=('calligra-3rdparty'
          'calligra-sheets'
          'calligra-stage'
          'calligra-words')
-pkgver=2.7.90
+pkgver=2.7.91
 pkgrel=1
 arch=('x86_64')
 url='http://www.calligra-suite.org'
@@ -66,7 +66,7 @@ makedepends=('automoc4'
 options=("debug")
 groups=('calligra')
 source=("http://download.kde.org/stable/${pkgbase}-${pkgver}/${pkgbase}-${pkgver}.tar.xz")
-sha512sums=('277a24f862b43de415f011890943e29b7759220b80274607de13afb2738f5dd8047e9ca27164883311200f05be6a3c17a3896e9bd9951abd6e6d526a89a2811c')
+sha512sums=('8f02b70270ee8252b4819216dd43a5f372058e9557a29474485100cfc2f6266f9fc9ffcb8be0a61f141c8254816da2761ea848613618bf0d633c825e6fc6b1c4')
 
 prepare() {
     mkdir -p "${srcdir}/build"
@@ -75,7 +75,7 @@ prepare() {
 build() {
     cd "${srcdir}/build"
     cmake "../${pkgbase}-${pkgver}" \
-        -DCMAKE_BUILD_TYPE=Release \
+        -DCMAKE_BUILD_TYPE=RelWithDebInfo \
         -DCMAKE_INSTALL_PREFIX=/usr \
         -DBUILD_active=OFF
     make
