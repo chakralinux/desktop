@@ -21,7 +21,7 @@ pkgname=('calligra-3rdparty'
          'calligra-stage'
          'calligra-words')
 pkgver=2.7.91
-pkgrel=1
+pkgrel=2
 arch=('x86_64')
 url='http://www.calligra-suite.org'
 screenshot=("http://upload.wikimedia.org/wikipedia/commons/thumb/3/3e/Calligra_Stage_2.4.png/800px-Calligra_Stage_2.4.png")
@@ -158,6 +158,9 @@ package_calligra-servicetypes() {
 package_calligra-extras() {
     pkgdesc="Extras for the Calligra office suite"
     depends=('calligra-libs')
+    conflicts=('calligra-templates')
+    replaces=('calligra-templates')
+    provides=('calligra-templates')
     install=calligra-extras.install
 
     cd build/extras
