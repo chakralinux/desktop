@@ -9,7 +9,7 @@ pkgname="kde-workspace"
 arch=('x86_64')
 #pkgver=${_kdever}
 pkgver=4.11.5
-pkgrel=1
+pkgrel=2
 pkgdesc="KDE Workspace"
 url="http://www.kde.org"
 license=('GPL'
@@ -132,7 +132,8 @@ sha256sums=('3b99a3991d6d8b1aa4158da67ead30cabb815c07a6c8ee10751307f97d8613cf'
             '57e52bbe7fd9553fd6ed969edef4cc709aa8109f9d5ef44203da6e8d7ede46b4'
             'a47f603f27269b7b224373f84b886a55f0b1028548079f5d977dc3f1ce79e3f9'
             'e5329c87f14ce04f80291f1f7a2be47994f3d54425b572c308b38e2718390959'
-            'b38959520a3ecafe6f5628849e29d7e8b0dc030622fa12e77eb8461ad7187a78')
+            'b38959520a3ecafe6f5628849e29d7e8b0dc030622fa12e77eb8461ad7187a78'
+            '6bc640b8324d47e9d07a7cedef7e7c5a944ec4d900a15b88471dc77724f9b4a7')
 
 prepare() {
     cd "${srcdir}/${pkgname}-${pkgver}"
@@ -148,7 +149,7 @@ prepare() {
     patch -Np0 -i ${srcdir}/09_enable_start-shutdown-scripts.patch
     patch -p0 -i ${srcdir}/fix_terminate-server.patch
     patch -p1 -i ${srcdir}/fix_root-only-kcms.patch
-    patch -p1 -i ${srcdir}/plasma-panel-resize-hint.diff
+    patch -p0 -i ${srcdir}/plasma-panel-resize-hint.diff
 
     # Disable krandr
     sed -i "s/add_subdirectory(randr)//g" ./kcontrol/CMakeLists.txt
