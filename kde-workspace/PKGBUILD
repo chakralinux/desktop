@@ -111,7 +111,8 @@ source=("http://download.kde.org/stable/${pkgver}/src/${pkgname}-$pkgver.tar.xz"
         '07_always_show_kickoff_subtext.patch'
         '09_enable_start-shutdown-scripts.patch'
         'fix_terminate-server.patch'
-        'fix_root-only-kcms.patch')
+        'fix_root-only-kcms.patch'
+        'plasma-panel-resize-hint.diff')
 #sha256sums=(`grep ${pkgname}-$_kdever.tar.xz  ../checksums.txt | cut -d " " -f1`
 sha256sums=('3b99a3991d6d8b1aa4158da67ead30cabb815c07a6c8ee10751307f97d8613cf'
             `grep kde-wallpapers-$_kdever.tar.xz  ../checksums.txt | cut -d " " -f1`
@@ -147,6 +148,7 @@ prepare() {
     patch -Np0 -i ${srcdir}/09_enable_start-shutdown-scripts.patch
     patch -p0 -i ${srcdir}/fix_terminate-server.patch
     patch -p1 -i ${srcdir}/fix_root-only-kcms.patch
+    patch -p1 -i ${srcdir}/plasma-panel-resize-hint.diff
 
     # Disable krandr
     sed -i "s/add_subdirectory(randr)//g" ./kcontrol/CMakeLists.txt
