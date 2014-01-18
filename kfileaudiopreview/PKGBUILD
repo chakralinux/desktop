@@ -1,0 +1,42 @@
+# Contributor: Andrea Scarpino <andrea@archlinux.org>
+
+source ../frameworks.conf
+
+pkgname=kfileaudiopreview
+pkgver=${KFVersion}
+pkgrel=1
+pkgdesc='KFile Audio Preview'
+arch=('i686' 'x86_64')
+url='https://projects.kde.org/projects/frameworks/kfileaudiopreview'
+license=('LGPL')
+depends=('phonon-qt5' 'kio' 'kservice' 'kconfig')
+makedepends=('extra-cmake-modules')
+checkdepends=("cmake")
+groups=('kf5')
+options=("debug")
+source=("${KFServer}/${pkgver}/${pkgname}-${pkgver}.tar.xz")
+md5sums=('1c7bc6e1778f6cc1c0079864d0126e30')
+
+prepare() {
+  mkdir -p build
+}
+
+build() {
+  cd build
+  cmake ../${pkgname}-${pkgver} \
+    -DCMAKE_BUILD_TYPE=${KFBuildType} \
+    -DCMAKE_INSTALL_PREFIX=${KFInstallPrefix} \
+    -DLIB_INSTALL_DIR=lib 
+  make
+}
+
+check() {
+  cd build
+  make test
+}
+
+
+package() {
+  cd build
+  make DESTDIR="${pkgdir}" install
+}
