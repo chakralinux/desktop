@@ -2,7 +2,7 @@
 # Contributions from AUR: https://aur.archlinux.org/packages/librecad/
 
 pkgname=librecad
-pkgver=2.0.0rc3
+pkgver=2.0.2
 pkgrel=1
 pkgdesc="A 2D CAD drawing tool based on the community edition of QCad"
 arch=('x86_64')
@@ -13,11 +13,22 @@ makedepends=('boost' 'imagemagick')
 conflicts=('librecad-git')
 replaces=('librecad-svn' 'caduntu' 'caduntu-svn')
 install=librecad.install
-source=("LibreCAD-${pkgver}::https://github.com/LibreCAD/LibreCAD/archive/${pkgver}.tar.gz")
-sha256sums=('f2374e61d9c28e38ba188277510ca37eefbedc4743bd64fa0df0566d55c66ecc')
+source=("${pkgname}-${pkgver}.tar.gz::https://codeload.github.com/LibreCAD/LibreCAD/tar.gz/${pkgver}")
+md5sums=('0081a4028780d8a610c9f0aab8ac4eb6')
+
+prepare() {
+	cd "${srcdir}/LibreCAD-${pkgver}"
+	
+	# fix version string
+	sed -i "/^SCMREVISION/c SCMREVISION=\"${pkgver}\"" librecad/src/src.pro
+
+	# fix qcollectiongenerator name
+	sed -i 's/qcollectiongenerator/qcollectiongenerator-qt5/g' scripts/postprocess-unix.sh
+}
 
 build() {
 	cd "${srcdir}/LibreCAD-${pkgver}"
+
 	export CPPFLAGS="-std=c++0x"
         qmake-qt5 librecad.pro
 	make
@@ -36,6 +47,7 @@ package() {
 	install -D -m0644 librecad/support/doc/index.html "${pkgdir}/usr/share/doc/librecad/index.html"
 	install -D -m0644 librecad/support/doc/style.css "${pkgdir}/usr/share/doc/librecad/style.css"
 	install -D -m0644 librecad/support/doc/img/librecadlogo.png "${pkgdir}/usr/share/doc/librecad/img/librecadlogo.png"
+	
 	for SIZE in 16 24 32 48 64 96 128; do
 		convert -scale ${SIZE} \
 			desktop/graphics_icons_and_splash/Icon\ LibreCAD/Icon_Librecad.svg \
