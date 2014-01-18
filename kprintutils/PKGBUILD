@@ -1,0 +1,41 @@
+# Contributor: Andrea Scarpino <andrea@archlinux.org>
+
+source ../frameworks.conf
+
+pkgname=kprintutils
+pkgver=${KFVersion}
+pkgrel=1
+pkgdesc='KPrintUtils'
+arch=('i686' 'x86_64')
+url='https://projects.kde.org/projects/frameworks/kprintutils'
+license=('LGPL')
+depends=('kparts')
+makedepends=('extra-cmake-modules')
+checkdepends=("cmake")
+groups=('kf5')
+options=("debug")
+source=("${KFServer}/${pkgver}/${pkgname}-${pkgver}.tar.xz")
+md5sums=('627d2151fa0aae0b9c41a435e9665056')
+
+prepare() {
+  mkdir -p build
+}
+
+build() {
+  cd build
+  cmake ../${pkgname}-${pkgver} \
+    -DCMAKE_BUILD_TYPE=${KFBuildType} \
+    -DCMAKE_INSTALL_PREFIX=${KFInstallPrefix} \
+    -DLIB_INSTALL_DIR=lib
+  make
+}
+
+check() {
+  cd build
+  make test
+}
+
+package() {
+  cd build
+  make DESTDIR="${pkgdir}" install
+}
