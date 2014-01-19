@@ -1,0 +1,24 @@
+#
+# Chakra Packages for Chakra, part of chakra-project.org
+#
+# maintainer: almack[at]chakra-project[dog]org>
+
+pkgname=yakuake-themes-ronak
+pkgver=1.0
+pkgrel=1
+pkgdesc="Chakra Ronak Yakuake Theme"
+url="http://chakra-project.org"
+license=("GPL" "Creative Commons, BY-ND")
+arch=('any')
+depends=('yakuake')
+groups=()
+source=("http://chakra.sourceforge.net/sources/chakra-artwork/ronak/Ronak-Yakuake-Theme-$pkgver.tar.gz")
+md5sums=('6ba03e16d526328b019542732aba3da8')
+
+package() {
+	cd ${srcdir}/Chakra-Ronak-Yakuake-Theme
+	
+	mkdir -pv $pkgdir/usr/share/apps/yakuake/skins/Chakra-Ronak-Yakuake-Theme
+	cp -Rv * $pkgdir/usr/share/apps/yakuake/skins/Chakra-Ronak-Yakuake-Theme
+
+} 
