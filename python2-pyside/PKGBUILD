@@ -1,0 +1,35 @@
+#
+# Games Packages for Chakra, part of chakra-project.org
+#
+# Maintainer: Adrián Chaves Fernández (Gallaecio) <adriyetichaves@gmail.com>
+
+pkgname=python2-pyside
+_pkgname=pyside-pyside
+pkgver=1.2.1
+pkgrel=1
+pkgdesc="Provides LGPL Qt bindings for Python and related tools for binding generation."
+arch=('i686' 'x86_64')
+license=('LGPL')
+url="http://www.pyside.org"
+depends=('python2-shiboken' 'python' 'qt' 'phonon')
+makedepends=('cmake' 'automoc4')
+provides=("pyside")
+conflicts=("pyside")
+replaces=("pyside")
+source=("${_pkgname}-${pkgver}.tar.gz::https://qt.gitorious.org/pyside/pyside/archive/${pkgver}.tar.gz")
+md5sums=('b807f6fc1d50e8c6e9314a7738a4142a')
+
+build() {
+  cd "${srcdir}/${_pkgname}"
+  mkdir -p build && cd build
+  cmake \
+    -DCMAKE_INSTALL_PREFIX=/usr \
+    -DCMAKE_BUILD_TYPE=RelWithDebInfo \
+    ..
+  make
+}
+
+package() {
+  cd "${srcdir}/${_pkgname}/build"
+  make DESTDIR="${pkgdir}" install
+}
