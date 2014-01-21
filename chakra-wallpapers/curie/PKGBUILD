@@ -1,0 +1,25 @@
+#
+# Chakra Packages for Chakra, part of chakra-project.org
+#
+# maintainer: Luca Giambonini <almack[at]chakra-project[dot]org>
+
+pkgname=("chakra-wallpapers-curie")
+pkgver=2014.01
+pkgrel=1
+pkgdesc="Chakra Curie Wallpapers by yaromanzarek"
+url="http://www.chakra-project.org"
+license=("GPL" "Creative Commons, BY-ND")
+arch=('any')
+makedepends=('automoc4')
+provides=('chakra-wallpaper=2014.01')
+provides=("chakra-wallpaper=${pkgver}")
+groups=("kde" "kde-uninstall" "chakra-wallpapers")
+source=("http://chakra.sourceforge.net/sources/chakra-artwork/wallpapers/curie/curie-${pkgver}.tar.gz")
+md5sums=('9e17f2aa90733da52d1bc445dc9ecd09')
+
+package() {
+	cd ${srcdir}/curie
+	
+	mkdir -pv ${pkgdir}/usr/share/wallpapers/curie/contents/
+	cp -Rv * ${pkgdir}/usr/share/wallpapers/curie
+}
