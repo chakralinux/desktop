@@ -4,14 +4,13 @@
 # maintainer: almack[at]chakra-project[dot]org>
 
 pkgname=kdeplasma-applets-welcome-plasmoid
-pkgver=0.4.1
+pkgver=2014.01
 pkgrel=1
 depends=('kdebase-workspace')
 makedepends=('make' 'cmake' 'automoc4')
 pkgdesc="Chakra's Welcome plasmoid, for live ISO info sharing"
 arch=("x86_64")
 license=('GPL')
-categories=('accessories')
 #install=$pkgname.install
 url="http://chakra-project.org/"
 
@@ -42,5 +41,9 @@ build() {
     -DCMAKE_INSTALL_PREFIX=/usr \
     -DCMAKE_BUILD_TYPE=Release
   make 
-  make DESTDIR=${pkgdir} install 
+}
+
+package() {
+  cd "$srcdir/$_gitname-build"
+  make DESTDIR=${pkgdir} install
 }
