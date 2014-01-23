@@ -3,7 +3,7 @@
 pkgname=kapudan
 _pkgname=kapudan  
 pkgver=2014.01.21
-pkgrel=2
+pkgrel=3
 branch="curie"
 pkgdesc="Chakra's desktop greeter, a fork of Pardus's Kaptan."
 arch=('x86_64')
@@ -13,12 +13,12 @@ license=('GPLv2')
 conflicts=('kapudan-git')
 depends=('python2' 'kde-baseapps-konsole' 'kde-runtime'
          'kdebindings-python2' 'pyqt' 'python2-xlib'
-         'python2-v4l2capture' 'python2-imaging' 'xdg-user-dirs')
+         'python2-imaging' 'xdg-user-dirs' 'ksuperkey')
 makedepends=('python-distribute' 'git' 'intltool')
 optdepends=('spun: update notifications'
             'clamav: for the security page')
 source=("${pkgname}-${pkgver}.tar.xz")
-md5sums=('5e244a56e5f9f984d313e99f6fba6278')
+md5sums=('f3695eb3619d6b7a4c05ea3c96ad91a6')
 
 # create tarball: source PKGBUILD && mksource
 
@@ -48,4 +48,6 @@ package() {
         "${pkgdir}/usr/share/kde4/apps/kapudan/kapudan/kde-themes/"
     install -Dm755 kapudan-autostart.desktop \
         "${pkgdir}/usr/share/kde4/apps/kapudan/kapudan/kapudan-autostart.desktop"
+    install -Dm755 data/ksuperkey.desktop \
+        "${pkgdir}/usr/share/kde4/apps/kapudan/kapudan/ksuperkey.desktop"
 }
