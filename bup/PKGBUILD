@@ -1,0 +1,39 @@
+# 
+# Part of chakra-project.org
+#
+# Maintainer: FranzMari <franzmari[at]chakra-project[dot]it>
+ 
+# If you'd like to have documentation, please set the variable below to 1.
+# This implies installing pandoc, which in turn depends on many Haskell packages.
+_havedocs=0
+#[ $_havedocs = 1 ] && makedepends=('haskell-pandoc')
+ 
+pkgname=bup
+pkgver=0.25
+pkgrel=2
+pkgdesc="Highly efficient file backup system based on the git packfile format."
+arch=('x86_64')
+url="http://github.com/bup/bup"
+license=('GPL')
+depends=('python-fuse' 'par2cmdline' 'pylibacl' 'python3-pyxattr')
+conflicts=('bup-git')
+source=("git+https://github.com/bup/bup.git#tag=${pkgver}")
+md5sums=('SKIP')
+ 
+ 
+build() {
+	cd $srcdir/$pkgname
+	## add -Wno-format in CFLAGS
+	CFLAGS="$CFLAGS -Wno-format"
+	make
+}
+ 
+test() {
+	cd $srcdir/$pkgname
+	make test
+}
+ 
+package() {
+	cd $srcdir/$pkgname
+	make DESTDIR=$pkgdir install
+}
