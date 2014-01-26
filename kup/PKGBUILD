@@ -1,0 +1,35 @@
+#
+# Part of chakra-project.org
+#
+# Maintainer: Francesco Marinucci <franzmari[at]chakra-project[dot]it>
+ 
+pkgname=kup
+pkgver=0.4.0
+pkgrel=2
+pkgdesc="A KDE-based frontend for the bup backup software"
+arch=('x86_64')
+url="http://kde-apps.org/content/show.php/Kup+Backup+System?content=147465"
+license=('GPL')
+depends=('kde-runtime' 'kdelibs' 'bup' 'rsync')
+makedepends=('cmake' 'automoc4')
+source=("http://kde-apps.org/CONTENT/content-files/147465-${pkgname}-${pkgver}.tar.gz")
+sha256sums=('185ec16deab31ccb040e686c70c8ccbbc7609fd88067c3d69117ade1be4735ad')
+screenshot="http://kde-apps.org/CONTENT/content-pre1/147465-1.png"
+ 
+build() {
+	cd ${pkgname}-${pkgver}
+	[ -d "build" ] && rm -rf build
+	mkdir build
+	cd build
+ 
+	cmake ../ \
+		-DCMAKE_BUILD_TYPE=Release \
+		-DCMAKE_INSTALL_PREFIX=/usr
+	make
+}
+ 
+package() {
+	cd ${pkgname}-${pkgver}
+	cd build
+	make DESTDIR=${pkgdir} install
+} 
