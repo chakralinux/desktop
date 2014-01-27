@@ -1,0 +1,28 @@
+#
+# Part of chakra-project.org
+#
+# Maintainer: Francesco Marinucci <franzmari[at]chakra-project[dot]it>
+
+pkgname=libcec
+pkgver=2.1.4
+pkgrel=1
+pkgdesc="Pulse-Eight's libcec for the Pulse-Eight USB-CEC adapter"
+arch=('x86_64')
+url="http://libcec.pulse-eight.com/"
+license=('GPL')
+depends=('udev' 'lockdev')
+source=("$pkgname-$pkgver.tar.gz::https://github.com/Pulse-Eight/$pkgname/archive/$pkgname-$pkgver.tar.gz")
+sha256sums=('79bef5232a5c9ab987ca3a2d4bfcaeb80480fd26f502dc1a996fe845d90fe147')
+
+build() {
+  cd "$pkgname-$pkgname-$pkgver"
+  autoreconf -vif
+  ./configure --prefix=/usr
+  make
+}
+
+package() {
+  cd "$pkgname-$pkgname-$pkgver"
+  make DESTDIR="$pkgdir" install
+}
+
