@@ -3,7 +3,7 @@
 
 pkgname=qupzilla
 pkgver=1.6.1
-pkgrel=1
+pkgrel=2
 pkgdesc="A very fast open source browser based on WebKit core"
 url="http://www.qupzilla.com"
 arch=('x86_64')
@@ -32,17 +32,12 @@ build() {
   cd "${pkgname}-${pkgver}"
   qmake QupZilla.pro
   make
-  
-  cd "${srcdir}/${pkgname}-${pkgver}"/src/plugins/KWalletPasswords/
-  qmake KWalletPasswords.pro
-  make
 }
 
 package() {
   cd "${pkgname}-${pkgver}"
 
   make INSTALL_ROOT="${pkgdir}" install
-  install -Dm755 "${srcdir}/${pkgname}-${pkgver}"/bin/plugins/libKWalletPasswords.so ${pkgdir}/usr/lib/qupzilla/libKWalletPasswords.so
   install -Dm 644 "${srcdir}/start-white.png" "${pkgdir}/usr/share/icons/start-white.png"
   
   # shell completion
