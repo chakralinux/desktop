@@ -5,24 +5,31 @@
 # Contributor from Arch: Evangelos Foutras <evangelos@foutrelis.com>
 
 pkgname=libmemcached
-pkgver=1.0.13
+pkgver=1.0.17
 pkgrel=1
 pkgdesc="C and C++ client library to the memcached server"
-arch=('i686' 'x86_64')
+arch=('x86_64')
 url="http://libmemcached.org/"
 license=('GPL')
 depends=('glibc' 'libsasl' 'libevent')
-makedepends=('perl')
+makedepends=('perl' 'memcached')
 options=('!libtool')
-source=(http://launchpad.net/$pkgname/1.0/$pkgver/+download/$pkgname-$pkgver.tar.gz)
-sha256sums=('41efd1b5e1a8839ebe6c51714ae013f1a4b547bee0973cd8d87cdebdefdc4b28')
+source=(http://launchpad.net/$pkgname/1.0/$pkgver/+download/$pkgname-$pkgver.tar.gz
+	gcc-4.8.patch)
+sha256sums=('7bb27b2589400f918df1cf5002cb01ef7ccac6e23f818604e2386de62c80bba5'
+            '4a6b5d70cf7905fbd9e58a4646a6943da5f77b5e0a87b1518c4688f437963194')
+
+prepare() {
+  cd "$srcdir/$pkgname-$pkgver"
+
+  # Fix build with GCC 4.8 (patch from Debian)
+  patch -Np1 -i "$srcdir/gcc-4.8.patch"
+}
 
 build() {
   cd "$srcdir/$pkgname-$pkgver"
 
-  # memcached is needed only in `make test', therefore we pass
-  # --without-memcached to the configure script to skip it
-  ./configure --prefix=/usr --without-memcached
+  ./configure --prefix=/usr
   make
 }
 
