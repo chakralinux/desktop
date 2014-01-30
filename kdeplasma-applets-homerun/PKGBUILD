@@ -3,7 +3,7 @@
 
 pkgname=kdeplasma-applets-homerun
 _pkgname=homerun
-pkgver=1.1.0
+pkgver=1.2.0
 pkgrel=1
 pkgdesc="An application launcher for KDE Plasma desktop"
 arch=('x86_64')
@@ -15,13 +15,16 @@ conflicts=('kdeplasma-applets-homerun-git')
 install=$pkgname.install  
 screenshot=('https://lh5.googleusercontent.com/-axerTR3fGvY/UExd_g_qByI/AAAAAAAAhlE/wKm_W5XtwWY/homerun.png')
 source=("http://download.kde.org/stable/$_pkgname/src/$_pkgname-$pkgver.tar.xz"
-        'icon.diff')
-md5sums=('505c1e9367e697f49aaed0733394b36f'
-         '50a4ecca639625a23d27589589a0f6f2')
+        'icon.diff'
+        'kicker-icon.diff')
+md5sums=('c2b2b9114c0db15357fa97f766208ad4'
+         'a57402bf4e353fa1ec8f1ae4972c9587'
+         '551a8fc1b77eedf2d9cc21929e707678')
 
 build() {
   cd "$srcdir"/$_pkgname-$pkgver
   patch -p1 -i "${srcdir}/icon.diff"
+  patch -p1 -i "${srcdir}/kicker-icon.diff"
   cd "$srcdir"
   mkdir build
   cd build
