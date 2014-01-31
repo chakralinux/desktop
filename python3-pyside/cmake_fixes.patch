@@ -2,15 +2,15 @@ diff --git a/PySide/CMakeLists.txt b/PySide/CMakeLists.txt
 index d8371c0..4c546dc 100644
 --- a/PySide/CMakeLists.txt
 +++ b/PySide/CMakeLists.txt
-@@ -32,7 +32,7 @@ HAS_QT_MODULE(QT_QTDECLARATIVE_FOUND QtDeclarative)
+@@ -35,7 +35,7 @@ HAS_QT_MODULE(QT_QTDECLARATIVE_FOUND QtDeclarative)
  
  # install
  install(FILES "${CMAKE_CURRENT_BINARY_DIR}/__init__.py"
 -        DESTINATION "${SITE_PACKAGE}/${BINDING_NAME}${pyside_SUFFIX}")
 +        DESTINATION "${SITE_PACKAGE}/${BINDING_NAME}")
+ install(FILES ${CMAKE_CURRENT_BINARY_DIR}/_utils.py
+         DESTINATION "${SITE_PACKAGE}/${BINDING_NAME}${pyside_SUFFIX}")
  install(FILES ${CMAKE_CURRENT_SOURCE_DIR}/typesystem_templates.xml
-         DESTINATION share/PySide${pyside_SUFFIX}/typesystems)
- install(FILES ${CMAKE_CURRENT_BINARY_DIR}/pyside_global.h
 diff --git a/PySide/QtGui/CMakeLists.txt b/PySide/QtGui/CMakeLists.txt
 index 7625634..e2e2dbc 100644
 --- a/PySide/QtGui/CMakeLists.txt

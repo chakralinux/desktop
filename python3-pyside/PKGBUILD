@@ -3,7 +3,8 @@
 # Contributor: Douglas Soares de Andrade <douglas@archlinux.org>
 
 pkgname=python3-pyside
-pkgver=1.1.2
+_pkgname=pyside-pyside
+pkgver=1.2.1
 pkgrel=1
 pkgdesc='CPython Qt bindings generated using the Shiboken generator. (Python 3 build)'
 arch=('i686' 'x86_64')
@@ -12,13 +13,13 @@ url='http://www.pyside.org'
 depends=('python3-shiboken>=1.1.2' 'python3' 'qt>=4.8' 'phonon' 'mesa')
 makedepends=('cmake' 'automoc4')
 replaces=('pyside-py3')
-source=("http://qt-project.org/uploads/pyside/pyside-qt4.8+1.1.2.tar.bz2"
+source=("${_pkgname}-${pkgver}.tar.gz::https://qt.gitorious.org/pyside/pyside/archive/${pkgver}.tar.gz"
         'cmake_fixes.patch')
-md5sums=('59c8653734b020b0128b82adc98ee704'
-         '4a538e43dcfcd6c3bd67b8915f0d9769')
+md5sums=('b807f6fc1d50e8c6e9314a7738a4142a'
+         '28fdf3a61c1ae4b47c5f6f762e428956')
 
 build(){
-    cd $srcdir/pyside-qt4.8+${pkgver}
+    cd $srcdir/${_pkgname}
     patch -p1 -N < ../cmake_fixes.patch
     mkdir -p build && cd build
     cmake .. -DCMAKE_INSTALL_PREFIX=/usr \
@@ -31,6 +32,6 @@ build(){
 
 
 package() {
-    cd "$srcdir/pyside-qt4.8+${pkgver}/build/"
+    cd $srcdir/${_pkgname}/build
     make DESTDIR=$pkgdir install
 }
