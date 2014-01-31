@@ -1,0 +1,32 @@
+#
+# Part of chakra-project.org
+#
+# Maintainer: Francesco Marinucci <franzmari[at]chakra-project[dot]it>
+
+
+pkgname=kde-plasma-themes-diamond
+pkgver=2.0
+pkgrel=1
+pkgdesc="Transparent theme for KDE 4.x"
+arch=('x86_64')
+license=('GPL')
+url="http://kde-look.org/content/show.php/Diamond?content=153930"
+depends=('kdebase-workspace')
+provides=('plasma-theme-diamond')
+replaces=('plasma-theme-diamond')
+conflicts=('plasma-theme-diamond')
+source=("http://kde-look.org/CONTENT/content-files/153930-Diamond.tar.gz"
+	"branding.svgz")
+md5sums=('bdcc945c48b734aac01629040f42f3c8'
+         'c0572408629234ff46634007fff272ff')
+ 
+package() {
+   mkdir -p ${pkgdir}/usr/share/apps/desktoptheme
+   cd ${srcdir}
+   cp -R Diamond ${pkgdir}/usr/share/apps/desktoptheme
+   chmod 755 -R ${pkgdir}/usr/share/apps/desktoptheme/Diamond
+
+  # replace with Chakra branding
+  rm ${pkgdir}/usr/share/apps/desktoptheme/Diamond/widgets/branding.svgz
+  install -Dm644 ${srcdir}/branding.svgz ${pkgdir}/usr/share/apps/desktoptheme/Diamond/widgets/branding.svgz
+}
