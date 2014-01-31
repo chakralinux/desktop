@@ -5,23 +5,19 @@
 
 pkgname=pokerth
 _realname=PokerTH
-pkgver=1.0.1
-pkgrel=2
+pkgver=1.1.1
+pkgrel=1
 pkgdesc="PokerTH is a Texas Holdem poker game written in C++/Qt."
 arch=('x86_64')
 license=('AGPL3' 'custom:Variety of FOSS licenses for data files')
 depends=('boost-libs' 'curl' 'gnutls' 'libgsasl' 'libircclient' 'qt' 'sdl_mixer' 'tinyxml' 'protobuf')
 makedepends=('boost')
 url="http://www.pokerth.net/"
-source=("http://downloads.sourceforge.net/sourceforge/${pkgname}/${_realname}-${pkgver}-src.tar.bz2"
-        "pokerth-1.0.1-boost.patch::https://github.com/pokerth/pokerth/commit/8adbe8edb982c56ad126264dab4b98fe45ed520f.diff#diff-29b89cfa10024074b0fab826fc532936")
-md5sums=('c6dcf0ed68ab50af91371348ffad5d00'
-         '6b126138564121c1f3de29ed3c328cb0')
+source=("http://downloads.sourceforge.net/sourceforge/${pkgname}/${_realname}-${pkgver}-src.tar.bz2")
+md5sums=('a7f76f95782099f966e5f2b6809f502a')
 
 build() {
   cd "${srcdir}/${_realname}-${pkgver}-src"
-
-  patch -p1 < "$srcdir/pokerth-1.0.1-boost.patch"
 
   qmake "${pkgname}.pro"
   make
