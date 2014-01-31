@@ -6,7 +6,7 @@
 pkgname=0ad
 pkgver=0.0.15
 _pkgver=$pkgver-alpha
-pkgrel=2
+pkgrel=3
 pkgdesc="Cross-platform, 3D and historically-based real-time strategy game"
 screenshot=http://www.wildfiregames.com/0ad/images/news_images/dynamic-borders.jpg
 arch=('i686' 'x86_64')
@@ -23,22 +23,15 @@ md5sums=('a651d81eb9b31da01e376ddaa597e954')
 build() {
   cd $srcdir/$pkgname-$_pkgver/build/workspaces
 
-  # NOTE: These sed commands are *not* likely to be changed between releases, like most patches.
-  sed \
-    -e 's/unix_names = { "boost_filesystem-mt", "boost_system-mt" },/unix_names = { "boost_filesystem", "boost_system" },/g' \
-    -e 's/unix_names = { "boost_signals-mt" },/unix_names = { "boost_signals" },/g' \
-    -i "${srcdir}/${pkgbase}-${_pkgver}/build/premake/extern_libs4.lua"
-  sed -i 's/export HOSTTYPE="$HOSTTYPE"/export HOSTTYPE="$CARCH"/g' ./update-workspaces.sh
-
   # Atlas disabled because it requires GTK.
   ./update-workspaces.sh \
     --disable-atlas \
     --with-system-enet \
+    --with-system-miniupnpc \
     --with-system-nvtt \
     --bindir=/usr/bin \
     --libdir=/usr/lib \
     --datadir=/usr/share/${pkgname}/data
-
 
   cd gcc
   make config=release
