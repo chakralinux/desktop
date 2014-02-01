@@ -2,29 +2,29 @@
 
 pkgname=freeorion
 pkgver=0.4.3
-pkgrel=1
+_revision=6281
+pkgrel=2
 pkgdesc='Turn-based galactic conquest game inspired by Master of Orion'
 arch=('x86_64')
 url='http://www.freeorion.org/'
 license=('GPL2' 'CCPL-by-sa')
-depends=('bullet' 'freealut' 'libvorbis' 'python2' 'gigi' 'desktop-file-utils' 'nvidia-cg-toolkit' 'libgl')
-makedepends=('boost' 'ogre=1.8.1-1' 'sdl' 'gigi=0.8.0-8' 'graphviz' 'libgl'
+depends=('bullet' 'freealut' 'freetype2' 'libvorbis' 'python2' 'gigi' 'desktop-file-utils' 'nvidia-cg-toolkit' 'libgl')
+makedepends=('boost' 'ogre' 'sdl' 'gigi=0.8.0' 'graphviz' 'libgl'
              'desktop-file-utils' 'setconf' 'cmake' 'gendesk' 'subversion' 'libogg')
 options=('!strip' '!emptydirs')
 install=install.sh
-source=("$pkgname.sh::https://projects.archlinux.org/svntogit/community.git/plain/trunk/freeorion.sh?h=packages/freeorion"
+source=("$pkgname.sh"
         "$pkgname.png::https://a.fsdn.com/con/icons/fr/freeorion@sf.net/FO_Icon_256x256.png"
-        "cmake_python.patch::https://projects.archlinux.org/svntogit/community.git/plain/trunk/cmake_python.patch?h=packages/freeorion")
+        "cmake_python.patch")
 sha256sums=('25b574af5397226373e24510ce59de94c5df5b31d94562fc0de387fd70731707'
             'a6a253eed31b77b00bf4f721f4b1c6bbd95505b9e4b38b736101e551dd12ff5f'
             '3dbe8df9c3a4a0d6451f42727ebf9bcb21fed41a08d1181d1cf77ef4ab5ee81a') 
 _svnrepo='https://freeorion.svn.sourceforge.net/svnroot/freeorion/trunk/FreeOrion/'
 _pyversion=2.7
-_revision=6142
 
 build() {
   cd "$srcdir"
-  gendesk -n
+  gendesk -n -f
 
   msg2 "Checking out svn revision $_revision..."
   if [[ -d "$pkgname/.svn" ]]; then
@@ -45,6 +45,7 @@ build() {
   cmake \
     -DPYTHON_INCLUDE_DIR:PATH="/usr/include/python$_pyversion" \
     -DPYTHON_LIBRARY:FILEPATH="/usr/lib/libpython$_pyversion.so" \
+    -DFREETYPE_INCLUDE_DIR_freetype2=/usr/include/freetype2 \
     -G "Unix Makefiles"
   
   msg2 'GLU fix...'

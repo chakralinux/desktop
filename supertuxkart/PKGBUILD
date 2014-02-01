@@ -6,22 +6,24 @@
 pkgname=supertuxkart
 _pkgname=SuperTuxKart
 pkgver=0.8.1
-pkgrel=1
+pkgrel=2
 pkgdesc="Kart racing game featuring Tux and friends."
 url="http://supertuxkart.sourceforge.net/"
 arch=('x86_64')
 license=('GPL3' 'GPL2' 'CCPL-by' 'CCPL-by-sa' 'custom:Public Domain')
-depends=('bullet' 'bzip2' 'curl' 'enet' 'fribidi' 'freeglut' 'irrlicht' 'libgl' 'libjpeg' 'libogg' 'libpng' 'libvorbis' 'openal' 'wiiuse')
+depends=( 'bzip2' 'curl' 'enet' 'fribidi' 'freeglut' 'libgl' 'libjpeg' 'libogg' 'libpng' 'libvorbis' 'openal' 'wiiuse')
 conflicts=('supertuxkart-svn')
 categories=('games')
 changelog=ChangeLog
 source=("http://downloads.sourceforge.net/project/${pkgname}/${_pkgname}/${pkgver}/${pkgname}-${pkgver}-src.tar.bz2"
         "$pkgname-system-libs.diff"
+        "$pkgname-$pkgver-mesa.patch"
         "FindEnet.cmake"
         "FindIrrlicht.cmake"
         "FindWiiUse.cmake")
 md5sums=('aa31ecf883dc35859eec76c667f1a6d6'
-         '0b45cd22405166e2d6a342162a20d482'
+         'e4aba32ba949f6489654e5788584d0d5'
+         'a3da9be5737e6a27b48834403cfcf489'
          'f63b2d5fbac6c53699aaaf97ed7f89d6'
          '78735ca4da9c04422a09f385561f5d9d'
          'b23cdd616cb27e2c114bbb1e3840274c')
@@ -35,7 +37,9 @@ build() {
     patch -uN CMakeLists.txt $srcdir/$pkgname-system-libs.diff
     sed -e "s#wiiuse/wiiuse.h#wiiuse.h#" -i src/input/wiimote_manager.cpp
     cp $srcdir/*.cmake cmake/
-  
+
+    patch -uNp0 -i $srcdir/$pkgname-$pkgver-mesa.patch
+
   mkdir -p build && cd build
   cmake \
     -DCMAKE_INSTALL_PREFIX=/usr \
@@ -58,8 +62,3 @@ package() {
   ln -s "${pkgdir}/usr/share/games/${pkgname}/data/CREDITS" "${pkgdir}/usr/share/licenses/${pkgname}/AUTHORS"
   cp "${srcdir}/${_pkgname}-$pkgver/COPYING" "${pkgdir}/usr/share/licenses/${pkgname}/LICENSE"
 }
-md5sums=('aa31ecf883dc35859eec76c667f1a6d6'
-         '782d4f79b0ee7d6c276a06930c70e93e'
-         'f63b2d5fbac6c53699aaaf97ed7f89d6'
-         '78735ca4da9c04422a09f385561f5d9d'
-         'b23cdd616cb27e2c114bbb1e3840274c')

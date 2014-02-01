@@ -1,13 +1,6 @@
 --- CMakeLists.txt	2013-11-24 21:54:13.000000000 +0000
 +++ CMakeLists-new.txt	2013-11-26 20:03:34.778184706 +0000
-@@ -37,12 +37,12 @@
-     STRING "Install data folder to this directory, absolute or relative to CMAKE_INSTALL_PREFIX")
- 
- # Build the Bullet physics library
--add_subdirectory("${PROJECT_SOURCE_DIR}/lib/bullet")
--include_directories("${PROJECT_SOURCE_DIR}/lib/bullet/src")
-+find_package(Bullet REQUIRED)
-+include_directories(${BULLET_INCLUDE_DIRS})
+@@ -42,7 +42,7 @@
  
  # Build the ENet UDP network library
 -add_subdirectory("${PROJECT_SOURCE_DIR}/lib/enet")
@@ -39,15 +32,11 @@
      
  # Set some compiler options
  if(UNIX)
-@@ -222,17 +218,15 @@
- 
- # Common library dependencies
- target_link_libraries(supertuxkart
--    bulletdynamics
--    bulletcollision
--    bulletmath
+@@ -224,14 +220,14 @@
+     bulletdynamics
+     bulletcollision
+     bulletmath
 -    enet
-+    ${BULLET_LIBRARIES}
 +    ${ENET_LIBRARIES}
      stkirrlicht
      ${CURL_LIBRARIES}
@@ -60,7 +49,7 @@
  if(APPLE)
      # In theory it would be cleaner to let CMake detect the right dependencies. In practice, this means that if a OSX user has
      # unix-style installs of Vorbis/Ogg/OpenAL/etc. they will be picked up over our frameworks. This is blocking when I make releases :
-@@ -261,7 +255,7 @@
+@@ -261,7 +257,7 @@
              target_link_libraries(supertuxkart ${PROJECT_SOURCE_DIR}/dependencies/lib/wiiuse.lib)
          endif()
      else()
