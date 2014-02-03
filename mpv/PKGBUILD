@@ -1,0 +1,51 @@
+# Maintainer: Neophytos Kolokotronis <tetris4 AT gmail DOT com>
+# Contributor: Samir Benmendil <ram-z[at]chakra-project[dot]org>
+# Contributions from Arch: https://projects.archlinux.org/svntogit/community.git/tree/trunk?h=packages/mpv
+ 
+pkgname=mpv
+pkgver=0.3.4
+pkgrel=1
+pkgdesc="A movie player and encoder for linux, based on MPlayer/mplayer2"
+arch=('x86_64')
+license=('GPL')
+url="http://mpv.io"
+depends=('portaudio' 'ffmpeg' 'lcms2' 'libxinerama' 'libdvdread' 'libquvi' 'mpg123' 'libxv' 'libxkbcommon' 'libva' 'desktop-file-utils' 'xdg-utils' 'libass')
+makedepends=('waf' 'mesa' 'python3-docutils')
+options=(!emptydirs)
+install=${pkgname}.install
+source=("https://github.com/mpv-player/$pkgname/archive/v${pkgver}.tar.gz")
+md5sums=('274bf45367df99774512cf43659004d5')
+ 
+build() {
+  # Custom CFLAGS break the mpv build
+  unset CFLAGS
+  unset LDFLAGS
+ 
+  cd "$pkgname-$pkgver"
+ 
+  waf configure --prefix=/usr \
+      --confdir=/etc/mpv \
+      --enable-wayland \
+      --disable-joystick \
+      --disable-radio \
+      --disable-radio-capture \
+      --disable-radio-v4l2 \
+      --disable-libbs2b \
+      --disable-direct3d \
+      --disable-corevideo \
+      --disable-cocoa \
+      --disable-coreaudio
+  waf build
+}
+ 
+package() {
+  cd "$srcdir/$pkgname-$pkgver"
+ 
+  waf install --destdir="$pkgdir" 
+  
+  install -d ${pkgdir}/usr/share/doc/mpv/examples
+ 
+  # some extra useful stuff "make install" doesn't install
+  install -m644 etc/{input,example}.conf  "$pkgdir"/usr/share/doc/mpv/examples
+  install -m644 DOCS/{encoding.rst,tech}
+}
