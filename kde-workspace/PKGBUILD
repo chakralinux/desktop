@@ -8,8 +8,8 @@ _default_wp="Elarun"
 pkgname="kde-workspace"
 arch=('x86_64')
 #pkgver=${_kdever}
-pkgver=4.11.5
-pkgrel=3
+pkgver=4.11.6
+pkgrel=1
 pkgdesc="KDE Workspace"
 url="http://www.kde.org"
 license=('GPL'
@@ -96,8 +96,7 @@ backup=('usr/share/config/kdm/kdmrc'
 source=("http://download.kde.org/stable/${pkgver}/src/${pkgname}-$pkgver.tar.xz"
         "$_mirror/kde-wallpapers-$_kdever.tar.xz"
         'mishaaq-kcm_touchpad-00370b5.tar.gz'
-        'http://chakra.sourceforge.net/sources/kdebase-workspace/114856-wacomtablet-1.99.3.tar.bz2'
-        'http://chakra.sourceforge.net/sources/kdebase-workspace/117639-favorites-0.1.tar.bz2'
+        'http://kde-apps.org/CONTENT/content-files/114856-wacomtablet-2.0.tar.bz2'
         'kde.pam'
         'kde-np.pam'
         'kscreensaver.pam'
@@ -114,11 +113,10 @@ source=("http://download.kde.org/stable/${pkgver}/src/${pkgname}-$pkgver.tar.xz"
         'fix_root-only-kcms.patch'
         'plasma-panel-resize-hint.diff')
 #sha256sums=(`grep ${pkgname}-$_kdever.tar.xz  ../checksums.txt | cut -d " " -f1`
-sha256sums=('3b99a3991d6d8b1aa4158da67ead30cabb815c07a6c8ee10751307f97d8613cf'
+sha256sums=('e1b3cb78dc94f3fab61c588ee610f143a1fd8a70f5f08b5ba19174427f9a6352'
             `grep kde-wallpapers-$_kdever.tar.xz  ../checksums.txt | cut -d " " -f1`
             '85b45195048fc1219ebe0496588404abcca0d9c9e88e2da6653c6e0326c4be51'
-            'b68bafa854064a2a4a35b6f47ad2f38f4296e186848e2f9eedc0e1f9529281a5'
-            '33615a51586dc57975b70cef528570e5ae7128d3c8501e13ac06eeb21e023e6c'
+            '5d15a1cda1e418e633e7fdd83f5a398c4294c28771a16b68979a2b40ddac0def'
             '812111f166fdf9ab7ef9400c4414cbe26fac5210f2292399d4446fe6e89eea54'
             '3ca72a5f34d29747d12b9b41888d0e369956ba383478850c578e3aa109444214'
             '0a985e3b699578de3e22b25ee72abe4e24ca8730e4afb37dfeed367823bdb0d5'
@@ -159,7 +157,8 @@ build() {
     cd "${srcdir}/${pkgname}-${pkgver}"
 
     msg "Building workspace..."
-    cmake . -DCMAKE_BUILD_TYPE=${_build_type} \
+    CXXFLAGS="${CXXFLAGS} -I /usr/include/freetype2" cmake . \
+        -DCMAKE_BUILD_TYPE=${_build_type} \
         -DCMAKE_INSTALL_PREFIX=${_installprefix} \
         -DWITH_Xmms=OFF \
         -DCMAKE_SKIP_RPATH=ON \
@@ -171,23 +170,18 @@ build() {
     cd "${srcdir}/mishaaq-kcm_touchpad-00370b5"
     # Fix desktop to the new layout
     sed -i -e "s~keyboard-and-mouse~input-devices~g" touchpad.desktop
-    cmake . -DCMAKE_BUILD_TYPE=${_build_type} \
+    CXXFLAGS="${CXXFLAGS} -I /usr/include/freetype2" cmake . \
+        -DCMAKE_BUILD_TYPE=${_build_type} \
         -DCMAKE_INSTALL_PREFIX=${_installprefix} \
         -DCMAKE_{SHARED,MODULE,EXE}_LINKER_FLAGS='-Wl,--no-undefined -Wl,--as-needed'
     make
 
     msg "Building kcm_tablet..."
-    cd "${srcdir}/wacomtablet-1.99.3"
+    cd "${srcdir}/wacomtablet-2.0"
     # Fix desktop to the new layout
-    sed -i -e "s~keyboard-and-mouse~input-devices~g" ${srcdir}/wacomtablet-1.99.3/src/kcmodule/kcm_wacomtablet.desktop
-    cmake . -DCMAKE_BUILD_TYPE=${_build_type} \
-        -DCMAKE_INSTALL_PREFIX=${_installprefix} \
-        -DCMAKE_{SHARED,MODULE,EXE}_LINKER_FLAGS='-Wl,--no-undefined -Wl,--as-needed'
-    make
-
-    msg "Building favourites launcher..."
-    cd "${srcdir}/favorites-0.1"
-    cmake . -DCMAKE_BUILD_TYPE=${_build_type} \
+    sed -i -e "s~keyboard-and-mouse~input-devices~g" ${srcdir}/wacomtablet-2.0/src/kcmodule/kcm_wacomtablet.desktop
+    CXXFLAGS="${CXXFLAGS} -I /usr/include/freetype2" cmake . \
+        -DCMAKE_BUILD_TYPE=${_build_type} \
         -DCMAKE_INSTALL_PREFIX=${_installprefix} \
         -DCMAKE_{SHARED,MODULE,EXE}_LINKER_FLAGS='-Wl,--no-undefined -Wl,--as-needed'
     make
@@ -200,10 +194,7 @@ package() {
     cd "${srcdir}/mishaaq-kcm_touchpad-00370b5"
     make DESTDIR=${pkgdir} install
 
-    cd "${srcdir}/wacomtablet-1.99.3"
-    make DESTDIR=${pkgdir} install
-
-    cd "${srcdir}/favorites-0.1"
+    cd "${srcdir}/wacomtablet-2.0"
     make DESTDIR=${pkgdir} install
 
     # Install PAM configuration

@@ -9,7 +9,7 @@ pkgname=kdegraphics-okular
 _pkgname=okular
 arch=('x86_64')
 pkgver=${_kdever}
-pkgrel=2
+pkgrel=1
 pkgdesc='Universal document viewer'
 url='http://kde.org/applications/graphics/okular/'
 license=('GPL'
@@ -50,12 +50,13 @@ sha256sums=(`grep ${_pkgname}-$_kdever.tar.xz  ../checksums.txt | cut -d " " -f1
 
 build() {
     cd ${srcdir}/${_pkgname}-${pkgver}
-    cmake . \
+    CXXFLAGS="${CXXFLAGS} -I /usr/include/freetype2" cmake . \
         -DCMAKE_BUILD_TYPE=${_build_type} \
         -DCMAKE_INSTALL_PREFIX=${_installprefix} \
         -DCMAKE_SKIP_RPATH=ON \
         -DKDE4_BUILD_TESTS=ON \
         -DWITH_ActiveApp=OFF \
+        -DFREETYPE_INCLUDE_DIR=/usr/include/freetype2/freetype/config \
         -DCMAKE_{SHARED,MODULE,EXE}_LINKER_FLAGS='-Wl,--no-undefined -Wl,--as-needed'
     make
 }
