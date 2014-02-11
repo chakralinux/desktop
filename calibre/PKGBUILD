@@ -1,7 +1,7 @@
 # maintainer: almack
 
 pkgname=calibre
-pkgver=1.22.0
+pkgver=1.23.0
 pkgrel=1
 pkgdesc="Ebook management application"
 arch=('x86_64')
@@ -20,8 +20,8 @@ install=${pkgname}.install
 source=("http://download.calibre-ebook.com/${pkgver}/${pkgname}-${pkgver}.tar.xz"
         'desktop_integration.patch'
         'calibre-mount-helper')
-sha256sums=('09cd7d4c48931faf2e44ddb2974b5c8a46aa992b14aee704b2750686254d9abb'
-            '3ae593b04ae928702837054df1d1598d63f3d4a9b474afca0a4024aaaab2d5fa'
+sha256sums=('a95076588ae047b9f75f036da4c8b1eb573e7f0d8fd8b3afc5d38ac046d9a6ea'
+            'b1f7b3f20723cd798b0137bd64bd2dd1844a0a6b023cb92db310dea80bfeb531'
             '1cdbd23edfea0b08f7bd089e3302ca9601737aac18537406f0408b449aea32d1')
 
 prepare() {
@@ -51,7 +51,7 @@ build() {
 package() {
   cd ${pkgname}
 
-  patch -uN src/calibre/linux.py "${srcdir}/desktop_integration.patch"
+  patch -Np1 -i "${srcdir}/desktop_integration.patch"
 
   # More on desktop integration (e.g. enforce Chakra defaults)
   sed -i -e "/self.create_uninstaller()/,/os.rmdir(config_dir)/d" \
