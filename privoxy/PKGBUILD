@@ -1,41 +1,35 @@
-# Chakra Packages for Chakra, part of chakra-project.org
-#
-# contributor (x86_64): Giuseppe Calà <jiveaxe@gmail.com>
-
-# include global config
-source ../_buildscripts/${current_repo}-${_arch}-cfg.conf
- 
+# Maintainer: abveritas@chakra-project.org
 
 pkgname=privoxy
-pkgver=3.0.17
-pkgrel=1
+pkgver=3.0.21
+pkgrel=2
 pkgdesc='A web proxy with advanced filtering capabilities.'
-arch=('i686' 'x86_64')
+arch=('x86_64')
 url='http://www.privoxy.org'
 license=('GPL')
 depends=('pcre' 'zlib')
 makedepends=('autoconf')
-categories=('network')
 backup=('etc/conf.d/privoxy'
         'etc/privoxy/'{config,trust,default.action,user.filter,default.filter}
         'etc/privoxy/'{match-all,user}.action
         'etc/logrotate.d/privoxy')
-install='privoxy.install'
+categories=('network')
+install=${pkgname}.install
 source=("http://downloads.sourceforge.net/ijbswa/${pkgname}-${pkgver}-stable-src.tar.gz"
-        'privoxy'
-        'privoxy.logrotate.d'
-        'privoxy.conf.d')
-md5sums=('9d363d738a3f3d73e774d6dfeafdb15f'
-         'a799e4d4f0ebb7f08190fa2bc961f439'
-         'a364c34c8dc6eb78c9a6b777237932de'
-         '27830ef79418e277b90c1c1fa933f876')
+        'privoxy-logrotate' # renamed the entry, because *.log is in gitignore
+        'privoxy.conf.d'
+        'privoxy.service')
+md5sums=('79558f2545cfcf9731f7de611646d837'
+         'fc3046377137003726a151ee27b142a2'
+         '27830ef79418e277b90c1c1fa933f876'
+         '4c154a126ec17b02c623e3d451e062d9')
 
 build() {
   cd "${srcdir}/${pkgname}-${pkgver}-stable"
 
   autoheader
   autoconf
-  ./configure --prefix=/usr --sysconfdir=/etc/privoxy
+  ./configure --prefix=/usr --sysconfdir=/etc/privoxy --enable-compression
 
   make
 }
@@ -49,8 +43,9 @@ package() {
   # Don't overwrite existing log files!
   rm "${pkgdir}/var/log/privoxy/"*
 
-  install -Dm0755 "${srcdir}/privoxy" "${pkgdir}/etc/rc.d/privoxy"
-  install -Dm0644 "${srcdir}/privoxy.logrotate.d" "${pkgdir}/etc/logrotate.d/privoxy"
+  # Install start scripts and config files
+  install -Dm0644 "${srcdir}/privoxy.service" "${pkgdir}/usr/lib/systemd/system/privoxy.service"
+  install -Dm0644 "${srcdir}/privoxy-logrotate" "${pkgdir}/etc/logrotate.d/privoxy"
   install -Dm0644 "${srcdir}/privoxy.conf.d" "${pkgdir}/etc/conf.d/privoxy"
 
   # Fix config paths.
@@ -64,5 +59,8 @@ package() {
 
   find "${pkgdir}/etc/privoxy/" -type d | xargs chmod 0770
   find "${pkgdir}/etc/privoxy/" -type f | xargs chmod 0660
-  chmod 0770 "${pkgdir}/var/log/privoxy"
+  chmod 0700 "${pkgdir}/var/log/privoxy"
+
+  # Avoid conflict with /var/run
+  rmdir "${pkgdir}/var/run"
 }

@@ -1,0 +1,37 @@
+# Contributor Inkane <neoinkaneglade@aol.com>
+# Contributor: Elkin Cruz <agnelkincc@gmail.com>
+# Contributor: Alexander Rødseth <rodseth@gmail.com>
+
+pkgname=shedskin
+pkgver=0.9.4
+pkgrel=3
+pkgdesc="A Python to C++ compiler"
+arch=('any')
+url="http://code.google.com/p/shedskin/"
+license=('GPL3')
+depends=('pcre' 'gc' 'python2')
+makedepends=('git' 'python2')
+source=("https://shedskin.googlecode.com/files/${pkgname}-${pkgver}.tgz")
+sha1sums=('d337488b7072ab0c4c69616af42ef6c0b9fe7db0')
+
+build() {
+  cd "${srcdir}/${pkgname}-${pkgver}"
+
+  # Python 2 fix
+  echo "#!/usr/bin/python2" > run
+  echo "import shedskin" >> run
+  echo "shedskin.main()" >> run
+}
+
+package() {
+  cd "${srcdir}/${pkgname}-${pkgver}"
+
+  # Install the wrapperscript
+  install -Dm755 run "$pkgdir/usr/bin/shedskin"
+
+  # Install using setup.py
+  python2 setup.py install --prefix="$pkgdir/usr"
+
+  # Install the license
+  install -Dm644 LICENSE "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
+}
