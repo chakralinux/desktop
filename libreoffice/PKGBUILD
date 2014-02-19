@@ -18,8 +18,8 @@ pkgname=('libreoffice-common'
 	'libreoffice-extension-presentation-minimizer'
 	'libreoffice-extension-wiki-publisher'
 	'libreoffice-extension-nlpsolver')
-_LOver=4.1.4.2
-pkgver=4.1.4
+_LOver=4.1.5.3
+pkgver=4.1.5
 pkgrel=1
 arch=('x86_64')
 license=('LGPL3')
@@ -34,7 +34,7 @@ makedepends=( # makedepends
              "curl>=7.20.0" "hunspell>=1.2.8" 'python3' 'libwpd>=0.9.2' 'libwps' 'libxaw' "neon>=0.28.6"
              'pango' 'nss' 'libjpeg' 'libxrandr' 'libgl' 'dbus-glib' "icu>=4.6" 'libxslt'
              'redland' 'graphite' 'hyphen' 'lpsolve' 'gcc-libs' 'sh'  'libtextcat' 'librsvg' 'lcms2'
-             'hicolor-icon-theme' 'desktop-file-utils' 'shared-mime-info' 'translate-toolkit' 'xdg-utils' 'ttf-dejavu' 'libcups' 'libodfgen' 'libmwaw')
+             'hicolor-icon-theme' 'desktop-file-utils' 'shared-mime-info' 'translate-toolkit' 'xdg-utils' 'ttf-dejavu' 'libcups' 'libodfgen' 'libetonyek')
 
 _mirror="http://download.documentfoundation.org/libreoffice/src/${pkgver}"
 #_mirror="http://dev-builds.libreoffice.org/pre-releases/src"
@@ -71,14 +71,15 @@ source=(${_mirror}/${pkgbase}{,-help,-translations}-${_LOver}.tar.xz
 	${_additional_source_url2}/185d60944ea767075d27247c3162b3bc-unowinreg.dll
 	${_additional_source_url}/libcdr-0.0.14.tar.bz2
 	${_additional_source_url}/libmspub-0.0.6.tar.bz2
+	${_additional_source_url}/libmwaw-0.1.11.tar.bz2
 	${_additional_source_url}/libvisio-0.0.31.tar.bz2
 	make-pyuno-work-with-system-wide-module-install.diff
 	kde4_cell_freeze.patch
 	dragndrop_Freeze.patch)
 
-md5sums=('2e7880600b26387f342f277c5d198bfa'
-         '1235bb27ff2a060cc666752143dfbf6b'
-         '083f211866fe1f77fd2712b822a56f5c'
+md5sums=('12679026121300396c85b4ca11b176c7'
+         'e0ea06a105071c278e52866f476c0ee6'
+         'c3b03c33ee14628f1c151288f2eb4962'
          '1f24ab1d39f4a51faf22244c94a6203f'
          '35c94d2df8893241173de1d16b6034c0'
          '798b2ffdc8bcfe7bca2cf92b62caf685'
@@ -109,6 +110,7 @@ md5sums=('2e7880600b26387f342f277c5d198bfa'
          '185d60944ea767075d27247c3162b3bc'
          'd88f9b94df880d2c05be943b000ca112'
          '1120705cd0f0d9bd5506360bf57b6c2e'
+         '828dd03510791fbe037081a2b4a1a8ff'
          '82628333418f101a20cd21f980cf9f40'
          '07d2bf5ad839a394cca008b3ec6e7bb1'
          '0242690873685e91769bc770fa2c8aa5'
@@ -145,6 +147,7 @@ noextract=(
 	185d60944ea767075d27247c3162b3bc-unowinreg.dll
 	libcdr-0.0.14.tar.bz2
 	libmspub-0.0.6.tar.bz2
+	libmwaw-0.1.11.tar.bz2
 	libvisio-0.0.31.tar.bz2)
 
 
@@ -224,6 +227,7 @@ build() {
 		--without-system-libcdr \
 		--without-system-jfreereport \
 		--without-system-apache-commons \
+		--without-system-libmwaw \
 		--without-system-mdds \
 		--without-myspell-dicts \
                 --with-system-libvisio \
@@ -268,8 +272,7 @@ package_libreoffice-common() {
  install=${pkgbase}.install
  depends=('libreoffice-langpack' "hunspell" "python3" "neon"
           'nspr' "icu" 'libsm' 'redland' 'hyphen' 'graphite' 'lcms2' 'poppler'
-          'hicolor-icon-theme' 'desktop-file-utils' 'shared-mime-info' 'xdg-utils' 'clucene' 'libodfgen' 'libmwaw'
-          'lpsolve' 'libmythes')
+          'hicolor-icon-theme' 'desktop-file-utils' 'shared-mime-info' 'xdg-utils' 'clucene' 'libodfgen' 'lpsolve' 'libmythes' )
           #'saxon'
  optdepends=('libreoffice-langpack: additional language support'
              'java-runtime:     adds java support'
@@ -446,7 +449,7 @@ package_libreoffice-draw() {
 
 package_libreoffice-impress() {
  pkgdesc="Presentation Application for LibreOffice."
- depends=('libreoffice-common' 'libreoffice-kde4')
+ depends=('libreoffice-common' 'libreoffice-kde4' 'libetonyek')
  optdepends=('mesa: for the OGLTrans extension')
  backup=()
  groups=('libreoffice')
