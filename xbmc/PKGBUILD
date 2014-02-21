@@ -39,78 +39,79 @@ sha256sums=('3e15c960d034efdea5f92a7b74716cb48094842d077b076025fd8640754ede73'
             'e157ec0ff047b7573777aa93844c4c15eafc4f9d7506529047ba22ad439daf21')
 
 prepare() {
-    cd xbmc-$pkgver-$_codename
+  cd xbmc-$pkgver-$_codename
 
-    patch -p0 <$srcdir/libass.patch
+  patch -p0 <$srcdir/libass.patch
 
-    # fix lsb_release dependency
-    sed -i -e 's:/usr/bin/lsb_release -d:cat /etc/arch-release:' xbmc/utils/SystemInfo.cpp
-    sed -i -e 's:#include <libsmbclient.h>:#include <samba-4.0/libsmbclient.h>:' xbmc/filesystem/{SmbFile,SMBDirectory}.cpp
+  # fix lsb_release dependency
+  sed -i -e 's:/usr/bin/lsb_release -d:cat /etc/arch-release:' xbmc/utils/SystemInfo.cpp
+  sed -i -e 's:#include <libsmbclient.h>:#include <samba-4.0/libsmbclient.h>:' xbmc/filesystem/{SmbFile,SMBDirectory}.cpp
 }
 
 build() {
-    cd xbmc-${pkgver}-$_codename
+  cd xbmc-${pkgver}-$_codename
 
-    msg "Bootstrapping XBMC"
-    ./bootstrap
+  msg "Bootstrapping XBMC"
+  ./bootstrap
 
-    msg "Configuring XBMC"
-    ./configure --prefix=/usr \
-      --enable-optimizations \
-      --enable-gl \
-      --enable-sdl \
-      --enable-vaapi \
-      --enable-vdpau \
-      --enable-xrandr \
-      --enable-rsxs \
-      --enable-projectm \
-      --enable-x11 \
-      --enable-pulse \
-      --enable-samba \
-      --enable-nfs \
-      --enable-avahi \
-      --enable-airplay \
-      --enable-airtunes \
-      --enable-ffmpeg-libvorbis \
-      --enable-rtmp \
-      --enable-libbluray \
-      --enable-dvdcss \
-      --enable-webserver \
-      --enable-optical-drive \
-      --enable-texturepacker \
-      --enable-udev \
-      --enable-libusb \
-      --enable-external-libraries \
-      --enable-libcec \
-      --disable-hal \
-      --disable-external-ffmpeg \
-      --disable-debug
+  msg "Configuring XBMC"
+  ./configure --prefix=/usr \
+    --enable-optimizations \
+    --enable-gl \
+    --enable-sdl \
+    --enable-vaapi \
+    --enable-vdpau \
+    --enable-xrandr \
+    --enable-rsxs \
+    --enable-projectm \
+    --enable-x11 \
+    --enable-pulse \
+    --enable-samba \
+    --enable-nfs \
+    --enable-avahi \
+    --enable-airplay \
+    --enable-airtunes \
+    --enable-ffmpeg-libvorbis \
+    --enable-rtmp \
+    --enable-libbluray \
+    --enable-dvdcss \
+    --enable-webserver \
+    --enable-optical-drive \
+    --enable-texturepacker \
+    --enable-udev \
+    --enable-libusb \
+    --enable-external-libraries \
+    --enable-libcec \
+    --disable-hal \
+    --disable-external-ffmpeg \
+    --disable-debug
 
-    msg "Running make"
-    make
+  msg "Running make"
+  make
 }
 
 package() {
-    cd xbmc-${pkgver}-$_codename
-    msg "Running make install"
-    make DESTDIR="${pkgdir}" install
+  cd xbmc-${pkgver}-$_codename
+  msg "Running make install"
+  make DESTDIR="${pkgdir}" install
 
-    # lsb_release fix
-    sed -i -e 's/which lsb_release &> \/dev\/null/\[ -f \/etc\/chakra-release ]/g' "${pkgdir}/usr/bin/xbmc"
-    sed -i -e "s/lsb_release -a 2> \/dev\/null | sed -e 's\/\^\/    \/'/cat \/etc\/chakra-release/g" "${pkgdir}/usr/bin/xbmc"
+  # lsb_release fix
+  sed -i -e 's/which lsb_release &> \/dev\/null/\[ -f \/etc\/chakra-release ]/g' "${pkgdir}/usr/bin/xbmc"
+  sed -i -e "s/lsb_release -a 2> \/dev\/null | sed -e 's\/\^\/    \/'/cat \/etc\/chakra-release/g" "${pkgdir}/usr/bin/xbmc"
 
-    # Tools
-    install -D -m 0755 "${srcdir}/xbmc-$pkgver-$_codename/xbmc-xrandr" "${pkgdir}/usr/share/xbmc/xbmc-xrandr"
-    install -D -m 0755 "${srcdir}/xbmc-$pkgver-$_codename/tools/TexturePacker/TexturePacker" "${pkgdir}/usr/share/xbmc/"
+  # Tools
+  install -D -m 0755 "${srcdir}/xbmc-$pkgver-$_codename/xbmc-xrandr" "${pkgdir}/usr/share/xbmc/xbmc-xrandr"
+  install -D -m 0755 "${srcdir}/xbmc-$pkgver-$_codename/tools/TexturePacker/TexturePacker" "${pkgdir}/usr/share/xbmc/"
 
-    # Licenses
-    install -d -m 0755 "${pkgdir}/usr/share/licenses/${pkgname}"
-    for licensef in LICENSE.GPL copying.txt; do
-        mv "${pkgdir}/usr/share/doc/xbmc/${licensef}" "${pkgdir}/usr/share/licenses/${pkgname}"
-    done
+  # Licenses
+  install -d -m 0755 "${pkgdir}/usr/share/licenses/${pkgname}"
+  for licensef in LICENSE.GPL copying.txt; do
+    mv "${pkgdir}/usr/share/doc/xbmc/${licensef}" "${pkgdir}/usr/share/licenses/${pkgname}"
+  done
 
-    # Systemd service
-    install -Dm0644 "${srcdir}/xbmc.service" "${pkgdir}/usr/lib/systemd/system/xbmc.service"
-    install -Dm0644 $srcdir/polkit.rules $pkgdir/usr/share/polkit-1/rules.d/10-xbmc.rules
-    chmod 0700 $pkgdir/usr/share/polkit-1/rules.d/
+  # Systemd service
+  install -Dm0644 "${srcdir}/xbmc.service" "${pkgdir}/usr/lib/systemd/system/xbmc.service"
+  install -Dm0644 $srcdir/polkit.rules $pkgdir/usr/share/polkit-1/rules.d/10-xbmc.rules
+  chmod 0700 $pkgdir/usr/share/polkit-1/rules.d/
 }
+# vim: set ts=2 sw=2 et:
