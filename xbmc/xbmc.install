@@ -1,13 +1,19 @@
-[Unit]
-Description = Starts instance of XBMC using xinit
-After = remote-fs.target
+post_install() {
+  [[ $(type -p gtk-update-icon-cache) ]] && usr/bin/gtk-update-icon-cache -qtf usr/share/icons/hicolor
+  [[ $(type -p update-desktop-database) ]] && usr/bin/update-desktop-database -q usr/share/applications
+  getent group xbmc > /dev/null || groupadd -r xbmc
+  getent passwd xbmc > /dev/null || useradd -r -m -d /var/lib/xbmc -g xbmc xbmc
+  usermod -a -G xbmc,audio,video,power,network,optical,storage,disk xbmc
+  mkdir -p var/lib/xbmc
+  chown -R xbmc:xbmc var/lib/xbmc
+}
 
-[Service]
-User = xbmc
-Group = xbmc
-Type = simple
-ExecStart = /usr/bin/xinit /usr/bin/xbmc-standalone -- :0 -nolisten tcp
-Restart = always
+post_upgrade() {
+  post_install $1
+}
 
-[Install]
-WantedBy = multi-user.target
+post_remove() {
+  [[ $(type -p gtk-update-icon-cache) ]] && usr/bin/gtk-update-icon-cache -qtf usr/share/icons/hicolor
+  [[ $(type -p update-desktop-database) ]] && usr/bin/update-desktop-database -q usr/share/applications
+  getent passwd xbmc > /dev/null && userdel xbmc
+}
