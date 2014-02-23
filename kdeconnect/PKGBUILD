@@ -8,9 +8,9 @@
 _buildtype='Release'
   
 pkgname=kdeconnect
-pkgver=0.4.2
+pkgver=0.5
 #_pkgver=0.4
-pkgrel=2
+pkgrel=1
 pkgdesc='KDE Connect - kded and kcm'
 url='https://albertvaka.wordpress.com/2013/08/05/introducing-kde-connect/'
 license=('GPL')
@@ -23,8 +23,8 @@ install=kdeconnect.install
 screenshot=('http://albertvaka.files.wordpress.com/2013/08/kcm.png')
 source=("http://download.kde.org/unstable/kdeconnect/${pkgver}/src/${pkgname}-kde-${pkgver}.tar.xz"
 'plasma_icon.patch')
-md5sums=('96320feda9805296c72e1e10578b903e'
-	'b89f0b4e1d38bb62848c0f0fc5e119b0')
+md5sums=('c87a7032d5b66dc22b22004a8275b493'
+         'b89f0b4e1d38bb62848c0f0fc5e119b0')
  
 if [[ ! ${_buildtype} == 'Release' ]] && [[ ! ${_buildtype} == 'release' ]]; then
   options=(debug)
@@ -35,10 +35,6 @@ prepare() {
   mkdir ${pkgname}-kde-${pkgver}-build
 
   cd ${pkgname}-kde-${pkgver}
-  # Plasmoid: Changed IconWidget -> SvgItem to enable themes to change the icon
-  # ToDo: remove this patch with version > 0.4.2
-  # https://projects.kde.org/projects/playground/base/kdeconnect-kde/repository/revisions/00632aaa6a02e1cef9b9b267467106d79ab71d39/diff/plasmoid/package/contents/ui/CompactRepresentation.qml
-  patch -Np1 -i ${srcdir}/plasma_icon.patch
 }
  
 build() {
