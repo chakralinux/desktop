@@ -5,21 +5,21 @@
 
 _name=mirall
 pkgname=owncloud-client
-pkgver=1.5.0
+pkgver=1.5.1
 pkgrel=1
 pkgdesc="ownCloud client based on mirall"
 arch=('x86_64')
 url="http://owncloud.org/"
 screenshot="http://owncloud.org/wp-content/uploads/2012/03/linux3.png"
 license=('GPL2')
-depends=('qtwebkit' 'csync-owncloud' 'neon' 'sqlite3' 'qtkeychain')
+depends=('qtwebkit' 'neon' 'sqlite3' 'qtkeychain')
 makedepends=('cmake' 'libssh' 'smbclient' 'desktop-file-utils')
 categories=('network')
-options=(!strip)
+conflicts=('csync-owncloud')
 backup=('etc/owncloud-client/sync-exclude.lst')
 install=${pkgname}.install
 source=("http://download.owncloud.com/desktop/stable/${_name}-${pkgver}.tar.bz2")
-sha256sums=('64532680da1c452b7b591550d07f25b554283ec65d448d41366ea2105b959a18')
+sha256sums=('79c41f8c72c994ab803b7053a1c7e0a46bbd20c25c1eed900e1c98433745daee')
 
 prepare() {
   if [[ -e ${_name}-${pkgver}-build ]]; then rm -rf ${_name}-${pkgver}-build; fi
@@ -33,7 +33,6 @@ build() {
         -DCMAKE_INSTALL_PREFIX=/usr \
         -DCMAKE_INSTALL_LIBDIR=/usr/lib \
         -DCSYNC_INCLUDE_PATH=/usr/include/ocsync \
-        -DHTTPBF_LIBRARY=/usr/lib/libhttpbf.a \
         -DCMAKE_INSTALL_SYSCONFDIR=/etc/${pkgname} \
         -WITH_DOC=TRUE \
         -DCMAKE_BUILD_TYPE="Release" \

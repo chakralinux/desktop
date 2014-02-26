@@ -3,7 +3,8 @@
 
 pkgname=xbmc
 pkgver=12.3
-pkgrel=2
+_codename=Frodo
+pkgrel=3
 pkgdesc="XBMC Media Center"
 arch=('x86_64')
 url="http://xbmc.org"
@@ -29,93 +30,88 @@ screenshot=('http://xbmc.org/wp-content/gallery/back-row/screenshot000.jpg')
 install=${pkgname}.install
 options=('makeflags')
 source=("http://mirrors.xbmc.org/releases/source/xbmc-${pkgver}.tar.gz"
-        "FEH.sh"
-        "${pkgname}.service")
+        "${pkgname}.service"
+        "polkit.rules"
+        "libass.patch::https://bugs.archlinux.org/index.php?getfile=11285")
 sha256sums=('3e15c960d034efdea5f92a7b74716cb48094842d077b076025fd8640754ede73'
-            '1b391dfbaa07f81e5a5a7dfd1288bf2bdeab8dc50bbb6dbf39a80d8797dfaeb0'
-            '547e06f3141866cd34b1df34025517e9826992b67543af7621d954bcdfa0ba94')
+            '547e06f3141866cd34b1df34025517e9826992b67543af7621d954bcdfa0ba94'
+            '4ea78374a08e13a64dcf6a424b111b8bfc11de03ed5829744fc6d9b5fc1ec96e'
+            'e157ec0ff047b7573777aa93844c4c15eafc4f9d7506529047ba22ad439daf21')
+
+prepare() {
+  cd xbmc-$pkgver-$_codename
+
+  patch -p0 <$srcdir/libass.patch
+
+  # fix lsb_release dependency
+  sed -i -e 's:/usr/bin/lsb_release -d:cat /etc/arch-release:' xbmc/utils/SystemInfo.cpp
+  sed -i -e 's:#include <libsmbclient.h>:#include <samba-4.0/libsmbclient.h>:' xbmc/filesystem/{SmbFile,SMBDirectory}.cpp
+}
 
 build() {
-    cd xbmc-${pkgver}-Frodo
-    sed -i -e 's:#include <libsmbclient.h>:#include <samba-4.0/libsmbclient.h>:' xbmc/filesystem/{SmbFile,SMBDirectory}.cpp
+  cd xbmc-${pkgver}-$_codename
 
-    
-    msg "Bootstrapping XBMC"
-    ./bootstrap
+  msg "Bootstrapping XBMC"
+  ./bootstrap
 
-    msg "Configuring XBMC"
-    ./configure --prefix=/usr \
-      --enable-optimizations \
-      --enable-gl \
-      --enable-sdl \
-      --enable-vaapi \
-      --enable-vdpau \
-      --enable-xrandr \
-      --enable-rsxs \
-      --enable-projectm \
-      --enable-x11 \
-      --enable-pulse \
-      --enable-samba \
-      --enable-nfs \
-      --enable-avahi \
-      --enable-airplay \
-      --enable-airtunes \
-      --enable-ffmpeg-libvorbis \
-      --enable-rtmp \
-      --enable-libbluray \
-      --enable-dvdcss \
-      --enable-webserver \
-      --enable-optical-drive \
-      --enable-texturepacker \
-      --enable-udev \
-      --enable-libusb \
-      --enable-external-libraries \
-      --enable-libcec \
-      --disable-hal \
-      --disable-external-ffmpeg \
-      --disable-debug
+  msg "Configuring XBMC"
+  ./configure --prefix=/usr \
+    --enable-optimizations \
+    --enable-gl \
+    --enable-sdl \
+    --enable-vaapi \
+    --enable-vdpau \
+    --enable-xrandr \
+    --enable-rsxs \
+    --enable-projectm \
+    --enable-x11 \
+    --enable-pulse \
+    --enable-samba \
+    --enable-nfs \
+    --enable-avahi \
+    --enable-airplay \
+    --enable-airtunes \
+    --enable-ffmpeg-libvorbis \
+    --enable-rtmp \
+    --enable-libbluray \
+    --enable-dvdcss \
+    --enable-webserver \
+    --enable-optical-drive \
+    --enable-texturepacker \
+    --enable-udev \
+    --enable-libusb \
+    --enable-external-libraries \
+    --enable-libcec \
+    --disable-hal \
+    --disable-external-ffmpeg \
+    --disable-debug
 
-    msg "Running make"
-    make 
-    make -C lib/addons/script.module.pil
+  msg "Running make"
+  make
 }
 
 package() {
-    cd xbmc-${pkgver}-Frodo
-    msg "Running make install"
-    make prefix="${pkgdir}/usr" install
+  cd xbmc-${pkgver}-$_codename
+  msg "Running make install"
+  make DESTDIR="${pkgdir}" install
 
-    # Replace FEH.py with FEH.sh (and thus remove external python dependency)
-    install -D -m 0755 "${srcdir}/FEH.sh" "${pkgdir}/usr/share/xbmc/FEH.sh"
-    sed -i -e 's/^python \(.*\)FEH.py \(.*\)$/\1FEH.sh \2/' "${pkgdir}/usr/bin/xbmc"
+  # lsb_release fix
+  sed -i -e 's/which lsb_release &> \/dev\/null/\[ -f \/etc\/chakra-release ]/g' "${pkgdir}/usr/bin/xbmc"
+  sed -i -e "s/lsb_release -a 2> \/dev\/null | sed -e 's\/\^\/    \/'/cat \/etc\/chakra-release/g" "${pkgdir}/usr/bin/xbmc"
 
-    # lsb_release fix
-    sed -i -e 's/which lsb_release &> \/dev\/null/\[ -f \/etc\/arch-release ]/g' "${pkgdir}/usr/bin/xbmc"
-    sed -i -e "s/lsb_release -a 2> \/dev\/null | sed -e 's\/\^\/    \/'/cat \/etc\/arch-release/g" "${pkgdir}/usr/bin/xbmc"
+  # Tools
+  install -D -m 0755 "${srcdir}/xbmc-$pkgver-$_codename/xbmc-xrandr" "${pkgdir}/usr/share/xbmc/xbmc-xrandr"
+  install -D -m 0755 "${srcdir}/xbmc-$pkgver-$_codename/tools/TexturePacker/TexturePacker" "${pkgdir}/usr/share/xbmc/"
 
-    # .desktop files
-    install -D -m 0644 "${srcdir}/xbmc-$pkgver-Frodo/tools/Linux/xbmc.desktop" "${pkgdir}/usr/share/applications/xbmc.desktop"
-    install -D -m 0644 "${srcdir}/xbmc-$pkgver-Frodo/tools/Linux/xbmc-48x48.png" "${pkgdir}/usr/share/pixmaps/xbmc.png"
+  # Licenses
+  install -d -m 0755 "${pkgdir}/usr/share/licenses/${pkgname}"
+  for licensef in LICENSE.GPL copying.txt; do
+    mv "${pkgdir}/usr/share/doc/xbmc/${licensef}" "${pkgdir}/usr/share/licenses/${pkgname}"
+  done
 
-    # Tools
-    install -D -m 0755 "${srcdir}/xbmc-$pkgver-Frodo/xbmc-xrandr" "${pkgdir}/usr/share/xbmc/xbmc-xrandr"
-    install -D -m 0755 "${srcdir}/xbmc-$pkgver-Frodo/tools/TexturePacker/TexturePacker" "${pkgdir}/usr/share/xbmc/"
-
-    # Licenses
-    install -d -m 0755 "${pkgdir}/usr/share/licenses/${pkgname}"
-    for licensef in LICENSE.GPL copying.txt; do
-        mv "${pkgdir}/usr/share/doc/xbmc/${licensef}" "${pkgdir}/usr/share/licenses/${pkgname}"
-    done
-
-    # Docs
-    install -d -m 0755 "${pkgdir}/usr/share/doc/${pkgname}"
-
-    # cleanup some stuff
-    msg "Cleanup unneeded files"
-    rm -rf "${pkgdir}/usr/share/xsessions"
-    rm -f "${pkgdir}/usr/share/xbmc/FEH.py"
-    rm -f "${pkgdir}/usr/share/icons/hicolor/icon-theme.cache"
-
-    # Systemd service
-    install -Dm0644 "${srcdir}/xbmc.service" "${pkgdir}/usr/lib/systemd/system/xbmc.service"
+  # Systemd service
+  install -Dm0644 "${srcdir}/xbmc.service" "${pkgdir}/usr/lib/systemd/system/xbmc.service"
+  install -Dm0644 $srcdir/polkit.rules $pkgdir/usr/share/polkit-1/rules.d/10-xbmc.rules
+  chmod 0700 $pkgdir/usr/share/polkit-1/rules.d/
 }
+# vim: set ts=2 sw=2 et:
