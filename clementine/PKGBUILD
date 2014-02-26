@@ -1,13 +1,10 @@
-#
-# Apps packages for Chakra, part of chakra-project.org
-#
-# Contributor: abveritas@chakra-project.org
 # Contributor: Giuseppe Calà <jiveaxe@gmail.com>
 # Maintainer: Bruce Liu <rainman59118@gmail.com>
 
 pkgname=clementine
-pkgver=1.2.1
-pkgrel=3
+_pkgname=Clementine
+pkgver=1.2.2
+pkgrel=1
 pkgdesc="A modern music player and library organiser and a port of Amarok 1.4, with some features rewritten to take advantage of Qt4."
 url="http://www.clementine-player.org/"
 screenshot="http://images.clementine-player.org/screenshots/clementine-1.0-3.png"
@@ -23,11 +20,19 @@ optdepends=('gstreamer0.10-base-plugins: for more open formats'
             'gstreamer0.10-bad-plugins: for use with "Bad" plugin libraries'
             'gstreamer0.10-ugly-plugins: for use with "Ugly" plugin libraries')
 categories=('multimedia')
-source=("http://clementine-player.googlecode.com/files/${pkgname}-${pkgver}.tar.gz")
-sha1sums=('15dcb7e6b4f08ba36abd105ed019b61b7e8578bb')
+source=("https://github.com/clementine-player/${_pkgname}/archive/${pkgver}.tar.gz"
+	"${pkgname}-unistd.patch")
+sha1sums=('9ab4110ea35185701cfc6b56863c991784c12134'
+          'edd8d0148cf04ba1321492be208699a9b8007967')
+
+prepare() {
+  cd Clementine-${pkgver}
+
+  patch -Np1 -i ../${pkgname}-unistd.patch
+}
 
 build() {
-  cd ${pkgname}-${pkgver}
+  cd ${_pkgname}-${pkgver}
   mkdir -p build && cd build
   cmake ../ -DCMAKE_INSTALL_PREFIX=/usr \
             -DCMAKE_BUILD_TYPE=Release \
@@ -36,6 +41,6 @@ build() {
 }
 
 package() {
-  cd ${pkgname}-${pkgver}/build
+  cd ${_pkgname}-${pkgver}/build
   make install DESTDIR="${pkgdir}"
 }
