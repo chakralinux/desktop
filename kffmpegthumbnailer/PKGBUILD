@@ -2,20 +2,20 @@
 
 pkgname=kffmpegthumbnailer
 pkgver=1.1.0
-pkgrel=3
+pkgrel=6
 pkgdesc="kffmpegthumbnailer is a video thumbnailer for kde based on ffmpegthumbnailer"
-arch=('i686' 'x86_64')
+arch=('x86_64')
 url="http://code.google.com/p/ffmpegthumbnailer"
 license=('GPL2')
 groups=('multimedia')
 depends=('kdebase-workspace' 'ffmpeg' 'ffmpegthumbnailer>=2.0.0')
-makedepends=('cmake')
+makedepends=('cmake' 'automoc4')
 categories=('accessories')
-source=("http://ffmpegthumbnailer.googlecode.com/files/$pkgname-$pkgver.tar.gz")
+source=("http://ffmpegthumbnailer.googlecode.com/files/${pkgname}-${pkgver}.tar.gz")
 md5sums=('fa897450ee691b6d225d8f79a6cfd409')
 
 build() {
-   cd ${srcdir}
+   cd ${srcdir}/${pkgname}-${pkgver}
    
    mkdir build
    cd build
@@ -24,7 +24,7 @@ build() {
 }
 
 package() {
-    cd ${srcdir}/build
+    cd ${srcdir}/${pkgname}-${pkgver}/build
   
     make DESTDIR=$pkgdir install 
 }
