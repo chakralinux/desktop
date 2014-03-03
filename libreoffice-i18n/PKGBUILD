@@ -114,7 +114,7 @@ pkgname=('libreoffice-af'
          'libreoffice-zu')
 _rcver=4.1.5.3
 pkgver=4.1.5
-pkgrel=1
+pkgrel=2
 
 _oodlver=${pkgver}
 #_oodlver=${_rcver}
@@ -420,12 +420,10 @@ prepare() {
     echo ${_pkglang} " unpacking..."
     cd ${srcdir}/LibreOffice_${_dirver}_Linux_x86_rpm_langpack_${_pkglang}/RPMS
 
-    # remove dictionaries if shipped - we ship them now in separate packages
-    rm -vf *-dict-*.rpm || /bin/true
-
-	for j in *.rpm
-	 do rpmextract.sh $j
-	done
+    for j in *.rpm
+      do rpmextract.sh $j
+    done
+    
     # the helppack rpm goes also into the langpack dir - so far we don't want to split the helppacks separate
     rpmextract.sh ${srcdir}/LibreOffice_${_dirver}_Linux_x86_rpm_helppack_${_pkglang}/RPMS/*.rpm || /bin/true
   done
