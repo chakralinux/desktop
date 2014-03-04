@@ -28,8 +28,7 @@ options=('docs'
          'debug'
          'log')
 source=("$_mirror/${_pkgname}-$_kdever.tar.xz")
-#sha256sums=(`grep ${_pkgname}-$_kdever.tar.xz  ../checksums.txt | cut -d " " -f1`)
-sha256sums=('570b2ff173cd23d60ec0e18b4f1f1d94da516f01a667916f090178d341c9bb19')
+sha256sums=(`grep "sources/${_pkgname}-$_kdever.tar.xz" ../checksums.txt | cut -d " " -f1`)
 
 build() {
     cd ${srcdir}/${_pkgname}-${pkgver}
