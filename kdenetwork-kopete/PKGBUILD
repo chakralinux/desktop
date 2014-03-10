@@ -1,43 +1,62 @@
-# include global config
+# Maintainer:   H W Tovetjärn (totte) <totte@tott.es>
+# Contributors: Manuel Tortosa <manutortosa@chakra-project.org>
+
+# Include global configuration
 source ../_buildscripts/${current_repo}-${_arch}-cfg.conf
 
 _pkgname="kopete"
 pkgname="kdenetwork-kopete"
 arch=('x86_64')
 pkgver=${_kdever}
-pkgrel=2
+pkgrel=1
 pkgdesc="Kopete, the instant messenger"
 url="http://kde.org/applications/internet/kopete/"
-depends=("kde-runtime>=${_kdever}" "kdepimlibs>=${_kdever}"
-	 'qca-ossl' 'libotr' 'libmsn' 'libidn' 'qimageblitz' 'libxss'
-         'libv4l' 'msilbc' 'libgadu' 'mediastreamer' 'ortp')
-groups=("kde" "kdenetwork" "kde-uninstall")
+depends=("kde-runtime>=${_kdever}"
+         "kdepimlibs>=${_kdever}"
+         'qca-ossl'
+         'libotr'
+         'libmsn'
+         'libidn'
+         'qimageblitz'
+         'libxss'
+         'libv4l'
+         'msilbc'
+         'libgadu')
+groups=("kde"
+        "kdenetwork"
+        "kde-uninstall")
 categories=('communication')
-conflicts=("kdenetwork-common" "kdenetwork-doc")
+conflicts=("kdenetwork-common"
+           "kdenetwork-doc")
 install=kdenetwork.install
-license=('GPL' 'LGPL' 'FDL')
-options=('docs' '!header' 'debug' 'log')
-makedepends=('pkg-config' 'cmake' 'automoc4' 'docbook-xsl')
-source=("$_mirror/${_pkgname}-$_kdever.tar.xz"
-        'mediastreamer29.patch')
-sha1sums=(`grep ${_pkgname}-$_kdever.tar.xz ../kde-sc.md5 | cut -d" " -f1`
-         'ad882d9bef621f6b42dcdf03f09dccc8')
+license=('GPL'
+         'LGPL'
+         'FDL')
+options=('docs'
+         '!header'
+         'debug'
+         'log')
+makedepends=('pkg-config'
+             'cmake'
+             'automoc4'
+             'docbook-xsl')
+source=("$_mirror/${_pkgname}-$_kdever.tar.xz")
+sha256sums=(`grep ${_pkgname}-$_kdever.tar.xz  ../checksums.txt | cut -d " " -f1`)
 
 build() {
-  cd ${srcdir}/${_pkgname}-${pkgver}
-  patch -p1 -i "${srcdir}"/mediastreamer29.patch
-
-  cmake . -DCMAKE_BUILD_TYPE=${_build_type} \
-          -DCMAKE_INSTALL_PREFIX=${_installprefix} \
-          -DWITH_Xmms=OFF \
-          -DWITH_qq=OFF \
-          -DWITH_meanwhile=OFF \
-          -DCMAKE_SKIP_RPATH=ON \
-          -DCMAKE_{SHARED,MODULE,EXE}_LINKER_FLAGS='-Wl,--no-undefined -Wl,--as-needed'
-  make 
+    cd ${srcdir}/${_pkgname}-${pkgver}
+    cmake . \
+        -DCMAKE_BUILD_TYPE=${_build_type} \
+        -DCMAKE_INSTALL_PREFIX=${_installprefix} \
+        -DWITH_Xmms=OFF \
+        -DWITH_qq=OFF \
+        -DWITH_meanwhile=OFF \
+        -DCMAKE_SKIP_RPATH=ON \
+        -DCMAKE_{SHARED,MODULE,EXE}_LINKER_FLAGS='-Wl,--no-undefined -Wl,--as-needed'
+    make
 }
 
 package() {
-  cd ${srcdir}/${_pkgname}-${pkgver}
-  make DESTDIR=${pkgdir} install 
+    cd ${srcdir}/${_pkgname}-${pkgver}
+    make DESTDIR=${pkgdir} install 
 }

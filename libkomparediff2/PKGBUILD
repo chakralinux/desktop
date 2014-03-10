@@ -1,0 +1,33 @@
+# Maintainer:   H W Tovetjärn (totte) <totte@tott.es>
+# Contributors: Manuel Tortosa <manutortosa@chakra-project.org>
+#               Andrea Scarpino <andrea@archlinux.org>
+
+pkgname=libkomparediff2
+pkgver=4.12.0
+pkgrel=1
+pkgdesc="Library to compare files and strings"
+url='https://projects.kde.org/projects/kde/kdesdk/libkomparediff2'
+arch=('i686' 'x86_64')
+license=('GPL' 'LGPL' 'FDL')
+depends=('kdelibs')
+makedepends=('cmake' 'automoc4')
+source=("http://download.kde.org/stable/${pkgver}/src/${pkgname}-${pkgver}.tar.xz")
+sha512sums=('6375f5a40919df9de73e3ffa86faf79349b208401412d80e0c1c7b1dc5fc6a0cf922b1220f27769d3cfa298470662bda5293ceae4295002543491c73eeb5cc77')
+
+prepare() {
+    mkdir build
+}
+
+build() {
+    cd build
+    cmake ../${pkgname}-${pkgver} \
+        -DCMAKE_BUILD_TYPE=Release \
+        -DKDE4_BUILD_TESTS=ON \
+        -DCMAKE_INSTALL_PREFIX=/usr
+    make
+}
+
+package() {
+    cd build
+    make DESTDIR="${pkgdir}" install
+}

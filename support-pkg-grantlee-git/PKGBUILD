@@ -1,8 +1,8 @@
-#
+
 # Platform Packages for Chakra, part of chakra-project.org
-#
-# maintainer (i686): Phil Miller <philm[at]chakra-project[dog]org>
-# maintainer (x86_64): Manuel Tortosa <manutortosa[at]chakra-project[dot]org>
+
+# Maintainer (i686): Phil Miller <philm@chakra-project[dog]org>
+# Maintainer (x86_64): Manuel Tortosa <manutortosa@chakra-project@org>
 
 pkgname=grantlee-git
 pkgver=20101019
@@ -37,13 +37,13 @@ mksource() {
 build() {
   cd "$srcdir/grantlee"
 
-  #
+  
   # BUILD HERE
-  #
+  
 
   mkdir -p build &&
   cd build &&
   cmake -DCMAKE_INSTALL_PREFIX=/usr ..
-  make || return 1
+  make
   make DESTDIR="$pkgdir/" install
 } 

@@ -1,10 +1,7 @@
-#
-# KDE SC Packages for Chakra, part of chakra-project.org
-#
-# maintainer: abveritas[at]chakra-project[dog]org>
-# maintainer: Manuel Tortosa <manutortosa[at]chakra-project[dot]org>
+# Maintainer:   H W Tovetjärn (totte) <totte@tott.es>
+# Contributors: Manuel Tortosa <manutortosa@chakra-project.org>
 
-# include global config
+# Include global configuration
 source ../_buildscripts/${current_repo}-${_arch}-cfg.conf
 
 pkgname=('kdeaccessibility-jovie')
@@ -14,34 +11,47 @@ pkgver=${_kdever}
 pkgrel=1
 pkgdesc="Text-to-speech system"
 url="http://www.kde.org"
-license=('GPL' 'LGPL' 'FDL')
-depends=("kde-runtime>=${_kdever}" "kdelibs>=${_kdever}" 'speech-dispatcher')
+license=('GPL'
+         'LGPL'
+         'FDL')
+depends=("kde-runtime>=${_kdever}"
+         "kdelibs>=${_kdever}"
+         'speech-dispatcher')
 conflicts=("kdeaccessibility-doc")
-replaces=("${pkgbase}-kttsd" "${pkgbase}-ksayit")
+replaces=("${pkgbase}-kttsd"
+          "${pkgbase}-ksayit")
 provides=('jovie')
 install='kdeaccessibility.install'
-groups=("kdeaccessibility" "kde" "kde-uninstall" "kde-doc")
-options=('docs' '!splithdr' 'splitdbg' 'log')
-makedepends=('pkgconfig' 'cmake' 'automoc4' "kde-runtime>=${_kdever}" "kdelibs>=${_kdever}" "speech-dispatcher>=0.6.7" 'docbook-xsl')
+groups=("kdeaccessibility"
+        "kde"
+        "kde-uninstall"
+        "kde-doc")
+options=('docs'
+         '!header'
+         'debug'
+         'log')
+makedepends=('pkgconfig'
+             'cmake'
+             'automoc4'
+             "kde-runtime>=${_kdever}"
+             "kdelibs>=${_kdever}"
+             "speech-dispatcher>=0.6.7"
+             'docbook-xsl')
 categories=('accessibility')
-
 source=($_mirror/${_pkgname}-$_kdever.tar.xz)
-md5sums=(`grep ${_pkgname}-$_kdever.tar.xz ../kde-sc.md5 | cut -d" " -f1`)
+sha256sums=(`grep ${_pkgname}-$_kdever.tar.xz  ../checksums.txt | cut -d " " -f1`)
 
 build() {
-	cd ${srcdir}/${_pkgname}-${pkgver}
-
-	msg "starting build ..."
-	cmake . -DCMAKE_BUILD_TYPE=${_build_type} \
-		-DCMAKE_INSTALL_PREFIX=${_installprefix} \
-		-DCMAKE_SKIP_RPATH=ON \
-		-DCMAKE_{SHARED,MODULE,EXE}_LINKER_FLAGS='-Wl,--no-undefined -Wl,--as-needed'
-
-	make 
+    cd ${srcdir}/${_pkgname}-${pkgver}
+    cmake . \
+        -DCMAKE_BUILD_TYPE=${_build_type} \
+        -DCMAKE_INSTALL_PREFIX=${_installprefix} \
+        -DCMAKE_SKIP_RPATH=ON \
+        -DCMAKE_{SHARED,MODULE,EXE}_LINKER_FLAGS='-Wl,--no-undefined -Wl,--as-needed'
+    make
 }
 
 package() {
-    	cd ${srcdir}/${_pkgname}-${pkgver}
-	make DESTDIR=${pkgdir} install
-	
+    cd ${srcdir}/${_pkgname}-${pkgver}
+    make DESTDIR=${pkgdir} install
 }

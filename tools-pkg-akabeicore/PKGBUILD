@@ -1,16 +1,8 @@
-#
-# Chakra Packages for Chakra, part of chakra-project.org
-#
-# maintainer (i686): Phil Miller <philm[at]chakra-project[dog]org>
-# maintainer (x86_64): Manuel Tortosa <manutortosa[at]chakra-project[dot]org>
+# Maintainer (i686): Phil Miller <philm@chakra-project[dog]org>
+# Maintainer (x86_64): Manuel Tortosa <manutortosa@chakra-project@org>
 
-# include global config
+# Include global configuration
 source ../_buildscripts/${current_repo}-${_arch}-cfg.conf
-
-
-#
-# package info
-#
 pkgname=akabeicore
 pkgver=20110407
 pkgrel=1
@@ -20,11 +12,9 @@ license="GPL"
 arch=('i686' 'x86_64')
 depends=('sqlite3' 'qt' 'libarchive')
 makedepends=('cmake')
-options=('!splithdr' 'splitdbg')
+options=('!header' 'debug')
 source=("http://chakra-project.org/sources/${pkgname}/${pkgname}-${pkgver}-${pkgrel}.tar.xz")
-  
 md5sums=('0fd0cd7f35ff95ad5ffa7385b10ef7b7')
-
 groups=('akabei')
 
 # create tarball: source PKGBUILD && mksource
@@ -39,9 +29,9 @@ mksource() {
 	  md5sum ${pkgname}-${pkgver}-${pkgrel}.tar.xz
 }
 
-#
+
 # build function
-#
+
 build()
 {
         cd "${srcdir}/$pkgname"
@@ -49,18 +39,18 @@ build()
 	cmake . -DCMAKE_INSTALL_PREFIX=${_installprefix} \
 		-DCMAKE_BUILD_TYPE=${_build_type} \
 		-DCMAKE_SKIP_RPATH=ON \
-		-DCMAKE_{SHARED,MODULE,EXE}_LINKER_FLAGS='-Wl,--no-undefined -Wl,--as-needed' || return 1
+		-DCMAKE_{SHARED,MODULE,EXE}_LINKER_FLAGS='-Wl,--no-undefined -Wl,--as-needed'
 
 	msg "Starting make..."
-	make || return 1
+	make
 }
 
 package()
 {
         cd "${srcdir}/$pkgname"
 	msg "Make successful, installing..."
-	make DESTDIR=${pkgdir} install || return 1
+	make DESTDIR=$startdir/pkg install
 
 	# remove nasty files
-	find ${pkgdir}/ -name ".git" -type d -exec rm -fr {} +
+	find $startdir/pkg/ -name ".git" -type d -exec rm -fr {} +
 }

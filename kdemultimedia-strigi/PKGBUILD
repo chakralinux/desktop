@@ -1,9 +1,9 @@
-#
-# KDE SC Packages for Chakra, part of chakra-project.org
-#
-# maintainer (x86_64): Manuel Tortosa <manutortosa[at]chakra-project[dot]org>
 
-# include global config
+
+
+# Maintainer (x86_64): Manuel Tortosa <manutortosa@chakra-project@org>
+
+# Include global configuration
 source ../_buildscripts/${current_repo}-${_arch}-cfg.conf
 
 pkgname=kdemultimedia-strigi-analyzer
@@ -17,10 +17,10 @@ license=('GPL' 'LGPL' 'FDL')
 depends=("kde-runtime>=${_kdever}" 'strigi')
 makedepends=('cmake' 'automoc4')
 source=("$_mirror/${_pkgname}-$_kdever.tar.xz")
-md5sums=(`grep ${_pkgname}-$_kdever.tar.xz ../kde-sc.md5 | cut -d" " -f1`)
+sha256sums=(`grep ${_pkgname}-$_kdever.tar.xz  ../checksums.txt | cut -d " " -f1`)
 groups=("kde" "kdemultimedia" "kde-uninstall")
 provides=('strigi-multimedia')
-options=('docs' '!splithdr' 'splitdbg' 'log')
+options=('docs' '!header' 'debug' 'log')
 
 build() {
 	cd ${srcdir}/${_pkgname}-${pkgver}
@@ -32,6 +32,6 @@ build() {
 
 package() {
 	cd ${srcdir}/${_pkgname}-${pkgver}
-	make DESTDIR=${pkgdir} install || return 1
+	make DESTDIR=${pkgdir} install
 
 }

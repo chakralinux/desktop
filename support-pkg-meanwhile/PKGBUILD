@@ -1,10 +1,10 @@
-#
-# KDE SC Packages for Chakra, part of chakra-project.org
-#
-# maintainer (i686): Phil Miller <philm[at]chakra-project[dog]org>
-# maintainer (x86_64): Manuel Tortosa <manutortosa[at]chakra-project[dot]org>
 
-# include global config
+
+
+# Maintainer (i686): Phil Miller <philm@chakra-project[dog]org>
+# Maintainer (x86_64): Manuel Tortosa <manutortosa@chakra-project@org>
+
+# Include global configuration
 source ../_buildscripts/${current_repo}-${_arch}-cfg.conf
 
 
@@ -23,7 +23,7 @@ url="http://meanwhile.sourceforge.net/"
 license="GPL"
 depends=('glib2')
 makedepends=('doxygen')
-options=('!splitdbg' '!splithdr')
+options=('!debug' '!header')
 source=(http://downloads.sourceforge.net/project/meanwhile/meanwhile/$pkgver/meanwhile-$pkgver.tar.gz)
 md5sums=('bf4ced109a367b4c5d71fe63c043270e') #  meanwhile-1.0.2.tar.gz
 groups=("kde-uninstall" "kde-support")
@@ -32,6 +32,6 @@ build()
 {
 	cd ${srcdir}/$_origname-$pkgver
 	./configure --prefix=${_installprefix}
-	make || return 1
-	make DESTDIR=${pkgdir} install
+	make
+	make DESTDIR=$startdir/pkg install
 } 

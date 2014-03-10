@@ -1,9 +1,7 @@
-#
-# KDE SC Packages for Chakra, part of chakra-project.org
-#
-# maintainer: Manuel Tortosa <manutortosa[at]chakra-project[dot]org>
+# Maintainer:   H W Tovetjärn (totte) <totte@tott.es>
+# Contributors: Manuel Tortosa <manutortosa@chakra-project.org>
 
-# include global config
+# Include global configuration
 source ../_buildscripts/${current_repo}-${_arch}-cfg.conf
 
 pkgname=kdebindings-kross-interpreters
@@ -14,30 +12,31 @@ pkgdesc="KDE interpreters for Kross"
 url="http://kde.org/"
 arch=('x86_64')
 license=('GPL' 'LGPL' 'FDL')
-depends=("kdebindings-pykde4>=${_kdever}" "kdebindings-korundum>=${_kdever}")
-makedepends=('cmake' 'automoc4' 'ruby' 'python2' 'java-environment')
-source=("$_mirror/${_pkgname}-$_kdever.tar.xz")
-md5sums=(`grep ${_pkgname}-$_kdever.tar.xz ../kde-sc.md5 | cut -d" " -f1`)
+depends=("kdebindings-python2>=${_kdever}")
+makedepends=('cmake' 'automoc4' 'python2' 'java-environment')
 groups=("kde" "kdebindings" "kde-uninstall")
 provides=('kross-interpreters')
-options=('docs' '!splithdr' 'splitdbg' 'log')
+options=('docs' '!header' 'debug' 'log')
+source=("$_mirror/${_pkgname}-$_kdever.tar.xz")
+sha256sums=(`grep ${_pkgname}-$_kdever.tar.xz  ../checksums.txt | cut -d " " -f1`)
 
 build() {
-  cd "${srcdir}"
-  mkdir build
-  cd build
+    cd "${srcdir}"
+    rm -rf build
+    mkdir build
+    cd build
 
-  cmake ../kross-interpreters-${pkgver} \
-    -DCMAKE_BUILD_TYPE=Release \
-    -DCMAKE_INSTALL_PREFIX=/usr \
-    -DBUILD_ruby=OFF 
-  make
+    cmake ../kross-interpreters-${pkgver} \
+        -DCMAKE_BUILD_TYPE=Release \
+        -DCMAKE_INSTALL_PREFIX=/usr \
+        -DBUILD_ruby=OFF 
+    make
 }
 
 package() {
-        cd ${srcdir}/build/java
-        make DESTDIR=${pkgdir} install
+    cd ${srcdir}/build/java
+    make DESTDIR=${pkgdir} install
 
-	cd ${srcdir}/build/python
-	make DESTDIR=${pkgdir} install
+    cd ${srcdir}/build/python
+    make DESTDIR=${pkgdir} install
 }

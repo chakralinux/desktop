@@ -1,10 +1,8 @@
-#
-# KDE SC Packages for Chakra, part of chakra-project.org
-#
-# maintainer: abveritas[at]chakra-project[dog]org>
-# maintainer: Manuel Tortosa <manutortosa[at]chakra-project[dot]org>
+# Maintainer:   H W Tovetjärn (totte) <totte@tott.es>
+# Contributors: Manuel Tortosa <manutortosa@chakra-project.org>
+#               Anke Boersma (abveritas) <abveritas@chakra-project.org>
 
-# include global config
+# Include global configuration
 source ../_buildscripts/${current_repo}-${_arch}-cfg.conf
 
 pkgname=kdegraphics-okular
@@ -12,39 +10,58 @@ _pkgname=okular
 arch=('x86_64')
 pkgver=${_kdever}
 pkgrel=1
-pkgdesc="split package"
-url="http://www.kde.org"
-license=('GPL' 'LGPL' 'FDL')
-options=('docs' '!splithdr' 'splitdbg' 'log')
-groups=("kde" "kdegraphics" "kde-uninstall")
+pkgdesc='Universal document viewer'
+url='http://kde.org/applications/graphics/okular/'
+license=('GPL'
+         'LGPL'
+         'FDL')
+options=('docs'
+         '!header'
+         'debug'
+         'log')
+groups=('kde'
+        'kdegraphics'
+        'kde-uninstall')
 provides=('okular')
 categories=('office')
-install=okular.install
-
 # note on libxxf86vm:
 #       not detected by namcap because libgl depends on it
 #       but nvidia providing libgl does not depend on libxxf86vm
-depends=("kdelibs>=${_kdever}" "kde-runtime>=${_kdever}" 'libxxf86vm' 'sane' 'lcms' "kdegraphics-libkdcraw>=${_kdever}" "kdegraphics-libkexiv2>=${_kdever}"
-         'qimageblitz' 'poppler-qt' 'chmlib' 'djvulibre' 'libspectre' 'ebook-tools')
-makedepends=('pkg-config' 'cmake' 'automoc4' 'qca')
-
+depends=("kdelibs>=${_kdever}"
+         "kde-runtime>=${_kdever}"
+         'libxxf86vm'
+         'sane'
+         'lcms'
+         "kdegraphics-libkdcraw>=${_kdever}"
+         "kdegraphics-libkexiv2>=${_kdever}"
+         'qimageblitz'
+         'poppler-qt'
+         'chmlib'
+         'djvulibre'
+         'libspectre'
+         'ebook-tools')
+makedepends=('pkg-config'
+             'cmake'
+             'automoc4'
+             'qca')
+install=okular.install
 source=("$_mirror/${_pkgname}-$_kdever.tar.xz")
-md5sums=(`grep ${_pkgname}-$_kdever.tar.xz ../kde-sc.md5 | cut -d" " -f1`)
+sha256sums=(`grep ${_pkgname}-$_kdever.tar.xz  ../checksums.txt | cut -d " " -f1`)
 
 build() {
-
-        msg "starting build ..."
-	cd ${srcdir}/${_pkgname}-${pkgver}
-	cmake . -DCMAKE_BUILD_TYPE=${_build_type} \
-		-DCMAKE_INSTALL_PREFIX=${_installprefix} \
-		-DCMAKE_SKIP_RPATH=ON \
-                -DWITH_ActiveApp=OFF \
-		-DCMAKE_{SHARED,MODULE,EXE}_LINKER_FLAGS='-Wl,--no-undefined -Wl,--as-needed'
-
-	make || return 1
+    cd ${srcdir}/${_pkgname}-${pkgver}
+    CXXFLAGS="${CXXFLAGS} -I /usr/include/freetype2" cmake . \
+        -DCMAKE_BUILD_TYPE=${_build_type} \
+        -DCMAKE_INSTALL_PREFIX=${_installprefix} \
+        -DCMAKE_SKIP_RPATH=ON \
+        -DKDE4_BUILD_TESTS=ON \
+        -DWITH_ActiveApp=OFF \
+        -DFREETYPE_INCLUDE_DIR=/usr/include/freetype2/freetype/config \
+        -DCMAKE_{SHARED,MODULE,EXE}_LINKER_FLAGS='-Wl,--no-undefined -Wl,--as-needed'
+    make
 }
 
 package() {
-	cd ${srcdir}/${_pkgname}-${pkgver}
-	make DESTDIR=${pkgdir} install || return 1
+    cd ${srcdir}/${_pkgname}-${pkgver}
+    make DESTDIR=${pkgdir} install
 }

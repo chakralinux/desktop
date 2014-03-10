@@ -1,17 +1,13 @@
-# maintainer abveritas[at]chakra-project[dot]org>
-
-# include global config
 source ../_buildscripts/${current_repo}-${_arch}-cfg.conf
 
-
-# IN THE FUTURE PLEASE CREATE NEW PKGBUILDS FOR THESE, this is a mess
+# In the future please create new pkgbuilds for these, this is a mess.
 pkgbase="kde-plasma-themes"
 pkgname=(
          #"kde-plasma-themes-neda"
 	 #"kde-plasma-themes-ronak"
 	 #"kde-plasma-themes-helium")
 pkgver=1.0
-pkgrel=3
+pkgrel=1
 arch=('any')
 
 source=(   #     'http://kde-look.org/CONTENT/content-files/125471-Helium.tar.xz')
@@ -49,6 +45,20 @@ license=('GPL')
   find $pkgdir/ -name ".directory" -type f -exec rm -fr {} +
 }
 
+package_kde-plasma-themes-caledonia() {
+pkgver=1.3
+pkgrel=1
+pkgdesc="Malcer's dark Caledonia Plasma theme with Chakra adjustments"
+url="http://sourceforge.net/projects/caledonia/"
+license=('Creative-Commons-BY-ND')
+  mkdir -p $pkgdir/usr/share/apps/desktoptheme/
+  cd $srcdir/caledonia-chakra
+  cp -R * $pkgdir/usr/share/apps/desktoptheme/
+  # fix file rights
+  chmod 755 -R $pkgdir/usr/share/apps/desktoptheme/caledonia
+  # remove nasty files
+  find $pkgdir/ -name ".directory" -type f -exec rm -fr {} +
+}
 
 package_kde-plasma-themes-helium() {
 pkgver=4.1.0
