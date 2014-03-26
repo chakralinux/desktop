@@ -1,36 +1,35 @@
-# Maintainer:   H W Tovetjärn (totte) <totte@tott.es>
-# Contributors: (Mcder3) <mcder3@gmail.com>
-#               (SteveK) <stevekej@gmail.com>
- 
-pkgname=cantata
-pkgver=1.3.2
-pkgrel=1
-pkgdesc="KDE client for MPD (Music Player Daemon)"
-arch=(x86_64)
-url="http://kde-apps.org/content/show.php/Cantata?content=147733"
-license=(GPL)
-screenshot='http://kde-apps.org/CONTENT/content-pre1/147733-1.png'
-makedepends=('cmake' 'automoc4')
-depends=('kdelibs')
-optdepends=('taglib: tag edit dialog and UMS device support'
-            'libmtp: MTP device support'
-            'ffmpeg: ReplayGain detection'
-            'mpg123: ReplayGain detection'
-            'perl-uri: Dynamic playlist support'
-            'cdparanoia: Read/rip Audio CDs'
-            'libcddb: Audio CD support'
-            'libmusicbrainz: Audio CD support')
-source=("https://drive.google.com/uc?export=download&id=0Bzghs6gQWi60TFIwWHBWR1JhVHc")
-sha1sums=('fd1817e7ad553b5226465f0e0c9cce9ff408a433')
+    # Maintainer: H W Tovetjärn (totte) <totte@tott.es>
+    # Contributors: (Mcder3) <mcder3@gmail.com>
+    # (SteveK) <stevekej@gmail.com>
 
-build() {
+    pkgname=cantata
+    pkgver=1.3.3
+    pkgrel=1
+    pkgdesc="KDE client for MPD (Music Player Daemon)"
+    arch=(x86_64)
+    url="http://kde-apps.org/content/show.php/Cantata?content=147733"
+    license=(GPL)
+    screenshot='http://kde-apps.org/CONTENT/content-pre1/147733-1.png'
+    makedepends=('cmake' 'automoc4')
+    depends=('kdelibs')
+    optdepends=('taglib: tag edit dialog and UMS device support'
+    'libmtp: MTP device support'
+    'ffmpeg: ReplayGain detection'
+    'mpg123: ReplayGain detection'
+    'perl-uri: Dynamic playlist support'
+    'cdparanoia: Read/rip Audio CDs'
+    'libcddb: Audio CD support'
+    'libmusicbrainz: Audio CD support')
+    source=("https://drive.google.com/uc?export=download&id=0Bzghs6gQWi60ZUN1NThacGFrdFE")
+    sha1sums=('967b7ea2eeba6036681598715c9f3a5277c57ae5')
+    build() {
     cd "$srcdir/${pkgname}-${pkgver}"
     mkdir build && cd build
     cmake -DCMAKE_INSTALL_PREFIX=/usr .. -DENABLE_HTTP_STREAM_PLAYBACK=ON -DENABLE_REMOTE_DEVICES=ON
     make
-}
-
-package() {
+    }
+    package() {
     cd "${srcdir}/${pkgname}-${pkgver}/build"
     make DESTDIR=${pkgdir} install
-}
+    }
+
