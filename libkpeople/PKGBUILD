@@ -1,29 +1,33 @@
 # maintainer: Giuseppe Calà <jiveaxe@gmail.com>
 
+source ../_buildscripts/${current_repo}-${_arch}-cfg.conf
+
 pkgname=libkpeople
-pkgver=0.1.0
-pkgrel=2
+pkgver=0.2.1
+pkgrel=1
 pkgdesc="A library that provides access to all contacts and the people who hold them."
 arch=('x86_64')
 url="http://www.kde.org"
 license=('GPL')
-depends=('kdelibs' 'shared-desktop-ontologies' 'core' 'soprano')
+depends=('kdelibs' 'kdepimlibs')
 makedepends=('cmake' 'automoc4')
-source=("http://download.kde.org/unstable/${pkgname}/${pkgver}/src/${pkgname}-${pkgver}.tar.bz2")
-md5sums=('3d5401b90eabbf6c230ba4b56d527c67')
+options=("debug")
+source=("http://download.kde.org/unstable/${pkgname}/${pkgver}/${pkgname}-${pkgver}.tar.bz2")
+md5sums=('8bda5fab90238d036b3d242b2d34b993')
 
 build() {
-  cd "${srcdir}"
+  cd "${srcdir}/${pkgname}-${pkgver}"
   mkdir build
   cd build
-  cmake ../${pkgname}-${pkgver} \
-    -DCMAKE_INSTALL_PREFIX=/usr \
-    -DCMAKE_BUILD_TYPE=Release
+  cmake .. \
+  -DCMAKE_BUILD_TYPE=${_build_type} \
+  -DCMAKE_INSTALL_PREFIX=${_installprefix}
   make
 }
 
 package() {
-  cd "${srcdir}"/build
+  cd "${srcdir}/${pkgname}-${pkgver}"
+  cd build
   make DESTDIR="${pkgdir}" install
 }
  
