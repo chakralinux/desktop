@@ -191,9 +191,9 @@ package_kdepim-kmail() {
     depends=("${pkgbase}-common>=${pkgver}")
     install=${pkgbase}.install
 
-    for i in kmail kmailcvt agents/archivemailagent agents/folderarchiveagent\
+    for i in kmail kmailcvt agents/archivemailagent\
     agents/mailfilteragent importwizard ksendemail libksieve messagelist \
-    ontologies kontact/plugins/kmail headerthemeeditor mboximporter; do
+    kontact/plugins/kmail headerthemeeditor mboximporter; do
         cd "${srcdir}"/build/${i}
         make DESTDIR="${pkgdir}" install
     done

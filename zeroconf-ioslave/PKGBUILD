@@ -23,7 +23,7 @@ source=("$_mirror/zeroconf-ioslave-$_kdever.tar.xz")
 sha256sums=(`grep zeroconf-ioslave-$_kdever.tar.xz  ../checksums.txt | cut -d " " -f1`)
 
 build() {
-    cd ${srcdir}/kdnssd-$pkgver
+    cd ${srcdir}/${pkgname}-$pkgver
     cmake . \
         -DCMAKE_BUILD_TYPE=${_build_type} \
         -DCMAKE_INSTALL_PREFIX=${_installprefix} \
@@ -33,6 +33,6 @@ build() {
 }
 
 package() {
-    cd ${srcdir}/kdnssd-$pkgver
+    cd ${srcdir}/${pkgname}-$pkgver
     make DESTDIR=${pkgdir} install
 }

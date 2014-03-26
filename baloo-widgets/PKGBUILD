@@ -13,16 +13,17 @@ url="http://www.kde.org"
 license=('GPL'
          'LGPL'
          'FDL')
-options=('docs'aa
+options=('docs'
          '!header'
          'debug'
          'log')
 depends=("kdelibs>=${_kdever}"
-         "baloo-core>=${kdever}")
+         "baloo>=${kdever}")
 makedepends=('pkg-config'
              'cmake'
              'automoc4'
              'doxygen')
+replaces=("nepomuk-widgets<4.13")
 source=($_mirror/${pkgname}-$_kdever.tar.xz)
 sha256sums=(`grep ${pkgname}-$_kdever.tar.xz  ../checksums.txt | cut -d" " -f1`)
 
