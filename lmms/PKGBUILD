@@ -1,27 +1,28 @@
-#
-# Apps Packages for Chakra, part of chakra-project.org
-#
-# Maintainer: Giuseppe Calà <jiveaxe@gmail.com>
-#
+# Maintainer: Francesco Marinucci <franzmari[at]chakra-project[dot]it>
+# Maintainer abveritas@chakra-project.org
 
 pkgname=lmms
-pkgver=0.4.13
+pkgver=1.0.0
 pkgrel=1
 pkgdesc='The Linux MultiMedia Studio.'
 url='http://lmms.sourceforge.net'
-arch=('i686' 'x86_64')
+arch=('x86_64')
 license=('GPL')
-depends=('glib2' 'qt' 'sdl_sound' 'jack' 'libsamplerate' 'fluidsynth' 'libpng' 'libvorbis' 'libxft' 'libxinerama' 'shared-mime-info')
+depends=('glib2' 'qt' 'sdl_sound' 'jack' 'libsamplerate' 'fluidsynth' 'libpng'
+         'libvorbis' 'libxft' 'libxinerama' 'shared-mime-info')
 optdepends=('wine: VST support (experimental)'
             'fftw: SpectrumAnalyzer plugin' )
-makedepends=('cmake' 'ladspa' 'libxft' 'freetype2' 'fftw')
+makedepends=('cmake' 'ladspa' 'libxft' 'freetype2' 'fftw' 'fltk')
 categories=('multimedia')
 install="lmms.install"
-source=("http://downloads.sourceforge.net/sourceforge/lmms/${pkgname}-${pkgver}.tar.bz2")
-md5sums=('80db0dc5263041d443f474220410991f')
+source=("http://downloads.sourceforge.net/sourceforge/lmms/${pkgname}-${pkgver}-src.tar.bz2"
+        'zynaddsubfx_unlink.patch')
+md5sums=('72260dd6e29bf018875fd751c1d43465'
+         'd2ea78ac0cf2979505f140c6845617cf')
 
 build() {
   cd "${srcdir}/${pkgname}-${pkgver}"
+  patch -p1 -i ${srcdir}/zynaddsubfx_unlink.patch
 
   sed -i 's|lib64|lib|g' cmake/modules/DetectMachine.cmake
   cmake . -DCMAKE_INSTALL_PREFIX=/usr
