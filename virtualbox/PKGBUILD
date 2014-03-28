@@ -1,4 +1,5 @@
-# Maintainer: Michael Haesel <michael[dot]haesel[at]gmail[dot]com>
+# Maintainer: UtG <utg.chakra.linux[at]gmail[dot]com>
+# Contributor: Michael Haesel <michael[dot]haesel[at]gmail[dot]com>
 # Contributor: Sebastien Luttringer <seblu[plus]arch[at]seblu[dot]net>
 
 #
@@ -9,8 +10,8 @@
 
 pkgbase=virtualbox
 pkgname=('virtualbox' 'virtualbox-ext-oracle' 'virtualbox-guest-additions')
-pkgver=4.3.8
-_build_virtualbox=92456
+pkgver=4.3.10
+_build_virtualbox=93012
 pkgrel=1
 arch=('x86_64')
 url='http://virtualbox.org/'
@@ -30,9 +31,9 @@ source=("VirtualBox-${pkgver}-${_build_virtualbox}-Linux_amd64.run::http://downl
         'vboxsetup.sh'
         'PUEL'
         'vboxservice.service')
-sha256sums=('7039cb7045f9b5ece6d99b42068008da8793ad27e2b8ebc59b7473e84189da20'         
-            'eb364239fc399416af6c985b3082bfbdd206d42a60e7af98ffba13d60912b864'
-            'a1e58f3a15cab81b82424c6382a490bb02377d78d537a57538692fa83ce448c7'
+sha256sums=('3483517046c5db6d96ba8d3b632715f44570a85eee0326cd252f783ed84120be'
+            'ec3f2a98373d5e228acb4756ac07f44212c4d53f6b83deee81b791abb0d2608a'
+            '247e15e9a205dcd4761f6cb547ceca2a61e8d6905c1930870939fd323f4cd1ae'
             'f4182fa7c3f109aefb7da84f16bc40f34c46eb768144e7ab373b9311c41f175b'
             '71740893a5f226f9d9fcc607ab9d39b7de816b2759625b34da19162bc7e579ff'
             '12dbba3b59991f2b68cddeeeda20236aeff63e11b7e2d1b08d9d6a82225f6651'
@@ -211,3 +212,4 @@ package_virtualbox-guest-additions() {
   # Install vboxclient.conf for vboxsf module
   install -Dm0644 "${srcdir}/vboxclient.conf" "${pkgdir}/etc/modules-load.d/vboxclient.conf"
 }
+
