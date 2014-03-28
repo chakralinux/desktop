@@ -1,31 +1,25 @@
-#
-# Apps Packages for Chakra, part of chakra-project.org
-#
-# maintainer (i686): Phil Miller <philm[at]chakra-project[dog]org>
 # maintainer (x86_64): Manuel Tortosa <manutortosa[at]chakra-project[dot]org>
 
-# include global config
-source ../_buildscripts/${current_repo}-${_arch}-cfg.conf
-
 pkgname=luckybackup
-pkgver=0.4.7
+pkgver=0.4.8
 pkgrel=1
 pkgdesc="Backup & Sync tool using Rsync and Qt4"
-arch=('i686' 'x86_64')
+arch=('x86_64')
 url="http://luckybackup.sourceforge.net/"
 license=('GPL3')
+screenshot="http://luckybackup.sourceforge.net/data/MainWindowFull.png"
 depends=( 'qt' 'rsync' 'openssh')
 makedepends=('pkgconfig' 'desktop-file-utils')
 categories=('utils' 'backup')
 source=(http://sourceforge.net/projects/luckybackup/files/$pkgver/source/$pkgname-$pkgver.tar.gz)
-md5sums=('ca8d1699f98fe85b0811fb7447064339')
+md5sums=('f6dcf502c2f11b5d44837189bf00ee01')
 
 build() {
 cd "${srcdir}/$pkgname-$pkgver"
-qmake || return 1
+qmake
 }
 
 package() {
 cd "${srcdir}/$pkgname-$pkgver"
-make INSTALL_ROOT=${pkgdir}/ install || return 1
+make INSTALL_ROOT=${pkgdir}/ install
 }
