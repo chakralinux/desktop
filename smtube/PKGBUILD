@@ -1,17 +1,22 @@
-# Maintainer:  Adrián Chaves Fernández (Gallaecio) <adriyetichaves@gmail.com>
+# Maintainer:  UtG <utg.chakra.linux[at]gmail[dot]com>
+# Contributor: Adrián Chaves Fernández (Gallaecio) <adriyetichaves@gmail.com>
 # Contributor: redzion simobrinci@gmail.com
 
 pkgname=smtube
-pkgver=1.8
-pkgrel=2
+pkgver=2.1
+pkgrel=1
 pkgdesc="Search and download videos from YouTube"
 arch=('x86_64')
 url="http://smplayer.sourceforge.net"
 license=('GPL')
 depends=('qt')
-optdepends=('smplayer' 'mplayer' 'vlc' 'kdemultimedia-dragonplayer')
+optdepends=('mplayer: play videos with MPlayer'
+            'smplayer: play videos with SMPlayer'
+            'kdemultimedia-dragonplayer: play videos with Dragon Player'
+            'vlc: play videos with VLC')
+install="$pkgname.install"
 source=("http://downloads.sourceforge.net/smplayer/${pkgname}-${pkgver}.tar.bz2")
-md5sums=('b80d4d085a8e7350619d65f0f0786037')
+md5sums=('9cd034d5abcbc66445478b5824af50f1')
 
 build() {
   cd "$srcdir/$pkgname-$pkgver"
