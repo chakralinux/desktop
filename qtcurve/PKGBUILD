@@ -2,48 +2,56 @@
 # Contributor: Neophytos Kolokotronis <tetris4@gmail.com>
 
 pkgbase=qtcurve
-pkgname=('qtcurve-utils' 'qtcurve-kde4') #'qtcurve-gtk2' )
+pkgname=('qtcurve-utils' 'qtcurve-kde4' 'qtcurve-qt5')
 pkgver=1.8.18
-pkgrel=1
+pkgrel=2
 arch=('x86_64')
 license=('GPL')
-pkgdesc='A configurable set of widget styles for KDE' #and gtk2
+pkgdesc='A configurable set of widget styles for KDE'
 url='https://github.com/QtCurve/qtcurve'
 depends=('kde-workspace')
-makedepends=('cmake' 'automoc4' 'qt' 'kde-workspace') #'gtk2')
+makedepends=('cmake' 'automoc4' 'qt' 'kde-workspace' 'qt5-svg' 'qt5-quickcontrols' 'qt5-x11extras')
 categories=('system')
-source=("$pkgbase-$pkgver.tar.gz::$url/archive/$pkgver.tar.gz")
+groups=("${pkgbase}")
+source=("${pkgbase}-${pkgver}.tar.gz::${url}/archive/${pkgver}.tar.gz")
 md5sums=('422d1876d944bb278855f320eda19368')
 
+prepare(){
+  cd ${srcdir}/${pkgbase}-${pkgver}
+  if [ -d build ]; then
+    rm -rf build && mkdir build
+  else
+    mkdir build
+  fi
+}
+
 build() {
-  cd $pkgbase-$pkgver
-  mkdir build
-  cd build
+  cd ${srcdir}/${pkgbase}-${pkgver}/build
   cmake .. -DCMAKE_BUILD_TYPE=Release \
            -DCMAKE_INSTALL_PREFIX=/usr \
-           -DENABLE_GTK2=false \
-           -DENABLE_QT5=false
+           -DENABLE_GTK2=Off
   make
 }
 
 package_qtcurve-utils() {
   depends=('libx11')
-  cd $pkgbase-$pkgver/build/lib/utils
-  make DESTDIR="$pkgdir" install
+  
+  cd ${srcdir}/${pkgbase}-${pkgver}/build/lib/utils
+  make DESTDIR="${pkgdir}" install
+  cd ${srcdir}/${pkgbase}-${pkgver}/build/po
+  make DESTDIR="${pkgdir}" install
 }
 
 package_qtcurve-kde4() {
   depends=('qtcurve-utils' 'kde-workspace')
-  provides=qtcurve
-  replaces=qtcurve
-  conflicts=qtcurve
-  
-  cd $pkgbase-$pkgver/build/qt4
-  make DESTDIR="$pkgdir" install
-  cd ../po
-  make DESTDIR="$pkgdir" install
+
+  cd ${srcdir}/${pkgbase}-${pkgver}/build/qt4
+  make DESTDIR="${pkgdir}" install
 }
 
-
-
-
+package_qtcurve-qt5() {
+  depends=('qtcurve-utils' 'qt5-svg' 'qt5-quickcontrols' 'qt5-x11extras')
+  
+  cd ${srcdir}/${pkgbase}-${pkgver}/build/qt5
+  make DESTDIR="${pkgdir}" install
+}
