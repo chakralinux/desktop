@@ -1,20 +1,20 @@
 # maintainer: Neophytos Kolokotronis <tetris4@gmail.com
 
 pkgname=blender
-pkgver=2.69
-pkgrel=2
+pkgver=2.70
+pkgrel=1
 pkgdesc="A fully integrated 3D graphics creation suite"
 arch=('x86_64')
 license=('GPL')
 url="http://www.blender.org"
 depends=('libpng' 'libtiff' 'openexr' 'sdl' 'python3' 'desktop-file-utils' 'shared-mime-info'
          'hicolor-icon-theme' 'xdg-utils' 'glew' 'freetype2' 'jack' 'openal' 'libsndfile' 
-	 'libsamplerate' 'ffmpeg' 'fftw' 'openimageio' 'boost-libs' 'opencollada' 'opencolorio' 'llvm' 'pcre')
+	 'libsamplerate' 'ffmpeg' 'fftw' 'openimageio' 'boost-libs' 'opencollada' 'opencolorio' 'llvm' 'pcre' 'libbluray')
 makedepends=('cmake' 'boost' 'mesa' 'subversion')
 screenshot=('http://www.blender.org/index.php?eID=tx_cms_showpic&file=uploads%2Fpics%2Fblender_screenshot3_03.png&width=800m&height=600m&bodyTag=%3Cbody%20style%3D%22margin%3A0%3B%20background%3A%23fff%3B%22%3E&wrap=%3Ca%20href%3D%22javascript%3Aclose%28%29%3B%22%3E%20%7C%20%3C%2Fa%3E&md5=cddc8ef0fbe1e90d0d22e78b4911860b')
 install=blender.install
 source=("http://download.blender.org/source/$pkgname-$pkgver.tar.gz")
-sha1sums=('9500410d2457d99e685ca506bec12851454dc5d4')
+sha1sums=('294d89855e4bd2226bfbd4311f835709379ec309')
 
 build() {
   cd "$srcdir/$pkgname-$pkgver"
@@ -40,9 +40,7 @@ build() {
     -DPYTHON_VERSION=3.3 \
     -DPYTHON_LIBPATH=/usr/lib \
     -DPYTHON_LIBRARY=python3.3m \
-    -DPYTHON_INCLUDE_DIRS=/usr/include/python3.3m \
-    -DOPENJPEG_INCLUDE_DIR=/usr/include/openjpeg-1.5
-    # Remove the openjpeg line once blender accepts my patch
+    -DPYTHON_INCLUDE_DIRS=/usr/include/python3.3m
 
   make
 }
