@@ -8,8 +8,8 @@ _default_wp="Elarun"
 pkgname="kde-workspace"
 arch=('x86_64')
 #pkgver=${_kdever}
-pkgver=4.11.7
-pkgrel=2
+pkgver=4.11.8
+pkgrel=1
 pkgdesc="KDE Workspace"
 url="http://www.kde.org"
 license=('GPL'
@@ -267,4 +267,8 @@ package() {
     #rm -rf ${pkgdir}/usr/share/applications/kde4/krandrtray.desktop
     rm -rf ${pkgdir}/usr/share/kde4/services/randr.desktop
     #rm -rf ${pkgdir}/usr/share/kde4/services/kded/randrmonitor.desktop
+
+    # resolve kdm issue (missing directory)
+    mkdir -p ${pkgdir}/var/lib/kdm
+    chown 135:135 ${pkgdir}/var/lib/kdm
 }
