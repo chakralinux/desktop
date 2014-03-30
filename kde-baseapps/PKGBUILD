@@ -15,7 +15,7 @@ pkgrel=1
 url="http://www.kde.org"
 license=('GPL' 'LGPL' 'FDL')
 options=('docs' '!header' 'debug' 'log')
-makedepends=("kde-workspace=4.11.7" 'pkg-config' 'cmake' 'automoc4' 'libraw1394' 'ruby'
+makedepends=("kde-workspace>=${_workspace_version}" 'pkg-config' 'cmake' 'automoc4' 'libraw1394' 'ruby'
              'tidyhtml' 'docbook-xsl' 'baloo-widgets')
 source=("$_mirror/${pkgbase}-$_kdever.tar.xz"
         "http://www.kde-apps.org/CONTENT/content-files/99752-kde_cdemu-0.5.0.tar.bz2")
@@ -34,7 +34,7 @@ build() {
 
 package_kde-baseapps() {
     pkgdesc="KDE Base Applications"
-    depends=("kde-runtime>=${_kdever}" 'libraw1394' 'baloo-widgets')
+    depends=("kde-runtime>=${_kdever}" 'libraw1394' 'nepomuk-widgets')
     optdepends=("cdemu-client: Support transparent CD/DVD image mounting in KDE")
     conflicts=("kdebase" 'kde-baseapps-doc')
     replaces=('kdebase' 'kde-baseapps-doc')
