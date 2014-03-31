@@ -1,20 +1,20 @@
-#
-# Apps Packages for Chakra, part of chakra-project.org
-#
-# Maintainer: Adrián Chaves Fernández (Gallaecio) <adriyetichaves gmail.com>
+# Maintainer: UtG <utg.chakra.linux[at]gmail[dot]com>
+# Contributor Adrián Chaves Fernández (Gallaecio) <adriyetichaves gmail.com>
 # Contributor: Neo Kolokotronis <tetris4@gmail.com>
 
 pkgname=aria2
-pkgver=1.18.2
+pkgver=1.18.5
 pkgrel=1
 pkgdesc='Download utility that supports HTTP(S), FTP, BitTorrent, and Metalink.'
 arch=('x86_64')
 url='http://aria2.sourceforge.net/'
 license=('GPL3')
 depends=('ca-certificates' 'c-ares' 'gnutls' 'libxml2' 'sqlite3')
+checkdepends=('cppunit')
 categories=('network')
-source=("http://downloads.sourceforge.net/$pkgname/$pkgname-$pkgver.tar.bz2")
-md5sums=('5f62e14f0e493de3619d75bc8ae16a43')
+source=(http://downloads.sourceforge.net/$pkgname/$pkgname-$pkgver.tar.xz)
+sha256sums=('90a15959498673ebe6a964f8f9fe840f4adbb0a1904a9810cd7da6743c0b619b')
+
 
 build() {
   cd $srcdir/$pkgname-$pkgver
@@ -23,6 +23,19 @@ build() {
     --with-ca-bundle=/etc/ssl/certs/ca-certificates.crt
     
   make
+}
+
+check() {
+  cd $srcdir/$pkgname-$pkgver
+  make check
+
+#Testsuite summary for aria2 1.18.5
+
+# TOTAL: 1; PASS:  1;  SKIP:  0;
+# XFAIL: 0; FAIL:  0;  XPASS: 0;
+# ERROR: 0
+
+
 }
 
 package() {
