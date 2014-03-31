@@ -1,5 +1,4 @@
-# Maintainer: U t G  <utg.chakra.linux[at]gmail[dot]com>
-# Contributor: Neophytos Kolokotronis <tetris4@gmail.com
+# maintainer: Neophytos Kolokotronis <tetris4@gmail.com
 
 pkgname=blender
 pkgver=2.70
@@ -8,12 +7,11 @@ pkgdesc="A fully integrated 3D graphics creation suite"
 arch=('x86_64')
 license=('GPL')
 url="http://www.blender.org"
-depends=('libpng' 'libtiff' 'openexr' 'sdl' 'python3' 'desktop-file-utils' 'shared-mime-info' 'hicolor-icon-theme' 'xdg-utils' 'glew' 'freetype2' 'jack' 'openal' 'libsndfile' 'libsamplerate' 'ffmpeg' 'fftw' 'openimageio' 'boost-libs' 'opencollada' 'opencolorio' 'llvm' 'pcre')
+depends=('libpng' 'libtiff' 'openexr' 'sdl' 'python3' 'desktop-file-utils' 'shared-mime-info'
+         'hicolor-icon-theme' 'xdg-utils' 'glew' 'freetype2' 'jack' 'openal' 'libsndfile' 
+	 'libsamplerate' 'ffmpeg' 'fftw' 'openimageio' 'boost-libs' 'opencollada' 'opencolorio' 'llvm' 'pcre' 'libbluray')
 makedepends=('cmake' 'boost' 'mesa' 'subversion')
-screenshot=( # new screenshots: 2014
-'http://www.blender.org/wp-content/uploads/2012/11/materials_screenshot-640x360.png' 
-'http://www.blender.org/wp-content/uploads/2012/11/Flexible-UI-640x359.png'
-'http://www.blender.org/wp-content/uploads/2012/11/camera-tracking-640x360.png')
+screenshot=('http://www.blender.org/index.php?eID=tx_cms_showpic&file=uploads%2Fpics%2Fblender_screenshot3_03.png&width=800m&height=600m&bodyTag=%3Cbody%20style%3D%22margin%3A0%3B%20background%3A%23fff%3B%22%3E&wrap=%3Ca%20href%3D%22javascript%3Aclose%28%29%3B%22%3E%20%7C%20%3C%2Fa%3E&md5=cddc8ef0fbe1e90d0d22e78b4911860b')
 install=blender.install
 source=("http://download.blender.org/source/$pkgname-$pkgver.tar.gz")
 sha1sums=('294d89855e4bd2226bfbd4311f835709379ec309')
@@ -23,10 +21,6 @@ build() {
   
   mkdir -p build
   cd build
-
-#    -DWITH_LLVM=ON \
-#    -DLLVM_VERSION=3.3 \
-#    -DLLVM_STATIC=OFF \
 
   cmake .. \
     -DCMAKE_INSTALL_PREFIX=/usr \
@@ -47,8 +41,6 @@ build() {
     -DPYTHON_LIBPATH=/usr/lib \
     -DPYTHON_LIBRARY=python3.3m \
     -DPYTHON_INCLUDE_DIRS=/usr/include/python3.3m
-    #-DOPENJPEG_INCLUDE_DIR=/usr/include/openjpeg-1.5
-    # Remove the openjpeg line once blender accepts my patch
 
   make
 }
@@ -59,4 +51,3 @@ package() {
   make DESTDIR="${pkgdir}" install
   python3 -m compileall "${pkgdir}/usr/share/blender"
 }
-
