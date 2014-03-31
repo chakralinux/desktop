@@ -1,9 +1,7 @@
-# Apps Packages for Chakra, part of chakra-project.org
-#
-# maintainer (x86_64): Manuel Tortosa <manutortosa[at]chakra-project[dot]org>
+# Maintainer: UtG <utg.chakra.linux[at]gmail[dot]com>
 
 pkgname=awstats
-pkgver=7.2
+pkgver=7.3
 pkgrel=1
 pkgdesc="Tool that generates web, streaming, ftp and mail server statistics, graphically"
 arch=('any')
@@ -15,7 +13,7 @@ categories=('network')
 install="awstats.install"
 backup=('etc/awstats/awstats.model.conf' 'etc/httpd/conf/extra/httpd-awstats.conf')
 source=("http://downloads.sourceforge.net/${pkgname}/${pkgname}-${pkgver}.tar.gz" "cron.awstats")
-md5sums=('0608ee882bc4a7088e9d588e887846c5'
+md5sums=('a76bf324d8836a8ba97f13a3c20ec6bc'
          '2103e3d97f8b4ff31cd4022c4ee839f7')
 
 build() {
@@ -36,7 +34,7 @@ package() {
 	mkdir -p $pkgdir/${_DOCDIR}/ || return 1
 	mkdir -p $pkgdir/var/lib/$pkgname || return 1
 
-	# Arch Linux specific path:
+	# Chakra specific path:
 	install -Dm644 tools/httpd_conf $pkgdir/${_SYSCONFDIR}/httpd/conf/extra/httpd-awstats.conf || return 1
 	install -Dm644 wwwroot/cgi-bin/awstats.model.conf $pkgdir/${_SYSCONFDIR}/awstats/awstats.model.conf || return 1
 	install -Dm744 $srcdir/cron.awstats $pkgdir/${_SYSCONFDIR}/cron.hourly/awstats || return 1
@@ -66,5 +64,3 @@ package() {
 
 	echo "deny from all" > $pkgdir/${_WWWROOT}.htaccess
 }
-
-# vim:set ts=2 sw=2 et:
