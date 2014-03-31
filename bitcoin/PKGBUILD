@@ -1,35 +1,53 @@
-# Maintainer: Neophytos Kolokotronis <tetris4@gmail.com>
+# Maintainer: UtG <utg.chakra.linux[at]gmail[dot]com>
+# Contributor: Neophytos Kolokotronis <tetris4@gmail.com>
 # Contributor: shahid <helllamer@gmail.com>
-# Contributor: Timothy Redaelli <timothy.redaelli@gmail.com>
+
 
 pkgname=bitcoin
-pkgver=0.8.5
+pkgver=0.9.0
 pkgrel=1
 pkgdesc="Bitcoin is a peer-to-peer network based digital currency."
 arch=('x86_64')
 url="http://www.bitcoin.org/"
 screenshot="http://c.fsdn.com/con/app/proj/bitcoin/screenshots/203604"
-depends=('boost-libs' 'qt' 'miniupnpc' 'qrencode' 'db')
+depends=('boost-libs' 'qt' 'miniupnpc' 'qrencode' 'db' 'protobuf')
 makedepends=('boost' 'automoc4')
 conflicts=('bitcoin-git')
 replaces=('bitcoin-git')
 license=('MIT')
-source=("http://downloads.sourceforge.net/sourceforge/${pkgname}/${pkgname}-${pkgver}-linux.tar.gz")
-sha256sums=('84543f10de5e82ce6e88dd5a501db37c6327edf79a2a04f29199c24843e71f63')
+source=("http://bitcoin.org/bin/$pkgver/bitcoin-$pkgver-linux.tar.gz"
+	#https://raw.github.com/bitcoin/bitcoin/v$pkgver/contrib/debian/bitcoin-qt.desktop
+	#https://raw.github.com/bitcoin/bitcoin/v$pkgver/share/pixmaps/bitcoin128.png
+sha256sums=('0f767c13b2c670939750a26558cbb40a7f89ff5ba7d42ce63da0bcc0b701642d'
+           # 'b65b377c0d9ecae9eea722843bca0add6bdb7e50929a7e1f751b79b6621c6073'
+           # 'ad880c8459ecfdb96abe6a4689af06bdd27906e0edcd39d0915482f2da91e722')
 
+            
+prepare() {
+  cd "$srcdir/$pkgbase-$pkgver-linux/src"
+  tar xf $pkgbase-$pkgver.tar.gz
+}
+     
+     
 build() {
-  cd ${pkgbase}-${pkgver}-linux/src
-
-  # and make qt gui (USE_UPNP default activated)
+  cd "$srcdir/$pkgbase-$pkgver-linux/src/$pkgbase-$pkgver"
+  ./configure --prefix=/usr --with-incompatible-bdb --with-gui=qt4
   qmake USE_QRCODE=1
   make
+     
+#build() {
+#  cd ${pkgbase}-${pkgver}-linux/src
+
+  # and make qt gui (USE_UPNP default activated)
+#  qmake USE_QRCODE=1
+#  make
 
   # make bitcoind
   make -f makefile.unix -C src  CXXFLAGS="$CXXFLAGS"
 }
 
 package() {
-  cd ${pkgbase}-${pkgver}-linux/src
+    cd "$srcdir/$pkgbase-$pkgver-linux/src/$pkgbase-$pkgver"
   
   # Install bitcoin-qt
   install -Dm755 bitcoin-qt "${pkgdir}"/usr/bin/bitcoin-qt
