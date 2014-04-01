@@ -1,45 +1,61 @@
-# Maintainer: Adrián Chaves Fernández (Gallaecio) <adriyetichaves gmail.com>
+# Maintainer: UtG <utg.chakra.linux[AT]gmail[dot]com>
+# Contributor: Adrián Chaves Fernández (Gallaecio) <adriyetichaves gmail.com>
 
 pkgname=frostwire
-pkgver=5.7.0
+pkgver=5.7.1
 pkgrel=1
 pkgdesc="BitTorrent client with integrated search"
 arch=('x86_64')
 url="http://www.frostwire.com"
-license=('GPL3')
-depends=('java-runtime' 'hicolor-icon-theme' 'desktop-file-utils')
-optdepends=('mplayer: audio playback.'
-            'vlc: video playback.')
+license=('GPL')
+depends=('java-runtime' 'mplayer' 'hicolor-icon-theme' 'desktop-file-utils')
+optdepends=('vlc: video playback.')
 makedepends=('libicns')
 categories=('network')
 source=(http://dl.frostwire.com/$pkgname/$pkgver/$pkgname-$pkgver.noarch.tar.gz
-        $pkgname.png)
-md5sums=('ab4bba116d2baaf041cf713e033dad6b'
-         '3a9ca2d81ffed338556ce6feaaf57114')
+        frostwire.sh
+        icons.tar.gz
+        java-version-detection.patch)
+md5sums=('439cc9b123a7a34b714dcc69820a873b'
+         'd0a1bc0a1360ca83c20dbe7b02ab5555'
+         'dbea03ff4e35cc6c190976282682c2cf'
+         '3076e0c9431b3bbf6a2be7bd1b05543b')
 
 package() {
 
   cd $srcdir/$pkgname-$pkgver.noarch
 
+  # FS#15544 (Java version detection fails when _JAVA_OPTIONS is set)
+  patch -Np0 -i "$srcdir/java-version-detection.patch"
+  
+  
   # Install files.
-  install -d $pkgdir/usr/share/$pkgname
-  cp -r $pkgname *.jar $pkgdir/usr/share/$pkgname
+  #install -d $pkgdir/usr/share/$pkgname
+  #cp -r $pkgname *.jar $pkgdir/usr/share/$pkgname
+  install -d "$pkgdir/usr/share/$pkgname"
+  cp -r * "$pkgdir/usr/share/$pkgname"
+  cp -r "$srcdir/icons" "$pkgdir/usr/share"
 
   # Desktop integration.
-  install -Dm644 $pkgname.desktop	$pkgdir/usr/share/applications/$pkgname.desktop
-  install -Dm644 "$srcdir/$pkgname.png" "$pkgdir/usr/share/pixmaps/$pkgname.png"
+  install -Dm644 $pkgname.desktop "$pkgdir/usr/share/applications/$pkgname.desktop"
+  install -Dm644 "$srcdir/icons/hicolor/16x16/apps/$pkgname.png" \ "$pkgdir/usr/share/pixmaps/$pkgname.png"
   
   # Execution script.
-  install -dm755 $pkgdir/usr/bin
-  echo '#!/bin/bash'					 > $pkgdir/usr/bin/$pkgname
-  echo "cd /usr/share/$pkgname && ./$pkgname \$@"	>> $pkgdir/usr/bin/$pkgname
-  chmod +x $pkgdir/usr/bin/$pkgname
-
+  #install -dm755 $pkgdir/usr/bin
+  install -D "$srcdir/$pkgname.sh" "$pkgdir/usr/bin/$pkgname"
+  #echo '#!/bin/bash'					 > $pkgdir/usr/bin/$pkgname
+  #echo "cd /usr/share/$pkgname && ./$pkgname \$@"	>> $pkgdir/usr/bin/$pkgname
+  #chmod +x $pkgdir/usr/bin/$pkgname
+  
   # Documentation.
   install -Dm664 changelog $pkgdir/usr/share/doc/$pkgname/ChangeLog
 
   # License.
   install -Dm664 COPYING $pkgdir/usr/share/licenses/$pkgname/license.txt
   install -Dm664 EULA.txt $pkgdir/usr/share/licenses/$pkgname/EULA.txt
+  
+  # Remove uneeded files
+  rm -rf "$pkgdir"/usr/share/frostwire/{runFrostwireOSX.sh,unpack200.py,root/{.svn,magnet10/.svn}}
 }
+
 
