@@ -5,35 +5,38 @@
 # contributor Fabio Lima <fheday at dcc [dot] fc [dot] up [dot] pt>
 
 pkgname=netbeans
-_pkgdate=201310111528
-pkgver=7.4
+_pkgdate=201403101706
+pkgver=8.0
 pkgrel=1
 pkgdesc='Netbeans IDE development platform.'
 arch=('any')
 url='http://www.netbeans.org'
 license=('CDDL')
-depends=('java-environment>=6')
-makedepends=('gendesk')
+depends=('java-environment' 'libxtst' 'giflib' 'atk')
+makedepends=('gendesk' 'setconf')
 optdepends=('php: for developing programs in php'
             'ruby: for developing programs in ruby')
 categories=('programming')
 options=('!strip')
 install="${pkgname}.install"
-source=("http://download.netbeans.org/${pkgname}/${pkgver}/final/zip/${pkgname}-${pkgver}-${_pkgdate}.zip")
-sha256sums=('bd9a7d1faab7c6a45c1b8d2e5ad11453c2ac767d2176836e65a5c7a62d7c365b')
+source=("http://dlc.sun.com.edgesuite.net/$pkgname/$pkgver/final/zip/$pkgname-$pkgver-$_pkgdate.zip")
+# http://dlc.sun.com.edgesuite.net/netbeans/8.0/final/zip/
+sha256sums=('0d063507f48292f4033a238783fb318a6df58485a7be86206a45a97ce12de97b')
 
-build() {
-  gendesk -n
+prepare() {
+  gendesk -f -n --pkgname "$pkgname" --pkgdesc "$pkgdesc"
+  setconf "$pkgname/bin/$pkgname" basedir "/usr/share/$pkgname"
 }
 
 package() {
-  cd ${pkgname}
-
-  mkdir -p "$pkgdir/usr/bin" "$pkgdir/usr/share/applications"
-  cp -r "../$pkgname" "$pkgdir/usr/share"
-  install -Dm644 "../$pkgname.desktop" \
+  mkdir -p "$pkgdir/usr/"{bin,share/applications}
+  cp -r "$pkgname" "$pkgdir/usr/share/"
+  install -Dm644 "$pkgname.desktop" \
     "$pkgdir/usr/share/applications/$pkgname.desktop"
+  cd "$pkgname"
   install -Dm644 "nb/$pkgname.png" "$pkgdir/usr/share/pixmaps/$pkgname.png"
-  ln -s "/usr/share/$pkgname/bin/$pkgname" "$pkgdir/usr/bin/$pkgname"
-  install -Dm644 LICENSE.txt "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
+  install -Dm755 "bin/$pkgname" "$pkgdir/usr/bin/$pkgname"
+
+  # Cleanup (contains the file that is now placed in /usr/bin + .exe-files)
+  rm -r "$pkgdir/usr/share/$pkgname/bin"
 }
