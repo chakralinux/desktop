@@ -1,21 +1,20 @@
-#
-# Games Packages for Chakra, part of chakra-project.org
-#
-# Maintainer: Adrián Chaves Fernández (Gallaecio) <adriyetichaves@gmail.com>
+# Maintainer: UtG <utg.chakra.linux[at]gmail[dot]com>
 
 pkgname=simgear
 _pkgname=SimGear
-pkgver=2.12.0
-pkgrel=2
-pkgdesc="FOSS libraries for quickly assembling 3D simulations."
-arch=('i686' 'x86_64')
-depends=('glut' 'freealut' 'libxrandr' 'plib' 'openscenegraph' 'zlib')
-makedepends=('boost')
-license=("GPL2")
-url=http://www.flightgear.org/
-options=('!makeflags')
-source=(http://mirrors.ibiblio.org/pub/mirrors/simgear/ftp/Source//$pkgname-$pkgver.tar.bz2)
-sha256sums=('8e90c4b2f72f6459c6f5125bcd1f16b5d4604af1ff404ab436a966349d32f46a')
+pkgver=3.0.0
+pkgrel=1
+pkgdesc="FOSS libraries for quickly assembling 3d simulations, games, and visualization applications."
+arch=('x86_64')
+depends=('glut' 'freealut'  'plib' 'openscenegraph')  #'libxrandr' 'zlib')
+makedepends=('boost' 'cmake' 'mesa')
+license=("GPL")
+#url="http://www.simgear.org"
+url="https://gitorious.org/fg"
+options=('!makeflags' 'staticlibs')
+#source=("SimGear-$pkgver.tar.gz::https://gitorious.org/fg/simgear/archive-tarball/release/$pkgver")
+source=("http://mirrors.ibiblio.org/pub/mirrors/simgear/ftp/Source/simgear-$pkgver.tar.bz2")
+md5sums=('097f55962dfc48b3e740334dbfda64a6')
 
 build() {
   cd $srcdir/$pkgname-$pkgver
