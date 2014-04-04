@@ -1,22 +1,21 @@
-#
-# Games Packages for Chakra, part of chakra-project.org
-#
-# Maintainer: Adrián Chaves Fernández (Gallaecio) <adriyetichaves@gmail.com>
+# Maintainer: UtG <utg.chakra.linux[at]gmail[dot]com>
 
 pkgname=flightgear-data
 _pkgname=flightgear
 _pkgname2=FlightGear
-pkgver=2.12.0
+pkgver=3.0.0
 pkgrel=1
-pkgdesc="FlightGear base data."
-arch=(any)
-license=(GPL3)
+pkgdesc="Base-Data for the opensource flight-simulator."
+arch=(x86_64)
+license=(GPL)
 url=http://www.flightgear.org
-source=(ftp://flightgear.wo0t.de/ftp/Shared/$_pkgname2-data-$pkgver.tar.bz)
-sha256sums=('136dfd24c8a28aa8a6a444ecaf2eb881a1e708d19c96b44352d79fcf84645b62')
+options=(!strip)
+source=("http://mirrors.ibiblio.org/flightgear/ftp/Shared/FlightGear-data-$pkgver.tar.bz2")
+md5sums=('ee607a5305cad78d21e6ae038f62b277')
 
 package() {
-  mkdir -p $pkgdir/usr/share/$_pkgname
-  mv $srcdir/fgdata $pkgdir/usr/share/$_pkgname/data
-  chown root:users $pkgdir/usr/share/$_pkgname/data
+  cd $srcdir
+  mkdir -p $pkgdir/usr/share/flightgear
+  mv fgdata/ $pkgdir/usr/share/flightgear/data
+  chown root:root $pkgdir/usr/share/flightgear/data
 }
