@@ -1,8 +1,9 @@
-# maintainer: Neophytos Kolokotronis <tetris4@gmail.com>
+# maintainer: UtG <utg[dot]chakra.linux[at]gmail[dot]com>
 
-# remember to update qmmp-plugin-pack as well
+ ### remember to update qmmp-plugin-pack as well ### 
+ 
 pkgname=qmmp
-pkgver=0.7.5
+pkgver=0.7.6
 pkgrel=1
 pkgdesc="Qt4 based audio-player"
 arch=('x86_64')
@@ -21,12 +22,13 @@ categories=('multimedia')
 screenshot=('http://qmmp.ylsoftware.com/images/qmmp-0.3.0_full_1.png')
 install=$pkgname.install
 source=("http://qmmp.ylsoftware.com/files/$pkgname-$pkgver.tar.bz2")
-md5sums=('dcc3c9ecd4dfbf0ced91c59cb894d460')
+md5sums=('1f66f6761d42fdef99ec9d9bd03ae449')
 
 build() {
   cd ${srcdir}/$pkgname-$pkgver
 
-  cmake . -DCMAKE_INSTALL_PREFIX=/usr
+  cmake . -DCMAKE_INSTALL_PREFIX=/usr \
+	  -DCMAKE_INSTALL_LIBDIR=/usr/lib
   make
 }
 
@@ -35,3 +37,4 @@ package() {
 
   make DESTDIR=${pkgdir} install
 }
+
