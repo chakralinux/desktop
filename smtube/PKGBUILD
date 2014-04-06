@@ -4,7 +4,7 @@
 
 pkgname=smtube
 pkgver=2.1
-pkgrel=1
+pkgrel=2
 pkgdesc="Search and download videos from YouTube"
 arch=('x86_64')
 url="http://smplayer.sourceforge.net"
@@ -25,5 +25,6 @@ build() {
 
 package() {
   cd "$srcdir/$pkgname-$pkgver"
-  make DESTDIR="$pkgdir" install
+  #make DESTDIR="$pkgdir" install
+  make PREFIX=/usr DESTDIR="$pkgdir/" install
 }
