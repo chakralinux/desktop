@@ -9,7 +9,7 @@
 
 pkgname=libircclient
 pkgver=1.7
-pkgrel=1
+pkgrel=2
 pkgdesc="A small but powerful library, which implements client-server IRC protocol."
 arch=('i686' 'x86_64')
 url="http://www.ulduzsoft.com/libircclient/"
@@ -34,6 +34,7 @@ build() {
       -i src/Makefile.in
 
   ./configure --prefix=/usr \
+              --libdir=/usr/lib \
               --enable-shared
 
   cd src &&  make CFLAGS="$CFLAGS"
