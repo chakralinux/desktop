@@ -1,22 +1,19 @@
-#
-# Apps Packages for Chakra, part of chakra-project.org
-#
-# Contributor (x86_64): Manuel Tortosa <manutortosa[at]chakra-project[dot]org>
-# Mantainer: Fabian Kosmale <0inkane@googlemail.com>
+# Maintainer: UtG <utg[dot]chakra.linux[at]gmail[dot]com
 
 pkgname=lazarus
-pkgver=1.0.14
+pkgver=1.2
 pkgrel=1
 _pkgsubver=0
 pkgdesc='Delphi-like IDE for FreePascal'
 url='http://www.lazarus.freepascal.org/'
-license=('GPL2' 'MPL' 'custom:LGPL')
+license=('GPL2' 'MPL' 'custom:modifiedLGPL')
 arch=('x86_64')
-depends=('fpc' 'fpc-src' 'fpc-qtbindings' 'qt' 'qtwebkit') #'gdk-pixbuf' 'gtk2'
+depends=('fpc' 'fpc-src' 'fpc-qtbindings' 'qt' 'qtwebkit')
 options=('!emptydirs' '!makeflags')
 categories=('programming')
 source=(http://downloads.sourceforge.net/project/lazarus/Lazarus%20Zip%20_%20GZip/Lazarus%20$pkgver/lazarus-$pkgver-${_pkgsubver}.tar.gz)
-md5sums=('11de0f79cf44eb25ee1c460561cc103b')
+md5sums=('f36e7182cf5a5d75a7157104d1370e0b')
+install='lazarus.install'
 
 build() {
   cd $srcdir/${pkgname}
