@@ -1,11 +1,8 @@
-#
-# Chakra Packages for Chakra, part of chakra-project.org
-#
-# maintainer (x86_64): AlmAck <gluca86 [at] gmail.com>
+# Maintainer: UtG  <utg[dot]chakra.linux[at]gmail[dot]com>
 
 pkgname=python2-keyring
-pkgver=1.2.2
-pkgrel=2
+pkgver=3.7
+pkgrel=1
 pkgdesc="Store and access your passwords safely."
 arch=('any')
 url="http://pypi.python.org/pypi/keyring"
@@ -13,9 +10,14 @@ license=('LGPL2')
 depends=('python')
 optdepends=('kdeutils-kwallet: supports the KDE Kwallet service.')	    
 source=(http://pypi.python.org/packages/source/k/keyring/keyring-$pkgver.zip)
-md5sums=('828bab18f3912785a4126eb6479d22b6')
+md5sums=('7746c545debacf983ec1c01966cacec3')
+
+build() {
+  cd "$srcdir/keyring-$pkgver"
+  python setup.py build
+}
 
 package() {
-  cd ${srcdir}/keyring-${pkgver}
-  python2 setup.py install --root=$pkgdir/ --optimize=1
+  cd "$srcdir/keyring-$pkgver"
+  python setup.py install --root=$pkgdir --optimize=1
 }
