@@ -1,22 +1,19 @@
-#
-# Packages for Chakra, part of chakra-project.org
-#
-# maintainer (i686): Phil Miller <philm[at]chakra-project[dog]org>
-# maintainer (x86_64): Manuel Tortosa <manutortosa[at]chakra-project[dot]org>
+# Maintainer: UtG  <utg[dot]chakra.linux[at]gmail[dot]com>
 
 pkgname=linkchecker
 _pkgname=LinkChecker
-pkgver=8.4
+pkgver=9.1
 pkgrel=1
 pkgdesc="An utility to check HTML documents for broken links."
 arch=('x86_64')
-url="http://linkchecker.sourceforge.net/"
+url="http://wummel.github.io/linkchecker/"
 license=('GPL')
-depends=('python2' 'python2-dns')
+depends=('python2>=2.5' 'python2-dns')
 makedepends=('qt')
 optdepends=('python-qscintilla: for gui version')
-source=(http://github.com/downloads/wummel/${pkgname}/${_pkgname}-${pkgver}.tar.xz)
-md5sums=('470c35cef8353d65069c14e13a2e83e4')
+#source=(http://github.com/downloads/wummel/${pkgname}/${_pkgname}-${pkgver}.tar.xz)
+source=(http://wummel.github.io/linkchecker/dist/${_pkgname}-$pkgver.tar.gz)
+sha256sums=('563f2e00d66e0b34df2e40344ee4e95e4fbc965acbebaf00fcb9cc91864f62cb')
 
 build() {
   cd $srcdir/${_pkgname}-$pkgver
