@@ -1,24 +1,56 @@
-#
-# Apps Packages for Chakra, part of chakra-project.org
-#
-# Maintainer: Adrián Chaves Fernández (Gallaecio) <adriyetichaves gmail.com>
+# Maintainer: UtG  <utg[dot]chakra.linux[at]gmail[dot]com>
 # Contributor: Giuseppe Calà <jiveaxe@gmail.com>
 
-pkgname=python-pycurl
-_pkgname=pycurl
-pkgver=7.19.0
+_pypiname=pycurl
+pkgbase=python-$_pypiname
+pkgname=('python3-pycurl' 'python2-pycurl')
+pkgver=7.19.3.1
 pkgrel=1
-pkgdesc="A Python interface to libcurl."
-arch=('i686' 'x86_64')
+arch=('x86_64')
 url="http://pycurl.sourceforge.net"
-license=('GPL3')
-depends=('python' 'curl>=7.19.0')
+license=('LGPL' 'MIT')
+makedepends=('python3' 'python2' 'curl>=7.19.0' 'git')
 replaces=('pycurl')
 provides=('pycurl')
-source=(http://pycurl.sourceforge.net/download/$_pkgname-$pkgver.tar.gz)
-md5sums=('919d58fe37e69fe87ce4534d8b6a1c7b')
+source=("git+https://github.com/pycurl/pycurl.git#tag=REL_${pkgver//./_}")
+sha1sums=('SKIP')
+
+prepare() {
+  cp -r ${_pypiname} python2-${_pypiname}
+
+  cd "${srcdir}/${_pypiname}"
+  find . -name '*.py' -exec sed -i -e "s|#! /usr/bin/env python|#!/usr/bin/env python3|" {} +
+    sed -i 's/"share", "doc", PACKAGE/"share", "doc", "python3-pycurl"/' setup.py
+
+  cd "${srcdir}/python2-${_pypiname}"
+  find . -name '*.py' -exec sed -i -e "s|#! /usr/bin/env python|#!/usr/bin/env python2|" {} +
+    sed -i 's/"share", "doc", PACKAGE/"share", "doc", "python2-pycurl"/' setup.py
+}
+
 
 build() {
-  cd $srcdir/$_pkgname-$pkgver
-  python setup.py install --curl-config=/usr/bin/curl-config --prefix $pkgdir/usr
+  cd "${srcdir}/${_pypiname}"
+  python3 setup.py build --with-ssl
+
+  cd "${srcdir}/python2-${_pypiname}"
+  python2 setup.py build --with-ssl
 }
+
+package_python3-pycurl() {
+  pkgdesc="A Python 3.x interface to libcurl"
+  depends=('python3' 'curl')
+
+  cd ${_pypiname}
+  python3 setup.py install -O1 --curl-config=/usr/bin/curl-config --root="${pkgdir}"
+  install -D -m644 COPYING-MIT "${pkgdir}/usr/share/licenses/${pkgname}/LICENSE"
+}
+
+package_python2-pycurl() {
+  pkgdesc="A Python 2.x interface to libcurl"
+  depends=('python2' 'curl')
+
+  cd python2-${_pypiname}
+  python2 setup.py install -O1 --curl-config=/usr/bin/curl-config --root="${pkgdir}"
+  install -D -m644 COPYING-MIT "${pkgdir}/usr/share/licenses/${pkgname}/LICENSE"
+}
+
