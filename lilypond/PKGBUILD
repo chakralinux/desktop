@@ -1,12 +1,9 @@
-#
-# Apps Packages for Chakra, part of chakra-project.org
-#
 # maintainer abveritas@chakra-project.org
 # contributor Giuseppe Calà <jiveaxe@gmail.com>
 
 pkgname=lilypond
-pkgver=2.16.2
-_pkgver=2.16
+pkgver=2.18.2
+_pkgver=2.18
 pkgrel=1
 pkgdesc="A music engraving program, devoted to producing the highest-quality sheet music possible."
 arch=('x86_64')
@@ -15,9 +12,8 @@ license=('GPL')
 depends=('fontconfig' 'freetype2' 'ghostscript'
          'guile' 'pango' 'python')
 makedepends=('bison' 'flex' 'fontforge' 'gettext' 'gsfonts'
-             'perl' 'texinfo' 't1utils' 'texlive-core' 'netpbm')
+             'perl' 'texinfo' 't1utils' 'texlive-core' 'texlive-langcyrillic' 'netpbm' 'texi2html' 'dblatex' 'zip' 'imagemagick')
 optdepends=('netpbm: building HTML documentation'
-            'imagemagick: building HTML documentation'
             'ttf-kochi-substitute: building HTML documentation'
             'texi2html>=1.82: building HTML documentation'
             'rsync: installing HTML documentation')
@@ -25,8 +21,7 @@ categories=('multimedia')
 screenshot=('http://createdigitalmusic.com/files/2010/05/frescobaldi.png')
 install=$pkgname.install
 source=("http://download.linuxaudio.org/${pkgname}/sources/v${_pkgver}/${pkgname}-${pkgver}.tar.gz")
-md5sums=('6db27f17d47e4f66a3b0716c65db3041')
-
+md5sums=('3c4bcbb708d12644668b32bfe82ebf25')
 
 build() {
   cd "$srcdir/lilypond-$pkgver"
