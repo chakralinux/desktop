@@ -1,15 +1,12 @@
-# 
-# Apps Packages for Chakra, part of chakra-project.org
-#
 # Original Arch Linux Maintainer: Lukas Fleischer <archlinux at cryptocrack dot de>
 # Original Arch Linux Contributor: Jaroslav Lichtblau <dragonlord@aur.archlinux.org>
 # Original Arch Linux Contributor: Pierre Schmitz <pierre@archlinux.de>
 
 pkgname=rkhunter
-pkgver=1.4.0
+pkgver=1.4.2
 pkgrel=1
 pkgdesc='Checks machines for the presence of rootkits and other unwanted tools.'
-arch=('any')
+arch=('x86_64')
 url='http://rkhunter.sourceforge.net/'
 license=('GPL')
 depends=('bash' 'perl' 'wget')
@@ -17,7 +14,7 @@ optdepends=('unhide')
 backup=('etc/rkhunter.conf')
 categories=('system')
 source=("http://downloads.sourceforge.net/sourceforge/${pkgname}/${pkgname}-${pkgver}.tar.gz")
-md5sums=('37b1ceb79a5ff3debca335d6550ac6b0')
+md5sums=('85ad366b7f3999eb2a9371e39a1a4df7')
 
 package() {
   cd "${srcdir}/${pkgname}-${pkgver}"
@@ -45,5 +42,3 @@ package() {
   sed -i 's|^#ALLOWHIDDENDIR=/dev/.udev$|ALLOWHIDDENDIR=/dev/.udev|' \
     "${pkgdir}/etc/${pkgname}.conf"
 }
-
-# vim:set ts=2 sw=2 et:
