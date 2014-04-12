@@ -2,7 +2,7 @@
 # Contributions from Arch: https://projects.archlinux.org/svntogit/packages.git/tree/trunk/PKGBUILD?h=packages/mpd
 
 pkgname=mpd
-pkgver=0.18.5
+pkgver=0.18.9
 pkgrel=1
 pkgdesc='Flexible, powerful, server-side application for playing music'
 url='http://mpd.wikia.com/wiki/Music_Player_Daemon_Wiki'
@@ -10,13 +10,13 @@ license=('GPL')
 arch=('x86_64')
 depends=('audiofile' 'avahi' 'curl' 'faad2' 'ffmpeg' 'jack' 'libao' 'libid3tag' 'libmad' 'libmms' 'libmodplug'
          'libpulse' 'libshout' 'sqlite3' 'wavpack' 'libmpdclient' 'yajl' 'opus')
-makedepends=('doxygen')
+makedepends=('libbluray' 'doxygen')
 source=("http://www.musicpd.org/download/mpd/stable/${pkgname}-${pkgver}.tar.xz"
         'mpd.conf')
 backup=('etc/mpd.conf')
 install=install
-sha1sums=('4078755d77b7de4135458ae7db2518d2e057e745'
-		  'f4d5922abb69abb739542d8e93f4dfd748acdad7')
+sha1sums=('70e96857d68c0191bbf721aa08a8b5f4ec8120c7'
+          'f4d5922abb69abb739542d8e93f4dfd748acdad7')
 
 build() {
     cd "${srcdir}/${pkgname}-${pkgver}"
