@@ -1,24 +1,22 @@
-#
-# Apps Packages for Chakra, part of chakra-project.org
-#
-# maintainer (x86_64): Giuseppe Calà <jiveaxe@gmail.com>
+# Maintainer: Neophytos Kolokotronis <tetris4 AT gmail DOT com>
+# contributor: abveritas@chakra-project.org
 
 pkgname=qlandkartegt
-pkgver=1.5.1
+pkgver=1.7.6
 pkgrel=1
 pkgdesc="Use your GPS with Linux"
 screenshot="http://sourceforge.net/dbimage.php?id=176174"
-arch=('i686' 'x86_64')
+arch=('x86_64')
 url="http://www.qlandkarte.org"
 license=('GPL')
-depends=('gdal' 'gpsd' 'libdmtx' 'libexif' 'libmysqlclient' 'mesa' 'postgresql-libs' 'qt' 'shared-mime-info')
+depends=('gdal' 'gpsd' 'libdmtx' 'libexif' 'libmysqlclient' 'mesa' 'postgresql-libs'
+         'qt' 'shared-mime-info' 'qtwebkit' 'unixodbc')
 makedepends=('cmake')
 categories=('utils')
-source=(http://downloads.sourceforge.net/$pkgname/$pkgname-$pkgver.tar.gz \
-        $pkgname-mimetypes.xml)
-md5sums=('ca9c5f68c9aaa23c852d34c6d39e678d'
+source=("http://downloads.sourceforge.net/$pkgname/$pkgname-$pkgver.tar.gz"
+        'qlandkartegt-mimetypes.xml')
+md5sums=('4213da3ad94bda19a77db91617edd152'
          'e4808690a9b5381880c573abd81cffdd')
-
 
 build() {
   cd ${srcdir}/$pkgname-$pkgver
