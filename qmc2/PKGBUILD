@@ -1,14 +1,7 @@
-#
-# Chakra Packages for Chakra, part of chakra-project.org
-#
-# maintainer (i686): Phil Miller <philm[at]chakra-project[dog]org>
 # maintainer (x86_64): Manuel Tortosa <manutortosa[at]chakra-project[dot]org>
 
-# include global config
-source ../_buildscripts/${current_repo}-${_arch}-cfg.conf
-
 pkgname=qmc2
-pkgver=0.41
+pkgver=0.42
 pkgrel=1
 pkgdesc="Qt 4 based UNIX MAME frontend supporting SDLMAME."
 url="http://qmc2.arcadehits.net"
@@ -18,10 +11,10 @@ depends=('qt' 'phonon' 'sdl' 'libxmu')
 makedepends=('rsync' 'mesa')
 source=(http://downloads.sourceforge.net/$pkgname/$pkgname-$pkgver.tar.bz2
         'qmamecat.desktop')
-md5sums=('aae4396cc27875b969f51c7bfa600fcf'
+md5sums=('516f333848948c16460060e314e6befb'
          'bf2a7898e6fff196fb99b5bcc4128a79')
 
-build() {
+package() {
   cd "$srcdir/$pkgname"
 
   export CTIME=0

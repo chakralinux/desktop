@@ -2,22 +2,22 @@
 # contributor: Ernesto Manriquez <alejandronova@gmail.com>
 
 pkgname=synergy
-pkgver=1.4.15
-pkgrel=3
+pkgver=1.4.17
+pkgrel=1
 pkgdesc="Share your mouse and keyboard between several computers"
 url="http://synergy-foss.org"
 arch=('x86_64')
 license=('GPL2')
 depends=('gcc-libs' 'libxtst' 'libxinerama' )
-makedepends=('libxt' 'cmake' 'qt' 'unzip' )
+makedepends=('libxt' 'cmake' 'qt' 'unzip')
 optdepends=('qt: gui support')
 provides=('synergy-plus')
 categories=('utils')
 backup=('etc/synergy.conf')
-source=("http://${pkgname}.googlecode.com/files/${pkgname}-${pkgver}-Source.tar.gz"
+source=(""http://fossfiles.com/synergy/synergy-${pkgver}-r2055-Source.tar.gz""
         "synergys.socket"
         "synergys.service")
-sha256sums=('643745888ec6150e74cb6da9813f8c7572f2f87cf35f0bd4f64cc1e467ef3550'
+sha256sums=('95c7e40d0ba249f91866d433f3f2407771c3d9f72e257c5b0655ef84f7558ad7'
             'aeb357ba161131524aa70a5303a17f78831c9a1ab17dbc7c97e4781a5c4bac44'
             'af2d1d7622ea189d773577a92d13164ca6a33f052f39de3fe466314265e59e0f')
 
@@ -25,7 +25,9 @@ build() {
   cd "${srcdir}/${pkgname}-${pkgver}-Source"
   
  # Unzip the crypto library
-  unzip -d tools/cryptopp562 tools/cryptopp562.zip
+  unzip -d ext/cryptopp562 ext/cryptopp562.zip
+  unzip -d ext/gmock-1.6.0 ext/gmock-1.6.0.zip
+  unzip -d ext/gtest-1.6.0 ext/gtest-1.6.0.zip
   
   cmake -D CMAKE_INSTALL_PREFIX=/usr .
   make
