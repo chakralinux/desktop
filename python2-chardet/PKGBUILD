@@ -1,13 +1,10 @@
-#
-# Apps Packages for Chakra, part of chakra-project.org
-#
 # Maintainer: Adrian Chaves Fernandez (Gallaecio) <adriyetichaves@gmail.com>
 # Contributor: Ionut Biru <ibiru@archlinux.org>
 # Contributor: William Rea <sillywilly@gmail.com>
 
 pkgname=python2-chardet
 _pkgname=chardet
-pkgver=2.1.1
+pkgver=2.2.1
 pkgrel=1
 pkgdesc="Python module for character encoding auto-detection"
 arch=('any')
@@ -17,9 +14,9 @@ depends=('python2' 'python-distribute')
 provides=('python-chardet')
 replaces=('python-chardet')
 source=(http://pypi.python.org/packages/source/c/$_pkgname/$_pkgname-$pkgver.tar.gz)
-md5sums=('295367fd210d20f3febda615a88e1ef0')
+md5sums=('4a758402eaefd0331bdedc7ecb6f452c')
 
-build() {
+package() {
   cd "${srcdir}/${_pkgname}-${pkgver}"
   python2 setup.py install --root="${pkgdir}" --optimize=1
 }

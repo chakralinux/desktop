@@ -1,36 +1,32 @@
-#
-# Apps Packages for Chakra, part of chakra-project.org
-#
 # maintainer (x86_64): Giuseppe Calà <jiveaxe@gmail.com>
 
-# include global config
-source ../_buildscripts/${current_repo}-${_arch}-cfg.conf
-
 pkgname=wiiuse
-pkgver=0.12
-pkgrel=2
+pkgver=0.14.0
+pkgrel=1
 pkgdesc="Wiiuse is a library written in C that connects with several Nintendo Wii remotes." 
-arch=(i686 x86_64)
-url="http://wiiuse.sourceforge.net/" 
+arch=('x86_64')
+url="https://github.com/rpavlik/wiiuse" 
 depends=('bluez')
+makedepends=('cmake')
 license="GPL3"
 install=wiiuse.install
 postfix=_src.tar.gz
-source=("http://downloads.sourceforge.net/sourceforge/wiiuse/wiiuse_v${pkgver}_src.tar.gz"
-        "io_nix.patch")
-
-md5sums=('29b555096f79dbd3fbc9b96b8d443083'
-         'b5b6340306ec7194f47dfdf842531b34')
+#source=("http://downloads.sourceforge.net/sourceforge/wiiuse/wiiuse_v${pkgver}_src.tar.gz"
+source=("git+https://github.com/rpavlik/wiiuse.git#tag=$pkgver")
+md5sums=('SKIP')
 
 build() {
-    patch -Np0 -i $srcdir/io_nix.patch || return 1
-  cd ${srcdir}/wiiuse_v$pkgver
-  make wiiuse || return 1
+  cd "$srcdir/$pkgname"
 
-#installing
-  mkdir -p ${pkgdir}/usr/lib
-  mkdir -p ${pkgdir}/usr/include
+  [[ ! -e build ]] && mkdir build
+  cd build
+  cmake ..
+  make
+}
 
-  install -D -m644 ./src/release-`gcc -v 2>&1|grep ^Target:|cut -d' ' -f2`/libwiiuse.so ${pkgdir}/usr/lib
-  install -D -m644 ./src/wiiuse.h ${pkgdir}/usr/include
+package() {
+  cd ${srcdir}/wiiuse
+
+  install -D -m644 ./build/src/libwiiuse.so "$pkgdir/usr/lib/libwiiuse.so"
+  install -D -m644 ./src/wiiuse.h "$pkgdir/usr/include/wiiuse.h"
 }
