@@ -1,0 +1,50 @@
+# Maintainer: UtG  <utg[dot]chakra.linux[at]gmail[dot]com>
+# Contributor: aur2ccr (http://ddg.gg/?q=!ccr+aur2ccr)
+# Contributor: Felix Kaiser <felix.kaiser@fxkr.net>
+
+pkgbase=python-pytest
+pkgname=('python2-pytest' 'python3-pytest')
+pkgver=2.5.2
+pkgrel=1
+pkgdesc="Simple powerful testing with Python"
+arch=('x86_64')
+license=('MIT')
+url="http://pytest.org/"
+makedepends=('python2-setuptools' 'python3-setuptools' 'python2-py' 'python3-py')
+source=("http://pypi.python.org/packages/source/p/pytest/pytest-$pkgver.tar.gz")
+md5sums=('8ea3d1939e81514ccba9ba0e9566b5be')
+
+prepare() {
+  cp -r pytest-${pkgver}{,-py3}
+  cp -r pytest-${pkgver}{,-py2}
+}
+
+build() {
+  cd "$srcdir/pytest-${pkgver}-py3"
+  python3 setup.py build
+
+  cd "$srcdir/pytest-${pkgver}-py2"
+  python2 setup.py build
+}
+
+package_python3-pytest() {
+  depends=('python3' 'python3-py' 'python3-setuptools')
+
+  cd pytest-${pkgver}-py3
+  python3 setup.py install --root="${pkgdir}" --optimize=1
+  install -D -m644 LICENSE "${pkgdir}/usr/share/licenses/${pkgname}/LICENSE"
+}
+
+package_python2-pytest() {
+  depends=('python2' 'python2-py' 'python2-setuptools')
+  provides=('python-pytest' 'python2-pytest')
+  conflicts=('python-pytest')
+  replaces=('python-pytest')
+
+  cd pytest-${pkgver}-py2
+  python2 setup.py install --root="${pkgdir}" --optimize=1
+  install -D -m644 LICENSE "${pkgdir}/usr/share/licenses/${pkgname}/LICENSE"
+
+  # deal with the conflict with python-pytests version of /usr/bin/py.test
+  mv "${pkgdir}/usr/bin/py.test" "${pkgdir}/usr/bin/py.test2"
+}
