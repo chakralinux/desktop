@@ -1,11 +1,7 @@
-#
-# Apps Packages for Chakra, part of chakra-project.org
-#
-# Contributor: abveritas@chakra-project.org
-# Maintainer: Bruce Liu <brli@users.sourceforge.net>
+# Maintainer: UtG  <utg[dot]chakra.linux[at]gmail[dot]com>
 
 pkgname=lftp
-pkgver=4.4.13
+pkgver=4.4.15
 pkgrel=1
 pkgdesc="Sophisticated command line based FTP client with openssl"
 arch=('x86_64')
@@ -14,8 +10,10 @@ license=('GPL3')
 depends=('gcc-libs' 'readline' "gnutls>=2.6.8" "expat>=2.0.1" 'perl' 'sh')
 makedepends=('autoconf')
 categories=('network')
-source=("http://lftp.yar.ru/ftp/${pkgname}-${pkgver}.tar.bz2")
-md5sums=('87b723b6a01c6bf0e5f4ba61de41bdac')
+source=(http://lftp.yar.ru/ftp/${pkgname}-${pkgver}.tar.xz{,.asc})
+md5sums=('f19cc0cea1d427aa2a952b27661b91e5'
+         'SKIP')
+backup=('etc/lftp.conf')
 
 build() {
   cd ${srcdir}/${pkgname}-${pkgver}
@@ -31,4 +29,3 @@ package() {
   make DESTDIR=${pkgdir} install
   rm -rf ${pkgdir}/usr/lib
 }
-
