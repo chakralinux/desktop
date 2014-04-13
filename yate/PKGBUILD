@@ -1,11 +1,9 @@
-#
-# Apps Packages for Chakra, part of chakra-project.org
-#
-# maintainer (x86_64): Manuel Tortosa <manutortosa[at]chakra-project[dot]org>
+# Maintainer: UtG  <utg[dot]chakra.linux[at]gmail[dot]com>
 # contributor Fabien <hcoohb@gmailcom>
 
 pkgname=yate
-pkgver=5.0.0
+pkgver=5.2.0
+subver=1
 pkgrel=1
 pkgdesc="Next-generation telephony engine, qt4 client for VoIP"
 arch=('x86_64')
@@ -16,11 +14,12 @@ depends=('qt' 'speex' 'gsm' 'postgresql-libs' 'libmysqlclient' \
 makedepends=('pkgconfig' 'desktop-file-utils')
 categories=('communication')
 options=(!makeflags)
-source=("http://yate.null.ro/tarballs/yate5/${pkgname}-${pkgver}-1.tar.gz"
+source=( #"http://yate.null.ro/tarballs/yate5/${pkgname}-${pkgver}-1.tar.gz"
+	"http://voip.null.ro/tarballs/yate5/${pkgname}-${pkgver}-${subver}.tar.gz"
         "yate.init"
         "yate.service"
         "yate.conf.d")
-sha256sums=('40eb0ec51a4bc4d708101c64c29355c224af80ca38c17ea835b280af7fa4d047'
+sha256sums=('9cf5c777f0f60cb24f2f34e75df99362bb683309b771367e3a9e7b6a3b6c02c2'
             '3797c4ea3e09ac8514349905a3a994233c9c86bca1feea1242ec5fa10fb44483'
             '224d8f15275717d078342c4a5d4b33c6d64dbf9772538656b590ef67a464dfec'
             '1b88b8e3573a68fb5f6673b1922318a4fa51c722def21dd27b4ef8ca002812e4')
@@ -55,3 +54,4 @@ package() {
   install -Dm0644 "${srcdir}/yate.service" "${pkgdir}/usr/lib/systemd/system/yate.service"
   install -Dm0644 "${srcdir}/yate.conf.d" "${pkgdir}/etc/conf.d/yate"
 }
+
