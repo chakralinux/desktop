@@ -1,22 +1,22 @@
-# Maintainer:   H W Tovetjärn (totte) <totte@tott.es>
+# Maintainer: UtG  <utg[dot]chakra.linux[at]gmail[dot]com>
 # Contributions from Arch: https://projects.archlinux.org/svntogit/packages.git/tree/trunk/PKGBUILD?h=packages/mpd
 
 pkgname=mpd
-pkgver=0.18.5
+pkgver=0.18.10
 pkgrel=1
 pkgdesc='Flexible, powerful, server-side application for playing music'
 url='http://mpd.wikia.com/wiki/Music_Player_Daemon_Wiki'
 license=('GPL')
 arch=('x86_64')
 depends=('audiofile' 'avahi' 'curl' 'faad2' 'ffmpeg' 'jack' 'libao' 'libid3tag' 'libmad' 'libmms' 'libmodplug'
-         'libpulse' 'libshout' 'sqlite3' 'wavpack' 'libmpdclient' 'yajl' 'opus')
+         'libpulse' 'libshout' 'sqlite3' 'wavpack' 'libmpdclient' 'yajl' 'opus' 'libbluray')
 makedepends=('doxygen')
 source=("http://www.musicpd.org/download/mpd/stable/${pkgname}-${pkgver}.tar.xz"
         'mpd.conf')
 backup=('etc/mpd.conf')
 install=install
-sha1sums=('4078755d77b7de4135458ae7db2518d2e057e745'
-		  'f4d5922abb69abb739542d8e93f4dfd748acdad7')
+sha1sums=('0923318cfda033bb4f89c219e6effa9d5b330c1d'
+          'f4d5922abb69abb739542d8e93f4dfd748acdad7')
 
 build() {
     cd "${srcdir}/${pkgname}-${pkgver}"
@@ -46,7 +46,10 @@ package() {
     install -d -g 45 -o 45 "${pkgdir}"/var/lib/mpd/playlists
     install -Dm644 doc/mpdconf.example "${pkgdir}"/etc/mpd.conf
     install -Dm644 ../mpd.conf "${pkgdir}"/usr/lib/tmpfiles.d/mpd.conf
+    
     install -d "${pkgdir}"/usr/lib/systemd/user
-    ln -s ../system/mpd.service "${pkgdir}"/usr/lib/systemd/user/mpd.service
+    install -Dm644 "${pkgdir}"/usr/lib/systemd/{system,user}/mpd.service
+    sed '/WantedBy=/c WantedBy=default.target' -i "${pkgdir}"/usr/lib/systemd/user/mpd.service
 
 }
+
