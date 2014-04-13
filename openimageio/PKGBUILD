@@ -17,13 +17,11 @@ source=("https://github.com/OpenImageIO/oiio/tarball/Release-${pkgver}")
 sha1sums=('8c53d259903c3c00853070fd0dfbb9d4be140c9b')
 
 build() {
-  #cd "$srcdir"/$_pkgname*/src
   cd "$srcdir"/$_pkgname-oiio-$_release
 
   [[ -d build ]] && rm -r build
   mkdir build && cd build
-  #cmake -DCMAKE_INSTALL_PREFIX=/usr ..
- # -DPYLIB_INSTALL_DIR=lib/python2.7/site-packages #\#
+
     cmake \
       -DCMAKE_INSTALL_PREFIX=/usr \
       -DPYLIB_INSTALL_DIR=usr/lib/python2.7/site-packages \
@@ -34,13 +32,9 @@ build() {
 }
 
 package() {
-  #cd "$srcdir"/$_pkgname*/src/build
-  #cd "$srcdir"/$_pkgnameoiio-Release-$pkgver/build
   cd "$srcdir"/$_pkgname-oiio-$_release/build
 
   make DESTDIR=$pkgdir install
-
-  #mv $pkgdir/usr/lib/python $pkgdir/usr/lib/python2.7
 
   # license
   cd ..
