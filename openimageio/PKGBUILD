@@ -1,40 +1,49 @@
-#
-# Chakra Packages for Chakra, part of chakra-project.org
-#
-# maintainer abveritas@chakra-project.org
+# Maintainer: UtG  <utg[dot]chakra.linux[at]gmail[dot]com>
 
 pkgname=openimageio
 _pkgname=OpenImageIO
-pkgver=1.2.0
+pkgver=1.3.11
 pkgrel=1
+_release=1548a68
 pkgdesc="A library for reading and writing images, including classes, utilities, and applications."
 arch=(x86_64)
 url="http://www.openimageio.org/"
 license=('custom')
-depends=('openexr' 'boost-libs' 'jasper' 'glew')
-makedepends=('cmake' 'qt' 'python2' 'boost')
+depends=('openexr' 'boost-libs' 'jasper' 'glew' 'libtiff' 'opencolorio' 'intel-tbb')
+makedepends=('cmake' 'qt4' 'python2' 'boost' 'mesa')
 optdepends=('qt: iv image viewer'
             'python2: bindings support')
 source=("https://github.com/OpenImageIO/oiio/tarball/Release-${pkgver}")
-sha1sums=('a64980cdae4df8d23c0e0591963fdd7bbe3ad1f8')
+sha1sums=('8c53d259903c3c00853070fd0dfbb9d4be140c9b')
 
 build() {
-  cd "$srcdir"/$_pkgname*/src
+  #cd "$srcdir"/$_pkgname*/src
+  cd "$srcdir"/$_pkgname-oiio-$_release
 
   [[ -d build ]] && rm -r build
   mkdir build && cd build
-  cmake -DCMAKE_INSTALL_PREFIX=/usr ..
+  #cmake -DCMAKE_INSTALL_PREFIX=/usr ..
+ # -DPYLIB_INSTALL_DIR=lib/python2.7/site-packages #\#
+    cmake \
+      -DCMAKE_INSTALL_PREFIX=/usr \
+      -DPYLIB_INSTALL_DIR=usr/lib/python2.7/site-packages \
+      -DUSE_EXTERNAL_TBB=ON \
+      -DOIIO_BUILD_TESTS=OFF \
+      ..
   make
 }
 
 package() {
-  cd "$srcdir"/$_pkgname*/src/build
+  #cd "$srcdir"/$_pkgname*/src/build
+  #cd "$srcdir"/$_pkgnameoiio-Release-$pkgver/build
+  cd "$srcdir"/$_pkgname-oiio-$_release/build
 
   make DESTDIR=$pkgdir install
 
-  mv $pkgdir/usr/lib/python $pkgdir/usr/lib/python2.7
+  #mv $pkgdir/usr/lib/python $pkgdir/usr/lib/python2.7
 
   # license
-  cd ../..
+  cd ..
   install -Dm644 LICENSE "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
 }
+
