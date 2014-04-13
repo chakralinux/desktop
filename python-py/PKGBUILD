@@ -1,0 +1,58 @@
+# Maintainer: UtG  <utg[dot]chakra.linux[at]gmail[dot]com>
+# Contributor: aur2ccr (http://ddg.gg/?q=!ccr+aur2ccr)
+# Contributor: Sebastian Wiesner <lunaryorn googlemail com>
+# Contributor: Igor Ramos Tiburcio <irtigor@yahoo.com.br>
+
+pkgbase=python-py
+pkgname=('python2-py' 'python3-py')
+pkgver=1.4.20
+pkgrel=1
+pkgdesc="Python rapid development tools"
+arch=('x86_64')
+url="http://pylib.readthedocs.org/en/latest/"
+license=('MIT')
+makedepends=("python2-setuptools" "python3-setuptools" )
+#checkdepends=('python2-pytest' 'python3-pytest')
+source=("http://pypi.python.org/packages/source/p/py/py-$pkgver.tar.gz")
+md5sums=('5f1708be5482f3ff6711dfd6cafd45e0')
+
+
+prepare() {
+  cp -r py-${pkgver}{,-py3}
+  cp -r py-${pkgver}{,-py2}
+}
+
+build() {
+  cd "$srcdir/py-${pkgver}-py3"
+  python3 setup.py build
+
+  cd "$srcdir/py-${pkgver}-py2"
+  python2 setup.py build
+}
+
+ ## ## uncomment these lines and checkdepends for package check ## ##
+# check() {
+#  cd "$srcdir/py-${pkgver}-py3"
+#  LANG=en_US.utf8 py.test
+
+#  cd "$srcdir/py-${pkgver}-py2"
+#  LANG=en_US.utf8 py.test2
+  ### RESULT (2014/04/13): 2 failed, 548 passed, 202 skipped, 3 xfailed ##
+#}
+
+package_python3-py() {
+  depends=('python3')
+
+  cd py-${pkgver}-py3
+  python3 setup.py install --root="${pkgdir}" --optimize=1
+  install -D -m644 LICENSE "${pkgdir}/usr/share/licenses/${pkgname}/LICENSE"
+}
+
+package_python2-py() {
+  depends=('python2')
+
+  cd py-${pkgver}-py2
+  python2 setup.py install --root="${pkgdir}" --optimize=1
+  install -D -m644 LICENSE "${pkgdir}/usr/share/licenses/${pkgname}/LICENSE"
+}
+
