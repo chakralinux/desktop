@@ -1,8 +1,10 @@
+# Maintainer: UtG  <utg[dot]chakra.linux[at]gmail[dot]com>
 # maintainer: Neophytos Kolokotronis <tetris4@gmail.com
 
 pkgname=blender
-pkgver=2.70
+pkgver=2.70a
 pkgrel=1
+epoch=1
 pkgdesc="A fully integrated 3D graphics creation suite"
 arch=('x86_64')
 license=('GPL')
@@ -14,10 +16,10 @@ makedepends=('cmake' 'boost' 'mesa' 'subversion')
 screenshot=('http://www.blender.org/index.php?eID=tx_cms_showpic&file=uploads%2Fpics%2Fblender_screenshot3_03.png&width=800m&height=600m&bodyTag=%3Cbody%20style%3D%22margin%3A0%3B%20background%3A%23fff%3B%22%3E&wrap=%3Ca%20href%3D%22javascript%3Aclose%28%29%3B%22%3E%20%7C%20%3C%2Fa%3E&md5=cddc8ef0fbe1e90d0d22e78b4911860b')
 install=blender.install
 source=("http://download.blender.org/source/$pkgname-$pkgver.tar.gz")
-sha1sums=('294d89855e4bd2226bfbd4311f835709379ec309')
+sha1sums=('44c597285972a6042f50b6709b6640d688a878d2')
 
 build() {
-  cd "$srcdir/$pkgname-$pkgver"
+  cd "$srcdir/$pkgname-v$pkgver"
   
   mkdir -p build
   cd build
@@ -46,8 +48,9 @@ build() {
 }
 
 package() {
-  cd "$srcdir/$pkgname-$pkgver/build"
+  cd "$srcdir/$pkgname-v$pkgver/build"
 
   make DESTDIR="${pkgdir}" install
   python3 -m compileall "${pkgdir}/usr/share/blender"
 }
+
