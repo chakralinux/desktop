@@ -1,23 +1,39 @@
-#
-# Chakra Packages for Chakra, part of chakra-project.org
-#
+# Maintainer: UtG  <utg[dot]chakra.linux[at]gmail[dot]com>
 # Contributor: abveritas@chakra-project.org
-# Maintainer: Bruce Liu <brli@users.sourceforge.net>
 
 pkgname=mc
-pkgver=4.8.11
+pkgver=4.8.12
 pkgrel=1
-pkgdesc="A filemanager/shell that emulates Norton Commander"
+pkgdesc="Midnight Commander is a text based filemanager/shell that emulates Norton Commander"
 arch=('x86_64')
 url="http://www.ibiblio.org/mc/"
 license=('GPL')
 depends=('e2fsprogs' 'glib2' 'pcre' 'gpm>=1.20.4' 'slang')
 makedepends=('libxt' 'libx11')
-optdepends=('p7zip: support for 7zip archives')
+optdepends=(
+    'cabextract: ucab extfs'
+    'cdparanoia: audio extfs'
+    'cdrkit: iso9660 extfs'
+    'gawk: hp48+ extfs'
+    'aspell: spelling corrections'
+    'cvs: CVS support'
+    'mtools: a+ extfs'
+    'perl: needed by several extfs scripts'
+    'unarj: uarj extfs'
+    'unrar: urar extfs'
+    'zip: uzip extfs'
+    'p7zip: support for 7zip archives')
 screenshot=('http://ompldr.org/vOG9vNg')
 options=('!emptydirs' '!makeflags')
+backup=('etc/mc/edit.indent.rc'
+        'etc/mc/filehighlight.ini'
+        'etc/mc/mcedit.menu'
+        'etc/mc/mc.ext'
+        'etc/mc/mc.keymap'
+        'etc/mc/mc.menu'
+        'etc/mc/sfs.ini')
 source=("https://www.midnight-commander.org/downloads/${pkgname}-${pkgver}.tar.xz")
-sha256sums=('1877ea844f9d71e133b9e03ca3bebcd7b10b9ba5b419b8d268e255816fe1993a')
+md5sums=('7ecccc03df060cd0ca1414a5a14e6649')
 
 build() {
 	cd ${srcdir}/${pkgname}-${pkgver}
