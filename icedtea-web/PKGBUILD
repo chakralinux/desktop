@@ -1,11 +1,8 @@
-#
-# Apps Packages for Chakra, part of chakra-project.org
-#
-# maintainer (x86_64): Manuel Tortosa <manutortosa[at]chakra-project[dot]org>
+# Maintainer: UtG  <utg[dot]chakra.linux[at]gmail[dot]com>
 
 pkgname=icedtea-web
 pkgdesc="Provides a Free Software web browser plugin running applets written in the Java programming language and an implementation of Java Web Start, originally based on the NetX project."
-pkgver=1.4.1
+pkgver=1.5
 pkgrel=1
 arch=('x86_64')
 url="http://icedtea.classpath.org/wiki/IcedTea-Web"
@@ -21,7 +18,7 @@ install="${pkgname}.install"
 
 source=("http://icedtea.classpath.org/download/source/${pkgname}-${pkgver}.tar.gz")
 noextract="${pkgname}-$pkgver.tar.gz" # due to broken path names in the tarball that fails with LANG=C in our chroot
-sha256sums=('09100207396a09784e04f2ad40d65212930c1d43839e7fa63b9dffaf8567d77b')
+md5sums=('a6199869763291879f3a7382b114974c')
 
 build() {
   cd "${srcdir}"
@@ -72,4 +69,3 @@ package() {
   ln -sf "${_jvmdir}/lib/IcedTeaPlugin.so" "${pkgdir}/usr/lib/mozilla/plugins/"
 }
 
-# vim:set ts=2 sw=2 et:
