@@ -1,32 +1,30 @@
-#
-# Chakra Packages for Chakra, part of chakra-project.org
-#
+# Maintainer: Francesco Marinucci <franzmari[at]chakra-project[dot]it>
 # contributor (x86_64): Giuseppe Calà <jiveaxe@gmail.com>
 
-# include global config
-source ../_buildscripts/${current_repo}-${_arch}-cfg.conf
-
 pkgname=guile
-pkgver=1.8.8
+pkgver=2.0.11
 pkgrel=1
 pkgdesc="Guile is a portable, embeddable Scheme implementation written in C"
 url="http://www.gnu.org/software/guile/"
-arch=(i686 x86_64)
+arch=('x86_64')
 license=('GPL')
 depends=('gmp' 'libtool' 'ncurses>=5.7' 'texinfo')
+makedepends=('gc' 'libunistring')
 install=guile.install
-source=(ftp://ftp.gnu.org/pub/gnu/${pkgname}/${pkgname}-${pkgver}.tar.gz
-        doc-snarfing-fix.patch)
+source=(ftp://ftp.gnu.org/pub/gnu/${pkgname}/${pkgname}-${pkgver}.tar.gz)
 options=('!libtool' '!makeflags')
-md5sums=('18661a8fdfef13e2fcb7651720aa53f3'
-	 '3d6f6a4670a8e933a760ff076ff40d2a')
+md5sums=('e532c68c6f17822561e3001136635ddd')
 
 build() {
   cd "${srcdir}/${pkgname}-${pkgver}"
-  patch -Np1 -i ${srcdir}/doc-snarfing-fix.patch || return 1
-  ./configure --prefix=/usr --disable-error-on-warning || return 1
-  make LDFLAGS+="-lpthread" || return 1
-  make DESTDIR="${pkgdir}" install || return 1
+  ./configure --prefix=/usr --disable-error-on-warning 
+  make LDFLAGS+="-lpthread" 
+}
+
+package() {
+  cd "${srcdir}/${pkgname}-${pkgver}"
+
+  make DESTDIR="${pkgdir}" install
   rm -f "${pkgdir}/usr/share/info/dir"
-  gzip "${pkgdir}/usr/share/info"/* || return 1
+  gzip "${pkgdir}/usr/share/info"/* 
 }
