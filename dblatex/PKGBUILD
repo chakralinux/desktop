@@ -1,23 +1,26 @@
-#
-# Apps Packages for Chakra, part of chakra-project.org
-#
+# Maintainer: UtG <utg[dot]chakra.linux[at]gmail[dot]com>
 # Contributor: Giuseppe Calà <jiveaxe@gmail.com>
 # Contributor: Adrián Chaves Fernández (Gallaecio) <adriyetichaves@gmail.com>
 
 pkgname=dblatex
-pkgver=0.3.2
+pkgver=0.3.4
 pkgrel=1
 pkgdesc="DocBook (XML and SGML) to DVI, PDF, PostScript converter using latex"
-arch=(any)
+arch=('x86_64')
 url="http://dblatex.sourceforge.net/"
 license=(GPL)
 depends=('docbook-xml' 'docbook-xsl' 'latex-epic' 'libxslt' 'python2' 'texlive-core' 'texlive-htmlxml' 'texlive-latexextra')
-source=("http://downloads.sourceforge.net/project/$pkgname/$pkgname/$pkgname-$pkgver/$pkgname-$pkgver.tar.bz2")
-md5sums=('95f81bc46690c4052818a82a32d05b7c')
+source=("http://downloads.sourceforge.net/project/$pkgname/$pkgname/$pkgname-$pkgver/$pkgname-$pkgver.tar.bz2"
+	dblatex-0.3.4-build-fix.patch)
+
+md5sums=('a511a2eaa55757b341e4c46353c5c681'
+	 'b047ef70faa39cdab89c89ac04d02b2f')
 
 package() {
   cd $srcdir/$pkgname-$pkgver
 
+  patch -Np0 -i ../dblatex-0.3.4-build-fix.patch
+  
   python2 setup.py install \
     --root $pkgdir \
     --catalogs=/etc/xml/docbook
