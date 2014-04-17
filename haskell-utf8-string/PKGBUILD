@@ -1,22 +1,35 @@
-# Maintainer: Stephen McIntosh <stephenmac7[at]gmail[dot]com>
+# Maintainer: UtG <utg[dot]chakra.linux[at]gmail[dot]com>
+# Contributors: H W TovetjÃ¤rn (totte) <totte@tott.es>
+#		Stephen McIntosh <stephenmac7[at]gmail[dot]com>
+#               Thomas Dziedzic <gostrc@gmail.com>
+#               Vesa Kaihlavirta <vesa@archlinux.org>
+#               Arch Haskell Team <arch-haskell@haskell.org>
+
+## NOTE: when you update Haskell packages you'll have to update the entire stack to not break it ##
+
 _hkgname=utf8-string
 pkgname=haskell-utf8-string
 pkgver=0.3.7
-pkgrel=4
+pkgrel=7
 pkgdesc="Support for reading and writing UTF8 Strings"
 url="http://hackage.haskell.org/package/${_hkgname}"
 license=('custom:BSD3')
-arch=('i686' 'x86_64')
-makedepends=()
-depends=('ghc')
-options=('strip')
+arch=('x86_64')
+depends=('ghc=7.6.3-1')
+options=('strip' 'staticlibs')
 source=(http://hackage.haskell.org/packages/archive/${_hkgname}/${pkgver}/${_hkgname}-${pkgver}.tar.gz)
 install=${pkgname}.install
 md5sums=('50e5c395713e716e0e4a56da73f87ccd')
 build() {
     cd ${srcdir}/${_hkgname}-${pkgver}
-    runhaskell Setup configure -O ${PKGBUILD_HASKELL_ENABLE_PROFILING:+-p } --enable-split-objs --enable-shared \
-       --prefix=/usr --docdir=/usr/share/doc/${pkgname} --libsubdir=\$compiler/site-local/\$pkgid
+    runhaskell Setup configure \
+        -O \
+        ${PKGBUILD_HASKELL_ENABLE_PROFILING:+-p } \
+        --enable-split-objs \
+        --enable-shared \
+        --prefix=/usr \
+        --docdir=/usr/share/doc/haskell-utf8-string \
+        --libsubdir=\$compiler/site-local/\$pkgid
     runhaskell Setup build
     runhaskell Setup haddock
     runhaskell Setup register   --gen-script
@@ -25,11 +38,20 @@ build() {
 }
 package() {
     cd ${srcdir}/${_hkgname}-${pkgver}
-    install -D -m744 register.sh   ${pkgdir}/usr/share/haskell/${pkgname}/register.sh
-    install    -m744 unregister.sh ${pkgdir}/usr/share/haskell/${pkgname}/unregister.sh
-    install -d -m755 ${pkgdir}/usr/share/doc/ghc/html/libraries
-    ln -s /usr/share/doc/${pkgname}/html ${pkgdir}/usr/share/doc/ghc/html/libraries/${_hkgname}
-    runhaskell Setup copy --destdir=${pkgdir}
-    install -D -m644 LICENSE ${pkgdir}/usr/share/licenses/${pkgname}/LICENSE
-    rm -f ${pkgdir}/usr/share/doc/${pkgname}/LICENSE
+    install -D -m744 register.sh \
+        "${pkgdir}/usr/share/haskell/${pkgname}/register.sh"
+    install -m744 unregister.sh \
+        "${pkgdir}/usr/share/haskell/${pkgname}/unregister.sh"
+    install -d -m755 "${pkgdir}/usr/share/doc/ghc/html/libraries"
+
+    # Documentation
+    ln -s "/usr/share/doc/${pkgname}/html" \
+        "${pkgdir}/usr/share/doc/ghc/html/libraries/utf8-string"
+
+    # License
+    install -D -m644 LICENSE \
+        "${pkgdir}/usr/share/licenses/${pkgname}/LICENSE"
+    rm -f "${pkgdir}/usr/share/doc/${pkgname}/LICENSE"
+
+    runhaskell Setup copy --destdir="${pkgdir}"
 }
