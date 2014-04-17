@@ -3,7 +3,7 @@
 
 pkgname=qupzilla
 pkgver=1.6.4
-pkgrel=1
+pkgrel=2
 pkgdesc="A very fast open source browser based on WebKit core"
 url="http://www.qupzilla.com"
 arch=('x86_64')
@@ -16,16 +16,22 @@ screenshot='http://www.qupzilla.com/screens/kde.png'
 source=("https://github.com/QupZilla/qupzilla/archive/v${pkgver}.tar.gz"
 	'qupzilla.patch'
         'theme-app-icon.patch'
+        'kwallet.patch'
 	'start-white.png')
 sha256sums=('05f543ba78171e9280809cd3f309dda6a835c5ac128341830cd7b9b0a6010d0f'
-            'f37afa5b9a3d52dfe640991fd28061a9ddcba895c649bc97bfb49aef29f3703c'
+            'f9fa1dbebce5bb6465946fbd11dd6569c5c3e6003de95858da3b5c4cd52200af'
             '8a5d93463a7e78d9d5f048a51a240703a4ea97b23ce0d66b27992b007f961687'
+            '7f0c99e0e226626c0f3fe117203bcdfd5024240b58326369e9a7dd39448cd972'
             '5bdac9f329c5d240e9aa58d7960f5f8b4c372e8908e2cf1080a02619a4695f09')
 
 prepare() {
-  cd "${pkgname}-${pkgver}/src/lib"
+  cd "${srcdir}/${pkgname}-${pkgver}/src/lib"
   patch -uNp1 -i ${srcdir}/qupzilla.patch
+
+  ## note that the following patches are backward patch, should be removed at next(>1.6.4) release
   patch -p3 -i ${srcdir}/theme-app-icon.patch
+  cd "${srcdir}/${pkgname}-${pkgver}/src/plugins/KWalletPasswords"
+  patch -uN ${srcdir}/${pkgname}-${pkgver}/src/plugins/KWalletPasswords/kwalletplugin.cpp ${srcdir}/kwallet.patch
  }
          
 build() {
@@ -47,4 +53,3 @@ package() {
   install -Dm644 linux/completion/_${pkgname} "${pkgdir}/usr/share/zsh/site-functions/_${pkgname}"
   install -Dm644 linux/completion/${pkgname} "${pkgdir}/usr/share/bash-completion/completions/${pkgname}"
 }
-
