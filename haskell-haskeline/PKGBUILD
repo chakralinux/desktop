@@ -1,22 +1,36 @@
-# Maintainer: Stephen McIntosh <stephenmac7[at]gmail[dot]com>
+# Maintainer: UtG <utg[dot]chakra.linux[at]gmail[dot]com>
+# Contributors: H W Tovetjärn (totte) <totte@tott.es>
+# 		Stephen McIntosh <stephenmac7[at]gmail[dot]com>
+#               Thomas Dziedzic <gostrc@gmail.com>
+#               Vesa Kaihlavirta <vesa@archlinux.org>
+#               Arch Haskell Team <arch-haskell@haskell.org>
+
+## NOTE: when you update Haskell packages you'll have to update the entire stack to not break it ##
+
 _hkgname=haskeline
 pkgname=haskell-haskeline
-pkgver=0.7.0.3
+pkgver=0.7.1.2
 pkgrel=1
 pkgdesc="A command-line interface for user input, written in Haskell."
 url="http://hackage.haskell.org/package/${_hkgname}"
 license=('custom:BSD3')
-arch=('i686' 'x86_64')
-makedepends=()
-depends=('ghc' 'haskell-extensible-exceptions' 'haskell-mtl' 'haskell-terminfo' 'haskell-unix' 'haskell-utf8-string')
-options=('strip')
+arch=('x86_64')
+depends=("ghc=7.6.3-1" 'haskell-extensible-exceptions' 'haskell-mtl' 'haskell-terminfo' 'haskell-unix' 'haskell-utf8-string')
+options=('strip' 'staticlibs')
 source=(http://hackage.haskell.org/packages/archive/${_hkgname}/${pkgver}/${_hkgname}-${pkgver}.tar.gz)
 install=${pkgname}.install
-md5sums=('3a78043dc80b5510202e71e77c0a9923')
+md5sums=('5a34c091ffff2564a1ea4bec0a3aaf71')
+
 build() {
-    cd ${srcdir}/${_hkgname}-${pkgver}
-    runhaskell Setup configure -O ${PKGBUILD_HASKELL_ENABLE_PROFILING:+-p } --enable-split-objs --enable-shared \
-       --prefix=/usr --docdir=/usr/share/doc/${pkgname} --libsubdir=\$compiler/site-local/\$pkgid
+    cd "${srcdir}/${_hkgname}-${pkgver}"
+    runhaskell Setup configure \
+	-O \
+	${PKGBUILD_HASKELL_ENABLE_PROFILING:+-p } \
+	--enable-split-objs \
+	--enable-shared \
+       --prefix=/usr \
+       --docdir="/usr/share/doc/${pkgname}" \
+       --libsubdir=\$compiler/site-local/\$pkgid
     runhaskell Setup build
     runhaskell Setup haddock
     runhaskell Setup register   --gen-script
@@ -24,12 +38,19 @@ build() {
     sed -i -r -e "s|ghc-pkg.*unregister[^ ]* |&'--force' |" unregister.sh
 }
 package() {
-    cd ${srcdir}/${_hkgname}-${pkgver}
+    cd "${srcdir}/${_hkgname}-${pkgver}"
     install -D -m744 register.sh   ${pkgdir}/usr/share/haskell/${pkgname}/register.sh
     install    -m744 unregister.sh ${pkgdir}/usr/share/haskell/${pkgname}/unregister.sh
     install -d -m755 ${pkgdir}/usr/share/doc/ghc/html/libraries
-    ln -s /usr/share/doc/${pkgname}/html ${pkgdir}/usr/share/doc/ghc/html/libraries/${_hkgname}
-    runhaskell Setup copy --destdir=${pkgdir}
-    install -D -m644 LICENSE ${pkgdir}/usr/share/licenses/${pkgname}/LICENSE
-    rm -f ${pkgdir}/usr/share/doc/${pkgname}/LICENSE
+    
+    # Documentation
+    ln -s "/usr/share/doc/${pkgname}/html" \
+        "${pkgdir}/usr/share/doc/ghc/html/libraries/haskeline"
+
+    # License
+    install -D -m644 LICENSE \
+	"${pkgdir}/usr/share/licenses/${pkgname}/LICENSE"
+    rm -f "${pkgdir}/usr/share/doc/${pkgname}/LICENSE"
+    
+    runhaskell Setup copy --destdir="${pkgdir}"
 }
