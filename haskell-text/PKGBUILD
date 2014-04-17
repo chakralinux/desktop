@@ -1,24 +1,25 @@
-# Apps Packages for Chakra, part of www.chakra-project.org
-# Maintainer: H W Tovetjärn (totte) <totte@tott.es>
-# Contributors: Stephen McIntosh <stephenmac7[at]gmail[dot]com>
+# Maintainer: UtG <utg[dot]chakra.linux[at]gmail[dot]com>
+# Contributors: H W Tovetjärn (totte) <totte@tott.es>
+#		Stephen McIntosh <stephenmac7[at]gmail[dot]com>
 #               Thomas Dziedzic <gostrc@gmail.com>
 #               Vesa Kaihlavirta <vesa@archlinux.org>
 #               Arch Haskell Team <arch-haskell@haskell.org>
 
+## NOTE: when you update Haskell packages you'll have to update the entire stack to not break it ##
+
 _hkgname=text
 pkgname=haskell-text
-pkgver=1.0.0.0
-pkgrel=1
+pkgver=1.1.0.1
+pkgrel=2
 pkgdesc="An efficient packed Unicode text type"
 url="http://hackage.haskell.org/package/text"
 license=('custom:BSD3')
 arch=('x86_64')
-makedepends=()
-depends=('ghc=7.6.3-1' 'haskell-array' 'haskell-base>=4.0' 'haskell-bytestring>=0.9' 'haskell-deepseq>=1.1.0.0' 'haskell-ghc-prim')
-options=('strip')
+depends=('ghc=7.6.3-1' 'haskell-deepseq>=1.3.0.2')
+options=('strip' 'staticlibs')
 source=("http://hackage.haskell.org/packages/archive/text/${pkgver}/text-${pkgver}.tar.gz")
-install="haskell-text.install"
-sha512sums=('9f6bf41e65c08840dffc1c1cd7d3c70a6dc6c7b6f3accce20f9c4b724c3b70cf79f5e14aba930a39347be4a89e4a29b0fdb004d2349c7fa210b5daddd84d74b5')
+install="${pkgname}.install"
+md5sums=('e8e1017ed0f0fef2a872569d8f31883e')
 
 build() {
     cd "${srcdir}/text-${pkgver}"
@@ -27,9 +28,9 @@ build() {
         ${PKGBUILD_HASKELL_ENABLE_PROFILING:+-p } \
         --enable-split-objs \
         --enable-shared \
-        --prefix="/usr" \
-        --docdir="/usr/share/doc/haskell-text" \
-        --libsubdir='$compiler/site-local/$pkgid'
+        --prefix=/usr \
+        --docdir=/usr/share/doc/haskell-text \
+        --libsubdir=\$compiler/site-local/\$pkgid
     runhaskell Setup build
     runhaskell Setup haddock
     runhaskell Setup register   --gen-script
@@ -40,19 +41,19 @@ build() {
 package() {
     cd "${srcdir}/text-${pkgver}"
     install -D -m744 register.sh \
-        "${pkgdir}/usr/share/haskell/haskell-text/register.sh"
+        "${pkgdir}/usr/share/haskell/${pkgname}/register.sh"
     install -m744 unregister.sh \
-        "${pkgdir}/usr/share/haskell/haskell-text/unregister.sh"
+        "${pkgdir}/usr/share/haskell/${pkgname}/unregister.sh"
     install -d -m755 "${pkgdir}/usr/share/doc/ghc/html/libraries"
 
     # Documentation
-    ln -s "/usr/share/doc/haskell-text/html" \
+    ln -s "/usr/share/doc/${pkgname}/html" \
         "${pkgdir}/usr/share/doc/ghc/html/libraries/text"
 
     # License
     install -D -m644 LICENSE \
-        "${pkgdir}/usr/share/licenses/haskell-text/LICENSE"
-    rm -f "${pkgdir}/usr/share/doc/haskell-text/LICENSE"
+        "${pkgdir}/usr/share/licenses/${pkgname}/LICENSE"
+    rm -f "${pkgdir}/usr/share/doc/${pkgname}/LICENSE"
 
     runhaskell Setup copy --destdir="${pkgdir}"
 }
