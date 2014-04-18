@@ -1,29 +1,31 @@
-#
-# Apps Packages for Chakra, part of chakra-project.org
-#
-# Maintainer: Adrián Chaves Fernández (Gallaecio) <adriyetichaves@gmail.com>
+# Maintainer: UtG  <utg[dot]chakra.linux[at]gmail[dot]com>
 # Contributors from Arch: Dan McGee <dan@archlinux.org>
 #                         Michael Irwin <6d6469@gmail.com>
 
 pkgname=memcached
-pkgver=1.4.16
+pkgver=1.4.17
 pkgrel=1
 pkgdesc="A distributed memory object caching system"
-arch=(i686 x86_64)
+arch=(x86_64)
 url="http://memcached.org/"
 license=('GPL')
 depends=('libevent')
 optdepends=('perl: for memcached-tool usage')
-backup=('etc/conf.d/memcached')
+install=memcached.install
 source=("http://www.memcached.org/files/$pkgname-$pkgver.tar.gz"
         memcached.service)
-sha1sums=('fdf071b5fd9972bf74f91d43f0b4cba980b83acb'
-          '5bc721d21991c2ec50ef01231527a280374d6477')
+sha1sums=('2b4fc706d39579cf355e3358cfd27b44d40bd79c'
+          'fccdb030495733440c38bc4b8ab629c8609f17eb')
 
 build() {
   cd "$srcdir/$pkgname-$pkgver"
   ./configure --prefix=/usr
   make
+}
+
+check() {
+  cd "$srcdir/$pkgname-$pkgver"
+  make test
 }
 
 package() {
@@ -32,3 +34,4 @@ package() {
   install -D -m 755 scripts/memcached-tool "$pkgdir"/usr/bin/memcached-tool
   install -D -m 644 ../memcached.service "$pkgdir"/usr/lib/systemd/system/memcached.service
 }
+
