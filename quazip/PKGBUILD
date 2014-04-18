@@ -1,30 +1,28 @@
-#
-# Apps Packages for Chakra, part of chakra-project.org
-#
+# Maintainer: UtG  <utg[dot]chakra.linux[at]gmail[dot]com>
 # Contributor: Andrei Nistor <coder[dot]tux[at]chakra-project[dot]org>
-# Maintainer: BrLi <rainman59118[at]gmail.com>
 
 pkgname=quazip
-pkgver=0.5.1
+pkgver=0.6.2
 pkgrel=1
 pkgdesc="C++ wrapper for the Gilles Vollant's ZIP/UNZIP C package"
 url="http://sourceforge.net/projects/quazip/"
-arch=('i686' 'x86_64')
-depends=('qt')
-source=("http://downloads.sourceforge.net/project/quazip/quazip/${pkgver}/quazip-${pkgver}.tar.gz")
 license=('LGPL')
-md5sums=('eec6b9b6f19654230dfcd158f29ea9d0')
+arch=('x86_64')
+depends=('qt')
+source=("http://downloads.sourceforge.net/${pkgname}/${pkgname}-${pkgver}.tar.gz")
+md5sums=('c11f8e2f757be94fd79dc49e5a4be0ca')
 
 build() {
-  cd ${srcdir}/quazip-${pkgver}/quazip
-  qmake PREFIX=${pkgdir}/usr
+  cd ${srcdir}/${pkgname}-${pkgver}/${pkgname}
+  qmake PREFIX=/usr
   make
-  make staticlib
 }
 
 package() {
-  cd ${srcdir}/quazip-${pkgver}/quazip
-  make install
-  cp libquazip.a ${pkgdir}/usr/lib
-}
+  cd ${srcdir}/${pkgname}-${pkgver}/${pkgname}
+  make INSTALL_ROOT="${pkgdir}" install
 
+  install -d "${pkgdir}"/usr/share/apps/cmake-2.8/Modules
+  install -m644 ../FindQuaZip.cmake\
+    "${pkgdir}"/usr/share/apps/cmake-2.8/Modules
+}
