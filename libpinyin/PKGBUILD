@@ -1,33 +1,35 @@
-#
-# Apps Packages for Chakra, part of chakra-project.org
-#
-# Maintainer: Weng Xuetian <wengxt@gmail.com>
+# Maintainer: UtG  <utg[dot]chakra.linux[at]gmail[dot]com>
 
 # include global config
 source ../_buildscripts/${current_repo}-${_arch}-cfg.conf
 
 pkgname=libpinyin
-pkgver=0.9.93
+pkgver=1.0.0
 pkgrel=1
+_modelver=7
 pkgdesc="Library to deal with pinyin."
-arch=('i686' 'x86_64')
+arch=('x86_64')
 url="https://github.com/libpinyin/libpinyin"
 license=('GPL')
-depends=('db')
-makedepends=('automake' 'libtool' 'autoconf')
-options=(!libtool)
-
-source=("https://github.com/libpinyin/libpinyin/archive/${pkgver}.tar.gz")
+depends=('db' 'glib2')
+makedepends=('git' 'libtool' 'autoconf' 'automake')
+source=("git+https://github.com/$pkgname/${pkgname}.git#tag=$pkgver"
+        "http://downloads.sourceforge.net/libpinyin/model${_modelver}.text.tar.gz")
+noextract=("model${_modelver}.text.tar.gz")
+sha512sums=('SKIP'
+            '74a56a23cdca24124037f688ed85a921089155a1b9a0b61e646f805b2bb698c56682c5d6a47ff86657c8b131a831dbee9d5cc5165d4c1f235b77fcd5b2e480ad')
 
 build() {
-  cd ${srcdir}/libpinyin-$pkgver
+  cd ${pkgname}
+
+  cp ../model${_modelver}.text.tar.gz data/
+  sed -i "/wget.*model${_modelver}\.text\.tar\.gz/ d" data/Makefile.am
 
   aclocal && libtoolize --force && autoheader && automake -a && autoconf
-  (./configure --prefix=/usr && make) || return 1
+  ./configure --prefix=/usr && make
 }
 
 package() {
-  cd ${srcdir}/libpinyin-$pkgver
-  make DESTDIR=${pkgdir} install || return 1
+  cd ${pkgname}
+  make DESTDIR="${pkgdir}" install
 }
-md5sums=('5d7391267780f1a585b4c08c56929ec7')
