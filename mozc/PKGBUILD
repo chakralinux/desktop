@@ -3,51 +3,73 @@
 
 ## Mozc compile option
 _bldtype=Release
+#_bldtype=Debug
 
-_zipcoderel=201303
+## NOTE there is a issue with ken_all.csv v201311 and v201312: 
+## http://code.google.com/p/mozc/issues/detail?id=205
+## therefore use 201310 version instead
+_zipcoderel=201310
 _protobuf_ver=2.5.0
+_gyp_rev=1775
 
 pkgbase=mozc
-pkgdesc="A Japanese Input Method for Chromium OS, Windows, Mac and Linux (the Open Source Edition of Google Japanese Input)"
-pkgname=('mozc' 'fcitx-mozc')
-pkgver=1.11.1502.102
+pkgver=1.13.1651.102
 _patchver=${pkgver}.1
 pkgrel=1
-arch=('i686' 'x86_64')
+pkgdesc="A Japanese Input Method for Chromium OS, Windows, Mac and Linux (the Open Source Edition of Google Japanese Input)"
+pkgname=('mozc' 'fcitx-mozc')
+arch=('x86_64')
 url="http://code.google.com/p/mozc/"
 license=('BSD' 'custom')
 makedepends=('pkg-config' 'python2' 'gtest' 'zinnia' 'qt' 'curl' 'fcitx')
+changelog=ChangeLog
 source=(http://mozc.googlecode.com/files/mozc-${pkgver}.tar.bz2
+	http://downloads.sourceforge.net/project/pnsft-aur/mozc/gyp-${_gyp_rev}.tar.xz
         http://downloads.sourceforge.net/pnsft-aur/ken_all-${_zipcoderel}.zip
         http://downloads.sourceforge.net/pnsft-aur/jigyosyo-${_zipcoderel}.zip
 	http://protobuf.googlecode.com/files/protobuf-${_protobuf_ver}.tar.bz2
 	http://download.fcitx-im.org/fcitx-mozc/fcitx-mozc-${_patchver}.patch
-	http://download.fcitx-im.org/fcitx-mozc/fcitx-mozc-icon.tar.gz
-)
-sha1sums=('72c06d409da957d6696bbe1341c118ba4c267877'
-          '00d7d3fa1233ef75b0f919b9e4c10c9692d7743b'
-          'cdb8f3535cdac0c25d24c103107889b9fb4b9e18'
+	### icons seem removed from fcitx-im.org/...
+	#http://download.fcitx-im.org/fcitx-mozc/fcitx-mozc-icon.tar.gz
+	### ...use my icons-backup:
+	https://dl.dropboxusercontent.com/u/66275722/Chakra/fcitx-mozc-icons.tar.gz
+	)
+sha1sums=('24680b3d350e5332f2235b9c1342127f6ef0fd63'
+          'f0795090078fd870b116e702f0ca50017db7940d'
+          '73cc37839c22f4c52392d7d32bbc59ff63156481'
+          '5640ba09ea7c509da688de292ed1b5bbf1d1e8d5'
           '62c10dcdac4b69cc8c6bb19f73db40c264cb2726'
-          '52da3ae38605bfcdc303734ac991ff29e17902dc'
-          '883f4fc489a9ed1c07d2d2ec37ca72509f04ea5d')
-
+          'f5719fadcbf1a85c0ea40dea234aaaea9988dafc'
+          'd1d57c3bac80f2a97569654468f46b790f8c9e38')
 
 build() {
   cd "${srcdir}/${pkgbase}-${pkgver}"
 
+  # Apply fcitx patch
   rm unix/fcitx -rf
   patch -Np2 -i ${srcdir}/fcitx-mozc-${_patchver}.patch || return 1
+  
+  # Adjust to use python2
+  find . -name  \*.py        -type f -exec sed -i -e "1s|python.*$|python2|"  {} +
+  find . -regex '.*\.gypi?$' -type f -exec sed -i -e "s|'python'|'python2'|g" {} +
+  
+  # Copy gyp
+  cp -rf "${srcdir}"/gyp-${_gyp_rev}/* third_party/gyp
+  
+  # Copy protobuf to be linked statically
+  cp -rf "${srcdir}/protobuf-${_protobuf_ver}" third_party/protobuf
+
 
   # Generate zip code seed
   msg "Generating zip code seed..."
-  python2 dictionary/gen_zip_code_seed.py --zip_code="${srcdir}/KEN_ALL.CSV" --jigyosyo="${srcdir}/JIGYOSYO.CSV" >> data/dictionary_oss/dictionary09.txt
+  python2 dictionary/gen_zip_code_seed.py \
+    --zip_code="${srcdir}/KEN_ALL.CSV" --jigyosyo="${srcdir}/JIGYOSYO.CSV" \
+    >> data/dictionary_oss/dictionary09.txt
   msg "Done."
 
-  # Copy protobuf to be linked statically
-  cp -rf "${srcdir}/protobuf-${_protobuf_ver}" protobuf/files
 
   msg "Starting make..."
-
+  
   # Get make -j option from $MAKEFLAGS
   _jobs=`sed -n -e "s/.*--jobs=\([0-9]\+\).*/\1/p" -e "s/.*-j *\([0-9]\+\).*/\1/p" <<< "$MAKEFLAGS"`
   _jobs=${_jobs:-1}
@@ -55,7 +77,7 @@ build() {
   _targets="server/server.gyp:mozc_server gui/gui.gyp:mozc_tool "
   _targets+="unix/fcitx/fcitx.gyp:fcitx-mozc "
 
-  GYP_DEFINES="enable_gtk_renderer=0" python2 build_mozc.py gyp --channel_dev=0
+  QTDIR=/usr GYP_DEFINES="enable_gtk_renderer=0" python2 build_mozc.py gyp --channel_dev=0
   python2 build_mozc.py build_tools -c $_bldtype -j $_jobs
   python2 build_mozc.py build -c $_bldtype -j $_jobs $_targets
 
@@ -65,7 +87,7 @@ build() {
 
 package_mozc() {
   pkgdesc="A Japanese Input Method for Chromium OS, Windows, Mac and Linux (the Open Source Edition of Google Japanese Input)"
-  arch=('i686' 'x86_64')
+  arch=('x86_64')
   groups=('mozc-im')
   depends=('curl' 'qt' 'zinnia')
   replaces=('mozc-server' 'mozc-utils-gui')
