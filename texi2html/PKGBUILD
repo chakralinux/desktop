@@ -1,29 +1,26 @@
-#
-# Chakra Packages for Chakra, part of chakra-project.org
-#
-# contributor (x86_64): Giuseppe Calà <jiveaxe@gmail.com>
+# Maintainer: 	 UtG  <utg[dot]chakra.linux[at]gmail[dot]com>
 
 # include global config
 source ../_buildscripts/${current_repo}-${_arch}-cfg.conf
 
 pkgname=texi2html
-pkgver=1.82
-pkgrel=2
+pkgver=5.0
+pkgrel=1
 pkgdesc="Converts texinfo documents to HTML"
-arch=('i686' 'x86_64')
+arch=('x86_64')
 url="http://www.nongnu.org/texi2html/"
 license=('GPL')
 depends=('perl')
-
-source=(http://download.savannah.gnu.org/releases/texi2html/$pkgname-$pkgver.tar.gz)
-md5sums=('7ea537a8c81ffbf5421b39c0333e91df')
+source=("http://download.savannah.gnu.org/releases/texi2html/$pkgname-$pkgver.tar.bz2")
+md5sums=('f15ac876fcdc8be865b16535f480aa54')
 
 build() {
   cd ${srcdir}/$pkgname-$pkgver
   ./configure --prefix=/usr
-  sed -i "s|mandir = /usr/man|mandir = \${prefix}/share/man|g" Makefile
-  make || return 1
-  make prefix=${pkgdir}/usr install
-  rm -r ${pkgdir}/usr/share/texinfo
-  rm -r ${pkgdir}/usr/share/info
+  make
+}
+
+package() {
+  cd "$srcdir/$pkgname-$pkgver"
+  make DESTDIR="$pkgdir"  install
 }
