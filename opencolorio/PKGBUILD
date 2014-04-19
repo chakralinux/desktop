@@ -1,12 +1,8 @@
-#
-# Chakra Packages for Chakra, part of chakra-project.org
-#
-# maintainer abveritas@chakra-project.org
+# Maintainer: UtG  <utg[dot]chakra.linux[at]gmail[dot]com>
 # contributor Sven-Hendrik Haase <sh@lutzhaase.com>
 
 pkgname=opencolorio
-pkgver=1.0.8
-_pkgver=8883824
+pkgver=1.0.9
 pkgrel=1
 pkgdesc="A color management framework for visual effects and animation"
 arch=('x86_64')
@@ -15,11 +11,11 @@ license=('BSD')
 depends=('python3')
 makedepends=('cmake')
 source=("http://github.com/imageworks/OpenColorIO/tarball/v$pkgver")
-sha1sums=('9b9bac9ed85c84f53775686eb72f3d612b148fef')
+sha1sums=('a015cb51b9b0ea0cdb3989fc23e1c18ad69511e0')
 
 build() 
 {
-  mv imageworks-OpenColorIO-$_pkgver $pkgname-$pkgver
+  mv imageworks-OpenColorIO-* $pkgname-$pkgver
   cd $pkgname-$pkgver
    
   cmake -DCMAKE_INSTALL_PREFIX=/usr .
@@ -34,5 +30,3 @@ package()
 
   install -Dm644 LICENSE $pkgdir/usr/share/licenses/$pkgname/LICENSE
 }
-
-# vim:set ts=2 sw=2 et:
