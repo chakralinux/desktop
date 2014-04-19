@@ -1,19 +1,19 @@
-#
-# Apps Packages for Chakra, part of chakra-project.org
-#
-# Maintainer: Weng Xuetian <wengxt@gmail.com>
+# Maintainer: 	 UtG  <utg[dot]chakra.linux[at]gmail[dot]com>
+# Contributor: 	 GONG Chen <chen dot sst at gmail dot com>
+# Contributor: 	 網軍總司令
 
 pkgname=librime
-pkgver=1.0
+pkgver=1.1
 pkgrel=1
 pkgdesc="Rime input method engine"
-arch=('i686' 'x86_64')
+arch=('x86_64')
 url="http://code.google.com/p/rimeime/"
 license=('GPL3')
-depends=('boost' 'google-glog' 'kyotocabinet' 'opencc' 'yaml-cpp>=0.5.0')
+depends=('boost-libs' 'google-glog' 'kyotocabinet' 'opencc' 'yaml-cpp>=0.5.0')
 optdepends=('brise: Rime schema repository')
-makedepends=('cmake')
+makedepends=('cmake' 'boost')
 source=("http://rimeime.googlecode.com/files/$pkgname-$pkgver.tar.gz")
+md5sums=('9f7831a40cd3d8af3fa08b073164238a')
 
 build() {
   cd "${srcdir}/$pkgname"
@@ -27,5 +27,3 @@ package() {
   cd "${srcdir}/$pkgname"
   make DESTDIR="$pkgdir" install
 }
-
-md5sums=('9ade135afaf88a9e1c76ebf478070725')
