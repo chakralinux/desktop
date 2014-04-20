@@ -1,23 +1,50 @@
-#
-# Apps Packages for Chakra, part of chakra-project.org
-#
-
+# Maintainer: 	UtG  <utg[dot]chakra.linux[at]gmail[dot]com>
+# Contributor: Jonas Heinrich <onny@project-insanity.org>
+# Contributor: Jordi De Groof <jordi (dot) degroof (at) gmail (dot) com>
 
 pkgname=freecad
 pkgver=0.13.1830
-pkgrel=3
+pkgrel=5
 pkgdesc='A general purpose 3D CAD modeler'
 arch=('x86_64')
 url='http://www.freecadweb.org/wiki'
 license=('GPL')
-depends=('boost-libs' 'curl' 'opencascade>=6.5.2' 'pivy-hg' 'python2-pyqt4' 'xerces-c' 'libspnav' 'shared-mime-info' 'hicolor-icon-theme')
+depends=('boost-libs' 'curl' 'opencascade>=6.6.0' 'pivy-hg' 'python2-pyqt4' 'xerces-c' 'libspnav' 'shared-mime-info' 'hicolor-icon-theme')
 makedepends=('boost' 'eigen3' 'gcc-fortran' 'swig' 'xerces-c' 'desktop-file-utils' 'zlib' 'cmake' 'coin>=3.1.3-2')
 options=(!libtool !makeflags)
 install=freecad.install
-source=("http://downloads.sourceforge.net/sourceforge/free-cad/freecad-${pkgver}.tar.gz" "${pkgname}.desktop" "${pkgname}.xml")
+source=("http://downloads.sourceforge.net/sourceforge/free-cad/freecad-${pkgver}.tar.gz" 		"freecad-0.13.diff"
+	"${pkgname}.desktop"
+	"${pkgname}.xml"
+	"BRepOffsetAPI_MakePipeShellPyImp.patch")
 md5sums=('13b8fddef12f5f8419dcf4adbab596eb'
+	 '493490db7844d7d5b9426fab8da5acea '
          'f930c02689c0b2cc75b9dab833e46932'
-         'c2f4154c8e4678825411de8e7fa54c6b')
+         'c2f4154c8e4678825411de8e7fa54c6b'
+         '8aeceda60d5260d8c201201ac06e5335')
+
+         
+         
+_installdir=/opt/$pkgname
+# I prefer installing in opt because installing
+# in /usr there are non standard dir.
+# However if you prefer /usr uncomment the following line
+# _installdir=/usr
+
+prepare(){
+  cd "${srcdir}/freecad-${pkgver}/"
+  # compatibility issues with OCC-6.6
+  for _FILE in $( grep -Rl "BRepTools::OuterShell" * )
+  do
+    sed -e "s|BRepTools|BRepClass3d|g" -i "$_FILE"
+  done
+
+  # these patch contain some code taken from upstream
+  # thanks to cbuehler 
+  patch -Np1 -i ../freecad-0.13.diff
+  patch -p0 -i ../BRepOffsetAPI_MakePipeShellPyImp.patch
+}
+
 
 build() {
   cd "${srcdir}/freecad-${pkgver}/"
@@ -25,15 +52,10 @@ build() {
   mkdir -p build
   cd build
 
-  cmake -DCMAKE_INSTALL_PREFIX:PATH=/usr/lib/$pkgname .. \
+  cmake -DCMAKE_INSTALL_PREFIX:PATH=${_installdir} .. \
   	-DOCC_INCLUDE_DIR:PATH=/opt/opencascade/inc/ \
 	-DPYTHON_EXECUTABLE:FILEPATH=/usr/bin/python2 \
 	-DFREECAD_USE_EXTERNAL_PIVY:BOOL=ON
-
-# Seems that this configurations doesn't work (tested with version 0.13.1830)
-#	-DCMAKE_INSTALL_DATADIR:PATH=/usr/share/${pkgname} .. \
-#	-DCMAKE_INSTALL_INCLUDEDIR:PATH=/usr/include/${pkgname} .. \
-#	-DCMAKE_INSTALL_DOCDIR:PATH=/usr/share/doc/${pkgname} .. \
 
 # add these options to copmile without coin debian patch
 # http://sourceforge.net/apps/mantisbt/free-cad/view.php?id=664
@@ -53,12 +75,12 @@ package() {
   cd "${srcdir}/freecad-${pkgver}/build"
 
   # Install main program
-  make DESTDIR=${pkgdir} install
+  make DESTDIR="${pkgdir}" install
 
   # Symlink to /usr/bin
-  mkdir -p ${pkgdir}/usr/bin/
-  ln -sf /usr/lib/${pkgname}/bin/FreeCAD "${pkgdir}/usr/bin/${pkgname}"
-  ln -sf /usr/lib/${pkgname}/bin/FreeCADCmd "${pkgdir}/usr/bin/freecadcmd"
+  mkdir -p "${pkgdir}/usr/bin/"
+  ln -sf "${_installdir}/bin/FreeCAD" "${pkgdir}/usr/bin/freecad"
+  ln -sf "${_installdir}/bin/FreeCADCmd" "${pkgdir}/usr/bin/freecadcmd"
 
   # Installs Qt plugin
   install -Dm755 ../src/Tools/plugins/widget/libFreeCAD_widgets.so "${pkgdir}/usr/lib/qt/plugins/designer/libFreeCAD_widgets.so"
@@ -73,5 +95,3 @@ package() {
    mkdir -p "${pkgdir}/usr/share/icons/hicolor/48x48/mimetypes/"
    ln -s /usr/share/${pkgname}/freecad.xpm "${pkgdir}/usr/share/icons/hicolor/48x48/mimetypes/application-x-extension-fcstd.xpm"
 }
-
-
