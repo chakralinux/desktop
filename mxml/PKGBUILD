@@ -1,29 +1,25 @@
-# Maintainer: Daniele Cocca <jmc@chakra-project.org>
+# Maintainer: 	UtG  <utg[dot]chakra.linux[at]gmail[dot]com>
+# Contributor: 	Daniele Cocca <jmc@chakra-project.org>
 
 pkgname=mxml
-pkgver=2.7
+pkgver=2.8
 pkgrel=1
-pkgdesc="Mini-XML is a small XML library that you can use to read and write XML and XML-like data files in your application without requiring large non-standard libraries."
-arch=('i686' 'x86_64')
+pkgdesc="Mini-XML is a small XML parsing library: read/write XML and XML-like data files in your application without requiring large non-standard libraries."
+arch=('x86_64')
 url="http://www.minixml.org/"
-license=('custom:Mini-XML License')
-source=("http://ftp.easysw.com/pub/${pkgname}/${pkgver}/${pkgname}-${pkgver}.tar.gz"
-        'LICENSE')
-md5sums=('76f2ae49bf0f5745d5cb5d9507774dc9'
-         '27ec281067efafcdd080f0cf8304c22f')
+license=('LGPL')
+source=("http://www.msweet.org/files/project3/$pkgname-$pkgver.tar.gz")
+md5sums=('d85ee6d30de053581242c4a86e79a5d2')
 
 build() {
   cd "${srcdir}/${pkgname}-${pkgver}"
-  ./configure --prefix=/usr
+  ./configure --prefix=/usr --enable-shared
   make
 }
 
 package() {
   cd "${srcdir}/${pkgname}-${pkgver}"
   make DSTROOT="${pkgdir}" install
+  chmod -x "$pkgdir/usr/lib/libmxml.a"
 
-  # Install the license file
-  install -D -m644 "${srcdir}/LICENSE" "${pkgdir}/usr/share/licenses/${pkgname}/LICENSE"
 }
-
-# vim:set ts=2 sw=2 et:
