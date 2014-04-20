@@ -2,14 +2,13 @@
 
 export OS_NAME=`uname`
 
-export PATH=$CASROOT/bin:$PATH;
-export LD_LIBRARY_PATH=$CASROOT/lib:$LD_LIBRARY_PATH;
+export PATH="$PATH:$CASROOT/bin"
+export LD_LIBRARY_PATH="${LD_LIBRARY_PATH:+$LD_LIBRARY_PATH:}$CASROOT/lib"
 
 export CSF_LANGUAGE=us
 export MMGT_CLEAR=1
 export CSF_EXCEPTION_PROMPT=1
 
-export CSF_MDTVFontDirectory=$CASROOT/src/FontMFT
 export CSF_SHMessage=$CASROOT/src/SHMessage
 export CSF_MDTVTexturesDirectory=$CASROOT/src/Textures
 export CSF_XSMessage=$CASROOT/src/XSMessage
