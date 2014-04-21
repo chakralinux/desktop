@@ -1,20 +1,20 @@
-# Maintainer: Neophytos Kolokotronis <tetris4 AT gmail DOT com>
+# Maintainer: 	UtG  <utg[dot]chakra.linux[at]gmail[dot]com>
 # Contributions from AUR: https://aur.archlinux.org/packages/librecad/
 
 pkgname=librecad
-pkgver=2.0.2
+pkgver=2.0.3
 pkgrel=1
 pkgdesc="A 2D CAD drawing tool based on the community edition of QCad"
 arch=('x86_64')
 url="http://www.librecad.org/"
 license=('GPL')
-depends=('qt5-base' 'qt5-svg' 'qt5-tools' 'muparser')
+depends=('qt5-base' 'qt5-svg' 'qt5-tools' 'libxcb' 'muparser')
 makedepends=('boost' 'imagemagick')
 conflicts=('librecad-git')
 replaces=('librecad-svn' 'caduntu' 'caduntu-svn')
 install=librecad.install
 source=("${pkgname}-${pkgver}.tar.gz::https://codeload.github.com/LibreCAD/LibreCAD/tar.gz/${pkgver}")
-md5sums=('0081a4028780d8a610c9f0aab8ac4eb6')
+sha256sums=('e6a24b8b9bdfe9916c6d404d94e43e91aeeaa17d1a4f7a080afe7479105715c6')
 
 prepare() {
 	cd "${srcdir}/LibreCAD-${pkgver}"
@@ -59,4 +59,3 @@ package() {
 	mkdir -p "${pkgdir}/usr/share/librecad/"
 	cp -r unix/resources/{library,patterns,fonts,qm} "${pkgdir}/usr/share/librecad/"
 }
-
