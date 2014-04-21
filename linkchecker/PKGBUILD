@@ -3,14 +3,16 @@
 pkgname=linkchecker
 _pkgname=LinkChecker
 pkgver=9.1
-pkgrel=1
+pkgrel=2
 pkgdesc="An utility to check HTML documents for broken links."
 arch=('x86_64')
 url="http://wummel.github.io/linkchecker/"
 license=('GPL')
-depends=('python2>=2.5' 'python2-dns')
+depends=('python2>=2.5' 'python2-requests>=2.2.0')
 makedepends=('qt')
-optdepends=('python-qscintilla: for gui version')
+optdepends=('python2-pyqt4: for gui version'
+	    'qscintilla-python2: for gui version'
+	    'python2-dns: a DNS toolkit for Python')
 #source=(http://github.com/downloads/wummel/${pkgname}/${_pkgname}-${pkgver}.tar.xz)
 source=(http://wummel.github.io/linkchecker/dist/${_pkgname}-$pkgver.tar.gz)
 sha256sums=('563f2e00d66e0b34df2e40344ee4e95e4fbc965acbebaf00fcb9cc91864f62cb')
@@ -25,4 +27,3 @@ package() {
   cd $srcdir/${_pkgname}-$pkgver
   python2 setup.py install --root=$pkgdir
 }
-
