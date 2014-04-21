@@ -1,0 +1,78 @@
+# maintainer almack@chakraos.org
+
+pkgname=octopi
+pkgver=0.3.2
+pkgrel=3
+pkgdesc="Octopi, a powerful Pacman frontend using Qt libs"
+url="https://octopiproject.wordpress.com/"
+arch=('x86_64')
+license=('GPL3')
+depends=('qt5-declarative' 'pacman' 'pacmanlogviewer' 'mirror-check')
+makedepends=('automoc4' 'qt')
+#conflicts=('oktopi')
+#replaces=('oktopi')
+categories=('system') 
+screenshot=('http://octopiproject.files.wordpress.com/2014/01/octopi_in_kaos.png')
+
+gitsha=92770c720bcdab5ef379cf9093d33a6a15492107
+source=("$pkgname"::"git://github.com/aarnt/${pkgname}.git#commit=${gitsha}")
+md5sums=('SKIP')
+
+prepare(){
+    cd "${srcdir}/${pkgname}"
+    # patch .desktop files
+    sed -i 's/Categories=GNOME;GTK;System;/Categories=System;Tools;/g' octopi.desktop octopi-notifier.desktop
+    
+    sed -i 's/\/\/#define NO_GTK_STYLE/#define NO_GTK_STYLE/g' src/main.cpp notifier/octopi-notifier/main.cpp
+}
+
+build() {
+   cd "${srcdir}/${pkgname}"
+   
+   #qmake octopi.pro
+   qmake octopi.pro
+   make
+   
+   pushd "notifier/pacmanhelper"
+    qmake pacmanhelper.pro
+    make
+   popd
+   
+   pushd "notifier/octopi-notifier"
+    qmake octopi-notifier.pro
+    make
+   popd
+   
+   pushd "repoeditor"
+    qmake repoeditor.pro
+    make
+   popd
+}
+
+package() {
+   cd "${srcdir}/${pkgname}"
+   
+   mkdir -p ${pkgdir}/usr/share/icons
+   install -m 644 -p resources/images/octopi_green.png ${pkgdir}/usr/share/icons/octopi.png
+   install -m 644 -p resources/images/octopi_green.png ${pkgdir}/usr/share/icons/octopi_green.png
+   install -m 644 -p resources/images/octopi_red.png ${pkgdir}/usr/share/icons/octopi_red.png
+   install -m 644 -p resources/images/octopi_transparent.png ${pkgdir}/usr/share/icons/octopi_transparent.png
+   install -m 644 -p resources/images/octopi_yellow.png ${pkgdir}/usr/share/icons/octopi_yellow.png
+   
+   mkdir -p ${pkgdir}/usr/bin
+   cp bin/octopi ${pkgdir}/usr/bin
+   cp notifier/bin/octopi-notifier ${pkgdir}/usr/bin
+   cp repoeditor/bin/octopi-repoeditor ${pkgdir}/usr/bin
+   
+   mkdir -p ${pkgdir}/usr/share/applications
+   install -m644 -p octopi.desktop ${pkgdir}/usr/share/applications
+   install -m644 -p octopi-notifier.desktop ${pkgdir}/usr/share/applications
+   
+   #Pacmanhelper service files
+   install -D -m755 notifier/bin/pacmanhelper ${pkgdir}/usr/lib/octopi/pacmanhelper
+
+   install -D -m644 notifier/pacmanhelper/polkit/org.octopi.pacman.policy ${pkgdir}/usr/share/polkit-1/actions/org.octopi.pacman.policy
+   install -D -m644 notifier/pacmanhelper/polkit/org.octopi.pacmanhelper.conf ${pkgdir}/etc/dbus-1/system.d/org.octopi.pacmanhelper.conf
+   install -D -m644 notifier/pacmanhelper/polkit/org.octopi.pacmanhelper.xml ${pkgdir}/usr/share/dbus-1/interfaces/org.octopi.pacmanhelper.xml
+   install -D -m644 notifier/pacmanhelper/polkit/org.octopi.pacmanhelper.service ${pkgdir}/usr/share/dbus-1/system-services/org.octopi.pacmanhelper.service
+}
