@@ -1,39 +1,38 @@
-# Maintainer: Neophytos Kolokotronis <tetris4 AT gmail DOT com>
-# contributor: abveritas[at]chakra-project[dot]org>
+# Maintainer: 	UtG <utg[dot]chakra.linux[at]gmail[dot]com>
+# contributor:  abveritas[at]chakra-project[dot]org>
 
 pkgname=qftp
-pkgver=1.5.2
+pkgver=1.5.3
 pkgrel=1
 pkgdesc="A Qt client for FTP file transfers."
 arch=('x86_64')
-url="http://www.phenix.bnl.gov/WWW/publish/hpereira/software/index.php?page=package&package_list=software_list_qt4&package=qftp&full=1"
-license=('GPL')
-depends=('qt5-base')
+url="http://hugo.pereira.free.fr/software/index.php?page=package&package_list=software_list_qt4&package=qftp&full=0"
+license=('GPLv2')
+depends=('qt')
 categories=('network')
-screenshot=('http://www.phenix.bnl.gov/WWW/publish/hpereira/software/screenshot/qftp_connect.png')
-source=("http://www.phenix.bnl.gov/WWW/publish/hpereira/software/tgz/${pkgname}-${pkgver}.tar.gz")
-md5sums=('afaeb21dba650b27688246328b76712e')
-
+source=("http://hugo.pereira.free.fr/software/tgz/${pkgname}-${pkgver}.tar.gz"
+	"qftp.desktop")
+sha256sums=('7a5a09e1710952935757afacf5e54288c4a00a15c883ff4d493fd179e3c235f9'
+            'f47e84a94e6be6361b56e581110e549cc7533ccca425f2a4ba98470dba43969b')
+        
 build() {
-  cd "${srcdir}"
-
-  mkdir -p build
-  cd build
+  cd "${srcdir}/${pkgname}-${pkgver}"
 
   # The default LDFLAGS="-Wl,--hash-style=gnu -Wl,--as-needed" specified
   # in /etc/makepkg.conf will break the linkage procedure.
-  unset LDFLAGS
-  
-  cmake "${srcdir}/${pkgname}-${pkgver}" \
-        -DCMAKE_BUILD_TYPE=RelWithDebInfo \
-        -DCMAKE_INSTALL_PREFIX=/usr \
-        -DUSE_QT5=ON
-     
+  export LDFLAGS="-lX11" # Fix linking error.
+
+  cmake ./ -DCMAKE_INSTALL_PREFIX=/usr
   make
 }
 
-package() {
-  cd "${srcdir}/build"
-  make install DESTDIR="${pkgdir}"
-}
 
+package() {
+  cd "${srcdir}/${pkgname}-${pkgver}"
+  make install DESTDIR="${pkgdir}" 
+  install -Dm644 COPYING "$pkgdir/usr/share/licenses/$pkgname/COPYING"
+  
+  install -d "${pkgdir}"/usr/share/{pixmaps,applications}
+  install -m644 "${srcdir}"/qftp.desktop "${pkgdir}"/usr/share/applications
+  install -m644 "${srcdir}"/"${pkgname}-${pkgver}"/qftp.png "${pkgdir}"/usr/share/pixmaps/qftp.png
+}
