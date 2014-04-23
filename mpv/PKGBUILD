@@ -1,51 +1,46 @@
-# Maintainer: UtG <utg.chakra.linux[at]gmail[dot]com>
+# Maintainer:  UtG <utg.chakra.linux[at]gmail[dot]com>
 # Contributor: Neophytos Kolokotronis <tetris4 AT gmail DOT com>
 # Contributor: Samir Benmendil <ram-z[at]chakra-project[dot]org>
  
 pkgname=mpv
-pkgver=0.3.7
+pkgver=0.3.8
 pkgrel=1
 pkgdesc="A movie player and encoder for linux, based on MPlayer/mplayer2"
 arch=('x86_64')
 license=('GPL')
 url="http://mpv.io"
-depends=('portaudio' 'ffmpeg' 'lcms2' 'libxinerama' 'libdvdread' 'libquvi' 'libbluray' 'mpg123' 'libxv' 'libxkbcommon' 'libva' 'desktop-file-utils' 'xdg-utils' 'libass')
-makedepends=('waf' 'mesa' 'python3-docutils')
-options=(!emptydirs)
+depends=('pulseaudio' 'ffmpeg' 'lcms2' 'libdvdread' 'libquvi' 'libgl' 'libxinerama'  'mpg123' 'libxv' 'libxkbcommon' 'libva'  'libass' 'lirc-utils' 'wayland' 'desktop-file-utils' 'hicolor-icon-theme' 'xdg-utils' 'lua' 'libdvdnav' 'libcdio-paranoia' 'libbluray')
+makedepends=('mesa' 'python3-docutils' 'ladspa')
+options=('!emptydirs' '!buildflags')
 install=${pkgname}.install
 source=("https://github.com/mpv-player/$pkgname/archive/v${pkgver}.tar.gz")
-md5sums=('0e1398c324775998b0e60fdb11b9e06d')
+md5sums=('f7fc14f52c1958f6b603245b0595efa9')
+
+prepare() {
+  cd $pkgname-$pkgver
+  ./bootstrap.py
+}
  
 build() {
-  # Custom CFLAGS break the mpv build
-  unset CFLAGS
-  unset LDFLAGS
- 
   cd "$pkgname-$pkgver"
  
-  waf configure --prefix=/usr \
+  ./waf configure --prefix=/usr \
       --confdir=/etc/mpv \
-      --enable-wayland \
-      --disable-joystick \
-      --disable-radio \
-      --disable-radio-capture \
-      --disable-radio-v4l2 \
-      --disable-libbs2b \
-      --disable-direct3d \
-      --disable-corevideo \
-      --disable-cocoa \
-      --disable-coreaudio
-  waf build
+      --enable-joystick \
+      --enable-pulse
+  ./waf build
 }
  
 package() {
   cd "$srcdir/$pkgname-$pkgver"
  
-  waf install --destdir="$pkgdir" 
+  ./waf install --destdir="$pkgdir" 
   
   install -d ${pkgdir}/usr/share/doc/mpv/examples
  
   # some extra useful stuff "make install" doesn't install
-  install -m644 etc/{input,example}.conf  "$pkgdir"/usr/share/doc/mpv/examples
-  install -m644 DOCS/{encoding.rst,tech}
+  install -m644 etc/{input,example}.conf \
+      "$pkgdir"/usr/share/doc/mpv/examples
+  install -m644 DOCS/{encoding.rst,tech-overview.txt} \
+    "$pkgdir"/usr/share/doc/mpv
 }
