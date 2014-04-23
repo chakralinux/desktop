@@ -1,28 +1,25 @@
-#
-# Apps Packages for Chakra, part of chakra-project.org
-#
 # Maintainer: Adrián Chaves Frenández (Gallaecio) <adriyetichaves@gmail.com>
  
 pkgname=happy
-pkgver=1.18.5
+pkgver=1.19.3
 pkgrel=1
 pkgdesc="The Parser Generator for Haskell"
 url="http://www.haskell.org/happy/"
-arch=('i686' 'x86_64')
+arch=('x86_64')
 license=("custom:BSD3")
-depends=(gmp)
-makedepends=(ghc haskell-mtl)
+depends=('gmp')
+makedepends=('ghc' 'haskell-mtl')
 options=(strip)
 source=(http://hackage.haskell.org/packages/archive/$pkgname/$pkgver/$pkgname-$pkgver.tar.gz)
+md5sums=('fb9f4aec9d9e3b92be95a8abc43704b4')
 
 
-build() {
+package() {
   cd ${srcdir}/${pkgname}-${pkgver}
 
-  runhaskell Setup.lhs configure --prefix=/usr || return 1
-  runhaskell Setup.lhs build || return 1
-  runhaskell Setup.lhs copy --destdir=$pkgdir || return 1
+  runhaskell Setup.lhs configure --prefix=/usr
+  runhaskell Setup.lhs build
+  runhaskell Setup.lhs copy --destdir=$pkgdir
 
   install -D -m644 LICENSE ${pkgdir}/usr/share/licenses/$pkgname/LICENSE
 }
-md5sums=('9e77b67df7b6a4d7273383cc890f39e8')
