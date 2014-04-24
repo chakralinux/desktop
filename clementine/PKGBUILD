@@ -3,7 +3,7 @@
 
 pkgname=clementine
 _pkgname=Clementine
-pkgver=1.2.2
+pkgver=1.2.3
 pkgrel=1
 pkgdesc="A modern music player and library organiser and a port of Amarok 1.4, with some features rewritten to take advantage of Qt4."
 url="http://www.clementine-player.org/"
@@ -20,16 +20,9 @@ optdepends=('gstreamer0.10-base-plugins: for more open formats'
             'gstreamer0.10-bad-plugins: for use with "Bad" plugin libraries'
             'gstreamer0.10-ugly-plugins: for use with "Ugly" plugin libraries')
 categories=('multimedia')
-source=("https://github.com/clementine-player/${_pkgname}/archive/${pkgver}.tar.gz"
-	"${pkgname}-unistd.patch")
-sha1sums=('9ab4110ea35185701cfc6b56863c991784c12134'
-          'edd8d0148cf04ba1321492be208699a9b8007967')
+source=("https://github.com/clementine-player/${_pkgname}/archive/${pkgver}.tar.gz")
+sha1sums=('2a27eda3a13185ba9f0f7b75dcf7173e6828384a')
 
-prepare() {
-  cd Clementine-${pkgver}
-
-  patch -Np1 -i ../${pkgname}-unistd.patch
-}
 
 build() {
   cd ${_pkgname}-${pkgver}
