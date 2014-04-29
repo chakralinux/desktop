@@ -1,10 +1,10 @@
-#
-# Chakra Packages for Chakra, part of chakra-project.org
-#
+# maintainer: almack[at]chakraos[dot]org>
 
 pkgname=kdeplasma-applets-ccr-plasmoid
+_gitname=ccr-plasmoid
+_gitsha=bbd4513
 pkgver=0.2.2
-pkgrel=2
+pkgrel=3
 depends=('kdebase-workspace')
 makedepends=('make' 'cmake' 'automoc4')
 pkgdesc="Plasmoid for handling the Chakra Community Repo"
@@ -12,38 +12,21 @@ arch=('x86_64')
 license=('GPL')
 categories=('accessories')
 screenshot=('')
-url="http://chakra-project.org/"
-
-_gitroot=git://gitorious.org//chakra/ccr-plasmoid.git
-_gitname=ccr-plasmoid
-_gitsha=a134dd1edf648e025515bda8a4ef1d9c1f02012c
+url="http://chakraos.org/"
+source=("$pkgname"::"git://gitorious.org/chakra/${_gitname}.git#commit=${_gitsha}")
+md5sums=('SKIP')
  
 build() {
-  cd "$srcdir"
-  msg "Connecting to GIT server...."
- 
-  if [[ -d "$_gitname" ]]; then
-    cd "$_gitname" && git pull origin
-    msg "The local files are updated."
-  else
-    git clone "$_gitroot" "$_gitname"
-  fi
- 
-  msg "GIT checkout done or server timeout"
-  msg "Starting build..."
- 
-  rm -rf "$srcdir/$_gitname-build"
-  git clone "$srcdir/$_gitname" "$srcdir/$_gitname-build"
-  cd "$srcdir/$_gitname-build"
-  git reset --hard ${_gitsha}
- 
-  mkdir build
-  cd build
+  cd "$srcdir/$pkgname"
+  
+  if [[ -e ${pkgname}-${pkgver}-build ]]; then rm -rf ${pkgname}-build; fi
+  mkdir ${pkgname}-${pkgver}-build
+  cd ${pkgname}-${pkgver}-build
   cmake .. -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=`kde4-config --prefix`
   make
 }
  
 package() {
-  cd "$srcdir/$_gitname-build/build"
+  cd "$srcdir/$pkgname/${pkgname}-${pkgver}-build"
   make DESTDIR="$pkgdir/" install
 }
