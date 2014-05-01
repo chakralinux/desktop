@@ -1,0 +1,23 @@
+#
+# Chakra Packages for Chakra, part of chakra-project.org
+#
+# maintainer: almack[at]chakraos[dog]org>
+
+pkgname=yakuake-themes-sirius
+pkgver=1.0
+pkgrel=1
+pkgdesc="Chakra Sirius Yakuake Theme"
+url="http://chakra-project.org"
+license=("GPL" "Creative Commons, BY-ND")
+arch=('any')
+depends=('yakuake')
+groups=()
+source=("http://chakra.sourceforge.net/sources/chakra-artwork/Sirius/Yakuake/Sirius-Yakuake-Theme-$pkgver.tar.gz")
+md5sums=('a5919e9c2e78cf748a95bcc5cd82315f')
+
+package() {
+	cd ${srcdir}/Chakra-Sirius-Yakuake-Theme
+
+	mkdir -pv $pkgdir/usr/share/apps/yakuake/skins/Chakra-Sirius-Yakuake-Theme
+	cp -Rv * $pkgdir/usr/share/apps/yakuake/skins/Chakra-Sirius-Yakuake-Theme
+}
