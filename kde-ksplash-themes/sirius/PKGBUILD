@@ -1,0 +1,25 @@
+# Maintainer: almack@chakraos[dog]org
+
+# Include global configuration
+source ../_buildscripts/${current_repo}-${_arch}-cfg.conf
+
+pkgname=kde-ksplash-themes-sirius
+_THEME="Sirius"
+pkgver=1.0
+pkgrel=1
+pkgdesc="Chakra Sirius KSplash-Theme"
+url="http://chakraos.org"
+license=("Creative Commons, BY-NC-SA")
+arch=('any')
+depends=('ttf-opensans')
+groups=("${_pkgprefix}" "${_pkgprefix}-complete" "${_pkgprefix}-uninstall" "${_pkgprefix}-minimal" "${_pkgprefix}-ksplash-themes")
+
+source=("http://chakra.sourceforge.net/sources/chakra-artwork/${_THEME}/KSplash-QML/${_THEME}-KSplash-QML-${pkgver}.tar.gz")
+md5sums=('abc8ac98f69c9638e13e2f005cd34f13')
+
+package()
+{
+  cd ${srcdir}/${_THEME}
+  mkdir -pv $pkgdir/usr/share/apps/ksplash/Themes/$_THEME
+  cp -Rv * $pkgdir/usr/share/apps/ksplash/Themes/$_THEME
+}

@@ -1,0 +1,24 @@
+# Maintainer: almack <almack@chakraos.org>
+
+# Include global configuration
+source ../_buildscripts/${current_repo}-${_arch}-cfg.conf
+
+pkgname=kde-kdm-themes-sirius
+_themename="sirius" # that's the folder name
+_THEME="Sirius" # the real theme name
+pkgver=1.0
+pkgrel=1
+pkgdesc="Chakra Sirius KDM-Theme"
+arch=('any')
+url="http://www.chakraos.org"
+license=("Creative Commons, BY-NC-SA")
+groups=("${_pkgprefix}" "${_pkgprefix}-complete" "${_pkgprefix}-uninstall" "${_pkgprefix}-minimal" "${_pkgprefix}-kdm-themes")
+
+source=("http://chakra.sourceforge.net/sources/chakra-artwork/${_THEME}/KDM/${_THEME}-KDM-${pkgver}.tar.gz")
+md5sums='4f1847b63ed47cbdc820b541e1a72779'
+
+package() {
+  cd ${srcdir}/${_themename}
+  mkdir -pv $pkgdir/usr/share/apps/ksplash/Themes/$_themename
+  cp -Rv * $pkgdir/usr/share/apps/ksplash/Themes/$_themename
+}
