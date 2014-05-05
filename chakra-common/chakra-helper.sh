@@ -49,7 +49,7 @@ and what you expected to happen along with this URL." \
         kdialog \
             --title "$TITLE" \
             --error "\"chakra-paste\" is not installed on your system, \n\n \
-paste the report on paste.chakra-project.org. \n \
+paste the report on paste.chakraos.org. \n \
 Search for similar issues on the web. If you don't find any, \n \
 create a new topic on the forum with a clear and detailed \n \
 explanation of what you are trying to do, what actually happens \n \
