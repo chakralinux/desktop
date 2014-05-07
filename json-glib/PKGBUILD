@@ -1,7 +1,7 @@
-# Maintainer: Weng Xuetian <wengxt AT gmail com>
+# Maintainer: Manuel "UtG" <utg[dot]chakra.linux[at]gmail[dot]com>
 
 pkgname=json-glib
-pkgver=0.16.2
+pkgver=1.0.0
 pkgrel=1
 pkgdesc="JSON library built on GLib"
 arch=('x86_64')
@@ -10,17 +10,18 @@ license=('GPL')
 depends=('glib2')
 makedepends=('gobject-introspection')
 options=('!libtool')
-source=(http://ftp.gnome.org/pub/GNOME/sources/${pkgname}/${pkgver::4}/${pkgname}-${pkgver}.tar.xz)
-sha256sums=('a95475364ec27ab1d2a69303cf579018558bfb6981e3498b3aaf1e6401f7422c')
+source=(http://ftp.gnome.org/pub/GNOME/sources/${pkgname}/${pkgver:0:3}/${pkgname}-${pkgver}.tar.xz)
+sha256sums=('dbf558d2da989ab84a27e4e13daa51ceaa97eb959c2c2f80976c9322a8f4cdde')
+
 
 build(){
-  cd ${srcdir}/${pkgname}-${pkgver}
+  cd "${srcdir}/${pkgname}-${pkgver}"
   ./configure --prefix=/usr
   make
 }
 
 package(){
-  cd ${srcdir}/${pkgname}-${pkgver}
+  cd "${srcdir}/${pkgname}-${pkgver}"
   make DESTDIR=${pkgdir} install
 }
 

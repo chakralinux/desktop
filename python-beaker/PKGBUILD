@@ -1,31 +1,45 @@
-# Maintainer: Adrián Chaves Fernández (Gallaecio) <adriyetichaves gmail.com>
+# Maintainer: Manuel "UtG" <utg[dot]chakra.linux[at]gmail[dot]com>
 # Contributor: Neo Kolokotronis <tetris4@gmail.com>
 
-pkgname=python2-beaker
+pkgname=('python2-beaker' 'python3-beaker')
 _pkgname=Beaker
 pkgver=1.6.4
-pkgrel=1
+pkgrel=2
 arch=('x86_64')
-license=('BSD')
+license=('custom')
 pkgdesc="Caching and sessions WSGI middleware for use with web applications and stand-alone Python scripts and applications."
 url="http://beaker.groovie.org/"
-depends=('python2')
-makedepends=('python2-setuptools')
-provides=('python-beaker')
-conflicts=('python-beaker')
-replaces=('python-beaker')
+makedepends=('python2-setuptools' 'python3-setuptools')
 source=("http://cheeseshop.python.org/packages/source/B/$_pkgname/$_pkgname-$pkgver.tar.gz")
 md5sums=('c2e102870ed4c53104dec48ceadf8e9d')
 
-package() {
-  cd $srcdir/$_pkgname-$pkgver
+build() {
+    cp -r ${_pkgname}-${pkgver} python2-${_pkgname}-${pkgver}
 
-  # Python 2 fix.
-  sed -i "s#/usr/bin/python#/usr/bin/python2#" beaker/crypto/pbkdf2.py
+    cd "${srcdir}/${_pkgname}-${pkgver}"
+    sed -i "s#/usr/bin/python#/usr/bin/python3#" beaker/crypto/pbkdf2.py
+    python3 setup.py build
 
-  # Installation.
+    cd "${srcdir}/python2-${_pkgname}-${pkgver}"
+    sed -i "s#/usr/bin/python#/usr/bin/python2#" beaker/crypto/pbkdf2.py
+    python2 setup.py build
+}
+
+package_python2-beaker() {
+  depends=('python2')
+  provides=('python-beaker')
+  conflicts=('python-beaker')
+  replaces=('python-beaker')
+  
+  cd "${srcdir}/python2-${_pkgname}-${pkgver}"
   python2 setup.py install --root=$pkgdir --optimize=1
-
-  # License.
   install -D -m644 LICENSE $pkgdir/usr/share/licenses/$pkgname/license.txt
+}
+
+package_python3-beaker() {
+    depends=('python3')
+
+    cd "${srcdir}/${_pkgname}-${pkgver}"
+    python3 setup.py install --root="${pkgdir}" --optimize=1
+    install -D -m644 LICENSE "${pkgdir}/usr/share/licenses/python-beaker/LICENSE"
 }
