@@ -2,9 +2,8 @@
 
 pkgname=kapudan
 _pkgname=kapudan  
-pkgver=2014.01.29
-pkgrel=2
-branch="curie"
+pkgver=2014.05
+pkgrel=1
 pkgdesc="Chakra's desktop greeter, a fork of Pardus's Kaptan."
 arch=('x86_64')
 url='http://gitorious.org/chakra/kapudan/'
@@ -17,23 +16,10 @@ depends=('python2' 'kde-baseapps-konsole' 'kde-runtime'
 makedepends=('python-distribute' 'git' 'intltool')
 optdepends=('spun: update notifications'
             'clamav: for the security page')
-source=("${pkgname}-${pkgver}.tar.xz")
-md5sums=('e3aecd4b03ea1bc48ea5bfa5b990dda9')
-
-# create tarball: source PKGBUILD && mksource
-
-mksource() {
-    if [ "${1}" = "" ] ; then
-        git clone git://gitorious.org/chakra/${pkgname}.git ${pkgname}
-    else
-        git clone -b "${1}" git://gitorious.org/chakra/${pkgname}.git ${pkgname}
-    fi
-    pushd ${pkgname}
-    popd
-    rm ${pkgname}/PKGBUILD
-    tar -cvJf ${pkgname}-${pkgver}.tar.xz ${pkgname}
-    md5sum ${pkgname}-${pkgver}.tar.xz
-}
+_gitname=kapudan
+_gitsha=046e0f5
+source=("$pkgname"::"git://gitorious.org/chakra/${_gitname}.git#commit=${_gitsha}")
+md5sums=('SKIP')
 
 package() {
     cd "${srcdir}/${pkgname}"
