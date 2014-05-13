@@ -1,9 +1,9 @@
 # Contributor: Anke Boersma <abveritas@chakra-project.org>
 # Maintainer: Bruce Liu <brli@users.sourceforge.net>
-
+_pkgname=QupZilla
 pkgname=qupzilla
-pkgver=1.6.5
-pkgrel=2
+pkgver=1.6.6
+pkgrel=1
 pkgdesc="A very fast open source browser based on WebKit core"
 url="http://www.qupzilla.com"
 arch=('x86_64')
@@ -13,17 +13,17 @@ optdepends=('bash-completion: bash completion support')
 categories=('network') 
 install=${pkgname}.install
 screenshot='http://www.qupzilla.com/screens/kde.png'
-source=("https://github.com/QupZilla/qupzilla/archive/v${pkgver}.tar.gz"
+source=("https://github.com/QupZilla/qupzilla/releases/download/v${pkgver}/${_pkgname}-${pkgver}.tar.xz"
 	'qupzilla.patch'
         'theme-app-icon.patch'
 	'start-white.png')
-sha1sums=('52f41bc68ee9d6b38977510e587cb1e2e201135c'
+sha1sums=('a2d5fb4ad860b9cd5e5cfc74b22d1fbbd3a8b566'
           '6c0450b4684d3a001ee5c7f601ba82e35b7db945'
           'a782a0ee5191ce5e0177ff5b9f1d55c248b829ea'
           '6ec67993bda3054d4210cc08177b124f873774e3')
 
 prepare() {
-  cd "${srcdir}/${pkgname}-${pkgver}/src/lib"
+  cd "${srcdir}/${_pkgname}-${pkgver}/src/lib"
   patch -uNp1 -i ${srcdir}/qupzilla.patch
 
   ## note that the following patches are backward patch, should be removed at next(>1.6.x) release
@@ -34,13 +34,13 @@ build() {
   export USE_WEBGL="true"
   export KDE_INTEGRATION="true"
   
-  cd "${srcdir}/${pkgname}-${pkgver}/"
+  cd "${srcdir}/${_pkgname}-${pkgver}/"
   qmake
   make
 }
 
 package() {
-  cd "${srcdir}/${pkgname}-${pkgver}/"
+  cd "${srcdir}/${_pkgname}-${pkgver}/"
 
   make INSTALL_ROOT="${pkgdir}" install
   install -Dm 644 "${srcdir}/start-white.png" "${pkgdir}/usr/share/icons/start-white.png"
