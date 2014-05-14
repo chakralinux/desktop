@@ -1,14 +1,11 @@
-#
-# Chakra Packages for Chakra, part of chakra-project.org
-#
 # maintainer (i686): Phil Miller <philm[at]chakra-project[dog]org>
 # maintainer (x86_64): Manuel Tortosa <manutortosa[at]chakra-project[dot]org>
 
 # include global config
-source ../_buildscripts/${current_repo}-${_arch}-cfg.conf
+#source ../_buildscripts/${current_repo}-${_arch}-cfg.conf
 
 pkgname=kchmviewer
-pkgver=6.0
+pkgver=6.1
 pkgrel=1
 pkgdesc="A .chm files (MS HTML help file format) viewer"
 arch=('i686' 'x86_64')
@@ -21,22 +18,26 @@ options=('libtool')
 install=${pkgname}.install
 source=("http://downloads.sourceforge.net/${pkgname}/${pkgname}-${pkgver}.tar.gz")
         #'kchmview-build-fix.diff')
-md5sums=('940fdeeb5f50cdd0d0611f7a13e003f9')
+md5sums=('09471178529b47cbeb3bcb68200a81a4')
          #'555b08c8aca9883e7916dc1fe11a8aea')
 
+prepare() {
+  cd "${srcdir}/${pkgname}-${pkgver}"
+  sed -e "/keyeventfilter.cpp/d" -i src/CMakeLists.txt
+}
 build() {
   cd "${srcdir}/${pkgname}-${pkgver}"
 
   # got patch from http://bugs.gentoo.org/320191
   #patch -Np1 -i ${srcdir}/kchmview-build-fix.diff
-
-  cmake . -DCMAKE_INSTALL_PREFIX=/usr
+  [[ -d build ]] || mkdir build ; cd build
+  cmake -DCMAKE_INSTALL_PREFIX=/usr ..
 
   make
 }
 
 package() {
-  cd "${srcdir}/${pkgname}-${pkgver}"
+  cd "${srcdir}/${pkgname}-${pkgver}/build"
 
   make DESTDIR=${pkgdir} install
 
