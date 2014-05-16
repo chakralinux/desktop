@@ -4,7 +4,7 @@
 
 pkgname=libkgapi
 pkgver=2.1.0
-pkgrel=1
+pkgrel=2
 pkgdesc='A KDE-based library for accessing various Google services via their public API'
 url='https://projects.kde.org/projects/kdereview/libkgapi'
 arch=('x86_64')
@@ -21,14 +21,14 @@ source=("http://download.kde.org/stable/${pkgname}/${pkgver}/src/${pkgname}-${pk
 sha512sums=('879fdb9c162850befad2f1553c3acce1b7201eabe5c8eb38ef03b9c1ee30abcbbc7b852afb6a1011c0e5faac13aff29a23100a706ecb062351fa3af74aa7b5e5')
 
 prepare() {
-    mkdir -p "${srcdir}/build"
+    [[ -d ${srcdir}/build ]] ||mkdir -p "${srcdir}/build"
 }
 
 build() {
     cd "${srcdir}/build"
     cmake "../${pkgname}-${pkgver}" \
-        -DCMAKE_BUILD_TYPE=${_build_type} \
-        -DCMAKE_INSTALL_PREFIX=${_installprefix} \
+        -DCMAKE_BUILD_TYPE=Release \
+        -DCMAKE_INSTALL_PREFIX=/user \
         -DKDE4_BUILD_TESTS=ON
     make
 }
