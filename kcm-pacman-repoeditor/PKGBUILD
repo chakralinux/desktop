@@ -1,0 +1,36 @@
+#
+# Apps Packages for Chakra, part of chakraos.org
+#
+# maintainer almack@chakraos.org
+
+pkgname=kcm-pacman-repoeditor
+_pkgname=kcmpacmanrepoeditor
+pkgver=0.1.0
+pkgdesc="A KDE control module for pacman's repositories management."
+pkgrel=1
+arch=('x86_64')
+url="https://github.com/gcala/kcmpacmanrepoeditor"
+license=('GPL3')
+makedepends=('cmake')
+depends=('kdelibs')
+categories=('system')
+#source=("$pkgname"::"git://github.com/gcala/${pkgname}.git#commit=${gitsha}")
+source=("https://github.com/gcala/${pkgname}/archive/master.zip")
+md5sums=('b1a4424cb886e9e84a5308df4db3c4aa')
+
+build(){
+  cd "${srcdir}/${_pkgname}-master"
+
+  mkdir -p build
+  cd build
+
+  cmake .. \
+    -DCMAKE_BUILD_TYPE=Release \
+    -DCMAKE_INSTALL_PREFIX=/usr
+  make
+}
+
+package(){
+  cd "${srcdir}/${_pkgname}-master/build"
+  make DESTDIR="${pkgdir}" install
+}
