@@ -17,8 +17,8 @@ pkgname=('libreoffice-common'
 	'libreoffice-postgresql-connector'
 	'libreoffice-extension-wiki-publisher'
 	'libreoffice-extension-nlpsolver')
-_LOver=4.2.1.1
-pkgver=4.2.1
+_LOver=4.2.4.2
+pkgver=4.2.4
 pkgrel=1
 arch=('x86_64')
 license=('LGPL3')
@@ -77,11 +77,12 @@ source=(${_mirror}/${pkgbase}{,-help,-translations}-${_LOver}.tar.xz
 	${_additional_source_url}/libatomic_ops-7_2d.zip
 	${_additional_source_url}/libe-book-0.0.3.tar.bz2
 	${_additional_source_url}/libabw-0.0.2.tar.bz2
-	make-pyuno-work-with-system-wide-module-install.diff)
+	make-pyuno-work-with-system-wide-module-install.diff
+	prevent_KDE_Qt_from_interfering_with_the_session_manager.diff)
 
-md5sums=('76d9612950ae1de8818943b681ba71c3'
-         'fda77ccb5be32ab54304082fe8d15841'
-         'cf7873e5e1ffc8b63d42bad5b2f37a2b'
+md5sums=('698a482f0cacd8b5eba9865fdd8a5403'
+         'a0ed88ac1758d2f87687fcf4bb7c9432'
+         '3db05930dc7c694d2cf58875b3245c2e'
          '15cb8c0803064faef0c4ddf5bc5ca279'
          '1f24ab1d39f4a51faf22244c94a6203f'
          '35c94d2df8893241173de1d16b6034c0'
@@ -118,7 +119,8 @@ md5sums=('76d9612950ae1de8818943b681ba71c3'
          'c0b86562d5aa40761a87134f83e6adcf'
          '2f1ceaf2ac8752ed278e175447d9b978'
          '40fa48e03b1e28ae0325cc34b35bc46d'
-         '07d2bf5ad839a394cca008b3ec6e7bb1')
+         '07d2bf5ad839a394cca008b3ec6e7bb1'
+         'fa2109339289663cb8ea7cf27cc22f4e')
 
 noextract=(
 	15cb8c0803064faef0c4ddf5bc5ca279-boost_1_54_0.tar.bz2
@@ -180,6 +182,10 @@ prepare() {
    
     # fix not upstreamable pyuno paths - patch taken from Debian
     patch -Np1 -i ${srcdir}/make-pyuno-work-with-system-wide-module-install.diff
+    
+    # fix some startup issues with kde4 integration
+    # https://bugs.archlinux.org/task/39819 - https://bugs.freedesktop.org/show_bug.cgi?id=77128
+    patch -Np1 -i ${srcdir}/prevent_KDE_Qt_from_interfering_with_the_session_manager.diff
     
 	#use the CFLAGS but remove the LibO overridden ones
 	for i in $CFLAGS; do
@@ -370,9 +376,19 @@ provides=('libreoffice-extension-pdfimport'
  # workaround all packages now depend on that file
  cp ${srcdir}/fakeinstall/usr/lib/libreoffice/share/registry/writer.xcd ${pkgdir}/usr/lib/libreoffice/share/registry/writer.xcd
 
- # move dicts to en-US langpack to avoid file conflicts with en-GBen-ZA packages
- mv ${pkgdir}/usr/lib/libreoffice/share/wordbook/en-GB.dic ${srcdir}/
- mv ${pkgdir}/usr/lib/libreoffice/share/wordbook/en-US.dic ${srcdir}/
+ # add missing files from Beanshell provider
+ # create directories from *list.txt file
+ for directory in `grep ^%dir ${srcdir}/libreoffice-$_LOver/file-lists/orig/gid_Module_Optional_Extensions_Script_Provider_For_BS`; do
+   install -dm755 ${pkgdir}/${directory/\%dir/}
+ done
+ # install files into the pkg from fakeinstall dir
+ for file in `grep -v ^%dir $srcdir/libreoffice-$_LOver/file-lists/orig/gid_Module_Optional_Extensions_Script_Provider_For_BS`; do
+   dirname=`dirname $file`
+   # check if directory has been already been created - some are missing like manpages
+   [ -d ${pkgdir}/$dirname ] || install -dm755 ${pkgdir}/$dirname
+   # mv file from fakeinstall to pkgdir
+   mv ${srcdir}/fakeinstall${file} ${pkgdir}$file || /bin/true # some double file entries make it fail
+ done
 }
 
 package_libreoffice-base() {
@@ -597,8 +613,8 @@ package_libreoffice-writer() {
    mv ${srcdir}/fakeinstall${file} ${pkgdir}$file
  done
 
- # workaround all packages now depend on that file
- rm ${pkgdir}/usr/lib/libreoffice/share/registry/writer.xcd
+ # workaround this file belongs now to common
+ rm -vf ${pkgdir}/usr/lib/libreoffice/share/registry/writer.xcd
 }
 
 package_libreoffice-en-US() {
