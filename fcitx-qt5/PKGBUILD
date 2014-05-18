@@ -2,9 +2,9 @@
 
 pkgname=fcitx-qt5
 pkgver=0.1.1
-pkgrel=3
+pkgrel=4
 pkgdesc="QT5 IM Module for Fcitx"
-arch=('i686' 'x86_64')
+arch=('x86_64')
 url="http://code.google.com/p/fcitx"
 license=('GPL')
 depends=('fcitx>=4.2.7' 'qt5-base')
@@ -17,10 +17,10 @@ build() {
   [[ -d build ]] || mkdir -p build
   cd build
 
-#  export Qt5Core_DIR=/opt/qt5
-#  export Qt5Gui_DIR=/opt/qt5
-#  export Qt5DBus_DIR=/opt/qt5
-#  export Qt5Widgets_DIR=/opt/qt5
+  export Qt5Core_DIR=/usr/lib/qt5
+  export Qt5Gui_DIR=/usr/lib/qt5
+  export Qt5DBus_DIR=/usr/lib/qt5
+  export Qt5Widgets_DIR=/usr/lib/qt5
 
   cmake -DCMAKE_INSTALL_PREFIX=/usr -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_LIBDIR=lib ..
   make
