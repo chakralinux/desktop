@@ -5,12 +5,12 @@
 pkgname=python3-pyside
 _pkgname=pyside-pyside
 pkgver=1.2.2
-pkgrel=1
+pkgrel=2
 pkgdesc='CPython Qt bindings generated using the Shiboken generator. (Python 3 build)'
 arch=('i686' 'x86_64')
 license=('LGPL')
 url='http://www.pyside.org'
-depends=('python3-shiboken>=1.1.2' 'python3' 'qt>=4.8' 'phonon' 'mesa')
+depends=('python3-shiboken>=1.2.0' 'python3' 'qt>=4.8' 'phonon' 'mesa')
 makedepends=('cmake' 'automoc4' 'graphviz')
 replaces=('pyside-py3')
 source=("${_pkgname}-${pkgver}.tar.gz::https://qt.gitorious.org/pyside/pyside/archive/${pkgver}.tar.gz"
@@ -28,8 +28,8 @@ build(){
     cd $srcdir/${_pkgname}/build
     cmake .. -DCMAKE_INSTALL_PREFIX=/usr \
              -DCMAKE_BUILD_TYPE=Release  \
-             -DBUILD_TESTS=OFF  \
-             -Dpyside_SUFFIX=-python3 
+             -DBUILD_TESTS=OFF
+#             -Dpyside_SUFFIX=-python3
     make
 }
 
