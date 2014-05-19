@@ -1,19 +1,19 @@
 # Maintainer: Michael Haesel <michael[dot]haesel[at]gmail[dot]com>
 
 pkgname=mumble
-pkgver=1.2.5
+pkgver=1.2.6
 pkgrel=1
 arch=('x86_64')
 pkgdesc="A voice chat application similar to TeamSpeak."
-license=('GPL')
+license=('BSD')
 depends=('qt' 'speex' 'lsb-release' 'libxi' 'avahi' 'libsndfile' 'protobuf' 'libpulse' 'opus')
 makedepends=('boost' 'mesa')
-options=('!libtool')
 categories=('communication')
+install=${pkgname}.install
 url="http://mumble.sourceforge.net/"
 screenshot="http://mumble.sourceforge.net/static/Mumble%20--%201.2.3.png"
-source=("http://sourceforge.net/projects/${pkgname}/files/${pkgname^}/${pkgver}/${pkgname}-${pkgver}.tar.gz")
-sha1sums=('2f25c892139cd2c9dba5bfe711562b79991a17aa')
+source=("http://downloads.sourceforge.net/mumble/${pkgname}-${pkgver}.tar.gz")
+sha256sums=('876cdecfb89798ab45020cdae0d64bd0fa899a9a97c2c7f4a6e706d4165fb6ff')
 
 build() {
   cd ${pkgname}-${pkgver}
@@ -21,7 +21,7 @@ build() {
   # Building mumble
   qmake main.pro \
     CONFIG+="bundled-celt no-bundled-opus no-bundled-speex no-speechd no-g15 no-xevie no-server \
-    no-embed-qt-translations packaged" \
+    no-embed-qt-translations no-update packaged" \
     DEFINES+="PLUGIN_PATH=/usr/lib/mumble"
   make release
 }
