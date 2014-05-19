@@ -2,13 +2,13 @@
 
 pkgname=qtcreator
 pkgver=3.1.0
-pkgrel=2
+pkgrel=3
 pkgdesc="Lightweight, cross-platform integrated development environment."
 arch=('x86_64')
 url="http://qt.digia.com/"
 license=('LGPL')
-makedepends=('qt-private-headers>=4.8.4' 'git')
-depends=('qt>=4.8.4')
+makedepends=('qt5-private-headers' 'qt5-base' 'git' 'mesa' 'clang')
+depends=('qt5-tools' 'qt5-quick1' 'qt5-quickcontrols')
 optdepends=('qt-docs: for the integrated Qt documentation'
             'gdb: for the debugger'
             'cmake: for cmake project suppport'
@@ -33,7 +33,7 @@ build() {
   mkdir build
   cd build
 
-  qmake "${srcdir}/qt-creator-opensource-src-${pkgver}/qtcreator.pro"
+  qmake-qt5 "${srcdir}/qt-creator-opensource-src-${pkgver}/qtcreator.pro"
   make
   make docs -j1
 }
