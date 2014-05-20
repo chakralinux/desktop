@@ -1,19 +1,23 @@
 # Maintainer: Adrián Chaves Fernández (Gallaecio) <adriyetichaves@gmail.com>
 
 pkgname=opal
-pkgver=3.12.8
+pkgver=3.12.9
 pkgrel=1
 pkgdesc="Open Phone Abstraction Library"
 arch=('x86_64')
 url="http://www.opalvoip.org/"
 license=('MPL')
 depends=('gsm' 'libtheora' 'ptlib' 'silc-toolkit' 'speex' 'x264')
-makedepends=('ffmpeg-compat')
+makedepends=('ffmpeg')
 source=(http://downloads.sourceforge.net/opalvoip/$pkgname-$pkgver.tar.bz2)
-md5sums=('db928c30ae0de43b6063a17dc6fe5106')
+md5sums=('fccfc4d7491ce1a3be04aee10ac38241')
 
 build() {
   cd $srcdir/$pkgname-$pkgver
+
+  export PKG_CONFIG_PATH=/usr/lib/pkgconfig
+  export LD_LIBRARY_PATH=/usr/lib
+  export PTLIBPLUGINDIR=/usr/lib/ptlib-3.12.9:/usr/lib/opal-3.12.9
 
   CXXFLAGS="$CXXFLAGS -fpermissive" \
   ./configure \
