@@ -1,39 +1,40 @@
-#
-# Apps Packages for Chakra, part of chakra-project.org
-#
 # maintainer (i686): Phil Miller <philm[at]chakra-project[dog]org>
 # maintainer (x86_64): Manuel Tortosa <manutortosa[at]chakra-project[dot]org>
 # contributor Fabien Valthier <hcoohb[at]gmail[dog]com>
 
 pkgname=mp3diags
-pkgver=1.0.12.079
+pkgver=1.2.01
 pkgrel=1
 pkgdesc="GUI-based application that allows end-users to identify issues with their MP3 files, fix some of the issues and make other changes."
 url="http://mp3diags.sourceforge.net/"
 license=('GPL')
 arch=('i686' 'x86_64')
-depends=('qt' 'phonon' 'boost-libs')
-makedepends=('make' 'gcc' 'boost')
+depends=('qt' 'boost-libs')
+makedepends=('boost')
 optdepends=('mp3gain: MP3 normalization support')
 categories=('multimedia')
 install=mp3diags.install
-http://downloads.sourceforge.net/project/mp3diags/mp3diags-src/MP3Diags-1.0.12.079.tar.gz?r=http%3A%2F%2Fsourceforge.net%2Fprojects%2Fmp3diags%2Ffiles%2Fmp3diags-src%2F&ts=1380835420&use_mirror=heanet
-source=("http://downloads.sourceforge.net/project/mp3diags/mp3diags-src/MP3Diags-1.0.12.079.tar.gz")
-md5sums=('ee7234b9c06072a0cdc6f8ca91738afb')
+source=("http://downloads.sourceforge.net/project/mp3diags/mp3diags-src/MP3Diags-${pkgver}.tar.gz")
+md5sums=('1156d59f70e15bde1f6a80146b541057')
 
 build() {
   cd ${srcdir}/MP3Diags-$pkgver
-
+  msg 'Building main application...'
   ./AdjustMt.sh
-
   qmake
   make
+
+  msg 'Building translation...'
+  ./MakeTranslations.sh
 }
 
 package() {
   cd ${srcdir}/MP3Diags-$pkgver
-  install -d ${pkgdir}/usr/share/{applications,pixmaps}
   install -D bin/MP3Diags ${pkgdir}/usr/bin/MP3Diags
-  install -D desktop/MP3Diags.desktop ${pkgdir}/usr/share/applications
-  install -D desktop/MP3Diags48.png ${pkgdir}/usr/share/pixmaps/MP3Diags.png
+  install -D desktop/MP3Diags.desktop ${pkgdir}/usr/share/applications/MP3Diags.desktop
+  for i in "16" "22" "24" "32" "36" "40" "48"; do
+		mkdir -p "${pkgdir}/usr/share/icons/hicolor/${i}x${i}/apps"
+		install -p -m644 "desktop/MP3Diags${i}.png" "${pkgdir}/usr/share/icons/hicolor/${i}x${i}/apps/MP3Diags.png"
+  done
+  install -Dm644 ${srcdir}/MP3Diags-$pkgver/src/translations/*.qm ${pkgdir}/usr/share/${pkgname}-${pkgver}/translations/
 }
