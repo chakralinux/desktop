@@ -3,416 +3,140 @@
 #
 
 pkgbase="libreoffice-i18n"
-pkgname=('libreoffice-af'
-         'libreoffice-am'
-         'libreoffice-ar'
-         'libreoffice-as'
-         'libreoffice-ast'
-         'libreoffice-be'
-         'libreoffice-bg'
-         'libreoffice-bn-IN'
-         'libreoffice-bn'
-         'libreoffice-bo'
-         'libreoffice-br'
-         'libreoffice-brx'
-         'libreoffice-bs'
-         'libreoffice-ca-XV'
-         'libreoffice-ca'
-         'libreoffice-cs'
-         'libreoffice-cy'
-         'libreoffice-da'
-         'libreoffice-de'
-         'libreoffice-dgo'
-         'libreoffice-dz'
-         'libreoffice-el'
-         'libreoffice-en-GB'
-         'libreoffice-en-ZA'
-         'libreoffice-eo'
-         'libreoffice-es'
-         'libreoffice-et'
-         'libreoffice-eu'
-         'libreoffice-fa'
-         'libreoffice-fi'
-         'libreoffice-fr'
-         'libreoffice-ga'
-         'libreoffice-gd'
-         'libreoffice-gl'
-         'libreoffice-gu'
-         'libreoffice-he'
-         'libreoffice-hi'
-         'libreoffice-hr'
-         'libreoffice-hu'
-         'libreoffice-id'
-         'libreoffice-is'
-         'libreoffice-it'
-         'libreoffice-ja'
-         'libreoffice-ka'
-         'libreoffice-kk'
-         'libreoffice-km'
-         'libreoffice-kn'
-         'libreoffice-ko'
-         'libreoffice-kok'
-         'libreoffice-ks'
-         'libreoffice-ku'
-         'libreoffice-lb'
-         'libreoffice-lo'
-         'libreoffice-lt'
-         'libreoffice-lv'
-         'libreoffice-mai'
-         'libreoffice-mk'
-         'libreoffice-ml'
-         'libreoffice-mn'
-         'libreoffice-mni'
-         'libreoffice-mr'
-         'libreoffice-my'
-         'libreoffice-nb'
-         'libreoffice-ne'
-         'libreoffice-nl'
-         'libreoffice-nn'
-         'libreoffice-nr'
-         'libreoffice-nso'
-         'libreoffice-oc'
-         'libreoffice-om'
-         'libreoffice-or'
-         'libreoffice-pa-IN'
-         'libreoffice-pl'
-         'libreoffice-pt-BR'
-         'libreoffice-pt'
-         'libreoffice-ro'
-         'libreoffice-ru'
-         'libreoffice-rw'
-         'libreoffice-sa-IN'
-         'libreoffice-sat'
-         'libreoffice-sd'
-         'libreoffice-sh'
-         'libreoffice-si'
-         'libreoffice-sid'
-         'libreoffice-sk'
-         'libreoffice-sl'
-         'libreoffice-sq'
-         'libreoffice-sr'
-         'libreoffice-ss'
-         'libreoffice-st'
-         'libreoffice-sv'
-         'libreoffice-sw-TZ'
-         'libreoffice-ta'
-         'libreoffice-te'
-         'libreoffice-tg'
-         'libreoffice-th'
-         'libreoffice-tn'
-         'libreoffice-tr'
-         'libreoffice-ts'
-         'libreoffice-tt'
-         'libreoffice-ug'
-         'libreoffice-uk'
-         'libreoffice-uz'
-         'libreoffice-ve'
-         'libreoffice-vi'
-         'libreoffice-xh'
-         'libreoffice-zh-CN'
-         'libreoffice-zh-TW'
-         'libreoffice-zu')
-_rcver=4.1.6.2
-pkgver=4.1.6
-pkgrel=1
+
+_rcver=4.2.4.2
+pkgver=4.2.4
+pkgrel=2
+depends=("libreoffice-common>=$pkgver")
 
 _oodlver=${pkgver}
 #_oodlver=${_rcver}
 _dirver=${_rcver}
 
-pkgdesc="LibreOffice language/localisation files"
 arch=('any')
 url="http://www.documentfoundation.org"
 license=('LGPL')
 makedepends=('rpmextract')
 
 # http://wiki.documentfoundation.org/Language_Teams
-
-#http://download.documentfoundation.org/mirrors/all.html
 _url="http://download.documentfoundation.org/libreoffice/stable"
-#_url="http://download.documentfoundation.org/libreoffice/testing"
-#_url="http://dev-builds.libreoffice.org/pre-releases"
-#_url="http://www.libreoffice.org/download/pre-releases"
 
 #_url+="/${pkgver}-rc2/rpm/x86"
 _url+="/${pkgver}/rpm/x86"
+#_url+="/rpm/x86"
 
-source=(${_url}/LibreOffice_${_oodlver}_Linux_x86_rpm_langpack_af.tar.gz
-        ${_url}/LibreOffice_${_oodlver}_Linux_x86_rpm_langpack_am.tar.gz
-        ${_url}/LibreOffice_${_oodlver}_Linux_x86_rpm_langpack_ar.tar.gz
-        ${_url}/LibreOffice_${_oodlver}_Linux_x86_rpm_langpack_as.tar.gz
-        ${_url}/LibreOffice_${_oodlver}_Linux_x86_rpm_{langpack,helppack}_ast.tar.gz
-        ${_url}/LibreOffice_${_oodlver}_Linux_x86_rpm_langpack_be.tar.gz
-        ${_url}/LibreOffice_${_oodlver}_Linux_x86_rpm_{langpack,helppack}_bg.tar.gz
-        ${_url}/LibreOffice_${_oodlver}_Linux_x86_rpm_{langpack,helppack}_bn-IN.tar.gz
-        ${_url}/LibreOffice_${_oodlver}_Linux_x86_rpm_{langpack,helppack}_bn.tar.gz
-        ${_url}/LibreOffice_${_oodlver}_Linux_x86_rpm_{langpack,helppack}_bo.tar.gz
-        ${_url}/LibreOffice_${_oodlver}_Linux_x86_rpm_langpack_br.tar.gz
-        ${_url}/LibreOffice_${_oodlver}_Linux_x86_rpm_langpack_brx.tar.gz
-        ${_url}/LibreOffice_${_oodlver}_Linux_x86_rpm_{langpack,helppack}_bs.tar.gz
-        ${_url}/LibreOffice_${_oodlver}_Linux_x86_rpm_{langpack,helppack}_ca-XV.tar.gz
-        ${_url}/LibreOffice_${_oodlver}_Linux_x86_rpm_{langpack,helppack}_ca.tar.gz
-        ${_url}/LibreOffice_${_oodlver}_Linux_x86_rpm_{langpack,helppack}_cs.tar.gz
-        ${_url}/LibreOffice_${_oodlver}_Linux_x86_rpm_langpack_cy.tar.gz
-        ${_url}/LibreOffice_${_oodlver}_Linux_x86_rpm_{langpack,helppack}_da.tar.gz
-        ${_url}/LibreOffice_${_oodlver}_Linux_x86_rpm_{langpack,helppack}_de.tar.gz
-        ${_url}/LibreOffice_${_oodlver}_Linux_x86_rpm_langpack_dgo.tar.gz
-        ${_url}/LibreOffice_${_oodlver}_Linux_x86_rpm_{langpack,helppack}_dz.tar.gz
-        ${_url}/LibreOffice_${_oodlver}_Linux_x86_rpm_{langpack,helppack}_el.tar.gz
-        ${_url}/LibreOffice_${_oodlver}_Linux_x86_rpm_{langpack,helppack}_en-GB.tar.gz
-        ${_url}/LibreOffice_${_oodlver}_Linux_x86_rpm_{langpack,helppack}_en-ZA.tar.gz
-        ${_url}/LibreOffice_${_oodlver}_Linux_x86_rpm_{langpack,helppack}_eo.tar.gz
-        ${_url}/LibreOffice_${_oodlver}_Linux_x86_rpm_{langpack,helppack}_es.tar.gz
-        ${_url}/LibreOffice_${_oodlver}_Linux_x86_rpm_{langpack,helppack}_et.tar.gz
-        ${_url}/LibreOffice_${_oodlver}_Linux_x86_rpm_{langpack,helppack}_eu.tar.gz
-        ${_url}/LibreOffice_${_oodlver}_Linux_x86_rpm_langpack_fa.tar.gz
-        ${_url}/LibreOffice_${_oodlver}_Linux_x86_rpm_{langpack,helppack}_fi.tar.gz
-        ${_url}/LibreOffice_${_oodlver}_Linux_x86_rpm_{langpack,helppack}_fr.tar.gz
-        ${_url}/LibreOffice_${_oodlver}_Linux_x86_rpm_langpack_ga.tar.gz
-        ${_url}/LibreOffice_${_oodlver}_Linux_x86_rpm_langpack_gd.tar.gz
-        ${_url}/LibreOffice_${_oodlver}_Linux_x86_rpm_{langpack,helppack}_gl.tar.gz
-        ${_url}/LibreOffice_${_oodlver}_Linux_x86_rpm_{langpack,helppack}_gu.tar.gz
-        ${_url}/LibreOffice_${_oodlver}_Linux_x86_rpm_{langpack,helppack}_he.tar.gz
-        ${_url}/LibreOffice_${_oodlver}_Linux_x86_rpm_{langpack,helppack}_hi.tar.gz
-        ${_url}/LibreOffice_${_oodlver}_Linux_x86_rpm_{langpack,helppack}_hr.tar.gz
-        ${_url}/LibreOffice_${_oodlver}_Linux_x86_rpm_{langpack,helppack}_hu.tar.gz
-        ${_url}/LibreOffice_${_oodlver}_Linux_x86_rpm_{langpack,helppack}_id.tar.gz
-        ${_url}/LibreOffice_${_oodlver}_Linux_x86_rpm_{langpack,helppack}_is.tar.gz
-        ${_url}/LibreOffice_${_oodlver}_Linux_x86_rpm_{langpack,helppack}_it.tar.gz
-        ${_url}/LibreOffice_${_oodlver}_Linux_x86_rpm_{langpack,helppack}_ja.tar.gz
-        ${_url}/LibreOffice_${_oodlver}_Linux_x86_rpm_{langpack,helppack}_ka.tar.gz
-        ${_url}/LibreOffice_${_oodlver}_Linux_x86_rpm_langpack_kk.tar.gz
-        ${_url}/LibreOffice_${_oodlver}_Linux_x86_rpm_{langpack,helppack}_km.tar.gz
-        ${_url}/LibreOffice_${_oodlver}_Linux_x86_rpm_langpack_kn.tar.gz
-        ${_url}/LibreOffice_${_oodlver}_Linux_x86_rpm_{langpack,helppack}_ko.tar.gz
-        ${_url}/LibreOffice_${_oodlver}_Linux_x86_rpm_langpack_kok.tar.gz
-        ${_url}/LibreOffice_${_oodlver}_Linux_x86_rpm_langpack_ks.tar.gz
-        ${_url}/LibreOffice_${_oodlver}_Linux_x86_rpm_langpack_ku.tar.gz
-        ${_url}/LibreOffice_${_oodlver}_Linux_x86_rpm_langpack_lb.tar.gz
-        ${_url}/LibreOffice_${_oodlver}_Linux_x86_rpm_langpack_lo.tar.gz
-        ${_url}/LibreOffice_${_oodlver}_Linux_x86_rpm_langpack_lt.tar.gz
-        ${_url}/LibreOffice_${_oodlver}_Linux_x86_rpm_langpack_lv.tar.gz
-        ${_url}/LibreOffice_${_oodlver}_Linux_x86_rpm_langpack_mai.tar.gz
-        ${_url}/LibreOffice_${_oodlver}_Linux_x86_rpm_{langpack,helppack}_mk.tar.gz
-        ${_url}/LibreOffice_${_oodlver}_Linux_x86_rpm_langpack_ml.tar.gz
-        ${_url}/LibreOffice_${_oodlver}_Linux_x86_rpm_langpack_mn.tar.gz
-        ${_url}/LibreOffice_${_oodlver}_Linux_x86_rpm_langpack_mni.tar.gz
-        ${_url}/LibreOffice_${_oodlver}_Linux_x86_rpm_langpack_mr.tar.gz
-        ${_url}/LibreOffice_${_oodlver}_Linux_x86_rpm_langpack_my.tar.gz
-        ${_url}/LibreOffice_${_oodlver}_Linux_x86_rpm_{langpack,helppack}_nb.tar.gz
-        ${_url}/LibreOffice_${_oodlver}_Linux_x86_rpm_{langpack,helppack}_ne.tar.gz
-        ${_url}/LibreOffice_${_oodlver}_Linux_x86_rpm_{langpack,helppack}_nl.tar.gz
-        ${_url}/LibreOffice_${_oodlver}_Linux_x86_rpm_{langpack,helppack}_nn.tar.gz
-        ${_url}/LibreOffice_${_oodlver}_Linux_x86_rpm_langpack_nr.tar.gz
-        ${_url}/LibreOffice_${_oodlver}_Linux_x86_rpm_langpack_nso.tar.gz
-        ${_url}/LibreOffice_${_oodlver}_Linux_x86_rpm_langpack_oc.tar.gz
-        ${_url}/LibreOffice_${_oodlver}_Linux_x86_rpm_{langpack,helppack}_om.tar.gz
-        ${_url}/LibreOffice_${_oodlver}_Linux_x86_rpm_langpack_or.tar.gz
-        ${_url}/LibreOffice_${_oodlver}_Linux_x86_rpm_langpack_pa-IN.tar.gz
-        ${_url}/LibreOffice_${_oodlver}_Linux_x86_rpm_{langpack,helppack}_pl.tar.gz
-        ${_url}/LibreOffice_${_oodlver}_Linux_x86_rpm_{langpack,helppack}_pt-BR.tar.gz
-        ${_url}/LibreOffice_${_oodlver}_Linux_x86_rpm_{langpack,helppack}_pt.tar.gz
-        ${_url}/LibreOffice_${_oodlver}_Linux_x86_rpm_langpack_ro.tar.gz
-        ${_url}/LibreOffice_${_oodlver}_Linux_x86_rpm_{langpack,helppack}_ru.tar.gz
-        ${_url}/LibreOffice_${_oodlver}_Linux_x86_rpm_langpack_rw.tar.gz
-        ${_url}/LibreOffice_${_oodlver}_Linux_x86_rpm_langpack_sa-IN.tar.gz
-        ${_url}/LibreOffice_${_oodlver}_Linux_x86_rpm_langpack_sat.tar.gz
-        ${_url}/LibreOffice_${_oodlver}_Linux_x86_rpm_langpack_sd.tar.gz
-        ${_url}/LibreOffice_${_oodlver}_Linux_x86_rpm_langpack_sh.tar.gz
-        ${_url}/LibreOffice_${_oodlver}_Linux_x86_rpm_{langpack,helppack}_si.tar.gz
-        ${_url}/LibreOffice_${_oodlver}_Linux_x86_rpm_langpack_sid.tar.gz
-        ${_url}/LibreOffice_${_oodlver}_Linux_x86_rpm_{langpack,helppack}_sk.tar.gz
-        ${_url}/LibreOffice_${_oodlver}_Linux_x86_rpm_{langpack,helppack}_sl.tar.gz
-        ${_url}/LibreOffice_${_oodlver}_Linux_x86_rpm_{langpack,helppack}_sq.tar.gz
-        ${_url}/LibreOffice_${_oodlver}_Linux_x86_rpm_langpack_sr.tar.gz
-        ${_url}/LibreOffice_${_oodlver}_Linux_x86_rpm_langpack_ss.tar.gz
-        ${_url}/LibreOffice_${_oodlver}_Linux_x86_rpm_langpack_st.tar.gz
-        ${_url}/LibreOffice_${_oodlver}_Linux_x86_rpm_{langpack,helppack}_sv.tar.gz
-        ${_url}/LibreOffice_${_oodlver}_Linux_x86_rpm_langpack_sw-TZ.tar.gz
-        ${_url}/LibreOffice_${_oodlver}_Linux_x86_rpm_langpack_ta.tar.gz
-        ${_url}/LibreOffice_${_oodlver}_Linux_x86_rpm_langpack_te.tar.gz
-        ${_url}/LibreOffice_${_oodlver}_Linux_x86_rpm_{langpack,helppack}_tg.tar.gz
-        ${_url}/LibreOffice_${_oodlver}_Linux_x86_rpm_langpack_th.tar.gz
-        ${_url}/LibreOffice_${_oodlver}_Linux_x86_rpm_langpack_tn.tar.gz
-        ${_url}/LibreOffice_${_oodlver}_Linux_x86_rpm_{langpack,helppack}_tr.tar.gz
-        ${_url}/LibreOffice_${_oodlver}_Linux_x86_rpm_langpack_ts.tar.gz
-        ${_url}/LibreOffice_${_oodlver}_Linux_x86_rpm_langpack_tt.tar.gz
-        ${_url}/LibreOffice_${_oodlver}_Linux_x86_rpm_{langpack,helppack}_ug.tar.gz
-        ${_url}/LibreOffice_${_oodlver}_Linux_x86_rpm_{langpack,helppack}_uk.tar.gz
-        ${_url}/LibreOffice_${_oodlver}_Linux_x86_rpm_langpack_uz.tar.gz
-        ${_url}/LibreOffice_${_oodlver}_Linux_x86_rpm_langpack_ve.tar.gz
-        ${_url}/LibreOffice_${_oodlver}_Linux_x86_rpm_{langpack,helppack}_vi.tar.gz
-        ${_url}/LibreOffice_${_oodlver}_Linux_x86_rpm_langpack_xh.tar.gz
-        ${_url}/LibreOffice_${_oodlver}_Linux_x86_rpm_{langpack,helppack}_zh-CN.tar.gz
-        ${_url}/LibreOffice_${_oodlver}_Linux_x86_rpm_{langpack,helppack}_zh-TW.tar.gz
-        ${_url}/LibreOffice_${_oodlver}_Linux_x86_rpm_langpack_zu.tar.gz)
-
-md5sums=('019a5fc52fce10285b3cd118639e5883'
-         '66b7ccc3fcfb844f285db12365040fda'
-         'd7b8b48d4285a441756e23351ac4ee76'
-         'a6f74f4e52ab00a3e5ef081226a92e8e'
-         '48eb5d6c4f606effdec585937e23edfe'
-         'd76121ef5d51a47195bd57a47c9d7f04'
-         '73edce935e5895bd6b8385b9e51bccdc'
-         'e0a39beb86827cee5e89239306e47eb8'
-         'fb7e0d0b1e07f55824124fe385a0ac61'
-         '683c6d26c0bafa173ce666beadd95063'
-         '0b722b43eed65bfb8cf84c1b108ec553'
-         '4b1ba43bf8b68656b97a5b41c8be18d7'
-         '6527b8b02a2048bd869d0f1be7fc7de5'
-         'c45813c949d350c8958fbe1e52811842'
-         'cbec2e7fc365d77471b8784581ab30cd'
-         '09c697791a486cf770edda487c516021'
-         '8a810a1c63ffdd1f091b730824784889'
-         'a9d324b9b745d6c0cada3e8f9e07fcbb'
-         '8ccc2279727b43b25add07c527f14f2a'
-         '8b53a3f65023ef3c79e624ff66fca49b'
-         'c899b16f7c8c76cafef1709b9ea94535'
-         '44442eae9e53b4f8161a0688559af628'
-         '067ac4825eada299ad1c6fda3140345f'
-         'b535689143ee1ba7ce91ade51ff5b961'
-         '92a3d292a8947c1cf526d76cf0bfbc96'
-         '3ca188aff98c11fe739dd83818765ad8'
-         '7ac44d3153fc5971192bc7b065294519'
-         '15d5898bb4f5fb9c59e232a68da92855'
-         '12942988b2ff8755715175a7e92d8534'
-         'd416c7f7f1c7316fbbe5e968271a9bea'
-         'b0ea8e36260bf71ad5e81163764f5e53'
-         '592eeb8a9c31d3d41533f950586ca960'
-         '1b0fd44e8f0a3af958e486d6656be9f0'
-         'a9e602b832bc908044bef2edc7ab71a8'
-         'c3bf25cb0e9c3b69493d5dd8dd344636'
-         '5badc6e7cab7beaa70d32ed7a6e321f2'
-         'c11cb20fa0b749013b97d225a29f024b'
-         'daceb57121ef5971c7fa978663f49172'
-         'c5d8a1ab87026747090bd9f04ef0e019'
-         'e25f465acc04eeb38f4e9e3da068f640'
-         '495d635b9abb12dc5cc3608b3542e18b'
-         '20ee1cfc16349bf793e913a144893af6'
-         '02892cc71b6ca6d91b13e87052abf40b'
-         'fa49ef62717d15cf291579756b78c3b1'
-         'fafd0fd6c2cd5c6a60e1152be42e4fb5'
-         '69e080bc4fae9459f7269a4ab4eaccd4'
-         '4479a4ac3073378e7589095e741e3afd'
-         '1d4dea47e2d9e116de905c602eb8b7f3'
-         'daac1d8dfc91da5edcb141069c9d6b44'
-         'ffae8a939a641be04692fc0bf331a735'
-         'e17a8ff288c6bb183c2482f96bfe8fdc'
-         '7f8afa0dc5e44d3025289cb366a1eeff'
-         '4ed776868d2d1c3eb720d7a6240c87e6'
-         'c20b013c11b2595b31e0f7db11ed59bc'
-         '80abdf56ab550daf955547bf5bf5ca4c'
-         'fdd847f5120c83cc623eeb36131acfd3'
-         '80a778b5d2bc38973702d51af46fabee'
-         '570f7c0fc2303aac881abdf0fa426325'
-         'b2f2645005220bf5efd45f37f8e58125'
-         'cb0bb2e1dec6bbcea18651358ee9918a'
-         '4876179ba396dd7fe1a5ae4161d10d15'
-         'a3e378c1fa5441972c16fa93612b8609'
-         'c8df8295014ce22ece34f0f14f24fa9c'
-         '84883c278d07dcef6de58bc1bd2536ee'
-         '98fa648a4367ba2e102eb7067395b461'
-         '43cb1796cfca487140f2c286b6bf849f'
-         '280b6b88a3f48d0e3367525b8179b2cd'
-         '037a328c8476f6efd241299cfafbb9c7'
-         '5453faa13dbdd54dad1e82ea68cfb6a7'
-         'a8e077b1a667ddcbb7979fcc6de07231'
-         '12dec1cc8c662801de55b2015648b5c6'
-         '4713afb77279dec677d8ebb98c37f6e9'
-         'e582f317ae0924563952d6803f0ee40e'
-         'f51a2036ad44f9c88a4f529db2339606'
-         '3c3399d344eaec7a49d83d5a58dd66e2'
-         'e6728b533e56abc39cfe4c38d4995cdb'
-         '16636df91bce1aad6377c53019955e57'
-         '0f2cfe00585321207c65c7eccdc09682'
-         '5ad4dfb41d6cee832d62f8825b970c66'
-         'b0f74cfe0e59b903c3ce0e34e71d50fe'
-         'b3ba53ea2faefc034503114266c09b2f'
-         '14e7f4c336c707c4300a330fc97efe0b'
-         '92f955308f1eebeb0da21fb363ecd3d4'
-         '20a8ca431f2fa6067a9f83f2b3534e2e'
-         '7721177706417042112cbcebff3ec52b'
-         '7a0e2bdf9b54cc63bd0b9c25ab69a771'
-         'c03cc80e3eed4a1a4aeb2b11414f18c3'
-         'a217b9d300495de5c5be71c31cac8db9'
-         '205a9e619cc31cb3155a118f43ef92cd'
-         '5284a01f34b0d558c47e9b03074296b5'
-         'df08c30a0d4d69e8d6b192d65f6643a2'
-         '54a0033ea248c15de375d4f280d9ebd6'
-         '14cf45e273ec7a972265bb4b2e0dd894'
-         '9e5da0e774b3bed66d5405d930d763c7'
-         'a54bbe1db780ff39cee11b41bc6239f5'
-         'bc1c12c094e89433764d5bb358567930'
-         'f577f89f8cdf5e139d11956e702c3448'
-         '1ca7c90beeae96c14ce0af2567fb8e07'
-         '2d4b9b07253a36de2a5dd722fecaeccb'
-         '2af3f4660010b0e6eb26c08332523d44'
-         '6667e8e6df291f470db41fe670db9627'
-         '616cf8ab87234d92d3cef6f00e31ef5d'
-         'e588e6cadc6ee1e6a804ec6f5ea925c8'
-         'de1de9bb542544f8c54069011627aeae'
-         '478b564598267ca0d9e2c7e29640dc1f'
-         '6d14fba70d5909ff0382b12db3ec8907'
-         'ad063a09bfa85d2e3a11b41d1a40ff0c'
-         '5c31a89b258ecc1306784a11dbc80039'
-         '34025414ccf482d4d7cb7f542c6d52f8'
-         '0539f9e1db41b0ae3f7e2995e23f7f15'
-         '850756abd069b9ec182be1fa0f253682'
-         'a1a6b74a5fb10302d5dac30a8dcdf6c7'
-         '7acf4f9887cacfcd2d6dc2f35809fd11'
-         'a041cf97fcccf520a4173cb8e634751a'
-         '2cfc75f919e0e58229783d3cec7ca2ed'
-         '627311b20cbf799248b9dad336bc069e'
-         '8b42ac2a72ef9a8effa8b5fc74791ccf'
-         '719b6dc8784b0ee2771071c12e148bc9'
-         '4270b0235732cf66f83f3ea9e209a77b'
-         'd43765522e9e3a30ec176e9b5af8cd5a'
-         'a49fbede74f1211b987be18d1121c592'
-         '83212076b81cdf4b6caa422f4483867f'
-         'f0fd2c2fdd736b62c939d844372e15c2'
-         '67e85d010b13d63c75d0a0c5a9de4f8c'
-         'a5ed515a13abcc0d46e71cf96ebb18de'
-         '80eac31999dc0554e15dcb51990a279e'
-         '6bbfe83da8003d48fa5bebde54671434'
-         '296de39c54e47dd38183635bbe3f1537'
-         '0209ece1fc7d3268996bbfe1dfc418ae'
-         '68ce2850dfc9e05290649102ac4fada2'
-         '30e342d1bc65c30e4d7488ab9ab74eef'
-         '57258eed45198ad97fda459e8ef8f7fe'
-         '58c9c71c424c0a455abecda0115c9bd2'
-         'f74483d2323af762713b2ed3d5514e6f'
-         '2b1565fe72846ed5f7abf0bae173275e'
-         '35e3aee23e57dcbd4f5a1e32f1c40170'
-         '09eb49abf3a864bcae551c6b26869fb5'
-         '0580ab9fd94401001e1c4ff3ff967f66'
-         '738ac07d817345295e1bf83ce1272411'
-         '784c094519622499f02de937e1cbf137'
-         '6e464a8939fe16f30c030c3bedcf0343'
-         '036bd188255e32a5b3d8f4c1acd98e6d'
-         '97d5b024142dd2342ff4fc1f85b13640'
-         '34c018bf5be80d451f9a3a13a4527daa'
-         '899d2ff44f8554724233f64ff075c0a9'
-         'c9586410a84548b117c1a401d00b5816'
-         'd5dabd132d58722619c6fe2217cf80e9'
-         'e743d1e21d3713132ddb1bba55d91881'
-         '52dc319f2ef00d4d50f29eedfc8c9cc8'
-         'b859e333ef9b2033f570c70ee1371750'
-         '79c0036c659181af077c2c3a5f61f23b'
-         'c3635f34f6a2145b4b7add1bbba58ad8'
-         '4eb64fa7beeb209a5bb8b239353ee941'
-         '689e8ea3ec2904c7db31d317c1132d04'
-         'a3b131af6772cec9da6561830748b866'
-         'd94c85263a73f48445e145624338573b'
-         '660f05929b8871b7a829aab6346464aa'
-         'b6ce445f4b478175a67548e61a7edb63'
-         '3fcbc89bf02e3cd3f931879489c63956'
-         '5fed13da543a7174004a33ae6234f10e'
-         'f14c6aeca98909704a8b4df0e3089afe'
-         '9a728c62dcb3a37e5a3e230e4a781758'
-         '90ca4a57695d3db7546c5d1d8ce82ed8'
-         '026c0d498aaaa85cac71ab27a1c55b3b'
-         '61639045f9b55de82380f7538a6abcbd')
-
+declare -A _languages
+_languages=(
+  [af]='Afrikaans'
+  [am]='Amharic'
+  [ar]='Arabic'
+  [as]='Assamese (India)'
+  [ast]='Asturianu'
+  [be]='Belarusian'
+  [bg]='Bulgarian'
+  [bn]='Bengali'
+  [bn-IN]='Bengali (India)'
+  [bo]='Tibetan'
+  [br]='Breton'
+  [brx]='Bodo'
+  [bs]='Bosnian'
+  [ca]='Catalan'
+  [ca-valencia]='Catalan (Valencia)'
+  [cs]='Czech'
+  [cy]='Welsh'
+  [da]='Danish'
+  [de]='German'
+  [dgo]='Dogri'
+  [dz]='Dzongkha'
+  [el]='Greek'
+  #[en-GB]='English (GB)'
+  [en-ZA]='English (ZA)'
+  [eo]='Esperanto'
+  [es]='Spanish'
+  [et]='Estonian'
+  [eu]='Basque'
+  [fa]='Persian'
+  [fi]='Finnish'
+  [fr]='French'
+  [ga]='Irish'
+  [gd]='Gaelic (Scottish)'
+  [gl]='Galician'
+  [gu]='Gujarati'
+  [he]='Hebrew'
+  [hi]='Hindi'
+  [hr]='Croatian'
+  [hu]='Hungarian'
+  [id]='Indonesian'
+  [is]='Icelandic'
+  [it]='Italian'
+  [ja]='Japanese'
+  [ka]='Georgian'
+  [kk]='Kazakh'
+  [km]='Khmer (Cambodia)'
+  [kmr-Latn]='Kurdish'
+  [kn]='Kannada'
+  [ko]='Korean'
+  [kok]='Konkani'
+  [ks]='Kashmiri'
+  [lb]='Luxembourgish'
+  [lo]='Lao'
+  [lt]='Lithuanian'
+  [lv]='Latvian'
+  [mai]='Maithili'
+  [mk]='Macedonian'
+  [ml]='Malayalam'
+  [mn]='Mongolian'
+  [mni]='Manipuri'
+  [mr]='Marathi'
+  [my]='Burmese'
+  [nb]='Norwegian Bokmal'
+  [ne]='Nepali'
+  [nl]='Dutch'
+  [nn]='Norwegian Nynorsk'
+  [nr]='Ndebele (South)'
+  [nso]='Northern Sotho'
+  [oc]='Occitan'
+  [om]='Oromo'
+  [or]='Oriya'
+  [pa-IN]='Punjabi (India)'
+  [pl]='Polish'
+  [pt]='Portuguese'
+  [pt-BR]='Portuguese (Brasil)'
+  [ro]='Romanian'
+  [ru]='Russian'
+  [rw]='Kinyarwanda'
+  [sa-IN]='Sanskrit (India)'
+  [sat]='Santali'
+  [sd]='Sindhi'
+  [si]='Singhalese'
+  [sid]='Sidama'
+  [sk]='Slovak'
+  [sl]='Slovenian'
+  [sq]='Albanien'
+  [sr]='Serbian'
+  [sr-Latn]='Serbian (Latin)'
+  [ss]='Swati'
+  [st]='Southern Sotho'
+  [sv]='Swedish'
+  [sw-TZ]='Swahili (Tanzania)'
+  [ta]='Tamil'
+  [te]='Telugu'
+  [tg]='Tajik'
+  [th]='Thai'
+  [tn]='Tswana'
+  [tr]='Turkish'
+  [ts]='Tsonga'
+  [tt]='Tatar'
+  [ug]='Uighur'
+  [uk]='Ukrainian'
+  [uz]='Uzbek'
+  [ve]='Venda'
+  [vi]='Vietnamese'
+  [xh]='Xhosa'
+  [zh-CN]='Chinese (simplified)'
+  [zh-TW]='Chinese (traditional)'
+  [zu]='Zulu'
+)
 
 prepare() {
   for i in ${pkgname[@]}
@@ -429,1201 +153,196 @@ prepare() {
   done
 }
 
-package_libreoffice-af() {
-  pkgdesc="Afrikaans language pack for LibreOffice"
-  provides=('openoffice-af' 'libreoffice-langpack')
-  replaces=(openoffice-af)
-  conflicts=(openoffice-af)
-  cd "${srcdir}"/LibreOffice_${_dirver}_Linux_x86_rpm_langpack_af/RPMS
-  mkdir -p "${pkgdir}"/usr/lib/libreoffice
-  cp -R opt/libreoffice*/* "${pkgdir}"/usr/lib/libreoffice
-  chown root:root -R "${pkgdir}"/usr/lib/libreoffice
-}
-
-package_libreoffice-am() {
-  pkgdesc="Amharic language pack for LibreOffice"
-  provides=('openoffice-am' 'libreoffice-langpack')
-  replaces=(openoffice-am)
-  conflicts=(openoffice-am)
-  cd "${srcdir}"/LibreOffice_${_dirver}_Linux_x86_rpm_langpack_am/RPMS
-  mkdir -p "${pkgdir}"/usr/lib/libreoffice
-  cp -R opt/libreoffice*/* "${pkgdir}"/usr/lib/libreoffice
-  chown root:root -R "${pkgdir}"/usr/lib/libreoffice
-}
-
-package_libreoffice-ar() {
-  pkgdesc="Arabic language pack for LibreOffice"
-  provides=('openoffice-ar' 'libreoffice-langpack')
-  replaces=(openoffice-ar)
-  conflicts=(openoffice-ar)
-  cd "${srcdir}"/LibreOffice_${_dirver}_Linux_x86_rpm_langpack_ar/RPMS
-  mkdir -p "${pkgdir}"/usr/lib/libreoffice
-  cp -R opt/libreoffice*/* "${pkgdir}"/usr/lib/libreoffice
-  chown root:root -R "${pkgdir}"/usr/lib/libreoffice
-}
-
-package_libreoffice-as() {
-  pkgdesc="Assamese (India) language pack for LibreOffice"
-  provides=('openoffice-as' 'libreoffice-langpack')
-  replaces=(openoffice-as)
-  conflicts=(openoffice-as)
-  cd "${srcdir}"/LibreOffice_${_dirver}_Linux_x86_rpm_langpack_as/RPMS
-  mkdir -p "${pkgdir}"/usr/lib/libreoffice
-  cp -R opt/libreoffice*/* "${pkgdir}"/usr/lib/libreoffice
-  chown root:root -R "${pkgdir}"/usr/lib/libreoffice
-}
-
-package_libreoffice-ast() {
-  pkgdesc="Asturianu language pack for LibreOffice"
-  provides=('openoffice-ast' 'libreoffice-langpack')
-  replaces=(openoffice-ast)
-  conflicts=(openoffice-ast)
-  cd "${srcdir}"/LibreOffice_${_dirver}_Linux_x86_rpm_langpack_ast/RPMS
-  mkdir -p "${pkgdir}"/usr/lib/libreoffice
-  cp -R opt/libreoffice*/* "${pkgdir}"/usr/lib/libreoffice
-  chown root:root -R "${pkgdir}"/usr/lib/libreoffice
-}
-
-package_libreoffice-be() {
-  pkgdesc="Belarusian language pack for LibreOffice"
-  provides=('openoffice-be-BY' 'libreoffice-langpack')
-  replaces=(openoffice-be-BY)
-  conflicts=(openoffice-be-BY)
-  cd "${srcdir}"/LibreOffice_${_dirver}_Linux_x86_rpm_langpack_be/RPMS
-  mkdir -p "${pkgdir}"/usr/lib/libreoffice
-  cp -R opt/libreoffice*/* "${pkgdir}"/usr/lib/libreoffice
-  chown root:root -R "${pkgdir}"/usr/lib/libreoffice
-}
-
-package_libreoffice-bg() {
-  pkgdesc="Bulgarian language pack for LibreOffice"
-  provides=('openoffice-bg' 'libreoffice-langpack')
-  replaces=(openoffice-bg)
-  conflicts=(openoffice-bg)
-  cd "${srcdir}"/LibreOffice_${_dirver}_Linux_x86_rpm_langpack_bg/RPMS
-  mkdir -p "${pkgdir}"/usr/lib/libreoffice
-  cp -R opt/libreoffice*/* "${pkgdir}"/usr/lib/libreoffice
-  chown root:root -R "${pkgdir}"/usr/lib/libreoffice
-}
-
-package_libreoffice-bn-IN() {
-  pkgdesc="Bengali (India) language pack for LibreOffice"
-  provides=('openoffice-bn-IN' 'libreoffice-langpack')
-  replaces=(openoffice-bn-IN)
-  conflicts=(openoffice-bn-IN)
-  cd "${srcdir}"/LibreOffice_${_dirver}_Linux_x86_rpm_langpack_bn-IN/RPMS
-  mkdir -p "${pkgdir}"/usr/lib/libreoffice
-  cp -R opt/libreoffice*/* "${pkgdir}"/usr/lib/libreoffice
-  chown root:root -R "${pkgdir}"/usr/lib/libreoffice
-}
-
-package_libreoffice-bn() {
-  pkgdesc="Bengali language pack for LibreOffice"
-  provides=('openoffice-bn' 'libreoffice-langpack')
-  replaces=(openoffice-bn)
-  conflicts=(openoffice-bn)
-  cd "${srcdir}"/LibreOffice_${_dirver}_Linux_x86_rpm_langpack_bn/RPMS
-  mkdir -p "${pkgdir}"/usr/lib/libreoffice
-  cp -R opt/libreoffice*/* "${pkgdir}"/usr/lib/libreoffice
-  chown root:root -R "${pkgdir}"/usr/lib/libreoffice
-}
-
-package_libreoffice-bo() {
-  pkgdesc="Tibetan language pack for LibreOffice"
-  provides=('openoffice-bo' 'libreoffice-langpack')
-  replaces=(openoffice-bo)
-  conflicts=(openoffice-bo)
-  cd "${srcdir}"/LibreOffice_${_dirver}_Linux_x86_rpm_langpack_bo/RPMS
-  mkdir -p "${pkgdir}"/usr/lib/libreoffice
-  cp -R opt/libreoffice*/* "${pkgdir}"/usr/lib/libreoffice
-  chown root:root -R "${pkgdir}"/usr/lib/libreoffice
-}
-
-package_libreoffice-br() {
-  pkgdesc="Breton language pack for LibreOffice"
-  provides=('openoffice-br' 'libreoffice-langpack')
-  replaces=(openoffice-br)
-  conflicts=(openoffice-br)
-  cd "${srcdir}"/LibreOffice_${_dirver}_Linux_x86_rpm_langpack_br/RPMS
-  mkdir -p "${pkgdir}"/usr/lib/libreoffice
-  cp -R opt/libreoffice*/* "${pkgdir}"/usr/lib/libreoffice
-  chown root:root -R "${pkgdir}"/usr/lib/libreoffice
-}
-
-package_libreoffice-brx() {
-  pkgdesc="Bodo language pack for LibreOffice"
-  provides=('openoffice-brx' 'libreoffice-langpack')
-  replaces=(openoffice-brx)
-  conflicts=(openoffice-brx)
-  cd "${srcdir}"/LibreOffice_${_dirver}_Linux_x86_rpm_langpack_brx/RPMS
-  mkdir -p "${pkgdir}"/usr/lib/libreoffice
-  cp -R opt/libreoffice*/* "${pkgdir}"/usr/lib/libreoffice
-  chown root:root -R "${pkgdir}"/usr/lib/libreoffice
-}
-
-package_libreoffice-bs() {
-  pkgdesc="Bosnian language pack for LibreOffice"
-  provides=('openoffice-bs' 'libreoffice-langpack')
-  replaces=(openoffice-bs)
-  conflicts=(openoffice-bs)
-  cd "${srcdir}"/LibreOffice_${_dirver}_Linux_x86_rpm_langpack_bs/RPMS
-  mkdir -p "${pkgdir}"/usr/lib/libreoffice
-  cp -R opt/libreoffice*/* "${pkgdir}"/usr/lib/libreoffice
-  chown root:root -R "${pkgdir}"/usr/lib/libreoffice
-}
-
-package_libreoffice-ca-XV() {
-  pkgdesc="Catalan (Valencia) language pack for LibreOffice"
-  provides=('openoffice-ca-XV' 'libreoffice-langpack')
-  replaces=(openoffice-ca-XV)
-  conflicts=(openoffice-ca-XV)
-  cd "${srcdir}"/LibreOffice_${_dirver}_Linux_x86_rpm_langpack_ca-XV/RPMS
-  mkdir -p "${pkgdir}"/usr/lib/libreoffice
-  cp -R opt/libreoffice*/* "${pkgdir}"/usr/lib/libreoffice
-  chown root:root -R "${pkgdir}"/usr/lib/libreoffice
-}
-
-package_libreoffice-ca() {
-  pkgdesc="Catalan language pack for LibreOffice"
-  provides=('openoffice-ca' 'libreoffice-langpack')
-  replaces=(openoffice-ca)
-  conflicts=(openoffice-ca)
-  cd "${srcdir}"/LibreOffice_${_dirver}_Linux_x86_rpm_langpack_ca/RPMS
-  mkdir -p "${pkgdir}"/usr/lib/libreoffice
-  cp -R opt/libreoffice*/* "${pkgdir}"/usr/lib/libreoffice
-  chown root:root -R "${pkgdir}"/usr/lib/libreoffice
-}
-
-package_libreoffice-cs() {
-  pkgdesc="Czech language pack for LibreOffice"
-  provides=('openoffice-cs' 'libreoffice-langpack')
-  replaces=(openoffice-cs)
-  conflicts=(openoffice-cs)
-  cd "${srcdir}"/LibreOffice_${_dirver}_Linux_x86_rpm_langpack_cs/RPMS
-  mkdir -p "${pkgdir}"/usr/lib/libreoffice
-  cp -R opt/libreoffice*/* "${pkgdir}"/usr/lib/libreoffice
-  chown root:root -R "${pkgdir}"/usr/lib/libreoffice
-}
-
-package_libreoffice-cy() {
-  pkgdesc="Welsh language pack for LibreOffice"
-  provides=('openoffice-cy' 'libreoffice-langpack')
-  replaces=(openoffice-cy)
-  conflicts=(openoffice-cy)
-  cd "${srcdir}"/LibreOffice_${_dirver}_Linux_x86_rpm_langpack_cy/RPMS
-  mkdir -p "${pkgdir}"/usr/lib/libreoffice
-  cp -R opt/libreoffice*/* "${pkgdir}"/usr/lib/libreoffice
-  chown root:root -R "${pkgdir}"/usr/lib/libreoffice
-}
-
-package_libreoffice-da() {
-  pkgdesc="Danish language pack for LibreOffice"
-  provides=('openoffice-da' 'libreoffice-langpack')
-  replaces=(openoffice-da)
-  conflicts=(openoffice-da)
-  cd "${srcdir}"/LibreOffice_${_dirver}_Linux_x86_rpm_langpack_da/RPMS
-  mkdir -p "${pkgdir}"/usr/lib/libreoffice
-  cp -R opt/libreoffice*/* "${pkgdir}"/usr/lib/libreoffice
-  chown root:root -R "${pkgdir}"/usr/lib/libreoffice
-}
-
-package_libreoffice-de() {
-  pkgdesc="German language pack for LibreOffice"
-  provides=('openoffice-de' 'libreoffice-langpack')
-  replaces=(openoffice-de)
-  conflicts=(openoffice-de)
-  cd "${srcdir}"/LibreOffice_${_dirver}_Linux_x86_rpm_langpack_de/RPMS
-  mkdir -p "${pkgdir}"/usr/lib/libreoffice
-  cp -R opt/libreoffice*/* "${pkgdir}"/usr/lib/libreoffice
-  chown root:root -R "${pkgdir}"/usr/lib/libreoffice
-}
-
-package_libreoffice-dgo() {
-  pkgdesc="Dogri language pack for LibreOffice"
-  provides=('openoffice-dgo' 'libreoffice-langpack')
-  replaces=(openoffice-dgo)
-  conflicts=(openoffice-dgo)
-  cd "${srcdir}"/LibreOffice_${_dirver}_Linux_x86_rpm_langpack_dgo/RPMS
-  mkdir -p "${pkgdir}"/usr/lib/libreoffice
-  cp -R opt/libreoffice*/* "${pkgdir}"/usr/lib/libreoffice
-  chown root:root -R "${pkgdir}"/usr/lib/libreoffice
-}
-
-package_libreoffice-dz() {
-  pkgdesc="Dzongkha language pack for LibreOffice"
-  provides=('openoffice-dz' 'libreoffice-langpack')
-  replaces=(openoffice-dz)
-  conflicts=(openoffice-dz)
-  cd "${srcdir}"/LibreOffice_${_dirver}_Linux_x86_rpm_langpack_dz/RPMS
-  mkdir -p "${pkgdir}"/usr/lib/libreoffice
-  cp -R opt/libreoffice*/* "${pkgdir}"/usr/lib/libreoffice
-  chown root:root -R "${pkgdir}"/usr/lib/libreoffice
-}
-
-package_libreoffice-el() {
-  pkgdesc="Greek language pack for LibreOffice"
-  provides=('openoffice-el' 'libreoffice-langpack')
-  replaces=(openoffice-el)
-  conflicts=(openoffice-el)
-  cd "${srcdir}"/LibreOffice_${_dirver}_Linux_x86_rpm_langpack_el/RPMS
-  mkdir -p "${pkgdir}"/usr/lib/libreoffice
-  cp -R opt/libreoffice*/* "${pkgdir}"/usr/lib/libreoffice
-  chown root:root -R "${pkgdir}"/usr/lib/libreoffice
-}
-
-package_libreoffice-en-GB() {
-  pkgdesc="English (GB) language pack for LibreOffice"
-  provides=('openoffice-en-GB' 'libreoffice-langpack')
-  replaces=(openoffice-en-GB)
-  conflicts=(openoffice-en-GB)
-  cd "${srcdir}"/LibreOffice_${_dirver}_Linux_x86_rpm_langpack_en-GB/RPMS
-  mkdir -p "${pkgdir}"/usr/lib/libreoffice
-  cp -R opt/libreoffice*/* "${pkgdir}"/usr/lib/libreoffice
-  chown root:root -R "${pkgdir}"/usr/lib/libreoffice
-}
-
-package_libreoffice-en-ZA() {
-  pkgdesc="English (ZA) language pack for LibreOffice"
-  provides=('openoffice-en-ZA' 'libreoffice-langpack')
-  replaces=(openoffice-en-ZA)
-  conflicts=(openoffice-en-ZA)
-  cd "${srcdir}"/LibreOffice_${_dirver}_Linux_x86_rpm_langpack_en-ZA/RPMS
-  mkdir -p "${pkgdir}"/usr/lib/libreoffice
-  cp -R opt/libreoffice*/* "${pkgdir}"/usr/lib/libreoffice
-  chown root:root -R "${pkgdir}"/usr/lib/libreoffice
-}
-
-package_libreoffice-eo() {
-  pkgdesc="Esperanto language pack for LibreOffice"
-  provides=('openoffice-eo' 'libreoffice-langpack')
-  replaces=(openoffice-eo)
-  conflicts=(openoffice-eo)
-  cd "${srcdir}"/LibreOffice_${_dirver}_Linux_x86_rpm_langpack_eo/RPMS
-  mkdir -p "${pkgdir}"/usr/lib/libreoffice
-  cp -R opt/libreoffice*/* "${pkgdir}"/usr/lib/libreoffice
-  chown root:root -R "${pkgdir}"/usr/lib/libreoffice
-}
-
-package_libreoffice-es() {
-  pkgdesc="Spanish language pack for LibreOffice"
-  provides=('openoffice-es' 'libreoffice-langpack')
-  replaces=(openoffice-es)
-  conflicts=(openoffice-es)
-  cd "${srcdir}"/LibreOffice_${_dirver}_Linux_x86_rpm_langpack_es/RPMS
-  mkdir -p "${pkgdir}"/usr/lib/libreoffice
-  cp -R opt/libreoffice*/* "${pkgdir}"/usr/lib/libreoffice
-  chown root:root -R "${pkgdir}"/usr/lib/libreoffice
-}
-
-package_libreoffice-et() {
-  pkgdesc="Estonian language pack for LibreOffice"
-  provides=('openoffice-et' 'libreoffice-langpack')
-  replaces=(openoffice-et)
-  conflicts=(openoffice-et)
-  cd "${srcdir}"/LibreOffice_${_dirver}_Linux_x86_rpm_langpack_et/RPMS
-  mkdir -p "${pkgdir}"/usr/lib/libreoffice
-  cp -R opt/libreoffice*/* "${pkgdir}"/usr/lib/libreoffice
-  chown root:root -R "${pkgdir}"/usr/lib/libreoffice
-}
-
-package_libreoffice-eu() {
-  pkgdesc="Basque language pack for LibreOffice"
-  provides=('openoffice-eu' 'libreoffice-langpack')
-  replaces=(openoffice-eu)
-  conflicts=(openoffice-eu)
-  cd "${srcdir}"/LibreOffice_${_dirver}_Linux_x86_rpm_langpack_eu/RPMS
-  mkdir -p "${pkgdir}"/usr/lib/libreoffice
-  cp -R opt/libreoffice*/* "${pkgdir}"/usr/lib/libreoffice
-  chown root:root -R "${pkgdir}"/usr/lib/libreoffice
-}
-
-package_libreoffice-fa() {
-  pkgdesc="Persian language pack for LibreOffice"
-  provides=('openoffice-fa' 'libreoffice-langpack')
-  replaces=(openoffice-fa)
-  conflicts=(openoffice-fa)
-  cd "${srcdir}"/LibreOffice_${_dirver}_Linux_x86_rpm_langpack_fa/RPMS
-  mkdir -p "${pkgdir}"/usr/lib/libreoffice
-  cp -R opt/libreoffice*/* "${pkgdir}"/usr/lib/libreoffice
-  chown root:root -R "${pkgdir}"/usr/lib/libreoffice
-}
-
-package_libreoffice-fi() {
-  pkgdesc="Finnish language pack for LibreOffice"
-  provides=('openoffice-fi' 'libreoffice-langpack')
-  replaces=(openoffice-fi)
-  conflicts=(openoffice-fi)
-  cd "${srcdir}"/LibreOffice_${_dirver}_Linux_x86_rpm_langpack_fi/RPMS
-  mkdir -p "${pkgdir}"/usr/lib/libreoffice
-  cp -R opt/libreoffice*/* "${pkgdir}"/usr/lib/libreoffice
-  chown root:root -R "${pkgdir}"/usr/lib/libreoffice
-}
-
-package_libreoffice-fr() {
-  pkgdesc="French language pack for LibreOffice"
-  provides=('openoffice-fr' 'libreoffice-langpack')
-  replaces=(openoffice-fr)
-  conflicts=(openoffice-fr)
-  cd "${srcdir}"/LibreOffice_${_dirver}_Linux_x86_rpm_langpack_fr/RPMS
-  mkdir -p "${pkgdir}"/usr/lib/libreoffice
-  cp -R opt/libreoffice*/* "${pkgdir}"/usr/lib/libreoffice
-  chown root:root -R "${pkgdir}"/usr/lib/libreoffice
-}
-
-package_libreoffice-ga() {
-  pkgdesc="Irish language pack for LibreOffice"
-  provides=('openoffice-ga' 'libreoffice-langpack')
-  replaces=(openoffice-ga)
-  conflicts=(openoffice-ga)
-  cd "${srcdir}"/LibreOffice_${_dirver}_Linux_x86_rpm_langpack_ga/RPMS
-  mkdir -p "${pkgdir}"/usr/lib/libreoffice
-  cp -R opt/libreoffice*/* "${pkgdir}"/usr/lib/libreoffice
-  chown root:root -R "${pkgdir}"/usr/lib/libreoffice
-}
-
-package_libreoffice-gd() {
-  pkgdesc="Gaelic (Scottish) language pack for LibreOffice"
-  provides=('openoffice-gd' 'libreoffice-langpack')
-  replaces=(openoffice-gd)
-  conflicts=(openoffice-gd)
-  cd "${srcdir}"/LibreOffice_${_dirver}_Linux_x86_rpm_langpack_gd/RPMS
-  mkdir -p "${pkgdir}"/usr/lib/libreoffice
-  cp -R opt/libreoffice*/* "${pkgdir}"/usr/lib/libreoffice
-  chown root:root -R "${pkgdir}"/usr/lib/libreoffice
-}
-
-package_libreoffice-gl() {
-  pkgdesc="Galician language pack for LibreOffice"
-  provides=('openoffice-gl' 'libreoffice-langpack')
-  replaces=(openoffice-gl)
-  conflicts=(openoffice-gl)
-  cd "${srcdir}"/LibreOffice_${_dirver}_Linux_x86_rpm_langpack_gl/RPMS
-  mkdir -p "${pkgdir}"/usr/lib/libreoffice
-  cp -R opt/libreoffice*/* "${pkgdir}"/usr/lib/libreoffice
-  chown root:root -R "${pkgdir}"/usr/lib/libreoffice
-}
-
-package_libreoffice-gu() {
-  pkgdesc="Gujarati language pack for LibreOffice"
-  provides=('openoffice-gu' 'libreoffice-langpack')
-  replaces=(openoffice-gu)
-  conflicts=(openoffice-gu)
-  cd "${srcdir}"/LibreOffice_${_dirver}_Linux_x86_rpm_langpack_gu/RPMS
-  mkdir -p "${pkgdir}"/usr/lib/libreoffice
-  cp -R opt/libreoffice*/* "${pkgdir}"/usr/lib/libreoffice
-  chown root:root -R "${pkgdir}"/usr/lib/libreoffice
-}
-
-package_libreoffice-he() {
-  pkgdesc="Hebrew language pack for LibreOffice"
-  provides=('openoffice-he' 'libreoffice-langpack')
-  replaces=(openoffice-he)
-  conflicts=(openoffice-he)
-  cd "${srcdir}"/LibreOffice_${_dirver}_Linux_x86_rpm_langpack_he/RPMS
-  mkdir -p "${pkgdir}"/usr/lib/libreoffice
-  cp -R opt/libreoffice*/* "${pkgdir}"/usr/lib/libreoffice
-  chown root:root -R "${pkgdir}"/usr/lib/libreoffice
-}
-
-package_libreoffice-hi() {
-  pkgdesc="Hindi language pack for LibreOffice"
-  provides=('openoffice-hi' 'libreoffice-langpack')
-  replaces=(openoffice-hi)
-  conflicts=(openoffice-hi)
-  cd "${srcdir}"/LibreOffice_${_dirver}_Linux_x86_rpm_langpack_hi/RPMS
-  mkdir -p "${pkgdir}"/usr/lib/libreoffice
-  cp -R opt/libreoffice*/* "${pkgdir}"/usr/lib/libreoffice
-  chown root:root -R "${pkgdir}"/usr/lib/libreoffice
-}
-
-package_libreoffice-hr() {
-  pkgdesc="Croatian language pack for LibreOffice"
-  provides=('openoffice-hr' 'libreoffice-langpack')
-  replaces=(openoffice-hr)
-  conflicts=(openoffice-hr)
-  cd "${srcdir}"/LibreOffice_${_dirver}_Linux_x86_rpm_langpack_hr/RPMS
-  mkdir -p "${pkgdir}"/usr/lib/libreoffice
-  cp -R opt/libreoffice*/* "${pkgdir}"/usr/lib/libreoffice
-  chown root:root -R "${pkgdir}"/usr/lib/libreoffice
-}
-
-package_libreoffice-hu() {
-  pkgdesc="Hungarian language pack for LibreOffice"
-  provides=('openoffice-hu' 'libreoffice-langpack')
-  replaces=(openoffice-hu)
-  conflicts=(openoffice-hu)
-  cd "${srcdir}"/LibreOffice_${_dirver}_Linux_x86_rpm_langpack_hu/RPMS
-  mkdir -p "${pkgdir}"/usr/lib/libreoffice
-  cp -R opt/libreoffice*/* "${pkgdir}"/usr/lib/libreoffice
-  chown root:root -R "${pkgdir}"/usr/lib/libreoffice
-}
-
-package_libreoffice-id() {
-  pkgdesc="Bahasa Indonesia language pack for LibreOffice"
-  provides=('openoffice-id' 'libreoffice-langpack')
-  replaces=(openoffice-id)
-  conflicts=(openoffice-id)
-  cd "${srcdir}"/LibreOffice_${_dirver}_Linux_x86_rpm_langpack_id/RPMS
-  mkdir -p "${pkgdir}"/usr/lib/libreoffice
-  cp -R opt/libreoffice*/* "${pkgdir}"/usr/lib/libreoffice
-  chown root:root -R "${pkgdir}"/usr/lib/libreoffice
-}
-
-package_libreoffice-is() {
-  pkgdesc="Icelandic language pack for LibreOffice"
-  provides=('openoffice-is' 'libreoffice-langpack')
-  replaces=(openoffice-is)
-  conflicts=(openoffice-is)
-  cd "${srcdir}"/LibreOffice_${_dirver}_Linux_x86_rpm_langpack_is/RPMS
-  mkdir -p "${pkgdir}"/usr/lib/libreoffice
-  cp -R opt/libreoffice*/* "${pkgdir}"/usr/lib/libreoffice
-  chown root:root -R "${pkgdir}"/usr/lib/libreoffice
-}
-
-package_libreoffice-it() {
-  pkgdesc="Italian language pack for LibreOffice"
-  provides=('openoffice-it' 'libreoffice-langpack')
-  replaces=(openoffice-it)
-  conflicts=(openoffice-it)
-  cd "${srcdir}"/LibreOffice_${_dirver}_Linux_x86_rpm_langpack_it/RPMS
-  mkdir -p "${pkgdir}"/usr/lib/libreoffice
-  cp -R opt/libreoffice*/* "${pkgdir}"/usr/lib/libreoffice
-  chown root:root -R "${pkgdir}"/usr/lib/libreoffice
-}
-
-package_libreoffice-ja() {
-  pkgdesc="Japanese language pack for LibreOffice"
-  provides=('openoffice-ja' 'libreoffice-langpack')
-  replaces=(openoffice-ja)
-  conflicts=(openoffice-ja)
-  cd "${srcdir}"/LibreOffice_${_dirver}_Linux_x86_rpm_langpack_ja/RPMS
-  mkdir -p "${pkgdir}"/usr/lib/libreoffice
-  cp -R opt/libreoffice*/* "${pkgdir}"/usr/lib/libreoffice
-  chown root:root -R "${pkgdir}"/usr/lib/libreoffice
-}
-
-package_libreoffice-ka() {
-  pkgdesc="Georgian language pack for LibreOffice"
-  provides=('openoffice-ka' 'libreoffice-langpack')
-  replaces=(openoffice-ka)
-  conflicts=(openoffice-ka)
-  cd "${srcdir}"/LibreOffice_${_dirver}_Linux_x86_rpm_langpack_ka/RPMS
-  mkdir -p "${pkgdir}"/usr/lib/libreoffice
-  cp -R opt/libreoffice*/* "${pkgdir}"/usr/lib/libreoffice
-  chown root:root -R "${pkgdir}"/usr/lib/libreoffice
-}
-
-package_libreoffice-kk() {
-  pkgdesc="Kazakh language pack for LibreOffice"
-  provides=('openoffice-kk' 'libreoffice-langpack')
-  replaces=(openoffice-kk)
-  conflicts=(openoffice-kk)
-  cd "${srcdir}"/LibreOffice_${_dirver}_Linux_x86_rpm_langpack_kk/RPMS
-  mkdir -p "${pkgdir}"/usr/lib/libreoffice
-  cp -R opt/libreoffice*/* "${pkgdir}"/usr/lib/libreoffice
-  chown root:root -R "${pkgdir}"/usr/lib/libreoffice
-}
-
-package_libreoffice-km() {
-  pkgdesc="Khmer (Cambodia) language pack for LibreOffice"
-  provides=('openoffice-km' 'libreoffice-langpack')
-  replaces=(openoffice-km)
-  conflicts=(openoffice-km)
-  cd "${srcdir}"/LibreOffice_${_dirver}_Linux_x86_rpm_langpack_km/RPMS
-  mkdir -p "${pkgdir}"/usr/lib/libreoffice
-  cp -R opt/libreoffice*/* "${pkgdir}"/usr/lib/libreoffice
-  chown root:root -R "${pkgdir}"/usr/lib/libreoffice
-}
-
-package_libreoffice-kn() {
-  pkgdesc="Kannada language pack for LibreOffice"
-  provides=('openoffice-kn' 'libreoffice-langpack')
-  replaces=(openoffice-kn)
-  conflicts=(openoffice-kn)
-  cd "${srcdir}"/LibreOffice_${_dirver}_Linux_x86_rpm_langpack_kn/RPMS
-  mkdir -p "${pkgdir}"/usr/lib/libreoffice
-  cp -R opt/libreoffice*/* "${pkgdir}"/usr/lib/libreoffice
-  chown root:root -R "${pkgdir}"/usr/lib/libreoffice
-}
-
-package_libreoffice-ko() {
-  pkgdesc="Korean language pack for LibreOffice"
-  provides=('openoffice-ko' 'libreoffice-langpack')
-  replaces=(openoffice-ko)
-  conflicts=(openoffice-ko)
-  cd "${srcdir}"/LibreOffice_${_dirver}_Linux_x86_rpm_langpack_ko/RPMS
-  mkdir -p "${pkgdir}"/usr/lib/libreoffice
-  cp -R opt/libreoffice*/* "${pkgdir}"/usr/lib/libreoffice
-  chown root:root -R "${pkgdir}"/usr/lib/libreoffice
-}
-
-package_libreoffice-kok() {
-  pkgdesc="Konkani language pack for LibreOffice"
-  provides=('openoffice-kok' 'libreoffice-langpack')
-  replaces=(openoffice-kok)
-  conflicts=(openoffice-kok)
-  cd "${srcdir}"/LibreOffice_${_dirver}_Linux_x86_rpm_langpack_kok/RPMS
-  mkdir -p "${pkgdir}"/usr/lib/libreoffice
-  cp -R opt/libreoffice*/* "${pkgdir}"/usr/lib/libreoffice
-  chown root:root -R "${pkgdir}"/usr/lib/libreoffice
-}
-
-package_libreoffice-ks() {
-  pkgdesc="Kashmiri language pack for LibreOffice"
-  provides=('openoffice-ks' 'libreoffice-langpack')
-  replaces=(openoffice-ks)
-  conflicts=(openoffice-ks)
-  cd "${srcdir}"/LibreOffice_${_dirver}_Linux_x86_rpm_langpack_ks/RPMS
-  mkdir -p "${pkgdir}"/usr/lib/libreoffice
-  cp -R opt/libreoffice*/* "${pkgdir}"/usr/lib/libreoffice
-  chown root:root -R "${pkgdir}"/usr/lib/libreoffice
-}
-
-package_libreoffice-ku() {
-  pkgdesc="Kurdish language pack for LibreOffice"
-  provides=('openoffice-ku' 'libreoffice-langpack')
-  replaces=(openoffice-ku)
-  conflicts=(openoffice-ku)
-  cd "${srcdir}"/LibreOffice_${_dirver}_Linux_x86_rpm_langpack_ku/RPMS
-  mkdir -p "${pkgdir}"/usr/lib/libreoffice
-  cp -R opt/libreoffice*/* "${pkgdir}"/usr/lib/libreoffice
-  chown root:root -R "${pkgdir}"/usr/lib/libreoffice
-}
-
-package_libreoffice-lb() {
-  pkgdesc="Luxembourgish language pack for LibreOffice"
-  provides=('openoffice-lb' 'libreoffice-langpack')
-  replaces=(openoffice-lb)
-  conflicts=(openoffice-lb)
-  cd "${srcdir}"/LibreOffice_${_dirver}_Linux_x86_rpm_langpack_lb/RPMS
-  mkdir -p "${pkgdir}"/usr/lib/libreoffice
-  cp -R opt/libreoffice*/* "${pkgdir}"/usr/lib/libreoffice
-  chown root:root -R "${pkgdir}"/usr/lib/libreoffice
-}
-
-package_libreoffice-lo() {
-  pkgdesc="Lao language pack for LibreOffice"
-  provides=('openoffice-lo' 'libreoffice-langpack')
-  replaces=(openoffice-lo)
-  conflicts=(openoffice-lo)
-  cd "${srcdir}"/LibreOffice_${_dirver}_Linux_x86_rpm_langpack_lo/RPMS
-  mkdir -p "${pkgdir}"/usr/lib/libreoffice
-  cp -R opt/libreoffice*/* "${pkgdir}"/usr/lib/libreoffice
-  chown root:root -R "${pkgdir}"/usr/lib/libreoffice
-}
-
-package_libreoffice-lt() {
-  pkgdesc="Lithuanian language pack for LibreOffice"
-  provides=('openoffice-lt' 'libreoffice-langpack')
-  replaces=(openoffice-lt)
-  conflicts=(openoffice-lt)
-  cd "${srcdir}"/LibreOffice_${_dirver}_Linux_x86_rpm_langpack_lt/RPMS
-  mkdir -p "${pkgdir}"/usr/lib/libreoffice
-  cp -R opt/libreoffice*/* "${pkgdir}"/usr/lib/libreoffice
-  chown root:root -R "${pkgdir}"/usr/lib/libreoffice
-}
-
-package_libreoffice-lv() {
-  pkgdesc="Latvian language pack for LibreOffice"
-  provides=('openoffice-lv' 'libreoffice-langpack')
-  replaces=(openoffice-lv)
-  conflicts=(openoffice-lv)
-  cd "${srcdir}"/LibreOffice_${_dirver}_Linux_x86_rpm_langpack_lv/RPMS
-  mkdir -p "${pkgdir}"/usr/lib/libreoffice
-  cp -R opt/libreoffice*/* "${pkgdir}"/usr/lib/libreoffice
-  chown root:root -R "${pkgdir}"/usr/lib/libreoffice
-}
-
-package_libreoffice-mai() {
-  pkgdesc="Maithili language pack for LibreOffice"
-  provides=('openoffice-mai' 'libreoffice-langpack')
-  replaces=(openoffice-mai)
-  conflicts=(openoffice-mai)
-  cd "${srcdir}"/LibreOffice_${_dirver}_Linux_x86_rpm_langpack_mai/RPMS
-  mkdir -p "${pkgdir}"/usr/lib/libreoffice
-  cp -R opt/libreoffice*/* "${pkgdir}"/usr/lib/libreoffice
-  chown root:root -R "${pkgdir}"/usr/lib/libreoffice
-}
-
-package_libreoffice-mk() {
-  pkgdesc="Macedonian language pack for LibreOffice"
-  provides=('openoffice-mk' 'libreoffice-langpack')
-  replaces=(openoffice-mk)
-  conflicts=(openoffice-mk)
-  cd "${srcdir}"/LibreOffice_${_dirver}_Linux_x86_rpm_langpack_mk/RPMS
-  mkdir -p "${pkgdir}"/usr/lib/libreoffice
-  cp -R opt/libreoffice*/* "${pkgdir}"/usr/lib/libreoffice
-  chown root:root -R "${pkgdir}"/usr/lib/libreoffice
-}
-
-package_libreoffice-ml() {
-  pkgdesc="Malayalam language pack for LibreOffice"
-  provides=('openoffice-ml' 'libreoffice-langpack')
-  replaces=(openoffice-ml)
-  conflicts=(openoffice-ml)
-  cd "${srcdir}"/LibreOffice_${_dirver}_Linux_x86_rpm_langpack_ml/RPMS
-  mkdir -p "${pkgdir}"/usr/lib/libreoffice
-  cp -R opt/libreoffice*/* "${pkgdir}"/usr/lib/libreoffice
-  chown root:root -R "${pkgdir}"/usr/lib/libreoffice
-}
-
-package_libreoffice-mn() {
-  pkgdesc="Mongolian language pack for LibreOffice"
-  provides=('openoffice-mn' 'libreoffice-langpack')
-  replaces=(openoffice-mn)
-  conflicts=(openoffice-mn)
-  cd "${srcdir}"/LibreOffice_${_dirver}_Linux_x86_rpm_langpack_mn/RPMS
-  mkdir -p "${pkgdir}"/usr/lib/libreoffice
-  cp -R opt/libreoffice*/* "${pkgdir}"/usr/lib/libreoffice
-  chown root:root -R "${pkgdir}"/usr/lib/libreoffice
-}
-
-package_libreoffice-mni() {
-  pkgdesc="Manipuri language pack for LibreOffice"
-  provides=('openoffice-mni' 'libreoffice-langpack')
-  replaces=(openoffice-mni)
-  conflicts=(openoffice-mni)
-  cd "${srcdir}"/LibreOffice_${_dirver}_Linux_x86_rpm_langpack_mni/RPMS
-  mkdir -p "${pkgdir}"/usr/lib/libreoffice
-  cp -R opt/libreoffice*/* "${pkgdir}"/usr/lib/libreoffice
-  chown root:root -R "${pkgdir}"/usr/lib/libreoffice
-}
-
-package_libreoffice-mr() {
-  pkgdesc="Marathi language pack for LibreOffice"
-  provides=('openoffice-mr' 'libreoffice-langpack')
-  replaces=(openoffice-mr)
-  conflicts=(openoffice-mr)
-  cd "${srcdir}"/LibreOffice_${_dirver}_Linux_x86_rpm_langpack_mr/RPMS
-  mkdir -p "${pkgdir}"/usr/lib/libreoffice
-  cp -R opt/libreoffice*/* "${pkgdir}"/usr/lib/libreoffice
-  chown root:root -R "${pkgdir}"/usr/lib/libreoffice
-}
-
-package_libreoffice-my() {
-  pkgdesc="Burmese language pack for LibreOffice"
-  provides=('openoffice-my' 'libreoffice-langpack')
-  replaces=(openoffice-my)
-  conflicts=(openoffice-my)
-  cd "${srcdir}"/LibreOffice_${_dirver}_Linux_x86_rpm_langpack_my/RPMS
-  mkdir -p "${pkgdir}"/usr/lib/libreoffice
-  cp -R opt/libreoffice*/* "${pkgdir}"/usr/lib/libreoffice
-  chown root:root -R "${pkgdir}"/usr/lib/libreoffice
-}
-
-package_libreoffice-nb() {
-  pkgdesc="Norwegian Bokmal language pack for LibreOffice"
-  provides=('openoffice-nb' 'libreoffice-langpack')
-  replaces=(openoffice-nb)
-  conflicts=(openoffice-nb)
-  cd "${srcdir}"/LibreOffice_${_dirver}_Linux_x86_rpm_langpack_nb/RPMS
-  mkdir -p "${pkgdir}"/usr/lib/libreoffice
-  cp -R opt/libreoffice*/* "${pkgdir}"/usr/lib/libreoffice
-  chown root:root -R "${pkgdir}"/usr/lib/libreoffice
-}
-
-package_libreoffice-ne() {
-  pkgdesc="Nepali language pack for LibreOffice"
-  provides=('openoffice-ne' 'libreoffice-langpack')
-  replaces=('openoffice-ne')
-  conflicts=(openoffice-ne)
-  cd "${srcdir}"/LibreOffice_${_dirver}_Linux_x86_rpm_langpack_ne/RPMS
-  mkdir -p "${pkgdir}"/usr/lib/libreoffice
-  cp -R opt/libreoffice*/* "${pkgdir}"/usr/lib/libreoffice
-  chown root:root -R "${pkgdir}"/usr/lib/libreoffice
-}
-
-package_libreoffice-nl() {
-  pkgdesc="Dutch language pack for LibreOffice"
-  provides=('openoffice-nl' 'libreoffice-langpack')
-  replaces=(openoffice-nl)
-  conflicts=(openoffice-nl)
-  cd "${srcdir}"/LibreOffice_${_dirver}_Linux_x86_rpm_langpack_nl/RPMS
-  mkdir -p "${pkgdir}"/usr/lib/libreoffice
-  cp -R opt/libreoffice*/* "${pkgdir}"/usr/lib/libreoffice
-  chown root:root -R "${pkgdir}"/usr/lib/libreoffice
-}
-
-package_libreoffice-nn() {
-  pkgdesc="Norwegian Nynorsk language pack for LibreOffice"
-  provides=('openoffice-nn' 'libreoffice-langpack')
-  replaces=(openoffice-nn)
-  conflicts=(openoffice-nn)
-  cd "${srcdir}"/LibreOffice_${_dirver}_Linux_x86_rpm_langpack_nn/RPMS
-  mkdir -p "${pkgdir}"/usr/lib/libreoffice
-  cp -R opt/libreoffice*/* "${pkgdir}"/usr/lib/libreoffice
-  chown root:root -R "${pkgdir}"/usr/lib/libreoffice
-}
-
-package_libreoffice-nr() {
-  pkgdesc="Ndebele (South) language pack for LibreOffice"
-  provides=(openoffice-nr)
-  replaces=(openoffice-nr)
-  conflicts=(openoffice-nr)
-  cd "${srcdir}"/LibreOffice_${_dirver}_Linux_x86_rpm_langpack_nr/RPMS
-  mkdir -p "${pkgdir}"/usr/lib/libreoffice
-  cp -R opt/libreoffice*/* "${pkgdir}"/usr/lib/libreoffice
-  chown root:root -R "${pkgdir}"/usr/lib/libreoffice
-}
-
-package_libreoffice-nso() {
-  pkgdesc="Northern Sotho language pack for LibreOffice"
-  provides=('openoffice-ns' 'libreoffice-ns' 'libreoffice-langpack')
-  replaces=('openoffice-ns' 'libreoffice-ns')
-  conflicts=(openoffice-ns)
-  cd "${srcdir}"/LibreOffice_${_dirver}_Linux_x86_rpm_langpack_nso/RPMS
-  mkdir -p "${pkgdir}"/usr/lib/libreoffice
-  cp -R opt/libreoffice*/* "${pkgdir}"/usr/lib/libreoffice
-  chown root:root -R "${pkgdir}"/usr/lib/libreoffice
-}
-
-package_libreoffice-oc() {
-  pkgdesc="Occitan language pack for LibreOffice"
-  provides=('openoffice-oc' 'libreoffice-langpack')
-  replaces=(openoffice-oc)
-  conflicts=(openoffice-oc)
-  cd "${srcdir}"/LibreOffice_${_dirver}_Linux_x86_rpm_langpack_oc/RPMS
-  mkdir -p "${pkgdir}"/usr/lib/libreoffice
-  cp -R opt/libreoffice*/* "${pkgdir}"/usr/lib/libreoffice
-  chown root:root -R "${pkgdir}"/usr/lib/libreoffice
-}
-
-package_libreoffice-om() {
-  pkgdesc="Oromo language pack for LibreOffice"
-  provides=('openoffice-om' 'libreoffice-langpack')
-  replaces=(openoffice-om)
-  conflicts=(openoffice-om)
-  cd "${srcdir}"/LibreOffice_${_dirver}_Linux_x86_rpm_langpack_om/RPMS
-  mkdir -p "${pkgdir}"/usr/lib/libreoffice
-  cp -R opt/libreoffice*/* "${pkgdir}"/usr/lib/libreoffice
-  chown root:root -R "${pkgdir}"/usr/lib/libreoffice
-}
-
-package_libreoffice-or() {
-  pkgdesc="Oriya language pack for LibreOffice"
-  provides=('openoffice-or' 'libreoffice-langpack')
-  replaces=(openoffice-or)
-  conflicts=(openoffice-or)
-  cd "${srcdir}"/LibreOffice_${_dirver}_Linux_x86_rpm_langpack_or/RPMS
-  mkdir -p "${pkgdir}"/usr/lib/libreoffice
-  cp -R opt/libreoffice*/* "${pkgdir}"/usr/lib/libreoffice
-  chown root:root -R "${pkgdir}"/usr/lib/libreoffice
-}
-
-package_libreoffice-pa-IN() {
-  pkgdesc="Punjabi (India) language pack for LibreOffice"
-  provides=('openoffice-pa-IN' 'libreoffice-langpack')
-  replaces=(openoffice-pa-IN)
-  conflicts=(openoffice-pa-IN)
-  cd "${srcdir}"/LibreOffice_${_dirver}_Linux_x86_rpm_langpack_pa-IN/RPMS
-  mkdir -p "${pkgdir}"/usr/lib/libreoffice
-  cp -R opt/libreoffice*/* "${pkgdir}"/usr/lib/libreoffice
-  chown root:root -R "${pkgdir}"/usr/lib/libreoffice
-}
-
-package_libreoffice-pl() {
-  pkgdesc="Polish language pack for LibreOffice"
-  provides=('openoffice-pl' 'libreoffice-langpack')
-  replaces=(openoffice-pl)
-  conflicts=(openoffice-pl)
-  cd "${srcdir}"/LibreOffice_${_dirver}_Linux_x86_rpm_langpack_pl/RPMS
-  mkdir -p "${pkgdir}"/usr/lib/libreoffice
-  cp -R opt/libreoffice*/* "${pkgdir}"/usr/lib/libreoffice
-  chown root:root -R "${pkgdir}"/usr/lib/libreoffice
-}
-
-package_libreoffice-pt-BR() {
-  pkgdesc="Portuguese (Brasil) language pack for LibreOffice"
-  provides=('openoffice-pt-BR' 'libreoffice-langpack')
-  replaces=(openoffice-pt-BR)
-  conflicts=(openoffice-pt-BR)
-  cd "${srcdir}"/LibreOffice_${_dirver}_Linux_x86_rpm_langpack_pt-BR/RPMS
-  mkdir -p "${pkgdir}"/usr/lib/libreoffice
-  cp -R opt/libreoffice*/* "${pkgdir}"/usr/lib/libreoffice
-  chown root:root -R "${pkgdir}"/usr/lib/libreoffice
-}
-
-package_libreoffice-pt() {
-  pkgdesc="Portuguese language pack for LibreOffice"
-  provides=('openoffice-pt' 'libreoffice-langpack')
-  replaces=(openoffice-pt)
-  conflicts=(openoffice-pt)
-  cd "${srcdir}"/LibreOffice_${_dirver}_Linux_x86_rpm_langpack_pt/RPMS
-  mkdir -p "${pkgdir}"/usr/lib/libreoffice
-  cp -R opt/libreoffice*/* "${pkgdir}"/usr/lib/libreoffice
-  chown root:root -R "${pkgdir}"/usr/lib/libreoffice
-}
-
-package_libreoffice-ro() {
-  pkgdesc="Romanian language pack for LibreOffice"
-  provides=('openoffice-ro' 'libreoffice-langpack')
-  replaces=(openoffice-ro)
-  conflicts=(openoffice-ro)
-  cd "${srcdir}"/LibreOffice_${_dirver}_Linux_x86_rpm_langpack_ro/RPMS
-  mkdir -p "${pkgdir}"/usr/lib/libreoffice
-  cp -R opt/libreoffice*/* "${pkgdir}"/usr/lib/libreoffice
-  chown root:root -R "${pkgdir}"/usr/lib/libreoffice
-}
-
-package_libreoffice-ru() {
-  pkgdesc="Russian language pack for LibreOffice"
-  provides=('openoffice-ru' 'libreoffice-langpack')
-  replaces=(openoffice-ru)
-  conflicts=(openoffice-ru)
-  cd "${srcdir}"/LibreOffice_${_dirver}_Linux_x86_rpm_langpack_ru/RPMS
-  mkdir -p "${pkgdir}"/usr/lib/libreoffice
-  cp -R opt/libreoffice*/* "${pkgdir}"/usr/lib/libreoffice
-  chown root:root -R "${pkgdir}"/usr/lib/libreoffice
-}
-
-package_libreoffice-rw() {
-  pkgdesc="Kinyarwanda language pack for LibreOffice"
-  provides=('openoffice-rw' 'libreoffice-langpack')
-  replaces=(openoffice-rw)
-  conflicts=(openoffice-rw)
-  cd "${srcdir}"/LibreOffice_${_dirver}_Linux_x86_rpm_langpack_rw/RPMS
-  mkdir -p "${pkgdir}"/usr/lib/libreoffice
-  cp -R opt/libreoffice*/* "${pkgdir}"/usr/lib/libreoffice
-  chown root:root -R "${pkgdir}"/usr/lib/libreoffice
-}
-
-package_libreoffice-sa-IN() {
-  pkgdesc="Sanskrit (India) language pack for LibreOffice"
-  provides=('openoffice-sa-IN' 'libreoffice-langpack')
-  replaces=(openoffice-sa-IN)
-  conflicts=(openoffice-sa-IN)
-  cd "${srcdir}"/LibreOffice_${_dirver}_Linux_x86_rpm_langpack_sa-IN/RPMS
-  mkdir -p "${pkgdir}"/usr/lib/libreoffice
-  cp -R opt/libreoffice*/* "${pkgdir}"/usr/lib/libreoffice
-  chown root:root -R "${pkgdir}"/usr/lib/libreoffice
-}
-
-package_libreoffice-sat() {
-  pkgdesc="Santali language pack for LibreOffice"
-  provides=('openoffice-sat' 'libreoffice-langpack')
-  replaces=(openoffice-sat)
-  conflicts=(openoffice-sat)
-  cd "${srcdir}"/LibreOffice_${_dirver}_Linux_x86_rpm_langpack_sat/RPMS
-  mkdir -p "${pkgdir}"/usr/lib/libreoffice
-  cp -R opt/libreoffice*/* "${pkgdir}"/usr/lib/libreoffice
-  chown root:root -R "${pkgdir}"/usr/lib/libreoffice
-}
-
-package_libreoffice-sd() {
-  pkgdesc="Sindhi language pack for LibreOffice"
-  provides=('openoffice-sd' 'libreoffice-langpack')
-  replaces=(openoffice-sd)
-  conflicts=(openoffice-sd)
-  cd "${srcdir}"/LibreOffice_${_dirver}_Linux_x86_rpm_langpack_sd/RPMS
-  mkdir -p "${pkgdir}"/usr/lib/libreoffice
-  cp -R opt/libreoffice*/* "${pkgdir}"/usr/lib/libreoffice
-  chown root:root -R "${pkgdir}"/usr/lib/libreoffice
-}
-
-package_libreoffice-sh() {
-  pkgdesc="Serbo-Croatian language pack for LibreOffice"
-  provides=('openoffice-sh' 'libreoffice-langpack')
-  replaces=(openoffice-sh)
-  conflicts=(openoffice-sh)
-  cd "${srcdir}"/LibreOffice_${_dirver}_Linux_x86_rpm_langpack_sh/RPMS
-  mkdir -p "${pkgdir}"/usr/lib/libreoffice
-  cp -R opt/libreoffice*/* "${pkgdir}"/usr/lib/libreoffice
-  chown root:root -R "${pkgdir}"/usr/lib/libreoffice
-}
-
-package_libreoffice-si() {
-  pkgdesc="Singhalese language pack for LibreOffice"
-  provides=('openoffice-si' 'libreoffice-langpack')
-  replaces=(openoffice-si)
-  conflicts=(openoffice-si)
-  cd "${srcdir}"/LibreOffice_${_dirver}_Linux_x86_rpm_langpack_si/RPMS
-  mkdir -p "${pkgdir}"/usr/lib/libreoffice
-  cp -R opt/libreoffice*/* "${pkgdir}"/usr/lib/libreoffice
-  chown root:root -R "${pkgdir}"/usr/lib/libreoffice
-}
-
-package_libreoffice-sid() {
-  pkgdesc="Sidama language pack for LibreOffice"
-  provides=('openoffice-sid' 'libreoffice-langpack')
-  replaces=(openoffice-sid)
-  conflicts=(openoffice-sid)
-  cd "${srcdir}"/LibreOffice_${_dirver}_Linux_x86_rpm_langpack_sid/RPMS
-  mkdir -p "${pkgdir}"/usr/lib/libreoffice
-  cp -R opt/libreoffice*/* "${pkgdir}"/usr/lib/libreoffice
-  chown root:root -R "${pkgdir}"/usr/lib/libreoffice
-}
-
-package_libreoffice-sk() {
-  pkgdesc="Slovak language pack for LibreOffice"
-  provides=('openoffice-sk' 'libreoffice-langpack')
-  replaces=(openoffice-sk)
-  conflicts=(openoffice-sk)
-  cd "${srcdir}"/LibreOffice_${_dirver}_Linux_x86_rpm_langpack_sk/RPMS
-  mkdir -p "${pkgdir}"/usr/lib/libreoffice
-  cp -R opt/libreoffice*/* "${pkgdir}"/usr/lib/libreoffice
-  chown root:root -R "${pkgdir}"/usr/lib/libreoffice
-}
-
-package_libreoffice-sl() {
-  pkgdesc="Slovenian language pack for LibreOffice"
-  provides=('openoffice-sl' 'libreoffice-langpack')
-  replaces=(openoffice-sl)
-  conflicts=(openoffice-sl)
-  cd "${srcdir}"/LibreOffice_${_dirver}_Linux_x86_rpm_langpack_sl/RPMS
-  mkdir -p "${pkgdir}"/usr/lib/libreoffice
-  cp -R opt/libreoffice*/* "${pkgdir}"/usr/lib/libreoffice
-  chown root:root -R "${pkgdir}"/usr/lib/libreoffice
-}
-
-package_libreoffice-sq() {
-  pkgdesc="Albanien language pack for LibreOffice"
-  provides=('openoffice-sq' 'libreoffice-langpack')
-  replaces=(openoffice-sq)
-  conflicts=(openoffice-sq)
-  cd "${srcdir}"/LibreOffice_${_dirver}_Linux_x86_rpm_langpack_sq/RPMS
-  mkdir -p "${pkgdir}"/usr/lib/libreoffice
-  cp -R opt/libreoffice*/* "${pkgdir}"/usr/lib/libreoffice
-  chown root:root -R "${pkgdir}"/usr/lib/libreoffice
-}
-
-package_libreoffice-sr() {
-  pkgdesc="Serbian language pack for LibreOffice"
-  provides=('openoffice-sr' 'libreoffice-langpack')
-  replaces=(openoffice-sr)
-  conflicts=(openoffice-sr)
-  cd "${srcdir}"/LibreOffice_${_dirver}_Linux_x86_rpm_langpack_sr/RPMS
-  mkdir -p "${pkgdir}"/usr/lib/libreoffice
-  cp -R opt/libreoffice*/* "${pkgdir}"/usr/lib/libreoffice
-  chown root:root -R "${pkgdir}"/usr/lib/libreoffice
-}
-
-package_libreoffice-ss() {
-  pkgdesc="Swati language pack for LibreOffice"
-  provides=('openoffice-ss' 'libreoffice-langpack')
-  replaces=(openoffice-ss)
-  conflicts=(openoffice-ss)
-  cd "${srcdir}"/LibreOffice_${_dirver}_Linux_x86_rpm_langpack_ss/RPMS
-  mkdir -p "${pkgdir}"/usr/lib/libreoffice
-  cp -R opt/libreoffice*/* "${pkgdir}"/usr/lib/libreoffice
-  chown root:root -R "${pkgdir}"/usr/lib/libreoffice
-}
-
-package_libreoffice-st() {
-  pkgdesc="Southern Sotho language pack for LibreOffice"
-  provides=('openoffice-st' 'libreoffice-langpack')
-  replaces=(openoffice-st)
-  conflicts=(openoffice-st)
-  cd "${srcdir}"/LibreOffice_${_dirver}_Linux_x86_rpm_langpack_st/RPMS
-  mkdir -p "${pkgdir}"/usr/lib/libreoffice
-  cp -R opt/libreoffice*/* "${pkgdir}"/usr/lib/libreoffice
-  chown root:root -R "${pkgdir}"/usr/lib/libreoffice
-}
-
-package_libreoffice-sv() {
-  pkgdesc="Swedish language pack for LibreOffice"
-  provides=('openoffice-sv' 'libreoffice-langpack')
-  replaces=(openoffice-sv)
-  conflicts=(openoffice-sv)
-  cd "${srcdir}"/LibreOffice_${_dirver}_Linux_x86_rpm_langpack_sv/RPMS
-  mkdir -p "${pkgdir}"/usr/lib/libreoffice
-  cp -R opt/libreoffice*/* "${pkgdir}"/usr/lib/libreoffice
-  chown root:root -R "${pkgdir}"/usr/lib/libreoffice
-}
-
-package_libreoffice-sw-TZ() {
-  pkgdesc="Swahili (Tanzania) language pack for LibreOffice"
-  provides=('openoffice-sw-TZ' 'libreoffice-langpack')
-  replaces=(openoffice-sw-TZ)
-  conflicts=(openoffice-sw-TZ)
-  cd "${srcdir}"/LibreOffice_${_dirver}_Linux_x86_rpm_langpack_sw-TZ/RPMS
-  mkdir -p "${pkgdir}"/usr/lib/libreoffice
-  cp -R opt/libreoffice*/* "${pkgdir}"/usr/lib/libreoffice
-  chown root:root -R "${pkgdir}"/usr/lib/libreoffice
-}
-
-package_libreoffice-ta() {
-  pkgdesc="Tamil language pack for LibreOffice"
-  provides=('openoffice-ta' 'libreoffice-langpack')
-  replaces=(openoffice-ta)
-  conflicts=(openoffice-ta)
-  cd "${srcdir}"/LibreOffice_${_dirver}_Linux_x86_rpm_langpack_ta/RPMS
-  mkdir -p "${pkgdir}"/usr/lib/libreoffice
-  cp -R opt/libreoffice*/* "${pkgdir}"/usr/lib/libreoffice
-  chown root:root -R "${pkgdir}"/usr/lib/libreoffice
-}
-
-package_libreoffice-te() {
-  pkgdesc="Telugu language pack for LibreOffice"
-  provides=('openoffice-te' 'libreoffice-langpack')
-  replaces=(openoffice-te)
-  conflicts=(openoffice-te)
-  cd "${srcdir}"/LibreOffice_${_dirver}_Linux_x86_rpm_langpack_te/RPMS
-  mkdir -p "${pkgdir}"/usr/lib/libreoffice
-  cp -R opt/libreoffice*/* "${pkgdir}"/usr/lib/libreoffice
-  chown root:root -R "${pkgdir}"/usr/lib/libreoffice
-}
-
-package_libreoffice-tg() {
-  pkgdesc="Tajik language pack for LibreOffice"
-  provides=('openoffice-tg' 'libreoffice-langpack')
-  replaces=(openoffice-tg)
-  conflicts=(openoffice-tg)
-  cd "${srcdir}"/LibreOffice_${_dirver}_Linux_x86_rpm_langpack_tg/RPMS
-  mkdir -p "${pkgdir}"/usr/lib/libreoffice
-  cp -R opt/libreoffice*/* "${pkgdir}"/usr/lib/libreoffice
-  chown root:root -R "${pkgdir}"/usr/lib/libreoffice
-}
-
-package_libreoffice-th() {
-  pkgdesc="Thai language pack for LibreOffice"
-  provides=('openoffice-th' 'libreoffice-langpack')
-  replaces=(openoffice-th)
-  conflicts=(openoffice-th)
-  cd "${srcdir}"/LibreOffice_${_dirver}_Linux_x86_rpm_langpack_th/RPMS
-  mkdir -p "${pkgdir}"/usr/lib/libreoffice
-  cp -R opt/libreoffice*/* "${pkgdir}"/usr/lib/libreoffice
-  chown root:root -R "${pkgdir}"/usr/lib/libreoffice
-}
-
-package_libreoffice-tn() {
-  pkgdesc="Tswana language pack for LibreOffice"
-  provides=('openoffice-tn' 'libreoffice-langpack')
-  replaces=(openoffice-tn)
-  conflicts=(openoffice-tn)
-  cd "${srcdir}"/LibreOffice_${_dirver}_Linux_x86_rpm_langpack_tn/RPMS
-  mkdir -p "${pkgdir}"/usr/lib/libreoffice
-  cp -R opt/libreoffice*/* "${pkgdir}"/usr/lib/libreoffice
-  chown root:root -R "${pkgdir}"/usr/lib/libreoffice
-}
-
-package_libreoffice-tr() {
-  pkgdesc="Turkish language pack for LibreOffice"
-  provides=('openoffice-tr' 'libreoffice-langpack')
-  replaces=(openoffice-tr)
-  conflicts=(openoffice-tr)
-  cd "${srcdir}"/LibreOffice_${_dirver}_Linux_x86_rpm_langpack_tr/RPMS
-  mkdir -p "${pkgdir}"/usr/lib/libreoffice
-  cp -R opt/libreoffice*/* "${pkgdir}"/usr/lib/libreoffice
-  chown root:root -R "${pkgdir}"/usr/lib/libreoffice
-}
-
-package_libreoffice-ts() {
-  pkgdesc="Tsonga language pack for LibreOffice"
-  provides=('openoffice-ts' 'libreoffice-langpack')
-  replaces=(openoffice-ts)
-  conflicts=(openoffice-ts)
-  cd "${srcdir}"/LibreOffice_${_dirver}_Linux_x86_rpm_langpack_ts/RPMS
-  mkdir -p "${pkgdir}"/usr/lib/libreoffice
-  cp -R opt/libreoffice*/* "${pkgdir}"/usr/lib/libreoffice
-  chown root:root -R "${pkgdir}"/usr/lib/libreoffice
-}
-
-package_libreoffice-tt() {
-  pkgdesc="Tatar language pack for LibreOffice"
-  provides=('openoffice-tt' 'libreoffice-langpack')
-  replaces=(openoffice-tt)
-  conflicts=(openoffice-tt)
-  cd "${srcdir}"/LibreOffice_${_dirver}_Linux_x86_rpm_langpack_tt/RPMS
-  mkdir -p "${pkgdir}"/usr/lib/libreoffice
-  cp -R opt/libreoffice*/* "${pkgdir}"/usr/lib/libreoffice
-  chown root:root -R "${pkgdir}"/usr/lib/libreoffice
-}
-
-package_libreoffice-ug() {
-  pkgdesc="Uighur language pack for LibreOffice"
-  provides=('openoffice-ug' 'libreoffice-langpack')
-  replaces=(openoffice-ug)
-  conflicts=(openoffice-ug)
-  cd "${srcdir}"/LibreOffice_${_dirver}_Linux_x86_rpm_langpack_ug/RPMS
-  mkdir -p "${pkgdir}"/usr/lib/libreoffice
-  cp -R opt/libreoffice*/* "${pkgdir}"/usr/lib/libreoffice
-  chown root:root -R "${pkgdir}"/usr/lib/libreoffice
-}
-
-package_libreoffice-uk() {
-  pkgdesc="Ukrainian language pack for LibreOffice"
-  provides=('openoffice-uk' 'libreoffice-langpack')
-  replaces=(openoffice-uk)
-  conflicts=(openoffice-uk)
-  cd "${srcdir}"/LibreOffice_${_dirver}_Linux_x86_rpm_langpack_uk/RPMS
-  mkdir -p "${pkgdir}"/usr/lib/libreoffice
-  cp -R opt/libreoffice*/* "${pkgdir}"/usr/lib/libreoffice
-  chown root:root -R "${pkgdir}"/usr/lib/libreoffice
-}
-
-package_libreoffice-uz() {
-  pkgdesc="Uzbek language pack for LibreOffice"
-  provides=('openoffice-uz' 'libreoffice-langpack')
-  replaces=(openoffice-uz)
-  conflicts=(openoffice-uz)
-  cd "${srcdir}"/LibreOffice_${_dirver}_Linux_x86_rpm_langpack_uz/RPMS
-  mkdir -p "${pkgdir}"/usr/lib/libreoffice
-  cp -R opt/libreoffice*/* "${pkgdir}"/usr/lib/libreoffice
-  chown root:root -R "${pkgdir}"/usr/lib/libreoffice
-}
-
-package_libreoffice-ve() {
-  pkgdesc="Venda language pack for LibreOffice"
-  provides=('openoffice-ve' 'libreoffice-langpack')
-  replaces=(openoffice-ve)
-  conflicts=(openoffice-ve)
-  cd "${srcdir}"/LibreOffice_${_dirver}_Linux_x86_rpm_langpack_ve/RPMS
-  mkdir -p "${pkgdir}"/usr/lib/libreoffice
-  cp -R opt/libreoffice*/* "${pkgdir}"/usr/lib/libreoffice
-  chown root:root -R "${pkgdir}"/usr/lib/libreoffice
-}
-
-package_libreoffice-vi() {
-  pkgdesc="Vietnamese language pack for LibreOffice"
-  provides=('openoffice-vi' 'libreoffice-langpack')
-  replaces=(openoffice-vi)
-  conflicts=(openoffice-vi)
-  cd "${srcdir}"/LibreOffice_${_dirver}_Linux_x86_rpm_langpack_vi/RPMS
-  mkdir -p "${pkgdir}"/usr/lib/libreoffice
-  cp -R opt/libreoffice*/* "${pkgdir}"/usr/lib/libreoffice
-  chown root:root -R "${pkgdir}"/usr/lib/libreoffice
-}
-
-package_libreoffice-xh() {
-  pkgdesc="Xhosa language pack for LibreOffice"
-  provides=('openoffice-xh' 'libreoffice-langpack')
-  replaces=(openoffice-xh)
-  conflicts=(openoffice-xh)
-  cd "${srcdir}"/LibreOffice_${_dirver}_Linux_x86_rpm_langpack_xh/RPMS
-  mkdir -p "${pkgdir}"/usr/lib/libreoffice
-  cp -R opt/libreoffice*/* "${pkgdir}"/usr/lib/libreoffice
-  chown root:root -R "${pkgdir}"/usr/lib/libreoffice
-}
-
-package_libreoffice-zh-CN() {
-  pkgdesc="Chinese (simplified) language pack for LibreOffice"
-  provides=('openoffice-zh-CN' 'libreoffice-langpack')
-  replaces=(openoffice-zh-CN)
-  conflicts=(openoffice-zh-CN)
-  cd "${srcdir}"/LibreOffice_${_dirver}_Linux_x86_rpm_langpack_zh-CN/RPMS
-  mkdir -p "${pkgdir}"/usr/lib/libreoffice
-  cp -R opt/libreoffice*/* "${pkgdir}"/usr/lib/libreoffice
-  chown root:root -R "${pkgdir}"/usr/lib/libreoffice
-}
-
-package_libreoffice-zh-TW() {
-  pkgdesc="Chinese (traditional) language pack for LibreOffice"
-  provides=('openoffice-zh-TW' 'libreoffice-langpack')
-  replaces=(openoffice-zh-TW)
-  conflicts=(openoffice-zh-TW)
-  cd "${srcdir}"/LibreOffice_${_dirver}_Linux_x86_rpm_langpack_zh-TW/RPMS
-  mkdir -p "${pkgdir}"/usr/lib/libreoffice
-  cp -R opt/libreoffice*/* "${pkgdir}"/usr/lib/libreoffice
-  chown root:root -R "${pkgdir}"/usr/lib/libreoffice
-}
-
-package_libreoffice-zu() {
-  pkgdesc="Zulu language pack for LibreOffice"
-  provides=('openoffice-zu' 'libreoffice-langpack')
-  replaces=(openoffice-zu)
-  conflicts=(openoffice-zu)
-  cd "${srcdir}"/LibreOffice_${_dirver}_Linux_x86_rpm_langpack_zu/RPMS
-  mkdir -p "${pkgdir}"/usr/lib/libreoffice
-  cp -R opt/libreoffice*/* "${pkgdir}"/usr/lib/libreoffice
-  chown root:root -R "${pkgdir}"/usr/lib/libreoffice
-}
+_package() {
+  pkgdesc="${_languages[$1]} language pack for LibreOffice"
+  provides=("openoffice-$1" 'libreoffice-langpack')
+  replaces=("openoffice-$1")
+  conflicts=("openoffice-$1")
+
+  cd "$srcdir"/LibreOffice_${_dirver}_Linux_x86_rpm_langpack_$1/RPMS
+  mkdir -p "$pkgdir"/usr/lib/libreoffice
+  cp -R opt/libreoffice*/* "$pkgdir"/usr/lib/libreoffice
+  chown root:root -R "$pkgdir"/usr/lib/libreoffice
+}
+  
+for lang in ${!_languages[@]}; do
+
+  echo $lang " adding to source list..."
+  _pkgname=libreoffice-$lang
+  source+=(${_url}/LibreOffice_${_oodlver}_Linux_x86_rpm_langpack_$lang.tar.gz)
+  
+  # check if the helppack exist, in case add to the sources
+  wget --spider -q ${_url}/LibreOffice_${_oodlver}_Linux_x86_rpm_helppack_$lang.tar.gz &&  source+=(${_url}/LibreOffice_${_oodlver}_Linux_x86_rpm_helppack_$lang.tar.gz)
+  
+  pkgname+=($_pkgname)
+  eval "package_${_pkgname}() {
+    _package $lang
+  }"
+done
+
+md5sums=('1792cd9f838f5b352e4a6e7d70be199c'
+         'd92de92ca531a397e208def34d7fe6a4'
+         '546a598d3e6fefd6a085bc38357460a4'
+         '4cdf262d75e176ce8cf62e38bd4b4a10'
+         'bd362a183a58a06a490f199369982d74'
+         'aa4d9800d396c0848ef4d24575abb72b'
+         'b0bdb093d834209dbbc103e4c21a64fb'
+         '4caf0dbb731ddfcee35b2d2cb068de87'
+         '8f5dc4cfaaf399e184a3a74628fa2433'
+         '299a5ea5ee274cd806438eb88fc88a25'
+         'ef2b5a356abe3fe9d78d095026007ce6'
+         'a34946e6d25fe4d5842928e08903f2b7'
+         '0bfbfc57dd70df881c46dd71d52e4135'
+         '2d656f9bceb70b2bd147e373ce4b3115'
+         '8a1391f3dd5696e4ebeb0ecefd4330f8'
+         'c83c1009a279ea26de46b4e1a19b5e2c'
+         '4e646773b4a899e2b42d49f3cb1296d0'
+         '6a15dfff99fc4b94c21965954965c68e'
+         '7148212e760b26897cf970cd19ce2516'
+         '106c8bee468a2db05f01aa97366d96a6'
+         '55cc14452f57bd8f9f5a7e1f42e75efe'
+         'c69657948acb6ca34bda15718a29180d'
+         '1f72348691539a36772822e6ded851f0'
+         '53cd28c59f1ae1fd65e7f61dabfea53f'
+         'd1e95db4e8c4e3d728a27a6ef8b029b7'
+         'd7116d0a8ba953f76a594b655500f855'
+         '62d26b2d7a0d91409164210eb069bb49'
+         'ba65d9af025e2065aaa38f0fead42a98'
+         '737f0913dafc776bec6ba3fdb1b44545'
+         '6f216e6e56ded4179fc3fe0c6fb8ec74'
+         'f33760e4c9ee621f2422793f78c13fad'
+         '718e600699b52c896b95c1b80505b537'
+         '13238688cc9d98050fd303bf5243cba4'
+         'a8016bbd9e89c9b69d3faad50167214e'
+         '82f57180fe07e137b3d8def92f63a435'
+         '6a487fbf2fb96ff16a5db661ee64b865'
+         '220db88c349597268e257edc2791c546'
+         '003d2c523cae5cd5c345060fceac4952'
+         '2088a5a3e6793c27f190e72b3dc9357d'
+         '83f8fbd38ace7942004a47f8903fcaf3'
+         'b59b5d5f24a84966fe84df9ca94ffeff'
+         'c3c1d7e0ed6498d4e13f8135f6c69267'
+         '879d16476375ec06983fad4e0034c271'
+         '937eb6ee8b45b370bf8bfd8438408b7a'
+         '60989d77ad83781917e20a0af6f82c13'
+         '427e8bae3b59ef9b3f1f9f1a7885111b'
+         'c33cd7ddfa4b68d64d23bacc88c04d10'
+         '1fe4193e39783648e93bd1d93cba5dcd'
+         'cc86bebe959a5c67816a951ba9434c18'
+         'd59d4e4745081306d793a751f282b26d'
+         '64f89b27d796f2be73564347c69266b7'
+         '6c57d5384f551779115f6f471147e572'
+         '5260a45848f611624b7be4e950138213'
+         '9d2518043d73069c92e38e2c86180d42'
+         '50c9804cf5fb6000ee9d31a4fda16751'
+         '62fb2aeb767f0b7d7eda692929eeacd6'
+         '8659eec023d41bc006f2e5262493f8e9'
+         '70de72fc85178757afecad027c3bffca'
+         'b82ef3f4b84bf18eaa146d5eecceace2'
+         '86e4929484f988ef5fc23a2580dd1dd8'
+         'af86add2127dadce34156093e8240d57'
+         'a7df4f102394b4f7fe96263fafa3c537'
+         '5b5fc4bed3feb14137382513fb221f9c'
+         '30742e5ae5b7fcd3526a3ddd6996f237'
+         'f43f523cf5e8078d12da8d75eb7a3746'
+         '5d327ab4e78d93e57f1306d790db9242'
+         '69e82ee1f3c8049a2bfb0c2e3adbc5e4'
+         'bfab4da94d8c7f4c193ab8f353119ef3'
+         'c2d94f60814f9679bb2320a61a680b55'
+         'a940baadb2991ba8d966d27bc892cf2f'
+         '7ccbadf2526ab12b7fb5e1dc5a43f0f1'
+         'a26c8e310e87ad0799b8e810d3ec5b09'
+         '8bf07b31bb02784fec7a517e9038843e'
+         '3eca85bb06458240adb3bdbb0e3307a7'
+         '52fda3b804d515e0c6daa081c23aea10'
+         '6c629be171fdb34f1cb73547a9994774'
+         '1ac59ea993df8d5d9d5cc38874f13522'
+         '133c25682b4a590dae45456583a5411e'
+         'e959e407896d96650d02944969277a7c'
+         '0eaef4bde3c3a4703a080a56169a9429'
+         '5716a2090cebf0faf25ff78a33636212'
+         '8d5c236dec42173a4d88e181fd6bfc68'
+         '9a4decba7fb9269e5446356c86625df4'
+         'de342fe0c62f9d32454dd7e60d2877e1'
+         '6f23ddffac419661b8818380d4af3ea4'
+         '6b42a661bc7ea59634371f8c28b72f33'
+         '5a80c7229c9e33cdf0345a5fc9147f40'
+         '6a9e998043da76ac73b3b31c4680c5fb'
+         '77fa8d676a880824c3868d0f3e4a2cac'
+         '67880de4c7365f4f6ea3b359e7e43c7b'
+         'a29d3d4ca4835fd59006cca9b003481a'
+         '529af51d9547cb84de8f0d0ea7e41394'
+         'a5ed19e4e411f2bbd4edd548ee1a209d'
+         '0dce3fba1462f079cfa94cafa782c1f4'
+         '27346e37077bfe18a91b85c27a58bfb5'
+         '40cf22f00d0b592d3397706b499a31a6'
+         '22086c8cd18fdd2e691b33cba055bf4f'
+         '281509c9d1f6831cacc518cb6fa14be3'
+         'abca6370d5c22951515e4223efdca02d'
+         'bdc51250aa1040473221c841fcc5fa7e'
+         'e880dffc94e5c92b74eca2a9d8c5d9f2'
+         '0857891ec88037835cdbc242aede422d'
+         '6158ac4783097e7f28ae71920b37aa38'
+         'f18832d0a9f788c23e9dab0550d74598'
+         '18cf2402cb7f989eece37c4aae76f9f6'
+         '18822798b760ccfc45f9c446d4ecf328'
+         '2c0f314a113bf6dc04969e6c65167f91'
+         '455ff28b337c8afb6e72d905450427a7'
+         'bce9da8aaeae5db1e6112780c6f60bae'
+         '0621f222e3f17ccf3448b0d52ceaf356'
+         '0e95c2c946c2e8429c44e4c9c2ebec90'
+         '91a02e316a4699457787c890ebf4e158'
+         'cc4c3a7bb3d588e4bf450e4fd7a61728'
+         'b3077494b37906c4d35371ea413709d3'
+         'b79a626a32b4034c90fb4853bae3deeb'
+         'f57d29bacb09be5cd38d04bd4074c730'
+         'fca4e91d29fe792431cdb9f628cd13cd'
+         'fd681c86fb61ed2295c36586e5b0f0ee'
+         '0207d2a801f17c40199d7f25cf2a7159'
+         '98a5a44c9b68a1a10f74eec9a4dfeffc'
+         'cd3b6f0ce376c613c61d417dfd7c6f28'
+         'df674d94e32832c2edf45ec7e2d7fbab'
+         '8932f5bdcedd6a3303a5ef160a99ad9f'
+         'fba722abc35a421606f8fdaa28e10134'
+         '44b2a21e2cb0196ef1bd9a7de22fe165'
+         'ee157b5bfe30e44c24e4862384e36080'
+         '7970c5fbc5b6dfaebfe65f9e1d69ef12'
+         '04a71404c9cd848b9d33960ff0b14e06'
+         'b13b4488af84ef83f65603e333a0b79b'
+         'a95c0d73402cbc3dc9bd5503ffa1ae00'
+         '9778cf05e12e66a5ea6d6cfbd45abde9'
+         'c5d50375ac4abdeeebad99a0a0bb7b04'
+         'ba201096e1da7ce2b43884ec6de2c467'
+         '8b93a79eaf7dd26a1e3c9d34d673fbad'
+         'e48819b2aa8abe414ef13d2c11125879'
+         'b363cf532aac94abb3ee01b0783f74f4'
+         'dca498bd55405bb69a1d07aa648dea8d'
+         '455c506d061b57b998c35172637b9c1a'
+         '7add1c3279b8d0a5c00fd454b5200dc8'
+         '4151ac17288b383bb67e3dfd8e084b6a'
+         'acdec9ad23357b4f9a859ddde357d645'
+         '138bc09c53cfb516c073eb1025500e9d'
+         'ca61acb64764e209332c4a83bb758c41'
+         '9ffd1fd617ff148860da6b6ad0e511c3'
+         'faab2cb0d0a1b8b09fa0e1a1efbf80d2'
+         '39e4922ffa01c0d5bda7b5330a977770'
+         '9024c6c7d994c40d8877c7ee985feff7'
+         'ccc32a7806cdf7a8eb036ed90b346b9b'
+         'c338062b621b1473c0fc2e0b26eb07d5'
+         'da3a9b7c508336799f3a8cb307bd5a3a'
+         'd737ee043e5a8d50b697cb267cf9b891'
+         'e71632a94ec077af1315fd4ee2ab9d50'
+         '9ab84b502a79f680d3d18bc9b3011cd8'
+         '4c0f7da2796bda17bd2f5648fe5f30ff'
+         '4a3d84ebd4687f47c44263fb3a5228e4'
+         'bb10cdd229bed3f2ec702dec35c0d0e2'
+         '1602fce30fa3e95c40a4b9b8a66ef11b'
+         '9a5615e6dc69848f161d9d5f1ab6c406'
+         'fb509d8795f13efe18a58a3d0b57304c'
+         '7f5be603eb32376e8dfc3bc6d7e6acaa'
+         '97663c7b5d8f18ee9f2c7521636593fc'
+         '97d16dd3f5f6bb1dd66dc5c23cd66671'
+         'ebcc75a6ffba5d6a48edea380993466e'
+         '28f86a00b23a1f55751ccbdb78cd03e0'
+         '265d305d6b96f72c966cf5ac9178b7fb'
+         'e4704469a58741b670d7a4664af0163f')
