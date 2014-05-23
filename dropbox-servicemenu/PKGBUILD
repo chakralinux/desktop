@@ -1,20 +1,20 @@
-#
-# Apps Packages for Chakra, part of chakra-project.org
-#
-# maintainer: Neo Kolokotronis <tetris4@gmail.com>
+# maintainer: Manuel 'UtG' <utg[dot]chakra.linux[at]gmail[dot]com>
 # contributor: (locke87) Felix Mauch
 
-pkgname=dropbox-servicemenu-gtkfree
+pkgname=dropbox-servicemenu
 pkgver=0.16.1
-pkgrel=1
+pkgrel=2
 pkgdesc="A servicemenu for KDE4 which allows easy access to most of Dropbox features - Stripped from gtk dependencies. It uses Dropbox CLI to generate public urls, and pyndexer to allow sharing directories in public directory."
 url="http://kde-apps.org/content/show.php?content=124416"
 license=('GPL')
-arch=('i686' 'x86_64')
-depends=('kfilebox-gtkfree' 'python' 'kde-baseapps' 'python-m2crypto' 'xdg-utils' 'sharutils' 'recode' 'perl')
+arch=('x86_64')
+conflicts=('dropbox-servicemenu-gtkfree')
+replaces=('dropbox-servicemenu-gtkfree')
+depends=('kfilebox' 'python' 'kde-baseapps' 'python-m2crypto' 'xdg-utils' 'sharutils' 'recode' 'perl')
 categories=('network')
 source=(http://kde-look.org/CONTENT/content-files/124416-DropboxServiceMenu-${pkgver}.tar.gz)
 md5sums=('3c0186649311611abfbb8ac016a67791')
+
 package() {
     cd "$srcdir/DropboxServiceMenu-${pkgver}/"
 
