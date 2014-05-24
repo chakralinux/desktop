@@ -49,7 +49,7 @@ _languages=(
   [dgo]='Dogri'
   [dz]='Dzongkha'
   [el]='Greek'
-  #[en-GB]='English (GB)'
+  [en-GB]='English (GB)'
   [en-ZA]='English (ZA)'
   [eo]='Esperanto'
   [es]='Spanish'
@@ -171,9 +171,11 @@ for lang in ${!_languages[@]}; do
   _pkgname=libreoffice-$lang
   source+=(${_url}/LibreOffice_${_oodlver}_Linux_x86_rpm_langpack_$lang.tar.gz)
   
-  # check if the helppack exist, in case add to the sources
-  wget --spider -q ${_url}/LibreOffice_${_oodlver}_Linux_x86_rpm_helppack_$lang.tar.gz &&  source+=(${_url}/LibreOffice_${_oodlver}_Linux_x86_rpm_helppack_$lang.tar.gz)
-  
+  # check if the helppack exist, in case add to the sources list
+  if curl -o /dev/null -s -I -f ${_url}/LibreOffice_${_oodlver}_Linux_x86_rpm_helppack_$lang.tar.gz; then
+  source+=(${_url}/LibreOffice_${_oodlver}_Linux_x86_rpm_helppack_$lang.tar.gz)
+  fi
+
   pkgname+=($_pkgname)
   eval "package_${_pkgname}() {
     _package $lang
