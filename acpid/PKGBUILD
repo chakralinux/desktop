@@ -2,7 +2,7 @@
 
 pkgname=acpid
 pkgver=2.0.22
-pkgrel=1
+pkgrel=2
 pkgdesc="A daemon for delivering ACPI power management events with netlink support."
 arch=('x86_64')
 url="http://sourceforge.net/projects/acpid2/"
@@ -41,17 +41,20 @@ package() {
   
   cd "${srcdir}"
     
-  # Install supplementary scripts.
+  msg 'Install supplementary scripts...'
   install -Dm755 acpid "$pkgdir/etc/rc.d/acpid"
   install -Dm644 anything "$pkgdir/etc/acpi/events/anything"
   install -Dm755 handler.sh "$pkgdir/etc/acpi/handler.sh"
   install -Dm644 acpid.conf.d "$pkgdir/etc/conf.d/acpid"
   
-  # Systemd units
+  msg 'Install SystemD units...'
   install -Dm0644 acpid.socket "${pkgdir}/usr/lib/systemd/system/acpid.socket"
   install -Dm0644 acpid.service "${pkgdir}/usr/lib/systemd/system/acpid.service"
 
-  # Set world readable bit on the acpid binary.
+  msg 'Set world readable bit on the acpid binary.'
   chmod 0755 "${pkgdir}"/usr/sbin/acpid
+
+  msg 'Remove deprecated rc.d files'
+  rm -rf ${pkgdir}/etc/rc.d/
 }
 
