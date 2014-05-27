@@ -1,0 +1,31 @@
+# Maintainer: UtG <utg[dot]chakra.linux[at]gmail[dot]com>
+# Contributor: https://aur.archlinux.org/packages/kcmsystemd/ 
+# Contributor from [ccr]: msx <archlinux.us: msx>
+ 
+pkgname=kcm-systemd
+_pkgname=kcmsystemd
+pkgver=0.6.1
+pkgrel=2
+pkgdesc="Systemd control module for KDE"
+arch=('x86_64')
+url='https://github.com/rthomsen/kcmsystemd'
+screenshot="http://wstaw.org/m/2013/11/19/screen27.png"
+license=('GPL')
+depends=('kde-workspace' 'boost-libs')
+makedepends=('cmake' 'automoc4' 'boost')
+source=("https://github.com/rthomsen/$_pkgname/archive/$pkgver.tar.gz")
+md5sums=('404215fb57c9efc429de458ec9de325a')
+ 
+build() {
+  cd $_pkgname-$pkgver
+  mkdir build
+  cd build
+  cmake .. -DCMAKE_INSTALL_PREFIX=$(kde4-config --prefix) -DCMAKE_BUILD_TYPE=Release
+  make
+}
+ 
+package() {
+  cd $_pkgname-$pkgver/build
+  make DESTDIR=$pkgdir install
+}
+ 
