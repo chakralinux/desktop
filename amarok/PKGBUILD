@@ -3,34 +3,41 @@
 pkgname=amarok
 replaces=('amarok-base' 'amarok-engine-xine' 'amarok-base-mysqlfree')
 pkgver=2.8.0
-pkgrel=2
+pkgrel=3
 pkgdesc="A media player for KDE"
 arch=('x86_64')
 url="http://amarok.kde.org"
 screenshot="http://amarok.kde.org/files/Amarok-2.6-InDulciJubilo-screenie4.png"
-license=('GPL2' 'LGPL2' 'FDL')
+license=('GPL2' 'LGPL2.1' 'FDL')
 depends=('kde-runtime' 'mariadb' 'qtscriptgenerator' 'taglib-extras' 'liblastfm' 'ffmpeg' 'libofa'
-         'qjson' 'mesa' 'loudmouth')
-makedepends=('pkgconfig' 'automoc4' 'cmake' 'libgpod' 'libmtp' 'docbook-xsl' 'libmygpo-qt' 'clamz')
+         'qjson' 'libbluray')
+makedepends=('pkgconfig' 'automoc4' 'cmake' 'libgpod' 'libmtp' 'docbook-xsl' 'libmygpo-qt' 'mesa' 'clamz' 'loudmouth')
 optdepends=("libgpod: support Apple iPod audio devices"
             "libmtp: support for portable media devices"
             "libmygpo-qt: support for gpodder.net"
-	    "ifuse: support for Apple iPod Touch and iPhone"
-            "clamz: allow to download songs from Amazon.com")
+            "ifuse: support for Apple iPod Touch and iPhone"
+            "clamz: allow to download songs from Amazon.com"
+            "loudmouth: backend needed by mp3tunes for syncing")
 categories=('multimedia')
 install="${pkgname}.install"
 source=("http://mirrors.mit.edu/kde/stable/${pkgname}/${pkgver}/src/${pkgname}-${pkgver}.tar.bz2")
 md5sums=('53cfcb4819668b10e13b061478c7b32a')
 
+prepare(){
+   cd "${srcdir}/${pkgname}-${pkgver}"
+   if [[ -e build ]]; then rm -rf build; fi
+   mkdir build
+}
 build() {
   cd "${srcdir}/${pkgname}-${pkgver}"
 
-  mkdir build
   cd build
   cmake .. \
     -DCMAKE_BUILD_TYPE=Release \
     -DCMAKE_INSTALL_PREFIX=/usr \
-    -DKDE4_BUILD_TESTS=OFF 
+    -DKDE4_BUILD_TESTS=OFF \
+    -DWITH_NepomukCore=OFF \
+    -DWITH_Soprano=OFF
   make
 }
 
