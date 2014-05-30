@@ -1,0 +1,37 @@
+# Maintainer: UtG <utg[dot]chakra.linux[at]gmail[dot]com>
+# Contributor from CCR: Gui||aume <michaudg@gmail.com>
+
+pkgname=x2goclient
+pkgver=4.0.2.0
+pkgrel=1
+pkgdesc="x2go qt4 client"
+arch=('x86_64')
+license=('GPL2')
+url="http://www.x2go.org"
+depends=('qt' 'libldap' 'libcups' 'nxproxy' 'libssh' 'libxpm' 'hicolor-icon-theme' 'xdg-utils')
+#makedepends=('man2html')
+install=x2goclient.install
+source=(http://code.x2go.org/releases/source/${pkgname}/${pkgname}-${pkgver}.tar.gz{,.asc})
+sha1sums=('bbe8efb2df88bfa18b056c52ee0b1cca7a52b71b'
+          'SKIP')
+
+build() {
+  cd ${pkgname}-${pkgver}
+  
+  sed -i "s:-o root -g root ::" Makefile
+  sed -i "s/qmake-qt4/qmake/" config_linux.sh
+  sed -i "s/qmake-qt4/qmake/" config_linux_plugin.sh
+  sed -i "s/qmake-qt4/qmake/" Makefile
+  sed -i "s/lrelease-qt4/lrelease/" Makefile
+  
+  #make PREFIX=/usr
+  #make PREFIX=/usr build_man # target broken and making the build hang
+  make PREFIX=/usr build_pluginprovider
+  make PREFIX=/usr build_client 
+  make PREFIX=/usr build_plugin
+}
+
+package() {
+  cd ${pkgname}-${pkgver}
+  make PREFIX=/usr DESTDIR="$pkgdir" install
+} 
