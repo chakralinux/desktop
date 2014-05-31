@@ -1,11 +1,9 @@
-#
-# Apps Packages for Chakra, part of chakra-project.org
-# 
-# maintainer abveritas[at]chakra-project.org>
+# Contributor: abveritas[at]chakra-project.org>
+# Maintainer: Bruce Liu <rainman59118@gmail.com>
 
 pkgname=kdeplasma-applets-appmenu-qml
 pkgver=1.6
-pkgrel=1
+pkgrel=2
 pkgdesc="This plasmoid shows a menu of the installed applications, similar to Lancelot but much simpler. (Chakra + Ronak Fix)"
 url="http://kde-apps.org/content/show.php/AppMenu+QML?content=146098"
 screenshot="http://kde-apps.org/CONTENT/content-pre1/146098-1.jpg"
@@ -14,16 +12,18 @@ arch=('x86_64')
 depends=('kde-workspace')
 makedepends=('unzip')
 source=("http://kde-apps.org/CONTENT/content-files/146098-plasma-applet-appmenu-qml-${pkgver}.plasmoid" 
-        'icon.diff')
+        'appmenu-qml.patch')
 md5sums=('4b583606c08fa50546c93772cd810852'
-         '8e621ada430aa4b366cec74399ba1e50')
+         '41e063bc9e1e78f1f029c31bfa03f163')
  
-build() {
+prepare() {
   unzip -o -q "$srcdir/146098-plasma-applet-appmenu-qml-${pkgver}.plasmoid" -d "$srcdir/plasma-applet-appmenu-qml"
-  
-  patch -p1 -i "${srcdir}/icon.diff"
-  
+  patch -p1 -i "${srcdir}/appmenu-qml.patch"
+}
+
+package() {  
   install -D $srcdir/plasma-applet-appmenu-qml/metadata.desktop ${pkgdir}/"`kde4-config --prefix`/share/kde4/services/plasma-applet-appmenu-qml.desktop"
-  mkdir -p ${pkgdir}/"`kde4-config --prefix`/share/apps/plasma/plasmoids/appmenu-qml"
+  install -dm755 ${pkgdir}/"`kde4-config --prefix`/share/apps/plasma/plasmoids/appmenu-qml"
   cp -r $srcdir/plasma-applet-appmenu-qml/* ${pkgdir}/"`kde4-config --prefix`/share/apps/plasma/plasmoids/appmenu-qml/"
+  rm ${pkgdir}/usr/share/apps/plasma/plasmoids/appmenu-qml/{Changelog,HACKING}
 }

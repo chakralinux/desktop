@@ -1,0 +1,73 @@
+diff -Naur a/plasma-applet-appmenu-qml/contents/config/main.xml b/plasma-applet-appmenu-qml/contents/config/main.xml
+--- a/plasma-applet-appmenu-qml/contents/config/main.xml	2013-08-01 01:02:31.000000000 +0800
++++ b/plasma-applet-appmenu-qml/contents/config/main.xml	2014-06-01 01:47:28.714026673 +0800
+@@ -12,7 +12,7 @@
+     </entry>
+     <entry name="icon" type="String">
+       <label>Icon on the launcher button</label>
+-      <default>start-here-kde</default>
++      <default>start-here-branding</default>
+     </entry>
+     <entry name="favoritesVisible" type="Bool">
+       <label>Show favorites list</label>
+diff -Naur a/plasma-applet-appmenu-qml/contents/ui/LeaveToolBar.qml b/plasma-applet-appmenu-qml/contents/ui/LeaveToolBar.qml
+--- a/plasma-applet-appmenu-qml/contents/ui/LeaveToolBar.qml	2013-08-01 01:03:31.000000000 +0800
++++ b/plasma-applet-appmenu-qml/contents/ui/LeaveToolBar.qml	2014-06-01 01:48:48.759087295 +0800
+@@ -56,28 +56,28 @@
+ 			actionsModel.append({"action": "switchUser", "text": i18n("Switch User"), "icon": "system-switch-user"});
+ 	}
+ 
+-	function doAction(action) {
+-		// see http://api.kde.org/4.10-api/kde-workspace-apidocs/libs/kworkspace/html/namespaceKWorkSpace.html
+-		if (action == "lockScreen")
+-			plasmoid.runCommand("qdbus", ["org.freedesktop.ScreenSaver", "/ScreenSaver", "Lock"]);
+-		else if (action == "requestShutDown")
+-			plasmoid.runCommand("qdbus", ["org.kde.ksmserver", "/KSMServer", "org.kde.KSMServerInterface.logout", "1", "-1", "-1"]); // ShutdownConfirmYes, ShutdownTypeDefault, ShutdownModeDefault
+-		else if (action == "logOut")
+-			plasmoid.runCommand("qdbus", ["org.kde.ksmserver", "/KSMServer", "org.kde.KSMServerInterface.logout", "0", "3", "-1"]); // ShutdownConfirmNo, ShutdownTypeLogout, ShutdownModeDefault
+-		else if (action == "turnOff")
+-			plasmoid.runCommand("qdbus", ["org.kde.ksmserver", "/KSMServer", "org.kde.KSMServerInterface.logout", "0", "2", "-1"]); // ShutdownConfirmNo, ShutdownTypeHalt, ShutdownModeDefault
+-		else if (action == "restart")
+-			plasmoid.runCommand("qdbus", ["org.kde.ksmserver", "/KSMServer", "org.kde.KSMServerInterface.logout", "0", "1", "-1"]); // ShutdownConfirmNo, ShutdownTypeReboot, ShutdownModeDefault
+-		else if (action == "suspendToRam")
+-			plasmoid.runCommand("qdbus", ["org.kde.Solid.PowerManagement", "/org/kde/Solid/PowerManagement", "org.kde.Solid.PowerManagement.suspendToRam"]);
+-		else if (action == "suspendToDisk")
+-			plasmoid.runCommand("qdbus", ["org.kde.Solid.PowerManagement", "/org/kde/Solid/PowerManagement", "org.kde.Solid.PowerManagement.suspendToDisk"]);
+-		else if (action == "switchUser")
+-			plasmoid.runCommand("qdbus", ["org.kde.krunner", "/App", "org.kde.krunner.App.switchUser"]);
+-	}
++// 	function doAction(action) {
++// 		// see http://api.kde.org/4.10-api/kde-workspace-apidocs/libs/kworkspace/html/namespaceKWorkSpace.html
++// 		if (action == "lockScreen")
++// 			plasmoid.runCommand("qdbus", ["org.freedesktop.ScreenSaver", "/ScreenSaver", "Lock"]);
++// 		else if (action == "requestShutDown")
++// 			plasmoid.runCommand("qdbus", ["org.kde.ksmserver", "/KSMServer", "org.kde.KSMServerInterface.logout", "1", "-1", "-1"]); // ShutdownConfirmYes, ShutdownTypeDefault, ShutdownModeDefault
++// 		else if (action == "logOut")
++// 			plasmoid.runCommand("qdbus", ["org.kde.ksmserver", "/KSMServer", "org.kde.KSMServerInterface.logout", "0", "3", "-1"]); // ShutdownConfirmNo, ShutdownTypeLogout, ShutdownModeDefault
++// 		else if (action == "turnOff")
++// 			plasmoid.runCommand("qdbus", ["org.kde.ksmserver", "/KSMServer", "org.kde.KSMServerInterface.logout", "0", "2", "-1"]); // ShutdownConfirmNo, ShutdownTypeHalt, ShutdownModeDefault
++// 		else if (action == "restart")
++// 			plasmoid.runCommand("qdbus", ["org.kde.ksmserver", "/KSMServer", "org.kde.KSMServerInterface.logout", "0", "1", "-1"]); // ShutdownConfirmNo, ShutdownTypeReboot, ShutdownModeDefault
++// 		else if (action == "suspendToRam")
++// 			plasmoid.runCommand("qdbus", ["org.kde.Solid.PowerManagement", "/org/kde/Solid/PowerManagement", "org.kde.Solid.PowerManagement.suspendToRam"]);
++// 		else if (action == "suspendToDisk")
++// 			plasmoid.runCommand("qdbus", ["org.kde.Solid.PowerManagement", "/org/kde/Solid/PowerManagement", "org.kde.Solid.PowerManagement.suspendToDisk"]);
++// 		else if (action == "switchUser")
++// 			plasmoid.runCommand("qdbus", ["org.kde.krunner", "/App", "org.kde.krunner.App.switchUser"]);
++// 	}
+ 
+ // Activate the following and remove the qdbus commands above when the plasma/viranch/powermanagementservices branch is finally merged in kde-workspace master
+-/*
++
+ 	function doAction(action) {
+ 		var service = dataEngine.serviceForSource("PowerDevil");
+ 		var operation = service.operationDescription(action);
+@@ -90,7 +90,7 @@
+ 		connectedSources: ["PowerDevil"]
+ 		interval: 0
+ 	}
+-*/
++
+ 
+ 	ListModel {
+ 		id: actionsModel
