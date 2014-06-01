@@ -1,0 +1,32 @@
+# Maintainer: UtG <utg[dot]chakra.linux[at]gmail[dot]com>
+
+pkgname=kprinter4
+pkgver=10
+pkgrel=1
+pkgdesc="GUI for printing Postscript files"
+arch=('x86_64')
+url="https://github.com/credativ/kprinter4"
+license=('GPL-3.0')
+depends=('kde-workspace' 'ghostscript' 'psutils' 'poster' 'libspectre')
+makedepends=('cmake' 'automoc4')
+install=kprinter4.install
+source=("https://github.com/credativ/$pkgname/archive/v$pkgver.tar.gz")
+md5sums=('3b45beabadbfef48f7106e5ac3896e80')
+
+build() {
+  cd $srcdir/$pkgname-$pkgver
+  mkdir build
+  cd build
+  
+  cmake -DCMAKE_INSTALL_PREFIX=/usr \
+	-DCMAKE_VERBOSE_MAKEFILE=ON \
+	-DCMAKE_BUILD_TYPE=Debug  .. 
+  
+  make
+}
+
+package() {
+  cd $srcdir/$pkgname-$pkgver/build
+  make DESTDIR=$pkgdir install
+  
+} 
