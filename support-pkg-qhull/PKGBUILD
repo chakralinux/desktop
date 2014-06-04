@@ -1,35 +1,20 @@
-
-
-
-# Maintainer (i686): Phil Miller <philm@chakra-project[dog]org>
 # Maintainer (x86_64): Manuel Tortosa <manutortosa@chakra-project@org>
 
-# Include global configuration
-source ../_buildscripts/${current_repo}-${_arch}-cfg.conf
-
 pkgname=qhull
-pkgver=2010.1
+pkgver=2012.1
 pkgrel=1
 pkgdesc="A general dimension code for computing convex hulls and related structures"
-arch=('i686' 'x86_64')
+arch=('x86_64')
 url="http://www.qhull.org/"
 license=('custom')
 depends=('glibc')
 makedepends=('cmake')
-source=(http://www.qhull.org/download/$pkgname-$pkgver-src.tgz
-	qhull-2010.1-cmake-install.patch
-	qhull-2010.1-overflows.patch)
+source=(http://www.qhull.org/download/$pkgname-$pkgver-src.tgz)
 options=('!libtool')
-sha1sums=('ed480912e03efdd767195c06c7e8c252c78112b1'
-          '0a7747eb13c2e07c25882c1f0f5c0dfb4ef1c8c0'
-          '21295d57af2f8cdfc775512fa44fe90f49d89c41')
+sha1sums=('60f61580e1d6fbbd28e6df2ff625c98d15b5fbc6')
 
 build() {
   cd "$srcdir/$pkgname-$pkgver"
-
-  # gentoo patches
-  patch -Np1 -i ${srcdir}/qhull-2010.1-cmake-install.patch
-  patch -Np1 -i ${srcdir}/qhull-2010.1-overflows.patch
 
   [ -d build ] || mkdir build
   cd build
