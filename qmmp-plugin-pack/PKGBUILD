@@ -1,8 +1,9 @@
 # maintainer: UtG <utg[dot]chakra.linux[at]gmail[dot]com>
 # Contributor: BrLi <rainman59118[at]gmail dot com>
+# maintainer: Jeff Huang <s8321414[at]gmail[dot]com>
 
 pkgname='qmmp-plugin-pack'
-pkgver=0.7.6
+pkgver=0.7.7
 pkgrel=1
 pkgdesc="Qmmp Plugin Pack"
 arch=('x86_64')
@@ -12,7 +13,7 @@ depends=("qmmp>=$pkgver")
 makedepends=('cmake>=2.8.0' 'yasm')
 optdepends=( 'mpg123: for mpg123 plugin' )
 source=(http://qmmp.ylsoftware.com/files/plugins/$pkgname-$pkgver.tar.bz2)
-md5sums=('6d2074a75a70f7ee6c520e29fb0f1ea4')
+md5sums=('1d80fa6b56441b6e7e66c44b842f899e')
 
 build() {
 	cd "${srcdir}/${pkgname}-${pkgver}"
@@ -24,4 +25,3 @@ package() {
 	cd "${srcdir}/${pkgname}-${pkgver}"
 	make DESTDIR="${pkgdir}" install
 }
-
