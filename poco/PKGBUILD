@@ -1,27 +1,21 @@
 # Maintainer: Adrian Chaves Fernandez (Gallaecio) <adriyetichaves@gmail.com>
-# Contributor: Robert Knauer <robert@privatdemail.net>
-# Contributor: Rodrigo Grumiche Silva <grumiche at integrityit dot com dot br>
-# Contributor: nozog
-# Contributor: davidhjelm
-# Contributor: Ray Kohler <ataraxia937 at gmail dot com>
-# Contributor: Nathan Owe < ndowens04 at gmail dot com>
 
 pkgname=poco
-pkgver=1.4.6.2
+pkgver=1.4.6.4
 _pkgver=1.4.6
-_pkgver2=1.4.6p2
+_pkgver2=1.4.6p4
 pkgrel=1
 pkgdesc="C++ class libraries for network-centric, portable applications, complete edition"
-arch=('i686' 'x86_64')
+arch=('x86_64')
 url="http://www.pocoproject.org/"
 license=('custom:boost')
-depends=('unixodbc' 'libmysqlclient' 'openssl')
-makedepends=('gcc' 'make' 'unixodbc' 'libmysqlclient' 'openssl' 'chrpath')
+depends=('unixodbc' 'libmariadbclient' 'openssl')
+makedepends=('gcc' 'make' 'unixodbc' 'libmariadbclient' 'openssl' 'chrpath')
 source=(
   
 "${pkgname}-${pkgver}-all.tar.gz"::"http://pocoproject.org/releases/${pkgname}-${_pkgver}/${pkgname}-${_pkgver2}-all.tar.gz"
 )
-sha256sums=('8d22dbea89a26563076d5f55fa201b26b66025f89c21ccb93fa08695f342364d')
+sha256sums=('a0453cd88a8360036b6d474c9ca428299c183bc66a119509273b8a5b7db42848')
 
 build()
 {
@@ -40,6 +34,7 @@ package()
   chrpath -d "${pkgdir}/usr/bin/cpspcd"
   chrpath -d "${pkgdir}/usr/bin/f2cpspd"
   chrpath -d "${pkgdir}/usr/bin/f2cpsp"
-  # remove debugging libraries
-  rm "${pkgdir}/usr/lib/libPoco"*"d.so"*
+ 
+#  remove debugging libraries
+#  rm "${pkgdir}/usr/lib/libPoco"*"d.so"*
 }
