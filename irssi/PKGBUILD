@@ -5,8 +5,8 @@
 
 
 pkgname=irssi
-pkgver=0.8.15
-pkgrel=5
+pkgver=0.8.16
+pkgrel=1
 pkgdesc="Modular text mode IRC client with Perl scripting"
 arch=('i686' 'x86_64')
 url="http://irssi.org/"
@@ -17,7 +17,7 @@ optdepends=('perl-libwww: for the scriptassist script')
 backup=(etc/irssi.conf)
 source=(http://irssi.org/files/${pkgname}-${pkgver}.tar.bz2)
 options=('!libtool')
-md5sums=('1dcb3f511b88df94b0c996f36668c7da')
+md5sums=('4346119c4c000d0198cda17666ff1f06')
 screenshot=('http://irssi.org/themefiles/dma147.png')
 
 build() {
@@ -26,6 +26,7 @@ build() {
   ./configure --prefix=/usr \
               --enable-ipv6 \
 	      --with-proxy \
+	      --with-bot \
 	      --sysconfdir=/etc \
 	      --with-perl-lib=vendor
   make
