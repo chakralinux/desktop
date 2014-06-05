@@ -1,11 +1,11 @@
-# Maintainer: Michael Haesel <michael[dot]haesel[at]gmail[dot]com>
+# Maintainer: Manuel 'UtG' <utg[dot]chakra.linux[at]gmail[dot]com>
 # Contributor:  eyome <baikalink@hotmail.fr>
 # Contributor: Carlos García carlos-lbs  <carlos.garcia(at)logicalbricks(dot)com>
 # Contributor: Giuseppe Calà <jiveaxe@gmail.com>
 
 _name=mirall
 pkgname=owncloud-client
-pkgver=1.5.4
+pkgver=1.6.0
 pkgrel=1
 pkgdesc="ownCloud client based on mirall"
 arch=('x86_64')
@@ -14,25 +14,30 @@ screenshot="http://owncloud.org/wp-content/uploads/2012/03/linux3.png"
 license=('GPL2')
 depends=('qtwebkit' 'neon' 'sqlite3' 'qtkeychain')
 makedepends=('cmake' 'libssh' 'smbclient' 'desktop-file-utils')
-categories=('network')
+groups=('network')
 conflicts=('csync-owncloud')
 backup=('etc/owncloud-client/sync-exclude.lst')
 install=${pkgname}.install
-source=("http://download.owncloud.com/desktop/stable/${_name}-${pkgver}.tar.bz2")
-sha256sums=('6a227f6c2d68d70f1f79c133e15f033a567a93ae55da83e303f57d2301bd5ad6')
+source=("http://download.owncloud.com/desktop/stable/${_name}-${pkgver}.tar.bz2"
+	'man.patch')
+sha256sums=('12b5da4b5598db3ef5d4d26e464de3534f3a6b8a864719949d82c77cfc353ab5'
+            '1cec1ec7761d087e197f0ccdf5e1e8236db0bd29a1babe49130c00f81e82e011')
 
 prepare() {
-  if [[ -e ${_name}-${pkgver}-build ]]; then rm -rf ${_name}-${pkgver}-build; fi
-  mkdir ${_name}-${pkgver}-build
+  if [[ -e ${srcdir}/${_name}-${pkgver}-build ]]; then rm -rf ${srcdir}/${_name}-${pkgver}-build; fi
+  mkdir ${srcdir}/${_name}-${pkgver}-build
+  
+  cd ${srcdir}/${_name}-${pkgver}
+  patch -p0 -i ${srcdir}/man.patch
 }
 
 build() {
-  cd ${_name}-${pkgver}-build
+  cd ${srcdir}/${_name}-${pkgver}-build
  
-  cmake -DQT_QMAKE_EXECUTABLE=/usr/bin/qmake \
+  cmake -DBUILD_WITH_QT4=on \
+	-DQT_QMAKE_EXECUTABLE=/usr/bin/qmake \
         -DCMAKE_INSTALL_PREFIX=/usr \
         -DCMAKE_INSTALL_LIBDIR=/usr/lib \
-        -DCSYNC_INCLUDE_PATH=/usr/include/ocsync \
         -DCMAKE_INSTALL_SYSCONFDIR=/etc/${pkgname} \
         -WITH_DOC=TRUE \
         -DCMAKE_BUILD_TYPE="Release" \
