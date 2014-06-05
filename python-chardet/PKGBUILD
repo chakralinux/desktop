@@ -1,0 +1,41 @@
+# Maintainer: Manuel 'UtG' <utg[dot]chakra.linux[at]gmail[dot]com>
+# Contributor: Ionut Biru <ibiru@archlinux.org>
+# Contributor: William Rea <sillywilly@gmail.com>
+
+pkgbase=python-chardet
+pkgname=('python2-chardet' 'python3-chardet')
+_pkgname=chardet
+pkgver=2.2.1
+pkgrel=2
+arch=('x86_64')
+#url="http://chardet.feedparser.org"
+url="https://github.com/chardet/chardet"
+license=('LGPL')
+makedepends=('python2-setuptools' 'python3-setuptools')
+source=(http://pypi.python.org/packages/source/c/$_pkgname/$_pkgname-$pkgver.tar.gz)
+md5sums=('4a758402eaefd0331bdedc7ecb6f452c')
+
+prepare() {
+   cp -r chardet-${pkgver} python2-chardet-${pkgver}
+}
+
+package_python3-chardet() {
+   depends=('python3')
+   pkgdesc="Python3 module for character encoding auto-detection"
+   
+   cd chardet-${pkgver}
+   python3 setup.py install --root="${pkgdir}" --optimize=1
+}
+
+package_python2-chardet() {
+   depends=('python2')
+   pkgdesc="Python2 module for character encoding auto-detection"
+   provides=('python-chardet')
+   replaces=('python-chardet')
+   
+   cd python2-chardet-${pkgver}
+   python2 setup.py install --root="${pkgdir}" --optimize=1
+
+   # To avoid file conflict with the python3 version
+   mv "$pkgdir/usr/bin/chardetect" "$pkgdir/usr/bin/chardetect-py2"
+}
