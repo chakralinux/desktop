@@ -1,0 +1,29 @@
+# Maintainer: Manuel 'UtG' <utg[dot]chakra.linux[at]gmail[dot]com>
+
+pkgname=mpc
+pkgver=0.26
+pkgrel=1
+pkgdesc="Minimalist command line interface to MPD"
+arch=('x86_64')
+url='http://www.musicpd.org/clients/mpc/'
+license=('GPL2')
+depends=('libmpdclient')
+options=('!emptydirs')
+source=("http://www.musicpd.org/download/${pkgname}/${pkgver%.*}/${pkgname}-${pkgver}.tar.xz"{,.sig})
+sha1sums=('dd1577cfff1d8324bc27c97fb26d88b845118800' 'SKIP')
+
+
+build() {
+    cd "$srcdir/$pkgname-$pkgver"
+    ./configure --prefix=/usr
+    make
+}
+
+package() {
+    cd "$srcdir/$pkgname-$pkgver"
+    make DESTDIR="$pkgdir" install
+	
+    # Install bash completion file
+    install -Dm644 doc/mpc-completion.bash "${pkgdir}/usr/share/bash-completion/completions/mpc"
+}
+ 
