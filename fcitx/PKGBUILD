@@ -1,20 +1,15 @@
-#
-# Apps Packages for Chakra, part of chakra-project.org
-#
 # Maintainer: Neo Kolokotronis <tetris4@gmail.com>
 # Contributor: csslayer <wengxt AT gmail com>
 
-# include global config
-
 pkgbase=fcitx
 pkgname=('fcitx' 'fcitx-pinyin' 'fcitx-table')
-pkgver=4.2.8.3
-pkgrel=2
+pkgver=4.2.8.4
+pkgrel=1
 arch=("i686" "x86_64")
 license=('GPL')
-url="http://code.google.com/p/fcitx"
+url="https://fcitx-im.org/wiki/Fcitx"
+#giturl="https://github.com/fcitx/"
 replaces=('fcitx-qt' 'fcitx-keyboard')
-conflicts=('fcitx-utf8-svn' 'fcitx-svn' 'fcitx-hg' 'fcitx-keyboard' 'fcitx-qt')
 makedepends=('cmake' 'qt' 'icu' 'wget' 'opencc' 'lua' 'iso-codes' 'enchant' 'libxkbfile' 'cairo' 'pango')
 source=("http://download.fcitx-im.org/${pkgname}/${pkgname}-${pkgver}.tar.xz")
 categories=('localization')
@@ -54,7 +49,7 @@ package_fcitx(){
     rm ${pkgdir}/usr/lib/fcitx/fcitx-pinyin.so
     rm -r ${pkgdir}/usr/share/fcitx/pinyin/
     rm ${pkgdir}/usr/share/fcitx/*/fcitx-pinyin.*
-    rm -r ${pkgdir}/usr/include/fcitx/module/pinyin/ -r
+    rm -r ${pkgdir}/usr/include/fcitx/module/pinyin/
     rm ${pkgdir}/usr/share/fcitx/inputmethod/{pinyin,shuangpin}.conf
 }
 
@@ -76,6 +71,4 @@ package_fcitx-table() {
     make DESTDIR=$pkgdir install
     popd
 }
-
-md5sums=('318da13bee2d4ea2a6467228984ec07e')
-md5sums=('a16f7056158b5b0ee1eeae0d92346300')
+md5sums=('3c3b98c2a3e9a0415def973b1ca780cb')

@@ -1,13 +1,7 @@
-#
-# Apps Packages for Chakra, part of chakra-project.org
-#
 # Maintainer: csslayer <wengxt AT gmail com>
 
-# include global config
-source ../_buildscripts/${current_repo}-${_arch}-cfg.conf
-
 pkgname=fcitx-kkc
-pkgver=0.1.0
+pkgver=0.1.1
 pkgrel=1
 pkgdesc="Fcitx Wrapper for libkkc."
 arch=('i686' 'x86_64')
@@ -19,8 +13,7 @@ source=(http://download.fcitx-im.org/${pkgname}/${pkgname}-${pkgver}.tar.xz)
 
 build(){
     cd "$srcdir/${pkgname}-${pkgver}"
-    rm -rf build
-    mkdir build
+    [[ -d build ]] && rm -rf build ; mkdir build
     cd build
     
     cmake -DCMAKE_INSTALL_PREFIX=/usr -DCMAKE_BUILD_TYPE=Release ..
@@ -32,4 +25,5 @@ package ()
     cd "$srcdir/${pkgname}-${pkgver}/build"
     make DESTDIR=${pkgdir} install
 }
-md5sums=('c86a48f9e7a1e9de16b0919e5413fc9d')
+
+md5sums=('3aaf697492df94bd8cf1056b92a0454c')

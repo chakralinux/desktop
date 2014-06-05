@@ -1,10 +1,7 @@
-#
-# Apps Packages for Chakra, part of chakra-project.org
-#
 # Maintainer: Weng Xuetian <wengxt@gmail.com>
 
 pkgname=fcitx-rime
-pkgver=0.3.0
+pkgver=0.3.1
 pkgrel=1
 pkgdesc="Fcitx Wrapper for librime"
 arch=('i686' 'x86_64')
@@ -15,14 +12,9 @@ makedepends=('cmake')
 source=(http://download.fcitx-im.org/${pkgname}/${pkgname}-${pkgver}.tar.xz)
 
 build() {
-  cd "$srcdir"
-
+  cd "$srcdir/${pkgname}-${pkgver}"
   msg "Starting make..."
-  
-  cd "$pkgname-$pkgver"
-
-  rm -rf build
-  mkdir build
+  [[ -d build ]] && rm -rf build ; mkdir build
   cd build
 
   cmake -DCMAKE_INSTALL_PREFIX=/usr ..
@@ -33,5 +25,4 @@ package() {
   cd "$srcdir/$pkgname-$pkgver/build"
   make DESTDIR="$pkgdir" install
 }
-
-md5sums=('cb06af113bd99300c01eb6be8ae0013a')
+md5sums=('2624ca4168441bbf85028314e84c81c6')

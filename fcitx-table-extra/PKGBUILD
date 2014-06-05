@@ -1,26 +1,19 @@
-#
-# Apps Packages for Chakra, part of chakra-project.org
-#
 # Maintainer: Weng Xuetian <wengxt AT gmail com>
 
-# include global config
-source ../_buildscripts/${current_repo}-${_arch}-cfg.conf
-
 pkgname=fcitx-table-extra
-pkgver=0.3.5
+pkgver=0.3.6
 pkgrel=1
 pkgdesc="Extra table data for fcitx, including Zhengma, Cangjie, Boshiamy"
 arch=('i686' 'x86_64')
 url="http://code.google.com/p/fcitx"
 license=('GPL')
-depends=('fcitx-table>=4.2.7')
+depends=('fcitx>=4.2.8.4')
 makedepends=('cmake')
 source=(http://download.fcitx-im.org/${pkgname}/${pkgname}-${pkgver}.tar.xz)
 
 build(){
     cd "$srcdir/${pkgname}-${pkgver}"
-    rm -rf build
-    mkdir build
+    [[ -d build ]] && rm -rf build ; mkdir build
     cd build
     
     cmake -DCMAKE_INSTALL_PREFIX=/usr -DCMAKE_BUILD_TYPE=Release ..
@@ -32,4 +25,5 @@ package ()
     cd "$srcdir/${pkgname}-${pkgver}/build"
     make DESTDIR=${pkgdir} install
 }
-md5sums=('a3b1bc560ef01a98ee2b4716b71fd439')
+
+md5sums=('0093069e0c754941b38115ebb768696e')

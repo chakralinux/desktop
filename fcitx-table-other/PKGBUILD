@@ -1,13 +1,7 @@
-#
-# Apps Packages for Chakra, part of chakra-project.org
-#
 # Maintainer: Weng Xuetian <wengxt AT gmail com>
 
-# include global config
-source ../_buildscripts/${current_repo}-${_arch}-cfg.conf
-
 pkgname=fcitx-table-other
-pkgver=0.2.2
+pkgver=0.2.3
 pkgrel=1
 pkgdesc="Extra non-chinese table data for fcitx"
 arch=('i686' 'x86_64')
@@ -19,12 +13,11 @@ source=(http://download.fcitx-im.org/${pkgname}/${pkgname}-${pkgver}.tar.xz)
 
 build(){
     cd "$srcdir/${pkgname}-${pkgver}"
-    rm -rf build
-    mkdir build
+    [[ -d build ]] && rm -rf build ; mkdir build
     cd build
     
     cmake -DCMAKE_INSTALL_PREFIX=/usr -DCMAKE_BUILD_TYPE=Release ..
-    make -j1
+    make
 }
 
 package ()
@@ -32,4 +25,4 @@ package ()
     cd "$srcdir/${pkgname}-${pkgver}/build"
     make DESTDIR=${pkgdir} install
 }
-md5sums=('b2827e5ddb962cdbdb2ede59d3c5752f')
+md5sums=('dcd8d64a5411421dc0df94317ba355e8')
