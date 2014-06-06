@@ -19,7 +19,7 @@ pkgname=('libreoffice-common'
 	'libreoffice-extension-nlpsolver')
 _LOver=4.2.4.2
 pkgver=4.2.4
-pkgrel=1
+pkgrel=2
 arch=('x86_64')
 license=('LGPL3')
 url="http://www.libreoffice.org/"
@@ -317,24 +317,7 @@ package_libreoffice-common() {
          etc/libreoffice/bootstraprc
          etc/libreoffice/psprint.conf)
 groups=('libreoffice')
-replaces=('libreoffice' 
-          'libreoffice-extension-diagram'
-          'libreoffice-extension-google-docs'
-          'libreoffice-extension-hunart'
-          'libreoffice-extension-ct2n'
-          'libreoffice-extension-numbertext'	
-          'libreoffice-extension-oooblogger'
-          'libreoffice-extension-scripting-beanshell'
-          'libreoffice-extension-scripting-javascript'
-          'libreoffice-extension-scripting-python'
-          'libreoffice-extension-typo'
-          'libreoffice-extension-validator'
-          'libreoffice-extension-watch-window'
-          'libreoffice-extension-pdfimport'
-          'libreoffice-extension-presenter-screen'
-          'libreoffice-extensions-report-builder'
-          'libreoffice-extension-presentation-minimizer'
-)
+
 provides=('libreoffice-extension-pdfimport'
           'libreoffice-extension-presenter-screen'
           'libreoffice-scripting-beanshell'
@@ -392,6 +375,9 @@ provides=('libreoffice-extension-pdfimport'
    # mv file from fakeinstall to pkgdir
    mv ${srcdir}/fakeinstall${file} ${pkgdir}$file || /bin/true # some double file entries make it fail
  done
+ # move dicts to en-US langpack to avoid file conflicts with en-GBen-ZA packages
+ rm ${pkgdir}/usr/lib/libreoffice/share/wordbook/en-GB.dic
+ mv ${pkgdir}/usr/lib/libreoffice/share/wordbook/en-US.dic ${srcdir}/
 }
 
 package_libreoffice-base() {
@@ -637,6 +623,8 @@ package_libreoffice-en-US() {
    # mv file from fakeinstall to pkgdir
    mv ${srcdir}/fakeinstall${file} ${pkgdir}$file
  done
+ # en-US.dic
+ install -Dm644 ${srcdir}/en-US.dic ${pkgdir}/usr/lib/libreoffice/share/wordbook/en-US.dic
 }
 
 package_libreoffice-extension-wiki-publisher() {
