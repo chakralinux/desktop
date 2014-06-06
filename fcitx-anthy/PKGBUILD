@@ -1,17 +1,11 @@
-#
-# Apps Packages for Chakra, part of chakra-project.org
-#
 # Maintainer: Weng Xuetian <wengxt@gmail.com>
 
-# include global config
-source ../_buildscripts/${current_repo}-${_arch}-cfg.conf
-
 pkgname=fcitx-anthy
-pkgver=0.2.0
+pkgver=0.2.1
 pkgrel=1
 pkgdesc="Japanese Input support (Anthy) for fcitx."
 arch=('i686' 'x86_64')
-url="http://code.google.com/p/fcitx"
+url="https://github.com/fcitx/fcitx-anthy"
 license=('GPL')
 depends=('fcitx>=4.2.8' 'anthy')
 makedepends=('cmake')
@@ -19,17 +13,16 @@ source=(http://download.fcitx-im.org/${pkgname}/${pkgname}-${pkgver}.tar.xz)
 
 build(){
     cd "$srcdir/${pkgname}-${pkgver}"
-    rm -rf build
-    mkdir build
+    [[ -d build ]] && rm -rf build ; mkdir build
     cd build
     
     cmake -DCMAKE_INSTALL_PREFIX=/usr -DCMAKE_BUILD_TYPE=Release ..
     make
 }
 
-package ()
-{
+package () {
     cd "$srcdir/${pkgname}-${pkgver}/build"
     make DESTDIR=${pkgdir} install
 }
-md5sums=('c02e4393d6141a4d0fa1693bf38a8f79')
+
+md5sums=('23ce628c01c5c09f9d4f1402c50fb19b')
