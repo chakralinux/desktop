@@ -1,6 +1,8 @@
 # Maintainer: Manuel 'UtG' <utg[dot]chakra.linux[at]gmail[dot]com>
 # Contributor from Arch: Matthias Maennich <arch@maennich.net>
 
+### NOTE: there's also python3-shiboken in another path
+
 pkgname=python2-shiboken
 _pkgname=shiboken
 _pkgname2=Shiboken
@@ -8,7 +10,7 @@ _pkgname3=pyside-shiboken
 pkgver=1.2.2
 _pyver=2.7
 pkgrel=1
-pkgdesc="Support library for Python bindings."
+pkgdesc='Python binding generator that uses API Extractor and outputs CPython code. (Python 2 build)'
 arch=('x86_64')
 license=('LGPL')
 url="http://www.pyside.org"
@@ -25,7 +27,8 @@ build() {
   mkdir -p build && cd build
   cmake \
     -DCMAKE_INSTALL_PREFIX=/usr \
-    -DCMAKE_BUILD_TYPE=RelWithDebInfo \
+    -DCMAKE_BUILD_TYPE=Release   \
+    -DBUILD_TESTS=FALSE          \
     ..
   make shiboken
   make libshiboken
