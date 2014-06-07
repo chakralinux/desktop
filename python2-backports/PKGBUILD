@@ -1,25 +1,37 @@
 #
 # Apps Packages for Chakra, part of chakra-project.org
 #
-# Maintainer: Daniele Cocca <jmc@chakra-project.org>
-#
+# Maintainer: Manuel 'UtG' <utg[dot]chakra.linux[at]gmail[dot]com>
 
-_pkgname=python-backports
+_pkgname=backports
 pkgname=python2-backports
-pkgver=1.0.0
+pkgver=1.0.1
 pkgrel=1
 pkgdesc="Collection of backported Python features that run on Python 2.5 or newer."
-arch=('any')
-license=('LGPL')
+arch=('x86_64')
+license=('custom:PYTHON')
 depends=('python2')
 replaces=('python-backports')
 url="http://ag-projects.com/"
-source=("http://download.ag-projects.com/SipClient/${_pkgname}-${pkgver}.tar.gz")
-md5sums=('fe1cc2c79f9d987fc67ca0e986a183a7')
+#source=("http://download.ag-projects.com/SipClient/${_pkgname}-${pkgver}.tar.gz")
+source=(https://dl.dropboxusercontent.com/u/66275722/Chakra/backports-1.0.tar.gz)
+# or use this:
+#source=('http://dev.gentoo.org/~radhermit/dist/backports-1.0.tar.gz')
+md5sums=('0ecb10bd1095f6604ae517db7ba9094f')
 
-package() {
-  cd "${srcdir}/${_pkgname}-${pkgver}"
-  python2 setup.py install --prefix=/usr --root="${pkgdir}" || return 1
+## we need this becuse upsteam source doesnt work
+prepare() {
+  tar zxvf "${_pkgname}-1.0.tar.gz"
+  mv "${_pkgname}-1.0" "python-${_pkgname}-1.0.1"
+  tar -pczf "python-${_pkgname}-1.0.1.tar.gz" "python-${_pkgname}-1.0.1"
 }
 
-# vim:set ts=2 sw=2 et:
+build() {
+  cd "$srcdir/python-$_pkgname-$pkgver"
+  python2 setup.py build
+}
+
+package() {
+  cd "$srcdir/python-$_pkgname-$pkgver"
+  python2 setup.py install --root="$pkgdir/"
+}

@@ -1,46 +1,35 @@
 #
 # Apps Packages for Chakra, part of chakra-project.org
 #
-# Maintainer: Daniele Cocca <jmc@chakra-project.org>
-#
+# Maintainer: Manuel 'UtG' <utg[dot]chakra.linux[at]gmail[dot]com>
 
 pkgname=blink
-pkgver=20120826
+pkgver=0.8.1
 pkgrel=1
 pkgdesc="A state of the art, easy to use SIP client. You can use it with any SIP provider or its own fully-featured SIP service."
 arch=('any')
 url="http://icanblink.com/"
-license=('GPL')
-depends=('python2' 'pyqt' 'python2-sipsimple')
-makedepends=('darcs')
-categories=('communication')
-source=('blink.desktop')
-md5sums=('1260b2ed4d21b24ee62ad1901087f8ac')
-
-_darcstrunk="http://devel.ag-projects.com/repositories"
-_darcsmod="blink-qt"
+license=('custom:MIT')
+depends=('python2' 'python2-pyqt4' 'python2-sipsimple' 'python2-cjson')
+categories=('network')
+source=("http://download.ag-projects.com/BlinkQt/$pkgname-$pkgver.tar.gz"
+	'blink.desktop')
+md5sums=('18040124c0b76d94f75eae03c4fef115'
+         '1260b2ed4d21b24ee62ad1901087f8ac')
 
 build() {
-  msg "Starting Darcs pull..."
-
-  cd "${srcdir}"
-
-  if [ -d "${_darcsmod}/_darcs" ]; then
-    (cd "${_darcsmod}" && darcs pull -a)
-  else
-    darcs get "${_darcstrunk}/${_darcsmod}" "${_darcsmod}"
-  fi
-
-  msg "Darcs pull done (or server timeout)."
+  cd "$srcdir/$pkgname-$pkgver"
+  python2 setup.py build
 }
 
 package() {
-  cd "${srcdir}/${_darcsmod}"
+  cd "$srcdir/$pkgname-$pkgver"
+  python2 setup.py install --root="$pkgdir/"
 
-  python2 setup.py install --prefix=/usr --root="${pkgdir}"
+  # license
+  install -Dm644 doc/license.txt \
+    "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
 
   install -D -m644 "${srcdir}/blink.desktop" \
                    "${pkgdir}/usr/share/applications/blink.desktop"
 }
-
-# vim:set ts=2 sw=2 et:

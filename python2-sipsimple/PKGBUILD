@@ -1,64 +1,52 @@
-#
-# Apps Packages for Chakra, part of chakra-project.org
-#
-# Maintainer: Daniele Cocca <jmc@chakra-project.org>
-#
+# Maintainer: Manuel 'UtG' <utg[dot]chakra.linux[at]gmail[dot]com>
 
 pkgname=python2-sipsimple
-pkgver=20120826
+pkgver=1.3.0
 pkgrel=1
-pkgdesc="SIP SIMPLE Client SDK is a Software Development Kit for easy development of SIP end-points that support rich media like Audio, Instant Messaging, File Transfers, Desktop Sharing and Presence."
-arch=('i686' 'x86_64')
-license=('LGPL')
+pkgdesc="SIP SIMPLE Client SDK is a Software Development Kit for easy development of SIP end-points that support rich media like Audio, Instant Messaging, File Transfers, Desktop Sharing and Presence"
+arch=(x86_64)
+#url="http://download.ag-projects.com/SipClient"
+url="http://sipsimpleclient.com/"
+license=('custom:MIT' 'LGPL')
 depends=('python2>=2.7'
          'python2-gnutls>=1.1.9'
          'python2-application>=1.2.8'
          'python2-backports>=1.0.0'
          'python2-cjson>=1.0.5'
-         'python-dateutil>=1.4'
+         'python2-dateutil>=1.4'
          'python2-eventlet>=0.8.11'
          'python2-greenlet>=0.4.0'
-         'python-lxml>=2.1.2'
+         'python2-lxml>=2.1.2'
          'python2-msrplib'
          'python2-xcaplib'
-         'python-cython>=0.13.0'
-         'python-dnspython>=1.6.0'
-         'twisted>=8.1.0'
-         'zope-interface>=3.3.1'
-         'python-imaging>=1.1.6'
+         'python2-cython>=0.13.0'
+         'python2-dns>=1.6.0'
+         'python2-twisted>=8.1.0'
+         'python2-zope-interface>=3.3.1'
+         'python2-imaging>=1.1.6'
          'openssl'
          'gnutls>=2.4.1'
          'libxml2>=2.6.32'
-         'libxslt>=1.1.24')
-makedepends=('setuptools>=0.6c9'
+         'libxslt>=1.1.24'
+         'util-linux'
+         'alsa-lib')
+makedepends=('python2-setuptools'
              'subversion'
              'darcs')
-optdepends=('python2-sipclients: command line programs to test the SIP SIMPLE Client library')
-url="http://sipsimpleclient.com/"
-
-_darcstrunk="http://devel.ag-projects.com/repositories"
-_darcsmod="python-sipsimple"
+source=("http://download.ag-projects.com/SipClient/python-sipsimple-$pkgver.tar.gz")
+md5sums=('222f6c0e845508f775063fe8b9cc8fb4')
 
 build() {
-  msg "Starting Darcs pull..."
-
-  cd "${srcdir}"
-
-  if [ -d "${_darcsmod}/_darcs" ]; then
-    (cd "${_darcsmod}" && darcs pull -a)
-  else
-    darcs get "${_darcstrunk}/${_darcsmod}" "${_darcsmod}"
-  fi
-
-  msg "Darcs pull done (or server timeout)."
-
-  cd "${srcdir}/${_darcsmod}"
-  MAKEFLAGS=-j1 python2 setup.py build_ext --pjsip-clean-compile --pjsip-disable-assertions
+  cd "$srcdir/python-sipsimple-$pkgver"
+  python2 setup.py build_ext --pjsip-clean-compile
 }
 
 package() {
-  cd "${srcdir}/${_darcsmod}"
-  python2 setup.py install --prefix=/usr --root="${pkgdir}"
+  cd "$srcdir/python-sipsimple-$pkgver"
+  python2 setup.py install --root="$pkgdir" --optimize=1
+
+  # license
+  install -Dm644 LICENSE \
+    "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
 }
 
-# vim:set ts=2 sw=2 et:
