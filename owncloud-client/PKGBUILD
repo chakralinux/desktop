@@ -6,7 +6,7 @@
 _name=mirall
 pkgname=owncloud-client
 pkgver=1.6.0
-pkgrel=2
+pkgrel=3
 pkgdesc="ownCloud client based on mirall"
 arch=('x86_64')
 url="http://owncloud.org/"
@@ -24,15 +24,15 @@ sha256sums=('12b5da4b5598db3ef5d4d26e464de3534f3a6b8a864719949d82c77cfc353ab5'
             '1cec1ec7761d087e197f0ccdf5e1e8236db0bd29a1babe49130c00f81e82e011')
 
 prepare() {
-  if [[ -e ${_name}-${pkgver}-build ]]; then rm -rf ${_name}-${pkgver}-build; fi
-  mkdir ${_name}-${pkgver}-build
-  
-  cd ${_name}-${pkgver}
+  cd ${srcdir}/${_name}-${pkgver}/
+  if [[ -d build ]]; then rm -rf build; fi
+  mkdir build
+  msg 'patch the man directory'
   patch -p0 -i "${srcdir}/man.patch"
 }
 
 build() {
-  cd ${_name}-${pkgver}-build
+  cd ${srcdir}/${_name}-${pkgver}/build
  
   cmake -DBUILD_WITH_QT4=on \
         -DQT_QMAKE_EXECUTABLE=/usr/bin/qmake \
@@ -40,17 +40,26 @@ build() {
         -DCMAKE_INSTALL_LIBDIR=/usr/lib \
         -DCMAKE_INSTALL_SYSCONFDIR=/etc/${pkgname} \
         -WITH_DOC=TRUE \
+        -DMEM_NULL_TESTS=On -DUNIT_TESTING=On \
         -DCMAKE_BUILD_TYPE="Release" \
-        ../${_name}-${pkgver}
+        ..
   make
+}
+
+check() {
+  cd ${srcdir}/${_name}-${pkgver}/build
+  make test
 }
  
 package() {
-  cd ${_name}-${pkgver}-build
+  cd ${srcdir}/${_name}-${pkgver}/build
  
   make DESTDIR="${pkgdir}" install
   
   # Fix desktop file
   desktop-file-edit --set-key="Keywords" --set-value="ownCloud;syncing;file;sharing;" \
     "${pkgdir}/usr/share/applications/owncloud.desktop"
+
+  # Ugly fix the shared libraries error: FS#203
+  ln -s /usr/lib/owncloud/libocsync.so.0.2.1 ${pkgdir}/usr/lib/libocsync.so.0
 }
