@@ -5,10 +5,10 @@
 
 pkgname=avogadro
 pkgver=1.1.1
-pkgrel=1
+pkgrel=2
 pkgdesc="An advanced molecular editor based on Qt"
 arch=('x86_64')
-url="http://avogadro.openmolecules.net/wiki/Main_Page"
+url="http://avogadro.cc/wiki/Main_Page"
 license=('GPL2')
 depends=('eigen2' 'openbabel' 'python2-pyqt4' 'boost-libs' 'glew' 'python2-numpy')
 makedepends=('cmake' 'boost' 'doxygen' 'libgl')
@@ -23,10 +23,6 @@ prepare() {
   mkdir -p build
   cd "${srcdir}/${pkgname}-${pkgver}"
   patch -p1 -i "${srcdir}"/boost153.patch
-  cd ${srcdir}
-  mkdir -p build
-  cd build
-  patch -p1 -i "${srcdir}"/boost.patch
 }
 
 build() {
