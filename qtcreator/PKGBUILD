@@ -1,8 +1,8 @@
 # Maintainer: Francesco Marinucci <franzmari[at]chakra-project[dot]it>
 
 pkgname=qtcreator
-pkgver=3.1.0
-pkgrel=3
+pkgver=3.1.1
+pkgrel=1
 pkgdesc="Lightweight, cross-platform integrated development environment."
 arch=('x86_64')
 url="http://qt.digia.com/"
@@ -19,21 +19,22 @@ optdepends=('qt-docs: for the integrated Qt documentation'
             'valgrind: for analyze support')
 categories=('programming')
 screenshot=("http://qt.nokia.com/images/products/qt-creator-breakdown-screenshot")
-options=(docs)
-#source=("http://download.qt-project.org/official_releases/qtcreator/3.1/${pkgver}/qt-creator-opensource-src${pkgver}-src.tar.gz"
-source=("http://ftp.fau.de/qtproject/official_releases/${pkgname}/3.1/${pkgver}/qt-creator-opensource-src-${pkgver}.tar.gz"
-        'qtcreator.desktop')
-sha256sums=('c8c648f4988b707393e0f1958a8868718f27e59263f05f3b6599fa62290c2bbf'
-            '1f70efa02ea457a4df21243d3e8d68b6c66ad194400beb1f26f954536d4e7c90')
+options=('docs')
+source=("http://download.qt-project.org/official_releases/qtcreator/3.1/${pkgver}/qt-creator-opensource-src-${pkgver}.tar.gz"
+	'qtcreator.desktop')
+#source=("http://ftp.fau.de/qtproject/official_releases/${pkgname}/3.1/${pkgver}/qt-creator-opensource-src-${pkgver}.tar.gz")
+md5sums=('1876878c58b3026e0df26fde9393cd91'
+         '5aa242e0262fa22f75c3b59d3a4ec198')
+install=qtcreator.install
         
 
 build() {
   cd "${srcdir}"
-  [ -d build ] && rm -r build
-  mkdir build
-  cd build
+  
+  [[ -d build ]] && rm -r build
+  mkdir build && cd build
 
-  qmake-qt5 "${srcdir}/qt-creator-opensource-src-${pkgver}/qtcreator.pro"
+  qmake-qt5 -r "${srcdir}/qt-creator-opensource-src-${pkgver}/qtcreator.pro"
   make
   make docs -j1
 }
@@ -49,3 +50,4 @@ package() {
   install -Dm644 "${srcdir}/qt-creator-opensource-src-${pkgver}/LGPL_EXCEPTION.TXT" \
     "${pkgdir}/usr/share/licenses/qtcreator/LGPL_EXCEPTION.TXT"
 }
+
