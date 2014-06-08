@@ -2,7 +2,7 @@
 # Maintainer: Bruce Liu <brli@user.sourceforge.net>
 
 pkgname=powertop
-pkgver=2.5
+pkgver=2.6.1
 pkgrel=1
 pkgdesc="Tool that finds the software that makes your laptop use more power than necessary"
 arch=('x86_64')
@@ -11,8 +11,8 @@ license=('GPL2')
 depends=('gcc-libs' 'libnl' 'ncurses' 'pciutils')
 categories=('utils')
 screenshot=('https://01.org/powertop/sites/default/files/resize/users/u8/powertop20_overview-640x381.png')
-source=("${url}/sites/default/files/downloads/${pkgname}-${pkgver}.tar.gz")
-md5sums=('806bbcbd44fcea1f807c9582fc1f7d3e')
+source=("https://01.org/sites/default/files/downloads/powertop/${pkgname}-${pkgver}.tar.gz")
+md5sums=('4391e7b0af854ecf722cdf712f24b631')
 
 build() {
   cd ${srcdir}/powertop-$pkgver
@@ -26,4 +26,3 @@ package() {
 
   make DESTDIR=${pkgdir} install
 }
-
