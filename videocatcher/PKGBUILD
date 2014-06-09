@@ -1,20 +1,14 @@
-#
-# Chakra Packages for Chakra, part of chakra-project.org
-#
-# maintainer (i686): Phil Miller <philm[at]chakra-project[dog]org>
 # maintainer (x86_64): Manuel Tortosa <manutortosa[at]chakra-project[dot]org>
-
-# include global config
-source ../_buildscripts/${current_repo}-${_arch}-cfg.conf
 
 pkgname=videocatcher
 pkgver=0.1.8
-pkgrel=3
+pkgrel=5
 pkgdesc="A videocast client for KDE. It makes it possible to subscribe to video RSS (and ATOM etc.) feeds and easily download videos"
-arch=('i686' 'x86_64')
+arch=('x86_64')
 url="http://kde-apps.org/content/show.php/Videocatcher?content=121556"
 license=('GPL')
 depends=('kdepimlibs' 'qt' 'boost' 'docbook-xsl')
+makedepends=('automoc4')
 categories=('network' 'multimedia')
 source=(http://kde-apps.org/CONTENT/content-files/121556-$pkgname-$pkgver.tar.bz2)
 md5sums=('6c3b1f2da7837aa0be576ed68b153c35')
@@ -24,5 +18,9 @@ build() {
 
   cmake ./ -DCMAKE_INSTALL_PREFIX="/usr"
   make
+}
+
+package() {
+  cd "$srcdir/$pkgname-$pkgver"
   make DESTDIR="$pkgdir" install
 }
