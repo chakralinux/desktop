@@ -6,7 +6,7 @@
 _name=mirall
 pkgname=owncloud-client
 pkgver=1.6.0
-pkgrel=3
+pkgrel=4
 pkgdesc="ownCloud client based on mirall"
 arch=('x86_64')
 url="http://owncloud.org/"
@@ -33,7 +33,10 @@ prepare() {
 
 build() {
   cd ${srcdir}/${_name}-${pkgver}/build
- 
+
+  # Fix the FS#203 in a more elegant way
+  export LDFLAGS="${LDFLAGS} -Wl,-rpath,/usr/lib/owncloud."
+
   cmake -DBUILD_WITH_QT4=on \
         -DQT_QMAKE_EXECUTABLE=/usr/bin/qmake \
         -DCMAKE_INSTALL_PREFIX=/usr \
@@ -59,7 +62,4 @@ package() {
   # Fix desktop file
   desktop-file-edit --set-key="Keywords" --set-value="ownCloud;syncing;file;sharing;" \
     "${pkgdir}/usr/share/applications/owncloud.desktop"
-
-  # Ugly fix the shared libraries error: FS#203
-  ln -s /usr/lib/owncloud/libocsync.so.0.2.1 ${pkgdir}/usr/lib/libocsync.so.0
 }
