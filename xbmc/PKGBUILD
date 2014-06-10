@@ -1,14 +1,16 @@
-# Maintainer: Neophytos Kolokotronis <tetris4 AT gmail DOT com>
-# Contributor abveritas@chakra-project.org
+# Mantainer: Manuel 'UtG' <utg[dot]chakra.linux[at]gmail[dot]com>
+# Contributorr: Neophytos Kolokotronis <tetris4 AT gmail DOT com>
+
+### NOTE: when you update XBMC, you also have to update xbmc-pvr-addons
 
 pkgname=xbmc
-pkgver=13.1b1
+pkgver=13.1
 _codename=Gotham
-pkgrel=4
-pkgdesc="XBMC Media Center"
+pkgrel=1
+pkgdesc="XBMC Media Center is a software media player and entertainment hub for digital media"
 arch=('x86_64')
 url="http://xbmc.org"
-license=('GPL' 'custom')
+license=('GPL2')
 depends=( 'bzip2' 'curl' 'enca' 'faac' 'faad2' 'ffmpeg' 'fontconfig' 'fribidi' 'python2' 'python-pysqlite'
           'glew' 'jasper' 'libcdio' 'libgl' 'libmad' 'libmms' 'libass' 'yajl' 'libtiff'
           'libmpeg2' 'libmariadbclient' 'libsamplerate' 'libxinerama' 'libpng' 'libbluedevil'
@@ -32,16 +34,19 @@ options=('makeflags')
 source=("xbmc-$pkgver.tar.gz::https://github.com/xbmc/xbmc/archive/${pkgver}-${_codename}.tar.gz"
         "${pkgname}.service"
         "polkit.rules"
-        "enable-external-ffmpeg.patch")
-sha256sums=('f806cdfd4a121213308a9d6e75e86a6014a9f8b16e195bf61bba1b999da94cb9'
+        "enable-external-ffmpeg.patch"
+        "make-sure-applications-xbmc.desktop-does-nt-have-exe.patch")
+sha256sums=('344b604eae2ddb47c032dd7964d01f27e6fcd7a8873c84c0841d5da75961a678'
             '547e06f3141866cd34b1df34025517e9826992b67543af7621d954bcdfa0ba94'
             '4ea78374a08e13a64dcf6a424b111b8bfc11de03ed5829744fc6d9b5fc1ec96e'
-            '0239e33e87292c7340ed2092f2b5f1e82f5e283b1f763fb125b3aee78f50c355')
+            '0239e33e87292c7340ed2092f2b5f1e82f5e283b1f763fb125b3aee78f50c355'
+            'ef7af1c4780767da3a27f96b3bd9f3912b8bb15d4b3ccd5a9f9d0de22b57914d')
 
 prepare() {
   cd xbmc-$pkgver-$_codename
 
   patch -p1 -i ../enable-external-ffmpeg.patch
+  patch -p1 -i ../make-sure-applications-xbmc.desktop-does-nt-have-exe.patch
 
   # fix lsb_release dependency
   sed -i -e 's:/usr/bin/lsb_release -d:cat /etc/arch-release:' xbmc/utils/SystemInfo.cpp
@@ -82,9 +87,11 @@ build() {
     --enable-libusb \
     --enable-external-libraries \
     --enable-libcec \
+    --enable-joystick \
     --disable-hal \
     --disable-external-ffmpeg \
     --disable-debug
+    
 
   msg "Running make"
   make
