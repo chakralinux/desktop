@@ -1,25 +1,38 @@
-#
-# Games Packages for Chakra, part of chakra-project.org
-#
 # Maintainer: Adrián Chaves Fernández (Gallaecio) <adriyetichaves gmail.com>
 
 pkgname=performous
 _pkgname=Performous
 pkgver=0.7.0
-pkgrel=4
+pkgrel=5
 pkgdesc='A free game like Singstar™, Rockband™ or Stepmania™'
-arch=('i686' 'x86_64')
+arch=('x86_64')
 url="http://$pkgname.org/"
 license=('GPL2' 'custom: Menu song: CC:BY-SA.')
-depends=('boost-libs' 'cairo' 'ffmpeg' 'glew' 'imagemagick' 'jack' 'libjpeg' 'libpng' 'librsvg' 'libxml++' 'opencv' 'portaudio' 'portmidi' 'sdl')
+depends=('boost-libs' 'cairo' 'ffmpeg' 'glew' 'imagemagick' 'jack' 'libjpeg' 'libpng' 'librsvg' 'libxml++' 'opencv' 'portaudio' 'portmidi' 'sdl' 'libbluray')
 makedepends=('boost' 'cmake' 'help2man' 'tar')
 optdepends=('performous-songs: some songs for Performous')
 changelog=ChangeLog
-source=("http://downloads.sourceforge.net/project/$pkgname/$pkgname/$pkgver/$pkgname-$pkgver.tar.bz2")
-md5sums=('60f3f72b51a630a4aa996484aedb9526')
+source=("http://downloads.sourceforge.net/project/$pkgname/$pkgname/$pkgver/$pkgname-$pkgver.tar.bz2"
+	'ffmpeg-2.0.patch'
+	'performous-0.7.0-cmake.patch')
+md5sums=('60f3f72b51a630a4aa996484aedb9526'
+         '9f781162b6ebc77b68caa05e2941c527'
+         '7da8aef3f4dd28e19f95957ae9ac2bb1')
+
+prepare() {
+ cd $pkgname-$pkgver
+# patch from gentoo
+  patch -Np0 -i ../performous-0.7.0-cmake.patch
+
+# fix building with ffmpeg-2.0
+  patch -Np1 -i ../ffmpeg-2.0.patch
+
+# since freetype2-2.5.1 include files aren't anymore in the freetype subdir
+  sed -i "s#freetype/freetype.h#freetype.h#g" cmake/Modules/FindFreetype.cmake
+}
 
 build() {
-  cd $srcdir/$pkgname-$pkgver
+  cd $pkgname-$pkgver
   
   mkdir -p build && cd build
   cmake \
@@ -30,7 +43,7 @@ build() {
 }
 
 package() {
-  cd $srcdir/$pkgname-$pkgver/build
+ cd $pkgname-$pkgver/build
   make DESTDIR="$pkgdir" install
 
   # Licensing information.
