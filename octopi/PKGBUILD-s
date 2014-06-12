@@ -4,7 +4,7 @@
 pkgbase=octopi
 pkgname=('octopi' 'octopi-notifier' 'octopi-qt5' 'octopi-notifier-qt5')
 pkgver=0.4.0
-pkgrel=4
+pkgrel=5
 url="https://octopiproject.wordpress.com/"
 arch=('x86_64')
 license=('GPL3')
@@ -53,7 +53,7 @@ build() {
    popd
 
    # next, the qt5 flavor
-   cd "${srcdir}/${pkgbase}"
+   cd "${srcdir}/${pkgbase}-qt5"
    qmake-qt5 octopi.pro
    make
 
@@ -61,7 +61,7 @@ build() {
    qmake-qt5 pacmanhelper.pro
    make
    popd
-   
+
    pushd "notifier/octopi-notifier"
    qmake-qt5 octopi-notifier.pro
    make
@@ -115,7 +115,7 @@ package_octopi-qt5() {
    conflicts+=('octopi')
    
    # start package
-   cd ${srcdir}/${pkgbase}
+   cd ${srcdir}/${pkgbase}-qt5
 
    install -Dm 755 bin/octopi ${pkgdir}/usr/bin/octopi
    install -Dm 755 repoeditor/bin/octopi-repoeditor ${pkgdir}/usr/bin/octopi-repoeditor
@@ -130,7 +130,7 @@ package_octopi-notifier-qt5() {
    conflicts+=('octopi-notifier')
    
    # main application
-   cd "${srcdir}/${pkgbase}"
+   cd "${srcdir}/${pkgbase}-qt5"
    install -Dm755 notifier/bin/octopi-notifier ${pkgdir}/usr/bin/${pkgname}
    install -Dm644 octopi-notifier.desktop ${pkgdir}/usr/share/applications/octopi-notifier.desktop
    install -Dm644 resources/images/octopi_red.png ${pkgdir}/usr/share/icons/${pkgname}.png
