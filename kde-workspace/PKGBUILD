@@ -8,7 +8,7 @@ _default_wp="Elarun"
 pkgname="kde-workspace"
 arch=('x86_64')
 #pkgver=${_kdever}
-pkgver=4.11.9
+pkgver=4.11.10
 pkgrel=1
 pkgdesc="KDE Workspace"
 url="http://www.kde.org"
@@ -93,7 +93,7 @@ groups=('kde'
         'kde-minimal')
 backup=('usr/share/config/kdm/kdmrc'
         'etc/pam.d/kscreensaver')
-source=("http://download.kde.org/stable/4.12.5/src/kde-workspace-4.11.9.tar.xz"
+source=("http://download.kde.org/stable/4.13.2/src/kde-workspace-4.11.10.tar.xz"
 #"http://download.kde.org/stable/${_kdever}/src/${pkgname}-$pkgver.tar.xz"
         "$_mirror/kde-wallpapers-$_kdever.tar.xz"
         'mishaaq-kcm_touchpad-00370b5.tar.gz'
@@ -114,8 +114,8 @@ source=("http://download.kde.org/stable/4.12.5/src/kde-workspace-4.11.9.tar.xz"
         'fix_root-only-kcms.patch'
         'plasma-panel-resize-hint.diff')
 #sha256sums=(`grep ${pkgname}-$_kdever.tar.xz  ../checksums.txt | cut -d " " -f1`
-sha256sums=('aa3d12a264e7fcb6c1330e800b9c7d43c00277275d182824d42f9fe1def0c0cf'
-#`grep ${pkgname}-${pkgver}.tar.xz  ../checksums.txt | cut -d " " -f1`
+sha256sums=(#'aa3d12a264e7fcb6c1330e800b9c7d43c00277275d182824d42f9fe1def0c0cf'
+`grep ${pkgname}-${pkgver}.tar.xz  ../checksums.txt | cut -d " " -f1`
             `grep kde-wallpapers-$_kdever.tar.xz  ../checksums.txt | cut -d " " -f1`
             '85b45195048fc1219ebe0496588404abcca0d9c9e88e2da6653c6e0326c4be51'
             '5d15a1cda1e418e633e7fdd83f5a398c4294c28771a16b68979a2b40ddac0def'
@@ -261,14 +261,14 @@ package() {
     install -D -m644 "${srcdir}"/kdm.service "${pkgdir}"/usr/lib/systemd/system/kdm.service
 
     # Remove krandr files
-    #rm -rf ${pkgdir}/usr/lib/debug/usr/bin/krandrtray.debug
-    #rm -rf ${pkgdir}/usr/bin/krandrtray
-    #rm -rf ${pkgdir}/usr/bin/krandrstartup
-    #rm -rf ${pkgdir}/usr/lib/kde4/kded_randrmonitor.so
+    rm -rf ${pkgdir}/usr/lib/debug/usr/bin/krandrtray.debug
+    rm -rf ${pkgdir}/usr/bin/krandrtray
+    rm -rf ${pkgdir}/usr/bin/krandrstartup
+    rm -rf ${pkgdir}/usr/lib/kde4/kded_randrmonitor.so
     rm -rf ${pkgdir}/usr/lib/kde4/kcm_randr.so
-    #rm -rf ${pkgdir}/usr/share/applications/kde4/krandrtray.desktop
+    rm -rf ${pkgdir}/usr/share/applications/kde4/krandrtray.desktop
     rm -rf ${pkgdir}/usr/share/kde4/services/randr.desktop
-    #rm -rf ${pkgdir}/usr/share/kde4/services/kded/randrmonitor.desktop
+    rm -rf ${pkgdir}/usr/share/kde4/services/kded/randrmonitor.desktop
 
     # resolve kdm issue (missing directory)
     mkdir -p ${pkgdir}/var/lib/kdm
