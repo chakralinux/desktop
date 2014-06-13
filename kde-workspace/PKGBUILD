@@ -9,7 +9,7 @@ pkgname="kde-workspace"
 arch=('x86_64')
 #pkgver=${_kdever}
 pkgver=4.11.10
-pkgrel=1
+pkgrel=2
 pkgdesc="KDE Workspace"
 url="http://www.kde.org"
 license=('GPL'
@@ -269,6 +269,8 @@ package() {
     rm -rf ${pkgdir}/usr/share/applications/kde4/krandrtray.desktop
     rm -rf ${pkgdir}/usr/share/kde4/services/randr.desktop
     rm -rf ${pkgdir}/usr/share/kde4/services/kded/randrmonitor.desktop
+    # remove krandr from startkde
+    sed -i 's/. krandrstartup//g' ${pkgdir}/usr/bin/startkde
 
     # resolve kdm issue (missing directory)
     mkdir -p ${pkgdir}/var/lib/kdm
