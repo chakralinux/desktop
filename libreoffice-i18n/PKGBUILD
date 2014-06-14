@@ -6,7 +6,7 @@ pkgbase="libreoffice-i18n"
 
 _rcver=4.2.4.2
 pkgver=4.2.4
-pkgrel=2
+pkgrel=3
 depends=("libreoffice-common>=$pkgver")
 
 _oodlver=${pkgver}
@@ -151,13 +151,13 @@ prepare() {
     # the helppack rpm goes also into the langpack dir - so far we don't want to split the helppacks separate
     rpmextract.sh ${srcdir}/LibreOffice_${_dirver}_Linux_x86_rpm_helppack_${_pkglang}/RPMS/*.rpm || /bin/true
   done
+  # rm duplicate dictionary
+  rm -rf ${srcdir}/LibreOffice_4.2.4.2_Linux_x86_rpm_langpack_en-GB/RPMS/opt/libreoffice4.2/share/wordbook/en-US.dic
 }
 
 _package() {
   pkgdesc="${_languages[$1]} language pack for LibreOffice"
-  provides=("openoffice-$1" 'libreoffice-langpack')
-  replaces=("openoffice-$1")
-  conflicts=("openoffice-$1")
+  provides=('libreoffice-langpack')
 
   cd "$srcdir"/LibreOffice_${_dirver}_Linux_x86_rpm_langpack_$1/RPMS
   mkdir -p "$pkgdir"/usr/lib/libreoffice

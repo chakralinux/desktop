@@ -4,22 +4,20 @@
 # maintainer almack@chakraos.org
 
 pkgname=kcm-pacman-repoeditor
-_pkgname=kcmpacmanrepoeditor
-pkgver=0.1.0
+pkgver=0.1.1
 pkgdesc="A KDE control module for pacman's repositories management."
-pkgrel=2
+pkgrel=1
 arch=('x86_64')
 url="https://github.com/gcala/kcmpacmanrepoeditor"
 license=('GPL3')
-makedepends=('cmake')
+makedepends=('cmake' 'automoc4')
 depends=('kdelibs')
 categories=('system')
-#source=("$pkgname"::"git://github.com/gcala/${pkgname}.git#commit=${gitsha}")
-source=("https://github.com/gcala/kcmpacmanrepoeditor/archive/master.zip")
-md5sums=('a9204214ba548d2caeb7975b236a660a')
+source=("$pkgname-$pkgver.tar.gz"::"https://github.com/gcala/$pkgname/archive/v$pkgver.tar.gz")
+md5sums=('0798977441e7833e08d4ae3ab6e97d2b')
 
 build(){
-  cd "${srcdir}/${_pkgname}-master"
+  cd "${srcdir}/${pkgname}-${pkgver}"
 
   mkdir -p build
   cd build
@@ -31,6 +29,6 @@ build(){
 }
 
 package(){
-  cd "${srcdir}/${_pkgname}-master/build"
+  cd "${srcdir}/${pkgname}-${pkgver}/build"
   make DESTDIR="${pkgdir}" install
 }

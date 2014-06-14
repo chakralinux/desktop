@@ -4,20 +4,23 @@
 # Maintainer: Ernesto Manriquez <alejandronova@gmail.com>
 
 pkgname=lyx
-pkgver=2.0.6
+pkgver=2.1.0
 pkgrel=2
 pkgdesc="An advanced open-source document processor"
 arch=('x86_64')
 url="http://www.lyx.org"
-depends=('qt' 'texlive-core' 'python2' 'perl' 'imagemagick' 'aspell' 'boost-libs' 'icu')
-makedepends=('boost')
-optdepends=('texlive-most: TeX Live goodies')
-categories=('office')
+depends=('qt' 'texlive-core' 'python2' 'perl' 'imagemagick' 'enchant' 'libmythes' 'boost-libs' 'icu')
+makedepends=('boost' 'bc')
+optdepends=('texlive-most: TeX Live goodies'
+            'kbibtex: BibTeX reference manager')
 license=('GPL')
-source=("ftp://ftp.lyx.org/pub/lyx/stable/2.0.x/$pkgname-$pkgver.tar.xz" 'lyx.desktop')
+source=("ftp://ftp.lyx.org/pub/lyx/stable/2.1.x/$pkgname-$pkgver.tar.xz"
+        'lyx.desktop'
+        'lyxrc.dist')
 screenshot=('http://www.lyx.org/images/about/main_window.png')
-md5sums=('9263fb53a5f878d67b00e2d8aec9748a'
-         'a511db621c56ff56383496533db3701a')
+md5sums=('9441eb16b07bae3aeaf7d8ebaa74b73f'
+         'a511db621c56ff56383496533db3701a'
+         'b70fdeab95ba4a6c3ff72410dfa61823')
 
 build() {
   cd ${srcdir}/${pkgname}-${pkgver}
@@ -34,4 +37,7 @@ package() {
 
   # install desktop entry
   install -Dm644 "${srcdir}/lyx.desktop" "${pkgdir}/usr/share/applications/lyx.desktop"
+  
+  # install default config file
+  install -Dm644 "${srcdir}/lyxrc.dist" "${pkgdir}/usr/share/lyx/lyxrc.dist"
 }
