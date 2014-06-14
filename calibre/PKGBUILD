@@ -1,47 +1,57 @@
-# maintainer: almack
+# maintainer: UtG <utg[dot]chakra.linux[at]gmail[dot]com>
 
 pkgname=calibre
-pkgver=0.9.40
+pkgver=1.40.0
 pkgrel=2
 pkgdesc="Ebook management application"
 arch=('x86_64')
 url="http://calibre.kovidgoyal.net/"
 license=('GPL3')
 depends=('python2' 'python2-imaging' 'libusb' 'python2-pyqt4' 'python-mechanize'
-         'imagemagick' 'dbus-python' 'python-lxml' 'python2-beautifulsoup' 'python2-dateutil'
-         'python-cssutils' 'desktop-file-utils' 'python2-dns' 'libmtp'
+         'imagemagick' 'python2-dbus' 'python-lxml' 'python2-beautifulsoup' 'python2-dateutil'
+         'python2-cssutils' 'desktop-file-utils' 'python2-dns' 'libmtp'
          'podofo' 'xdg-utils' 'cherrypy' 'python2-pdf' 'unrar' 'chmlib' 'poppler'
-         'poppler-qt' 'icu' 'libwmf' 'libffi' 'python2-six' 'python2-netifaces' 'python2-cssselect')
+         'poppler-qt' 'icu' 'libwmf' 'libffi' 'python2-six' 'python2-netifaces' 'python2-cssselect'
+         'python2-apsw')
 makedepends=('python2-pycountry' 'qt-private-headers')
 #optdepends=('ipython: to use calibre-debug')
 screenshot=('https://lh5.googleusercontent.com/_lG58t3XWd3c/TcNwiXkAx_I/AAAAAAAAAEc/M34I4uY9UUY/s800/gui.jpeg')
-install=calibre.install
-source=("http://sourceforge.net/projects/calibre/files/${pkgver}/calibre-${pkgver}.tar.xz"
-        'desktop_integration.patch')
-md5sums=('f63b0e5697c5e997ecaaeaa82a14cd60'
-         '8353d1878c5a498b3e49eddef473605f')
-
-build() {
-  cd "${srcdir}/${pkgname}"
+install=${pkgname}.install
+source=("http://download.calibre-ebook.com/${pkgver}/${pkgname}-${pkgver}.tar.xz"
+        'desktop_integration.patch'
+        'calibre-mount-helper')
+md5sums=('4fb8c0273e9bf14698fe99a89c9e2a65'
+         '47b2576415b7898946320930892e86e4'
+         '675cd87d41342119827ef706055491e7')
+         
+prepare() {
+  cd ${srcdir}/${pkgname}
 
   rm -rf src/cherrypy
   rm -rf resources/${pkgname}-portable.*
   mkdir -p src/calibre/plugins
-  
-  sed -i -e "s/ldflags = shlex.split(ldflags)/ldflags = shlex.split(ldflags) + ['-fPIC']/" setup/extensions.py
-  
+
+  sed -i -e "s/ldflags = shlex.split(ldflags)/ldflags = shlex.split(ldflags) + ['-fPIC']/" \
+    setup/extensions.py
+
+  # Fix for shebang in meta.py
+  sed -i -e "s:#!usr:#!/usr:g" src/calibre/ebooks/markdown/extensions/meta.py
+
   sed -i -e 's:\(#!/usr/bin/env[ ]\+python$\|#!/usr/bin/python$\):\12:g' \
     $(find . -regex ".*.py\|.*.recipe")
+}
 
-
-  LANG='en_US.UTF-8' python2 setup.py build
-  #LANG='en_US.UTF-8' python2 setup.py translations
+build() {
+  cd ${srcdir}/${pkgname}
+  
+  python2 setup.py build
+  python2 setup.py translations
 }
 
 package() {
-  cd ${pkgname}
+  cd ${srcdir}/${pkgname}
 
-  patch -p1 -i "${srcdir}/desktop_integration.patch"
+  patch -Np1 -i "${srcdir}/desktop_integration.patch"
 
   # More on desktop integration (e.g. enforce Chakra defaults)
   sed -i -e "/self.create_uninstaller()/,/os.rmdir(config_dir)/d" \
@@ -53,13 +63,18 @@ package() {
   # Fix the environment module location
   sed -i -e "s|(prefix=.*)|(prefix='$pkgdir/usr')|g" setup/install.py
 
-  mkdir -p ${pkgdir}/usr/lib/python2.7/site-packages
-  python2 setup.py install --root=${pkgdir}/ --prefix=/usr \
-    --staging-bindir=${pkgdir}/usr/bin \
-    --staging-libdir=${pkgdir}/usr/lib \
-    --staging-sharedir=${pkgdir}/usr/share
+  install -d "${pkgdir}/usr/lib/python2.7/site-packages"
+  install -d "${pkgdir}/usr/share/zsh/site-functions"
+  python2 setup.py install --root="${pkgdir}" --prefix=/usr \
+    --staging-bindir="${pkgdir}/usr/bin" \
+    --staging-libdir="${pkgdir}/usr/lib" \
+    --staging-sharedir="${pkgdir}/usr/share"
 
-  find ${pkgdir} -type d -empty -delete
+  find "${pkgdir}" -type d -empty -delete
+  
+  # See http://lwn.net/SubscriberLink/465311/7c299471a5399167/
+  rm -rf "${pkgdir}/usr/bin/calibre-mount-helper"
+  install -m 755 "${srcdir}/calibre-mount-helper" "${pkgdir}/usr/bin"
   
   python2 -m compileall "${pkgdir}/usr/lib/calibre/"
   python2 -O -m compileall "${pkgdir}/usr/lib/calibre/"
