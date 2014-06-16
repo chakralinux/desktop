@@ -4,12 +4,11 @@
 pkgbase=qtcurve
 pkgname=('qtcurve-utils' 'qtcurve-kde4' 'qtcurve-qt5')
 pkgver=1.8.18
-pkgrel=2
+pkgrel=3
 arch=('x86_64')
 license=('GPL')
-pkgdesc='A configurable set of widget styles for KDE'
+pkgdesc='A configurable set of widget styles for Qt and KDE'
 url='https://github.com/QtCurve/qtcurve'
-depends=('kde-workspace')
 makedepends=('cmake' 'automoc4' 'qt' 'kde-workspace' 'qt5-svg' 'qt5-quickcontrols' 'qt5-x11extras')
 categories=('system')
 groups=("${pkgbase}")
@@ -18,23 +17,35 @@ md5sums=('422d1876d944bb278855f320eda19368')
 
 prepare(){
   cd ${srcdir}/${pkgbase}-${pkgver}
-  if [ -d build ]; then
-    rm -rf build && mkdir build
-  else
-    mkdir build
-  fi
+  for i in build build-qt5; do
+    if [ -d ${i} ]; then
+      rm -rf ${i} && mkdir ${i}
+    else
+      mkdir ${i}
+    fi
+  done
+  echo $(ls build*)
 }
 
 build() {
+  msg 'Making KDE4 modules'
   cd ${srcdir}/${pkgbase}-${pkgver}/build
   cmake .. -DCMAKE_BUILD_TYPE=Release \
            -DCMAKE_INSTALL_PREFIX=/usr \
-           -DENABLE_GTK2=Off
+           -DENABLE_GTK2=Off \
+           -DENABLE_QT5=Off
+  make
+  msg 'Making Qt5 module'
+  cd ${srcdir}/${pkgbase}-${pkgver}/build-qt5
+  cmake .. -DCMAKE_BUILD_TYPE=Release \ 
+           -DCMAKE_INSTALL_PREFIX=/usr \
+           -DENABLE_GTK2=Off \
+	   -DENABLE_QT4=Off
   make
 }
 
 package_qtcurve-utils() {
-  depends=('libx11')
+  depends=('libx11' 'libxau' 'libxdmcp')
   
   cd ${srcdir}/${pkgbase}-${pkgver}/build/lib/utils
   make DESTDIR="${pkgdir}" install
@@ -50,8 +61,8 @@ package_qtcurve-kde4() {
 }
 
 package_qtcurve-qt5() {
-  depends=('qtcurve-utils' 'qt5-svg' 'qt5-quickcontrols' 'qt5-x11extras')
+  depends=('qtcurve-utils' 'qt5-svg' 'qt5-x11extras' 'qt5-base')
   
-  cd ${srcdir}/${pkgbase}-${pkgver}/build/qt5
+  cd ${srcdir}/${pkgbase}-${pkgver}/build-qt5/qt5
   make DESTDIR="${pkgdir}" install
 }
