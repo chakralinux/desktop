@@ -3,9 +3,9 @@
 # Maintainer: Bruce Liu <bril@users.sourceforge.net>
 
 pkgbase=transmission
-pkgname=('transmission-cli' 'transmission')
+pkgname=('transmission-cli' 'transmission-qt' 'transmission-qt5')
 pkgver=2.83
-pkgrel=1
+pkgrel=2
 arch=('x86_64')
 url="http://www.transmissionbt.com/"
 license=('MIT')
@@ -18,7 +18,7 @@ md5sums=('4620cfbfefee2ce55a6fa12c3ec330a7'
 build() {
   msg 'Configure source code...'
   cd "${srcdir}/${pkgbase}-${pkgver}"
-
+  sed -i '/^CONFIG/aQMAKE_CXXFLAGS += -std=c++11' qt/qtr.pro
   autoreconf -fi 
   export CFLAGS="$CFLAGS -fno-strict-aliasing"
 
@@ -27,12 +27,13 @@ build() {
               --enable-static=no \
               --localedir=/usr/share/transmission/i18n
   make
-#  msg 'Compiling Qt4 part...'
-#  cd "${srcdir}/${pkgbase}-${pkgver}/qt"
-#  qmake qtr.pro
-#  make
-  msg 'Compiling Qt5 part...'
+  cp -r qt qt5
+  msg 'Compiling Qt4 part...'
   cd "${srcdir}/${pkgbase}-${pkgver}/qt"
+  qmake qtr.pro
+  make
+  msg 'Compiling Qt5 part...'
+  cd "${srcdir}/${pkgbase}-${pkgver}/qt5"
   /usr/lib/qt5/bin/qmake qtr.pro
   make
 }
@@ -56,30 +57,27 @@ package_transmission-cli() {
   install -D -m644 COPYING "${pkgdir}/usr/share/licenses/transmission-cli/COPYING"
 }
 
-#package_transmission-qt() {
-#  pkgdesc="Fast, easy, and free BitTorrent client (Qt GUI)"
-#  depends=('curl' 'qt' 'libevent' 'miniupnpc')
-#  optdepends=('transmission-cli: daemon and web support')
-#  categories=('network')
-#  screenshot=('http://www.transmissionbt.com/images/screenshots/Qt-Large.jpg')
-#  provides=("${pkgbase}")
-#  conflicts=("${pkgbase}")
-#  replaces=("${pkgbase}")
-#  install=transmission-qt.install
+package_transmission-qt() {
+  pkgdesc="Fast, easy, and free BitTorrent client (Qt GUI)"
+  depends=('curl' 'qt' 'libevent' 'miniupnpc')
+  optdepends=('transmission-cli: daemon and web support')
+  categories=('network')
+  screenshot=('http://www.transmissionbt.com/images/screenshots/Qt-Large.jpg')
+  install=transmission.install
 
-#  cd "${srcdir}/${pkgbase}-${pkgver}"
+  cd "${srcdir}/${pkgbase}-${pkgver}"
 
-#  make -C qt INSTALL_ROOT="${pkgdir}"/usr install
-#
-#  install -D -m644 COPYING "${pkgdir}/usr/share/licenses/transmission-qt/COPYING"
-#  install -D -m644 qt/icons/transmission.png "${pkgdir}/usr/share/pixmaps/transmission-qt.png"
-#  install -D -m644 qt/transmission-qt.desktop "${pkgdir}/usr/share/applications/transmission-qt.desktop"
-  
-#  install -dm755 ${pkgdir}/usr/share/icons/hicolor
-#  cp -r qt/icons/hicolor/* ${pkgdir}/usr/share/icons/hicolor/
-#}
+  make -C qt INSTALL_ROOT="${pkgdir}"/usr install
 
-package_transmission() {
+  install -D -m644 COPYING "${pkgdir}/usr/share/licenses/transmission-qt/COPYING"
+  install -D -m644 qt/icons/transmission.png "${pkgdir}/usr/share/pixmaps/transmission-qt.png"
+  install -D -m644 qt/transmission-qt.desktop "${pkgdir}/usr/share/applications/transmission-qt.desktop"
+ 
+  install -dm755 ${pkgdir}/usr/share/icons/hicolor
+  cp -r qt/icons/hicolor/* ${pkgdir}/usr/share/icons/hicolor/
+}
+
+package_transmission-qt5() {
   pkgdesc="Fast, easy, and free BitTorrent client (Qt5 GUI)"
   depends=('curl' 'qt5-base' 'libevent' 'miniupnpc')
   optdepends=('transmission-cli: daemon and web support')
