@@ -1,11 +1,11 @@
-#
-# Chakra Packages for Chakra, part of chakra-project.org
-#
-# maintainer abveritas@chakra-project.org
 
-#
+# Chakra Packages for Chakra, part of chakra-project.org
+
+# Maintainer abveritas@chakra-project.org
+
+
 # package info
-#
+
 pkgname=tribe-netinst
 provides=tribe
 replaces=tribe
@@ -21,7 +21,7 @@ arch=('x86_64')
 depends=('kdelibs' 'kdeedu-marble>=4.10.0' 'squashfs-tools' 'tribe-partitionmanager'
         'cinstall>=0.4.6.10' 'rsync' 'mkinitcpio-nfs-utils' 'ntfs-3g' 'libpwquality')
 makedepends=('cmake' 'kde-workspace' 'automoc4')
-options=('!splithdr' '!splitdbg')
+options=('!header' '!debug')
 source=("${pkgname}-${pkgver}.tar.xz"
         "http://chakra-linux.org/sources/tribe/RELEASE_NOTES_${_rls_notes}.html"
         'launch-tribe.sh')
@@ -47,9 +47,9 @@ mksource() {
 	  md5sum ${pkgname}-${pkgver}.tar.xz
 }
 
-#
+
 # build function
-#
+
 build()
 {
         cd "${srcdir}/${pkgname}-${pkgver}"

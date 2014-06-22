@@ -1,8 +1,7 @@
-
 pkgbase=digikam
 pkgname=('digikam' 'kipi-plugins' 'libkvkontakte')
-pkgver=3.5.0
-pkgrel=5
+pkgver=4.0.0
+pkgrel=1
 url="http://digikam.sourceforge.net"
 arch=('x86_64')
 license=('GPL')
@@ -10,19 +9,10 @@ screenshot=('http://i.imgur.com/6YnUM.png')
 makedepends=('kde-runtime' 'kdegraphics-kgamma' 'kdepimlibs' 'lensfun' 'kdeedu-marble'
              'liblqr' 'opencv' 'lapack' 'libgpod' 'pkgconfig' 'cmake' 'automoc4'
              'doxygen' 'docbook-xsl' 'qjson' 'kdegraphics-libkexiv2' 'kdegraphics-libkdcraw'
-             'kdegraphics-libksane' 'qt-gstreamer' 'boost' 'hugin-tools' 'eigen3')
-source=("http://download.kde.org/stable/${pkgname}/${pkgname}-${pkgver}.tar.bz2"
-	'panorama_lastpage.patch')
-md5sums=('16d570269883652487516a77c9d7d6f8'
-	 '1f14b528d5601ca0dee2021caafba104')
-
-prepare(){
-    cd "${srcdir}/${pkgname}-${pkgver}"
-    # Panorama: bugfix lastpage (only for v3.5.0)
-    pushd "${srcdir}/${pkgname}-${pkgver}/extra/kipi-plugins/"
-    patch -Np1 -i ${srcdir}/panorama_lastpage.patch
-    popd
-}
+             'kdegraphics-libksane' 'mariadb' 'qt-gstreamer' 'boost' 'hugin-tools' 'eigen3' 'libbluray')
+source=("http://download.kde.org/stable/${pkgname}/${pkgname}-${pkgver}.tar.bz2")
+options=("debug")
+md5sums=('03438cc1aeb9a266dcf1f2523ffe983d')
 
 build() {
    cd ${srcdir}
@@ -30,9 +20,8 @@ build() {
    mkdir -p build
    cd build
    cmake ../${pkgname}-${pkgver} \
-     -DCMAKE_BUILD_TYPE=Release \
+     -DCMAKE_BUILD_TYPE=RelWithDebInfo \
      -DCMAKE_INSTALL_PREFIX=/usr \
-     -DCMAKE_SKIP_RPATH=ON \
      -DDIGIKAMSC_USE_PRIVATE_KDEGRAPHICS=OFF
    make 
 }
@@ -40,7 +29,7 @@ build() {
 package_digikam() {
   pkgdesc="Digital photo management application for kde"
   depends=('kde-runtime' 'kdegraphics-kgamma' 'kdepimlibs' 'lensfun' 'kdeedu-marble'
-           'liblqr' 'opencv' 'kipi-plugins' 'lapack' 'libgpod')
+           'liblqr' 'mariadb' 'opencv' 'kipi-plugins' 'lapack' 'libgpod')
   install=digikam.install
   replaces=('digikamimageplugins')
   categories=('graphics')

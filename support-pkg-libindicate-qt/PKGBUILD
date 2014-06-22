@@ -1,10 +1,10 @@
-#
-# KDE SC Packages for Chakra, part of chakra-project.org
-#
-# maintainer (i686): Phil Miller <philm[at]chakra-project[dog]org>
-# maintainer (x86_64): Manuel Tortosa <manutortosa[at]chakra-project[dot]org>
 
-# include global config
+
+
+# Maintainer (i686): Phil Miller <philm@chakra-project[dog]org>
+# Maintainer (x86_64): Manuel Tortosa <manutortosa@chakra-project@org>
+
+# Include global configuration
 source ../_buildscripts/${current_repo}-${_arch}-cfg.conf
 
 
@@ -22,7 +22,7 @@ license=('GPL')
 depends=('libindicate>=0.2.3-3')
 makedepends=()
 groups=("kde-uninstall" "kde-support")
-options=('!splitdbg' '!splithdr')
+options=('!debug' '!header')
 
 source=(http://launchpadlibrarian.net/32429490/libindicate-qt-0.2.2.tar.bz2)
 md5sums=('edc09ce095e7aab01b85291ce9e5f78c') # libindicate-qt-0.2.2.tar.bz2
@@ -37,7 +37,7 @@ build() {
     -DCMAKE_INSTALL_PREFIX=/usr \
     -DCMAKE_SKIP_RPATH=ON \
     -DCMAKE_{SHARED,MODULE,EXE}_LINKER_FLAGS='-Wl,--no-undefined -Wl,--as-needed'
-  make || return 1
+  make
   make DESTDIR=${pkgdir} install
 
 }

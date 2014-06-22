@@ -5,10 +5,10 @@
 
 pkgname=avogadro
 pkgver=1.1.1
-pkgrel=1
+pkgrel=2
 pkgdesc="An advanced molecular editor based on Qt"
 arch=('x86_64')
-url="http://avogadro.openmolecules.net/wiki/Main_Page"
+url="http://avogadro.cc/wiki/Main_Page"
 license=('GPL2')
 depends=('eigen2' 'openbabel' 'python2-pyqt4' 'boost-libs' 'glew' 'python2-numpy')
 makedepends=('cmake' 'boost' 'doxygen' 'libgl')
@@ -19,12 +19,14 @@ source=("http://downloads.sourceforge.net/${pkgname}/${pkgname}-${pkgver}.tar.bz
 sha512sums=('37e2fc9400f8727b7e69d84c13989aaba6fc88287e106a6ed137e4d0fd8ea181dc4ab49b08148d2077754f014748c8ed6f46881f31a1455029f876b599754827'
             'b8ebad1e70a91408be97554ac4af5872ca9ce62a387568ed32c40c50f0b29b3f6c3db38333408fda119b08f99531fd87e4dec6a5483e3492a1e8fe30b4e42d26')
 
-build() {
+prepare() {
+  mkdir -p build
   cd "${srcdir}/${pkgname}-${pkgver}"
   patch -p1 -i "${srcdir}"/boost153.patch
-  cd ${srcdir}
-  mkdir -p build
-  cd build
+}
+
+build() {
+  cd ${srcdir}/build
 
   cmake ../${pkgname}-${pkgver} \
     -DCMAKE_BUILD_TYPE=Release \

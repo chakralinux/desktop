@@ -1,0 +1,27 @@
+# Maintainer: AlmAck <almack@chakraos@org>
+
+pkgname=("chakra-wallpapers-example")
+_release_name=example
+pkgver=2014.05
+pkgrel=1
+pkgdesc="Chakra Descartes Theme Wallpapers by Malcer for KDE Chakra "
+url="http://www.chakra-project.org"
+license=("Creative Commons, BY-NC-SA")
+arch=('any')
+makedepends=('automoc4')
+options=('!header')
+groups=("kde" "kde-uninstall")
+source=("http://chakra.sourceforge.net/sources/chakra-artwork/wallpapers/${_release_name}/${_release_name}-${pkgver}.tar.gz")
+md5sums=('f4a1d2777dd13bcc63efcf868e0b21b0')
+
+package() {
+	cd ${srcdir}/${_release_name}
+	
+	mkdir -pv ${pkgdir}/usr/share/wallpapers/${_release_name}/contents/
+	cd ${srcdir}/${_release_name}/content
+	cp -Rv * ${pkgdir}/usr/share/wallpapers/${_release_name}/contents/
+	cd $pkgdir/usr/share/wallpapers/${_release_name}/contents/
+
+	cp -v ${srcdir}/${_release_name}/metadata.desktop $pkgdir/usr/share/wallpapers/${_release_name}
+	cp -v ${srcdir}/${_release_name}/content/screenshot.png $pkgdir/usr/share/wallpapers/${_release_name}/contents
+}

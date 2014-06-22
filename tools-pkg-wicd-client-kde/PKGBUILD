@@ -1,8 +1,8 @@
-#
+
 # Chakra Packages for Chakra, part of chakra-project.org
-#
-# maintainer (i686): Phil Miller <philm[at]chakra-project[dog]org>
-# maintainer (x86_64): Manuel Tortosa <manutortosa[at]chakra-project[dot]org>
+
+# Maintainer (i686): Phil Miller <philm@chakra-project[dog]org>
+# Maintainer (x86_64): Manuel Tortosa <manutortosa@chakra-project@org>
 
 pkgname=wicd-client-kde
 _pkgname=wicd-kde
@@ -21,16 +21,16 @@ categories=('network')
 build() 
 
 {
-  cd ${srcdir}/${_pkgname} || return 1
+  cd ${srcdir}/${_pkgname}
   
 
-  cmake . -DCMAKE_INSTALL_PREFIX=`kde4-config --prefix` || return 1
-  make || return 1
+  cmake . -DCMAKE_INSTALL_PREFIX=`kde4-config --prefix`
+  make
   
 }
 
 package()
 {
-  cd ${srcdir}/${_pkgname} || return 1
-  make DESTDIR=${pkgdir} install || return 1
+  cd ${srcdir}/${_pkgname}
+  make DESTDIR=${pkgdir} install
 }

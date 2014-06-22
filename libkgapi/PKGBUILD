@@ -1,32 +1,39 @@
-# Desktop packages for Chakra
+# Maintainer:   H W Tovetjärn (totte) <totte@tott.es>
+# Contributors: Manuel Tortosa <manutortosa@chakra-project.org>
+#               Andrea Scarpino <andrea@archlinux.org>
 
 pkgname=libkgapi
-pkgver=2.0.0
-pkgrel=1
-pkgdesc="A KDE-based library for accessing various Google services via their public API"
+pkgver=2.1.0
+pkgrel=2
+pkgdesc='A KDE-based library for accessing various Google services via their public API'
 url='https://projects.kde.org/projects/kdereview/libkgapi'
 arch=('x86_64')
-license=('GPL' 'LGPL' 'FDL')
-depends=('kdepimlibs' 'qjson')
-makedepends=('cmake' 'automoc4' 'boost')
-replaces=('akonadi-google' 'libkgoogle')
-conflicts=('akonadi-google' 'libkgoogle')
-provides=('akonadi-google' 'libkgoogle')
+license=('GPL'
+         'LGPL'
+         'FDL')
+options=("debug")
+depends=('kdepimlibs'
+         'qjson')
+makedepends=('cmake'
+             'automoc4'
+             'boost')
 source=("http://download.kde.org/stable/${pkgname}/${pkgver}/src/${pkgname}-${pkgver}.tar.bz2")
-md5sums=('e7938dcec05b0f73e6a0b24c1674378d')
+sha512sums=('879fdb9c162850befad2f1553c3acce1b7201eabe5c8eb38ef03b9c1ee30abcbbc7b852afb6a1011c0e5faac13aff29a23100a706ecb062351fa3af74aa7b5e5')
+
+prepare() {
+    [[ -d ${srcdir}/build ]] ||mkdir -p "${srcdir}/build"
+}
 
 build() {
-  cd "${srcdir}/${pkgname}-${pkgver}"
-  mkdir build
-  cd build
-  cmake ..\
-    -DCMAKE_BUILD_TYPE=Release \
-    -DCMAKE_INSTALL_PREFIX=/usr
-  make
+    cd "${srcdir}/build"
+    cmake "../${pkgname}-${pkgver}" \
+        -DCMAKE_BUILD_TYPE=Release \
+        -DCMAKE_INSTALL_PREFIX=/usr \
+        -DKDE4_BUILD_TESTS=ON
+    make
 }
 
 package() {
-  cd "${srcdir}/${pkgname}-${pkgver}/build"
-  make DESTDIR="${pkgdir}" install
-
+    cd "${srcdir}/build"
+    make DESTDIR="${pkgdir}" install
 }

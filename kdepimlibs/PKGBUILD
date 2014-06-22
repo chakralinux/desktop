@@ -1,46 +1,58 @@
-#
-# KDE SC Packages for Chakra, part of chakra-project.org
-#
-# maintainer: Manuel Tortosa <manutortosa[at]chakra-project[dot]org>
+# Maintainer:   H W Tovetjärn (totte) <totte@tott.es>
+# Contributors: Manuel Tortosa <manutortosa@chakra-project.org>
 
-# include global config
+# Include global configuration
 source ../_buildscripts/${current_repo}-${_arch}-cfg.conf
 
 pkgname="kdepimlibs"
 arch=('x86_64')
 pkgver=${_kdever}
-pkgrel=2
-
-pkgdesc="KDE Pim Libraries"
+pkgrel=1
+pkgdesc="KDE PIM libraries"
 url="http://www.kde.org"
-license=('GPL' 'LGPL' 'FDL')
-
+license=('GPL'
+         'LGPL'
+         'FDL')
 install=${pkgname}.install
-options=('docs' '!splithdr' 'splitdbg' 'log')
-depends=("kdelibs>=${_kdever}" 'akonadi>=1.8.80' 'libical' 'gpgme' 'prison' 'libdmtx' 'qrencode' 'qjson' 'nepomuk-core')
-makedepends=('pkg-config' 'cmake>=2.8.9' 'automoc4' 'boost' 'cyrus-sasl' 'openldap' 'prison' 'docbook-xsl')
-
-groups=("kde" "kde-uninstall" "kde-minimal")
-
+options=('docs'
+         '!header'
+         'debug'
+         'log')
+depends=("kdelibs>=${_kdever}"
+         'akonadi>=1.9.80'
+         'libical'
+         'gpgme'
+         'prison'
+         'libdmtx'
+         'qrencode'
+         'qjson')
+makedepends=('pkg-config'
+             'cmake>=2.8.9'
+             'automoc4'
+             'boost'
+             'cyrus-sasl'
+             'openldap'
+             'prison'
+             'docbook-xsl')
+groups=('kde'
+        'kde-uninstall'
+        'kde-minimal')
 source=($_mirror/${pkgname}-$_kdever.tar.xz)
-md5sums=(`grep ${pkgname}-$_kdever.tar.xz ../kde-sc.md5 | cut -d" " -f1`)
+sha256sums=(`grep ${pkgname}-$_kdever.tar.xz  ../checksums.txt | cut -d" " -f1`)
 
 build() {
-	msg "starting build ..."
-	cd ${srcdir}
-	mkdir -p build
-	cd build
-
-	cmake ../${pkgname}-${pkgver} \
-		-DCMAKE_BUILD_TYPE=${_build_type} \
-		-DCMAKE_INSTALL_PREFIX=${_installprefix} \
-		-DCMAKE_SKIP_RPATH=ON \
-		-DCMAKE_{SHARED,MODULE,EXE}_LINKER_FLAGS='-Wl,--no-undefined -Wl,--as-needed'
-
-	make
+    cd ${srcdir}
+    mkdir -p build
+    cd build
+    cmake ../${pkgname}-${pkgver} \
+        -DCMAKE_BUILD_TYPE=${_build_type} \
+        -DCMAKE_INSTALL_PREFIX=${_installprefix} \
+        -DCMAKE_SKIP_RPATH=ON \
+        -DCMAKE_{SHARED,MODULE,EXE}_LINKER_FLAGS='-Wl,--no-undefined -Wl,--as-needed'
+    make
 }
 
 package() {
-	cd ${srcdir}/build
-	make DESTDIR=${pkgdir} install
+    cd ${srcdir}/build
+    make DESTDIR=${pkgdir} install
 }

@@ -21,11 +21,11 @@ source=(ftp://ftp.musicbrainz.org/pub/musicbrainz/lib${pkgname}-${pkgver}.tar.gz
   cd ${srcdir}/lib${pkgname}-${pkgver}
   sed -i -e 's,-ltermcap,-lncurses,' configure
   sed -i -e 's:-lthr:-lpthread:g' lib/threads/posix/Makefile.in
-  patch -Np0 -i ${srcdir}/tunepimp-gcc43.patch || return 1
-  patch -Np1 -i ${srcdir}/gcc4.4.patch || return 1
-  patch -Np1 -i ${srcdir}/mp4v2-1.9.patch || return 1
+  patch -Np0 -i ${srcdir}/tunepimp-gcc43.patch
+  patch -Np1 -i ${srcdir}/gcc4.4.patch
+  patch -Np1 -i ${srcdir}/mp4v2-1.9.patch
   ./configure --prefix=/usr
-  make || return 1
+  make
   make DESTDIR=${pkgdir} install
   # install python bindings
   cd python

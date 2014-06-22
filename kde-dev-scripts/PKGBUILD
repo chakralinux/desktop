@@ -1,0 +1,37 @@
+# Maintainer:   H W Tovetjärn (totte) <totte@tott.es>
+# Contributors: Manuel Tortosa <manutortosa@chakra-project.org>
+
+# Include global configuration
+source ../_buildscripts/${current_repo}-${_arch}-cfg.conf
+
+pkgname="kde-dev-scripts"
+arch=('x86_64')
+pkgver=${_kdever}
+pkgrel=1
+pkgdesc="Extra scripts for the KDE SDK"
+depends=("kde-runtime>=${_kdever}" 'python')
+conflicts=("kdesdk-doc" "kdesdk-scripts")
+provides="kdesdk-scripts"
+replaces="kdesdk-scripts"
+groups=("kde" "kde-devel" "kde-uninstall" "kdesdk")
+categories=('programming')
+install=kdesdk.install
+url="http://www.kde.org"
+license=('GPL' 'LGPL' 'FDL')
+options=('docs' '!header' 'debug' 'log')
+makedepends=('pkg-config' 'cmake' 'automoc4')
+source=("$_mirror/${pkgname}-$_kdever.tar.xz")
+sha256sums=(`grep ${pkgname}-$_kdever.tar.xz  ../checksums.txt | cut -d" " -f1`)
+
+build() {
+    cd "${srcdir}/${pkgname}-${pkgver}"
+    cmake . \
+        -DCMAKE_BUILD_TYPE=${_build_type} \
+        -DCMAKE_INSTALL_PREFIX=${_installprefix} 
+    make 
+}
+
+package() {
+  cd "${srcdir}/${pkgname}-${pkgver}"
+  make DESTDIR=${pkgdir} install 
+}

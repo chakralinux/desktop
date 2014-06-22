@@ -1,224 +1,278 @@
-#
-# KDE SC Packages for Chakra, part of chakra-project.org
-#
-# maintainer Manuel Tortosa <manutortosa[at]chakra-project[dot]org>
+# Maintainer:   H W Tovetjärn (totte) <totte@tott.es>
+# Contributors: Manuel Tortosa <manutortosa@chakra-project.org>
 
-# include global config
+# Include global configuration
 source ../_buildscripts/${current_repo}-${_arch}-cfg.conf
 
-# Default wallpaper included in kde-workspace pkg
 _default_wp="Elarun"
-_kdever=4.11.2
-_build_type=Release
-_installprefix=/usr
 pkgname="kde-workspace"
 arch=('x86_64')
-pkgver=${_kdever}
-pkgrel=7
+#pkgver=${_kdever}
+pkgver=4.11.10
+pkgrel=2
 pkgdesc="KDE Workspace"
 url="http://www.kde.org"
-license=('GPL' 'LGPL' 'FDL')
-options=('docs' 'debug' 'log')
+license=('GPL'
+         'LGPL'
+         'FDL')
+options=('docs'
+         '!header'
+         'debug'
+         'log')
 install=${pkgname}.install
-depends=('polkit-kde-agent' "kdepimlibs>=${_kdever}" "kde-runtime>=${_kdever}" 'qimageblitz' 'mesa' "kactivities>=${_kdever}" 
-         'libxxf86misc' 'libxcomposite' 'xcb-util-image' 'xcb-util-renderutil' 'xcb-util-keysyms' 'libxss' 'lm_sensors' 'libxklavier' 'libxft' 
-         'oxygen-icons' 'xkit' 'libxdamage' 'xorg-utils' 'libxrandr' 'libxres' 'libdmtx' 'libqalculate' 'prison' 'qrencode' 
-         "kdepim-runtime>=${_kdever}" "kde-base-artwork>=${_kdever}" 'otf-source-sans-pro')
-makedepends=('pkgconfig' 'cmake' 'automoc4' 'networkmanager' 'bluez' "kdebindings-pykde4>=${_kdever}"
-             'oxygen-icons' "kde-runtime>=${_kdever}" 'gpsd' 'samba' 'xf86-input-wacom'
-             'libraw1394' 'libdmtx' 'docbook-xsl' 'prison' 'qrencode')  
-optdepends=("appmenu-qt:         Global menu support"
-            "kdebindings-pykde4: Python Support for Plasma"
-            "kdeedu-marble:      Marble Wallpaper Plugin"
-            "gpsd:               Plasma geolocation support"
-            "ntp:                Time/date sync support"
-            "opentp:             Optional time/date sync support"
-            "xf86-input-wacom:   Wacom tablet support")
-provides=('kdebase-workspace' 'powerdevil' 'kcm_tablet=1.1.3' 'kde-workspace-doc' 'ktouchpadenabler')
-replaces=('guidance-power-manager' 'kdebase-workspace' 'kde-workspace-doc' 'ktouchpadenabler')
-conflicts=('kdebase-workspace' 'powerdevil' 'kcm_tablet' 'guidance-power-manager' 'kde-workspace-doc' 'kded-appmenu' 'ktouchpadenabler')
-groups=("kde" "kde-uninstall" "kde-minimal")
+depends=('polkit-kde-agent'
+         "kdepimlibs>=${_kdever}"
+         "kde-runtime>=${_kdever}"
+         'qimageblitz'
+         'mesa'
+         "kactivities>=${_kdever}" 
+         'libxcomposite'
+         'xcb-util-image'
+         'xcb-util-renderutil'
+         'libxss'
+         'lm_sensors'
+         'libxklavier'
+         'libxft'
+         'oxygen-icons'
+         'xkit'
+         'libxdamage'
+         'xorg-utils'
+         'libxrandr'
+         'libxres'
+         'libdmtx'
+         'libqalculate'
+         'prison'
+         'qrencode'
+         "kdepim-runtime>=${_kdever}"
+         "kde-base-artwork>=${_kdever}"
+         'xcb-util-keysyms'
+         'xcb-util-wm')
+makedepends=('pkgconfig'
+             'cmake'
+             'automoc4'
+             'networkmanager'
+             'bluez'
+             "kdebindings-python2>=${_kdever}"
+             'oxygen-icons'
+             "kde-runtime>=${_kdever}"
+             'gpsd'
+             'samba'
+             'xf86-input-wacom'
+             'libraw1394'
+             'libdmtx'
+             'docbook-xsl'
+             'prison'
+             'qrencode')
+optdepends=('appmenu-qt:           Global menu support'
+            'kdebindings-python2:  Python 2 support for Plasma'
+            'kdebindings-python3:  Python 3 support for Plasma'
+            'kdeedu-marble:        Marble wallpaper Plugin'
+            'gpsd:                 Plasma geolocation support'
+            'kscreen:              Monitor configuration'
+            'ntp:                  Time/date sync support'
+            'opentp:               Optional time/date sync support'
+            'xf86-input-wacom:     Wacom tablet support')
+provides=('kdebase-workspace'
+          'powerdevil'
+          'kcm_tablet=1.1.3'
+          'kde-workspace-doc'
+          'ktouchpadenabler')
+replaces=('guidance-power-manager'
+          'kdebase-workspace'
+          'kde-workspace-doc'
+          'ktouchpadenabler')
+conflicts=('kdebase-workspace'
+           'powerdevil'
+           'kcm_tablet'
+           'guidance-power-manager'
+           'kde-workspace-doc'
+           'kded-appmenu'
+           'ktouchpadenabler')
+groups=('kde'
+        'kde-uninstall'
+        'kde-minimal')
 backup=('usr/share/config/kdm/kdmrc'
         'etc/pam.d/kscreensaver')
+source=("http://download.kde.org/stable/4.13.2/src/kde-workspace-4.11.10.tar.xz"
+#"http://download.kde.org/stable/${_kdever}/src/${pkgname}-$pkgver.tar.xz"
+        "$_mirror/kde-wallpapers-$_kdever.tar.xz"
+        'mishaaq-kcm_touchpad-00370b5.tar.gz'
+        'http://kde-apps.org/CONTENT/content-files/114856-wacomtablet-2.0.tar.bz2'
+        'kde.pam'
+        'kde-np.pam'
+        'kscreensaver.pam'
+        'chakra-branding.tar.gz'
+        'kdm.service'
+        '01_kdm_zsh_profile.patch'
+        '02_sane_env_and_shutdown_path.patch'
+        '03_plasma_menubutton_branding.patch'
+        '04_plasma_kickoff_url.patch'
+        '06_kickoff_default_favourites.patch'
+        '07_always_show_kickoff_subtext.patch'
+        '09_enable_start-shutdown-scripts.patch'
+        'fix_terminate-server.patch'
+        'fix_root-only-kcms.patch'
+        'plasma-panel-resize-hint.diff')
+#sha256sums=(`grep ${pkgname}-$_kdever.tar.xz  ../checksums.txt | cut -d " " -f1`
+sha256sums=(#'aa3d12a264e7fcb6c1330e800b9c7d43c00277275d182824d42f9fe1def0c0cf'
+`grep ${pkgname}-${pkgver}.tar.xz  ../checksums.txt | cut -d " " -f1`
+            `grep kde-wallpapers-$_kdever.tar.xz  ../checksums.txt | cut -d " " -f1`
+            '85b45195048fc1219ebe0496588404abcca0d9c9e88e2da6653c6e0326c4be51'
+            '5d15a1cda1e418e633e7fdd83f5a398c4294c28771a16b68979a2b40ddac0def'
+            '812111f166fdf9ab7ef9400c4414cbe26fac5210f2292399d4446fe6e89eea54'
+            '3ca72a5f34d29747d12b9b41888d0e369956ba383478850c578e3aa109444214'
+            '0a985e3b699578de3e22b25ee72abe4e24ca8730e4afb37dfeed367823bdb0d5'
+            'e5f970c550ce5d1397ae05692162d4c70d193ecac54369ec92a4fad1646c6394'
+            'b932b7761651df48746b7e5e178fd4c7d322e9f6c41dcf2ec2c51f91a6440d85'
+            'b33bb32aaef3c25bd3bda458ec569c500a8e636481e2010de4c82488f1634581'
+            'a4c05882dd3a340960dec495cb2fd19cf2523d14a7add5b77af0f98cdff4c394'
+            '9b3e7905a8382e46b72830fd6adf311200c5c30cadcfd71b1f0adf34cad251eb'
+            '6729768a9c645f3f1b4901500beaeb8367aa3f5b4f3589c512e7fe7798b25dfd'
+            '26b5495def4edc9317af23b9f4720c442e3e61d6937b3b168f0aa681b63681a2'
+            '57e52bbe7fd9553fd6ed969edef4cc709aa8109f9d5ef44203da6e8d7ede46b4'
+            'ad91b3661bcb72bbbd12ed100fc76b7ae0829e37e726adb9c3e4e4cb44d496fd'
+            'e5329c87f14ce04f80291f1f7a2be47994f3d54425b572c308b38e2718390959'
+            'b38959520a3ecafe6f5628849e29d7e8b0dc030622fa12e77eb8461ad7187a78'
+            '6bc640b8324d47e9d07a7cedef7e7c5a944ec4d900a15b88471dc77724f9b4a7')
 
+prepare() {
+    cd "${srcdir}/${pkgname}-${pkgver}"
 
-source=($_mirror/${pkgname}-$_kdever.tar.xz
-        $_mirror/kde-wallpapers-$_kdever.tar.xz
-        mishaaq-kcm_touchpad-00370b5.tar.gz
-        http://chakra.sourceforge.net/sources/kdebase-workspace/114856-wacomtablet-1.99.3.tar.bz2
-        http://chakra.sourceforge.net/sources/kdebase-workspace/117639-favorites-0.1.tar.bz2
-        kde.pam
-        kde-np.pam
-        kscreensaver.pam
-        chakra-branding.tar.gz
-        kdm.service
-
-        # core patches
-        01_kdm_zsh_profile.patch
-        #02_sane_env_and_shutdown_path.patch
-        03_plasma_menubutton_branding.patch
-        04_plasma_kickoff_url.patch
-        06_kickoff_default_favourites.patch
-        07_always_show_kickoff_subtext.patch
-        09_enable_start-shutdown-scripts.patch
-
-        # restart xserver on logout
-        fix_terminate-server.patch
-        # "fix" some sytemsettings modules that need root access
-        fix_root-only-kcms.patch
-
-        #Font settings
-        kcmfonts
-        kdeglobals)
-
-md5sums=('23f6204a3e3e6d2ad213af13d708c751'
-         'a1df0fc9896ef49037b9ecd0cb8155ee'
-         'f355a658d2e9267fdf4e8d8f88038bcf'
-         '452bde7f31f20afe2ffae9cd19260e29'
-         'b60baabccbd302d00923e053db0dc0ae'
-         '5b137f8b00c578ec324e72b455814fd0'
-         'ce53d3a059f5ccbf7429058f935ee9a4'
-         '367a3538f54db71f108b34cfa31088ac'
-         '7c52d1bf3a124e46aab8a5ba93a09ac3'
-         'c4b5f1b342b3dad38642318ca077daee'
-         '721e97031b62aee8914e8617e86f9235'
-         '8e623bb5608025417ff9ed061e5a03f1'
-         '13e71d63e345ddd54eed6b6853ced1fb'
-         'd4d7d3fc3ac072a8ca848e9c96e517dc'
-         '89d96455c6a446ef59b0620d1b8606af'
-         '3ee0002192f6f0a2e1d15c813f520f81'
-         '814350c52c135d6f7bdada1e29223d38'
-         '5f963f80a026f0600edae1b1c70411e5'
-         '54fd81f469755d39d7b92a8d04474e66'
-         '62ccd1740eff4d3a068a08720f703dd9')
-
-
-build() {
-	cd ${srcdir}/${pkgname}-${pkgver}
-
-	msg "applying main patchset ..."
-	patch -Np0 -i ${srcdir}/01_kdm_zsh_profile.patch
-	# 02 is merged in 09, Jan 2013
-	#patch -Np0 -i ${srcdir}/02_sane_env_and_shutdown_path.patch
-	patch -Np1 -i ${srcdir}/03_plasma_menubutton_branding.patch
+    msg "Applying patches..."
+    patch -Np0 -i ${srcdir}/01_kdm_zsh_profile.patch
+    # 02 was merged in upstream 2013-01-09
+    #patch -Np0 -i ${srcdir}/02_sane_env_and_shutdown_path.patch
+    patch -Np1 -i ${srcdir}/03_plasma_menubutton_branding.patch
     patch -Np0 -i ${srcdir}/04_plasma_kickoff_url.patch
-	patch -Np1 -i ${srcdir}/06_kickoff_default_favourites.patch
-	patch -Np1 -i ${srcdir}/07_always_show_kickoff_subtext.patch
-	patch -Np0 -i ${srcdir}/09_enable_start-shutdown-scripts.patch
-
-	msg "applying fixes ..."
-	patch -p0 -i ${srcdir}/fix_terminate-server.patch
+    patch -Np1 -i ${srcdir}/06_kickoff_default_favourites.patch
+    patch -Np1 -i ${srcdir}/07_always_show_kickoff_subtext.patch
+    patch -Np0 -i ${srcdir}/09_enable_start-shutdown-scripts.patch
+    patch -p0 -i ${srcdir}/fix_terminate-server.patch
     patch -p1 -i ${srcdir}/fix_root-only-kcms.patch
+    patch -p0 -i ${srcdir}/plasma-panel-resize-hint.diff
 
-	msg "starting workspace build ..."
-	cmake . -DCMAKE_BUILD_TYPE=${_build_type} \
-            -DCMAKE_INSTALL_PREFIX=${_installprefix} \
-            -DWITH_Xmms=OFF \
-            -DCMAKE_SKIP_RPATH=ON \
-            -DCMAKE_{SHARED,MODULE,EXE}_LINKER_FLAGS='-Wl,--no-undefined -Wl,--as-needed'
-	make
-
-    msg "starting kcm_touchpad build ..."
-	cd ${srcdir}/mishaaq-kcm_touchpad-00370b5
-    # Fix desktop to the new layout
-	sed -i -e "s~keyboard-and-mouse~input-devices~g" touchpad.desktop
-	cmake . -DCMAKE_BUILD_TYPE=${_build_type} \
-            -DCMAKE_INSTALL_PREFIX=${_installprefix} \
-            -DCMAKE_{SHARED,MODULE,EXE}_LINKER_FLAGS='-Wl,--no-undefined -Wl,--as-needed'
-
-	msg "starting kcm_tablet build ..."
-	cd ${srcdir}/wacomtablet-1.99.3
-    # Fix desktop to the new layout
-    sed -i -e "s~keyboard-and-mouse~input-devices~g" ${srcdir}/wacomtablet-1.99.3/src/kcmodule/kcm_wacomtablet.desktop
-	cmake . -DCMAKE_BUILD_TYPE=${_build_type} \
-            -DCMAKE_INSTALL_PREFIX=${_installprefix} \
-            -DCMAKE_{SHARED,MODULE,EXE}_LINKER_FLAGS='-Wl,--no-undefined -Wl,--as-needed'
-
-	msg "starting favorites launcher build ..."
-	cd ${srcdir}/favorites-0.1
-	cmake . -DCMAKE_BUILD_TYPE=${_build_type} \
-            -DCMAKE_INSTALL_PREFIX=${_installprefix} \
-            -DCMAKE_{SHARED,MODULE,EXE}_LINKER_FLAGS='-Wl,--no-undefined -Wl,--as-needed'
-	make
+    # Disable krandr
+    sed -i "s/add_subdirectory(randr)//g" ./kcontrol/CMakeLists.txt
 }
 
+build() {
+    cd "${srcdir}/${pkgname}-${pkgver}"
+
+    msg "Building workspace..."
+    CXXFLAGS="${CXXFLAGS} -I /usr/include/freetype2" cmake . \
+        -DCMAKE_BUILD_TYPE=${_build_type} \
+        -DCMAKE_INSTALL_PREFIX=${_installprefix} \
+        -DWITH_Xmms=OFF \
+        -DCMAKE_SKIP_RPATH=ON \
+        -DWITH_CkConnector=OFF \
+        -DCMAKE_{SHARED,MODULE,EXE}_LINKER_FLAGS='-Wl,--no-undefined -Wl,--as-needed'
+    make
+
+    msg "Building kcm_touchpad..."
+    cd "${srcdir}/mishaaq-kcm_touchpad-00370b5"
+    # Fix desktop to the new layout
+    sed -i -e "s~keyboard-and-mouse~input-devices~g" touchpad.desktop
+    CXXFLAGS="${CXXFLAGS} -I /usr/include/freetype2" cmake . \
+        -DCMAKE_BUILD_TYPE=${_build_type} \
+        -DCMAKE_INSTALL_PREFIX=${_installprefix} \
+        -DCMAKE_{SHARED,MODULE,EXE}_LINKER_FLAGS='-Wl,--no-undefined -Wl,--as-needed'
+    make
+
+    msg "Building kcm_tablet..."
+    cd "${srcdir}/wacomtablet-2.0"
+    # Fix desktop to the new layout
+    sed -i -e "s~keyboard-and-mouse~input-devices~g" ${srcdir}/wacomtablet-2.0/src/kcmodule/kcm_wacomtablet.desktop
+    CXXFLAGS="${CXXFLAGS} -I /usr/include/freetype2" cmake . \
+        -DCMAKE_BUILD_TYPE=${_build_type} \
+        -DCMAKE_INSTALL_PREFIX=${_installprefix} \
+        -DCMAKE_{SHARED,MODULE,EXE}_LINKER_FLAGS='-Wl,--no-undefined -Wl,--as-needed'
+    make
+}
 
 package() {
-	cd ${srcdir}/${pkgname}-${pkgver}
-	make DESTDIR=${pkgdir} install
+    cd "${srcdir}/${pkgname}-${pkgver}"
+    make DESTDIR=${pkgdir} install
 
-	cd ${srcdir}/mishaaq-kcm_touchpad-00370b5
-	make DESTDIR=${pkgdir} install
+    cd "${srcdir}/mishaaq-kcm_touchpad-00370b5"
+    make DESTDIR=${pkgdir} install
 
-	cd ${srcdir}/wacomtablet-1.99.3
-	make DESTDIR=${pkgdir} install
+    cd "${srcdir}/wacomtablet-2.0"
+    make DESTDIR=${pkgdir} install
 
-	cd ${srcdir}/favorites-0.1
-	make DESTDIR=${pkgdir} install
+    # Install PAM configuration
+    install -D -m644 ${srcdir}/kde.pam ${pkgdir}/etc/pam.d/kde
+    install -D -m644 ${srcdir}/kde-np.pam ${pkgdir}/etc/pam.d/kde-np
+    install -D -m644 ${srcdir}/kscreensaver.pam ${pkgdir}/etc/pam.d/kscreensaver
 
-	# install pam configuration
-	install -D -m644 ${srcdir}/kde.pam ${pkgdir}/etc/pam.d/kde
-	install -D -m644 ${srcdir}/kde-np.pam ${pkgdir}/etc/pam.d/kde-np
-	install -D -m644 ${srcdir}/kscreensaver.pam ${pkgdir}/etc/pam.d/kscreensaver
+    # Sane path for env and shutdown directories
+    install -d -m755 ${pkgdir}/etc/kde/{env,shutdown}
 
-	# sane path for env and shutdown dir
-	install -d -m755 ${pkgdir}/etc/kde/{env,shutdown}
+    # Install session
+    install -D -m 644 ${srcdir}/${pkgname}-${pkgver}/kdm/kfrontend/sessions/kde-plasma.desktop \
+    ${pkgdir}/etc/X11/sessions/kde-plasma.desktop
+    install -D -m 644 ${srcdir}/${pkgname}-${pkgver}/kdm/kfrontend/sessions/kde-plasma-safe.desktop \
+    ${pkgdir}/etc/X11/sessions/kde-plasma-safe.desktop
 
-	# install session
-	install -D -m 644 ${srcdir}/${pkgname}-${pkgver}/kdm/kfrontend/sessions/kde-plasma.desktop \
-	${pkgdir}/etc/X11/sessions/kde-plasma.desktop
-	install -D -m 644 ${srcdir}/${pkgname}-${pkgver}/kdm/kfrontend/sessions/kde-plasma-safe.desktop \
-	${pkgdir}/etc/X11/sessions/kde-plasma-safe.desktop
+    # Install KDM clean default configuration
+    cd "${srcdir}/${pkgname}-${pkgver}/kdm"
+    make DESTDIR=${pkgdir} GENKDMCONF_FLAGS="--no-old --no-backup --no-in-notice" install
 
-	# also install kdm clean default config
-	cd ${srcdir}/${pkgname}-${pkgver}/kdm 
-	make DESTDIR=${pkgdir} GENKDMCONF_FLAGS="--no-old --no-backup --no-in-notice" install
+    # Copy branding stuff
+    mkdir -p ${pkgdir}/usr/share/icons/oxygen/scalable/places/
 
-	# copy branding stuff
-	mkdir -p ${pkgdir}/usr/share/icons/oxygen/scalable/places/
-	
-	cp -f ${srcdir}/chakra-branding/start-here-branding.svgz ${pkgdir}/usr/share/icons/oxygen/scalable/places/start-here-branding.svgz
-	cp -f ${srcdir}/chakra-branding/kdemod-start-here-branding.svgz ${pkgdir}/usr/share/icons/oxygen/scalable/places/kdemod-start-here-branding.svgz
-	
-	cp -f ${srcdir}/chakra-branding/branding-icon.png ${pkgdir}/usr/share/apps/kdm/themes/oxygen/branding-icon.png
-	
-	cd ${srcdir}/chakra-branding/
-	for i in 256 128 64 48 32 22 16; do
-		mkdir -p ${pkgdir}/usr/share/icons/oxygen/${i}x${i}/places/
-		install -D -m644 start-here-branding-${i}.png ${pkgdir}/usr/share/icons/oxygen/${i}x${i}/places/start-here-branding.png
-		install -D -m644 kdemod-start-here-branding-${i}.png ${pkgdir}/usr/share/icons/oxygen/${i}x${i}/places/kdemod-start-here-branding.png
-	done
-	
-	# edit kdmrc
-	sed -i -e s,#GUIStyle=.*,GUIStyle=Oxygen,g ${pkgdir}/usr/share/config/kdm/kdmrc
-	sed -i -e s,#ColorScheme=.*,ColorScheme=Oxygen,g ${pkgdir}/usr/share/config/kdm/kdmrc
-	sed -i -e s,Theme=/usr.*,Theme=/usr/share/apps/kdm/themes/horos,g ${pkgdir}/usr/share/config/kdm/kdmrc
-	sed -i -e s,MinShowUID=.*,MinShowUID=1000,g ${pkgdir}/usr/share/config/kdm/kdmrc
-	sed -i -e 's/halt/poweroff/' ${pkgdir}/usr/share/config/kdm/kdmrc
+    cp -f ${srcdir}/chakra-branding/start-here-branding.svgz ${pkgdir}/usr/share/icons/oxygen/scalable/places/start-here-branding.svgz
+    cp -f ${srcdir}/chakra-branding/kdemod-start-here-branding.svgz ${pkgdir}/usr/share/icons/oxygen/scalable/places/kdemod-start-here-branding.svgz
+    cp -f ${srcdir}/chakra-branding/branding-icon.png ${pkgdir}/usr/share/apps/kdm/themes/oxygen/branding-icon.png
 
-	# WORKAROUND -> put ggl stuff into ggl package
-	rm -rf ${pkgdir}/usr/share/apps/plasma/plasmoids/ggl_photos
-	rm -rf ${pkgdir}/usr/share/apps/plasma/plasmoids/ggl_rss
-	rm -rf ${pkgdir}/usr/share/kde4/services/plasma-applet-ggl-photos.desktop
-	rm -rf ${pkgdir}/usr/share/kde4/services/plasma-applet-ggl-rss.desktop
+    cd ${srcdir}/chakra-branding/
+    for i in 256 128 64 48 32 22 16; do
+        mkdir -p ${pkgdir}/usr/share/icons/oxygen/${i}x${i}/places/
+        install -D -m644 start-here-branding-${i}.png ${pkgdir}/usr/share/icons/oxygen/${i}x${i}/places/start-here-branding.png
+        install -D -m644 kdemod-start-here-branding-${i}.png ${pkgdir}/usr/share/icons/oxygen/${i}x${i}/places/kdemod-start-here-branding.png
+    done
 
-	# Put a wallpaper into the package
-	mkdir -p ${pkgdir}/usr/share/wallpapers
-	cp -rv ${srcdir}/kde-wallpapers-${_kdever}/${_default_wp} ${pkgdir}/usr/share/wallpapers
+    # Edit kdmrc
+    sed -i -e s,#GUIStyle=.*,GUIStyle=Oxygen,g ${pkgdir}/usr/share/config/kdm/kdmrc
+    sed -i -e s,#ColorScheme=.*,ColorScheme=Oxygen,g ${pkgdir}/usr/share/config/kdm/kdmrc
+    sed -i -e s,Theme=/usr.*,Theme=/usr/share/apps/kdm/themes/horos,g ${pkgdir}/usr/share/config/kdm/kdmrc
+    sed -i -e s,MinShowUID=.*,MinShowUID=1000,g ${pkgdir}/usr/share/config/kdm/kdmrc
+    sed -i -e 's/halt/poweroff/' ${pkgdir}/usr/share/config/kdm/kdmrc
 
-	# Adding powerdevil option files
-	mkdir -p ${pkgdir}/usr/include/powerdevil
-	cp -rv ${srcdir}/${pkgname}-${_kdever}/powerdevil/daemon/powerdevilaction.h ${pkgdir}/usr/include/powerdevil
-	cp -rv ${srcdir}/${pkgname}-${_kdever}/powerdevil/daemon/powerdevilactionconfig.h ${pkgdir}/usr/include/powerdevil
-	cp -rv ${srcdir}/${pkgname}-${_kdever}/powerdevil/daemon/powerdevilpolicyagent.h ${pkgdir}/usr/include/powerdevil
-	
-	# Systemd .service file
-	install -D -m644 "${srcdir}"/kdm.service "${pkgdir}"/usr/lib/systemd/system/kdm.service
-	
-	# kde-base-artwork conflict, will be corrected in RC 2
-	rm -rf ${pkgdir}/usr/share/apps/ksplash/Themes/Default/
-	
-	# install font configuration
-    install -D -m644 ${srcdir}/kcmfonts ${pkgdir}/usr/share/config/kcmfonts
-    install -D -m644 ${srcdir}/kdeglobals ${pkgdir}/usr/share/config/kdeglobals
+    # Workaround: put ggl stuff into ggl package
+    rm -rf ${pkgdir}/usr/share/apps/plasma/plasmoids/ggl_photos
+    rm -rf ${pkgdir}/usr/share/apps/plasma/plasmoids/ggl_rss
+    rm -rf ${pkgdir}/usr/share/kde4/services/plasma-applet-ggl-photos.desktop
+    rm -rf ${pkgdir}/usr/share/kde4/services/plasma-applet-ggl-rss.desktop
+
+    # Put a wallpaper in the package
+    mkdir -p ${pkgdir}/usr/share/wallpapers
+    cp -rv ${srcdir}/kde-wallpapers-${_kdever}/${_default_wp} ${pkgdir}/usr/share/wallpapers
+
+    # Adding powerdevil option files
+    mkdir -p ${pkgdir}/usr/include/powerdevil
+    #cp -rv ${srcdir}/${pkgname}-${_kdever}/powerdevil/daemon/powerdevilaction.h ${pkgdir}/usr/include/powerdevil
+    #cp -rv ${srcdir}/${pkgname}-${_kdever}/powerdevil/daemon/powerdevilactionconfig.h ${pkgdir}/usr/include/powerdevil
+    #cp -rv ${srcdir}/${pkgname}-${_kdever}/powerdevil/daemon/powerdevilpolicyagent.h ${pkgdir}/usr/include/powerdevil
+    cp -rv ${srcdir}/${pkgname}-${pkgver}/powerdevil/daemon/powerdevilaction.h ${pkgdir}/usr/include/powerdevil
+    cp -rv ${srcdir}/${pkgname}-${pkgver}/powerdevil/daemon/powerdevilactionconfig.h ${pkgdir}/usr/include/powerdevil
+    cp -rv ${srcdir}/${pkgname}-${pkgver}/powerdevil/daemon/powerdevilpolicyagent.h ${pkgdir}/usr/include/powerdevil
+    
+    # Systemd .service file
+    install -D -m644 "${srcdir}"/kdm.service "${pkgdir}"/usr/lib/systemd/system/kdm.service
+
+    # Remove krandr files
+    rm -rf ${pkgdir}/usr/lib/debug/usr/bin/krandrtray.debug
+    rm -rf ${pkgdir}/usr/bin/krandrtray
+    rm -rf ${pkgdir}/usr/bin/krandrstartup
+    rm -rf ${pkgdir}/usr/lib/kde4/kded_randrmonitor.so
+    rm -rf ${pkgdir}/usr/lib/kde4/kcm_randr.so
+    rm -rf ${pkgdir}/usr/share/applications/kde4/krandrtray.desktop
+    rm -rf ${pkgdir}/usr/share/kde4/services/randr.desktop
+    rm -rf ${pkgdir}/usr/share/kde4/services/kded/randrmonitor.desktop
+    # remove krandr from startkde
+    sed -i 's/. krandrstartup//g' ${pkgdir}/usr/bin/startkde
+
+    # resolve kdm issue (missing directory)
+    mkdir -p ${pkgdir}/var/lib/kdm
+    chown 135:135 ${pkgdir}/var/lib/kdm
 }

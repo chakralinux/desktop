@@ -1,0 +1,29 @@
+# Maintainer: AlmAck
+
+pkgname=librevenge
+pkgver=0.0.1
+pkgrel=1
+pkgdesc="library for REVerses ENGineered formats filters"
+arch=('x86_64')
+url="http://sf.net/p/libwpd/librevenge/"
+license=('MPL')
+depends=('boost-libs')
+makedepends=('boost' 'doxygen' 'cppunit')
+source=(http://sourceforge.net/projects/libwpd/files/librevenge/$pkgname-$pkgver/$pkgname-$pkgver.tar.xz)
+sha1sums=('8987ad4202035bf3bfa6d879fc689ecb9b4a80d9')
+
+build() {
+	cd $pkgname-$pkgver
+	./configure --prefix=/usr
+	make
+}
+
+check() {
+	cd $pkgname-$pkgver
+	make check
+}
+
+package() {
+	cd $pkgname-$pkgver
+	make DESTDIR="$pkgdir/" install
+}
