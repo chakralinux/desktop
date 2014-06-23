@@ -1,0 +1,43 @@
+# maintainer: Neophytos Kolokotronis <tetris4@gmail.com>
+
+pkgname=tribe-partitionmanager-git
+_gitname=partitionmanager
+pkgver=r781.e8fdee1
+pkgrel=1
+pkgdesc="A KDE utility that allows you to manage disks, partitions, and file systems"
+arch=('i686' 'x86_64')
+url='http://kde.org/applications/system/kdepartitionmanager/'
+license=('GPL2')
+depends=('kdebase-runtime' 'parted')
+makedepends=('cmake' 'automoc4' 'git')
+conflicts=('tribe-partitionmanager')
+provides=('tribe-partitionmanager')
+source=('git://anongit.kde.org/partitionmanager' 'tribe.patch')
+md5sums=('SKIP' 'SKIP')
+install=${pkgname}.install
+
+pkgver() {
+  cd $_gitname
+  printf "r%s.%s" "$(git rev-list --count HEAD)" "$(git rev-parse --short HEAD)"
+}
+
+prepare() {
+  mkdir build
+  cd ${_gitname}
+  git checkout frameworks
+  patch -p1 < ${srcdir}/tribe.patch
+}
+
+build() {
+  cd build
+  cmake ../${_gitname} \
+    -DCMAKE_INSTALL_PREFIX=/usr \
+    -DCMAKE_BUILD_TYPE=Release \
+    -DENABLE_UDISKS2=ON
+  make
+}
+
+package() {
+  cd build
+  make DESTDIR=${pkgdir} install
+}
