@@ -2,14 +2,14 @@
 # Contributor: Neophytos Kolokotronis <tetris4@gmail.com>
 
 pkgbase=qtcurve
-pkgname=('qtcurve-utils' 'qtcurve-kde4' 'qtcurve-qt5')
+pkgname=('qtcurve-utils' 'qtcurve-kde4') #'qtcurve-qt5')
 pkgver=1.8.18
 pkgrel=3
 arch=('x86_64')
 license=('GPL')
 pkgdesc='A configurable set of widget styles for Qt and KDE'
 url='https://github.com/QtCurve/qtcurve'
-makedepends=('cmake' 'automoc4' 'qt' 'kde-workspace' 'qt5-svg' 'qt5-quickcontrols' 'qt5-x11extras')
+makedepends=('cmake' 'automoc4' 'qt' 'kde-workspace' 'qt5-svg' 'qt5-quickcontrols' 'qt5-x11extras' 'libx11' 'libxcb')
 categories=('system')
 groups=("${pkgbase}")
 source=("${pkgbase}-${pkgver}.tar.gz::${url}/archive/${pkgver}.tar.gz")
@@ -17,14 +17,8 @@ md5sums=('422d1876d944bb278855f320eda19368')
 
 prepare(){
   cd ${srcdir}/${pkgbase}-${pkgver}
-  for i in build build-qt5; do
-    if [ -d ${i} ]; then
-      rm -rf ${i} && mkdir ${i}
-    else
-      mkdir ${i}
-    fi
-  done
-  echo $(ls build*)
+  [[ -e build ]] && rm -rf build
+  mkdir build
 }
 
 build() {
@@ -34,13 +28,6 @@ build() {
            -DCMAKE_INSTALL_PREFIX=/usr \
            -DENABLE_GTK2=Off \
            -DENABLE_QT5=Off
-  make
-  msg 'Making Qt5 module'
-  cd ${srcdir}/${pkgbase}-${pkgver}/build-qt5
-  cmake .. -DCMAKE_BUILD_TYPE=Release \ 
-           -DCMAKE_INSTALL_PREFIX=/usr \
-           -DENABLE_GTK2=Off \
-	   -DENABLE_QT4=Off
   make
 }
 
@@ -57,12 +44,5 @@ package_qtcurve-kde4() {
   depends=('qtcurve-utils' 'kde-workspace')
 
   cd ${srcdir}/${pkgbase}-${pkgver}/build/qt4
-  make DESTDIR="${pkgdir}" install
-}
-
-package_qtcurve-qt5() {
-  depends=('qtcurve-utils' 'qt5-svg' 'qt5-x11extras' 'qt5-base')
-  
-  cd ${srcdir}/${pkgbase}-${pkgver}/build-qt5/qt5
   make DESTDIR="${pkgdir}" install
 }
