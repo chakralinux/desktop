@@ -1,28 +1,43 @@
 #
-# Chakra Packages for Chakra, part of chakra-project.org
+# Chakra Package
 #
-# maintainer (i686): Phil Miller <philm[at]chakra-project[dog]org>
-# maintainer (x86_64): Manuel Tortosa <manutortosa[at]chakra-project[dot]org>
+# Maintainer:
+# Drake Justice <djustice@chakraos.org>
 
 pkgname=ktorrent
-pkgver=4.1.0
-pkgrel=1
-ktorver=4.1.0
-pkgdesc="A BitTorrent program for KDE"
+pkgver=4.3.1
+pkgrel=2
+pkgdesc="A powerful BitTorrent client for KDE"
 arch=('i686' 'x86_64')
-url="http://ktorrent.org"
+url='http://ktorrent.pwsp.net/'
 license=('GPL2')
-depends=('kdelibs' 'kdebase-runtime' 'kdepimlibs' 'qca' 'gmp' 'taglib' 'libktorrent>=1.1.0')
-makedepends=('cmake' 'automoc4' 'docbook-xsl')
-categories=('network')
-source=(http://ktorrent.org/downloads/${ktorver}/ktorrent-${pkgver}.tar.bz2)
-options=('libtool')
-md5sums=('3981c00810217e88b9772438df31df08')
+depends=('libktorrent' 'kdebase-runtime' 'taglib')
+makedepends=('automoc4' 'cmake' 'boost' 'kdebase-workspace')
+install=${pkgname}.install
+source=("http://ktorrent.pwsp.net/downloads/${pkgver}/${pkgname}-${pkgver}.tar.bz2"
+        'kde412.patch'
+        'kdebug-315239.patch')
+sha1sums=('6b56bab48dd07805225c3d4d5d5d1c4c1def241e'
+          'f2c0e05913b2f21b593818e2cd3547d09f86be86'
+          'd247aecbbbbbda3eef8dcb51d3db244b1c845f85')
+
+prepare() {
+	mkdir build
+
+  cd ${pkgname}-${pkgver}
+  patch -p1 -i "${srcdir}"/kde412.patch
+  patch -p1 -i "${srcdir}"/kdebug-315239.patch
+}
 
 build() {
-	cd ${srcdir}/ktorrent-${ktorver}
+	cd build
+	cmake ../${pkgname}-${pkgver} \
+	  -DCMAKE_BUILD_TYPE=Release \
+	  -DCMAKE_INSTALL_PREFIX=/usr
+	make
+}
 
-	cmake .	-DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=/usr
-	make || return 1
-	make DESTDIR=${pkgdir} install 
+package() {
+	cd build
+	make DESTDIR="${pkgdir}" install
 }
