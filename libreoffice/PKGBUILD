@@ -26,7 +26,7 @@ url="http://www.libreoffice.org/"
 screenshot="http://wstaw.org/m/2012/04/20/libre2.png"
 makedepends=( # makedepends
              'sane' 'perl-archive-zip' 'zip' 'unzip' 'unixodbc' # boost -> internal 
-             'apache-ant' 'gperf' 'poppler' 'kdelibs' 'cppunit' 
+             'apache-ant' 'gperf' 'poppler' 'kdelibs' 'cppunit' 'glu'
              'beanshell'  'vigra' 'libldap' 'libmythes' 'junit' 'libwpg' 'imagemagick'
              'mesa' 'gst-plugins-base' 'java-runtime' 'postgresql-libs' 'clucene' 'doxygen' 'libvisio' 'bluez' 'junit'
              # libreoffice main pkg
@@ -60,7 +60,7 @@ source=(${_mirror}/${pkgbase}{,-help,-translations}-${_LOver}.tar.xz
 	${_additional_source_url}/ace6ab49184e329db254e454a010f56d-libxml-1.1.7.zip
 	${_additional_source_url}/db60e4fde8dd6d6807523deb71ee34dc-liblayout-0.2.10.zip
 	${_additional_source_url}/ba2930200c9f019c2d93a8c88c651a0f-flow-engine-0.9.4.zip
-	${_additional_source_url}/47203e7cade74e5c385aa812f21e7932-mdds_0.10.2.tar.bz2
+	${_additional_source_url}/aa5ca9d1ed1082890835afab26400a39-mdds_0.10.3.tar.bz2
 	${_additional_source_url}/ae330b9493bd4503ac390106ff6060d7-libexttextcat-3.4.3.tar.bz2
 	${_additional_source_url}/22f8a85daf4a012180322e1f52a7563b-libcmis-0.4.1.tar.gz
 	${_additional_source_url}/ea2acaf140ae40a87a952caa75184f4d-liborcus-0.5.1.tar.bz2
@@ -79,14 +79,13 @@ source=(${_mirror}/${pkgbase}{,-help,-translations}-${_LOver}.tar.xz
 	${_additional_source_url}/language-subtag-registry-2014-03-27.tar.bz2
 	${_additional_source_url}/libetonyek-0.0.4.tar.bz2 # must be removed when 0.1.1 is compatible with libreoffice
 	${_additional_source_url}/libodfgen-0.0.4.tar.bz2
-	make-pyuno-work-with-system-wide-module-install.diff
-        icu53.diff
-	icu53_crashfix.diff
-	prevent_KDE_Qt_from_interfering_with_the_session_manager.diff)
+	make-pyuno-work-with-system-wide-module-install.diff)
+        #icu53.diff
+	#icu53_crashfix.diff)
 
-md5sums=('698a482f0cacd8b5eba9865fdd8a5403'
-         'a0ed88ac1758d2f87687fcf4bb7c9432'
-         '3db05930dc7c694d2cf58875b3245c2e'
+md5sums=('eb44cc33bb9331db4c1b6ae0b03fff9f'
+         '867c10167b05ba19162b78032405524b'
+         '6bcd61a3f977f78c64b1eaa13a40524c'
          '15cb8c0803064faef0c4ddf5bc5ca279'
          '1f24ab1d39f4a51faf22244c94a6203f'
          '35c94d2df8893241173de1d16b6034c0'
@@ -107,7 +106,7 @@ md5sums=('698a482f0cacd8b5eba9865fdd8a5403'
          'ace6ab49184e329db254e454a010f56d'
          'db60e4fde8dd6d6807523deb71ee34dc'
          'ba2930200c9f019c2d93a8c88c651a0f'
-         '47203e7cade74e5c385aa812f21e7932'
+         'aa5ca9d1ed1082890835afab26400a39'
          'ae330b9493bd4503ac390106ff6060d7'
          '22f8a85daf4a012180322e1f52a7563b'
          'ea2acaf140ae40a87a952caa75184f4d'
@@ -126,13 +125,12 @@ md5sums=('698a482f0cacd8b5eba9865fdd8a5403'
          '504af523f5d1a5590bbeb6a4b55e8a97'
          '3c50bc60394d1f2675fbf9bd22581363'
          'e5483d1f0b71e64c367c1194b54b0f53'
-         '07d2bf5ad839a394cca008b3ec6e7bb1'
-         'fa2109339289663cb8ea7cf27cc22f4e')
+         '07d2bf5ad839a394cca008b3ec6e7bb1')
 
 noextract=(
 	15cb8c0803064faef0c4ddf5bc5ca279-boost_1_54_0.tar.bz2
 	185d60944ea767075d27247c3162b3bc-unowinreg.dll
-	47203e7cade74e5c385aa812f21e7932-mdds_0.10.2.tar.bz2
+	aa5ca9d1ed1082890835afab26400a39-mdds_0.10.3.tar.bz2
 	798b2ffdc8bcfe7bca2cf92b62caf685-rhino1_5R5.zip
 	1f24ab1d39f4a51faf22244c94a6203f-xmlsec1-1.2.14.tar.gz
 	ae330b9493bd4503ac390106ff6060d7-libexttextcat-3.4.3.tar.bz2
@@ -193,13 +191,9 @@ prepare() {
     # fix not upstreamable pyuno paths - patch taken from Debian
     patch -Np1 -i ${srcdir}/make-pyuno-work-with-system-wide-module-install.diff
     
-    # fix some startup issues with kde4 integration
-    # https://bugs.archlinux.org/task/39819 - https://bugs.freedesktop.org/show_bug.cgi?id=77128
-    patch -Np1 -i ${srcdir}/prevent_KDE_Qt_from_interfering_with_the_session_manager.diff
-
     # upstream fixes for icu 53
-    patch -Np1 -i ${srcdir}/icu53.diff
-    patch -Np1 -i ${srcdir}/icu53_crashfix.diff
+    #patch -Np1 -i ${srcdir}/icu53.diff
+    #patch -Np1 -i ${srcdir}/icu53_crashfix.diff
 
     
 	#use the CFLAGS but remove the LibO overridden ones
@@ -660,49 +654,4 @@ package_libreoffice-extension-nlpsolver() {
 	install -dm755 ${pkgdir}/usr/lib/libreoffice/share/extensions
 	unzip -q ${srcdir}/libreoffice-$_LOver/workdir/Extension/nlpsolver.oxt -d ${pkgdir}/usr/lib/libreoffice/share/extensions/nlpsolver
 }
-md5sums=('698a482f0cacd8b5eba9865fdd8a5403'
-         'a0ed88ac1758d2f87687fcf4bb7c9432'
-         '3db05930dc7c694d2cf58875b3245c2e'
-         '15cb8c0803064faef0c4ddf5bc5ca279'
-         '1f24ab1d39f4a51faf22244c94a6203f'
-         '35c94d2df8893241173de1d16b6034c0'
-         '798b2ffdc8bcfe7bca2cf92b62caf685'
-         'a7983f859eafb2677d7ff386a023bc40'
-         '3c219630e4302863a9a83d0efde889db'
-         '625ff5f2f968dd908bca43c9469d6e6b'
-         '2c9b0f83ed5890af02c0df1c1776f39b'
-         '2e482c7567908d334785ce7d69ddfff7'
-         'eeb2c7ddf0d302fba4bfc6e97eac9624'
-         '39bb3fcea1514f1369fcfc87542390fd'
-         '3404ab6b1792ae5f16bbd603bd1e1d03'
-         '97b2d4dba862397f446b217e2b623e71'
-         'f94d9870737518e3b597f9265f4e9803'
-         '8ce2fcd72becf06c41f7201d15373ed9'
-         'd8bd5eed178db6e2b18eeed243f85aa8'
-         '3bdf40c0d199af31923e900d082ca2dd'
-         'ace6ab49184e329db254e454a010f56d'
-         'db60e4fde8dd6d6807523deb71ee34dc'
-         'ba2930200c9f019c2d93a8c88c651a0f'
-         '47203e7cade74e5c385aa812f21e7932'
-         'ae330b9493bd4503ac390106ff6060d7'
-         '22f8a85daf4a012180322e1f52a7563b'
-         'ea2acaf140ae40a87a952caa75184f4d'
-         '36271d3fa0d9dec1632029b6d7aac925'
-         '0168229624cfac409e766913506961a8'
-         '17410483b5b5f267aa18b7e00b65e6e0'
-         '185d60944ea767075d27247c3162b3bc'
-         'fbcd8619fc6646f41d527c1329102998'
-         '1120705cd0f0d9bd5506360bf57b6c2e'
-         'd794625f156a9fb1c53b3f8a8aa13b5e'
-         '496dd00028afcc19f896b01394769043'
-         '21154d2004e025c8a3666625b0357bb5'
-         'c0b86562d5aa40761a87134f83e6adcf'
-         '2f1ceaf2ac8752ed278e175447d9b978'
-         '40fa48e03b1e28ae0325cc34b35bc46d'
-         '504af523f5d1a5590bbeb6a4b55e8a97'
-         '3c50bc60394d1f2675fbf9bd22581363'
-         'e5483d1f0b71e64c367c1194b54b0f53'
-         '07d2bf5ad839a394cca008b3ec6e7bb1'
-         '07f53a9f899e533f9393e48b5d429165'
-         '2a296750092824cd5631e7b529433b28'
-         'fa2109339289663cb8ea7cf27cc22f4e')
+
