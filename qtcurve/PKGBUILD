@@ -5,7 +5,7 @@
 pkgbase=qtcurve
 pkgname=('qtcurve-utils' 'qtcurve-qt5' 'qtcurve-kde4')
 pkgver=1.8.18
-pkgrel=5
+pkgrel=6
 pkgdesc='A configurable set of widget styles for KDE and Gtk'
 arch=('x86_64')
 url='https://github.com/QtCurve/qtcurve'
@@ -39,8 +39,8 @@ build() {
 package_qtcurve-utils() {
   depends=('libx11')
   cd $pkgbase-$pkgver/build
-  make -C lib/utils DESTDIR="$pkgdir" install
-  make -C po DESTDIR="$pkgdir" install
+  make DESTDIR="$pkgdir" install
+  rm -rf ${pkgdir}/usr/{share/apps,lib/kde4,lib/qt5}
 }
 
 package_qtcurve-kde4() {
