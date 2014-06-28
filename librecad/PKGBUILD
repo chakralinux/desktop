@@ -2,7 +2,7 @@
 # Contributions from AUR: https://aur.archlinux.org/packages/librecad/
 
 pkgname=librecad
-pkgver=2.0.3
+pkgver=2.0.4
 pkgrel=1
 pkgdesc="A 2D CAD drawing tool based on the community edition of QCad"
 arch=('x86_64')
@@ -14,7 +14,7 @@ conflicts=('librecad-git')
 replaces=('librecad-svn' 'caduntu' 'caduntu-svn')
 install=librecad.install
 source=("${pkgname}-${pkgver}.tar.gz::https://codeload.github.com/LibreCAD/LibreCAD/tar.gz/${pkgver}")
-sha256sums=('e6a24b8b9bdfe9916c6d404d94e43e91aeeaa17d1a4f7a080afe7479105715c6')
+sha256sums=('e3d3f65a4510f1bb0d2b94e9917fa16c3f6425cf8e18d233857997e4e13d22f7')
 
 prepare() {
 	cd "${srcdir}/LibreCAD-${pkgver}"
@@ -24,6 +24,9 @@ prepare() {
 
 	# fix qcollectiongenerator name
 	sed -i 's/qcollectiongenerator/qcollectiongenerator-qt5/g' scripts/postprocess-unix.sh
+	
+	# fix lrelease name
+	sed -i 's/lrelease/lrelease-qt5/g' scripts/postprocess-unix.sh
 }
 
 build() {
