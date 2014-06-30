@@ -5,8 +5,8 @@
 
 _name=mirall
 pkgname=owncloud-client
-pkgver=1.6.0
-pkgrel=5
+pkgver=1.6.1
+pkgrel=1
 pkgdesc="ownCloud client based on mirall"
 arch=('x86_64')
 url="http://owncloud.org/"
@@ -20,11 +20,11 @@ backup=('etc/owncloud-client/sync-exclude.lst')
 install=${pkgname}.install
 source=("http://download.owncloud.com/desktop/stable/${_name}-${pkgver}.tar.bz2"
         'man.patch')
-sha256sums=('12b5da4b5598db3ef5d4d26e464de3534f3a6b8a864719949d82c77cfc353ab5'
+sha256sums=('3b6a013db097479ff3c3682aa40d2abef3f3ab8939d9fc0ace38f278780709dc'
             '1cec1ec7761d087e197f0ccdf5e1e8236db0bd29a1babe49130c00f81e82e011')
 
 prepare() {
-  cd ${srcdir}/${_name}-${pkgver}/
+  cd ${_name}-${pkgver}/
   if [[ -d build ]]; then rm -rf build; fi
   mkdir build
   msg 'patch the man directory'
@@ -32,7 +32,7 @@ prepare() {
 }
 
 build() {
-  cd ${srcdir}/${_name}-${pkgver}/build
+  cd ${_name}-${pkgver}/build
 
   cmake -DBUILD_WITH_QT4=on \
         -DQT_QMAKE_EXECUTABLE=/usr/bin/qmake \
@@ -47,12 +47,12 @@ build() {
 }
 
 check() {
-  cd ${srcdir}/${_name}-${pkgver}/build
+  cd ${_name}-${pkgver}/build
   make test
 }
  
 package() {
-  cd ${srcdir}/${_name}-${pkgver}/build
+  cd ${_name}-${pkgver}/build
   make DESTDIR="${pkgdir}" install
   
   # Fix desktop file
