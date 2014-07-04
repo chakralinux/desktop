@@ -4,30 +4,21 @@
 # Maintainer: Adrián Chaves Fernández (Gallaecio) <adriyetichaves gmail.com>
 
 pkgname=xmoto
-pkgver=0.5.10
+pkgver=0.5.11
 pkgrel=1
 pkgdesc="A challenging 2D motocross platform game, where physics play an important role."
-arch=('i686' 'x86_64')
+arch=('x86_64')
 url="http://xmoto.tuxfamily.org"
 license=('GPL')
 depends=('bzip2' 'libjpeg' 'libpng' 'lua' 'sdl_mixer' 'ode' 'curl'
-	 'mesa' 'sqlite3' 'sdl_ttf' 'desktop-file-utils' 'sdl_net' 'libxdg-basedir')
+         'mesa' 'sqlite3' 'sdl_ttf' 'desktop-file-utils' 'sdl_net' 'libxdg-basedir')
 makedepends=('desktop-file-utils')
 categories=('games')
-source=("http://download.tuxfamily.org/${pkgname}/${pkgname}/${pkgver}/${pkgname}-${pkgver}-src.tar.gz"
-        "${pkgname}-${pkgver}-libpng.patch::https://projects.archlinux.org/svntogit/community.git/plain/trunk/${pkgname}-${pkgver}-libpng15.patch?h=packages/${pkgname}")
-sha256sums=('2d2438e4685aa5fc1aa9f73bfbe26893d7fc97fadd6e1cc9fdb09c8d16df9e1e'
-            '06615615d5e27219bb1c9c74418eeac09dbbe177cbb56471bd068759b82972cd')
+source=("http://download.tuxfamily.org/${pkgname}/${pkgname}/${pkgver}/${pkgname}-${pkgver}-src.tar.gz")
+sha256sums=('a584a6f9292b184686b72c78f16de4b82d5c5b72ad89e41912ff50d03eca26b2')
 
 build() {
-  cd "${srcdir}/${pkgname}-${pkgver}"
-
-  # Patches
-  patch -Np1 -i "${srcdir}/${pkgname}-${pkgver}-libpng.patch"
-  sed \
-    -e '/#include <vector>/ a\
-#include <unistd.h>' \
-    -i src/helpers/System.h
+  cd ${pkgname}-${pkgver}
 
   ./configure \
     LDFLAGS="-L/usr/lib" \
@@ -38,16 +29,16 @@ build() {
 }
 
 package() {
-  cd "${srcdir}/${pkgname}-${pkgver}"
+  cd ${pkgname}-${pkgver}
 
   make DESTDIR="${pkgdir}" mangdir=/usr/share/man/man6 install
 
   # install desktop file
   desktop-file-install --set-key=Icon --set-value=xmoto -m 0644 \
     --dir="${pkgdir}/usr/share/applications" \
-    "${srcdir}/${pkgname}-${pkgver}/extra/xmoto.desktop"
+    extra/xmoto.desktop
 
   # install icon
-  install -Dm0644 "${srcdir}/${pkgname}-${pkgver}/extra/xmoto.xpm" \
+  install -Dm0644 extra/xmoto.xpm \
     "${pkgdir}/usr/share/pixmaps/xmoto.xpm"
 }
