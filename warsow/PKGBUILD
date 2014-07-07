@@ -7,25 +7,24 @@
 
 pkgbase=warsow
 pkgname=('warsow' 'warsow-data')
-pkgver=1.02 # Warsow data version
-_pkgver=1.0 # Launchpad version
-pkgrel=2
-arch=('i686' 'x86_64')
+pkgver=1.51 # Warsow data version
+_pkgver=15  # Launchpad version
+pkgrel=1
+arch=('x86_64')
 url="http://www.warsow.net/"
 makedepends=('mesa' 'openal' 'imagemagick' 'gendesk' 'curl' 'libjpeg' 'libtheora' 'libvorbis'
-             'libxxf86dga' 'sdl' 'libxinerama' 'libxrandr' 'libxxf86vm')
+             'libxxf86dga' 'sdl' 'libxinerama' 'libxrandr' 'libxxf86vm' 'libxi')
 categories=('games')
-source=("https://launchpadlibrarian.net/111352130/${pkgname}_${_pkgver}_sdk.tar.gz"
-        "${pkgname}-data_${pkgver}.tar.gz::http://www.warsow.net/download?dl=linux")
-sha256sums=('2e394b5c50ad206723a59636ab93448f69d8602e710ab334451badf746870e22'
-            'f933d251de4c92b6107d4db1eef5326baf4873d32a6e2f1c3daae14bc92e85ec')
+source=("http://www.warsow.eu/${pkgname}_${pkgver}_sdk.tar.gz"
+        "http://www.warsow.eu/${pkgname}_${pkgver}_unified.tar.gz")
+sha256sums=('ac635c654e088566d30d53e8fab21abd2d40762d7f4ab0e09faa827aac5c4f97'
+            '94510d85e4a245b5f8c0c715ae41b1d162c96e06dbfe75ccd99fffb9a76426b5')
 
 build() {
-  cd "${srcdir}"
   gendesk -n
 
   # Compile Warsow.
-  cd "${srcdir}/${pkgname}_${_pkgver}_sdk/source/"
+  cd source/source
   make -j1 # Error finding a library if -j is higher.
 }
 
@@ -43,10 +42,6 @@ package_warsow-data() {
   arch=('any')
   license=('custom:Warsow Content License')
 
-  echo "${pkgdir}"
-  
-  cd "${srcdir}"
-  
   # Create the destination directories.
   install -d "${pkgdir}/usr/share/${_pkgname}"
 
@@ -54,17 +49,17 @@ package_warsow-data() {
   cp -r ${_pkgname}_${_pkgver}/basewsw "${pkgdir}/usr/share/${_pkgname}"
 
   # Install custom license: Warsow Content License.
-  install -Dm 0644 ${_pkgname}_${_pkgver}/docs/license.txt "${pkgdir}/usr/share/licenses/${pkgname}/license.txt"
+  install -Dm0644 ${_pkgname}_${_pkgver}/docs/license.txt "${pkgdir}/usr/share/licenses/${pkgname}/license.txt"
 }
 
 package_warsow() {
   pkgdesc="A free online multiplayer competitive FPS based on the Qfusion engine"
-  arch=('i686' 'x86_64')
+  arch=('x86_64')
   license=('GPL')
   depends=('curl' 'libjpeg' 'libtheora' 'libvorbis' 'libxinerama' 'libxrandr' 'libxxf86dga' 'libxxf86vm' 'sdl' 'warsow-data')
   optdepends=('openal: for openal audio support')
   
-  cd "${srcdir}/${pkgname}_${_pkgver}_sdk/source/"
+  cd source/source
 
   # Manual installation.
   install -d "${pkgdir}/usr/share/${pkgname}/"
