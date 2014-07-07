@@ -6,53 +6,53 @@
 # Contributor: Lukas Jirkovsky <l.jirkovsky@gmail.com>
 
 pkgname=ufoai
-pkgver=2.4
-pkgrel=2
+pkgver=2.5
+pkgrel=1
 pkgdesc="In UFO: Alien Invasion you fight aliens trying to capture Earth"
 arch=('x86_64')
 url="http://ufoai.ninex.info/"
 license=('GPL2')
 depends=('libjpeg' 'libgl' 'libpng' 'curl' 'sdl_image' 'sdl_mixer' 'sdl_ttf' 'xvidcore' 'ufoai-data')
 makedepends=('mesa')
-source=(http://downloads.sourceforge.net/project/ufoai/UFO_AI%202.x/$pkgver/ufoai-$pkgver-source.tar.bz2
-	ufo.sh)
-md5sums=('d7e88aee0ea94149c8b9d90eb6c21ba9'
-         'f3665bf49894cc2fa1709c6ddf320308')
+source=("http://downloads.sourceforge.net/project/ufoai/UFO_AI%202.x/${pkgver}/ufoai-${pkgver}-source.tar.bz2"
+        "ufo.sh")
+sha256sums=('0c7cc3bc9efeb276f71cbe6ee8ff7c76f98d183de79f1a069fa63059cf182a8f'
+            '9e444eb936bad1f131c20cac7107dbf34fbbe66741a2cc8d35af5069ec9d5dcb')
 
 build() {
-  cd "$srcdir"/$pkgname-$pkgver-source
+  cd ${pkgname}-${pkgver}-source
 
   ./configure \
     --prefix=/usr \
+    --bindir=/usr/bin \
     --datadir=/usr/share/ufoai \
     --enable-release \
     --localedir=/usr/share/ufoai/base/i18n/
-    
   make
   make lang
 }
 
 package() {
-  cd "$srcdir"/$pkgname-$pkgver-source
+  cd ${pkgname}-${pkgver}-source
 
-  install -Dm755 ufo "$pkgdir"/usr/share/ufoai/ufo
-  install -Dm755 ufoded "$pkgdir"/usr/share/ufoai/ufoded
-  install -Dm755 ufo2map "$pkgdir"/usr/share/ufoai/ufo2map
-  install -Dm755 ufomodel "$pkgdir"/usr/share/ufoai/ufomodel
+  install -Dm755 ufo "${pkgdir}"/usr/share/ufoai/ufo
+  install -Dm755 ufoded "${pkgdir}"/usr/share/ufoai/ufoded
+  install -Dm755 ufo2map "${pkgdir}"/usr/share/ufoai/ufo2map
+  install -Dm755 ufomodel "${pkgdir}"/usr/share/ufoai/ufomodel
 
-  install -Dm755 "${srcdir}"/ufo.sh "$pkgdir"/usr/bin/ufo
+  install -Dm755 "${srcdir}"/ufo.sh "${pkgdir}"/usr/bin/ufo
   ln -s /usr/share/ufoai/ufoded "${pkgdir}"/usr/bin/
   ln -s /usr/share/ufoai/ufo2map "${pkgdir}"/usr/bin/
   ln -s /usr/share/ufoai/ufomodel "${pkgdir}"/usr/bin/
 
-  cp -r base "$pkgdir"/usr/share/ufoai/
+  cp -r base "${pkgdir}"/usr/share/ufoai/
 
-  install -Dm644 debian/ufoai.desktop "$pkgdir"/usr/share/applications/ufoai.desktop
-  install -Dm644 debian/ufoai-safe.desktop "$pkgdir"/usr/share/applications/ufoai-safe.desktop
-  install -Dm644 debian/ufoded.desktop "$pkgdir"/usr/share/applications/ufoded.desktop
+  install -Dm644 debian/ufoai.desktop "${pkgdir}"/usr/share/applications/ufoai.desktop
+  install -Dm644 debian/ufoai-safe.desktop "${pkgdir}"/usr/share/applications/ufoai-safe.desktop
+  install -Dm644 debian/ufoded.desktop "${pkgdir}"/usr/share/applications/ufoded.desktop
 
-  sed -i 's|/usr/games/||' "$pkgdir"/usr/share/applications/*
+  sed -i 's|/usr/games/||' "${pkgdir}"/usr/share/applications/*
 
-  install -Dm644 debian/ufoai.xpm "$pkgdir"/usr/share/pixmaps/ufoai.xpm
-  install -Dm644 debian/ufoded.xpm "$pkgdir"/usr/share/pixmaps/ufoded.xpm
+  install -Dm644 debian/ufoai.xpm "${pkgdir}"/usr/share/pixmaps/ufoai.xpm
+  install -Dm644 debian/ufoded.xpm "${pkgdir}"/usr/share/pixmaps/ufoded.xpm
 }
