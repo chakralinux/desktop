@@ -9,7 +9,7 @@ pkgbase=warsow
 pkgname=('warsow' 'warsow-data')
 pkgver=1.51 # Warsow data version
 _pkgver=15  # Launchpad version
-pkgrel=1
+pkgrel=2
 arch=('x86_64')
 url="http://www.warsow.net/"
 makedepends=('mesa' 'openal' 'imagemagick' 'gendesk' 'curl' 'libjpeg' 'libtheora' 'libvorbis'
@@ -47,6 +47,7 @@ package_warsow-data() {
 
     # Move Data to destination directory.
   cp -r ${_pkgname}_${_pkgver}/basewsw "${pkgdir}/usr/share/${_pkgname}"
+  chmod -R g+rx,o+rx "${pkgdir}/usr/share/${_pkgname}/basewsw"
 
   # Install custom license: Warsow Content License.
   install -Dm0644 ${_pkgname}_${_pkgver}/docs/license.txt "${pkgdir}/usr/share/licenses/${pkgname}/license.txt"
@@ -64,6 +65,7 @@ package_warsow() {
   # Manual installation.
   install -d "${pkgdir}/usr/share/${pkgname}/"
   cp -r release/* "${pkgdir}/usr/share/${pkgname}"
+  chmod +r "${pkgdir}/usr/share/${pkgname}/"*
 
   # Execution scripts:
   install -d "${pkgdir}/usr/bin"
