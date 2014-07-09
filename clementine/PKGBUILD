@@ -4,14 +4,14 @@
 pkgname=clementine
 _pkgname=Clementine
 pkgver=1.2.3
-pkgrel=1
+pkgrel=2
 pkgdesc="A modern music player and library organiser and a port of Amarok 1.4, with some features rewritten to take advantage of Qt4."
 url="http://www.clementine-player.org/"
 screenshot="http://images.clementine-player.org/screenshots/clementine-1.0-3.png"
 license="GPL"
 arch=('x86_64')
 install=${pkgname}.install
-depends=('gstreamer0.10-base' 'taglib' 'glew' 'liblastfm' 'libgpod' 'libmtp' 'libplist'
+depends=('gstreamer0.10-base' 'taglib' 'glew>=1.10.0' 'liblastfm' 'libgpod' 'libmtp' 'libplist'
          'hicolor-icon-theme' 'qtwebkit' 'libimobiledevice' 'qjson' 'glew' 'protobuf'
          'libcdio' 'qca' 'qca-ossl' 'chromaprint')
 makedepends=('cmake' 'boost' 'mesa')
@@ -20,15 +20,22 @@ optdepends=('gstreamer0.10-base-plugins: for more open formats'
             'gstreamer0.10-bad-plugins: for use with "Bad" plugin libraries'
             'gstreamer0.10-ugly-plugins: for use with "Ugly" plugin libraries')
 categories=('multimedia')
-source=("https://github.com/clementine-player/${_pkgname}/archive/${pkgver}.tar.gz")
-sha1sums=('2a27eda3a13185ba9f0f7b75dcf7173e6828384a')
+source=("https://github.com/clementine-player/${_pkgname}/archive/${pkgver}.tar.gz"
+        "clementine-udisks-headers.patch")
+sha1sums=('2a27eda3a13185ba9f0f7b75dcf7173e6828384a'
+          '7a33cbcbf7cb06d2c5bea1b7757e9ba58c4f4869')
 
+prepare() {
+  cd ${_pkgname}-${pkgver}
+  patch -Np1 -i "../clementine-udisks-headers.patch" || return 1
+}
 
 build() {
   cd ${_pkgname}-${pkgver}
   mkdir -p build && cd build
   cmake ../ -DCMAKE_INSTALL_PREFIX=/usr \
             -DCMAKE_BUILD_TYPE=Release \
+            -DBUILD_WERROR=OFF \
             -DSTATIC_SQLITE=ON
   make
 }
