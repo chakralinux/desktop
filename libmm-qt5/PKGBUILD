@@ -1,0 +1,40 @@
+source ../plasma.conf
+
+pkgname=libnm-qt5
+_pkgname=libnm-qt
+pkgver=5.0.90
+pkgrel=1
+pkgdesc="Plasma Workspace"
+arch=('i686' 'x86_64')
+url='http://projects.kde.org'
+license=('LGPL')
+depends=('qt5-base' 'networkmanager')
+makedepends=('extra-cmake-modules' 'kapidox')
+checkdepends=("cmake")
+groups=('plasma')
+options=("debug")
+source=("${PServer}/${pkgver}/${_pkgname}-${pkgver}.tar.xz")
+sha256sums=( $(getSum ${_pkgname} | head -n1) )
+
+prepare() {
+  mkdir -p build
+}
+
+build() {
+  cd build
+  cmake ../${_pkgname}-${pkgver} \
+    -DCMAKE_BUILD_TYPE=${PBuildType} \
+    -DCMAKE_INSTALL_PREFIX=${PInstallPrefix} \
+    -DLIB_INSTALL_DIR=lib 
+  make
+}
+
+check() {
+  cd build
+  make test || return 0
+}
+
+package() {
+  cd build
+  make DESTDIR="${pkgdir}" install
+}
