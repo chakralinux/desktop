@@ -3,44 +3,58 @@
 # Contributor: Samir Benmendil <ram-z[at]chakra-project[dot]org>
  
 pkgname=mpv
-pkgver=0.3.11
+pkgver=0.4.1
 pkgrel=1
 pkgdesc="A movie player and encoder for linux, based on MPlayer/mplayer2"
 arch=('x86_64')
 license=('GPL')
 url="http://mpv.io"
-depends=('pulseaudio' 'ffmpeg' 'lcms2' 'libdvdread' 'libquvi' 'libgl' 'libxinerama'  'mpg123' 'libxv' 'libxkbcommon' 'libva'  'libass' 'lirc-utils' 'wayland' 'desktop-file-utils' 'hicolor-icon-theme' 'xdg-utils' 'lua' 'libdvdnav' 'libcdio-paranoia' 'libbluray')
+depends=('pulseaudio' 'ffmpeg' 'lcms2' 'libdvdread' 'libquvi' 'libgl' 
+         'libxinerama' 'mpg123' 'libxv' 'libxkbcommon' 'libva'  'libass' 
+         'lirc-utils' 'wayland' 'desktop-file-utils' 'hicolor-icon-theme' 
+         'xdg-utils' 'lua' 'libdvdnav' 'libcdio-paranoia' 'libbluray'
+         'enca' 'libguess')
 makedepends=('mesa' 'python3-docutils' 'ladspa')
 options=('!emptydirs' '!buildflags')
 install=${pkgname}.install
-source=("https://github.com/mpv-player/$pkgname/archive/v${pkgver}.tar.gz")
-md5sums=('c2ab93033ce55e3e0ee596576db88e74')
+source=("https://github.com/mpv-player/${pkgname}/archive/v${pkgver}.tar.gz")
+sha256sums=('969511267ad443235ac60a947fc40b5fb93fbd97670e23e42705cd39f8f71273')
 
 prepare() {
-  cd $pkgname-$pkgver
+  cd ${pkgname}-${pkgver}
+  
   ./bootstrap.py
+  sed -i 's/vendor-completions/site-functions/' wscript_build.py
 }
  
 build() {
-  cd "$pkgname-$pkgver"
+  cd ${pkgname}-${pkgver}
  
-  ./waf configure --prefix=/usr \
-      --confdir=/etc/mpv \
-      --enable-joystick \
-      --enable-pulse
+  # disable wayland, as long, as the version is too old
+  # it won't compile with 1.3.0
+  ./waf configure \
+    --prefix=/usr \
+    --confdir=/etc/mpv \
+    --enable-joystick \
+    --enable-libmpv-shared \
+    --enable-cdda \
+    --enable-zsh-comp \
+    --enable-pulse \
+    --disable-wayland \
+    --disable-portaudio
   ./waf build
 }
  
 package() {
-  cd "$srcdir/$pkgname-$pkgver"
+  cd ${pkgname}-${pkgver}
  
-  ./waf install --destdir="$pkgdir" 
+  ./waf install --destdir="${pkgdir}" 
   
-  install -d ${pkgdir}/usr/share/doc/mpv/examples
+  install -d "${pkgdir}/usr/share/doc/mpv/examples"
  
   # some extra useful stuff "make install" doesn't install
   install -m644 etc/{input,example}.conf \
-      "$pkgdir"/usr/share/doc/mpv/examples
+    "${pkgdir}"/usr/share/doc/mpv/examples
   install -m644 DOCS/{encoding.rst,tech-overview.txt} \
-    "$pkgdir"/usr/share/doc/mpv
+    "${pkgdir}"/usr/share/doc/mpv
 }
