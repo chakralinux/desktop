@@ -1,60 +1,56 @@
 # contributor (x86_64): Giuseppe Calà <jiveaxe@gmail.com>
 
 pkgname=clamav
-pkgver=0.98.3
+pkgver=0.98.4
 pkgrel=1
 pkgdesc='Anti-virus toolkit for Unix'
 arch=('x86_64')
 options=('!libtool')
-install="$pkgname.install"
+install="${pkgname}.install"
 license=('GPL')
 categories=('system')
-backup=('etc/conf.d/clamav' 'etc/logrotate.d/clamav')
+backup=('etc/clamav/clamd.conf' 'etc/clamav/freshclam.conf' 'etc/logrotate.d/clamav')
 url='http://www.clamav.net/'
 depends=('bzip2' 'zlib' 'libtool')
 source=("http://downloads.sourceforge.net/sourceforge/${pkgname}/${pkgname}-${pkgver}.tar.gz"
-        'clamav.confd'
+        'clamd.conf'
         'clamav.logrotate'
-        'config.patch'
-        'service'
-        'service.fresh'
-        'tmpfiles.d')
-sha1sums=('32f0a0675f8023b20e1d19fe8592e330674d0551'
-          'cb116cdab49a810381a515cbcfb6a6c148547f07'
-          'be3310d2b41a68ce06e33c84ab68ffe59fdce104'
-          '00dfadd93d11186793cb1161745f9dd7370beb99'
-          'df522b0488f3901e491f148c9300f6bae348c605'
-          'cda9a087e5593992150cb456e34c5f6f589aca82'
-          'a224ea9b4d0f4f196827347d54bed51e11c197ea')
+        'clamd.service'
+        'freshclam.service'
+        'tmpfiles.d'
+        'freshclam.conf')
+sha256sums=('d3006747abcf750f395a8bfa8267ab314c7b63196c4b41e7717948aaaafa3e1c'
+            '03fe7fc57a72a618e0ccdc31e86050bd64f97a734ad7d47f1c8d68b2bd45fb9c'
+            'dba0c3344a284374c3692c794891e673f3ad73e231efaa607ad3d51026e256d3'
+            'a7722a9b93f1e23b5830a34e49087385551cf271f6584a47c7f8c550768c3a82'
+            'dd5ff6c79ee360da5f2221c4d9110a2a8886d86293f6c93c16bf74fdb126593c'
+            '0a61abee3b9bba94126afe3344e7d8e82da5120ca6dbd2b413b10f75da5b0b0d'
+            'e16f1596201850fd4a63680b27f603cb64e67176159be3d8ed78a4403fdb1700')
 
-prepare() {
-  cd ${pkgname}-${pkgver}
-  patch -p1 -i ../config.patch
-}
-            
 build() {
-	cd ${pkgname}-${pkgver}
-	./configure --prefix=/usr \
-	  --sysconfdir=/etc/clamav \
-		--with-dbdir=/var/lib/clamav \
-		--disable-clamav
-	make
+  cd ${pkgname}-${pkgver}
+  
+  ./configure \
+    --prefix=/usr \
+    --sbindir=/usr/bin \
+    --sysconfdir=/etc/clamav \
+    --with-dbdir=/var/lib/clamav \
+    --disable-clamav
+  make
 }
 
 package() {
-	cd ${pkgname}-${pkgver}
-	make DESTDIR="${pkgdir}" install
+  cd ${pkgname}-${pkgver}
+  
+  make DESTDIR="${pkgdir}" install
 
-	install -D -m644 ../service.fresh "${pkgdir}/usr/lib/systemd/system/freshclamd.service"
-	install -D -m644 ../service "${pkgdir}/usr/lib/systemd/system/clamd.service"
-	install -D -m644 ../tmpfiles.d "${pkgdir}/usr/lib/tmpfiles.d/clamav.conf"
-	install -D -m644 ../clamav.logrotate "$pkgdir/etc/logrotate.d/clamav"
-	install -D -m644 ../clamav.confd "$pkgdir/etc/conf.d/clamav"
+  install -Dm644 ../freshclam.service "${pkgdir}/usr/lib/systemd/system/freshclam.service"
+  install -Dm644 ../clamd.service "${pkgdir}/usr/lib/systemd/system/clamd.service"
+  install -Dm644 ../tmpfiles.d "${pkgdir}/usr/lib/tmpfiles.d/clamav.conf"
+  install -Dm644 ../clamav.logrotate "${pkgdir}/etc/logrotate.d/clamav"
+  install -Dm644 ../clamd.conf "${pkgdir}/etc/clamav/clamd.conf"
+  install -Dm644 ../freshclam.conf "${pkgdir}/etc/clamav/freshclam.conf"
 	
-	install -d -o 64 -g 64 "${pkgdir}"/run/clamav
-	install -d -o 64 -g 64 "${pkgdir}"/var/log/clamav
-	install -d -o 64 -g 64 "${pkgdir}"/var/lib/clamav
-	
-	# un-distribute databases to require freshclam
-	#rm "$pkgdir"/var/lib/clamav/*.cvd
+  install -d -o 64 -g 64 "${pkgdir}"/var/log/clamav
+  install -d -o 64 -g 64 "${pkgdir}"/var/lib/clamav
 }
