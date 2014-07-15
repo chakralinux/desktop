@@ -1,0 +1,26 @@
+pkgname=libmowgli
+pkgver=2.0.0
+pkgrel=3
+pkgdesc='Performance and usability-oriented extensions to C'
+url='http://www.atheme.org/project/mowgli'
+license=('custom')
+arch=('x86_64')
+depends=('openssl')
+makedepends=('git')
+source=("${pkgname}-${pkgver}::git+https://github.com/atheme/libmowgli-2.git#tag=${pkgname}-${pkgver}")
+sha256sums=('SKIP')
+ 
+build() {
+  cd ${pkgname}-${pkgver}
+
+  ./configure --prefix=/usr
+  make
+}
+ 
+package() {
+  cd ${pkgname}-${pkgver}
+
+  make DESTDIR="${pkgdir}" install
+  install -Dm644 COPYING "${pkgdir}/usr/share/licenses/${pkgname}/COPYING"
+}
+
