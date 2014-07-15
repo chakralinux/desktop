@@ -1,33 +1,33 @@
 #
-# Games Packages for Chakra, part of chakra-project.org
+# Games Packages for Chakra, part of chakraos.org
 #
 # Maintainer: Adrián Chaves Fernández (Gallaecio) <adriyetichaves@gmail.com>
 
 pkgname=warzone2100
-pkgver=3.1.0
+pkgver=3.1.1
 pkgrel=1
 pkgdesc="3D real-time strategy game where you fight to rebuilt the world destroyed by nuclear war."
-arch=('i686' 'x86_64')
+arch=('x86_64')
 url="http://wz2100.net/"
 license=('GPL')
 groups=()
 categories=('games')
-depends=(sdl_net libgl openal libjpeg libpng libvorbis libtheora libmad physfs mesa quesoglc popt ttf-dejavu qt glew)
-makedepends=(gawk bison flex zip unzip)
-conflicts=(warzone2100-dev)
+depends=('sdl_net' 'libgl' 'openal' 'libjpeg' 'libpng' 'libvorbis' 'libtheora'
+         'libmad' 'physfs' 'mesa' 'quesoglc' 'popt' 'ttf-dejavu' 'qt' 'glew')
+makedepends=('gawk' 'bison' 'flex' 'zip' 'unzip')
+conflicts=('warzone2100-dev')
 changelog=ChangeLog
-source=(http://downloads.sourceforge.net/sourceforge/$pkgname/$pkgname-$pkgver.tar.xz)
-md5sums=('7f061f3e5a2a6a83c146508ccefabd86')
-
+source=("http://downloads.sourceforge.net/sourceforge/${pkgname}/${pkgname}-${pkgver}.tar.xz")
+sha256sums=('c937a2e2c7afdad00b00767636234bbec4d8b18efb008073445439d32edb76cf')
 
 build() {
-  cd $srcdir/$pkgname-$pkgver
+  cd ${pkgname}-${pkgver}
   ./configure \
     --prefix=/usr
   make
 }
 
 package() {
-  cd $srcdir/$pkgname-$pkgver
-  make DESTDIR=$pkgdir install
+  cd ${pkgname}-${pkgver}
+  make DESTDIR=${pkgdir} install
 }
