@@ -10,9 +10,9 @@
 
 pkgbase=virtualbox
 pkgname=('virtualbox' 'virtualbox-ext-oracle' 'virtualbox-guest-additions')
-pkgver=4.3.12
-_build_virtualbox=93733
-pkgrel=2
+pkgver=4.3.14
+_build_virtualbox=95030
+pkgrel=1
 arch=('x86_64')
 url='http://virtualbox.org/'
 license=('GPL2' 'custom:PUEL')
@@ -32,9 +32,9 @@ source=("VirtualBox-${pkgver}-${_build_virtualbox}-Linux_amd64.run::http://downl
         'PUEL'
         'vboxservice.service')
 # the checksum can be found here: https://www.virtualbox.org/download/hashes/${pkgver}/SHA256SUMS
-sha256sums=('d37075e601f13ed3564ba51359b4a43b725cb532266cedd9af5e42304d533a2c'
-            'f931ce41b2cc9500dc43aba004630cf7bb7050ba737eae38827e91062f072d1f'
-            'c76dd5ec86f61ad72263ab6d2405723b06badfc2fae57f83ffa5de96f553400d'
+sha256sums=('8ed9fe965941a7bbd0e40f074b2e835a4b03a8e66d7056ae18ef5bb86e3ee38c'
+            'b965c3565e7933bc61019d2992f4da084944cfd9e809fbeaff330f4743d47537'
+            '2a87971ae3c7e57e87713967a6f242acbdafcc09b635cba98e6dd3a7f5292d3b'
             'e0122a9a33df9704bf73c1904330f95dde25488b49972e8a28f48934f3921c67'
             '71740893a5f226f9d9fcc607ab9d39b7de816b2759625b34da19162bc7e579ff'
             '12dbba3b59991f2b68cddeeeda20236aeff63e11b7e2d1b08d9d6a82225f6651'
@@ -45,6 +45,7 @@ sha256sums=('d37075e601f13ed3564ba51359b4a43b725cb532266cedd9af5e42304d533a2c'
             '28833ef89fed96aa2cdb071c98687e8aa88e3c4c249b261f9b905e6621fa0e23'
             '50658c653cde4dc43ba73a64c72761d2e996fd8e360fc682aa2844e1ad5b045f'
             'aaa8d3d71c8585edf43ed11676ccd567cc85fc23752d3c3499506741cef3c9ba')
+
 
 _installdir='/opt/VirtualBox'
 
@@ -95,23 +96,23 @@ package_virtualbox() {
     "${pkgdir}/${_installdir}/VBox.sh"
   
   # Install vboxdrv configuration
-  install -D -m 0644 "${srcdir}/vboxdrv.conf" "${pkgdir}/etc/conf.d/vboxdrv"
+  install -Dm0644 "${srcdir}/vboxdrv.conf" "${pkgdir}/etc/conf.d/vboxdrv"
   
   # Install vboxweb configuration
-  install -D -m 0644 "${srcdir}/vboxweb.conf" "${pkgdir}/etc/conf.d/vboxweb"
+  install -Dm0644 "${srcdir}/vboxweb.conf" "${pkgdir}/etc/conf.d/vboxweb"
   
   # Install systemd units
-  install -D -m 0644 "${srcdir}/vboxweb.service" "${pkgdir}/usr/lib/systemd/system/vboxweb.service"
-  install -D -m 0644 "${srcdir}/vboxusb.service" "${pkgdir}/usr/lib/systemd/system/vboxusb.service"
+  install -Dm0644 "${srcdir}/vboxweb.service" "${pkgdir}/usr/lib/systemd/system/vboxweb.service"
+  install -Dm0644 "${srcdir}/vboxusb.service" "${pkgdir}/usr/lib/systemd/system/vboxusb.service"
 
   # Install udev rules
-  install -D -m 0644 "${srcdir}/10-vboxdrv.rules" "${pkgdir}/usr/lib/udev/rules.d/10-vboxdrv.rules"
-  install -d -m 0755 "${pkgdir}/usr/share/virtualbox"
+  install -Dm0644 "${srcdir}/10-vboxdrv.rules" "${pkgdir}/usr/lib/udev/rules.d/10-vboxdrv.rules"
+  install -dm0755 "${pkgdir}/usr/share/virtualbox"
   ln -s "${_installdir}/VBoxCreateUSBNode.sh" "${pkgdir}/usr/share/virtualbox/VBoxCreateUSBNode.sh"
   
   # Install setup script for modules and usb devices
-  install -D -m 0755 "${srcdir}/vboxsetup.sh" "${pkgdir}/usr/bin/vboxsetup"
-  install -D -m 0644 "${srcdir}/virtualbox.conf" "${pkgdir}/etc/modules-load.d/virtualbox.conf"  
+  install -Dm0755 "${srcdir}/vboxsetup.sh" "${pkgdir}/usr/bin/vboxsetup"
+  install -Dm0644 "${srcdir}/virtualbox.conf" "${pkgdir}/etc/modules-load.d/virtualbox.conf"  
 
   # Install the SDK
   cd "${pkgdir}/${_installdir}/sdk/installer"
@@ -120,7 +121,7 @@ package_virtualbox() {
   cd "${pkgdir}/${_installdir}"
 
   # Symlink the launchers. Second link can fail if fs is not case sensitive.
-  install -d -m 0755 "${pkgdir}/usr/bin"
+  install -dm0755 "${pkgdir}/usr/bin"
   for _bin in VirtualBox VBox{Headless,Manage,SDL,SVC,Tunctl,NetAdpCtl} rdesktop-vrdp vboxwebsrv; do
     ln -s "${_installdir}/${_bin}" "${pkgdir}/usr/bin/${_bin}"
     ln -s "${_installdir}/${_bin}" "${pkgdir}/usr/bin/${_bin,,}" &>/dev/null || :
@@ -133,15 +134,15 @@ package_virtualbox() {
   ln -s "${_installdir}/virtualbox.desktop" "${pkgdir}/usr/share/applications/virtualbox.desktop"
 
   # Symlink mime info
-  install -d -m 0755 "${pkgdir}/usr/share/mime/packages"
+  install -dm0755 "${pkgdir}/usr/share/mime/packages"
   ln -s "${_installdir}/virtualbox.xml" "${pkgdir}/usr/share/mime/packages/virtualbox.xml"
 
   # Symlink doc
-  install -d -m 0755 "${pkgdir}/usr/share/doc/${pkgname}"
+  install -dm0755 "${pkgdir}/usr/share/doc/${pkgname}"
   ln -s "${_installdir}/VirtualBox.chm" "${pkgdir}/usr/share/doc/$pkgname/virtualbox.chm"
 
   # Symlink module sources
-  install -d -m 0755 "${pkgdir}/usr/src"
+  install -dm0755 "${pkgdir}/usr/src"
   ln -s "${_installdir}/src/vboxhost" "${pkgdir}/usr/src/vboxhost-${pkgver}"
 
   # Symlink icons
@@ -160,7 +161,7 @@ package_virtualbox() {
   done
 
   # Write the configuration file
-  install -d -m 0755 "${pkgdir}/etc/vbox"
+  install -dm0755 "${pkgdir}/etc/vbox"
   echo "# VirtualBox installation directory" > "${pkgdir}/etc/vbox/vbox.cfg"
   echo "INSTALL_DIR='${_installdir}'" >> "${pkgdir}/etc/vbox/vbox.cfg"
   echo "# VirtualBox version" >> "${pkgdir}/etc/vbox/vbox.cfg"
@@ -169,7 +170,7 @@ package_virtualbox() {
   chmod 0644 "${pkgdir}/etc/vbox/vbox.cfg"
 
   # Create the directory below if it doesn't exist
-  install -d -m 0755 "${pkgdir}/var/run/VirtualBox"
+  install -dm0755 "${pkgdir}/var/run/VirtualBox"
 
   # Use system's Qt
   rm "${pkgdir}/opt/VirtualBox/libQtCoreVBox.so.4"
@@ -189,12 +190,10 @@ package_virtualbox-ext-oracle() {
   license=('custom:PUEL')
   depends=("virtualbox")
   install=${pkgname}.install
-  
-  cd "${srcdir}"
-  
-  install -D -m 644 "Oracle_VM_VirtualBox_Extension_Pack-${pkgver}-${_build_virtualbox}.vbox-extpack" \
+    
+  install -Dm0644 "Oracle_VM_VirtualBox_Extension_Pack-${pkgver}-${_build_virtualbox}.vbox-extpack" \
     "${pkgdir}/usr/share/virtualbox/extensions/Oracle_VM_VirtualBox_Extension_Pack-${pkgver}.vbox-extpack"
-  install -D -m 644 PUEL "${pkgdir}/usr/share/licenses/${pkgname}/PUEL"
+  install -Dm0644 PUEL "${pkgdir}/usr/share/licenses/${pkgname}/PUEL"
 }
 
 package_virtualbox-guest-additions() {
