@@ -1,7 +1,7 @@
-diff -aur calibre/src/calibre/linux.py calibre.new/src/calibre/linux.py
---- calibre/src/calibre/linux.py	2014-02-28 04:06:35.000000000 +0100
-+++ calibre.new/src/calibre/linux.py	2014-02-28 11:18:00.518362669 +0100
-@@ -495,18 +495,6 @@
+diff -Naur 1/src/calibre/linux.py 2/src/calibre/linux.py
+--- a/src/calibre/linux.py	2014-07-18 02:37:49.000000000 +0000
++++ b/src/calibre/linux.py	2014-07-19 10:57:55.949212936 +0000
+@@ -645,19 +645,7 @@
              self.setup_completion()
          if islinux or isbsd:
              self.setup_desktop_integration()
@@ -17,19 +17,12 @@ diff -aur calibre/src/calibre/linux.py calibre.new/src/calibre/linux.py
 -                        shutil.rmtree(f) if os.path.isdir(f) else os.unlink(f)
 -                if os.stat(config_dir).st_uid == 0:
 -                    os.rmdir(config_dir)
- 
+-
++        
          if warn is None and self.warnings:
              self.info('\n\nThere were %d warnings\n'%len(self.warnings))
-@@ -564,7 +552,7 @@
-                 if isnetbsd:
-                     f = os.path.join(self.opts.staging_root, 'share/bash_completion.d/calibre')
-                 else:
--                    f = os.path.join(self.opts.staging_etc, 'bash_completion.d/calibre')
-+                    f = os.path.join(self.opts.staging_root, 'usr/share/bash-completion/completions/calibre')
-             if not os.path.exists(os.path.dirname(f)):
-                 os.makedirs(os.path.dirname(f))
-             bash_comp_dest, zsh_comp_dest = f, None
-@@ -713,56 +701,37 @@
+             for args, kwargs in self.warnings:
+@@ -730,56 +718,37 @@
  
              with TemporaryDirectory() as tdir, CurrentDir(tdir), \
                                  PreserveMIMEDefaults():
@@ -99,4 +92,3 @@ diff -aur calibre/src/calibre/linux.py calibre.new/src/calibre/linux.py
                  f.write(GUI)
                  write_mimetypes(f)
                  f.close()
-        
