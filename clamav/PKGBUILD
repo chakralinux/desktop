@@ -2,7 +2,7 @@
 
 pkgname=clamav
 pkgver=0.98.4
-pkgrel=1
+pkgrel=2
 pkgdesc='Anti-virus toolkit for Unix'
 arch=('x86_64')
 options=('!libtool')
@@ -16,7 +16,7 @@ source=("http://downloads.sourceforge.net/sourceforge/${pkgname}/${pkgname}-${pk
         'clamd.conf'
         'clamav.logrotate'
         'clamd.service'
-        'freshclam.service'
+        'freshclamd.service'
         'tmpfiles.d'
         'freshclam.conf')
 sha256sums=('d3006747abcf750f395a8bfa8267ab314c7b63196c4b41e7717948aaaafa3e1c'
@@ -25,7 +25,7 @@ sha256sums=('d3006747abcf750f395a8bfa8267ab314c7b63196c4b41e7717948aaaafa3e1c'
             'a7722a9b93f1e23b5830a34e49087385551cf271f6584a47c7f8c550768c3a82'
             'dd5ff6c79ee360da5f2221c4d9110a2a8886d86293f6c93c16bf74fdb126593c'
             '0a61abee3b9bba94126afe3344e7d8e82da5120ca6dbd2b413b10f75da5b0b0d'
-            'e16f1596201850fd4a63680b27f603cb64e67176159be3d8ed78a4403fdb1700')
+            '127b39e13525ffb4242198cfb76f99d4d517e5f2fd9fa8dcad3f31fc9f82f952')
 
 build() {
   cd ${pkgname}-${pkgver}
@@ -44,7 +44,7 @@ package() {
   
   make DESTDIR="${pkgdir}" install
 
-  install -Dm644 ../freshclam.service "${pkgdir}/usr/lib/systemd/system/freshclam.service"
+  install -Dm644 ../freshclamd.service "${pkgdir}/usr/lib/systemd/system/freshclamd.service"
   install -Dm644 ../clamd.service "${pkgdir}/usr/lib/systemd/system/clamd.service"
   install -Dm644 ../tmpfiles.d "${pkgdir}/usr/lib/tmpfiles.d/clamav.conf"
   install -Dm644 ../clamav.logrotate "${pkgdir}/etc/logrotate.d/clamav"

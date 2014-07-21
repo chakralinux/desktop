@@ -1,5 +1,10 @@
 post_upgrade() {
-    systemd-tmpfiles --create clamav.conf
+    #systemd-tmpfiles --create clamav.conf
+
+    echo ">>> To run the clamav daemon, activate and install it with systemctl:"
+    echo ">>> $ sudo systemctl enable clamd && sudo systemctl start clamd"
+    echo ">>> To run the updater daemon freshclamd, run the following:"
+    echo ">>> $ sudo systemctl enable freshclamd && sudo systemctl start freshclamd"
 }
 
 post_install() {
