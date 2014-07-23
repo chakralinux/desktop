@@ -7,9 +7,9 @@ source ../_buildscripts/${current_repo}-${_arch}-cfg.conf
 _default_wp="Elarun"
 pkgname="kde-workspace"
 arch=('x86_64')
-#pkgver=${_kdever}
-pkgver=4.11.10
-pkgrel=4
+pkgver=${_workspace_ver}
+#pkgver=4.11.11
+pkgrel=1
 pkgdesc="KDE Workspace"
 url="http://www.kde.org"
 license=('GPL'
@@ -93,9 +93,9 @@ groups=('kde'
         'kde-minimal')
 backup=('usr/share/config/kdm/kdmrc'
         'etc/pam.d/kscreensaver')
-source=("http://download.kde.org/stable/4.13.2/src/kde-workspace-4.11.10.tar.xz"
+source=("http://download.kde.org/stable/${_kdever}/src/kde-workspace-${_workspace_ver}.tar.xz"
 #"http://download.kde.org/stable/${_kdever}/src/${pkgname}-$pkgver.tar.xz"
-        "http://download.kde.org/stable/4.13.2/src/kde-wallpapers-4.13.2.tar.xz"
+        "http://download.kde.org/stable/${_kdever}/src/kde-wallpapers-${_kdever}.tar.xz"
         'mishaaq-kcm_touchpad-00370b5.tar.gz'
         'http://kde-apps.org/CONTENT/content-files/114856-wacomtablet-2.0.tar.bz2'
         'kde.pam'
@@ -113,9 +113,9 @@ source=("http://download.kde.org/stable/4.13.2/src/kde-workspace-4.11.10.tar.xz"
         'fix_terminate-server.patch'
         'fix_root-only-kcms.patch'
         'plasma-panel-resize-hint.diff')
-#sha256sums=(`grep ${pkgname}-$_kdever.tar.xz  ../checksums.txt | cut -d " " -f1`
-sha256sums=('99d116444d43d1c471f7647353d237224444dc6674e90ecea97419629ec38e86'
-            '755eb9884fa29ce4a6c6ee459afca2bb1a361f1bc9e84f1c0d4470f3da4c5e4b'
+sha256sums=(`grep ${pkgname}-$_kdever.tar.xz  ../checksums.txt | cut -d " " -f1`
+#sha256sums=('99d116444d43d1c471f7647353d237224444dc6674e90ecea97419629ec38e86'
+            `grep kde-wallpapers-$_kdever.tar.xz  ../checksums.txt | cut -d " " -f1`
             '85b45195048fc1219ebe0496588404abcca0d9c9e88e2da6653c6e0326c4be51'
             '5d15a1cda1e418e633e7fdd83f5a398c4294c28771a16b68979a2b40ddac0def'
             '812111f166fdf9ab7ef9400c4414cbe26fac5210f2292399d4446fe6e89eea54'

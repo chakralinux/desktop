@@ -7,7 +7,7 @@ source ../_buildscripts/${current_repo}-${_arch}-cfg.conf
 pkgname="kdelibs"
 arch=('x86_64')
 pkgver=${_kdever}
-pkgrel=3
+pkgrel=1
 pkgdesc="KDE Core Libraries"
 url="http://www.kde.org"
 license=('GPL'
@@ -84,13 +84,12 @@ source=($_mirror/${pkgname}-$_kdever.tar.xz
         01_chakra_tag.patch
         02_kde_applications_menu.patch
         03_chakra_menu.patch
-        kio_pop3_mitm.patch
         MergeDir.patch)
-sha256sums=('559809c602b80ff1091a4fb67e8c98b0ebb91c3cd437d1583068ddde19efda0e'
+sha256sums=(`grep $pkgbase-$_kdever.tar.xz  ../checksums.txt | cut -d " " -f1`
+#sha256sums=('d291b4bc159a3f686ad93ff3dfbe90a0a7e33600357e8390c84154ec050efc82'
             '029e2d07c5fc8676d143b903aa181fc470e5b469d49ccf107e19031f562bf4e3'
             'b2d25c76081ea6bb31d90c4c6b619ce64ac36de3a6eefb2f9990d3dbf8cd9c91'
             '505e9e5e969be5094b3f713b865d5927cc3de1f4693915174732b20793228c4f'
-            '4a8382341b750b7170c50363145a360dd698882b6a9fe833cf6573bf292ab3ea'
             'd7d2fac1ceb1551081a5f3fa860c14d4aeb0c774d56067e931c20b8d79c4450f')
 
 build() {
@@ -100,7 +99,7 @@ build() {
     patch -Np1 -i ${srcdir}/01_chakra_tag.patch
     patch -Np1 -i ${srcdir}/02_kde_applications_menu.patch
     patch -Np1 -i ${srcdir}/03_chakra_menu.patch
-    patch -Np1 -i ${srcdir}/kio_pop3_mitm.patch
+
     # right positioning of applications' entries in kmenu
     patch -p1 -i ${srcdir}/MergeDir.patch
     cd ${srcdir}
