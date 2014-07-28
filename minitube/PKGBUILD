@@ -2,7 +2,7 @@
 # Maintainer: Francesco Marinucci <franzmari[at]chakra-project[dot]it>
 
 pkgname=minitube
-pkgver=2.1.6
+pkgver=2.2
 pkgrel=1
 pkgdesc="A native YouTube client in QT. Watch YouTube videos without Flash Player"
 arch=('x86_64')
@@ -13,17 +13,13 @@ optdepends=('phonon-xine: for xine backend'
             'phonon-mplayer: for mplayer backend'
             'phonon-vlc: for vlc backend')
 categories=('multimedia')
-install=minitube.install
+install=${pkgname}.install
 screenshot="http://flavio.tordini.org/files/minitube/minitube-01.jpg"
-source=("http://flavio.tordini.org/files/${pkgname}/${pkgname}-1.2.6.tar.gz"
-        "$pkgname-missing-locale.patch")
-md5sums=('b5a7794cad661d47e0e856b864f774af'
-         '70cdaa1d3df700cf90243be5a0d55443')
+source=("http://flavio.tordini.org/files/${pkgname}/${pkgname}-${pkgver}.tar.gz")
+md5sums=('b8483b2cfc4be460f347ed9342e3789f')
 
 prepare() {
   cd $pkgname
-  # remove missing translations
-  patch -p1 -i ../${source[1]}
 }
 
 build() {
