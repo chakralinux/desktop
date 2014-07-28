@@ -1,0 +1,46 @@
+
+source ../frameworks.conf
+
+pkgname=konsole
+pkgver=4.98.0
+#pkgver=${KFVersion}
+pkgrel=1
+pkgdesc="KDE's terminal emulator"
+arch=('x86_64')
+url='https://projects.kde.org/projects/kde/applications/kde-baseapps'
+license=('LGPL')
+depends=('kio' 'kdelibs4support' 'kiconthemes' 'knotifyconfig' 'knotifications' 'kparts' 'kpty'
+         'kinit' 'kemoticons' 'kitemmodels')
+makedepends=('extra-cmake-modules' 'kdoctools' 'git')
+groups=('kf5')
+conflicts=('kde-baseapps-konsole')
+#source=("${KFServer}/${pkgver}/${pkgname}-${pkgver}.tar.xz")
+source=("git://anongit.kde.org/${pkgname}#branch=frameworks")
+md5sums=('SKIP')
+
+prepare() {
+  mkdir -p build
+}
+
+build() {
+  cd build
+  #cmake ../${pkgname}-${pkgver} \
+  cmake ../${pkgname} \
+    -DCMAKE_BUILD_TYPE=${KFBuildType} \
+    -DCMAKE_INSTALL_PREFIX=${KFInstallPrefix} \
+    -DQT4_BUILD=OFF \
+    -DLIB_INSTALL_DIR=lib 
+  make
+}
+
+check() {
+  cd build
+  msg "currently not working"
+  make test || return 0
+}
+
+package() {
+  cd build
+  make DESTDIR="${pkgdir}" install
+}
+ 
