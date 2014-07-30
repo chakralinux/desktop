@@ -3,7 +3,7 @@
 source ../_buildscripts/${current_repo}-${_arch}-cfg.conf
 
 pkgname=libkpeople
-pkgver=0.2.1
+pkgver=0.2.2
 pkgrel=1
 pkgdesc="A library that provides access to all contacts and the people who hold them."
 arch=('x86_64')
@@ -12,8 +12,7 @@ license=('GPL')
 depends=('kdelibs' 'kdepimlibs')
 makedepends=('cmake' 'automoc4')
 options=("debug")
-source=("http://download.kde.org/unstable/${pkgname}/${pkgver}/${pkgname}-${pkgver}.tar.bz2")
-md5sums=('8bda5fab90238d036b3d242b2d34b993')
+source=("http://download.kde.org/unstable/${pkgname}/${pkgver}/src/${pkgname}-${pkgver}.tar.bz2")
 
 build() {
   cd "${srcdir}/${pkgname}-${pkgver}"
@@ -31,3 +30,4 @@ package() {
   make DESTDIR="${pkgdir}" install
 }
  
+md5sums=('30886bb1019131cd8de77853bec64bef')
