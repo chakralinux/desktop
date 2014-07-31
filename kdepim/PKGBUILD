@@ -135,7 +135,7 @@ package_kdepim-kaddressbook() {
     install=${pkgbase}.install
 
     for i in kaddressbook kontact/plugins/kaddressbook \
-    plugins/kaddressbook contactthemeeditor; do
+    plugins/kaddressbook; do
         cd "${srcdir}"/build/${i}
         make DESTDIR="${pkgdir}" install
     done
@@ -193,7 +193,7 @@ package_kdepim-kmail() {
 
     for i in kmail kmailcvt agents/archivemailagent storageservicemanager\
     agents/mailfilteragent importwizard ksendemail libksieve messagelist \
-    kontact/plugins/kmail headerthemeeditor mboximporter; do
+    kontact/plugins/kmail grantleeeditor mboximporter; do
         cd "${srcdir}"/build/${i}
         make DESTDIR="${pkgdir}" install
     done
@@ -319,10 +319,10 @@ package_kdepim-common() {
     install=${pkgbase}.install
 
     for i in agents/sendlateragent akonadi_next calendarsupport \
-    incidenceeditor-ng kaddressbookgrantlee kdgantt2 libkdepim \
+    incidenceeditor-ng kaddressbookgrantlee grantleetheme kdgantt2 libkdepim \
     libkdepimdbusinterfaces libkleo libkpgp mailcommon mailimporter \
     messagecomposer messagecore messageviewer noteshared icons templateparser \
-    plugins/messageviewer grantleethemeeditor \
+    plugins/messageviewer \
     plugins/ktexteditor pimcommon pimsettingexporter; do
         cd "${srcdir}"/build/${i}
         make DESTDIR="${pkgdir}" install
