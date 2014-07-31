@@ -3,8 +3,8 @@
 #               Andrea Scarpino <andrea@archlinux.org>
 
 pkgname=libkgapi
-pkgver=2.1.0
-pkgrel=3
+pkgver=2.2.0
+pkgrel=1
 pkgdesc='A KDE-based library for accessing various Google services via their public API'
 url='https://projects.kde.org/projects/kdereview/libkgapi'
 arch=('x86_64')
@@ -18,7 +18,7 @@ makedepends=('cmake'
              'automoc4'
              'boost')
 source=("http://download.kde.org/stable/${pkgname}/${pkgver}/src/${pkgname}-${pkgver}.tar.bz2")
-sha512sums=('879fdb9c162850befad2f1553c3acce1b7201eabe5c8eb38ef03b9c1ee30abcbbc7b852afb6a1011c0e5faac13aff29a23100a706ecb062351fa3af74aa7b5e5')
+sha512sums=('c5f37aacb89243d7985d7064aa8941d3d2a6c26685113e876b38c737ea2e1126b40b0f88b0908e7ea8a7bcb2fade1dc528c2f73f22890b9e892c6d18d9d3bb42')
 
 prepare() {
     [[ -d ${srcdir}/build ]] ||mkdir -p "${srcdir}/build"
@@ -27,7 +27,7 @@ prepare() {
 build() {
     cd "${srcdir}/build"
     cmake "../${pkgname}-${pkgver}" \
-        -DCMAKE_BUILD_TYPE=Release \
+        -DCMAKE_BUILD_TYPE=RelWithDebInfo \
         -DCMAKE_INSTALL_PREFIX=/usr \
         -DKDE4_BUILD_TESTS=ON
     make
