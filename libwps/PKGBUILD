@@ -3,22 +3,19 @@
 #
 
 pkgname=libwps
-pkgver=0.2.2
+pkgver=0.3.0
 pkgrel=1
 pkgdesc="a Microsoft Works file word processor format import filter library"
 arch=('i686' 'x86_64')
 url="http://libwps.sourceforge.net/"
 license=('LGPL')
-depends=('libwpd')
+depends=('libwpd' 'librevenge')
 options=(!libtool)
 source=("http://downloads.sourceforge.net/project/libwps/$pkgname/$pkgname-$pkgver/$pkgname-$pkgver.tar.bz2")
-md5sums=('29721a16f25967d59969d5f0ae485b4a')
+md5sums=('d4d77d08b9048bae3b8ec8df11f80efd')
 
 build() {
 	cd "$srcdir/$pkgname-$pkgver"
-	sed -i -e 's: -Wall -Werror -pedantic::' configure.in
-	touch NEWS AUTHORS ChangeLog
-	autoreconf -fi
 	./configure  --prefix=/usr
 	make
 }
