@@ -12,7 +12,7 @@ pkgbase=virtualbox
 pkgname=('virtualbox' 'virtualbox-ext-oracle' 'virtualbox-guest-additions')
 pkgver=4.3.14
 _build_virtualbox=95030
-pkgrel=1
+pkgrel=2
 arch=('x86_64')
 url='http://virtualbox.org/'
 license=('GPL2' 'custom:PUEL')
@@ -169,9 +169,6 @@ package_virtualbox() {
   echo "INSTALL_REV='${_build_virtualbox}'" >> "${pkgdir}/etc/vbox/vbox.cfg"
   chmod 0644 "${pkgdir}/etc/vbox/vbox.cfg"
 
-  # Create the directory below if it doesn't exist
-  install -dm0755 "${pkgdir}/var/run/VirtualBox"
-
   # Use system's Qt
   rm "${pkgdir}/opt/VirtualBox/libQtCoreVBox.so.4"
   rm "${pkgdir}/opt/VirtualBox/libQtGuiVBox.so.4"
@@ -182,6 +179,10 @@ package_virtualbox() {
   ln -s /usr/lib/libQtGui.so.4 libQtGuiVBox.so.4
   ln -s /usr/lib/libQtOpenGL.so.4 libQtOpenGLVBox.so.4
   ln -s /usr/lib/libQtNetwork.so.4 libQtNetworkVBox.so.4
+
+  # Register into DKMS
+  install -dm 755 "$pkgdir/var/lib/dkms/vboxhost/$pkgver"
+  ln -s '/opt/VirtualBox/src/vboxhost' "$pkgdir/var/lib/dkms/vboxhost/$pkgver/source"
 }
 
 package_virtualbox-ext-oracle() {

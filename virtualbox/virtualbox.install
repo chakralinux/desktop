@@ -1,3 +1,20 @@
+#!/bin/bash
+
+update_databases() {
+  # Update mime database
+  type -P update-mime-database &>/dev/null &&
+    update-mime-database /usr/share/mime &>/dev/null
+
+  # Update xdg icon database
+  type -P xdg-icon-resource &>/dev/null &&
+    xdg-icon-resource forceupdate --theme hicolor &>/dev/null
+
+  # Update desktop database
+  type -P update-desktop-database &>/dev/null &&
+    update-desktop-database -q &>/dev/null
+}
+
+# arg 1:  the new package version
 post_install() {
   # Add vboxusers group, GID 108 is reserved (http://wiki.archlinux.org/index.php/UID_and_GID_list),
   getent group vboxusers &> /dev/null || groupadd -f -g 108 vboxusers
@@ -5,33 +22,30 @@ post_install() {
   # Load new udev rule for module vboxdrv
   udevadm control --reload-rules
 
-  # Update mime database
-  [[ -x =update-mime-database ]] && update-mime-database /usr/share/mime &>/dev/null
-
-  # Update desktop database
-  [[ -x =update-desktop-database ]] && update-desktop-database -q &>/dev/null
-
-  # Build new module
-  /usr/bin/vboxsetup setup
-
-  # (Re-)Create USB nodes
-  /usr/bin/vboxsetup fixusb
+  # Update databases
+  update_databases
 
   # Show warnings
-  /bin/cat <<EOF
+  cat <<EOF
 
 ==> Remember to add allowed users to the vboxusers group:
 ==> # gpasswd -a USERNAME vboxusers
-==>
-==> To start virtualbox web service automatically you need to enable and start the service through systemctl
-==> To create missing USB devices, you can enable vboxusb.service by running 'systemctl enable vboxusb.service'
-==> To fix missing usb devices, you can call 'vboxsetup fixusb' or reboot your computer
-==>
+==
+==> To compile/load virtualbox modules automatically at startup you can systemctl enable dkms.service
+==
+==> To build and install your modules
+==> # run dkms autoinstall
+==> or
+==> # vboxsetup setup
+==> if you don't use dkms
 EOF
 }
 
+# arg 1:  the new package version
+# arg 2:  the old package version
 pre_upgrade() {
-  pre_remove 
+  (($(vercmp $2 '4.1.34-1') < 0 )) && /usr/bin/vboxsetup remove || true
+  pre_remove "$2" 
 
   # Remove any stuff remaining from the module compilation
   rm -Rf "/opt/VirtualBox"
@@ -54,25 +68,18 @@ pre_remove() {
   fi
   
   # Remove modules
-  if [[ -f /usr/bin/vboxsetup ]]; then
-    /usr/bin/vboxsetup remove
-  else
-    echo -e "\n==> Modules could not be deleted. Please check manually.\n"
-  fi
+  [[ -n $1 ]] && dkms remove vboxhost/${1%-*} --all >/dev/null || true
 }
 
 post_remove() {
   # Remove any stuff remaining from the module compilation
   rm -Rf "/opt/VirtualBox"
-  
+
   # Remove any run files
   rm -Rf "/var/run/VirtualBox"
 
-  # Update mime database
-  [[ -x =update-mime-database ]] && update-mime-database /usr/share/mime &>/dev/null
-
-  # Update desktop database
-  [[ -x =update-desktop-database ]] && update-desktop-database -q &>/dev/null
+  # Update databases
+  update_databases
 
   # remove vboxusers group
   groupdel vboxusers &>/dev/null || true
