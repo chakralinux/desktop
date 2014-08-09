@@ -1,19 +1,31 @@
 # Maintainer: Michael Haesel <michael[dot]haesel[at]gmail[dot]com>
 
 pkgname=mumble
-pkgver=1.2.7
+pkgver=1.2.8
 pkgrel=1
 arch=('x86_64')
 pkgdesc="A voice chat application similar to TeamSpeak."
 license=('BSD')
-depends=('qt' 'speex' 'lsb-release' 'libxi' 'avahi' 'libsndfile' 'protobuf' 'libpulse' 'opus')
+depends=('qt' 'speex' 'lsb-release' 'libxi' 'avahi' 'libsndfile' 'protobuf' 
+         'libpulse' 'opus' "speech-dispatcher")
 makedepends=('boost' 'mesa')
 categories=('communication')
 install=${pkgname}.install
 url="http://mumble.sourceforge.net/"
 screenshot="http://mumble.sourceforge.net/static/Mumble%20--%201.2.3.png"
-source=("http://downloads.sourceforge.net/mumble/${pkgname}-${pkgver}.tar.gz")
-sha256sums=('2d0c7db764ea7f23311bde34ff270d0539b38c84075d6b58c4f56d36db9c587e')
+source=("http://downloads.sourceforge.net/mumble/${pkgname}-${pkgver}.tar.gz"
+        "speech-dispatcher.patch"
+        "gcc49.patch::https://github.com/mumble-voip/mumble/commit/349436284b5f1baa61836c98ff0d518392140c5d.patch")
+sha256sums=('4c2fc3dff49687bc1d977905958e8a9c35e109723aeed42c9ea124104febe159'
+            'efa6108ce8c77b23b971504dbf916832b1ebd3ce52319292fd3da815cc05a54b'
+            '00c14a5e41142510828d583e1e9a25a6d6d2614f3c7a86c75056be4321a0f798')
+
+prepare() {
+  cd ${pkgname}-${pkgver}
+
+  patch -p1 -i "${srcdir}/gcc49.patch"
+  patch -p1 -i "${srcdir}/speech-dispatcher.patch"
+}
 
 build() {
   cd ${pkgname}-${pkgver}
