@@ -1,7 +1,7 @@
 # maintainer: UtG <utg[dot]chakra.linux[at]gmail[dot]com>
 
 pkgname=calibre
-pkgver=1.47.0
+pkgver=1.48.0
 pkgrel=1
 pkgdesc="Ebook management application"
 arch=('x86_64')
@@ -14,68 +14,72 @@ depends=('python2' 'python2-imaging' 'libusb' 'python2-pyqt4' 'python-mechanize'
          'poppler-qt' 'icu' 'libwmf' 'libffi' 'python2-six' 'python2-netifaces' 'python2-cssselect'
          'python2-apsw')
 makedepends=('python2-pycountry' 'qt-private-headers')
-#optdepends=('ipython: to use calibre-debug')
+#optdepends=('ipython2: to use calibre-debug')
 screenshot=('https://lh5.googleusercontent.com/_lG58t3XWd3c/TcNwiXkAx_I/AAAAAAAAAEc/M34I4uY9UUY/s800/gui.jpeg')
 install=${pkgname}.install
 source=("http://download.calibre-ebook.com/${pkgver}/${pkgname}-${pkgver}.tar.xz"
         'desktop_integration.patch'
         'calibre-mount-helper')
-sha256sums=('efeb71a5bb4742a9c0a99038fdd97baa55c35e8ba5312e19e422c004bbf5b8c2'
+sha256sums=('e704090f6611c5e374252c3f1b58e077ccd3170a3ea39893e5bf687287abf472'
             '1ba6b04321524411b58fd3e55c30be6e421ca3a8005017e765421acecace78fb'
             '1cdbd23edfea0b08f7bd089e3302ca9601737aac18537406f0408b449aea32d1')
 
 prepare() {
   cd ${pkgname}
 
-  rm -rf src/cherrypy
+  # Remove unneded files an libs
+  rm -rf src/cherrypy \
+         src/six.py \
+         src/html5lib \
+         src/chardet
   rm -rf resources/${pkgname}-portable.*
   mkdir -p src/calibre/plugins
 
-  sed -i -e "s/ldflags = shlex.split(ldflags)/ldflags = shlex.split(ldflags) + ['-fPIC']/" \
+  sed -i -e "s/shlex.split(ldflags)/& + ['-fPIC']/" \
     setup/extensions.py
-
-  # Fix for shebang in meta.py
-  sed -i -e "s:#!usr:#!/usr:g" src/calibre/ebooks/markdown/extensions/meta.py
 
   sed -i -e 's:\(#!/usr/bin/env[ ]\+python$\|#!/usr/bin/python$\):\12:g' \
     $(find . -regex ".*.py\|.*.recipe")
+  
+  # Desktop integration (e.g. enforce arch defaults)
+  sed -e "/self.create_uninstaller()/,/os.rmdir(config_dir)/d" \
+      -e "/\(cc('xdg-icon-resource\|self.icon_resources.append\|'128'))\)/d" \
+      -e "/render_img/ s/\('calibre-.*\.png'\)/os.path.join(dir, \1)/g" \
+      -e "/dir, 'calibre-lrf.png'/i \
+\                dir = os.path.join(self.opts.staging_sharedir,'../pixmaps')\n\
+\                os.mkdir(dir)" \
+      -e "/f = open/ s/\('calibre-.*\.desktop'\)/os.path.join(dir, \1)/g" \
+      -e "/dir, 'calibre-lrfviewer.desktop'/i \
+\                dir = os.path.join(self.opts.staging_sharedir,'../applications')\n\
+\                os.mkdir(dir)" \
+      -e "s/'ctc-posml'/'text' not in mt and 'pdf' not in mt and 'xhtml'/" \
+      -e "s/^Name=calibre/Name=Calibre/g" \
+      -i  src/calibre/linux.py
 }
 
 build() {
   cd ${pkgname}
   
-  python2 setup.py build
-  python2 setup.py translations
+  LANG=en_US.UTF-8 python2 setup.py build
+  LANG=en_US.UTF-8 python2 setup.py translations
 }
 
 package() {
   cd ${pkgname}
 
-  patch -Np1 -i "${srcdir}/desktop_integration.patch"
-
-  # More on desktop integration (e.g. enforce Chakra defaults)
-  sed -i -e "/self.create_uninstaller()/,/os.rmdir(config_dir)/d" \
-      -e "s|self.opts.staging_sharedir, 'man/man1'|self.opts.staging_root, 'usr/share/man/man1'|" \
-      -e "s|manpath, prog+'.1'+__appname__+'.bz2'|manpath, prog+'.1'+'.bz2'|" \
-      -e "s|old_udev = '/etc|old_udev = '${pkgdir}/etc|" \
-      -e "s/^Name=calibre/Name=Calibre/g" src/calibre/linux.py
-
   # Fix the environment module location
-  sed -i -e "s|(prefix=.*)|(prefix='$pkgdir/usr')|g" setup/install.py
+  sed -i -e "s|(prefix=.*)|(prefix='${pkgdir}/usr')|g" setup/install.py
 
   install -d "${pkgdir}/usr/lib/python2.7/site-packages"
   install -d "${pkgdir}/usr/share/zsh/site-functions"
-  python2 setup.py install --root="${pkgdir}" --prefix=/usr \
+  
+  LANG=en_US.UTF-8 python2 setup.py install \
+    --root="${pkgdir}" \
+    --prefix=/usr \
     --staging-bindir="${pkgdir}/usr/bin" \
     --staging-libdir="${pkgdir}/usr/lib" \
     --staging-sharedir="${pkgdir}/usr/share"
-
-  find "${pkgdir}" -type d -empty -delete
-  
-  # See http://lwn.net/SubscriberLink/465311/7c299471a5399167/
-  rm -rf "${pkgdir}/usr/bin/calibre-mount-helper"
-  install -m 755 "${srcdir}/calibre-mount-helper" "${pkgdir}/usr/bin"
-  
+    
   python2 -m compileall "${pkgdir}/usr/lib/calibre/"
   python2 -O -m compileall "${pkgdir}/usr/lib/calibre/"
 }
