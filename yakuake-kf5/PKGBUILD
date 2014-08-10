@@ -1,0 +1,39 @@
+pkgname=yakuake-kf5
+_pkgname=yakuake
+pkgver=2.9.9.1
+pkgrel=1
+pkgdesc="A KDE konsole application with the look and feel of that in the Quake engine, kf5 version"
+arch=('x86_64')
+url="http://yakuake.kde.org"
+license=('GPL')
+depends=('konsole' 'knewstuff')
+makedepends=('extra-cmake-modules' 'git')
+conflicts=('yakuake')
+groups=('system')
+source=("git://anongit.kde.org/yakuake#branch=frameworks")
+md5sums=('SKIP')
+
+prepare() {
+  mkdir -p build
+}
+
+build() {
+  cd build
+  cmake ../${_pkgname} \
+    -DCMAKE_BUILD_TYPE=${KFBuildType} \
+    -DCMAKE_INSTALL_PREFIX=${KFInstallPrefix} \
+    -DQT4_BUILD=OFF \
+    -DLIB_INSTALL_DIR=lib 
+  make
+}
+
+check() {
+  cd build
+  make test || return 0
+}
+
+package() {
+  cd build
+  make DESTDIR="${pkgdir}" install
+}
+ 

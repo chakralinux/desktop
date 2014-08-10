@@ -1,0 +1,45 @@
+
+source ../frameworks.conf
+
+pkgname=kate
+#pkgver=${_kdever}
+pkgver=4.98.0
+pkgrel=1
+pkgdesc='Advanced editor component which is used in numerous KDE applications requiring a text editing component'
+arch=('x86_64')
+url='https://projects.kde.org/projects/kde/applications/kate'
+license=('LGPL')
+depends=('kdelibs4support' 'kconfig' 'kguiaddons' 'ki18n' 'kinit' 'kjobwidgets' 'kitemmodels'
+         'kio' 'kparts' 'ktexteditor' 'kwindowsystem' 'kxmlgui')
+makedepends=('extra-cmake-modules' 'kdoctools' 'git')
+conflicts=('kdesdk-kate')
+#source=("http://download.kde.org/unstable/frameworks/${pkgver}/${pkgname}-${pkgver}.tar.xz")
+#md5sums=(`grep ${pkgname}-$_kdever.tar.xz ../kf5.md5 | cut -d" " -f1`)
+source=("git://anongit.kde.org/kate")
+md5sums=('SKIP')
+
+prepare() {
+  mkdir -p build
+}
+
+build() {
+  cd build
+  #cmake ../${_pkgname}-${pkgver} \
+  cmake ../${pkgname} \
+    -DCMAKE_BUILD_TYPE=${KFBuildType} \
+    -DCMAKE_INSTALL_PREFIX=${KFInstallPrefix} \
+    -DQT4_BUILD=OFF \
+    -DLIB_INSTALL_DIR=lib 
+  make
+}
+
+check() {
+  cd build
+  make test || return 0
+}
+
+package() {
+  cd build
+  make DESTDIR="${pkgdir}" install
+}
+ 
