@@ -84,8 +84,7 @@ source=($_mirror/${pkgname}-$_kdever.tar.xz
         01_chakra_tag.patch
         02_kde_applications_menu.patch
         03_chakra_menu.patch
-        MergeDir.patch
-        dbus_system_bus_name_instead_of_PID_for_authentication-security.patch)
+        MergeDir.patch)
 sha256sums=(`grep $pkgname-$_kdever.tar.xz  ../checksums.txt | cut -d " " -f1`
 #sha256sums=('d291b4bc159a3f686ad93ff3dfbe90a0a7e33600357e8390c84154ec050efc82'
             '029e2d07c5fc8676d143b903aa181fc470e5b469d49ccf107e19031f562bf4e3'
@@ -102,9 +101,6 @@ build() {
     patch -Np1 -i ${srcdir}/02_kde_applications_menu.patch
     patch -Np1 -i ${srcdir}/03_chakra_menu.patch
     
-    # http://quickgit.kde.org/?p=kdelibs.git&a=commitdiff&h=e4e7b53b71e2659adaf52691d4accc3594203b23&hp=03272a9f2e00e146bfa3b83467fdc28f72a4e194&o=plain
-    patch -Np1 -i ${srcdir}/dbus_system_bus_name_instead_of_PID_for_authentication-security.patch
-
     # right positioning of applications' entries in kmenu
     patch -p1 -i ${srcdir}/MergeDir.patch
     cd ${srcdir}
