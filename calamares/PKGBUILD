@@ -1,0 +1,41 @@
+
+pkgname=calamares
+pkgver=0.1.0.7
+pkgrel=1
+pkgdesc='Distribution-independent installer framework'
+arch=('x86_64')
+url='https://github.com/calamares/calamares'
+license=('LGPL')
+depends=('qt5-base' 'kconfig' 'ki18n' 'kcoreaddons' 'solid' 'yaml-cpp'
+         'parted' 'libatasmart' 'udisks2')
+makedepends=('extra-cmake-modules' 'git' 'qt5-tools')
+source=("git://github.com/calamares/calamares")
+md5sums=('SKIP')
+
+prepare () {
+  cd ${srcdir}/${pkgname}
+  
+  git submodule init
+  git submodule update
+}
+
+build() {
+  mkdir -p build
+  
+  cd build
+  
+  cmake ../${pkgname} \
+    -DCMAKE_BUILD_TYPE=Debug \
+    -DCMAKE_INSTALL_PREFIX=/usr \
+    -DWITH_PARTITIONMANAGER=1 \
+    -DCMAKE_INSTALL_LIBDIR=lib 
+  make
+}
+
+package() {
+  cd build 
+  make DESTDIR="${pkgdir}" install
+  
+  sed 's|/path/to/squashfs/image.sqfs|/bootmnt/chakra/x86_64/root-image.sqfs|' -i "${pkgdir}/usr/share/calamares/modules/unsquashfs.conf"
+  sed 's|linux312|linux|' -i "${pkgdir}/usr/share/calamares/modules/initcpio.conf"
+}
