@@ -10,7 +10,7 @@ pkgname=('kdebindings-python-common'
          'kdebindings-python2'
          'kdebindings-python3')
 pkgver=${_kdever}
-pkgrel=1
+pkgrel=2
 url='https://projects.kde.org/projects/kde/kdebindings/pykde4'
 arch=('x86_64')
 license=('GPL'
@@ -125,4 +125,9 @@ package_kdebindings-python-common() {
     make DESTDIR="${pkgdir}" install
 
     rm -r "${pkgdir}"/usr/{bin,lib}
+
+
+    # This doesn't seem right, we shouldn't need to install the file manually
+    install -Dm 644 pykde_config.sip ${pkgdir}/usr/share/sip/PyKDE4/pykde_config.sip
+
 }
