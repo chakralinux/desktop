@@ -2,7 +2,7 @@
 
 pkgname=calibre
 pkgver=1.48.0
-pkgrel=1
+pkgrel=2
 pkgdesc="Ebook management application"
 arch=('x86_64')
 url="http://calibre.kovidgoyal.net/"
@@ -17,21 +17,17 @@ makedepends=('python2-pycountry' 'qt-private-headers')
 #optdepends=('ipython2: to use calibre-debug')
 screenshot=('https://lh5.googleusercontent.com/_lG58t3XWd3c/TcNwiXkAx_I/AAAAAAAAAEc/M34I4uY9UUY/s800/gui.jpeg')
 install=${pkgname}.install
-source=("http://download.calibre-ebook.com/${pkgver}/${pkgname}-${pkgver}.tar.xz"
-        'desktop_integration.patch'
-        'calibre-mount-helper')
-sha256sums=('e704090f6611c5e374252c3f1b58e077ccd3170a3ea39893e5bf687287abf472'
-            '1ba6b04321524411b58fd3e55c30be6e421ca3a8005017e765421acecace78fb'
-            '1cdbd23edfea0b08f7bd089e3302ca9601737aac18537406f0408b449aea32d1')
+source=("http://download.calibre-ebook.com/${pkgver}/${pkgname}-${pkgver}.tar.xz")
+sha256sums=('e704090f6611c5e374252c3f1b58e077ccd3170a3ea39893e5bf687287abf472')
 
 prepare() {
   cd ${pkgname}
 
   # Remove unneded files an libs
-  rm -rf src/cherrypy \
-         src/six.py \
-         src/html5lib \
-         src/chardet
+  rm -rf src/cherrypy
+  #       src/six.py \
+  #       src/html5lib \
+  #       src/chardet
   rm -rf resources/${pkgname}-portable.*
   mkdir -p src/calibre/plugins
 
