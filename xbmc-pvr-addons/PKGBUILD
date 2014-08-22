@@ -3,7 +3,7 @@
 pkgname=xbmc-pvr-addons
 pkgver=20140610.13.0_Gotham
 _relname=${pkgver:9}
-pkgrel=3
+pkgrel=4
 epoch=1
 pkgdesc="XBMC PVR add-ons for current stable xbmc"
 arch=('x86_64')
@@ -13,20 +13,19 @@ depends=('xbmc' 'libmysqlclient')
 makedepends=('git' 'libmysqlclient' 'boost')
 optdepends=('tvheadend-git: tvheadend backend' 'mythtv: mythtv backend')
 conflicts=('xbmc-pvr-addons-git')
-source=("$pkgname-$pkgver.tar.gz::https://github.com/opdenkamp/xbmc-pvr-addons/archive/${_relname/_/-}.tar.gz")
+source=("${pkgname}-${pkgver}.tar.gz::https://github.com/opdenkamp/xbmc-pvr-addons/archive/${_relname/_/-}.tar.gz")
 #source=("git://github.com/opdenkamp/xbmc-pvr-addons.git")
 #source=("git://github.com/fetzerch/xbmc-pvr-addons.git#branch=frodo")
 md5sums=('63f5863393ca869eb6f357a62de76378')
 
 build() {
-  cd "$srcdir/$pkgname-${_relname/_/-}"
+  cd ${pkgname}-${_relname/_/-}
   ./bootstrap
   ./configure --prefix=/usr --enable-addons-with-dependencies
   make
 }
 
 package() {
-  cd "$srcdir/$pkgname-${_relname/_/-}"
+  cd ${pkgname}-${_relname/_/-}
   make DESTDIR="$pkgdir/" install
 }
-
