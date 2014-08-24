@@ -7,7 +7,7 @@ source ../_buildscripts/${current_repo}-${_arch}-cfg.conf
 pkgname="kdelibs"
 arch=('x86_64')
 pkgver=${_kdever}
-pkgrel=2
+pkgrel=1
 pkgdesc="KDE Core Libraries"
 url="http://www.kde.org"
 license=('GPL'
@@ -86,12 +86,10 @@ source=($_mirror/${pkgname}-$_kdever.tar.xz
         03_chakra_menu.patch
         MergeDir.patch)
 sha256sums=(`grep $pkgname-$_kdever.tar.xz  ../checksums.txt | cut -d " " -f1`
-#sha256sums=('d291b4bc159a3f686ad93ff3dfbe90a0a7e33600357e8390c84154ec050efc82'
             '029e2d07c5fc8676d143b903aa181fc470e5b469d49ccf107e19031f562bf4e3'
             'b2d25c76081ea6bb31d90c4c6b619ce64ac36de3a6eefb2f9990d3dbf8cd9c91'
             '505e9e5e969be5094b3f713b865d5927cc3de1f4693915174732b20793228c4f'
-            'd7d2fac1ceb1551081a5f3fa860c14d4aeb0c774d56067e931c20b8d79c4450f'
-            'ab0164407de4b7435e86c011f06c0b3688ead93789999537c47d55403acd9e54')
+            'd7d2fac1ceb1551081a5f3fa860c14d4aeb0c774d56067e931c20b8d79c4450f')
 
 build() {
     # main patches
