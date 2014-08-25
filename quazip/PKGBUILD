@@ -2,7 +2,7 @@
 # Contributor: Andrei Nistor <coder[dot]tux[at]chakra-project[dot]org>
 
 pkgname=quazip
-pkgver=0.6.2
+pkgver=0.7
 pkgrel=1
 pkgdesc="C++ wrapper for the Gilles Vollant's ZIP/UNZIP C package"
 url="http://sourceforge.net/projects/quazip/"
@@ -10,7 +10,7 @@ license=('LGPL')
 arch=('x86_64')
 depends=('qt')
 source=("http://downloads.sourceforge.net/${pkgname}/${pkgname}-${pkgver}.tar.gz")
-md5sums=('c11f8e2f757be94fd79dc49e5a4be0ca')
+md5sums=('52a9d807934ce4e9c30ead677a3148d2')
 
 build() {
   cd ${srcdir}/${pkgname}-${pkgver}/${pkgname}
@@ -22,7 +22,7 @@ package() {
   cd ${srcdir}/${pkgname}-${pkgver}/${pkgname}
   make INSTALL_ROOT="${pkgdir}" install
 
-  install -d "${pkgdir}"/usr/share/apps/cmake-2.8/Modules
+  install -d "${pkgdir}"/usr/share/apps/cmake-3.0/Modules
   install -m644 ../FindQuaZip.cmake\
-    "${pkgdir}"/usr/share/apps/cmake-2.8/Modules
+    "${pkgdir}"/usr/share/apps/cmake-3.0/Modules
 }
