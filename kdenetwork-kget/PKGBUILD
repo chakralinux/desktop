@@ -7,7 +7,7 @@ source ../_buildscripts/${current_repo}-${_arch}-cfg.conf
 pkgname="kdenetwork-kget"
 arch=('x86_64')
 pkgver=${_kdever}
-pkgrel=1
+pkgrel=2
 pkgdesc="Download manager"
 url="http://kde.org/applications/internet/kget/"
 depends=("kde-workspace>=${_workspace_ver}" 'qca' 'kwebkitpart>=0.9.6' 'libktorrent>=1.0.4' 'libmms')
@@ -27,6 +27,8 @@ build() {
         -DCMAKE_BUILD_TYPE=${_build_type} \
         -DCMAKE_INSTALL_PREFIX=${_installprefix} \
         -DCMAKE_SKIP_RPATH=ON \
+        -DWITH_NepomukCore=Off \
+        -DWITH_NepomukWidgets=Off \
         -DCMAKE_{SHARED,MODULE,EXE}_LINKER_FLAGS='-Wl,--no-undefined -Wl,--as-needed'
     make
 }
