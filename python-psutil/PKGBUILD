@@ -1,0 +1,57 @@
+pkgbase=python-psutil
+pkgname=('python3-psutil' 'python2-psutil')
+pkgver=2.1.1
+pkgrel=1
+arch=('x86_64')
+url='http://code.google.com/p/psutil/'
+license=('custom: BSD')
+makedepends=('python3' 'python3-setuptools' 'python2' 'python2-setuptools')
+checkdepends=('net-tools' 'procps-ng')
+source=("https://pypi.python.org/packages/source/p/psutil/psutil-${pkgver}.tar.gz")
+sha256sums=('bf812a4aa6a41147d0e96e63d826eb7582fda6b54ad8f22534354b7f8ac45593')
+
+build() {
+  cd psutil-${pkgver}
+
+  msg2 python3
+  python3 setup.py build --build-lib=build/python3
+
+  msg2 python2
+  python2 setup.py build --build-lib=build/python2
+  find build/python2 -type f -exec \
+    sed -i '1s,^#! \?/usr/bin/\(env \|\)python$,#!/usr/bin/python2,' {} \;
+}
+
+check() {
+  cd psutil-${pkgver}
+
+  msg2 python3
+  export PYTHONPATH="$PWD/build/python3"
+  #python test/test_psutil.py
+  python3 test/test_memory_leaks.py
+
+  msg2 python2
+  export PYTHONPATH="$PWD/build/python2"
+  #python2 test/test_psutil.py
+  python2 test/test_memory_leaks.py
+}
+
+package_python3-psutil() {
+  pkgdesc='A cross-platform process and system utilities module for Python'
+  depends=('glibc' 'python3')
+
+  cd psutil-${pkgver}
+  python3 setup.py build --build-lib=build/python3 \
+                  install --root="${pkgdir}" --optimize=1
+  install -D -m 644 LICENSE "${pkgdir}/"usr/share/licenses/${pkgname}/LICENSE
+}
+
+package_python2-psutil() {
+  pkgdesc='A cross-platform process and system utilities module for Python2'
+  depends=('glibc' 'python2')
+
+  cd psutil-${pkgver}
+  python2 setup.py build --build-lib=build/python2 \
+                   install --root="${pkgdir}" --optimize=1
+  install -D -m 644 LICENSE "${pkgdir}/"usr/share/licenses/${pkgname}/LICENSE
+}
