@@ -3,7 +3,7 @@
 
 pkgname=blender
 pkgver=2.70a
-pkgrel=2
+pkgrel=3
 epoch=1
 pkgdesc="A fully integrated 3D graphics creation suite"
 arch=('x86_64')
@@ -24,12 +24,13 @@ build() {
   [[ -d build ]] && rm -rf build
   mkdir -p build && cd build
 
+# enable again -DWITH_OPENCOLLADA=ON when 2.71 is build!
   cmake .. \
     -DCMAKE_INSTALL_PREFIX=/usr \
     -DCMAKE_BUILD_TYPE=Release \
     -DWITH_INSTALL_PORTABLE=OFF \
     -DWITH_PYTHON_INSTALL=OFF \
-    -DWITH_OPENCOLLADA=ON \
+    -DWITH_OPENCOLLADA=OFF \
     -DOPENIMAGEIO_ROOT_DIR=/usr \
     -DWITH_GAMEENGINE=ON \
     -DWITH_JACK=ON \
