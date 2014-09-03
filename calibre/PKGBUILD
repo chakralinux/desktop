@@ -1,42 +1,43 @@
 # maintainer: UtG <utg[dot]chakra.linux[at]gmail[dot]com>
 
 pkgname=calibre
-pkgver=1.48.0
-pkgrel=2
+pkgver=2.1.0
+pkgrel=1
 pkgdesc="Ebook management application"
 arch=('x86_64')
 url="http://calibre.kovidgoyal.net/"
 license=('GPL3')
-depends=('python2' 'python2-imaging' 'libusb' 'python2-pyqt4' 'python-mechanize'
-         'imagemagick' 'python2-dbus' 'python-lxml' 'python2-beautifulsoup' 'python2-dateutil'
-         'python2-cssutils' 'desktop-file-utils' 'python2-dns' 'libmtp'
-         'podofo' 'xdg-utils' 'cherrypy' 'python2-pdf' 'unrar' 'chmlib' 'poppler'
-         'poppler-qt' 'icu' 'libwmf' 'libffi' 'python2-six' 'python2-netifaces' 'python2-cssselect'
-         'python2-apsw')
-makedepends=('python2-pycountry' 'qt-private-headers')
+depends=('python2-six' 'python2-dateutil' 'python2-cssutils' 'python2-cherrypy' 
+         'python2-mechanize' 'podofo' 'libwmf'
+         'imagemagick' 'chmlib' 'python2-lxml' 'libusb' 
+         'python2-pillow' 'shared-mime-info' 'python2-dns' 
+         'python2-pyqt5' 'python2-psutil' 'icu' 'libmtp' 
+         'python2-netifaces' 'python2-cssselect' 'python2-apsw' 'qt5-webkit'
+         'qt5-svg' 'python2-chardet' 'python2-html5lib')
+makedepends=('python2-pycountry' 'qt5-x11extras')
 #optdepends=('ipython2: to use calibre-debug')
 screenshot=('https://lh5.googleusercontent.com/_lG58t3XWd3c/TcNwiXkAx_I/AAAAAAAAAEc/M34I4uY9UUY/s800/gui.jpeg')
 install=${pkgname}.install
 source=("http://download.calibre-ebook.com/${pkgver}/${pkgname}-${pkgver}.tar.xz")
-sha256sums=('e704090f6611c5e374252c3f1b58e077ccd3170a3ea39893e5bf687287abf472')
+sha256sums=('e73967059435f5d29ed27d84512dd96aaf914295b1d509e342a002727ecddcfe')
 
 prepare() {
-  cd ${pkgname}
+  cd ${pkgname}-${pkgver}
 
   # Remove unneded files an libs
-  rm -rf src/cherrypy
-  # Do not remove these now
-  #       src/six.py \
-  #       src/html5lib \
-  #       src/chardet
+  rm -rf src/cherrypy 
+         #src/six.py \
+         #src/chardet \
+         #src/html5lib
+         
   rm -rf resources/${pkgname}-portable.*
-  mkdir -p src/calibre/plugins
 
-  sed -i -e "s/shlex.split(ldflags)/& + ['-fPIC']/" \
-    setup/extensions.py
+  sed -i -e "s/shlex.split(ldflags)/& + ['-fPIC']/" setup/extensions.py
 
-  sed -i -e 's:\(#!/usr/bin/env[ ]\+python$\|#!/usr/bin/python$\):\12:g' \
-    $(find . -regex ".*.py\|.*.recipe")
+  sed -i 's:\(env[ ]\+python$\|/usr/bin/python$\):\12:g' \
+    $(find . -regex ".*\.py\|.*\.recipe")
+
+  sed -i "/pyqt_sip_dir/ s:=.*:= '/usr/share/sip/Py2-PyQt5':" setup/build_environment.py
   
   # Desktop integration (e.g. enforce arch defaults)
   sed -e "/self.create_uninstaller()/,/os.rmdir(config_dir)/d" \
@@ -55,14 +56,14 @@ prepare() {
 }
 
 build() {
-  cd ${pkgname}
+  cd ${pkgname}-${pkgver}
   
   LANG=en_US.UTF-8 python2 setup.py build
   LANG=en_US.UTF-8 python2 setup.py translations
 }
 
 package() {
-  cd ${pkgname}
+  cd ${pkgname}-${pkgver}
 
   # Fix the environment module location
   sed -i -e "s|(prefix=.*)|(prefix='${pkgdir}/usr')|g" setup/install.py
