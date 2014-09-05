@@ -10,7 +10,7 @@ pkgname=('kdebindings-python-common'
          'kdebindings-python2'
          'kdebindings-python3')
 pkgver=${_kdever}
-pkgrel=3
+pkgrel=4
 url='https://projects.kde.org/projects/kde/kdebindings/pykde4'
 arch=('x86_64')
 license=('GPL'
@@ -60,7 +60,7 @@ build() {
         -DCMAKE_INSTALL_PREFIX=/usr \
         -DCMAKE_BUILD_TYPE=Release \
         -DPYTHON_EXECUTABLE=/usr/bin/python3 \
-        -DPYTHON_LIBRARY=/usr/lib/libpython3.3m.so.1.0 \
+        -DPYTHON_LIBRARY=/usr/lib/libpython3.4m.so.1.0 \
         -DPYKDEUIC4_ALTINSTALL=TRUE
     make
 }
@@ -78,7 +78,7 @@ package_kdebindings-python3() {
 
     # Fix issue with wrong number of given arguments
     sed -i 's/winfo = comp.compileUi(uifile, output, None)/winfo = comp.compileUi(uifile, output, None, "")/g' \
-        "${pkgdir}"/usr/lib/python3.3/site-packages/PyQt4/uic/pykdeuic4.py
+        "${pkgdir}"/usr/lib/python3.4/site-packages/PyQt4/uic/pykdeuic4.py
 
     # Provided by common
     #rm -r "${pkgdir}"/usr/share/apps/pykde4/examples
