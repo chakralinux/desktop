@@ -3,7 +3,7 @@
 pkgbase=cherrypy
 pkgname=('python2-cherrypy' 'python3-cherrypy')
 pkgver=3.3.0
-pkgrel=1
+pkgrel=2
 pkgdesc="A pythonic, object-oriented web development framework"
 arch=('x86_64')
 makedepends=('python2' 'python3')
@@ -14,34 +14,57 @@ source=("https://pypi.python.org/packages/source/C/CherryPy/CherryPy-${pkgver}.t
 md5sums=('4ac4af5ac21a893f07221cbd7ec4be11')
 
 build() {
-    cd $srcdir/CherryPy-$pkgver
-    install -dm 755 $srcdir/build2
-    install -dm 755 $srcdir/build3
-    cp -R * ../build2
-    cp -R * ../build3
+  cp -r CherryPy-${pkgver} build2
+  cp -r CherryPy-${pkgver} build3
+
+  cd build2
+  sed \
+    -e 's_#! /usr/bin/env python_&3_' \
+    -i cherrypy/cherryd
+  sed \
+    -e 's_#!/usr/bin/python_&3_' \
+    -i cherrypy/test/sessiondemo.py
+  python3 ./setup.py build
+
+  cd "${srcdir}/build3"
+  sed \
+    -e 's_#! /usr/bin/env python_&2_' \
+    -i cherrypy/cherryd
+  sed \
+    -e 's_#!/usr/bin/python_&2_' \
+    -i cherrypy/test/sessiondemo.py
+  python2 ./setup.py build
+
 }
+
+
+package_python3-cherrypy() {
+  depends=('python3')
+  
+  cd $srcdir/build3
+  
+  python3 ./setup.py install --root="${pkgdir}" --optimize=1
+  mv $pkgdir/usr/bin/cherryd $pkgdir/usr/bin/cherryd-python3
+
+  install -Dm644 cherrypy/LICENSE.txt \
+    "${pkgdir}/usr/share/licenses/${pkgname}/LICENSE.txt"
+}
+
 package_python2-cherrypy() {
 depends=('python2')
 provides=('cherrypy')
 conflicts=('cherrypy')
 replaces=('cherrypy')
-    cd $srcdir/build2
-    python2 ./setup.py install --root=$pkgdir
-    # install the lincence file
-    install -dm 755 $pkgdir/usr/share/licenses/$pkgname/
-    install -D -m644 ${srcdir}/CherryPy-${pkgver}/cherrypy/LICENSE.txt $pkgdir/usr/share/licenses/$pkgname/
-    rm $pkgdir/usr/lib/python2.7/site-packages/cherrypy/LICENSE.txt
+  cd $srcdir/build2
+  python2 ./setup.py install --root="${pkgdir}" --optimize=1
+  install -Dm644 cherrypy/LICENSE.txt \
+    "${pkgdir}/usr/share/licenses/${pkgname}/LICENSE.txt"
 }
 
-package_python3-cherrypy() {
-depends=('python3')
-    cd $srcdir/build3
-    python3 ./setup.py install --root=$pkgdir
-    # rename the binary
-    install -Dm 755 $pkgdir/usr/bin/cherryd $pkgdir/usr/bin/cherryd-python3
-    rm $pkgdir/usr/bin/cherryd
-    # install the lincence file
-    install -dm 755 $pkgdir/usr/share/licenses/$pkgname/
-    install -D -m644 ${srcdir}/CherryPy-${pkgver}/cherrypy/LICENSE.txt $pkgdir/usr/share/licenses/${pkgname}/
-    rm $pkgdir/usr/lib/python3.3/site-packages/cherrypy/LICENSE.txt
+check() {
+  cd build2
+  python2 ./setup.py check
+
+  cd ../build3
+  python3 ./setup.py check
 }

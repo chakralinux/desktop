@@ -4,15 +4,16 @@
 
 pkgbase=python-pytest
 pkgname=('python2-pytest' 'python3-pytest')
-pkgver=2.5.2
+pkgver=2.6.2
 pkgrel=1
 pkgdesc="Simple powerful testing with Python"
-arch=('x86_64')
+arch=('any')
 license=('MIT')
 url="http://pytest.org/"
 makedepends=('python2-setuptools' 'python3-setuptools' 'python2-py' 'python3-py')
+checkdepends=('lsof' 'python3-nose' 'python2-nose' 'python3-twisted' 'python2-twisted' 'python3-mock' 'python2-mock' 'python3-yaml' 'python2-yaml' 'python3-pexpect' 'python2-pexpect')
 source=("http://pypi.python.org/packages/source/p/pytest/pytest-$pkgver.tar.gz")
-md5sums=('8ea3d1939e81514ccba9ba0e9566b5be')
+md5sums=('0a1735fb1d481ef3864f34678607ba85')
 
 prepare() {
   cp -r pytest-${pkgver}{,-py3}
@@ -26,6 +27,15 @@ build() {
   cd "$srcdir/pytest-${pkgver}-py2"
   python2 setup.py build
 }
+
+check() {
+  cd "$srcdir/pytest-${pkgver}-py3"
+  python3 setup.py test
+
+  cd "$srcdir/pytest-${pkgver}-py2"
+  python2 setup.py test
+}
+
 
 package_python3-pytest() {
   depends=('python3' 'python3-py' 'python3-setuptools')

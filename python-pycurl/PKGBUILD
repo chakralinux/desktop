@@ -4,7 +4,7 @@
 _pypiname=pycurl
 pkgbase=python-$_pypiname
 pkgname=('python3-pycurl' 'python2-pycurl')
-pkgver=7.19.3
+pkgver=7.19.5
 pkgrel=1
 arch=('x86_64')
 url="http://pycurl.sourceforge.net"
@@ -19,20 +19,35 @@ prepare() {
   cd "${srcdir}/${_pypiname}"
   find . -name '*.py' -exec sed -i -e "s|#! /usr/bin/env python|#!/usr/bin/env python3|" {} +
     sed -i 's/"share", "doc", PACKAGE/"share", "doc", "python3-pycurl"/' setup.py
+  sed -i "s/nosetests/nosetests3/" Makefile
 
   cd "${srcdir}/python2-${_pypiname}"
   find . -name '*.py' -exec sed -i -e "s|#! /usr/bin/env python|#!/usr/bin/env python2|" {} +
     sed -i 's/"share", "doc", PACKAGE/"share", "doc", "python2-pycurl"/' setup.py
+  sed -i "s/nosetests/nosetests2/" Makefile
 }
 
 
 build() {
   cd "${srcdir}/${_pypiname}"
+  make
   python3 setup.py build --with-ssl
 
   cd "${srcdir}/python2-${_pypiname}"
+  make
   python2 setup.py build --with-ssl
 }
+
+check() {
+  export PYCURL_VSFTPD_PATH=vsftpd
+
+  cd "$srcdir/$_pypiname"
+  PYTHONPATH="$PWD/build/lib.linux-$CARCH-3.4:$PYTHONPATH" make test || warning "Tests failed"
+
+  cd "${srcdir}/python2-${_pypiname}"
+  PYTHONPATH="$PWD/build/lib.linux-$CARCH-2.7:$PYTHONPATH" make test || warning "Tests failed"
+}
+
 
 package_python3-pycurl() {
   pkgdesc="A Python 3.x interface to libcurl"
@@ -40,7 +55,7 @@ package_python3-pycurl() {
   provides=('pycurl')
 
   cd ${_pypiname}
-  python3 setup.py install -O1 --curl-config=/usr/bin/curl-config --root="${pkgdir}"
+  python3 setup.py install -O1 --root="${pkgdir}"
   install -D -m644 COPYING-MIT "${pkgdir}/usr/share/licenses/${pkgname}/LICENSE"
 }
 
@@ -52,7 +67,6 @@ package_python2-pycurl() {
   replaces=('python-pycurl')
 
   cd python2-${_pypiname}
-  python2 setup.py install -O1 --curl-config=/usr/bin/curl-config --root="${pkgdir}"
+  python2 setup.py install -O1 --root="${pkgdir}"
   install -D -m644 COPYING-MIT "${pkgdir}/usr/share/licenses/${pkgname}/LICENSE"
 }
-

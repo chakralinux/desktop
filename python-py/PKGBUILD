@@ -5,17 +5,16 @@
 
 pkgbase=python-py
 pkgname=('python2-py' 'python3-py')
-pkgver=1.4.20
-pkgrel=2
+pkgver=1.4.24
+pkgrel=1
 pkgdesc="Python rapid development tools"
-arch=('x86_64')
-url="http://pylib.readthedocs.org/en/latest/"
+arch=('any')
 license=('MIT')
+url="http://pylib.readthedocs.org/en/latest/"
 makedepends=("python2-setuptools" "python3-setuptools" )
 checkdepends=('python2-pytest' 'python3-pytest')
 source=("http://pypi.python.org/packages/source/p/py/py-$pkgver.tar.gz")
-md5sums=('5f1708be5482f3ff6711dfd6cafd45e0')
-
+sha512sums=('f62a6e962ff1ebab484725f37825cf07d730c182b7558dddf9ffe7fba7bc068748eb39952adf290fb4029989d4df1f0da1e17d4a5d7c8c509b7c82697d1e1c7c')
 
 prepare() {
   cp -r py-${pkgver}{,-py3}
@@ -32,11 +31,10 @@ build() {
 
 check() {
   cd "$srcdir/py-${pkgver}-py3"
-  LANG=en_US.utf8 py.test
+  PYTHONPATH="$PWD/build/lib:$PYTHONPATH" LANG=en_US.utf8 py.test
 
   cd "$srcdir/py-${pkgver}-py2"
-  LANG=en_US.utf8 py.test2
-  ### check RESULT (2014/04/18): 550 passed, 202 skipped, 3 xfailed ##
+  PYTHONPATH="$PWD/build/lib:$PYTHONPATH" LANG=en_US.utf8 py.test2
 }
 
 package_python3-py() {
