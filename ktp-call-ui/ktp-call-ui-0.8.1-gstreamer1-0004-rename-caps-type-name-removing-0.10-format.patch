@@ -1,0 +1,44 @@
+From 84f4a8c5faa7c99bf828b1aad0b69cb63763851c Mon Sep 17 00:00:00 2001
+From: Diane Trout <diane@ghic.org>
+Date: Wed, 15 Jan 2014 22:18:39 -0800
+Subject: [PATCH 4/8] rename caps type name removing 0.10 format
+
+Also simplify the audio caps
+---
+ libktpcall/private/tf-audio-content-handler.cpp | 5 ++---
+ libktpcall/private/tf-video-content-handler.cpp | 2 +-
+ 2 files changed, 3 insertions(+), 4 deletions(-)
+
+diff --git a/libktpcall/private/tf-audio-content-handler.cpp b/libktpcall/private/tf-audio-content-handler.cpp
+index 02741b1..965c19c 100644
+--- a/libktpcall/private/tf-audio-content-handler.cpp
++++ b/libktpcall/private/tf-audio-content-handler.cpp
+@@ -200,10 +200,9 @@ bool TfAudioContentHandler::createSrcBin(const QGst::ElementPtr & src)
+         "volume name=input_volume_%1 ! "
+         "level name=input_level_%1 ! "
+         "audioconvert ! "
+-        "capsfilter caps=\"audio/x-raw-int,rate=[8000,16000];audio/x-raw-float,rate=[8000,16000]\" ! "
++        "capsfilter caps=\"audio/x-raw,rate=[8000,16000]\" ! "
+         "tee name=input_tee_%1 ! "
+-        "fakesink sync=false async=false silent=true enable-last-buffer=true")).arg(id);
+-
++        "fakesink sync=false async=false silent=true enable-last-sample=true")).arg(id);
+ 
+     QGst::BinPtr bin;
+     try {
+diff --git a/libktpcall/private/tf-video-content-handler.cpp b/libktpcall/private/tf-video-content-handler.cpp
+index fe412b4..25e4d10 100644
+--- a/libktpcall/private/tf-video-content-handler.cpp
++++ b/libktpcall/private/tf-video-content-handler.cpp
+@@ -254,7 +254,7 @@ QGst::CapsPtr TfVideoContentHandler::contentCaps() const
+         framerate = 15;
+     }
+ 
+-    QGst::Structure capsStruct("video/x-raw-yuv");
++    QGst::Structure capsStruct("video/x-raw");
+     capsStruct.setValue("width", width);
+     capsStruct.setValue("height", height);
+     capsStruct.setValue("framerate", QGst::Fraction(framerate, 1));
+-- 
+1.8.3.1
+

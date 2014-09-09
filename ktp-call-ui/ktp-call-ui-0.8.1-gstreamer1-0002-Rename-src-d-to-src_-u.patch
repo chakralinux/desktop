@@ -1,0 +1,98 @@
+From 2efe349f0d0ddadb308b5852a5b57fe699e30bb3 Mon Sep 17 00:00:00 2001
+From: Diane Trout <diane@ghic.org>
+Date: Wed, 15 Jan 2014 20:54:48 -0800
+Subject: [PATCH 2/8] Rename src%d to src_%u.
+
+The gstreamer 1.0 documentation suggests the _ is inconsistently
+used. (Though they did want to use %u for unsigned values.)
+---
+ libktpcall/private/sink-controllers.cpp         | 6 +++---
+ libktpcall/private/tf-audio-content-handler.cpp | 4 ++--
+ libktpcall/private/tf-video-content-handler.cpp | 6 +++---
+ 3 files changed, 8 insertions(+), 8 deletions(-)
+
+diff --git a/libktpcall/private/sink-controllers.cpp b/libktpcall/private/sink-controllers.cpp
+index 3b067d1..d6fde88 100644
+--- a/libktpcall/private/sink-controllers.cpp
++++ b/libktpcall/private/sink-controllers.cpp
+@@ -117,7 +117,7 @@ QGst::PadPtr VideoSinkController::requestSrcPad()
+     QString newPadName = QString("src%1").arg(m_padNameCounter);
+     m_padNameCounter++;
+ 
+-    QGst::PadPtr teeSrcPad = m_tee->getRequestPad("src%d");
++    QGst::PadPtr teeSrcPad = m_tee->getRequestPad("src_%u");
+     QGst::PadPtr ghostSrcPad = QGst::GhostPad::create(teeSrcPad, newPadName.toAscii());
+ 
+     ghostSrcPad->setActive(true);
+@@ -144,7 +144,7 @@ void VideoSinkController::linkVideoSink(const QGst::ElementPtr & sink)
+     Q_ASSERT(m_bin);
+     kDebug();
+ 
+-    QGst::PadPtr srcPad = m_tee->getRequestPad("src%d");
++    QGst::PadPtr srcPad = m_tee->getRequestPad("src_%u");
+     m_videoSinkBin = new VideoSinkBin(sink);
+ 
+     m_bin->add(m_videoSinkBin->bin());
+@@ -188,7 +188,7 @@ void VideoSinkController::initFromStreamingThread(const QGst::PadPtr & srcPad,
+     fakesink->setProperty("enable-last-buffer", false);
+ 
+     m_bin->add(m_tee, fakesink);
+-    m_tee->getRequestPad("src%d")->link(fakesink->getStaticPad("sink"));
++    m_tee->getRequestPad("src_%u")->link(fakesink->getStaticPad("sink"));
+ 
+     QGst::PadPtr binSinkPad = QGst::GhostPad::create(m_tee->getStaticPad("sink"), "sink");
+     m_bin->addPad(binSinkPad);
+diff --git a/libktpcall/private/tf-audio-content-handler.cpp b/libktpcall/private/tf-audio-content-handler.cpp
+index e9cf9f3..4924080 100644
+--- a/libktpcall/private/tf-audio-content-handler.cpp
++++ b/libktpcall/private/tf-audio-content-handler.cpp
+@@ -55,7 +55,7 @@ VolumeController *TfAudioContentHandler::outputVolumeController() const
+ BaseSinkController *TfAudioContentHandler::createSinkController(const QGst::PadPtr & srcPad)
+ {
+     refSink();
+-    AudioSinkController *ctrl = new AudioSinkController(m_outputAdder->getRequestPad("sink%d"));
++    AudioSinkController *ctrl = new AudioSinkController(m_outputAdder->getRequestPad("sink_%u"));
+     ctrl->initFromStreamingThread(srcPad, channelHandler()->pipeline());
+     return ctrl;
+ }
+@@ -239,7 +239,7 @@ bool TfAudioContentHandler::createSrcBin(const QGst::ElementPtr & src)
+ 
+     QGst::ElementPtr tee = bin->getElementByName(
+             QString(QLatin1String("input_tee_%1")).arg(id).toAscii());
+-    if (tee->getRequestPad("src%d")->link(queue->getStaticPad("sink")) != QGst::PadLinkOk) {
++    if (tee->getRequestPad("src_%u")->link(queue->getStaticPad("sink")) != QGst::PadLinkOk) {
+         kWarning() << "Failed to link tee ! queue";
+         return false;
+     }
+diff --git a/libktpcall/private/tf-video-content-handler.cpp b/libktpcall/private/tf-video-content-handler.cpp
+index 870fdb3..68afff3 100644
+--- a/libktpcall/private/tf-video-content-handler.cpp
++++ b/libktpcall/private/tf-video-content-handler.cpp
+@@ -57,7 +57,7 @@ void TfVideoContentHandler::linkVideoPreviewSink(const QGst::ElementPtr & sink)
+     QString teeName = QString(QLatin1String("input_tee_%1")).arg(id);
+     QGst::ElementPtr tee = m_srcBin->getElementByName(teeName.toAscii());
+ 
+-    QGst::PadPtr srcPad = tee->getRequestPad("src%d");
++    QGst::PadPtr srcPad = tee->getRequestPad("src_%u");
+     m_videoPreviewBin = new VideoSinkBin(sink);
+ 
+     m_srcBin->add(m_videoPreviewBin->bin());
+@@ -220,13 +220,13 @@ bool TfVideoContentHandler::createSrcBin(const QGst::ElementPtr & src)
+     }
+ 
+     // tee ! fakesink
+-    if (tee->getRequestPad("src%d")->link(fakesink->getStaticPad("sink")) != QGst::PadLinkOk) {
++    if (tee->getRequestPad("src_%u")->link(fakesink->getStaticPad("sink")) != QGst::PadLinkOk) {
+         kWarning() << "Failed to link tee ! fakesink";
+         return false;
+     }
+ 
+     // tee ! queue
+-    if (tee->getRequestPad("src%d")->link(queue->getStaticPad("sink")) != QGst::PadLinkOk) {
++    if (tee->getRequestPad("src_%u")->link(queue->getStaticPad("sink")) != QGst::PadLinkOk) {
+         kWarning() << "Failed to link tee ! queue";
+         return false;
+     }
+-- 
+1.8.3.1
+

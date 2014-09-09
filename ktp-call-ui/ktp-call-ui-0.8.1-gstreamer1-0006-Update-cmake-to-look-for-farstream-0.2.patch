@@ -1,0 +1,27 @@
+From d2b73c6810647c1286a6d5216f8ec0401050f503 Mon Sep 17 00:00:00 2001
+From: Diane Trout <diane@ghic.org>
+Date: Wed, 4 Jun 2014 23:06:06 -0700
+Subject: [PATCH 6/8] Update cmake to look for farstream 0.2
+
+---
+ libktpcall/CMakeLists.txt | 7 ++++++-
+ 1 file changed, 6 insertions(+), 1 deletion(-)
+
+diff --git a/libktpcall/CMakeLists.txt b/libktpcall/CMakeLists.txt
+index 354710a..9d5a52b 100644
+--- a/libktpcall/CMakeLists.txt
++++ b/libktpcall/CMakeLists.txt
+@@ -1,4 +1,9 @@
+-include_directories(${CMAKE_CURRENT_BINARY_DIR})
++find_package(PkgConfig REQUIRED)
++pkg_check_modules(FARSTREAM REQUIRED farstream-0.2)
++
++include_directories(${CMAKE_CURRENT_BINARY_DIR}
++        ${FARSTREAM_INCLUDE_DIRS}
++)
+ 
+ #####
+ 
+-- 
+1.8.3.1
+
