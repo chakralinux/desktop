@@ -10,11 +10,12 @@ pkgrel=1
 pkgdesc="A small and lightweight implementation of the XDG Sound Theme Specification"
 arch=('x86_64')
 license=('LGPL')
-depends=('libvorbis>=1.3.1' 'libtool' 'alsa-lib' 'tdb' 'sound-theme-freedesktop')
+depends=('libvorbis>=1.3.1' 'libltdl' 'alsa-lib' 'tdb' 'sound-theme-freedesktop' 'systemd')
 makedepends=('pulseaudio' 'gstreamer' 'lynx')
-options=(!emptydirs)
+options=(!emptydirs libtool)
 url="http://0pointer.de/lennart/projects/libcanberra"
 source=("http://pkgs.fedoraproject.org/repo/pkgs/${pkgbase}/${pkgbase}-${pkgver}.tar.xz/34cb7e4430afaf6f447c4ebdb9b42072/${pkgbase}-${pkgver}.tar.xz")
+md5sums=('34cb7e4430afaf6f447c4ebdb9b42072')
 
 build() {
   cd "${srcdir}/${pkgbase}-${pkgver}"
@@ -22,6 +23,9 @@ build() {
       --disable-static --with-builtin=dso --enable-null --disable-oss \
       --enable-alsa --enable-gstreamer --enable-pulse --disable-gtk \
       --with-systemdsystemunitdir=/usr/lib/systemd/system
+
+  # Fight unused direct deps
+  sed -i -e 's/ -shared / -Wl,-O1,--as-needed\0 /g' -e 's/    if test "$export_dynamic" = yes && test -n "$export_dynamic_flag_spec"; then/      func_append compile_command " -Wl,-O1,--as-needed"\n      func_append finalize_command " -Wl,-O1,--as-needed"\n\0/' libtool
   make
 }
 
@@ -29,8 +33,8 @@ package_libcanberra() {
 
   cd "${srcdir}/${pkgbase}-${pkgver}"
   make -j1 DESTDIR="${pkgdir}" install
-  rm -f "${pkgdir}/usr/lib/libcanberra-gtk.la"
-  rm -f "${pkgdir}/usr/lib/gtk-2.0/modules/"*.la
+  rm "$pkgdir"/usr/lib/*.la
+  rm -f "${pkgdir}/usr/lib/gtk-{2,3}.0/modules/"*.la
   
   install -m755 -d "${pkgdir}/etc/X11/xinit/xinitrc.d"
 
@@ -62,4 +66,3 @@ package_libcanberra-gstreamer() {
   mkdir -p "${pkgdir}/usr/lib/${pkgbase}-${pkgver}"
   mv gstreamer-plugin/* "${pkgdir}/usr/lib/${pkgbase}-${pkgver}"
 }
-md5sums=('34cb7e4430afaf6f447c4ebdb9b42072')
