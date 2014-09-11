@@ -3,28 +3,34 @@
 
 pkgname=subtitlecomposer
 pkgver=0.5.6
-pkgrel=2
+pkgrel=1
 pkgdesc="A text-based subtitles editor for KDE"
 arch=('x86_64')
 url="http://kde-apps.org/content/show.php/Subtitle+Composer?content=162048"
 license=('GPL')
-depends=('kdelibs' 'gettext' 'gstreamer0.10-base')
+depends=('kdelibs' 'gettext' 'xine-lib')
 makedepends=('cmake' 'automoc4')
 optdepends=("mplayer: for MPlayer backend"
-            "mplayer2: for MPlayer backend"
-            "xine-lib: for Xine backend")
+            "mplayer2: for MPlayer backend")
 categories=('multimedia')
 screenshot="http://kde-apps.org/CONTENT/content-pre1/162048-1.png"
-source=(https://github.com/maxrd2/$pkgname/archive/v$pkgver.tar.gz) 
-md5sums=('8b48fbb99f5e10312670367024aa6fe2')
+source=(https://github.com/maxrd2/$pkgname/archive/v$pkgver.tar.gz 'https://github.com/wengxt/subtitlecomposer/commit/26ce31879bb05447b266c84cfb8dc4e484ff0f8a.patch') 
+install="${pkgname}.install"
+md5sums=('8b48fbb99f5e10312670367024aa6fe2'
+         'd76a1afd3b4f794f451950fd31def7c4')
 
+prepare()
+{
+	cd ${srcdir}/${pkgname}-${pkgver}
+	patch -Np1 -i ../26ce31879bb05447b266c84cfb8dc4e484ff0f8a.patch
+}
 
 build()
 {
 	cd ${srcdir}/${pkgname}-${pkgver}
-	mkdir build
+	mkdir -p build
 	cd build
-	cmake .. -DCMAKE_INSTALL_PREFIX=/usr
+	cmake .. -DCMAKE_INSTALL_PREFIX=/usr -DWITH_GStreamer=OFF
 	make
 }
 

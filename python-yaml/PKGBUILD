@@ -1,0 +1,36 @@
+# Maintainer: Weng Xuetian <wengxt@gmail.com>
+# Contributor: Sergej Pupykin <pupykin.s+arch@gmail.com>
+# Contributor: Michal Bozon <michal.bozon__at__gmail.com>
+
+pkgbase=python-yaml
+pkgname=(python2-yaml python3-yaml)
+pkgver=3.11
+pkgrel=1
+pkgdesc="Python bindings for YAML, using fast libYAML library"
+arch=('x86_64')
+url="http://pyyaml.org"
+license=('MIT')
+makedepends=('python3' 'python2' 'libyaml')
+install='python-yaml.install'
+source=(http://pyyaml.org/download/pyyaml/PyYAML-$pkgver.tar.gz)
+md5sums=('f50e08ef0fe55178479d3a618efe21db')
+
+build() {
+  true
+}
+
+package_python2-yaml() {
+  depends=('python2' 'libyaml')
+
+  cd $srcdir/PyYAML-$pkgver
+  python2 setup.py install --prefix=/usr --root=$pkgdir
+  install -m644 -D LICENSE $pkgdir/usr/share/licenses/$pkgname/LICENSE
+}
+
+package_python3-yaml() {
+  depends=('python3' 'libyaml')
+
+  cd $srcdir/PyYAML-$pkgver
+  python3 setup.py install --prefix=/usr --root=$pkgdir
+  install -m644 -D LICENSE $pkgdir/usr/share/licenses/$pkgname/LICENSE
+}
