@@ -2,7 +2,7 @@
 
 pkgname=icedtea-web
 pkgdesc="Provides a Free Software web browser plugin running applets written in the Java programming language and an implementation of Java Web Start, originally based on the NetX project."
-pkgver=1.5
+pkgver=1.5.1
 pkgrel=1
 arch=('x86_64')
 url="http://icedtea.classpath.org/wiki/IcedTea-Web"
@@ -18,7 +18,7 @@ install="${pkgname}.install"
 
 source=("http://icedtea.classpath.org/download/source/${pkgname}-${pkgver}.tar.gz")
 noextract="${pkgname}-$pkgver.tar.gz" # due to broken path names in the tarball that fails with LANG=C in our chroot
-md5sums=('a6199869763291879f3a7382b114974c')
+md5sums=('ee53fdd19456a59aa9d3a407d35a358c')
 
 build() {
   cd "${srcdir}"
@@ -68,4 +68,3 @@ package() {
   install -m755 -d "${pkgdir}/usr/lib/mozilla/plugins/"
   ln -sf "${_jvmdir}/lib/IcedTeaPlugin.so" "${pkgdir}/usr/lib/mozilla/plugins/"
 }
-
