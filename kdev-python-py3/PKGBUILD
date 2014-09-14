@@ -1,7 +1,8 @@
 # maintainer: Neophytos Kolokotronis <tetris4@gmail.com>
 # contributor: Jakub Kozisek <nodevel at gmail dot com>
 
-pkgname=kdev-python
+_pkgname=kdev-python
+pkgname=kdev-python-py3
 pkgver=1.7.0
 _pkgver=4.7.0
 _branch=stable
@@ -12,22 +13,22 @@ url="http://www.kdevelop.org/"
 license=('GPL')
 depends=('kdevelop')
 makedepends=('cmake' 'automoc4' 'kdevelop-pg-qt')
-source=("http://download.kde.org/${_branch}/kdevelop/${_pkgver}/src/${pkgname}-${pkgver}.tar.xz")
-md5sums=('4a28c46ec22cc59722f3fee5d5106e3a')
+conflicts=('kdev-python')
+source=("http://download.kde.org/${_branch}/kdevelop/${_pkgver}/src/${_pkgname}-${pkgver}-py3.tar.xz")
 
 build() {
-    cd "${srcdir}/${pkgname}-${pkgver}"
     mkdir build && cd build 
     cmake \
         -DCMAKE_BUILD_TYPE=RELWITHDEBINFO \
         -DCMAKE_{SHARED,MODULE,EXE}_LINKER_FLAGS='-Wl,--no-undefined -Wl,--as-needed' \
         -DCMAKE_INSTALL_PREFIX=/usr \
-        ..
+        "../${_pkgname}-${pkgver}-py3"
     make parser
     make
 }
 
 package() {
-    cd "${srcdir}/${pkgname}-${pkgver}/build"
+    cd build
     make DESTDIR="${pkgdir}" install
 }
+md5sums=('708e43202056cc241209109b8bbd5bd0')
