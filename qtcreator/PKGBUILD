@@ -1,53 +1,66 @@
 # Maintainer: Manuel 'UtG' <utg[dot]chakra.linux[at]gmail[dot]com>
 
 pkgname=qtcreator
-pkgver=3.1.1
-pkgrel=2
-pkgdesc="Lightweight, cross-platform integrated development environment."
+pkgver=3.2.0
+_pkgver=v3.2.0
+pkgrel=1
+pkgdesc='Lightweight, cross-platform integrated development environment'
 arch=('x86_64')
-url="http://qt.digia.com/"
+url='http://qt-project.org'
 license=('LGPL')
-makedepends=('qt5-private-headers' 'qt5-base' 'git' 'mesa' 'clang')
-depends=('qt5-tools' 'qt5-quick1' 'qt5-quickcontrols')
-optdepends=('qt-docs: for the integrated Qt documentation'
+depends=('qt5-quick1' 'qt5-tools' 'qt5-quickcontrols' 'libxkbcommon')
+makedepends=('git' 'mesa' 'clang')
+options=('docs')
+optdepends=('qt5-doc: for the integrated Qt documentation'
             'gdb: for the debugger'
-            'cmake: for cmake project suppport'
-            'ksshaskpass: for ssh support'
+            'cmake: for cmake project support'
+            'openssh-askpass: for ssh support'
             'git: for git support'
             'mercurial: for mercurial support'
             'bzr: for bazaar support'
+            'clang: Clang code model'
             'valgrind: for analyze support')
-categories=('programming')
-screenshot=("http://qt.nokia.com/images/products/qt-creator-breakdown-screenshot")
-options=('docs')
-source=("http://download.qt-project.org/official_releases/qtcreator/3.1/${pkgver}/qt-creator-opensource-src-${pkgver}.tar.gz"
-	'qtcreator.desktop')
-#source=("http://ftp.fau.de/qtproject/official_releases/${pkgname}/3.1/${pkgver}/qt-creator-opensource-src-${pkgver}.tar.gz")
-md5sums=('1876878c58b3026e0df26fde9393cd91'
-         '5aa242e0262fa22f75c3b59d3a4ec198')
 install=qtcreator.install
-        
+source=("git://gitorious.org/qt-creator/qt-creator.git#tag=${_pkgver}"
+        "git://gitorious.org/qt-labs/qbs.git"
+        "remote-qml.patch::https://qt.gitorious.org/qt-creator/qt-creator/commit/e8305e3ed2349b95c7311c296febc6d75f1a0c2a.patch"
+        'qtcreator.desktop')
+md5sums=('SKIP'
+         'SKIP'
+         '648a54f4cf1bde2f62145da5e6c6b88e'
+         '5aa242e0262fa22f75c3b59d3a4ec198')
+
+prepare() {
+  cd qt-creator
+  git submodule init
+  git config submodule.qbs.url $srcdir/qbs
+  git submodule update
+
+  patch -Np1 < $srcdir/remote-qml.patch
+}
 
 build() {
-  cd "${srcdir}"
-  
   [[ -d build ]] && rm -r build
   mkdir build && cd build
 
-  qmake-qt5 -r "${srcdir}/qt-creator-opensource-src-${pkgver}/qtcreator.pro"
+  LLVM_INSTALL_DIR=/usr qmake-qt5 -r ../qt-creator/qtcreator.pro
   make
   make docs -j1
 }
 
 package() {
-  cd "${srcdir}/build"
+  cd build
 
-  make INSTALL_ROOT="${pkgdir}/usr" install
+  make INSTALL_ROOT="${pkgdir}/usr/" install
   make INSTALL_ROOT="${pkgdir}/usr/" install_docs
 
-  install -Dm644 "${srcdir}/qtcreator.desktop" \
-    "${pkgdir}/usr/share/applications/qtcreator.desktop"
-  install -Dm644 "${srcdir}/qt-creator-opensource-src-${pkgver}/LGPL_EXCEPTION.TXT" \
-    "${pkgdir}/usr/share/licenses/qtcreator/LGPL_EXCEPTION.TXT"
+  # Workaround for FS#40583
+  mv "${pkgdir}"/usr/bin/qtcreator "${pkgdir}"/usr/bin/qtcreator-bin
+  echo "#!/bin/sh" > "${pkgdir}"/usr/bin/qtcreator
+  echo "QT_LOGGING_TO_CONSOLE=1 qtcreator-bin \$@" >> "${pkgdir}"/usr/bin/qtcreator
+  chmod +x "${pkgdir}"/usr/bin/qtcreator
+
+  install -Dm644 ${srcdir}/qtcreator.desktop ${pkgdir}/usr/share/applications/qtcreator.desktop
+  install -Dm644 ${srcdir}/qt-creator/LGPL_EXCEPTION.TXT ${pkgdir}/usr/share/licenses/qtcreator/LGPL_EXCEPTION.TXT
 }
 
