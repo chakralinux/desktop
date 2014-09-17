@@ -1,7 +1,7 @@
 pkgbase=digikam
 pkgname=('digikam' 'kipi-plugins' 'libkvkontakte')
-pkgver=4.2.0
-pkgrel=2
+pkgver=4.3.0
+pkgrel=1
 url="http://digikam.sourceforge.net"
 arch=('x86_64')
 license=('GPL')
@@ -9,10 +9,10 @@ screenshot=('http://i.imgur.com/6YnUM.png')
 makedepends=('kde-runtime' 'kdegraphics-kgamma' 'kdepimlibs' 'lensfun' 'kdeedu-marble'
              'liblqr' 'opencv' 'lapack' 'libgpod' 'pkgconfig' 'cmake' 'automoc4'
              'doxygen' 'docbook-xsl' 'qjson' 'kdegraphics-libkexiv2' 'kdegraphics-libkdcraw'
-             'kdegraphics-libksane' 'mariadb' 'qt-gstreamer' 'boost' 'hugin-tools' 'eigen3' 'libbluray')
+             'kdegraphics-libksane' 'mariadb' 'qt-gstreamer' 'boost' 'hugin-tools' 'eigen3' 'libbluray' 'baloo')
 source=("http://download.kde.org/stable/${pkgname}/${pkgname}-${pkgver}.tar.bz2")
 options=("debug")
-md5sums=('8e12775115604dd4e1d91d345781214b')
+md5sums=('0bb9e3597def8cc11068ca6dfd719ba0')
 
 build() {
    cd ${srcdir}
@@ -29,7 +29,7 @@ build() {
 package_digikam() {
   pkgdesc="Digital photo management application for kde"
   depends=('kde-runtime' 'kdegraphics-kgamma' 'kdepimlibs' 'lensfun' 'kdeedu-marble'
-           'liblqr' 'mariadb' 'opencv' 'kipi-plugins' 'lapack' 'libgpod')
+           'liblqr' 'mariadb' 'opencv' 'kipi-plugins' 'lapack' 'libgpod' 'baloo')
   install=digikam.install
   replaces=('digikamimageplugins')
   categories=('graphics')
