@@ -8,8 +8,8 @@ pkgname="kdemultimedia-thumbnailers"
 pkgdesc='KDE thumbnailers for several formats'
 arch=('x86_64')
 pkgver=${_kdever}
-pkgrel=1
-depends=('mplayer' 'ffmpeg' 'kdelibs')
+pkgrel=2
+depends=('mplayer' 'ffmpeg' 'kdelibs' 'taglib')
 provides=('ffmpegthumbs' 'mplayerthumbs')
 groups=("kde" "kdemultimedia" "kde-uninstall")
 install=kdemultimedia.install
@@ -22,8 +22,8 @@ makedepends=('pkg-config' 'cmake' 'automoc4' 'docbook-xsl')
 source=("$_mirror/ffmpegthumbs-$_kdever.tar.xz"
         "$_mirror/mplayerthumbs-$_kdever.tar.xz"
         'http://kenai.com/projects/kde-odf-thumbnail/downloads/download/1.0.0/kde-odf-thumbnail-1.0.0.tar.gz'
-        'http://kde-apps.org/CONTENT/content-files/107128-GimpResourcesThumbnailer-2.1.0.tar.gz'
-        'http://kde-apps.org/CONTENT/content-files/114885-AudioThumbs-0.1.tar.gz'
+        'https://github.com/aclemens/GimpResourcesThumbnailer/archive/2.1.2.tar.gz'
+        'http://kde-apps.org/CONTENT/content-files/145088-AudioThumbs-0.2.tar.gz'
         'mplayerthumbs-horizontal.patch'
         'sprocket-large.png'
         'sprocket-medium.png'
@@ -31,8 +31,8 @@ source=("$_mirror/ffmpegthumbs-$_kdever.tar.xz"
 sha256sums=(`grep ffmpegthumbs-$_kdever.tar.xz  ../checksums.txt | cut -d" " -f1`
             `grep mplayerthumbs-$_kdever.tar.xz  ../checksums.txt | cut -d" " -f1`
             'e1e38ad52e992934576cf04c32b99f08a361a841bd9e582088f6b000d2d87c50'
-            '3ad00c63f797d01788a425b9b00adcd45ac56d6422f7783f64975413e1761c3a'
-            'ea2660f0d09cc2fc1e7a890c2f45bde0a311e3e1a458f978d9dd9c90c4a4cf6d'
+            'a8e964e74a4be92070a9817247d5e7dc12ef4add0fc8165cffbc1d24b5e8ac51'
+            '6f821fe2c6f2347b7bdbdb48886f78c585b54527216eaa56fcb6673eb80bb05e'
             'a559b6196c2fdca6afcbfc2dbdf1105c8bbdecdb88f6130f93e930f890819d56'
             '7250534c556dda3e09b57498fd4a8c4cbdff75f4d315ccb2f233f5c7e87aa66f'
             '9dcf342c7068e973285e9ea252584372fde841686877a3bbaecbf9732446fb7d'
@@ -63,20 +63,23 @@ build() {
         -DCMAKE_INSTALL_PREFIX=${_installprefix} \
         -DCMAKE_SKIP_RPATH=ON \
         -DCMAKE_{SHARED,MODULE,EXE}_LINKER_FLAGS='-Wl,--no-undefined -Wl,--as-needed'
+    make
     popd
 
-    pushd $srcdir/GimpResourcesThumbnailer-2.1.0
+    pushd $srcdir/GimpResourcesThumbnailer-2.1.2
     cmake . \
         -DCMAKE_BUILD_TYPE=${_build_type} \
         -DCMAKE_INSTALL_PREFIX=${_installprefix} \
         -DCMAKE_{SHARED,MODULE,EXE}_LINKER_FLAGS='-Wl,--no-undefined -Wl,--as-needed'
+    make
     popd
 
-    pushd $srcdir/AudioThumbs-0.1
+    pushd $srcdir/
     cmake . \
         -DCMAKE_BUILD_TYPE=${_build_type} \
         -DCMAKE_INSTALL_PREFIX=${_installprefix} \
         -DCMAKE_{SHARED,MODULE,EXE}_LINKER_FLAGS='-Wl,--no-undefined -Wl,--as-needed'
+    make
     popd
 }
 
@@ -94,9 +97,9 @@ package() {
     cd $srcdir/kde-odf-thumbnail-1.0.0
     make DESTDIR=${pkgdir} install 
 
-    cd $srcdir/GimpResourcesThumbnailer-2.1.0
+    cd $srcdir/GimpResourcesThumbnailer-2.1.2
     make DESTDIR=${pkgdir} install 
 
-    cd $srcdir/AudioThumbs-0.1
+    cd $srcdir/
     make DESTDIR=${pkgdir} install 
 }

@@ -1,4 +1,5 @@
 post_install() {
+                update-mime-database usr/share/mime
 		if [ -e "/etc/chakra/updates.conf" ] ; then
 
 			. /etc/chakra/updates.conf
@@ -27,6 +28,7 @@ post_install() {
 }
 
 post_upgrade() {
+                update-mime-database usr/share/mime &> /dev/null
 		if [ -e "/etc/chakra/updates.conf" ] ; then
 
 			. /etc/chakra/updates.conf
@@ -55,6 +57,7 @@ post_upgrade() {
 }
 
 post_remove() {
+                update-mime-database usr/share/mime &> /dev/null
 		if [ -e "/etc/chakra/updates.conf" ] ; then
 
 			. /etc/chakra/updates.conf
