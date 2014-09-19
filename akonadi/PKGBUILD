@@ -3,15 +3,14 @@
 
 pkgname=akonadi
 pkgver=1.12.91
-pkgrel=1
+pkgrel=2
 pkgdesc="PIM layer, which provides an asynchronous API to access all kinds of PIM data"
 arch=('x86_64')
 url='http://www.akonadi-project.org'
 license=('LGPL')
 depends=('shared-mime-info'
          'boost-libs'
-         'akonadi-backend'
-         'soprano>=2.7.56')
+         'akonadi-backend')
 makedepends=('pkg-config'
              'cmake'
              'automoc4'
@@ -31,7 +30,8 @@ build() {
     cmake ../${pkgname}-${pkgver} \
         -DCMAKE_BUILD_TYPE=Release \
         -DCMAKE_INSTALL_PREFIX=/usr \
-        -DINSTALL_QSQLITE_IN_QT_PREFIX=TRUE
+        -DINSTALL_QSQLITE_IN_QT_PREFIX=TRUE \
+        -DWITH_SOPRANO=OFF
     make 
 }
 
