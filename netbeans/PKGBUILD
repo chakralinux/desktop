@@ -5,8 +5,8 @@
 # contributor Fabio Lima <fheday at dcc [dot] fc [dot] up [dot] pt>
 
 pkgname=netbeans
-_pkgdate=201403101706
-pkgver=8.0
+_pkgdate=201408251540
+pkgver=8.0.1
 pkgrel=1
 pkgdesc='Netbeans IDE development platform.'
 arch=('any')
@@ -19,24 +19,24 @@ optdepends=('php: for developing programs in php'
 categories=('programming')
 options=('!strip')
 install="${pkgname}.install"
-source=("http://dlc.sun.com.edgesuite.net/$pkgname/$pkgver/final/zip/$pkgname-$pkgver-$_pkgdate.zip")
+source=("http://dlc.sun.com.edgesuite.net/${pkgname}/${pkgver}/final/zip/${pkgname}-${pkgver}-${_pkgdate}.zip")
 # http://dlc.sun.com.edgesuite.net/netbeans/8.0/final/zip/
-sha256sums=('0d063507f48292f4033a238783fb318a6df58485a7be86206a45a97ce12de97b')
+sha256sums=('5c572e18ff610d7d78044c7602bfaa97d0faaeb6ba3f4fbe1427cadb12285e5e')
 
 prepare() {
-  gendesk -f -n --pkgname "$pkgname" --pkgdesc "$pkgdesc"
-  setconf "$pkgname/bin/$pkgname" basedir "/usr/share/$pkgname"
+  gendesk -f -n --pkgname "${pkgname}" --pkgdesc "${pkgdesc}"
+  setconf "${pkgname}/bin/${pkgname}" basedir "/usr/share/${pkgname}"
 }
 
 package() {
-  mkdir -p "$pkgdir/usr/"{bin,share/applications}
-  cp -r "$pkgname" "$pkgdir/usr/share/"
-  install -Dm644 "$pkgname.desktop" \
-    "$pkgdir/usr/share/applications/$pkgname.desktop"
-  cd "$pkgname"
-  install -Dm644 "nb/$pkgname.png" "$pkgdir/usr/share/pixmaps/$pkgname.png"
-  install -Dm755 "bin/$pkgname" "$pkgdir/usr/bin/$pkgname"
+  mkdir -p "${pkgdir}/usr/"{bin,share/applications}
+  cp -r "${pkgname}" "${pkgdir}/usr/share/"
+  install -Dm644 "${pkgname}.desktop" \
+    "${pkgdir}/usr/share/applications/${pkgname}.desktop"
+  cd "${pkgname}"
+  install -Dm644 "nb/${pkgname}.png" "${pkgdir}/usr/share/pixmaps/${pkgname}.png"
+  install -Dm755 "bin/${pkgname}" "${pkgdir}/usr/bin/${pkgname}"
 
   # Cleanup (contains the file that is now placed in /usr/bin + .exe-files)
-  rm -r "$pkgdir/usr/share/$pkgname/bin"
+  rm -r "${pkgdir}/usr/share/${pkgname}/bin"
 }
