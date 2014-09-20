@@ -3,7 +3,7 @@
 # Contributor: Neo Kolokotronis <tetris4@gmail.com>
 
 pkgname=aria2
-pkgver=1.18.5
+pkgver=1.18.8
 pkgrel=1
 pkgdesc='Download utility that supports HTTP(S), FTP, BitTorrent, and Metalink.'
 arch=('x86_64')
@@ -12,12 +12,11 @@ license=('GPL3')
 depends=('ca-certificates' 'c-ares' 'gnutls' 'libxml2' 'sqlite3')
 checkdepends=('cppunit')
 categories=('network')
-source=(http://downloads.sourceforge.net/$pkgname/$pkgname-$pkgver.tar.xz)
-sha256sums=('90a15959498673ebe6a964f8f9fe840f4adbb0a1904a9810cd7da6743c0b619b')
-
+source=("http://downloads.sourceforge.net/${pkgname}/${pkgname}-${pkgver}.tar.xz")
+sha256sums=('ed08fb94dbf4713251a7a9f9eab3b63d480061cb94048720d8fe372f73d83863')
 
 build() {
-  cd $srcdir/$pkgname-$pkgver
+  cd ${pkgname}-${pkgver}
   ./configure \
     --prefix=/usr \
     --with-ca-bundle=/etc/ssl/certs/ca-certificates.crt
@@ -26,25 +25,23 @@ build() {
 }
 
 check() {
-  cd $srcdir/$pkgname-$pkgver
+  cd ${pkgname}-${pkgver}
   make check
 
-#Testsuite summary for aria2 1.18.5
-
-# TOTAL: 1; PASS:  1;  SKIP:  0;
-# XFAIL: 0; FAIL:  0;  XPASS: 0;
+#Testsuite summary for aria2 1.18.8
+#
+# TOTAL: 1 / PASS:  1 / SKIP:  0
+# XFAIL: 0 / FAIL:  0 / XPASS: 0
 # ERROR: 0
-
-
 }
 
 package() {
-  cd $srcdir/$pkgname-$pkgver
-  make DESTDIR=$pkgdir install
+  cd ${pkgname}-${pkgver}
+  make DESTDIR="${pkgdir}" install
   
     # add bash completion (aria2 automatically installs to a temporary target directory)
-  install -d ${pkgdir}/usr/share/bash-completion/completions
-  install -m644 ${pkgdir}/usr/share/doc/aria2/bash_completion/aria2c \
-		${pkgdir}/usr/share/bash-completion/completions
-  rm -rf ${pkgdir}/usr/share/doc/aria2/bash_completion
+  install -d "${pkgdir}/usr/share/bash-completion/completions"
+  install -m644 "${pkgdir}/usr/share/doc/aria2/bash_completion/aria2c" \
+    "${pkgdir}/usr/share/bash-completion/completions"
+  rm -rf "${pkgdir}/usr/share/doc/aria2/bash_completion"
 }
