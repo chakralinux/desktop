@@ -5,8 +5,8 @@
 # Contributor: Manuel Tortosa <manutortosa[at]chakra-project[dot]org>
 
 pkgname=zsh
-pkgver=5.0.5
-pkgrel=2
+pkgver=5.0.6
+pkgrel=1
 pkgdesc='A very advanced and programmable command interpreter (shell) for UNIX'
 arch=('x86_64')
 url='http://www.zsh.org/'
@@ -14,9 +14,9 @@ license=('custom')
 depends=('pcre' 'libcap' 'gdbm')
 categories=('system')
 install=zsh.install
-source=("ftp://ftp.zsh.org/pub/${pkgname}-${pkgver}.tar.gz"
+source=("http://www.zsh.org/pub/${pkgname}-${pkgver}.tar.gz"
 	"zprofile")
-md5sums=('6fb0e3e52a0f8de5ca63138391b81ce0'
+md5sums=('e357132906ea173c64fd1b2e9596fa0e'
          '24a9335edf77252a7b5f52e079f7aef7')
 
 build() {
@@ -30,7 +30,6 @@ build() {
 	sed -i 's#/usr/share/keymaps#/usr/share/kbd/keymaps#g' Completion/Unix/Command/_loadkeys
 
 	./configure --prefix=/usr \
-		--bindir=/bin \
 		--enable-etcdir=/etc/zsh \
 		--enable-zshenv=/etc/zsh/zshenv \
 		--enable-zlogin=/etc/zsh/zlogin \
