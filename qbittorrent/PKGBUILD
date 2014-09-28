@@ -1,8 +1,8 @@
 # Maintainer: Francesco Marinucci < franzmari[at]chakra-project[dot]it>
 
 pkgname=qbittorrent
-pkgver=3.1.9.2
-pkgrel=2
+pkgver=3.1.10
+pkgrel=1
 pkgdesc="A bittorrent client written in C++ / Qt4 using the good libtorrent library"
 arch=('x86_64')
 url="http://www.qbittorrent.org/"
@@ -15,7 +15,7 @@ categories=('network')
 screenshot=('http://sourceforge.net/projects/qbittorrent/screenshots/242189.jpg')
 install=qbittorrent.install
 source=("http://sourceforge.net/projects/qbittorrent/files/qbittorrent/${pkgname}-${pkgver}/${pkgname}-${pkgver}.tar.xz")
-md5sums=('530f6fc3909bf0576ca3cc7575daae97')
+md5sums=('cfba5bd0690f6b9667e6cf7365ec94b0')
 
 build()
 {
@@ -28,4 +28,5 @@ package()
 {
     cd ${srcdir}/${pkgname}-${pkgver}
     make INSTALL_ROOT=${pkgdir} install
+    install -Dm644 COPYING ${pkgdir}/usr/share/licenses/$pkgname/COPYING
 }
