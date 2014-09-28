@@ -1,28 +1,8 @@
-diff -Naur lib.orig/app/qupzilla.cpp lib/app/qupzilla.cpp
---- lib.orig/app/qupzilla.cpp	2014-01-02 03:55:33.000000000 +0800
-+++ lib/app/qupzilla.cpp	2014-01-02 08:36:37.999446668 +0800
-@@ -779,7 +779,7 @@
- 
-     //Url settings
-     settings.beginGroup("Web-URL-Settings");
--    m_homepage = settings.value("homepage", "qupzilla:start").toUrl();
-+    m_homepage = settings.value("homepage", "http://chakraos.org/index.php?welcome").toUrl();
-     settings.endGroup();
- 
-     QWebSettings* websettings = mApp->webSettings();
-@@ -795,7 +795,7 @@
-     bool showWebSearchBar = settings.value("showWebSearchBar", true).toBool();
-     bool showBookmarksToolbar = settings.value("showBookmarksToolbar", true).toBool();
-     bool showNavigationToolbar = settings.value("showNavigationToolbar", true).toBool();
--    bool showMenuBar = settings.value("showMenubar", true).toBool();
-+    bool showMenuBar = settings.value("showMenubar", false).toBool();
-     bool makeTransparent = settings.value("useTransparentBackground", false).toBool();
-     m_sideBarWidth = settings.value("SideBarWidth", 250).toInt();
-     m_webViewWidth = settings.value("WebViewWidth", 2000).toInt();
-diff -Naur lib.orig/opensearch/searchenginesmanager.cpp lib/opensearch/searchenginesmanager.cpp
---- lib.orig/opensearch/searchenginesmanager.cpp	2014-01-02 03:55:33.000000000 +0800
-+++ lib/opensearch/searchenginesmanager.cpp	2014-01-02 08:41:23.306313965 +0800
-@@ -150,7 +150,7 @@
+diff --git a/src/lib/opensearch/searchenginesmanager.cpp b/src/lib/opensearch/searchenginesmanager.cpp
+index 8f9281c..d09a2bc 100644
+--- a/src/lib/opensearch/searchenginesmanager.cpp
++++ b/src/lib/opensearch/searchenginesmanager.cpp
+@@ -167,7 +167,7 @@ void SearchEnginesManager::restoreDefaults()
      Engine duck;
      duck.name = "DuckDuckGo";
      duck.icon = QIcon(":/icons/sites/duck.png");
@@ -31,16 +11,17 @@ diff -Naur lib.orig/opensearch/searchenginesmanager.cpp lib/opensearch/searcheng
      duck.shortcut = "d";
  
      Engine sp;
-diff -Naur lib.orig/plugins/speeddial.cpp lib/plugins/speeddial.cpp
---- lib.orig/plugins/speeddial.cpp	2014-01-02 03:55:33.000000000 +0800
-+++ lib/plugins/speeddial.cpp	2014-01-02 08:41:23.439648958 +0800
-@@ -47,17 +47,18 @@
+diff --git a/src/lib/plugins/speeddial.cpp b/src/lib/plugins/speeddial.cpp
+index 753cf66..fdc891f 100644
+--- a/src/lib/plugins/speeddial.cpp
++++ b/src/lib/plugins/speeddial.cpp
+@@ -47,17 +47,18 @@ void SpeedDial::loadSettings()
      Settings settings;
      settings.beginGroup("SpeedDial");
      QString allPages = settings.value("pages", QString()).toString();
 -    m_backgroundImage = settings.value("background", QString()).toString();
 -    m_backgroundImageSize = settings.value("backsize", "auto").toString();
-+    m_backgroundImage = settings.value("background", "file:///usr/share/icons/start-white.png").toString();
++    m_backgroundImage = settings.value("file:///usr/share/icons/start-white.png", QString()).toString();
 +    m_backgroundImageSize = settings.value("backsize", "contain").toString();
      m_maxPagesInRow = settings.value("pagesrow", 4).toInt();
      m_sizeOfSpeedDials = settings.value("sdsize", 231).toInt();
@@ -58,24 +39,25 @@ diff -Naur lib.orig/plugins/speeddial.cpp lib/plugins/speeddial.cpp
                     "url:\"https://duckduckgo.com\"|title:\"DuckDuckGo\";";
      }
      changed(allPages);
-diff -Naur lib.orig/preferences/preferences.cpp lib/preferences/preferences.cpp
---- lib.orig/preferences/preferences.cpp	2014-01-02 03:55:33.000000000 +0800
-+++ lib/preferences/preferences.cpp	2014-01-02 08:35:34.408662809 +0800
-@@ -104,7 +104,7 @@
+diff --git a/src/lib/preferences/preferences.cpp b/src/lib/preferences/preferences.cpp
+index c431fb7..790727f 100644
+--- a/src/lib/preferences/preferences.cpp
++++ b/src/lib/preferences/preferences.cpp
+@@ -140,7 +140,7 @@ Preferences::Preferences(BrowserWindow* window, QWidget* parent)
      Settings settings;
      //GENERAL URLs
      settings.beginGroup("Web-URL-Settings");
 -    m_homepage = settings.value("homepage", "qupzilla:start").toString();
-+    m_homepage = settings.value("homepage", "http://chakraos.org/welcome.html").toString();
++    m_homepage = settings.value("homepage", "http://chakraos.org/home/?welcome").toString();
      m_newTabUrl = settings.value("newTabUrl", "qupzilla:speeddial").toString();
      ui->homepage->setText(m_homepage);
      ui->newTabUrl->setText(m_newTabUrl);
-@@ -185,7 +185,7 @@
+@@ -215,7 +215,7 @@ Preferences::Preferences(BrowserWindow* window, QWidget* parent)
  
      //APPEREANCE
      settings.beginGroup("Browser-View-Settings");
 -    ui->showStatusbar->setChecked(settings.value("showStatusBar", true).toBool());
 +    ui->showStatusbar->setChecked(settings.value("showStatusBar", false).toBool());
-     if (p_QupZilla) {
-         ui->showBookmarksToolbar->setChecked(p_QupZilla->bookmarksToolbar()->isVisible());
-         ui->showNavigationToolbar->setChecked(p_QupZilla->navigationBar()->isVisible());
+     ui->showBookmarksToolbar->setChecked(settings.value("showBookmarksToolbar", true).toBool());
+     ui->showNavigationToolbar->setChecked(settings.value("showNavigationToolbar", true).toBool());
+     ui->showHome->setChecked(settings.value("showHomeButton", true).toBool());

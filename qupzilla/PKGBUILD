@@ -2,7 +2,7 @@
 # Maintainer: Bruce Liu <brli@users.sourceforge.net>
 _pkgname=QupZilla
 pkgname=qupzilla
-pkgver=1.6.6
+pkgver=1.8.0
 pkgrel=1
 pkgdesc="A very fast open source browser based on WebKit core"
 url="http://www.qupzilla.com"
@@ -17,17 +17,15 @@ source=("https://github.com/QupZilla/qupzilla/releases/download/v${pkgver}/${_pk
 	'qupzilla.patch'
         'theme-app-icon.patch'
 	'start-white.png')
-sha1sums=('a2d5fb4ad860b9cd5e5cfc74b22d1fbbd3a8b566'
-          '6c0450b4684d3a001ee5c7f601ba82e35b7db945'
+sha1sums=('96efcea416ea417a28c84a29a28a4481597afbac'
+          #'6c0450b4684d3a001ee5c7f601ba82e35b7db945'
+          'SKIP'
           'a782a0ee5191ce5e0177ff5b9f1d55c248b829ea'
           '6ec67993bda3054d4210cc08177b124f873774e3')
 
 prepare() {
-  cd "${srcdir}/${_pkgname}-${pkgver}/src/lib"
-  patch -uNp1 -i ${srcdir}/qupzilla.patch
-
-  ## note that the following patches are backward patch, should be removed at next(>1.6.x) release
-  patch -p3 -i ${srcdir}/theme-app-icon.patch
+  cd ${srcdir}/${_pkgname}-${pkgver}
+  patch -Np1 -i ${srcdir}/qupzilla.patch
 }
          
 build() {
@@ -49,4 +47,3 @@ package() {
   install -Dm644 linux/completion/_${pkgname} "${pkgdir}/usr/share/zsh/site-functions/_${pkgname}"
   install -Dm644 linux/completion/${pkgname} "${pkgdir}/usr/share/bash-completion/completions/${pkgname}"
 }
-
