@@ -3,7 +3,7 @@
 _pkgname=QupZilla
 pkgname=qupzilla
 pkgver=1.8.0
-pkgrel=1
+pkgrel=2
 pkgdesc="A very fast open source browser based on WebKit core"
 url="http://www.qupzilla.com"
 arch=('x86_64')
@@ -17,8 +17,7 @@ source=("https://github.com/QupZilla/qupzilla/releases/download/v${pkgver}/${_pk
 	'qupzilla.patch'
 	'start-white.png')
 sha1sums=('96efcea416ea417a28c84a29a28a4481597afbac'
-          'bbaeeaadd43d37e43ad11beb8478c9ddf7096d5b'
-          'a782a0ee5191ce5e0177ff5b9f1d55c248b829ea'
+          '956649151977cd6cb89a2d84f8e187175c21cdca'
           '6ec67993bda3054d4210cc08177b124f873774e3')
 
 prepare() {
@@ -39,7 +38,7 @@ package() {
   cd "${srcdir}/${_pkgname}-${pkgver}/"
 
   make INSTALL_ROOT="${pkgdir}" install
-  install -Dm 644 "${srcdir}/start-white.png" "${pkgdir}/usr/share/icons/start-white.png"
+  install -Dm 644 "${srcdir}/start-white.png" "${pkgdir}/usr/share/pixmaps/start-white.png"
   
   # shell completion
   install -Dm644 linux/completion/_${pkgname} "${pkgdir}/usr/share/zsh/site-functions/_${pkgname}"
