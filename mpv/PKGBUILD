@@ -3,7 +3,7 @@
 # Contributor: Samir Benmendil <ram-z[at]chakra-project[dot]org>
  
 pkgname=mpv
-pkgver=0.5.3
+pkgver=0.6.0
 pkgrel=1
 pkgdesc="A movie player and encoder for linux, based on MPlayer/mplayer2"
 arch=('x86_64')
@@ -18,7 +18,7 @@ makedepends=('mesa' 'python3-docutils' 'ladspa')
 options=('!emptydirs' '!buildflags')
 install=${pkgname}.install
 source=("https://github.com/mpv-player/${pkgname}/archive/v${pkgver}.tar.gz")
-sha256sums=('04de4375f5ca69849927f23657358734ff1c02c54a15667ab3623ccb00ab6fa7')
+sha256sums=('838f999bdeb36f43888ce7627a8b5f4c5bc942c5c94b6898da15bfcd7d3d8ad1')
 
 prepare() {
   cd ${pkgname}-${pkgver}
@@ -40,7 +40,6 @@ build() {
     --enable-cdda \
     --enable-zsh-comp \
     --enable-pulse \
-    --disable-wayland \
     --disable-portaudio
   ./waf build
 }
