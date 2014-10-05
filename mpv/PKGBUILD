@@ -4,7 +4,7 @@
  
 pkgname=mpv
 pkgver=0.6.0
-pkgrel=1
+pkgrel=2
 pkgdesc="A movie player and encoder for linux, based on MPlayer/mplayer2"
 arch=('x86_64')
 license=('GPL')
@@ -52,6 +52,8 @@ package() {
   install -d "${pkgdir}/usr/share/doc/mpv/examples"
  
   # some extra useful stuff "make install" doesn't install
+  install -m755 TOOLS/umpv \
+    "${pkgdir}"/usr/bin/umpv
   install -m644 etc/{input,example}.conf \
     "${pkgdir}"/usr/share/doc/mpv/examples
   install -m644 DOCS/{encoding.rst,tech-overview.txt} \
