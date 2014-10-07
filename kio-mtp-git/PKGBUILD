@@ -10,37 +10,24 @@ depends=('kdelibs' 'libmtp')
 makedepends=('cmake' 'git' 'automoc4')
 conflicts=('kio-mtp')
 provides=('kio-mtp')
- 
-_gitroot="git://anongit.kde.org/$_pkgname"
-_gitname="$_pkgname"
- 
+source=($_pkgname::git://anongit.kde.org/$_pkgname) 
+md5sums=('SKIP')
+
+
+prepare() {
+  rm -rf ${srcdir}/$_pkgname-build
+  mkdir ${srcdir}/$_pkgname-build
+}
 build() {
-  cd $srcdir
- 
-  msg "Connecting to GIT server...."
- 
-  if [ -d $_gitname ] ; then
-    cd $_gitname && git pull origin
-    msg "The local files are updated."
-  else
-    git clone $_gitroot $_gitname --depth=1
-  fi
- 
-  msg "GIT checkout done or server timeout"
-  msg "Starting make..."
- 
-  rm -rf $srcdir/$_gitname-build
-  cp -R $srcdir/$_gitname $srcdir/$_gitname-build
-  cd $srcdir/$_gitname-build
+  cd $srcdir/$_pkgname-build
  
   cmake -DCMAKE_INSTALL_PREFIX=`kde4-config --prefix` \
         -DCMAKE_BUILD_TYPE=RelWithDebInfo \
-        .
+        ../$_pkgname
   make
 }
  
 package() {
-  cd $srcdir/$_gitname-build
- 
+  cd $srcdir/$_pkgname-build
   make DESTDIR=$pkgdir install
 }
