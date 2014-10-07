@@ -1,6 +1,6 @@
 pkgname=kio-mtp-git
 _pkgname=kio-mtp
-pkgver=20140513
+pkgver=20141007
 pkgrel=1
 pkgdesc="Provides mtp  protocol support."
 arch=('x86_64')
@@ -13,6 +13,9 @@ provides=('kio-mtp')
 source=($_pkgname::git://anongit.kde.org/$_pkgname) 
 md5sums=('SKIP')
 
+pkgver() {
+  date +%Y%m%d
+}
 
 prepare() {
   rm -rf ${srcdir}/$_pkgname-build
