@@ -6,15 +6,15 @@
 
 pkgname=devil
 pkgver=1.7.8
-pkgrel=12
+pkgrel=15
 pkgdesc="Library for reading several different image formats"
 arch=('i686' 'x86_64')
 url="http://openil.sourceforge.net/"
-depends=('allegro>=4.4.0.1' 'freeglut' 'jasper>=1.900.1-4' 'lcms>=1.18-3' 'libmng>=1.0.10-3' 'libpng>=1.4.0' 'openexr' 'sdl')
-makedepends=('bash')
-license=('GPL3')
-source=(http://downloads.sourceforge.net/openil/DevIL-$pkgver.tar.gz
-	libpng14.patch)
+depends=('libpng' 'libmng' 'jasper' 'lcms' 'openexr')
+install=devil.install
+options=('!docs' '!emptydirs')
+license=('GPL')
+source=(http://downloads.sourceforge.net/openil/DevIL-$pkgver.tar.gz libpng14.patch)
 md5sums=('7918f215524589435e5ec2e8736d5e1d'
          '0f839ccefd43b0ee8b4b3f99806147fc')
 
@@ -27,9 +27,6 @@ build() {
   # Configure and build.
   ./configure \
     --enable-ILU \
-    --enable-ILUT \
-    --enable-opengl \
-    --enable-sdl \
     --prefix=/usr
   make
 }

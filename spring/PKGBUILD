@@ -2,35 +2,38 @@
 
 pkgname=spring
 _pkgname=springrts
-pkgver=96.0
+pkgver=98.0
 pkgrel=1
 pkgdesc='A 3D real-time-strategy game engine.'
 arch=('x86_64')
 url="http://springrts.com/"
-license=('GPL2')
-depends=('boost' 'devil' 'freetype2' 'glew' 'icu' 'libvorbis' 'openal')
-makedepends=('cmake' 'java-environment' 'lzma-utils' 'p7zip' 'python' 'zip')
-optdepends=('java-runtime: java-based bots.')
+license=('GPL')
+depends=('openal' 'glew' 'boost-libs' 'freetype2' 'devil' 'libvorbis' 'sdl2'
+         'libxcursor' 'curl' 'shared-mime-info' 'desktop-file-utils' 'libx11')
+makedepends=('boost' 'cmake' 'zip' 'xz' 'p7zip' 'python2' 'java-environment' 'mesa')
+optdepends=('python2: python-based bots'
+            'java-runtime: java-based bots')
+install=spring.install
 source=("http://downloads.sourceforge.net/sourceforge/$_pkgname/${pkgname}_${pkgver}_src.tar.lzma")
-md5sums=('2aeaaed4cf316ea22761efc0ef849a73')
+md5sums=('fbe60dff4d39918157869f45738e0a8a')
 
 build() {
   bsdtar -xf ${pkgname}_${pkgver}_src.tar.lzma
   
   cd ${pkgname}_$pkgver
 
-  cmake \
+  cmake	. \
     -DCMAKE_INSTALL_PREFIX=/usr \
     -DDATADIR=share/spring \
-    .
-
+    -DCMAKE_SKIP_RPATH=YES
   make
 }
 
 package() {
-  cd ${pkgname}_$pkgver
-  make DESTDIR=$pkgdir install
+  cd spring_${pkgver}
 
-  install -d $pkgdir/etc/spring
-  echo '$HOME/.spring' > $pkgdir/etc/spring/datadir
+  make DESTDIR="$pkgdir" install
+
+  install -d "$pkgdir/etc/spring"
+  echo '$HOME/.spring' > "$pkgdir/etc/spring/datadir"
 }
