@@ -1,31 +1,30 @@
 # Maintainer: Adrián Chaves Fernández (Gallaecio) <adriyetichaves@gmail.com>
 
 pkgname=sfml
-pkgver=2.0.rc1
-_pkgver=2.0rc1
-pkgrel=2
+pkgver=2.1
+_pkgver=2.1
+pkgrel=1
 pkgdesc="A simple, fast, cross-platform and object-oriented multimedia API."
 arch=('x86_64')
 url="http://www.sfml-dev.org"
 license=('ZLIB')
 depends=('freetype2' 'glew' 'libjpeg-turbo' 'libsndfile' 'libxrandr' 'openal' 'soil')
 makedepends=('mesa' 'doxygen' 'cmake')
-source=("2.0-rc.tar.gz::https://github.com/LaurentGomila/SFML/tarball/2.0-rc")
-md5sums=('03c8e6817f4525092b94a3d44e8eada8')
+source=("http://www.sfml-dev.org/download/sfml/${pkgver}/SFML-${pkgver}-sources.zip")
+md5sums=('2de81448733f3f46964f23f41cd42e92')
 
 build() {
-  cd "$srcdir"/Laurent*
+  cd "$srcdir"/SFML-${pkgver}
 
-  mkdir build && cd build
+  mkdir -p build && cd build
   cmake -DCMAKE_INSTALL_PREFIX=/usr .. \
-        -DBUILD_DOC=true \
-        -DBUILD_EXAMPLES=true
+        -DSFML_BUILD_EXAMPLES=true \
+        -DSFML_BUILD_DOC=true
   make
-  make doc
 }
 
 package() {
-  cd "$srcdir"/Laurent*/build
+  cd "$srcdir"/SFML-${pkgver}/build
 
   make DESTDIR="$pkgdir/" install
 
