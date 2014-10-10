@@ -1,7 +1,6 @@
 #
 # Chakra Packages for Chakra, part of chakra-project.org
 #
-# maintainer (i686): Phil Miller <philm[at]chakra-project[dog]org>
 # maintainer (x86_64): Manuel Tortosa <manutortosa[at]chakra-project[dot]org>
 
 # include global config
@@ -9,9 +8,9 @@ source ../_buildscripts/${current_repo}-${_arch}-cfg.conf
 
 pkgname=krename
 pkgver=4.0.9
-pkgrel=1
+pkgrel=2
 pkgdesc="A very powerfull batch file renamer for KDE"
-arch=('i686' 'x86_64')
+arch=('x86_64')
 url="http://www.krename.net"
 license=('GPL')
 depends=('kdelibs' 'taglib' 'xdg-utils')
@@ -28,7 +27,8 @@ build() {
   cd build
   cmake ../${pkgname}-${pkgver} \
     -DCMAKE_INSTALL_PREFIX=/usr \
-    -DCMAKE_BUILD_TYPE=Release
+    -DCMAKE_BUILD_TYPE=Release -DCMAKE_CXX_FLAGS="-I/usr/include/freetype2"
+  sed -i 's|/share/locale|/share/locale/kde4|' po/cmake_install.cmake
   make
 }
 
