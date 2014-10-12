@@ -19,7 +19,7 @@ pkgname=('libreoffice-common'
 	'libreoffice-extension-nlpsolver')
 _LOver=4.3.2.2
 pkgver=4.3.2
-pkgrel=1
+pkgrel=3
 arch=('x86_64')
 license=('LGPL3')
 url="http://www.libreoffice.org/"
@@ -34,7 +34,7 @@ makedepends=( # makedepends
              'pango' 'nss' 'libjpeg' 'libxrandr' 'libgl' 'dbus-glib' "icu>=4.6" 'libxslt'
              'redland' 'graphite' 'hyphen' 'lpsolve' 'gcc-libs' 'sh'  'libtextcat' 'librsvg' 'lcms2'
              'hicolor-icon-theme' 'desktop-file-utils' 'shared-mime-info' 'translate-toolkit' 'xdg-utils' 'ttf-dejavu' 'libcups'  'libmwaw' 'ttf-liberation'
-             'glew' 'libetonyek' 'telepathy-glib'
+             'glew' 'libetonyek'
              )
 
 _mirror="http://download.documentfoundation.org/libreoffice/src/${pkgver}"
@@ -251,7 +251,6 @@ build() {
 		--enable-gstreamer \
                 --disable-gstreamer-0-10 \
 		--enable-lockdown\
-		--enable-mergelibs \
 		--enable-opencl \
 		--enable-opengl \
 		--enable-openssl \
@@ -261,7 +260,6 @@ build() {
 		--enable-scripting-javascript \
 		--enable-ext-wiki-publisher \
 		--enable-ext-nlpsolver \
-                --enable-telepathy \
 		--without-fonts \
 		--without-ppds \
 		--without-system-libwps \
