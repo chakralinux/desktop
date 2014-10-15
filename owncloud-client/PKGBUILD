@@ -5,7 +5,7 @@
 
 _name=mirall
 pkgname=owncloud-client
-pkgver=1.6.1
+pkgver=1.6.3
 pkgrel=1
 pkgdesc="ownCloud client based on mirall"
 arch=('x86_64')
@@ -18,17 +18,13 @@ groups=('network')
 conflicts=('csync-owncloud')
 backup=('etc/owncloud-client/sync-exclude.lst')
 install=${pkgname}.install
-source=("http://download.owncloud.com/desktop/stable/${_name}-${pkgver}.tar.bz2"
-        'man.patch')
-sha256sums=('3b6a013db097479ff3c3682aa40d2abef3f3ab8939d9fc0ace38f278780709dc'
-            '1cec1ec7761d087e197f0ccdf5e1e8236db0bd29a1babe49130c00f81e82e011')
+source=("http://download.owncloud.com/desktop/stable/${_name}-${pkgver}.tar.bz2")
+sha256sums=('89e4488881a53956cdedab21d05eb61b2c00bb31a20286b72836e39a3126204b')
 
 prepare() {
   cd ${_name}-${pkgver}/
   if [[ -d build ]]; then rm -rf build; fi
   mkdir build
-  msg 'patch the man directory'
-  patch -p0 -i "${srcdir}/man.patch"
 }
 
 build() {
