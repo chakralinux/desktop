@@ -9,7 +9,7 @@ pkgname="kde-workspace"
 arch=('x86_64')
 pkgver=${_workspace_ver}
 #pkgver=4.11.11
-pkgrel=3
+pkgrel=1
 pkgdesc="KDE Workspace"
 url="http://www.kde.org"
 license=('GPL' 'LGPL' 'FDL')
@@ -106,12 +106,8 @@ source=("http://download.kde.org/stable/${_kdever}/src/kde-workspace-${_workspac
         '09_enable_start-shutdown-scripts.patch'
         'fix_terminate-server.patch'
         'fix_root-only-kcms.patch'
-        'plasma-panel-resize-hint.diff'
-        # port some 4.11.12 graphical fixes
-        # http://bugs.kde.org/show_bug.cgi?id=336589
-        # http://bugs.kde.org/show_bug.cgi?id=317066
-        '4.11.12a.patch'
-        '4.11.12b.patch')
+        'plasma-panel-resize-hint.diff')
+        
 
 sha256sums=(`grep ${pkgname}-$pkgver.tar.xz  ../checksums.txt | cut -d " " -f1`
             `grep kde-wallpapers-$_kdever.tar.xz  ../checksums.txt | cut -d " " -f1`
@@ -130,9 +126,7 @@ sha256sums=(`grep ${pkgname}-$pkgver.tar.xz  ../checksums.txt | cut -d " " -f1`
             'ad91b3661bcb72bbbd12ed100fc76b7ae0829e37e726adb9c3e4e4cb44d496fd'
             'e5329c87f14ce04f80291f1f7a2be47994f3d54425b572c308b38e2718390959'
             'b38959520a3ecafe6f5628849e29d7e8b0dc030622fa12e77eb8461ad7187a78'
-            '6bc640b8324d47e9d07a7cedef7e7c5a944ec4d900a15b88471dc77724f9b4a7'
-            '227d69e08ecf741206e1477b0af7ba687f071dbb38f8f0ce779422facc90bb12'
-            'c3363f93984a6b846dfc4e344dfb0b740905a7dfca0f81b006128953bf24bc3d')
+            '6bc640b8324d47e9d07a7cedef7e7c5a944ec4d900a15b88471dc77724f9b4a7')
 
 prepare() {
     cd "${srcdir}/${pkgname}-${pkgver}"
@@ -149,8 +143,6 @@ prepare() {
     patch -p0 -i ${srcdir}/fix_terminate-server.patch
     patch -p1 -i ${srcdir}/fix_root-only-kcms.patch
     patch -p0 -i ${srcdir}/plasma-panel-resize-hint.diff
-    patch -p1 -i ${srcdir}/4.11.12a.patch
-    patch -p1 -i ${srcdir}/4.11.12b.patch
 
     # Disable krandr
     sed -i "s/add_subdirectory(randr)//g" ./kcontrol/CMakeLists.txt
@@ -170,9 +162,9 @@ build() {
     make
 
     msg "Building kcm_tablet..."
-    cd "${srcdir}/wacomtablet-2.0"
+    cd "${srcdir}/wacomtablet"
     # Fix desktop to the new layout
-    sed -i -e "s~keyboard-and-mouse~input-devices~g" ${srcdir}/wacomtablet-2.0/src/kcmodule/kcm_wacomtablet.desktop
+    sed -i -e "s~keyboard-and-mouse~input-devices~g" src/kcmodule/kcm_wacomtablet.desktop
     CXXFLAGS="${CXXFLAGS} -I /usr/include/freetype2" cmake . \
         -DCMAKE_BUILD_TYPE=${_build_type} \
         -DCMAKE_INSTALL_PREFIX=${_installprefix} \
@@ -184,7 +176,7 @@ package() {
     cd "${srcdir}/${pkgname}-${pkgver}"
     make DESTDIR=${pkgdir} install
 
-    cd "${srcdir}/wacomtablet-2.0"
+    cd "${srcdir}/wacomtablet"
     make DESTDIR=${pkgdir} install
 
     # Install PAM configuration

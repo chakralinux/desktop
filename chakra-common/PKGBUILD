@@ -33,7 +33,7 @@ replaces=('kde-common'
 conflicts=('kde-common'
            'chakra-paste')
 install=chakra-common.install
-source=('http://www.kde-apps.org/CONTENT/content-files/48411-rootactions_servicemenu_2.4.10.tar.gz'
+source=('http://www.kde-apps.org/CONTENT/content-files/48411-rootactions_servicemenu_2.8.2.tar.gz'
         'servicemenu-copy-path.desktop'
         'http://www.kde-apps.org/CONTENT/content-files/102825-compressattach.desktop.bz2'
         'servicemenu-rootactions.patch'
@@ -59,10 +59,10 @@ source=('http://www.kde-apps.org/CONTENT/content-files/48411-rootactions_service
         'agent-shutdown.sh'
         'chakra-helper.sh'
         'https://gitorious.org/chakra-paste/chakra-paste/archive/05f0a884a4de1460309ee95d678eb034c4c964b5.tar.gz')
-sha256sums=('92978c921647a2fa00d82c0bde59ebd15f7c805e87e11e1f9c4789bde3fbd8b5'
+sha256sums=('39e41a6acf246af4050d3e253b028f6abb739e19ec03d3c17ebf467b68be3962'
             '2bf00472d9b50bc9befcf9cdca92a1a6d31690287de330e6390ca65c17aba02e'
             'ca7d66aec559282581dd577746dff86b9b4127ae871ee2788b74ab66f99edbfa'
-            'c20b837934d708653de775ed19bd013e4b8509ba5dffbbd5ac4c905e3102f15c'
+            'ba4b1f429bd6900f6989df6e50b69fea38110ccb4a304a903de6e291d0af8b74'
             '30625733e2873f6945062868678e3408f6f224f1358623a2857fee6649615e37'
             'cff1d0489f5f4b7eb92a0cee9a7cf100bd8c401c9395a78d95068c5437330a28'
             '04022df9f6cebb4b6fc18f66c8c84c531128c9856ef735a59c9efc7a6976b7f5'
@@ -84,7 +84,7 @@ sha256sums=('92978c921647a2fa00d82c0bde59ebd15f7c805e87e11e1f9c4789bde3fbd8b5'
             'e4a44b4ed3130d1fa309a6b5c829461ec09ec595c31cd4a8715d79942fe8f0ef'
             '530ecdbe32c8f33991cd6c2ccf29212f28bb4462d1844f5acba335b5984a9347'
             '9e0c9408c9bc12aeca2fd66a4723b57a6878307ba956df7cca43f8112dd71429'
-	    '5676b7b4145f52720a32a86a7e504cad769b23b957e9f71b0542c10b4b47e7ba')
+            '82adc6318d28ec5734aa0bf30194c22e82f1a8226918747a8e680b6e472cf218')
 
 package() {
     # Install scripts for gpg/ssh-agent
@@ -112,10 +112,10 @@ package() {
     install -D -m755 -o root -g root ${srcdir}/updates.conf ${pkgdir}/etc/chakra/updates.conf
 
     # Install root actions service menu
-    cd ${srcdir}/rootactions_servicemenu_2.4.10/Root_Actions_2.4.10/dolphin-KDE4/
+    cd ${srcdir}/rootactions_servicemenu_2.8.2/Root_Actions_2.8.2/dolphin-KDE4/
     mkdir -p ${pkgdir}/usr/share/kde4/services/ServiceMenus/
     install -m755 *.desktop ${pkgdir}/usr/share/kde4/services/ServiceMenus/
-        cd ${srcdir}/rootactions_servicemenu_2.4.10/Root_Actions_2.4.10
+        cd ${srcdir}/rootactions_servicemenu_2.8.2/Root_Actions_2.8.2
         patch -p2 < ${srcdir}/servicemenu-rootactions.patch      
     install -Dm755 rootactions-servicemenu.pl ${pkgdir}/usr/bin/rootactions-servicemenu.pl
         sed "s~Icon=terminal~Icon=utilities-terminal~g" -i ${pkgdir}/usr/share/kde4/services/ServiceMenus/10-rootactionsfolders.desktop
