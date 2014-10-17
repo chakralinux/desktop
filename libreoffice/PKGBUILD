@@ -19,7 +19,7 @@ pkgname=('libreoffice-common'
 	'libreoffice-extension-nlpsolver')
 _LOver=4.3.2.2
 pkgver=4.3.2
-pkgrel=3
+pkgrel=4
 arch=('x86_64')
 license=('LGPL3')
 url="http://www.libreoffice.org/"
@@ -185,128 +185,12 @@ noextract=(
           libodfgen-0.1.1.tar.bz2)
 
 
-prepare() {
-    cd ${srcdir}/libreoffice-$_LOver
-    
-    # fix exttextcat build error
-    # /usr/include/features.h:330:4: error: #warning _FORTIFY_SOURCE requires compiling with optimization (-O) [-Werror=cpp]
-    unset CPPFLAGS
-
-	# move external sources into place
-	mkdir -p ${srcdir}/ext_sources &&	pushd ${srcdir}/ext_sources
-	for source in "${noextract[@]}"; do
-	  ln -sf ${srcdir}/$source .
-	done
-	popd
-
-    # unowinreg.dll must be a file not a symlink or the result will become a broken symlink
-    # /usr/share/libreoffice/sdk/classes/win/unowinreg.dll -> /build/libreoffice/src/185d60944ea767075d27247c3162b3bc-unowinreg.dll
-    rm ${srcdir}/ext_sources/185d60944ea767075d27247c3162b3bc-unowinreg.dll
-    cp -f ${srcdir}/185d60944ea767075d27247c3162b3bc-unowinreg.dll ${srcdir}/ext_sources
-   
-    # fix not upstreamable pyuno paths - patch taken from Debian
-    patch -Np1 -i ${srcdir}/make-pyuno-work-with-system-wide-module-install.diff
-    
-    patch -Np1 -i ${srcdir}/libreoffice-mergedlibs-circular-deps.patch
-
-    
-    #use the CFLAGS but remove the LibO overridden ones
-    for i in $CFLAGS; do
-            case "$i" in
-                    -O?|-pipe|-Wall|-g|-fexceptions) continue;;
-            esac
-    ARCH_FLAGS="$ARCH_FLAGS $i"
-    done
-}
 
 
 build() {
 
     cd libreoffice-$_LOver
 
-    ./autogen.sh --with-build-version="${_LOver} Chakra GNU/Linux-${pkgrel}" --with-vendor="Chakra GNU/Linux" \
-		--enable-split-app-modules \
-		--with-parallelism=${MAKEFLAGS/-j/} \
-		--with-external-tar="${srcdir}/ext_sources" \
-		--disable-fetch-external \
-		--disable-verbose \
-		--enable-release-build \
-		--prefix=/usr --exec-prefix=/usr --sysconfdir=/etc \
-		--libdir=/usr/lib --mandir=/usr/share/man \
-		--with-lang="" \
-		--enable-cairo-canvas \
-		--enable-crashdump \
-		--enable-avahi \
-		--enable-dbus \
-		--disable-evolution2 \
-		--enable-graphite\
-		--enable-gio\
-                --disable-epm \
-		--disable-gnome-vfs\
-		--disable-kde\
-		--disable-gtk \
-		--disable-gconf \
-                --disable-mergelibs \
-		--enable-kde4 \
-		--enable-gstreamer \
-                --disable-gstreamer-0-10 \
-		--enable-lockdown\
-		--enable-opencl \
-		--enable-opengl \
-		--enable-openssl \
-		--enable-odk \
-		--enable-python=system \
-		--enable-scripting-beanshell \
-		--enable-scripting-javascript \
-		--enable-ext-wiki-publisher \
-		--enable-ext-nlpsolver \
-		--without-fonts \
-		--without-ppds \
-		--without-system-libwps \
-                --without-system-glm \
-		--without-system-libcdr \
-		--without-system-jfreereport \
-		--without-system-apache-commons \
-		--without-system-mdds \
-		--without-myspell-dicts \
-                --with-system-libvisio \
-                --without-system-libcmis \
-                --without-system-libmspub \
-		--without-system-libexttextcat \
-		--without-system-orcus \
-		--without-system-liblangtag \
-		--without-system-npapi-headers \
-		--with-system-libetonyek \
-		--without-system-libfreehand \
-		--without-system-firebird \
-		--without-system-libatomic-ops \
-		--without-system-libebook \
-		--without-system-libabw \
-		--with-system-dicts \
-		--with-external-dict-dir=/usr/share/hunspell \
-		--with-external-hyph-dir=/usr/share/hyphen \
-		--with-external-thes-dir=/usr/share/mythes \
-		--with-system-beanshell \
-                --with-system-cppunit \
-                --with-system-graphite \
-                --with-system-glew \
-		--with-system-libwpg \
-		--with-system-libwps \
-		--without-system-libodfgen \
-		--with-system-redland \
-		--with-ant-home="/usr/share/java/apache-ant"\
-		--with-system-boost \
-		--with-system-cairo \
-		--with-system-libs \
-		--with-system-mythes \
-		--with-system-headers \
-		--without-system-hsqldb \
-		--with-alloc=system\
-		--with-system-clucene
-        
-        touch src.downloaded
-	#./download
-	make build
 	# fake installation to create split file lists
 	mkdir $srcdir/fakeinstall
 	make DESTDIR=${srcdir}/fakeinstall distro-pack-install
@@ -520,6 +404,10 @@ package_libreoffice-kde4() {
  optdepends=()
  backup=()
  groups=('libreoffice')
+ 
+ # Merge kde and kde4 filelists as we do not bother with compat anymore
+ # Not worth fixing unless really cleaning up the install completely
+ cat ${srcdir}/libreoffice-$_LOver/file-lists/kde_list.txt >> ${srcdir}/libreoffice-$_LOver/file-lists/kde4_list.txt
  
  # create directories from *list.txt file
  for directory in `grep ^%dir ${srcdir}/libreoffice-$_LOver/file-lists/kde4_list.txt`; do
