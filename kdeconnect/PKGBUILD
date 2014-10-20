@@ -1,49 +1,39 @@
 # Maintainer: Neophytos Kolokotronis <tetris4@gmail.com>
 # Contributions from AUR: https://aur.archlinux.org/packages/kdeconnect/
 
-# The section below can be adjusted to suit your needs
-# What type of build do you want? Default is Release.
-# See http://techbase.kde.org/Development/CMake/Addons_for_KDE#Buildtypes to check what is supported.
- 
-_buildtype='Release'
-  
 pkgname=kdeconnect
-pkgver=0.7.2
+pkgver=0.7.3
 _pkgver=${pkgver}
 pkgrel=1
 pkgdesc='KDE Connect - kded and kcm'
 url='https://albertvaka.wordpress.com/2013/08/05/introducing-kde-connect/'
 license=('GPL')
 arch=('x86_64')
-depends=('kdelibs' 'qjson' 'qca-ossl')
+depends=('kdelibs' 'qjson' 'qca-ossl' 'libfakekey')
 makedepends=('automoc4' 'cmake')
+optdepends=('sshfs: remote filesystem browser')
 install=kdeconnect.install
 screenshot=('http://albertvaka.files.wordpress.com/2013/08/kcm.png')
 source=("http://download.kde.org/unstable/kdeconnect/${_pkgver}/src/${pkgname}-kde-${pkgver}.tar.xz")
-md5sums=('1cd10d54bb3dc6e5b854ec110f63cecb')
- 
-if [[ ! ${_buildtype} == 'Release' ]] && [[ ! ${_buildtype} == 'release' ]]; then
-  options=(debug)
-fi
- 
+md5sums=('261e2b3412ed28e6f67e0ef2187b1854')
+
 prepare() {
-  if [[ -e ${pkgname}-kde-${pkgver}-build ]]; then rm -rf ${pkgname}-build; fi
-  mkdir ${pkgname}-kde-${pkgver}-build
+  mkdir -p build
 
   cd ${pkgname}-kde-${pkgver}
 }
  
 build() {
-  cd ${pkgname}-kde-${pkgver}-build
+  cd build
  
   cmake -DCMAKE_INSTALL_PREFIX=/usr \
         -DKDE4_BUILD_TESTS=OFF \
-        -DCMAKE_BUILD_TYPE=${_buildtype} \
+        -DCMAKE_BUILD_TYPE=Release \
         ../${pkgname}-kde-${pkgver}
   make
 }
  
 package() {
-  cd ${pkgname}-kde-${pkgver}-build
+  cd build
   make DESTDIR=${pkgdir} install
 }

@@ -1,12 +1,18 @@
+post_upgrade() {
+  xdg-icon-resource forceupdate --theme hicolor &> /dev/null
+}
+
 post_install() {
 echo 'To use kdeconnect run:
 qdbus org.kde.kded /kded loadModule kdeconnect
 kbuildsycoca4 -noincremental
 You might also be required to open port 1714:1764, incoming for tcp & udp'
+  post_upgrade
 }
 
 post_remove() {
 echo 'To complete removal run:
 qdbus org.kde.kded /kded unloadModule kdeconnect
 kbuildsycoca4 -noincremental'
+  post_upgrade
 }
