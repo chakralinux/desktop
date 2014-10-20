@@ -1,8 +1,8 @@
 # Maintainer: Neophytos Kolokotronis <tetris4@gmail.com>
 
 pkgname=ktp-call-ui
-pkgver=0.8.1
-pkgrel=3
+pkgver=0.9.0
+pkgrel=1
 pkgdesc="Telepathy call handler "
 arch=('x86_64')
 url="http://www.kde.org"
@@ -13,41 +13,14 @@ depends=('ktp-common-internals' 'telepathy-farstream' 'farstream'
 makedepends=('boost' 'cmake' 'automoc4' )
 groups=('kde-telepathy')
 categories=('communication')
-source=("ftp://mirrors.mit.edu/kde/stable/kde-telepathy/${pkgver}/src/${pkgname}-${pkgver}.tar.bz2"
-        "ktp-call-ui-0.8.1-gstreamer1-0001-Require-farstream-0.2.patch"
-        "ktp-call-ui-0.8.1-gstreamer1-0002-Rename-src-d-to-src_-u.patch"
-        "ktp-call-ui-0.8.1-gstreamer1-0003-rename-enable-last-buffer-to-enable-last-sample.patch"
-        "ktp-call-ui-0.8.1-gstreamer1-0004-rename-caps-type-name-removing-0.10-format.patch"
-        "ktp-call-ui-0.8.1-gstreamer1-0005-ffmpegcolorspace-videoconvert.patch"
-        "ktp-call-ui-0.8.1-gstreamer1-0006-Update-cmake-to-look-for-farstream-0.2.patch"
-        "ktp-call-ui-0.8.1-gstreamer1-0007-videomaxrate-seems-to-have-been-generalized-into-vid.patch"
-        "ktp-call-ui-0.8.1-gstreamer1-0008-Remove-postproc_tmpnoise-from-TfVideoContentHandler-.patch"
-        "git-fix.patch")
-md5sums=('059fdb5ac1f16ca9c178a83edfd5c624'
-         'f3c2d09ffbd519344187e133399bebf0'
-         '3a7a7c4156df529d95d58ffb2b7c9ab2'
-         '8b6f36ba3b6004ee6ff20c1ef03289f0'
-         'ead2f7ebd55aabe6ccd7ecdbc08b3f96'
-         'c077829b8d520a70c51f061b7f287d7a'
-         'b438b22edaa599c6558b1893b691f4e9'
-         '10d9143adb34e137cc3242486ba15542'
-         '513ae3c388f1723213211f56b407fa92'
-         '4b762cdb61eee22f8774dfd5936b7853')
+source=("ftp://mirrors.mit.edu/kde/stable/kde-telepathy/${pkgver}/src/${pkgname}-${pkgver}.tar.bz2")
+md5sums=('1d37e323b276ef6482d328e83265ae07')
 
 
 prepare() {
   cd "${srcdir}"
   mkdir -p build
   cd ${pkgname}-${pkgver}
-  patch -Np1 -i "../ktp-call-ui-0.8.1-gstreamer1-0001-Require-farstream-0.2.patch"
-  patch -Np1 -i "../ktp-call-ui-0.8.1-gstreamer1-0002-Rename-src-d-to-src_-u.patch"
-  patch -Np1 -i "../ktp-call-ui-0.8.1-gstreamer1-0003-rename-enable-last-buffer-to-enable-last-sample.patch"
-  patch -Np1 -i "../ktp-call-ui-0.8.1-gstreamer1-0004-rename-caps-type-name-removing-0.10-format.patch"
-  patch -Np1 -i "../ktp-call-ui-0.8.1-gstreamer1-0005-ffmpegcolorspace-videoconvert.patch"
-  patch -Np1 -i "../ktp-call-ui-0.8.1-gstreamer1-0006-Update-cmake-to-look-for-farstream-0.2.patch"
-  patch -Np1 -i "../ktp-call-ui-0.8.1-gstreamer1-0007-videomaxrate-seems-to-have-been-generalized-into-vid.patch"
-  patch -Np1 -i "../ktp-call-ui-0.8.1-gstreamer1-0008-Remove-postproc_tmpnoise-from-TfVideoContentHandler-.patch"
-  patch -Np1 -i "../git-fix.patch"
 }
 
 build() {
