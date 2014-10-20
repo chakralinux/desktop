@@ -4,28 +4,25 @@
 # Maintainer: Adrian Chaves Fernandez (Gallaecio) <adriyetichaves@gmail.com>
 
 pkgname=0ad
-pkgver=0.0.16
+pkgver=0.0.17
 _pkgver=$pkgver-alpha
-pkgrel=2
+pkgrel=1
 pkgdesc="Cross-platform, 3D and historically-based real-time strategy game"
 screenshot=http://www.wildfiregames.com/0ad/images/news_images/dynamic-borders.jpg
 arch=('i686' 'x86_64')
 url="http://play0ad.com/"
 license=('GPL2' 'CCPL') # source licenses.
-depends=('boost-libs' 'curl' 'enet' 'gamin' 'gloox' 'libogg' 'libpng' 'libvorbis' 'libxcursor' 'libxml2' 'mesa' 'miniupnpc' 'nspr' 'nvidia-texture-tools' 'openal' 'sdl' 'zip' 'zlib' 0ad-data=$pkgver)
+depends=('boost-libs' 'curl' 'enet' 'gamin' 'gloox' 'libgl' 'libogg' 'libpng' 'libvorbis' 'libxcursor' 'libxml2' 'mesa' 'miniupnpc' 'nspr' 'nvidia-texture-tools' 'openal' 'sdl' 'zip' 'zlib' 0ad-data=$pkgver)
 makedepends=('boost' 'python2')
 replaces=(0ad-debug) # If someone wants a debug version, they should rebuild 0ad with config=debug.
 categories=('games')
 changelog=ChangeLog
-source=(http://downloads.sourceforge.net/project/zero-ad/releases/$pkgname-$_pkgver-unix-build.tar.xz
-        http://trac.wildfiregames.com/raw-attachment/ticket/2552/miniupnpc_api.patch)
-md5sums=('3836bbcdf4edc57c2354b4fef6023146'
-         '6981595ba4b8eb21f9503304b090c9a9')
+source=(http://downloads.sourceforge.net/project/zero-ad/releases/$pkgname-$_pkgver-unix-build.tar.xz)
+md5sums=('c59990a355060e01174919ae444ad7c2')
 
 prepare() {
   cd "$srcdir/$pkgname-$_pkgver/"
-  patch -p0 -i "../miniupnpc_api.patch"
-  sed -i "s/env python/env python2/g" libraries/source/cxxtest-4.3/bin/cxxtestgen
+  sed -i "s/env python/env python2/g" libraries/source/cxxtest-4.4/bin/cxxtestgen
 }         
 
 build() {
@@ -36,15 +33,14 @@ build() {
   # Atlas disabled because it requires GTK.
   ./update-workspaces.sh \
     --disable-atlas \
-    --with-system-enet \
     --with-system-miniupnpc \
     --with-system-nvtt \
     --bindir=/usr/bin \
-    --libdir=/usr/lib \
+    --libdir=/usr/lib/0ad \
     --datadir=/usr/share/${pkgname}/data
 
   cd gcc
-  make config=release
+  make
 }
 
 package() {
