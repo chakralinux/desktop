@@ -2,7 +2,7 @@ source ../plasma.conf
 
 pkgname=libnm-qt5
 _pkgname=libnm-qt
-pkgver=5.0.92
+pkgver=${PVersion}
 pkgrel=1
 pkgdesc="Plasma Workspace"
 arch=('x86_64')
@@ -13,7 +13,7 @@ makedepends=('extra-cmake-modules' 'kapidox')
 checkdepends=("cmake")
 groups=('plasma')
 options=("debug")
-source=("${PServer}/${PVersion}/${_pkgname}-${pkgver}.tar.xz")
+source=("${PServer}/${pkgver}/${_pkgname}-${PSubVersion}.tar.xz")
 sha256sums=( $(getSum ${_pkgname} | head -n1) )
 
 prepare() {
