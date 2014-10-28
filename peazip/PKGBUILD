@@ -1,7 +1,7 @@
 # Maintainer: Daniele Cocca <jmc@chakra-project.org>
 pkgname=peazip
 pkgver=5.5.0
-pkgrel=1
+pkgrel=2
 pkgdesc="Free, Open Source file and archive manager. Supports 7Z, ACE, ARC, CAB, ISO, PAQ, PEA, RAR, TAR, ZIP and many more archive formats."
 arch=('x86_64')
 url="http://peazip.org/"
@@ -10,24 +10,51 @@ depends=('zip' 'unzip' 'unrar' 'xz' 'p7zip' 'unarj' 'fpc-qtbindings')
 makedepends=('lazarus')
 optdepends=('rar: support for RAR archive compression')
 categories=('utils')
-source=("http://sourceforge.net/projects/peazip/files/${pkgver}/${pkgname}-${pkgver}.src.zip")
-md5sums=('854377293beaad8d5371aa63e1b6bf0c')
+source=("http://sourceforge.net/projects/peazip/files/${pkgver}/${pkgname}-${pkgver}.src.zip"
+        'altconf.txt')
+md5sums=('854377293beaad8d5371aa63e1b6bf0c'
+         '8bc81e527370ae11c78511db5e2bbeb4')
 
 build() {
   cd ${srcdir}/${pkgname}-${pkgver}.src
-  lazbuild -B --verbose -r project_peach.lpi \
-	   --lazarusdir=/usr/lib/lazarus \
-	   --widgetset=qt \
-	   --primary-config-path=${srcdir}/config
+  for i in project_pea.lpi project_peach.lpi project_gwrap.lpi ; do 
+   lazbuild -B --cpu=${arch} --verbose ${i} \
+ 	   --lazarusdir=/usr/lib/lazarus \
+ 	   --widgetset=qt
+  done
 }
 
 package() {
-  cd ${srcdir}/${pkgname}-${pkgver}.src
-  install -Dm755 peazip ${pkgdir}/usr/bin/peazip
+  # Since the dev are lazy, we introduce several path for easier description
+  _srcdir=${srcdir}/${pkgname}-${pkgver}.src
+  _datadir=usr/share/${pkgname}
+  cd ${_srcdir}
+  install -dm755 ${pkgdir}/${_datadir}
 
-  # preparing for desktop installation
-  cd ${srcdir}/${pkgname}-${pkgver}.src/FreeDesktop_integration/
+  # Move language files and utilities
+  cp -rv res/themes ${pkgdir}/${_datadir}/res/
+  cp -rv res/lang ${pkgdir}/${_datadir}/res/
+  install -Dm644 ${srcdir}/altconf.txt ${pkgdir}/${_datadir}/res/altconf.txt
+  
+  # Link tools
+  for i in 7z upx ; do
+    install -dm755 ${pkgdir}/${_datadir}/res/${i}
+    ln -s /usr/bin/${i} ${pkgdir}/${_datadir}/res/${i}/${i}
+  done
 
+  # Install binary to datadir/res 
+  for i in pea pealauncher ; do
+    install -Dm755 ${i} ${pkgdir}/${_datadir}/res/${i}
+  done
+  
+  # Install peazip to datadir because at start need to read res/altconf.txt
+  install -Dm755 peazip ${pkgdir}/${_datadir}/peazip
+  install -dm755 ${pkgdir}/usr/bin
+  ln -s /${_datadir}/peazip ${pkgdir}/usr/bin/peazip
+
+  # Preparing for desktop installation
+  cd ${_srcdir}/FreeDesktop_integration/
+ 
   # Move the Dolohin integration
   for i in peazipadd.desktop \
            peazipext.desktop \
