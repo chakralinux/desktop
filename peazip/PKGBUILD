@@ -1,58 +1,44 @@
-#
-# Chakra Packages for Chakra, part of chakra-project.org
-#
 # Maintainer: Daniele Cocca <jmc@chakra-project.org>
-#
-
-# include global config
-source ../_buildscripts/${current_repo}-${_arch}-cfg.conf
-
 pkgname=peazip
-pkgver=4.4
+pkgver=5.5.0
 pkgrel=1
 pkgdesc="Free, Open Source file and archive manager. Supports 7Z, ACE, ARC, CAB, ISO, PAQ, PEA, RAR, TAR, ZIP and many more archive formats."
-arch=('i686')
+arch=('x86_64')
 url="http://peazip.org/"
 license=('GPL')
 depends=('zip' 'unzip' 'unrar' 'xz' 'p7zip' 'unarj' 'fpc-qtbindings')
+makedepends=('lazarus')
 optdepends=('rar: support for RAR archive compression')
 categories=('utils')
-source=("http://peazip.googlecode.com/files/${pkgname}-${pkgver}.LINUX.Qt.tgz")
-noextract=("${pkgname}-${pkgver}.LINUX.Qt.tgz")
-md5sums=('336e14f541e48d9820d0d5af09c11f19')
+source=("http://sourceforge.net/projects/peazip/files/${pkgver}/${pkgname}-${pkgver}.src.zip")
+md5sums=('854377293beaad8d5371aa63e1b6bf0c')
 
-package() {
-  # Extract the software as distributed upstream
-  tar -zxf "${srcdir}/${pkgname}-${pkgver}.LINUX.Qt.tgz" -C "${pkgdir}"
-
-  # Remove useless KDE3 support directories or empty ones
-  rm -rf "${pkgdir}/opt"
-  rm -rf "${pkgdir}/usr/lib32"
-  rm -rf "${pkgdir}/usr/local/lib"
-  rm -rf "${pkgdir}/usr/local/lib32"
-  rm -rf "${pkgdir}/usr/local/share/PeaZip/res/icons"
-  rm -rf "${pkgdir}/usr/local/share/PeaZip/res/unace"
-  rm -rf "${pkgdir}/usr/local/share/PeaZip/FreeDesktop_integration/kde3-konqueror"
-
-  # Remove the duplicated libQtPas library (will be provided by fpc-qtcompat)
-  rm -rf "${pkgdir}/usr/lib"
-
-  # Move files from /usr/local/share to /usr/share prefix
-  for directory in "${pkgdir}/usr/local/share"/*; do
-    mv "${directory}" "${directory}/../../../share"
-  done
-  rm -rf "${pkgdir}/usr/local/share"
-
-  # Move files from /usr/local to /usr prefix
-  for directory in "${pkgdir}/usr/local"/*; do
-    mv "${directory}" "${directory}/../../"
-  done
-  rm -rf "${pkgdir}/usr/local"
-
-  # Recreate the application launchers
-  ln -sf /usr/share/PeaZip/res/pea "${pkgdir}/usr/bin/pea"
-  ln -sf /usr/share/PeaZip/res/pealauncher "${pkgdir}/usr/bin/pealauncher"
-  ln -sf /usr/share/PeaZip/peazip "${pkgdir}/usr/bin/peazip"
+build() {
+  cd ${srcdir}/${pkgname}-${pkgver}.src
+  lazbuild -B --verbose -r project_peach.lpi \
+	   --lazarusdir=/usr/lib/lazarus \
+	   --widgetset=qt \
+	   --primary-config-path=${srcdir}/config
 }
 
-# vim:set ts=2 sw=2 et:
+package() {
+  cd ${srcdir}/${pkgname}-${pkgver}.src
+  install -Dm755 peazip ${pkgdir}/usr/bin/peazip
+
+  # preparing for desktop installation
+  cd ${srcdir}/${pkgname}-${pkgver}.src/FreeDesktop_integration/
+
+  # Move the Dolohin integration
+  for i in peazipadd.desktop \
+           peazipext.desktop \
+           peazipextfolder.desktop \
+           peazipexthere.desktop \
+           peazipopen.desktop ; do 
+    install -Dm755 kde4-dolphin/usr/share/kde4/services/ServiceMenus/${i} \
+		   ${pkgdir}/usr/share/kde4/services/ServiceMenus/${i}
+  done
+
+  # Move mimetypes and icons
+  install -Dm755 peazip.desktop ${pkgdir}/usr/share/applications/peazip.desktop
+  install -Dm755 peazip.png ${pkgdir}/usr/share/icons/hicolor/256x256/apps/peazip.png
+}
