@@ -1,13 +1,13 @@
 pkgname=tribe
 pkgver=2014.09
 _rls_notes=20140922
-pkgrel=9
+pkgrel=10
 _codename=Euler
 pkgdesc="Tribe - Chakra LiveCD Installer"
 url="http://git.chakra-project.org/chakra/"
 license="GPL"
 arch=('x86_64')
-depends=('kdelibs' 'kdeedu-marble' 'squashfs-tools' 'tribe-partitionmanager'
+depends=('kdelibs' 'kdeedu-marble' 'squashfs-tools' 'partitionmanager>=1:1.1.0' 'grub>=2.02.beta2'
          'rsync' 'mkinitcpio-nfs-utils' 'ntfs-3g' 'libpwquality')
 makedepends=('cmake' 'kde-workspace' 'automoc4')
 options=('debug')
@@ -35,6 +35,9 @@ build() {
 	sed -i -e "s~source build/from git~Build: ${pkgver} ($_codename)~g" "src/config-tribe.h.cmake"
 	sed -i -e "s~code-name~$_codename~g" "scripts/postinstall-functions/01-job-initialize-target"
 	sed -i -e "s~chakra-version~${pkgver}~g" "scripts/postinstall-functions/01-job-initialize-target"
+
+        # temporarily hack on grub, need to merge upstream
+        sed -i -e "s~--skip-resume~~g" "scripts/postinstall-functions/20-job-install-grub2"
 	
 	mkdir "$_gitname-build"
 	cd "$_gitname-build"
