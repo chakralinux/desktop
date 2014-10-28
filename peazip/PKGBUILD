@@ -1,7 +1,7 @@
 # Maintainer: Daniele Cocca <jmc@chakra-project.org>
 pkgname=peazip
 pkgver=5.5.0
-pkgrel=2
+pkgrel=3
 pkgdesc="Free, Open Source file and archive manager. Supports 7Z, ACE, ARC, CAB, ISO, PAQ, PEA, RAR, TAR, ZIP and many more archive formats."
 arch=('x86_64')
 url="http://peazip.org/"
@@ -68,4 +68,9 @@ package() {
   # Move mimetypes and icons
   install -Dm755 peazip.desktop ${pkgdir}/usr/share/applications/peazip.desktop
   install -Dm755 peazip.png ${pkgdir}/usr/share/icons/hicolor/256x256/apps/peazip.png
+  
+  # License file
+  for r in copying.txt copying_we.txt legal.txt; do
+    install -Dm644 ${_srcdir}/${r} ${pkgdir}/usr/share/licenses/${pkgname}/${r}
+  done
 }
