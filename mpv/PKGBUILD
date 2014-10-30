@@ -3,7 +3,7 @@
 # Contributor: Samir Benmendil <ram-z[at]chakra-project[dot]org>
  
 pkgname=mpv
-pkgver=0.6.1
+pkgver=0.6.2
 pkgrel=1
 pkgdesc="A movie player and encoder for linux, based on MPlayer/mplayer2"
 arch=('x86_64')
@@ -18,13 +18,18 @@ makedepends=('mesa' 'python3-docutils' 'ladspa')
 options=('!emptydirs' '!buildflags')
 install=${pkgname}.install
 source=("https://github.com/mpv-player/${pkgname}/archive/v${pkgver}.tar.gz")
-sha256sums=('3a3127bb2989b205c065fbfe33334b1253f857732755706c2675b7b0f6d67f0f')
+sha256sums=('20532f6a2c37fc06711d05b77e3fbafb4759e3de00f0294ca70645e4f68882e8')
 
 prepare() {
+  # point python to python3
+  sed -i 's|#!/usr/bin/env python|#!/usr/bin/env python3|' ${srcdir}/${pkgname}-${pkgver}/bootstrap.py
+  # initialize
   cd ${pkgname}-${pkgver}
-  
   ./bootstrap.py
   sed -i 's/vendor-completions/site-functions/' wscript_build.py
+
+  # waf looking for python2...
+  sed -i 's|#!/usr/bin/env python|#!/usr/bin/env python3|' ${srcdir}/${pkgname}-${pkgver}/waf
 }
  
 build() {
