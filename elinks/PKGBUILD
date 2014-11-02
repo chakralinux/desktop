@@ -1,38 +1,42 @@
-#
-# Chakra Packages for Chakra, part of chakra-project.org
-#
-# maintainer (i686): Phil Miller <philm[at]chakra-project[dog]org>
-# maintainer (x86_64): Manuel Tortosa <manutortosa[at]chakra-project[dot]org>
-
-# include global config
-source ../_buildscripts/${current_repo}-${_arch}-cfg.conf
+# Maintainer:  Ram-Z <samir.benmendil[at]gmail[dot]com>
+# Contributor: Kyle Keen <keenerd@gmail.com>
+# Contributor: Sergej Pupykin <pupykin.s+arch@gmail.com>
+# Contributor: Andrea Scarpino <andrea@archlinux.org>
+# Contributor: damir <damir@archlinux.org>
+# Contributor: Ben <contrasutra@myrealbox.com>
 
 pkgname=elinks
 pkgver=0.13
-pkgrel=2
+_commit="a3751107033599b835eaafa61177c8d4dda4b7ef"
+pkgrel=3
 pkgdesc="An advanced and well-established feature-rich text mode web browser."
 arch=("i686" "x86_64")
 url="http://elinks.or.cz"
 license=('GPL')
-depends=('bzip2' 'expat>=2.0' 'gpm>=1.20.4' 'openssl' 'lua>=5.1.1' 'libidn' 'js' 'gc' 'tre' 'smbclient')
-categories=('network')
-source=("http://elinks.or.cz/download/$pkgname-current-$pkgver.tar.gz"
-	"${pkgname}.desktop")
-md5sums=('fd0522ac0431641454d4ad54315ad836'
-         'ef70f6bb7457799a979fb201615369e6')
+depends=('bzip2' 'expat>=2.0' 'gpm>=1.20.4' 'openssl' 'lua' 'libidn' 'js185'
+	 'gc' 'tre' 'desktop-file-utils')
+makedepends=('git')
+install=elinks.install
+source=("git+http://elinks.cz/elinks.git#commit=$_commit")
+md5sums=('SKIP')
 
 build() {
-  cd elinks || cd `find $srcdir -maxdepth 1 -type d -name elinks-$pkgver\*`
-
+  cd elinks
+  sed -i 's/Terminal=1/Terminal=true/' "contrib/debian/$pkgname.desktop"
+  [ -x configure ] || sh autogen.sh
   ./configure --prefix=/usr --mandir=/usr/share/man \
               --sysconfdir=/etc \
-              --enable-smb --without-x --enable-cgi \
+              --disable-smb --without-x --enable-cgi \
               --enable-leds --enable-256-colors --enable-html-highlight \
-              --without-zlib
+              --with-zlib
   make
-  make DESTDIR=${pkgdir} install
-  rm -f ${pkgdir}/usr/share/locale/locale.alias
+}
 
-  install -D -m644 ${srcdir}/${pkgname}.desktop \
-    ${pkgdir}/usr/share/applications/${pkgname}.desktop
+package() {
+  cd elinks
+  make DESTDIR="$pkgdir" install
+  rm -f "$pkgdir/usr/share/locale/locale.alias"
+
+  install -D -m644 "contrib/debian/$pkgname.desktop" \
+    "$pkgdir/usr/share/applications/$pkgname.desktop"
 }
