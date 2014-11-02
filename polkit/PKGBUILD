@@ -1,20 +1,14 @@
-
-# Desktop Packages for Chakra, part of chakra-project.org
-
-# Maintainer abveritas@chakra-project.org
+# Maintainer: Ram-Z <samir.benmendil[at]gmail[dot]com>
 
 pkgname=polkit
 pkgver=0.112
-pkgrel=1
+pkgrel=2
 pkgdesc="Application development toolkit for controlling system-wide privileges"
 arch=('x86_64')
 license=('LGPL')
 url="http://www.freedesktop.org/wiki/Software/polkit"
-depends=('glib2' 'pam' 'expat>=2.0.1' 'systemd' 'js')
+depends=('glib2' 'pam' 'expat>=2.0.1' 'systemd' 'js17')
 makedepends=('intltool>=0.41.1' 'gobject-introspection>=0.9.5' 'docbook-xsl')
-replaces=('consolekit')
-provides=('consolekit')
-conflicts=('consolekit' 'hal' 'hal-cups-utils')
 options=('!libtool')
 install=polkit.install
 source=("http://www.freedesktop.org/software/polkit/releases/$pkgname-$pkgver.tar.gz"
@@ -23,22 +17,27 @@ md5sums=('b0f2fa00a55f47c6a5d88e9b73f80127'
          '6564f95878297b954f0572bc1610dd15')
 
 build() {
-  cd "${srcdir}/${pkgname}-${pkgver}"
+  cd ${pkgname}-${pkgver}
   
-  ./configure --prefix=/usr --sysconfdir=/etc \
-      --localstatedir=/var --libexecdir=/usr/lib/polkit-1 \
-      --with-systemdsystemunitdir=/usr/lib/systemd/system \
-      --enable-libsystemd-login=yes \
-      --disable-static --with-os-type=chakra 
+  ./configure \
+    --prefix=/usr \
+    --sysconfdir=/etc \
+    --localstatedir=/var \
+    --libexecdir=/usr/lib/polkit-1 \
+    --with-systemdsystemunitdir=/usr/lib/systemd/system \
+    --enable-libsystemd-login=yes \
+    --disable-static \
+    --with-os-type=chakra 
+
   make 
 }
 
 package() {
-  cd "${srcdir}/${pkgname}-${pkgver}"
+  cd ${pkgname}-${pkgver}
   make DESTDIR="${pkgdir}" install
 
-  chown 102 "$pkgdir/etc/polkit-1/rules.d"
-  chown 102 "$pkgdir/usr/share/polkit-1/rules.d"
+  chown 102 "$pkgdir"/etc/polkit-1/rules.d
+  chown 102 "$pkgdir"/usr/share/polkit-1/rules.d
   
-  install -m644 "${srcdir}/polkit.pam" "${pkgdir}/etc/pam.d/polkit-1" 
+  install -m644 "${srcdir}"/polkit.pam "${pkgdir}"/etc/pam.d/polkit-1
 }
