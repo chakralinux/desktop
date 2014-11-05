@@ -3,7 +3,7 @@
 #
 
 pkgname=k3b
-pkgver=2.0.3
+pkgver=2.0.3a
 pkgrel=1
 pkgdesc="Feature-rich and easy to handle CD burning application"
 arch=("x86_64")
@@ -21,16 +21,16 @@ optdepends=('dvd+rw-tools: for dvd burning support'
 categories=('multimedia')
 install=$pkgname.install
 source=("http://download.kde.org/stable/${pkgname}/${pkgname}-${pkgver}.tar.xz")
-sha256sums=('871a7677653d1a86ace1e523498e47f5cca4d552f14f471f39c82adf84c38589')
+sha256sums=('2d0bb2746802c1d3ad7ddd10e29234cf2053074f376feb200306a5570c39c081')
 
 prepare() {
-  cd ${pkgname}-${pkgver}
+  cd ${pkgname}-2.0.3
 }
 
 build() {
   mkdir -p build
   cd build
-  cmake ../${pkgname}-${pkgver} \
+  cmake ../${pkgname}-2.0.3 \
     -DCMAKE_INSTALL_PREFIX=/usr \
     -DCMAKE_BUILD_TYPE=Release
   make
