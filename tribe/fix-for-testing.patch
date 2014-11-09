@@ -1,0 +1,206 @@
+diff --git a/data/netinstall.conf b/data/netinstall.conf
+index a087e5539b7ac7cd5174162e1d40c6260417f7bf..95253a5c540656b22c931fc28b727a5cee0ac81a 100644
+--- a/data/netinstall.conf
++++ b/data/netinstall.conf
+@@ -16,12 +16,11 @@ fuse
+ gptfdisk
+ jfsutils
+ ntfs-3g
+-ntfsprogs
+ reiserfsprogs
+ xfsprogs
+ 
+ # power
+-acpi-call
++acpi_call
+ pmtools
+ 
+ # network
+@@ -37,8 +36,8 @@ linux-firmware
+ # sound
+ alsa-lib
+ alsa-utils
+-gstreamer0.10
+-gstreamer0.10-plugins
++gstreamer
++gst-plugins-good
+ libao
+ libcanberra-gstreamer
+ libcanberra-pulse
+@@ -106,11 +105,14 @@ xf86-video-tseng
+ xf86-video-v4l
+ xf86-video-vesa
+ xf86-video-voodoo
++mesa-libgl
+ 
+ # xorg input drivers
+ xf86-input-synaptics
+ xf86-input-wacom
+-xorg-input-drivers
++xf86-input-evdev
++xf86-input-keyboard
++xf86-input-mouse
+ 
+ # fonts
+ terminus-font
+@@ -125,11 +127,11 @@ xorg-fonts-cyrillic
+ hicolor-icon-theme
+ 
+ # kde
++chakra-common
+ qt
+ kde-baseapps
+ kde-baseapps-dolphin
+ kde-baseapps-konsole
+-kde-common
+ kde-runtime
+ kde-workspace
+ kdelibs
+@@ -149,7 +151,7 @@ kapudan-kde-themes-caledonia
+ kde-kdm-themes-sirius
+ kde-ksplash-themes-sirius
+ kde-plasma-themes-caledonia
+-python-imaging
++python2-imaging
+ python2-v4l2capture
+ python2-xlib
+ caledonia-colors
+@@ -167,7 +169,7 @@ kdeutils-kgpg
+ kdeutils-sweeper
+ 
+ # kde network
+-kdeplasma-applets-networkmanagement
++kdeplasma-applets-plasma-nm
+ networkmanager-dispatcher-ntpd
+ kcm-ufw
+ 
+@@ -239,7 +241,7 @@ kdeadmin-print-manager
+ hplip
+ epsoneplijs
+ epson-inkjet-printer-escpr
+-python2-gobject
++python2-gobject2
+ samba
+ 
+ [multimedia]
+@@ -250,7 +252,7 @@ amarok
+ [misc]
+ imagewriter
+ tomoyo-tools
+-python2-gobject3  ## needed for systemd-analyze
++python2-gobject  ## needed for systemd-analyze
+ clamav
+ kdenetwork-kget  ## maybe move to a network group?
+ kdeplasma-addons-applets-lancelot
+diff --git a/scripts/postinstall-functions/11-job-setup-hardware b/scripts/postinstall-functions/11-job-setup-hardware
+index a20527ecfa3aa3a9716e96bf68e8a18a23bb083a..e1644c12b9b229bc153fa5f2187fe6818420ba65 100644
+--- a/scripts/postinstall-functions/11-job-setup-hardware
++++ b/scripts/postinstall-functions/11-job-setup-hardware
+@@ -35,11 +35,26 @@ job_setup_hardware()
+ 		/usr/bin/pacman -r ${mountpoint} -Rdd xf86-video-nouveau --noconfirm
+         msg "installing driver"
+ 		if [[ "${netinst}" == "yes" ]]; then
+-		    /usr/bin/pacman -r ${mountpoint} -S nvidia-utils nvidia --noconfirm
++			/usr/bin/pacman -r ${mountpoint} -S nvidia-libgl nvidia-utils nvidia --noconfirm
+ 		else
+-            /usr/bin/pacman -r ${mountpoint} -Ud --force ${PKG_OVERLAY}/nvidia-utils-34* --noconfirm
+-            /usr/bin/pacman -r ${mountpoint} -Ud --force ${PKG_OVERLAY}/nvidia-34* --noconfirm
+-        fi
++			/usr/bin/pacman -r ${mountpoint} -Udd --force --noconfirm ${PKG_OVERLAY}/nvidia-libgl-343* \
++																	  ${PKG_OVERLAY}/nvidia-343* \
++																	  ${PKG_OVERLAY}/nvidia-utils-343*
++		fi
++
++	elif [ -e "/tmp/nvidia-340xx" ] ; then
++		msg "nvidia-340xx detected"
++
++		msg "removing unneeded packages"
++		/usr/bin/pacman -r ${mountpoint} -Rdd mesa-libgl --noconfirm
++		/usr/bin/pacman -r ${mountpoint} -Rdd xf86-video-nv --noconfirm
++		/usr/bin/pacman -r ${mountpoint} -Rdd xf86-video-nouveau --noconfirm
++		msg "installing driver"
++		if [[ "${netinst}" == "yes" ]]; then
++			/usr/bin/pacman -r ${mountpoint} -S nvidia-340xx-libgl nvidia-340xx nvidia-340xx-utils --noconfirm
++		else
++			/usr/bin/pacman -r ${mountpoint} -Udd --force ${PKG_OVERLAY}/nvidia-340xx* --noconfirm
++		fi
+ 
+ 	elif [ -e "/tmp/nvidia-304xx" ] ; then
+ 		msg "nvidia-304xx detected"
+@@ -49,11 +64,11 @@ job_setup_hardware()
+ 		/usr/bin/pacman -r ${mountpoint} -Rdd xf86-video-nv --noconfirm
+ 		/usr/bin/pacman -r ${mountpoint} -Rdd xf86-video-nouveau --noconfirm
+ 		msg "installing driver"
+-        if [[ "${netinst}" == "yes" ]]; then
+-            /usr/bin/pacman -r ${mountpoint} -S nvidia-304xx nvidia-304xx-utils --noconfirm
+-        else
+-            /usr/bin/pacman -r ${mountpoint} -Ud --force ${PKG_OVERLAY}/nvidia-304xx* --noconfirm
+-        fi
++		if [[ "${netinst}" == "yes" ]]; then
++			/usr/bin/pacman -r ${mountpoint} -S nvidia-304xx-libgl nvidia-304xx nvidia-304xx-utils --noconfirm
++		else
++			/usr/bin/pacman -r ${mountpoint} -Udd --force ${PKG_OVERLAY}/nvidia-304xx* --noconfirm
++		fi
+ 
+ 	elif [ -e "/tmp/nvidia-173xx" ] ; then
+ 		msg "nvidia-173xx detected"
+@@ -63,11 +78,11 @@ job_setup_hardware()
+ 		/usr/bin/pacman -r ${mountpoint} -Rdd xf86-video-nv --noconfirm
+ 		/usr/bin/pacman -r ${mountpoint} -Rdd xf86-video-nouveau --noconfirm
+ 		msg "installing driver"
+-        if [[ "${netinst}" == "yes" ]]; then
+-            /usr/bin/pacman -r ${mountpoint} -S nvidia-173xx nvidia-173-utils --noconfirm
+-        else
+-            /usr/bin/pacman -r ${mountpoint} -Ud --force ${PKG_OVERLAY}/nvidia-173xx* --noconfirm
+-        fi
++		if [[ "${netinst}" == "yes" ]]; then
++			/usr/bin/pacman -r ${mountpoint} -S nvidia-173xx nvidia-173-utils --noconfirm
++		else
++			/usr/bin/pacman -r ${mountpoint} -Udd --force ${PKG_OVERLAY}/nvidia-173xx* --noconfirm
++		fi
+ 
+ 	elif [ -e "/tmp/catalyst" ] ; then
+ 		msg "catalyst detected"
+@@ -75,35 +90,18 @@ job_setup_hardware()
+ 		msg "removing unneeded packages"
+ 		# remove conflicting packages
+ 		/usr/bin/pacman -r ${mountpoint} -Rdd mesa-libgl --noconfirm
+-		/usr/bin/pacman -r ${mountpoint} -Rdd libcl --noconfirm
+-		/usr/bin/pacman -r ${mountpoint} -Rdd xf86-video-ati --noconfirm
+-
+-		msg "installing driver"
+-		# install driver
+-        if [[ "${netinst}" == "yes" ]]; then
+-            /usr/bin/pacman -r ${mountpoint} -S catalyst catalyst-utils --noconfirm
+-        else
+-            /usr/bin/pacman -r ${mountpoint} -Ud --force ${PKG_OVERLAY}/catalyst-utils* --noconfirm
+-            /usr/bin/pacman -r ${mountpoint} -Ud --force ${PKG_OVERLAY}/catalyst-1* --noconfirm
+-        fi
+-
+-	elif [ -e "/tmp/catalyst-legacy" ] ; then
+-		msg "catalyst-legacy detected"
+-
+-		msg "removing unneeded packages"
+-		# remove conflicting packages
+-		/usr/bin/pacman -r ${mountpoint} -Rdd mesa-libgl --noconfirm
+-		/usr/bin/pacman -r ${mountpoint} -Rdd libcl --noconfirm
+ 		/usr/bin/pacman -r ${mountpoint} -Rdd xf86-video-ati --noconfirm
+ 
+ 		msg "installing driver"
+ 		# install driver
+ 		if [[ "${netinst}" == "yes" ]]; then
+-            /usr/bin/pacman -r ${mountpoint} -S catalyst-legacy catalyst-legacy-utils --noconfirm
+-        else
+-            /usr/bin/pacman -r ${mountpoint} -Ud --force ${PKG_OVERLAY}/catalyst-legacy-utils* --noconfirm
+-            /usr/bin/pacman -r ${mountpoint} -Ud --force ${PKG_OVERLAY}/catalyst-legacy-1* --noconfirm
+-        fi
++			/usr/bin/pacman -r ${mountpoint} -S catalyst-libgl catalyst catalyst-utils --noconfirm
++		else
++			/usr/bin/pacman -r ${mountpoint} -Udd --force --noconfirm ${PKG_OVERLAY}/catalyst-libgl* \
++																	  ${PKG_OVERLAY}/catalyst-utils* \
++																	  ${PKG_OVERLAY}/catalyst-1*
++		fi
++
+ 	fi
+ 
+ 	# fixing alsa

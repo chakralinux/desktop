@@ -1,7 +1,7 @@
 pkgname=tribe
 pkgver=2014.11
 _rls_notes=20141106
-pkgrel=1
+pkgrel=3
 _codename=Euler
 pkgdesc="Tribe - Chakra LiveCD Installer"
 url="http://git.chakra-project.org/chakra/"
@@ -16,10 +16,12 @@ _gitname=tribe
 _gitsha=7be7264b10926947e3128417adeef6aa6c3c99de
 source=("$pkgname"::"git://gitorious.org/chakra/${_gitname}.git#commit=${_gitsha}"
         "http://chakra.sourceforge.net/sources/tribe/RELEASE_NOTES_${_rls_notes}.html"
-        "launch-tribe.sh")
+        "launch-tribe.sh"
+        "fix-for-testing.patch")
 md5sums=('SKIP'
          '6835631130af41f9877ba7c954d65ad1'
-         'e31855da237a2c8029774831b3c04685')
+         'e31855da237a2c8029774831b3c04685'
+         'f90b5ed07a8a58258aa5c04f230a1dde')
 
 groups=('kde-uninstall')
 categories=('system')
@@ -28,6 +30,7 @@ install=tools-tribe.install
 prepare() {        
 	cd "$srcdir/$_gitname"
         # not yet upstream'ed patch
+	patch -Np1 -i ../fix-for-testing.patch
 }
 
 build() {        
