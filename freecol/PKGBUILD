@@ -5,45 +5,36 @@
 
 pkgname=freecol
 _pkgname=FreeCol
-pkgver=0.10.7
+pkgver=0.11.0
 pkgrel=1
 pkgdesc="A turn-based strategy game based on Colonization"
-arch=('any')
+arch=('x86_64')
 url="http://www.freecol.org/"
 license=('GPL')
 depends=('java-runtime')
-makedepends=('apache-ant')
+#makedepends=('apache-ant')
 categories=('games')
 source=(http://downloads.sourceforge.net/$pkgname/$pkgname-$pkgver-src.zip
         main.desktop
         main.sh)
-md5sums=('4ec18d691807d682cea3c2f85e47ae03'
+md5sums=('c57397d2add345396f3a42192798ddeb'
          '68922dfb7c1db20c13c4eb6930f9bd93'
          '058e8125acc3b475e90cb2be7cd8f55a')
 
 build() {
-  cd $srcdir/$pkgname
-  ant
+  cd "$srcdir/$pkgname"
 }
 
 package() {
-  cd $srcdir/$pkgname
+  cd "$srcdir/$pkgname"
 
-  # Binary.
-  install -Dm644 $_pkgname.jar		$pkgdir/usr/share/java/$pkgname/$pkgname.jar
+  install -Dm644 FreeCol.jar "$pkgdir/usr/share/java/$pkgname/FreeCol.jar"
+  install -Dm644 doc/FreeCol.tex "$pkgdir/usr/share/doc/$pkgname/FreeCol.pdf"
+  install -Dm644 $pkgname.xpm "$pkgdir/usr/share/pixmaps/$pkgname.xpm"
+  install -Dm644 ../main.desktop "$pkgdir/usr/share/applications/$pkgname.desktop"
+  install -Dm755 ../main.sh "$pkgdir/usr/bin/$pkgname"
 
-  # Documentation.
-  install -Dm644 doc/$_pkgname.pdf	$pkgdir/usr/share/doc/$pkgname/$pkgname.pdf
-
-  # Desktop integration.
-  install -Dm644 $pkgname.xpm		$pkgdir/usr/share/pixmaps/$pkgname.xpm
-  install -Dm644 $srcdir/main.desktop	$pkgdir/usr/share/applications/$pkgname.desktop
-
-  # Execution script.
-  install -Dm755 $srcdir/main.sh	$pkgdir/usr/bin/$pkgname
-
-  # Data.
-  cp -r data jars $pkgdir/usr/share/java/$pkgname/
-  find $pkgdir/usr/share/java/$pkgname -type d -exec chmod 755 '{}' \;
-  find $pkgdir/usr/share/java/$pkgname -type f -exec chmod 644 '{}' \;
+  cp -r data jars "$pkgdir/usr/share/java/$pkgname/"
+  find "$pkgdir/usr/share/java/$pkgname" -type d -exec chmod 755 '{}' \;
+  find "$pkgdir/usr/share/java/$pkgname" -type f -exec chmod 644 '{}' \;
 }
