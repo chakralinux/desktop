@@ -1,12 +1,3 @@
-_update_assets() {
-	/usr/bin/unvanquished-update-paks
-}
-
-_delete_assets() {
-	rm -f /var/lib/unvanquished/main/*.pk3
-	rm -f /var/cache/unvanquished/update-paks/*
-}
-
 _update_desktop_environment() {
 	# update icon cache
 	xdg-icon-resource forceupdate --theme hicolor &> /dev/null
@@ -25,6 +16,7 @@ _add_server_user() {
 _delete_server_user() {
 	if getent passwd unvanquished >/dev/null; then
 		userdel unvanquished
+		groupdel unvanquished
 	fi
 }
 
@@ -33,17 +25,25 @@ _chown_server_home() {
 }
 
 _migrate() {
-	# if there is /opt/unvanquished/main (containing untracked asset files) we have to migrate to the new filesystem layout
-	if [ -d /opt/unvanquished/main ]; then
-		# move assets
-		echo "Moving assets from /opt/unvanquished to /var/lib/unvanquished..."
-		mv -v /opt/unvanquished/main/*.pk3 /var/lib/unvanquished/main/
+	# delete pre unvanquished-data assets
+	if [ -d /var/lib/unvanquished ] && ! pacman -Qo /var/lib/unvanquished >/dev/null 2>&1; then
+		echo "Deleting old asset directory..."
 
-		# delete old asset directory
-		rmdir /opt/unvanquished/main && rmdir /opt/unvanquished
+		if [ -d /var/lib/unvanquished/main ]; then
+			rm -f /var/lib/unvanquished/main/*.pk3
+			rmdir /var/lib/unvanquished/main
+		fi
 
-		# chown new server directory
-		_chown_server_home
+		if [ -d /var/lib/unvanquished/pkg ]; then
+			rm -f /var/lib/unvanquished/pkg/*.pk3
+			rmdir /var/lib/unvanquished/pkg
+		fi
+
+		rmdir /var/lib/unvanquished
+	fi
+	if [ -d /var/cache/unvanquished ] && ! pacman -Qo /var/cache/unvanquished >/dev/null 2>&1; then
+		echo "Deleting old asset update cache..."
+		rm -r /var/cache/unvanquished
 	fi
 }
 
@@ -51,16 +51,14 @@ post_install() {
 	_add_server_user
 	_chown_server_home
 	_update_desktop_environment
-	_update_assets
 }
 
 post_upgrade() {
 	_migrate
-	_update_assets
 }
 
 pre_remove() {
-	_delete_assets
+	true
 }
 
 post_remove() {
