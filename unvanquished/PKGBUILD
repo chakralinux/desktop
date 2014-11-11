@@ -3,10 +3,10 @@
 # Contributor: Martin F. Schumann <mfs@mfs.name>
 
 pkgname=unvanquished
-pkgver=0.22.1
+pkgver=0.33.1
 pkgrel=1
 pkgdesc='A team-based fps/rts hybrid game which pits aliens against humans. Monthly release that can be played on official servers.'
-arch=('x86_64' 'i686')
+arch=('x86_64')
 url='http://www.unvanquished.net'
 license=('GPL3')
 makedepends=('cmake')
@@ -25,6 +25,15 @@ install='unvanquished.install'
 source=("unvanquished::git+https://github.com/Unvanquished/Unvanquished.git#tag=v${pkgver}"
         'ChangeLog'                   'unvanquished.install' 'unvanquished.sh'   'unvanquished-tty.sh'
         'unvanquished-update-paks.sh' 'unvanquished.service' 'unvanquished.conf' 'unvanquished.desktop')
+md5sums=('SKIP'
+         'ce9371c1cd22e58ddf744f64b96583b6'
+         '7d8d5e1d05978745abdcaa624be7c47b'
+         'ac9c54f828edbbf236156431991f6c82'
+         '7a10dca92e352e6f47d99a0434681f4e'
+         '2e82941e47422fdb3cee4ccfca346458'
+         '1842789de67de55b8027c51cad22f778'
+         'ce04c7e8423b2da0ea0d8df8be4c8ea4'
+         'ac69d49b3c665d274d0ab58870220522')
 
 build() {
 	cd $srcdir/unvanquished
@@ -52,15 +61,14 @@ package() {
 	# install content
 	cd $srcdir/unvanquished
 
-	install -m 755 daemon                      \
-	               daemon-tty                  \
-	               daemonded                   \
-	               *.so                        \
-		       download-pk3.sh             $pkgdir/usr/lib/unvanquished/
-	install -m 755 main/*.so                   $pkgdir/usr/lib/unvanquished/main/
-	install -m 644 debian/unvanquished.png     $pkgdir/usr/share/icons/hicolor/128x128/apps/
-	install -m 644 COPYING.txt                 $pkgdir/usr/share/licenses/unvanquished/
-	install -m 644 debian/configfiles/*        $pkgdir/etc/unvanquished/main/
+	install -m 755 daemon*                 "${pkgdir}/usr/lib/unvanquished/"
+	install -m 755 *.so                    "${pkgdir}/usr/lib/unvanquished/"
+	install -m 755 game-nacl-native-exe    "${pkgdir}/usr/lib/unvanquished/"
+	install -m 755 nacl_helper_bootstrap   "${pkgdir}/usr/lib/unvanquished/"
+	install -m 755 sel_ldr                 "${pkgdir}/usr/lib/unvanquished/"
+	install -m 755 irt_core-x86*.nexe      "${pkgdir}/usr/lib/unvanquished/"
+	install -m 644 debian/unvanquished.png "${pkgdir}/usr/share/icons/hicolor/128x128/apps/"
+	install -m 644 COPYING.txt             "${pkgdir}/usr/share/licenses/unvanquished/"
 
 	# install starters
 	cd $srcdir
@@ -78,12 +86,3 @@ package() {
 	ln -s ../../../../etc/unvanquished/main configuration.pk3dir
 }
 
-md5sums=('SKIP'
-         'ce9371c1cd22e58ddf744f64b96583b6'
-         '7d8d5e1d05978745abdcaa624be7c47b'
-         'ac9c54f828edbbf236156431991f6c82'
-         '7a10dca92e352e6f47d99a0434681f4e'
-         '2e82941e47422fdb3cee4ccfca346458'
-         '1842789de67de55b8027c51cad22f778'
-         'ce04c7e8423b2da0ea0d8df8be4c8ea4'
-         'ac69d49b3c665d274d0ab58870220522')
