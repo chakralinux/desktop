@@ -9,7 +9,7 @@ pkgname="kde-workspace"
 arch=('x86_64')
 pkgver=${_workspace_ver}
 #pkgver=4.11.11
-pkgrel=2
+pkgrel=1
 pkgdesc="KDE Workspace"
 url="http://www.kde.org"
 license=('GPL' 'LGPL' 'FDL')
@@ -106,8 +106,7 @@ source=("http://download.kde.org/stable/${_kdever}/src/kde-workspace-${_workspac
         '09_enable_start-shutdown-scripts.patch'
         'fix_terminate-server.patch'
         'fix_root-only-kcms.patch'
-        'plasma-panel-resize-hint.diff'
-        'time_vulnerability_fix.patch::http://quickgit.kde.org/?p=kde-workspace.git&a=commitdiff&h=54d0bfb5effff9c8cf60da890b7728cbe36a454e&hp=fd2aa9deed44fad6107625ad7360157fea7296f6&o=plain')
+        'plasma-panel-resize-hint.diff')
         
 
 sha256sums=(`grep ${pkgname}-$pkgver.tar.xz  ../checksums.txt | cut -d " " -f1`
@@ -127,8 +126,7 @@ sha256sums=(`grep ${pkgname}-$pkgver.tar.xz  ../checksums.txt | cut -d " " -f1`
             'ad91b3661bcb72bbbd12ed100fc76b7ae0829e37e726adb9c3e4e4cb44d496fd'
             'e5329c87f14ce04f80291f1f7a2be47994f3d54425b572c308b38e2718390959'
             'b38959520a3ecafe6f5628849e29d7e8b0dc030622fa12e77eb8461ad7187a78'
-            '6bc640b8324d47e9d07a7cedef7e7c5a944ec4d900a15b88471dc77724f9b4a7'
-            '64d7657b06c06e668d4ae1fe23da8afdae512c42e1f5b1f95024cba2c403ef0f')
+            '6bc640b8324d47e9d07a7cedef7e7c5a944ec4d900a15b88471dc77724f9b4a7')
 
 prepare() {
     cd "${srcdir}/${pkgname}-${pkgver}"
@@ -145,7 +143,6 @@ prepare() {
     patch -p0 -i ${srcdir}/fix_terminate-server.patch
     patch -p1 -i ${srcdir}/fix_root-only-kcms.patch
     patch -p0 -i ${srcdir}/plasma-panel-resize-hint.diff
-    patch -p1 -i ${srcdir}/time_vulnerability_fix.patch
 
     # Disable krandr
     sed -i "s/add_subdirectory(randr)//g" ./kcontrol/CMakeLists.txt
