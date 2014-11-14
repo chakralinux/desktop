@@ -7,7 +7,7 @@ source ../_buildscripts/${current_repo}-${_arch}-cfg.conf
 pkgbase=kactivities4
 pkgname=('kactivities4' 'libkactivities4')
 pkgver=4.13.3 # there is no 4.14 version!
-pkgrel=4
+pkgrel=5
 arch=('x86_64')
 pkgdesc='API for using and interacting with Activities'
 url='http://kde.org/'
@@ -41,6 +41,7 @@ package_kactivities4() {
   pkgdesc='The KActivity Manager Daemon'
   depends=('libkactivities4')
   provides=('kactivitymanagerd')
+  conflicts=('kactivities<=4.13.3-3')
 
   cd build
   install -Dm755 src/service/kactivitymanagerd \
@@ -52,7 +53,7 @@ package_libkactivities4() {
   depends=('kdelibs' 'kactivitymanagerd')
   provides=('kactivities')
   replaces=('kactivities<=4.13.3-3')
-  conflcits=('kactivities<=4.13.3-3')
+  conflicts=('kactivities<=4.13.3-3')
 
   cd build
   make DESTDIR="${pkgdir}" install
