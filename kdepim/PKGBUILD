@@ -22,7 +22,7 @@ pkgname=('kdepim-common'
          'kdepim-korganizer'
          'kdepim-ktimetracker')
 pkgver=${_kdever}
-pkgrel=1
+pkgrel=2
 arch=('x86_64')
 url="http://pim.kde.org"
 license=('GPL'
@@ -192,8 +192,8 @@ package_kdepim-kmail() {
     install=${pkgbase}.install
 
     for i in kmail kmailcvt agents/archivemailagent storageservicemanager\
-    agents/mailfilteragent importwizard ksendemail libksieve messagelist \
-    kontact/plugins/kmail grantleeeditor mboximporter; do
+    agents/mailfilteragent agents/followupreminderagent importwizard ksendemail\
+    libksieve messagelist kontact/plugins/kmail grantleeeditor mboximporter; do
         cd "${srcdir}"/build/${i}
         make DESTDIR="${pkgdir}" install
     done
