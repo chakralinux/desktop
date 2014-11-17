@@ -1,206 +1,131 @@
-diff --git a/data/netinstall.conf b/data/netinstall.conf
-index a087e5539b7ac7cd5174162e1d40c6260417f7bf..95253a5c540656b22c931fc28b727a5cee0ac81a 100644
---- a/data/netinstall.conf
-+++ b/data/netinstall.conf
-@@ -16,12 +16,11 @@ fuse
- gptfdisk
- jfsutils
- ntfs-3g
--ntfsprogs
- reiserfsprogs
- xfsprogs
- 
- # power
--acpi-call
-+acpi_call
- pmtools
- 
- # network
-@@ -37,8 +36,8 @@ linux-firmware
- # sound
- alsa-lib
- alsa-utils
--gstreamer0.10
--gstreamer0.10-plugins
-+gstreamer
-+gst-plugins-good
- libao
- libcanberra-gstreamer
- libcanberra-pulse
-@@ -106,11 +105,14 @@ xf86-video-tseng
- xf86-video-v4l
- xf86-video-vesa
- xf86-video-voodoo
-+mesa-libgl
- 
- # xorg input drivers
- xf86-input-synaptics
- xf86-input-wacom
--xorg-input-drivers
-+xf86-input-evdev
-+xf86-input-keyboard
-+xf86-input-mouse
- 
- # fonts
- terminus-font
-@@ -125,11 +127,11 @@ xorg-fonts-cyrillic
- hicolor-icon-theme
- 
- # kde
-+chakra-common
- qt
- kde-baseapps
- kde-baseapps-dolphin
- kde-baseapps-konsole
--kde-common
- kde-runtime
- kde-workspace
- kdelibs
-@@ -149,7 +151,7 @@ kapudan-kde-themes-caledonia
- kde-kdm-themes-sirius
- kde-ksplash-themes-sirius
- kde-plasma-themes-caledonia
--python-imaging
-+python2-imaging
- python2-v4l2capture
- python2-xlib
- caledonia-colors
-@@ -167,7 +169,7 @@ kdeutils-kgpg
- kdeutils-sweeper
- 
- # kde network
--kdeplasma-applets-networkmanagement
-+kdeplasma-applets-plasma-nm
- networkmanager-dispatcher-ntpd
- kcm-ufw
- 
-@@ -239,7 +241,7 @@ kdeadmin-print-manager
- hplip
- epsoneplijs
- epson-inkjet-printer-escpr
--python2-gobject
-+python2-gobject2
- samba
- 
- [multimedia]
-@@ -250,7 +252,7 @@ amarok
- [misc]
- imagewriter
- tomoyo-tools
--python2-gobject3  ## needed for systemd-analyze
-+python2-gobject  ## needed for systemd-analyze
- clamav
- kdenetwork-kget  ## maybe move to a network group?
- kdeplasma-addons-applets-lancelot
-diff --git a/scripts/postinstall-functions/11-job-setup-hardware b/scripts/postinstall-functions/11-job-setup-hardware
-index a20527ecfa3aa3a9716e96bf68e8a18a23bb083a..e1644c12b9b229bc153fa5f2187fe6818420ba65 100644
---- a/scripts/postinstall-functions/11-job-setup-hardware
-+++ b/scripts/postinstall-functions/11-job-setup-hardware
-@@ -35,11 +35,26 @@ job_setup_hardware()
- 		/usr/bin/pacman -r ${mountpoint} -Rdd xf86-video-nouveau --noconfirm
-         msg "installing driver"
- 		if [[ "${netinst}" == "yes" ]]; then
--		    /usr/bin/pacman -r ${mountpoint} -S nvidia-utils nvidia --noconfirm
-+			/usr/bin/pacman -r ${mountpoint} -S nvidia-libgl nvidia-utils nvidia --noconfirm
- 		else
--            /usr/bin/pacman -r ${mountpoint} -Ud --force ${PKG_OVERLAY}/nvidia-utils-34* --noconfirm
--            /usr/bin/pacman -r ${mountpoint} -Ud --force ${PKG_OVERLAY}/nvidia-34* --noconfirm
--        fi
-+			/usr/bin/pacman -r ${mountpoint} -Udd --force --noconfirm ${PKG_OVERLAY}/nvidia-libgl-343* \
-+																	  ${PKG_OVERLAY}/nvidia-343* \
-+																	  ${PKG_OVERLAY}/nvidia-utils-343*
-+		fi
+diff --git a/scripts/postinstall-functions/20-job-install-grub2 b/scripts/postinstall-functions/20-job-install-grub2
+index fbc3b415ec246b3dbf4d911cf69bdd636f75de7e..199aefbfa60f401b67b4ed5ac096cfdfedf3d838 100644
+--- a/scripts/postinstall-functions/20-job-install-grub2
++++ b/scripts/postinstall-functions/20-job-install-grub2
+@@ -14,7 +14,14 @@ job_install_grub2()
+     echo "GRUB2___ >>>> mountpoint: ${mountpoint}"
+     echo "GRUB2___ >>>> target_boot: ${target_boot}"
+     echo "GRUB2___ >>>> device: ${_device}"
+-    chroot ${mountpoint} grub-install /dev/${_device} --no-floppy > /tmp/grub2.log 2>&1
 +
-+	elif [ -e "/tmp/nvidia-340xx" ] ; then
-+		msg "nvidia-340xx detected"
++    _grub_efi_args=""
++    # system is efi
++    if [ -d /sys/firmware/efi ] && [ "$(ls -A /sys/firmware/efi)" ]; then
++        _grub_efi_args="--efi-directory=/boot"
++    fi
 +
-+		msg "removing unneeded packages"
-+		/usr/bin/pacman -r ${mountpoint} -Rdd mesa-libgl --noconfirm
-+		/usr/bin/pacman -r ${mountpoint} -Rdd xf86-video-nv --noconfirm
-+		/usr/bin/pacman -r ${mountpoint} -Rdd xf86-video-nouveau --noconfirm
-+		msg "installing driver"
-+		if [[ "${netinst}" == "yes" ]]; then
-+			/usr/bin/pacman -r ${mountpoint} -S nvidia-340xx-libgl nvidia-340xx nvidia-340xx-utils --noconfirm
-+		else
-+			/usr/bin/pacman -r ${mountpoint} -Udd --force ${PKG_OVERLAY}/nvidia-340xx* --noconfirm
-+		fi
++    chroot ${mountpoint} grub-install /dev/${_device} --no-floppy $_grub_efi_args > /tmp/grub2.log 2>&1
  
- 	elif [ -e "/tmp/nvidia-304xx" ] ; then
- 		msg "nvidia-304xx detected"
-@@ -49,11 +64,11 @@ job_setup_hardware()
- 		/usr/bin/pacman -r ${mountpoint} -Rdd xf86-video-nv --noconfirm
- 		/usr/bin/pacman -r ${mountpoint} -Rdd xf86-video-nouveau --noconfirm
- 		msg "installing driver"
--        if [[ "${netinst}" == "yes" ]]; then
--            /usr/bin/pacman -r ${mountpoint} -S nvidia-304xx nvidia-304xx-utils --noconfirm
--        else
--            /usr/bin/pacman -r ${mountpoint} -Ud --force ${PKG_OVERLAY}/nvidia-304xx* --noconfirm
--        fi
-+		if [[ "${netinst}" == "yes" ]]; then
-+			/usr/bin/pacman -r ${mountpoint} -S nvidia-304xx-libgl nvidia-304xx nvidia-304xx-utils --noconfirm
-+		else
-+			/usr/bin/pacman -r ${mountpoint} -Udd --force ${PKG_OVERLAY}/nvidia-304xx* --noconfirm
-+		fi
+     if [ -e "/tmp/catalyst" ] ; then
+         msg "Adding nomodeset for catalyst to kernel line"
+diff --git a/src/pages/partitionpage.cpp b/src/pages/partitionpage.cpp
+index 22af3ff686a949464afdb0ebdc8839fcf5aabfb2..8d4baf805b76abe03f7cce278fbef16069220a5b 100644
+--- a/src/pages/partitionpage.cpp
++++ b/src/pages/partitionpage.cpp
+@@ -16,6 +16,7 @@
+ #include <QPainter>
+ #include <QtAlgorithms>
+ #include <QTimeLine>
++#include <QDir>
  
- 	elif [ -e "/tmp/nvidia-173xx" ] ; then
- 		msg "nvidia-173xx detected"
-@@ -63,11 +78,11 @@ job_setup_hardware()
- 		/usr/bin/pacman -r ${mountpoint} -Rdd xf86-video-nv --noconfirm
- 		/usr/bin/pacman -r ${mountpoint} -Rdd xf86-video-nouveau --noconfirm
- 		msg "installing driver"
--        if [[ "${netinst}" == "yes" ]]; then
--            /usr/bin/pacman -r ${mountpoint} -S nvidia-173xx nvidia-173-utils --noconfirm
--        else
--            /usr/bin/pacman -r ${mountpoint} -Ud --force ${PKG_OVERLAY}/nvidia-173xx* --noconfirm
--        fi
-+		if [[ "${netinst}" == "yes" ]]; then
-+			/usr/bin/pacman -r ${mountpoint} -S nvidia-173xx nvidia-173-utils --noconfirm
-+		else
-+			/usr/bin/pacman -r ${mountpoint} -Udd --force ${PKG_OVERLAY}/nvidia-173xx* --noconfirm
-+		fi
+ #include <KLineEdit>
+ #include <KMessageBox>
+@@ -803,12 +804,18 @@ QTreeWidgetItem* PartitionPage::createItem(const Partition* p, Device *dev)
+     return item;
+ }
  
- 	elif [ -e "/tmp/catalyst" ] ; then
- 		msg "catalyst detected"
-@@ -75,35 +90,18 @@ job_setup_hardware()
- 		msg "removing unneeded packages"
- 		# remove conflicting packages
- 		/usr/bin/pacman -r ${mountpoint} -Rdd mesa-libgl --noconfirm
--		/usr/bin/pacman -r ${mountpoint} -Rdd libcl --noconfirm
--		/usr/bin/pacman -r ${mountpoint} -Rdd xf86-video-ati --noconfirm
--
--		msg "installing driver"
--		# install driver
--        if [[ "${netinst}" == "yes" ]]; then
--            /usr/bin/pacman -r ${mountpoint} -S catalyst catalyst-utils --noconfirm
--        else
--            /usr/bin/pacman -r ${mountpoint} -Ud --force ${PKG_OVERLAY}/catalyst-utils* --noconfirm
--            /usr/bin/pacman -r ${mountpoint} -Ud --force ${PKG_OVERLAY}/catalyst-1* --noconfirm
--        fi
--
--	elif [ -e "/tmp/catalyst-legacy" ] ; then
--		msg "catalyst-legacy detected"
--
--		msg "removing unneeded packages"
--		# remove conflicting packages
--		/usr/bin/pacman -r ${mountpoint} -Rdd mesa-libgl --noconfirm
--		/usr/bin/pacman -r ${mountpoint} -Rdd libcl --noconfirm
- 		/usr/bin/pacman -r ${mountpoint} -Rdd xf86-video-ati --noconfirm
- 
- 		msg "installing driver"
- 		# install driver
- 		if [[ "${netinst}" == "yes" ]]; then
--            /usr/bin/pacman -r ${mountpoint} -S catalyst-legacy catalyst-legacy-utils --noconfirm
--        else
--            /usr/bin/pacman -r ${mountpoint} -Ud --force ${PKG_OVERLAY}/catalyst-legacy-utils* --noconfirm
--            /usr/bin/pacman -r ${mountpoint} -Ud --force ${PKG_OVERLAY}/catalyst-legacy-1* --noconfirm
--        fi
-+			/usr/bin/pacman -r ${mountpoint} -S catalyst-libgl catalyst catalyst-utils --noconfirm
-+		else
-+			/usr/bin/pacman -r ${mountpoint} -Udd --force --noconfirm ${PKG_OVERLAY}/catalyst-libgl* \
-+																	  ${PKG_OVERLAY}/catalyst-utils* \
-+																	  ${PKG_OVERLAY}/catalyst-1*
-+		fi
++bool isEFISystem()
++{
++    const QDir efiDir = QDir("/sys/firmware/efi");
++    return efiDir.exists() && efiDir.entryInfoList(QDir::NoDotAndDotDot|QDir::AllEntries|QDir::Hidden|QDir::System).count() != 0;
++}
 +
- 	fi
+ void PartitionPage::aboutToGoToNext()
+ {
+     bool foundRoot = false;
+     bool unmount = false;
+-    bool bootPartition = false;
+     Device *bootDevice = NULL;
++    const Partition *bootPartition = NULL;
  
- 	# fixing alsa
+     QTreeWidgetItemIterator it(m_ui->treeWidget);
+     while (*it) {
+@@ -817,6 +824,10 @@ void PartitionPage::aboutToGoToNext()
+         if (text.startsWith('/')) {
+             const Partition *partition = (*it)->data(0, PARTITION_ROLE).value<const Partition*>();
+             Device *device = (*it)->data(0, DEVICE_ROLE).value<Device*>();
++            if (text == "/boot") {
++                bootDevice = device;
++                bootPartition = partition;
++            }
+ 
+             if (partition->isMounted() && unmount == false) {
+                 KDialog *dialog = new KDialog(this, Qt::FramelessWindowHint);
+@@ -890,8 +901,6 @@ void PartitionPage::aboutToGoToNext()
+                 }
+                 PMHandler::instance()->addSectorToMountList(device, partition->firstSector(), text);
+             }
+-        } else if (text == "/boot") {
+-            bootDevice = (*it)->data(0, DEVICE_ROLE).value<Device*>();
+         } else if (!text.isEmpty() && text != "None") {
+             KMessageBox::error(this, i18n("You have selected '%1' as a mountpoint, which is not valid. A valid mountpoint "
+                                "always starts with '/' and represents a directory on disk", text),
+@@ -908,26 +917,42 @@ void PartitionPage::aboutToGoToNext()
+         return;
+     }
+ 
+-    if (bootDevice && bootDevice->partitionTable()->type() == PartitionTable::gpt) {
+-        int f = 1;
+-
+-        foreach(const Partition* p, bootDevice->partitionTable()->children()) {
+-            while(!(PartitionTable::flagName(static_cast<PartitionTable::Flag>(f))).isEmpty())
+-            {
+-                    if (p->availableFlags() & f &&
+-                        p->activeFlags() & f &&
+-                        p->fileSystem().type() == FileSystem::Unknown) {
+-                            bootPartition = true;
+-                            break;
+-                    }
+-                    f <<= 1;
+-            }
++    bool isEFI = isEFISystem();
++    if (isEFI) {
++        // we kinds force people to use EFI partition as /boot
++        if (!bootPartition ||
++            !(bootPartition->availableFlags() & PartitionTable::FlagBoot) ||
++            !(bootPartition->activeFlags() & PartitionTable::FlagBoot)) {
++            KMessageBox::error(this, i18n("You need to set mount point of EFI Partition as /boot!"));
++            return;
+         }
+ 
+-        if (!bootPartition) {
+-            KMessageBox::error(this, i18n("When using a GPT Partition Table you need to have a unformatted partition with the bios_grub flag!"));
++        if (bootPartition->fileSystem().type() == FileSystem::Fat32) {
++            KMessageBox::error(this, i18n("File system of EFI Partition need to be fat32!"));
+             return;
+         }
++
++        // force to use gpt when it's EFI system
++        if (!bootDevice || bootDevice->partitionTable()->type() != PartitionTable::gpt) {
++            KMessageBox::error(this, i18n("When boot from EFI you need to use gpt partition table!"));
++            return;
++        }
++    } else {
++        bool biosGrubPartition = false;
++        if (bootDevice && bootDevice->partitionTable()->type() == PartitionTable::gpt) {
++            foreach(const Partition* p, bootDevice->partitionTable()->children()) {
++                if ((p->availableFlags() & PartitionTable::FlagBiosGrubBoot) &&
++                    (p->activeFlags() & PartitionTable::FlagBiosGrubBoot)) {
++                    biosGrubPartition = true;
++                    break;
++                }
++            }
++
++            if (!biosGrubPartition) {
++                KMessageBox::error(this, i18n("When using a GPT Partition Table you need to have a unformatted partition with the bios_grub flag!"));
++                return;
++            }
++        }
+     }
+ 
+     s_partitionToMountPoint.clear();
