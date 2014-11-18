@@ -2,7 +2,7 @@
 
 pkgname=libtorrent-rasterbar
 pkgver=0.16.16
-pkgrel=2
+pkgrel=3
 pkgdesc="A C++ library that aims to be a good alternative to all the other bittorrent implementations around"
 url="http://www.rasterbar.com/products/libtorrent/"
 arch=('x86_64')
@@ -15,9 +15,7 @@ sha1sums=('de8faed5cbc09baddb2748cb7b75edd07ab0addc')
 
 build() {
   cd "${srcdir}/${pkgname}-${pkgver}"
-  #./configure --prefix=/usr --enable-python-binding
-  #make
-    PYTHON=/usr/bin/python2 ./configure --prefix=/usr \
+  PYTHON=/usr/bin/python2 ./configure --prefix=/usr \
       --enable-python-binding \
       --with-libgeoip=system
   make
