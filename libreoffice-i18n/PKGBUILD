@@ -6,7 +6,7 @@ pkgbase="libreoffice-i18n"
 
 _rcver=4.3.4.1
 pkgver=4.3.4
-pkgrel=1
+pkgrel=2
 depends=("libreoffice-common>=$pkgver")
 
 _oodlver=${pkgver}
@@ -160,6 +160,13 @@ _package() {
   mkdir -p "$pkgdir"/usr/lib/libreoffice
   cp -R opt/libreoffice*/* "$pkgdir"/usr/lib/libreoffice
   chown root:root -R "$pkgdir"/usr/lib/libreoffice
+  
+  # remove en-US.dic from en-GB package
+  if [ $1 == "en-GB" ]; then
+    if [ -e "$pkgdir"/usr/lib/libreoffice/share/wordbook/en-US.dic ]; then
+      rm "$pkgdir"/usr/lib/libreoffice/share/wordbook/en-US.dic
+    fi
+  fi
 }
   
 for _lang in "${_languages[@]}"; do
