@@ -35,12 +35,12 @@ build() {
 }
 
 package() {
-  cd build
-  make install DESTDIR=$pkgdir
+  cd "${srcdir}/Sigil-${pkgver}/build"
+  make DESTDIR=$pkgdir install
   install -d -m 0755 "${pkgdir}"/usr/share/applications
 
   # Desktop integration.
-  install -Dm0644 $srcdir/$pkgname.desktop $pkgdir/usr/share/applications/$pkgname.desktop
+  install -Dm0644 $srcdir/${_pkgname}-${pkgver}/$pkgname.desktop $pkgdir/usr/share/applications/$pkgname.desktop
   for _pic in 16 32 48 128 256; do
     install -Dm0644 ../src/Sigil/Resource_Files/icon/app_icon_$_pic.png \
       $pkgdir/usr/share/icons/hicolor/$_picx$_pic/apps/$pkgname.png
