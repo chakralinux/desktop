@@ -3,23 +3,24 @@
 
 pkgname=sigil
 _pkgname=Sigil
-pkgver=0.7.4
-pkgrel=2
+pkgver=0.8.1
+pkgrel=1
 pkgdesc="A multi-platform WYSIWYG ebook editor. It is designed to edit books in ePub format. "
 arch=('x86_64')
 url="http://code.google.com/p/sigil/"
 license=('GPL3')
-depends=('qt5-base' 'qt5-webkit' 'boost-libs')
-makedepends=('cmake' 'gendesk' 'boost' 'qt5-tools' 'qt5-svg')
+depends=('qt5-webkit' 'boost-libs')
+makedepends=('qt5-tools' 'qt5-svg' 'cmake' 'gendesk' 'boost')
 categories=('office')
 install=sigil.install
 screenshot=('http://1.bp.blogspot.com/-K2Q-tdVbPRI/UI08v7LhzHI/AAAAAAAAABY/vZ5LHjM6nb4/s1600/Screen+Shot+2012-10-28+at+10.07.03+AM.png')
-source=("http://$pkgname.googlecode.com/files/$_pkgname-$pkgver-Code.zip")
-sha1sums=('12f1557511b197374e07f4f6a9ed07ae6d23dd67')
+source=("https://github.com/user-none/Sigil/releases/download/${pkgver}/${_pkgname}-${pkgver}-Code.zip")
+sha1sums=('dfb2812fd5cceed427110ca76146822304437a52')
 
 
 build() {
-  gendesk -n
+  cd "${srcdir}/Sigil-${pkgver}"
+  gendesk -n "$startdir"/PKGBUILD
 
   mkdir -p build 
   cd build
