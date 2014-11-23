@@ -3,7 +3,7 @@
 
 pkgbase=octopi
 pkgname=('octopi' 'octopi-notifier' 'octopi-qt5' 'octopi-notifier-qt5')
-pkgver=0.5
+pkgver=0.5.0.90
 pkgrel=1
 url="https://octopiproject.wordpress.com/"
 arch=('x86_64')
@@ -15,7 +15,7 @@ replaces=('oktopi')
 categories=('system') 
 screenshot=('http://octopiproject.files.wordpress.com/2014/01/octopi_in_kaos.png')
 
-gitsha=0cd9398
+gitsha=9a2bc23
 source=("$pkgname"::"git://github.com/aarnt/${pkgname}.git#commit=${gitsha}")
 md5sums=('SKIP')
 
@@ -26,6 +26,9 @@ prepare(){
     sed -i 's/Categories=GNOME;GTK;System;/Categories=System;Tools;/g' octopi.desktop octopi-notifier.desktop
     sed -i 's/\/\/#define NO_GTK_STYLE/#define NO_GTK_STYLE/g' src/main.cpp notifier/octopi-notifier/main.cpp
     sed -i 's/Icon=octopi/Icon=octopi-notifier/g' octopi-notifier.desktop
+
+    # enable the kstatus switch
+    sed -e "s/# DEFINES += KSTATUS/ DEFINES += KSTATUS/" -i notifier/octopi-notifier/octopi-notifier.pro
 
     # prepare for package split
     cp -r "${srcdir}/${pkgbase}" "${srcdir}/${pkgbase}-qt5"
