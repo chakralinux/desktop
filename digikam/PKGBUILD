@@ -1,7 +1,7 @@
 pkgbase=digikam
 pkgname=('digikam' 'kipi-plugins' 'libkvkontakte')
 pkgver=4.5.0
-pkgrel=1
+pkgrel=2
 url="http://digikam.sourceforge.net"
 arch=('x86_64')
 license=('GPL')
@@ -68,7 +68,7 @@ package_kipi-plugins() {
 
   splitdirs="libkface libkgeomap libmediawiki kipi-plugins"
   for i in ${splitdirs} ; do
-      cd ${srcdir}/$pkgbase-$pkgver/extra/${i}
+      cd ${srcdir}/build/extra/${i}
 
       make DESTDIR="${pkgdir}" install
   done
