@@ -1,18 +1,19 @@
 # maintainer: Neophytos Kolokotronis <tetris4@gmail.com>
 # cpntributions from ArchLinux: https://www.archlinux.org/packages/community/x86_64/handbrake-cli/
 pkgname=handbrake-cli
-pkgver=0.9.9
-pkgrel=2
+pkgver=0.10.0
+pkgrel=1
+pkgdesc="Multithreaded video transcoder (CLI)"
 arch=('x86_64')
 url="http://handbrake.fr/"
 license=('GPL')
-depends=('bzip2' 'gcc-libs' 'zlib' 'fribidi' 'ffmpeg')
-makedepends=('intltool' 'python' 'yasm' 'wget' 'libnotify' 'gstreamer0.10-base' 'dbus-glib' 'libbluray' 'libass')
+depends=('bzip2' 'gcc-libs' 'zlib' 'fribidi' 'libass' 'lame' 'libxml2' 'libtheora' 'libsamplerate' 'libbluray' 'x264' 'libdvdnav')
+makedepends=('intltool' 'python2' 'yasm' 'wget' 'libnotify' 'gst-plugins-base' 'dbus-glib')
 source=("http://downloads.sourceforge.net/project/handbrake/$pkgver/HandBrake-$pkgver.tar.bz2")
 categories=('multimedia')
-md5sums=('ee81337a46f8af76599d6038f193a2c1')
+md5sums=('0902f724e2884bc9a5e077cc021b578d')
 
-build() {
+prepare() {
   cd "$srcdir/HandBrake-$pkgver"
   
   # Use more system libs
@@ -20,15 +21,15 @@ build() {
   # https://forum.handbrake.fr/viewtopic.php?f=13&t=27581
   sed -i \
     -e '/MODULES += contrib\/libbluray/d' \
-    -e '/MODULES += contrib\/x264/d' \
     make/include/main.defs
-    
-
+}    
+build() {
+  cd "$srcdir/HandBrake-$pkgver"
+  
   ./configure --prefix=/usr \
               --force \
               --disable-gtk \
-              --disable-gtk-update-checks \
-              --enable-ff-mpeg2
+              --disable-gtk-update-checks
   cd build
   make
 }
