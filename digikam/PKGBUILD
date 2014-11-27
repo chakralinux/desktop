@@ -1,7 +1,7 @@
 pkgbase=digikam
 pkgname=('digikam' 'kipi-plugins' 'libkvkontakte')
 pkgver=4.5.0
-pkgrel=3
+pkgrel=4
 url="http://digikam.sourceforge.net"
 arch=('x86_64')
 license=('GPL')
@@ -10,9 +10,16 @@ makedepends=('kde-runtime' 'kdegraphics-kgamma' 'kdepimlibs' 'lensfun' 'kdeedu-m
              'liblqr' 'opencv' 'lapack' 'libgpod' 'pkgconfig' 'cmake' 'automoc4'
              'doxygen' 'docbook-xsl' 'qjson' 'kdegraphics-libkexiv2' 'kdegraphics-libkdcraw'
              'kdegraphics-libksane' 'mariadb' 'qt-gstreamer' 'boost' 'hugin-tools' 'eigen3' 'libbluray' 'baloo' 'libpgf')
-source=("http://download.kde.org/stable/${pkgname}/${pkgname}-${pkgver}.tar.bz2")
+source=("http://download.kde.org/stable/${pkgname}/${pkgname}-${pkgver}.tar.bz2"
+        libkexiv2.patch)
 options=("debug")
-md5sums=('5fb3ab7b7c765bc7a310ca87c8e37220')
+md5sums=('5fb3ab7b7c765bc7a310ca87c8e37220'
+         'b41b45c2ced45f86abcff39d1fd8c8dd')
+
+prepare() {
+  cd "${srcdir}/${pkgname}-${pkgver}"
+  patch -Np0 -i "${srcdir}/libkexiv2.patch" 
+}
 
 build() {
    cd ${srcdir}
