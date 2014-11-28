@@ -18,7 +18,7 @@ pkgname=('calligra-braindump'
          'calligra-stage'
          'calligra-words')
 pkgver=2.8.6
-pkgrel=1
+pkgrel=2
 arch=('x86_64')
 url='http://www.calligra.org'
 screenshot=("http://upload.wikimedia.org/wikipedia/commons/thumb/3/3e/Calligra_Stage_2.4.png/800px-Calligra_Stage_2.4.png")
@@ -47,14 +47,12 @@ makedepends=('automoc4'
              'libmariadbclient'
              'libodfgen'
              'libpqxx'
-             'libqtgtl'
              'libspnav'
              'libvisio'
              'libwpd'
              'libwpg'
              'libwps'
              'opencolorio'
-             'opengtl'
              'openjpeg'
              'poppler-qt'
              'pstoedit'
@@ -77,6 +75,7 @@ build() {
         -DCMAKE_BUILD_TYPE=RelWithDebInfo \
         -DCMAKE_INSTALL_PREFIX=/usr \
         -DCMAKE_INSTALL_LIBDIR=lib \
+        -DPACKAGERS_BUILD=ON \
         -DBUILD_active=OFF
     make
 }
@@ -178,10 +177,8 @@ package_calligra-krita() {
              'kde-runtime'
              'lcms2'
              'libkdcraw'
-             'libqtgtl'
              'opencolorio'
              'openexr'
-             'opengtl'
              'poppler-qt'
              'qimageblitz'
              'shared-mime-info'
