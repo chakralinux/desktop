@@ -9,24 +9,27 @@ pkgdesc="KDE's screen management library"
 arch=('x86_64')
 url='projects.kde.org/'
 license=('LGPL')
-depends=('qt5-base' 'solid' 'kdelibs4support' 'kio' 'kconfig' 'khtml' 'kiconthemes' 'kemoticons' 'kitemmodels' 'kdnssd')
-makedepends=('extra-cmake-modules')
+depends=('kdelibs4support' 'khtml' 'kdnssd' 'libssh' 'smbclient' 'exiv2' 'openexr' 'openslp')
+makedepends=('extra-cmake-modules' 'kdoctools' 'python')
 checkdepends=("cmake")
 groups=('plasma')
 options=("debug")
-source=("${PServer}/${pkgver}/${pkgname}-${PSubVersion}.tar.xz")
-sha256sums=( $(getSum ${pkgname}) )
+source=("${PServer}/${pkgver}/${pkgname}-${PSubVersion}.tar.xz"
+        'sanitize-input.patch')
+sha256sums=( $(getSum ${pkgname}) 
+            '9ddbbe633373c16c42016a5118fc1e9bdc684f82fbf77a6bcbe0d1902c68e176')
 
 prepare() {
   mkdir -p build
+
+  cd ${pkgname}-${pkgver}
+  patch -p1 -i "${srcdir}"/sanitize-input.patch
 }
 
 build() {
   cd build
-  cmake ../${pkgname}-${pkgver} \
-    -DCMAKE_BUILD_TYPE=${PBuildType} \
-    -DCMAKE_INSTALL_PREFIX=${PInstallPrefix} \
-    -DLIB_INSTALL_DIR=lib 
+  cmake_kf5 ../${pkgname}-${pkgver} \
+    -DPYTHON_EXECUTABLE=/usr/bin/python3
   make
 }
 
@@ -38,4 +41,8 @@ check() {
 package() {
   cd build
   make DESTDIR="${pkgdir}" install
+
+  # conflicts with kde-runtime
+  rm "$pkgdir"/usr/lib/libmolletnetwork.so
+  mv "$pkgdir"/usr/share/config.kcfg/jpegcreatorsettings{,5}.kcfg
 }

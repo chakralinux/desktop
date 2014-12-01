@@ -6,12 +6,13 @@ source ../_buildscripts/${current_repo}-${_arch}-cfg.conf
 
 pkgbase="kde-baseapps"
 pkgname=('kde-baseapps'
+        'kde-baseapps-kdepasswd'
         'kde-baseapps-dolphin'
         'kde-baseapps-konqueror'
         'kde-baseapps-konqueror-plugins')
 arch=('x86_64')
 pkgver=${_kdever}
-pkgrel=1
+pkgrel=2
 url="http://www.kde.org"
 license=('GPL' 'LGPL' 'FDL')
 options=('docs' '!header' 'debug' 'log')
@@ -42,7 +43,7 @@ package_kde-baseapps() {
     groups=("${pkgbase}" "kde" "kde-minimal" "kde-uninstall")
     install=kde-baseapps.install
 
-    splitdirs="kdepasswd kdialog keditbookmarks kfind lib nsplugins plasma konqueror doc/kdepasswd doc/kfind"
+    splitdirs="kdialog keditbookmarks kfind lib nsplugins plasma konqueror doc/kfind"
     for i in ${splitdirs} ; do
         cd ${srcdir}/${pkgbase}-${pkgver}/${i}
         make DESTDIR=${pkgdir} install
@@ -95,6 +96,17 @@ package_kde-baseapps() {
 
     # Fix missing KFind icon, fixes FS#325
     sed -i -e "s~Icon=kfind~Icon=edit-find~g" ${pkgdir}/usr/share/applications/kde4/kfind.desktop
+}
+
+package_kde-baseapps-kdepasswd() {
+    pkgdesc='Change Password'
+    depends=('kde-runtime' 'kde-baseapps')
+
+    splitdirs="kdepasswd doc/kdepasswd"
+    for i in ${splitdirs} ; do
+        cd ${srcdir}/${pkgbase}-${pkgver}/${i}
+        make DESTDIR=${pkgdir} install
+    done
 }
 
 package_kde-baseapps-dolphin() {
