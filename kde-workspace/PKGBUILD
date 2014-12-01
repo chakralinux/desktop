@@ -5,46 +5,14 @@
 source ../_buildscripts/${current_repo}-${_arch}-cfg.conf
 
 _default_wp="Elarun"
-pkgname="kde-workspace"
+pkgbase="kde-workspace"
+pkgname=("kde-workspace" "kde4-integration")
 arch=('x86_64')
 pkgver=${_workspace_ver}
 #pkgver=4.11.11
-pkgrel=1
-pkgdesc="KDE Workspace"
+pkgrel=2
 url="http://www.kde.org"
 license=('GPL' 'LGPL' 'FDL')
-options=('docs'
-         '!header'
-         'debug'
-         'log')
-install=${pkgname}.install
-depends=('polkit-kde-agent'
-         "kdepimlibs>=${_kdever}"
-         "kde-runtime>=${_kdever}"
-         'qimageblitz'
-         'mesa'
-         "kactivities" 
-         'libxcomposite'
-         'xcb-util-image'
-         'xcb-util-renderutil'
-         'libxss'
-         'lm_sensors'
-         'libxklavier'
-         'libxft'
-         'oxygen-icons'
-         'xkit'
-         'libxdamage'
-         'xorg-utils'
-         'libxrandr'
-         'libxres'
-         'libdmtx'
-         'libqalculate'
-         'prison'
-         'qrencode'
-         "kdepim-runtime>=${_kdever}"
-         "kde-base-artwork>=${_kdever}"
-         'xcb-util-keysyms'
-         'xcb-util-wm')
 makedepends=('pkgconfig'
              'cmake'
              'automoc4'
@@ -60,34 +28,38 @@ makedepends=('pkgconfig'
              'libdmtx'
              'docbook-xsl'
              'prison'
-             'qrencode')
-optdepends=('appmenu-qt:           Global menu support'
-            'kdebindings-python2:  Python 2 support for Plasma'
-            'kdebindings-python3:  Python 3 support for Plasma'
-            'kdeedu-marble:        Marble wallpaper Plugin'
-            'gpsd:                 Plasma geolocation support'
-            'kscreen:              Monitor configuration'
-            'ntp:                  Time/date sync support'
-            'opentp:               Optional time/date sync support'
-            'xf86-input-wacom:     Wacom tablet support')
-provides=('kdebase-workspace'
-          'powerdevil'
-          'kcm_tablet=2.0.2'
-          'kde-workspace-doc')
-replaces=('guidance-power-manager'
-          'kdebase-workspace'
-          'kde-workspace-doc')
-conflicts=('kdebase-workspace'
-           'powerdevil'
-           'kcm_tablet'
-           'guidance-power-manager'
-           'kde-workspace-doc'
-           'kded-appmenu')
+             'qrencode'
+             "kdepimlibs>=${_kdever}"
+             "kde-runtime>=${_kdever}"
+             'qimageblitz'
+             'mesa'
+             "libkactivities4" 
+             'libxcomposite'
+             'xcb-util-image'
+             'xcb-util-renderutil'
+             'libxss'
+             'libxklavier'
+             'libxft'
+             'xkit'
+             'libxdamage'
+             'xorg-utils'
+             'libxrandr'
+             'libxres'
+             'libdmtx'
+             'libqalculate'
+             'prison'
+             'qrencode'
+             "kdepim-runtime>=${_kdever}"
+             "kde-base-artwork>=${_kdever}"
+             'xcb-util-keysyms'
+             'xcb-util-wm')
+options=('docs'
+         '!header'
+         'debug'
+         'log')
 groups=('kde'
         'kde-uninstall'
         'kde-minimal')
-backup=('usr/share/config/kdm/kdmrc'
-        'etc/pam.d/kscreensaver')
 source=("http://download.kde.org/stable/${_kdever}/src/kde-workspace-${_workspace_ver}.tar.xz"
 #"http://download.kde.org/stable/${_kdever}/src/${pkgname}-$pkgver.tar.xz"
         "http://download.kde.org/stable/${_kdever}/src/kde-wallpapers-${_kdever}.tar.xz"
@@ -172,7 +144,61 @@ build() {
     make
 }
 
-package() {
+package_kde-workspace() {
+    pkgdesc="KDE Workspace"
+    install=${pkgname}.install
+    depends=('polkit-kde-agent'
+            "kdepimlibs>=${_kdever}"
+            "kde-runtime>=${_kdever}"
+            'qimageblitz'
+            'mesa'
+            "kactivities" 
+            'libxcomposite'
+            'xcb-util-image'
+            'xcb-util-renderutil'
+            'libxss'
+            'lm_sensors'
+            'libxklavier'
+            'libxft'
+            'oxygen-icons'
+            'xkit'
+            'libxdamage'
+            'xorg-utils'
+            'libxrandr'
+            'libxres'
+            'libdmtx'
+            'libqalculate'
+            'prison'
+            'qrencode'
+            "kdepim-runtime>=${_kdever}"
+            "kde-base-artwork>=${_kdever}"
+            'xcb-util-keysyms'
+            'xcb-util-wm'
+            'kde4-integration')
+    backup=('usr/share/config/kdm/kdmrc'
+            'etc/pam.d/kscreensaver')
+    optdepends=('appmenu-qt:           Global menu support'
+                'kdebindings-python2:  Python 2 support for Plasma'
+                'kdebindings-python3:  Python 3 support for Plasma'
+                'kdeedu-marble:        Marble wallpaper Plugin'
+                'gpsd:                 Plasma geolocation support'
+                'kscreen:              Monitor configuration'
+                'ntp:                  Time/date sync support'
+                'opentp:               Optional time/date sync support'
+                'xf86-input-wacom:     Wacom tablet support')
+    provides=('kdebase-workspace'
+            'powerdevil'
+            'kcm_tablet=2.0.2'
+            'kde-workspace-doc')
+    replaces=('guidance-power-manager'
+            'kdebase-workspace'
+            'kde-workspace-doc')
+    conflicts=('kdebase-workspace'
+            'powerdevil'
+            'kcm_tablet'
+            'guidance-power-manager'
+            'kde-workspace-doc'
+            'kded-appmenu')
     cd "${srcdir}/${pkgname}-${pkgver}"
     make DESTDIR=${pkgdir} install
 
@@ -255,4 +281,16 @@ package() {
     # resolve kdm issue (missing directory)
     mkdir -p ${pkgdir}/var/lib/kdm
     chown 135:135 ${pkgdir}/var/lib/kdm
+
+    # remove file in kde4-integration
+    rm -rf ${pkgdir}/usr/lib/kde4/plugins/gui_platform/
+}
+
+package_kde4-integration()
+{
+    pkgdesc=("Qt4/KDE4 integration")
+    depends=("kdelibs")
+
+    cd "${srcdir}/${pkgname}-${pkgver}/qguiplatformplugin_kde/"
+    make DESTDIR=${pkgdir} install
 }
