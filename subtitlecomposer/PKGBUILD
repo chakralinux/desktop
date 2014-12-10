@@ -2,8 +2,8 @@
 
 
 pkgname=subtitlecomposer
-pkgver=0.5.6
-pkgrel=3
+pkgver=0.5.7
+pkgrel=1
 pkgdesc="A text-based subtitles editor for KDE"
 arch=('x86_64')
 url="http://kde-apps.org/content/show.php/Subtitle+Composer?content=162048"
@@ -14,16 +14,17 @@ optdepends=("mplayer: for MPlayer backend"
             "mplayer2: for MPlayer backend")
 categories=('multimedia')
 screenshot="http://kde-apps.org/CONTENT/content-pre1/162048-1.png"
-source=(https://github.com/maxrd2/$pkgname/archive/v$pkgver.tar.gz 'https://github.com/wengxt/subtitlecomposer/commit/26ce31879bb05447b266c84cfb8dc4e484ff0f8a.patch') 
+source=(https://github.com/maxrd2/$pkgname/archive/v$pkgver.tar.gz 
+#'https://github.com/wengxt/subtitlecomposer/commit/26ce31879bb05447b266c84cfb8dc4e484ff0f8a.patch'
+) 
 install="${pkgname}.install"
-md5sums=('8b48fbb99f5e10312670367024aa6fe2'
-         'd76a1afd3b4f794f451950fd31def7c4')
+md5sums=('9e1fef4dca5a15e5c0435f1b099d4ab4')
 
-prepare()
-{
-	cd ${srcdir}/${pkgname}-${pkgver}
-	patch -Np1 -i ../26ce31879bb05447b266c84cfb8dc4e484ff0f8a.patch
-}
+#prepare()
+#{
+#	cd ${srcdir}/${pkgname}-${pkgver}
+#	patch -Np1 -i ../26ce31879bb05447b266c84cfb8dc4e484ff0f8a.patch
+#}
 
 build()
 {
