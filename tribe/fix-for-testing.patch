@@ -100,7 +100,7 @@ index 22af3ff686a949464afdb0ebdc8839fcf5aabfb2..8d4baf805b76abe03f7cce278fbef160
  
 -        if (!bootPartition) {
 -            KMessageBox::error(this, i18n("When using a GPT Partition Table you need to have a unformatted partition with the bios_grub flag!"));
-+        if (bootPartition->fileSystem().type() == FileSystem::Fat32) {
++        if (bootPartition->fileSystem().type() != FileSystem::Fat32) {
 +            KMessageBox::error(this, i18n("File system of EFI Partition need to be fat32!"));
              return;
          }
