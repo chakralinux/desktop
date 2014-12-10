@@ -1,20 +1,18 @@
 #
-# Apps Packages for Chakra, part of chakra-project.org
+# Chakra Packages for Chakra, part of chakra-project.org
 #
-# maintainer (x86_64): Giuseppe Calà <jiveaxe@gmail.com>
+# maintainer (x86_64): Giuseppe Cal <jiveaxe@gmail.com>
 
 pkgname=strace
-pkgver=4.7
+pkgver=4.9
 pkgrel=1
 pkgdesc="A useful diagnositic, instructional, and debugging tool"
 arch=('x86_64')
 url="http://sourceforge.net/projects/strace/"
 license=('custom')
 depends=('perl')
-categories=('programming')
 source=(http://downloads.sourceforge.net/${pkgname}/${pkgname}-$pkgver.tar.xz)
-md5sums=('6054c3880a00c6703f83b57f15e04642')
-#needs to be build on it's own arch, no crosscompiling
+md5sums=('885eafadb10f6c60464a266d3929a2a4')
 
 build() {
   cd "${srcdir}/${pkgname}-${pkgver}"
@@ -26,5 +24,5 @@ package() {
   cd "${srcdir}/${pkgname}-${pkgver}"
   make DESTDIR="${pkgdir}/" install || return 1
 
-  install -Dm644 COPYRIGHT ${pkgdir}/usr/share/licenses/${pkgname}/LICENSE
+  install -Dm644 COPYING ${pkgdir}/usr/share/licenses/${pkgname}/LICENSE
 }
