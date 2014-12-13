@@ -3,7 +3,7 @@
 # contributor kote
 
 pkgname=yagf
-pkgver=0.9.3
+pkgver=0.9.4.2
 pkgrel=1
 pkgdesc="Qt4-based GUI for Cuneiform OCR"
 arch=(x86_64)
@@ -14,17 +14,17 @@ depends=('cuneiform' 'qt' 'aspell')
 optdepends=('xsane: acquire images from a scanner into YAGF directly')
 makedepends=('cmake')
 install=yagf.install
-source=(http://symmetrica.net/cuneiform-linux/${pkgname}-${pkgver}.tar.gz)
-md5sums=('54549f1daef831ca88532b450a9cf1d9')
+source=("https://yagf.googlecode.com/archive/$pkgname-$pkgver.tar.gz")
+md5sums=('129d631f312e40eabb2ca172765a71d7')
 
 build() {
-  cd "${srcdir}/${pkgname}-${pkgver}"
+  cd "${srcdir}/$pkgname-${pkgname}-${pkgver}"
   cmake -D CMAKE_INSTALL_PREFIX=/usr -D CMAKE_BUILD_TYPE=Release .
   make
 }
 
 package() {
-  cd "${srcdir}/${pkgname}-${pkgver}"
+  cd "${srcdir}/$pkgname-${pkgname}-${pkgver}"
   make DESTDIR=${pkgdir} install
   [ -d $pkgdir/usr/lib64 ] && mv $pkgdir/usr/lib64 $pkgdir/usr/lib || true
 }
