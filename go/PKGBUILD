@@ -2,7 +2,7 @@
 # Maintainer: Bruce Liu <rainman59118@gmail.com>
 
 pkgname=go
-pkgver=1.2.1
+pkgver=1.4
 pkgrel=1
 pkgdesc='Google Go compiler and tools (release version)'
 arch=('x86_64')
@@ -12,13 +12,13 @@ depends=('perl' 'gawk')
 makedepends=('inetutils')
 options=('!strip' '!emptydirs')
 install=${pkgname}.install
-source=("http://go.googlecode.com/files/${pkgname}${pkgver}.src.tar.gz"
+source=("https://github.com/golang/go/archive/$pkgname$pkgver.tar.gz"
         "${pkgname}.sh")
-sha256sums=('1655a9367bec083df57cacc29add280c279791801e102fd851c00d8babd12a55'
+sha256sums=('579bb7e514aedc13d5bbff57fafdab9c183d277f341f2a55cf1013aeb881d9cf'
             '36202a833faeb8ea10760557a1e221025288480bdeebf776c8b610014aadc181')
 
 build() {
-  cd "${pkgname}"
+  cd $pkgname-$pkgname$pkgver
 
   export GOROOT_FINAL="/usr/lib/go"
   export GOOS=linux
@@ -27,7 +27,7 @@ build() {
 }
 
 check() {
-  cd "${pkgname}"
+  cd $pkgname-$pkgname$pkgver
 
   export GOROOT="${srcdir}/${pkgname}"
   export PATH="${srcdir}/${pkgname}/bin:$PATH"
@@ -37,27 +37,27 @@ check() {
 }
 
 package() {
-  cd "${pkgname}"
+  cd $pkgname-$pkgname$pkgver
 
-  export GOROOT="${srcdir}/${pkgname}"
+  export GOROOT="${srcdir}/$pkgname-$pkgname$pkgver"
   export PATH="${srcdir}/${pkgname}/bin:$PATH"
 
-  install -Dm644 LICENSE \
-    "${pkgdir}/usr/share/licenses/go/LICENSE"
-  install -Dm644 misc/bash/go \
-    "${pkgdir}/usr/share/bash-completion/completions/go"
-  install -Dm644 misc/emacs/go-mode-load.el \
-    "${pkgdir}/usr/share/emacs/site-lisp/go-mode-load.el"
-  install -Dm644 misc/emacs/go-mode.el \
-    "${pkgdir}/usr/share/emacs/site-lisp/go-mode.el"
-  install -Dm644 misc/zsh/go \
-    "${pkgdir}/usr/share/zsh/site-functions/_go"
-
-  for f in ftdetect/gofiletype.vim autoload/go/complete.vim indent/go.vim \
-    ftplugin/go/fmt.vim ftplugin/go/import.vim syntax/go.vim syntax/godoc.vim plugin/godoc.vim;
-  do
-    install -Dm644 "misc/vim/$f" "${pkgdir}/usr/share/vim/vimfiles/$f"
-  done
+#   install -Dm644 LICENSE \
+#     "${pkgdir}/usr/share/licenses/go/LICENSE"
+#   install -Dm644 misc/bash/go \
+#     "${pkgdir}/usr/share/bash-completion/completions/go"
+#   install -Dm644 misc/emacs/go-mode-load.el \
+#     "${pkgdir}/usr/share/emacs/site-lisp/go-mode-load.el"
+#   install -Dm644 misc/emacs/go-mode.el \
+#     "${pkgdir}/usr/share/emacs/site-lisp/go-mode.el"
+#   install -Dm644 misc/zsh/go \
+#     "${pkgdir}/usr/share/zsh/site-functions/_go"
+# 
+#   for f in ftdetect/gofiletype.vim autoload/go/complete.vim indent/go.vim \
+#     ftplugin/go/fmt.vim ftplugin/go/import.vim syntax/go.vim syntax/godoc.vim plugin/godoc.vim;
+#   do
+#     install -Dm644 "misc/vim/$f" "${pkgdir}/usr/share/vim/vimfiles/$f"
+#   done
 
   install -d "${pkgdir}/"{etc/profile.d,usr/{share/go,lib/go,lib/go/src}}
 
@@ -65,7 +65,6 @@ package() {
   ln -s /usr/share/go/doc "${pkgdir}/usr/lib/go/doc"
   cp -r --preserve=timestamps bin "${pkgdir}/usr"
   cp -r --preserve=timestamps pkg "${pkgdir}/usr/lib/go"
-  cp -r --preserve=timestamps $GOROOT/src/pkg "${pkgdir}/usr/lib/go/src/"
   cp -r --preserve=timestamps $GOROOT/src/cmd "${pkgdir}/usr/lib/go/src/cmd"
   cp -r --preserve=timestamps $GOROOT/src/lib9 "${pkgdir}/usr/lib/go/src/"
   cp -r --preserve=timestamps $GOROOT/lib "${pkgdir}/usr/lib/go/"
@@ -74,16 +73,16 @@ package() {
 
   # Remove object files from target src dir
   find "${pkgdir}/usr/lib/go/src/" -type f -name '*.[ao]' -delete
-  find "${pkgdir}/usr/lib/go/src/pkg" -type f -executable -delete
+#   find "${pkgdir}/usr/lib/go/src/pkg" -type f -executable -delete
   
   # Fix for FS#32813
   find "${pkgdir}" -type f -name sql.go -exec chmod -x '{}' \;
 
   # Headers for C modules
-  install -Dm644 src/pkg/runtime/runtime.h \
-    "${pkgdir}/usr/lib/go/src/pkg/runtime/runtime.h"
-  install -Dm644 src/pkg/runtime/cgocall.h \
-    "${pkgdir}/usr/lib/go/src/pkg/runtime/cgocall.h"
+  install -Dm644 src/runtime/runtime.h \
+    "${pkgdir}/usr/lib/go/src/runtime/runtime.h"
+  install -Dm644 src/runtime/cgocall.h \
+    "${pkgdir}/usr/lib/go/src/runtime/cgocall.h"
 
   # For packages that source /etc/profile.d/go.sh
   install -Dm755 "${srcdir}/${pkgname}.sh" "${pkgdir}/etc/profile.d/${pkgname}.sh"
