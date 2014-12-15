@@ -17,8 +17,8 @@ pkgname=('calligra-braindump'
          'calligra-sheets'
          'calligra-stage'
          'calligra-words')
-pkgver=2.8.6
-pkgrel=2
+pkgver=2.8.7
+pkgrel=1
 arch=('x86_64')
 url='http://www.calligra.org'
 screenshot=("http://upload.wikimedia.org/wikipedia/commons/thumb/3/3e/Calligra_Stage_2.4.png/800px-Calligra_Stage_2.4.png")
@@ -47,12 +47,14 @@ makedepends=('automoc4'
              'libmariadbclient'
              'libodfgen'
              'libpqxx'
+             'libqtgtl'
              'libspnav'
              'libvisio'
              'libwpd'
              'libwpg'
              'libwps'
              'opencolorio'
+             'opengtl'
              'openjpeg'
              'poppler-qt'
              'pstoedit'
@@ -63,7 +65,7 @@ makedepends=('automoc4'
 options=("debug")
 groups=('calligra')
 source=("http://download.kde.org/stable/${pkgbase}-${pkgver}/${pkgbase}-${pkgver}.tar.xz")
-sha512sums=('ab09e121121aa7fb14687e644f3c23840775f42f050726cb87894d295e6d987ff636d94c92488727b5161e0b7967cca9fe64bdd4e976d75f1f25323d69ea8ef4')
+sha512sums=('e09fcbb6708d73db3b31027c4393a138fbf5c47d1b777dd4a3b94f6e668d67ac963cfadb320350c63f1b2d1173edc67dc2100704899176c196865fb4d2ce7442')
 
 prepare() {
     mkdir -p "${srcdir}/build"
@@ -75,7 +77,6 @@ build() {
         -DCMAKE_BUILD_TYPE=RelWithDebInfo \
         -DCMAKE_INSTALL_PREFIX=/usr \
         -DCMAKE_INSTALL_LIBDIR=lib \
-        -DPACKAGERS_BUILD=ON \
         -DBUILD_active=OFF
     make
 }
@@ -177,8 +178,10 @@ package_calligra-krita() {
              'kde-runtime'
              'lcms2'
              'libkdcraw'
+             'libqtgtl'
              'opencolorio'
              'openexr'
+             'opengtl'
              'poppler-qt'
              'qimageblitz'
              'shared-mime-info'
