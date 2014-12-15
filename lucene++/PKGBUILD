@@ -1,0 +1,39 @@
+# Maintainer: Francesco Marinucci <framari [at] opmbx [dot] org>
+# CCR Maintainer: ahjolinna <ahjolinna@ovi.com>
+
+pkgname=lucene++
+pkgver=3.0.6
+pkgrel=2
+pkgdesc='C++ port of the popular Java Lucene library'
+arch=('x86_64')
+url='https://github.com/luceneplusplus/LucenePlusPlus'
+license=('GPL' 'Apache')
+depends=('boost-libs')
+makedepends=('boost' 'cmake' 'subversion')
+source=("$pkgname-$pkgver.tar.gz::https://github.com/luceneplusplus/LucenePlusPlus/archive/master.tar.gz")
+md5sums=('a93c682330197516ce7a60137b261f48')
+
+prepare() {
+  mkdir build
+  sed -i \
+    -e 's#SET(LUCENE++_VERSION_REVISION.*#SET(LUCENE++_VERSION_REVISION "5")#' \
+    -e 's#SET(LUCENE++_VERSION_PATCH.*#SET(LUCENE++_VERSION_PATCH "0")#' \
+    $srcdir/LucenePlusPlus-master/CMakeLists.txt
+}
+
+build() {
+  cd build
+
+  cmake ../LucenePlusPlus-master \
+    -DCMAKE_INSTALL_PREFIX=/usr \
+    -DLIB_DESTINATION=/usr/lib \
+    -DBoost_LIBRARY_DIR=/usr/lib \
+    -DENABLE_CUSTOM_ALLOCATOR='FALSE'
+
+  make
+}
+
+package() {
+  cd build
+  make DESTDIR="$pkgdir" install
+}
