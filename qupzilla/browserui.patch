@@ -35,19 +35,6 @@ index b9e51b3..bdecf2f 100644
      }
  
      settings.endGroup();
-diff --git a/src/lib/opensearch/searchenginesmanager.cpp b/src/lib/opensearch/searchenginesmanager.cpp
-index 8f9281c..d09a2bc 100644
---- a/src/lib/opensearch/searchenginesmanager.cpp
-+++ b/src/lib/opensearch/searchenginesmanager.cpp
-@@ -167,7 +167,7 @@ void SearchEnginesManager::restoreDefaults()
-     Engine duck;
-     duck.name = "DuckDuckGo";
-     duck.icon = QIcon(":/icons/sites/duck.png");
--    duck.url = "https://duckduckgo.com/?q=%s&t=qupzilla";
-+    duck.url = "https://duckduckgo.com/?t=chakra&q=%s";
-     duck.shortcut = "d";
- 
-     Engine sp;
 diff --git a/src/lib/plugins/speeddial.cpp b/src/lib/plugins/speeddial.cpp
 index 753cf66..fdc891f 100644
 --- a/src/lib/plugins/speeddial.cpp
@@ -76,25 +63,3 @@ index 753cf66..fdc891f 100644
                     "url:\"https://duckduckgo.com\"|title:\"DuckDuckGo\";";
      }
      changed(allPages);
-diff --git a/src/lib/preferences/preferences.cpp b/src/lib/preferences/preferences.cpp
-index c431fb7..790727f 100644
---- a/src/lib/preferences/preferences.cpp
-+++ b/src/lib/preferences/preferences.cpp
-@@ -140,7 +140,7 @@ Preferences::Preferences(BrowserWindow* window, QWidget* parent)
-     Settings settings;
-     //GENERAL URLs
-     settings.beginGroup("Web-URL-Settings");
--    m_homepage = settings.value("homepage", "qupzilla:start").toString();
-+    m_homepage = settings.value("homepage", "http://chakraos.org/home/?welcome").toString();
-     m_newTabUrl = settings.value("newTabUrl", "qupzilla:speeddial").toString();
-     ui->homepage->setText(m_homepage);
-     ui->newTabUrl->setText(m_newTabUrl);
-@@ -215,7 +215,7 @@ Preferences::Preferences(BrowserWindow* window, QWidget* parent)
- 
-     //APPEREANCE
-     settings.beginGroup("Browser-View-Settings");
--    ui->showStatusbar->setChecked(settings.value("showStatusBar", true).toBool());
-+    ui->showStatusbar->setChecked(settings.value("showStatusBar", false).toBool());
-     ui->showBookmarksToolbar->setChecked(settings.value("showBookmarksToolbar", true).toBool());
-     ui->showNavigationToolbar->setChecked(settings.value("showNavigationToolbar", true).toBool());
-     ui->showHome->setChecked(settings.value("showHomeButton", true).toBool());
