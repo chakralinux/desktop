@@ -3,7 +3,7 @@
 pkgname=qt4-fsarchiver
 pkgver=0.6.19.9
 _pkgver=0.6.19-9
-pkgrel=1
+pkgrel=2
 pkgdesc='GUI for fsarchiver'
 arch=('x86_64')
 url='http://sourceforge.net/projects/qt4-fsarchiver/'
@@ -32,6 +32,7 @@ package() {
 	
   # workaround for fixed destination path in qmake project
   mkdir -p ${pkgdir}/usr/bin
+  mv ${pkgdir}/usr/sbin/findsmb-qt ${pkgdir}/usr/bin/
   mv ${pkgdir}/usr/sbin/qt4-fsarchiver ${pkgdir}/usr/bin/
   rm -rf ${pkgdir}/usr/sbin
   
