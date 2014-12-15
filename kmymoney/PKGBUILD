@@ -1,9 +1,10 @@
+# Maintainer: Francesco Marinucci <framari [at] openmailbox [dot] org>
 # Maintainer: abveritas@chakra-project.org
 
 pkgname=kmymoney
-pkgver=4.6.4
-pkgrel=2
-pkgdesc="An finance manager for KDE4 with HBCI support"
+pkgver=4.7.1
+pkgrel=1
+pkgdesc="A finance manager for KDE4 with HBCI support"
 arch=('x86_64')
 url="http://kmymoney2.sourceforge.net"
 license=('GPL')
@@ -13,29 +14,24 @@ makedepends=('cmake' 'automoc4' 'gwenhywfar' 'docbook-xsl' 'boost' 'doxygen')
 conflicts=(kmymoney2)
 replaces=(kmymoney2)
 categories=('office')
-
-source=("http://sourceforge.net/projects/kmymoney2/files/KMyMoney-KDE4/$pkgver/$pkgname-$pkgver.tar.xz/download")
-sha1sums=('3e4b17574684fd717fc75963d0a0c4d31aa81b71')
-
-prepare() {
-  cd "${srcdir}"
-  rm -rf build
-  mkdir build
-}
+install=$pkgname.install
+source=(http://download.kde.org/stable/$pkgname/$pkgver/src/$pkgname-$pkgver.tar.xz)
+sha256sums=('7749cbae146eb4adf5c92162c841ae321f971c5720bc32d0227a42a4dd4acfc4')
 
 build() {
-  cd ${srcdir}/build
+  cd "${srcdir}/${pkgname}-${pkgver}"
 
-  cmake "${srcdir}/${pkgname}-${pkgver}" \
-        -DCMAKE_INSTALL_PREFIX=/usr \
-        -DCMAKE_BUILD_TYPE=RELEASE \
-        -DCMAKE_SKIP_RPATH=YES \
-        -DKDE4_BUILD_TESTS=OFF
-  make VERBOSE=1
+  mkdir build
+  cd build
+
+  cmake ../ \
+    -DCMAKE_INSTALL_PREFIX=/usr \
+    -DCMAKE_BUILD_TYPE=RELEASE -DCMAKE_SKIP_RPATH=YES
+  make
 }
 
 package() {
-  cd ${srcdir}/build
+  cd "${srcdir}/${pkgname}-${pkgver}/build"
 
-  make DESTDIR=${pkgdir} install
+  make DESTDIR="${pkgdir}" install
 }
