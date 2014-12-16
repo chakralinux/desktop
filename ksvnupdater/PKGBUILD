@@ -1,7 +1,7 @@
 # Maintinaer: Bruce Liu <brli@users.sourceforge.net>
 
 pkgname=ksvnupdater
-pkgver=1.2.7
+pkgver=1.3.1
 pkgrel=1
 pkgdesc="ksvnupdater is a utility oriented to KDE translation teams."
 url="http://www.eloihr.net/ksvnupdater"
@@ -12,19 +12,19 @@ makedepends=('cmake' 'automoc4' 'pology' 'docbook-xsl')
 install=${pkgname}.install
 screenshot=('http://www.eloihr.net/ksvnupdater/img/ksvnupdater_update.png')
 source=(http://www.eloihr.net/ksvnupdater/files/ksvnupdater-$pkgver.tar.bz2)
-md5sums=('4941fa17d39d56cc80010f40bfcc9a36')
+md5sums=('6e0c6eb54da5b0dbdead26f39d5069fb')
 
 build() {
-  cd ${srcdir}
+  cd $srcdir
 
   mkdir build && cd build
 
-  cmake -DCMAKE_INSTALL_PREFIX=/usr ${srcdir}/${pkgname}-${pkgver}
+  cmake -DCMAKE_INSTALL_PREFIX=/usr $srcdir/$pkgname-$pkgver
   make
 }
 
 package() {
-  cd ${srcdir}/build
-  make DESTDIR=${pkgdir} install
+  cd $srcdir/build
+  make DESTDIR=$pkgdir install
 }
 
