@@ -1,37 +1,39 @@
+
 #
 # Apps Packages for Chakra, part of chakra-project.org
 #
 # Maintainer: Adrián Chaves Fernández (Gallaecio) <adriyetichaves@gmail.com>
 
-# include global config
-source ../_buildscripts/${current_repo}-${_arch}-cfg.conf
-
 pkgname=hydrogen
-pkgver=0.9.5
+pkgver=0.9.6
 pkgrel=1
 pkgdesc="Advanced drum machine."
-arch=('i686' 'x86_64')
+arch=('x86_64')
 license=('GPL2')
 url="http://www.hydrogen-music.org/"
-depends=('alsa-lib' 'flac' 'jack' 'libarchive' 'liblrdf' 'libsndfile' 'qt' 'tar' 'zlib')
-makedepends=('scons')
+depends=('alsa-lib' 'flac' 'lash' 'jack' 'libarchive' 'libsndfile' 'qt' 'tar' 'zlib' 'ladspa' 'pulseaudio')
+makedepends=('cmake')
 categories=('multimedia')
-changelog=ChangeLog
-source=(http://downloads.sourceforge.net/$pkgname/$pkgname-$pkgver.tar.gz)
-md5sums=('e96f291d60e58f5d62fe616cee577dc0')
+source=(https://github.com/hydrogen-music/$pkgname/archive/$pkgver.tar.gz)
+md5sums=('e4424926a88af82fb2048b3548723827')
 
 build() {
-  cd $srcdir/$pkgname-$pkgver
-
 msg "Compiling..."
-  export QTDIR=/usr
-  scons \
-    prefix=/usr \
-    libarchive=1
+  cd $srcdir/$pkgname-$pkgver
+  mkdir -p build/
+  cd build
+  cmake ../ \
+    -DCMAKE_BUILD_TYPE=Release \
+    -DCMAKE_INSTALL_PREFIX=/usr \
+    -DWANT_LASH=true \
+    -DWANT_LIBARCHIVE=true
+  make
 }
 
 package() {
-  cd $srcdir/$pkgname-$pkgver
 
-  scons DESTDIR="$pkgdir" install
+msg "Installing..."
+  cd $srcdir/$pkgname-$pkgver/build
+  make DESTDIR=$pkgdir install
+
 }
