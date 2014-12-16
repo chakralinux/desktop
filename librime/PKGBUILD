@@ -3,20 +3,21 @@
 # Contributor: 	 網軍總司令
 
 pkgname=librime
-pkgver=1.1
-pkgrel=2
+_pkgname=rime
+pkgver=1.2
+pkgrel=1
 pkgdesc="Rime input method engine"
 arch=('x86_64')
 url="http://code.google.com/p/rimeime/"
 license=('GPL3')
-depends=('boost-libs' 'google-glog' 'kyotocabinet' 'opencc' 'yaml-cpp>=0.5.0')
+depends=('boost-libs' 'google-glog' 'kyotocabinet' 'opencc' 'yaml-cpp>=0.5.0' 'marisa')
 optdepends=('brise: Rime schema repository')
 makedepends=('cmake' 'boost')
-source=("http://rimeime.googlecode.com/files/$pkgname-$pkgver.tar.gz")
-md5sums=('9f7831a40cd3d8af3fa08b073164238a')
+source=("https://github.com/lotem/$pkgname/archive/$_pkgname-$pkgver.tar.gz")
+md5sums=('bcb249dfaeb84d4a884bcc6a9dae433f')
 
 build() {
-  cd "${srcdir}/$pkgname"
+  cd "$srcdir/$pkgname-$_pkgname-$pkgver"
   mkdir -p build
   cd build
   cmake -DCMAKE_INSTALL_PREFIX=/usr -DCMAKE_BUILD_TYPE=Release ..
@@ -24,6 +25,6 @@ build() {
 }
 
 package() {
-  cd "${srcdir}/$pkgname"
+  cd "$srcdir/$pkgname-$_pkgname-$pkgver"
   make DESTDIR="$pkgdir" install
 }
