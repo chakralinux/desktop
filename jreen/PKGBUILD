@@ -6,26 +6,26 @@
 
 pkgname=jreen
 _name=lib${pkgname}
-pkgver=1.1.1
+pkgver=1.2.0	
 pkgrel=1
 pkgdesc="Qt XMPP library"
 arch=('x86_64')
 url="https://github.com/euroelessar/jreen"
 license=('GPL2')
-depends=('libidn' 'qca' 'zlib')
+depends=('libidn' 'qca' 'zlib' 'libgsasl' 'speex')
 makedepends=('cmake')
 conflicts=('jreen-git')
 options=(!strip)
-source=("http://qutim.org/dwnl/44/${_name}-${pkgver}.tar.bz2")
-md5sums=('180c4a3356b6d5865292e33de2a29820')
+source=("https://github.com/euroelessar/$pkgname/archive/v$pkgver.tar.gz")
+md5sums=('a7d2480c789173c4f836c14a97f66b51')
 
 build() {
-  cd ${srcdir}/${_name}-${pkgver}
+  cd $srcdir/$pkgname-$pkgver
   cmake -DCMAKE_INSTALL_PREFIX=/usr -DCMAKE_BUILD_TYPE=release
   make
 }
 
 package() {
-  cd ${srcdir}/${_name}-${pkgver}
-  make DESTDIR=${pkgdir} install
+  cd $srcdir/$pkgname-$pkgver
+  make DESTDIR=$pkgdir install
 }
