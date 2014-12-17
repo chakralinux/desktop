@@ -1,27 +1,28 @@
 # Maintainer: Ernesto Manríquez <alejandronova@gmail.com>
 
 pkgname=python2-regex
-pkgver=0.1.20120613
+_pkgname=regex
+pkgver=2014.12.15
 pkgrel=1
 pkgdesc="Alternative regular expression module, to replace re."
 arch=('x86_64')
 url="https://code.google.com/p/mrab-regex-hg/"
 license=('custom')
 depends=('python2')
-makedepends=('python2-distribute')
+makedepends=('python2-setuptools')
 conflicts=('python2-regex-hg')
-source=("https://launchpad.net/ubuntu/+archive/primary/+files/python-regex_${pkgver}.orig.tar.gz")
-sha256sums=('e94f24600c82e3ed72b5022dfc2e2d1d0c44fe62a7f6860ae31075ad28fed3c2')
+source=("https://pypi.python.org/packages/source/r/$_pkgname/$_pkgname-$pkgver.tar.gz")
+sha256sums=('ac7b39d07e286ee6038d86fe829a465e2f699a86ecba73726de3d9986f651b1c')
 
 build() {
-  cd "$srcdir/regex-${pkgver}"
+  cd "$srcdir/$_pkgname-$pkgver"
 
   python2 setup.py build
 }
 
 package() {
-  cd "${srcdir}/regex-${pkgver}"
+  cd "$srcdir/$_pkgname-$pkgver"
 
-  python2 setup.py install --prefix=/usr --root="${pkgdir}"
+  python2 setup.py install --prefix=/usr --root="$pkgdir"
 }
 
