@@ -1,0 +1,30 @@
+#
+# Apps packages for Chakra, part of www.chakra-project.org
+#
+# Maintainer:   H W Tovetjärn (totte) <totte@tott.es>
+# Contributors: M Cigorraga (msx) <martincigorraga@gmail.com>
+#               (george) <rpubaddr0@gmail.com>
+#               (mornik) <mornik@gmail.com>
+
+pkgname=tmux
+pkgver=1.9a
+pkgrel=1
+pkgdesc='A terminal multiplexer, intended as an alternative to GNU screen'
+arch=('x86_64')
+url='http://sourceforge.net/projects/tmux/'
+screenshot='http://tmux.sourceforge.net/tmux3.png'
+license=('BSD')
+depends=('ncurses' 'libevent')
+source=("http://download.sourceforge.net/tmux/$pkgname-$pkgver.tar.gz")
+sha512sums=('842984638dc1f7364c03393187379598f35679d535d911d5df4016944d6032e61a1bf840d7d339c6e99b30c55581d470acca85ab6ee5799b8927d18c0e9a91df')
+
+build() {
+    cd "$pkgname-$pkgver"
+    ./configure --prefix=/usr
+    make
+}
+
+package() {
+    cd "$pkgname-$pkgver"
+    make DESTDIR="$pkgdir" install
+}
