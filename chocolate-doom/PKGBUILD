@@ -4,7 +4,7 @@
 # Maintainer: Adrián Chaves Fernández (Gallaecio) <adriyetichaves gmail.com>
 
 pkgname=chocolate-doom
-pkgver=1.7.0
+pkgver=2.1.0
 pkgrel=1
 pkgdesc="A Doom port reproducing the behavior of the original DOS version."
 arch=('i686' 'x86_64')
@@ -14,12 +14,12 @@ depends=('sdl_mixer' 'sdl_net')
 makedepends=('autoconf' 'automake')
 categories=('games')
 install=$pkgname.install
-source=(http://downloads.sourceforge.net/$pkgname/$pkgname-$pkgver.tar.gz \
+source=(http://www.chocolate-doom.org/downloads/${pkgver}/chocolate-doom-${pkgver}.tar.gz \
 	chocolate-doom.png \
 	chocolate-setup.png \
         chocolate-doom.desktop \
         chocolate-setup.desktop)
-md5sums=('c0a8b240e5c1db9fc1d4772ed6669fda'
+md5sums=('b4c4e9063e94f269292a4fa946ebf33c'
          '7202cf0d89b6e339996028eaa08087b5'
          'dbd12210652965e96a8127e22fe4a4cb'
          '3ba5256126c0c5a0492c53d4c8beb45d'
@@ -27,14 +27,6 @@ md5sums=('c0a8b240e5c1db9fc1d4772ed6669fda'
 
 build() {
   cd $srcdir/$pkgname-$pkgver
-
-  sed 's|/games|/bin|g' -i {src,setup}/Makefile.am
-  sed 's|share/games|share|g' -i src/d_iwad.c
-  sed	-e '/samplerate/d' \
-	-e 's| CFLAGS=|: # CFLAGS=|g' \
-	-i configure.in
-
-  autoreconf -i
 
   ./configure \
     --prefix=/usr
