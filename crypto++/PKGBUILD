@@ -7,27 +7,29 @@ pkgname=crypto++
 _pkgname=cryptopp
 pkgver=5.6.2
 _pkgver=${pkgver//./}
-pkgrel=1
+pkgrel=2
 pkgdesc="C++ class library of cryptographic schemes."
 arch=('i686' 'x86_64')
 url="http://www.cryptopp.com"
 license=('custom')
 makedepends=('unzip')
-source=($url/$_pkgname$_pkgver.zip)
-md5sums=('7ed022585698df48e65ce9218f6c6a67')
+source=($url/$_pkgname$_pkgver.zip
+        libcrypto++.pc)
+md5sums=('7ed022585698df48e65ce9218f6c6a67'
+         '46de3847c59ad16456fa863eb33e73b2')
 
+# The code below has been copied from the Arch Linux PKGBUILD.
 build() {
-  cd $srcdir
-
   sed -i -e 's/^CXXFLAGS/#CXXFLAGS/' GNUmakefile
-  make -f GNUmakefile || return 1
+  export CXXFLAGS="${CXXFLAGS} -DNDEBUG -fPIC"
+  make -f GNUmakefile  
+  make libcryptopp.so
 }
 
 package() {
-  install -d $pkgdir/usr/{lib,include/cryptopp}
-  install -m644 *.h $pkgdir/usr/include/$_pkgname/
-  install -m644 libcryptopp.a $pkgdir/usr/lib/
-
-  # License:
-  install -D -m644 License.txt $pkgdir/usr/share/licenses/$pkgname/LICENSE
+  install -d ${pkgdir}/usr/{lib/pkgconfig,include/cryptopp}
+  install -m644 *.h ${pkgdir}/usr/include/cryptopp/
+  install -m644 libcryptopp.so "${pkgdir}/usr/lib/libcryptopp.so"
+  install -m644 ${srcdir}/libcrypto++.pc "${pkgdir}/usr/lib/pkgconfig/libcrypto++.pc"
+  install -D -m644 License.txt "${pkgdir}/usr/share/licenses/${pkgname}/LICENSE"
 }
