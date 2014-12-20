@@ -5,42 +5,42 @@
 
 pkgname=corsix-th
 _pkgname=CorsixTH
-pkgver=0.21
+pkgver=0.30
 _pkgver=$pkgver
 pkgrel=1
 pkgdesc='Reimplementation of the game engine of Theme Hospital.'
 arch=('i686' 'x86_64')
 url='http://corsix-th.googlecode.com'
 license=('MIT')
-depends=('lua' 'sdl_mixer' 'timidity++')
+depends=('ffmpeg' 'lua' 'sdl_mixer' 'timidity++' 'x264')
 categories=('games')
 makedepends=('cmake')
 install=$pkgname.install
-source=("$url/files/$_pkgname-$_pkgver-Source.tar.gz"
+source=("https://github.com/CorsixTH/CorsixTH/archive/v${pkgver}.tar.gz"
         "$pkgname.sh")
-sha1sums=('48aeff966f6f09f9d3340cff8633fe4f3d05a9c2'
+sha1sums=('033644d2115888093f65c683022fb5ad9ea0d74b'
           '7fd6ae8db366b7f9c4671708e8ea7beb48f1bea3')
 
+# The code below has been strongly based on
+# https://gist.github.com/Rayman2200/8118205
+# for version 0.30.
 build() {
-  cd $srcdir/
-
-  mkdir -p build && cd build
+  cd "${srcdir}/CorsixTH-${pkgver}"
+  # CMake config is broke for corsix-th v0.30, so the LICENSE need to be moved to the right location
+  mv LICENSE CorsixTH/LICENSE.txt
   cmake \
-    -DCMAKE_INSTALL_PREFIX=/usr/share \
-    -DCMAKE_BUILD_TYPE=RelWithDebInfo \
-    ..
-
+    -D CMAKE_INSTALL_PREFIX=/usr/share/ \
+    -D CMAKE_BUILD_TYPE=Release \
+    -Wno-dev \
+    .
+  cd CorsixTH
   make
 }
-
+ 
 package() {
-  cd $srcdir/build
-
-  make DESTDIR=$pkgdir install
-
-  # “Link” to de actual executable:
-  install -Dm755 $srcdir/$pkgname.sh $pkgdir/usr/bin/$pkgname
-
-  # License:
-  install -Dm644 $srcdir/CorsixTH/LICENSE.txt $pkgdir/usr/share/licenses/$pkgname/License.txt
-}
+  cd "${srcdir}/CorsixTH-${pkgver}/CorsixTH"
+  make DESTDIR="${pkgdir}" install
+  install -Dm755 CorsixTH "${pkgdir}/usr/bin/CorsixTH"
+  install -Dm644 ../DebianPackage/usr/share/applications/CorsixTH.desktop "${pkgdir}/usr/share/applications/CorsixTH.desktop"
+  sed -e 's/games/share/g' -i "${pkgdir}/usr/share/applications/CorsixTH.desktop"
+} 
