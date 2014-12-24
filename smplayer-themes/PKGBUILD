@@ -1,0 +1,35 @@
+# Maintainer: Jeff Huang <s8321414[at]gmail[dot]com>
+# Original maintainer on CCR: UnderTheGun <erolele *AT* gmail *DOT* com>
+
+pkgname=smplayer-themes
+pkgver=14.9.0
+pkgrel=1
+pkgdesc="Themes for smplayer"
+arch=('any')
+url="http://smplayer.sourceforge.net/"
+license=('GPL')
+depends=('smplayer')
+makedepends=('optipng')
+source=(http://downloads.sourceforge.net/smplayer/$pkgname-$pkgver.tar.bz2)
+md5sums=('77ce4cb7e230939ba8629966b9d0554c')
+
+prepare() {
+  cd ${pkgname}-${pkgver}
+
+  # Fix invalid PNG icons to work with libpng 1.6
+  find -name '*.png' -exec optipng -quiet -force -fix {} +
+}
+
+build() {
+  cd ${pkgname}-${pkgver}
+  make
+}
+
+package() {
+  cd ${pkgname}-${pkgver}
+  make PREFIX="${pkgdir}/usr" install
+  install -dpm755 ${pkgdir}/usr/share/licenses/${pkgname}
+  install -Dpm644 COPYING* ${pkgdir}/usr/share/licenses/${pkgname}/
+  install -dpm755 ${pkgdir}/usr/share/doc/${pkgname}
+  install -Dpm644 Changelog README.txt ${pkgdir}/usr/share/doc/${pkgname}/
+}
