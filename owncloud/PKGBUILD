@@ -1,0 +1,52 @@
+# Maintainer: Jeff Huang <s8321414[at]gmail[dot]com>
+# Origin maintainer on CCR: Giuseppe Calà <jiveaxe@gmail.com>
+
+pkgname=owncloud
+pkgver=7.0.4
+pkgrel=2
+pkgdesc="A cloud server to store your files centrally on a hardware controlled by you"
+arch=('x86_64')
+url="http://owncloud.org/"
+license=('GPL')
+depends=('php-gd' 'php-intl')
+optdepends=('php-apache: to use the Apache web server'
+            'nginx: to use the nginx web server'
+            'php-sqlite: to use the SQLite database backend'
+            'php-pgsql: to use the PostgreSQL database backend'
+            'php-apcu'
+            'php-xcache'
+            'mariadb: to use the MySQL database backend' 
+            'smbclient: to mount SAMBA shares' 
+            'php-mcrypt' 
+            'php-imagick: file preview' 
+            'ffmpeg: file preview' 
+            'libreoffice-common: file preview')
+
+makedepends=()
+categories=('network')
+backup=('etc/httpd/conf/extra/owncloud.conf')
+source=("http://download.owncloud.org/community/${pkgname}-${pkgver}.tar.bz2"
+        'owncloud.conf')
+options=('!strip')
+install=owncloud.install
+md5sums=('6d4a3f9275d1f2b2607e7e6484051d4c'
+         '0505493fccf49dcaa0760268c290c138')
+
+conflicts=('owncloud-git')
+screenshot=(http://karlitschek.de/wp-content/uploads/2014/07/oc7.jpg)
+
+package() {
+# install license
+  install -d $pkgdir/usr/share/licenses/$pkgname
+  cp $srcdir/$pkgname/COPYING-* $pkgdir/usr/share/licenses/$pkgname
+
+# install project
+  install -d  ${pkgdir}/usr/share/webapps/
+  cp -a ${srcdir}/${pkgname}  ${pkgdir}/usr/share/webapps/
+  chown -R http:http ${pkgdir}/usr/share/webapps/owncloud/{apps,config}
+
+# install apache .conf file
+  install -d ${pkgdir}/etc/httpd/conf/extra
+  install -m 644 ${srcdir}/owncloud.conf  ${pkgdir}/etc/httpd/conf/extra/
+}
+
