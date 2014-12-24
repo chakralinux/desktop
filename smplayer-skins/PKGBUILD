@@ -1,0 +1,29 @@
+# Maintainer: Jeff Huang <s8321414[at]gmail[dot]com>
+# Original maintainer on CCR: Marcos Heredia <chelqo@gmail.com>
+
+pkgname=smplayer-skins
+pkgver=14.9.0
+pkgrel=2
+pkgdesc="Skin themes for SMPlayer"
+arch=('any')
+url="http://smplayer.sourceforge.net/"
+screenshot="http://smplayer.sourceforge.net/images/screenshots/thumbs/th_smplayer_skin_modern3.png"
+license=('GPL')
+depends=("smplayer>=$pkgver")
+source=("http://downloads.sourceforge.net/smplayer/$pkgname-$pkgver.tar.bz2")
+md5sums=('5e7f97060f97e71d86ba609a4768220c')
+
+
+build() {
+  cd "$pkgname-$pkgver"
+  make PREFIX=$pkgdir/usr
+}
+
+package() {
+  cd "$pkgname-$pkgver"
+  make PREFIX=$pkgdir/usr install
+  install -dpm755 ${pkgdir}/usr/share/licenses/${pkgname}
+  install -Dpm644 COPYING* ${pkgdir}/usr/share/licenses/${pkgname}/
+  install -dpm755 ${pkgdir}/usr/share/doc/${pkgname}
+  install -Dpm644 Changelog README.txt smplayer-skins.spec ${pkgdir}/usr/share/doc/${pkgname}/
+}
