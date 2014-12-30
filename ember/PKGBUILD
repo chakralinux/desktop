@@ -4,26 +4,22 @@
 # Maintainer: Adrián Chaves Fernández (Gallaecio) <adriyetichaves@gmail.com>
 
 pkgname=ember
-pkgver=0.7.1
+pkgver=0.7.2
 _mediaver=$pkgver
-pkgrel=2
+pkgrel=1
 pkgdesc="Ember is a 3D client using the OGRE 3d library, valid for WorldForge server."
 arch=('i686' 'x86_64')
 url="http://wiki.worldforge.org/wiki/Ember"
 license=('GPL3')
-depends=('atlas_cpp' 'boost' 'cegui-0.7' 'curl' 'eris' 'freealut' 'libsigc++2.0' 'libwfut' 'mercator' 'ogre' 'openal' 'sdl' 'skstream' 'toluapp' 'varconf' 'wfmath')
+depends=('atlas_cpp' 'boost' 'cegui-0.8' 'curl' 'eris' 'freealut' 'libsigc++2.0' 'libwfut' 'mercator' 'ogre' 'openal' 'sdl' 'skstream' 'toluapp' 'varconf' 'wfmath')
 categories=('games')
 source=("http://downloads.sourceforge.net/worldforge/$pkgname-$pkgver.tar.bz2"
 	"http://downloads.sourceforge.net/worldforge/$pkgname-media-$_mediaver.tar.bz2")
-md5sums=('bfcd6f5a9980b05172c45791dba611cf'
-         '773df69df42628c4d9933a74f109335c')
+md5sums=('5fa2cf860ebe66674d5e5e05c8e87009'
+         'fb36fc4770fcea24f0fc839986b786b3')
 
 build() {
   cd $srcdir/$pkgbase-$pkgver
-
-  sed -e 's#.reset(0)#.reset()#' \
-      -i src/components/ogre/SceneManagers/EmberPagingSceneManager/src/OgrePagingLandScapeData2D.cpp \
-      -i src/components/ogre/SceneManagers/EmberPagingSceneManager/src/OgrePagingLandScapeData2DManager.cpp
   
   ./configure \
     --enable-cegui-toluapp \
