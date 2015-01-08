@@ -1,7 +1,7 @@
 # maintainer: AlmAck
 
 pkgname=wireshark
-pkgver=1.12.2
+pkgver=1.12.3
 pkgrel=1
 pkgdesc='A free network protocol analyzer for Unix/Linux and Windows'
 arch=('x86_64')
@@ -9,9 +9,9 @@ license=('GPL2')
 depends=('libpcap' 'libcap' 'krb5' 'glib2' 'desktop-file-utils' 'hicolor-icon-theme' 'lua' 'libgcrypt' 'qt' 'harfbuzz' 'graphite')
 makedepends=('bison' 'flex' 'bash' 'gnutls' 'python' 'portaudio')
 url='http://www.wireshark.org/'
-install=wireshark.install
+install=${pkgname}.install
 source=(http://www.wireshark.org/download/src/${pkgname}-${pkgver}.tar.bz2)
-sha1sums=('0598fe285725f97045d7d08e6bde04686044b335')
+sha1sums=('44ad77b6e80f41ba34ac0eaf477b81cb1345ceed')
 
 build() {
   cd ${pkgname}-${pkgver}
@@ -25,9 +25,9 @@ build() {
       --with-zlib \
       --with-lua \
       --with-krb5 \
-      --without-portaudio \
-      --disable-gtk2 \
-      --disable-gtk3 \
+      --with-portaudio \
+      --with-gtk2=no \
+      --with-gtk3=no \
       --with-qt
   make all
 }
