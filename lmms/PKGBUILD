@@ -2,7 +2,7 @@
 # Maintainer abveritas@chakra-project.org
 
 pkgname=lmms
-pkgver=1.0.3
+pkgver=1.1.0
 pkgrel=1
 pkgdesc='The Linux MultiMedia Studio.'
 url='http://lmms.sourceforge.net'
@@ -11,24 +11,22 @@ license=('GPL')
 depends=('glib2' 'qt' 'sdl_sound' 'jack' 'libsamplerate' 'fluidsynth' 'libpng'
          'libvorbis' 'libxft' 'libxinerama' 'shared-mime-info')
 optdepends=('wine: VST support (experimental)'
-            'fftw: SpectrumAnalyzer plugin' )
+            'fftw: SpectrumAnalyzer plugin'
+            'pulseaudio: PulseAudio output' )
 makedepends=('cmake' 'ladspa' 'libxft' 'freetype2' 'fftw' 'fltk')
 categories=('multimedia')
 install="lmms.install"
-source=("http://downloads.sourceforge.net/sourceforge/lmms/${pkgname}-${pkgver}-src.tar.bz2"
-        'zynaddsubfx_unlink.patch'
-        'lmms-1.0.3-build-fix.patch')
-md5sums=('1f63ad9abd1781206d852e79b2191638'
-         'd2ea78ac0cf2979505f140c6845617cf'
-         'fa8ab5c48b021b87f80444440479190a')
+source=("https://github.com/LMMS/${pkgname}/archive/v${pkgver}.tar.gz"
+        'zynaddsubfx_unlink.patch')
+md5sums=('170ce0615063e9a171f1980972cca262'
+         'd2ea78ac0cf2979505f140c6845617cf')
 
 build() {
   cd "${srcdir}/${pkgname}-${pkgver}"
-  patch -Np1 -i ../lmms-1.0.3-build-fix.patch
   patch -p1 -i ${srcdir}/zynaddsubfx_unlink.patch
 
   sed -i 's|lib64|lib|g' cmake/modules/DetectMachine.cmake
-  cmake . -DCMAKE_INSTALL_PREFIX=/usr
+  cmake . -DCMAKE_INSTALL_PREFIX=/usr -USE=vst
   make
 }
 
@@ -37,5 +35,3 @@ package() {
 
   make DESTDIR="${pkgdir}" install
 }
-
-# vim:set ts=2 sw=2 et:
