@@ -10,7 +10,7 @@ pkgname=("kde-workspace" "kde4-integration")
 arch=('x86_64')
 pkgver=${_workspace_ver}
 #pkgver=4.11.11
-pkgrel=2
+pkgrel=3
 url="http://www.kde.org"
 license=('GPL' 'LGPL' 'FDL')
 makedepends=('pkgconfig'
@@ -38,6 +38,7 @@ makedepends=('pkgconfig'
              'xcb-util-image'
              'xcb-util-renderutil'
              'libxss'
+             'lm_sensors'
              'libxklavier'
              'libxft'
              'xkit'
@@ -291,6 +292,6 @@ package_kde4-integration()
     pkgdesc=("Qt4/KDE4 integration")
     depends=("kdelibs")
 
-    cd "${srcdir}/${pkgname}-${pkgver}/qguiplatformplugin_kde/"
+    cd "${srcdir}/${pkgbase}-${pkgver}/qguiplatformplugin_kde/"
     make DESTDIR=${pkgdir} install
 }
