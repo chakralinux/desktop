@@ -1,34 +1,38 @@
 #
-# Chakra Packages for Chakra, part of chakra-project.org
+# Chakra Packages for Chakra, part of chakraos.org
 #
-# maintainer (i686): Phil Miller <philm[at]chakra-project[dog]org>
-# maintainer (x86_64): Manuel Tortosa <manutortosa[at]chakra-project[dot]org>
-# contributor (x86_64): Giuseppe Calà <jiveaxe@gmail.com>
+# Maintainer: Jeff Huang <s8321414[at]gmail[dot]com>
+# Contributor: Phil Miller <philm[at]chakra-project[dog]org>
+# Contributor: Manuel Tortosa <manutortosa[at]chakra-project[dot]org>
+# Contributor: Giuseppe Calà <jiveaxe@gmail.com>
 
 pkgname=krecipes
-pkgver=2.0beta2
-_pkgver=2.0-beta2
-pkgrel=3
+pkgver=2.0.0
+pkgrel=1
 pkgdesc="A tool designed to make organizing your personal recipes collection fast and easy."
 arch=('i686' 'x86_64')
 url="http://extragear.kde.org/apps/krecipes/"
 license=('GPL')
-depends=('kdebase-runtime' 'qimageblitz' 'hicolor-icon-theme')
+depends=('kde-runtime' 'qimageblitz' 'hicolor-icon-theme')
 makedepends=('cmake' 'automoc4' 'docbook-xsl')
-optdepends=('mysql' 'postgresql')
+optdepends=('mariadb' 'postgresql')
 categories=('utils')
 install=${pkgname}.install
-source=(http://downloads.sourceforge.net/${pkgname}/${pkgname}-${_pkgver}.tar.gz)
-md5sums=('4c01ccad7ad1409cb35c824a61250fe2')
+source=(http://download.kde.org/stable/$pkgname/$pkgver/src/$pkgname-$pkgver-1.tar.xz)
+md5sums=('dbd40f4352ce885ff0e81242c69bf0fc')
 
 build() { 
   cd ${srcdir}
   mkdir build
   cd build
-  cmake ../${pkgname}-${_pkgver} \
+  cmake ../${pkgname}-${pkgver} \
     -DCMAKE_BUILD_TYPE=Release \
     -DCMAKE_SKIP_RPATH=ON \
     -DCMAKE_INSTALL_PREFIX=/usr
   make  || return 1
+}
+
+package() {
+  cd ${srcdir}/build
   make DESTDIR=${pkgdir} install
 }  
