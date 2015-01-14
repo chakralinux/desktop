@@ -1,0 +1,44 @@
+# Contributor: Andrea Scarpino <andrea@archlinux.org>
+
+source ../plasma.conf
+
+pkgname=kcm-touchpad-kf5
+_pkgname=kcm-touchpad
+pkgver=${PVersion}
+pkgrel=1
+pkgdesc="Library for making window decoration"
+arch=('x86_64')
+url='projects.kde.org/'
+license=('LGPL')
+depends=('qt5-x11extras' 'kded' 'kcmutils' 'kinit' 'kcoreaddons' 'kdbusaddons' 'kcompletion' 'knotifyconfig'
+         'kwidgetsaddons' 'ki18n' 'kservice' 'knotifications' 'kxmlgui' 'kglobalaccel' 'plasma-framework'
+         'xf86-input-synaptics' 'xorg-server-devel')
+makedepends=('extra-cmake-modules' 'kdoctools' 'python3')
+checkdepends=("cmake")
+groups=('plasma')
+options=("debug")
+source=("${PServer}/${pkgver}/${_pkgname}-${PSubVersion}.tar.xz")
+sha256sums=( $(getSum ${_pkgname}) )
+
+prepare() {
+  mkdir -p build
+
+  cd ${_pkgname}-${pkgver}
+}
+
+build() {
+  cd build
+  cmake_kf5 ../${_pkgname}-${pkgver} \
+    -DPYTHON_EXECUTABLE=/usr/bin/python3
+  make
+}
+
+check() {
+  cd build
+  make test || return 0
+}
+
+package() {
+  cd build
+  make DESTDIR="${pkgdir}" install
+}

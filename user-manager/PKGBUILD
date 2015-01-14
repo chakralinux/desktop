@@ -2,15 +2,14 @@
 
 source ../plasma.conf
 
-pkgname=kio-extras
+pkgname=user-manager
 pkgver=${PVersion}
 pkgrel=1
-pkgdesc="KDE's screen management library"
+pkgdesc="KDE's user manager"
 arch=('x86_64')
 url='projects.kde.org/'
 license=('LGPL')
-depends=('kdelibs4support' 'khtml' 'kdnssd' 'libssh' 'smbclient' 'exiv2' 'openexr' 'openslp'
-         'libmtp' 'phonon-qt5' )
+depends=('qt5-base' 'kdelibs4support' 'libpwquality')
 makedepends=('extra-cmake-modules' 'kdoctools' 'python3')
 checkdepends=("cmake")
 groups=('plasma')
@@ -39,8 +38,4 @@ check() {
 package() {
   cd build
   make DESTDIR="${pkgdir}" install
-
-  # conflicts with kde-runtime
-  mv "$pkgdir"/usr/share/config.kcfg/jpegcreatorsettings{,5}.kcfg
-
 }
