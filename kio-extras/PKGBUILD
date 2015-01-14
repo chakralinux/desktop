@@ -10,13 +10,14 @@ arch=('x86_64')
 url='projects.kde.org/'
 license=('LGPL')
 depends=('kdelibs4support' 'khtml' 'kdnssd' 'libssh' 'smbclient' 'exiv2' 'openexr' 'openslp'
-         'libmtp' 'phonon-qt5' )
+         'libmtp' 'phonon-qt5' 'kpty')
 makedepends=('extra-cmake-modules' 'kdoctools' 'python3')
 checkdepends=("cmake")
 groups=('plasma')
 options=("debug")
 source=("${PServer}/${pkgver}/${pkgname}-${PSubVersion}.tar.xz")
 sha256sums=( $(getSum ${pkgname}) )
+install=${pkgname}.install
 
 prepare() {
   mkdir -p build

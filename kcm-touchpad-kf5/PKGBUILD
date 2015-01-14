@@ -12,13 +12,14 @@ url='projects.kde.org/'
 license=('LGPL')
 depends=('qt5-x11extras' 'kded' 'kcmutils' 'kinit' 'kcoreaddons' 'kdbusaddons' 'kcompletion' 'knotifyconfig'
          'kwidgetsaddons' 'ki18n' 'kservice' 'knotifications' 'kxmlgui' 'kglobalaccel' 'plasma-framework'
-         'xf86-input-synaptics' 'xorg-server-devel')
-makedepends=('extra-cmake-modules' 'kdoctools' 'python3')
+         'xf86-input-synaptics')
+makedepends=('extra-cmake-modules' 'kdoctools' 'python3' 'xorg-server-devel')
 checkdepends=("cmake")
 groups=('plasma')
 options=("debug")
 source=("${PServer}/${pkgver}/${_pkgname}-${PSubVersion}.tar.xz")
 sha256sums=( $(getSum ${_pkgname}) )
+install=${pkgname}.install
 
 prepare() {
   mkdir -p build
