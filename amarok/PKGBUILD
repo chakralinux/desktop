@@ -1,12 +1,9 @@
-#
-# Apps Packages for Chakra, part of chakra-project.org
-#
 # maintainer Martín González <koteccr[at]gmail[dot]com>
 
 pkgname=amarok
 replaces=('amarok-base' 'amarok-engine-xine' 'amarok-base-mysqlfree')
 pkgver=2.7.0
-pkgrel=1
+pkgrel=2
 pkgdesc="A media player for KDE"
 arch=('x86_64')
 url="http://amarok.kde.org"
@@ -14,7 +11,8 @@ screenshot="http://amarok.kde.org/files/Amarok-2.6-InDulciJubilo-screenie4.png"
 license=('GPL2' 'LGPL2' 'FDL')
 depends=('kde-runtime' 'mysql' 'qtscriptgenerator' 'taglib-extras' 'liblastfm' 'ffmpeg' 'libofa'
          'qjson' 'mesa' 'loudmouth')
-makedepends=('pkgconfig' 'automoc4' 'cmake' 'libgpod' 'libmtp' 'docbook-xsl' 'libmygpo-qt' )
+makedepends=('pkgconfig' 'automoc4' 'cmake' 'libgpod' 'libmtp' 'docbook-xsl' 'libmygpo-qt' 'gmock' 
+             'clamz')
 optdepends=("libgpod: support Apple iPod audio devices"
             "libmtp: support for portable media devices"
             "libmygpo-qt: support for gpodder.net"
@@ -31,7 +29,9 @@ build() {
   cd build
   cmake .. \
     -DCMAKE_BUILD_TYPE=Release \
-    -DCMAKE_INSTALL_PREFIX=/usr
+    -DCMAKE_INSTALL_PREFIX=/usr \
+    -DWITH_Soprano=OFF \
+    -DKDE4_BUILD_TESTS=OFF
   make
 }
 
