@@ -1,6 +1,6 @@
 pkgname=kio-mtp-git
 _pkgname=kio-mtp
-pkgver=20141007
+pkgver=20150120
 pkgrel=1
 pkgdesc="Provides mtp  protocol support."
 arch=('x86_64')
@@ -18,11 +18,11 @@ pkgver() {
 }
 
 prepare() {
-  rm -rf ${srcdir}/$_pkgname-build
-  mkdir ${srcdir}/$_pkgname-build
+  rm -rf $_pkgname-build
+  mkdir $_pkgname-build
 }
 build() {
-  cd $srcdir/$_pkgname-build
+  cd $_pkgname-build
  
   cmake -DCMAKE_INSTALL_PREFIX=`kde4-config --prefix` \
         -DCMAKE_BUILD_TYPE=RelWithDebInfo \
@@ -31,6 +31,6 @@ build() {
 }
  
 package() {
-  cd $srcdir/$_pkgname-build
+  cd $_pkgname-build
   make DESTDIR=$pkgdir install
 }
