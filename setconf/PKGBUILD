@@ -4,7 +4,7 @@
 
 pkgname=setconf
 pkgver=0.6.4
-pkgrel=1
+pkgrel=2
 pkgdesc="A utility to easily change settings in Makefiles and other configuration files"
 arch=('x86_64')
 url="http://setconf.roboticoverlords.org/"
@@ -14,7 +14,7 @@ source=("http://setconf.roboticoverlords.org/$pkgname-$pkgver.tar.xz")
 sha256sums=('c2bc02c0b787afacf9fffc9bd5d24aa623e140daee1e056f1c6d97dcf6bea88a')
 
 prepare() {
-  sed -i 's:usr/bin/python:usr/bin/python2:' "$pkgname-$pkgver/$pkgname.py"
+  sed -i 's:usr/bin/python$:usr/bin/python2:' "$pkgname-$pkgver/$pkgname.py"
 }
 
 package() {
