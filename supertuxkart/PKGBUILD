@@ -6,7 +6,7 @@
 pkgname=supertuxkart
 _pkgname=SuperTuxKart
 pkgver=0.8.1
-pkgrel=2
+pkgrel=3
 pkgdesc="Kart racing game featuring Tux and friends."
 url="http://supertuxkart.sourceforge.net/"
 arch=('x86_64')
@@ -17,13 +17,11 @@ categories=('games')
 changelog=ChangeLog
 source=("http://downloads.sourceforge.net/project/${pkgname}/${_pkgname}/${pkgver}/${pkgname}-${pkgver}-src.tar.bz2"
         "$pkgname-system-libs.diff"
-        "$pkgname-$pkgver-mesa.patch"
         "FindEnet.cmake"
         "FindIrrlicht.cmake"
         "FindWiiUse.cmake")
 md5sums=('aa31ecf883dc35859eec76c667f1a6d6'
          'e4aba32ba949f6489654e5788584d0d5'
-         'a3da9be5737e6a27b48834403cfcf489'
          'f63b2d5fbac6c53699aaaf97ed7f89d6'
          '78735ca4da9c04422a09f385561f5d9d'
          'b23cdd616cb27e2c114bbb1e3840274c')
@@ -38,7 +36,9 @@ build() {
     sed -e "s#wiiuse/wiiuse.h#wiiuse.h#" -i src/input/wiimote_manager.cpp
     cp $srcdir/*.cmake cmake/
 
-    patch -uNp0 -i $srcdir/$pkgname-$pkgver-mesa.patch
+    cp /usr/include/GL/glext.h lib/irrlicht/source/Irrlicht/glext.h
+    cp /usr/include/GL/glxext.h lib/irrlicht/source/Irrlicht/glxext.h
+    cp /usr/include/GL/wglext.h lib/irrlicht/source/Irrlicht/wglext.h
 
   mkdir -p build && cd build
   cmake \
