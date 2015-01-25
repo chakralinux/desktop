@@ -1,26 +1,23 @@
 #
-# Apps SC Packages for Chakra, part of chakra-project.org
+# Apps Packages for Chakra, part of chakraos.org
 #
-# maintainer (i686): Phil Miller <philm[at]chakra-project[dog]org>
-# maintainer (x86_64): Manuel Tortosa <manutortosa[at]chakra-project[dot]org>
+# maintainer (x86_64): almack
 
 # include global config
-source ../_buildscripts/${current_repo}-${_arch}-cfg.conf
 
 pkgname=libmpdclient
-pkgver=2.5
-pkgrel=1
+pkgver=2.9
+pkgrel=2
 pkgdesc='Asynchronous API library for interfacing MPD in the C, C++ & Objective C languages'
-arch=('i686' 'x86_64')
-url='http://mpd.wikia.com/wiki/ClientLib:libmpdclient'
-license=('custom')
-options=('!libtool')
-source=("http://downloads.sourceforge.net/project/musicpd/${pkgname}/${pkgver}/${pkgname}-${pkgver}.tar.gz")
-sha1sums=('a2e68352f2b7d55787d14a45ee0d902f2427b3dc')
+arch=('x86_64')
+url='http://www.musicpd.org/libs/libmpdclient/'
+license=('custom:BSD')
+source=("http://www.musicpd.org/download/${pkgname}/${pkgver%.*}/${pkgname}-${pkgver}.tar.xz")
+sha1sums=('1a3557d4d1f78085db6285a8c8cb9085c300d9d3')
 
 build() {
 	cd "${srcdir}/${pkgname}-${pkgver}"
-	./configure --prefix=/usr --disable-static
+	./configure --prefix=/usr --disable-documentation
 	make
 }
 
