@@ -7,7 +7,7 @@ source ../_buildscripts/${current_repo}-${_arch}-cfg.conf
 pkgname="kdenetwork-kget"
 arch=('x86_64')
 pkgver=${_kdever}
-pkgrel=1
+pkgrel=2
 pkgdesc="Download manager"
 url="http://kde.org/applications/internet/kget/"
 depends=("kde-workspace>=${_workspace_ver}" 'qca' 'kwebkitpart>=0.9.6' 'libktorrent>=1.0.4' 'libmms')
@@ -18,8 +18,18 @@ install=kdenetwork.install
 license=('GPL' 'LGPL' 'FDL')
 options=('docs' '!header' 'debug' 'log')
 makedepends=('pkg-config' 'cmake' 'automoc4' 'docbook-xsl')
-source=("$_mirror/kget-$_kdever.tar.xz")
-sha256sums=(`grep kget-$_kdever.tar.xz  ../checksums.txt | cut -d " " -f1`)
+source=("$_mirror/kget-$_kdever.tar.xz"
+        list_view_header_recovery.patch)
+sha256sums=(`grep kget-$_kdever.tar.xz  ../checksums.txt | cut -d " " -f1`
+            '6c48b3111c3ed4f9a5834f69edbf7a60faa92054bdeb6c9cf7ee78da580a3e22')
+
+
+prepare(){
+  cd ${srcdir}/kget-$pkgver
+  # https://bugs.kde.org/show_bug.cgi?id=339513
+  #  Bug 339513 - kget should remember columns' widths on reopen 
+  patch -Np1 -i "${srcdir}/list_view_header_recovery.patch"
+}
 
 build() {
     cd ${srcdir}/kget-$pkgver

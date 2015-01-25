@@ -1,0 +1,116 @@
+From fa80293e3f78442fdd00972f1a26105c263552ad Mon Sep 17 00:00:00 2001
+From: stream <stream009@gmail.com>
+Date: Fri, 17 Oct 2014 22:10:27 +0900
+Subject: [PATCH] Bug fix about list view header status recovery
+
+---
+ mainwindow.cpp        |  5 +++--
+ ui/transfersview.cpp  | 22 ++++++++++++----------
+ ui/transfersview.h    |  1 +
+ ui/viewscontainer.cpp |  5 +++++
+ ui/viewscontainer.h   |  2 ++
+ 5 files changed, 23 insertions(+), 12 deletions(-)
+
+diff --git a/mainwindow.cpp b/mainwindow.cpp
+index 1767466..7e2ff9c 100644
+--- a/mainwindow.cpp
++++ b/mainwindow.cpp
+@@ -85,11 +85,12 @@ MainWindow::MainWindow(bool showMainwindow, bool startWithoutAnimation, bool doT
+ 
+     setCentralWidget(m_viewsContainer);
+ 
++    init();
++
+     // restore position, size and visibility
+     move( Settings::mainPosition() );
+     setPlainCaption(i18n("KGet"));
+-    
+-    init();
++    m_viewsContainer->loadSettings();
+ 
+     if ( Settings::showMain() && showMainwindow)
+         show();
+diff --git a/ui/transfersview.cpp b/ui/transfersview.cpp
+index 7eee6c7..3e3b8a9 100644
+--- a/ui/transfersview.cpp
++++ b/ui/transfersview.cpp
+@@ -66,6 +66,18 @@ TransfersView::~TransfersView()
+ {
+ }
+ 
++void TransfersView::loadSettings()
++{
++    QByteArray loadedState = QByteArray::fromBase64(Settings::headerState().toAscii());
++    if (loadedState.isEmpty()) {
++        setColumnWidth(0 , 230);
++    } else {
++        header()->restoreState(loadedState);
++    }
++    //Workaround if the saved headerState is corrupted
++    header()->setRootIndex(QModelIndex());
++}
++
+ void TransfersView::setModel(QAbstractItemModel * model)
+ {
+     QTreeView::setModel(model);
+@@ -77,16 +89,6 @@ void TransfersView::setModel(QAbstractItemModel * model)
+         openPersistentEditor(model->index(i, TransferTreeModel::Status, QModelIndex()));
+     }
+ 
+-    QByteArray loadedState = QByteArray::fromBase64(Settings::headerState().toAscii());
+-    if (loadedState.isEmpty()) {
+-        setColumnWidth(0 , 230);
+-    } else {
+-        header()->restoreState(loadedState);
+-    }
+-
+-    //Workaround if the saved headerState is corrupted
+-    header()->setRootIndex(QModelIndex());
+-
+     populateHeaderActions();
+     toggleMainGroup();
+     connect(model, SIGNAL(rowsRemoved(QModelIndex,int,int)), SLOT (toggleMainGroup()));
+diff --git a/ui/transfersview.h b/ui/transfersview.h
+index 88b75ab..0f7f964 100644
+--- a/ui/transfersview.h
++++ b/ui/transfersview.h
+@@ -25,6 +25,7 @@ class TransfersView : public QTreeView
+         ~TransfersView();
+ 
+         void setModel(QAbstractItemModel * model);
++        void loadSettings();
+ 
+     private:
+         void dropEvent(QDropEvent * event);
+diff --git a/ui/viewscontainer.cpp b/ui/viewscontainer.cpp
+index 4a9f9ed..317937b 100644
+--- a/ui/viewscontainer.cpp
++++ b/ui/viewscontainer.cpp
+@@ -39,6 +39,11 @@ ViewsContainer::ViewsContainer(QWidget * parent)
+     setLayout(layout);
+ }
+ 
++void ViewsContainer::loadSettings()
++{
++    m_transfersView->loadSettings();
++}
++
+ void ViewsContainer::showTransferDetails(TransferHandler * transfer)
+ {
+     TransferTreeModel *model = KGet::model();
+diff --git a/ui/viewscontainer.h b/ui/viewscontainer.h
+index 9b5dc46..c086e90 100644
+--- a/ui/viewscontainer.h
++++ b/ui/viewscontainer.h
+@@ -25,6 +25,8 @@ class ViewsContainer : public QWidget
+     public:
+         ViewsContainer(QWidget * parent = 0);
+ 
++        void loadSettings();
++
+     public slots:
+         void showTransferDetails(TransferHandler * transfer);
+         void closeTransferDetails(TransferHandler * transfer);
+-- 
+2.1.2
+
