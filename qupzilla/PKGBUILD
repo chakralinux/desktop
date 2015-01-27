@@ -3,13 +3,14 @@
 
 _pkgname=QupZilla
 pkgname=qupzilla
-pkgver=1.8.5
+pkgver=1.8.6
 pkgrel=1
 pkgdesc="A very fast open source browser based on WebKit core"
 url="http://www.qupzilla.com"
 arch=('x86_64')
 license=('GPL3')
-depends=('qtwebkit' 'qtwebkit-plugins' 'kdelibs')
+depends=('qt5-base' 'qt5-webkit' 'qt5-script' 'kdelibs')
+makedepends=('qt5-tools')
 optdepends=('bash-completion: bash completion support')
 categories=('network') 
 install=${pkgname}.install
@@ -19,7 +20,7 @@ source=("https://github.com/QupZilla/qupzilla/releases/download/v${pkgver}/${_pk
 	'preference.patch'
 	'searchmanager.patch'
 	'start-white.png')
-sha1sums=('b3b92bf56605bd2adad47e7e85bcc11f18890961'
+sha1sums=('e1164dd6afb1ee121c2d53acc95b1c7b7d51603e'
           'c3d9f661c3243764afc24c661678ad96d5c423f9'
           'ac27b9415e74f2b6771b9011b7e415f8086abf5a'
           '86ead03eb48b2eca44125755ff55f76eedde3b10'
@@ -41,7 +42,7 @@ build() {
   export ENABLE_OPACITY_EFFECT="true"
   
   cd "${srcdir}/${_pkgname}-${pkgver}/"
-  qmake
+  /usr/lib/qt5/bin/qmake
   make
 }
 
