@@ -4,7 +4,7 @@
  
 pkgname=mpv
 pkgver=0.7.3
-pkgrel=1
+pkgrel=2
 pkgdesc="A movie player and encoder for linux, based on MPlayer/mplayer2"
 arch=('x86_64')
 license=('GPL')
@@ -45,7 +45,9 @@ build() {
     --enable-cdda \
     --enable-zsh-comp \
     --enable-pulse \
-    --disable-portaudio
+    --enable-wayland \
+    --enable-gl-wayland \
+    --enable-egl-x11
   ./waf build
 }
  
