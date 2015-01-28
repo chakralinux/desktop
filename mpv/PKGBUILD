@@ -14,8 +14,9 @@ depends=('pulseaudio' 'ffmpeg' 'lcms2' 'libdvdread' 'libgl'
          'lirc-utils' 'wayland' 'desktop-file-utils' 'hicolor-icon-theme' 
          'xdg-utils' 'lua' 'libdvdnav' 'libcdio-paranoia' 'libbluray'
          'enca' 'libguess' 'harfbuzz' 'graphite' 'libxrandr')
-makedepends=('mesa' 'python3-docutils' 'ladspa' 'x264')
-options=('!emptydirs' '!buildflags')
+makedepends=('mesa' 'python3-docutils' 'ladspa' 'x264' 'jack'
+             'samba' 'sdl2_mixer' 'sdl_mixer' 'libdvdcss' 'libbs2b')
+options=('!emptydirs')
 install=${pkgname}.install
 source=("https://github.com/mpv-player/${pkgname}/archive/v${pkgver}.tar.gz")
 sha256sums=('88dcdc44264a8e9b9b73a95d03137d51071aea8c269cc19146109bf8f917e8b1')
@@ -45,9 +46,13 @@ build() {
     --enable-cdda \
     --enable-zsh-comp \
     --enable-pulse \
+    --enable-sdl2 \
+    --enable-openal \
     --enable-wayland \
     --enable-gl-wayland \
-    --enable-egl-x11
+    --enable-egl-x11 \
+    --enable-libsmbclient \
+    --enable-dvdread
   ./waf build
 }
  
