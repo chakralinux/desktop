@@ -5,8 +5,8 @@
 # Contributor on CCR: Gandalf77 <krzychprzech@gmail.com>
 
 pkgname=clipgrab
-pkgver=3.4.8
-pkgrel=2
+pkgver=3.4.9
+pkgrel=1
 pkgdesc='A video downloader and converter for YouTube, Vimeo, DailyMotion, MyVideo and many other'
 arch=('x86_64')
 url='http://clipgrab.de/en'
@@ -16,17 +16,17 @@ depends=('qtwebkit')
 optdepends=('ffmpeg: for some encodings')
 source=("http://download.clipgrab.de/${pkgname}-${pkgver}.tar.bz2"
         "${pkgname}.desktop")
-sha256sums=('5daf3ac8d16e6865b532c59e844bdc099dc92d3cca28e4db594cfa74b7e4388d'
+sha256sums=('e1aaf9c5f55788ac580ba645f0368b8bdf5b65dbe133cd7e08df9ffed8c0546d'
             'a12c0501d2f46b4a2a7103a0cce8a35d9b44245dee6cc12eb7d3e5c083cc5809')
 
 build() {
-  cd ${pkgname}
+  cd ${pkgname}-${pkgver}
   qmake clipgrab.pro
   make
 }
 
 package() {
-  cd ${pkgname}
+  cd ${pkgname}-${pkgver}
   install -Dm755 ${pkgname} "${pkgdir}/usr/bin/${pkgname}"
   install -Dm644 icon.png "${pkgdir}/usr/share/pixmaps/${pkgname}.png"
   install -Dm644 "${srcdir}/${pkgname}.desktop" "${pkgdir}/usr/share/applications/${pkgname}.desktop"
