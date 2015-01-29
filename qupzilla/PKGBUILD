@@ -1,30 +1,32 @@
 # Contributor: Anke Boersma <abveritas@chakra-project.org>
 # Maintainer: Bruce Liu <brli@users.sourceforge.net>
+# Note: this is a messive splittion PKGBUILD, we want it simpler as soon as we migrate to kf5
 
 _pkgname=QupZilla
-pkgname=qupzilla
+pkgbase=qupzilla
+pkgname=('qupzilla-qt5' 'qupzilla' 'qupzilla-common')
 pkgver=1.8.6
-pkgrel=1
+pkgrel=2
 pkgdesc="A very fast open source browser based on WebKit core"
 url="http://www.qupzilla.com"
 arch=('x86_64')
 license=('GPL3')
-depends=('qt5-base' 'qt5-webkit' 'qt5-script' 'kdelibs')
-makedepends=('qt5-tools')
+makedepends=('qt5-tools' 'qt5-webkit' 'qt5-script' 'kwallet' 'kdelibs' 'qt')
 optdepends=('bash-completion: bash completion support')
 categories=('network') 
-install=${pkgname}.install
 screenshot='http://www.qupzilla.com/screens/kde.png'
 source=("https://github.com/QupZilla/qupzilla/releases/download/v${pkgver}/${_pkgname}-${pkgver}.tar.xz"
 	'browserui.patch'
 	'preference.patch'
 	'searchmanager.patch'
-	'start-white.png')
+	'start-white.png'
+	'qupzilla-qt5.desktop') # only for now
 sha1sums=('e1164dd6afb1ee121c2d53acc95b1c7b7d51603e'
           'c3d9f661c3243764afc24c661678ad96d5c423f9'
           'ac27b9415e74f2b6771b9011b7e415f8086abf5a'
           '86ead03eb48b2eca44125755ff55f76eedde3b10'
-          '6ec67993bda3054d4210cc08177b124f873774e3')
+          '6ec67993bda3054d4210cc08177b124f873774e3'
+          '995413e503c4cd3b49edc711200174f09c5e649e')          
 
 prepare() {
   cd ${srcdir}/${_pkgname}-${pkgver}
@@ -34,25 +36,84 @@ prepare() {
   patch -Np1 -i ${srcdir}/preference.patch  
   msg 'Applying search engine patch...'
   patch -Np1 -i ${srcdir}/searchmanager.patch
+  
+  # split
+  mkdir ${srcdir}/qt{4,5}
+  cp -rv ${srcdir}/${_pkgname}-${pkgver}/* ${srcdir}/qt4
+  cp -rv ${srcdir}/${_pkgname}-${pkgver}/* ${srcdir}/qt5
 }
          
-build() {
+build_qupzilla() {
   export USE_WEBGL="true"
   export KDE_INTEGRATION="true"
   export ENABLE_OPACITY_EFFECT="true"
   
-  cd "${srcdir}/${_pkgname}-${pkgver}/"
-  /usr/lib/qt5/bin/qmake
+  cd "${srcdir}/qt4"
+  qmake
   make
 }
 
-package() {
-  cd "${srcdir}/${_pkgname}-${pkgver}/"
+build_qupzilla-qt5() {
+  export USE_WEBGL="true"
+  export KDE_INTEGRATION="true"
+  
+  cd "${srcdir}/qt5"
+  /usr/lib/qt5/bin/qmake
+  
+  export USE_LIBPATH="/usr/lib/qupzilla-qt5" 
+  export USE_DATADIR="/usr/share/qupzilla-qt5"
+  make
+}
+
+build() {
+  build_qupzilla
+  build_qupzilla-qt5
+}
+
+package_qupzilla-common() {
+  pkgdesc+=('(Common files)')
+  depends=('desktop-file-utils' 'hicolor-icon-theme')
+  install=${pkgbase}.install
+  cd "${srcdir}/qt4"
 
   make INSTALL_ROOT="${pkgdir}" install
   install -Dm 644 "${srcdir}/start-white.png" "${pkgdir}/usr/share/pixmaps/start-white.png"
   
   # shell completion
-  install -Dm644 linux/completion/_${pkgname} "${pkgdir}/usr/share/zsh/site-functions/_${pkgname}"
-  install -Dm644 linux/completion/${pkgname} "${pkgdir}/usr/share/bash-completion/completions/${pkgname}"
+  install -Dm644 linux/completion/_${pkgbase} "${pkgdir}/usr/share/zsh/site-functions/_${pkgbase}"
+  install -Dm644 linux/completion/${pkgbase} "${pkgdir}/usr/share/bash-completion/completions/${pkgbase}"
+  
+  # remove libs and bins
+  rm -rfv ${pkgdir}/{bin,lib,usr/share/applications}
+}
+
+package_qupzilla() {
+  pkgdesc+=('(Qt4 build)')
+  depends=('qt' 'qtwebkit-plugins' 'qtwebkit' 'qupzilla-common')
+  optdepends=('kdelibs: kwallet integration')
+  cd "${srcdir}/qt4"
+  make INSTALL_ROOT="${pkgdir}" install
+
+  # remove common files
+  rm -rfv "${pkgdir}/usr/share"
+  
+  # install back .desktop files
+  install -Dm644 "${srcdir}/qt4/linux/applications/qupzilla.desktop" "${pkgdir}/usr/share/applications/qupzilla.desktop"
+}
+
+package_qupzilla-qt5() {
+  pkgdesc+=('(Qt5 build)')
+  depends=('qt5-webkit' 'qt5-script' 'qupzilla-common')
+  optdepends=('kwallet: kf5 kwallet integration')
+  cd "${srcdir}/qt5"
+  make INSTALL_ROOT="${pkgdir}" install
+  
+  # seperate the binary
+  mv -v "${pkgdir}/usr/bin/qupzilla" "${pkgdir}/usr/bin/qupzilla-qt5"
+
+  # remove common files
+  rm -rfv "${pkgdir}/usr/share"
+  
+  # install qupzilla-qt5.desktop
+  install -Dm644 "${srcdir}/qupzilla-qt5.desktop" "${pkgdir}/usr/share/applications/qupzilla-qt5.desktop"
 }
