@@ -3,30 +3,34 @@
 pkgbase=xonotic
 _pkgbase=Xonotic
 pkgname=($pkgbase $pkgbase-data)
-pkgver=0.7.0
+pkgver=0.8.0
 pkgrel=1
 pkgdesc="A free, fast-paced crossplatform first-person shooter"
 arch=('x86_64')
 url="http://xonotic.org"
 license=('GPL2')
 depends=('alsa-lib' 'curl' 'libjpeg' 'libmodplug' 'libpng' 'libvorbis' 'libxpm' 'libxxf86dga'
-'libxxf86vm' 'sdl')
+'libxxf86vm' 'sdl2')
 makedepends=('unzip' 'mesa')
 categories=('games')
 source=("http://dl.xonotic.org/$pkgbase-$pkgver.zip"
         "xonotic-glx.desktop"
         "xonotic-sdl.desktop")
-md5sums=('eda7e8acadbefaf4b2efcfb70bbe98e2'
+md5sums=('bc368e116a2502362e1d4f07d8f8efab'
          'c4d94fcbfbef47cf614f2b6f381ea89b'
          '541cf57a483f540220eb08c898f6dbc2')
 
-build() {
-  cd $srcdir/$_pkgbase/source/darkplaces
 
-  # Build the binaries separately to avoid truncated files.
-  make CPUOPTIMIZATIONS="$CFLAGS" DP_LINK_TO_LIBJPEG=1 cl-nexuiz
-  make CPUOPTIMIZATIONS="$CFLAGS" DP_LINK_TO_LIBJPEG=1 sdl-nexuiz
-  make CPUOPTIMIZATIONS="$CFLAGS" DP_LINK_TO_LIBJPEG=1 sv-nexuiz
+build() {
+  # compile engine
+	make -C Xonotic/source/darkplaces CPUOPTIMIZATIONS="${CFLAGS}" DP_FS_BASEDIR=/usr/share/xonotic/ DP_LINK_TO_LIBJPEG=1 cl-release
+	make -C Xonotic/source/darkplaces CPUOPTIMIZATIONS="${CFLAGS}" DP_FS_BASEDIR=/usr/share/xonotic/ DP_LINK_TO_LIBJPEG=1 sdl2-release
+	make -C Xonotic/source/darkplaces CPUOPTIMIZATIONS="${CFLAGS}" DP_FS_BASEDIR=/usr/share/xonotic/ DP_LINK_TO_LIBJPEG=1 sv-release
+
+  cd $srcdir/Xonotic/source/d0_blind_id
+  sh autogen.sh
+  ./configure --prefix=/usr --disable-rijndael
+  make
 }
 
 package_xonotic() {
@@ -35,9 +39,9 @@ package_xonotic() {
   'libxxf86vm' 'sdl' 'xonotic-data')
 
   # Binaries.
-  install -Dm755 source/darkplaces/nexuiz-dedicated $pkgdir/usr/share/$pkgbase/$pkgbase-server
-  install -Dm755 source/darkplaces/nexuiz-glx $pkgdir/usr/share/$pkgbase/$pkgbase-glx
-  install -Dm755 source/darkplaces/nexuiz-sdl $pkgdir/usr/share/$pkgbase/$pkgbase-sdl
+  install -Dm755 source/darkplaces/darkplaces-dedicated $pkgdir/usr/share/$pkgbase/$pkgbase-server
+  install -Dm755 source/darkplaces/darkplaces-glx $pkgdir/usr/share/$pkgbase/$pkgbase-glx
+  install -Dm755 source/darkplaces/darkplaces-sdl $pkgdir/usr/share/$pkgbase/$pkgbase-sdl
 
   # Execution scripts.
   install -d $pkgdir/usr/bin
