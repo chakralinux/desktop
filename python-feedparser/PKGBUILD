@@ -5,9 +5,9 @@
 
 _pkgname=feedparser
 pkgbase=python-feedparser
-pkgname=('python2-feedparser' 'python3-feedparser')
+pkgname=('python2-feedparser' 'python3-feedparser' 'python3-sgmllib')
 pkgver=5.1.3
-pkgrel=2
+pkgrel=3
 pkgdesc="feedparser is a Python library that parses feeds in all known formats, including Atom, RSS, and RDF."
 arch=('any')
 url="http://code.google.com/p/feedparser/"
@@ -30,9 +30,15 @@ prepare() {
   chmod 644  feedparser-${pkgver}/feedparser/feedparser.egg-info/*
   cp -r feedparser-${pkgver} feedparser-${pkgver}-python2
   cp -r feedparser-${pkgver} feedparser-${pkgver}-python3
+  cp -r feedparser-${pkgver} feedparser-${pkgver}-sgmllib
 
   (cd feedparser-${pkgver}-python2; sed -i 's#env python$#env python2#' feedparser/feedparser.py)
   (cd feedparser-${pkgver}-python3; 2to3 -w feedparser/feedparser.py feedparser/feedparsertest.py)
+}
+
+build() {
+  cd feedparser-${pkgver}-sgmllib
+  python3 /usr/lib/python3.4/compileall.py feedparser/sgmllib3.py
 }
 
 package_python2-feedparser() {
@@ -45,9 +51,21 @@ package_python2-feedparser() {
 }
 
 package_python3-feedparser() {
-  depends=('libxml2' 'python-sgmllib')
+  depends=('libxml2' 'python3-sgmllib')
   
   cd "${srcdir}/feedparser-${pkgver}-python3"
   python3 setup.py install --root="${pkgdir}"
   install -Dm644 LICENSE "${pkgdir}/usr/share/licenses/${pkgname}/license"
+}
+
+package_python3-sgmllib() {
+  depends=('python3')
+  pkgdesc="Port of sgmllib to python-3"
+  license=('PSF')
+  
+  cd "${srcdir}/feedparser-${pkgver}-sgmllib"
+  install -Dm644 feedparser/sgmllib3.py \
+    "${pkgdir}/usr/lib/python3.4/site-packages/sgmllib.py"
+  install -Dm644 feedparser/__pycache__/sgmllib3.cpython-34.pyc \
+    "${pkgdir}/usr/lib/python3.4/site-packages/__pycache__/sgmllib.cpython-34.pyc"
 }
