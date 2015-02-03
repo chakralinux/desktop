@@ -3,7 +3,7 @@
 pkgbase=pacmanlogviewer
 pkgname=('pacmanlogviewer' 'pacmanlogviewer-qt5')
 pkgver=1.3.0
-pkgrel=1
+pkgrel=2
 arch=('x86_64')
 url=('https://opendesktop.org/content/show.php?content=150484')
 license=('GPL')
@@ -15,6 +15,7 @@ md5sums=('618e32f604d7c972d90b0e902e39a6d7')
 package_pacmanlogviewer() {
     pkgdesc="Inspect pacman log file."
     depends=('qt')
+    conflicts=("pacmanlogviewer-qt5")
     
     cd "$srcdir/$pkgbase-$pkgver"
     mkdir build
@@ -27,6 +28,8 @@ package_pacmanlogviewer() {
 package_pacmanlogviewer-qt5() {
     pkgdesc="Inspect pacman log file. (Qt5 version)"
     depends=('qt5-base' 'qt5-tools')
+    provides=("pacmanlogviewer")
+    conflicts=("pacmanlogviewer")
     
     cd "$srcdir/$pkgbase-$pkgver"
     mkdir build-qt5
