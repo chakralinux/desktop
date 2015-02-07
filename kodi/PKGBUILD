@@ -1,13 +1,11 @@
 # Maintainer: AlmAck
 # Contributor: Arch
 
-_prefix=/usr
-
 pkgbase=kodi
 pkgname=('kodi')
-pkgver=14.0
+pkgver=14.1
 _codename=Helix
-pkgrel=2
+pkgrel=1
 arch=('x86_64')
 url="http://kodi.tv"
 license=('GPL2')
@@ -23,7 +21,7 @@ makedepends=(
 )
   
 source=("$pkgname-$pkgver-$_codename.tar.gz::https://github.com/xbmc/xbmc/archive/$pkgver-$_codename.tar.gz")
-sha256sums=('11746d95cc59361f36ce6ea9d0d36bbd9ec3376e991f5ec1720f8ff740b91192')
+sha256sums=('a38059e292cf8523918834e49fcc2d688525ceb7951ddf7f5ee535f4147255d6')
 
 prepare() {
   cd "$srcdir/xbmc-$pkgver-$_codename"
@@ -44,7 +42,7 @@ build() {
 
   # Configuring XBMC
   export PYTHON_VERSION=2  # external python v2
-  ./configure --prefix=$_prefix --exec-prefix=$_prefix \
+  ./configure --prefix=/usr --exec-prefix=/usr \
     --disable-debug \
     --enable-optimizations \
     --enable-libbluray \
@@ -93,10 +91,10 @@ package_kodi() {
   make DESTDIR="$pkgdir" install
 
   # Licenses
-	install -dm755 ${pkgdir}${_prefix}/share/licenses/${pkgname}
+	install -dm755 ${pkgdir}/usr/share/licenses/${pkgname}
   for licensef in LICENSE.GPL copying.txt; do
-		mv ${pkgdir}${_prefix}/share/doc/kodi/${licensef} \
-			${pkgdir}${_prefix}/share/licenses/${pkgname}
+		mv ${pkgdir}/usr/share/doc/kodi/${licensef} \
+			${pkgdir}/usr/share/licenses/${pkgname}
   done
 }
 
