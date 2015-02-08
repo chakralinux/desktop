@@ -1,9 +1,9 @@
 # Neophytos Kolokotronis <tetris4 AT gmail DOT com>
 
 pkgname=kdevplatform
-pkgver=1.7.0
-_pkgver=4.7.0
-pkgrel=2
+pkgver=1.7.1
+_pkgver=4.7.1
+pkgrel=1
 pkgdesc="A C/C++ development platform for KDE"
 arch=('x86_64')
 url="http://www.kdevelop.org/"
@@ -12,19 +12,8 @@ depends=('kdelibs' 'boost' 'subversion' 'qjson')
 optdepends=("kdesdk-kompare: difference checking")
 makedepends=('cmake' 'automoc4')
 install=${pkgname}.install
-source=("http://download.kde.org/stable/kdevelop/${_pkgver}/src/${pkgname}-${pkgver}.tar.xz"
-        "revert-shell1.patch::http://quickgit.kde.org/?p=kdevplatform.git&a=commitdiff&h=2bc4e2c5e396987fbf6beb4d7630018cdb934550&o=plain"
-        "revert-shell2.patch::http://quickgit.kde.org/?p=kdevplatform.git&a=commitdiff&h=5186645ab0f845b495552fcda2ff9c68bce0dc7b&o=plain")
-md5sums=('72375e077f97b44056c76c7f85ce49ad'
-         '881e922fdfb595224bfc91836fe4a841'
-         '8996bb8f5a53dd3806041ab5a1978e41')
-
-prepare() {
-  cd "${pkgname}-${pkgver}"
-  # temp workaround kde bug 339056
-  patch -R -Np1 -i ../revert-shell1.patch
-  patch -R -Np1 -i ../revert-shell2.patch
-}
+source=("http://download.kde.org/stable/kdevelop/${_pkgver}/src/${pkgname}-${pkgver}.tar.xz")
+md5sums=('f6c123d65ae8d5c50944d548c8bc812f')
 
 build() {
   cd ${srcdir}
