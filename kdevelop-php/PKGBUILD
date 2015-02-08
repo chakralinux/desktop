@@ -2,8 +2,8 @@
 
 pkgbase=kdevelop-php
 pkgname=('kdevelop-php' 'kdevelop-php-docs')
-pkgver=1.7.0
-_pkgver=4.7.0
+pkgver=1.7.1
+_pkgver=4.7.1
 pkgrel=1
 pkgdesc="PHP plugin for Kdevelop"
 arch=('x86_64')
@@ -13,10 +13,9 @@ depends=("kdevelop=${_pkgver}" "kdevelop-pg-qt")
 makedepends=('cmake' 'automoc4')
 categories=('programming')
 options=('!makeflags')
-source=("http://download.kde.org/stable/kdevelop/${_pkgver}/src/${pkgname}-${pkgver}.tar.xz"
-        "http://download.kde.org/stable/kdevelop/${_pkgver}/src/${pkgname}-docs-${pkgver}.tar.xz")
-sha1sums=('e3a41f7700af56840fd60219e083b761180b8b8c'
-          '487b60f591929e7a8292ef8f1c555a0243f1176a')
+source=(http://download.kde.org/stable/kdevelop/${_pkgver}/src/${pkgbase}-{,docs-}${pkgver}.tar.xz)
+sha1sums=('384bb55b8878041b1979d1652f149195842fb5e2'
+          'f0755ea6649ca501e45a17fc59c51ebcbef77267')
 
 build() {
   cd "${srcdir}"
