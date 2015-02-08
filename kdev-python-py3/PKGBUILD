@@ -3,8 +3,8 @@
 
 _pkgname=kdev-python
 pkgname=kdev-python-py3
-pkgver=1.7.0
-_pkgver=4.7.0
+pkgver=1.7.1
+_pkgver=4.7.1
 _branch=stable
 pkgrel=1
 pkgdesc="Python language plugin for KDevelop”"
@@ -15,6 +15,7 @@ depends=('kdevelop')
 makedepends=('cmake' 'automoc4' 'kdevelop-pg-qt')
 conflicts=('kdev-python')
 source=("http://download.kde.org/${_branch}/kdevelop/${_pkgver}/src/${_pkgname}-${pkgver}-py3.tar.xz")
+md5sums=('f670af81e55bbc68fd3bd0443b0fc34e')
 
 build() {
     mkdir build && cd build 
@@ -31,4 +32,3 @@ package() {
     cd build
     make DESTDIR="${pkgdir}" install
 }
-md5sums=('708e43202056cc241209109b8bbd5bd0')
