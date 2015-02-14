@@ -4,7 +4,7 @@
 # Contributor: xylosper <darklin20@gmail.com>
 
 pkgname=bomi
-pkgver=0.9.1
+pkgver=0.9.2
 pkgrel=1
 pkgdesc="Powerful and easy-to-use multimedia player"
 arch=('x86_64')
@@ -16,7 +16,7 @@ install=$pkgname.install
 depends=('qt5-base' 'qt5-declarative' 'qt5-x11extras' 'qt5-quickcontrols' 'icu'
          'libdvdread' 'libdvdnav' 'libcdio-paranoia' 'libcdio'
          'alsa-lib' 'libpulse' 'jack' 'libchardet' 'libbluray'
-         'mpg123' 'libva' 'libgl' 'fribidi' 'libass' 'ffmpeg')
+         'mpg123' 'libva' 'libgl' 'fribidi' 'libass' 'ffmpeg' 'systemd')
 makedepends=('mesa' 'gcc' 'pkg-config' 'python3' 'qt5-tools')
 optdepends=('libaacs: AACS decryption for Blu-ray support'
             'libbdplus: BD+ decryption for Blu-ray support'
@@ -26,14 +26,16 @@ provides=('cmplayer')
 replace=('cmplayer')
 conflicts=('cmplayer' 'bomi-git')
 source=(https://github.com/xylosper/bomi/archive/v$pkgver.tar.gz)
-md5sums=('e75be876c64596a67c01dfdf07607395')
-#options=(debug !strip)
+md5sums=('071e5c2b2e21581eb91aa67ff9630b78')
 
 build() {
   cd "$srcdir/$pkgname-$pkgver"
-    ./configure --prefix=/usr --enable-jack \
-        --enable-pulseaudio --enable-cdda \
-        --defaultskin=Breeze
+    ./configure --prefix=/usr \
+                --enable-jack \
+                --enable-pulseaudio \
+                --enable-cdda \
+                --defaultskin=Native \
+                --enable-systemd
   make
 }
 
