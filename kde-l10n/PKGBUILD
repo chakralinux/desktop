@@ -68,7 +68,7 @@ pkgver=${_kdever}
 pkgrel=1
 url="http://www.kde.org"
 license=('GPL' 'FDL')
-depends=("kdelibs>=${_kdever}" 'automoc4' 'docbook-xsl')
+depends=("kdelibs>=${_libsver}" 'automoc4' 'docbook-xsl')
 options=('docs' 'log')
 source=(${_mirror}/${pkgbase}/kde-l10n-ar-${pkgver}.tar.xz
         ${_mirror}/${pkgbase}/kde-l10n-bg-${pkgver}.tar.xz
@@ -83,6 +83,7 @@ source=(${_mirror}/${pkgbase}/kde-l10n-ar-${pkgver}.tar.xz
         ${_mirror}/${pkgbase}/kde-l10n-es-${pkgver}.tar.xz
         ${_mirror}/${pkgbase}/kde-l10n-et-${pkgver}.tar.xz
         ${_mirror}/${pkgbase}/kde-l10n-eu-${pkgver}.tar.xz
+        ${_mirror}/${pkgbase}/kde-l10n-fa-${pkgver}.tar.xz      
         ${_mirror}/${pkgbase}/kde-l10n-fi-${pkgver}.tar.xz
         ${_mirror}/${pkgbase}/kde-l10n-fr-${pkgver}.tar.xz
         ${_mirror}/${pkgbase}/kde-l10n-ga-${pkgver}.tar.xz
@@ -138,6 +139,7 @@ sha256sums=(
 `grep  "kde-l10n-es-${pkgver}.tar.xz"             ../checksums.txt  |  cut  -d  " "  -f1`
 `grep  "kde-l10n-et-${pkgver}.tar.xz"             ../checksums.txt  |  cut  -d  " "  -f1`
 `grep  "kde-l10n-eu-${pkgver}.tar.xz"             ../checksums.txt  |  cut  -d  " "  -f1`
+`grep  "kde-l10n-fa-${pkgver}.tar.xz"             ../checksums.txt  |  cut  -d  " "  -f1`
 `grep  "kde-l10n-fi-${pkgver}.tar.xz"             ../checksums.txt  |  cut  -d  " "  -f1`
 `grep  "kde-l10n-fr-${pkgver}.tar.xz"             ../checksums.txt  |  cut  -d  " "  -f1`
 `grep  "kde-l10n-ga-${pkgver}.tar.xz"             ../checksums.txt  |  cut  -d  " "  -f1`
@@ -195,6 +197,7 @@ build() {
            'es'
            'et'
            'eu'
+           'fa'
            'fi'
            'fr'
            'ga'
@@ -504,6 +507,17 @@ package_kde-l10n-eu()
     categories=('localization')
 
     pushd ${srcdir}/kde-l10n-eu-${pkgver}
+        make DESTDIR=${pkgdir} install
+    popd
+}
+
+package_kde-l10n-fa()
+{
+    pkgdesc="KDE language support: Persian"
+    groups=("kde-uninstall" "kde-l10n")
+    categories=('localization')
+
+    pushd ${srcdir}/kde-l10n-fi-${pkgver}
         make DESTDIR=${pkgdir} install
     popd
 }

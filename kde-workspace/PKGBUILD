@@ -10,7 +10,7 @@ pkgname=("kde-workspace" "kde4-integration")
 arch=('x86_64')
 pkgver=${_workspace_ver}
 #pkgver=4.11.11
-pkgrel=4
+pkgrel=1
 url="http://www.kde.org"
 license=('GPL' 'LGPL' 'FDL')
 makedepends=('pkgconfig'
@@ -18,7 +18,7 @@ makedepends=('pkgconfig'
              'automoc4'
              'networkmanager'
              'bluez'
-             "kdebindings-python2>=${_kdever}"
+             "kdebindings-python2>=${_oldkdever}"
              'oxygen-icons'
              "kde-runtime>=${_kdever}"
              'gpsd'
@@ -29,8 +29,7 @@ makedepends=('pkgconfig'
              'docbook-xsl'
              'prison'
              'qrencode'
-             "kdepimlibs>=${_kdever}"
-             "kde-runtime>=${_kdever}"
+             "kdepimlibs>=${_libsver}"
              'qimageblitz'
              'mesa'
              "libkactivities4" 
@@ -50,7 +49,7 @@ makedepends=('pkgconfig'
              'libqalculate'
              'prison'
              'qrencode'
-             "kdepim-runtime>=${_kdever}"
+             "kdepim-runtime>=${_libsver}"
              "kde-base-artwork>=${_kdever}"
              'xcb-util-keysyms'
              'xcb-util-wm')
@@ -149,7 +148,7 @@ package_kde-workspace() {
     pkgdesc="KDE Workspace"
     install=${pkgname}.install
     depends=('polkit-kde-agent'
-            "kdepimlibs>=${_kdever}"
+            "kdepimlibs>=${_libsver}"
             "kde-runtime>=${_kdever}"
             'qimageblitz'
             'mesa'
@@ -171,7 +170,7 @@ package_kde-workspace() {
             'libqalculate'
             'prison'
             'qrencode'
-            "kdepim-runtime>=${_kdever}"
+            "kdepim-runtime>=${_libsver}"
             "kde-base-artwork>=${_kdever}"
             'xcb-util-keysyms'
             'xcb-util-wm'

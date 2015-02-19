@@ -1,15 +1,16 @@
-# Contributor: Andrea Scarpino <andrea@archlinux.org>
+# Contributions from Arch: https://projects.archlinux.org/svntogit/packages.git/tree/trunk/PKGBUILD?h=packages/extra-cmake-modules
 
 source ../frameworks.conf
 
 pkgname=extra-cmake-modules
-pkgver=1.3.0
+pkgver=1.7.0
 pkgrel=1
 pkgdesc='Extra CMake modules'
-arch=('any')
+arch=('x86_64')
 url='https://projects.kde.org/projects/kdesupport/extra-cmake-modules'
 license=('LGPL')
 depends=('cmake')
+makedepends=('python3-sphinx') # qt5-tools for QtHelp pages
 source=("$KFServer/$KFVersion/${pkgname}-${pkgver}.tar.xz")
 sha256sums=( $(getSum $pkgname) )
 
@@ -21,7 +22,8 @@ build() {
   cd build
   cmake ../${pkgname}-${pkgver} \
     -DCMAKE_INSTALL_PREFIX=$KFInstallPrefix \
-    -DCMAKE_BUILD_TYPE=$KFBuildType
+    -DCMAKE_BUILD_TYPE=$KFBuildType \
+    -DBUILD_HTML_DOCS=OFF
   make
 }
 

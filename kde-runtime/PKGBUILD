@@ -7,7 +7,7 @@ source ../_buildscripts/${current_repo}-${_arch}-cfg.conf
 pkgname='kde-runtime'
 arch=('x86_64')
 pkgver=${_kdever}
-pkgrel=3
+pkgrel=1
 pkgdesc='Plugins and applications necessary for the running of KDE applications'
 url='http://www.kde.org'
 license=('GPL'
@@ -17,8 +17,8 @@ options=('docs'
          '!header'
          'debug'
          'log')
-depends=("kdelibs>=${_kdever}"
-         "baloo>=${_kdever}"
+depends=("kdelibs>=${_libsver}"
+         "baloo>=${_oldkdever}"
          "kactivities"
          'oxygen-icons'
          'xorg-xauth'
@@ -34,7 +34,7 @@ depends=("kdelibs>=${_kdever}"
 makedepends=('pkgconfig'
              'cmake'
              'automoc4'
-             "kdepimlibs>=${_kdever}"
+             "kdepimlibs>=${_libsver}"
              'openslp'
              'docbook-xsl'
              'networkmanager'
@@ -56,12 +56,10 @@ install=kde-runtime.install
 noextract=(branding.svgz)
 source=("$_mirror/${pkgname}-$_kdever.tar.xz"
         'branding.svgz'
-        'Remove-volume-control-from-KNotify.patch'
-        'kio_bookmarks_sanitize.patch')
+        'Remove-volume-control-from-KNotify.patch')
 sha256sums=(`grep ${pkgname}-$_kdever.tar.xz  ../checksums.txt | cut -d" " -f1`
             '586c5461d66ef13d5c43fb269e16c4da51812ae25a0d1b132f0bbbcdb22505e5'
-            '87bb4bd5f20a95d10f03930477b7cc41c1a68b04e1ca57836b5836fe29c8e7bf'
-            '66e45c895a6f2eba609789d10bb918f33e34d17923abd1dbe05e838a0971d824')
+            '87bb4bd5f20a95d10f03930477b7cc41c1a68b04e1ca57836b5836fe29c8e7bf')
 
 prepare() {
     cd "${srcdir}/${pkgname}-${pkgver}"
@@ -72,8 +70,6 @@ prepare() {
 
     msg "Applying patches..."
     patch -p1 -i ${srcdir}/Remove-volume-control-from-KNotify.patch
-    # https://www.kde.org/info/security/advisory-20141113-1.txt
-    patch -p1 -i ${srcdir}/kio_bookmarks_sanitize.patch
 }
 
 build() {

@@ -6,7 +6,7 @@ source ../_buildscripts/${current_repo}-${_arch}-cfg.conf
 
 pkgname="kdepimlibs"
 arch=('x86_64')
-pkgver=${_kdever}
+pkgver=${_libsver}
 pkgrel=1
 pkgdesc="KDE PIM libraries"
 url="http://www.kde.org"
@@ -18,7 +18,7 @@ options=('docs'
          '!header'
          'debug'
          'log')
-depends=("kdelibs>=${_kdever}"
+depends=("kdelibs>=${_lbsver}"
          'akonadi>=1.12.90'
          'libical'
          'gpgme'
@@ -37,8 +37,8 @@ makedepends=('pkg-config'
 groups=('kde'
         'kde-uninstall'
         'kde-minimal')
-source=($_mirror/${pkgname}-$_kdever.tar.xz)
-sha256sums=(`grep ${pkgname}-$_kdever.tar.xz  ../checksums.txt | cut -d" " -f1`)
+source=($_mirror/${pkgname}-$_libsver.tar.xz)
+sha256sums=(`grep ${pkgname}-$_libsver.tar.xz  ../checksums.txt | cut -d" " -f1`)
 
 build() {
     cd ${srcdir}

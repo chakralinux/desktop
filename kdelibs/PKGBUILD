@@ -6,7 +6,7 @@ source ../_buildscripts/${current_repo}-${_arch}-cfg.conf
 
 pkgname="kdelibs"
 arch=('x86_64')
-pkgver=${_kdever}
+pkgver=${_libsver}
 pkgrel=1
 pkgdesc="KDE Core Libraries"
 url="http://www.kde.org"
@@ -70,7 +70,7 @@ optdepends=('phonon-gstreamer: GStreamer Phonon backend (default)'
             'avahi:            Service discovery on your local network'
             'aspell:           Spell checking'
             'hspell:           Hebrew spell checking')
-provides=("${pkgname}=${_kdever}"
+provides=("${pkgname}=${_libsver}"
           "kdelibs-doc")
 replaces=('kdelibs-experimental'
           'arts'
@@ -80,12 +80,12 @@ groups=("kde"
         "kde-uninstall")
 conflicts=("kdelibs-doc")
 install=${pkgname}.install
-source=($_mirror/${pkgname}-$_kdever.tar.xz
+source=($_mirror/${pkgname}-$_libsver.tar.xz
         01_chakra_tag.patch
         02_kde_applications_menu.patch
         03_chakra_menu.patch
         MergeDir.patch)
-sha256sums=(`grep $pkgname-$_kdever.tar.xz  ../checksums.txt | cut -d " " -f1`
+sha256sums=(`grep $pkgname-$_libsver.tar.xz  ../checksums.txt | cut -d " " -f1`
             '029e2d07c5fc8676d143b903aa181fc470e5b469d49ccf107e19031f562bf4e3'
             'b2d25c76081ea6bb31d90c4c6b619ce64ac36de3a6eefb2f9990d3dbf8cd9c91'
             '505e9e5e969be5094b3f713b865d5927cc3de1f4693915174732b20793228c4f'

@@ -21,8 +21,8 @@ pkgname=('kdepim-common'
          'kdepim-kontact'
          'kdepim-korganizer'
          'kdepim-ktimetracker')
-pkgver=${_kdever}
-pkgrel=2
+pkgver=${_libsver}
+pkgrel=1
 arch=('x86_64')
 url="http://pim.kde.org"
 license=('GPL'
@@ -36,10 +36,10 @@ makedepends=('pkg-config'
              'cmake'
              'automoc4'
              'boost'
-             "kdelibs>=${_kdever}"
-             "kdepimlibs>=${_kdever}"
+             "kdelibs>=${_libsver}"
+             "kdepimlibs>=${_libsver}"
              'grantlee>=0.3.0'
-             "kdepim-runtime>=${_kdever}"
+             "kdepim-runtime>=${_libsver}"
              'libxss'
              "kde-runtime>=${_kdever}"
              'libsamplerate'
@@ -48,10 +48,10 @@ makedepends=('pkg-config'
              "chakra-common>=${_kdever}"
              'docbook-xml'
              'dblatex'
-             "baloo-widgets>=${_kdever}"
+             "baloo-widgets>=${_oldkdever}"
              'link-grammar')
 source=($_mirror/${pkgbase}-${pkgver}.tar.xz)
-sha256sums=(`grep ${pkgbase}-$_kdever.tar.xz  ../checksums.txt | cut -d" " -f1`)
+sha256sums=(`grep ${pkgbase}-$_libsver.tar.xz  ../checksums.txt | cut -d" " -f1`)
 
 prepare() {
     mkdir "${srcdir}/build"
@@ -75,7 +75,7 @@ package_kdepim-akonadiconsole() {
             "${pkgbase}"
             "kde-uninstall")
     depends=("${pkgbase}-common>=${pkgver}"
-             "baloo-widgets>=${_kdever}")
+             "baloo-widgets>=${_oldkdever}")
     install=${pkgbase}.install
 
     cd "${srcdir}"/build/akonadiconsole
@@ -296,8 +296,8 @@ package_kdepim-ktnef() {
             "${pkgbase}"
             "kde-uninstall")
     categories=('accessories')
-    depends=("kdebase-runtime>=${pkgver}"
-             "kdepimlibs>=${pkgver}")
+    depends=("kdebase-runtime>=${_oldkdever}"
+             "kdepimlibs>=${libsver}")
     install=${pkgbase}.install
 
     cd "${srcdir}"/build/ktnef
@@ -306,7 +306,7 @@ package_kdepim-ktnef() {
 
 package_kdepim-common() {
     pkgdesc="KDE PIM common files and libraries"
-    depends=("kdepimlibs>=${_kdever}"
+    depends=("kdepimlibs>=${_libsver}"
              "kde-runtime>=${_kdever}"
              "chakra-common>=${_kdever}"
              "kdepim-runtime>=${_pkgver}"

@@ -7,7 +7,7 @@ source ../_buildscripts/${current_repo}-${_arch}-cfg.conf
 pkgbase=kdepim-runtime
 pkgname=${pkgbase}
 arch=('x86_64')
-pkgver=${_kdever}
+pkgver=${_libsver}
 pkgrel=1
 pkgdesc='Extends the functionality of KDE PIM'
 url='https://projects.kde.org/projects/kde/kdepim-runtime'
@@ -19,9 +19,9 @@ options=('docs'
          '!header'
          'debug'
          'log')
-depends=("kdepimlibs>=${_kdever}"
+depends=("kdepimlibs>=${_libsever}"
          "kde-runtime>=${_kdever}"
-         "kdelibs>=${_kdever}"
+         "kdelibs>=${_libsver}"
          'prison'
          'libdmtx'
          'qrencode'
@@ -35,8 +35,8 @@ groups=('kde'
         'kdepim'
         'kde-uninstall'
         'kde-minimal')
-source=($_mirror/${pkgbase}-$_kdever.tar.xz)
-sha256sums=(`grep ${pkgbase}-$_kdever.tar.xz  ../checksums.txt | cut -d" " -f1`)
+source=($_mirror/${pkgbase}-$_libsver.tar.xz)
+sha256sums=(`grep ${pkgbase}-$_libsver.tar.xz  ../checksums.txt | cut -d" " -f1`)
 
 prepare() {
     cd "${srcdir}"
