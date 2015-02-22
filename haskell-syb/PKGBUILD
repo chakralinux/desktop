@@ -9,23 +9,22 @@
 
 _hkgname=syb
 pkgname=haskell-syb
-pkgver=0.4.1
-pkgrel=2
+pkgver=0.4.4
+pkgrel=1
 pkgdesc="Scrap Your Boilerplate"
 url="http://hackage.haskell.org/package/${_hkgname}"
 license=('custom:BSD3')
 arch=('x86_64')
-depends=('ghc=7.6.3')
+depends=('ghc')
 options=('strip' 'staticlibs')
 source=(http://hackage.haskell.org/packages/archive/${_hkgname}/${pkgver}/${_hkgname}-${pkgver}.tar.gz)
 install=${pkgname}.install
-md5sums=('28df3b70cef652fa6c04e6353c580a7a')
+md5sums=('e30720ca8086073a29f3321413cefc94')
 
 build() {
     cd ${srcdir}/${_hkgname}-${pkgver}
     runhaskell Setup configure \
-        -O \
-        ${PKGBUILD_HASKELL_ENABLE_PROFILING:+-p } \
+        -O -p \
         --enable-split-objs \
         --enable-shared \
         --prefix=/usr \

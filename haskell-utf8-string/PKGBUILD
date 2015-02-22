@@ -9,22 +9,23 @@
 
 _hkgname=utf8-string
 pkgname=haskell-utf8-string
-pkgver=0.3.7
-pkgrel=7
+pkgver=1
+pkgrel=1
 pkgdesc="Support for reading and writing UTF8 Strings"
 url="http://hackage.haskell.org/package/${_hkgname}"
 license=('custom:BSD3')
 arch=('x86_64')
-depends=('ghc=7.6.3-1')
+depends=('ghc')
 options=('strip' 'staticlibs')
 source=(http://hackage.haskell.org/packages/archive/${_hkgname}/${pkgver}/${_hkgname}-${pkgver}.tar.gz)
 install=${pkgname}.install
-md5sums=('50e5c395713e716e0e4a56da73f87ccd')
+md5sums=('ba089498bf478266ce25d21eb00236aa')
+
 build() {
     cd ${srcdir}/${_hkgname}-${pkgver}
     runhaskell Setup configure \
         -O \
-        ${PKGBUILD_HASKELL_ENABLE_PROFILING:+-p } \
+        -p \
         --enable-split-objs \
         --enable-shared \
         --prefix=/usr \

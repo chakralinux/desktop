@@ -10,7 +10,7 @@
 _hkgname=regex-compat
 pkgname=haskell-regex-compat
 pkgver=0.95.1
-pkgrel=8
+pkgrel=9
 pkgdesc="Replaces/Enhances Text.Regex"
 url="http://hackage.haskell.org/package/${_hkgname}"
 license=('custom:BSD3')
@@ -24,8 +24,7 @@ md5sums=('d0573ab4e2f3de5faa61380b67333320')
 build() {
     cd ${srcdir}/${_hkgname}-${pkgver}
     runhaskell Setup configure \
-        -O \
-        ${PKGBUILD_HASKELL_ENABLE_PROFILING:+-p } \
+        -O -p \
         --enable-split-objs \
         --enable-shared \
         --prefix=/usr \

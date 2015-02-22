@@ -8,19 +8,19 @@
 ## NOTE: when you update Haskell packages you'll have to update the entire stack to not break it ##
 
 pkgname=hasktags
-pkgver=0.68.7
+pkgver=0.69.1
 pkgrel=1
 pkgdesc='Produces ctags “tags” and etags “TAGS” files for Haskell software'
 url="http://hackage.haskell.org/package/$pkgname"
 license=('custom:BSD3')
 arch=('x86_64')
-makedepends=('ghc=7.6.3' 'haskell-utf8-string' 'haskell-json')
+makedepends=('ghc' 'haskell-utf8-string' 'haskell-json')
 source=("http://hackage.haskell.org/packages/archive/$pkgname/$pkgver/$pkgname-$pkgver.tar.gz")
-md5sums=('298b5316da0283bfa6a519bcd9f1a4a2')
+md5sums=('997eb5ccc1a236c4a66b134bf60e9135')
 
 build() {
   cd $srcdir/$pkgname-$pkgver
-  runhaskell Setup configure -O \
+  runhaskell Setup configure -O -p \
     --prefix=/usr
   runhaskell Setup build
 }
@@ -31,7 +31,7 @@ package() {
 
   # Documentation
   install -Dm644 README $pkgdir/usr/share/doc/$pkgname/usage.txt
-  rm -R $pkgdir/usr/share/doc/$pkgname-$pkgver
+  rm -Rf $pkgdir/usr/share/doc/$pkgname-$pkgver
 
   # Legal
   install -Dm644 LICENSE $pkgdir/usr/share/licenses/$pkgname/license.txt

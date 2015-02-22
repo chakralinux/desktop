@@ -7,19 +7,17 @@
 #   This implies that all libraries need to be rebuilt when ghc is rebuilt.
 
 pkgname=ghc
-pkgver=7.6.1
+pkgver=7.8.4
 pkgrel=1
 pkgdesc='The Glasgow Haskell Compiler'
 arch=('i686' 'x86_64')
 url='http://www.haskell.org/ghc/'
 license=('custom')
-# libffi might be needed in the future: http://hackage.haskell.org/trac/ghc/ticket/4496
-depends=('perl' 'gmp>=5.0' 'gcc') # 'libffi')
+depends=('perl' 'gmp>=5.0' 'gcc' 'libffi')
 makedepends=('ghc' 'perl' 'libxslt' 'docbook-xsl')
 checkdepends=('python2')
 install='ghc.install'
-# keep this otherwise a lot of tests will show as unexpected failures... need to investigate why using -jn for n > 1 does this...
-#options=('!makeflags')
+options=('staticlibs')
 # missing rtl?
 provides=('haskell-array=0.4.0.1'
           'haskell-base=4.6.0.0'
@@ -70,8 +68,8 @@ replaces=('haskell-array<0.4.0.1'
 source=("http://www.haskell.org/ghc/dist/${pkgver}/ghc-${pkgver}-src.tar.bz2"
         "http://www.haskell.org/ghc/dist/${pkgver}/ghc-${pkgver}-testsuite.tar.bz2"
         'build.mk')
-md5sums=('e9d892d2970550ec5e70130b3621f6b6'
-         '0d93c458e3b445a7e524ef6ae459ce11'
+md5sums=('f4b8c79c356be70a1b340e19c24a01c1'
+         '00fa7fe874456210a6a6c21e095d85b4'
          'c367ef26300648ee9b8aca3dee5c9669')
 
 build() {
@@ -80,7 +78,9 @@ build() {
   cp ${srcdir}/build.mk mk/build.mk
 
   ./configure \
-    --prefix=/usr
+    --prefix=/usr \
+    --with-system-libffi \
+    --with-ffi-includes=/usr/lib/libffi-3.2.1/include
 
   make
 }
@@ -92,8 +92,8 @@ check() {
   cd ghc-${pkgver}
 
   # python2 rename
-  sed -e 's/PYTHON = python/&2/' -i testsuite/mk/boilerplate.mk
-  sed -e 's_#!/usr/bin/env python_&2_' -i testsuite/timeout/calibrate testsuite/timeout/timeout.py
+  #sed -e 's/PYTHON = python/&2/' -i testsuite/mk/boilerplate.mk
+  sed -e 's_#!/usr/bin/env python$_&2_' -i testsuite/timeout/calibrate testsuite/timeout/timeout.py
 
   # upstream known failures on both i686 and x86_64:
   #    ghci.debugger/scripts     break011 [bad stderr] (ghci)

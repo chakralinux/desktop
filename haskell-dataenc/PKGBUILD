@@ -4,23 +4,23 @@
 
 _hkgname=dataenc
 pkgname=haskell-dataenc
-pkgver=0.14.0.5
-pkgrel=2
+pkgver=0.14.0.7
+pkgrel=1
 pkgdesc="Data encoding library"
 url="http://hackage.haskell.org/package/${_hkgname}"
 license=('custom:BSD3')
 arch=('x86_64')
-depends=('ghc=7.6.3-1')
+depends=('ghc')
 options=('strip' 'staticlibs')
 source=(http://hackage.haskell.org/packages/archive/${_hkgname}/${pkgver}/${_hkgname}-${pkgver}.tar.gz)
 install=${pkgname}.install
-md5sums=('4da812ca7a1640a5fdcc676009ab160c')
+md5sums=('28491649dbeafb9512b4ea187cc6fddf')
 
 build() {
     cd ${srcdir}/${_hkgname}-${pkgver}
     runhaskell Setup configure \
         -O \
-        ${PKGBUILD_HASKELL_ENABLE_PROFILING:+-p } \
+        -p \
         --enable-split-objs \
         --enable-shared \
         --prefix="/usr" \

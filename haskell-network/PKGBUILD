@@ -9,23 +9,22 @@
 
 _hkgname=network
 pkgname=haskell-network
-pkgver=2.4.2.2
+pkgver=2.6.0.2
 pkgrel=1
 pkgdesc="Low-level networking interface"
 url="http://hackage.haskell.org/package/network"
 license=('custom:BSD3')
 arch=('x86_64')
-depends=('ghc=7.6.3-1' 'haskell-parsec>=3.0')
+depends=('ghc' 'haskell-parsec>=3.0')
 options=('strip' 'staticlibs')
 source=("http://hackage.haskell.org/packages/archive/network/${pkgver}/network-${pkgver}.tar.gz")
 install="${pkgname}.install"
-md5sums=('ef57169f445f33bfe553c25a7496cec8')
+md5sums=('c6e5e3fafedb45cd945b72e35cd3abe0')
 
 build() {
     cd "${srcdir}/network-${pkgver}"
     runhaskell Setup configure \
-        -O \
-        ${PKGBUILD_HASKELL_ENABLE_PROFILING:+-p } \
+        -O -p \
         --enable-split-objs \
         --enable-shared \
         --prefix=/usr \

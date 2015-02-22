@@ -9,23 +9,23 @@
 
 _hkgname=hslogger
 pkgname=haskell-hslogger
-pkgver=1.2.3
-pkgrel=3
+pkgver=1.2.8
+pkgrel=1
 pkgdesc="Versatile logging framework"
 url="http://hackage.haskell.org/package/hslogger"
 license=('custom:BSD3')
 arch=('x86_64')
-depends=('ghc=7.6.3' 'haskell-mtl' 'haskell-network')
+depends=('ghc' 'haskell-mtl' 'haskell-network')
 options=('strip' 'staticlibs')
 source=("http://hackage.haskell.org/packages/archive/${_hkgname}/${pkgver}/${_hkgname}-${pkgver}.tar.gz")
 install="${pkgname}.install"
-md5sums=('4047e50789860c8ac3e8998f7de68ca5')
+md5sums=('e5960e170f9809486ede60f8165bb770')
 
 build() {
     cd "${srcdir}/${_hkgname}-${pkgver}"
     runhaskell Setup configure \
         -O \
-        ${PKGBUILD_HASKELL_ENABLE_PROFILING:+-p } \
+        -p \
         --enable-split-objs \
         --enable-shared \
         --prefix=/usr \

@@ -9,7 +9,7 @@
 
 _hkgname=primitive
 pkgname=haskell-primitive
-pkgver=0.5.2.1
+pkgver=0.5.4.0
 pkgrel=1
 pkgdesc="Wrappers for primitive array operations"
 url="http://hackage.haskell.org/package/primitive"
@@ -19,15 +19,14 @@ makedepends=()
 depends=("ghc")
 options=('strip' 'staticlibs')
 source=("http://hackage.haskell.org/packages/archive/${_hkgname}/${pkgver}/${_hkgname}-${pkgver}.tar.gz")
-sha256sums=('0e516b81c2ef2c96d47dc40561663cc2cbfece0f135948e77e9b53025ff1c3ee')
 install="${pkgname}.install"
+sha256sums=('203c2a288a65ef6b75d2150d6f91f8204aa437add108d8e16cb9f581867ced15')
 
 build() {
     cd ${srcdir}/${_hkgname}-${pkgver}
     
       runhaskell Setup configure \
-        -O \
-        ${PKGBUILD_HASKELL_ENABLE_PROFILING:+-p } \
+        -O -p \
         --enable-split-objs \
         --enable-shared \
         --prefix=/usr \

@@ -10,12 +10,12 @@
 _hkgname=regex-base
 pkgname=haskell-regex-base
 pkgver=0.93.2
-pkgrel=8
+pkgrel=9
 pkgdesc="Replaces/Enhances Text.Regex"
 url="http://hackage.haskell.org/package/${_hkgname}"
 license=('custom:BSD3')
 arch=('x86_64')
-depends=('ghc=7.6.3-1' 'haskell-mtl=2.1.2')
+depends=('ghc' 'haskell-mtl')
 options=('strip' 'staticlibs')
 source=(http://hackage.haskell.org/packages/archive/${_hkgname}/${pkgver}/${_hkgname}-${pkgver}.tar.gz)
 install=${pkgname}.install
@@ -24,8 +24,7 @@ md5sums=('e7b93b0b17eff8d3068ecb2f5d5f6ea3')
 build() {
     cd ${srcdir}/${_hkgname}-${pkgver}
     runhaskell Setup configure \
-        -O \
-        ${PKGBUILD_HASKELL_ENABLE_PROFILING:+-p } \
+        -O -p \
         --enable-split-objs \
         --enable-shared \
         --prefix=/usr \

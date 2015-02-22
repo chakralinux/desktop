@@ -9,23 +9,22 @@
 
 _hkgname=parsec
 pkgname=haskell-parsec
-pkgver=3.1.5
+pkgver=3.1.8
 pkgrel=1
 pkgdesc="Monadic parser combinators"
 url="http://hackage.haskell.org/package/${_hkgname}"
 license=('custom:BSD3')
 arch=('x86_64')
-depends=('ghc=7.6.3-1' 'haskell-mtl' 'haskell-text')
+depends=('ghc' 'haskell-mtl' 'haskell-text')
 options=('strip'  'staticlibs')
 install=${pkgname}.install
 source=(http://hackage.haskell.org/packages/archive/${_hkgname}/${pkgver}/${_hkgname}-${pkgver}.tar.gz)
-md5sums=('00e822decff17a034a68c462d2a3e099')
+md5sums=('31ae00ec47cc85695c84f7bc15565fb3')
 
 build() {
     cd ${srcdir}/${_hkgname}-${pkgver}
     runhaskell Setup configure \
-        -O \
-        ${PKGBUILD_HASKELL_ENABLE_PROFILING:+-p } \
+        -O -p \
         --enable-split-objs \
         --enable-shared \
         --prefix=/usr \

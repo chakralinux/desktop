@@ -9,23 +9,22 @@
 
 _hkgname=tar
 pkgname=haskell-tar
-pkgver=0.4.0.1
-pkgrel=4
+pkgver=0.4.1.0
+pkgrel=1
 pkgdesc="Reading, writing and manipulating \".tar\" archive files."
 url="http://hackage.haskell.org/package/${_hkgname}"
 license=('custom:BSD3')
 arch=('x86_64')
-depends=('ghc=7.6.3')
+depends=('ghc')
 options=('strip' 'staticlibs')
 source=(http://hackage.haskell.org/packages/archive/${_hkgname}/${pkgver}/${_hkgname}-${pkgver}.tar.gz)
 install=${pkgname}.install
-md5sums=('a037976a434d6a55cad3e07f54686ffd')
+md5sums=('7be8e7c1d81983a1737f563903438aef')
 
 build() {
     cd ${srcdir}/${_hkgname}-${pkgver}
     runhaskell Setup configure \
-    -O \
-    ${PKGBUILD_HASKELL_ENABLE_PROFILING:+-p } \
+    -O -p \
     --enable-split-objs \
     --enable-shared \
     --prefix=/usr \

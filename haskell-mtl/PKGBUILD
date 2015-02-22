@@ -9,23 +9,23 @@
 
 _hkgname=mtl
 pkgname=haskell-mtl
-pkgver=2.1.2
-pkgrel=4
+pkgver=2.2.1
+pkgrel=1
 pkgdesc="Monad classes, using functional dependencies"
 url="http://hackage.haskell.org/package/${_hkgname}"
 license=('custom:BSD3')
 arch=('x86_64')
-depends=('ghc=7.6.3-1' "haskell-transformers=0.3.0.0")
+depends=('ghc' "haskell-transformers")
 options=('strip' 'staticlibs')
 source=(http://hackage.haskell.org/packages/archive/${_hkgname}/${pkgver}/${_hkgname}-${pkgver}.tar.gz)
 install=${pkgname}.install
-sha512sums=('ef8043adeb2746c770bebd4683c95c399bdc047c278b619d89230f342d13c33f0a9275c6be399e6da329f385ff209ff537e002b82d5075684202e8703fc5e29d')
+sha512sums=('5c31626b15551ee1757ad701b8e5552202bb6fe1dbd002039e3b78c6d01108a5c50f565c4993d165a00eb564d9d72fb8d2aae891b6242f0ca8cb11f7b95c5c6b')
 
 build() {
     cd ${srcdir}/${_hkgname}-${pkgver}
     runhaskell Setup configure \
         -O \
-        ${PKGBUILD_HASKELL_ENABLE_PROFILING:+-p } \
+        -p \
         --enable-split-objs \
         --enable-shared \
         --prefix=/usr \
