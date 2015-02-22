@@ -1,11 +1,9 @@
-# oxygen-fonts is in [platform]
 _build_desktop_plasma="
     libmm-qt5
     kfilemetadata5
     baloo-kf5
     libbluedevil-kf5
     bluedevil-kf5
-    kcm-touchpad-kf5
     polkit-kde-agent-frameworks
     kde-cli-tools
     libkscreen-kf5
@@ -16,6 +14,7 @@ _build_desktop_plasma="
     kwin
     breeze
     oxygen
+    oxygen-fonts
     libksysguard
     ksysguard
     plasma-workspace
@@ -26,7 +25,6 @@ _build_desktop_plasma="
     kmenuedit
     milou
     systemsettings
-    user-manager
     kde-gtk-config-kf5
     kdeplasma-addons-kf5
     plasma-desktop
@@ -34,9 +32,19 @@ _build_desktop_plasma="
     kscreen-kf5
     ksshaskpass
     plasma-workspace-wallpapers
-    sddm-kcm
-    breeze-kde4
-    oxygen-kde4"
+    sddm
+    sddm-kcm"
+    UPDATE platform > fontforge before STARTING THE BUILD
 
-_build_desktop_plasmaextra="
-    baloo-widgets-kf5"
+Total files above: 36 > 35 come from KDE Plasma 5.2 tars + sddm (github)
+KDE Plasma 5.2 tars > 37 files > 34 files + kwin (dual version) + muon + sums
+
+Notes:
+don't build muon 
+
+During 5.2 build these changes occured:
+kwin > available version 5.2.0.1 
+merged breeze + breeze4 packages
+merged oxygen + oxygen-kde4 packages
+moved oxygen-fonts from platform to desktop
+kcm-touchpad-kf5 was not built cause not upstream tar available (remained on 5.1.95)

@@ -1,16 +1,16 @@
+#contributions from Arch: https://www.archlinux.org/packages/extra/x86_64/libmm-qt5/
 source ../plasma.conf
 
 pkgname=libmm-qt5
 _pkgname=libmm-qt
 pkgver=${PVersion}
 pkgrel=1
-pkgdesc="Plasma Workspace"
+pkgdesc="Qt5 wrapper for ModemManager DBus API"
 arch=('x86_64')
-url='http://projects.kde.org'
+url='https://projects.kde.org/projects/extragear/libs/libmm-qt'
 license=('LGPL')
-depends=('qt5-base' 'networkmanager')
-makedepends=('extra-cmake-modules' 'kapidox')
-checkdepends=("cmake")
+depends=('qt5-base' 'modemmanager')
+makedepends=('extra-cmake-modules')
 groups=('plasma')
 options=("debug")
 source=("${PServer}/${pkgver}/${_pkgname}-${PSubVersion}.tar.xz")
@@ -22,13 +22,13 @@ prepare() {
 
 build() {
   cd build
-  cmake_kf5 ../${_pkgname}-${pkgver}
+  cmake_kf5 ../${_pkgname}-${pkgver} \
+    -DCMAKE_BUILD_TYPE=Release \
+    -DCMAKE_INSTALL_PREFIX=/usr \
+    -DLIB_INSTALL_DIR=lib \
+    -DKDE_INSTALL_USE_QT_SYS_PATHS=ON \
+    -DBUILD_TESTING=OFF
   make
-}
-
-check() {
-  cd build
-  make test || return 0
 }
 
 package() {

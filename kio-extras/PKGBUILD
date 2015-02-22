@@ -1,18 +1,16 @@
-# Contributor: Andrea Scarpino <andrea@archlinux.org>
-
+# Contributions from Arch: https://projects.archlinux.org/svntogit/packages.git/tree/trunk?h=packages/kio-extras
 source ../plasma.conf
 
 pkgname=kio-extras
 pkgver=${PVersion}
 pkgrel=1
-pkgdesc="KDE's screen management library"
+pkgdesc="Additional components to increase the functionality of KIO"
 arch=('x86_64')
-url='projects.kde.org/'
+url='https://projects.kde.org/projects/kde/workspace/kio-extras'
 license=('LGPL')
 depends=('kdelibs4support' 'khtml' 'kdnssd' 'libssh' 'smbclient' 'exiv2' 'openexr' 'openslp'
-         'libmtp' 'phonon-qt5' 'kpty')
+         'libmtp' 'kpty')
 makedepends=('extra-cmake-modules' 'kdoctools' 'python3')
-checkdepends=("cmake")
 groups=('plasma')
 options=("debug")
 source=("${PServer}/${pkgver}/${pkgname}-${PSubVersion}.tar.xz")
@@ -28,13 +26,12 @@ prepare() {
 build() {
   cd build
   cmake_kf5 ../${pkgname}-${pkgver} \
-    -DPYTHON_EXECUTABLE=/usr/bin/python3
+    -DCMAKE_BUILD_TYPE=Release \
+    -DCMAKE_INSTALL_PREFIX=/usr \
+    -DLIB_INSTALL_DIR=lib \
+    -DKDE_INSTALL_USE_QT_SYS_PATHS=ON \
+    -DBUILD_TESTING=OFF
   make
-}
-
-check() {
-  cd build
-  make test || return 0
 }
 
 package() {
