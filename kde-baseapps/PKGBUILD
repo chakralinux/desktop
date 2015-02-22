@@ -12,7 +12,7 @@ pkgname=('kde-baseapps'
         'kde-baseapps-konqueror-plugins')
 arch=('x86_64')
 pkgver=${_kdever}
-pkgrel=2
+pkgrel=3
 url="http://www.kde.org"
 license=('GPL' 'LGPL' 'FDL')
 options=('docs' '!header' 'debug' 'log')
@@ -82,6 +82,7 @@ package_kde-baseapps() {
     rm -vR ${pkgdir}/usr/share/applications/kde4/konqbrowser.desktop
     rm -vR ${pkgdir}/usr/share/apps/konqsidebartng
     rm -vR ${pkgdir}/usr/share/apps/konqueror
+    rm -vR ${pkgdir}/usr/share/appdata/konqueror.appdata.xml
 
     # Don't ship the Konqueror desktop file
     mv -v ${pkgdir}/usr/share/kde4/services/konqueror.desktop ${srcdir}/konqueror.desktop
