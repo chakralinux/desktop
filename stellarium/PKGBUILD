@@ -1,10 +1,10 @@
 #
-# Apps Packages for Chakra, part of chakra-project.org
+# Apps Packages for Chakra, part of chakraos.org
 #
 # Maintainer: Martín González <koteccr at gmail dot com>
 
 pkgname=stellarium
-pkgver=0.13.1
+pkgver=0.13.2
 pkgrel=1
 pkgdesc="A stellarium with great graphics and a nice database of sky-objects"
 arch=('x86_64')
@@ -12,19 +12,11 @@ url="http://www.stellarium.org/"
 screenshot=('http://www.stellarium.org/img/screenshots/0.10-from-mars.jpg')
 license=('GPL2')
 depends=('libpng' 'libgl' 'qt5-quick1' 'glu' 'openssl' 'zlib' 'gettext' 
-         'xdg-utils' 'freetype2' 'phonon' 'qt5-multimedia')
+         'xdg-utils' 'freetype2' 'phonon' 'qt5-multimedia' 'desktop-file-utils')
 makedepends=('cmake' 'boost' 'mesa' 'mesa-libgl' 'qt5-tools')
 categories=('education')
-source=("http://downloads.sourceforge.net/${pkgname}/${pkgname}-${pkgver}.tar.gz"
-        "stellarium-desktop.patch")
-sha256sums=('ceb69e058545236e46406adbb8e2cbb0a26078eae471a945df09131f61cc3278'
-            '50485fc974ce965039f825ca33f4bb4cf5a4dea76b4fce1a635c3027c287c7eb')
-
-prepare() {
-  cd ${pkgname}-${pkgver}
-  
-  patch -p1 -i ../stellarium-desktop.patch
-}
+source=("http://downloads.sourceforge.net/${pkgname}/${pkgname}-${pkgver}.tar.gz")
+sha256sums=('e5718e28d484b6f16e13f334fe91c3611557b46b7989f4bf68fdcb6d76c059ab')
 
 build() {
   cd ${pkgname}-${pkgver}
