@@ -1,22 +1,21 @@
-
-source ../frameworks.conf
+#Contributions from Arch: https://projects.archlinux.org/svntogit/packages.git/tree/trunk?h=packages/konsole
+source ../_buildscripts/${current_repo}-${_arch}-cfg.conf
 
 pkgname=konsole
-pkgver=4.98.0
-#pkgver=${KFVersion}
+pkgver=${_kdever}
 pkgrel=1
 pkgdesc="KDE's terminal emulator"
 arch=('x86_64')
-url='https://projects.kde.org/projects/kde/applications/kde-baseapps'
+url='http://kde.org/applications/system/konsole/'
 license=('LGPL')
-depends=('kio' 'kdelibs4support' 'kiconthemes' 'knotifyconfig' 'knotifications' 'kparts' 'kpty'
-         'kinit' 'kemoticons' 'kitemmodels')
-makedepends=('extra-cmake-modules' 'kdoctools' 'git')
-groups=('kf5')
+depends=('kdelibs4support' 'knotifyconfig' 'kpty')
+makedepends=('extra-cmake-modules' 'kdoctools' 'python3')
+groups=('kde')
 conflicts=('kde-baseapps-konsole')
-#source=("${KFServer}/${pkgver}/${pkgname}-${pkgver}.tar.xz")
-source=("git://anongit.kde.org/${pkgname}#branch=frameworks")
-md5sums=('SKIP')
+provides=('kde-baseapps-konsole')
+replaces=('kde-baseapps-konsole')
+source=("$_mirror/${pkgname}-$_kdever.tar.xz")
+sha256sums=(`grep ${pkgname}-$_kdever.tar.xz  ../checksums.txt | cut -d " " -f1`)
 
 prepare() {
   mkdir -p build
@@ -24,23 +23,15 @@ prepare() {
 
 build() {
   cd build
-  #cmake ../${pkgname}-${pkgver} \
-  cmake ../${pkgname} \
-    -DCMAKE_BUILD_TYPE=${KFBuildType} \
-    -DCMAKE_INSTALL_PREFIX=${KFInstallPrefix} \
-    -DQT4_BUILD=OFF \
-    -DLIB_INSTALL_DIR=lib 
+  cmake ../konsole-${pkgver} \
+    -DCMAKE_BUILD_TYPE=Release \
+    -DCMAKE_INSTALL_PREFIX=/usr \
+    -DCMAKE_INSTALL_LIBDIR=lib \
+    -DKDE_INSTALL_USE_QT_SYS_PATHS=ON
   make
 }
 
-check() {
-  cd build
-  msg "currently not working"
-  make test || return 0
-}
-
 package() {
-  cd build
+  cd "${srcdir}"/build
   make DESTDIR="${pkgdir}" install
 }
- 

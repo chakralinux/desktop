@@ -1,0 +1,38 @@
+#Contributions from Arch: https://projects.archlinux.org/svntogit/packages.git/tree/trunk?h=packages/parley
+source ../_buildscripts/${current_repo}-${_arch}-cfg.conf
+
+pkgname=parley
+pkgver=${_kdever}
+pkgrel=1
+pkgdesc="Vocabulary trainer"
+url="http://kde.org/applications/education/parley/"
+arch=('x86_64')
+license=('GPL' 'LGPL' 'FDL')
+depends=('kross' 'knewstuff' 'libkeduvocdocument' 'khtml' 'qt5-multimedia' 'kcmutils')
+makedepends=('extra-cmake-modules' 'kdoctools' 'python3')
+replaces=('kdeedu-parley')
+conflicts=('kdeedu-parley')
+provides=('kdeedu-parley')
+groups=("kde" "kdeedu" "kde-uninstall")
+categories=('education')
+install=${pkgname}.install
+source=("$_mirror/${pkgname}-$_kdever.tar.xz")
+sha256sums=(`grep ${pkgname}-$_kdever.tar.xz  ../checksums.txt | cut -d " " -f1`)
+
+prepare() {
+  mkdir -p build
+}
+
+build() {
+  cd build
+  cmake ../parley-${pkgver} \
+    -DCMAKE_BUILD_TYPE=Release \
+    -DCMAKE_INSTALL_PREFIX=/usr \
+    -DSYSCONF_INSTALL_DIR=/etc
+  make
+}
+
+package() {
+  cd build
+  make DESTDIR="${pkgdir}" install
+}

@@ -1,0 +1,40 @@
+# Contributions from Arch: https://projects.archlinux.org/svntogit/packages.git/tree/trunk?h=packages/okteta
+source ../_buildscripts/${current_repo}-${_arch}-cfg.conf
+
+pkgname="okteta"
+arch=('x86_64')
+pkgver=${_kdever}
+pkgrel=1
+pkgdesc="A hex editor"
+screenshot="http://www.kde.org/images/screenshots/okteta.png"
+groups=("kde" "kde-devel" "kdesdk" "kde-uninstall")
+depends=('kcmutils' 'kparts' 'knewstuff' 'qca-qt5')
+makedepends=('extra-cmake-modules' 'kdoctools' 'python3' 'qt5-tools')
+replaces=('kdesdk-okteta')
+conflicts=('kdesdk-okteta')
+provides=('kdesdk-okteta')
+install=${pkgname}.install
+license=('GPL' 'LGPL' 'FDL')
+source=("$_mirror/${pkgname}-$_kdever.tar.xz")
+sha256sums=(`grep ${pkgname}-$_kdever.tar.xz  ../checksums.txt | cut -d " " -f1`)
+
+prepare() {
+  mkdir build
+}
+
+build() {
+  cd build
+  cmake ../okteta-${pkgver} \
+    -DCMAKE_BUILD_TYPE=Release \
+    -DBUILD_TESTING=OFF \
+    -DCMAKE_INSTALL_PREFIX=/usr \
+    -DCMAKE_INSTALL_LIBDIR=lib \
+    -DSYSCONF_INSTALL_DIR=/etc \
+    -DKDE_INSTALL_USE_QT_SYS_PATHS=ON
+  make
+}
+
+package() {
+  cd build
+  make DESTDIR="$pkgdir" install
+}

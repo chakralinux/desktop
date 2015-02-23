@@ -1,0 +1,42 @@
+# Contributions from Arch: https://projects.archlinux.org/svntogit/packages.git/tree/trunk?h=packages/gwenview
+source ../_buildscripts/${current_repo}-${_arch}-cfg.conf
+
+pkgname=gwenview
+pkgver=${_kdever}
+pkgrel=1
+pkgdesc="A fast and easy to use image viewer for KDE"
+arch=('x86_64')
+url="http://kde.org/applications/graphics/gwenview/"
+license=('GPL' 'LGPL' 'FDL')
+depends=('kded' 'kactivities-frameworks' 'baloo-kf5')
+makedepends=('extra-cmake-modules' 'kdoctools' 'python3')
+install=${pkgname}.install
+groups=("kde" "kdegraphics" "kde-uninstall")
+categories=('graphics')
+provides=('gwenview')
+provides=('kdegraphics-gwenview')
+replaces=('kdegraphics-gwenview')
+conflicts=('kdegraphics-gwenview')
+source=("$_mirror/${pkgname}-$_kdever.tar.xz")
+sha256sums=(`grep ${pkgname}-$_kdever.tar.xz  ../checksums.txt | cut -d " " -f1`)
+
+prepare() {
+  mkdir build
+}
+
+build() {
+  cd build
+  cmake ../${pkgname}-${pkgver} \
+    -DCMAKE_BUILD_TYPE=Release \
+    -DCMAKE_INSTALL_PREFIX=/usr \
+    -DLIB_INSTALL_DIR=lib \
+    -DKDE_INSTALL_USE_QT_SYS_PATHS=ON \
+    -DGWENVIEW_SEMANTICINFO_BACKEND="Baloo" \
+    -DBUILD_TESTING=OFF
+  make
+}
+
+package() {
+  cd build
+  make DESTDIR="${pkgdir}" install
+}

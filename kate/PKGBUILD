@@ -1,45 +1,76 @@
+#contributions from Arch: https://projects.archlinux.org/svntogit/packages.git/tree/trunk?h=packages/kate
+source ../_buildscripts/${current_repo}-${_arch}-cfg.conf
 
-source ../frameworks.conf
 
-pkgname=kate
-#pkgver=${_kdever}
-pkgver=4.98.0
+pkgbase=kate
+pkgname=('kwrite'
+         'kate')
+pkgver=${_kdever}
 pkgrel=1
 pkgdesc='Advanced editor component which is used in numerous KDE applications requiring a text editing component'
 arch=('x86_64')
 url='https://projects.kde.org/projects/kde/applications/kate'
-license=('LGPL')
-depends=('kdelibs4support' 'kconfig' 'kguiaddons' 'ki18n' 'kinit' 'kjobwidgets' 'kitemmodels'
-         'kio' 'kparts' 'ktexteditor' 'kwindowsystem' 'kxmlgui')
-makedepends=('extra-cmake-modules' 'kdoctools' 'git')
-conflicts=('kdesdk-kate')
-#source=("http://download.kde.org/unstable/frameworks/${pkgver}/${pkgname}-${pkgver}.tar.xz")
-#md5sums=(`grep ${pkgname}-$_kdever.tar.xz ../kf5.md5 | cut -d" " -f1`)
-source=("git://anongit.kde.org/kate")
-md5sums=('SKIP')
+license=('GPL' 'LGPL' 'FDL')
+depends=('knewstuff' 'ktexteditor' 'threadweaver' 'kded' 'kitemmodels')
+makedepends=('extra-cmake-modules' 'kdoctools' 'python3' 'plasma-framework')
+optdepends=('kio-extras: extra protocols support (sftp, fish and more)')
+source=("$_mirror/${pkgbase}-$_kdever.tar.xz"
+        'fix-dolphin-hang.patch')
+sha256sums=("`grep ${pkgbase}-$_kdever.tar.xz  ../checksums.txt | cut -d " " -f1`"
+            '43ee92486397dcc1541911fca92454a28a5887140c5d4e32ceba98ccf35ddefd')
 
 prepare() {
-  mkdir -p build
+  mkdir build
+
+  # FS#43513 / https://bugs.kde.org/show_bug.cgi?id=339094
+  cd ${pkgbase}-${pkgver}
+  patch -p1 -i ../fix-dolphin-hang.patch
 }
 
 build() {
   cd build
-  #cmake ../${_pkgname}-${pkgver} \
-  cmake ../${pkgname} \
-    -DCMAKE_BUILD_TYPE=${KFBuildType} \
-    -DCMAKE_INSTALL_PREFIX=${KFInstallPrefix} \
-    -DQT4_BUILD=OFF \
-    -DLIB_INSTALL_DIR=lib 
+  cmake ../${pkgbase}-${pkgver} \
+    -DCMAKE_BUILD_TYPE=Release \
+    -DCMAKE_INSTALL_PREFIX=/usr \
+    -DCMAKE_INSTALL_LIBDIR=lib \
+    -DSYSCONF_INSTALL_DIR=/etc \
+    -DKDE_INSTALL_USE_QT_SYS_PATHS=ON \
+    -DBUILD_TESTING=OFF
   make
 }
 
-check() {
-  cd build
-  make test || return 0
-}
+package_kwrite() {
+  pkgdesc="Text Editor"
+  groups=('kde')
+  url="http://www.kde.org/applications/utilities/kwrite/"
+  install='kwrite.install'
+  replaces=('kde-baseapps-kwrite')
+  conflicts=('kde-baseapps-kwrite')
+  provides=('kde-baseapps-kwrite')
 
-package() {
-  cd build
+  cd build/kwrite
+  make DESTDIR="${pkgdir}" install
+
+  cd ../../build/doc/kwrite
   make DESTDIR="${pkgdir}" install
 }
- 
+
+package_kate() {
+  pkgdesc="Advanced Text Editor"
+  groups=('kde')
+  url="http://www.kde.org/applications/utilities/kate/"
+  install='kate.install'
+  replaces=('kdesdk-kate')
+  conflicts=('kdesdk-kate')
+  provides=('kdesdk-kate')
+  optdepends=('konsole: open a terminal in Kate')
+
+  cd build/kate
+  make DESTDIR="${pkgdir}" install
+
+  cd ../../build/doc/kate
+  make DESTDIR="${pkgdir}" install
+
+  cd ../../../build/addons
+  make DESTDIR="${pkgdir}" install
+}
