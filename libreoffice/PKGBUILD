@@ -185,28 +185,28 @@ noextract=(
 
 
 prepare() {
-    cd ${srcdir}/libreoffice-$_LOver
+    cd $srcdir/libreoffice-$_LOver
     
     # fix exttextcat build error
     # /usr/include/features.h:330:4: error: #warning _FORTIFY_SOURCE requires compiling with optimization (-O) [-Werror=cpp]
     unset CPPFLAGS
 
         # move external sources into place
-        mkdir -p ${srcdir}/ext_sources &&       pushd ${srcdir}/ext_sources
+        mkdir -p $srcdir/ext_sources &&       pushd $srcdir/ext_sources
         for source in "${noextract[@]}"; do
-          ln -sf ${srcdir}/$source .
+          ln -sf $srcdir/$source .
         done
         popd
 
     # unowinreg.dll must be a file not a symlink or the result will become a broken symlink
     # /usr/share/libreoffice/sdk/classes/win/unowinreg.dll -> /build/libreoffice/src/185d60944ea767075d27247c3162b3bc-unowinreg.dll
-    rm ${srcdir}/ext_sources/185d60944ea767075d27247c3162b3bc-unowinreg.dll
-    cp -f ${srcdir}/185d60944ea767075d27247c3162b3bc-unowinreg.dll ${srcdir}/ext_sources
+    rm $srcdir/ext_sources/185d60944ea767075d27247c3162b3bc-unowinreg.dll
+    cp -f $srcdir/185d60944ea767075d27247c3162b3bc-unowinreg.dll $srcdir/ext_sources
    
     # fix not upstreamable pyuno paths - patch taken from Debian
-    patch -Np1 -i ${srcdir}/make-pyuno-work-with-system-wide-module-install.diff
+    patch -Np1 -i $srcdir/make-pyuno-work-with-system-wide-module-install.diff
     
-    patch -Np1 -i ${srcdir}/libreoffice-mergedlibs-circular-deps.patch
+    patch -Np1 -i $srcdir/libreoffice-mergedlibs-circular-deps.patch
 
     
     #use the CFLAGS but remove the LibO overridden ones
@@ -222,10 +222,12 @@ build() {
 
     cd libreoffice-$_LOver
 
-    ./autogen.sh --with-build-version="${_LOver} Chakra GNU/Linux-${pkgrel}" --with-vendor="Chakra GNU/Linux" \
+   sed -i '/CppunitTest_macros_test/d' sw/Module_sw.mk
+   
+   ./autogen.sh --with-build-version="${_LOver} Chakra GNU/Linux-${pkgrel}" --with-vendor="Chakra GNU/Linux" \
                 --enable-split-app-modules \
                 --with-parallelism=${MAKEFLAGS/-j/} \
-                --with-external-tar="${srcdir}/ext_sources" \
+                --with-external-tar="$srcdir/ext_sources" \
                 --disable-fetch-external \
                 --disable-verbose \
                 --enable-release-build \
@@ -307,7 +309,7 @@ build() {
         make build
 	# fake installation to create split file lists
 	mkdir $srcdir/fakeinstall
-	make DESTDIR=${srcdir}/fakeinstall distro-pack-install
+	make DESTDIR=$srcdir/fakeinstall distro-pack-install
 }
 
 package_libreoffice-common() {
@@ -346,7 +348,7 @@ provides=('libreoffice-extension-pdfimport'
           'libreoffice-extension-presentation-minimizer')
 
  # create directories from *list.txt file
- for directory in `grep ^%dir ${srcdir}/libreoffice-$_LOver/file-lists/common_list.txt`; do
+ for directory in `grep ^%dir $srcdir/libreoffice-$_LOver/file-lists/common_list.txt`; do
    install -dm755 ${pkgdir}/${directory/\%dir/}
  done
  # install files into the pkg from fakeinstall dir
@@ -355,7 +357,7 @@ provides=('libreoffice-extension-pdfimport'
    # check if directory has been already been created - some are missing like manpages
    [ -d ${pkgdir}/$dirname ] || install -dm755 ${pkgdir}/$dirname
    # mv file from fakeinstall to pkgdir
-   mv ${srcdir}/fakeinstall${file} ${pkgdir}$file
+   mv $srcdir/fakeinstall${file} ${pkgdir}$file
  done
  
  # put configuration files into place
@@ -374,16 +376,16 @@ provides=('libreoffice-extension-pdfimport'
  rm -rf ${pkgdir}/etc/bash_completion.d
 
  # remove conflicting files
- rm -f ${pkgdir}/usr/lib/libreoffice/program/classes/ScriptProviderForJavaScript.jar
+# rm -f ${pkgdir}/usr/lib/libreoffice/program/classes/ScriptProviderForJavaScript.jar
  rm -f ${pkgdir}/usr/lib/libreoffice/program/classes/js.jar
- rm -f ${pkgdir}/usr/lib/libreoffice/program/services/scriptproviderforjavascript.rdb
+# rm -f ${pkgdir}/usr/lib/libreoffice/program/services/scriptproviderforjavascript.rdb
 
  # workaround all packages now depend on that file
- cp ${srcdir}/fakeinstall/usr/lib/libreoffice/share/registry/writer.xcd ${pkgdir}/usr/lib/libreoffice/share/registry/writer.xcd
+ cp $srcdir/fakeinstall/usr/lib/libreoffice/share/registry/writer.xcd ${pkgdir}/usr/lib/libreoffice/share/registry/writer.xcd
 
  # add missing files from Beanshell provider
  # create directories from *list.txt file
- for directory in `grep ^%dir ${srcdir}/libreoffice-$_LOver/file-lists/orig/gid_Module_Optional_Extensions_Script_Provider_For_BS`; do
+ for directory in `grep ^%dir $srcdir/libreoffice-$_LOver/file-lists/orig/gid_Module_Optional_Extensions_Script_Provider_For_BS`; do
    install -dm755 ${pkgdir}/${directory/\%dir/}
  done
  # install files into the pkg from fakeinstall dir
@@ -392,11 +394,11 @@ provides=('libreoffice-extension-pdfimport'
    # check if directory has been already been created - some are missing like manpages
    [ -d ${pkgdir}/$dirname ] || install -dm755 ${pkgdir}/$dirname
    # mv file from fakeinstall to pkgdir
-   mv ${srcdir}/fakeinstall${file} ${pkgdir}$file || /bin/true # some double file entries make it fail
+   mv $srcdir/fakeinstall${file} ${pkgdir}$file || /bin/true # some double file entries make it fail
  done
  # move dicts to en-US langpack to avoid file conflicts with en-GBen-ZA packages
  rm ${pkgdir}/usr/lib/libreoffice/share/wordbook/en-GB.dic
- mv ${pkgdir}/usr/lib/libreoffice/share/wordbook/en-US.dic ${srcdir}/
+ mv ${pkgdir}/usr/lib/libreoffice/share/wordbook/en-US.dic $srcdir/
 }
 
 package_libreoffice-base() {
@@ -408,7 +410,7 @@ package_libreoffice-base() {
  replaces=('libreoffice')
 
  # create directories from *list.txt file
- for directory in `grep ^%dir ${srcdir}/libreoffice-$_LOver/file-lists/base_list.txt`; do
+ for directory in `grep ^%dir $srcdir/libreoffice-$_LOver/file-lists/base_list.txt`; do
    install -dm755 ${pkgdir}/${directory/\%dir/}
  done
  # install files into the pkg from fakeinstall dir
@@ -417,7 +419,7 @@ package_libreoffice-base() {
    # check if directory has been already been created - some are missing like manpages
    [ -d ${pkgdir}/$dirname ] || install -dm755 ${pkgdir}/$dirname
    # mv file from fakeinstall to pkgdir
-   mv ${srcdir}/fakeinstall${file} ${pkgdir}$file
+   mv $srcdir/fakeinstall${file} ${pkgdir}$file
  done
 }
 
@@ -428,11 +430,11 @@ package_libreoffice-postgresql-connector() {
  replaces=('libreoffice')
 
  # workaround double entries in the file list
- mv ${srcdir}/libreoffice-$_LOver/file-lists/postgresql_list.txt ${srcdir}/libreoffice-$_LOver/file-lists/postgresql_list.txt.orig
- sort ${srcdir}/libreoffice-$_LOver/file-lists/postgresql_list.txt.orig | uniq 1>& ${srcdir}/libreoffice-$_LOver/file-lists/postgresql_list.txt
+ mv $srcdir/libreoffice-$_LOver/file-lists/postgresql_list.txt $srcdir/libreoffice-$_LOver/file-lists/postgresql_list.txt.orig
+ sort $srcdir/libreoffice-$_LOver/file-lists/postgresql_list.txt.orig | uniq 1>& $srcdir/libreoffice-$_LOver/file-lists/postgresql_list.txt
 
  # create directories from *list.txt file
- for directory in `grep ^%dir ${srcdir}/libreoffice-$_LOver/file-lists/postgresql_list.txt`; do
+ for directory in `grep ^%dir $srcdir/libreoffice-$_LOver/file-lists/postgresql_list.txt`; do
    install -dm755 ${pkgdir}/${directory/\%dir/}
  done
  # install files into the pkg from fakeinstall dir
@@ -441,7 +443,7 @@ package_libreoffice-postgresql-connector() {
    # check if directory has been already been created - some are missing like manpages
    [ -d ${pkgdir}/$dirname ] || install -dm755 ${pkgdir}/$dirname
    # mv file from fakeinstall to pkgdir
-   mv ${srcdir}/fakeinstall${file} ${pkgdir}$file
+   mv $srcdir/fakeinstall${file} ${pkgdir}$file
  done
 }
 
@@ -455,7 +457,7 @@ package_libreoffice-calc() {
  replaces=('libreoffice')
  
  # create directories from *list.txt file
- for directory in `grep ^%dir ${srcdir}/libreoffice-$_LOver/file-lists/calc_list.txt`; do
+ for directory in `grep ^%dir $srcdir/libreoffice-$_LOver/file-lists/calc_list.txt`; do
    install -dm755 ${pkgdir}/${directory/\%dir/}
  done
  # install files into the pkg from fakeinstall dir
@@ -464,7 +466,7 @@ package_libreoffice-calc() {
    # check if directory has been already been created - some are missing like manpages
    [ -d ${pkgdir}/$dirname ] || install -dm755 ${pkgdir}/$dirname
    # mv file from fakeinstall to pkgdir
-   mv ${srcdir}/fakeinstall${file} ${pkgdir}$file
+   mv $srcdir/fakeinstall${file} ${pkgdir}$file
  done
 }
 
@@ -477,7 +479,7 @@ package_libreoffice-draw() {
  replaces=('libreoffice')
  
  # create directories from *list.txt file
- for directory in `grep ^%dir ${srcdir}/libreoffice-$_LOver/file-lists/draw_list.txt`; do
+ for directory in `grep ^%dir $srcdir/libreoffice-$_LOver/file-lists/draw_list.txt`; do
    install -dm755 ${pkgdir}/${directory/\%dir/}
  done
  # install files into the pkg from fakeinstall dir
@@ -486,7 +488,7 @@ package_libreoffice-draw() {
    # check if directory has been already been created - some are missing like manpages
    [ -d ${pkgdir}/$dirname ] || install -dm755 ${pkgdir}/$dirname
    # mv file from fakeinstall to pkgdir
-   mv ${srcdir}/fakeinstall${file} ${pkgdir}$file
+   mv $srcdir/fakeinstall${file} ${pkgdir}$file
  done
 }
 
@@ -499,7 +501,7 @@ package_libreoffice-impress() {
  replaces=('libreoffice')
  
  # create directories from *list.txt file
- for directory in `grep ^%dir ${srcdir}/libreoffice-$_LOver/file-lists/impress_list.txt`; do
+ for directory in `grep ^%dir $srcdir/libreoffice-$_LOver/file-lists/impress_list.txt`; do
    install -dm755 ${pkgdir}/${directory/\%dir/}
  done
  # install files into the pkg from fakeinstall dir
@@ -508,7 +510,7 @@ package_libreoffice-impress() {
    # check if directory has been already been created - some are missing like manpages
    [ -d ${pkgdir}/$dirname ] || install -dm755 ${pkgdir}/$dirname
    # mv file from fakeinstall to pkgdir
-   mv ${srcdir}/fakeinstall${file} ${pkgdir}$file
+   mv $srcdir/fakeinstall${file} ${pkgdir}$file
  done
 }
 
@@ -521,10 +523,10 @@ package_libreoffice-kde4() {
  
  # Merge kde and kde4 filelists as we do not bother with compat anymore
  # Not worth fixing unless really cleaning up the install completely
- cat ${srcdir}/libreoffice-$_LOver/file-lists/kde_list.txt >> ${srcdir}/libreoffice-$_LOver/file-lists/kde4_list.txt
+ cat $srcdir/libreoffice-$_LOver/file-lists/kde_list.txt >> $srcdir/libreoffice-$_LOver/file-lists/kde4_list.txt
  
  # create directories from *list.txt file
- for directory in `grep ^%dir ${srcdir}/libreoffice-$_LOver/file-lists/kde4_list.txt`; do
+ for directory in `grep ^%dir $srcdir/libreoffice-$_LOver/file-lists/kde4_list.txt`; do
    install -dm755 ${pkgdir}/${directory/\%dir/}
  done
  # install files into the pkg from fakeinstall dir
@@ -533,7 +535,7 @@ package_libreoffice-kde4() {
    # check if directory has been already been created - some are missing like manpages
    [ -d ${pkgdir}/$dirname ] || install -dm755 ${pkgdir}/$dirname
    # mv file from fakeinstall to pkgdir
-   mv ${srcdir}/fakeinstall${file} ${pkgdir}$file
+   mv $srcdir/fakeinstall${file} ${pkgdir}$file
  done
 }
 
@@ -546,7 +548,7 @@ package_libreoffice-math() {
  replaces=('libreoffice')
  
  # create directories from *list.txt file
- for directory in `grep ^%dir ${srcdir}/libreoffice-$_LOver/file-lists/math_list.txt`; do
+ for directory in `grep ^%dir $srcdir/libreoffice-$_LOver/file-lists/math_list.txt`; do
    install -dm755 ${pkgdir}/${directory/\%dir/}
  done
  # install files into the pkg from fakeinstall dir
@@ -555,7 +557,7 @@ package_libreoffice-math() {
    # check if directory has been already been created - some are missing like manpages
    [ -d ${pkgdir}/$dirname ] || install -dm755 ${pkgdir}/$dirname
    # mv file from fakeinstall to pkgdir
-   mv ${srcdir}/fakeinstall${file} ${pkgdir}$file
+   mv $srcdir/fakeinstall${file} ${pkgdir}$file
  done
 }
 
@@ -567,7 +569,7 @@ package_libreoffice-sdk() {
  groups=('libreoffice')
  
  # create directories from *list.txt file
- for directory in `grep ^%dir ${srcdir}/libreoffice-$_LOver/file-lists/sdk_list.txt`; do
+ for directory in `grep ^%dir $srcdir/libreoffice-$_LOver/file-lists/sdk_list.txt`; do
    install -dm755 ${pkgdir}/${directory/\%dir/}
  done
  # install files into the pkg from fakeinstall dir
@@ -576,7 +578,7 @@ package_libreoffice-sdk() {
    # check if directory has been already been created - some are missing like manpages
    [ -d ${pkgdir}/$dirname ] || install -dm755 ${pkgdir}/$dirname
    # mv file from fakeinstall to pkgdir
-   mv ${srcdir}/fakeinstall${file} ${pkgdir}$file
+   mv $srcdir/fakeinstall${file} ${pkgdir}$file
  done
 }
 
@@ -588,7 +590,7 @@ package_libreoffice-sdk-doc() {
  groups=('libreoffice')
  
  # create directories from *list.txt file
- for directory in `grep ^%dir ${srcdir}/libreoffice-$_LOver/file-lists/sdk_doc_list.txt`; do
+ for directory in `grep ^%dir $srcdir/libreoffice-$_LOver/file-lists/sdk_doc_list.txt`; do
    install -dm755 ${pkgdir}/${directory/\%dir/}
  done
  # install files into the pkg from fakeinstall dir
@@ -597,7 +599,7 @@ package_libreoffice-sdk-doc() {
    # check if directory has been already been created - some are missing like manpages
    [ -d ${pkgdir}/$dirname ] || install -dm755 ${pkgdir}/$dirname
    # mv file from fakeinstall to pkgdir
-   mv ${srcdir}/fakeinstall${file} ${pkgdir}$file
+   mv $srcdir/fakeinstall${file} ${pkgdir}$file
  done
 
  #fix permissions
@@ -613,7 +615,7 @@ package_libreoffice-writer() {
  replaces=('libreoffice')
 
  # create directories from *list.txt file
- for directory in `grep ^%dir ${srcdir}/libreoffice-$_LOver/file-lists/writer_list.txt`; do
+ for directory in `grep ^%dir $srcdir/libreoffice-$_LOver/file-lists/writer_list.txt`; do
    install -dm755 ${pkgdir}/${directory/\%dir/}
  done
  # install files into the pkg from fakeinstall dir
@@ -622,7 +624,7 @@ package_libreoffice-writer() {
    # check if directory has been already been created - some are missing like manpages
    [ -d ${pkgdir}/$dirname ] || install -dm755 ${pkgdir}/$dirname
    # mv file from fakeinstall to pkgdir
-   mv ${srcdir}/fakeinstall${file} ${pkgdir}$file
+   mv $srcdir/fakeinstall${file} ${pkgdir}$file
  done
 
  # workaround this file belongs now to common
@@ -635,7 +637,7 @@ package_libreoffice-en-US() {
   provides=('libreoffice-langpack')
 
  # create directories from *list.txt file
- for directory in `grep ^%dir ${srcdir}/libreoffice-$_LOver/file-lists/lang_en_US_list.txt`; do
+ for directory in `grep ^%dir $srcdir/libreoffice-$_LOver/file-lists/lang_en_US_list.txt`; do
    install -dm755 ${pkgdir}/${directory/\%dir/}
  done
  # install files into the pkg from fakeinstall dir
@@ -644,10 +646,10 @@ package_libreoffice-en-US() {
    # check if directory has been already been created - some are missing like manpages
    [ -d ${pkgdir}/$dirname ] || install -dm755 ${pkgdir}/$dirname
    # mv file from fakeinstall to pkgdir
-   mv ${srcdir}/fakeinstall${file} ${pkgdir}$file
+   mv $srcdir/fakeinstall${file} ${pkgdir}$file
  done
  # en-US.dic
- install -Dm644 ${srcdir}/en-US.dic ${pkgdir}/usr/lib/libreoffice/share/wordbook/en-US.dic
+ install -Dm644 $srcdir/en-US.dic ${pkgdir}/usr/lib/libreoffice/share/wordbook/en-US.dic
 }
 
 package_libreoffice-extension-wiki-publisher() {
@@ -658,7 +660,7 @@ package_libreoffice-extension-wiki-publisher() {
  groups=('libreoffice-extensions')
 
 	install -dm755 ${pkgdir}/usr/lib/libreoffice/share/extensions
-	unzip -q ${srcdir}/libreoffice-$_LOver/workdir/Extension/wiki-publisher.oxt -d ${pkgdir}/usr/lib/libreoffice/share/extensions/wiki-publisher
+	unzip -q $srcdir/libreoffice-$_LOver/workdir/Extension/wiki-publisher.oxt -d ${pkgdir}/usr/lib/libreoffice/share/extensions/wiki-publisher
 }
 
 package_libreoffice-extension-nlpsolver() {
@@ -669,5 +671,5 @@ package_libreoffice-extension-nlpsolver() {
  groups=('libreoffice-extensions')
 
 	install -dm755 ${pkgdir}/usr/lib/libreoffice/share/extensions
-	unzip -q ${srcdir}/libreoffice-$_LOver/workdir/Extension/nlpsolver.oxt -d ${pkgdir}/usr/lib/libreoffice/share/extensions/nlpsolver
+	unzip -q $srcdir/libreoffice-$_LOver/workdir/Extension/nlpsolver.oxt -d ${pkgdir}/usr/lib/libreoffice/share/extensions/nlpsolver
 }
