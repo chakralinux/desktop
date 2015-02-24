@@ -1,52 +1,36 @@
-# maintainer (i686): Phil Miller <philm[at]chakra-project[dog]org>
-# maintainer (x86_64): Manuel Tortosa <manutortosa[at]chakra-project[dot]org>
-
-# include global config
-#source ../_buildscripts/${current_repo}-${_arch}-cfg.conf
+# Maintainer: Jeff Huang <philm[at]chakra-project[dog]org>
+# Contributer: Phil Miller <philm[at]chakraos[dog]org>
+# Contributer: Manuel Tortosa <manutortosa[at]chakraos[dot]org>
 
 pkgname=kchmviewer
-pkgver=7.1
+pkgver=7.3
 pkgrel=1
 pkgdesc="A .chm files (MS HTML help file format) viewer"
 arch=('i686' 'x86_64')
 url="http://kchmviewer.sourceforge.net/"
 license=('GPL')
-depends=('chmlib' 'desktop-file-utils' 'kdelibs' 'libzip' 'qt' 'xdg-utils')
-makedepends=('automoc4' 'cmake')
+depends=('desktop-file-utils' 'chmlib' 'xdg-utils' 'libzip' 'qt5-webkit')
+makedepends=('qt5-tools')
 categories=('office')
 options=('libtool')
 install=${pkgname}.install
 source=("http://downloads.sourceforge.net/${pkgname}/${pkgname}-${pkgver}.tar.gz")
-        #'kchmview-build-fix.diff')
-md5sums=('bdf99e82f0f95e29bf9e24b86292601c')
-         #'555b08c8aca9883e7916dc1fe11a8aea')
+sha256sums=('7cb805c9a836b7622bbea1d5df8873fb711979285abb21bccf095f25cf3f6007')
 
-prepare() {
-  cd "${srcdir}/${pkgname}-${pkgver}"
-  sed -e "/keyeventfilter.cpp/d" -i src/CMakeLists.txt
-}
 build() {
-  cd "${srcdir}/${pkgname}-${pkgver}"
+  cd $pkgname-$pkgver
 
-  # got patch from http://bugs.gentoo.org/320191
-  #patch -Np1 -i ${srcdir}/kchmview-build-fix.diff
-  [[ -d build ]] || mkdir build ; cd build
-  cmake -DCMAKE_INSTALL_PREFIX=/usr ..
-
+  qmake-qt5 PREFIX=/usr
   make
 }
 
 package() {
-  cd "${srcdir}/${pkgname}-${pkgver}/build"
+  cd $pkgname-$pkgver
 
-  make DESTDIR=${pkgdir} install
+#   make DISTDIR="${pkgdir}" install
 
-  #icon file
-  install -D -m644 ${srcdir}/${pkgname}-${pkgver}/packages/${pkgname}.png \
-    ${pkgdir}/usr/share/pixmaps/${pkgname}.png
-
-  #msits.protocol file provided by kdegraphics package
-  rm -rf ${pkgdir}/usr/share/kde4
-  #kio_msits.so file provided by kdegraphics package - FS#14376
-  rm -rf ${pkgdir}/usr/lib
+  install -Dm755 bin/$pkgname "${pkgdir}"/usr/bin/$pkgname
+#icon/desktop file
+  install -Dm644 packages/$pkgname.png "${pkgdir}"/usr/share/pixmaps/$pkgname.png
+  install -Dm644 packages/$pkgname.desktop "${pkgdir}"/usr/share/applications/$pkgname.desktop
 }
