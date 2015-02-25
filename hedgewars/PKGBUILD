@@ -1,34 +1,41 @@
 # Maintainer: Adrian Chaves Fernandez (Gallaecio) <adriyetichaves@gmail.com>
 
 pkgname=hedgewars
-pkgver=0.9.20
-_pkgver=${pkgver}
+pkgver=0.9.21
 pkgrel=1
 pkgdesc="Free turn based strategy game similar to Worms"
 arch=('x86_64')
 url="http://hedgewars.org"
 license=('GPL2')
-depends=('ffmpeg' 'lua' 'qt' 'sdl' 'sdl_mixer' 'sdl_image' 'sdl_net' 'sdl_ttf' 'ttf-dejavu' 'freeglut')
-makedepends=('fpc' 'cmake' 'ghc' 'haskell-bytestring-show' 'haskell-utf8-string' 'haskell-dataenc' 'haskell-network' 
-'haskell-hslogger' 'haskell-random' 'haskell-vector')
+depends=('ffmpeg' 'lua' 'qt' 'sdl' 'sdl_mixer' 'sdl_image' 'sdl_net' 'sdl_ttf' 'ttf-dejavu' 'freeglut' 'physfs')
+makedepends=('fpc' 'cmake'
+	     # haskell specific
+	     'ghc'
+	     'haskell-network'
+	     'haskell-bytestring-show'
+	     'haskell-utf8-string'
+	     'haskell-dataenc'
+	     'haskell-hslogger'
+	     'haskell-vector'
+	     'haskell-entropy'
+	     'haskell-sha'
+	     'haskell-zlib'
+	     'haskell-random')
 categories=('games')
-source=("http://download.gna.org/$pkgname/$pkgname-src-${_pkgver}.tar.bz2"
-        'ffmpeg2.0.patch')
-md5sums=('7ee1b23e51053d34feb84464184f60fa'
-         'da84d64a252579236d3ff0cc6e008e72')
-
-prepare() {
-  cd $pkgname-src-$pkgver
-  patch -p1 <$srcdir/ffmpeg2.0.patch      
-  sed -e "/^instance NFData B.ByteString\$/d" -i "gameServer/Actions.hs"
-}
+source=("http://download.gna.org/$pkgname/$pkgname-src-${pkgver}.tar.bz2"
+	hedgewars.png)
+md5sums=('67b57d00b91d3c1212dcb5d56ac6f2df'
+	 'eeb14d50df39063549ac5eca9dbc65d1')
       
 build() {
   cd $srcdir/$pkgname-src-$pkgver
   mkdir -p build && cd build
+  #Temporarily disable server's feature,it depends on specific version's haskell modules.
   cmake \
         -DCMAKE_INSTALL_PREFIX=/usr \
         -DCMAKE_BUILD_TYPE=Release \
+        -DDATA_INSTALL_DIR=/usr/share/hedgewars \
+	-DNOSERVER=1 \
         ..
   make
 }
@@ -36,8 +43,7 @@ build() {
 package() {
   cd $srcdir/$pkgname-src-$pkgver/build
   make DESTDIR=$pkgdir install
-
-  # DejaVu Font.
-  rm $pkgdir/usr/share/$pkgname/Data/Fonts/DejaVuSans-Bold.ttf
-  ln -s /usr/share/fonts/TTF/DejaVuSans-Bold.ttf $pkgdir/usr/share/$pkgname/Data/Fonts/DejaVuSans-Bold.ttf
+  install -D -m644 $srcdir/hedgewars-src-${pkgver}/Fonts_LICENSE.txt $pkgdir/usr/share/licenses/$pkgname/Fonts_LICENSE.txt
+  install -D -m644 $srcdir/hedgewars.png $pkgdir/usr/share/pixmaps/hedgewars.png
+  install -D -m644 $srcdir/hedgewars-src-${pkgver}/share/hedgewars/Data/misc/hedgewars.desktop $pkgdir/usr/share/applications/hedgewars.desktop
 }
