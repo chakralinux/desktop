@@ -4,11 +4,11 @@
 # Include global configuration
 source ../_buildscripts/${current_repo}-${_arch}-cfg.conf
 
-pkgname='kde-runtime'
+pkgbase='kde-runtime'
+pkgname=('kde-runtime' 'khelpcenter4')
 arch=('x86_64')
 pkgver=${_kdever}
-pkgrel=1
-pkgdesc='Plugins and applications necessary for the running of KDE applications'
+pkgrel=2
 url='http://www.kde.org'
 license=('GPL'
          'LGPL'
@@ -17,20 +17,6 @@ options=('docs'
          '!header'
          'debug'
          'log')
-depends=("kdelibs>=${_libsver}"
-         "baloo>=${_oldkdever}"
-         "kactivities"
-         'oxygen-icons'
-         'xorg-xauth'
-         'hicolor-icon-theme'
-         'samba'
-         'rarian'
-         'libssh'
-         'libpulse'
-         'libssh>=0.6.0'
-         'libcanberra'
-         'sound-theme-freedesktop'
-         'libgcrypt')
 makedepends=('pkgconfig'
              'cmake'
              'automoc4'
@@ -40,41 +26,46 @@ makedepends=('pkgconfig'
              'networkmanager'
              'xine-lib'
              'libcanberra-pulse'
+             "kdelibs>=${_libsver}"
+             "baloo>=${_oldkdever}"
+             "kactivities"
+             'oxygen-icons'
+             'xorg-xauth'
+             'hicolor-icon-theme'
+             'samba'
+             'rarian'
+             'libssh'
+             'libpulse'
+             'libssh>=0.6.0'
+             'libcanberra'
+             'sound-theme-freedesktop'
+             'libgcrypt'
              'soprano')
-optdepends=('htdig: to build the search index'
-            'gdb: drkonq crash handler')
 groups=('kde'
         'kde-minimal'
         'kde-uninstall')
-replaces=('kdebase-runtime'
-          'kde-runtime-doc')
-provides=('kdebase-runtime'
-          'kde-runtime-doc'
-          'khelpcenter')
-conflicts=('kdebase-runtime'
-           'kde-runtime-doc')
 install=kde-runtime.install
 noextract=(branding.svgz)
-source=("$_mirror/${pkgname}-$_kdever.tar.xz"
+source=("$_mirror/${pkgbase}-$_kdever.tar.xz"
         'branding.svgz'
         'Remove-volume-control-from-KNotify.patch')
-sha256sums=(`grep ${pkgname}-$_kdever.tar.xz  ../checksums.txt | cut -d" " -f1`
+sha256sums=(`grep ${pkgbase}-$_kdever.tar.xz  ../checksums.txt | cut -d" " -f1`
             '586c5461d66ef13d5c43fb269e16c4da51812ae25a0d1b132f0bbbcdb22505e5'
             '87bb4bd5f20a95d10f03930477b7cc41c1a68b04e1ca57836b5836fe29c8e7bf')
 
 prepare() {
-    cd "${srcdir}/${pkgname}-${pkgver}"
-    rm -rf "${srcdir}/${pkgname}-${pkgver}/build"
-    mkdir "${srcdir}/${pkgname}-${pkgver}/build"
-    cp -f ${srcdir}/branding.svgz ${srcdir}/${pkgname}-${pkgver}/desktoptheme/oxygen/widgets/
-    cp -f ${srcdir}/branding.svgz ${srcdir}/${pkgname}-${pkgver}/desktoptheme/air/widgets/
+    cd "${srcdir}/${pkgbase}-${pkgver}"
+    rm -rf "${srcdir}/${pkgbase}-${pkgver}/build"
+    mkdir "${srcdir}/${pkgbase}-${pkgver}/build"
+    cp -f ${srcdir}/branding.svgz ${srcdir}/${pkgbase}-${pkgver}/desktoptheme/oxygen/widgets/
+    cp -f ${srcdir}/branding.svgz ${srcdir}/${pkgbase}-${pkgver}/desktoptheme/air/widgets/
 
     msg "Applying patches..."
     patch -p1 -i ${srcdir}/Remove-volume-control-from-KNotify.patch
 }
 
 build() {
-    cd "${srcdir}/${pkgname}-${pkgver}/build"
+    cd "${srcdir}/${pkgbase}-${pkgver}/build"
     cmake .. \
         -DCMAKE_BUILD_TYPE=${_build_type} \
         -DCMAKE_INSTALL_PREFIX=${_installprefix} \
@@ -84,13 +75,58 @@ build() {
     make
 }
 
-package() {
-    cd "${srcdir}/${pkgname}-${pkgver}/build"
+package_kde-runtime() {
+    pkgdesc='Plugins and applications necessary for the running of KDE applications'
+    depends=("kdelibs>=${_libsver}"
+             "baloo>=${_oldkdever}"
+             "kactivities"
+             'oxygen-icons'
+             'xorg-xauth'
+             'hicolor-icon-theme'
+             'samba'
+             'rarian'
+             'libssh'
+             'libpulse'
+             'libssh>=0.6.0'
+             'libcanberra'
+             'sound-theme-freedesktop'
+             'libgcrypt')
+    optdepends=('htdig: to build the search index'
+                'gdb: drkonq crash handler')
+    replaces=('kdebase-runtime'
+              'kde-runtime-doc')
+    provides=('kdebase-runtime'
+              'kde-runtime-doc')
+    conflicts=('kdebase-runtime'
+               'kde-runtime-doc')
+
+    cd "${srcdir}/${pkgbase}-${pkgver}/build"
     make DESTDIR=${pkgdir} install
     # put kdesu into the path
     cp ${pkgdir}/usr/lib/kde4/libexec/kdesu ${pkgdir}/usr/bin/kdesu
     # WORKAROUND, conflict with hicolor-icon-theme
     rm -rf ${pkgdir}/usr/share/icons/hicolor/index.theme
     rm -rf ${pkgdir}/usr/share/icons/default.kde4
+    # split khelpcenter
+    rm  "${pkgdir}"/usr/lib/kde4/libexec/khc_indexbuilder \
+        "${pkgdir}"/usr/lib/libkdeinit4_khelpcenter.so \
+        "${pkgdir}"/usr/bin/khelpcenter \
+        "${pkgdir}"/usr/share/applications/kde4/Help.desktop \
+        "${pkgdir}"/usr/share/config.kcfg/khelpcenter.kcfg \
+        "${pkgdir}"/usr/share/kde4/services/khelpcenter.desktop \
+        "${pkgdir}"/usr/share/dbus-1/interfaces/org.kde.khelpcenter.kcmhelpcenter.xml \
+        "${pkgdir}"/usr/lib/kde4/libexec/khc_htdig.pl \
+        "${pkgdir}"/usr/lib/kde4/libexec/khc_htsearch.pl \
+        "${pkgdir}"/usr/lib/kde4/libexec/khc_mansearch.pl \
+        "${pkgdir}"/usr/lib/kde4/libexec/khc_docbookdig.pl
+    rm -r "${pkgdir}"/usr/share/apps/khelpcenter/
+
 }
 
+package_khelpcenter4() {
+    pkgdesc="Application to show KDE Applications' documentation"
+    provides=('khelpcenter')
+    depends=("kde-runtime=${pkgver}")
+    cd "${srcdir}/${pkgbase}-${pkgver}/build/khelpcenter"
+    make DESTDIR=${pkgdir} install
+}
