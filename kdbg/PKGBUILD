@@ -2,19 +2,18 @@
 # Contributor: abveritas[at]chakra-project[dot]org>
 
 pkgname=kdbg
-pkgver=2.5.4
+pkgver=2.5.5
 pkgrel=1
 pkgdesc="A gdb GUI for KDE."
 arch=('x86_64')
 url="http://www.kdbg.org"
 license=("GPL")
 depends=('kde-runtime' 'gdb')
-makedepends=('automoc4')
-options=('libtool')
+makedepends=('automoc4' 'cmake' 'optipng')
 categories=('programming')
 screenshots=('http://www.kdbg.org/kdbgtotal.png')
 source=("http://downloads.sourceforge.net/kdbg/$pkgname-$pkgver.tar.gz")
-md5sums=('715219a810f39e02b493cab9c4a845a1')
+md5sums=('3c4271fb0c3be75d658a94c3ea6c6167')
 
 build() {
   cd $srcdir
@@ -24,7 +23,8 @@ build() {
     -DCMAKE_BUILD_TYPE=Release \
     -DCMAKE_INSTALL_PREFIX=/usr
 
-  make 
+  make
+  find -name '*.png' -exec optipng -quiet -force -fix {} \;
 }
 
 package() {
