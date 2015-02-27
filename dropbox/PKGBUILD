@@ -1,0 +1,58 @@
+# aur Maintainer: Massimiliano Torromeo <massimiliano.torromeo@gmail.com>
+# Contributor: Tom < tomgparchaur at gmail dot com >
+# Maintainer: ahjolinna <ahjolinna@ovi.com>
+
+pkgname=dropbox
+pkgver=3.2.6
+pkgrel=2
+pkgdesc="A free service that lets you bring your photos, docs, and videos anywhere and share them easily. (Experimental build)"
+arch=('x86_64')
+url="http://www.dropbox.com"
+license=(custom)
+depends=('dbus-glib' 'qt5-base' 'libsm')
+optdepends=(
+    'ufw-extras: ufw rules for dropbox'
+    'perl-file-mimeinfo: opening dropbox folder on some desktop environments'
+    'dropbox-servicemenu: servicemenu for KDE4'
+)
+provides=('dropbox' 'kfilebox')
+conflicts=('dropbox' 'kfilebox')
+replaces=('kfilebox')
+options=('!strip' '!upx')
+source=("https://dl-web.dropbox.com/u/17/${pkgname}-lnx.${arch}-${pkgver}.tar.gz"
+        "dropbox.png"
+        "dropbox.desktop"
+        "terms.txt"
+        "dropbox@.service")
+md5sums=('93b638aae7e536b2f5d1d1f7d932d0fb'
+         '2be5a57e477adf82a7d9b7fe77f22086'
+         '20c97082211cf02af494043b93d5feb8'
+         'c5805dbc29e952f21c83230aa725d5b0'
+         '9ab7095c79d4ae550ab798afeee0683f')
+
+
+
+package() {
+	install -d "$pkgdir/opt"
+	cp -R "$srcdir"/.dropbox-dist/dropbox-lnx.$arch-$pkgver "$pkgdir"/opt/dropbox
+ 
+	find "$pkgdir/opt/dropbox/" -type f -exec chmod 644 {} \;
+	find "$pkgdir/opt/dropbox/" -type d -exec chmod 755 {} \;
+	chmod 755 "$pkgdir/opt/dropbox/dropboxd"
+	chmod 755 "$pkgdir/opt/dropbox/dropbox"
+	chown -R root:root "$pkgdir/opt/dropbox"
+ 
+	install -d "$pkgdir/usr/bin"
+	ln -s "/opt/dropbox/dropboxd" "$pkgdir/usr/bin/dropboxd"
+ 
+	install -D -m 644 "$srcdir/dropbox.desktop" "$pkgdir/usr/share/applications/dropbox.desktop"
+	install -D -m 644 "$srcdir/dropbox.png" "$pkgdir/usr/share/pixmaps/dropbox.png"
+	install -D -m 644 "$srcdir/terms.txt" "$pkgdir/usr/share/licenses/$pkgname/terms.txt"
+	install -Dm644 "$srcdir/dropbox@.service" "$pkgdir/usr/lib/systemd/system/dropbox@.service"
+
+	rm -f "$pkgdir"/opt/dropbox/library.zip
+	ln -s dropbox "$pkgdir"/opt/dropbox/library.zip
+	
+} 
+
+ 
