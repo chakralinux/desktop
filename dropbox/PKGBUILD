@@ -1,22 +1,18 @@
-# aur Maintainer: Massimiliano Torromeo <massimiliano.torromeo@gmail.com>
-# Contributor: Tom < tomgparchaur at gmail dot com >
-# Maintainer: ahjolinna <ahjolinna@ovi.com>
+# Maintainer: Bruce Liu <brli@sourceforge.net>
 
 pkgname=dropbox
 pkgver=3.2.6
-pkgrel=2
+pkgrel=3
 pkgdesc="A free service that lets you bring your photos, docs, and videos anywhere and share them easily. (Experimental build)"
 arch=('x86_64')
 url="http://www.dropbox.com"
 license=(custom)
-depends=('dbus-glib' 'qt5-base' 'libsm')
+depends=('dbus-glib' 'libsm')
 optdepends=(
-    'ufw-extras: ufw rules for dropbox'
-    'perl-file-mimeinfo: opening dropbox folder on some desktop environments'
     'dropbox-servicemenu: servicemenu for KDE4'
 )
-provides=('dropbox' 'kfilebox')
-conflicts=('dropbox' 'kfilebox')
+provides=('kfilebox')
+conflicts=('kfilebox')
 replaces=('kfilebox')
 options=('!strip' '!upx')
 source=("https://dl-web.dropbox.com/u/17/${pkgname}-lnx.${arch}-${pkgver}.tar.gz"
@@ -29,9 +25,7 @@ md5sums=('93b638aae7e536b2f5d1d1f7d932d0fb'
          '20c97082211cf02af494043b93d5feb8'
          'c5805dbc29e952f21c83230aa725d5b0'
          '9ab7095c79d4ae550ab798afeee0683f')
-
-
-
+install="${pkgname}.install"
 package() {
 	install -d "$pkgdir/opt"
 	cp -R "$srcdir"/.dropbox-dist/dropbox-lnx.$arch-$pkgver "$pkgdir"/opt/dropbox
@@ -52,7 +46,20 @@ package() {
 
 	rm -f "$pkgdir"/opt/dropbox/library.zip
 	ln -s dropbox "$pkgdir"/opt/dropbox/library.zip
-	
-} 
 
- 
+        # FIXME: dirty hack to replace Qt5 libs with system ones
+        #for i in libQt5Core.so.5 \
+        #         libQt5Gui.so.5 \
+        #         libQt5OpenGL.so.5 \
+        #         libQt5Qml.so.5 \
+        #         libQt5Sql.so.5 \
+        #         libQt5WebKitWidgets.so.5 \
+        #         libQt5DBus.so.5 \
+        #         libQt5Network.so.5 \
+        #         libQt5PrintSupport.so.5 \
+        #         libQt5Quick.so.5 \
+        #         libQt5WebKit.so.5 \
+        #         libQt5Widgets.so.5 ; do
+        #ln -sfv /usr/lib/${i} ${pkgdir}/opt/dropbox/
+        #done
+}
