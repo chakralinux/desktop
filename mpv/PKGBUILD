@@ -4,7 +4,7 @@
 # Contributor: Samir Benmendil <ram-z[at]chakra-project[dot]org>
  
 pkgname=mpv
-pkgver=0.8.1
+pkgver=0.8.2
 pkgrel=1
 pkgdesc="A movie player and encoder for linux, based on MPlayer/mplayer2"
 arch=('x86_64')
@@ -20,7 +20,7 @@ makedepends=('mesa' 'python3-docutils' 'ladspa' 'x264' 'jack'
 options=('!emptydirs')
 install=${pkgname}.install
 source=("https://github.com/mpv-player/${pkgname}/archive/v${pkgver}.tar.gz")
-sha256sums=('480d99d0cbea00dc8aff58b3ec9061473b34f0f5bd69577dabec1ef2a15c26b2')
+sha256sums=('a565934bf668b24a946f192f06981664415bd991fd204454b85bb8f7978074a7')
 
 prepare() {
   # point python to python3
@@ -37,8 +37,7 @@ prepare() {
 build() {
   cd ${pkgname}-${pkgver}
  
-  # disable wayland, as long, as the version is too old
-  # it won't compile with 1.3.0
+  # disable SDL, since they are just legacy drivers
   ./waf configure \
     --prefix=/usr \
     --confdir=/etc/mpv \
