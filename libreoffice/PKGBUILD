@@ -17,8 +17,8 @@ pkgname=('libreoffice-common'
 	'libreoffice-postgresql-connector'
 	'libreoffice-extension-wiki-publisher'
 	'libreoffice-extension-nlpsolver')
-_LOver=4.3.6.2
-pkgver=4.3.6
+_LOver=4.4.1.2
+pkgver=4.4.1
 pkgrel=1
 arch=('x86_64')
 license=('LGPL3')
@@ -28,7 +28,7 @@ makedepends=( # makedepends
              'sane' 'perl-archive-zip' 'zip' 'unzip' 'unixodbc' # boost -> internal 
              'apache-ant' 'gperf' 'poppler' 'kdelibs' 'cppunit' 'glu'
              'beanshell'  'vigra' 'libldap' 'libmythes' 'junit' 'libwpg' 'imagemagick'
-             'mesa' 'gst-plugins-base' 'java-runtime' 'postgresql-libs' 'clucene' 'doxygen' 'libvisio' 'bluez' 'bluez-libs' 'junit'
+             'mesa' 'gst-plugins-base' 'java-runtime' 'postgresql-libs' 'clucene' 'doxygen' 'libvisio' 'bluez-libs' 'junit'
              # libreoffice main pkg
              "curl>=7.20.0" "hunspell>=1.2.8" 'python3' 'libwpd>=0.9.2' 'libwps' 'libxaw' "neon>=0.28.6"
              'pango' 'nss' 'libjpeg' 'libxrandr' 'libgl' 'dbus-glib' "icu>=4.6" 'libxslt'
@@ -47,7 +47,6 @@ source=(${_mirror}/${pkgbase}{,-help,-translations}-${_LOver}.tar.xz
         ${_additional_source_url}/35c94d2df8893241173de1d16b6034c0-swingExSrc.zip
         ${_additional_source_url}/798b2ffdc8bcfe7bca2cf92b62caf685-rhino1_5R5.zip
         ${_additional_source_url}/a7983f859eafb2677d7ff386a023bc40-xsltml_2.1.2.zip
-        ${_additional_source_url}/e8e197d628436490886d17cffa108fe3-commons-logging-1.1.3-src.tar.gz
         ${_additional_source_url}/8ab049135b2d15313da5d9f0656894a1-commons-lang3-3.3.1-src.tar.gz
         ${_additional_source_url}/2c9b0f83ed5890af02c0df1c1776f39b-commons-httpclient-3.1-src.tar.gz
         ${_additional_source_url}/048751f3271906db5126ab76870444c4-commons-codec-1.9-src.zip
@@ -62,8 +61,8 @@ source=(${_mirror}/${pkgbase}{,-help,-translations}-${_LOver}.tar.xz
         ${_additional_source_url}/ace6ab49184e329db254e454a010f56d-libxml-1.1.7.zip
         ${_additional_source_url}/db60e4fde8dd6d6807523deb71ee34dc-liblayout-0.2.10.zip
         ${_additional_source_url}/ba2930200c9f019c2d93a8c88c651a0f-flow-engine-0.9.4.zip
-        ${_additional_source_url}/ae330b9493bd4503ac390106ff6060d7-libexttextcat-3.4.3.tar.bz2
-        ${_additional_source_url}/22f8a85daf4a012180322e1f52a7563b-libcmis-0.4.1.tar.gz
+        ${_additional_source_url}/10d61fbaa6a06348823651b1bd7940fe-libexttextcat-3.4.4.tar.bz2
+        ${_additional_source_url}/5821b806a98e6c38370970e682ce76e8-libcmis-0.5.0.tar.gz
         ${_additional_source_url}/7681383be6ce489d84c1c74f4e7f9643-liborcus-0.7.0.tar.bz2
         ${_additional_source_url}/36271d3fa0d9dec1632029b6d7aac925-liblangtag-0.5.1.tar.bz2
         ${_additional_source_url}/0168229624cfac409e766913506961a8-ucpp-1.3.2.tar.gz
@@ -71,32 +70,31 @@ source=(${_mirror}/${pkgbase}{,-help,-translations}-${_LOver}.tar.xz
         ${_additional_source_url2}/185d60944ea767075d27247c3162b3bc-unowinreg.dll
         ${_additional_source_url}/cb4207cb913c7a5a8bfa5b91234618ee-mdds_0.11.2.tar.bz2
         ${_additional_source_url}/bae83fa5dc7f081768daace6e199adc3-glm-0.9.4.6-libreoffice.zip
-        ${_additional_source_url}/libcdr-0.1.0.tar.bz2
-        ${_additional_source_url}/libmspub-0.1.1.tar.bz2
+        ${_additional_source_url}/commons-logging-1.2-src.tar.gz
+        ${_additional_source_url}/libcdr-0.1.1.tar.bz2
+        ${_additional_source_url}/libmspub-0.1.2.tar.bz2
         ${_additional_source_url}/libatomic_ops-7_2d.zip
-        ${_additional_source_url}/libmwaw-0.3.1.tar.bz2
         ${_additional_source_url}/libfreehand-0.1.0.tar.bz2
         ${_additional_source_url}/Firebird-2.5.2.26540-0.tar.bz2
-        ${_additional_source_url}/libe-book-0.1.1.tar.bz2
-        ${_additional_source_url}/libabw-0.1.0.tar.bz2
+        ${_additional_source_url}/libe-book-0.1.2.tar.bz2
+        ${_additional_source_url}/libabw-0.1.1.tar.bz2
+        ${_additional_source_url}/libpagemaker-0.0.2.tar.bz2  
         ${_additional_source_url}/language-subtag-registry-2014-12-03.tar.bz2
         ${_additional_source_url}/CoinMP-1.7.6.tgz
         ${_additional_source_url}/4b87018f7fff1d054939d19920b751a0-collada2gltf-master-cb1d97788a.tar.bz2
         ${_additional_source_url}/OpenCOLLADA-master-6509aa13af.tar.bz2
         ${_additional_source_url}/libgltf/libgltf-0.0.2.tar.bz2
-        ${_additional_source_url}/libodfgen-0.1.1.tar.bz2
-        make-pyuno-work-with-system-wide-module-install.diff
-        libreoffice-mergedlibs-circular-deps.patch)
+        ${_additional_source_url}/libodfgen-0.1.3.tar.bz2
+        make-pyuno-work-with-system-wide-module-install.diff)
 
-md5sums=('92139917fbb2dd5e6dc7cc2808f002a1'
-         '89e5c73d39ad20319df10c7108247300'
-         '908c32d3cb419f1a99b2180f59a5a569'
+md5sums=('4c7b5a8a37cb883382778a95604180cf'
+         'c59c5680716e147ade109e3544f892f4'
+         '85c9224cc524b8882e98568e4e7acf3a'
          'd6eef4b4cacb2183f2bf265a5a03a354'
          '1f24ab1d39f4a51faf22244c94a6203f'
          '35c94d2df8893241173de1d16b6034c0'
          '798b2ffdc8bcfe7bca2cf92b62caf685'
          'a7983f859eafb2677d7ff386a023bc40'
-         'e8e197d628436490886d17cffa108fe3'
          '8ab049135b2d15313da5d9f0656894a1'
          '2c9b0f83ed5890af02c0df1c1776f39b'
          '048751f3271906db5126ab76870444c4'
@@ -111,8 +109,8 @@ md5sums=('92139917fbb2dd5e6dc7cc2808f002a1'
          'ace6ab49184e329db254e454a010f56d'
          'db60e4fde8dd6d6807523deb71ee34dc'
          'ba2930200c9f019c2d93a8c88c651a0f'
-         'ae330b9493bd4503ac390106ff6060d7'
-         '22f8a85daf4a012180322e1f52a7563b'
+         '10d61fbaa6a06348823651b1bd7940fe'
+         '5821b806a98e6c38370970e682ce76e8'
          '7681383be6ce489d84c1c74f4e7f9643'
          '36271d3fa0d9dec1632029b6d7aac925'
          '0168229624cfac409e766913506961a8'
@@ -120,23 +118,22 @@ md5sums=('92139917fbb2dd5e6dc7cc2808f002a1'
          '185d60944ea767075d27247c3162b3bc'
          'cb4207cb913c7a5a8bfa5b91234618ee'
          'bae83fa5dc7f081768daace6e199adc3'
-         '0e2f56934c8872ec4a254cd4bb1d7cf6'
-         '1d489c4932109e72495b1df8b69e5f11'
+         'ce977548f1cbf46918e93cd38ac35163'
+         'b33fd0be3befdd1b37777e08ce058bd9'
+         'ff9d0f9dd8fbc523408ea1953d5bde41'
          'c0b86562d5aa40761a87134f83e6adcf'
-         '6f1ac4a0e24131c422e1e91f07718fb6'
          '5f029fef73e42a2c2ae4524a7513f97d'
          '21154d2004e025c8a3666625b0357bb5'
-         'c25a881d21abc5b4da19205db513cc22'
-         '9317e967c8fa8ff50e049744c4b33c87'
+         '6b48eda57914e6343efebc9381027b78'
+         '7a3815b506d064313ba309617b6f5a0b'
+         '795cc7a59ace4db2b12586971d668671'
          '0f2677ec23bb43ddc7355d1b4cc8ed45'
          '1cce53bf4b40ae29790d2c5c9f8b1129'
          '4b87018f7fff1d054939d19920b751a0'
          '4ca8a6ef0afeefc864e9ef21b9f14bd6'
          'd63a9f47ab048f5009d90693d6aa6424'
-         'c22c83c17cda0754382ada4e116594b7'
-         '07d2bf5ad839a394cca008b3ec6e7bb1'
-         '58b0aa8810134f77d268d1c7a14bdef0')
-
+         '47d292edebac7b60c61d5cf307da1d64'
+         'dcb5ad3e5f7139227677ea064b075422')
 
 noextract=(
           d6eef4b4cacb2183f2bf265a5a03a354-boost_1_55_0.tar.bz2
@@ -144,7 +141,6 @@ noextract=(
           35c94d2df8893241173de1d16b6034c0-swingExSrc.zip
           798b2ffdc8bcfe7bca2cf92b62caf685-rhino1_5R5.zip
           a7983f859eafb2677d7ff386a023bc40-xsltml_2.1.2.zip
-          e8e197d628436490886d17cffa108fe3-commons-logging-1.1.3-src.tar.gz
           8ab049135b2d15313da5d9f0656894a1-commons-lang3-3.3.1-src.tar.gz
           2c9b0f83ed5890af02c0df1c1776f39b-commons-httpclient-3.1-src.tar.gz
           048751f3271906db5126ab76870444c4-commons-codec-1.9-src.zip
@@ -159,8 +155,8 @@ noextract=(
           ace6ab49184e329db254e454a010f56d-libxml-1.1.7.zip
           db60e4fde8dd6d6807523deb71ee34dc-liblayout-0.2.10.zip
           ba2930200c9f019c2d93a8c88c651a0f-flow-engine-0.9.4.zip
-          ae330b9493bd4503ac390106ff6060d7-libexttextcat-3.4.3.tar.bz2
-          22f8a85daf4a012180322e1f52a7563b-libcmis-0.4.1.tar.gz
+          10d61fbaa6a06348823651b1bd7940fe-libexttextcat-3.4.4.tar.bz2
+          5821b806a98e6c38370970e682ce76e8-libcmis-0.5.0.tar.gz
           7681383be6ce489d84c1c74f4e7f9643-liborcus-0.7.0.tar.bz2
           36271d3fa0d9dec1632029b6d7aac925-liblangtag-0.5.1.tar.bz2
           0168229624cfac409e766913506961a8-ucpp-1.3.2.tar.gz
@@ -168,46 +164,44 @@ noextract=(
           185d60944ea767075d27247c3162b3bc-unowinreg.dll
           cb4207cb913c7a5a8bfa5b91234618ee-mdds_0.11.2.tar.bz2
           bae83fa5dc7f081768daace6e199adc3-glm-0.9.4.6-libreoffice.zip
-          libcdr-0.1.0.tar.bz2
-          libmspub-0.1.1.tar.bz2
+          commons-logging-1.2-src.tar.gz
+          libcdr-0.1.1.tar.bz2
+          libmspub-0.1.2.tar.bz2
           libatomic_ops-7_2d.zip
-          libmwaw-0.3.1.tar.bz2
           libfreehand-0.1.0.tar.bz2
           Firebird-2.5.2.26540-0.tar.bz2
-          libe-book-0.1.1.tar.bz2
-          libabw-0.1.0.tar.bz2
+          libe-book-0.1.2.tar.bz2
+          libabw-0.1.1.tar.bz2
+          libpagemaker-0.0.2.tar.bz2 
           CoinMP-1.7.6.tgz
           4b87018f7fff1d054939d19920b751a0-collada2gltf-master-cb1d97788a.tar.bz2
           OpenCOLLADA-master-6509aa13af.tar.bz2
           libgltf-0.0.2.tar.bz2
           language-subtag-registry-2014-12-03.tar.bz2
-          libodfgen-0.1.1.tar.bz2)
+          libodfgen-0.1.3.tar.bz2)
 
 
 prepare() {
-    cd $srcdir/libreoffice-$_LOver
+    cd ${srcdir}/libreoffice-$_LOver
     
     # fix exttextcat build error
     # /usr/include/features.h:330:4: error: #warning _FORTIFY_SOURCE requires compiling with optimization (-O) [-Werror=cpp]
     unset CPPFLAGS
 
         # move external sources into place
-        mkdir -p $srcdir/ext_sources &&       pushd $srcdir/ext_sources
+        mkdir -p ${srcdir}/ext_sources &&       pushd ${srcdir}/ext_sources
         for source in "${noextract[@]}"; do
-          ln -sf $srcdir/$source .
+          ln -sf ${srcdir}/$source .
         done
         popd
 
     # unowinreg.dll must be a file not a symlink or the result will become a broken symlink
     # /usr/share/libreoffice/sdk/classes/win/unowinreg.dll -> /build/libreoffice/src/185d60944ea767075d27247c3162b3bc-unowinreg.dll
-    rm $srcdir/ext_sources/185d60944ea767075d27247c3162b3bc-unowinreg.dll
-    cp -f $srcdir/185d60944ea767075d27247c3162b3bc-unowinreg.dll $srcdir/ext_sources
+    rm ${srcdir}/ext_sources/185d60944ea767075d27247c3162b3bc-unowinreg.dll
+    cp -f ${srcdir}/185d60944ea767075d27247c3162b3bc-unowinreg.dll ${srcdir}/ext_sources
    
     # fix not upstreamable pyuno paths - patch taken from Debian
-    patch -Np1 -i $srcdir/make-pyuno-work-with-system-wide-module-install.diff
-    
-    patch -Np1 -i $srcdir/libreoffice-mergedlibs-circular-deps.patch
-
+    patch -Np1 -i ${srcdir}/make-pyuno-work-with-system-wide-module-install.diff
     
     #use the CFLAGS but remove the LibO overridden ones
     for i in $CFLAGS; do
@@ -222,12 +216,10 @@ build() {
 
     cd libreoffice-$_LOver
 
-   sed -i '/CppunitTest_macros_test/d' sw/Module_sw.mk
-   
-   ./autogen.sh --with-build-version="${_LOver} Chakra GNU/Linux-${pkgrel}" --with-vendor="Chakra GNU/Linux" \
+    ./autogen.sh --with-build-version="${_LOver} Chakra GNU/Linux-${pkgrel}" --with-vendor="Chakra GNU/Linux" \
                 --enable-split-app-modules \
                 --with-parallelism=${MAKEFLAGS/-j/} \
-                --with-external-tar="$srcdir/ext_sources" \
+                --with-external-tar="${srcdir}/ext_sources" \
                 --disable-fetch-external \
                 --disable-verbose \
                 --enable-release-build \
@@ -248,11 +240,8 @@ build() {
                 --disable-gconf \
                 --disable-mergelibs \
                 --enable-kde4 \
-                --enable-gstreamer \
                 --disable-gstreamer-0-10 \
                 --enable-lockdown\
-                --enable-opencl \
-                --enable-opengl \
                 --enable-openssl \
                 --enable-odk \
                 --enable-python=system \
@@ -261,7 +250,6 @@ build() {
                 --enable-ext-wiki-publisher \
                 --enable-ext-nlpsolver \
                 --without-fonts \
-                --without-ppds \
                 --without-system-libwps \
                 --without-system-glm \
                 --without-system-libcdr \
@@ -301,6 +289,9 @@ build() {
                 --with-system-mythes \
                 --with-system-headers \
                 --without-system-hsqldb \
+                --without-system-libpagemaker \
+                --without-system-coinmp \
+                --without-system-libgltf \
                 --with-alloc=system\
                 --with-system-clucene
         
@@ -309,7 +300,7 @@ build() {
         make build
 	# fake installation to create split file lists
 	mkdir $srcdir/fakeinstall
-	make DESTDIR=$srcdir/fakeinstall distro-pack-install
+	make DESTDIR=${srcdir}/fakeinstall distro-pack-install
 }
 
 package_libreoffice-common() {
@@ -348,7 +339,7 @@ provides=('libreoffice-extension-pdfimport'
           'libreoffice-extension-presentation-minimizer')
 
  # create directories from *list.txt file
- for directory in `grep ^%dir $srcdir/libreoffice-$_LOver/file-lists/common_list.txt`; do
+ for directory in `grep ^%dir ${srcdir}/libreoffice-$_LOver/file-lists/common_list.txt`; do
    install -dm755 ${pkgdir}/${directory/\%dir/}
  done
  # install files into the pkg from fakeinstall dir
@@ -357,7 +348,7 @@ provides=('libreoffice-extension-pdfimport'
    # check if directory has been already been created - some are missing like manpages
    [ -d ${pkgdir}/$dirname ] || install -dm755 ${pkgdir}/$dirname
    # mv file from fakeinstall to pkgdir
-   mv $srcdir/fakeinstall${file} ${pkgdir}$file
+   mv ${srcdir}/fakeinstall${file} ${pkgdir}$file
  done
  
  # put configuration files into place
@@ -376,16 +367,16 @@ provides=('libreoffice-extension-pdfimport'
  rm -rf ${pkgdir}/etc/bash_completion.d
 
  # remove conflicting files
-# rm -f ${pkgdir}/usr/lib/libreoffice/program/classes/ScriptProviderForJavaScript.jar
+ rm -f ${pkgdir}/usr/lib/libreoffice/program/classes/ScriptProviderForJavaScript.jar
  rm -f ${pkgdir}/usr/lib/libreoffice/program/classes/js.jar
-# rm -f ${pkgdir}/usr/lib/libreoffice/program/services/scriptproviderforjavascript.rdb
+ rm -f ${pkgdir}/usr/lib/libreoffice/program/services/scriptproviderforjavascript.rdb
 
  # workaround all packages now depend on that file
- cp $srcdir/fakeinstall/usr/lib/libreoffice/share/registry/writer.xcd ${pkgdir}/usr/lib/libreoffice/share/registry/writer.xcd
+ cp ${srcdir}/fakeinstall/usr/lib/libreoffice/share/registry/writer.xcd ${pkgdir}/usr/lib/libreoffice/share/registry/writer.xcd
 
  # add missing files from Beanshell provider
  # create directories from *list.txt file
- for directory in `grep ^%dir $srcdir/libreoffice-$_LOver/file-lists/orig/gid_Module_Optional_Extensions_Script_Provider_For_BS`; do
+ for directory in `grep ^%dir ${srcdir}/libreoffice-$_LOver/file-lists/orig/gid_Module_Optional_Extensions_Script_Provider_For_BS`; do
    install -dm755 ${pkgdir}/${directory/\%dir/}
  done
  # install files into the pkg from fakeinstall dir
@@ -394,11 +385,11 @@ provides=('libreoffice-extension-pdfimport'
    # check if directory has been already been created - some are missing like manpages
    [ -d ${pkgdir}/$dirname ] || install -dm755 ${pkgdir}/$dirname
    # mv file from fakeinstall to pkgdir
-   mv $srcdir/fakeinstall${file} ${pkgdir}$file || /bin/true # some double file entries make it fail
+   mv ${srcdir}/fakeinstall${file} ${pkgdir}$file || /bin/true # some double file entries make it fail
  done
  # move dicts to en-US langpack to avoid file conflicts with en-GBen-ZA packages
  rm ${pkgdir}/usr/lib/libreoffice/share/wordbook/en-GB.dic
- mv ${pkgdir}/usr/lib/libreoffice/share/wordbook/en-US.dic $srcdir/
+ mv ${pkgdir}/usr/lib/libreoffice/share/wordbook/en-US.dic ${srcdir}/
 }
 
 package_libreoffice-base() {
@@ -410,7 +401,7 @@ package_libreoffice-base() {
  replaces=('libreoffice')
 
  # create directories from *list.txt file
- for directory in `grep ^%dir $srcdir/libreoffice-$_LOver/file-lists/base_list.txt`; do
+ for directory in `grep ^%dir ${srcdir}/libreoffice-$_LOver/file-lists/base_list.txt`; do
    install -dm755 ${pkgdir}/${directory/\%dir/}
  done
  # install files into the pkg from fakeinstall dir
@@ -419,7 +410,7 @@ package_libreoffice-base() {
    # check if directory has been already been created - some are missing like manpages
    [ -d ${pkgdir}/$dirname ] || install -dm755 ${pkgdir}/$dirname
    # mv file from fakeinstall to pkgdir
-   mv $srcdir/fakeinstall${file} ${pkgdir}$file
+   mv ${srcdir}/fakeinstall${file} ${pkgdir}$file
  done
 }
 
@@ -430,11 +421,11 @@ package_libreoffice-postgresql-connector() {
  replaces=('libreoffice')
 
  # workaround double entries in the file list
- mv $srcdir/libreoffice-$_LOver/file-lists/postgresql_list.txt $srcdir/libreoffice-$_LOver/file-lists/postgresql_list.txt.orig
- sort $srcdir/libreoffice-$_LOver/file-lists/postgresql_list.txt.orig | uniq 1>& $srcdir/libreoffice-$_LOver/file-lists/postgresql_list.txt
+ mv ${srcdir}/libreoffice-$_LOver/file-lists/postgresql_list.txt ${srcdir}/libreoffice-$_LOver/file-lists/postgresql_list.txt.orig
+ sort ${srcdir}/libreoffice-$_LOver/file-lists/postgresql_list.txt.orig | uniq 1>& ${srcdir}/libreoffice-$_LOver/file-lists/postgresql_list.txt
 
  # create directories from *list.txt file
- for directory in `grep ^%dir $srcdir/libreoffice-$_LOver/file-lists/postgresql_list.txt`; do
+ for directory in `grep ^%dir ${srcdir}/libreoffice-$_LOver/file-lists/postgresql_list.txt`; do
    install -dm755 ${pkgdir}/${directory/\%dir/}
  done
  # install files into the pkg from fakeinstall dir
@@ -443,7 +434,7 @@ package_libreoffice-postgresql-connector() {
    # check if directory has been already been created - some are missing like manpages
    [ -d ${pkgdir}/$dirname ] || install -dm755 ${pkgdir}/$dirname
    # mv file from fakeinstall to pkgdir
-   mv $srcdir/fakeinstall${file} ${pkgdir}$file
+   mv ${srcdir}/fakeinstall${file} ${pkgdir}$file
  done
 }
 
@@ -457,7 +448,7 @@ package_libreoffice-calc() {
  replaces=('libreoffice')
  
  # create directories from *list.txt file
- for directory in `grep ^%dir $srcdir/libreoffice-$_LOver/file-lists/calc_list.txt`; do
+ for directory in `grep ^%dir ${srcdir}/libreoffice-$_LOver/file-lists/calc_list.txt`; do
    install -dm755 ${pkgdir}/${directory/\%dir/}
  done
  # install files into the pkg from fakeinstall dir
@@ -466,7 +457,7 @@ package_libreoffice-calc() {
    # check if directory has been already been created - some are missing like manpages
    [ -d ${pkgdir}/$dirname ] || install -dm755 ${pkgdir}/$dirname
    # mv file from fakeinstall to pkgdir
-   mv $srcdir/fakeinstall${file} ${pkgdir}$file
+   mv ${srcdir}/fakeinstall${file} ${pkgdir}$file
  done
 }
 
@@ -479,7 +470,7 @@ package_libreoffice-draw() {
  replaces=('libreoffice')
  
  # create directories from *list.txt file
- for directory in `grep ^%dir $srcdir/libreoffice-$_LOver/file-lists/draw_list.txt`; do
+ for directory in `grep ^%dir ${srcdir}/libreoffice-$_LOver/file-lists/draw_list.txt`; do
    install -dm755 ${pkgdir}/${directory/\%dir/}
  done
  # install files into the pkg from fakeinstall dir
@@ -488,7 +479,7 @@ package_libreoffice-draw() {
    # check if directory has been already been created - some are missing like manpages
    [ -d ${pkgdir}/$dirname ] || install -dm755 ${pkgdir}/$dirname
    # mv file from fakeinstall to pkgdir
-   mv $srcdir/fakeinstall${file} ${pkgdir}$file
+   mv ${srcdir}/fakeinstall${file} ${pkgdir}$file
  done
 }
 
@@ -501,7 +492,7 @@ package_libreoffice-impress() {
  replaces=('libreoffice')
  
  # create directories from *list.txt file
- for directory in `grep ^%dir $srcdir/libreoffice-$_LOver/file-lists/impress_list.txt`; do
+ for directory in `grep ^%dir ${srcdir}/libreoffice-$_LOver/file-lists/impress_list.txt`; do
    install -dm755 ${pkgdir}/${directory/\%dir/}
  done
  # install files into the pkg from fakeinstall dir
@@ -510,7 +501,7 @@ package_libreoffice-impress() {
    # check if directory has been already been created - some are missing like manpages
    [ -d ${pkgdir}/$dirname ] || install -dm755 ${pkgdir}/$dirname
    # mv file from fakeinstall to pkgdir
-   mv $srcdir/fakeinstall${file} ${pkgdir}$file
+   mv ${srcdir}/fakeinstall${file} ${pkgdir}$file
  done
 }
 
@@ -523,10 +514,10 @@ package_libreoffice-kde4() {
  
  # Merge kde and kde4 filelists as we do not bother with compat anymore
  # Not worth fixing unless really cleaning up the install completely
- cat $srcdir/libreoffice-$_LOver/file-lists/kde_list.txt >> $srcdir/libreoffice-$_LOver/file-lists/kde4_list.txt
+ cat ${srcdir}/libreoffice-$_LOver/file-lists/kde_list.txt >> ${srcdir}/libreoffice-$_LOver/file-lists/kde4_list.txt
  
  # create directories from *list.txt file
- for directory in `grep ^%dir $srcdir/libreoffice-$_LOver/file-lists/kde4_list.txt`; do
+ for directory in `grep ^%dir ${srcdir}/libreoffice-$_LOver/file-lists/kde4_list.txt`; do
    install -dm755 ${pkgdir}/${directory/\%dir/}
  done
  # install files into the pkg from fakeinstall dir
@@ -535,7 +526,7 @@ package_libreoffice-kde4() {
    # check if directory has been already been created - some are missing like manpages
    [ -d ${pkgdir}/$dirname ] || install -dm755 ${pkgdir}/$dirname
    # mv file from fakeinstall to pkgdir
-   mv $srcdir/fakeinstall${file} ${pkgdir}$file
+   mv ${srcdir}/fakeinstall${file} ${pkgdir}$file
  done
 }
 
@@ -548,7 +539,7 @@ package_libreoffice-math() {
  replaces=('libreoffice')
  
  # create directories from *list.txt file
- for directory in `grep ^%dir $srcdir/libreoffice-$_LOver/file-lists/math_list.txt`; do
+ for directory in `grep ^%dir ${srcdir}/libreoffice-$_LOver/file-lists/math_list.txt`; do
    install -dm755 ${pkgdir}/${directory/\%dir/}
  done
  # install files into the pkg from fakeinstall dir
@@ -557,7 +548,7 @@ package_libreoffice-math() {
    # check if directory has been already been created - some are missing like manpages
    [ -d ${pkgdir}/$dirname ] || install -dm755 ${pkgdir}/$dirname
    # mv file from fakeinstall to pkgdir
-   mv $srcdir/fakeinstall${file} ${pkgdir}$file
+   mv ${srcdir}/fakeinstall${file} ${pkgdir}$file
  done
 }
 
@@ -569,7 +560,7 @@ package_libreoffice-sdk() {
  groups=('libreoffice')
  
  # create directories from *list.txt file
- for directory in `grep ^%dir $srcdir/libreoffice-$_LOver/file-lists/sdk_list.txt`; do
+ for directory in `grep ^%dir ${srcdir}/libreoffice-$_LOver/file-lists/sdk_list.txt`; do
    install -dm755 ${pkgdir}/${directory/\%dir/}
  done
  # install files into the pkg from fakeinstall dir
@@ -578,7 +569,7 @@ package_libreoffice-sdk() {
    # check if directory has been already been created - some are missing like manpages
    [ -d ${pkgdir}/$dirname ] || install -dm755 ${pkgdir}/$dirname
    # mv file from fakeinstall to pkgdir
-   mv $srcdir/fakeinstall${file} ${pkgdir}$file
+   mv ${srcdir}/fakeinstall${file} ${pkgdir}$file
  done
 }
 
@@ -590,7 +581,7 @@ package_libreoffice-sdk-doc() {
  groups=('libreoffice')
  
  # create directories from *list.txt file
- for directory in `grep ^%dir $srcdir/libreoffice-$_LOver/file-lists/sdk_doc_list.txt`; do
+ for directory in `grep ^%dir ${srcdir}/libreoffice-$_LOver/file-lists/sdk_doc_list.txt`; do
    install -dm755 ${pkgdir}/${directory/\%dir/}
  done
  # install files into the pkg from fakeinstall dir
@@ -599,7 +590,7 @@ package_libreoffice-sdk-doc() {
    # check if directory has been already been created - some are missing like manpages
    [ -d ${pkgdir}/$dirname ] || install -dm755 ${pkgdir}/$dirname
    # mv file from fakeinstall to pkgdir
-   mv $srcdir/fakeinstall${file} ${pkgdir}$file
+   mv ${srcdir}/fakeinstall${file} ${pkgdir}$file
  done
 
  #fix permissions
@@ -615,7 +606,7 @@ package_libreoffice-writer() {
  replaces=('libreoffice')
 
  # create directories from *list.txt file
- for directory in `grep ^%dir $srcdir/libreoffice-$_LOver/file-lists/writer_list.txt`; do
+ for directory in `grep ^%dir ${srcdir}/libreoffice-$_LOver/file-lists/writer_list.txt`; do
    install -dm755 ${pkgdir}/${directory/\%dir/}
  done
  # install files into the pkg from fakeinstall dir
@@ -624,7 +615,7 @@ package_libreoffice-writer() {
    # check if directory has been already been created - some are missing like manpages
    [ -d ${pkgdir}/$dirname ] || install -dm755 ${pkgdir}/$dirname
    # mv file from fakeinstall to pkgdir
-   mv $srcdir/fakeinstall${file} ${pkgdir}$file
+   mv ${srcdir}/fakeinstall${file} ${pkgdir}$file
  done
 
  # workaround this file belongs now to common
@@ -637,7 +628,7 @@ package_libreoffice-en-US() {
   provides=('libreoffice-langpack')
 
  # create directories from *list.txt file
- for directory in `grep ^%dir $srcdir/libreoffice-$_LOver/file-lists/lang_en_US_list.txt`; do
+ for directory in `grep ^%dir ${srcdir}/libreoffice-$_LOver/file-lists/lang_en_US_list.txt`; do
    install -dm755 ${pkgdir}/${directory/\%dir/}
  done
  # install files into the pkg from fakeinstall dir
@@ -646,10 +637,10 @@ package_libreoffice-en-US() {
    # check if directory has been already been created - some are missing like manpages
    [ -d ${pkgdir}/$dirname ] || install -dm755 ${pkgdir}/$dirname
    # mv file from fakeinstall to pkgdir
-   mv $srcdir/fakeinstall${file} ${pkgdir}$file
+   mv ${srcdir}/fakeinstall${file} ${pkgdir}$file
  done
  # en-US.dic
- install -Dm644 $srcdir/en-US.dic ${pkgdir}/usr/lib/libreoffice/share/wordbook/en-US.dic
+ install -Dm644 ${srcdir}/en-US.dic ${pkgdir}/usr/lib/libreoffice/share/wordbook/en-US.dic
 }
 
 package_libreoffice-extension-wiki-publisher() {
@@ -660,7 +651,7 @@ package_libreoffice-extension-wiki-publisher() {
  groups=('libreoffice-extensions')
 
 	install -dm755 ${pkgdir}/usr/lib/libreoffice/share/extensions
-	unzip -q $srcdir/libreoffice-$_LOver/workdir/Extension/wiki-publisher.oxt -d ${pkgdir}/usr/lib/libreoffice/share/extensions/wiki-publisher
+	unzip -q ${srcdir}/libreoffice-$_LOver/workdir/Extension/wiki-publisher.oxt -d ${pkgdir}/usr/lib/libreoffice/share/extensions/wiki-publisher
 }
 
 package_libreoffice-extension-nlpsolver() {
@@ -671,5 +662,5 @@ package_libreoffice-extension-nlpsolver() {
  groups=('libreoffice-extensions')
 
 	install -dm755 ${pkgdir}/usr/lib/libreoffice/share/extensions
-	unzip -q $srcdir/libreoffice-$_LOver/workdir/Extension/nlpsolver.oxt -d ${pkgdir}/usr/lib/libreoffice/share/extensions/nlpsolver
+	unzip -q ${srcdir}/libreoffice-$_LOver/workdir/Extension/nlpsolver.oxt -d ${pkgdir}/usr/lib/libreoffice/share/extensions/nlpsolver
 }
