@@ -4,7 +4,7 @@
 
 pkgname=mpd
 pkgver=0.19.9
-pkgrel=1
+pkgrel=2
 pkgdesc='Flexible, powerful, server-side application for playing music'
 url='http://www.musicpd.org/'
 license=('GPL')
@@ -38,20 +38,11 @@ build() {
 package() {
     cd "${srcdir}/${pkgname}-${pkgver}"
     make DESTDIR="${pkgdir}" install
-    sed \
-        -e '/^#playlist_directory/c playlist_directory "/var/lib/mpd/playlists"' \
-        -e '/^#db_file/c db_file "/var/lib/mpd/mpd.db"' \
-        -e '/^#pid_file/c pid_file "/run/mpd/mpd.pid"' \
-        -e '/^#state_file/c state_file "/var/lib/mpd/mpdstate"' \
-        -e '/^#user/c user "mpd"' \
-        -i doc/mpdconf.example
+
     install -d -g 45 -o 45 "${pkgdir}"/var/lib/mpd/playlists
     install -Dm644 doc/mpdconf.example "${pkgdir}"/etc/mpd.conf
     install -Dm644 ../mpd.conf "${pkgdir}"/usr/lib/tmpfiles.d/mpd.conf
-    
-    install -d "${pkgdir}"/usr/lib/systemd/user
-    install -Dm644 "${pkgdir}"/usr/lib/systemd/{system,user}/mpd.service
-    sed '/\[Service\]/a User=mpd' -i "${pkgdir}"/usr/lib/systemd/system/mpd.service
-    sed '/WantedBy=/c WantedBy=default.target' -i "${pkgdir}"/usr/lib/systemd/user/mpd.service
 
+    install -Dm644 "${pkgdir}"/usr/lib/systemd/{system,user}/mpd.service
+    sed '/WantedBy=/c WantedBy=default.target' -i "${pkgdir}"/usr/lib/systemd/user/mpd.service
 }
