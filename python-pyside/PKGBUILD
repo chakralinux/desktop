@@ -5,7 +5,7 @@ pkgbase=python-pyside
 pkgname=(python-pyside-common python2-pyside python3-pyside)
 _pkgrealname=pyside
 pkgver=1.2.2
-pkgrel=5
+pkgrel=6
 arch=('x86_64')
 license=('LGPL')
 url="http://qt-project.org/wiki/PySide"
@@ -40,11 +40,12 @@ package_python-pyside-common(){
 
     rm -rf "$pkgdir"/usr/lib/pkgconfig
     rm -rf "$pkgdir"/usr/lib/python* "$pkgdir"/usr/lib/libpyside.*
+    rm -rf "$pkgdir"/usr/lib/libpyside-*
     rm "$pkgdir"/usr/lib/cmake/PySide-$pkgver/PySideConfig*python*.cmake
 }
 
 package_python3-pyside(){
-    depends=('python3' "qt>=${_qtver}" "python-shiboken>=$pkgver" "python-pyside-common=$pkgver-$pkgrel")
+    depends=('python3' "qt>=${_qtver}" "python3-shiboken>=$pkgver" "python-pyside-common=$pkgver-$pkgrel")
     pkgdesc="Provides LGPL Qt bindings for Python and related tools for binding generation (Python 3 version)"
     optdepends=('qtwebkit: for PySide.QtWebKit'
                 'phonon: for PySide.phonon')
