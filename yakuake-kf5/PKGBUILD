@@ -1,6 +1,8 @@
+source ../plasma.conf
+
 pkgname=yakuake-kf5
 _pkgname=yakuake
-pkgver=2.9.9.1
+pkgver=2.9.9.2
 pkgrel=1
 pkgdesc="A KDE konsole application with the look and feel of that in the Quake engine, kf5 version"
 arch=('x86_64')
@@ -19,11 +21,7 @@ prepare() {
 
 build() {
   cd build
-  cmake ../${_pkgname} \
-    -DCMAKE_BUILD_TYPE=${KFBuildType} \
-    -DCMAKE_INSTALL_PREFIX=${KFInstallPrefix} \
-    -DQT4_BUILD=OFF \
-    -DLIB_INSTALL_DIR=lib 
+  cmake_kf5 ../${_pkgname}
   make
 }
 
