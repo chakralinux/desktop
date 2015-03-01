@@ -5,7 +5,7 @@ pkgbase=python-pyside
 pkgname=(python-pyside-common python2-pyside python3-pyside)
 _pkgrealname=pyside
 pkgver=1.2.2
-pkgrel=6
+pkgrel=7
 arch=('x86_64')
 license=('LGPL')
 url="http://qt-project.org/wiki/PySide"
@@ -58,8 +58,12 @@ package_python3-pyside(){
 
     rm -rf "$pkgdir"/usr/include
     rm -rf "$pkgdir"/usr/share
+    rm -rf "$pkgdir"/usr/lib/python2.7/
     rm "$pkgdir"/usr/lib/cmake/PySide-$pkgver/PySideConfig.cmake
     rm "$pkgdir"/usr/lib/cmake/PySide-$pkgver/PySideConfigVersion.cmake
+    rm "$pkgdir"/usr/lib/cmake/PySide-$pkgver/PySideConfig-python2.7.cmake
+    rm "$pkgdir"/usr/lib/libpyside-python2.7.so
+    rm "$pkgdir"/usr/lib/libpyside-python2.7.so.*
 }
 
 package_python2-pyside(){
