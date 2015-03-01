@@ -2,41 +2,41 @@
 # Contributor: Manuel Tortosa <manutortosa@chakra-project.org>
 
 pkgname="system-config-printer"
-pkgver=1.4.0
-pkgrel=6
+pkgver=1.5.5
+pkgrel=1
 pkgdesc="A CUPS printer configuration tool and status applet"
 url="http://cyberelk.net/tim/software/system-config-printer/"
-arch=('any')
+arch=('x86_64')
 license=('GPL')
-depends=('pycups' 'python2-dbus' 'pysmbc' 'libusb-compat' 'python-pycurl')
-makedepends=('intltool' 'python2' 'xmlto' 'docbook-xsl' 'desktop-file-utils' 'libcups' 'libxml2')
+depends=('pycups' 'python3-dbus' 'pysmbc' 'libusb-compat' 'python3-pycurl' 'python3-requests')
+makedepends=('intltool' 'python3' 'xmlto' 'docbook-xsl' 'desktop-file-utils' 'libcups' 'libxml2')
 optdepends=('kdeadmin-print-manager: for the administration tool in KDE System Settings')
 provides=('system-config-printer-common')
-source=(http://cyberelk.net/tim/data/${pkgname}/1.4/${pkgname}-${pkgver}.tar.xz{,.sig})
-md5sums=('3267c2eac454f470c0659034196d2668'
-         'bbd7884b13824713ab683418d26f6cb6')
+source=(http://cyberelk.net/tim/data/$pkgname/1.5/$pkgname-$pkgver.tar.xz{,.sig})
+md5sums=('1aaee6a90449ee0c6b90da2eb5df03a9'
+         'SKIP')
 
 
 build() {
-  cd "${srcdir}"/${pkgname}-${pkgver}
-
-  sed -i -e "s|#![ ]*/usr/bin/python$|#!/usr/bin/python2|" \
-    -e "s|#![ ]*/usr/bin/env python$|#!/usr/bin/env python2|" \
-    $(find . -name '*.py')
-  sed -i "s|#!/usr/bin/python|#!/usr/bin/python2|" udev/udev-add-printer
+  cd $pkgname-$pkgver
 
   ./configure --prefix=/usr \
     --sbindir=/usr/bin \
     --sysconfdir=/etc \
-    --with-udev-rules
+    --with-udevdir=/usr/lib/udev --with-udev-rules
 
   make
 }
 
 package() {
-  cd ${pkgname}-${pkgver}
-  make DESTDIR="${pkgdir}" install
+  cd $pkgname-$pkgver
+  make DESTDIR=$pkgdir install
 
-  sed -i -e "s~#!/bin/sh~#!/bin/sh\nexport GI_TYPELIB_PATH=/usr/lib/girepository-1.0/:/usr/lib/girepository-1.0/~g" ${pkgdir}/usr/bin/system-config-printer
-  sed -i -e "s~#!/bin/sh~#!/bin/sh\nexport GI_TYPELIB_PATH=/usr/lib/girepository-1.0/:/usr/lib/girepository-1.0/~g" ${pkgdir}/usr/bin/scp-dbus-service
+  # Compile *.pyc
+  find "${pkgdir}" -name '*.py' -exec python3 -mpy_compile {} +
+  # Compile *.pyo
+  find "${pkgdir}" -name '*.py' -exec python3 -O -mpy_compile {} +
+  
+  # new cups 2.0.0 service naming
+  sed -i "s|cups.socket|org.cups.cupsd.socket|g" ${pkgdir}/usr/lib/systemd/system/configure-printer@.service
 }
