@@ -1,6 +1,3 @@
-# Maintainer:   H W Tovetjärn (totte) <totte@tott.es>
-# Contributors: Manuel Tortosa <manutortosa@chakra-project.org>
-
 # Include global configuration
 source ../_buildscripts/${current_repo}-${_arch}-cfg.conf
 
@@ -81,7 +78,7 @@ pkgname=('kdeplasma-addons-applets-bball'
          'kdeplasma-addons-wallpapers-weather')
 arch=('x86_64')
 pkgver=${_kdever}
-pkgrel=1
+pkgrel=2
 pkgdesc="KDE Plasma Addons"
 url="http://www.kde.org/"
 license=('GPL'
@@ -124,7 +121,7 @@ build() {
 
 package_kdeplasma-addons-common() {
     pkgdesc='Plasma Addon Library'
-    depends=('kde-workspace')
+    depends=('kde-workspace' 'qoauth')
     groups=("kde" "kde-uninstall" "kdeplasma-addons")
     conflicts=("kdeplasma-addons")
     replaces=("kdeplasma-addons")
@@ -420,7 +417,7 @@ package_kdeplasma-addons-applets-mediaplayer() {
 
 package_kdeplasma-addons-applets-microblog() {
     pkgdesc='Update and view your microblog status.'
-    depends=('kde-workspace' 'kdeplasma-addons-common' 'qca-ossl' 'qoauth')
+    depends=('kde-workspace' 'kdeplasma-addons-common' 'qca-ossl')
     groups=("kde" "kde-uninstall" "kdeplasma-addons")
 
     cd $srcdir/build/applets/microblog
