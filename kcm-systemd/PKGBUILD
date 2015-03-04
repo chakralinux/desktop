@@ -1,31 +1,35 @@
-# Maintainer: UtG <utg[dot]chakra.linux[at]gmail[dot]com>
+# Maintainer: Jeff Huang <s8321414[at]gmail[dot]com>
+# Contributor: UtG <utg[dot]chakra.linux[at]gmail[dot]com>
 # Contributor: https://aur.archlinux.org/packages/kcmsystemd/ 
 # Contributor from [ccr]: msx <archlinux.us: msx>
  
 pkgname=kcm-systemd
 _pkgname=kcmsystemd
-pkgver=0.7.0
+pkgver=1.1.0
 pkgrel=1
 pkgdesc="Systemd control module for KDE"
 arch=('x86_64')
 url='https://github.com/rthomsen/kcmsystemd'
 screenshot="http://wstaw.org/m/2013/11/19/screen27.png"
 license=('GPL')
-depends=('kde-workspace' 'boost-libs')
-makedepends=('cmake' 'automoc4' 'boost')
+depends=('kconfigwidgets' 'kcoreaddons' 'ki18n' 'kauth' 'boost-libs')
+makedepends=('extra-cmake-modules' 'python3' 'boost')
 source=("https://github.com/rthomsen/$_pkgname/archive/$pkgver.tar.gz")
-md5sums=('6506596175e31e24d67f042ac450c2d6')
+md5sums=('8d385b1b2f9c0f054a8de16a50dcbaaa')
  
 build() {
-  cd $_pkgname-$pkgver
-  mkdir build
+  mkdir -p build
   cd build
-  cmake .. -DCMAKE_INSTALL_PREFIX=$(kde4-config --prefix) -DCMAKE_BUILD_TYPE=Release
+  cmake ../$_pkgname-$pkgver \
+   -DCMAKE_INSTALL_PREFIX=/usr \
+   -DCMAKE_BUILD_TYPE=Release \
+   -DCMAKE_INSTALL_LIBDIR=lib \
+   -DKDE_INSTALL_USE_QT_SYS_PATHS=ON
   make
 }
- 
+
 package() {
-  cd $_pkgname-$pkgver/build
-  make DESTDIR=$pkgdir install
+  cd build
+  make DESTDIR="$pkgdir" install
 }
  
