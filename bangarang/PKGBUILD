@@ -1,14 +1,12 @@
 #
 # Apps Packages for Chakra, part of chakra-project.org
 #
-# maintainer (i686): Phil Miller <philm[at]chakra-project[dog]org>
-# maintainer (x86_64): Manuel Tortosa <manutortosa[at]chakra-project[dot]org>
 
 pkgname=bangarang
 pkgver=2.1
-pkgrel=1
+pkgrel=2
 pkgdesc="Simple KDE media player."
-arch=('i686' 'x86_64')
+arch=('x86_64')
 url="http://bangarangkde.wordpress.com/"
 license=('GPL3')
 depends=('kdelibs' 'kde-runtime' 'soprano' 'taglib>=1.5')
@@ -17,9 +15,21 @@ categories=('multimedia')
 source=(http://bangarangissuetracking.googlecode.com/files/$pkgname-$pkgver.tar.gz)
 md5sums=('b70b27027c93b5ee8576183277b55776')
 
+prepare() {
+  cd $pkgname-$pkgname/src/platform/infofetchers
+
+  # GCC 4.9 fix
+  sed -i '22i#include <unistd.h>' {lastfm,tmdb,tvdb}infofetcher.h
+}
+
 build() {
-  cd $srcdir/$pkgname-$pkgname
+  cd $pkgname-$pkgname
 
   cmake -DCMAKE_INSTALL_PREFIX=/usr
+}
+
+package() {
+  cd $pkgname-$pkgname
+
   make DESTDIR=$pkgdir install
 }
