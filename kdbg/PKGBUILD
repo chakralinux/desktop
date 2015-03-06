@@ -3,7 +3,7 @@
 
 pkgname=kdbg
 pkgver=2.5.5
-pkgrel=1
+pkgrel=2
 pkgdesc="A gdb GUI for KDE."
 arch=('x86_64')
 url="http://www.kdbg.org"
@@ -16,10 +16,10 @@ source=("http://downloads.sourceforge.net/kdbg/$pkgname-$pkgver.tar.gz")
 md5sums=('3c4271fb0c3be75d658a94c3ea6c6167')
 
 build() {
-  cd $srcdir
+  cd $pkgname-$pkgver
   mkdir -p build
   cd build
-  cmake ../${pkgbase}-${pkgver} \
+  cmake .. \
     -DCMAKE_BUILD_TYPE=Release \
     -DCMAKE_INSTALL_PREFIX=/usr
 
@@ -28,6 +28,6 @@ build() {
 }
 
 package() {
-  cd $srcdir/build
-  make DESTDIR=${pkgdir} install
+  cd $pkgname-$pkgver/build
+  make DESTDIR=$pkgdir install
 }
