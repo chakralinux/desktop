@@ -3,25 +3,22 @@
 #
 # Maintainer: Adrián Chaves Fernández (Gallaecio) <adriyetichaves@gmail.com>
 
-pkgname=flare
-_pkgname=flare-game
-_shared_name=${pkgname}
+pkgname=flare-engine
+_shared_name=flare
 pkgver=0.19
 pkgrel=1
-pkgdesc="Action roleplaying game from an isometric perspective"
+pkgdesc="Engine for action roleplaying games from an isometric perspective"
 arch=('i686' 'x86_64')
 url="http://clintbellanger.net/rpg/"
-license=('CCPL-by-sa')
-depends=('flare-engine')
+license=('GPL3')
+depends=('sdl' 'sdl_image' 'sdl_mixer' 'sdl_ttf')
 makedepends=('cmake')
-replaces=('osare')
 categories=('games')
-changelog=ChangeLog
-source=(http://downloads.sourceforge.net/project/flare-game/Linux/${_pkgname}.$pkgver.tar.gz)
-md5sums=('0d2950b8f6facc640a019aecd3a1fdb8')
+source=(http://downloads.sourceforge.net/project/flare-game/Linux/$pkgname.$pkgver.tar.gz)
+md5sums=('160325e67edf6ce83aeee3b1cd84598a')
 
 build() {
-  cd $srcdir/${_pkgname}.$pkgver
+  cd $srcdir/$pkgname.$pkgver
 
   # Some CMake changes.
   sed -i -e "s#share/games#share#" -e "s#/games#/bin#" CMakeLists.txt
@@ -38,9 +35,9 @@ build() {
 }
 
 package() {
-  cd $srcdir/${_pkgname}.$pkgver/build
+  cd $srcdir/$pkgname.$pkgver/build
   make DESTDIR=$pkgdir install
  
   # Documentation.
-  install -Dm644 ../README $pkgdir/usr/share/doc/$pkgname/readme.txt
+  install -Dm644 ../README.engine $pkgdir/usr/share/doc/$pkgname/readme.txt
 }
