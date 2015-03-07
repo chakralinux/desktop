@@ -1,19 +1,19 @@
-# Maintainer: Francesco Marinucci <franzmari[at]chakra-project[dot]it>
+# Maintainer: Francesco Marinucci <framari [at] opmbx [dot] org>
  
 pkgname=kup
 pkgver=0.5.0
-pkgrel=2
+pkgrel=3
 pkgdesc="A KDE-based frontend for the bup backup software"
 arch=('x86_64')
 url="http://kde-apps.org/content/show.php/Kup+Backup+System?content=147465"
 license=('GPL')
 depends=('kde-runtime' 'kdelibs' 'bup' 'rsync' 'python2-pyxattr')
 makedepends=('cmake' 'automoc4')
-source=("http://kde-apps.org/CONTENT/content-files/147465-${pkgname}-${pkgver}.tar.gz")
+source=("http://kde-apps.org/CONTENT/content-files/147465-$pkgname-$pkgver.tar.gz")
 sha256sums=('0d9d7d4c5e12f5d799c42dd8da9f0c98dbff93bac6242da73e65ea1d9400d223')
  
 build() {
-	cd ${pkgname}-${pkgver}
+	cd $pkgname-$pkgver
 	[ -d "build" ] && rm -rf build
 	mkdir build
 	cd build
@@ -25,7 +25,7 @@ build() {
 }
  
 package() {
-	cd ${pkgname}-${pkgver}
+	cd $pkgname-$pkgver
 	cd build
-	make DESTDIR=${pkgdir} install
+	make DESTDIR=$pkgdir install
 } 
