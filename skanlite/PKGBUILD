@@ -5,7 +5,7 @@
 
 pkgname=skanlite
 pkgver=1.1
-pkgrel=1
+pkgrel=2
 pkgdesc="Image Scanning Application for KDE"
 arch=('x86_64')
 url='http://www.kde.org'
@@ -18,18 +18,17 @@ source=("http://download.kde.org/stable/$pkgname/$pkgver/src/$pkgname-$pkgver.ta
 md5sums=('21cd642d4177fff759bf4694af39b9fe')
 
 build() {
-  cd ${srcdir}
-  
+  cd $pkgname-$pkgver
   mkdir build
   cd build
-  cmake ../${pkgname}-${pkgver} \
+  cmake .. \
     -DCMAKE_BUILD_TYPE=Release \
     -DCMAKE_INSTALL_PREFIX=/usr
   make 
 }
 
 package() {
-  cd ${srcdir}/build
+  cd $pkgname-$pkgver/build
   
-  make DESTDIR=${pkgdir} install
+  make DESTDIR=$pkgdir install
 }
