@@ -1,18 +1,13 @@
 #
 # Chakra Packages for Chakra, part of chakra-project.org
 #
-# maintainer (i686): Phil Miller <philm[at]chakra-project[dog]org>
-# maintainer (x86_64): Manuel Tortosa <manutortosa[at]chakra-project[dot]org>
-
-# include global config
-source ../_buildscripts/${current_repo}-${_arch}-cfg.conf
 
 pkgname=kdesvn
 pkgver=1.6.0
-pkgrel=1
+pkgrel=2
 pkgdesc="A pure C++ SVN-client for KDE"
-arch=('i686' 'x86_64')
-url="http://www.alwins-world.de/programs/kdesvn/"
+arch=('x86_64')
+url="http://kdesvn.alwins-world.de/"
 license=('GPL')
 depends=('hicolor-icon-theme' 'kdelibs' 'subversion' 'xdg-utils' 'qt')
 makedepends=('automoc4' 'cmake' 'docbook-xsl')
@@ -20,11 +15,11 @@ conflicts=('qsvn')
 options=('libtool')
 categories=('programming')
 install=$pkgname.install
-source=(http://kdesvn.alwins-world.de/downloads/$pkgname-$pkgver.tar.bz2)
+source=(https://launchpad.net/ubuntu/+archive/primary/+files/${pkgname}_${pkgver}.orig.tar.bz2)
 md5sums=('7e6adc98ff4777a06d5752d3f2b58fa3')
 
 build() {
-  cd ${srcdir}/$pkgname-$pkgver
+  cd $pkgname-$pkgver
 
   cmake . \
     -DCMAKE_INSTALL_PREFIX=/usr \
@@ -36,13 +31,13 @@ build() {
 }
 
  package() {
-  cd ${srcdir}/$pkgname-$pkgver
+  cd $pkgname-$pkgver
 
-  make DESTDIR=${pkgdir} install
+  make DESTDIR=$pkgdir install
 
 #removing conflicting files - kdesdk
-  rm -f ${pkgdir}/usr/share/kde4/services/svn*
+  rm -f $pkgdir/usr/share/kde4/services/svn*
 
  #removing $srcdir reference
-  rm -rf ${pkgdir}/usr/share/doc
+  rm -rf $pkgdir/usr/share/doc
 }
