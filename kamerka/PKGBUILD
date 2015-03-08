@@ -6,8 +6,8 @@
 pkgname=kamerka
 pkgver=0.8.5
 pkgdesc="take photos using your webcam and shiny animated QML interface."
-pkgrel=2
-arch=(x86_64)
+pkgrel=3
+arch=('x86_64')
 _kdeapps=142415
 url="http://kde-apps.org/content/show.php?content=${_kdeapps}"
 screenshot="http://kde-apps.org/CONTENT/content-pre1/142415-1.jpg"
@@ -19,7 +19,7 @@ source=(http://dosowisko.net/${pkgname}/downloads/${pkgname}-${pkgver}.tar.gz)
 md5sums=('92e5a274a9818b504186ce42e7211a7c')
  
 build(){
- cd $srcdir/$pkgname-$pkgver
+ cd $pkgname-$pkgver
   [[ -d build ]] && rm -r build
   mkdir build && cd build
   cmake \
@@ -30,6 +30,6 @@ build(){
 }
  
 package(){
-  cd ${srcdir}/${pkgname}-${pkgver}/build
-  make DESTDIR="${pkgdir}" install
+  cd $pkgname-$pkgver/build
+  make DESTDIR=$pkgdir install
 }
