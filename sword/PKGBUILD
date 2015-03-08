@@ -1,0 +1,30 @@
+# Maintainer: Francesco Marinucci <franzmari [at] chakra-project [dot] it>
+
+pkgname=sword
+pkgver=1.7.4
+mainver=1.7
+pkgrel=1
+pkgdesc="SWORD libraries for Bible programs"
+arch=('x86_64')
+url="http://www.crosswire.org/sword/index.jsp"
+license=('GPL')
+depends=('curl' 'clucene' 'swig')
+makedepends=('cmake')
+backup=('etc/sword.conf')
+source=("http://www.crosswire.org/ftpmirror/pub/$pkgname/source/v$mainver/$pkgname-$pkgver.tar.gz")
+md5sums=('1677f02a86cbf07713d4e1d4c39791e6')
+
+build() {
+  cd "$srcdir/$pkgname-$pkgver"
+
+  ./configure --prefix=/usr --libdir=/usr/lib --sysconfdir=/etc
+  make
+}
+
+package() {
+  cd "$srcdir/$pkgname-$pkgver"
+
+  make DESTDIR="$pkgdir" install
+  mkdir --parents "$pkgdir/etc"
+  make DESTDIR="$pkgdir" install_config
+}
