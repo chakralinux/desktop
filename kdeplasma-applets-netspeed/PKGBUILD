@@ -3,21 +3,22 @@
 pkgname=kdeplasma-applets-netspeed
 _pkgname=netspeed-plasma
 pkgver=0.2
-pkgrel=1
+pkgrel=2
 pkgdesc="Simple plasmoid to show the current speed of a network interface, and to show the overall statistics"
-arch=('i686' 'x86_64')
+arch=('x86_64')
 license=('CCPL:cc-by-sa')
-url="http://kde-look.org/content/show.php/Fushigi?content=137517"
-depends=('kdelibs' 'kdebase-workspace')
+url="http://sourceforge.net/projects/netspeed-plasma/"
+depends=('kdelibs' 'kde-workspace')
+makedepends=('cmake' 'automoc4')
 categories=('accessories')
 source=(http://sourceforge.net/projects/${_pkgname}/files/0.2/${_pkgname}-0.2.tar.gz)
 md5sums=('ea165c8bcc11cc70495b23c91c161cc9')
 
 build() {
-  cd $srcdir
+  cd $_pkgname-$pkgver
   mkdir -p build
   cd build
-  cmake ../$_pkgname-$pkgver \
+  cmake .. \
   	-DCMAKE_BUILD_TYPE=Release \
   	-DCMAKE_SKIP_RPATH=ON \
   	-DCMAKE_INSTALL_PREFIX=/usr
@@ -25,7 +26,7 @@ build() {
 }
 
 package() {
-  cd $srcdir
-  cd build
-  make DESTDIR=${pkgdir} install
+  cd $_pkgname-$pkgver/build
+
+  make DESTDIR=$pkgdir install
 }
