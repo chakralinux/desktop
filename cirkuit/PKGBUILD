@@ -5,7 +5,7 @@
 
 pkgname=cirkuit
 pkgver=0.4.3
-pkgrel=3
+pkgrel=4
 pkgdesc='An application for drawing high-quality line diagrams to include in TeX, LaTeX, or similar documents.'
 url="http://wwwu.uni-klu.ac.at/magostin/cirkuit.html"
 license=('GPL3')
@@ -19,7 +19,7 @@ source=(http://wwwu.uni-klu.ac.at/magostin/src/$pkgname-$pkgver.tar.bz2)
 md5sums=('dccdb6bdb6f1afb99cbebe4780f96b49')
 
 build() {
-  cd $srcdir/$pkgname-$pkgver
+  cd $pkgname-$pkgver
   [[ -d build ]] && rm -r build
   mkdir build && cd build
   cmake \
@@ -30,6 +30,6 @@ build() {
 }
  
 package() {
-  cd $srcdir/$pkgname-$pkgver/build
+  cd $pkgname-$pkgver/build
   make DESTDIR=$pkgdir install
 }
