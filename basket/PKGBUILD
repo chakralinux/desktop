@@ -1,17 +1,12 @@
 #
 # Chakra Packages for Chakra, part of chakra-project.org
 #
-# maintainer (i686): Phil Miller <philm[at]chakra-project[dog]org>
-# maintainer (x86_64): Manuel Tortosa <manutortosa[at]chakra-project[dot]org>
-
-# include global config
-source ../_buildscripts/${current_repo}-${_arch}-cfg.conf
 
 pkgname=basket
 pkgver=1.81
-pkgrel=2
+pkgrel=3
 pkgdesc="All-purpose notes taker for KDE."
-arch=('i686' 'x86_64')
+arch=('x86_64')
 url="http://basket.kde.org/"
 depends=('kdelibs' 'gpgme' 'qimageblitz' 'hicolor-icon-theme')
 makedepends=('cmake' 'automoc4')
@@ -22,16 +17,18 @@ source=(http://basket.kde.org/downloads/$pkgname-$pkgver.tar.bz2)
 md5sums=('cbb1bc5ca7c2ad1485c433c00a8f65a1')
 
 build() {
-  cd $srcdir/$pkgname-$pkgver
-  cmake ../${pkgbase}-${pkgver} \
+  cd $pkgname-$pkgver
+  mkdir build
+  cd build
+  cmake .. \
     -DCMAKE_BUILD_TYPE=Release \
     -DCMAKE_SKIP_RPATH=ON \
     -DCMAKE_INSTALL_PREFIX=/usr
 
-  make || return 1
+  make
 }
 
 package() {
-  cd $srcdir/$pkgname-$pkgver
+  cd $pkgname-$pkgver/build
   make DESTDIR=$pkgdir install
 }
