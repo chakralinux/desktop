@@ -2,7 +2,7 @@
 
 pkgname=lemonpos
 pkgver=0.9.3
-pkgrel=2
+pkgrel=3
 pkgdesc="An open source Point of Sale software targeted for micro, small and medium businesses."
 url="http://lemonpos.org/"
 license=('GPL')
@@ -16,12 +16,10 @@ md5sums=('1dabd68e744707483f30df5c5add9190')
 build() {
     cd $srcdir/$pkgname/src
     cmake .. -DCMAKE_INSTALL_PREFIX=/usr
-    msg "Starting make..."
     make
 }
 
 package() {
     cd $srcdir/$pkgname/src
-    msg "Make successful, installIing..."
     make DESTDIR=$pkgdir install
 }
