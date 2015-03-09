@@ -1,0 +1,66 @@
+# Contributor on CCR: danyf90 <daniele.formichelli@gmail.com>
+# Contributions from Arch: https://projects.archlinux.org/svntogit/community.git/tree/trunk?h=packages/mythtv
+
+pkgname=mythtv
+pkgver=0.27.4
+pkgrel=2
+pkgdesc="A Homebrew PVR project"
+arch=('x86_64')
+url="http://www.mythtv.org/"
+license=('GPL')
+depends=('avahi' 'fftw' 'lame' 'libass' 'libavc1394' 'libcdio' 'libiec61883'
+         'libpulse' 'libva' 'libvpx' 'libxinerama' 'lirc-utils'
+         'mariadb-clients' 'mysql-python' 'perl-dbd-mysql'
+         'perl-io-socket-inet6' 'perl-libwww' 'perl-net-upnp' 'python2-lxml'
+         'qtwebkit' 'taglib' 'urlgrabber' 'x264')
+makedepends=('glew' 'libcec' 'libxml2' 'mesa' 'libgl' 'openssl' 'yasm')
+optdepends=('glew: for GPU commercial flagging'
+            'libcec: for consumer electronics control capabilities'
+            'libxml2: to read blu-ray metadata'
+            'openssl: for AirTunes (RAOP) support'
+            'udisks: detect changes to removable media'
+            'xmltv: to download tv listings')
+install='mythtv.install'
+source=(
+	"$pkgname-$pkgver.tar.gz::https://github.com/MythTV/$pkgname/archive/v$pkgver.tar.gz"
+	'mythbackend.service'
+	'libcec-2-support.2.patch')
+sha512sums=('6f858f32467756e96db6f79ccb2c42edc0bf22d217cb7b9dc9188ada994bbb9aafe9f72dd71aca10cd26bad1bd5d344af64487ec5fc925872aba81cf7aa257c8'
+            '8c5327ef450296f33f725ccbca82b9cb71e0eb8c6239cddab57817c085b962ec31f39a337ee55ed22c7eea0c79b104d73f6dbfbfa7a583f956d8c1f17cc38a5b'
+            '9798d219fa452e10cae1d282196c906172e45f9d70ae7757e383267ec6b7dbbfce9a1810cfa9453fb53a5c1e1fcc8c848dec402cf386286f273b1ba2d5b14a41')
+
+prepare() {
+  cd $srcdir/$pkgname-$pkgver/$pkgname
+
+  find 'bindings/python' 'contrib' -type f | xargs sed -i 's@^#!.*python$@#!/usr/bin/python2@'
+  patch -Np2 -i $srcdir/libcec-2-support.2.patch
+}
+
+build() {
+  cd $srcdir/$pkgname-$pkgver/$pkgname
+
+  ./configure --prefix=/usr \
+              --cpu=x86-64 \
+              --disable-altivec \
+              --disable-audio-jack \
+              --disable-ccache \
+              --disable-distcc \
+              --enable-libfftw3 \
+              --enable-libmp3lame \
+              --enable-libvpx \
+              --enable-libx264 \
+              --enable-vaapi \
+              --python=python2
+  make
+}
+
+package() {
+  cd $srcdir/$pkgname-$pkgver/$pkgname
+  make INSTALL_ROOT=$pkgdir install
+
+  install -Dm644 $srcdir/mythbackend.service $pkgdir/usr/lib/systemd/system/mythbackend.service
+  install -Dm644 'database/mc.sql' $pkgdir/usr/share/mythtv/mc.sql
+
+  install -d $pkgdir/{usr/share/mythtv,var/log/mythtv}
+  cp -R 'contrib' $pkgdir/usr/share/mythtv
+}
