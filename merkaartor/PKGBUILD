@@ -1,22 +1,21 @@
-# Apps Packages for Chakra, part of chakra-project.org
-# Maintainer: Adrián Chaves Fernández (Gallaecio) <adriyetichaves gmail.com>
 # Contributions from AUR: https://aur.archlinux.org/packages/merkaartor/
 
 pkgname=merkaartor
 pkgver=0.18.1
-pkgrel=2
+pkgrel=4
 pkgdesc="An editor for the OpenStreetMap project"
 arch=('x86_64')
 url="http://www.merkaartor.org/"
 license=('GPL2')
-depends=('exiv2' 'gdal' 'libxml2' 'libxslt' 'proj' 'qtwebkit')
+depends=('exiv2' 'gdal' 'libxml2' 'libxslt' 'proj' 'qtwebkit' 'unixodbc')
 optdepends=('gpsd')
-makedepends=('boost')
+makedepends=('git' 'boost')
 conflicts=('merkaartor-svn')
 categories=('network' 'education')
 screenshot=(http://merkaartor.be/attachments/download/195)
-source=("http://merkaartor.be/attachments/download/301/merkaartor-0.18.1.tar.bz2")
-md5sums=('a63e67fc2d6430770d057f27936ab965')
+#source=("http://merkaartor.be/attachments/download/301/merkaartor-0.18.1.tar.bz2")
+source+=("$pkgname-$pkgver::git+https://gitorious.org/$pkgname/main.git#tag=$pkgver")
+md5sums=('SKIP')
 
 build() {
   cd $srcdir/$pkgname-$pkgver
