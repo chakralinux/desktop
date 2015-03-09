@@ -1,51 +1,57 @@
-# Maintainer: Michael Haesel <michael[dot]haesel[at]gmail[dot]com>
+# Maintainer: Manuel 'UtG' <utg[dot]chakra.linux[at]gmail[dot]com>
 # Contributor:  eyome <baikalink@hotmail.fr>
-# Contributor: Carlos García carlos-lbs  <carlos.garcia(at)logicalbricks(dot)com>
-# Contributor: Giuseppe Calà <jiveaxe@gmail.com>
-# http://gitorious.org/chakra-packages/apps/trees/master/owncloud-client
- 
+# Contributor: Carlos GarcÃ­a carlos-lbs  <carlos.garcia(at)logicalbricks(dot)com>
+# Contributor: Giuseppe CalÃ  <jiveaxe@gmail.com>
+
 _name=mirall
 pkgname=owncloud-client
-pkgver=1.2.5
-pkgrel=1
+pkgver=1.7.1
+pkgrel=2
 pkgdesc="ownCloud client based on mirall"
 arch=('x86_64')
 url="http://owncloud.org/"
-screenshot="http://en.opensuse.org/images/b/bb/New_oc_connect.png"
+screenshot="http://owncloud.org/wp-content/uploads/2012/03/linux3.png"
 license=('GPL2')
-depends=('qt' 'csync-owncloud>=0.70.0' 'neon')
-makedepends=('cmake' 'libssh' 'smbclient')
-provides=('mirall' 'owncloud-client')
-conflicts=('mirall-git' 'mirall')
-categories=('network')
-options=()
+depends=('qtwebkit' 'neon' 'sqlite3' 'qtkeychain')
+makedepends=('cmake' 'libssh' 'smbclient' 'desktop-file-utils')
+groups=('network')
+conflicts=('csync-owncloud')
 backup=('etc/owncloud-client/sync-exclude.lst')
 install=${pkgname}.install
-_buildtype="Release"
-source=("http://download.owncloud.com/download/${_name}-${pkgver}.tar.bz2"
-        "${pkgname}.desktop")
-sha256sums=('ff3e45b6e681363eb435deed55cc654c903f04597270cb1b966b0ac8d72758b8'
-            'e0c1fa75171148ff3025508531a51244f54a835596595942b99131a745c588ca')
- 
+source=("http://download.owncloud.com/desktop/stable/${_name}-${pkgver}.tar.bz2")
+sha256sums=('ce1bc5784eb42d3f510c6d012d0ad86eefbab99f54f4e8653f546d2c4fda2f59')
+
+prepare() {
+  cd ${_name}-${pkgver}/
+  if [[ -d build ]]; then rm -rf build; fi
+  mkdir build
+}
+
 build() {
-  cd "${srcdir}/${_name}-${pkgver}"
- 
-  if [[ -e "${srcdir}/${_name}-${pkgver}-build" ]]; then rm -rf "${srcdir}/${_name}-${pkgver}-build"; fi
-  mkdir "${srcdir}/${_name}-${pkgver}-build"
-  cd "${srcdir}/${_name}-${pkgver}-build"
- 
-  cmake -DCMAKE_INSTALL_PREFIX=/usr \
-        -DCMAKE_INSTALL_LIBDIR=/usr/lib \
-        -DCSYNC_INCLUDE_PATH=/usr/include/ocsync \
+  cd ${_name}-${pkgver}/build
+
+  cmake -DBUILD_WITH_QT4=on \
+        -DQT_QMAKE_EXECUTABLE=/usr/bin/qmake \
+        -DCMAKE_INSTALL_PREFIX=/usr \
+        -DCMAKE_INSTALL_LIBDIR=lib \
         -DCMAKE_INSTALL_SYSCONFDIR=/etc/${pkgname} \
-        -DCMAKE_BUILD_TYPE=${_buildtype} \
-        ../${_name}-${pkgver}
+        -WITH_DOC=TRUE \
+        -DMEM_NULL_TESTS=On -DUNIT_TESTING=On \
+        -DCMAKE_BUILD_TYPE="Release" \
+        ..
   make
+}
+
+check() {
+  cd ${_name}-${pkgver}/build
+  make test
 }
  
 package() {
-  cd "${srcdir}/${_name}-${pkgver}-build"
- 
+  cd ${_name}-${pkgver}/build
   make DESTDIR="${pkgdir}" install
-  install -Dm644 "${srcdir}/${pkgname}.desktop" "${pkgdir}/usr/share/applications/${pkgname}.desktop"
+  
+  # Fix desktop file
+  desktop-file-edit --set-key="Keywords" --set-value="ownCloud;syncing;file;sharing;" \
+    "${pkgdir}/usr/share/applications/owncloud.desktop"
 }
