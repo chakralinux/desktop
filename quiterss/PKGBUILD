@@ -1,0 +1,32 @@
+# Maintainer: Jeff Huang <s8321414[at]gmail[dot]com>
+# Original maintainer on CCR: Manuel UtG <utg[dot]chakra.linux[at]gmail[dot]com>
+
+pkgname=quiterss
+_pkgname=QuiteRSS
+pkgver=0.17.5
+pkgrel=2
+pkgdesc="QuiteRSS is fast and light rss ,feed reader written in C++/Qt4"
+arch=('x86_64')
+url='http://quiterss.org/'
+license=('GPL3')
+depends=('qtwebkit' 'phonon')
+makedepends=('cmake' 'gettext' 'automoc4')
+source=("http://quiterss.org/files/${pkgver}/${_pkgname}-${pkgver}-src.tar.bz2")
+md5sums=('943d944f5c0973c78a48a0124f906708')
+install=${pkgname}.install
+
+build() {
+  cd "${srcdir}/${_pkgname}-${pkgver}-src"
+
+  qmake ${srcdir}/${_pkgname}-${pkgver}-src/${_pkgname}.pro \
+  PREFIX=/usr \
+  CONFIG+=LINUX_INTEGRATED \
+  INSTALL_ROOT_PATH="${pkgdir}"
+
+  make
+}
+ 
+package() {
+  cd "${srcdir}/${_pkgname}-${pkgver}-src"
+  make INSTALL_ROOT="${pkgdir}" install
+}
