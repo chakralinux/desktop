@@ -1,16 +1,17 @@
-# Maintainer: Neophytos Kolokotronis <tetris4 AT gmail DOT com>
-# contributor Giuseppe Calà <jiveaxe@gmail.com>
+# Contributor: Giuseppe CalÃ  <jiveaxe@gmail.com>
+# Maintainer: Bruce Liu <rainman59118@gmail.com>
 
 pkgname=clementine
-pkgver=1.2.0
-pkgrel=3
+_pkgname=Clementine
+pkgver=1.2.3
+pkgrel=4
 pkgdesc="A modern music player and library organiser and a port of Amarok 1.4, with some features rewritten to take advantage of Qt4."
 url="http://www.clementine-player.org/"
 screenshot="http://images.clementine-player.org/screenshots/clementine-1.0-3.png"
 license="GPL"
 arch=('x86_64')
 install=${pkgname}.install
-depends=('gstreamer0.10-base' 'taglib' 'glew' 'liblastfm' 'libgpod' 'libmtp' 'libplist'
+depends=('gstreamer0.10-base' 'taglib' 'glew>=1.10.0' 'liblastfm' 'libgpod' 'libmtp' 'libplist'
          'hicolor-icon-theme' 'qtwebkit' 'libimobiledevice' 'qjson' 'glew' 'protobuf'
          'libcdio' 'qca' 'qca-ossl' 'chromaprint')
 makedepends=('cmake' 'boost' 'mesa')
@@ -19,19 +20,27 @@ optdepends=('gstreamer0.10-base-plugins: for more open formats'
             'gstreamer0.10-bad-plugins: for use with "Bad" plugin libraries'
             'gstreamer0.10-ugly-plugins: for use with "Ugly" plugin libraries')
 categories=('multimedia')
-source=("http://clementine-player.googlecode.com/files/${pkgname}-${pkgver}.tar.gz")
-sha256sums=('563d00da4e893f7b1966ed137bcab28042151e31ea561cb7076047d3cad96f72')
+source=("https://github.com/clementine-player/${_pkgname}/archive/${pkgver}.tar.gz"
+        "udisks-headers.patch")
+sha1sums=('2a27eda3a13185ba9f0f7b75dcf7173e6828384a'
+          '72f73076a6384c9ce387ec5856a63e599a6e8474')
+
+prepare() {
+  cd ${_pkgname}-${pkgver}
+  patch -Np1 -i "../udisks-headers.patch"
+}
 
 build() {
-  cd ${pkgname}-${pkgver}
+  cd ${_pkgname}-${pkgver}
   mkdir -p build && cd build
   cmake ../ -DCMAKE_INSTALL_PREFIX=/usr \
             -DCMAKE_BUILD_TYPE=Release \
+            -DBUILD_WERROR=OFF \
             -DSTATIC_SQLITE=ON
   make
 }
 
 package() {
-  cd ${pkgname}-${pkgver}/build
+  cd ${_pkgname}-${pkgver}/build
   make install DESTDIR="${pkgdir}"
 }
