@@ -3,7 +3,7 @@
 pkgname=kapudan
 _pkgname=kapudan  
 pkgver=2015.03
-pkgrel=1
+pkgrel=2
 pkgdesc="Chakra's desktop greeter, a fork of Pardus's Kaptan."
 arch=('x86_64')
 url='http://gitorious.org/chakra/kapudan/'
@@ -20,6 +20,12 @@ _gitname=kapudan
 _gitsha=a4a833b
 source=("$pkgname"::"git://gitorious.org/chakra/${_gitname}.git#commit=${_gitsha}")
 md5sums=('SKIP')
+
+prepare() {
+    cd "${srcdir}/${pkgname}"
+    # move locales to share/locale/kde4 for frameworks compatibility
+    sed -i 's|share/locale|share/locale/kde4|' -i setup.py
+}
 
 package() {
     cd "${srcdir}/${pkgname}"
