@@ -1,36 +1,40 @@
-#
-# Apps SC Packages for Chakra, part of chakra-project.org
-#
-# maintainer (i686): Phil Miller <philm[at]chakra-project[dog]org>
-# maintainer (x86_64): Manuel Tortosa <manutortosa[at]chakra-project[dot]org>
-
-# include global config
-source ../_buildscripts/${current_repo}-${_arch}-cfg.conf
-
 pkgname=kadu
-pkgver=0.11.0
-pkgrel=1
+pkgver=2.0
+pkgrel=2
 pkgdesc="A Qt-based Gadu-Gadu client"
-arch=('i686' 'x86_64')
+arch=('x86_64')
 url="http://www.kadu.net/"
 license=('GPL')
-depends=('libgadu' 'aspell' 'phonon' 'libxss' 'qca-ossl' 'libidn')
-makedepends=('cmake' 'libao' 'libsndfile' 'libxtst' 'curl' 'libmpdclient')
+depends=('libgadu' 'libxss' 'enchant' 'phonon-qt5' 'qca-ossl' 'qca-qt5' 'libidn'
+         'libmpdclient' 'libotr' 'libarchive' 'injeqt' 'xdg-utils' 'qt5-multimedia'
+         'qt5-quick1' 'qt5-declarative' 'qt5-webkit' 'qt5-x11extras')
+makedepends=('cmake' 'libao' 'libsndfile' 'libxtst' 'curl' 'chrpath' 'ninja'
+             'qt5-tools')
 conflicts=('kadu-svn')
-categories=('communication')
-install=$pkgname.install
+screenshot=('http://www.kadu.im/wiki/images/thumb/2/24/Screen_mainpage_pl.png/450px-Screen_mainpage_pl.png')
+install=kadu.install
 source=(http://download.kadu.im/stable/$pkgname-$pkgver.tar.bz2)
-sha1sums=('2e42cc0dc4a0fef0c352059a72fa753daa24f138')
+md5sums=('7239fab871f32082a7cf27433219b08b')
+
+prepare() {
+  sed -i 's/unity_integration//g' $pkgname-$pkgver/Plugins.cmake
+  sed -i 's/indicator_docking//g' $pkgname-$pkgver/Plugins.cmake
+}
 
 build() {
-  cd $srcdir/kadu-$pkgver
-  cmake . -DCMAKE_INSTALL_PREFIX=/usr
-  make
+  mkdir build
+  cd build
+
+  cmake ../$pkgname-$pkgver \
+    -GNinja \
+    -DCMAKE_BUILD_TYPE=Release \
+    -DCMAKE_INSTALL_PREFIX=/usr \
+    -DCMAKE_INSTALL_LIBDIR=/usr/lib \
+    -DQT_QMAKE_EXECUTABLE=/usr/bin/qmake-qt5
+  ninja
 }
 
 package() {
-  cd $srcdir/kadu-$pkgver
-  make DESTDIR=$pkgdir install
-  rm -rf $pkgdir/usr/{lib,include}/{libgadu*,pkgconfig}
-  rm -rf $pkgdir/usr/share/kadu/{HISTORY,README}
+  DESTDIR="$pkgdir" LIBDIR=/usr/lib ninja -C build install
+  chrpath -d "$pkgdir"/usr/lib/kadu/plugins/*.so
 }
