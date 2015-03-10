@@ -2,7 +2,7 @@
 # Origin maintainer on CCR: Giuseppe Calà <jiveaxe@gmail.com>
 
 pkgname=owncloud
-pkgver=8.0.0
+pkgver=8.0.2
 pkgrel=1
 pkgdesc="A cloud server to store your files centrally on a hardware controlled by you"
 arch=('x86_64')
@@ -29,7 +29,7 @@ source=("http://download.owncloud.org/community/${pkgname}-${pkgver}.tar.bz2"
         'owncloud.conf')
 options=('!strip')
 install=owncloud.install
-md5sums=('d2c1366be0756c24e1f5cfc02f80269f'
+md5sums=('9b10eb45b7923fcb46b89cf0ad149097'
          '0505493fccf49dcaa0760268c290c138')
 
 conflicts=('owncloud-git')
@@ -37,16 +37,26 @@ screenshot=(http://karlitschek.de/wp-content/uploads/2014/07/oc7.jpg)
 
 package() {
 # install license
-  install -d $pkgdir/usr/share/licenses/$pkgname
-  cp $srcdir/$pkgname/COPYING-* $pkgdir/usr/share/licenses/$pkgname
+  install -d ${pkgdir}/usr/share/licenses/${pkgname}
+  cp ${srcdir}/${pkgname}/COPYING-* ${pkgdir}/usr/share/licenses/${pkgname}
 
 # install project
-  install -d  ${pkgdir}/usr/share/webapps/
-  cp -a ${srcdir}/${pkgname}  ${pkgdir}/usr/share/webapps/
-  chown -R http:http ${pkgdir}/usr/share/webapps/owncloud/{apps,config}
+  install -d ${pkgdir}/usr/share/webapps/
+  cp -a ${srcdir}/${pkgname} ${pkgdir}/usr/share/webapps/
 
-# install apache .conf file
-  install -d ${pkgdir}/etc/httpd/conf/extra
-  install -m 644 ${srcdir}/owncloud.conf  ${pkgdir}/etc/httpd/conf/extra/
+# install apache config file
+  install -d  ${pkgdir}/etc/webapps/${pkgname}
+  install -m 644 ${srcdir}/owncloud.conf  ${pkgdir}/etc/webapps/${pkgname}
+
+# move config to /etc
+  mv ${pkgdir}/usr/share/webapps/owncloud/config ${pkgdir}/etc/webapps/${pkgname}/config
+  chown -R http:http ${pkgdir}/etc/webapps/${pkgname}
+  ln -s /etc/webapps/${pkgname}/config ${pkgdir}/usr/share/webapps/owncloud/config
+  chown -R root:http ${pkgdir}/usr/share/webapps/${pkgname}
+
+  find ${pkgdir}/usr/share/webapps/owncloud -type f -exec chmod 0644 {} \;
+  find ${pkgdir}/usr/share/webapps/owncloud -type d -exec chmod 0755 {} \;
+#  find ${pkgdir}/etc/webapps/owncloud -type f -print0 | xargs -0 chmod 0640
+#  find ${pkgdir}/etc/webapps/owncloud -type d -print0 | xargs -0 chmod 0750
 }
 
