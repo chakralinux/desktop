@@ -1,25 +1,20 @@
-# maintainer: Neophytos Kolokotronis <tetris4@gmail.com
 # Contributions from Arch: https://www.archlinux.org/packages/community/x86_64/postgis/
 
 pkgname=postgis
-pkgver=2.1.4
+pkgver=2.1.5
 pkgrel=1
 pkgdesc="Adds support for geographic objects to PostgreSQL"
 arch=('x86_64')
 url="http://postgis.refractions.net/"
 license=('GPL')
 depends=('postgresql' 'proj' 'geos' 'gdal' 'json-c' 'jasper' 'unixodbc')
-options=('!libtool')
 source=(http://download.osgeo.org/postgis/source/$pkgname-$pkgver.tar.gz)
-md5sums=('6f7bacc0205859dafdfe545db1b892ca')
+sha256sums=('0d0e27f72f12b8dba456fbde25ed0f6913f42baf57332a7f1b9bbc6f29fddbf4')
 
 build() {
 	cd ${srcdir}/$pkgname-$pkgver
 	./configure --prefix=/usr
 	make
-	# Build utils (https://bugs.archlinux.org/task/25836)
-        cd utils
-        make
 }
 
 package() {

@@ -1,30 +1,32 @@
-# maintainer abveritas[at]chakra-project[dot]org>
-
 pkgname=bibletime-kde4
-_pkgname=bibletime
-pkgver=2.9.1
-pkgrel=3
+origname=bibletime
+pkgver=2.10.1
+pkgrel=1
 pkgdesc="Bible software that uses the Sword Engine for KDE4"
 arch=('x86_64')
 url=("http://www.blog.bibletime.info")
 license=('GPL2')
-depends=('qtwebkit' 'sword' 'openssl')
-makedepends=('cmake' 'boost')
+depends=('qtwebkit' 'sword' 'openssl' 'clucene')
+makedepends=('cmake')
 categories=('education')
-source=('http://gitorious.org/bibletime/bibletime/archive-tarball/master')
-md5sums=('9c431081610aa1947c0b0a31ec78a364')
+source=(http://sourceforge.net/projects/bibletime/files/bibletime-$pkgver.tar.xz)
+md5sums=('ef4d189d53fd1608c56f4827947ffcf0')
 
 build() {
-  cd "$srcdir/$_pkgname-$_pkgname"
-  cmake -DCMAKE_INSTALL_PREFIX=/usr \
-	-DCMAKE_BUILD_TYPE=Release ${srcdir}/$_pkgname-$_pkgname 
+	mkdir "$srcdir/$origname-$pkgver/build_dir"
+	cd "$srcdir/$origname-$pkgver/build_dir"
+
+	CXXFLAGS+=" -fpermissive"
+	cmake	-DCMAKE_INSTALL_PREFIX=/usr \
+		-DCMAKE_BUILD_TYPE=Release \
+		-DBT_FORCE_USE_QT4=TRUE \
+		..
 
 	make
 }
 
 package() {
-        cd "$srcdir/$_pkgname-$_pkgname"
-        make DESTDIR="${pkgdir}" install 
-
+	cd "$srcdir/$origname-$pkgver/build_dir"
+	make DESTDIR="$pkgdir" install
 }
 
