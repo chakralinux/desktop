@@ -1,14 +1,8 @@
-# Maintainer: H W Tovetjärn (totte) <totte@tott.es>
-# Contributors: SaultDon <sault.don gmail>
-#               Lantald < lantald at gmx.com >
-#               Thomas Dziedzic < gostrc at gmail >
-#               dibblethewrecker dibblethewrecker.at.jiwe.dot.org
-#               Gerardo Exequiel Pozzi <vmlinuz386@yahoo.com.ar>
-#               Eric Forgeot < http://esclinux.tk >
+# Contributions from Arch: https://aur.archlinux.org/packages/qgis/
 
 pkgname=qgis
-pkgver=2.6.1
-pkgrel=2
+pkgver=2.8.1
+pkgrel=1
 pkgdesc='A Geographic Information System (GIS) that supports vector, raster and database formats'
 url='http://qgis.org/'
 license=('GPL')
@@ -18,7 +12,6 @@ depends=('bison'
          'curl'
          'flex'
          'gdal'
-         'giflib'
          'jasper'
          'libmariadbclient'
          'libspatialite'
@@ -28,7 +21,7 @@ depends=('bison'
          'qscintilla-python2'
          'python2-psycopg2'
          'qt'
-         'qwt'
+         'qwt6'
          'spatialindex'
          'sqlite3')
 makedepends=('cmake'
@@ -44,7 +37,7 @@ optdepends=('fcgi: qgis mapserver'
             'python2-sip: python-support'
             'postgis: postgis support and SPIT plugin')
 source=("http://qgis.org/downloads/${pkgname}-${pkgver}.tar.bz2")
-md5sums=('e6d4233b5f8d4c7a77e289a9c794089f')
+md5sums=('3f8d66edc81afd7386338430fad4527b')
 
 prepare() {
     rm -rf ${srcdir}/${pkgname}-${pkgver}/build
@@ -52,24 +45,13 @@ prepare() {
 }
 
 build() {
-    #cd "${pkgname}-${pkgver}"
-    #patch -Np1 -i "${srcdir}/rev-349a4c97.diff"
-    #patch -Np1 -i "${srcdir}/QgsFieldValidator.diff"
-    
     cd ${srcdir}/${pkgname}-${pkgver}/build
-        #-DCMAKE_SKIP_RPATH=ON \
-        #-DENABLE_TESTS=OFF \
-        #-DQT_QMAKE_EXECUTABLE=qmake \
-        #-DQWTPOLAR_INCLUDE_DIR=/usr/include/qwt \
-        #-DQWTPOLAR_LIBRARY=/usr/lib/libqwtpolar.so \
-        #-DQWT_INCLUDE_DIR=/usr/include/qwt \
-        #-DQWT_LIBRARY=/usr/lib/libqwt.so \
-        #-DWITH_INTERNAL_QWTPOLAR=FALSE \
-        #-DWITH_MAPSERVER=TRUE
     cmake ../ \
         -DCMAKE_BUILD_TYPE=Release \
         -DCMAKE_INSTALL_PREFIX=/usr \
+        -DWITH_GRASS=ON \
         -DGRASS_PREFIX=/opt/grass \
+        -DGRASS_INCLUDE_DIR=/opt/grass/include/ \
         -DQGIS_MANUAL_SUBDIR=share/man \
         -DPYTHON_LIBRARY=/usr/lib/libpython2.7.so \
         -DPYTHON_EXECUTABLE=/usr/bin/python2 \
@@ -98,8 +80,4 @@ package() {
         done
     ln -s /usr/share/qgis/images/icons/qgis-icon.png "${pkgdir}/usr/share/pixmaps/qgis-icon.png"
     ln -s /usr/share/qgis/images/icons/qgis-mime-icon.png "${pkgdir}/usr/share/pixmaps/qgis-mime-icon.png"
-
-    # enable qgis for python by setting PYTHONPATH
-    #install -Dm644 "${srcdir}/qgis.sh" \
-    #"${pkgdir}/etc/profile.d/qgis.sh"
 }
