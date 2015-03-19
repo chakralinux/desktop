@@ -69,7 +69,7 @@ pkgver=${_kdever}
 pkgrel=3
 url="http://www.kde.org"
 license=('GPL' 'FDL')
-makedepends=('kdoctools' 'ki18n' 'qt5-tools')
+makedepends=('kdoctools' 'ki18n' 'qt5-tools' 'extra-cmake-modules')
 depends=("kdelibs>=${_libsver}" 'automoc4' 'docbook-xsl')
 options=('docs' 'log')
 
@@ -78,9 +78,9 @@ sha256sums=()
 
 for _name in "${pkgname[@]}"; do
   source+=(${_mirror}/${pkgbase}/${_name}-${pkgver}.tar.xz)
-  source+=(${_oldkdemirror}/${pkgbase}/${_name}-${_oldkdever}.tar.xz)
+#  source+=(${_oldkdemirror}/${pkgbase}/${_name}-${_oldkdever}.tar.xz)
   sha256sums+=(`grep  "${_name}-${pkgver}.tar.xz"             ../checksums.txt  |  cut  -d  " "  -f1`)
-  sha256sums+=(`grep  "${_name}-${_oldkdever}.tar.xz"             ../checksums.txt  |  cut  -d  " "  -f1`)
+#  sha256sums+=(`grep  "${_name}-${_oldkdever}.tar.xz"             ../checksums.txt  |  cut  -d  " "  -f1`)
 done
 
 build() {
@@ -95,12 +95,12 @@ build() {
 #   done
 
     for it in ${pkgname[@]} ; do
-        pushd "$it-$_oldkdever"
-        cmake \
-            -DCMAKE_INSTALL_PREFIX=${_installprefix} \
-            -DCMAKE_BUILD_TYPE=Release
-        make
-        popd
+#         pushd "$it-$_oldkdever"
+#         cmake \
+#             -DCMAKE_INSTALL_PREFIX=${_installprefix} \
+#             -DCMAKE_BUILD_TYPE=Release
+#         make
+#         popd
 
         pushd "$it-$pkgver"
         cmake \
@@ -113,9 +113,9 @@ build() {
 
 package_helper()
 {
-    pushd ${srcdir}/kde-l10n-${1}-${_oldkdever}
-    make DESTDIR=${pkgdir} install
-    popd
+#     pushd ${srcdir}/kde-l10n-${1}-${_oldkdever}
+#     make DESTDIR=${pkgdir} install
+#     popd
     # overwrite old 4.14.3 with new one
     pushd ${srcdir}/kde-l10n-${1}-${pkgver}
     make DESTDIR=${pkgdir} install
