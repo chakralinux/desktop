@@ -1,8 +1,9 @@
-# Maintainer: Adrián Chaves Fernández (Gallaecio) <adriyetichaves@gmail.com>
+# Maintainer: Jeff Huang <s8321414[at]gmail[dot]com>
+# Contributer: Adrián Chaves Fernández (Gallaecio) <adriyetichaves@gmail.com>
 
 pkgname=freeciv
 pkgver=2.5.0
-pkgrel=1
+pkgrel=2
 pkgdesc="Multiplayer clone of Civilization™."
 arch=('x86_64')
 url="http://www.freeciv.org/"
@@ -10,6 +11,7 @@ license=('GPL2')
 depends=('bzip2' 'freetype2' 'readline' 'qt5-base' 'sqlite3' 'curl' 'libltdl')
 changelog=ChangeLog
 categories=('games')
+backup=('etc/freeciv/database.lua')
 source=(http://downloads.sourceforge.net/sourceforge/$pkgname/$pkgname-$pkgver.tar.bz2)
 md5sums=('8a61ecd986853200326711446c573f1b')
 
@@ -33,7 +35,7 @@ package() {
   install -dm 755 $pkgdir/etc
   make DESTDIR=$pkgdir install
 
-  # Link to SDL client.
+  # Link to Qt client.
   cd $pkgdir/usr/bin
-  ln -s freeciv-sdl freeciv
+  ln -s freeciv-qt freeciv
 }
