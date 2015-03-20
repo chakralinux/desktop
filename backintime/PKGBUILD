@@ -1,0 +1,41 @@
+# Maintainer: UtG <utg.chakra.linux[at]gmail[dot]com>
+# contributor: AlmAck <gluca86[at]google[dot]com>
+
+
+pkgname=backintime
+pkgver=1.1.2
+#_bzrversion=900
+pkgrel=1
+pkgdesc="A simple backup system for Linux inspired from 'flyback project' and 'TimeVault'."
+arch=('x86_64')
+url="https://launchpad.net/backintime"
+license="GPL"
+depends=('rsync' 'cron' 'python' 'xorg-utils' 'python2-pyqt4' 'python2-keyring')
+categories=('utils' 'backup')
+replace=backintime-kde
+source=("http://backintime.le-web.org/download/backintime/backintime-$pkgver.tar.gz")
+sha256sums=('601418af0e68c327afa91e3ed9ef76c63016272728669021ca1e8b6f73d1d87b')
+
+_bzrbranch=lp:backintime 
+_bzrmod=trunk
+
+build() {
+ 
+  cd "${srcdir}/${pkgname}-${pkgver}/common"
+  ./configure
+  make
+
+  cd "${srcdir}/${pkgname}-${pkgver}/qt4"
+  ./configure
+  make
+}
+
+package(){
+  cd "${srcdir}/${pkgname}-${pkgver}/common"
+  make DESTDIR="${pkgdir}" install
+  sed -i -e 's/python/python2/g' "${pkgdir}/usr/bin/backintime"
+  
+  cd "${srcdir}/${pkgname}-${pkgver}/qt4"
+  make DESTDIR="${pkgdir}" install
+  sed -i -e 's/python/python2/g' "${pkgdir}/usr/bin/backintime-qt4"
+}
