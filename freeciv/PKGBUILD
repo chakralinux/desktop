@@ -1,24 +1,28 @@
 # Maintainer: Adrián Chaves Fernández (Gallaecio) <adriyetichaves@gmail.com>
 
 pkgname=freeciv
-pkgver=2.4.3
+pkgver=2.5.0
 pkgrel=1
 pkgdesc="Multiplayer clone of Civilization™."
 arch=('x86_64')
 url="http://www.freeciv.org/"
 license=('GPL2')
-depends=('bzip2' 'freetype2' 'readline' 'sdl' 'sdl_image' 'sdl_mixer')
+depends=('bzip2' 'freetype2' 'readline' 'qt5-base' 'sqlite3' 'curl' 'libltdl')
 changelog=ChangeLog
 categories=('games')
 source=(http://downloads.sourceforge.net/sourceforge/$pkgname/$pkgname-$pkgver.tar.bz2)
-md5sums=('437f9a4aadb80619a7c5ae9643142b8b')
+md5sums=('8a61ecd986853200326711446c573f1b')
 
 build() {
   cd $srcdir/$pkgname-$pkgver
+  export MOCCMD="/usr/lib/qt5/bin/moc"
   ./configure \
     --prefix=/usr \
     --mandir=/usr/share/man \
-    --enable-client=sdl \
+    --sysconfdir=/etc \
+    --enable-client=qt \
+    --enable-fcdb=sqlite3 \
+    --enable-aimodules \
     --enable-shared
   make
 }
