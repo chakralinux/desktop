@@ -2,7 +2,7 @@
 # Contributer: UtG <utg[dot]chakra.linux[at]gmail[dot]com>
 
 pkgname=calibre
-pkgver=2.21.0
+pkgver=2.22.0
 pkgrel=1
 pkgdesc="Ebook management application"
 arch=('x86_64')
@@ -16,22 +16,20 @@ depends=('python2-six' 'python2-dateutil' 'python2-cssutils' 'python2-cherrypy'
          'python2-netifaces' 'python2-cssselect' 'python2-apsw' 'qt5-webkit'
          'qt5-svg' 'python2-chardet' 'python2-html5lib' 'python2-pygments')
 makedepends=('python2-pycountry' 'qt5-x11extras')
-#optdepends=('ipython2: to use calibre-debug')
+optdepends=('udisks: required for mounting certain devices')
 screenshot=('https://lh5.googleusercontent.com/_lG58t3XWd3c/TcNwiXkAx_I/AAAAAAAAAEc/M34I4uY9UUY/s800/gui.jpeg')
 install=${pkgname}.install
 source=("http://download.calibre-ebook.com/${pkgver}/${pkgname}-${pkgver}.tar.xz")
-sha256sums=('eb15469ece3f8ac3005f6a0ec1a6ad68b58f185c5e493334ebba2edea578b1a9')
+sha256sums=('c053136ccf2eab3346087a2de30f8fa3f228baecd87753a5b3204bf87ba917a6')
 
 prepare() {
   cd ${pkgname}-${pkgver}
 
   # Remove unneded files an libs
-  rm -rf src/cherrypy 
-         #src/six.py \
+  rm -rf resources/${pkgname}-portable.* \
+	 src/cherrypy \
          #src/chardet \
-         #src/html5lib
-         
-  rm -rf resources/${pkgname}-portable.*
+         #src/html5lib 
 
   sed -i -e "s/shlex.split(ldflags)/& + ['-fPIC']/" setup/extensions.py
 
