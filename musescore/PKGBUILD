@@ -1,46 +1,34 @@
 #
-# Apps Packages for Chakra, part of chakra-project.org
+# Apps Packages for Chakra, part of chakraos.org
 #
 # Maintainer: Neophytos Kolokotronis <tetris4@gmail.com>
 
 pkgname=musescore
-_pkgname=mscore
-pkgver=1.3
-pkgrel=3
+pkgver=2.0.0
+pkgrel=1
 pkgdesc="A music score editor written in Qt"
 arch=('x86_64')
 url="http://www.musescore.org/en/"
 license=('GPL')
-depends=('libsndfile' 'qtscriptgenerator' 'portaudio')
-makedepends=('cmake' 'doxygen')
-optdepends=('jack')
+depends=('libpulse' 'portaudio' 'qt5-quick1' 'qt5-svg' 'qt5-tools')
+makedepends=('cmake' 'doxygen' 'lame' 'qt5-script' 'texlive-core')
+optdepends=('lame: MP3 export')
 categories=('multimedia')
 install=musescore.install
-source=("http://downloads.sourceforge.net/${_pkgname}/${_pkgname}-${pkgver}.tar.bz2"
-        'paths.patch'
+source=("musescore-${pkgver}.tar.gz::https://github.com/musescore/MuseScore/archive/v${pkgver}.tar.gz"
         'musescore.conf')
-md5sums=('e5fde2bef0d40ee7542e1f515a3919d1'
-         'a0419cbe08b655820d52ea440653b1d3'
-         '289539133bfcd06bed8ca115b33524e5')
+sha256sums=('1c88d64f0b020b1eec9fd4d181353da07948cc08c6e2a35c5ea97c8e6ffa8ea8'
+            '397b5431137d468a64b768670efdf385c27cb7298ee9295a32323a2610427928')
 
 build() {
-  cd $srcdir/${_pkgname}-${pkgver}
-  export QT_PLUGINS_DIR=/usr/lib/qt/plugins 
-  [ -d build ] && make clean
-  patch -p1 < $srcdir/paths.patch
+  cd MuseScore-${pkgver}
 
-  make PREFIX=/usr release 
+  make PREFIX='/usr' release
 }
 
 package() {
-  cd $srcdir/${_pkgname}-${pkgver}
-  make DESTDIR="$pkgdir" install
+  cd MuseScore-${pkgver}/build.release
 
-  # avoid file conflict with "qtscriptgenerator" 
-  for _i in gui network core uitools xml
-  do 
-    rm $pkgdir/usr/lib/qt/plugins/script/libqtscript_${_i}.so
-  done
-
-  install -D -m 0644 "${srcdir}/musescore.conf" "${pkgdir}/etc/modules-load.d/musescore.conf"  
+  make DESTDIR="${pkgdir}" install
+  install -m 644 ../assets/musescore-icon-round-512.png "${pkgdir}"/usr/share/pixmaps/mscore.png
 }
