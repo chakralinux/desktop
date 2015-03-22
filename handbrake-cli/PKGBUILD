@@ -1,17 +1,17 @@
 # maintainer: Neophytos Kolokotronis <tetris4@gmail.com>
 # cpntributions from ArchLinux: https://www.archlinux.org/packages/community/x86_64/handbrake-cli/
 pkgname=handbrake-cli
-pkgver=0.10.0
-pkgrel=2
+pkgver=0.10.1
+pkgrel=1
 pkgdesc="Multithreaded video transcoder (CLI)"
 arch=('x86_64')
 url="http://handbrake.fr/"
 license=('GPL')
 depends=('bzip2' 'gcc-libs' 'zlib' 'fribidi' 'libass' 'lame' 'libxml2' 'libtheora' 'libsamplerate' 'libbluray' 'x264' 'libdvdnav')
 makedepends=('intltool' 'python2' 'yasm' 'wget' 'libnotify' 'gst-plugins-base' 'dbus-glib')
-source=("http://downloads.sourceforge.net/project/handbrake/$pkgver/HandBrake-$pkgver.tar.bz2")
+source=("https://handbrake.fr/mirror/HandBrake-$pkgver.tar.bz2")
 categories=('multimedia')
-md5sums=('0902f724e2884bc9a5e077cc021b578d')
+md5sums=('8b54ebaa5e4b40fd4d07b50a41f06258')
 
 prepare() {
   cd "$srcdir/HandBrake-$pkgver"
@@ -21,6 +21,8 @@ prepare() {
   # https://forum.handbrake.fr/viewtopic.php?f=13&t=27581
   sed -i \
     -e '/MODULES += contrib\/libbluray/d' \
+    -e '/MODULES += contrib\/libdvdnav/d' \
+    -e '/MODULES += contrib\/libdvdread/d' \
     make/include/main.defs
 }    
 build() {
@@ -39,4 +41,3 @@ package() {
   
   install -D HandBrakeCLI "$pkgdir/usr/bin/HandBrakeCLI"
 }
-
