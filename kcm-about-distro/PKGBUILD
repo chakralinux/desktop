@@ -3,7 +3,7 @@
 pkgname=kcm-about-distro
 _pkgname=about-distro
 pkgver=2.0.1
-pkgrel=2
+pkgrel=3
 pkgdesc="KCM displaying distribution and system information"
 arch=('x86_64')
 url='https://projects.kde.org/about-distro'
@@ -54,6 +54,6 @@ build() {
 package() {
   cd "${srcdir}/build"
   make DESTDIR="$pkgdir" install
-  install -Dm644 "$srcdir/kcm-about-distrorc" "$pkgdir/usr/share/config/kcm-about-distrorc"
-  install -Dm644 "$srcdir/chakra-label.png" "$pkgdir/usr/share/apps/$_pkgname/chakra-label.png"
+  install -Dm644 "$srcdir/kcm-about-distrorc" "$pkgdir/etc/xdg/kcm-about-distrorc"
+  install -Dm644 "$srcdir/chakra-label.png" "$pkgdir/usr/share/$_pkgname/chakra-label.png"
 }
