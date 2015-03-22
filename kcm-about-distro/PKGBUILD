@@ -2,31 +2,30 @@
 
 pkgname=kcm-about-distro
 _pkgname=about-distro
-pkgver=1.0.1
+pkgver=2.0.1
 pkgrel=1
 pkgdesc="KCM displaying distribution and system information"
 arch=('x86_64')
 url='https://projects.kde.org/about-distro'
 screenshot="http://i.imgur.com/ZidApNr.png"
 license=('GPL3')
-depends=('kdelibs')
-makedepends=('cmake' 'automoc4')
+depends=('kconfigwidgets' 'solid' 'python3')
+makedepends=('extra-cmake-modules')
 source=("http://download.kde.org/stable/$_pkgname/$pkgver/src/$_pkgname-$pkgver.tar.xz"
         'kcm-about-distrorc'
-        'chakra-label.png'
-        'Module_Chakra.patch'
-        'kcm-about-distro.install')
-md5sums=('fc8c0dddb94ffe148d5f2fd78e865a98'
+        'chakra-label.png')
+        #'Module_Chakra.patch'
+md5sums=('bfde9eea480fb59af8c1817ed39fd8c2'
          '8ad607452f80603c36f5ba28e30f51d6'
-         'becd80aad126da45464128e825acd116'
-         'f0c4012841d4dc68fe54f3b25982abaf'
-         'cc0ce36d58e8f8e33561de4853279ecc')
+         'becd80aad126da45464128e825acd116')
+         #'f0c4012841d4dc68fe54f3b25982abaf'
 install="kcm-about-distro.install"
 
 prepare(){
   cd ${srcdir}/about-distro-*
   
-  patch -Np1 -i ${srcdir}/Module_Chakra.patch
+  # Why we need this patch?
+  #patch -Np1 -i ${srcdir}/Module_Chakra.patch
   
   # Let's remove Chakra's release date to make space for the whole name's project
   sed -i 's/%1\ %2/%1/g' src/Module.cpp
@@ -40,7 +39,7 @@ build() {
   mkdir -p build
   cd build
   cmake ../$_pkgname-$pkgver \
-    -DQT_QMAKE_EXECUTABLE=/usr/bin/qmake \
+    -DQT_QMAKE_EXECUTABLE=/usr/bin/qmake-qt5 \
     -DCMAKE_BUILD_TYPE=Release \
     -DCMAKE_INSTALL_PREFIX=/usr
   make
