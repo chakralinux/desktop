@@ -1,0 +1,45 @@
+# Contributions from ArchLinux: https://www.archlinux.org/packages/community/x86_64/syncthing/
+
+pkgname=syncthing
+pkgver=0.10.29
+pkgrel=1
+pkgdesc="Open Source Continuous Replication / Cluster Synchronization Thing"
+url="http://syncthing.net/"
+license=('GPL3')
+arch=('x86_64')
+screenshot='http://syncthing.net/screenshot.jpg'
+depends=('glibc')
+makedepends=('git' 'go' 'inetutils' 'sed')
+source=("$pkgname-$pkgver::git+https://github.com/syncthing/syncthing.git#tag=v${pkgver}"
+        "syncthing.1"
+        "syncthing.desktop")
+sha1sums=('SKIP'
+          '17be8b3f99c577e325765abc251f597e204d7711'
+          '8197e3ae55959d697d7702df565f751c0b3da1a7')
+install=${pkgname}.install
+
+prepare() {
+    cd "${srcdir}"
+    mkdir -p "src/github.com/syncthing"
+    mv "${pkgname}-${pkgver}" "src/github.com/syncthing/${pkgname}"
+}
+
+build() {
+    export GOPATH="${srcdir}"
+    cd "${srcdir}/src/github.com/syncthing/${pkgname}"
+    go run build.go -no-upgrade build
+}
+
+package() {
+    cd "${srcdir}/src/github.com/syncthing/${pkgname}"
+    install -D -m 755 ${pkgname} "${pkgdir}/usr/bin/${pkgname}"
+    install -D -m 644 README.md "${pkgdir}/usr/share/doc/${pkgname}/README.md"
+    install -D -m 644 "etc/linux-systemd/system/${pkgname}@.service" "${pkgdir}/usr/lib/systemd/system/${pkgname}@.service"
+    install -D -m 644 "etc/linux-systemd/user/${pkgname}.service" "${pkgdir}/usr/lib/systemd/user/${pkgname}.service"
+    install -D -m 644 "${srcdir}/${pkgname}.1" "${pkgdir}/usr/share/man/man1/${pkgname}.1"
+    
+    # Desktop icon
+    install -Dm644 "${srcdir}/${pkgname}.desktop" "$pkgdir/usr/share/applications/${pkgname}.desktop"
+    install -Dm644 "${srcdir}/src/github.com/syncthing/${pkgname}/gui/assets/img/favicon.png" "$pkgdir/usr/share/pixmaps/${pkgname}.png"
+}
+
