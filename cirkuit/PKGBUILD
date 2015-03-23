@@ -1,11 +1,8 @@
-#
-# Apps Packages for Chakra, part of chakra-project.org
-#
-# Maintainer: Adrián Chaves Fernández (Gallaecio) <adriyetichaves@gmail.com>
+# Contributions from AUR: https://aur.archlinux.org/packages/cirkuit/
 
 pkgname=cirkuit
 pkgver=0.4.3
-pkgrel=4
+pkgrel=5
 pkgdesc='An application for drawing high-quality line diagrams to include in TeX, LaTeX, or similar documents.'
 url="http://wwwu.uni-klu.ac.at/magostin/cirkuit.html"
 license=('GPL3')
@@ -22,14 +19,17 @@ build() {
   cd $pkgname-$pkgver
   [[ -d build ]] && rm -r build
   mkdir build && cd build
-  cmake \
+  cmake  \
     -DCMAKE_INSTALL_PREFIX=/usr \
+    -Wno-dev \
     -DCMAKE_BUILD_TYPE=RelWithDebInfo \
     ..
   make
 }
- 
+
 package() {
   cd $pkgname-$pkgver/build
   make DESTDIR=$pkgdir install
+  rm -rf ${pkgdir}/usr/share/apps/katepart/syntax/gnuplot.xml
 }
+
