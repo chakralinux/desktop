@@ -83,13 +83,15 @@ done
 build() {
     cd ${srcdir}
 
-   for it in `find . -maxdepth 1 -type d|sed -e '/^\.$/d'` ; do
-       pushd "$it"
-       cmake -DCMAKE_INSTALL_PREFIX=${_installprefix} -DCMAKE_BUILD_TYPE=Release
-       make
-       make DESTDIR=${pkgdir} install
-       popd
-   done
+#   This has been replaced from the following section, to handle the build of both 14.12.3 and 4.14.3
+#       
+#   for it in `find . -maxdepth 1 -type d|sed -e '/^\.$/d'` ; do
+#       pushd "$it"
+#       cmake -DCMAKE_INSTALL_PREFIX=${_installprefix} -DCMAKE_BUILD_TYPE=Release
+#       make
+#       make DESTDIR=${pkgdir} install
+#       popd
+#   done
 
     for it in ${pkgname[@]} ; do
          pushd "$it-$_oldkdever"
