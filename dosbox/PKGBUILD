@@ -1,27 +1,24 @@
-#
-# Chakra Packages for Chakra, part of chakra-project.org
-#
-# maintainer (i686): Phil Miller <philm[at]chakra-project[dog]org>
-# maintainer (x86_64): Manuel Tortosa <manutortosa[at]chakra-project[dot]org>
-
 pkgname=dosbox
 pkgver=0.74
-pkgrel=5
+pkgrel=6
 pkgdesc="An emulator with builtin DOS for running DOS Games"
 arch=('x86_64')
 url="http://dosbox.sourceforge.net/"
 license=('GPL')
-depends=('sdl_net' 'sdl_sound' 'libgl' 'libpng' 'alsa-lib' 'gcc-libs' 'zlib')
-makedepends=('mesa')
+depends=('sdl_net' 'sdl_sound' 'libgl' 'libpng' 'alsa-lib' 'gcc-libs' 'zlib' 'glu')
+makedepends=('mesa-libgl' 'gendesk')
 categories=('games' 'system')
 source=("http://downloads.sourceforge.net/${pkgname}/$pkgname-$pkgver.tar.gz"
-	'dosbox.png' 'dosbox.desktop' 'gcc46.patch')
+	'dosbox.png'
+	'gcc46.patch')
 md5sums=('b9b240fa87104421962d14eee71351e8'
          '2aac25fc06979e375953fcc36824dc5e'
-         '85169ca599028bee8e29e0b3b7b34dd8'
          '3fba2e3c7c43290319b2928f40ed30e5')
 
 prepare() {
+  cd ${srcdir}
+  gendesk --pkgname ${pkgname} --pkgdesc ${pkgdesc}
+  
   cd ${srcdir}/${pkgname}-${pkgver}
   patch -Np1 -i "$srcdir/gcc46.patch"
   sed -i 's/png_check_sig/png_sig_cmp/' configure 
@@ -30,9 +27,8 @@ prepare() {
 build(){
   cd ${srcdir}/${pkgname}-${pkgver}
 
-  ./configure --prefix=/usr \
-    --sysconfdir=/etc/dosbox 
-  make 
+  ./configure --prefix=/usr --sysconfdir=/etc/dosbox 
+  make
 }
 
 package() {
