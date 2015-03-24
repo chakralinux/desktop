@@ -1,6 +1,6 @@
 pkgname=dosbox
 pkgver=0.74
-pkgrel=6
+pkgrel=7
 pkgdesc="An emulator with builtin DOS for running DOS Games"
 arch=('x86_64')
 url="http://dosbox.sourceforge.net/"
@@ -17,7 +17,7 @@ md5sums=('b9b240fa87104421962d14eee71351e8'
 
 prepare() {
   cd ${srcdir}
-  gendesk --pkgname ${pkgname} --pkgdesc ${pkgdesc}
+  gendesk --pkgname "${pkgname}" --pkgdesc "${pkgdesc}"
   
   cd ${srcdir}/${pkgname}-${pkgver}
   patch -Np1 -i "$srcdir/gcc46.patch"
