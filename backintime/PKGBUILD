@@ -1,38 +1,36 @@
-# Maintainer: UtG <utg.chakra.linux[at]gmail[dot]com>
-# contributor: AlmAck <gluca86[at]google[dot]com>
-
 pkgname=backintime
-pkgver=1.1.2
-pkgrel=3
+pkgver=1.1.4
+pkgrel=1
 pkgdesc="A simple backup system for Linux inspired from 'flyback project' and 'TimeVault'."
 arch=('x86_64')
 url="https://launchpad.net/backintime"
 license="GPL"
-depends=('rsync' 'cron' 'python' 'xorg-utils' 'python2-pyqt4' 'python2-keyring')
+depends=('rsync' 'cron' 'python' 'xorg-utils' 'python3-pyqt4' 'python3-keyring' 'icu' 'polkit'
+	 'openssh' 'python3-dbus' 'libnotify')
 categories=('utils' 'backup')
 provides=('backintime-kde')
 conflicts=('backintime-kde')
 replaces=('backintime-kde')
-source=("http://backintime.le-web.org/download/backintime/backintime-$pkgver.tar.gz")
-sha256sums=('601418af0e68c327afa91e3ed9ef76c63016272728669021ca1e8b6f73d1d87b')
+source=("https://launchpadlibrarian.net/200955618/${pkgname}-${pkgver}.tar.gz")
+sha256sums=('434fc1fb6d9ac20d7b04c791e39bf9e077773c696e18f2bf1aa8f3e7fb59a770')
 
 build() {
  
   cd "${srcdir}/${pkgname}-${pkgver}/common"
-  ./configure
+  ./configure --python3 --no-fuse-group
   make
 
   cd "${srcdir}/${pkgname}-${pkgver}/qt4"
-  ./configure
+  ./configure --python3
   make
 }
 
 package(){
   cd "${srcdir}/${pkgname}-${pkgver}/common"
   make DESTDIR="${pkgdir}" install
-  sed -i -e 's/python/python2/g' "${pkgdir}/usr/bin/backintime"
+  sed -i -e 's/python/python3/g' "${pkgdir}/usr/bin/backintime"
   
   cd "${srcdir}/${pkgname}-${pkgver}/qt4"
   make DESTDIR="${pkgdir}" install
-  sed -i -e 's/python/python2/g' "${pkgdir}/usr/bin/backintime-qt4"
+  sed -i -e 's/python/python3/g' "${pkgdir}/usr/bin/backintime-qt4"
 }
