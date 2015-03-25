@@ -3,10 +3,10 @@ source ../_buildscripts/${current_repo}-${_arch}-cfg.conf
 
 _default_wp="Elarun"
 pkgbase="kde-workspace"
-pkgname=("kde-workspace" "kde4-integration")
+pkgname=("kde-workspace" "kde4-integration" "libksysguard4" "libkworkspace4")
 arch=('x86_64')
 pkgver=${_workspace_ver}
-pkgrel=2
+pkgrel=3
 url="http://www.kde.org"
 license=('GPL' 'LGPL' 'FDL')
 makedepends=('pkgconfig'
@@ -169,7 +169,9 @@ package_kde-workspace() {
             "kde-base-artwork>=${_kdever}"
             'xcb-util-keysyms'
             'xcb-util-wm'
-            'kde4-integration')
+            'kde4-integration'
+            'libksysguard4'
+            'libkworkspace4')
     backup=('usr/share/config/kdm/kdmrc'
             'etc/pam.d/kscreensaver')
     optdepends=('appmenu-qt:           Global menu support'
@@ -277,6 +279,26 @@ package_kde-workspace() {
 
     # remove file in kde4-integration
     rm -rf ${pkgdir}/usr/lib/kde4/plugins/gui_platform/
+
+    # remove ksysguard files
+    rm -rf ${pkgdir}/usr/include/ksysguard \
+           ${pkgdir}/usr/include/ksgrd \
+           ${pkgdir}/usr/share/apps/ksysguard \
+           ${pkgdir}/usr/lib/liblsofui.so* \
+           ${pkgdir}/usr/lib/libprocessui.so* \
+           ${pkgdir}/usr/lib/libksignalplotter.so* \
+           ${pkgdir}/usr/lib/libprocesscore.so* \
+           ${pkgdir}/usr/lib/libksgrd.so* \
+           ${pkgdir}/usr/lib/kde4/plugins/designer/ksysguardlsofwidgets.so \
+           ${pkgdir}/usr/lib/kde4/plugins/designer/ksysguardwidgets.so \
+           ${pkgdir}/usr/lib/kde4/plugins/designer/ksignalplotterwidgets.so
+
+    # remove libkworkspace files
+    rm -rf ${pkgdir}/usr/include/kworkspace \
+           ${pkgdir}/usr/lib/libkworkspace.so*
+
+    rm -rf ${srcdir}/cmake
+    mv ${pkgdir}/usr/lib/cmake ${srcdir}/
 }
 
 package_kde4-integration()
@@ -286,4 +308,26 @@ package_kde4-integration()
 
     cd "${srcdir}/${pkgbase}-${pkgver}/qguiplatformplugin_kde/"
     make DESTDIR=${pkgdir} install
+}
+
+package_libksysguard4()
+{
+    pkgdesc=("KDE4 version of libksysguard")
+    depends=("kdelibs")
+
+    cd "${pkgbase}-${pkgver}/libs/ksysguard"
+    make DESTDIR=${pkgdir} install
+    # remove the process helper
+    rm -rf "${pkgdir}"{/usr/share/dbus-1/,/usr/share/polkit-1,/etc,/usr/lib/kde4/libexec}
+}
+
+package_libkworkspace4()
+{
+    pkgdesc=("KDE4 version of libkworkspace")
+    depends=("kdelibs")
+
+    cd "${pkgbase}-${pkgver}/libs/kworkspace"
+    make DESTDIR=${pkgdir} install
+
+   mv ${srcdir}/cmake ${pkgdir}/usr/lib/
 }
