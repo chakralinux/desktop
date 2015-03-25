@@ -6,7 +6,7 @@ pkgbase="kde-workspace"
 pkgname=("kde-workspace" "kde4-integration" "libksysguard4" "libkworkspace4")
 arch=('x86_64')
 pkgver=${_workspace_ver}
-pkgrel=3
+pkgrel=4
 url="http://www.kde.org"
 license=('GPL' 'LGPL' 'FDL')
 makedepends=('pkgconfig'
@@ -281,14 +281,12 @@ package_kde-workspace() {
     rm -rf ${pkgdir}/usr/lib/kde4/plugins/gui_platform/
 
     # remove ksysguard files
-    rm -rf ${pkgdir}/usr/include/ksysguard \
-           ${pkgdir}/usr/include/ksgrd \
-           ${pkgdir}/usr/share/apps/ksysguard \
-           ${pkgdir}/usr/lib/liblsofui.so* \
-           ${pkgdir}/usr/lib/libprocessui.so* \
-           ${pkgdir}/usr/lib/libksignalplotter.so* \
-           ${pkgdir}/usr/lib/libprocesscore.so* \
-           ${pkgdir}/usr/lib/libksgrd.so* \
+    rm -rf ${pkgdir}/usr/share/apps/ksysguard \
+           ${pkgdir}/usr/lib/liblsofui.so.* \
+           ${pkgdir}/usr/lib/libprocessui.so.* \
+           ${pkgdir}/usr/lib/libksignalplotter.so.* \
+           ${pkgdir}/usr/lib/libprocesscore.so.* \
+           ${pkgdir}/usr/lib/libksgrd.so.* \
            ${pkgdir}/usr/lib/kde4/plugins/designer/ksysguardlsofwidgets.so \
            ${pkgdir}/usr/lib/kde4/plugins/designer/ksysguardwidgets.so \
            ${pkgdir}/usr/lib/kde4/plugins/designer/ksignalplotterwidgets.so
@@ -296,9 +294,6 @@ package_kde-workspace() {
     # remove libkworkspace files
     rm -rf ${pkgdir}/usr/include/kworkspace \
            ${pkgdir}/usr/lib/libkworkspace.so*
-
-    rm -rf ${srcdir}/cmake
-    mv ${pkgdir}/usr/lib/cmake ${srcdir}/
 }
 
 package_kde4-integration()
@@ -319,6 +314,16 @@ package_libksysguard4()
     make DESTDIR=${pkgdir} install
     # remove the process helper
     rm -rf "${pkgdir}"{/usr/share/dbus-1/,/usr/share/polkit-1,/etc,/usr/lib/kde4/libexec}
+    # remove header
+    rm -rf ${pkgdir}/usr/include/ksysguard \
+           ${pkgdir}/usr/include/ksgrd
+    # remove dev symlink
+    rm -f \
+           ${pkgdir}/usr/lib/liblsofui.so \
+           ${pkgdir}/usr/lib/libprocessui.so \
+           ${pkgdir}/usr/lib/libksignalplotter.so \
+           ${pkgdir}/usr/lib/libprocesscore.so \
+           ${pkgdir}/usr/lib/libksgrd.so
 }
 
 package_libkworkspace4()
@@ -328,6 +333,4 @@ package_libkworkspace4()
 
     cd "${pkgbase}-${pkgver}/libs/kworkspace"
     make DESTDIR=${pkgdir} install
-
-   mv ${srcdir}/cmake ${pkgdir}/usr/lib/
 }
