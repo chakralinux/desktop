@@ -2,12 +2,12 @@
 
 pkgname=kshutdown
 pkgver=3.2
-pkgrel=2
+pkgrel=3
 pkgdesc="Advanced shut down utility."
 arch=('x86_64')
 url="http://kshutdown.sourceforge.net/"
 license=('GPL2')
-depends=('kdelibs' 'kde-workspace')
+depends=('kde-runtime')
 makedepends=('cmake' 'automoc4')
 categories=('utils')
 install=$pkgname.install
@@ -19,7 +19,7 @@ build() {
   mkdir build && cd build
   cmake \
     -DCMAKE_INSTALL_PREFIX=/usr \
-    -DCMAKE_BUILD_TYPE=RelWithDebInfo ..
+    -DCMAKE_BUILD_TYPE=Release ..
   make
 }
  
