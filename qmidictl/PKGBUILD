@@ -1,27 +1,26 @@
-# Moved from CCR
 
 pkgname=qmidictl
-pkgver=0.1.0
+pkgver=0.2.0
 pkgrel=1
 pkgdesc="A MIDI remote controller application that sends MIDI data over the network, using UDP/IP multicast."
-arch=(i686 x86_64)
+arch=('x86_64')
 url="http://qmidictl.sourceforge.net/"
 license=('GPL')
 depends=('qt' 'hicolor-icon-theme')
 categories=('multimedia' 'network')
 install="$pkgname.install"
 source=("http://downloads.sourceforge.net/project/$pkgname/$pkgname/$pkgver/$pkgname-$pkgver.tar.gz")
-md5sums=('e75158d956c56ea23c8d65dbdb869331')
+md5sums=('51d10a01a3930d67c45fa9880e30bd24')
 
 build() {
-  cd "$srcdir/$pkgname-$pkgver"
+  cd $pkgname-$pkgver
 
   ./configure --prefix=/usr
   make
 }
 
 package() {
-  cd "$srcdir/$pkgname-$pkgver"
+  cd $pkgname-$pkgver
 
-  make DESTDIR="$pkgdir/" install
+  make DESTDIR=$pkgdir install
 }
