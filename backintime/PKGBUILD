@@ -1,6 +1,6 @@
 pkgname=backintime
 pkgver=1.1.4
-pkgrel=1
+pkgrel=2
 pkgdesc="A simple backup system for Linux inspired from 'flyback project' and 'TimeVault'."
 arch=('x86_64')
 url="https://launchpad.net/backintime"
@@ -28,9 +28,7 @@ build() {
 package(){
   cd "${srcdir}/${pkgname}-${pkgver}/common"
   make DESTDIR="${pkgdir}" install
-  sed -i -e 's/python/python3/g' "${pkgdir}/usr/bin/backintime"
   
   cd "${srcdir}/${pkgname}-${pkgver}/qt4"
   make DESTDIR="${pkgdir}" install
-  sed -i -e 's/python/python3/g' "${pkgdir}/usr/bin/backintime-qt4"
 }
