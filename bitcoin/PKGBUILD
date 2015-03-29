@@ -3,8 +3,8 @@
 pkgbase=bitcoin
 pkgname=('bitcoin-daemon' 'bitcoin-cli' 'bitcoin-qt')
 pkgver=0.10.0
-pkgrel=1
-arch=('i686' 'x86_64')
+pkgrel=2
+arch=('x86_64')
 url="http://www.bitcoin.org/"
 makedepends=('boost' 'automoc4' 'qrencode' 'miniupnpc' 'protobuf')
 license=('MIT')
@@ -29,9 +29,12 @@ build() {
 
 package_bitcoin-qt() {
   pkgdesc="Bitcoin is a peer-to-peer network based digital currency - Qt"
-  depends=(boost-libs qt miniupnpc qrencode protobuf)
+  depends=('boost-libs' 'qt' 'miniupnpc' 'qrencode' 'protobuf')
   install=bitcoin-qt.install
-
+  provides=('bitcoin')
+  conflicts=('bitcoin')
+  replaces=('bitcoin')
+  
   cd "$pkgbase-$pkgver"
   install -Dm755 src/qt/bitcoin-qt "$pkgdir"/usr/bin/bitcoin-qt
   install -Dm644 "$srcdir"/bitcoin-qt.desktop \
@@ -44,7 +47,7 @@ package_bitcoin-qt() {
 
 package_bitcoin-daemon() {
   pkgdesc="Bitcoin is a peer-to-peer network based digital currency - daemon"
-  depends=(boost-libs miniupnpc openssl)
+  depends=('boost-libs' 'miniupnpc' 'openssl')
 
   cd "$pkgbase-$pkgver"
   install -Dm755 src/bitcoind "$pkgdir"/usr/bin/bitcoind
@@ -59,7 +62,7 @@ package_bitcoin-daemon() {
 
 package_bitcoin-cli() {
   pkgdesc="Bitcoin is a peer-to-peer network based digital currency - RPC client"
-  depends=(boost-libs openssl)
+  depends=('boost-libs' 'openssl')
 
   cd "$pkgbase-$pkgver"
   install -Dm755 src/bitcoin-cli "$pkgdir"/usr/bin/bitcoin-cli
