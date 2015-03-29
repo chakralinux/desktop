@@ -1,7 +1,5 @@
-# Maintainer: Neophytos Kolokotronis <tetris4@gmail.com>
-
 pkgname=qtractor
-pkgver=0.6.5
+pkgver=0.6.6
 pkgrel=1
 pkgdesc="Audio/MIDI multitrack sequencer"
 arch=('x86_64')
@@ -12,12 +10,12 @@ depends=('qt' 'jack' 'slv2' 'libmad' 'libsamplerate' 'rubberband' 'liblo')
 makedepends=('ladspa' 'dssi')
 categories=('multimedia')
 source=("http://downloads.sourceforge.net/$pkgname/$pkgname-$pkgver.tar.gz")
-md5sums=('810ec8b8d80cf76be6347c271f28a6cc')
+md5sums=('f3cf65a15c851b74f8b19e6ad5f22c5c')
 
 build() {
   cd "$srcdir/$pkgname-$pkgver"
 
-  ./configure --prefix=/usr --enable-debug
+  ./configure --prefix=/usr
   make
 }
 
