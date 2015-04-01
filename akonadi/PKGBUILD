@@ -3,7 +3,7 @@
 
 pkgname=akonadi
 pkgver=1.13.0
-pkgrel=3
+pkgrel=4
 pkgdesc="PIM layer, which provides an asynchronous API to access all kinds of PIM data"
 arch=('x86_64')
 url='http://www.akonadi-project.org'
@@ -22,6 +22,7 @@ source=("http://download.kde.org/stable/akonadi/src/${pkgname}-${pkgver}.tar.bz2
 sha256sums=('8c7f690002ea22c139f3a64394aef2e816e00ca47fd971af7d54a66087356dd2')
 
 prepare() {
+   [[ -d ${srcdir}/build ]] || rm -rf ${srcdir}/build
     mkdir "${srcdir}/build"
 }
 
