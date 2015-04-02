@@ -1,28 +1,28 @@
-# Maintainer: Francesco Marinucci <franzmari[at]chakra-project[dot]it>
-
 pkgname=kid3
-pkgver=3.1.2
-pkgrel=2
+pkgver=3.2.0
+pkgrel=1
 pkgdesc="An MP3, Ogg/Vorbis and FLAC tag editor for KDE"
 arch=('x86_64')
 url="http://kid3.sourceforge.net/"
 license=('GPL')
-depends=('id3lib' 'kdelibs' 'libmp4v2' 'chromaprint' 'ffmpeg')
-makedepends=('automoc4' 'cmake' 'taglib' 'docbook-xsl')
+depends=('id3lib' 'kde-runtime' 'libmp4v2' 'chromaprint' 'ffmpeg')
+makedepends=('automoc4' 'cmake' 'taglib' 'docbook-xsl' 'docbook-xml' 'xorg-server-xvfb' 'phonon')
 categories=('multimedia')
 screenshot=('http://pkgs.org/images/linux-software/kid3/kid3-screenshot.png')
 install=${pkgname}.install
 source=("http://sourceforge.net/projects/$pkgname/files/$pkgname/$pkgver/$pkgname-$pkgver.tar.gz")
-sha256sums=('085097a653877ef56dd719083da1ab005944826ce215141fe3f6d4285e5f6246')
+sha256sums=('0197ee6484e9b80ffae39867833fce04ac23ec143d4ff6f1a074af0efba1d503')
 
 build() {
   mkdir -p build
   cd build
   cmake ../${pkgname}-${pkgver} \
-    -DWITH_APPS=KDE \
+    -DWITH_APPS="CLI;KDE" \
     -DCMAKE_INSTALL_PREFIX=/usr \
     -DCMAKE_BUILD_TYPE=Release 
-  make 
+  #make
+  #https://sourceforge.net/p/kid3/bugs/108/
+  xvfb-run -a make
 }
 
 package() {
