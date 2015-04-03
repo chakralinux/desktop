@@ -1,20 +1,17 @@
-# Maintainer abveritas@chakra-project.org
-
 pkgname=caledonia-colors
 pkgver=2.0
-pkgrel=1
+pkgrel=2
 pkgdesc="Caledonia colors scheme"
 arch=('x86_64')
 url=(http://malcer.deviantart.com/)
 license=('CC-BY; CC-BY-SA')
-depends=('kde-workspace')
 source=('http://sourceforge.net/projects/caledonia/files/Caledonia Color Scheme/Caledonia.colors')
 md5sums=('340e4177b9ddc3b023b31e6594d70937')
 
 package() {
-       mkdir -p $pkgdir/usr/share/apps/color-schemes
-       chmod 755 -R $pkgdir/usr/share/apps/color-schemes
+       # Setting for KDE4 # shoudl be removed in the future
+       install -Dm644 ${srcdir}/Caledonia.colors ${pkgdir}/usr/share/apps/color-schemes/Caledonia.colors
 
-       cd ${srcdir}
-       cp Caledonia.colors $pkgdir/usr/share/apps/color-schemes/Caledonia.colors
+       # Setting for plasma5
+       install -Dm644 ${srcdir}/Caledonia.colors ${pkgdir}/usr/share/color-schemes/Caledonia.colors
 }
