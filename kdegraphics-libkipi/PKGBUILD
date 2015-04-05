@@ -1,8 +1,6 @@
-# Maintainer:   H W Tovetjärn (totte) <totte@tott.es>
-# Contributors: Manuel Tortosa <manutortosa@chakra-project.org>
-
+# Contributions from Arch: https://projects.archlinux.org/svntogit/packages.git/tree/trunk?h=packages/libkdcraw
 # Include global configuration
-source ../_buildscripts/${current_repo}-${_arch}-cfg.conf
+source ../kdeapps.conf
 
 pkgname=kdegraphics-libkipi
 _pkgname=libkipi
@@ -11,22 +9,13 @@ pkgrel=1
 pkgdesc='An interface to use kipi-plugins from a KDE application'
 arch=('x86_64')
 url='https://projects.kde.org/projects/kde/kdegraphics/libs/libkipi'
-license=('GPL'
-         'LGPL'
-         'FDL')
+license=('GPL' 'LGPL' 'FDL')
 depends=("kdelibs>=${_libsver}")
-makedepends=('cmake'
-             'automoc4'
-             'pkg-config')
-groups=('kde'
-        'kdegraphics'
-        'kde-uninstall')
+makedepends=('cmake' 'automoc4' 'pkg-config')
+groups=('kde' 'kdegraphics' 'kde-uninstall')
 install=${_pkgname}.install
 provides=('libkipi')
-options=('docs'
-         '!header'
-         'debug'
-         'log')
+options=('docs' '!header' 'debug' 'log')
 source=("$_mirror/${_pkgname}-$_kdever.tar.xz")
 sha256sums=(`grep ${_pkgname}-$_kdever.tar.xz  ../checksums.txt | cut -d " " -f1`)
 
