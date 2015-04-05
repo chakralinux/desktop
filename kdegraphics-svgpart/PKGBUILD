@@ -1,8 +1,6 @@
-# Maintainer:   H W Tovetjärn (totte) <totte@tott.es>
-# Contributors: Manuel Tortosa <manutortosa@chakra-project.org>
-
+# Contributions from Arch: https://www.archlinux.org/packages/extra/x86_64/kdegraphics-svgpart/
 # Include global configuration
-source ../_buildscripts/${current_repo}-${_arch}-cfg.conf
+source ../kdeapps.conf
 
 pkgname=kdegraphics-svgpart
 _pkgname=svgpart
@@ -11,21 +9,12 @@ pkgrel=1
 pkgdesc="A KPart for viewing SVGs"
 arch=('x86_64')
 url='https://projects.kde.org/projects/kde/kdegraphics/svgpart'
-license=('GPL'
-         'LGPL'
-         'FDL')
+license=('GPL' 'LGPL' 'FDL')
 depends=("kdelibs>=${_libsver}")
-makedepends=('pkg-config'
-             'cmake'
-             'automoc4')
-groups=('kde'
-        'kdegraphics'
-        'kde-uninstall')
+makedepends=('pkg-config' 'cmake' 'automoc4')
+groups=('kde' 'kdegraphics' 'kde-uninstall')
 provides=('svgpart')
-options=('docs'
-         '!header'
-         'debug'
-         'log')
+options=('docs' '!header' 'debug' 'log')
 source=("$_mirror/${_pkgname}-$_kdever.tar.xz")
 sha256sums=(`grep ${_pkgname}-$_kdever.tar.xz  ../checksums.txt | cut -d " " -f1`)
 
