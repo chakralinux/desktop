@@ -1,8 +1,5 @@
-# Maintainer:   H W Tovetjärn (totte) <totte@tott.es>
-# Contributors: Manuel Tortosa <manutortosa@chakra-project.org>
-
 # Include global configuration
-source ../_buildscripts/${current_repo}-${_arch}-cfg.conf
+source ../kdeapps.conf
 
 pkgname=('kdeaccessibility-kmouth')
 _pkgname="kmouth"
@@ -11,29 +8,15 @@ pkgver=${_kdever}
 pkgrel=1
 pkgdesc="Speech synthesizer"
 url="http://www.kde.org"
-license=('GPL'
-         'LGPL'
-         'FDL')
+license=('GPL' 'LGPL' 'FDL')
 depends=("kde-runtime>=${_kdever}"
          "kdelibs>=${_libsver}")
 conflicts=("kdeaccessibility-doc")
 provides=('kmouth')
 install='kdeaccessibility.install'
-groups=("kdeaccessibility"
-        "kde"
-        "kde-uninstall"
-        "kde-doc")
-options=('docs'
-         '!header'
-         'debug'
-         'log')
-makedepends=('pkgconfig'
-             'cmake'
-             'automoc4'
-             "kde-runtime>=${_kdever}"
-             "kdelibs>=${_libsver}"
-             "speech-dispatcher>=0.6.7"
-             'docbook-xsl')
+groups=("kdeaccessibility" "kde" "kde-uninstall" "kde-doc")
+options=('docs' '!header' 'debug' 'log')
+makedepends=('pkgconfig' 'cmake' 'automoc4'  "speech-dispatcher>=0.6.7" 'docbook-xsl')
 categories=('accessibility')
 source=($_mirror/${_pkgname}-$_kdever.tar.xz)
 sha256sums=(`grep ${_pkgname}-$_kdever.tar.xz  ../checksums.txt | cut -d " " -f1`)
