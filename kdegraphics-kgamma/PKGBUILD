@@ -1,9 +1,6 @@
-# Maintainer:   H W Tovetjärn (totte) <totte@tott.es>
-# Contributors: Manuel Tortosa <manutortosa@chakra-project.org>
-#               Andrea Scarpino <andrea@archlinux.org>
-
+# Contributions from Arch: https://projects.archlinux.org/svntogit/packages.git/tree/trunk?h=packages/kdegraphics-kgamma
 # Include global configuration
-source ../_buildscripts/${current_repo}-${_arch}-cfg.conf
+source ../kdeapps.conf
 
 pkgname=kdegraphics-kgamma
 _pkgname=kgamma
@@ -12,9 +9,7 @@ pkgrel=1
 pkgdesc='A monitor calibration tool'
 arch=('x86_64')
 url='http://kde.org/applications/graphics/kgamma/'
-license=('GPL'
-         'LGPL'
-         'FDL')
+license=('GPL' 'LGPL' 'FDL')
 # Note on libxxf86vm:
 #     not detected by namcap because libgl depends on it
 #     but nvidia providing libgl does not depend on libxxf86vm
@@ -27,20 +22,14 @@ depends=("kde-runtime>=${_kdever}"
          "kdegraphics-thumbnailers>=${_kdever}"
          "kdegraphics-strigi-analyzer>=${_kdever}"
          "kdegraphics-svgpart>=${_kdever}")
-makedepends=('cmake'
-             'automoc4')
-groups=('kde'
-        'kdegraphics'
-        'kde-uninstall')
+makedepends=('cmake' 'automoc4')
+groups=('kde' 'kdegraphics' 'kde-uninstall')
 categories=('graphics')
 provides=('kdegraphics-common')
 replaces=('kdegraphics-common'
           'kdegraphics-doc')
 conflicts=('kdegraphics-common')
-options=('docs'
-         '!header'
-         'debug'
-         'log')
+options=('docs' '!header' 'debug' 'log')
 source=("$_mirror/${_pkgname}-$_kdever.tar.xz")
 sha256sums=(`grep ${_pkgname}-$_kdever.tar.xz  ../checksums.txt | cut -d " " -f1`)
 

@@ -1,8 +1,6 @@
-# Maintainer:   H W Tovetjärn (totte) <totte@tott.es>
-# Contributors: Manuel Tortosa <manutortosa@chakra-project.org>
-
+# Contributions from Arch: https://www.archlinux.org/packages/extra/x86_64/kdegraphics-mobipocket/
 # Include global configuration
-source ../_buildscripts/${current_repo}-${_arch}-cfg.conf
+source ../kdeapps.conf
 
 pkgname=kdegraphics-mobipocket
 arch=('x86_64')
@@ -10,19 +8,11 @@ pkgver=${_kdever}
 pkgrel=1
 pkgdesc='A collection of plugins to handle mobipocket files'
 url='https://projects.kde.org/projects/kde/kdegraphics/kdegraphics-mobipocket'
-license=('GPL'
-         'LGPL'
-         'FDL')
-options=('docs'
-         '!header'
-         'debug'
-         'log')
-groups=('kde'
-        'kdegraphics'
-        'kde-uninstall')
+license=('GPL' 'LGPL' 'FDL')
+options=('docs' '!header' 'debug' 'log')
+groups=('kde' 'kdegraphics' 'kde-uninstall')
 provides=('mobipocket')
-depends=("kdegraphics-okular>=${_kdever}"
-         'strigi')
+depends=("kdegraphics-okular>=${_kdever}" 'strigi')
 makedepends=('automoc4')
 install=${pkgname}.install
 source=("$_mirror/${pkgname}-$_kdever.tar.xz")

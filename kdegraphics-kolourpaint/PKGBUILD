@@ -1,8 +1,6 @@
-# Maintainer:   H W Tovetjärn (totte) <totte@tott.es>
-# Contributors: Manuel Tortosa <manutortosa@chakra-project.org>
-
+# Contributions from Arch: https://www.archlinux.org/packages/extra/x86_64/kdegraphics-kolourpaint/
 # Include global configuration
-source ../_buildscripts/${current_repo}-${_arch}-cfg.conf
+source ../kdeapps.conf
 
 pkgname=kdegraphics-kolourpaint
 _pkgname=kolourpaint
@@ -11,9 +9,7 @@ pkgrel=1
 pkgdesc='A simple painting program to quickly create raster images'
 url='http://kde.org/applications/graphics/kolourpaint/'
 arch=('x86_64')
-license=('GPL'
-         'LGPL'
-         'FDL')
+license=('GPL' 'LGPL' 'FDL')
 depends=("kde-runtime>=${_kdever}"
          'qimageblitz'
          "kdegraphics-libkexiv2>=${_kdever}"
@@ -21,18 +17,11 @@ depends=("kde-runtime>=${_kdever}"
          "kdegraphics-ksaneplugin>=${_kdever}"
          "kdegraphics-svgpart>=${_kdever}"
          "kdegraphics-kgamma>=${_kdever}")
-makedepends=('cmake'
-             'automoc4'
-             'docbook-xsl')
-groups=('kde'
-        'kdegraphics'
-        'kde-uninstall')
+makedepends=('cmake' 'automoc4' 'docbook-xsl')
+groups=('kde' 'kdegraphics' 'kde-uninstall')
 categories=('graphics')
 provides=('kolourpaint')
-options=('docs'
-         '!header'
-         'debug'
-         'log')
+options=('docs' '!header' 'debug' 'log')
 install=${pkgname}.install
 source=("$_mirror/${_pkgname}-$_kdever.tar.xz")
 sha256sums=(`grep ${_pkgname}-$_kdever.tar.xz  ../checksums.txt | cut -d " " -f1`)
