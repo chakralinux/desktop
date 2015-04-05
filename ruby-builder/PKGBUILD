@@ -1,4 +1,4 @@
-# Maintainer: Adrián Chaves Fernández (Gallaecio)
+# Maintainer: AdriÃ¡n Chaves FernÃ¡ndez (Gallaecio)
 
 pkgname=ruby-builder
 _pkgname=builder
@@ -9,15 +9,27 @@ arch=('x86_64')
 url="http://builder.rubyforge.org"
 license=('MIT')
 depends=('ruby')
-source=("https://github.com/jimweirich/builder/archive/$_pkgname-$pkgver.tar.gz")
-md5sums=('41b41666df9cb92529fd58ac250b0524')
+source=("https://github.com/jimweirich/builder/archive/$_pkgname-$pkgver.tar.gz"
+        "rake.patch")
+md5sums=('41b41666df9cb92529fd58ac250b0524'
+         '1a82128b5602f76d9f41d5d313ddf17d')
+
+prepare() {
+  cd $srcdir/$_pkgname-$_pkgname-$pkgver
+  patch -p1 -i ${srcdir}/rake.patch
+}
+
+build() {
+  cd $srcdir/$_pkgname-$_pkgname-$pkgver
+  rake builder:gem
+}
 
 package() {
-  cd $srcdir/$_pkgname-$_pkgname-$pkgver
+  cd $srcdir/$_pkgname-$_pkgname-$pkgver/pkg
 
   local _gemdir=$(ruby -rubygems -e 'puts Gem.default_dir')
   gem install \
-    --ignore-dependencies --install-dir $pkgdir$_gemdir \
+    --ignore-dependencies --no-user-install --install-dir $pkgdir$_gemdir \
     $_pkgname-$pkgver.gem
 
   install -Dm644 $srcdir/$_pkgname-$_pkgname-$pkgver/MIT-LICENSE \
