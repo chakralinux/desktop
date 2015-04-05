@@ -1,8 +1,6 @@
-# Maintainer:   H W Tovetjärn (totte) <totte@tott.es>
-# Contributors: Manuel Tortosa <manutortosa@chakra-project.org>
-
 # Include global configuration
-source ../_buildscripts/${current_repo}-${_arch}-cfg.conf
+source ../kdeapps.conf
+
 _pkgname="ksystemlog"
 pkgname="kdeadmin-ksystemlog"
 arch=('x86_64')
@@ -11,24 +9,14 @@ pkgrel=1
 pkgdesc="Log viewer"
 screenshot="http://www.kde.org/images/screenshots/ksystemlog.png"
 depends=("kde-runtime")
-groups=("kdeadmin"
-        "kde"
-        "kde-uninstall")
+groups=("kdeadmin" "kde" "kde-uninstall")
 conflicts=("kdeadmin-doc")
 categories=('system')
 url="http://www.kde.org/"
-license=('GPL'
-         'LGPL'
-         'FDL')
+license=('GPL' 'LGPL' 'FDL')
 install=kdeadmin.install
-options=('docs'
-         '!header'
-         'debug'
-         'log')
-makedepends=('pkg-config'
-             'cmake'
-             'automoc4'
-             'docbook-xsl')
+options=('docs' '!header' 'debug' 'log')
+makedepends=('pkg-config' 'cmake' 'automoc4' 'docbook-xsl')
 source=("$_mirror/${_pkgname}-$_kdever.tar.xz" 
         "syslog-path.patch")
 sha256sums=(`grep ${_pkgname}-$_kdever.tar.xz  ../checksums.txt | cut -d " " -f1`

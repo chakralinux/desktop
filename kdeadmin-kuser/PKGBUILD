@@ -1,8 +1,5 @@
-# Maintainer:   H W Tovetjärn (totte) <totte@tott.es>
-# Contributors: Manuel Tortosa <manutortosa@chakra-project.org>
-
 # Include global configuration
-source ../_buildscripts/${current_repo}-${_arch}-cfg.conf
+source ../kdeapps.conf
 
 _pkgname="kuser"
 pkgname="kdeadmin-kuser"
@@ -10,25 +7,13 @@ arch=('x86_64')
 pkgver=${_kdever}
 pkgrel=1
 url="http://www.kde.org/"
-license=('GPL'
-         'LGPL'
-         'FDL')
-options=('docs'
-         '!header'
-         'debug'
-         'log')
-makedepends=('pkg-config'
-             'cmake'
-             'automoc4'
-             'docbook-xsl'
-             'kdepimlibs')
+license=('GPL' 'LGPL' 'FDL')
+options=('docs' '!header' 'debug' 'log')
+makedepends=('pkg-config' 'cmake' 'automoc4' 'docbook-xsl' 'kdepimlibs')
 pkgdesc="Manage users and groups"
 screenshot="http://www.kde.org/images/screenshots/kuser.png"
 depends=("kde-runtime")
-groups=("kdeadmin"
-        "kde"
-        "kde-minimal"
-        "kde-uninstall")
+groups=("kdeadmin" "kde" "kde-minimal" "kde-uninstall")
 conflicts=("kdeadmin-doc")
 categories=('system')
 source=("$_mirror/${_pkgname}-$_kdever.tar.xz")
