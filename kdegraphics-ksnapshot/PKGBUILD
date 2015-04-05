@@ -1,8 +1,6 @@
-# Maintainer:   H W Tovetjärn (totte) <totte@tott.es>
-# Contributors: Manuel Tortosa <manutortosa@chakra-project.org>
-
+# Contributions from Arch: https://www.archlinux.org/packages/extra/x86_64/kdegraphics-ksnapshot/
 # Include global configuration
-source ../_buildscripts/${current_repo}-${_arch}-cfg.conf
+source ../kdeapps.conf
 
 pkgname=kdegraphics-ksnapshot
 _pkgname=ksnapshot
@@ -11,22 +9,14 @@ pkgrel=1
 pkgdesc='Screen capture program'
 url='http://kde.org/applications/graphics/ksnapshot/'
 arch=('x86_64')
-license=('GPL'
-         'LGPL'
-         'FDL')
+license=('GPL' 'LGPL' 'FDL')
 depends=("kdelibs>=${_libsver}"
          "kdegraphics-libkipi>=${_kdever}")
-makedepends=('cmake'
-             'automoc4')
+makedepends=('cmake' 'automoc4')
 optdepends=('kipi-plugins')
-groups=('kde'
-        'kdegraphics'
-        'kde-uninstall')
+groups=('kde' 'kdegraphics' 'kde-uninstall')
 categories=('graphics')
-options=('docs'
-         '!header'
-         'debug'
-         'log')
+options=('docs' '!header' 'debug' 'log')
 install=${pkgname}.install
 source=("$_mirror/${_pkgname}-$_kdever.tar.xz")
 sha256sums=(`grep ${_pkgname}-$_kdever.tar.xz  ../checksums.txt | cut -d " " -f1`)
