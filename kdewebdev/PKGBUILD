@@ -13,7 +13,7 @@ url="http://www.kde.org/"
 license=('GPL' 'LGPL' 'FDL')
 options=('docs' '!header' 'debug' 'log')
 makedepends=('pkgconfig' 'cmake' 'automoc4' 'ruby' "kdepimlibs>=${_libsver}"
-             "kde-runtime>=${_kdever}" 'tidyhtml' "kdepim-runtime>=${_libsver}")
+             "kde-runtime" 'tidyhtml' "kdepim-runtime>=${_libsver}")
 source=($_mirror/${pkgbase}-$_kdever.tar.xz)
 sha256sums=(`grep ${pkgbase}-$_kdever.tar.xz  ../checksums.txt | cut -d" " -f1`)
 
@@ -29,7 +29,7 @@ build() {
 
 package_kdewebdev-kfilereplace() {
     pkgdesc="Utility that replace some strings with others in a lot of files in an only operation"
-    depends=("kde-runtime>=${_kdever}" "kdelibs>=${_libsver}")
+    depends=("kde-runtime" "kdelibs>=${_libsver}")
     groups=("kde" "${pkgbase}" "kde-uninstall")
     categories=('utils')
     conflicts=('kdewebdev-common' Â'kdewebdev-doc')
@@ -44,7 +44,7 @@ package_kdewebdev-kfilereplace() {
 
 package_kdewebdev-kimagemapeditor() {
     pkgdesc="Image map editor"
-    depends=("kde-runtime>=${_kdever}" "kdelibs>=${_libsver}")
+    depends=("kde-runtime" "kdelibs>=${_libsver}")
     conflicts=('kdewebdev-common' 'kdewebdev-doc')
     groups=("kde" "${pkgbase}" "kde-uninstall")
     categories=('graphics')
@@ -59,7 +59,7 @@ package_kdewebdev-kimagemapeditor() {
 
 package_kdewebdev-kommander() {
     pkgdesc="Visual application builder"
-    depends=("kde-runtime>=${_kdever}" "kdelibs>=${_libsver}")
+    depends=("kde-runtime" "kdelibs>=${_libsver}")
     conflicts=('kdewebdev-common' 'kdewebdev-doc')
     groups=("kde" "${pkgbase}" "kde-uninstall")
     categories=('programming')
@@ -74,7 +74,7 @@ package_kdewebdev-kommander() {
 
 package_kdewebdev-klinkstatus() {
     pkgdesc="Link checking utility"
-    depends=("kde-runtime>=${_kdever}" "kdelibs>=${_libsver}" 'tidyhtml' "kdepimlibs>=${_libsver}") # "kdepim-runtime>=${_kdever}"
+    depends=("kde-runtime" "kdelibs>=${_libsver}" 'tidyhtml' "kdepimlibs>=${_libsver}") # "kdepim-runtime>=${_kdever}"
     conflicts=('kdewebdev-common' 'kdewebdev-doc')
     groups=("kde" "${pkgbase}" "kde-uninstall")
     categories=('utils')
