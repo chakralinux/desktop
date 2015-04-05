@@ -1,8 +1,5 @@
-# Maintainer:   H W Tovetjärn (totte) <totte@tott.es>
-# Contributors: Manuel Tortosa <manutortosa@chakra-project.org>
-
 # Include global configuration
-source ../_buildscripts/${current_repo}-${_arch}-cfg.conf
+source ../kdeapps.conf
 
 pkgname=('kdeaccessibility-kaccessible')
 _pkgname="kaccessible"
@@ -11,33 +8,16 @@ pkgver=${_kdever}
 pkgrel=1
 pkgdesc='Provides accessibility services like focus tracking and a screenreader'
 url="http://www.kde.org"
-license=('GPL'
-         'LGPL'
-         'FDL')
+license=('GPL' 'LGPL' 'FDL')
 depends=("kde-runtime>=${_kdever}"
          'speech-dispatcher')
-conflicts=("kdeaccessibility-doc"
-           "kdeaccessibility-colorschemes"
-           "kdeaccessibility-iconthemes")
+conflicts=("kdeaccessibility-doc" "kdeaccessibility-colorschemes" "kdeaccessibility-iconthemes")
 install='kdeaccessibility.install'
-provides=('kdeaccessibility-common'
-          'kaccessible')
+provides=('kdeaccessibility-common' 'kaccessible')
 replaces=('kdeaccessibility-common')
-groups=("kdeaccessibility"
-        "kde"
-        "kde-uninstall"
-        "kde-doc")
-options=('docs'
-         '!header'
-         'debug'
-         'log')
-makedepends=('pkgconfig'
-             'cmake'
-             'automoc4'
-             "kde-runtime>=${_kdever}"
-             "kdelibs>=${_libsver}"
-             "speech-dispatcher>=0.6.7"
-             'docbook-xsl')
+groups=("kdeaccessibility" "kde" "kde-uninstall" "kde-doc")
+options=('docs' '!header' 'debug' 'log')
+makedepends=('pkgconfig' 'cmake' 'automoc4' "kdelibs>=${_libsver}" 'docbook-xsl')
 categories=('accessibility')
 source=($_mirror/${_pkgname}-$_kdever.tar.xz)
 sha256sums=(`grep ${_pkgname}-$_kdever.tar.xz  ../checksums.txt | cut -d " " -f1`)
