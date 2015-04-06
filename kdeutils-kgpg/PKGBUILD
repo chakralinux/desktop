@@ -1,8 +1,5 @@
-# Maintainer:   H W Tovetjärn (totte) <totte@tott.es>
-# Contributors: Manuel Tortosa <manutortosa@chakra-project.org>
-
 # Include global configuration
-source ../_buildscripts/${current_repo}-${_arch}-cfg.conf
+source ../kdeapps.conf
 
 pkgname="kdeutils-kgpg"
 _pkgname="kgpg"
@@ -11,25 +8,12 @@ pkgver=${_kdever}
 pkgrel=1
 pkgdesc="GPG encryption and key management"
 url="http://www.kde.org"
-license=('GPL'
-         'LGPL'
-         'FDL')
-options=('docs'
-         '!header'
-         'debug'
-         'log')
-depends=("kde-runtime"
-         "kdelibs>=${_libsver}"
-         "kdepimlibs>=${_libsver}"
-         "kdepim-runtime>=${_libsver}")
+license=('GPL' 'LGPL' 'FDL')
+options=('docs' '!header' 'debug' 'log')
+depends=("kde-runtime" "kdelibs>=${_libsver}" "kdepimlibs>=${_libsver}" "kdepim-runtime>=${_libsver}")
+makedepends=('pkg-config' 'cmake' 'automoc4' "kdelibs>=${_libsver}")
 conflicts=("kdeutils-common")
-makedepends=('pkg-config'
-             'cmake'
-             'automoc4'
-             "kdelibs>=${_libsver}")
-groups=("kde"
-        "kdeutils"
-        "kde-uninstall")
+groups=("kde" "kdeutils" "kde-uninstall")
 categories=('utils')
 install=kdeutils.install
 source=($_mirror/${_pkgname}-$_kdever.tar.xz)
