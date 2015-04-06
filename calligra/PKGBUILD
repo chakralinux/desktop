@@ -1,8 +1,3 @@
-# Maintainer:   H W Tovetjärn (totte) <totte@tott.es>
-# Contributors: Manuel Tortosa (manutortosa) <manuel.tortosa@chakra-project.org>
-#               Andrea Scarpino <andrea@archlinux.org>
-#               Ronald van Haren <ronald.archlinux.org>
-
 pkgbase=calligra
 pkgname=('calligra-braindump'
          'calligra-devtools'
@@ -17,7 +12,7 @@ pkgname=('calligra-braindump'
          'calligra-sheets'
          'calligra-stage'
          'calligra-words')
-pkgver=2.9.1
+pkgver=2.9.2
 pkgrel=1
 arch=('x86_64')
 url='http://www.calligra.org'
@@ -64,10 +59,11 @@ options=("debug")
 groups=('calligra')
 source=("http://download.kde.org/stable/${pkgbase}-${pkgver}/${pkgbase}-${pkgver}.tar.xz")
 #source=("http://download.kde.org/unstable/${pkgbase}-${pkgver}/${pkgbase}-${pkgver}.tar.xz")
-md5sums=('3afd7afffbbb8078dcc1e339a85cf74c')
+md5sums=('a293d85b288468c14c8638ad0dc37947')
 
 build() {
-    cd "${srcdir}/build"
+    cd "${srcdir}"
+    mkdir -p build && cd build
     cmake "../${pkgbase}-${pkgver}" \
         -DCMAKE_BUILD_TYPE=RelWithDebInfo \
         -DCMAKE_INSTALL_PREFIX=/usr \
