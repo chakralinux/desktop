@@ -1,8 +1,5 @@
-# Maintainer:   H W Tovetjärn (totte) <totte@tott.es>
-# Contributors: Manuel Tortosa <manutortosa@chakra-project.org>
-
 # Include global configuration
-source ../_buildscripts/${current_repo}-${_arch}-cfg.conf
+source ../kdeapps.conf
 
 _pkgname="ktux"
 pkgname="kdetoys-ktux"
@@ -11,23 +8,14 @@ pkgver=${_kdever}
 pkgrel=1
 pkgdesc="Tux-in-a-Spaceship screen saver"
 conflicts=("kdetoys-common")
-groups=("kde"
-        "kdetoys"
-        "kde-uninstall")
+groups=("kde" "kdetoys" "kde-uninstall")
 categories=('accessories')
 install=kdetoys.install
 url="http://www.kde.org"
-license=('GPL'
-         'LGPL'
-         'FDL')
-options=('docs'
-         '!header'
-         'debug'
-         'log')
-makedepends=('pkg-config'
-             'cmake'
-             'automoc4'
-             "kde-workspace>=${_workspace_ver}")
+license=('GPL' 'LGPL' 'FDL')
+options=('docs' '!header' 'debug' 'log')
+depends=('kde-runtime')
+makedepends=('pkg-config' 'cmake' 'automoc4')
 source=($_mirror/${_pkgname}-$_kdever.tar.xz)
 sha256sums=(`grep ${_pkgname}-$_kdever.tar.xz  ../checksums.txt | cut -d " " -f1`)
 

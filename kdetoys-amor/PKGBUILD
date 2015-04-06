@@ -1,8 +1,5 @@
-# Maintainer:   H W Tovetjärn (totte) <totte@tott.es>
-# Contributors: Manuel Tortosa <manutortosa@chakra-project.org>
-
 # Include global configuration
-source ../_buildscripts/${current_repo}-${_arch}-cfg.conf
+source ../kdeapps.conf
 
 _pkgname="amor"
 pkgname="kdetoys-amor"
@@ -10,25 +7,14 @@ arch=('x86_64')
 pkgver=${_kdever}
 pkgrel=1
 url="http://www.kde.org"
-license=('GPL'
-         'LGPL'
-         'FDL')
-options=('docs'
-         '!header'
-         'debug'
-         'log')
+license=('GPL' 'LGPL' 'FDL')
+options=('docs' '!header' 'debug' 'log')
 pkgdesc="Amusing Misuse Of Resources puts comic figures above your windows"
-conflicts=("kdetoys-common"
-           "kdetoys-doc")
-groups=("kde"
-        "kdetoys"
-        "kde-uninstall")
+conflicts=("kdetoys-common" "kdetoys-doc")
+groups=("kde" "kdetoys" "kde-uninstall")
 categories=('accessories')
 install=kdetoys.install
-makedepends=('pkg-config'
-             'cmake'
-             'automoc4'
-             "kde-workspace>=${_workspace_ver}")
+makedepends=('pkg-config' 'cmake' 'automoc4' "kde-workspace>=${_workspace_ver}")
 source=($_mirror/${_pkgname}-$_kdever.tar.xz)
 sha256sums=(`grep ${_pkgname}-$_kdever.tar.xz  ../checksums.txt | cut -d " " -f1`)
 
