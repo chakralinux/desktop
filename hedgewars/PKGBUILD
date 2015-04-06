@@ -1,7 +1,5 @@
-# Maintainer: Adrian Chaves Fernandez (Gallaecio) <adriyetichaves@gmail.com>
-
 pkgname=hedgewars
-pkgver=0.9.21
+pkgver=0.9.21.1
 pkgrel=1
 pkgdesc="Free turn based strategy game similar to Worms"
 arch=('x86_64')
@@ -24,16 +22,21 @@ makedepends=('fpc' 'cmake'
 categories=('games')
 source=("http://download.gna.org/$pkgname/$pkgname-src-${pkgver}.tar.bz2"
 	hedgewars.png)
-md5sums=('67b57d00b91d3c1212dcb5d56ac6f2df'
+md5sums=('5c87b1ff54c861ae0cae6a9c1198f957'
 	 'eeb14d50df39063549ac5eca9dbc65d1')
-      
+
+prepare() {
+  cd $pkgname-src-*
+  sed -i 's|instance NFData (Chan a)$|instance NFData (Chan a) where rnf x = seq x ()|' gameServer/CoreTypes.hs
+}	 
+
 build() {
-  cd $srcdir/$pkgname-src-$pkgver
+  cd $srcdir/$pkgname-src-*
   mkdir -p build && cd build
-  #Temporarily disable server's feature,it depends on specific version's haskell modules.
+  #Don't know why ld can't link to haskell-sha correctly,disable it.
   cmake \
         -DCMAKE_INSTALL_PREFIX=/usr \
-        -DCMAKE_BUILD_TYPE=Release \
+        -DCMAKE_BUILD_TYPE="Release" \
         -DDATA_INSTALL_DIR=/usr/share/hedgewars \
 	-DNOSERVER=1 \
         ..
@@ -41,9 +44,9 @@ build() {
 }
  
 package() {
-  cd $srcdir/$pkgname-src-$pkgver/build
+  cd $srcdir/$pkgname-src-*/build
   make DESTDIR=$pkgdir install
-  install -D -m644 $srcdir/hedgewars-src-${pkgver}/Fonts_LICENSE.txt $pkgdir/usr/share/licenses/$pkgname/Fonts_LICENSE.txt
+  install -D -m644 $srcdir/hedgewars-src-*/Fonts_LICENSE.txt $pkgdir/usr/share/licenses/$pkgname/Fonts_LICENSE.txt
   install -D -m644 $srcdir/hedgewars.png $pkgdir/usr/share/pixmaps/hedgewars.png
-  install -D -m644 $srcdir/hedgewars-src-${pkgver}/share/hedgewars/Data/misc/hedgewars.desktop $pkgdir/usr/share/applications/hedgewars.desktop
+  install -D -m644 $srcdir/hedgewars-src-*/share/hedgewars/Data/misc/hedgewars.desktop $pkgdir/usr/share/applications/hedgewars.desktop
 }
