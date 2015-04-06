@@ -1,26 +1,16 @@
-# Maintainer:   H W Tovetjärn (totte) <totte@tott.es>
-# Contributors: Manuel Tortosa <manutortosa@chakra-project.org>
-
 # Include global configuration
-source ../_buildscripts/${current_repo}-${_arch}-cfg.conf
+source ../kdeapps.conf
 
 pkgname="kqtquickcharts"    
 arch=('x86_64')
 pkgver=${_kdever}
 pkgrel=1
 pkgdesc="The core Nepomuk system"
-url="http://www.kde.org"
-license=('GPL'
-         'LGPL'
-         'FDL')
-options=('docs'
-         '!header'
-         'debug'
-         'log')
+url="https://projects.kde.org/projects/kde/kdeedu/kqtquickcharts"
+license=('GPL' 'LGPL' 'FDL')
+options=('docs' '!header' 'debug' 'log')
 depends=("kdelibs>=${_libsver}")
-makedepends=('cmake'
-             'automoc4'
-             'doxygen')
+makedepends=('cmake' 'automoc4' 'doxygen')
 source=($_mirror/${pkgname}-$_kdever.tar.xz)
 sha256sums=(`grep ${pkgname}-$_kdever.tar.xz  ../checksums.txt | cut -d" " -f1`)
 
