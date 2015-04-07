@@ -2,11 +2,12 @@
 
 pkgname=signon
 pkgver=8.57
-pkgrel=1
+pkgrel=4
 arch=('x86_64')
 url="http://code.google.com/p/accounts-sso/"
 license=('LGPL')
 depends=('qt5-base' 'libproxy')
+makedepends=('qt5-tools' 'doxygen')
 pkgdesc="Qt Framework to provide credential storage and authentication service"
 options=('!emptydirs')
 source=("http://rsync.chakraos.org/sources/${pkgname}/$pkgname-$pkgver.tar.bz2"
@@ -18,7 +19,6 @@ prepare() {
   cd $pkgname-$pkgver
   # Use gnome-keyring secrets storage if signon-keyring-extension is available
   patch -Np1 -i "$srcdir/use_keyring.patch"
-  cd ..
 }
 
 build() {
@@ -27,11 +27,11 @@ build() {
   make
 }
 
-package_() {
+package() {
   cd $pkgname-$pkgver
   make INSTALL_ROOT="$pkgdir" install
 
   # Do not ship docs
-  rm -rf "${pkgdir}"/usr/share/doc
+  rm -rf "${pkgdir}/usr/share/doc"
 }
 
