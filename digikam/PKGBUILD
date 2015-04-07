@@ -1,6 +1,6 @@
 pkgbase=digikam
 pkgname=('digikam' 'kipi-plugins' 'libkvkontakte')
-pkgver=4.8.0
+pkgver=4.9.0
 pkgrel=1
 url="http://digikam.sourceforge.net"
 arch=('x86_64')
@@ -12,7 +12,7 @@ makedepends=('kde-runtime' 'kdegraphics-kgamma' 'kdepimlibs' 'lensfun' 'kdeedu-m
              'kdegraphics-libksane' 'mariadb' 'qt-gstreamer' 'boost' 'hugin-tools' 'eigen3' 'libbluray' 'baloo' 'libpgf')
 source=("http://download.kde.org/stable/${pkgname}/${pkgname}-${pkgver}.tar.bz2")
 options=("debug")
-md5sums=('2a869d4007577c7df090afcdea2fab97')
+md5sums=('9f0b00b6421fb310921399bae3089b5a')
 
 build() {
    cd ${srcdir}
@@ -49,7 +49,7 @@ package_digikam() {
       make DESTDIR="${pkgdir}" install
   done
   rm -rf "${pkgdir}/usr/share/icons/oxygen"
-  rm "${pkgdir}"/usr/share/locale/*/LC_MESSAGES/libkipi.mo
+  rm "${pkgdir}"/usr/share/locale/kde4/*/LC_MESSAGES/libkipi.mo
 }
 
 package_libkvkontakte() {
