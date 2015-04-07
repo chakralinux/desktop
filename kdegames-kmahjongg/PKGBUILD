@@ -1,8 +1,5 @@
-# Maintainer:   H W Tovetjärn (totte) <totte@tott.es>
-# Contributors: Manuel Tortosa <manutortosa@chakra-project.org>
-
 # Include global configuration
-source ../_buildscripts/${current_repo}-${_arch}-cfg.conf
+source ../kdeapps.conf
 
 pkgname=kdegames-kmahjongg
 _pkgname=kmahjongg
@@ -10,23 +7,14 @@ pkgver=${_kdever}
 pkgrel=1
 pkgdesc="Mahjongg solitaire"
 arch=('x86_64')
-url='http://www.kde.org'
-license=('GPL'
-         'LGPL'
-         'FDL')
-depends=("kdegames-libkdegames>=${_kdever}"
-         "kdegames-libkmahjongg>=${_kdever}")
-makedepends=('pkg-config'
-             'cmake'
-             'automoc4')
-groups=("kde"
-        "kdegames"
-        "kde-uninstall")
+url='http://kde.org/applications/games/kmahjongg/'
+license=('GPL' 'LGPL' 'FDL')
+depends=("kdegames-libkdegames"
+         "kdegames-libkmahjongg")
+makedepends=('pkg-config' 'cmake' 'automoc4')
+groups=("kde" "kdegames" "kde-uninstall")
 provides=('kmahjongg')
-options=('docs'
-         '!header'
-         'debug'
-         'log')
+options=('docs' '!header' 'debug' 'log')
 source=("$_mirror/${_pkgname}-$_kdever.tar.xz")
 sha256sums=(`grep " ${_pkgname}-${_kdever}.tar.xz"  ../checksums.txt | cut -d " " -f1`)
 

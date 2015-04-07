@@ -1,8 +1,5 @@
-# Maintainer:   H W Tovetjärn (totte) <totte@tott.es>
-# Contributors: Manuel Tortosa <manutortosa@chakra-project.org>
-
 # Include global configuration
-source ../_buildscripts/${current_repo}-${_arch}-cfg.conf
+source ../kdeapps.conf
 
 pkgname=kdegames-klickety
 _pkgname=klickety
@@ -11,21 +8,11 @@ pkgrel=1
 pkgdesc="Board game"
 arch=('x86_64')
 url='http://www.kde.org'
-license=('GPL'
-         'LGPL'
-         'FDL')
-depends=("kdegames-libkdegames>=${_kdever}")
-makedepends=('pkg-config'
-             'cmake'
-             'automoc4')
-groups=("kde"
-        "kdegames"
-        "kde-uninstall")
-provides=('klickety')
-options=('docs'
-         '!header'
-         'debug'
-         'log')
+license=('GPL' 'LGPL' 'FDL')
+depends=("kdegames-libkdegames")
+makedepends=('pkg-config' 'cmake' 'automoc4')
+groups=("kde" "kdegames" "kde-uninstall")
+options=('docs' '!header' 'debug' 'log')
 source=("$_mirror/${_pkgname}-$_kdever.tar.xz")
 sha256sums=(`grep ${_pkgname}-$_kdever.tar.xz  ../checksums.txt | cut -d " " -f1`)
 

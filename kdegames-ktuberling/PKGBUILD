@@ -1,8 +1,5 @@
-# Maintainer:   H W Tovetjärn (totte) <totte@tott.es>
-# Contributors: Manuel Tortosa <manutortosa@chakra-project.org>
-
 # Include global configuration
-source ../_buildscripts/${current_repo}-${_arch}-cfg.conf
+source ../kdeapps.conf
 
 pkgname=kdegames-ktuberling
 _pkgname=ktuberling
@@ -10,22 +7,13 @@ pkgver=${_kdever}
 pkgrel=1
 pkgdesc="Potato-Man game for children"
 arch=('x86_64')
-url='http://www.kde.org'
-license=('GPL'
-         'LGPL'
-         'FDL')
-depends=("kdegames-libkdegames>=${_kdever}")
-makedepends=('pkg-config'
-             'cmake'
-             'automoc4')
-groups=("kde"
-        "kdegames"
-        "kde-uninstall")
-provides=('ktuberling')
-options=('docs'
-         '!header'
-         'debug'
-         'log')
+url='http://kde.org/applications/games/ktuberling/'
+screenshot='http://kde.org/applications/games/ktuberling/'
+license=('GPL' 'LGPL' 'FDL')
+depends=("kdegames-libkdegames")
+makedepends=('pkg-config' 'cmake' 'automoc4')
+groups=("kde" "kdegames" "kde-uninstall")
+options=('docs' '!header' 'debug' 'log')
 source=("$_mirror/${_pkgname}-$_kdever.tar.xz")
 sha256sums=(`grep ${_pkgname}-$_kdever.tar.xz  ../checksums.txt | cut -d " " -f1`)
 
