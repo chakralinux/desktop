@@ -1,0 +1,32 @@
+# Contributions from Arch: https://www.archlinux.org/packages/extra/x86_64/libkmahjongg/
+# Include global configuration
+source ../kdeapps.conf
+
+pkgname=libkmahjongg
+pkgver=${_kdever}
+pkgrel=1
+pkgdesc="Common code, backgrounds and tile sets for games using Mahjongg tiles"
+arch=('x86_64')
+url='https://projects.kde.org/projects/kde/kdegames/libmahjongg'
+license=('GPL' 'LGPL' 'FDL')
+depends=('kcompletion' 'kconfigwidgets')
+makedepends=('extra-cmake-modules' 'qt5-svg' 'python3')
+groups=("kde" "kdegames" "kde-uninstall")
+options=('docs' '!header' 'debug' 'log')
+source=("$_mirror/${_pkgname}-$_kdever.tar.xz")
+sha256sums=(`grep ${_pkgname}-$_kdever.tar.xz  ../checksums.txt | cut -d " " -f1`)
+
+prepare() {
+  mkdir -p build
+}
+
+build() {
+  cd build
+  cmake_kf5 ../${pkgname}-${pkgver}
+  make
+}
+
+package() {
+    cd "${srcdir}/${pkgname}-${pkgver}"
+    make DESTDIR=${pkgdir} install
+}
