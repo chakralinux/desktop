@@ -1,35 +1,21 @@
-# Maintainer:   H W Tovetjärn (totte) <totte@tott.es>
-# Contributors: Manuel Tortosa <manutortosa@chakra-project.org>
-
+# Contributions from Arch: https://projects.archlinux.org/svntogit/packages.git/tree/trunk?h=packages/libkdegames4
 # Include global configuration
-source ../_buildscripts/${current_repo}-${_arch}-cfg.conf
+source ../kdeapps.conf
 
 pkgname=kdegames-libkdegames
 _pkgname=libkdegames
-pkgver=${_kdever}
+pkgver=14.12.3
 pkgrel=1
 pkgdesc="Shared libraries for KDE games"
 arch=('x86_64')
-url='http://www.kde.org'
-license=('GPL'
-         'LGPL'
-         'FDL')
+url='https://projects.kde.org/projects/kde/kdegames/libkdegames'
+license=('GPL' 'LGPL' 'FDL')
 depends=("kdelibs>=${_libsver}")
-makedepends=('pkg-config'
-             'cmake'
-             'automoc4')
-groups=("kde"
-        "kdegames"
-        "kde-uninstall")
-conflicts=('kdegames-common')
-replaces=('kdegames-common')
-provides=('kdeganes-common')
-options=('docs'
-         '!header'
-         'debug'
-         'log')
-source=("$_mirror/${_pkgname}-$_kdever.tar.xz")
-sha256sums=(`grep ${_pkgname}-$_kdever.tar.xz  ../checksums.txt | cut -d " " -f1`)
+makedepends=('pkg-config' 'cmake' 'automoc4')
+groups=("kde" "kdegames" "kde-uninstall")
+options=('docs' '!header' 'debug' 'log')
+source=("http://download.kde.org/stable/applications/${pkgver}/src/libkdegames-${pkgver}.tar.xz")
+sha1sums=('258d8130e7a38d1366466cef1d29ee2e13a456a5')
 
 build() {
     cd "${srcdir}/${_pkgname}-${pkgver}"

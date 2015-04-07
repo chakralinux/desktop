@@ -1,8 +1,5 @@
-# Maintainer:   H W Tovetjärn (totte) <totte@tott.es>
-# Contributors: Manuel Tortosa <manutortosa@chakra-project.org>
-
 # Include global configuration
-source ../_buildscripts/${current_repo}-${_arch}-cfg.conf
+source ../kdeapps.conf
 
 pkgname=kdegames-kajongg
 _pkgname=kajongg
@@ -10,25 +7,12 @@ pkgver=${_kdever}
 pkgrel=1
 pkgdesc="The ancient Chinese board game for four players"
 arch=('x86_64')
-url='http://www.kde.org'
-license=('GPL'
-         'LGPL'
-         'FDL')
-depends=("kdegames-libkdegames>=${_kdever}"
-         "kdegames-libkmahjongg>=${_kdever}"
-         "kdebindings-python2>=${_oldkdever}"
-         "python2-twisted")
-makedepends=('pkg-config'
-             'cmake'
-             'automoc4')
-groups=("kde"
-        "kdegames"
-        "kde-uninstall")
-provides=('kajongg')
-options=('docs'
-         '!header'
-         'debug'
-         'log')
+url='http://kde.org/applications/games/kajongg/'
+license=('GPL' 'LGPL' 'FDL')
+depends=("kdegames-libkdegames" "kdegames-libkmahjongg" "kdebindings-python2" "python2-twisted")
+makedepends=('pkg-config' 'cmake' 'automoc4')
+groups=("kde" "kdegames" "kde-uninstall")
+options=('docs' '!header' 'debug' 'log')
 source=("$_mirror/${_pkgname}-$_kdever.tar.xz")
 sha256sums=(`grep ${_pkgname}-$_kdever.tar.xz  ../checksums.txt | cut -d " " -f1`)
 

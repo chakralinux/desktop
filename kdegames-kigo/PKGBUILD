@@ -1,8 +1,5 @@
-# Maintainer:   H W Tovetjärn (totte) <totte@tott.es>
-# Contributors: Manuel Tortosa <manutortosa@chakra-project.org>
-
 # Include global configuration
-source ../_buildscripts/${current_repo}-${_arch}-cfg.conf
+source ../kdeapps.conf
 
 pkgname=kdegames-kigo
 _pkgname=kigo
@@ -10,23 +7,13 @@ pkgver=${_kdever}
 pkgrel=1
 pkgdesc="Go board game"
 arch=('x86_64')
-url='http://www.kde.org'
-license=('GPL'
-         'LGPL'
-         'FDL')
-depends=("kdegames-libkdegames>=${_kdever}"
-         'gnugo')
-makedepends=('pkg-config'
-             'cmake'
-             'automoc4')
-groups=("kde"
-        "kdegames"
-        "kde-uninstall")
-provides=('kigo')
-options=('docs'
-         '!header'
-         'debug'
-         'log')
+url='http://kde.org/applications/games/kigo/'
+screenshot='https://www.kde.org/images/screenshots/kigo.png'
+license=('GPL' 'LGPL' 'FDL')
+depends=("kdegames-libkdegames" 'gnugo')
+makedepends=('pkg-config' 'cmake' 'automoc4')
+groups=("kde" "kdegames" "kde-uninstall")
+options=('docs' '!header' 'debug' 'log')
 source=("$_mirror/${_pkgname}-$_kdever.tar.xz")
 sha256sums=(`grep ${_pkgname}-$_kdever.tar.xz  ../checksums.txt | cut -d " " -f1`)
 
