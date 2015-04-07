@@ -1,0 +1,31 @@
+# Contributions from Arch: https://www.archlinux.org/packages/kde-unstable/x86_64/signon-kwallet-extension/
+# # Include global configuration
+source ../kdeapps.conf
+
+pkgname=signon-kwallet-extension
+pkgver=${_kdever}
+pkgrel=1
+pkgdesc="KWallet signon extension"
+arch=('x86_64')
+url="http://kde.org/"
+license=('GPL')
+depends=('kwallet' 'signon')
+makedepends=('extra-cmake-modules')
+groups=('kde-telepathy')
+source=("$_mirror/${pkgname}-$_kdever.tar.xz")
+sha256sums=(`grep ${pkgname}-$_kdever.tar.xz  ../checksums.txt | cut -d " " -f1`)
+
+prepare() {
+  mkdir -p build
+}
+
+build() {
+  cd build
+  cmake_kf5 ../${pkgname}-${pkgver}
+  make
+}
+
+package() {
+    cd ${srcdir}/${pkgname}-${pkgver}
+    make DESTDIR=${pkgdir} install
+}

@@ -1,0 +1,35 @@
+# Contribution from Arch: https://www.archlinux.org/packages/extra/x86_64/signon-plugin-oauth2/
+
+pkgname=signon-plugin-oauth2
+_pkgname=signon-oauth2
+pkgver=0.21
+pkgrel=1
+pkgdesc='OAuth 2 plugin for signon'
+arch=('x86_64')
+url="https://gitlab.com/accounts-sso/signon-plugin-oauth2"
+license=('LGPL')
+depends=('signon')
+makedepends=('qt5-xmlpatterns')
+source=("http://rsync.chakraos.org/sources/${pkgname}/${_pkgname}-${pkgver}.tar.bz2")
+md5sums=('')
+
+prepare() {
+  cd signon-plugin-oauth2.accounts-sso-$pkgver
+
+  sed -i '/-Werror/d' common-project-config.pri
+
+  # Do not install tests and example
+  echo 'INSTALLS =' >>tests/tests.pro
+  echo 'INSTALLS =' >>example/example.pro
+}
+
+build() {
+  cd signon-plugin-oauth2.accounts-sso-$pkgver
+  qmake-qt5 PREFIX=/usr LIBDIR=/usr/lib
+  make
+}
+
+package() {
+  cd signon-plugin-oauth2.accounts-sso-$pkgver
+  make INSTALL_ROOT="$pkgdir" install
+}
