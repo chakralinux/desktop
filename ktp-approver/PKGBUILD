@@ -1,29 +1,31 @@
-# maintainer: Neophytos Kolokotronis <tetris4@gmail.com>
+# Contributions from Arch: https://www.archlinux.org/packages/extra/x86_64/telepathy-kde-approver/
+# Include global configuration
+source ../kdeapps.conf
 
 pkgname=ktp-approver
-pkgver=0.9.0
+pkgver=${_kdever}
 pkgrel=1
 pkgdesc="KDE Channel Approver for Telepathy"
 arch=('x86_64')
-url="http://www.kde.org"
+url="http://community.kde.org/Real-Time_Communication_and_Collaboration"
 license=('GPL')
-depends=('ktp-common-internals' 'ktp-contact-list' )
-makedepends=('cmake' 'automoc4')
+depends=('knotifications' 'telepathy-qt5')
+makedepends=('extra-cmake-modules' 'kdoctools' 'python3')
 groups=('kde-telepathy')
-source=("ftp://mirrors.mit.edu/kde/stable/kde-telepathy/${pkgver}/src/${pkgname}-${pkgver}.tar.bz2")
-md5sums=('0e523ffcc041fcd8cf780a9e2f3aec84')
+source=("$_mirror/${pkgname}-$_kdever.tar.xz")
+sha256sums=(`grep ${pkgname}-$_kdever.tar.xz  ../checksums.txt | cut -d " " -f1`)
+
+prepare() {
+  mkdir -p build
+}
 
 build() {
-  cd "${srcdir}"
-  mkdir build
   cd build
-  cmake ../${pkgname}-${pkgver} \
-    -DCMAKE_INSTALL_PREFIX=/usr \
-    -DCMAKE_BUILD_TYPE=Release
+  cmake_kf5 ../${pkgname}-${pkgver}
   make
 }
 
 package() {
-  cd "${srcdir}"/build
-  make DESTDIR="${pkgdir}" install
+    cd ${srcdir}/${pkgname}-${pkgver}
+    make DESTDIR=${pkgdir} install
 }

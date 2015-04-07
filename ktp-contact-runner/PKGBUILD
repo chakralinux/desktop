@@ -1,32 +1,31 @@
-# Maintainer: Neophytos Kolokotronis <tetris4@gmail.com>
+# Contributions from Arch: https://www.archlinux.org/packages/extra/x86_64/telepathy-kde-contact-runner/
+# Include global configuration
+source ../kdeapps.conf
 
 pkgname='ktp-contact-runner'
-pkgver=0.9.0
+pkgver=${_kdever}
 pkgrel=1
 arch=('x86_64')
-url="http://www.kde.org"
+url="https://community.kde.org/Real-Time_Communication_and_Collaboration"
 license=('GPL')
 pkgdesc='Finds entries from your KDE-Telepathy Contacts'
-depends=('kde-workspace' 'ktp-common-internals')
-makedepends=('cmake' 'automoc4')
+depends=('ktp-common-internals' 'krunner')
+makedepends=('extra-cmake-modules' 'kdoctools' 'python3')
 groups=('kde-telepathy')
-source=("ftp://mirrors.mit.edu/kde/stable/kde-telepathy/${pkgver}/src/${pkgname}-${pkgver}.tar.bz2")
-md5sums=('deb4c7b8c5a709f27f23c68a1252870a')
+source=("$_mirror/${pkgname}-$_kdever.tar.xz")
+sha256sums=(`grep ${pkgname}-$_kdever.tar.xz  ../checksums.txt | cut -d " " -f1`)
+
+prepare() {
+  mkdir -p build
+}
 
 build() {
-          cd $srcdir/$pkgname-$pkgver
-          cd ..
-          rm -rf build
-          mkdir -p build && cd build
-
-          cmake ../${pkgbase}-${pkgver} \
-                  -DCMAKE_BUILD_TYPE=Release \
-                  -DCMAKE_SKIP_RPATH=ON \
-                  -DCMAKE_INSTALL_PREFIX=/usr
-          make
-  }
+  cd build
+  cmake_kf5 ../${pkgname}-${pkgver}
+  make
+}
 
 package() {
-          cd $srcdir/build
-          make DESTDIR=$pkgdir install
-  }
+    cd ${srcdir}/${pkgname}-${pkgver}
+    make DESTDIR=${pkgdir} install
+}

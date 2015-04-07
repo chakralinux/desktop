@@ -1,30 +1,32 @@
-# Maintainer: Neophytos Kolokotronis <tetris4@gmail.com>
+# Contributions from Arch: https://www.archlinux.org/packages/extra/x86_64/telepathy-kde-common-internals/
+# Include global configuration
+source ../kdeapps.conf
 
 pkgname=ktp-common-internals
-pkgver=0.9.0
-pkgrel=2
+pkgver=${_kdever}
+pkgrel=1
 pkgdesc="Common libraries for telepathy-kde"
 arch=('x86_64')
-url="http://www.kde.org"
+url="http://community.kde.org/Real-Time_Communication_and_Collaboration"
 license=('GPL')
-depends=('kdelibs' 'telepathy-qt>=0.9.5' 'telepathy-logger-qt' 'telepathy-mission-control' 'kdeutils-kwallet' 'libkpeople>=0.3.0' 'libotr>=4.0.0')
-makedepends=('cmake' 'automoc4')
+depends=('hicolor-icon-theme' 'kaccounts-integration' 'knotifyconfig' 'kpeople' 'ktexteditor' 'telepathy-logger-qt' 'libotr')
+makedepends=('extra-cmake-modules' 'kdoctools' 'python3' 'doxygen')
 groups=('kde-telepathy')
 install=${pkgname}.install
-source=("ftp://mirrors.mit.edu/kde/stable/kde-telepathy/${pkgver}/src/${pkgname}-${pkgver}.tar.bz2")
-md5sums=('3fb590f861fa1b342c2ddadb2ed3ee57')
+source=("$_mirror/${pkgname}-$_kdever.tar.xz")
+sha256sums=(`grep ${pkgname}-$_kdever.tar.xz  ../checksums.txt | cut -d " " -f1`)
+
+prepare() {
+  mkdir -p build
+}
 
 build() {
-  cd "${srcdir}"
-  mkdir build
   cd build
-  cmake ../${pkgname}-${pkgver} \
-    -DCMAKE_INSTALL_PREFIX=/usr \
-    -DCMAKE_BUILD_TYPE=Release
+  cmake_kf5 ../${pkgname}-${pkgver}
   make
 }
 
 package() {
-  cd "${srcdir}"/build
-  make DESTDIR="${pkgdir}" install
+    cd ${srcdir}/${pkgname}-${pkgver}
+    make DESTDIR=${pkgdir} install
 }

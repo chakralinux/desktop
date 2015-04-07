@@ -1,32 +1,33 @@
-# Maintainer: Neophytos Kolokotronis <tetris4@gmail.com>
+# Contributions from Arch: https://www.archlinux.org/packages/extra/x86_64/telepathy-kde-contact-list/
+# Include global configuration
+source ../kdeapps.conf
 
 pkgname=ktp-contact-list
-pkgver=0.9.0
+pkgver=${_kdever}
 pkgrel=1
 pkgdesc="Telepathy contact list application "
 arch=('x86_64')
-url="http://www.kde.org"
+url="https://community.kde.org/Real-Time_Communication_and_Collaboration"
 license=('GPL')
-depends=('kde-runtime' 'ktp-common-internals' 'libkpeople')
-makedepends=('cmake' 'automoc4')
+depends=('ktp-common-internals')
+makedepends=('extra-cmake-modules' 'kdoctools' 'python3')
 groups=('kde-telepathy')
 categories=('communication')
 install=${pkgname}.install
-source=("ftp://mirrors.mit.edu/kde/stable/kde-telepathy/${pkgver}/src/${pkgname}-${pkgver}.tar.bz2")
-screenshot=('http://martys.typepad.com/.a/6a012876e7556d970c014e874d17ac970d-pi')
-md5sums=('295dd67108f765d58414bc47da921e26')
+source=("$_mirror/${pkgname}-$_kdever.tar.xz")
+sha256sums=(`grep ${pkgname}-$_kdever.tar.xz  ../checksums.txt | cut -d " " -f1`)
+
+prepare() {
+  mkdir -p build
+}
 
 build() {
-  cd "${srcdir}"
-  mkdir build
   cd build
-  cmake ../${pkgname}-${pkgver} \
-    -DCMAKE_INSTALL_PREFIX=/usr \
-    -DCMAKE_BUILD_TYPE=Release
+  cmake_kf5 ../${pkgname}-${pkgver}
   make
 }
 
 package() {
-  cd "${srcdir}"/build
-  make DESTDIR="${pkgdir}" install
+    cd ${srcdir}/${pkgname}-${pkgver}
+    make DESTDIR=${pkgdir} install
 }

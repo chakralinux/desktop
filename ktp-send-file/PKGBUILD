@@ -1,30 +1,32 @@
-# Maintainer: Neophytos Kolokotronis <tetris4@gmail.com>
+# Contributions from Arch: https://www.archlinux.org/packages/extra/x86_64/telepathy-kde-send-file/
+# Include global configuration
+source ../kdeapps.conf
 
 pkgname=ktp-send-file
-pkgver=0.9.0
+pkgver=${_kdever}
 pkgrel=1
 pkgdesc="A File manager plugin to launch a file transfer job with a specified contact"
 arch=('x86_64')
-url="http://www.kde.org"
+url="https://community.kde.org/Real-Time_Communication_and_Collaboration"
 license=('GPL')
-depends=('ktp-filetransfer-handler' 'ktp-contact-list')
-makedepends=('cmake' 'automoc4')
+depends=('ktp-common-internals')
+makedepends=('extra-cmake-modules' 'kdoctools' 'python3')
 groups=('kde-telepathy')
 install=${pkgname}.install
-source=("ftp://mirrors.mit.edu/kde/stable/kde-telepathy/${pkgver}/src/${pkgname}-${pkgver}.tar.bz2")
-md5sums=('9c9f2e4900f9fb6afd94aab824fad98c')
+source=("$_mirror/${pkgname}-$_kdever.tar.xz")
+sha256sums=(`grep ${pkgname}-$_kdever.tar.xz  ../checksums.txt | cut -d " " -f1`)
+
+prepare() {
+  mkdir -p build
+}
 
 build() {
-  cd "${srcdir}"
-  mkdir build
   cd build
-  cmake ../${pkgname}-${pkgver} \
-    -DCMAKE_INSTALL_PREFIX=/usr \
-    -DCMAKE_BUILD_TYPE=Release
+  cmake_kf5 ../${pkgname}-${pkgver}
   make
 }
 
 package() {
-  cd "${srcdir}"/build
-  make DESTDIR="${pkgdir}" install
+    cd ${srcdir}/${pkgname}-${pkgver}
+    make DESTDIR=${pkgdir} install
 }

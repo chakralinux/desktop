@@ -1,0 +1,31 @@
+# Contributions from Arch: https://www.archlinux.org/packages/kde-unstable/x86_64/kaccounts-integration/
+# Include global configuration
+source ../kdeapps.conf
+
+pkgname=kaccounts-integration
+pkgver=${_kdever}
+pkgrel=1
+pkgdesc="Small system to administer web accounts for the sites and services across the KDE desktop, including: Google, Facebook, Owncloud, IMAP, Jabber and others"
+arch=('x86_64')
+url="https://projects.kde.org/projects/kdereview/kaccounts-integration"
+license=('GPL')
+depends=('kaccounts-providers' 'kcmutils' 'kio' 'signon-kwallet-extension' 'signon-plugin-oauth2' 'signon-ui')
+makedepends=('extra-cmake-modules' 'kdoctools')
+groups=('kde-telepathy')
+source=("$_mirror/${pkgname}-$_kdever.tar.xz")
+sha256sums=(`grep ${pkgname}-$_kdever.tar.xz  ../checksums.txt | cut -d " " -f1`)
+
+prepare() {
+  mkdir -p build
+}
+
+build() {
+  cd build
+  cmake_kf5 ../${pkgname}-${pkgver}
+  make
+}
+
+package() {
+    cd ${srcdir}/${pkgname}-${pkgver}
+    make DESTDIR=${pkgdir} install
+}

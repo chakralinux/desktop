@@ -1,16 +1,19 @@
-# Contributions from Arch: https://www.archlinux.org/packages/extra/x86_64/telepathy-kde-filetransfer-handler/
+# Contributions from Arch: https://www.archlinux.org/packages/extra/x86_64/telepathy-kde-integration-module/
 # Include global configuration
 source ../kdeapps.conf
 
-pkgname=ktp-filetransfer-handler
+pkgname=ktp-kded-module
 pkgver=${_kdever}
 pkgrel=1
-pkgdesc="Telepathy file transfer handler"
+pkgdesc="Workspace integration module - provides several plugins like auto-away, the infamous 'Now listening to...' and also an error handler"
 arch=('x86_64')
 url="https://community.kde.org/Real-Time_Communication_and_Collaboration"
 license=('GPL')
-depends=('ktp-common-internals')
+depends=('ktp-common-internal' 'kidletime')
 makedepends=('extra-cmake-modules' 'kdoctools' 'python3')
+provides=('ktp-kded-integration-module')
+replaces=('ktp-kded-integration-module')
+conflicts=('ktp-kded-integration-module')
 groups=('kde-telepathy')
 source=("$_mirror/${pkgname}-$_kdever.tar.xz")
 sha256sums=(`grep ${pkgname}-$_kdever.tar.xz  ../checksums.txt | cut -d " " -f1`)
