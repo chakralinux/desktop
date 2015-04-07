@@ -1,31 +1,18 @@
-# Maintainer:   H W Tovetjärn (totte) <totte@tott.es>
-# Contributors: Manuel Tortosa <manutortosa@chakra-project.org>
-
 # Include global configuration
-source ../_buildscripts/${current_repo}-${_arch}-cfg.conf
+source ../kdeapps.conf
 
 pkgname=kdeedu-libkdeedu
 _pkgname=libkdeedu
-pkgver=${_kdever}
+pkgver=14.12.3
 pkgrel=1
 pkgdesc="Libraries used by KDE Education applications"
 arch=('x86_64')
-url='http://www.kde.org'
+url='https://projects.kde.org/projects/kde/kdeedu/libkdeedu'
 license=('GPL' 'LGPL' 'FDL')
 depends=("kdelibs>=${_libsver}")
-makedepends=('cmake'
-             'automoc4')
-replaces=('kdeedu-common')
-provides=('kdeedu-common'
-          'libkdeedu')
-conflicts=('kdeedu-doc')
-groups=("kde"
-        "kdeedu"
-        "kde-uninstall")
-options=('docs'
-         '!header'
-         'debug'
-         'log')
+makedepends=('cmake' 'automoc4')
+groups=("kde" "kdeedu" "kde-uninstall")
+options=('docs' '!header' 'debug' 'log')
 install=${_pkgname}.install
 source=("$_mirror/${_pkgname}-$_kdever.tar.xz")
 sha256sums=(`grep ${_pkgname}-$_kdever.tar.xz  ../checksums.txt | cut -d " " -f1`)
