@@ -14,6 +14,7 @@ md5sums=('1d38d956ad324d374cf5ef621eaa50b5')
 prepare() {
   cd $pkgname-$pkgver
   
+  #add dummy implementation of onEmbedError because moc does not understand that it is commented out
   sed -i '84i void onEmbedError() {}' src/request.cpp
   
   # Do not install tests
