@@ -13,7 +13,9 @@ md5sums=('1d38d956ad324d374cf5ef621eaa50b5')
 
 prepare() {
   cd $pkgname-$pkgver
-
+  
+  sed -i '84i void onEmbedError() {}' src/request.cpp
+  
   # Do not install tests
   echo 'INSTALLS =' >>tests/unit/tst_inactivity_timer.pro
   echo 'INSTALLS =' >>tests/unit/tst_signon_ui.pro
