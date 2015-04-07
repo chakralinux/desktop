@@ -11,10 +11,10 @@ license=('LGPL')
 depends=('signon')
 makedepends=('qt5-xmlpatterns')
 source=("http://rsync.chakraos.org/sources/${pkgname}/${_pkgname}-${pkgver}.tar.bz2")
-md5sums=('')
+md5sums=('086576e945e2272e138aead6ff533895')
 
 prepare() {
-  cd signon-plugin-oauth2.accounts-sso-$pkgver
+  cd ${_pkgname}-${pkgver}
 
   sed -i '/-Werror/d' common-project-config.pri
 
@@ -24,12 +24,12 @@ prepare() {
 }
 
 build() {
-  cd signon-plugin-oauth2.accounts-sso-$pkgver
+  cd ${_pkgname}-${pkgver} 
   qmake-qt5 PREFIX=/usr LIBDIR=/usr/lib
   make
 }
 
 package() {
-  cd signon-plugin-oauth2.accounts-sso-$pkgver
+  cd ${_pkgname}-${pkgver}
   make INSTALL_ROOT="$pkgdir" install
 }
