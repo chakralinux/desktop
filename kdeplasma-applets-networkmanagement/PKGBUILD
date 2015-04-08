@@ -1,9 +1,7 @@
-# Maintainer: Neophytos Kolokotronis <tetris4@gmail.com
-
 pkgname=('kdeplasma-applets-networkmanagement')       
 arch=('x86_64')
-pkgver=0.9.0.9
-pkgrel=2
+pkgver=0.9.0.12
+pkgrel=1
 pkgdesc="KDE SC networkmanager plasmoid"
 url="http://plasma.kde.org"
 license=('GPL')
@@ -13,8 +11,9 @@ makedepends=('cmake' 'python2' 'automoc4' 'mobile-broadband-provider-info'
 optdepends=('mobile-broadband-provider-info: Database of mobile broadband service providers'
             'openconnect: Cisco AnyConnect compatible VPN client')
 install=${pkgname}.install
-source=("ftp://ftp.kde.org/pub/kde/unstable/networkmanagement/${pkgver}/src/networkmanagement-${pkgver}.tar.bz2")
-md5sums=('ce8841d95906ac28dadd8bc3f345c5f2')
+conflicts=('kdeplasma-applets-plasma-nm')
+source=("http://download.kde.org/unstable/networkmanagement/${pkgver}/src/networkmanagement-${pkgver}.tar.xz")
+md5sums=('3a2b0b8f3545727cf0ded82e82a936b8')
 
 build() {
   cd "${srcdir}"
