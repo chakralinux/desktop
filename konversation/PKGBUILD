@@ -2,28 +2,29 @@
 # Contributer: abveritas[at]chakraos[dot]org>
 
 pkgname=konversation
-pkgver=1.5.1
-pkgrel=2
+pkgver=1.6
+pkgrel=1
 pkgdesc="A user friendly IRC client for KDE"
 arch=('x86_64')
 url="http://konversation.kde.org"
-depends=('kde-runtime' 'kdepimlibs' 'python2')
-makedepends=('automoc4' 'cmake' 'pkg-config' 'docbook-xsl')
+depends=('knotifyconfig' 'kemoticons' 'kparts' 'kidletime' 'qca-qt5' 'python2')
+makedepends=('extra-cmake-modules' 'kdoctools' 'python')
 license=('GPL2' 'FDL')
 categories=('communication')
 screenshots=('http://konversation.kde.org/screenshots/konversation13_2.png')
 install=${pkgname}.install
 source=("http://download.kde.org/stable/${pkgname}/${pkgver}/src/${pkgname}-${pkgver}.tar.xz")
-md5sums=('66731bbfa34e36bd3f7b723c63a492e7')
+sha1sums=('16e8c1969b04c0946b48a436e8825654b0029bb9')
 
 build() {
   cd "${srcdir}"
-  mkdir build
-  cd build
+  [[ -e build ]] || rm -rf build
+  mkdir build && cd build
   cmake ../${pkgname}-${pkgver} \
     -DCMAKE_BUILD_TYPE=Release \
     -DCMAKE_SKIP_RPATH=ON \
-    -DCMAKE_INSTALL_PREFIX=/usr
+    -DCMAKE_INSTALL_PREFIX=/usr \
+    -DKDE_INSTALL_USE_QT_SYS_PATHS=ON
   make
 }
 
