@@ -1,42 +1,21 @@
-# Maintainer:   H W Tovetjärn (totte) <totte@tott.es>
-# Contributors: Manuel Tortosa <manutortosa@chakra-project.org>
-
 # Include global configuration
-source ../_buildscripts/${current_repo}-${_arch}-cfg.conf
+source ../kdeapps.conf
 
-pkgbase=kdepim-runtime
-pkgname=${pkgbase}
+pkgname=kdepim-runtime
 arch=('x86_64')
 pkgver=${_libsver}
 pkgrel=1
 pkgdesc='Extends the functionality of KDE PIM'
 url='https://projects.kde.org/projects/kde/kdepim-runtime'
-license=('GPL'
-         'LGPL'
-         'FDL')
-install=${pkgbase}.install
-options=('docs'
-         '!header'
-         'debug'
-         'log')
-depends=("kdepimlibs>=${_libsever}"
-         "kde-runtime"
-         "kdelibs>=${_libsver}"
-         'prison'
-         'libdmtx'
-         'qrencode'
-         'libkgapi'
-         'libkfbapi'
-         'libkolab')
-makedepends=('pkg-config'
-             'cmake'
-             'automoc4')
-groups=('kde'
-        'kdepim'
-        'kde-uninstall'
-        'kde-minimal')
-source=($_mirror/${pkgbase}-$_libsver.tar.xz)
-sha256sums=(`grep ${pkgbase}-$_libsver.tar.xz  ../checksums.txt | cut -d" " -f1`)
+license=('GPL' 'LGPL' 'FDL')
+install=${pkgname}.install
+options=('docs' '!header' 'debug' 'log')
+depends=("kdepimlibs>=${_libsever}" "kde-runtime" "kdelibs>=${_libsver}" 'prison' 'libdmtx' 'qrencode' 'libkgapi'
+         'libkfbapi' 'libkolab')
+makedepends=('pkg-config' 'cmake' 'automoc4')
+groups=('kde' 'kdepim' 'kde-uninstall' 'kde-minimal')
+source=($_mirror/${pkgname}-$_libsver.tar.xz)
+sha256sums=(`grep ${pkgname}-$_libsver.tar.xz  ../checksums.txt | cut -d" " -f1`)
 
 prepare() {
     cd "${srcdir}"
@@ -45,7 +24,7 @@ prepare() {
 
 build() {
     cd "${srcdir}/build"
-    cmake ../${pkgbase}-${pkgver} \
+    cmake ../${pkgname}-${pkgver} \
         -DCMAKE_BUILD_TYPE=${_build_type} \
         -DCMAKE_INSTALL_PREFIX=${_installprefix} \
         -DCMAKE_SKIP_RPATH=ON \

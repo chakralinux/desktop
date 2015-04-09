@@ -1,5 +1,5 @@
 # Include global configuration
-source ../_buildscripts/${current_repo}-${_arch}-cfg.conf
+source ../kdeapps.conf
 
 _default_wp="Elarun"
 pkgbase="kde-workspace"
@@ -9,53 +9,14 @@ pkgver=${_workspace_ver}
 pkgrel=4
 url="http://www.kde.org"
 license=('GPL' 'LGPL' 'FDL')
-makedepends=('pkgconfig'
-             'cmake'
-             'automoc4'
-             'networkmanager'
-             'bluez'
-             "kdebindings-python2>=${_oldkdever}"
-             'oxygen-icons'
-             "kde-runtime"
-             'gpsd'
-             'samba'
-             'xf86-input-wacom'
-             'libraw1394'
-             'libdmtx'
-             'docbook-xsl'
-             'prison'
-             'qrencode'
-             "kdepimlibs>=${_libsver}"
-             'qimageblitz'
-             'mesa'
-             "libkactivities4" 
-             'libxcomposite'
-             'xcb-util-image'
-             'xcb-util-renderutil'
-             'libxss'
-             'lm_sensors'
-             'libxklavier'
-             'libxft'
-             'xkit'
-             'libxdamage'
-             'xorg-utils'
-             'libxrandr'
-             'libxres'
-             'libdmtx'
-             'libqalculate'
-             'prison'
-             'qrencode'
-             "kdepim-runtime>=${_libsver}"
-             "kde-base-artwork>=${_kdever}"
-             'xcb-util-keysyms'
-             'xcb-util-wm')
-options=('docs'
-         '!header'
-         'debug'
-         'log')
-groups=('kde'
-        'kde-uninstall'
-        'kde-minimal')
+makedepends=('pkgconfig' 'cmake' 'automoc4' 'networkmanager' 'bluez' "kdebindings-python2>=${_oldkdever}"
+             'oxygen-icons' "kde-runtime" 'gpsd' 'samba' 'xf86-input-wacom' 'libraw1394' 'libdmtx' 'docbook-xsl'
+             'prison' 'qrencode' "kdepimlibs>=${_libsver}" 'qimageblitz' 'mesa' "libkactivities4" 'libxcomposite'
+             'xcb-util-image' 'xcb-util-renderutil' 'libxss' 'lm_sensors' 'libxklavier' 'libxft' 'xkit'
+             'libxdamage' 'xorg-utils' 'libxrandr' 'libxres' 'libdmtx' 'libqalculate' 'prison' 'qrencode'
+             "kdepim-runtime>=${_libsver}" "kde-base-artwork>=${_kdever}" 'xcb-util-keysyms' 'xcb-util-wm')
+options=('docs' '!header' 'debug' 'log')
+groups=('kde' 'kde-uninstall' 'kde-minimal')
 source=("http://download.kde.org/stable/applications/${_kdever}/src/kde-workspace-${_workspace_ver}.tar.xz"
         "http://download.kde.org/stable/applications/${_kdever}/src/kde-wallpapers-${_kdever}.tar.xz"
         "git://anongit.kde.org/wacomtablet#tag=v2.0.2"
@@ -74,7 +35,6 @@ source=("http://download.kde.org/stable/applications/${_kdever}/src/kde-workspac
         'fix_terminate-server.patch'
         'fix_root-only-kcms.patch'
         'plasma-panel-resize-hint.diff')
-        
 
 sha256sums=(`grep ${pkgname}-$pkgver.tar.xz  ../checksums.txt | cut -d " " -f1`
             `grep kde-wallpapers-$_kdever.tar.xz  ../checksums.txt | cut -d " " -f1`

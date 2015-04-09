@@ -1,68 +1,21 @@
-# Maintainer:   H W Tovetjärn (totte) <totte@tott.es>
-# Contributors: Manuel Tortosa <manutortosa@chakra-project.org>
-
 # Include global configuration
-source ../_buildscripts/${current_repo}-${_arch}-cfg.conf
+source ../kdeapps.conf
 
 pkgname="kdelibs"
 arch=('x86_64')
 pkgver=${_libsver}
-pkgrel=3
+pkgrel=1
 pkgdesc="KDE Core Libraries"
 url="http://www.kde.org"
-license=('GPL'
-         'LGPL'
-         'FDL')
-options=('docs'
-         '!header'
-         'debug'
-         'log')
-depends=("${_qtpkg}>=${_qtver}"
-         "chakra-common>=${_kdever}"
-         "oxygen-icons>=${_kdever}" 
-         'shared-mime-info'
-         'upower'
-         'udisks2'
-         'xz>=5.0.0'
-         'enchant'
-         'jasper'
-         'openexr'
-         'giflib'
-         'strigi'
-         'libxtst'
-         'soprano>=2.8'
-         'ca-certificates'
-         'xdg-utils'
-         'qca'
-         'polkit-qt>=0.98.1'
-         'libxss'
-         'phonon'
-         'shared-desktop-ontologies>=0.7'
-         'attica>=0.4.2'
-         'krb5'
-         'libxcursor'
-         'libutempter'
-         'hicolor-icon-theme'
-         'libdbusmenu-qt'
-         'grantlee>=0.3.0'
-         'media-player-info'
-         'qtwebkit'
-         'systemd'
-         'pcre')
-makedepends=('pkg-config'
-             'cmake'
-             'automoc4'
-             'intltool'
-             'avahi'
-             'libgl'
-             'aspell'
-             'hspell'
-             'shared-mime-info' 
-             'docbook-xsl'
-             'docbook-xml'
-             'bzip2>=1.0.6'
-             'libzip'
-             'libpulse')
+license=('GPL' 'LGPL' 'FDL')
+options=('docs' '!header' 'debug' 'log')
+depends=("${_qtpkg}>=${_qtver}" "chakra-common>=${_kdever}" "oxygen-icons>=${_kdever}" 
+         'shared-mime-info' 'upower' 'udisks2' 'xz' 'enchant' 'jasper' 'openexr' 'giflib' 'strigi' 'libxtst'
+         'soprano' 'ca-certificates' 'xdg-utils' 'qca' 'polkit-qt4' 'libxss' 'phonon' 'shared-desktop-ontologies'
+         'attica>=0.4.2' 'krb5' 'libxcursor' 'libutempter' 'hicolor-icon-theme' 'libdbusmenu-qt' 'grantlee' 
+         'media-player-info' 'qtwebkit' 'systemd' 'pcre')
+makedepends=('pkg-config' 'cmake' 'automoc4' 'intltool' 'avahi' 'libgl' 'aspell' 'hspell' 'shared-mime-info' 
+             'docbook-xsl' 'docbook-xml' 'bzip2>=1.0.6' 'libzip' 'libpulse')
 optdepends=('phonon-gstreamer: GStreamer Phonon backend (default)'
             'phonon-xine:      Xine Phonon backend'
             'phonon-mplayer:   MPlayer Phonon backend'
@@ -72,12 +25,8 @@ optdepends=('phonon-gstreamer: GStreamer Phonon backend (default)'
             'hspell:           Hebrew spell checking')
 provides=("${pkgname}=${_libsver}"
           "kdelibs-doc")
-replaces=('kdelibs-experimental'
-          'arts'
-          'kdelibs-doc')
-groups=("kde"
-        "kde-minimal"
-        "kde-uninstall")
+replaces=('kdelibs-experimental' 'arts' 'kdelibs-doc')
+groups=("kde" "kde-minimal" "kde-uninstall")
 conflicts=("kdelibs-doc")
 install=${pkgname}.install
 source=($_mirror/${pkgname}-$_libsver.tar.xz

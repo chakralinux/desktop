@@ -1,10 +1,5 @@
-# Maintainer:   H W Tovetjärn (totte) <totte@tott.es>
-# Contributors: Manuel Tortosa <manutortosa@chakra-project.org>
-#               Andrea Scarpino <andrea@archlinux.org>
-#               Pierre Schmitz <pierre@archlinux.de>
-
 # Include global configuration
-source ../_buildscripts/${current_repo}-${_arch}-cfg.conf
+source ../kdeapps.conf
 
 pkgbase='kdepim'
 pkgname=('kdepim-common'
@@ -25,20 +20,15 @@ pkgver=${_libsver}
 pkgrel=1
 arch=('x86_64')
 url="http://pim.kde.org"
-license=('GPL'
-         'LGPL'
-         'FDL')
-options=('!docs'
-         '!header'
-         'debug'
-         'log')
+license=('GPL' 'LGPL' 'FDL')
+options=('!docs' '!header' 'debug' 'log')
 makedepends=('pkg-config'
              'cmake'
              'automoc4'
              'boost'
              "kdelibs>=${_libsver}"
              "kdepimlibs>=${_libsver}"
-             'grantlee>=0.3.0'
+             'grantlee'
              "kdepim-runtime>=${_libsver}"
              'libxss'
              "kde-runtime"
