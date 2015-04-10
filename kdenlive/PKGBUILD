@@ -1,0 +1,39 @@
+# Contributions from Arch: https://www.archlinux.org/packages/kde-unstable/x86_64/kdenlive/
+# Include global configuration
+source ../kdeapps.conf
+
+pkgname=kdenlive
+pkgver=${_kdever}
+pkgrel=1
+pkgdesc="A non-linear video editor for Linux"
+arch=('x86_64')
+url="http://www.kdenlive.org/"
+license=('GPL')
+depends=('knewstuff' 'knotifyconfig' 'kplotting' 'mlt' 'glu' 'hicolor-icon-theme')
+optdepends=("dvdauthor: for creating dvds"
+	    "recordmydesktop: for desktop-recordings"
+	    "dvgrab: for firewire capture"
+	    "xine-ui: for DVD preview"
+	    "ffmpeg: for FFmpeg plugin"
+	    "cdrkit: for creation of DVD ISO images"
+	    "libdv: for webcam capture (if FFmpeg is not installed)")
+makedepends=('extra-cmake-modules' 'kdoctools' 'v4l-utils')
+categories=('multimedia')
+screenshot=('http://kdenlive.org/sites/default/files/kdenlive-090a_0.png')
+source=("$_mirror/${pkgname}-$_kdever.tar.xz")
+sha256sums=(`grep ${pkgname}-$_kdever.tar.xz  ../checksums.txt | cut -d " " -f1`)
+
+prepare() {
+  mkdir -p build
+}
+
+build() {
+  cd build
+  cmake_kf5 ../${pkgname}-${pkgver}
+  make
+}
+
+package() {
+    cd build
+    make DESTDIR=${pkgdir} install
+}
