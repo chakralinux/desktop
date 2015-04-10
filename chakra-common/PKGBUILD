@@ -56,8 +56,9 @@ source=('http://www.kde-apps.org/CONTENT/content-files/48411-rootactions_service
         'agent-startup.sh'
         'agent-shutdown.sh'
         'chakra-helper.sh'
-        'kde4.sh'
-        'https://gitorious.org/chakra-paste/chakra-paste/archive/05f0a884a4de1460309ee95d678eb034c4c964b5.tar.gz')
+        'kde4.sh')
+        # skipping chakra-paste because gitorious has issues with wget
+#        'https://gitorious.org/chakra-paste/chakra-paste/archive/05f0a884a4de1460309ee95d678eb034c4c964b5.tar.gz'
 sha256sums=('39e41a6acf246af4050d3e253b028f6abb739e19ec03d3c17ebf467b68be3962'
             '2bf00472d9b50bc9befcf9cdca92a1a6d31690287de330e6390ca65c17aba02e'
             'ca7d66aec559282581dd577746dff86b9b4127ae871ee2788b74ab66f99edbfa'
@@ -83,8 +84,8 @@ sha256sums=('39e41a6acf246af4050d3e253b028f6abb739e19ec03d3c17ebf467b68be3962'
             'e4a44b4ed3130d1fa309a6b5c829461ec09ec595c31cd4a8715d79942fe8f0ef'
             '530ecdbe32c8f33991cd6c2ccf29212f28bb4462d1844f5acba335b5984a9347'
             '9e0c9408c9bc12aeca2fd66a4723b57a6878307ba956df7cca43f8112dd71429'
-            '0e419422afb09ccebd3f532cde784e97adfd5ad7816701c17966597f54915bfc'
-            'a5b01c1f41bad239e05dff01a497db68d80806bf72a76b89ef8eb053853986c4')
+            '0e419422afb09ccebd3f532cde784e97adfd5ad7816701c17966597f54915bfc')
+#            'a5b01c1f41bad239e05dff01a497db68d80806bf72a76b89ef8eb053853986c4'
 
 package() {
     # Install scripts for gpg/ssh-agent
@@ -152,7 +153,7 @@ package() {
     install -m644 Chakra.directory ${pkgdir}/usr/share/desktop-directories/
   
     # chakra-paste
-    install -D -m777 chakra-paste-chakra-paste/chakra-paste "${pkgdir}/usr/bin/chakra-paste"
+  #  install -D -m777 chakra-paste-chakra-paste/chakra-paste "${pkgdir}/usr/bin/chakra-paste"
   
     # chakra-helper
     install -D -m777 chakra-helper.sh "${pkgdir}/usr/bin/chakra-helper"
