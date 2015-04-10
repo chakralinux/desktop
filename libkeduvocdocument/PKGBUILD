@@ -1,5 +1,6 @@
 # Contributions from Arch: https://projects.archlinux.org/svntogit/packages.git/tree/trunk?h=packages/libkeduvocdocument
-source ../_buildscripts/${current_repo}-${_arch}-cfg.conf
+# Include global configuration
+source ../kdeapps.conf
 
 pkgname=libkeduvocdocument
 pkgver=${_kdever}
@@ -19,14 +20,11 @@ prepare() {
 
 build() {
   cd build
-  cmake ../$pkgname-${pkgver} \
-    -DCMAKE_BUILD_TYPE=Release \
-    -DCMAKE_INSTALL_PREFIX=/usr \
-    -DCMAKE_INSTALL_LIBDIR=lib
+  cmake_kf5 ../${pkgname}-${pkgver}
   make
 }
 
 package() {
-  cd "${srcdir}"/build
-  make DESTDIR="${pkgdir}" install
+    cd build
+    make DESTDIR=${pkgdir} install
 }
