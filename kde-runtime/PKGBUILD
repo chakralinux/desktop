@@ -37,11 +37,9 @@ groups=('kde' 'kde-minimal' 'kde-uninstall')
 install=kde-runtime.install
 noextract=(branding.svgz)
 source=("$_mirror/${pkgbase}-$_kdever.tar.xz"
-        'branding.svgz'
-        'Remove-volume-control-from-KNotify.patch')
+        'branding.svgz')
 sha256sums=(`grep ${pkgbase}-$_kdever.tar.xz  ../checksums.txt | cut -d" " -f1`
-            '586c5461d66ef13d5c43fb269e16c4da51812ae25a0d1b132f0bbbcdb22505e5'
-            '87bb4bd5f20a95d10f03930477b7cc41c1a68b04e1ca57836b5836fe29c8e7bf')
+            '586c5461d66ef13d5c43fb269e16c4da51812ae25a0d1b132f0bbbcdb22505e5')
 
 prepare() {
     cd "${srcdir}/${pkgbase}-${pkgver}"
@@ -49,9 +47,6 @@ prepare() {
     mkdir "${srcdir}/${pkgbase}-${pkgver}/build"
     cp -f ${srcdir}/branding.svgz ${srcdir}/${pkgbase}-${pkgver}/desktoptheme/oxygen/widgets/
     cp -f ${srcdir}/branding.svgz ${srcdir}/${pkgbase}-${pkgver}/desktoptheme/air/widgets/
-
-    msg "Applying patches..."
-    patch -p1 -i ${srcdir}/Remove-volume-control-from-KNotify.patch
 }
 
 build() {
