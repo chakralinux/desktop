@@ -116,9 +116,12 @@ build() {
 
 package_helper()
 {
-     pushd ${srcdir}/kde-l10n-${1}-${_oldkdever}
-     make DESTDIR=${pkgdir} install
-     popd
+    if [ ${it} != "kde-10n-eo" ];
+    then
+      pushd ${srcdir}/kde-l10n-${1}-${_oldkdever}
+      make DESTDIR=${pkgdir} install
+      popd
+    fi
     # overwrite old 4.14.3 with new one
     pushd ${srcdir}/kde-l10n-${1}-${pkgver}
     make DESTDIR=${pkgdir} install
