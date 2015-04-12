@@ -1,6 +1,6 @@
 pkgname=wesnoth
 pkgver=1.12.2
-pkgrel=1
+pkgrel=2
 pkgdesc="A turn-based strategy game on a fantasy world."
 arch=('x86_64')
 license=('GPL2')
@@ -32,6 +32,8 @@ build() {
     -DENABLE_TOOLS=ON \
     -DENABLE_OMP=ON \
     -DCMAKE_BUILD_TYPE=RelWithDebugInfo \
+    -DMANDIR=share/man \
+    -DFIFO_DIR=/run/wesnothd \
     ..
   make
 }
