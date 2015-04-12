@@ -10,6 +10,7 @@ license=('GPL')
 depends=('telepathy-qt5' 'telepathy-logger')
 makedepends=('extra-cmake-modules' 'python2' 'doxygen')
 group=('kde-telepathy')
+options=("debug")
 #switch to stable source once available
 source=("http://download.kde.org/unstable/kde-telepathy/${pkgver}/src/${pkgname}-${pkgver}.tar.xz")
 md5sums=('37faed9d4609bb3a586581d2df600590')
@@ -21,7 +22,7 @@ prepare() {
 build() {
   cd build
   cmake ../${pkgname}-${pkgver} \
-    -DCMAKE_BUILD_TYPE=Release \
+    -DCMAKE_BUILD_TYPE=RelWithDebInfo \
     -DCMAKE_INSTALL_PREFIX=/usr \
     -DLIB_INSTALL_DIR=lib \
     -DPYTHON_EXECUTABLE=/usr/bin/python2
