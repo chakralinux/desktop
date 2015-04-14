@@ -1,21 +1,22 @@
 pkgname=labplot
-_pkgname=labplot
-conflicts=labplot2-svn
-pkgver=2.0.1
-pkgrel=2
+pkgver=2.0.2
+pkgrel=1
 pkgdesc="A free software data analysis and visualization application build on top of KDE SC"
 arch=('x86_64')
 url='http://labplot.sourceforge.net/'
 license=('GPL')
-depends=('kdelibs' 'kdebase-runtime' 'gsl' 'qwtplot3d')
-makedepends=('cmake' 'automoc4' 'subversion')
-source=("http://netcologne.dl.sourceforge.net/project/labplot/labplot/2.0.0/${pkgname}-${pkgver}.tar.bz2")
-sha256sums=('2d4f28acdb57ffd093b4da5ca0362d8cbfe11163fe04149ae126dac3764b25b3')
+depends=('kdelibs' 'hdf5' 'netcdf' 'gsl')
+makedepends=('cmake' 'automoc4' 'docbook-xsl')
+conflicts=('labplot2-svn')
+source=("http://download.kde.org/stable/${pkgname}/${pkgver}/src/${pkgname}-${pkgver}.tar.xz")
+sha256sums=('f52e00006e2ce87aeda5bf15b950155e5db71cde4b0e1fb0819b6e71aaf6dee0')
  
 build() {
  
   cd "${srcdir}"/${pkgname}-${pkgver}
- 
+  
+  ./compile
+  
   cmake -DCMAKE_INSTALL_PREFIX=/usr
   make 
  
