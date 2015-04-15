@@ -2,7 +2,7 @@
 
 pkgname=signon
 pkgver=8.57
-pkgrel=4
+pkgrel=5
 arch=('x86_64')
 url="http://code.google.com/p/accounts-sso/"
 license=('LGPL')
@@ -17,7 +17,7 @@ sha1sums=('c9fa0567b68db434a7a954dcb303adf7aad1578b'
 
 prepare() {
   cd $pkgname-$pkgver
-  # Use gnome-keyring secrets storage if signon-keyring-extension is available
+  # Use kwallet-keyring secrets storage if signon-keyring-extension is available
   patch -Np1 -i "$srcdir/use_keyring.patch"
 }
 
