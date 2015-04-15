@@ -1,37 +1,30 @@
-# Maintainer: BrLi <rainman59118[AT]Gmail.com>
-# Contributor: MartÃƒÂ­n GonzÃƒÂ¡lez <kote at chakra-project dot org>
-# Contributor: Kuba Serafinowski <zizzfizzix(at)gmail(dot)com>
-
 pkgname=tomahawk
-pkgver=0.8.2
-pkgrel=4
+pkgver=0.8.4
+pkgrel=1
 pkgdesc="The social media player. A Music Player App written in C++/Qt"
 arch=('x86_64')
 url="http://tomahawk-player.org/"
 screenshot="https://img.skitch.com/20110813-n6w28ugdugyeptxgaj83y4ptp5.medium.jpg"
 license=('GPL3')
 depends=('phonon' 'taglib' 'boost' 'lucene++' 'libechonest>=2.1.0' 'jreen>=1.1.1' 'qtweetlib'
-         'attica' 'quazip' 'qtwebkit' 'liblastfm' 'sparsehash' 'qtkeychain' 'gnutls' 'websocketpp' 'libechonest')
-makedepends=('cmake' 'git')
-provides=('tomahawk')
+         'attica' 'quazip' 'qtwebkit' 'liblastfm' 'sparsehash' 'qtkeychain' 'gnutls' 'websocketpp')
+makedepends=('cmake' 'automoc4' 'sparsehash' 'boost')
 conflicts=('tomahawk-git')
 categories=('multimedia')
 options=(!strip)
 source=("http://download.tomahawk-player.org/${pkgname}-${pkgver}.tar.bz2")
-md5sums=('a63128cad97035d9b872000a3f8c6d5f')
+md5sums=('04832abe1786edcc55805875b5882445')
 
 build() {
  
   cd ${srcdir}/${pkgname}-${pkgver}
-
-  msg "Starting build..."
 
   rm -rf ${srcdir}/${pkgname}-${pkgver}-build
   cp -r ${srcdir}/${pkgname}-${pkgver} ${srcdir}/${pkgname}-${pkgver}-build
   cd ${srcdir}/${pkgname}-${pkgver}-build
 
   cmake -DCMAKE_INSTALL_PREFIX=/usr \
-        -DCMAKE_BUILD_TYPE=release \
+        -DCMAKE_BUILD_TYPE=Release \
         -DCMAKE_INSTALL_LIBDIR=lib \
         -DCMAKE_INSTALL_LIBEXECDIR=lib/${pkgname} 
   make
