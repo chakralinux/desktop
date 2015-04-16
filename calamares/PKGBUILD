@@ -1,7 +1,7 @@
 
 pkgname=calamares
 pkgver=1.0.1
-pkgrel=2
+pkgrel=3
 pkgdesc='Distribution-independent installer framework'
 arch=('x86_64')
 url='https://github.com/calamares/calamares'
@@ -10,8 +10,10 @@ depends=('qt5-svg' 'kconfig' 'ki18n' 'kcoreaddons' 'solid' 'yaml-cpp'
          'parted' 'libatasmart' 'udisks2' 'polkit-qt5' 'boost-libs'
          'rsync')
 makedepends=('extra-cmake-modules' 'git' 'qt5-tools')
-source=("git://github.com/rshipp/calamares"
-#source=("calamares.tar.xz"
+_gitsha='b15ccdf'
+source=("git://github.com/calamares/calamares#commit=${_gitsha}"
+        http://rsync.chakraos.org/sources/chakra-artwork/calamares/chakra-branding_2015.04-1.tar.gz
+#source=("git://github.com/rshipp/calamares"
         'displaymanagers.conf'
         'locale.conf'
         'prepare.conf'
@@ -27,6 +29,7 @@ source=("git://github.com/rshipp/calamares"
 #        'JobQueue.diff'
 #        'along_UEFI.diff')
 md5sums=('SKIP'
+         '6e17cea14a849620a557be50f7e2cb0c'
          '0364830e843823dff80b18509ea4042e'
          'c05b2dda2e0a8a57cf25cc89913a1f4f'
          '76cf16c8e4347d369330ed64ff28083b'
@@ -42,14 +45,17 @@ prepare () {
   
   git submodule init
   git submodule update
-  sed -i 's|Ext4|Xfs|' ${srcdir}/${pkgname}/src/modules/partition/tests/PartitionJobTests.cpp
-  sed -i 's|Ext4|Xfs|' ${srcdir}/${pkgname}/src/modules/partition/gui/EraseDiskPage.cpp
-  sed -i 's|Ext4|Xfs|' ${srcdir}/${pkgname}/src/modules/partition/gui/ReplacePage.cpp
+  #sed -i 's|Ext4|Xfs|' ${srcdir}/${pkgname}/src/modules/partition/tests/PartitionJobTests.cpp
+  #sed -i 's|Ext4|Xfs|' ${srcdir}/${pkgname}/src/modules/partition/gui/EraseDiskPage.cpp
+  #sed -i 's|Ext4|Xfs|' ${srcdir}/${pkgname}/src/modules/partition/gui/ReplacePage.cpp
   #patch -p1 -i ${srcdir}/GreetingPage.diff
   #patch -p1 -i ${srcdir}/CalamaresStyle.diff
   #patch -p1 -i ${srcdir}/UEFI.diff
   #patch -p1 -i ${srcdir}/JobQueue.diff
   #patch -p1 -i ${srcdir}/along_UEFI.diff
+  
+  # copy our branding files to the correct location
+  cp -avr ${srcdir}/chakra src/branding/chakra
 }
 
 build() {
