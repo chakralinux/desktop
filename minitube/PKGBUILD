@@ -1,34 +1,24 @@
-# Maintainer: UtG  <utg[dot]chakra.linux[at]gmail[dot]com>
-# Maintainer: Francesco Marinucci <franzmari[at]chakra-project[dot]it>
-
 pkgname=minitube
-pkgver=2.3
-pkgrel=2
+pkgver=2.4
+pkgrel=1
 pkgdesc="A native YouTube client in QT. Watch YouTube videos without Flash Player"
 arch=('x86_64')
 url="http://flavio.tordini.org/minitube"
 license=('GPL')
-depends=('phonon' 'qt')
-optdepends=('phonon-xine: for xine backend'
-            'phonon-mplayer: for mplayer backend'
-            'phonon-vlc: for vlc backend')
+depends=('phonon' 'qt' 'phonon-backend-vlc')
 categories=('multimedia')
 install=${pkgname}.install
 screenshot="http://flavio.tordini.org/files/minitube/minitube-01.jpg"
-source=("http://flavio.tordini.org/files/${pkgname}/${pkgname}-${pkgver}.tar.gz")
-md5sums=('8c9dba9b0190a740fab6c38c5d79c3f8')
-
-prepare() {
-  cd $pkgname
-}
+source=("https://github.com/flaviotordini/${pkgname}/archive/${pkgver}.tar.gz")
+md5sums=('90e8f7c8adfe633553e08d98edd77961')
 
 build() {
-        cd "${srcdir}/${pkgname}"      
+        cd "${srcdir}/${pkgname}-${pkgver}"      
         qmake 
 }
 
 package() {
-        cd "${srcdir}/${pkgname}"
+        cd "${srcdir}/${pkgname}-${pkgver}"
         
         make install INSTALL_ROOT="${pkgdir}" 
 }
