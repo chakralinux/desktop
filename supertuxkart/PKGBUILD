@@ -1,48 +1,29 @@
-#
-# Games Packages for Chakra, part of chakra-project.org
-#
-# Maintainer: Adrian Chaves Fernandez (Gallaecio) <adriyetichaves gmail.com>
-
 pkgname=supertuxkart
 _pkgname=SuperTuxKart
-pkgver=0.8.1
-pkgrel=4
+pkgver=0.9
+pkgrel=1
 pkgdesc="Kart racing game featuring Tux and friends."
 url="http://supertuxkart.sourceforge.net/"
 arch=('x86_64')
 license=('GPL3' 'GPL2' 'CCPL-by' 'CCPL-by-sa' 'custom:Public Domain')
-depends=( 'bzip2' 'curl' 'enet' 'fribidi' 'freeglut' 'libgl' 'libjpeg' 'libogg' 'libpng' 'libvorbis' 'openal' 'wiiuse' 'bluez-libs')
+depends=('bzip2' 'curl' 'enet' 'fribidi' 'freeglut' 'libgl' 'libjpeg' 'libogg' 
+         'libpng' 'libvorbis' 'openal' 'wiiuse' 'bluez-libs' 'glu' 'xorg-xrandr')
+makedepends=('cmake' 'subversion' 'mesa' 'imagemagick' 'setconf' 'mesa-libgl')
 conflicts=('supertuxkart-svn')
 categories=('games')
 changelog=ChangeLog
-source=("http://downloads.sourceforge.net/project/${pkgname}/${_pkgname}/${pkgver}/${pkgname}-${pkgver}-src.tar.bz2"
-        "$pkgname-system-libs.diff"
-        "FindEnet.cmake"
-        "FindIrrlicht.cmake"
-        "FindWiiUse.cmake")
-md5sums=('aa31ecf883dc35859eec76c667f1a6d6'
-         'e4aba32ba949f6489654e5788584d0d5'
-         'f63b2d5fbac6c53699aaaf97ed7f89d6'
-         '78735ca4da9c04422a09f385561f5d9d'
-         'b23cdd616cb27e2c114bbb1e3840274c')
+source=("http://downloads.sourceforge.net/project/${pkgname}/${_pkgname}/${pkgver}/${pkgname}-${pkgver}-src.tar.xz")
+md5sums=('ae07569ab02c88ca4d49017df7731923')
 
 build() {
-  cd "${srcdir}/${_pkgname}-${pkgver}"
-  
-  # Patches.
-  
-    # For using system libraries.
-    patch -uN CMakeLists.txt $srcdir/$pkgname-system-libs.diff
-    sed -e "s#wiiuse/wiiuse.h#wiiuse.h#" -i src/input/wiimote_manager.cpp
-    cp $srcdir/*.cmake cmake/
-
-    cp /usr/include/GL/glext.h lib/irrlicht/source/Irrlicht/glext.h
-    cp /usr/include/GL/glxext.h lib/irrlicht/source/Irrlicht/glxext.h
-    cp /usr/include/GL/wglext.h lib/irrlicht/source/Irrlicht/wglext.h
+  cd "${srcdir}/${pkgname}-${pkgver}"
 
   mkdir -p build && cd build
   cmake \
     -DCMAKE_INSTALL_PREFIX=/usr \
+    -DIRRLICHT_DIR="$srcdir/irrlicht" \
+    -DCMAKE_BUILD_TYPE=Release \
+    -DCMAKE_CXX_FLAGS="-lpthread -lm -ldl $CXXFLAGS" \
     -DUSE_WIIUSE=ON \
     -DUSE_FRIBIDI=ON \
     ..
@@ -50,15 +31,12 @@ build() {
 }
 
 package() {
-  cd "${srcdir}/${_pkgname}-${pkgver}/build"
+  cd "${srcdir}/${pkgname}-${pkgver}/build"
   
   make DESTDIR="${pkgdir}" install
-  
-  # Desktop Integration
-  sed -e "s@/usr/games@/usr/bin@" -i $pkgdir/usr/share/applications/$pkgname.desktop
 
   # Licensing
   install -d "${pkgdir}/usr/share/licenses/${pkgname}"
-  ln -s "${pkgdir}/usr/share/games/${pkgname}/data/CREDITS" "${pkgdir}/usr/share/licenses/${pkgname}/AUTHORS"
-  cp "${srcdir}/${_pkgname}-$pkgver/COPYING" "${pkgdir}/usr/share/licenses/${pkgname}/LICENSE"
+  ln -s "${pkgdir}/usr/share/${pkgname}/data/CREDITS" "${pkgdir}/usr/share/licenses/${pkgname}/AUTHORS"
+  cp "${srcdir}/${pkgname}-$pkgver/COPYING" "${pkgdir}/usr/share/licenses/${pkgname}/LICENSE"
 }
