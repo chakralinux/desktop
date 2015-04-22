@@ -1,15 +1,13 @@
-# Maintainer: Manuel 'UtG' <utg[dot]chakra.linux[at]gmail[dot]com>
-
 pkgname=qtcreator
-pkgver=3.3.1
-_pkgver=v3.3.1
+pkgver=3.3.2
+_pkgver=3.3
 pkgrel=1
 pkgdesc='Lightweight, cross-platform integrated development environment'
 arch=('x86_64')
 url='http://qt-project.org'
 license=('LGPL')
-depends=('qt5-quick1' 'qt5-tools' 'qt5-quickcontrols' 'libxkbcommon')
-makedepends=('git' 'mesa' 'clang')
+depends=('qt5-quick1' 'qt5-tools' 'qt5-quickcontrols' 'libxkbcommon' 'qbs')
+makedepends=('mesa' 'clang')
 options=('docs')
 optdepends=('qt5-doc: for the integrated Qt documentation'
             'gdb: for the debugger'
@@ -20,32 +18,25 @@ optdepends=('qt5-doc: for the integrated Qt documentation'
             'bzr: for bazaar support'
             'clang: Clang code model'
             'valgrind: for analyze support')
-install=qtcreator.install
-source=("git://gitorious.org/qt-creator/qt-creator.git#tag=${_pkgver}"
-        "git://gitorious.org/qt-labs/qbs.git"
+install=${pkgname}.install
+source=("http://download.qt.io/official_releases/${pkgname}/${_pkgver}/${pkgver}/qt-creator-opensource-src-${pkgver}.tar.gz"
         'qtcreator.desktop')
-md5sums=('SKIP'
-         'SKIP'
+md5sums=('476ff3142c5e8d09fa5f495070f350df'
          '5aa242e0262fa22f75c3b59d3a4ec198')
 
-prepare() {
-  cd qt-creator
-  git submodule init
-  git config submodule.qbs.url $srcdir/qbs
-  git submodule update
-}
-
 build() {
+  cd ${srcdir}/qt-creator-opensource-src-${pkgver}
+  
   [[ -d build ]] && rm -r build
   mkdir build && cd build
 
-  LLVM_INSTALL_DIR=/usr qmake-qt5 -r ../qt-creator/qtcreator.pro
+  LLVM_INSTALL_DIR=/usr qmake-qt5 -r ../qtcreator.pro
   make
   make docs -j1
 }
 
 package() {
-  cd build
+  cd ${srcdir}/qt-creator-opensource-src-${pkgver}/build
 
   make INSTALL_ROOT="${pkgdir}/usr/" install
   make INSTALL_ROOT="${pkgdir}/usr/" install_docs
@@ -57,5 +48,5 @@ package() {
   chmod +x "${pkgdir}"/usr/bin/qtcreator
 
   install -Dm644 ${srcdir}/qtcreator.desktop ${pkgdir}/usr/share/applications/qtcreator.desktop
-  install -Dm644 ${srcdir}/qt-creator/LGPL_EXCEPTION.TXT ${pkgdir}/usr/share/licenses/qtcreator/LGPL_EXCEPTION.TXT
+  install -Dm644 ${srcdir}/qt-creator-opensource-src-${pkgver}/LGPL_EXCEPTION.TXT ${pkgdir}/usr/share/licenses/qtcreator/LGPL_EXCEPTION.TXT
 }
