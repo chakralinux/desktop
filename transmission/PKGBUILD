@@ -18,7 +18,6 @@ md5sums=('411aec1c418c14f6765710d89743ae42'
 build() {
   msg 'Configure source code...'
   cd "${srcdir}/${pkgbase}-${pkgver}"
-  autoreconf -fi 
   export CFLAGS="$CFLAGS -fno-strict-aliasing"
 
   ./configure --prefix=/usr \
@@ -26,12 +25,15 @@ build() {
               --enable-static=no \
               --localedir=/usr/share/transmission/i18n
   make
+  make -C po
   cp -r qt qt5
+
   msg 'Compiling Qt4 part...'
   sed -i '/^CONFIG/aQMAKE_CXXFLAGS += -std=c++11' qt/qtr.pro
   cd "${srcdir}/${pkgbase}-${pkgver}/qt"
   qmake qtr.pro
   make
+
   msg 'Compiling Qt5 part...'
   cd "${srcdir}/${pkgbase}-${pkgver}/qt5"
   /usr/lib/qt5/bin/qmake qtr.pro
