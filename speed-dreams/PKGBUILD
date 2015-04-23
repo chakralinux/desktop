@@ -1,82 +1,80 @@
-#
-# Games Packages for Chakra, part of chakra-project.org
-#
-# Maintainer: Adrián Chaves Fernández (Gallaecio) <adriyetichaves@gmail.com>
-
 pkgbase=speed-dreams
 pkgname=('speed-dreams' 'speed-dreams-data')
-pkgver=2.0.0
-_pkgver=2.0.0-r4687
-pkgrel=9
+pkgver=2.1.0
+_pkgver=2.1.0-r5799
+pkgrel=1
 pkgdesc="A racing simulator with rich graphics and physics"
-arch=('i686' 'x86_64')
+arch=('x86_64')
 url="http://speed-dreams.sourceforge.net/"
 license=('GPL2')
-depends=('enet' 'freeglut' 'glu' 'libgl' 'libjpeg' 'libpng' 'libxi' 'libxmu' 'libxrandr' 'openal' 'plib' 'sdl' 'zlib')
-makedepends=('mesa')
+depends=('enet' 'freeglut' 'glu' 'libgl' 'libjpeg' 'libpng' 'libxi' 'libxmu' 
+         'libxrandr' 'openal' 'plib' 'sdl' 'zlib' 'libogg' 'libvorbis' 'enet')
+makedepends=('cmake' 'mesa' 'tar')
 categories=('games')
-source=("http://downloads.sourceforge.net/project/$pkgbase/$pkgver/$pkgbase-src-base-$_pkgver.tar.xz"
-        "http://downloads.sourceforge.net/project/$pkgbase/$pkgver/$pkgbase-src-hq-cars-and-tracks-$_pkgver.tar.xz"
-        "http://downloads.sourceforge.net/project/$pkgbase/$pkgver/$pkgbase-src-more-hq-cars-and-tracks-$_pkgver.tar.xz"
-        "http://downloads.sourceforge.net/project/$pkgbase/$pkgver/$pkgbase-src-wip-cars-and-tracks-$_pkgver.tar.xz"
-        "http://downloads.sourceforge.net/project/$pkgbase/$pkgver/$pkgbase-src-unmaintained-$_pkgver.tar.xz")
-md5sums=('a6842887fc289ed6057be2ba9d2afaa2'
-         '57cf5c475491294ce1fb249e2dc0273b'
-         'c8ab7ef068fa3fbe67d2b3246b30ea8a'
-         'edcc842291737dbb13a3083252bf51d4'
-         '8505c46aae6ce56a43353b8899d40ce4')
+noextract=("${pkgname}-src-base-${_pkgver}.tar.xz"
+           "${pkgname}-src-unmaintained-${_pkgver}.tar.xz"
+           "${pkgname}-src-wip-cars-and-tracks-${_pkgver}.tar.xz"
+           "${pkgname}-src-hq-cars-and-tracks-${_pkgver}.tar.xz"
+           "${pkgname}-src-more-hq-cars-and-tracks-${_pkgver}.tar.xz")
+source=("http://downloads.sourceforge.net/sourceforge/${pkgname}/${pkgname}-src-base-${_pkgver}.tar.xz"
+        "http://downloads.sourceforge.net/sourceforge/${pkgname}/${pkgname}-src-unmaintained-${_pkgver}.tar.xz"
+        "http://downloads.sourceforge.net/sourceforge/${pkgname}/${pkgname}-src-wip-cars-and-tracks-${_pkgver}.tar.xz"
+        "http://downloads.sourceforge.net/sourceforge/${pkgname}/${pkgname}-src-hq-cars-and-tracks-${_pkgver}.tar.xz"
+        "http://downloads.sourceforge.net/sourceforge/${pkgname}/${pkgname}-src-more-hq-cars-and-tracks-${_pkgver}.tar.xz"
+        "${pkgname}.desktop")
+md5sums=('4e45e6ebf35b5afe52be4c4d24e670a7'
+         '293ff3117d9b82d7a509bb935cdd4d4b'
+         '1f4f32f726ee27fce30bbcd91c611b7f'
+         '09efa3454b1b0812169b5714821279e8'
+         '71f4be0d2b5589c32deb9b3686e69128'
+         '634f8cb8f4f96686c8049c8a025e72d0')
 
-build() {
-  cd $srcdir
-  
-  mkdir -p  build
-  cd build
-  
-  cmake \
-    -D OPTION_OFFICIAL_ONLY:BOOL=ON \
-    -D CMAKE_INSTALL_PREFIX:STRING=/usr \
-    -D SD_LOCALDIR:STRING=~/.speed-dreams \
-    ..
+prepare() {
+  # extract these manually as bsdtar can't handle these
+  tar xf "${pkgname}-src-base-${_pkgver}.tar.xz"
+  tar xf "${pkgname}-src-unmaintained-${_pkgver}.tar.xz"
+  tar xf "${pkgname}-src-wip-cars-and-tracks-${_pkgver}.tar.xz"
+  tar xf "${pkgname}-src-hq-cars-and-tracks-${_pkgver}.tar.xz"
+  tar xf "${pkgname}-src-more-hq-cars-and-tracks-${_pkgver}.tar.xz"
+}
+
+build() {  
+  cmake . \
+    -DCMAKE_BUILD_TYPE=Release \
+    -DCMAKE_INSTALL_PREFIX=/usr \
+    -DSD_BINDIR=/usr/bin \
+    -DOPTION_OFFICIAL_ONLY=ON \
+    -DSD_LOCALDIR=~/.speed-dreams \
+    -DSD_DATADIR=/usr/share/speed-dreams-2 \
+    -DSD_LIBDIR=/usr/lib/speed-dreams-2
   make
-  
-  mkdir -p ../tmppkg
-  make DESTDIR=../tmppkg install
 }
 
 package_speed-dreams() {
   depends=(${depends[@]} speed-dreams-data)
   
-  cd $srcdir
-  
-  # Copy game from the installation.
-  mkdir -p $pkgdir/usr
-  mv $srcdir/tmppkg/usr/games   $pkgdir/usr/games
-  mv $srcdir/tmppkg/usr/include $pkgdir/usr/include
-  if [ -d "$srcdir/tmppkg/usr/lib64" ]; then
-    mv $srcdir/tmppkg/usr/lib64 $pkgdir/usr/lib64
-  else
-    mv $srcdir/tmppkg/usr/lib   $pkgdir/usr/lib
-  fi
-  mkdir -p $pkgdir/usr/share
-  mv $srcdir/tmppkg/usr/share/man   $pkgdir/usr/share/man
-  
-  # Run Script.
-  mkdir -p $pkgdir/usr/bin
-  echo "#!/bin/bash"                    >  $pkgdir/usr/bin/$pkgbase
-  echo "/usr/games/speed-dreams-2"      >> $pkgdir/usr/bin/$pkgbase
-  chmod +x $pkgdir/usr/bin/$pkgbase
-  
-  # Desktop Integration.
-  install -Dm644 $srcdir/data/data/icons/icon.png $pkgdir/usr/share/pixmaps/$pkgname.png
+  make DESTDIR="${pkgdir}/" install
+
+  rm -r "${pkgdir}/usr/share"
+
+  install -Dm644 "data/data/icons/icon.png" "${pkgdir}/usr/share/pixmaps/speed-dreams.png"
+  install -Dm644 "${srcdir}/${pkgname}.desktop" "${pkgdir}/usr/share/applications/speed-dreams.desktop"
+
+  mkdir -p "${pkgdir}/usr/share/doc/${pkgname}"
+  cp -r doc/* "${pkgdir}/usr/share/doc/${pkgname}/"
+
+  # Symlink for backwards compatibility
+  cd "${pkgdir}/usr/bin"
+  ln -s speed-dreams-2 speed-dreams
 }
 
 package_speed-dreams-data() {
   depends=()
   pkgdesc="$pkgdesk (data files)"
   
-  cd $srcdir
-  
-  # Copy game from the installation.
-  mkdir -p $pkgdir/usr/share
-  mv $srcdir/tmppkg/usr/share/games   $pkgdir/usr/share/games
+  make DESTDIR="${pkgdir}/" install
+
+  rm -r "${pkgdir}/usr/bin"
+  rm -r "${pkgdir}/usr/lib"
+  rm -r "${pkgdir}/usr/include"
 }
