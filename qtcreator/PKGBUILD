@@ -1,7 +1,7 @@
 pkgname=qtcreator
 pkgver=3.3.2
 _pkgver=3.3
-pkgrel=1
+pkgrel=2
 pkgdesc='Lightweight, cross-platform integrated development environment'
 arch=('x86_64')
 url='http://qt-project.org'
@@ -49,4 +49,6 @@ package() {
 
   install -Dm644 ${srcdir}/qtcreator.desktop ${pkgdir}/usr/share/applications/qtcreator.desktop
   install -Dm644 ${srcdir}/qt-creator-opensource-src-${pkgver}/LGPL_EXCEPTION.TXT ${pkgdir}/usr/share/licenses/qtcreator/LGPL_EXCEPTION.TXT
+  
+  rm -f ${pkgdir}/usr/bin/qbs*
 }
