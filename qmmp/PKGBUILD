@@ -2,7 +2,7 @@
  
 pkgname=qmmp
 pkgver=0.8.4
-pkgrel=1
+pkgrel=2
 pkgdesc="Qt4 based audio-player"
 arch=('x86_64')
 url="http://qmmp.ylsoftware.com/"
@@ -26,7 +26,7 @@ build() {
   cd ${srcdir}/$pkgname-$pkgver
 
   cmake . -DCMAKE_INSTALL_PREFIX=/usr \
-	  -DCMAKE_INSTALL_LIBDIR=/usr/lib
+	  -DLIB_DIR=lib
   make
 }
 
