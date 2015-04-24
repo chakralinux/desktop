@@ -3,7 +3,7 @@
 
 pkgname=lighttpd
 pkgver=1.4.35
-pkgrel=1
+pkgrel=2
 pkgdesc='A secure, fast, compliant and very flexible web-server.'
 license=('custom')
 arch=('x86_64')
@@ -34,7 +34,8 @@ build() {
 
 	./configure --prefix=/usr \
 		--libexecdir=/usr/lib/lighttpd/modules \
-		--sysconfdir=/etc/lighttpd \
+		--libdir=/usr/lib \
+                --sysconfdir=/etc/lighttpd \
 		--with-mysql \
 		--with-ldap \
 		--with-attr \
