@@ -1,9 +1,8 @@
-# Maintainer: Neophytos Kolokotronis <tetris4 AT gmail DOT com>
 # Contributions from AUR: http://aur.archlinux.org/packages.php?ID=4277
 
 pkgname=rkward
 pkgver=0.6.3
-pkgrel=1
+pkgrel=2
 pkgdesc="Easy to use transparent frontend to R for KDE4"
 arch=('x86_64')
 url="http://rkward.sourceforge.net/"
@@ -17,9 +16,11 @@ screenshot="http://sourceforge.net/apps/mediawiki/rkward/nfs/project/r/rk/rkward
 	 
 build() {
 	cd "${srcdir}/${pkgname}-${pkgver}"
-	mkdir -p build
-	cd build
-	cmake .. -DCMAKE_INSTALL_PREFIX=`kde4-config --prefix` -DCMAKE_BUILD_TYPE=Release
+	mkdir -p build && cd build
+	cmake -DCMAKE_INSTALL_PREFIX=`kde4-config --prefix` \
+	      -DCMAKE_BUILD_TYPE=Release \
+	      -DR_LIBDIR="/usr/lib/R/library" \
+	      ..
 	make 
 }
 
