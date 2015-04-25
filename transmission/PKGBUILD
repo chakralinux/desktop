@@ -5,20 +5,26 @@
 pkgbase=transmission
 pkgname=('transmission-cli' 'transmission-qt' 'transmission-qt5')
 pkgver=2.84
-pkgrel=3
+pkgrel=4
 arch=('x86_64')
 url="http://www.transmissionbt.com/"
 license=('MIT')
 makedepends=('intltool' 'curl' 'pkgconfig' 'desktop-file-utils' 'qt' 'libevent' 'gettext' 'qt5-tools' 'miniupnpc')
 source=("http://mirrors.m0k.org/transmission/files/${pkgbase}-${pkgver}.tar.xz"
-        'transmission.tmpfiles')
+        'transmission.tmpfiles'
+        'transmission-2.80-translations-path-fix.patch') # patch from Gentoo
 md5sums=('411aec1c418c14f6765710d89743ae42'
-         '23f2320361ad54373c3a4551ef634fe8')
+         '23f2320361ad54373c3a4551ef634fe8'
+         '2c751d74f728d36353201a4cd5a88803')
+
+prepare() {
+  cd "${srcdir}/${pkgbase}-${pkgver}"
+  patch -Np0 -i ${srcdir}/transmission-2.80-translations-path-fix.patch
+}
 
 build() {
   msg 'Configure source code...'
   cd "${srcdir}/${pkgbase}-${pkgver}"
-  export CFLAGS="$CFLAGS -fno-strict-aliasing"
 
   ./configure --prefix=/usr \
               --enable-nls \
