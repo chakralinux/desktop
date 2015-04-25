@@ -5,11 +5,11 @@
 pkgbase=transmission
 pkgname=('transmission-cli' 'transmission-qt' 'transmission-qt5')
 pkgver=2.84
-pkgrel=2
+pkgrel=3
 arch=('x86_64')
 url="http://www.transmissionbt.com/"
 license=('MIT')
-makedepends=('intltool' 'curl' 'pkgconfig' 'desktop-file-utils' 'qt' 'libevent' 'gettext' 'qt5-base' 'miniupnpc')
+makedepends=('intltool' 'curl' 'pkgconfig' 'desktop-file-utils' 'qt' 'libevent' 'gettext' 'qt5-tools' 'miniupnpc')
 source=("http://mirrors.m0k.org/transmission/files/${pkgbase}-${pkgver}.tar.xz"
         'transmission.tmpfiles')
 md5sums=('411aec1c418c14f6765710d89743ae42'
@@ -22,8 +22,7 @@ build() {
 
   ./configure --prefix=/usr \
               --enable-nls \
-              --enable-static=no \
-              --localedir=/usr/share/transmission/i18n
+              --enable-static=no
   make
   cp -r qt qt5
 
@@ -32,11 +31,13 @@ build() {
   cd "${srcdir}/${pkgbase}-${pkgver}/qt"
   qmake qtr.pro
   make
+  lrelease ${srcdir}/${pkgbase}-${pkgver}/qt/translations/*.ts
 
   msg 'Compiling Qt5 part...'
   cd "${srcdir}/${pkgbase}-${pkgver}/qt5"
   /usr/lib/qt5/bin/qmake qtr.pro
   make
+  lrelease-qt5 ${srcdir}/${pkgbase}-${pkgver}/qt5/translations/*.ts
 }
 
 package_transmission-cli() {
@@ -75,7 +76,12 @@ package_transmission-qt() {
   install -D -m644 qt/transmission-qt.desktop "${pkgdir}/usr/share/applications/transmission-qt.desktop"
  
   install -dm755 ${pkgdir}/usr/share/icons/hicolor
-  cp -r qt/icons/hicolor/* ${pkgdir}/usr/share/icons/hicolor/
+  cp -r ${srcdir}/${pkgbase}-${pkgver}/qt/icons/hicolor/* ${pkgdir}/usr/share/icons/hicolor/
+
+  install -dm755 ${pkgdir}/usr/share/transmission/i18n
+  for i in $(ls ${srcdir}/${pkgbase}-${pkgver}/qt/translations/ | grep qm); do 
+    install -Dm644 ${srcdir}/${pkgbase}-${pkgver}/qt/translations/${i} ${pkgdir}/usr/share/qt/translations/${i}
+  done
 }
 
 package_transmission-qt5() {
@@ -99,4 +105,9 @@ package_transmission-qt5() {
   
   install -dm755 ${pkgdir}/usr/share/icons/hicolor
   cp -r qt/icons/hicolor/* ${pkgdir}/usr/share/icons/hicolor/
+
+  install -dm755 ${pkgdir}/usr/share/transmission/i18n
+  for i in $(ls ${srcdir}/${pkgbase}-${pkgver}/qt5/translations/ | grep qm); do 
+    install -Dm644 ${srcdir}/${pkgbase}-${pkgver}/qt5/translations/${i} ${pkgdir}/usr/share/qt5/translations/${i}
+  done
 }
