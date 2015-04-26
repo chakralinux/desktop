@@ -3,19 +3,19 @@
 
 pkgbase=octopi
 pkgname=('octopi' 'octopi-notifier' 'octopi-qt5' 'octopi-notifier-qt5')
-pkgver=0.6.0
+pkgver=0.7.0
 pkgrel=1
 url="https://octopiproject.wordpress.com/"
 arch=('x86_64')
 license=('GPL3')
-depends=('pacman' 'pacmanlogviewer' 'mirror-check')
+depends=('pacman' 'pacmanlogviewer' 'mirror-check' 'gist')
 makedepends=('automoc4' 'qt' 'qt5-declarative')
 conflicts=('oktopi')
 replaces=('oktopi')
 categories=('system') 
 screenshot=('http://octopiproject.files.wordpress.com/2014/01/octopi_in_kaos.png')
 
-gitsha=94d4adf
+gitsha=f17ee4f
 source=("$pkgname"::"git://github.com/aarnt/${pkgname}.git#commit=${gitsha}")
 md5sums=('SKIP')
 
@@ -124,7 +124,7 @@ package_octopi-notifier() {
 
 package_octopi-qt5() {
    pkgdesc="Octopi, a powerful Pacman frontend using Qt libs - Qt5 version"
-   depends+=('qt5-declarative')
+   depends+=('qt5-declarative' 'knotifications')
    provides+=('octopi')
    conflicts+=('octopi')
    
