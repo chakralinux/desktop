@@ -1,10 +1,5 @@
-# Maintainer: Jeff Huang <s8321414[at]gmail[dot]com>
-# Contributor: UtG <utg.chakra.linux[at]gmail[dot]com>
-# Contributor: Neophytos Kolokotronis <tetris4 AT gmail DOT com>
-# Contributor: Samir Benmendil <ram-z[at]chakra-project[dot]org>
- 
 pkgname=mpv
-pkgver=0.8.3
+pkgver=0.9.0
 pkgrel=1
 pkgdesc="A movie player and encoder for linux, based on MPlayer/mplayer2"
 arch=('x86_64')
@@ -14,13 +9,13 @@ depends=('pulseaudio' 'ffmpeg' 'lcms2' 'libdvdread' 'libgl' 'libbs2b'
          'libxinerama' 'mpg123' 'libxv' 'libxkbcommon' 'libva'  'libass' 
          'lirc-utils' 'wayland' 'desktop-file-utils' 'hicolor-icon-theme' 
          'xdg-utils' 'lua' 'libdvdnav' 'libcdio-paranoia' 'libbluray'
-         'enca' 'libguess' 'harfbuzz' 'graphite' 'libxrandr')
+         'enca' 'libguess' 'harfbuzz' 'graphite' 'libxrandr' 'rubberband')
 makedepends=('mesa' 'python3-docutils' 'ladspa' 'x264' 'jack'
              'samba')
 options=('!emptydirs')
 install=${pkgname}.install
 source=("https://github.com/mpv-player/${pkgname}/archive/v${pkgver}.tar.gz")
-sha256sums=('091038c802866848e3647f2a50215fa64ead0dc36f9114457db8b353528689cf')
+sha256sums=('a7afd1438b85e564401feef12f4f8b674df8f511e309c38b03a98928cd03dd22')
 
 prepare() {
   # point python to python3
@@ -41,7 +36,6 @@ build() {
   ./waf configure \
     --prefix=/usr \
     --confdir=/etc/mpv \
-    --enable-joystick \
     --enable-libmpv-shared \
     --enable-cdda \
     --enable-zsh-comp \
