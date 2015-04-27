@@ -2,25 +2,22 @@
 # contributor Fabien <hcoohb@gmailcom>
 
 pkgname=yate
-pkgver=5.2.0
+pkgver=5.4.2
 subver=1
 pkgrel=1
 pkgdesc="Next-generation telephony engine, qt4 client for VoIP"
 arch=('x86_64')
 url="http://yate.null.ro"
 license=('GPL2')
-depends=('qt' 'speex' 'gsm' 'postgresql-libs' 'libmysqlclient' \
-         'alsa-lib')
-makedepends=('pkgconfig' 'desktop-file-utils')
+depends=('qt' 'speex' 'gsm' 'postgresql-libs' 'libmysqlclient' 'alsa-lib')
+makedepends=('pkg-config' 'desktop-file-utils')
 categories=('communication')
 options=(!makeflags)
 source=( #"http://yate.null.ro/tarballs/yate5/${pkgname}-${pkgver}-1.tar.gz"
 	"http://voip.null.ro/tarballs/yate5/${pkgname}-${pkgver}-${subver}.tar.gz"
-        "yate.init"
         "yate.service"
         "yate.conf.d")
-sha256sums=('9cf5c777f0f60cb24f2f34e75df99362bb683309b771367e3a9e7b6a3b6c02c2'
-            '3797c4ea3e09ac8514349905a3a994233c9c86bca1feea1242ec5fa10fb44483'
+sha256sums=('f62453e2d743e99733685acbd3cd953d8c07d1f3e21ab26539bbb01b1ff8fc21'
             '224d8f15275717d078342c4a5d4b33c6d64dbf9772538656b590ef67a464dfec'
             '1b88b8e3573a68fb5f6673b1922318a4fa51c722def21dd27b4ef8ca002812e4')
 
@@ -46,9 +43,6 @@ package() {
   desktop-file-edit --remove-key="Encoding" \
                     --set-icon="null_team-48" \
                     "${pkgdir}/usr/share/applications/yate-qt4.desktop"
-  
-  # Install init scripts
-  install -Dm0755 "${srcdir}/yate.init" "${pkgdir}/etc/rc.d/yate"
   
   # Install system units
   install -Dm0644 "${srcdir}/yate.service" "${pkgdir}/usr/lib/systemd/system/yate.service"
