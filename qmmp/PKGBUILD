@@ -2,20 +2,27 @@
  
 pkgname=qmmp
 pkgver=0.8.4
-pkgrel=2
+pkgrel=3
 pkgdesc="Qt4 based audio-player"
 arch=('x86_64')
 url="http://qmmp.ylsoftware.com/"
 license=('GPL')
 depends=('alsa-lib' 'curl' 'hicolor-icon-theme' 'libmad' 'libvorbis' 'libogg'  'qt' 'taglib' 'xdg-utils')
-makedepends=('cmake'  'flac' 'jack' 'libmpcdec' 'ffmpeg' 'libsamplerate' 'libmodplug' 'libsndfile' 'wavpack' 'libcdio' 'oss' 'mesa')
+makedepends=('cmake'  'flac' 'jack' 'libmpcdec' 'ffmpeg' 'libsamplerate' 'libmodplug' 'libsndfile' 
+             'wavpack' 'libcdio' 'oss' 'mesa' 'faad2' 'libgme' 'libcddb' 'libmms')
 optdepends=('flac: native FLAC support'
             'jack: JACK sound output'
             'oss: OSS sound output'
+            'pulseaudio: PulseAudio output'
             'libmpcdec: Musepack support'
             'libmodplug: MOD playing library'
             'libsndfile: sampled sound support'
-            'libcdio: for audio CD playback support')
+            'libcdio: for audio CD playback support'
+            'faad2: ADTS AAC support'
+            'libgme: support for chiptunes from various platforms'
+            'libcddb: CDDB server support'
+            'libmms: MMS stream protocol support'
+            'ffmpeg' 'libsamplerate' 'wavpack')
 categories=('multimedia')
 screenshot=('http://qmmp.ylsoftware.com/images/qmmp-0.3.0_full_1.png')
 install=$pkgname.install
@@ -26,7 +33,8 @@ build() {
   cd ${srcdir}/$pkgname-$pkgver
 
   cmake . -DCMAKE_INSTALL_PREFIX=/usr \
-	  -DLIB_DIR=lib
+	  -DLIB_DIR=lib \
+	  -DUSE_HAL:BOOL=FALSE
   make
 }
 
