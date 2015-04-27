@@ -1,8 +1,7 @@
-# Maintainer: UtG <utg[dot]chakra.linux[at]gmail[dot]com
-
 pkgname=lazarus
-pkgver=1.2.6
-pkgrel=2
+pkgver=1.4.0
+_pkgver=1.4
+pkgrel=1
 _pkgsubver=0
 pkgdesc='Delphi-like IDE for FreePascal'
 url='http://www.lazarus.freepascal.org/'
@@ -11,8 +10,8 @@ arch=('x86_64')
 depends=('fpc' 'fpc-src' 'fpc-qtbindings' 'qt' 'qtwebkit')
 options=('!emptydirs' '!makeflags')
 categories=('programming')
-source=(http://downloads.sourceforge.net/project/lazarus/Lazarus%20Zip%20_%20GZip/Lazarus%20$pkgver/lazarus-$pkgver-${_pkgsubver}.tar.gz)
-md5sums=('caa1ee35266ea5e930af064e7efb550c')
+source=(http://downloads.sourceforge.net/project/lazarus/Lazarus%20Zip%20_%20GZip/Lazarus%20$_pkgver/lazarus-$pkgver-${_pkgsubver}.tar.gz)
+sha512sums=('ea02acc0c32cb7bd82361d04e1ab48c6dda0ae0f3c9c40b6e4cb8be5099a0338f6bb354053cf3bcd9f1abfa0c816f504db660aa41a3b08373bb8ed9c1c865eba')
 install='lazarus.install'
 
 build() {
@@ -56,5 +55,5 @@ package() {
   sed -e 's|\(Categories\).*|\1=IDE;Development;|' \
     -e 's|\.png|\.xpm|' -i install/lazarus.desktop
   install -Dm644 install/lazarus.desktop $pkgdir/usr/share/applications/lazarus.desktop
-  install -Dm644 images/ide_icon48x48.png $pkgdir/usr/share/pixmaps/lazarus.png
+  install -Dm644 images/icons/${pkgname}256x256.png $pkgdir/usr/share/pixmaps/lazarus.png
 }
