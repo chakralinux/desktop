@@ -1,27 +1,22 @@
-# Maintainer: Jeff Huang <s8321414 at gmail.com>
-# maintainer abveritas@chakra-project.org
-# contributor Giuseppe Calà <jiveaxe@gmail.com>
-
 pkgname=sigil
 _pkgname=Sigil
-pkgver=0.8.2
+pkgver=0.8.6
 pkgrel=1
-pkgdesc="A multi-platform WYSIWYG ebook editor. It is designed to edit books in ePub format. "
+pkgdesc="A multi-platform WYSIWYG ebook editor. It is designed to edit books in ePub format."
 arch=('x86_64')
-url="http://code.google.com/p/sigil/"
+url="http://sigil-ebook.com/"
 license=('GPL3')
-depends=('qt5-webkit' 'boost-libs')
-makedepends=('qt5-tools' 'qt5-svg' 'cmake' 'gendesk' 'boost')
+depends=('qt5-webkit' 'boost-libs' 'hicolor-icon-theme' 'qt5-multimedia' 'qt5-xmlpatterns')
+makedepends=('qt5-tools' 'qt5-svg' 'cmake' 'boost')
 categories=('office')
 install=sigil.install
 screenshot=('http://1.bp.blogspot.com/-K2Q-tdVbPRI/UI08v7LhzHI/AAAAAAAAABY/vZ5LHjM6nb4/s1600/Screen+Shot+2012-10-28+at+10.07.03+AM.png')
 source=("https://github.com/user-none/Sigil/releases/download/${pkgver}/${_pkgname}-${pkgver}-Code.zip")
-sha1sums=('88c38978f890b2d055059bfff691b720ff464ebd')
+sha512sums=('f511756834002a3b1ea39b380434b766dd3931e5c6b67ab4282981a8d9ec367859cb4feb071b689f13ce75cb66d7f1ced74e47085294eebb0d13785a9ce9995a')
 
 
 build() {
   cd "${srcdir}/Sigil-${pkgver}"
-  gendesk -n "$startdir"/PKGBUILD
 
   mkdir -p build 
   cd build
@@ -37,15 +32,16 @@ build() {
 
 package() {
   cd "${srcdir}/Sigil-${pkgver}/build"
+  
   make DESTDIR=$pkgdir install
-  install -d -m 0755 "${pkgdir}"/usr/share/applications
-
-  # Desktop integration.
-  install -Dm0644 $srcdir/${_pkgname}-${pkgver}/$pkgname.desktop $pkgdir/usr/share/applications/$pkgname.desktop
+  
+  install -Dm0644 $srcdir/${_pkgname}-${pkgver}/src/$_pkgname/Resource_Files/freedesktop/$pkgname.desktop \
+  $pkgdir/usr/share/applications/$pkgname.desktop
+  
   for _pic in 16 32 48 128 256; do
     install -Dm0644 ../src/Sigil/Resource_Files/icon/app_icon_$_pic.png \
       $pkgdir/usr/share/icons/hicolor/$_picx$_pic/apps/$pkgname.png
   done
-   install -Dm644 ../src/Sigil/Resource_Files/icon/app_icon_128.png \
+   install -Dm644 ../src/Sigil/Resource_Files/icon/app_icon_512.png \
        "$pkgdir/usr/share/pixmaps/$pkgname.png"
 }
