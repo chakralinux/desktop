@@ -1,8 +1,5 @@
-# Maintainer: Jeff Huang <s8321414[at]gmail[dot]com>
-# Origin maintainer on CCR: Giuseppe Calà <jiveaxe@gmail.com>
-
 pkgname=owncloud
-pkgver=8.0.2
+pkgver=8.0.3
 pkgrel=1
 pkgdesc="A cloud server to store your files centrally on a hardware controlled by you"
 arch=('x86_64')
@@ -13,6 +10,8 @@ optdepends=('php-apache: to use the Apache web server'
             'nginx: to use the nginx web server'
             'php-sqlite: to use the SQLite database backend'
             'php-pgsql: to use the PostgreSQL database backend'
+            'php-ldap: LDAP authentication'
+            'php-intl'
             'php-apcu'
             'php-xcache'
             'mariadb: to use the MySQL database backend' 
@@ -21,28 +20,36 @@ optdepends=('php-apache: to use the Apache web server'
             'php-imagick: file preview' 
             'ffmpeg: file preview' 
             'libreoffice-common: file preview')
-
-makedepends=()
 categories=('network')
+conflicts=('owncloud-git')
+screenshot=(http://karlitschek.de/wp-content/uploads/2014/07/oc7.jpg)
 backup=('etc/httpd/conf/extra/owncloud.conf')
-source=("http://download.owncloud.org/community/${pkgname}-${pkgver}.tar.bz2"
+source=("$pkgname-$pkgver.tar.gz::https://github.com/owncloud/core/archive/v$pkgver.tar.gz"
+	"$pkgname-3rdparty-$pkgver.tar.gz::https://github.com/owncloud/3rdparty/archive/v$pkgver.tar.gz"
         'owncloud.conf')
 options=('!strip')
 install=owncloud.install
-md5sums=('9b10eb45b7923fcb46b89cf0ad149097'
+md5sums=('db1827324136469067191ea31c167da5'
+         '3cf86b2a131e42ebd7e324228be1920a'
          '0505493fccf49dcaa0760268c290c138')
 
-conflicts=('owncloud-git')
-screenshot=(http://karlitschek.de/wp-content/uploads/2014/07/oc7.jpg)
-
+prepare() {
+  cd $srcdir/core-$pkgver
+  #sed -i "s|'appstoreenabled'.*|'appstoreenabled' => false,|" config/config.sample.php
+  rm -rf $srcdir/core-$pkgver/3rdparty
+  mv $srcdir/3rdparty-$pkgver $srcdir/core-$pkgver/3rdparty
+}         
+         
 package() {
+  cd $srcdir/core-$pkgver
 # install license
   install -d ${pkgdir}/usr/share/licenses/${pkgname}
-  cp ${srcdir}/${pkgname}/COPYING-* ${pkgdir}/usr/share/licenses/${pkgname}
+  cp ${srcdir}/core-$pkgver/COPYING-* ${pkgdir}/usr/share/licenses/${pkgname}
 
 # install project
   install -d ${pkgdir}/usr/share/webapps/
-  cp -a ${srcdir}/${pkgname} ${pkgdir}/usr/share/webapps/
+  cp -a ${srcdir}/core-$pkgver ${pkgdir}/usr/share/webapps/${pkgname}
+  rm -rf ${pkgdir}/usr/share/webapps/${pkgname}/tests
 
 # install apache config file
   install -d  ${pkgdir}/etc/webapps/${pkgname}
