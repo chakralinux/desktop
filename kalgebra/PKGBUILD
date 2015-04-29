@@ -1,13 +1,13 @@
 # Contributions from Arch: https://projects.archlinux.org/svntogit/packages.git/tree/trunk?h=packages/kalgebra
-source ../_buildscripts/${current_repo}-${_arch}-cfg.conf
+source ../kdeapps.conf
 
 pkgname=kalgebra
 pkgver=${_kdever}
 pkgrel=1
 pkgdesc="Graph calculator"
 url="http://kde.org/applications/education/kalgebra/"
+screenshot="https://www.kde.org/images/screenshots/kalgebra.png"
 arch=('x86_64')
-url='http://kde.org/applications/education/kalgebra/'
 license=('GPL' 'LGPL' 'FDL')
 depends=('analitza' 'kio' 'qt5-webkit' 'hicolor-icon-theme')
 makedepends=('extra-cmake-modules' 'kdoctools' 'python3' 'glu')
@@ -21,15 +21,12 @@ source=("$_mirror/${pkgname}-$_kdever.tar.xz")
 sha256sums=(`grep ${pkgname}-$_kdever.tar.xz  ../checksums.txt | cut -d " " -f1`)
 
 prepare() {
-  mkdir build
+  mkdir -p build
 }
 
 build() {
   cd build
-  cmake ../kalgebra-${pkgver} \
-    -DCMAKE_BUILD_TYPE=Release \
-    -DKDE4_BUILD_TESTS=OFF \
-    -DCMAKE_INSTALL_PREFIX=/usr
+  cmake_kf5 ../${pkgname}-${pkgver} 
   make
 }
 
