@@ -1,7 +1,5 @@
-# Maintainer: Adrián Chaves Fernández (Gallaecio) <adriyetichaves gmail.com>
-
 pkgname=anki
-pkgver=2.0.31
+pkgver=2.0.32
 pkgrel=1
 pkgdesc='Helps you remember facts (like words/phrases in a foreign language) efficiently.'
 url='http://ankisrs.net/'
@@ -15,32 +13,33 @@ optdepends=('python2-matplotlib: show graphs.'
 	    'sox: audio recording.'
 	    'python2-pyaudio: audio recording.')
 source=("http://ankisrs.net/download/mirror/$pkgname-$pkgver.tgz")
-md5sums=('7e75a9c44897ba608c0dda2c0e1a096f')
+sha512sums=('a65a529121e8d6ca53b29ef3b22d432b48884c28ef5b2422f0c813069f5889469e0545951f6789aa883a411572419e7175364320a18a7cfc1582f5fa98b837d3')
 
-build() {
+prepare() {
   cd $srcdir/anki-$pkgver
   sed -i 's|#!/usr/bin/env python|#!/usr/bin/env python2|' runanki
   rm -f anki.bat
+  
+  # Desktop integration. KDE needs Qt in Categories
+  desktop-file-install --dir "${pkgdir}/usr/share/applications" \
+                       --add-category='Qt' \
+                       ${pkgname}.desktop
+  
+  sed s/TryExec=anki/TryExec=runanki/ -i anki.desktop
+  sed s/Exec=anki/Exec=runanki/ -i anki.desktop
 }
 
 package() {
   cd "${srcdir}/${pkgname}-${pkgver}"
 
-  mkdir -p $pkgdir/usr/{bin,share/{anki,pixmaps,applications,man/man1}}
-  cp -av * $pkgdir/usr/share/anki/
+  install -d $pkgdir/usr/{bin,share/{anki,pixmaps,applications,man/man1}}
   
-  # Desktop integration. KDE needs Qt in Categories
- desktop-file-install --dir "${pkgdir}/usr/share/applications" \
-                       --add-category='Qt' \
-                       ${pkgname}.desktop
-
-  cd $pkgdir/usr/share/anki && (
-    mv runanki ../../bin/
-    mv anki.xpm anki.png ../pixmaps/
-    mv anki.desktop ../applications/
-    mv anki.1 ../man/man1/
-  )
-  sed s/TryExec=anki/TryExec=runanki/ -i $pkgdir/usr/share/applications/anki.desktop
-  sed s/Exec=anki/Exec=runanki/ -i $pkgdir/usr/share/applications/anki.desktop
+  mv runanki $pkgdir/usr/bin/runanki
+  mv anki.xpm $pkgdir/usr/share/pixmaps/anki.xpm
+  mv anki.png $pkgdir/usr/share/pixmaps/anki.png
+  mv anki.desktop $pkgdir/usr/share/applications/anki.desktop
+  mv anki.1 $pkgdir/usr/share/man/man1/anki.1
+  
+  cp -av * $pkgdir/usr/share/anki/
 
 }
