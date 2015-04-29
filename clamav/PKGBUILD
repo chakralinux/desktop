@@ -1,17 +1,14 @@
-# contributor (x86_64): Giuseppe Calà <jiveaxe@gmail.com>
-
 pkgname=clamav
-pkgver=0.98.6
+pkgver=0.98.7
 pkgrel=1
 pkgdesc='Anti-virus toolkit for Unix'
 arch=('x86_64')
-options=('!libtool')
 install="${pkgname}.install"
 license=('GPL')
 categories=('system')
 backup=('etc/clamav/clamd.conf' 'etc/clamav/freshclam.conf' 'etc/logrotate.d/clamav')
 url='http://www.clamav.net/'
-depends=('bzip2' 'zlib' 'libtool')
+depends=('bzip2' 'libltdl' 'gcc-libs')
 source=("http://downloads.sourceforge.net/sourceforge/${pkgname}/${pkgname}-${pkgver}.tar.gz"
         'clamd.conf'
         'clamav.logrotate'
@@ -19,7 +16,7 @@ source=("http://downloads.sourceforge.net/sourceforge/${pkgname}/${pkgname}-${pk
         'freshclamd.service'
         'tmpfiles.d'
         'freshclam.conf')
-sha256sums=('6591245d55445a2ddcc1700964c33b8bf62fe20c75bd9c7746f4fe0735502951'
+sha256sums=('282417b707740de13cd8f18d4cbca9ddd181cf96b444db2cad98913a5153e272'
             '03fe7fc57a72a618e0ccdc31e86050bd64f97a734ad7d47f1c8d68b2bd45fb9c'
             'dba0c3344a284374c3692c794891e673f3ad73e231efaa607ad3d51026e256d3'
             'a7722a9b93f1e23b5830a34e49087385551cf271f6584a47c7f8c550768c3a82'
