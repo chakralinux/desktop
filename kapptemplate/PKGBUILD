@@ -1,5 +1,5 @@
 #Contributions from Arch: https://projects.archlinux.org/svntogit/packages.git/tree/trunk?h=packages/kapptemplate
-source ../_buildscripts/${current_repo}-${_arch}-cfg.conf
+source ../kdeapps.conf
 
 pkgname="kapptemplate"
 arch=('x86_64')
@@ -8,7 +8,7 @@ pkgrel=1
 pkgdesc="KDE application template generator"
 screenshot="http://www.kde.org/images/screenshots/kapptemplate.png"
 depends=('kio')
-makedepends=('extra-cmake-modules' 'kdoctools' 'python')
+makedepends=('extra-cmake-modules' 'kdoctools' 'python3')
 replaces=('kdesdk-kapptemplate')
 conflicts=('kdesdk-kapptemplate')
 provides=('kdesdk-kapptemplate')
@@ -18,20 +18,17 @@ license=('GPL' 'LGPL' 'FDL')
 source=("$_mirror/${pkgname}-$_kdever.tar.xz")
 sha256sums=(`grep ${pkgname}-$_kdever.tar.xz  ../checksums.txt | cut -d " " -f1`)
 
-prepare(){
-    mkdir -p build
+prepare() {
+  mkdir -p build
 }
 
 build() {
   cd build
-  cmake ../kapptemplate-${pkgver} \
-    -DCMAKE_BUILD_TYPE=Release \
-    -DBUILD_TESTING=OFF \
-    -DCMAKE_INSTALL_PREFIX=/usr
+  cmake_kf5 ../${pkgname}-${pkgver} 
   make
 }
 
 package() {
   cd build
-  make DESTDIR="$pkgdir" install
+  make DESTDIR="${pkgdir}" install
 }
