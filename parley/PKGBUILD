@@ -1,11 +1,12 @@
 #Contributions from Arch: https://projects.archlinux.org/svntogit/packages.git/tree/trunk?h=packages/parley
-source ../_buildscripts/${current_repo}-${_arch}-cfg.conf
+source ../kdeapps.conf
 
 pkgname=parley
 pkgver=${_kdever}
 pkgrel=1
 pkgdesc="Vocabulary trainer"
 url="http://kde.org/applications/education/parley/"
+screenshot="https://www.kde.org/images/screenshots/parley.png"
 arch=('x86_64')
 license=('GPL' 'LGPL' 'FDL')
 depends=('kross' 'knewstuff' 'libkeduvocdocument' 'khtml' 'qt5-multimedia' 'kcmutils')
@@ -25,10 +26,7 @@ prepare() {
 
 build() {
   cd build
-  cmake ../parley-${pkgver} \
-    -DCMAKE_BUILD_TYPE=Release \
-    -DCMAKE_INSTALL_PREFIX=/usr \
-    -DSYSCONF_INSTALL_DIR=/etc
+  cmake_kf5 ../${pkgname}-${pkgver} 
   make
 }
 
