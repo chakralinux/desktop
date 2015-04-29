@@ -1,11 +1,12 @@
 # Contributions from Arch: https://projects.archlinux.org/svntogit/packages.git/tree/trunk?h=packages/kanagram
-source ../_buildscripts/${current_repo}-${_arch}-cfg.conf
+source ../kdeapps.conf
 
 pkgname=kanagram
 pkgver=${_kdever}
 pkgrel=1
 pkgdesc="Letter order game"
 url="http://kde.org/applications/education/kanagram/"
+screenshot="https://www.kde.org/images/screenshots/kanagram.png"
 arch=('x86_64')
 license=('GPL' 'LGPL' 'FDL')
 depends=('libkeduvocdocument' 'kdeclarative' 'knewstuff' 'hicolor-icon-theme')
@@ -20,20 +21,16 @@ source=("$_mirror/${pkgname}-$_kdever.tar.xz")
 sha256sums=(`grep ${pkgname}-$_kdever.tar.xz  ../checksums.txt | cut -d " " -f1`)
 
 prepare() {
-    mkdir -p build
+  mkdir -p build
 }
 
 build() {
   cd build
-  cmake ../kanagram-${pkgver} \
-    -DCMAKE_BUILD_TYPE=Release \
-    -DBUILD_TESTING=OFF \
-    -DCMAKE_INSTALL_PREFIX=/usr \
-    -DSYSCONF_INSTALL_DIR=/etc
+  cmake_kf5 ../${pkgname}-${pkgver} 
   make
 }
 
 package() {
-  cd "${srcdir}"/build
+  cd build
   make DESTDIR="${pkgdir}" install
 }
