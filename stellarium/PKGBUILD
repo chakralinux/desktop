@@ -1,10 +1,5 @@
-#
-# Apps Packages for Chakra, part of chakraos.org
-#
-# Maintainer: Martín González <koteccr at gmail dot com>
-
 pkgname=stellarium
-pkgver=0.13.2
+pkgver=0.13.3
 pkgrel=1
 pkgdesc="A stellarium with great graphics and a nice database of sky-objects"
 arch=('x86_64')
@@ -16,7 +11,7 @@ depends=('libpng' 'libgl' 'qt5-quick1' 'glu' 'openssl' 'zlib' 'gettext'
 makedepends=('cmake' 'boost' 'mesa' 'mesa-libgl' 'qt5-tools')
 categories=('education')
 source=("http://downloads.sourceforge.net/${pkgname}/${pkgname}-${pkgver}.tar.gz")
-sha256sums=('e5718e28d484b6f16e13f334fe91c3611557b46b7989f4bf68fdcb6d76c059ab')
+sha512sums=('9d8b8d4e045dd3e8052a7f6af4dd21205c2e66c2e4db254fbb6e897f3df1f049a6e2080f6598210da162917e1f6a3535972c8826e5e696f4ab954a5b26d0d083')
 
 build() {
   cd ${pkgname}-${pkgver}
@@ -37,6 +32,6 @@ package() {
   # install desktop icons
   for i in 16 32 48 64 128 256 512; do
     install -Dm644 data/icons/${i}x${i}/stellarium.png \
-      "${pkgdir}/usr/share/icons/hicolor/apps/${i}x${i}/stellarium.png"
+      "${pkgdir}/usr/share/icons/hicolor/${i}x${i}/apps/stellarium.png"
   done    
 }
