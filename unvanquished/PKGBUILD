@@ -3,22 +3,16 @@
 # Contributor: Martin F. Schumann
 
 pkgname=unvanquished
-pkgver=0.36.0
+pkgver=0.38.0
 pkgrel=1
 
+_depbasename=linux64-3
+_depname="${_depbasename}.tar.bz2"
 _gitver="archlinux/${pkgver}-${pkgrel}"
 _gitdir="${pkgname/u/U}-${_gitver/\//-}"
 
-_depver="2"
-if test "$CARCH" == "x86_64"; then
-	_depbasename=linux64-${_depver}
-else
-	_depbasename=linux32-${_depver}
-fi
-_depname="${_depbasename}.tar.bz2"
-
 pkgdesc='A team-based, fast-paced, fps/rts hybrid game which pits aliens against humans. Monthly alpha release.'
-arch=('x86_64' 'i686')
+arch=('x86_64')
 url='http://www.unvanquished.net'
 license=('GPL3')
 
@@ -28,8 +22,6 @@ depends=("unvanquished-data>=${pkgver}"
          'libjpeg-turbo' 'libwebp>=0.2.0' 'freetype2' 'openal' 'libogg'
          'libvorbis' 'speex' 'libtheora' 'opusfile' 'ncurses' 'xdg-utils'
          'desktop-file-utils' 'shared-mime-info' 'hicolor-icon-theme')
-provides=('unvanquished')
-conflicts=('unvanquished-git')
 options=('emptydirs' '!strip')
 backup=('etc/conf.d/unvanquished.conf' 'etc/unvanquished/server.cfg' 'etc/unvanquished/maprotation.cfg')
 install='unvanquished.install'
@@ -66,9 +58,7 @@ package() {
 
 	install -m 755 daemon*                 "${pkgdir}/usr/lib/unvanquished/"
 	install -m 755 *.so                    "${pkgdir}/usr/lib/unvanquished/"
-	install -m 755 game-nacl-native-exe    "${pkgdir}/usr/lib/unvanquished/"
 	install -m 755 nacl_helper_bootstrap   "${pkgdir}/usr/lib/unvanquished/"
-	install -m 755 sel_ldr                 "${pkgdir}/usr/lib/unvanquished/"
 	install -m 755 irt_core-x86*.nexe      "${pkgdir}/usr/lib/unvanquished/"
 	install -m 644 debian/unvanquished.png "${pkgdir}/usr/share/icons/hicolor/128x128/apps/"
 	install -m 644 COPYING.txt             "${pkgdir}/usr/share/licenses/unvanquished/"
@@ -94,10 +84,6 @@ package() {
 	ln -s ../../../../etc/unvanquished/maprotation.cfg .
 }
 
-md5sums=('c08bf7764c94cc4d3227f8bbcc3b6d56'
-         'a5246cf3bed53798ddc4d95c6b8c1b37')
-if test "$CARCH" == "x86_64"; then
-	md5sums+=('e5a7ee4c6175342b4545cea1c4c669b9')
-else
-	md5sums+=('df59cf8c320b34b7e85b5f1a8e74665c')
-fi
+md5sums=('31a4d8b0ac3afb369bdfee868111f396'
+         'a5246cf3bed53798ddc4d95c6b8c1b37'
+         'e5a7ee4c6175342b4545cea1c4c669b9')
