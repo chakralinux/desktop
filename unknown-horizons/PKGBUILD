@@ -8,7 +8,7 @@
 # Maintainer: Adrián Chaves Fernández (Gallaecio) <adriyetichaves@gmail.com>
 
 pkgname=unknown-horizons
-pkgver=2013.3
+pkgver=2014.1
 pkgrel=1
 pyver=2.7
 pkgdesc="A 2D realtime strategy simulation with an emphasis on economy and city building"
@@ -19,13 +19,13 @@ depends=('python2'  'python2-yaml' 'fife' 'python-distutils-extra')
 categories=('games')
 options=(!strip)
 source=(https://github.com/unknown-horizons/unknown-horizons/releases/download/${pkgver}/unknown-horizons-${pkgver}.tar.xz)
-md5sums=('2417cb88c12a0f855c96743c7f3287d0')
+md5sums=('276ed6118eba6af615a286ff2989da6c')
 
 package() {
   cd $srcdir/$pkgname
   
   # Workaround for an upstream packaging issue (old language pre-built files are distributed in 2013.2).
-  rm -rf content/lang/*
+  #rm -rf content/lang/*
 
   sed -i 's/env python$/env python2/' run_uh.py
 
