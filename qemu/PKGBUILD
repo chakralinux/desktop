@@ -2,14 +2,14 @@
 
 pkgname=qemu
 _pkgname=kvm
-pkgver=2.2.1
+pkgver=2.3.0
 pkgrel=1
 pkgdesc="Generic and open source processor emulator using dynamic translation to improve speed."
 arch=('x86_64')
 license=('GPL2' 'LGPL2.1')
 url="http://wiki.qemu.org/Index.html"
 depends=('alsa-lib' 'bluez' 'curl' 'gnutls>=2.4.1' 'libjpeg' 'libpng' 'libpulse' 'libsasl' 'sdl' 'util-linux-ng' 'vde2' 'pixman' 'libaio' 'libseccomp')
-makedepends=('git' 'iasl' 'perl' 'python2' 'texi2html')
+makedepends=('git' 'iasl' 'perl' 'python2' 'texi2html' 'bluez-libs')
 backup=('etc/qemu/target-x86_64.conf')
 provides=("qemu-kvm=${pkver}")
 conflicts=("qemu-kvm<${pkgver}")
@@ -20,7 +20,7 @@ install='qemu-kvm.install'
 source=("http://wiki.qemu.org/download/${pkgname}-${pkgver}.tar.bz2"
         "65-kvm.rules"
         "qemu-glibc-2.18.patch")
-md5sums=('833ff4457062456d38d6567f802ffef4'
+md5sums=('2fab3ea4460de9b57192e5b8b311f221'
          '6c511f3ea77bde6b1a790c246da79b75'
          '8b94e8971f56405e52d3f9b62a86e65f')
 
@@ -28,16 +28,15 @@ md5sums=('833ff4457062456d38d6567f802ffef4'
 
 build() {
   cd $srcdir/$pkgname-$pkgver
-
-  patch -i ../qemu-glibc-2.18.patch -p1 || return 1
-    
+   
    ./configure --prefix=/usr --sysconfdir=/etc --audio-drv-list='pa alsa sdl'\
               --python=/usr/bin/python2 --smbd=/usr/bin/smbd \
               --libexecdir=/usr/lib/qemu \
               --disable-gtk \
               --enable-linux-aio --enable-seccomp \
+              --enable-bluez --enable-modules \
               --localstatedir=/var
-              make
+   make
 }
 
 package() {
@@ -49,11 +48,11 @@ package() {
     echo "allow br0" > ${pkgdir}/etc/qemu/bridge.conf.sample
 
     # symbolic link for backwards compatibility
-    ln -s qemu-system-x86_64 "${pkgdir}/usr/bin/qemu-kvm"
+    #ln -s qemu-system-x86_64 "${pkgdir}/usr/bin/qemu-kvm"
     # symbolic link for to qemu binary for emulator apps
-    ln -s qemu-system-x86_64 "${pkgdir}/usr/bin/qemu"
+    #ln -s qemu-system-x86_64 "${pkgdir}/usr/bin/qemu"
     # symbolic link for to qemu binary for emulator apps
-    ln -s qemu-system-x86_64 "${pkgdir}/usr/bin/kvm"
+    #ln -s qemu-system-x86_64 "${pkgdir}/usr/bin/kvm"
 
     # install udev rules
     install -D -m644 "${srcdir}/65-kvm.rules" \
@@ -65,5 +64,4 @@ package() {
         /usr/bin/strip $STRIP_BINARIES "$binary";;
       esac
     done
-
 }
