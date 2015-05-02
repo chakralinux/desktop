@@ -1,9 +1,7 @@
-# Maintainer: UtG  <utg[dot]chakra.linux[at]gmail[dot]com>
-
 pkgname=qemu
 _pkgname=kvm
 pkgver=2.3.0
-pkgrel=1
+pkgrel=2
 pkgdesc="Generic and open source processor emulator using dynamic translation to improve speed."
 arch=('x86_64')
 license=('GPL2' 'LGPL2.1')
@@ -18,13 +16,9 @@ categories=('system')
 options=(!strip)
 install='qemu-kvm.install'
 source=("http://wiki.qemu.org/download/${pkgname}-${pkgver}.tar.bz2"
-        "65-kvm.rules"
-        "qemu-glibc-2.18.patch")
+        "65-kvm.rules")
 md5sums=('2fab3ea4460de9b57192e5b8b311f221'
-         '6c511f3ea77bde6b1a790c246da79b75'
-         '8b94e8971f56405e52d3f9b62a86e65f')
-
-
+         '6c511f3ea77bde6b1a790c246da79b75')
 
 build() {
   cd $srcdir/$pkgname-$pkgver
@@ -54,6 +48,9 @@ package() {
     # symbolic link for to qemu binary for emulator apps
     #ln -s qemu-system-x86_64 "${pkgdir}/usr/bin/kvm"
 
+    # remove conflicting /var/run directory
+    rm -r "${pkgdir}/var"
+    
     # install udev rules
     install -D -m644 "${srcdir}/65-kvm.rules" \
                      "${pkgdir}/usr/lib/udev/rules.d/65-kvm.rules"
