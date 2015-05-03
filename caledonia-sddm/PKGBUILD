@@ -1,0 +1,16 @@
+pkgname=caledonia-sddm
+pkgver=2015.05.03
+pkgrel=1
+pkgdesc='Caledonia SDDM theme files'
+url='http://www.chakraos.org'
+arch=('x86_64')
+license=('LGPL')
+groups=('caledonia2.0')
+depends=('sddm' 'caledonia-look-and-feel')
+source=()
+md5sums=()
+
+package() {
+  mkdir -p ${pkgdir}/usr/share/sddm/themes/
+  ln -s /usr/share/plasma/look-and-feel/org.kde.caledonia.desktop/contents/loginmanager ${pkgdir}/usr/share/sddm/themes/caledonia
+}

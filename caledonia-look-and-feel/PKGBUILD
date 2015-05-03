@@ -1,0 +1,21 @@
+pkgname=caledonia-look-and-feel
+pkgver=2015.05.03
+pkgrel=1
+pkgdesc='Caledonia Plasma 5 Look & Feel theme files'
+url='http://www.chakraos.org'
+arch=('x86_64')
+license=('LGPL')
+groups=('caledonia2.0')
+depends=('plasma-framework' 'kde-plasma-themes-caledonia>=2.0' 'caledonia-colors>=2.0')
+makedepends=('')
+conflicts=('kde-kdm-themes-caledonia'
+           'kde-ksplash-themes-caledonia')
+replaces=('kde-kdm-themes-caledonia'
+           'kde-ksplash-themes-caledonia')
+source=("http://rsync.chakraos.org/sources/chakra-artwork/caledonia/Caledonia2.0_look-and-feel_${pkgver}.tar.gz")
+md5sums=('84e19fe8d6ddb491eeb59318e589c89e')
+
+package() {
+  mkdir -p $pkgdir/usr/share/plasma/look-and-feel
+  mv $srcdir/org.kde.caledonia.desktop $pkgdir/usr/share/plasma/look-and-feel
+}
