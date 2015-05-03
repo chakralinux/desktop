@@ -1,5 +1,5 @@
 #Contributions from Arch: https://projects.archlinux.org/svntogit/packages.git/tree/trunk?h=packages/konsole
-source ../_buildscripts/${current_repo}-${_arch}-cfg.conf
+source ../kdeapps.conf
 
 pkgname=konsole
 pkgver=${_kdever}
@@ -7,6 +7,7 @@ pkgrel=1
 pkgdesc="KDE's terminal emulator"
 arch=('x86_64')
 url='http://kde.org/applications/system/konsole/'
+screenshot=('https://www.kde.org/images/screenshots/konsole.png')
 license=('LGPL')
 depends=('kdelibs4support' 'knotifyconfig' 'kpty')
 makedepends=('extra-cmake-modules' 'kdoctools' 'python3')
@@ -23,15 +24,11 @@ prepare() {
 
 build() {
   cd build
-  cmake ../konsole-${pkgver} \
-    -DCMAKE_BUILD_TYPE=Release \
-    -DCMAKE_INSTALL_PREFIX=/usr \
-    -DCMAKE_INSTALL_LIBDIR=lib \
-    -DKDE_INSTALL_USE_QT_SYS_PATHS=ON
+  cmake_kf5 ../${pkgname}-${pkgver} 
   make
 }
 
 package() {
-  cd "${srcdir}"/build
+  cd build
   make DESTDIR="${pkgdir}" install
 }

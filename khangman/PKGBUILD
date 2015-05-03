@@ -1,14 +1,15 @@
 # Contributions from Arch: https://projects.archlinux.org/svntogit/packages.git/tree/trunk?h=packages/khangman
-source ../_buildscripts/${current_repo}-${_arch}-cfg.conf
+source ../kdeapps.conf
 
 pkgname=khangman
 pkgver=${_kdever}
 pkgrel=1
 pkgdesc="Hangman game"
 url="http://kde.org/applications/education/khangman/"
+screenshot="https://www.kde.org/images/screenshots/khangman.png"
 arch=('x86_64')
 license=('GPL' 'LGPL' 'FDL')
-depends=('libkeduvocdocument' 'knewstuff')
+depends=('libkeduvocdocument' 'knewstuff' 'kdeclarative')
 makedepends=('extra-cmake-modules' 'kdoctools' 'python3')
 provides=('kdeedu-khangman')
 conflicts=('kdeedu-khangman')
@@ -25,16 +26,11 @@ prepare() {
 
 build() {
   cd build
-  cmake ../khangman-${pkgver} \
-    -DCMAKE_BUILD_TYPE=Release \
-    -DBUILD_TESTING=OFF \
-    -DCMAKE_INSTALL_PREFIX=/usr \
-    -DCMAKE_INSTALL_LIBDIR=lib \
-    -DSYSCONF_INSTALL_DIR=/etc
+  cmake_kf5 ../${pkgname}-${pkgver} 
   make
 }
 
 package() {
-  cd "${srcdir}"/build
+  cd build
   make DESTDIR="${pkgdir}" install
 }

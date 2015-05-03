@@ -1,11 +1,12 @@
 # Contributions from Arch: https://projects.archlinux.org/svntogit/packages.git/tree/trunk?h=packages/kig
-source ../_buildscripts/${current_repo}-${_arch}-cfg.conf
+source ../kdeapps.conf
 
 pkgname=kig
 pkgver=${_kdever}
 pkgrel=1
 pkgdesc="Interactive geometry"
 url="http://kde.org/applications/education/kig/"
+screenshot="https://www.kde.org/images/screenshots/kig.png"
 arch=('x86_64')
 license=('GPL' 'LGPL' 'FDL')
 depends=('ktexteditor' 'kdelibs4support')
@@ -25,12 +26,7 @@ prepare() {
 
 build() {
   cd build
-  cmake ../kig-${pkgver} \
-    -DCMAKE_BUILD_TYPE=Release \
-    -DBUILD_TESTING=OFF \
-    -DCMAKE_INSTALL_PREFIX=/usr \
-    -DCMAKE_INSTALL_LIBDIR=lib \
-    -DKDE_INSTALL_USE_QT_SYS_PATHS=ON
+  cmake_kf5 ../${pkgname}-${pkgver} 
   make
 }
 

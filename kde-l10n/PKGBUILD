@@ -64,7 +64,7 @@ pkgname=('kde-l10n-ar'
          'kde-l10n-zh_TW')
 arch=('x86_64')
 pkgver=${_kdever}
-pkgrel=1
+pkgrel=2
 url="http://www.kde.org"
 license=('GPL' 'FDL')
 makedepends=('kdoctools' 'ki18n' 'qt5-tools' 'extra-cmake-modules')
@@ -116,7 +116,7 @@ build() {
 
 package_helper()
 {
-    if [ ${it} != "kde-10n-eo" ];
+    if [ ${1} != "eo" ];
     then
       pushd ${srcdir}/kde-l10n-${1}-${_oldkdever}
       make DESTDIR=${pkgdir} install

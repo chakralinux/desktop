@@ -1,6 +1,5 @@
 #contributions from Arch: https://projects.archlinux.org/svntogit/packages.git/tree/trunk?h=packages/kate
-source ../_buildscripts/${current_repo}-${_arch}-cfg.conf
-
+source ../kdeapps.conf
 
 pkgbase=kate
 pkgname=('kwrite'
@@ -9,7 +8,6 @@ pkgver=${_kdever}
 pkgrel=1
 pkgdesc='Advanced editor component which is used in numerous KDE applications requiring a text editing component'
 arch=('x86_64')
-url='https://projects.kde.org/projects/kde/applications/kate'
 license=('GPL' 'LGPL' 'FDL')
 depends=('knewstuff' 'ktexteditor' 'threadweaver' 'kded' 'kitemmodels')
 makedepends=('extra-cmake-modules' 'kdoctools' 'python3' 'plasma-framework')
@@ -21,21 +19,11 @@ sha256sums=("`grep ${pkgbase}-$_kdever.tar.xz  ../checksums.txt | cut -d " " -f1
 
 prepare() {
   mkdir build
-
-  # FS#43513 / https://bugs.kde.org/show_bug.cgi?id=339094
-  cd ${pkgbase}-${pkgver}
-  patch -p1 -i ../fix-dolphin-hang.patch
 }
 
 build() {
   cd build
-  cmake ../${pkgbase}-${pkgver} \
-    -DCMAKE_BUILD_TYPE=Release \
-    -DCMAKE_INSTALL_PREFIX=/usr \
-    -DCMAKE_INSTALL_LIBDIR=lib \
-    -DSYSCONF_INSTALL_DIR=/etc \
-    -DKDE_INSTALL_USE_QT_SYS_PATHS=ON \
-    -DBUILD_TESTING=OFF
+  cmake_kf5 ../${pkgbase}-${pkgver} 
   make
 }
 
@@ -43,6 +31,7 @@ package_kwrite() {
   pkgdesc="Text Editor"
   groups=('kde')
   url="http://www.kde.org/applications/utilities/kwrite/"
+  screenshot="https://www.kde.org/images/screenshots/kwrite.png"
   install='kwrite.install'
   replaces=('kde-baseapps-kwrite')
   conflicts=('kde-baseapps-kwrite')
@@ -59,7 +48,8 @@ package_kate() {
   pkgdesc="Advanced Text Editor"
   groups=('kde')
   url="http://www.kde.org/applications/utilities/kate/"
-  install='kate.install'
+  screenshot="https://www.kde.org/images/screenshots/kate.png"
+    install='kate.install'
   replaces=('kdesdk-kate')
   conflicts=('kdesdk-kate')
   provides=('kdesdk-kate')
