@@ -1,11 +1,7 @@
-#
-# Apps Packages for Chakra, part of chakra-project.org
-#
-# Maintainer: Neophytos Kolokotronis <tetris4@gmail.com>
 # Contributor from Arch: Evangelos Foutras <evangelos@foutrelis.com>
 
 pkgname=libmemcached
-pkgver=1.0.17
+pkgver=1.0.18
 pkgrel=1
 pkgdesc="C and C++ client library to the memcached server"
 arch=('x86_64')
@@ -14,17 +10,8 @@ license=('GPL')
 depends=('glibc' 'libsasl' 'libevent')
 makedepends=('perl' 'memcached')
 options=('!libtool')
-source=(http://launchpad.net/$pkgname/1.0/$pkgver/+download/$pkgname-$pkgver.tar.gz
-	gcc-4.8.patch)
-sha256sums=('7bb27b2589400f918df1cf5002cb01ef7ccac6e23f818604e2386de62c80bba5'
-            '4a6b5d70cf7905fbd9e58a4646a6943da5f77b5e0a87b1518c4688f437963194')
-
-prepare() {
-  cd "$srcdir/$pkgname-$pkgver"
-
-  # Fix build with GCC 4.8 (patch from Debian)
-  patch -Np1 -i "$srcdir/gcc-4.8.patch"
-}
+source=(http://launchpad.net/$pkgname/1.0/$pkgver/+download/$pkgname-$pkgver.tar.gz)
+sha512sums=('2d95fea63b8b6dc7ded42c3a88a54aad74d5a1d417af1247144dae4a88c3b639a3aabc0c2b66661ff69a7609a314efaaae236e10971af9c428a4bca0a0101585')
 
 build() {
   cd "$srcdir/$pkgname-$pkgver"
