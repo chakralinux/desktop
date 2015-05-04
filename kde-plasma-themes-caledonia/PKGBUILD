@@ -1,6 +1,6 @@
 pkgname=kde-plasma-themes-caledonia
 pkgver=2.0
-pkgrel=3
+pkgrel=4
 arch=('x86_64')
 pkgdesc="Malcer's dark Caledonia Plasma theme with Chakra branding"
 url=("http://caledonia.sourceforge.net/")
@@ -14,12 +14,12 @@ md5sums=('c4167e82c98322bb578f06901edd47a2'
 
 package() {
   mkdir -p $pkgdir/usr/share/licenses/caledonia
-  mv ${srcdir}/Caledonia/LICENSE.txt $pkgdir/usr/share/licenses/caledonia/LICENSE
+  install -Dm644 ${srcdir}/Caledonia/LICENSE.txt $pkgdir/usr/share/licenses/caledonia/LICENSE
   chmod 644 -R ${pkgdir}/usr/share/licenses/caledonia/LICENSE
 
   mkdir -p $pkgdir/usr/share/apps/desktoptheme/caledonia/
   cd $srcdir/Caledonia
-  cp -R * $pkgdir/usr/share/apps/desktoptheme/caledonia/
+  cp -Rv * $pkgdir/usr/share/apps/desktoptheme/caledonia/
   # fix file rights
   chmod 755 -R $pkgdir/usr/share/apps/desktoptheme/caledonia
   # remove nasty files
@@ -28,5 +28,9 @@ package() {
   # replace with Chakra branding
   rm ${pkgdir}/usr/share/apps/desktoptheme/caledonia/widgets/branding.svgz
   install -Dm644 ${srcdir}/branding.svgz ${pkgdir}/usr/share/apps/desktoptheme/caledonia/widgets/branding.svgz
+
+  # duplicate one for plasma5
+  install -dm755 ${pkgdir}/usr/share/plasma/desktoptheme
+  cp -rv $pkgdir/usr/share/apps/desktoptheme/caledonia $pkgdir/usr/share/plasma/desktoptheme/caledonia
 }
  
