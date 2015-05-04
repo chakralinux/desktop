@@ -1,7 +1,5 @@
-# Maintainer: Daniele Cocca <jmc@chakra-project.org>
-
 pkgname=winff
-pkgver=1.5.3
+pkgver=1.5.4
 pkgrel=1
 pkgdesc="WinFF is a GUI for the command line video converter, FFMPEG. It will convert most any video file that FFmpeg will convert. WinFF does multiple files in multiple formats at one time."
 arch=('x86_64')
@@ -11,8 +9,8 @@ depends=('fpc-qtbindings' 'ffmpeg')
 makedepends=('lazarus' 'fpc')
 source=("${pkgname}-${pkgver}.tar.gz::https://docs.google.com/uc?authuser=0&id=0B8HoAIi30ZDkMHlvVkVtNHJnLVE&export=download"
         'winff.desktop')
-md5sums=('4707630b55c8c6e45d9d2a7f83067be3'
-         'd74b924cd98995ada520f3333c845459')
+sha512sums=('3d2112f565b030b59f200938c28a70b5b48f10dda42b8bd16a92dc7222b483af220aae8121bef669c6e1b6d44567647f99f674a24593dd5133ff2f4e2aa0e7bb'
+            '711c91d2885d5f9ccf5c20e9ad351b98ca9558de33df221e280ef1d071a9d6691c337ec5b4031878fd75d0734404b3f8eb02ae2f3caf5f20be4b95b444f49020')
 screenshot="http://winff.org/images/2013/screenshot-1.5-ubuntu.jpg"
 
 build() {
@@ -30,6 +28,8 @@ package() {
   install -Dm 644 winff-icons/24x24/winff.png ${pkgdir}/usr/share/icons/hicolor/24x24/apps/winff.png
   install -Dm 644 winff-icons/32x32/winff.png ${pkgdir}/usr/share/icons/hicolor/32x32/apps/winff.png
   install -Dm 644 winff-icons/48x48/winff.png ${pkgdir}/usr/share/icons/hicolor/48x48/apps/winff.png
+  install -Dm 644 winff-icons/winff_logo2.svgz ${pkgdir}/usr/share/pixmaps/winff.svgz
+  install -Dm 644 winff.1 ${pkgdir}/usr/share/man/man1/winff.1.gz
   install -dm 755 ${pkgdir}/usr/share/winff/languages/
   find . -name "*.po"  -exec install -Dm 644 {} ${pkgdir}/usr/share/winff/languages/ \; &> /dev/null
 }
