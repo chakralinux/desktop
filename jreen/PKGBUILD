@@ -1,12 +1,6 @@
-#
-# Apps SC Packages for Chakra, part of chakra-project.org
-#
-# maintainer abevritas@chakra-project.org
-# contributor kote martini438[at]gmail.com
-
 pkgname=jreen
 _name=lib${pkgname}
-pkgver=1.2.0	
+pkgver=1.2.1
 pkgrel=1
 pkgdesc="Qt XMPP library"
 arch=('x86_64')
@@ -17,7 +11,7 @@ makedepends=('cmake')
 conflicts=('jreen-git')
 options=(!strip)
 source=("https://github.com/euroelessar/$pkgname/archive/v$pkgver.tar.gz")
-md5sums=('a7d2480c789173c4f836c14a97f66b51')
+sha512sums=('3ab28cf2a2c2a595892b15acb9e49c7aa64dbb3b2ac13138ce011b16c2c6b3abeb524231d271fb0f4a6da028548ae6995b34bd70ee9c40fb54e6d64fac2633a2')
 
 build() {
   cd $srcdir/$pkgname-$pkgver
@@ -28,4 +22,8 @@ build() {
 package() {
   cd $srcdir/$pkgname-$pkgver
   make DESTDIR=$pkgdir install
+  
+  install -d $pkgdir/usr/lib
+  mv $pkgdir/usr/lib64/* $pkgdir/usr/lib
+  rmdir $pkgdir/usr/lib64
 }
