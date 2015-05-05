@@ -1,9 +1,7 @@
-# Maintainer: UtG  <utg[dot]chakra.linux[at]gmail[dot]com>
- 
 pkgname=qt4-fsarchiver
-pkgver=0.6.19.9
-_pkgver=0.6.19-9
-pkgrel=2
+pkgver=0.6.19.13
+_pkgver=0.6.19-13
+pkgrel=1
 pkgdesc='GUI for fsarchiver'
 arch=('x86_64')
 url='http://sourceforge.net/projects/qt4-fsarchiver/'
@@ -14,29 +12,34 @@ categories=('utils')
 screenshot=('http://media.cdn.ubuntu-de.org/wiki/attachments/02/04/verzeichnis.jpg')
 source=("http://sourceforge.net/projects/${pkgname}/files/source/${pkgname}-${_pkgver}.tar.gz")
 install="${pkgname}.install"
-sha1sums=('434cc08cdf91d0820f025e3e46a16489f312e915')
+sha512sums=('07fec2c4f5ec7a877cfc0ce94b8f851d2bfae8dff6d1a97e1851bc52323f7d75d0aac4ba637944f2469f9eceec962633d667a6571eed7eff076e5db98c7e55ee')
 
 build() {
 	cd "${srcdir}/${pkgname}"
 	qmake
+	make
 }
 
 package() {
   cd "${srcdir}/${pkgname}"
-  make
   make INSTALL_ROOT="${pkgdir}" install
   
-  mkdir -p ${pkgdir}/usr/share/qt/translations
+  install -d ${pkgdir}/usr/share/pixmaps
+  install -d ${pkgdir}/usr/share/qt/translations
   rm -R ${pkgdir}/usr/share/qt4
+  mv ${pkgdir}/usr/share/app-install/icons/harddrive.png ${pkgdir}/usr/share/pixmaps/${pkgname}.png
+  rm -R ${pkgdir}/usr/share/app-install
   install -D -m644 ${srcdir}/${pkgname}/translations/*.qm ${pkgdir}/usr/share/qt/translations
 	
   # workaround for fixed destination path in qmake project
-  mkdir -p ${pkgdir}/usr/bin
+  install -d ${pkgdir}/usr/bin
   mv ${pkgdir}/usr/sbin/findsmb-qt ${pkgdir}/usr/bin/
   mv ${pkgdir}/usr/sbin/qt4-fsarchiver ${pkgdir}/usr/bin/
   rm -rf ${pkgdir}/usr/sbin
   
   sed s/Terminal=true/Terminal=false/ -i ${pkgdir}/usr/share/applications/qt4-fsarchiver.desktop
   sed s/sudo/kdesu/ -i ${pkgdir}/usr/share/applications/qt4-fsarchiver.desktop
+  sed -i s!/usr/share/app-install/icons/harddrive.png!qt4-fsarchiver.png! \
+  ${pkgdir}/usr/share/applications/qt4-fsarchiver.desktop
 	
 }
