@@ -5,7 +5,8 @@ pkgrel=1
 arch=('x86_64')
 license=('LGPL')
 url='https://qt-project.org/wiki/PySide'
-makedepends=('cmake' 'python3' 'python2' 'qt' 'python2-shiboken' 'python3-shiboken' 'python2-pyside' 'python3-pyside')
+makedepends=('cmake' 'python3' 'python2' 'qt' 
+             'python2-shiboken' 'python3-shiboken' 'python2-pyside' 'python3-pyside')
 source=("$pkgbase-$pkgver.tar.gz::https://github.com/PySide/Tools/archive/${pkgver}.tar.gz")
 sha512sums=('7cee288b733e5f83a01683d7fc8f1017c044e46dbb02489c5e763e37db4e24f319ffd593e001ee6ca5a21a34cf1a6009ab1d4c9e4102c60693992b6f2f7c8991')
 
@@ -30,6 +31,8 @@ build() {
     cmake .. \
         -DCMAKE_INSTALL_PREFIX=/usr \
         -DCMAKE_BUILD_TYPE=Release \
+        -DPYTHON_SUFFIX=.cpython-34m \
+        -DPYTHON_BASENAME=.cpython-34m \
         -DQT_QMAKE_EXECUTABLE=/usr/bin/qmake
     make
 }
