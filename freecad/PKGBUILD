@@ -1,93 +1,65 @@
-# Maintainer: 	UtG  <utg[dot]chakra.linux[at]gmail[dot]com>
-# Contributor: Jonas Heinrich <onny@project-insanity.org>
-# Contributor: Jordi De Groof <jordi (dot) degroof (at) gmail (dot) com>
-
 pkgname=freecad
-pkgver=0.14.3702
-pkgrel=2
+pkgver=0.15.4671
+pkgrel=1
 pkgdesc='A general purpose 3D CAD modeler'
 arch=('x86_64')
 url='http://www.freecadweb.org/wiki'
 license=('GPL')
-depends=('boost-libs' 'curl' 'opencascade>=6.6.0' 'pivy-hg' 'python2-pyqt4' 'xerces-c' 'libspnav' 'shared-mime-info' 'hicolor-icon-theme' 'python2-shiboken' 
-'python2-pyside')
-makedepends=('boost' 'eigen3' 'gcc-fortran' 'swig' 'xerces-c' 'desktop-file-utils' 'zlib' 'cmake' 'coin>=3.1.3-2' 'glu')
+depends=('boost-libs' 'curl' 'opencascade' 'pivy-hg' 'xerces-c' 'libspnav' 'shared-mime-info' 'hicolor-icon-theme' 'python2-matplotlib' 'python2-shiboken' 'python2-pyside-tools' 'pyside-tools-common' 'python2-pyqt4' 'qtwebkit')
+makedepends=('boost' 'eigen3' 'gcc-fortran' 'swig' 'xerces-c' 'desktop-file-utils' 'cmake' 'coin' 'zlib' 'glu')
 options=(!libtool !makeflags)
 install=freecad.install
-source=("http://downloads.sourceforge.net/sourceforge/free-cad/freecad-${pkgver}.tar.gz" 		
+source=("http://downloads.sourceforge.net/project/free-cad/FreeCAD%20Source/${pkgname}_${pkgver}.tar.gz"
 	"${pkgname}.desktop"
-	"${pkgname}.xml"
-md5sums=('234747bdff47a62fd10cb902f3dd772b'
-         '493490db7844d7d5b9426fab8da5acea'
-         'f930c02689c0b2cc75b9dab833e46932'
-         'c2f4154c8e4678825411de8e7fa54c6b'
-         '8aeceda60d5260d8c201201ac06e5335')
+	"${pkgname}.xml")
+sha512sums=('695081117b5511bbc0b7335b63a8760e164987a6dff2c5b0dc86b6b0a93bb7d7b83aa9f4fab1d66d7d2c917a42b0135af78553b463579873a1d1e52e3dd9aecb'
+         'a58dd5f6d8217b6633d5cc24a0b61954b1044d4156b25b78c00ea29f3ac9ca4932e9bde08bd11fc4327d76c7e82500cf3c2ddc934f426e970757cd200b070aec'
+         'ac0dfe1b2c58335867e94d4ce86696763b6354dcdca68a653bf115b6ea562f0f8ff7d243d42d0c6fd6e758bd488d626e30cd917bb1b5c676c1f0cafdece005d6')
 
-         
-         
-_installdir=/opt/$pkgname
-# I prefer installing in opt because installing
-# in /usr there are non standard dir.
-# However if you prefer /usr uncomment the following line
-# _installdir=/usr
+prepare() {
+  sed -i \
+    -e "46i\\\tModDir = '/usr/share/freecad/Mod'" \
+    -e "50i\\\tLibDir = '/usr/lib/freecad'" \
+    "${srcdir}/freecad-${pkgver}/src/App/FreeCADInit.py"
 
-prepare(){
-  cd "${srcdir}/freecad-${pkgver}/"
-  # compatibility issues with OCC-6.6
-  for _FILE in $( grep -Rl "BRepTools::OuterShell" * )
-  do
-    sed -e "s|BRepTools|BRepClass3d|g" -i "$_FILE"
-  done
-
+  sed -i \
+	  -e 's|\bpyside-uic\b|python2-pyside-uic|' \
+	  $srcdir/freecad-$pkgver/cMake/FindPySideTools.cmake
 }
-
 
 build() {
   cd "${srcdir}/freecad-${pkgver}/"
-
-  mkdir -p build
-  cd build
-
-  cmake -DCMAKE_INSTALL_PREFIX:PATH=${_installdir} .. \
-  	-DOCC_INCLUDE_DIR:PATH=/opt/opencascade/inc/ \
-	-DPYTHON_EXECUTABLE:FILEPATH=/usr/bin/python2 \
-	-DFREECAD_USE_EXTERNAL_PIVY:BOOL=ON
-
-# add these options to copmile without coin debian patch
-# http://sourceforge.net/apps/mantisbt/free-cad/view.php?id=664
-#	-DCMAKE_C_FLAGS:STRING="$CFLAGS -fpermissive" \
-#	-DCMAKE_CXX_FLAGS:STRING="$CXXFLAGS -fpermissive"
-
-  # Build main program
+  cmake \
+    -DCMAKE_BUILD_TYPE=Release \
+    -DCMAKE_INSTALL_PREFIX:PATH="/usr" \
+    -DCMAKE_INSTALL_DOCDIR:PATH="share/freecad/doc" \
+    -DCMAKE_INSTALL_DATADIR:PATH="share/freecad" \
+    -DCMAKE_INSTALL_LIBDIR:PATH="lib/freecad" \
+    -DOCC_INCLUDE_DIR:PATH=/opt/opencascade/inc/ \
+    -DPYTHON_EXECUTABLE:FILEPATH=/usr/bin/python2 \
+    -DFREECAD_USE_EXTERNAL_PIVY:BOOL=ON
   make
-
-  # Builds Qt plugin
-#  cd "${srcdir}/freecad-${pkgver}/src/Tools/plugins/widget/"
-#  qmake plugin.pro
-#  make
 }
 
 package() {
-  cd "${srcdir}/freecad-${pkgver}/build"
-
-  # Install main program
+  cd "${srcdir}/freecad-${pkgver}"
   make DESTDIR="${pkgdir}" install
 
   # Symlink to /usr/bin
-  mkdir -p "${pkgdir}/usr/bin/"
-  ln -sf "${_installdir}/bin/FreeCAD" "${pkgdir}/usr/bin/freecad"
-  ln -sf "${_installdir}/bin/FreeCADCmd" "${pkgdir}/usr/bin/freecadcmd"
+  ln -sf "FreeCAD" "${pkgdir}/usr/bin/freecad"
+  ln -sf "FreeCADCmd" "${pkgdir}/usr/bin/freecadcmd"
 
-  # Installs Qt plugin
-#  install -Dm755 ../src/Tools/plugins/widget/libFreeCAD_widgets.so "${pkgdir}/usr/lib/qt/plugins/designer/libFreeCAD_widgets.so"
+  cp -ra "${pkgdir}/usr/Mod" "${pkgdir}/usr/share/freecad/"
+  rm -r "${pkgdir}/usr/Mod"
 
   # Install pixmaps and desktop shortcut
   desktop-file-install \
     --dir="${pkgdir}/usr/share/applications" \
     "${srcdir}/${pkgname}.desktop"
 
-   # Mime info
-   install -D -m644 "${srcdir}/${pkgname}.xml" "${pkgdir}/usr/share/mime/packages/${pkgname}.xml"
-   mkdir -p "${pkgdir}/usr/share/icons/hicolor/48x48/mimetypes/"
-   ln -s /usr/share/${pkgname}/freecad.xpm "${pkgdir}/usr/share/icons/hicolor/48x48/mimetypes/application-x-extension-fcstd.xpm"
+    install -d ${pkgdir}/usr/share/pixmaps
+    cp ${pkgdir}/usr/share/freecad/freecad.svg ${pkgdir}/usr/share/pixmaps/freecad.svg
+    
+  # Mime info
+  install -D -m644 "${srcdir}/${pkgname}.xml" "${pkgdir}/usr/share/mime/packages/${pkgname}.xml"
 }
