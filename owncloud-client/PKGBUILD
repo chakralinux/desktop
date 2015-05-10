@@ -1,6 +1,6 @@
 _name=owncloudclient
 pkgname=owncloud-client
-pkgver=1.8.0
+pkgver=1.8.1
 pkgrel=1
 pkgdesc="ownCloud client based on mirall"
 arch=('x86_64')
@@ -8,13 +8,13 @@ url="http://owncloud.org/"
 screenshot="http://owncloud.org/wp-content/uploads/2012/03/linux3.png"
 license=('GPL2')
 depends=('qtwebkit' 'neon' 'sqlite3' 'qtkeychain')
-makedepends=('cmake' 'libssh' 'smbclient' 'desktop-file-utils')
+makedepends=('cmake' 'libssh' 'smbclient' 'python3-sphinx')
 groups=('network')
 conflicts=('csync-owncloud')
 backup=('etc/owncloud-client/sync-exclude.lst')
 install=${pkgname}.install
-source=("http://download.owncloud.com/desktop/stable/${_name}-${pkgver}.tar.bz2")
-sha256sums=('192bec5fe4b60c40d3a5d60abe224a1029af653ce445515290f3f1bb7967b0bd')
+source=("http://download.owncloud.com/desktop/stable/${_name}-${pkgver}.tar.xz")
+sha256sums=('8b9bb4fea2a4b80938a3477813839ac325ac1ed39a85a8f1e0cd3ebb0e430ea3')
 
 prepare() {
   cd ${_name}-${pkgver}/
@@ -35,18 +35,10 @@ build() {
         -DCMAKE_BUILD_TYPE="Release" \
         ..
   make
-}
-
-check() {
-  cd ${_name}-${pkgver}/build
-  make test
+  make doc-man
 }
  
 package() {
   cd ${_name}-${pkgver}/build
   make DESTDIR="${pkgdir}" install
-  
-  # Fix desktop file
-  desktop-file-edit --set-key="Keywords" --set-value="ownCloud;syncing;file;sharing;" \
-    "${pkgdir}/usr/share/applications/owncloud.desktop"
 }
