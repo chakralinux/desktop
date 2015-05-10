@@ -1,22 +1,16 @@
-#
-# Apps packages for Chakra, part of www.chakra-project.org
-#
-# Maintainer:   H W Tovetjärn (totte) <totte@tott.es>
-# Contributors: M Cigorraga (msx) <martincigorraga@gmail.com>
-#               (george) <rpubaddr0@gmail.com>
-#               (mornik) <mornik@gmail.com>
-
 pkgname=tmux
-pkgver=1.9a
+pkgver=2.0
 pkgrel=1
 pkgdesc='A terminal multiplexer, intended as an alternative to GNU screen'
 arch=('x86_64')
 url='http://sourceforge.net/projects/tmux/'
 screenshot='http://tmux.sourceforge.net/tmux3.png'
 license=('BSD')
-depends=('ncurses' 'libevent')
-source=("http://download.sourceforge.net/tmux/$pkgname-$pkgver.tar.gz")
-sha512sums=('842984638dc1f7364c03393187379598f35679d535d911d5df4016944d6032e61a1bf840d7d339c6e99b30c55581d470acca85ab6ee5799b8927d18c0e9a91df')
+depends=('ncurses' 'libevent' 'libutempter')
+source=("http://download.sourceforge.net/tmux/$pkgname-$pkgver.tar.gz"
+        LICENSE)
+sha512sums=('8a4be40ceb9b371a91107173de08348c4379b103454fa397ee326506f78a5fda1034dc7148c090c687221eddb8a2fc0c3aeb85da57841df6bcd74fb5f4f5f53d'
+            'b03188cd81ffe7443905bb2cd2bb9330a00ddad258eb0f1ad64add09c2c305f1ad6686855986ce6f828a3884bfbaebbd9896e2307e65a47797a628d81c4e3677')
 
 build() {
     cd "$pkgname-$pkgver"
@@ -27,4 +21,13 @@ build() {
 package() {
     cd "$pkgname-$pkgver"
     make DESTDIR="$pkgdir" install
+    
+    install -Dm644 ../LICENSE "$pkgdir/usr/share/licenses/tmux/LICENSE"
+
+    install -dm755 "$pkgdir/usr/share/tmux/"
+    install -m644 examples/* "$pkgdir/usr/share/tmux/"
+    install -Dm644 examples/tmux.vim "$pkgdir/usr/share/vim/vimfiles/syntax/tmux.vim"
+
+    install -d $pkgdir/usr/share/bash-completion/completions/
+    mv $pkgdir/usr/share/tmux/bash_completion_tmux.sh $pkgdir/usr/share/bash-completion/completions/tmux
 }
