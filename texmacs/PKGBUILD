@@ -16,54 +16,56 @@ provides=('texmacs')
 conflicts=('texmacs-qt')
 install=${pkgname}.install
 options=('!emptydirs')
-source=("http://www.texmacs.org/Download/ftp/tmftp/source/TeXmacs-$pkgver-src.tar.gz"
-        'https://lists.gnu.org/archive/html/texmacs-dev/2010-09/png9oo9TJIjlY.png'
-        'texmacs.desktop')
-sha512sums=('e9d2dd0aab2e66470c4ae860e13b6fad2cc07913f14f7bca042c703d4d8b4a62fafafa711b81a0d8f8c125a3641b8bb5f38cd3adac74ec18895671423aa60be9'
-            'aae0c0a2c9f6f691ab694d3a6069ac0286153fe3aec6865c0bba6422f287e95cf18a26f810b5b87ad77944ea890f8839448059d095d7b22483d50e16d366966e'
-            '277353b9e612c2d958e621c317aff75615ddaaee3570357b492a2dcb656aec1dda42f4e65ea24c11ff37b74eaaf3ffe9a5776c964a9d5a2eb8cf157fe9348069')
+source=("http://www.texmacs.org/Download/ftp/tmftp/source/TeXmacs-$pkgver-src.tar.gz")
+sha512sums=('e9d2dd0aab2e66470c4ae860e13b6fad2cc07913f14f7bca042c703d4d8b4a62fafafa711b81a0d8f8c125a3641b8bb5f38cd3adac74ec18895671423aa60be9')
 
 prepare() {
-    cd $srcdir/TeXmacs-$pkgver-src
+  cd "${srcdir}/TeXmacs-${pkgver}-src"
+  sed -i 's/env python/env python2/' \
+    plugins/{mathematica/bin/realpath.py,python/bin/tm_python,sage/bin/tm_sage} \
+    TeXmacs/misc/inkscape_extension/texmacs_reedit.py
+  sed -i 's/"python"/"python2"/' plugins/python/progs/init-python.scm
+  sed -i '/^LDPATH/d' src/makefile.in
+  sed -i -e 's/guile /guile1.8 /g' \
+         -e 's/guile-config/guile-config1.8/g' \
+         configure
 
-    sed -i 's/env python/env python2/' \
-	plugins/{mathematica/bin/realpath.py,python/bin/tm_python,sage/bin/tm_sage} \
-	TeXmacs/misc/inkscape_extension/texmacs_reedit.py
-    sed -i 's/"python"/"python2"/' plugins/python/progs/init-python.scm
-    sed -i '/^LDPATH/d' src/makefile.in
-    sed -i -e 's/guile /guile1.8 /g' \
-	-e 's/guile-config/guile-config1.8/g' \
-	configure
-	
-  # Don't generate icon-cache and mime-database (namcap tells that they should not be in a package)
+ # Don't generate icon-cache and mime-database (namcap tells that they should not be in a package)
   sed -i '/update-mime-database/d' Makefile.in
   sed -i '/gtk-update-icon-cache/d' Makefile.in
   sed -i '\/icons\/gnome 2>\/dev\/null/d' Makefile.in
-  
+
 }
-  
-build() {  
+
+build() {
   cd "${srcdir}/TeXmacs-${pkgver}-src"
   
   export QMAKE=qmake
-  export MOC=moc-qt4
-  export UIC=uic-qt4
-    ./configure \
-	--prefix=/usr \
+  export MOC=moc
+  export UIC=uic
+  export LDFLAGS=-lz
+  ./configure \
+  	--prefix=/usr \
 	--enable-pdf-renderer \
 	--enable-optimize \
 	--with-freetype \
 	--with-imlib2 \
 	--enable-guile2=no \
 	--with-qt
-    make || return 1
+  make
 }
 
 package() {
-    cd $srcdir/TeXmacs-$pkgver-src
-    make DESTDIR=${pkgdir} install
-    
-    # fix fig2ps script
-    sed -i 's|${prefix}|/usr|' "${pkgdir}/usr/bin/fig2ps"
+  cd "${srcdir}/TeXmacs-${pkgver}-src"
+  make DESTDIR=${pkgdir} install
+  
+  cp ${pkgdir}/usr/share/icons/gnome/scalable/apps/TeXmacs.svg \
+  ${pkgdir}/usr/share/pixmaps/texmacs.svg 
+  rm ${pkgdir}/usr/share/pixmaps/TeXmacs.xpm
+  sed -i s!Icon=TeXmacs!Icon=texmacs! \
+  ${pkgdir}/usr/share/applications/texmacs.desktop
+ 
 
+ # fix fig2ps script
+ sed -i 's|${prefix}|/usr|' "${pkgdir}/usr/bin/fig2ps"
 }
