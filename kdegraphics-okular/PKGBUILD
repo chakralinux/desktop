@@ -10,7 +10,7 @@ pkgrel=1
 pkgdesc='Universal document viewer'
 url='http://kde.org/applications/graphics/okular/'
 license=('GPL' 'LGPL' 'FDL')
-options=('docs' '!header' 'debug' 'log')
+options=('docs' 'debug')
 groups=('kde' 'kdegraphics' 'kde-uninstall')
 provides=('okular')
 categories=('office')
@@ -24,7 +24,7 @@ depends=("kdelibs>=${_libsver}"
          'libxxf86vm' 'sane' 'lcms' 'qimageblitz' 'poppler-qt' 'chmlib' 'djvulibre' 'libspectre')
 optdepends=('ebook-tools: epub support'
             'kdegraphics-mobipocket: mobi support')
-makedepends=('pkg-config' 'cmake' 'automoc4' 'qca')
+makedepends=('pkg-config' 'cmake' 'automoc4' 'qca' 'kdoctools')
 install=okular.install
 source=("$_mirror/${_pkgname}-$_kdever.tar.xz")
 sha256sums=(`grep ${_pkgname}-$_kdever.tar.xz  ../checksums.txt | cut -d " " -f1`)
