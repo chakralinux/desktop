@@ -1,18 +1,16 @@
-# Maintainer: Jeff Huang <s8321414[at]gmail[dot]com>
-# Contributer: Francesco Marinucci <framari [at] opmbx [dot] org>
- 
 pkgname=kup
 _pkgname=Kup
-pkgver=0.5.1
+pkgver=0.6.0
 pkgrel=1
 pkgdesc="A KDE-based frontend for the bup backup software"
 arch=('x86_64')
 url="http://kde-apps.org/content/show.php/Kup+Backup+System?content=147465"
 license=('GPL')
-depends=('kde-runtime' 'kdelibs' 'bup' 'rsync' 'python2-pyxattr')
-makedepends=('cmake' 'automoc4')
+depends=('qt5-base' 'kcoreaddons' 'kdbusaddons' 'ki18n' 'kio' 'solid' 'kidletime' 
+         'knotifications' 'kiconthemes' 'kconfig' 'kinit' 'bup' 'rsync' 'python2-pyxattr')
+makedepends=('cmake' 'extra-cmake-modules')
 source=("https://github.com/spersson/${_pkgname}/archive/${pkgname}-${pkgver}.tar.gz")
-sha256sums=('c5b9c8e0500967a2e0bc4e2853fab25c41aaab4e40c06db92d64d5bd0b3bcdb7')
+sha256sums=('c27bbe35bb56088b1ceb944b7de92d407ee4f505ae92b53d235607e6c853e5fd')
  
 build() {
 	cd ${_pkgname}-${pkgname}-${pkgver}
