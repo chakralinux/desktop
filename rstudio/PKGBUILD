@@ -1,10 +1,8 @@
-# Maintainer: Francesco Marinucci <franzmari [at] chakra-project[dot]it>
-
 pkgname=rstudio
 _pkgname=rstudio-rstudio
-pkgver=0.98.507
-_pkgver=ee098fe
-pkgrel=3
+pkgver=0.98.1103
+_pkgver=1c6c7bd
+pkgrel=1
 pkgdesc="A new integrated development environment (IDE) for R - The Desktop Client"
 arch=('x86_64')
 url="http://www.rstudio.org/"
@@ -13,19 +11,23 @@ depends=('boost-libs' 'java-environment' 'qtwebkit' 'r')
 makedepends=('apache-ant' 'boost' 'bzip2' 'cmake' 'git' 'icu' 'openssl' 'pam' 'unzip' 'wget' 'libcups')
 provides=('rstudio-desktop')
 categories=('programming')
-source=("https://github.com/$pkgname/$pkgname/tarball/v$pkgver")
-md5sums=('6e223c600dcc02855c37ec0cda0c97f5')
+source=("https://github.com/$pkgname/$pkgname/tarball/v$pkgver"
+	"http://www.rstudio.com/wp-content/uploads/2014/06/RStudio-Ball.png")
+sha512sums=('a57fc273b22f5aae7972d2357a23e6f1a81735d91740abcbef49538ea404cf429d737ea09a1fc8f5043487410aef455d9898cae450a7deef71937ce59cd1062d'
+	    'c045e7efa05c57fa04d2a3cfce4222d3b34309822b0be8ebb89b11fb800cfe711f41c01c567e1075a570d0f569cfb82b62fc9080a9fa312e8b596c499e4c5663')
 
 build() {
   cd $srcdir/$_pkgname-$_pkgver/dependencies/common
   sh install-gwt
   sh install-dictionaries
   sh install-mathjax
+  sh install-pandoc
+  sh install-packages
 
   # Configure and build.
   cd $srcdir/$_pkgname-$_pkgver
 
-  mkdir build 
+  mkdir -p build 
   cd build
   unset LDFLAGS
   cmake \
@@ -40,4 +42,11 @@ package() {
   make DESTDIR=$pkgdir install
   
   install -Dm644 ../COPYING "$pkgdir/usr/share/licenses/${pkgname}/COPYING"
+  echo "#! /bin/sh
+  exec /usr/lib/rstudio/bin/rstudio" > $srcdir/rstudio.sh
+  install -D $srcdir/rstudio.sh $pkgdir/usr/bin/rstudio
+  sed -i s!/usr/lib/rstudio/bin/rstudio!rstudio! \
+  $pkgdir/usr/share/applications/rstudio.desktop
+  install -D ../../RStudio-Ball.png $pkgdir/usr/share/pixmaps/rstudio.png
+  
 }
