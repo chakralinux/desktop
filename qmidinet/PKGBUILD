@@ -1,8 +1,5 @@
-# Moved from CCR
-# Contributor: ulritx <eneko.sarasola@gmail.com>
-
 pkgname=qmidinet
-pkgver=0.1.2
+pkgver=0.2.1
 pkgrel=1
 pkgdesc="A MIDI network gateway application that sends and receives MIDI data (ALSA Sequencer) over the network, using UDP/IP multicast"
 arch=('x86_64')
@@ -11,8 +8,10 @@ license=('GPL')
 depends=('qt' 'jack' 'hicolor-icon-theme')
 categories=('multimedia')
 install="$pkgname.install"
-source=("http://downloads.sourceforge.net/project/$pkgname/$pkgname/$pkgver/$pkgname-$pkgver.tar.gz")
-md5sums=('3536df97cb5f786c075c90cd8cfc5848')
+source=("http://downloads.sourceforge.net/project/$pkgname/$pkgname/$pkgver/$pkgname-$pkgver.tar.gz"
+	"qmidinet.png")
+sha512sums=('87d51c1a44c266fc4a0349eff5ff0f42014a8ed7c592135bef956ce7eb995195a06478243f39bece4487edff7c664fd1f92f89d3c3577a18ead837edc82bc449'
+	    'd7bfdcd042308306b1d6cf7171dabf68b6280b948d8836858a04da25cd906e4ac86d2aad5a93f3a324a430ac8b9c1ed4b0f2b34ad1c7a93be27033f697d78efa')
 
 build() {
   cd "$srcdir/$pkgname-$pkgver"
@@ -25,4 +24,5 @@ package() {
   cd "$srcdir/$pkgname-$pkgver"
 
   make DESTDIR="$pkgdir/" install
+  install -D ../qmidinet.png ${pkgdir}/usr/share/pixmaps/${pkgname}.png
 }
