@@ -1,35 +1,32 @@
-# Maintainer: Neophytos Kolokotronis <tetris4 AT gmail DOT com>
-# maintainer (abveritas[at]chakra-project[dot]org>
-
 pkgbase=avidemux
 pkgname=('avidemux-cli' 'avidemux')
-pkgver=2.6.7
+pkgver=2.6.9
 pkgrel=1
 pkgdesc='Simple video editor for cutting, filtering and encoding tasks.'
 arch=('x86_64')
 license=('GPL')
 url="http://fixounet.free.fr/avidemux/"
 screenshot="http://upload.wikimedia.org/wikipedia/commons/7/77/Avidemux_Screenshot_Qt.png"
-makedepends=('cmake' 'libxslt' 'qt' 'jack' 'libvorbis' 'sdl' 'libxv' 'alsa-lib' 'lame' 'xvidcore'
+makedepends=('cmake' 'libxslt' 'qt5-base' 'qt5-tools' 'qt5-script' 'jack' 'libvorbis' 'sdl' 'libxv' 'alsa-lib' 'lame' 'xvidcore'
              'faad2' 'faac' 'x264' 'libsamplerate' 'opencore-amr' 'yasm' 'mesa' 'libvpx'
              'pulseaudio' 'libva' 'desktop-file-utils')
 categories=('multimedia')
 options=("!makeflags")
 source=("http://downloads.sourceforge.net/avidemux/avidemux_${pkgver}.tar.gz")
-sha256sums=('d28202273d23be85c748c12d6e4df5e013bb861ea52b9bac7e0f90ba3d23249f')
+sha256sums=('c073bdb966bc0ab0dc3bbc7b5119fb81509b9d6cd90b916183a99ec6627e5006')
          
 build() {
   cd "${srcdir}/${pkgbase}_${pkgver}"
  # build
   bash ./bootStrap.bash --with-core \
                         --with-cli \
-                        --with-qt4 \
+                        --enable-qt5 \
                         --without-gtk \
                         --with-plugins
 
   # Create qm files
   cd po
-  lrelease *.po
+  lrelease-qt5 *.po
 }
 
 package_avidemux-cli() {
@@ -57,15 +54,13 @@ package_avidemux-cli() {
 
 package_avidemux() {
   pkgdesc="A graphical tool to edit video (filter/re-encode/split)"
-  depends=('avidemux-cli' 'qt' 'mesa')
+  depends=('avidemux-cli' 'qt5-base' 'mesa')
 
   cd "${srcdir}/${pkgbase}_${pkgver}"
   
-  (cd buildQt4; make DESTDIR="${pkgdir}" install)
-  (cd buildPluginsQt4; make DESTDIR="${pkgdir}" install)
+  (cd buildQt5; make DESTDIR="${pkgdir}" install)
+  (cd buildPluginsQt5; make DESTDIR="${pkgdir}" install)
 
   install -D -m644 avidemux2.desktop "${pkgdir}/usr/share/applications/avidemux-qt.desktop"
-  sed -i 's|2_gtk|3_qt4|' "${pkgdir}/usr/share/applications/avidemux-qt.desktop"
-
+  sed -i 's|2_gtk|3_qt5|' "${pkgdir}/usr/share/applications/avidemux-qt.desktop"
 }
- 
