@@ -4,20 +4,24 @@
 
 pkgname=mpd
 pkgver=0.19.9
-pkgrel=2
+pkgrel=3
 pkgdesc='Flexible, powerful, server-side application for playing music'
 url='http://www.musicpd.org/'
 license=('GPL')
 arch=('x86_64')
-depends=('audiofile' 'avahi' 'curl' 'faad2' 'ffmpeg' 'jack' 'libao' 'libid3tag' 'libmad' 'libmms' 'libmodplug'
-         'libpulse' 'libshout' 'sqlite3' 'wavpack' 'libmpdclient' 'yajl' 'opus' 'libbluray' 'libgme' 'icu' 'libupnp' 'libnfs' 'x264')
+depends=('audiofile' 'avahi' 'curl' 'faad2' 'ffmpeg' 'jack' 'libao' 'libid3tag'
+         'libmad' 'libmms' 'libmodplug' 'libpulse' 'libshout' 'sqlite3' 'wavpack'
+         'libmpdclient' 'yajl' 'opus' 'libbluray' 'libgme' 'icu' 'libupnp' 'libnfs'
+         'x264')
 makedepends=('boost' 'doxygen')
 source=("http://www.musicpd.org/download/mpd/stable/${pkgname}-${pkgver}.tar.xz"
+        'tmpfiles.d'
         'mpd.conf')
 backup=('etc/mpd.conf')
 install=install
 sha1sums=('6683bee5f132eda318c5a61ec14b2df8d9164d60'
-          'f4d5922abb69abb739542d8e93f4dfd748acdad7')
+          'f4d5922abb69abb739542d8e93f4dfd748acdad7'
+          '291fd5cda9f0845834a553017327c4586bd853f6')
 
 build() {
     cd "${srcdir}/${pkgname}-${pkgver}"
@@ -25,13 +29,13 @@ build() {
     ./configure \
         --prefix=/usr \
         --sysconfdir=/etc \
+        --enable-libmpdclient \
         --enable-jack \
         --enable-soundcloud \
+        --enable-pipe-output \
         --enable-pulse \
-	--enable-libmpdclient \
-	--enable-pipe-output \
         --disable-sidplay \
-        --with-systemdsystemunitdir=/usr/lib/systemd/system 
+        --with-systemdsystemunitdir=/usr/lib/systemd/system
     make
 }
 
@@ -40,9 +44,10 @@ package() {
     make DESTDIR="${pkgdir}" install
 
     install -d -g 45 -o 45 "${pkgdir}"/var/lib/mpd/playlists
-    install -Dm644 doc/mpdconf.example "${pkgdir}"/etc/mpd.conf
-    install -Dm644 ../mpd.conf "${pkgdir}"/usr/lib/tmpfiles.d/mpd.conf
+    install -Dm644 ../mpd.conf "${pkgdir}"/etc/mpd.conf
+    install -Dm644 ../tmpfiles.d "${pkgdir}"/usr/lib/tmpfiles.d/mpd.conf
 
     install -Dm644 "${pkgdir}"/usr/lib/systemd/{system,user}/mpd.service
-    sed '/WantedBy=/c WantedBy=default.target' -i "${pkgdir}"/usr/lib/systemd/user/mpd.service
+    sed '/\[Service\]/a User=mpd' -i "${pkgdir}"/usr/lib/systemd/system/mpd.service
+    sed '/WantedBy=/c WantedBy=default.target' -i "${pkgdir}"/usr/lib/systemd/{system,user}/mpd.service
 }
