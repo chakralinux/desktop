@@ -1,7 +1,5 @@
-# Maintainer: Viech <viech unvanquished net>
-
 pkgname=unvanquished-data
-pkgver=0.38.0
+pkgver=0.39.0
 pkgrel=1
 
 _gitver="archlinux/${pkgver}-${pkgrel}"
@@ -10,12 +8,15 @@ pkgdesc='Game assets for Unvanquished.'
 arch=('any')
 url='http://www.unvanquished.net'
 license=('GPL3')
-
-makedepends=('aria2>=1.18.7-2')
+makedepends=('aria2')
 source=("https://github.com/Unvanquished/Unvanquished/raw/${_gitver}/download-pk3-torrent.sh")
+md5sums=('bb2d205411ab0b05e755abe06e8d38b3')
 
 build() {
 	cd "${srcdir}"
+	
+	#aria2/GnuTLS bug workaround
+	sed -i 's,https,http,' download-pk3-torrent.sh
 
 	chmod +x download-pk3-torrent.sh
 }
@@ -48,5 +49,3 @@ package() {
 	# download new or modified assets
 	./download-pk3-torrent.sh "${pkgdir}/usr/share/unvanquished/pkg/" "${srcdir}/cache" "${pkgver}"
 }
-
-md5sums=('bb2d205411ab0b05e755abe06e8d38b3')
