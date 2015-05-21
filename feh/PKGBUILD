@@ -1,20 +1,17 @@
-# Maintainer: UtG <utg.chakra.linux[AT]gmail[dot]com>
-
 pkgname=feh
-pkgver=2.12
-pkgrel=2
+pkgver=2.13
+pkgrel=1
 pkgdesc='Fast and light imlib2-based image viewer'
 arch=('x86_64')
 url="http://feh.finalrewind.org/"
 license=('custom:MIT')
-depends=('giblib' 'curl' 'libxinerama' 'libexif')
+depends=('imlib2' 'curl' 'libxinerama' 'libexif')
 optdepends=('perl: feh-cam, webcam wrapper for feh'
             'imagemagick: support more file formats')
 makedepends=('libxt')
 categories=('graphics')
-source=("${url}${pkgname}-${pkgver}.tar.bz2"{,.asc})
-sha1sums=('30eb2b778858b1f4ce97e44c8225758185b0c588'
-          'SKIP')
+source=("${url}${pkgname}-${pkgver}.tar.bz2")
+sha512sums=('9806f3efa82de27c4559fd46763521dd9080d8548df97e68d11ed4d46c5000c6b4ec2c9e6441e58c2d462a8ecbd8eb4911a20d00e51e3ebc3092b71cdf4ed6a7')
 
 build() {
 	cd "${srcdir}/${pkgname}-${pkgver}"
@@ -24,5 +21,8 @@ build() {
 package() {
 	cd "${srcdir}/${pkgname}-${pkgver}"
 	make PREFIX=/usr DESTDIR="${pkgdir}" install
+	
+	# .desktop isn't needed since feh is a terminal app
+	rm ${pkgdir}/usr/share/applications/${pkgname}.desktop
 	install -Dm644 COPYING "${pkgdir}/usr/share/licenses/${pkgname}/LICENSE"
 }
