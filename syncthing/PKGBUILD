@@ -1,8 +1,8 @@
-# Contributions from ArchLinux: https://www.archlinux.org/packages/community/x86_64/syncthing/
+# Contributions from Arch Linux: https://www.archlinux.org/packages/community/x86_64/syncthing/
 
 pkgname=syncthing
-pkgver=0.11.3
-pkgrel=2
+pkgver=0.11.5
+pkgrel=1
 pkgdesc="Open Source Continuous Replication / Cluster Synchronization Thing"
 url="http://syncthing.net/"
 license=('MPLv2')
@@ -14,7 +14,7 @@ source=("$pkgname-$pkgver::https://github.com/syncthing/syncthing/releases/downl
         "syncthing.1"
         "syncthing.desktop"
         "https://upload.wikimedia.org/wikipedia/commons/8/83/SyncthingAugustLogo.png")
-sha512sums=('3f8a6ab4579928d966d1101065ee42885ba5523043cc4d07157dd21cada7838ed67227e91c5f2db884c343472caaa112071a14471a6246c8c6a6de52547ca20e'
+sha512sums=('b0450ff96be486bcbee0af965476b00b8c97947aa4b51ecc349a2a618467aebc944383e136ff17658093b74d219ef8b1af4ac4b3a09b20e5f935316df868ae99'
           'dafadb0c87b1f5b20c337cc0171f254586cc195304ad9b471392247537be06a98cac29575649109a176aa66ea8cee2809a051557352b86a117151e868d8392b3'
           '121613768221627bb1d2e1ea8621f5ac5d2bc82a990c9f81bdc834d1348f122dbd5396b4ef3c6a7845ea492187d377dbed096683b942c64ef6c6218c28188868'
           '3f93800b022a0e1d1d2b462cf1dfbc1f38a4e91ebba2b8b9a95b764617bf3303fdac91c2ceb1df3b5431523a556f3e482cf491e57e76983766aab381f96e3368')
@@ -33,6 +33,12 @@ build() {
     go run build.go -no-upgrade build
 }
 
+check() {
+  export GOPATH="${srcdir}"
+  cd "${srcdir}/src/github.com/syncthing/${pkgname}"
+  #go run build.go -no-upgrade test
+}
+
 package() {
     cd "${srcdir}/src/github.com/syncthing/${pkgname}"
     install -D -m 755 ${pkgname} "${pkgdir}/usr/bin/${pkgname}"
@@ -40,6 +46,9 @@ package() {
     install -D -m 644 "etc/linux-systemd/system/${pkgname}@.service" "${pkgdir}/usr/lib/systemd/system/${pkgname}@.service"
     install -D -m 644 "etc/linux-systemd/user/${pkgname}.service" "${pkgdir}/usr/lib/systemd/user/${pkgname}.service"
     install -D -m 644 "${srcdir}/${pkgname}.1" "${pkgdir}/usr/share/man/man1/${pkgname}.1"
+    
+    # license
+    install -Dm644 LICENSE "${pkgdir}"/usr/share/licenses/${pkgname}/LICENSE
     
     # Desktop icon
     install -Dm644 "${srcdir}/${pkgname}.desktop" "$pkgdir/usr/share/applications/${pkgname}.desktop"
