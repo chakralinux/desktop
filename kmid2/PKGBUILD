@@ -1,21 +1,18 @@
-# Maintainer: Jeff Huang <s8321414[at]gmail[dot]com>
-# Contributer: Phil Miller <philm[at]chakraos[dot]org>
-# Contributer: Manuel Tortosa <manutortosa[at]chakraos[dot]org>
-
 pkgname=kmid2
 pkgver=2.4.0
-pkgrel=2
+pkgrel=3
 pkgdesc="MIDI/Karaoke player for KDE4"
 url="http://userbase.kde.org/KMid2"
 license="GPL"
-arch=('i686' 'x86_64')
-depends=('kdelibs' 'alsa-lib' 'drumstick' 'phonon')
-makedepends=('cmake' 'automoc4')
+arch=('x86_64')
+# drumstick 0.5 bundled
+depends=('kdelibs' 'alsa-lib' 'phonon')
+makedepends=('cmake' 'automoc4' 'docbook-xsl')
 optdepends=('fluidsynth' 'timidity++')
 conflicts=('kmid-svn')
 categories=('multimedia')
 source=(http://downloads.sourceforge.net/${pkgname}/${pkgver}/kmid-${pkgver}.tar.bz2)
-md5sums=('3abf39fdb31862d4d695613e8835bf00')
+sha512sums=('1a25ddae7133c492a6141795b3f87c49ed7c2621c97c163addc4c6328185710e65e526af7d87e0623e67eb48e3feace11da1047f7475dff8768406c219fb3ad0')
 
 package() {
 	  cd ${srcdir}/kmid-$pkgver
