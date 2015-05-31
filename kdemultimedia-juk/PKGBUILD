@@ -11,7 +11,7 @@ url='http://kde.org/applications/multimedia/juk/'
 arch=('x86_64')
 license=('GPL' 'LGPL' 'FDL')
 depends=("kde-runtime" 'taglib')
-makedepends=('cmake' 'automoc4')
+makedepends=('cmake' 'automoc4' 'kdoctools')
 groups=("kde" "kdemultimedia" "kde-uninstall")
 provides=('juk')
 options=('docs' 'debug')
@@ -24,8 +24,7 @@ build() {
         -DCMAKE_BUILD_TYPE=${_build_type} \
         -DCMAKE_INSTALL_PREFIX=${_installprefix} \
         -DCMAKE_SKIP_RPATH=ON \
-        -DWITH_TunePimp=OFF \
-        -DCMAKE_{SHARED,MODULE,EXE}_LINKER_FLAGS='-Wl,--no-undefined -Wl,--as-needed'
+        -DWITH_TunePimp=OFF
     make
 }
 
