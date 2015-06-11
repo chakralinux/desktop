@@ -1,19 +1,18 @@
-# Maintainer: Weng Xuetian <wengxt@gmail.com>
-
 pkgname=fcitx-anthy
-pkgver=0.2.1
+pkgver=0.2.2
 pkgrel=1
 pkgdesc="Japanese Input support (Anthy) for fcitx."
-arch=('i686' 'x86_64')
+arch=('x86_64')
 url="https://github.com/fcitx/fcitx-anthy"
 license=('GPL')
 depends=('fcitx>=4.2.8' 'anthy')
 makedepends=('cmake')
 source=(http://download.fcitx-im.org/${pkgname}/${pkgname}-${pkgver}.tar.xz)
+sha512sums=('a4b1eeba813481cc40617e70bd5ee97d1921dc92bab15cf0bdc059d689c239e46caf9e8aba3403ff6374acfbdea565261a948444fe40fa18d5513797eccbd28d')
 
 build(){
     cd "$srcdir/${pkgname}-${pkgver}"
-    [[ -d build ]] && rm -rf build ; mkdir build
+    mkdir -p build
     cd build
     
     cmake -DCMAKE_INSTALL_PREFIX=/usr -DCMAKE_BUILD_TYPE=Release ..
@@ -25,4 +24,3 @@ package () {
     make DESTDIR=${pkgdir} install
 }
 
-md5sums=('23ce628c01c5c09f9d4f1402c50fb19b')
