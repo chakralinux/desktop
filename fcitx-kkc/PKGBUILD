@@ -1,19 +1,18 @@
-# Maintainer: csslayer <wengxt AT gmail com>
-
 pkgname=fcitx-kkc
-pkgver=0.1.1
+pkgver=0.1.2
 pkgrel=1
 pkgdesc="Fcitx Wrapper for libkkc."
-arch=('i686' 'x86_64')
+arch=('x86_64')
 url="http://code.google.com/p/fcitx"
 license=('GPL')
 depends=('fcitx>=4.2.8' 'libkkc' 'libkkc-data' 'skk-jisyo' 'qt')
 makedepends=('cmake')
 source=(http://download.fcitx-im.org/${pkgname}/${pkgname}-${pkgver}.tar.xz)
+sha512sums=('fee5bc30cd9db1f333bb8dd58658f70894e188472767e0dd08b86ee4f711395ec423b29dc5c530613af6b8c4926f2e5253e61941e69ec0eecd2db135c50e9ff5')
 
 build(){
     cd "$srcdir/${pkgname}-${pkgver}"
-    [[ -d build ]] && rm -rf build ; mkdir build
+    mkdir -p build
     cd build
     
     cmake -DCMAKE_INSTALL_PREFIX=/usr -DCMAKE_BUILD_TYPE=Release ..
@@ -26,4 +25,3 @@ package ()
     make DESTDIR=${pkgdir} install
 }
 
-md5sums=('3aaf697492df94bd8cf1056b92a0454c')
