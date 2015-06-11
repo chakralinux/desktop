@@ -1,12 +1,12 @@
 pkgbase=fcitx
 pkgname=('fcitx' 'fcitx-pinyin' 'fcitx-table')
-pkgver=4.2.8.6
+pkgver=4.2.9
 pkgrel=1
 arch=('x86_64')
 license=('GPL')
 url="https://fcitx-im.org/wiki/Fcitx"
 #giturl="https://github.com/fcitx/"
-makedepends=('cmake' 'qt' 'icu' 'wget' 'opencc' 'lua' 'iso-codes' 'enchant' 'libxkbfile' 'cairo' 'pango')
+makedepends=('cmake' 'extra-cmake-modules' 'qt' 'icu' 'wget' 'opencc' 'lua' 'iso-codes' 'enchant' 'libxkbfile' 'libxkbcommon' 'cairo' 'pango' 'mesa' 'python2')
 source=("http://download.fcitx-im.org/${pkgname}/${pkgname}-${pkgver}.tar.xz")
 categories=('localization')
 
@@ -67,4 +67,4 @@ package_fcitx-table() {
     make DESTDIR=$pkgdir install
     popd
 }
-md5sums=('fa52c746343d9a11b37fede3e385b079')
+sha512sums=('f5eea414d57a701546675b19e6fac9b96e96b60cc063b2d66692866ae5969a9b3fada0c8a6da79e019aca939fd28051ccd12406fc43c3f76e6dcced3952374fe')
