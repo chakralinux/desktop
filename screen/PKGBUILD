@@ -1,10 +1,5 @@
-# Maintainer: Manuel 'UtG' <utg[dot]chakra.linux[at]gmail[dot]com>
-
-# include global config
-source ../_buildscripts/${current_repo}-${_arch}-cfg.conf
-
 pkgname=screen
-pkgver=4.2.1
+pkgver=4.3.0
 pkgrel=1
 _ptygroup=5 #the UID of our PTY/TTY group
 pkgdesc="Full-screen window manager that multiplexes a physical terminal"
@@ -17,14 +12,12 @@ options=('!makeflags')
 groups=('system')
 install=screen.install
 source=("http://ftp.gnu.org/gnu/screen/screen-${pkgver}.tar.gz"{,.sig}
-	      screen.pam)
-md5sums=('419a0594e2b25039239af8b90eda7d92'
+	screen.pam)
+md5sums=('f76d28eadc4caaf6cdff00685ae6ad46'
          'SKIP'
          '74f7919d7b65436cc2ea5341fa8ca374')
 
 build() {
-  #export LDFLAGS="${LDFLAGS} -Wl,--as-needed"
-
   cd "${srcdir}/${pkgname}-${pkgver}"
   
   ./configure \
@@ -52,6 +45,4 @@ package() {
   install -Dm644 etc/completer.zsh ${pkgdir}/usr/share/zsh/site-functions/screen
   install -Dm644 etc/etcscreenrc ${pkgdir}/etc/screenrc
   install -Dm644 etc/screenrc ${pkgdir}/etc/skel/.screenrc
-
-  #gzip -9 ${pkgdir}/usr/share/info/*
 }
