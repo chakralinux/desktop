@@ -1,6 +1,6 @@
 pkgname=icedtea-web
 pkgver=1.6
-pkgrel=1
+pkgrel=2
 arch=('x86_64')
 pkgdesc="Provides a Free Software web browser plugin running applets written in the Java programming language and an implementation of Java Web Start, originally based on the NetX project."
 url="http://icedtea.classpath.org/wiki/IcedTea-Web"
@@ -41,13 +41,6 @@ build() {
   make
 }
 
-check() {
-  cd "${srcdir}"/icedtea-web*
-  # as more tests have been added some are expected to fail
-  # see http://mail.openjdk.java.net/pipermail/distro-pkg-dev/2012-March/017566.html
-  make -k check || return 0
-}
-
 package() {
   cd "${srcdir}"/icedtea-web*
 
@@ -58,8 +51,6 @@ package() {
   install -m755 -d "${pkgdir}/usr/share"/{applications,pixmaps}
   install -m644 javaws.png "${pkgdir}/usr/share/pixmaps"
   install -m644 {javaws,itweb-settings}.desktop "${pkgdir}/usr/share/applications"
-  # remove splitted doc files
-  rm -rf "${pkgdir}/usr/share/doc"
 
   # link binaries into /usr/bin + jre/bin
   install -m755 -d "${pkgdir}/usr/bin"
@@ -76,8 +67,4 @@ package() {
   ln -sf "${_jvmdir}/lib/IcedTeaPlugin.so" "${pkgdir}/usr/lib/mozilla/plugins/"
   
   make DESTDIR="${pkgdir}" install-data-local
-  # remove javaws about and man page
-  rm -rf "${pkgdir}"/usr/lib
-  rm -rf "${pkgdir}"/usr/share/man
-  rm -rf "${pkgdir}"/usr/share/icedtea-web # conflicting and unneeded file it seems
 }
