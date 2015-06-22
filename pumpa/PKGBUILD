@@ -1,35 +1,32 @@
 # Contributor: speps <speps dot aur dot archlinux dot org>
 
 pkgname=pumpa
-pkgver=0.9
+pkgver=0.9.1
 pkgrel=1
 pkgdesc="A simple pump.io client written in C++ and Qt"
 arch=('x86_64')
-url="http://gitorious.org/pumpa"
+url="https://pumpa.branchable.com/"
 license=('GPL3')
-depends=('qt' 'qjson' 'tidyhtml' 'aspell')
+depends=('qt5-base' 'qjson' 'tidyhtml' 'aspell')
 install="$pkgname.install"
-source=("${url}/pumpa/archive/v$pkgver.tar.gz")
-sha512sums=('034e88ec6b75c02a781fe985ed19f6475e4bf2be73d9d18d3a808392abbed82507d6925bcbc6ad138aba61b93161735bf59dd1afa6a665879cc85e3f831038b8')
+source=("$pkgname-$pkgver::http://download.opensuse.org/source/factory/repo/oss/suse/src/pumpa-${pkgver}-1.1.src.rpm")
+sha512sums=('66df75ed31812d907a38bc7b47c28bf57c37266977747ac6d69b53286e41556df7d8cde43f4219997ce00b39176b944e0eb9723fde49abc7313196f758d2b783')
 
 prepare() {
-  cd "$srcdir/$pkgname-$pkgname"
-
-  # desktop file paths fix
-  sed -e '/Exec/s/\./\/usr\/bin/' \
-      -e '/Icon/s/\.\/pumpa\/images/\/usr\/share\/pixmpas/' \
-      -i $pkgname.desktop
+  cd $srcdir
+  
+  tar -Jxf $pkgname-$pkgver.tar.xz
 }
 
 build() {
-  cd "$srcdir/$pkgname-$pkgname"
-  qmake
+  cd "$srcdir/$pkgname-$pkgver"
+  qmake-qt5
   make
 }
 
 package() {
-  cd "$srcdir/$pkgname-$pkgname"
-
+  cd "$srcdir/$pkgname-$pkgver"
+  
   # bin
   install -Dm755 $pkgname \
     "$pkgdir/usr/bin/$pkgname"
@@ -39,7 +36,7 @@ package() {
     "$pkgdir/usr/share/applications/$pkgname.desktop"
 
   # icon
-  install -Dm644 images/$pkgname.png \
+  install -Dm644 icons/512x512/$pkgname.png \
     "$pkgdir/usr/share/pixmaps/$pkgname.png"
     
   # man

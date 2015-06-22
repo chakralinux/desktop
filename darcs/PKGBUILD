@@ -1,39 +1,40 @@
-#
-# Apps Packages for Chakra, part of chakra-project.org
-#
-# Maintainer: Adrián Chaves Frenández (Gallaecio) <adriyetichaves gmail.com>
-
+# Contributor fro Arch https://aur.archlinux.org/packages/darcs/
 
 pkgname=darcs
-pkgver=2.8.4
+pkgver=2.10.0
 pkgrel=1
 pkgdesc="Decentralized replacement for CVS with roots in quantum mechanics."
 arch=('x86_64')
 url="http://darcs.net"
 license=('GPL')
-depends=('curl' 'gmp' 'ncurses>=5.6-7')
-makedepends=('ghc' 'haskell-tar' 'haskell-text' 'haskell-hashed-storage<0.6' 'haskell-haskeline' 'haskell-html' 'haskell-parsec<3.2' 'haskell-regex-compat' 'haskell-random' 'haskell-vector')
+depends=('curl' 'libffi')
+makedepends=('ghc' 'cabal-install')
 source=("http://darcs.net/releases/$pkgname-$pkgver.tar.gz")
-md5sums=('7456b7957add1b04c49de1b72c137a77')
+sha512sums=('216fb69aeed03c56cc7773eb92b8de3ec60be0526826a15a05230b7a66f9804e492be230c82c6475faa46e49ffed1531a9b03ea0d9c60e8de802cb9cdd421dcb')
 
 build() {
-  cd $srcdir/$pkgname-$pkgver
-  runhaskell Setup.lhs configure \
-    --ghc \
-    --prefix=/usr \
-    --disable-library-for-ghci \
-    --libsubdir=\$compiler/site-local/\$pkgid
+   cd ${srcdir}/${pkgname}-${pkgver}
 
-  runhaskell Setup.lhs build
+   # I've seen this cause a problem in the past. If necessary, do a
+   # cabal update manually and comment it out here.
+   cabal update
+
+   cabal sandbox init
+   cabal install --only-dependencies
+   cabal configure -O --prefix=/usr
+   cabal build
 }
 
 package() {
-  cd $srcdir/$pkgname-$pkgver
+   cd ${srcdir}/${pkgname}-${pkgver}
 
-  runhaskell Setup.lhs copy \
-    --destdir=$pkgdir
+   cabal copy --destdir=${pkgdir}
 
-  rm -r $pkgdir/usr/lib/
-  chmod 755 $pkgdir/usr/share/man/man1/$pkgname.1
+   # darcs is both a binary and a library. This packaging exists
+   # solely to give the user the darcs binary. Unfortunately the only
+   # way I found to prevent installation of these files was to blow
+   # away this dir just prior to packaging:
+   rm -r ${pkgdir}/usr/lib
+
+   chmod 755 ${pkgdir}/usr/share/man/man1/${pkgname}.1
 }
-

@@ -1,18 +1,18 @@
 pkgname=smtube
-pkgver=15.5.10
+pkgver=15.5.17
 pkgrel=1
 pkgdesc="Search and download videos from YouTube"
 arch=('x86_64')
 url="http://smplayer.sourceforge.net"
 license=('GPL')
-depends=('qt' 'qtwebkit')
+depends=('qt' 'qtwebkit' 'desktop-file-utils' 'hicolor-icon-theme')
 optdepends=('mplayer: play videos with MPlayer'
             'smplayer: play videos with SMPlayer'
             'kdemultimedia-dragonplayer: play videos with Dragon Player'
             'vlc: play videos with VLC')
 install="$pkgname.install"
-source=("http://downloads.sourceforge.net/smplayer/${pkgname}-${pkgver}.tar.bz2")
-md5sums=('ac05ed80bf724463512246832e57f253')
+source=("http://downloads.sourceforge.net/smtube/${pkgname}-${pkgver}.tar.bz2")
+md5sums=('577ebdf5fbcd3d17959294e688c124b4')
 
 build() {
   cd "$srcdir/$pkgname-$pkgver"
@@ -21,6 +21,5 @@ build() {
 
 package() {
   cd "$srcdir/$pkgname-$pkgver"
-  #make DESTDIR="$pkgdir" install
   make PREFIX=/usr DESTDIR="$pkgdir/" install
 }

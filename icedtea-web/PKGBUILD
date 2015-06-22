@@ -1,44 +1,44 @@
-# Maintainer: UtG  <utg[dot]chakra.linux[at]gmail[dot]com>
-
 pkgname=icedtea-web
-pkgdesc="Provides a Free Software web browser plugin running applets written in the Java programming language and an implementation of Java Web Start, originally based on the NetX project."
-pkgver=1.5.2
-pkgrel=1
+pkgver=1.6
+pkgrel=2
 arch=('x86_64')
+pkgdesc="Provides a Free Software web browser plugin running applets written in the Java programming language and an implementation of Java Web Start, originally based on the NetX project."
 url="http://icedtea.classpath.org/wiki/IcedTea-Web"
 license=('GPL2')
 
 _javaver=8
 _jvmdir="/usr/lib/jvm/java-${_javaver}-openjdk"
 
-makedepends=("java-environment=${_javaver}" 'zip' 'qt' 'npapi-sdk' 'rhino' 'junit' 'cups' 'autoconf')
 depends=("java-environment=${_javaver}" 'qt' 'desktop-file-utils')
+makedepends=("java-environment=${_javaver}" 'zip' 'qt' 'npapi-sdk' 'rhino' 'junit' 'cups' 'autoconf')
 categories=('network')
+provides=('icedtea-web' 'icedtea-web-doc')
 install="${pkgname}.install"
-
 source=("http://icedtea.classpath.org/download/source/${pkgname}-${pkgver}.tar.gz")
-noextract="${pkgname}-$pkgver.tar.gz" # due to broken path names in the tarball that fails with LANG=C in our chroot
-md5sums=('f8656d18345a7d1e2eb20e076abcc3ca')
+# due to broken path names in the tarball that fails with LANG=C in our chroot
+noextract="${pkgname}-$pkgver.tar.gz"
+sha512sums=('fa2250e2583914f4d84fd9c6f8e765fd50ffbbbd8566863ce227223e37d9f1e769e9a92342f880d5cf151c9b25147aa988e2822221b833903cc959c837f345fa')
 
 build() {
   cd "${srcdir}"
-  LANG=en_US.UTF8 bsdtar -x -f "${srcdir}/${pkgname}-$pkgver.tar.gz"
+  
+  # if you encounter this error "bsdtar: Failed to set default locale"
+  # you will need to set locale of your chroot   https://wiki.archlinux.org/index.php/Locale
+  # do this (inside your chroot):
+  # sudo nano /etc/locale.gen
+  # then uncomment a locale (like en_US.UTF-8 for example)
+  # save and type
+  # sudo locale-gen
+  
+  LANG=en_US.UTF-8 bsdtar -x -f "${srcdir}/${pkgname}-$pkgver.tar.gz"
 
   cd "${srcdir}"/icedtea-web*
 
   ./configure --prefix="${_jvmdir}" \
               --with-jdk-home="${_jvmdir}" \
-              --datarootdir=/usr/share \
-              --disable-docs
+              --datarootdir=/usr/share 
 
   make
-}
-
-check() {
-  cd "${srcdir}"/icedtea-web*
-  # as more tests have been added some are expectged to fail
-  # see http://mail.openjdk.java.net/pipermail/distro-pkg-dev/2012-March/017566.html
-  make -k check || return 0
 }
 
 package() {
@@ -51,8 +51,6 @@ package() {
   install -m755 -d "${pkgdir}/usr/share"/{applications,pixmaps}
   install -m644 javaws.png "${pkgdir}/usr/share/pixmaps"
   install -m644 {javaws,itweb-settings}.desktop "${pkgdir}/usr/share/applications"
-  # remove splitted doc files
-  rm -rf "${pkgdir}/usr/share/doc"
 
   # link binaries into /usr/bin + jre/bin
   install -m755 -d "${pkgdir}/usr/bin"
@@ -67,4 +65,6 @@ package() {
   # link the mozilla-plugin - test it here http://www.java.com/en/download/help/testvm.xml
   install -m755 -d "${pkgdir}/usr/lib/mozilla/plugins/"
   ln -sf "${_jvmdir}/lib/IcedTeaPlugin.so" "${pkgdir}/usr/lib/mozilla/plugins/"
+  
+  make DESTDIR="${pkgdir}" install-data-local
 }

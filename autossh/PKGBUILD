@@ -1,21 +1,16 @@
-#
-# Apps Packages for Chakra, part of chakra-project.org
-#
-# maintainer abveritas@chakra-project.org
-
 pkgname=autossh
 pkgver=1.4.1
-_pkgver=1.4c
-pkgrel=1
+_pkgver=1.4e
+pkgrel=2
 pkgdesc="Automatically restart SSH sessions and tunnels"
-arch=('i686' 'x86_64')
+arch=('x86_64')
 url="http://www.harding.motd.ca/autossh/"
 license=('custom')
 depends=('openssh')
 source=("http://www.harding.motd.ca/autossh/$pkgname-$_pkgver.tgz"
 	"LICENSE")
-md5sums=('26520eea934f296be0783dabe7fcfd28'
-         '5d65ce1eff3f2c72546a8343b18d67bf')
+sha512sums=('2f71403ee005103c6a3e2e669f6b26153161c95c8dacd3e73d61673461b3512348636877760d911341771e744c0a682b107df4ac48621661ff36a9fc0191f2fb'
+            '59b757619d264840c5057ae71b783660a765b4ba30b1d0d2c98a70c7184ce9c489db243809f50b8e56d7e7939713148770cdb4db5604c1210c7c545937077e34')
 
 build() {
   cd $srcdir/$pkgname-$_pkgver
@@ -25,7 +20,10 @@ build() {
 
   msg "Building"
   make
+}
 
+package() {
+  cd $srcdir/$pkgname-$_pkgver
   msg "Creating package"
   install -D -m755 autossh $pkgdir/usr/bin/autossh
   install -D -m644 CHANGES $pkgdir/usr/share/doc/autossh/CHANGES

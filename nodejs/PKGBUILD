@@ -1,20 +1,20 @@
 pkgname=nodejs
-pkgver=0.12.2
-_npmver=2.9.0
+pkgver=0.12.4
+_npmver=2.11.0
 pkgrel=1
 pkgdesc='Evented I/O for V8 javascript'
 arch=('x86_64')
 url='http://nodejs.org/'
 license=('MIT')
 depends=('openssl' 'zlib')
-provides=('nodejs-node-gyp')
+provides=('nodejs-node-gyp' 'npm')
 makedepends=('python2' 'git' 'procps-ng')
 optdepends=('python2: for node-gyp')
 checkdepends=('curl')
 options=('!emptydirs')
 source=("http://nodejs.org/dist/v$pkgver/node-v$pkgver.tar.gz"
         git+https://github.com/npm/npm.git#tag=v$_npmver)
-sha256sums=('ac7e78ade93e633e7ed628532bb8e650caba0c9c33af33581957f3382e2a772d'
+sha256sums=('3298d0997613a04ac64343e8316da134d04588132554ae402eb344e3369ec912'
             'SKIP')
 
 prepare() {

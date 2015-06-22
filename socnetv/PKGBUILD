@@ -1,19 +1,16 @@
-# maintainer (x86_64): Giuseppe Calà <jiveaxe@gmail.com>
-
 pkgname=socnetv
-pkgver=1.5
+pkgver=1.8
 pkgrel=1
 pkgdesc="Social Networks Analysis and Visualisation"
 arch=('x86_64')
 url="http://socnetv.sourceforge.net/"
 license=('GPL3')
-depends=('qt5-base' 'qt5-webkit')
+depends=('qt5-base')
 source=(http://downloads.sourceforge.net/socnetv/SocNetV-$pkgver.tar.gz)
-md5sums=('15a7634ceca73bbb48c7ad6326595955')
+sha512sums=('1b7a534b8e4a701c53551be45f6d80fa72aa7e30a850c5229b60229bde267dfc4a4c1e9ebe4ca374ebaacc3218d0f1d525038ecb6b47532c4e5ce0e345b49fbc')
 
 build() {
   cd "${srcdir}/$pkgname-$pkgver"
-
 	qmake-qt5
 	make
 }
