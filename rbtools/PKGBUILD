@@ -1,9 +1,5 @@
-# Maintainer: Francesco Marinucci <franzmari[at]chakra-project[dot]it>
-# previous CCR-Maintainer: Simone Gaiarin <simgunz@gmail.com>
-
 pkgname=rbtools
-verprefix=0.6
-pkgver=${verprefix}.3
+pkgver=0.7.4
 pkgrel=1
 pkgdesc="Client tools for Review Board"
 arch=('x86_64')
@@ -11,16 +7,16 @@ url="http://www.reviewboard.org/"
 license=('custom:MIT')
 depends=('python2')
 makedepends=('python2-setuptools')
-source=("http://downloads.reviewboard.org/releases/RBTools/${verprefix}/RBTools-${pkgver}.tar.gz")
-sha1sums=('9518df550cd1e2eb515ea88c7917f60bcc1b7d32')
+source=("$pkgname-$pkgver::https://github.com/reviewboard/rbtools/archive/release-${pkgver}.tar.gz")
+sha512sums=('f8aac6aa642ea7a0433ec93d9cde33b538473448331bccc0d1f4e699f417537456e1d6c3e570fc0d01f6296a1032acd5049bff29d19fe48d1d508730b8b75717')
 
 build() {
-  cd "$srcdir/RBTools-$pkgver"
+  cd "$srcdir/$pkgname-release-$pkgver"
   python2 setup.py build
 }
 
 package() {
-  cd "$srcdir/RBTools-$pkgver"
+  cd "$srcdir/$pkgname-release-$pkgver"
   python2 setup.py install --root "${pkgdir}"
   install -d -m755 "${pkgdir}/usr/share/licenses/${pkgname}"
   install -m644 COPYING "${pkgdir}/usr/share/licenses/${pkgname}/LICENSE"
