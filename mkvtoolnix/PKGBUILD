@@ -1,36 +1,96 @@
-pkgname=mkvtoolnix
-pkgver=7.8.0
+pkgbase=mkvtoolnix
+pkgname=('mkvtoolnix-cli' 'mkvtoolnix-gui')
+pkgver=8.0.0
 pkgrel=1
 pkgdesc="Set of tools to create, edit and inspect Matroska files."
 arch=('x86_64')
 license=('GPL')
 url="http://www.bunkus.org/videotools/mkvtoolnix/index.html"
-depends=('flac' 'libmatroska' 'libogg' 'libvorbis' 'qt5-base' 'xdg-utils' 'libebml' 'zlib' 'boost-libs' 'expat')
 optdepends=('flac: for FLAC support (Free Lossless Audio Codec)'
             'lzo2: for additional compression capabilities'
             'bzip2: for additional compression capabilities'
             'file: for automatic content type detection'
             'curl: for online update checks')
-makedepends=('boost' 'ruby')
+makedepends=('flac' 'libmatroska' 'libogg' 'libvorbis' 'qt5-base' 'xdg-utils' 'libebml' 
+             'zlib' 'boost-libs' 'expat' 'boost' 'ruby')
 categories=('multimedia')
-install=${pkgname}.install
-source=("http://www.bunkus.org/videotools/$pkgname/sources/$pkgname-$pkgver.tar.xz")
-sha1sums=('e855680e5b673e1d39e2f4146ce809504c435f7b')
+source=("http://www.bunkus.org/videotools/${pkgbase}/sources/${pkgbase}-${pkgver}.tar.xz")
+sha1sums=('fdc4c320a9363a29e5faf364320ee9d75c62c384')
 
-build() {
-  cd "${srcdir}/${pkgname}-${pkgver}"
-  ./autogen.sh
-  ./configure \
-    --enable-qt \
-    --prefix=/usr \
-    --with-boost-libdir=/usr/lib
-  rake
+prepare() {
+  cd "${srcdir}/${pkgbase}-${pkgver}"
+
+  # Disable automagic curl dep used for online update checking
+  sed -i -e '/curl/d' configure.in
+  export CURL_CFLAGS="" CURL_LIBS=""
+
+  export CFLAGS="${CFLAGS} -DBOOST_FILESYSTEM_VERSION=3"
+  export CXXFLAGS="${CXXFLAGS} -DBOOST_FILESYSTEM_VERSION=3"
+
+  # Sets number of threads for a parallel build
+  export DRAKETHREADS=4
+
+  autoreconf -vfi
 }
 
-package() {
-  cd "${srcdir}/${pkgname}-${pkgver}"
-  rake DESTDIR="${pkgdir}" install
+package_mkvtoolnix-cli() {
+  pkgdesc="Set of tools to create, edit and inspect Matroska files - CLI version"
+  depends=('libmatroska' 'expat' 'flac' 'libvorbis' 'file' 'boost-libs' 'lzo')
+  provides=('mkvtoolnix')
+  conflicts=('mkvtoolnix')
+  replaces=('mkvtoolnix')
 
+  cd "${srcdir}/${pkgbase}-${pkgver}"
+  
+  ./configure --prefix=/usr \
+              --with-boost-libdir=/usr/lib \
+              --disable-gui
+  ./drake
+
+  mv src/mkvinfo{,-cli}
+
+  ./drake DESTDIR="${pkgdir}" install
   rm -rf "${pkgdir}"/usr/bin/mkvinfo
-  install -Dm755 src/mkvinfo "${pkgdir}"/usr/bin/mkvinfo
+  install -Dm755 src/mkvinfo-cli "${pkgdir}"/usr/bin/mkvinfo
+
+  rm -rf "${pkgdir}"/usr/bin/mmg
+  rm -rf "${pkgdir}"/usr/share/man/de/man1/mmg.1
+  rm -rf "${pkgdir}"/usr/share/man/ja/man1/mmg.1
+  rm -rf "${pkgdir}"/usr/share/man/man1/mmg.1
+  rm -rf "${pkgdir}"/usr/share/man/nl/man1/mmg.1
+  rm -rf "${pkgdir}"/usr/share/man/zh_CN/man1/mmg.1
+  rm -rf "${pkgdir}"/usr/share/man/uk/man1/mmg.1
+  rm -rf "${pkgdir}"/usr/share/applications
+  rm -rf "${pkgdir}"/usr/share/icons
+  rm -rf "${pkgdir}"/usr/share/mime
+}
+
+package_mkvtoolnix-gui() {
+  pkgdesc="Set of tools to create, edit and inspect Matroska files - Qt GUI"
+  depends=("mkvtoolnix-cli=${pkgver}" 'qt5-base' 'xdg-utils' 'desktop-file-utils')
+  install=mkvtoolnix.install
+
+  cd "${srcdir}/${pkgbase}-${pkgver}"
+  
+  ./configure --prefix=/usr \
+              --with-boost-libdir=/usr/lib
+  ./drake
+
+  ./drake DESTDIR="${pkgdir}" install
+  
+  rm -rf "${pkgdir}"/usr/bin/mkvextract
+  rm -rf "${pkgdir}"/usr/bin/mkvinfo
+  rm -rf "${pkgdir}"/usr/bin/mkvmerge
+  rm -rf "${pkgdir}"/usr/bin/mkvpropedit
+  rm -rf "${pkgdir}"/usr/share/doc
+  rm -rf "${pkgdir}"/usr/share/locale
+  rm -rf "${pkgdir}"/usr/share/man/de/man1/mkv*
+  rm -rf "${pkgdir}"/usr/share/man/ja/man1/mkv*
+  rm -rf "${pkgdir}"/usr/share/man/man1/mkv*
+  rm -rf "${pkgdir}"/usr/share/man/nl/man1/mkv*
+  rm -rf "${pkgdir}"/usr/share/man/zh_CN/man1/mkv*
+  rm -rf "${pkgdir}"/usr/share/man/uk/man1/mkv*
+  
+  install -Dm755 src/mkvinfo "${pkgdir}"/usr/bin/mkvinfo-gui
+  sed -ri 's/^(Exec=mkvinfo)/\1-gui/' "${pkgdir}"/usr/share/applications/mkvinfo.desktop
 }
