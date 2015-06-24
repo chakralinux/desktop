@@ -1,7 +1,5 @@
-# Maintainer: Michael Haesel <michael[dot]haesel[at]gmail[dot]com>
-
 pkgname=mumble
-pkgver=1.2.8
+pkgver=1.2.9
 pkgrel=1
 arch=('x86_64')
 pkgdesc="A voice chat application similar to TeamSpeak."
@@ -16,14 +14,15 @@ screenshot="http://mumble.sourceforge.net/static/Mumble%20--%201.2.3.png"
 source=("http://downloads.sourceforge.net/mumble/${pkgname}-${pkgver}.tar.gz"
         "speech-dispatcher.patch"
         "gcc49.patch::https://github.com/mumble-voip/mumble/commit/349436284b5f1baa61836c98ff0d518392140c5d.patch")
-sha256sums=('4c2fc3dff49687bc1d977905958e8a9c35e109723aeed42c9ea124104febe159'
-            'efa6108ce8c77b23b971504dbf916832b1ebd3ce52319292fd3da815cc05a54b'
-            '00c14a5e41142510828d583e1e9a25a6d6d2614f3c7a86c75056be4321a0f798')
+sha512sums=('dfd3cf620e2b65aafa55cb3d021e626d2c37683da6c31a1787a35b94254c446d1816ad4f05fa004dedeab6edd5c4696ce4ef8033f465b3d2c3cdfbfea97cf5d0'
+            '729894e58fe5d3020bfab8935769f14988f72c2397823dce2e8610b37ae96b8295e424befbda9148aa35e23bedf33b4c0bf64e74c199b6ea6addc90e61cb8bc2'
+            '17b4a2c506adddf58ed43b28cf97a256f891049bb87040e6eb9185e0174f1e827d1511e4554327b5337394356b787edf32a44e95624f9e004b35c0b1fecae0a4')
 
 prepare() {
   cd ${pkgname}-${pkgver}
 
-  patch -p1 -i "${srcdir}/gcc49.patch"
+# I guess it's not needed anymore, feel free to delete anyway
+#  patch -p1 -i "${srcdir}/gcc49.patch" 
   patch -p1 -i "${srcdir}/speech-dispatcher.patch"
 }
 
