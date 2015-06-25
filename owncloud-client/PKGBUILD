@@ -1,6 +1,6 @@
 _name=owncloudclient
 pkgname=owncloud-client
-pkgver=1.8.1
+pkgver=1.8.3
 pkgrel=1
 pkgdesc="ownCloud client based on mirall"
 arch=('x86_64')
@@ -13,8 +13,8 @@ groups=('network')
 conflicts=('csync-owncloud')
 backup=('etc/owncloud-client/sync-exclude.lst')
 install=${pkgname}.install
-source=("http://download.owncloud.com/desktop/stable/${_name}-${pkgver}.tar.xz")
-sha256sums=('8b9bb4fea2a4b80938a3477813839ac325ac1ed39a85a8f1e0cd3ebb0e430ea3')
+source=("https://download.owncloud.com/desktop/stable/$_name-$pkgver.tar.xz")
+md5sums=('f1d933a0f7e327a74688c3c356ac8a92')
 
 prepare() {
   cd ${_name}-${pkgver}/
@@ -31,7 +31,8 @@ build() {
         -DCMAKE_INSTALL_LIBDIR=lib \
         -DCMAKE_INSTALL_SYSCONFDIR=/etc/${pkgname} \
         -WITH_DOC=TRUE \
-        -DMEM_NULL_TESTS=On -DUNIT_TESTING=On \
+        -DMEM_NULL_TESTS=On \
+        -DUNIT_TESTING=On \
         -DCMAKE_BUILD_TYPE="Release" \
         ..
   make
