@@ -1,43 +1,32 @@
-#
-# Games Packages for Chakra, part of chakra-project.org
-#
-# Maintainer: Adrián Chaves Fernández (Gallaecio) <adriyetichaves@gmail.com>
-
 pkgname=redeclipse
-pkgver=1.4
-pkgrel=4
+pkgver=1.5.2
+pkgrel=1
 pkgdesc='A first-person shooter, built as a total conversion of Cube Engine 2'
-arch=(i686 x86_64)
+arch=('x86_64')
 url=http://redeclipse.net
-license=(CCPL-by-sa ZLIB)
-depends=(enet glu libgl mesa sdl sdl_image sdl_mixer zlib hicolor-icon-theme)
-makedepends=('mesa' 'gzip')
+license=("custom" "CC0" "CCPL:by" "CCPL:by-sa" "ZLIB" "MIT")
+depends=('enet' 'glu' 'libgl' 'sdl' 'sdl_image' 'sdl_mixer' 'zlib' 'hicolor-icon-theme')
+makedepends=('mesa' 'gzip' 'ed')
 categories=('games')
-source=(http://downloads.sourceforge.net/$pkgname/${pkgname}_${pkgver}_nix.tar.bz2)
-md5sums=('3d478f5cf4838adcf5cde8d3421f2ffe')
+source=("base-${pkgver}.tar.gz::https://github.com/red-eclipse/base/archive/v${pkgver}.tar.gz"
+        "data-${pkgver}.tar.gz::https://github.com/red-eclipse/data/archive/v${pkgver}.tar.gz")
+md5sums=('ebadab6ef5c828e2c728b283ba8f33af'
+         '8e73af20821353e4d450a7113690226a')
+
+prepare() {
+    cd "${srcdir}/base-${pkgver}"
+    rmdir data
+    mv "${srcdir}/data-${pkgver}" data
+}
 
 build() {
-  cd "$srcdir/$pkgname-$pkgver/src"
-
-  # Fix .desktop icon (fixed upstream after Red Eclipse 1.4).
-  sed 's/"@APPNAME@"/@APPNAME@/' -i install/nix/redeclipse.desktop.am
-
-  # System Enet.
-  sed \
-    -e "s#-Ienet/include#-I/usr/share/enet/include#" \
-    -e "s#-Lenet/.libs##" \
-    -e "s#client: libenet#client:#" \
-    -e "s#server: libenet#server:#" \
-    -i core.mk
-
-  # Compilation.
-  make
+    cd "${srcdir}/base-${pkgver}"
+    make -C src/ client server
 }
 
 package() {
-  cd "$srcdir/$pkgname-$pkgver"
-  make -C src/ DESTDIR="$pkgdir" prefix=/usr system-install
-
-  # License.
-  install -Dm644 doc/all-licenses.txt "$pkgdir/usr/share/licenses/$pkgname/license.txt"
+    cd "${srcdir}/base-${pkgver}"
+    make -C src/ DESTDIR="${pkgdir}" prefix=/usr system-install
+    install -Dm 0644 "${srcdir}/base-${pkgver}/doc/license.txt" "${pkgdir}/usr/share/licenses/${pkgname}/license.txt"
+    install -Dm 0644 "${srcdir}/base-${pkgver}/doc/all-licenses.txt" "${pkgdir}/usr/share/licenses/${pkgname}/all-licenses.txt"
 }
