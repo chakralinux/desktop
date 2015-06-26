@@ -1,21 +1,17 @@
-# maintainer (i686): Phil Miller <philm[at]chakra-project[dog]org>
-# maintainer (x86_64): Manuel Tortosa <manutortosa[at]chakra-project[dot]org>
-# contributor Fabien Valthier <hcoohb[at]gmail[dog]com>
-
 pkgname=mp3diags
-pkgver=1.2.01
-pkgrel=2
+pkgver=1.2.02
+pkgrel=1
 pkgdesc="GUI-based application that allows end-users to identify issues with their MP3 files, fix some of the issues and make other changes."
-url="http://mp3diags.sourceforge.net/"
+url="http://sourceforge.net/projects/mp3diags/"
 license=('GPL')
-arch=('i686' 'x86_64')
+arch=('x86_64')
 depends=('qt' 'boost-libs')
 makedepends=('boost')
 optdepends=('mp3gain: MP3 normalization support')
 categories=('multimedia')
 install=mp3diags.install
 source=("http://downloads.sourceforge.net/project/mp3diags/mp3diags-src/MP3Diags-${pkgver}.tar.gz")
-md5sums=('1156d59f70e15bde1f6a80146b541057')
+sha512sums=('51498646ad3c9a19aeb0bcbf8cd280de75a24eb252790cc71d1eba433b986bbc58d4198d8bdfc0339dd6845ddfd966dd482f991b976e2da8f49e9d4e4f0464d0')
 
 build() {
   cd ${srcdir}/MP3Diags-$pkgver
@@ -34,9 +30,10 @@ package() {
   install -D bin/MP3Diags ${pkgdir}/usr/bin/MP3Diags
   install -D desktop/MP3Diags.desktop ${pkgdir}/usr/share/applications/MP3Diags.desktop
   for i in "16" "22" "24" "32" "36" "40" "48"; do
-		mkdir -p "${pkgdir}/usr/share/icons/hicolor/${i}x${i}/apps"
+		install -d "${pkgdir}/usr/share/icons/hicolor/${i}x${i}/apps"
 		install -p -m644 "desktop/MP3Diags${i}.png" "${pkgdir}/usr/share/icons/hicolor/${i}x${i}/apps/MP3Diags.png"
   done
-  mkdir -p ${pkgdir}/usr/share/${pkgname}-${pkgver}/translations/
-  install -Dm644 ${srcdir}/MP3Diags-$pkgver/src/translations/*.qm ${pkgdir}/usr/share/${pkgname}-${pkgver}/translations/
+  install -D ${srcdir}/MP3Diags-$pkgver/src/images/logo.svg ${pkgdir}/usr/share/pixmaps/MP3Diags.svg
+  install -d ${pkgdir}/usr/share/${pkgname}/translations/
+  install -Dm644 ${srcdir}/MP3Diags-$pkgver/src/translations/*.qm ${pkgdir}/usr/share/${pkgname}/translations/
 }
