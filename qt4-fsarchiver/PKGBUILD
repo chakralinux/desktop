@@ -1,6 +1,6 @@
 pkgname=qt4-fsarchiver
-pkgver=0.6.19.13
-_pkgver=0.6.19-13
+pkgver=0.6.19.14
+_pkgver=0.6.19-14
 pkgrel=1
 pkgdesc='GUI for fsarchiver'
 arch=('x86_64')
@@ -10,9 +10,11 @@ depends=('fsarchiver' 'kde-runtime')
 makedepends=('qt')
 categories=('utils')
 screenshot=('http://media.cdn.ubuntu-de.org/wiki/attachments/02/04/verzeichnis.jpg')
-source=("http://sourceforge.net/projects/${pkgname}/files/source/${pkgname}-${_pkgver}.tar.gz")
+source=("http://sourceforge.net/projects/${pkgname}/files/source/${pkgname}-${_pkgver}.tar.gz"
+	"qt4-fsarchiver.png")
 install="${pkgname}.install"
-sha512sums=('07fec2c4f5ec7a877cfc0ce94b8f851d2bfae8dff6d1a97e1851bc52323f7d75d0aac4ba637944f2469f9eceec962633d667a6571eed7eff076e5db98c7e55ee')
+sha512sums=('9f791c0916afa8bc054b695cb60ce361ce4538a9423ea485d2c9eab92b04eff449cbd5423ab0f4874b98a56bb970f0e39f3bcff3c90a3000efb49b837bf0d95e'
+	    '713cf469ea2165b6038e581ec42d7bf6486e39cc9a64f6b1eae9b2e9d69fdc1a5987e34cd8717a23435ded4e5f33784202ffc01c30ed3153192dfab46dcbbb7b')
 
 build() {
 	cd "${srcdir}/${pkgname}"
@@ -27,7 +29,7 @@ package() {
   install -d ${pkgdir}/usr/share/pixmaps
   install -d ${pkgdir}/usr/share/qt/translations
   rm -R ${pkgdir}/usr/share/qt4
-  mv ${pkgdir}/usr/share/app-install/icons/harddrive.png ${pkgdir}/usr/share/pixmaps/${pkgname}.png
+  install -D ${srcdir}/${pkgname}.png ${pkgdir}/usr/share/pixmaps/${pkgname}.png
   rm -R ${pkgdir}/usr/share/app-install
   install -D -m644 ${srcdir}/${pkgname}/translations/*.qm ${pkgdir}/usr/share/qt/translations
 	
