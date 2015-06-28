@@ -1,7 +1,7 @@
 pkgbase=avidemux
 pkgname=('avidemux-cli' 'avidemux')
 pkgver=2.6.10
-pkgrel=1
+pkgrel=2
 pkgdesc='Simple video editor for cutting, filtering and encoding tasks.'
 arch=('x86_64')
 license=('GPL')
@@ -9,9 +9,7 @@ url="http://fixounet.free.fr/avidemux/"
 screenshot="http://upload.wikimedia.org/wikipedia/commons/7/77/Avidemux_Screenshot_Qt.png"
 makedepends=('cmake' 'libxslt' 'qt5-base' 'qt5-tools' 'qt5-script' 'qt' 'jack' 'libvorbis' 'sdl' 'libxv' 'alsa-lib' 'lame'
              'faad2' 'faac' 'x264' 'x265' 'libsamplerate' 'opencore-amr' 'yasm' 'mesa' 'libvpx' 'sqlite3' 'xvidcore'
-             'pulseaudio' 'libva' 'desktop-file-utils' 'libdca' 'fribidi' 'glu')
-# 'aften' 'dcaenc' 'twolame' will be added to makedepends
-# and avidemux will be rebuilt
+             'pulseaudio' 'libva' 'desktop-file-utils' 'libdca' 'fribidi' 'glu' 'aften' 'dcaenc' 'twolame')
 categories=('multimedia')
 options=("!makeflags")
 source=("http://downloads.sourceforge.net/avidemux/avidemux_${pkgver}.tar.gz")
@@ -35,8 +33,7 @@ package_avidemux-cli() {
   pkgdesc="A graphical tool to edit video (filter/re-encode/split)- command line version"
   depends=('faac' 'faad2' 'fontconfig' 'fribidi' 'jack' 'lame' 'libdca' 
   'pulseaudio' 'libva' 'libxv' 'libvpx' 'libxml2' 'opencore-amr'  'xvidcore'
-  'sdl' 'sqlite3' 'x264' 'x265')
-  # 'aften' 'dcaenc' 'twolame' same thing as makepends
+  'sdl' 'sqlite3' 'x264' 'x265' 'aften' 'dcaenc' 'twolame')
   optdepends=('avidemux: graphical interface')
 
   cd "${srcdir}/${pkgbase}_${pkgver}"
