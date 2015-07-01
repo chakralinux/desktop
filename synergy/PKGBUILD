@@ -1,48 +1,62 @@
-# Maintainer: Neophytos Kolokotronis <tetris4 AT gmail DOT com>
-# contributor: Ernesto Manriquez <alejandronova@gmail.com>
+# Arch contribution https://www.archlinux.org/packages/community/x86_64/synergy/
 
 pkgname=synergy
-pkgver=1.6.2
-pkgrel=2
+pkgver=1.7.3
+pkgrel=1
 pkgdesc="Share your mouse and keyboard between several computers"
 url="http://synergy-foss.org"
 arch=('x86_64')
 license=('GPL2')
-depends=('gcc-libs' 'libxtst' 'libxinerama' 'crypto++' 'libxkbcommon' 'avahi')
+depends=('gcc-libs' 'libxtst' 'libxinerama' 'crypto++' 'libxkbcommon' 'avahi' 'qt5-base')
 makedepends=('libxt' 'cmake' 'qt5-base' 'unzip' 'subversion')
-optdepends=('qt5-base: gui support')
 license=('GPL2')
-source=("synergy-${pkgver}.tar.gz::https://github.com/synergy/synergy/archive/${pkgver}.tar.gz"
+source=("synergy-${pkgver}.tar.gz::https://github.com/synergy/synergy/archive/v${pkgver}-stable.tar.gz"
         "synergys.socket"
         "synergys.service"
-        "unfuck-cryptopp-thanks-gentoo.patch")
-sha1sums=('e3cab850da2ac63c1d7649c5a9fa0c7c204ef9a4'
-          '7ec33221725fc496b807e0f435c5e87b590beb5d'
-          '79fe22835b88a3454048fe16b76edff1c9d68145'
-          '8e321e664ae4b7a763175524dd938a88d85c7909')
+        "fix-incompetence.patch"
+        "synergy.png")
+sha512sums=('334cad16b843f0a6c1337960d76b37724bdb2a5f9841cffab4dbcbe6393cb0c4323860b64a15cccba1158763ef8cbea820900a5c53d0abbb6a92cfbeff827287'
+          'f9c124533dfd0bbbb1b5036b7f4b06f7f86f69165e88b9146ff17798377119eb9f1a4666f3b2ee9840bc436558d715cdbfe2fdfd7624348fae64871f785a1a62'
+          'ed968fc898a74deb4b5048ba864a8bdc2fcac5eca154d489c5f859414689d3ff18b05240fd28376a202ccf8b6820f1680a22627b434556cfd523968600392c2d'
+          'c178e0cb3051c2981172d95a7212a5b3459daa18c29abb260f20c804572e2f86d7b10da7a47ae53cefe7e646a062921405de6befb2208a362a933e89e74bcf98'
+          'cd109f2701bbc8373816e1209e9e224dba0fae1d9444dc069c2bb0a19fe9d7e4d2238c1d1656572ac14026323d815d357cb9e5fe3b284dba36707320e8ed4d21')
 
+prepare() {
+  cd "${srcdir}/synergy-${pkgver}-stable"
+  patch -p1 < ../fix-incompetence.patch
+
+  cd ext
+  unzip gmock-1.6.0.zip -d gmock-1.6.0
+  unzip gtest-1.6.0.zip -d gtest-1.6.0
+}          
+          
 build() {
-  cd "${srcdir}/synergy-${pkgver}"
+  cd "${srcdir}/synergy-${pkgver}-stable"
 
-  # Unfuck the bundled cryptopp stuff. Thanks a lot, Gentoo!
-  # You and Fedora are our only friends in this crazy world.
-  patch -Np1 < "${srcdir}/unfuck-cryptopp-thanks-gentoo.patch"
-
-  cmake -DCMAKE_INSTALL_PREFIX=/usr -DCMAKE_CXX_FLAGS="${CXXFLAGS} -pthread" .
-  make -j1
+  cmake -DCMAKE_INSTALL_PREFIX=/usr .
+  make
 
   cd src/gui
   qmake-qt5
   make
 }
 
+check() {
+  cd "${srcdir}/synergy-${pkgver}-stable/bin"
+  ./unittests
+}
+
+
 package() {
-  cd "${srcdir}/synergy-${pkgver}"
+  cd "${srcdir}/synergy-${pkgver}-stable"
 
   # install binary
-  install -Dm755 bin/synergy "$pkgdir/usr/bin/synergy"
-  install -Dm755 bin/synergyc "$pkgdir/usr/bin/synergyc"
-  install -Dm755 bin/synergys "$pkgdir/usr/bin/synergys"
+  install -Dm755 bin/synergy "${pkgdir}/usr/bin/synergy"
+  install -Dm755 bin/synergyc "${pkgdir}/usr/bin/synergyc"
+  install -Dm755 bin/synergyd "${pkgdir}/usr/bin/synergyd"
+  install -Dm755 bin/synergys "${pkgdir}/usr/bin/synergys"
+  install -Dm755 bin/syntool "${pkgdir}/usr/bin/syntool"
+  install -Dm755 bin/usynergy "${pkgdir}/usr/bin/usynergy"
 
   # install config
   install -Dm644 "doc/${pkgname}.conf.example" "${pkgdir}/etc/${pkgname}.conf.example" 
@@ -58,6 +72,9 @@ package() {
   install -Dm644 "$srcdir/synergys.socket" "$pkgdir/usr/lib/systemd/system/synergys@.socket"
 
   # install desktop/icon stuff
-  install -Dm644 "res/synergy.ico" "$pkgdir/usr/share/icons/synergy.ico"
+  install -Dm644 "$srcdir/synergy.png" "$pkgdir/usr/share/pixmaps/synergy.png"
   install -Dm644 "res/synergy.desktop" "$pkgdir/usr/share/applications/synergy.desktop"
+  
+  sed -i s!/usr/share/icons/synergy.ico!synergy! \
+  $pkgdir/usr/share/applications/synergy.desktop
 }
