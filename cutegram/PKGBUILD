@@ -1,0 +1,31 @@
+pkgname=cutegram
+_pkgname=Cutegram
+pkgver=2.4.0
+pkgrel=1
+pkgdesc="A different telegram client from Aseman team"
+arch=('x86_64')
+url="http://aseman.co/en/products/cutegram/"
+license=('GPL')
+depends=('qt5-base' 'qt5-declarative' 'qt5-multimedia' 'qt5-quick1'
+'qt5-graphicaleffects' 'qt5-quickcontrols' 'qt5-webengine' 'qt5-imageformats'
+'gstreamer0.10-base-plugins' 'gstreamer0.10-good-plugins'
+'libqtelegram-ae>=1:4.1')
+conflicts=('cutegram-git')
+source=("https://github.com/Aseman-Land/Cutegram/archive/v$pkgver-stable.tar.gz")
+sha512sums=('0d21075df229f1a1cf17d3efd40a35b55bdbb915a2c065fa90c4573d1278c614901742cdfa2a1cb3f5b736543c9ba73e81e4f02f7bb10cd30bfbcaf48554043e')
+
+prepare() {
+  cd "${srcdir}/${_pkgname}-$pkgver-stable"
+  mkdir -p build 
+}
+
+build() {
+  cd "${srcdir}/${_pkgname}-$pkgver-stable/build"
+  qmake-qt5 -r .. PREFIX=/usr DEFINES+=WEBENGINE_ASEMAN_WEBGRABBER
+  make
+}
+
+package() {
+  cd "${srcdir}/${_pkgname}-$pkgver-stable/build"
+  make INSTALL_ROOT="${pkgdir}" install
+}
