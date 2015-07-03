@@ -1,6 +1,6 @@
 pkgname=nodejs
-pkgver=0.12.4
-_npmver=2.11.0
+pkgver=0.12.5
+_npmver=2.12.0
 pkgrel=1
 pkgdesc='Evented I/O for V8 javascript'
 arch=('x86_64')
@@ -14,16 +14,16 @@ checkdepends=('curl')
 options=('!emptydirs')
 source=("http://nodejs.org/dist/v$pkgver/node-v$pkgver.tar.gz"
         git+https://github.com/npm/npm.git#tag=v$_npmver)
-sha256sums=('3298d0997613a04ac64343e8316da134d04588132554ae402eb344e3369ec912'
+sha512sums=('9cb6b833ae5dcedfc4acd96f1e7adbd127a737be990093967eb8a6e730daa8a0d7eebe7c61f5717c808ffc4321eb7e8485928822a411922a517252a7edd2fcd8'
             'SKIP')
 
 prepare() {
   cd node-v$pkgver
 
   # We need newer version of npm to fix bugs
-  rm -r deps/npm
-  ln -s "$srcdir/npm" deps
-  rm -r "$srcdir/npm/.git"
+ # rm -r deps/npm
+ # ln -s "$srcdir/npm" deps
+ # rm -r "$srcdir/npm/.git"
 
   msg 'Fixing for python2 name'
   find -type f -exec sed \
