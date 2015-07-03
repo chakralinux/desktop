@@ -1,0 +1,24 @@
+# Arch contribution https://www.archlinux.org/packages/community/x86_64/libantlr3c/
+
+pkgname=libantlr3c
+pkgver=3.4
+pkgrel=1
+pkgdesc='C runtime for the ANTLR parsing library'
+url='http://www.antlr.org/'
+arch=('x86_64')
+license=('BSD')
+depends=('bash')
+source=(http://www.antlr3.org/download/C/${pkgname}-${pkgver}.tar.gz)
+sha512sums=('8edb243d745ff5bf3b15940f124d1255a9ca965cb656a73a558aed7fa07effcd7620f23dc692e5d5169a03200254836dd57af3ce444ba225281a5b721497e211')
+
+build() {
+  cd "${srcdir}/${pkgname}-${pkgver}"
+  ./configure --prefix=/usr --sysconfdir=/etc --enable-64bit
+  make
+}
+
+package() {
+  cd "${srcdir}/${pkgname}-${pkgver}"
+  make install DESTDIR="${pkgdir}"
+  install -Dm0644 COPYING $pkgdir/usr/share/licenses/$pkgname/COPYING
+}
