@@ -1,20 +1,15 @@
-#
-# Apps Packages for Chakra, part of chakra-project.org
-#
-# Maintainer: AlmAck <gluca86 [at] gmail [dot] com>
-
 pkgname=vmpk
-pkgver=0.5.1
+pkgver=0.6.0
 pkgrel=1
 pkgdesc="MIDI event generator and receiver"
 arch=('x86_64')
-url="http://vmpk.sourceforge.net/"
-depends=('qt' 'jack')
-makedepends=('cmake')
+url="http://sourceforge.net/projects/vmpk/"
+depends=('qt5-x11extras' 'drumstick')
+makedepends=('cmake' 'docbook-xsl' 'qt5-tools')
 license=('GPL3')
 install="$pkgname.install"
 source=("http://downloads.sourceforge.net/project/$pkgname/$pkgname/$pkgver/$pkgname-$pkgver.tar.bz2")
-md5sums=('07e376936c38c7c244374ff9ddca6a72')
+sha512sums=('bcd3f190867656c09bbd5d14b287fdd205afc3772495cc189b6208e1109bdbe0067912d806133bb611484eaab7a3b06823e70ae0e662be4fb70fd6f943ae2b8d')
 
 build() {
   cd "$srcdir/$pkgname-$pkgver"
@@ -26,4 +21,7 @@ build() {
 package() {
   cd "$srcdir/$pkgname-$pkgver"
   make DESTDIR="$pkgdir/" install
+
+  sed -i s!"Categories=AudioVideo;Audio;Midi;Education;Music;"!"Categories=AudioVideo;Music;"! \
+  ${pkgdir}/usr/share/applications/vmpk.desktop
 }
