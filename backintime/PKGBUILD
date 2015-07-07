@@ -1,6 +1,6 @@
 pkgname=backintime
-pkgver=1.1.4
-pkgrel=2
+pkgver=1.1.6
+pkgrel=1
 pkgdesc="A simple backup system for Linux inspired from 'flyback project' and 'TimeVault'."
 arch=('x86_64')
 url="https://launchpad.net/backintime"
@@ -11,8 +11,10 @@ categories=('utils' 'backup')
 provides=('backintime-kde')
 conflicts=('backintime-kde')
 replaces=('backintime-kde')
-source=("https://launchpadlibrarian.net/200955618/${pkgname}-${pkgver}.tar.gz")
-sha256sums=('434fc1fb6d9ac20d7b04c791e39bf9e077773c696e18f2bf1aa8f3e7fb59a770')
+source=("https://launchpad.net/backintime/1.1/${pkgver}/+download/backintime-${pkgver}.tar.gz"
+	"${pkgname}.png")
+sha512sums=('d040c4a325b0b2a25a76670c0b35c890a34be21d3d05f6d042f4484bb10056776c0d2e919a81b94074e4b7296d30f4885f5db6d39b1d0f18bf92bab5cbcddc1a'
+	    '596dc61d734877baa1fcf8af1afd910581dbe4670517a74229f850b284eb135e11b7bb09963521379c3513e736d183258fc142f246cd74a680c759f0bfa4a382')
 
 build() {
  
@@ -31,4 +33,11 @@ package(){
   
   cd "${srcdir}/${pkgname}-${pkgver}/qt4"
   make DESTDIR="${pkgdir}" install
+  
+  install -D ../../${pkgname}.png ${pkgdir}/usr/share/pixmaps/${pkgname}.png
+  
+  sed -i s!"Icon=document-save"!"Icon=backintime"! \
+  ${pkgdir}/usr/share/applications/${pkgname}-qt4-root.desktop
+  sed -i s!"Icon=document-save"!"Icon=backintime"! \
+  ${pkgdir}/usr/share/applications/${pkgname}-qt4.desktop
 }
