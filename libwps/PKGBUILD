@@ -1,23 +1,23 @@
 pkgname=libwps
-pkgver=0.3.1
+pkgver=0.4.0
 pkgrel=1
 pkgdesc="a Microsoft Works file word processor format import filter library"
-arch=('i686' 'x86_64')
+arch=('x86_64')
 url="http://libwps.sourceforge.net/"
 license=('LGPL')
 depends=('libwpd' 'librevenge')
 options=(!libtool)
 source=("http://downloads.sourceforge.net/project/libwps/$pkgname/$pkgname-$pkgver/$pkgname-$pkgver.tar.xz")
-md5sums=('d62253cd1c8b8d296902ec7726a1022b')
+md5sums=('7daace0a791104af382a277ff81e828a')
 
 build() {
-	cd "$srcdir/$pkgname-$pkgver"
+	cd $pkgname-$pkgver
 	./configure  --prefix=/usr
 	make
 }
 
 package() {
-	cd "$srcdir/$pkgname-$pkgver"
+	cd $pkgname-$pkgver
 	make DESTDIR="$pkgdir" install
 }
 
