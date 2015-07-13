@@ -1,46 +1,45 @@
-# Maintainer: Adrián Chaves Fernández (Gallaecio) <adriyetichaves[at]gmail[dot]com>
-
 pkgname=neverball
-pkgver=1.5.4
-pkgrel=2
+pkgver=1.6.0
+pkgrel=1
 pkgdesc="3D game similar to Super Monkey Ball or Marble Madness."
-arch=('i686' 'x86_64')
+arch=('x86_64')
 url="http://neverball.org/"
-license=('GPL2')
-depends=('sdl_ttf' 'libgl' 'libpng' 'libjpeg>=7' 'libvorbis' 'libx11' 'physfs')
+license=('GPL')
+depends=('sdl2_ttf' 'sdl2_net' 'libgl' 'libpng' 'libjpeg' 'libvorbis' 'physfs'
+         'hicolor-icon-theme' 'xdg-utils')
 makedepends=('mesa')
+install=neverball.install
 categories=('games')
 source=(http://neverball.org/$pkgname-$pkgver.tar.gz)
-md5sums=('c523b0f72c2035831310e821162f7bd7')
+sha1sums=('3faebf15fea9361358a416176b9689f966c456ea')
 
 build() {
-  cd "$srcdir/$pkgname-$pkgver"
-  sed -i 's|#define CONFIG_LOCALE "./locale"|#define CONFIG_LOCALE "/usr/share/locale"|' share/base_config.h || return 1
+  cd ${pkgname}-${pkgver}
+  make DATADIR=/usr/share/neverball \
+       LOCALEDIR=/usr/share/locale \
+       CPPFLAGS="$CPPFLAGS -DNDEBUG" \
+       CFLAGS="$CFLAGS" \
+       ENABLE_RADIANT_CONSOLE=1
+}
 
-  make LDFLAGS="-lX11 -lm" ENABLE_NLS=1 DATADIR=/usr/share/neverball || return 1
+package() {
+  cd ${pkgname}-${pkgver}
+  install -d "${pkgdir}/usr/bin"
+  install -d "${pkgdir}"/usr/share/{neverball,locale,applications,doc/neverball}
+  install -d "${pkgdir}"/usr/share/man/man{1,6}
 
-  install -D -m755 neverball "${pkgdir}/usr/bin/neverball" || return 1
-  install -D -m755 neverputt "${pkgdir}/usr/bin/neverputt" || return 1
-  install -D -m755 mapc "${pkgdir}/usr/bin/mapc" || return 1
+  install -m755 neverball neverputt mapc "${pkgdir}/usr/bin"
+  cp -r locale/* "${pkgdir}/usr/share/locale/"
+  cp -r data/* "${pkgdir}/usr/share/neverball/"
+  cp -r doc/* "${pkgdir}/usr/share/doc/neverball/"
+  install -m644 dist/*.desktop "${pkgdir}/usr/share/applications/"
+  install -m644 dist/mapc.1 "${pkgdir}/usr/share/man/man1"
+  install -m644 dist/{neverball.6,neverputt.6} "${pkgdir}/usr/share/man/man6"
 
-  install -d "${pkgdir}/usr/share/neverball"
-  cp -r data/* "${pkgdir}/usr/share/neverball/" || return 1
-  find "${pkgdir}/usr/share/neverball" -type f -exec chmod 0644 {} \;
+  for i in 16 24 32 48 64 128 256 512; do
+    install -D -m644 dist/neverball_$i.png "${pkgdir}/usr/share/icons/hicolor/${i}x$i/apps/neverball.png"
+    install -D -m644 dist/neverputt_$i.png "${pkgdir}/usr/share/icons/hicolor/${i}x$i/apps/neverputt.png"
+  done
 
-  install -d "${pkgdir}/usr/share/locale"
-  cp -r locale/* "${pkgdir}/usr/share/locale/" || return 1
-
-  install -d "${pkgdir}/usr/share/applications"
-  install -d "${pkgdir}/usr/share/pixmaps"
-  install -m644 dist/*.desktop "${pkgdir}/usr/share/applications/" || return 1
-  install -m644 dist/*.png "${pkgdir}/usr/share/pixmaps/" || return 1
-  ln -s neverball_48.png "${pkgdir}/usr/share/pixmaps/neverball.png" || return 1
-  ln -s neverputt_48.png "${pkgdir}/usr/share/pixmaps/neverputt.png" || return 1
-
-  install -d "${pkgdir}/usr/share/doc/neverball"
-  install -m644 doc/* "${pkgdir}/usr/share/doc/neverball/" || return 1
-
-  install -D -m644 dist/mapc.1 "${pkgdir}/usr/share/man/man1/mapc.1" || return 1
-  install -D -m644 dist/neverball.6 "${pkgdir}/usr/share/man/man6/neverball.6" || return 1
-  install -D -m644 dist/neverputt.6 "${pkgdir}/usr/share/man/man6/neverputt.6" || return 1
+  chmod -R u=rwX,go=rX "${pkgdir}/usr/share/neverball"
 }
