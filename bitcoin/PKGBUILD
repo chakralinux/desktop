@@ -2,11 +2,11 @@
 
 pkgbase=bitcoin
 pkgname=('bitcoin-daemon' 'bitcoin-cli' 'bitcoin-qt')
-pkgver=0.10.2
+pkgver=0.11.0
 pkgrel=1
 arch=('x86_64')
 url="http://www.bitcoin.org/"
-makedepends=('boost' 'automoc4' 'qrencode' 'miniupnpc' 'protobuf')
+makedepends=('boost' 'qrencode' 'miniupnpc' 'protobuf' 'qt5-tools')
 license=('MIT')
 source=(http://bitcoin.org/bin/bitcoin-core-$pkgver/bitcoin-$pkgver.tar.gz
 	https://raw.github.com/bitcoin/bitcoin/v$pkgver/contrib/debian/bitcoin-qt.desktop
@@ -14,22 +14,25 @@ source=(http://bitcoin.org/bin/bitcoin-core-$pkgver/bitcoin-$pkgver.tar.gz
 	https://raw.github.com/bitcoin/bitcoin/v$pkgver/contrib/debian/examples/bitcoin.conf
 	https://raw.github.com/bitcoin/bitcoin/v$pkgver/contrib/debian/manpages/bitcoind.1
 	https://raw.github.com/bitcoin/bitcoin/v$pkgver/contrib/debian/manpages/bitcoin.conf.5)
-sha512sums=('0cd0592f660343cadc07809afb41eb08a477f6a5cb158a632f7ca4f7a7f7a505e60ec9058d47165c826024b802f1ce85cbd53dc2a11bb1019c0ecceaec14519d'
+sha512sums=('5c6a1aa75dc4c8518b62dfa8f0b0a21850cc2e7b6a741cebcd9ec8c8eca32091aa172c6d9bcd1a4d22a9111d9486ce2f12e2ae0635e74cdb9d0cd9eadd7afa9c'
             '9ada8dacb1b47c80460f66799d81319d11af2c0ae670d81348561eb4a69d852fd463df98428dc3d60fb90d47eda401524fe33aad318d1a07044fb27385f9e306'
             '57613bb7caf28bb1aba0d76dd6e500ea29437f1f2442345183c57f988c0eecb51dfe8dc42ed964971569ea3a79d712740cf319176f111174e61688bc26e4d9c0'
-            '373c7d5ec6a99ad6464ac3119ff687dbecdf1a09c5d254a174eb1f6424658fa5573651e1d54670e7c36bba311283e76903ba9e43a766d802097470dea123d3a3'
-            'ab91011ebd4cde3d258f6147583a6361bdc5c98aab251fed3d6d126c65a3bfe4278db799aa03492f11e8ea85202773a09e6cb03941fe8a29fceeff2d62df77ad'
+            'b45741863c93eadfd4a38f207679c02b485642c376d5907f50441e69ee94139f12ac0b77696402021c6637a7c205a23cc389a16ab4d59db039cf69d0bee87587'
+            '0b798fba30e50a6ead4a12fa4c0a3bf93e40a738f76a4d71f8595f885e6d026fe1d2f03ea100315f2013bd0214bc2e6431c833d3b77fe3b04e99f4371660854c'
             'd9a0686e6931701a851b75ea700cfa68bdf8b09fd1faae365ab3803a1deb278bece7d7c88e6e4f8bd735774cc4d6e29ee18db7e3450faffa50f8fa5ac6b876e3')
 
 build() {
   cd "$srcdir/$pkgbase-$pkgver"
-  ./configure --prefix=/usr --with-incompatible-bdb --with-gui=qt4
+  ./configure --prefix=/usr \
+              --with-incompatible-bdb \
+              --enable-hardening \
+              --with-gui=qt5
   make
 }
 
 package_bitcoin-qt() {
   pkgdesc="Bitcoin is a peer-to-peer network based digital currency - Qt"
-  depends=('boost-libs' 'qt' 'miniupnpc' 'qrencode' 'protobuf')
+  depends=('boost-libs' 'qt5-base' 'miniupnpc' 'qrencode' 'protobuf')
   install=bitcoin-qt.install
   provides=('bitcoin')
   conflicts=('bitcoin')
