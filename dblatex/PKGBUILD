@@ -1,21 +1,21 @@
 pkgname=dblatex
-pkgver=0.3.5
+pkgver=0.3.6
 pkgrel=1
 pkgdesc="DocBook (XML and SGML) to DVI, PDF, PostScript converter using latex"
 arch=('x86_64')
-url="http://dblatex.sourceforge.net/"
+url="https://pypi.python.org/pypi/dblatex"
 license=(GPL)
 depends=('docbook-xml' 'docbook-xsl' 'latex-epic' 'libxslt' 'python2' 'texlive-core' 'texlive-htmlxml' 'texlive-latexextra')
 source=("http://downloads.sourceforge.net/project/$pkgname/$pkgname/$pkgname-$pkgver/$pkgname-$pkgver.tar.bz2"
 	dblatex-0.3.5-build-fix.patch)
 
-sha512sums=('ea667015c9a5452aea5ffbc62dabf0b136a19dd8ecc45cb91094ae0ac190f6dd2d7ecf94aaef4fc96d6ffea69f48d197b76da773a06ddff89550480153fa88b4'
+sha512sums=('2d0eeeea5c190ef5c765a46b8c5a02418d91d174da604c53024b43a989cc2eee5bd22d38671ab9c74538ce0fa3d1a2120ab6cf693645a382807dd06463352ada'
 	 '851292bf592a56520131a5675e481a425eac6752ff524f12ccaa903444663767a77b09661f7c1833b98574ba1e797da0903a96a980f4fab07047d1bae64cfdd6')
 
 package() {
   cd $srcdir/$pkgname-$pkgver
 
-  patch -Np0 -i ../dblatex-0.3.5-build-fix.patch
+ # patch -Np0 -i ../dblatex-0.3.5-build-fix.patch
   
   python2 setup.py install \
     --root $pkgdir \
