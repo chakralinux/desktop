@@ -1,21 +1,14 @@
-#
-# Apps Packages for Chakra, part of chakra-project.org
-#
-# Maintainer: Weng Xuetian <wengxt AT gmail com>
-
-# include global config
-source ../_buildscripts/${current_repo}-${_arch}-cfg.conf
-
 pkgname=fcitx-libpinyin
-pkgver=0.3.1
+pkgver=0.3.2
 pkgrel=1
 pkgdesc="Fcitx Wrapper for libpinyin."
-arch=('i686' 'x86_64')
-url="http://code.google.com/p/fcitx"
+arch=('x86_64')
+url="https://fcitx-im.org/wiki/Fcitx"
 license=('GPL')
-depends=('fcitx>=4.2.8' 'libpinyin>=0.9.92' 'qt')
+depends=('fcitx>=4.2.8' 'libpinyin>=0.9.92' 'qt' 'qtwebkit')
 makedepends=('cmake')
-source=(http://download.fcitx-im.org/${pkgname}/${pkgname}-${pkgver}.tar.xz)
+source=("http://download.fcitx-im.org/${pkgname}/${pkgname}-${pkgver}.tar.xz")
+sha512sums=('523927788735f15ad7c4d997f029e26b40f0ff761c8161566497fb5cf84ddc0c1ad3edaaa470baa762cc5445384f2d9f1af32c2eaabc28311b92e1dab28a7e53')
 
 build(){
     cd "$srcdir/${pkgname}-${pkgver}"
@@ -32,4 +25,3 @@ package ()
     cd "$srcdir/${pkgname}-${pkgver}/build"
     make DESTDIR=${pkgdir} install
 }
-md5sums=('201d63ea1abe63eb12a58b18abb30ed1')
