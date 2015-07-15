@@ -1,18 +1,16 @@
-# Maintainer: Neophytos Kolokotronis <tetris4@gmail.com>
-# Contributor: Eric Bélanger <eric@archlinux.org>
-
 pkgname=links
-pkgver=2.9
+pkgver=2.10
 pkgrel=1
 pkgdesc="A text WWW browser, similar to Lynx"
 arch=('x86_64')
 url="http://links.twibright.com/"
 license=('GPL')
-depends=('bzip2' 'libjpeg' 'libpng' 'libtiff' 'libx11' 'xz' 'zlib' 'openssl' 'gpm')
+depends=('bzip2' 'libjpeg' 'libpng' 'libtiff' 'libx11' 'librsvg' 'libevent' 'xz' 'zlib' 'openssl' 'gpm')
 screenshot='http://links.twibright.com/shots/shot5.jpg'
 source=(http://links.twibright.com/download/${pkgname}-${pkgver}.tar.bz2 links.desktop)
-sha1sums=('1202f1ade1075fa4f62e343702e5a0a22cdc2b13'
+sha1sums=('bffd48917a9d038f4277443bf6ea2cf8c9372c3c'
           'f600e27c2a71184444f7dd07a10230aa44463a02')
+
 prepare() {
   cd ${pkgname}-${pkgver}
   sed -i "/ac_cpp=/s/\$CPPFLAGS/\$CPPFLAGS -O2/" configure
@@ -25,7 +23,8 @@ build() {
               --mandir=/usr/share/man \
               --enable-javascript \
               --enable-graphics \
-              --with-x --with-fb
+              --with-x \
+              --with-fb
   make
   mv links xlinks
 
