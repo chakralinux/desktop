@@ -1,19 +1,19 @@
 pkgname=dblatex
 pkgver=0.3.6
-pkgrel=1
+pkgrel=2
 pkgdesc="DocBook (XML and SGML) to DVI, PDF, PostScript converter using latex"
 arch=('x86_64')
 url="https://pypi.python.org/pypi/dblatex"
 license=(GPL)
 depends=('docbook-xml' 'docbook-xsl' 'latex-epic' 'libxslt' 'python2' 'texlive-core' 'texlive-htmlxml' 'texlive-latexextra')
-source=("http://downloads.sourceforge.net/project/$pkgname/$pkgname/$pkgname-$pkgver/$pkgname-$pkgver.tar.bz2"
+source=("https://pypi.python.org/packages/source/d/dblatex/$pkgname-$pkgver.tar.bz2"
 	dblatex-0.3.5-build-fix.patch)
 
-sha512sums=('2d0eeeea5c190ef5c765a46b8c5a02418d91d174da604c53024b43a989cc2eee5bd22d38671ab9c74538ce0fa3d1a2120ab6cf693645a382807dd06463352ada'
-	 '851292bf592a56520131a5675e481a425eac6752ff524f12ccaa903444663767a77b09661f7c1833b98574ba1e797da0903a96a980f4fab07047d1bae64cfdd6')
+sha512sums=('a7b151e04fb60c01068afd199acff3710f4bae05451399f2ff2c367ccce503a759133803d97f3fb346e4766647c96635456ecd13fecfea4bbd591db3f2853723'
+            '851292bf592a56520131a5675e481a425eac6752ff524f12ccaa903444663767a77b09661f7c1833b98574ba1e797da0903a96a980f4fab07047d1bae64cfdd6')
 
 package() {
-  cd $srcdir/$pkgname-$pkgver
+  cd $pkgname-$pkgver
 
  # patch -Np0 -i ../dblatex-0.3.5-build-fix.patch
   
