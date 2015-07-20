@@ -1,14 +1,12 @@
 pkgname=dropbox
-pkgver=3.4.6
+pkgver=3.6.9
 pkgrel=1
 pkgdesc="A free service that lets you bring your photos, docs, and videos anywhere and share them easily."
 arch=('x86_64')
 url="http://www.dropbox.com"
 license=('custom')
 depends=('dbus-glib' 'libsm')
-optdepends=(
-    'dropbox-servicemenu: servicemenu for KDE4'
-)
+optdepends=('dropbox-servicemenu: servicemenu for KDE4')
 provides=('kfilebox')
 conflicts=('kfilebox')
 replaces=('kfilebox')
@@ -16,13 +14,13 @@ options=('!strip' '!upx')
 source=("https://dl-web.dropbox.com/u/17/${pkgname}-lnx.${arch}-${pkgver}.tar.gz"
         "dropbox.png"
         "dropbox.desktop"
-        "terms.txt"
+        "LICENSE"
         "dropbox@.service")
-md5sums=('0b77dcdaece4b17a8a16cce50c66869a'
-         '2be5a57e477adf82a7d9b7fe77f22086'
-         '20c97082211cf02af494043b93d5feb8'
-         'c5805dbc29e952f21c83230aa725d5b0'
-         '9ab7095c79d4ae550ab798afeee0683f')
+sha512sums=('a6f7d58c62c833b609cfcfed8043a4824223f31f4d4d3986bc6606132a0c3afc10305e7deae4b89e664a373f92392c50ae2abe02956e58b2b2fc5314c5794344'
+         'b1a2ca11479c9f243c0368d79b36ef87910311af2dd126a3291438083544ed10a640143a58e73be1d27bf016c114e668ea504ed6eed6955370bfcac309e5fb7d'
+         'b3e0701afe90693b99d5e23bad6b8637bc27611a42c695d12b3b990d98bf010371b266322cd54c60ffd654ed44f56a85b1fcb51b30db991af60043dc22bf1897'
+         'f688115daa8930dffd6e27a7113b137972c20918297c6178bb7e8f820add325d34d452f8bf6bb73fa6b2de73ffa028d27457ed2df390687af8841d9425ebab3e'
+         '34a9bc25e0ea5f1e24bea617fcce84a8e5d4b9889b3b0c97a62df1f3ee6f959e67aac46f258882cb8625fea0eac52f4d48904e377017a3c8ebd6a9026dd4c672')
 install="${pkgname}.install"
 
 package() {
@@ -40,7 +38,7 @@ package() {
  
 	install -D -m 644 "$srcdir/dropbox.desktop" "$pkgdir/usr/share/applications/dropbox.desktop"
 	install -D -m 644 "$srcdir/dropbox.png" "$pkgdir/usr/share/pixmaps/dropbox.png"
-	install -D -m 644 "$srcdir/terms.txt" "$pkgdir/usr/share/licenses/$pkgname/terms.txt"
+	install -D -m 644 "$srcdir/LICENSE" "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
 	install -Dm644 "$srcdir/dropbox@.service" "$pkgdir/usr/lib/systemd/system/dropbox@.service"
 
 	rm -f "$pkgdir"/opt/dropbox/library.zip
