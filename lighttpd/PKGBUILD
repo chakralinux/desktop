@@ -1,9 +1,6 @@
-# Contributor: Neophytos Kolokotronis <tetris4@gmail.com>
-# Maintainer: Bruce Liu <brli@users.sourceforge.net>
-
 pkgname=lighttpd
-pkgver=1.4.35
-pkgrel=2
+pkgver=1.4.36
+pkgrel=1
 pkgdesc='A secure, fast, compliant and very flexible web-server.'
 license=('custom')
 arch=('x86_64')
@@ -18,16 +15,16 @@ categories=('network')
 backup=('etc/lighttpd/lighttpd.conf' 'etc/logrotate.d/lighttpd')
 options=('!libtool' 'emptydirs')
 install=${pkgname}.install
-source=("http://download.lighttpd.net/lighttpd/releases-1.4.x/lighttpd-${pkgver}.tar.bz2"
+source=("http://download.lighttpd.net/lighttpd/releases-1.4.x/lighttpd-${pkgver}.tar.gz"
         'lighttpd.tmpfiles'
         'lighttpd.service'
         'lighttpd.logrotate.d' 
         'lighttpd.conf')
-sha256sums=('4a71c1f6d8af41ed894b507720c4c17184dc320590013881d5170ca7f15c5bf7'
-            'd8a185145a7c08b4fd8c8e6c12dae3e176389dd9b1c66e239757b2ba5108c871'
-            '708cefe97541edba73f572ed3836bd056462b1467e45e1912c9d960139929696'
-            'b7c1f4a6a886f0f8e0f0b3248cf004aab2dd67c740f7389d7e1eb08b3eaa0d39'
-            '48b531fbcc58a40ec26716c93f0b0d4a33bed1667d8ef77c17b36d807b5c39a3')
+sha512sums=('ecb88874dd81b5a469d94b8a1b03823b5b12cf49264d77f0d3b71cd4b537ffdd03595a3a471186c36cd9cfaebc5cff5c5f4037c2d8aeb83012ca224651f8a359'
+            '0079d6fd80ca42fa5384838b3df68d25000fb7a5a92ea9fb02f6a18cdfb85b23279c78b881e21270e7e450ee3ae28ea839932f3268b826b52478079e510ecd33'
+            'e9cb6f83e19366f8243a1ac1962d957f11801dbf20b2ebdaecd96d8422f794fd9061725dab648a6fd1bc7b74f59601340970f05ab4288e5c9ff92b065fbf1bf4'
+            '6ad0213cb50e9325b0cbf8a58365387868f9798c775ce3b68b032fc4046ea637eb31f1fde38af7bb5efc5aac6a6e3443a8a620fd1c55f3beeece35300dec0fbd'
+            '000f2ec18c52aa0d828355aec68ff85639e64161883c7567d23159d752b5f33054cca1a82177be58543fc880f165e797b2d262eea318053593b656c659addc6b')
 
 build() {
 	cd "${srcdir}/${pkgname}-${pkgver}"
