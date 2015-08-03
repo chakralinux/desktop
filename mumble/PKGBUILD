@@ -1,66 +1,51 @@
 pkgname=mumble
-pkgver=1.2.9
+pkgver=1.2.10
 pkgrel=1
 arch=('x86_64')
 pkgdesc="A voice chat application similar to TeamSpeak."
 license=('BSD')
 depends=('qt' 'speex' 'lsb-release' 'libxi' 'avahi' 'libsndfile' 'protobuf' 
-         'libpulse' 'opus' "speech-dispatcher")
+         'libpulse' 'xdg-utils' 'opus' 'speech-dispatcher')
 makedepends=('boost' 'mesa')
 categories=('communication')
 install=${pkgname}.install
-url="http://mumble.sourceforge.net/"
+url="http://www.mumble.com/"
 screenshot="http://mumble.sourceforge.net/static/Mumble%20--%201.2.3.png"
-source=("http://downloads.sourceforge.net/mumble/${pkgname}-${pkgver}.tar.gz"
-        "speech-dispatcher.patch"
-        "gcc49.patch::https://github.com/mumble-voip/mumble/commit/349436284b5f1baa61836c98ff0d518392140c5d.patch")
-sha512sums=('dfd3cf620e2b65aafa55cb3d021e626d2c37683da6c31a1787a35b94254c446d1816ad4f05fa004dedeab6edd5c4696ce4ef8033f465b3d2c3cdfbfea97cf5d0'
-            '729894e58fe5d3020bfab8935769f14988f72c2397823dce2e8610b37ae96b8295e424befbda9148aa35e23bedf33b4c0bf64e74c199b6ea6addc90e61cb8bc2'
-            '17b4a2c506adddf58ed43b28cf97a256f891049bb87040e6eb9185e0174f1e827d1511e4554327b5337394356b787edf32a44e95624f9e004b35c0b1fecae0a4')
-
-prepare() {
-  cd ${pkgname}-${pkgver}
-
-# I guess it's not needed anymore, feel free to delete anyway
-#  patch -p1 -i "${srcdir}/gcc49.patch" 
-  patch -p1 -i "${srcdir}/speech-dispatcher.patch"
-}
+source=("https://github.com/mumble-voip/mumble/releases/download/${pkgver}/mumble-${pkgver}.tar.gz")
+sha512sums=('d4ff0572fd744cbf3473b25353b2ab8b2fc2d68921179c02f3047460d63c9e388d6d9e04fc4fb4b27eeaa63baf74d8bf3dc098cf24285619aef1b29f636b972e')
 
 build() {
-  cd ${pkgname}-${pkgver}
+  cd $srcdir/$pkgname-$pkgver
 
   # Building mumble
   qmake main.pro \
-    CONFIG+="bundled-celt no-bundled-opus no-bundled-speex no-speechd no-g15 no-xevie no-server \
+    CONFIG+="bundled-celt no-bundled-opus no-bundled-speex no-g15 no-xevie no-server \
     no-embed-qt-translations no-update packaged" \
-    DEFINES+="PLUGIN_PATH=/usr/lib/mumble"
+    DEFINES+="PLUGIN_PATH=/usr/lib/mumble" \
+    INCLUDEPATH+="/usr/include/speech-dispatcher"
   make release
 }
 
 package() {
-  cd ${pkgname}-${pkgver}
+  cd $srcdir/$pkgname-$pkgver
 
   # bin stuff
-  install -m755 -D release/mumble "${pkgdir}/usr/bin/mumble"
-  install -m755 -D scripts/mumble-overlay "${pkgdir}/usr/bin/mumble-overlay"
+  install -m755 -D ./release/mumble $pkgdir/usr/bin/mumble
+  install -m755 -D ./scripts/mumble-overlay $pkgdir/usr/bin/mumble-overlay
 
   # lib stuff
-  install -m755 -D release/libmumble.so.${pkgver} "${pkgdir}/usr/lib/mumble/libmumble.so.${pkgver}"
-  ln -s libmumble.so.${pkgver} "${pkgdir}/usr/lib/mumble/libmumble.so"
-  ln -s libmumble.so.${pkgver} "${pkgdir}/usr/lib/mumble/libmumble.so.1"
-  ln -s libmumble.so.${pkgver} "${pkgdir}/usr/lib/mumble/libmumble.so.1.2"
-
-  install -m755 -D release/plugins/liblink.so "${pkgdir}/usr/lib/mumble/liblink.so"
-  install -m755 -D release/plugins/libmanual.so "${pkgdir}/usr/lib/mumble/libmanual.so"
-  install -m755 -D release/libcelt* "${pkgdir}/usr/lib/mumble/"
+  install -m755 -D ./release/libmumble.so.$pkgver $pkgdir/usr/lib/mumble/libmumble.so.$pkgver
+  ln -s libmumble.so.$pkgver $pkgdir/usr/lib/mumble/libmumble.so
+  ln -s libmumble.so.$pkgver $pkgdir/usr/lib/mumble/libmumble.so.1
+  ln -s libmumble.so.$pkgver $pkgdir/usr/lib/mumble/libmumble.so.1.2
+  install -m755 -D ./release/plugins/liblink.so $pkgdir/usr/lib/mumble/liblink.so
+  install -m755 -D ./release/plugins/libmanual.so $pkgdir/usr/lib/mumble/libmanual.so
+  install -m755 -D ./release/libcelt* $pkgdir/usr/lib/mumble/
 
   # other stuff
-  install -m644 -D scripts/mumble.desktop "${pkgdir}/usr/share/applications/mumble.desktop"
-  install -m644 -D scripts/mumble.protocol "${pkgdir}/usr/share/kde4/services/mumble.protocol"
-  install -m755 -d "${pkgdir}/usr/share/man/man1"
-  install -m644 -D man/mum* "${pkgdir}/usr/share/man/man1/"
-  install -m644 -D icons/mumble.svg "${pkgdir}/usr/share/icons/hicolor/scalable/apps/mumble.svg"
-
-  # License.
-  install -m644 -D LICENSE "${pkgdir}/usr/share/licenses/${pkgname}/LICENSE"
+  install -m644 -D ./scripts/mumble.desktop $pkgdir/usr/share/applications/mumble.desktop
+  install -m755 -d $pkgdir/usr/share/man/man1
+  install -m644 -D ./man/mum* $pkgdir/usr/share/man/man1/
+  install -m644 -D ./icons/mumble.svg $pkgdir/usr/share/icons/hicolor/scalable/apps/mumble.svg
+  install -m644 -D ./LICENSE $pkgdir/usr/share/licenses/$pkgname/LICENSE
 }
