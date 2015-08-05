@@ -1,7 +1,7 @@
 pkgname=kodi
-pkgver=14.2
-_codename=Helix
-pkgrel=2
+pkgver=15.0
+_codename=Isengard
+pkgrel=1
 arch=('x86_64')
 url="http://kodi.tv"
 license=('GPL2')
@@ -41,7 +41,7 @@ provides=('xbmc')
 conflicts=('xbmc')
 replaces=('xbmc')
 source=("$pkgname-$pkgver-$_codename.tar.gz::https://github.com/xbmc/xbmc/archive/$pkgver-$_codename.tar.gz")
-sha256sums=('d9cb8590430a925fb789a5beb4da2695cdcd2d2500dd31126f3b77b31aa267f4')
+sha256sums=('27dba173cfe74b323f4dbaa72ae2bfe5961f76c27bddcd5210253be91cae0dff')
 
 prepare() {
   cd "$srcdir/xbmc-$pkgver-$_codename"
@@ -66,7 +66,6 @@ build() {
     --disable-debug \
     --enable-optimizations \
     --enable-libbluray \
-    --enable-texturepacker \
     --enable-external-libraries \
     --disable-gtest \
     --with-lirc-device=/run/lirc/lircd
