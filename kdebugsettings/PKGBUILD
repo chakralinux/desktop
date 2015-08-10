@@ -1,0 +1,32 @@
+# Include global configuration
+source ../kdeapps.conf
+
+pkgname=kdebugsettings
+pkgver=${_kdever}
+pkgrel=1
+pkgdesc='An application to enable/disable qCDebug'
+arch=('x86_64')
+url='http://projects.kde.org/kdebugsettings'
+license=(GPL)
+depends=(kconfigwidgets kio)
+makedepends=(extra-cmake-modules python3)
+groups=('kde' 'kde-uninstall' 'kde-applications' 'kdeutils')
+options=('docs' 'debug')
+source=("$_mirror/${pkgname}-$_kdever.tar.xz")
+sha256sums=(`grep ${pkgname}-$_kdever.tar.xz  ../checksums.txt | cut -d " " -f1`)
+
+prepare() {
+  mkdir -p build
+}
+
+build() {
+  cd build
+  cmake_kf5 ../${pkgname}-${pkgver}
+  make
+}
+
+package() {
+  cd build
+  make DESTDIR="${pkgdir}" install
+}
+

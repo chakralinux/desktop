@@ -1,0 +1,33 @@
+# Include global configuration
+source ../kdeapps.conf
+
+pkgname=kiriki
+pkgver=${_kdever}
+pkgrel=1
+pkgdesc="An addictive and fun dice game"
+url="http://kde.org/applications/games/kiriki/"
+arch=('x86_64')
+license=('GPL' 'LGPL' 'FDL')
+depends=('libkdegames' 'hicolor-icon-theme' 'knotifications')
+makedepends=('extra-cmake-modules' 'kdoctools')
+groups=('kde' 'kde-uninstall' 'kde-applications' 'kdegames')
+conflicts=('kdegames-kiriki')
+replaces=('kdegames-kiriki')
+options=('docs' 'debug')
+source=("$_mirror/${pkgname}-$_kdever.tar.xz")
+sha256sums=(`grep ${pkgname}-$_kdever.tar.xz  ../checksums.txt | cut -d " " -f1`)
+
+prepare() {
+  mkdir -p build
+}
+
+build() {
+  cd build
+  cmake_kf5 ../${pkgname}-${pkgver}
+  make
+}
+
+package() {
+  cd build
+  make DESTDIR=${pkgdir} install
+}

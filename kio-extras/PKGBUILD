@@ -1,26 +1,24 @@
 # Contributions from Arch: https://projects.archlinux.org/svntogit/packages.git/tree/trunk?h=packages/kio-extras
-source ../plasma.conf
+source ../kdeapps.conf
 
 pkgname=kio-extras
-pkgver=${PVersion}
+pkgver=${_kdever}
 pkgrel=1
 pkgdesc="Additional components to increase the functionality of KIO"
 arch=('x86_64')
 url='https://projects.kde.org/projects/kde/workspace/kio-extras'
 license=('LGPL')
-depends=('kdelibs4support' 'khtml' 'kdnssd' 'libssh' 'smbclient' 'exiv2' 'openexr' 'openslp'
-         'libmtp' 'kpty')
+depends=('kdelibs4support' 'khtml' 'kdnssd' 'libssh' 'smbclient'
+         'exiv2' 'openexr' 'openslp' 'libmtp' 'kpty')
 makedepends=('extra-cmake-modules' 'kdoctools' 'python3')
-groups=('plasma')
+groups=('kde' 'kde-applications' 'kdenetwork')
 options=("debug")
-source=("${PServer}/${pkgver}/${pkgname}-${PSubVersion}.tar.xz")
-sha256sums=( $(getSum ${pkgname}) )
 install=${pkgname}.install
+source=("$_mirror/${pkgname}-$_kdever.tar.xz")
+sha256sums=(`grep ${pkgname}-$_kdever.tar.xz  ../checksums.txt | cut -d " " -f1`)
 
 prepare() {
   mkdir -p build
-
-  cd ${pkgname}-${pkgver}
 }
 
 build() {
@@ -31,6 +29,6 @@ build() {
 }
 
 package() {
-  cd build
-  make DESTDIR="${pkgdir}" install
+    cd build
+    make DESTDIR=${pkgdir} install
 }

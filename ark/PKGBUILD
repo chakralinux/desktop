@@ -1,0 +1,38 @@
+# Include global configuration
+source ../kdeapps.conf
+
+pkgname=ark
+arch=('x86_64')
+pkgver=${_kdever}
+pkgrel=1
+pkgdesc="Archiver for various compression formats"
+url="http://www.kde.org"
+license=('GPL' 'LGPL' 'FDL')
+options=('docs' 'debug')
+depends=('karchive' 'kconfig' 'kpty' 'khtml' 'kdbusaddons' 'ki18n' 'kiconthemes'
+         'kio' 'kservice' 'kwidgetsaddons' 'libarchive' 'kde-baseapps')
+makedepends=('extra-cmake-modules' 'kdoctools' 'p7zip' 'zip' 'unzip' 'unrar')
+optdepends=('p7zip' 'zip' 'unzip' 'unrar')
+conflicts=("kdeutils-common" "kdeutils-doc")
+groups=('kde' 'kde-uninstall' 'kde-applications' 'kdeutils')
+conflicts=('kdeutils-ark')
+replaces=('kdeutils-ark')
+install=kdeutils.install
+
+source=("$_mirror/${pkgname}-$_kdever.tar.xz")
+sha256sums=(`grep ${pkgname}-$_kdever.tar.xz  ../checksums.txt | cut -d " " -f1`)
+
+prepare() {
+  mkdir -p build
+}
+
+build() {
+  cd build
+  cmake_kf5 ../${pkgname}-${pkgver}
+  make
+}
+
+package() {
+  cd build
+  make DESTDIR=${pkgdir} install
+}

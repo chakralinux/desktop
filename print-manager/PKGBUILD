@@ -1,28 +1,36 @@
-# Maintainer: Manuel Tortosa <manutortosa@chakra-project.org>
+# Contributions from Arch: https://www.archlinux.org/packages/extra/x86_64/kdeutils-print-manager/
+# Include global configuration
+source ../kdeapps.conf
 
 pkgname=print-manager
-pkgver=0.2.0
+pkgver=${_kdever}
 pkgrel=1
 pkgdesc="A KDE tool for managing print jobs and printers"
-arch=('x86_64')
 url="https://projects.kde.org/projects/playground/base/print-manager"
-license=('GPL')
-depends=('kde-workspace' 'libcups')
-makedepends=('cmake' 'automoc4')
-source=("http://download.kde.org/stable/${pkgname}/${pkgver}/src/${pkgname}-${pkgver}.tar.bz2")
-md5sums=('183c22e91021b0357c2a27146c931de0')
+arch=('x86_64')
+license=('GPL' 'LGPL' 'FDL')
+depends=('libcups' 'kcmutils' 'plasma-framework')
+makedepends=('extra-cmake-modules' 'python3' 'kdoctools' 'qt5-tools')
+optdepends=('system-config-printer: auto-detect the printer driver')
+install=${pkgname}.install
+groups=("kde" "kdeadmin" "kde-uninstall")
+replaces=('kdeadmin-print-manager')
+conflicts=('kdeadmin-print-manager')
+options=('docs' 'debug')
+source=("$_mirror/${pkgname}-$_kdever.tar.xz")
+sha256sums=(`grep ${pkgname}-$_kdever.tar.xz  ../checksums.txt | cut -d " " -f1`)
+
+prepare() {
+  mkdir -p build
+}
 
 build() {
-  mkdir build
   cd build
-  cmake ../${pkgname}-${pkgver} \
-    -DCMAKE_INSTALL_PREFIX=/usr \
-    -DCMAKE_BUILD_TYPE=Release \
-    -DCUPS_1_6=ON
+  cmake_kf5 ../${pkgname}-${pkgver}
   make
 }
 
 package() {
   cd build
-  make DESTDIR="${pkgdir}" install
+  make DESTDIR=${pkgdir} install
 }

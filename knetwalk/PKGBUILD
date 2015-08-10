@@ -1,0 +1,35 @@
+# Contributions from Arch: https://www.archlinux.org/packages/extra/x86_64/kdegames-knetwalk/
+# Include global configuration
+source ../kdeapps.conf
+
+pkgname=knetwalk
+pkgver=${_kdever}
+pkgrel=1
+pkgdesc="Connect all the terminals to the server, in as few turns as possible"
+arch=('x86_64')
+url='http://kde.org/applications/games/knetwalk/'
+screenshot='https://www.kde.org/images/screenshots/knetwalk.png'
+license=('GPL' 'LGPL' 'FDL')
+depends=('knotifyconfig' 'libkdegames')
+makedepends=('extra-cmake-modules' 'kdoctools' 'python3')
+groups=('kde' 'kde-uninstall' 'kde-applications' 'kdegames')
+replaces=('kdegames-knetwalk')
+conflicts=('kdegames-knetwalk')
+options=('docs' 'debug')
+source=("$_mirror/${pkgname}-$_kdever.tar.xz")
+sha256sums=(`grep ${pkgname}-$_kdever.tar.xz  ../checksums.txt | cut -d " " -f1`)
+
+prepare() {
+  mkdir -p build
+}
+
+build() {
+  cd build
+  cmake_kf5 ../${pkgname}-${pkgver}
+  make
+}
+
+package() {
+  cd build
+  make DESTDIR=${pkgdir} install
+}

@@ -1,0 +1,34 @@
+# Include global configuration
+source ../kdeapps.conf
+
+pkgname="kcharselect"
+arch=('x86_64')
+pkgver=${_kdever}
+pkgrel=1
+pkgdesc="Character selector"
+url="http://kde.org/applications/utilities/kcharselect/"
+license=('GPL' 'LGPL' 'FDL')
+options=('docs' 'debug')
+depends=('kxmlgui')
+makedepends=('extra-cmake-modules' 'python3' 'kdoctools')
+groups=('kde' 'kde-uninstall' 'kde-applications' 'kdeutils')
+conflicts=("kdeutils-kcharselect")
+replaces=("kdeutils-kcharselect")
+install=kdeutils.install
+source=($_mirror/${pkgname}-$_kdever.tar.xz)
+sha256sums=(`grep ${pkgname}-$_kdever.tar.xz  ../checksums.txt | cut -d " " -f1`)
+
+prepare() {
+  mkdir -p build
+}
+
+build() {
+  cd build
+  cmake_kf5 ../${pkgname}-${pkgver}
+  make
+}
+
+package() {
+    cd build
+    make DESTDIR=${pkgdir} install
+}

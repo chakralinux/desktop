@@ -1,0 +1,33 @@
+# Include global configuration
+source ../kdeapps.conf
+
+pkgname=dragon
+pkgver=${_kdever}
+pkgrel=1
+pkgdesc="A simple multimedia player"
+url='http://kde.org/applications/multimedia/dragonplayer/'
+arch=('x86_64')
+license=('GPL' 'LGPL' 'FDL')
+depends=('hicolor-icon-theme' 'kparts')
+makedepends=('extra-cmake-modules' 'kdoctools' 'python')
+groups=('kde' 'kde-uninstall' 'kde-applications' 'kdemultimedia')
+conflicts=('kdemultimedia-dragonplayer')
+replaces=('kdemultimedia-dragonplayer')
+options=('docs' 'debug')
+source=("$_mirror/${pkgname}-$_kdever.tar.xz")
+sha256sums=(`grep ${pkgname}-$_kdever.tar.xz  ../checksums.txt | cut -d " " -f1`)
+
+prepare() {
+  mkdir -p build
+}
+
+build() {
+  cd build
+  cmake_kf5 ../${pkgname}-${pkgver}
+  make
+}
+
+package() {
+  cd build
+  make DESTDIR=${pkgdir} install
+}

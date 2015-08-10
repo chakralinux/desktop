@@ -1,0 +1,34 @@
+# Include global configuration
+source ../kdeapps.conf
+
+pkgname=dolphin
+pkgver=${_kdever}
+pkgrel=1
+pkgdesc="File Manager"
+arch=('x86_64')
+url="http://kde.org/applications/system/dolphin/"
+license=(LGPL)
+depends=('baloo-widgets' 'knewstuff' 'kio-extras' 'ktexteditor' 'kactivities-frameworks')
+makedepends=('extra-cmake-modules' 'kdoctools' 'python3')
+conflicts=('kdebase-dolphin<15.04.3-1')
+replaces=(kdebase-dolphin)
+groups=('kde' 'kde-uninstall' 'kde-applications' 'kdebase')
+install=$pkgname.install
+options=('docs' 'debug')
+source=("$_mirror/${pkgname}-$_kdever.tar.xz")
+sha256sums=(`grep ${pkgname}-$_kdever.tar.xz  ../checksums.txt | cut -d " " -f1`)
+
+prepare() {
+  mkdir -p build
+}
+
+build() {
+  cd build
+  cmake_kf5 ../${pkgname}-${pkgver}
+  make
+}
+
+package() {
+  cd build
+  make DESTDIR=${pkgdir} install
+}

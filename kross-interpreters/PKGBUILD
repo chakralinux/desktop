@@ -1,0 +1,32 @@
+# Include global configuration
+source ../kdeapps.conf
+
+pkgname=kross-interpreters
+pkgver=${_kdever}
+pkgrel=1
+pkgdesc='Language interpreters to enable in-process scripting with Kross'
+arch=('x86_64')
+url="https://projects.kde.org/$pkgname"
+license=(LGPL)
+depends=(kross kdelibs4support)
+makedepends=(extra-cmake-modules kdoctools python2)
+optdepends=('python2: kross-python plugin')
+options=('debug')
+groups=('kde' 'kde-uninstall' 'kde-applications' 'kdebindings')
+source=("$_mirror/${pkgname}-$_kdever.tar.xz")
+sha256sums=(`grep ${pkgname}-$_kdever.tar.xz  ../checksums.txt | cut -d " " -f1`)
+
+prepare() {
+  mkdir -p build
+}
+
+build() {
+  cd build
+  cmake_kf5 ../${pkgname}-${pkgver}
+  make
+}
+
+package() {
+  cd build
+  make DESTDIR=${pkgdir} install
+}

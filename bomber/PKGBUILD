@@ -1,0 +1,34 @@
+# Contributions from Arch: https://www.archlinux.org/packages/extra/x86_64/kdegames-bomber/
+# Include global configuration
+source ../kdeapps.conf
+
+pkgname=bomber
+pkgver=${_kdever}
+pkgrel=1
+pkgdesc="Arcade Bombing Game"
+arch=('x86_64')
+url='http://kde.org/applications/games/bomber/'
+license=('GPL' 'LGPL' 'FDL')
+depends=("libkdegames")
+makedepends=('extra-cmake-modules' 'kdoctools' 'python3')
+groups=('kde' 'kde-uninstall' 'kde-applications' 'kdegames')
+replaces=('kdegames-bomber')
+conflicts=('kdegames-bomber')
+options=('docs' 'debug')
+source=("$_mirror/${pkgname}-$_kdever.tar.xz")
+sha256sums=(`grep ${pkgname}-$_kdever.tar.xz  ../checksums.txt | cut -d " " -f1`)
+
+prepare() {
+  mkdir -p build
+}
+
+build() {
+  cd build
+  cmake_kf5 ../${pkgname}-${pkgver}
+  make
+}
+
+package() {
+  cd build
+  make DESTDIR=${pkgdir} install
+}

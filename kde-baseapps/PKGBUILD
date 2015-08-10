@@ -1,177 +1,117 @@
 # Include global configuration
 source ../kdeapps.conf
 
-pkgbase="kde-baseapps"
-pkgname=('kde-baseapps'
-        'kde-baseapps-kdepasswd'
-        'kde-baseapps-dolphin'
-        'kde-baseapps-konqueror'
-        'kde-baseapps-konqueror-plugins')
-arch=('x86_64')
+pkgbase=kde-baseapps
+pkgname=('kdebase-kdepasswd'
+         'kdebase-kdialog'
+         'kdebase-keditbookmarks'
+         'kdebase-kfind'
+         'kdebase-konq-plugins'
+         'kdebase-konqueror'
+         'kdebase-lib'
+         'kdebase-plasma')
 pkgver=${_kdever}
 pkgrel=1
-url="http://www.kde.org"
+arch=('x86_64')
+url='http://www.kde.org'
 license=('GPL' 'LGPL' 'FDL')
+groups=('kde' 'kde-uninstall' 'kde-applications' 'kdebase')
+makedepends=('kdelibs' 'cmake' 'automoc4' 'tidyhtml' 'docbook-xsl')
 options=('docs' 'debug')
-makedepends=("kde-workspace>=${_workspace_version}" 'pkg-config' 'cmake' 'automoc4' 'libraw1394' 'ruby'
-             'tidyhtml' 'docbook-xsl' 'baloo-widgets')
-source=("$_mirror/${pkgbase}-$_kdever.tar.xz"
-        "http://www.kde-apps.org/CONTENT/content-files/99752-kde_cdemu-0.5.0.tar.bz2")
-sha256sums=(`grep ${pkgbase}-$_kdever.tar.xz  ../checksums.txt | cut -d" " -f1`
-            'd93744048cf7ae6b86861d26e2c38c27fafd4a7d6e5703e03ed09d776273303a')
+source=("$_mirror/${pkgbase}-$_kdever.tar.xz")
+sha256sums=(`grep ${pkgbase}-$_kdever.tar.xz  ../checksums.txt | cut -d " " -f1`)
+
+prepare() {
+  mkdir -p build
+}
 
 build() {
-    cd ${pkgbase}-${pkgver}
-    cmake . \
-        -DCMAKE_BUILD_TYPE=${_build_type} \
-        -DCMAKE_INSTALL_PREFIX=${_installprefix} \
-        -DCMAKE_SKIP_RPATH=ON \
-        -DCMAKE_{SHARED,MODULE,EXE}_LINKER_FLAGS='-Wl,--no-undefined -Wl,--as-needed'
-    make
+  cd build
+  cmake ../kde-baseapps-${pkgver} \
+    -DCMAKE_BUILD_TYPE=Release \
+    -DKDE4_BUILD_TESTS=OFF \
+    -DCMAKE_SKIP_RPATH=ON \
+    -DCMAKE_INSTALL_PREFIX=/usr
+  make
 }
 
-package_kde-baseapps() {
-    pkgdesc="KDE Base Applications"
-    depends=("kde-runtime" 'libraw1394' 'baloo-widgets')
-    optdepends=("cdemu-client: Support transparent CD/DVD image mounting in KDE")
-    conflicts=("kdebase" 'kde-baseapps-doc')
-    replaces=('kdebase' 'kde-baseapps-doc')
-    provides=("kdebase" "baseapps" 'kde-baseapps-doc')
-    groups=("${pkgbase}" "kde" "kde-minimal" "kde-uninstall")
-    install=kde-baseapps.install
+package_kdebase-kdepasswd() {
+  pkgdesc='Change Password'
+  depends=('kdebase-runtime' 'kdebase-lib')
 
-    splitdirs="kdialog keditbookmarks kfind lib nsplugins plasma konqueror doc/kfind"
-    for i in ${splitdirs} ; do
-        cd ${srcdir}/${pkgbase}-${pkgver}/${i}
-        make DESTDIR=${pkgdir} install
-    done
-        
-    # install cdemu frontend
-    cd ${srcdir}/kde_cdemu
-    cmake . \
-        -DCMAKE_INSTALL_PREFIX=${_installprefix} \
-        -DCMAKE_BUILD_TYPE=Release \
-        -DCMAKE_SKIP_RPATH=ON \
-        -DCMAKE_{SHARED,MODULE}_LINKER_FLAGS='-Wl,--no-undefined -Wl,--as-needed'
-    make
-    make DESTDIR=${pkgdir} install
-    
-    msg "Splitting Konqueror ..."
-    rm -vR ${pkgdir}/usr/bin/kfmclient
-    rm -vR ${pkgdir}/usr/share/applications/kde4/kfmclient*
-    rm -vR ${pkgdir}/usr/include/konqsidebarplugin.h 
-    rm -vR ${pkgdir}/usr/lib/libkonqsidebarplugin.so*
-    rm -vR ${pkgdir}/usr/lib/libkdeinit4_konqueror.so*
-    rm -vR ${pkgdir}/usr/lib/libkonquerorprivate.so*
-    rm -vR ${pkgdir}/usr/lib/kde4/konq_aboutpage.so*
-    rm -vR ${pkgdir}/usr/lib/kde4/konqsidebar_web.so*
-    rm -vR ${pkgdir}/usr/lib/kde4/konq_sidebartree_bookmarks.so*
-    rm -vR ${pkgdir}/usr/lib/kde4/konq_sidebartree_dirtree.so*
-    rm -vR ${pkgdir}/usr/lib/kde4/konq_sidebar.so*
-    rm -vR ${pkgdir}/usr/lib/kde4/konqsidebar_history.so*
-    rm -vR ${pkgdir}/usr/lib/kde4/kded_konqy_preloader.so*
-    rm -vR ${pkgdir}/usr/lib/kde4/konqsidebar_places.so*
-    rm -vR ${pkgdir}/usr/lib/kde4/konqsidebar_tree.so*
-    rm -vR ${pkgdir}/usr/share/config/konqsidebartngrc
-    rm -vR ${pkgdir}/usr/share/config.kcfg/konqueror.kcfg
-    rm -vR ${pkgdir}/usr/share/autostart/konqy_preload.desktop
-    rm -vR ${pkgdir}/usr/share/applications/kde4/konquerorsu.desktop
-    rm -vR ${pkgdir}/usr/share/applications/kde4/konqbrowser.desktop
-    rm -vR ${pkgdir}/usr/share/apps/konqsidebartng
-    rm -vR ${pkgdir}/usr/share/apps/konqueror
-    rm -vR ${pkgdir}/usr/share/appdata/konqueror.appdata.xml
-
-    # Don't ship the Konqueror desktop file
-    mv -v ${pkgdir}/usr/share/kde4/services/konqueror.desktop ${srcdir}/konqueror.desktop
-
-    rm -vR ${pkgdir}/usr/share/icons/
-    rm -vR ${pkgdir}/usr/share/dbus-1/interfaces/org.kde.Konq*
-    rm -vR ${pkgdir}/usr/share/dbus-1/interfaces/org.kde.konq*
-    rm -vR ${pkgdir}/usr/bin/konqueror
-    
-    # we don't want the cdemu manager app. the service menu + devicenotifier will suffice
-    rm -rfv ${pkgdir}/usr/share/applications/kde4/kde_cdemu.desktop
-
-    # Fix missing KFind icon, fixes FS#325
-    sed -i -e "s~Icon=kfind~Icon=edit-find~g" ${pkgdir}/usr/share/applications/kde4/kfind.desktop
+  cd "$srcdir"/build/kdepasswd
+  make DESTDIR="$pkgdir" install
+  cd "$srcdir"/build/doc/kdepasswd
+  make DESTDIR="$pkgdir" install
 }
 
-package_kde-baseapps-kdepasswd() {
-    pkgdesc='Change Password'
-    depends=('kde-runtime' 'kde-baseapps')
+package_kdebase-kdialog() {
+  pkgdesc='A utility for displaying dialog boxes from shell scripts'
+  depends=('kdebase-runtime')
 
-    splitdirs="kdepasswd doc/kdepasswd"
-    for i in ${splitdirs} ; do
-        cd ${srcdir}/${pkgbase}-${pkgver}/${i}
-        make DESTDIR=${pkgdir} install
-    done
+  cd "$srcdir"/build/kdialog
+  make DESTDIR="$pkgdir" install
 }
 
-package_kde-baseapps-dolphin() {
-    pkgdesc="The default KDE file manager"
-    depends=("${pkgbase}>=${_kdever}")
-    groups=("${pkgbase}" "kde" "kde-complete" "kde-uninstall")
-    conflicts=("kdebase-dolphin")
-    provides=("kdebase-dolphin")
-    replaces=("kdebase-dolphin")
-    categories=('system')
-    install=dolphin.install
+package_kdebase-keditbookmarks() {
+  pkgdesc='Bookmark Organizer and Editor'
+  depends=('kdebase-runtime')
 
-    splitdirs="dolphin doc/dolphin"
-    for i in ${splitdirs} ; do
-        cd ${srcdir}/${pkgbase}-${pkgver}/${i}
-        make DESTDIR=${pkgdir} install
-    done
+  cd "$srcdir"/build/keditbookmarks
+  make DESTDIR="$pkgdir" install
 }
 
-package_kde-baseapps-konqueror() {
-    pkgdesc="The default KDE web browser"
-    depends=("${pkgbase}>=${_kdever}" "kde-baseapps-dolphin>=${_kdever}")
-    groups=("${pkgbase}" "kde" "kde-minimal" "kde-uninstall")
-    conflicts=("kdebase-konqueror")
-    provides=("kdebase-konqueror")
-    replaces=("kdebase-konqueror")
-    categories=('network')
-    install=konqueror.install
+package_kdebase-kfind() {
+  pkgdesc='Find Files/Folders'
+  depends=('kdebase-runtime' 'kdebase-lib')
+  url="http://kde.org/applications/utilities/kfind/"
+  install='kde-baseapps.install'
 
-    splitdirs="konqueror doc/konqueror"
-    for i in ${splitdirs} ; do
-        cd ${srcdir}/${pkgbase}-${pkgver}/${i}
-        make DESTDIR=${pkgdir} install
-    done
-
-    msg "Remove conflicting files ..."
-    rm -vR ${pkgdir}/usr/lib/kde4/kcm_history.so*
-    rm -vR ${pkgdir}/usr/lib/kde4/kcm_kio.so*
-    rm -vR ${pkgdir}/usr/lib/kde4/kcm_konq.so*
-    rm -vR ${pkgdir}/usr/lib/kde4/kcm_konqhtml.so*
-    rm -vR ${pkgdir}/usr/lib/kde4/kcm_kurifilt.so*
-    rm -vR ${pkgdir}/usr/lib/kde4/kcm_performance.so*
-    rm -vR ${pkgdir}/usr/lib/libkdeinit4_kfmclient.so*
-    rm -vR ${pkgdir}/usr/share/applications/kde4/Home.desktop
-    rm -vR ${pkgdir}/usr/share/apps/kcmcss
-    #rm -vR ${pkgdir}/usr/share/apps/kconf_update
-    rm -vR ${pkgdir}/usr/share/apps/kcontrol
-    rm -vR ${pkgdir}/usr/share/kde4/service*
-  
-    # Move the Konqueror desktop file back
-    mkdir -pv ${pkgdir}/usr/share/kde4/services
-    cp -v ${srcdir}/konqueror.desktop ${pkgdir}/usr/share/kde4/services/konqueror.desktop
+  cd "$srcdir"/build/kfind
+  make DESTDIR="$pkgdir" install
+  cd "$srcdir"/build/doc/kfind
+  make DESTDIR="$pkgdir" install
 }
 
-package_kde-baseapps-konqueror-plugins() {
-    pkgdesc="KDE Base Applications - Extra plugins for Konqueror"
-    depends=("kde-baseapps-konqueror>=${_kdever}" 'tidyhtml')
-    groups=("${pkgbase}" "kde" "kde-minimal" "kde-uninstall")
-    conflicts=("konq-plugins" "kde-baseapps-konq-plugins")
-    provides=("konq-plugins" "kde-baseapps-konq-plugins")
-    replaces=("konq-plugins" "kde-baseapps-konq-plugins")
-    categories=('network')
-    install=konqueror.install
+package_kdebase-konq-plugins() {
+  pkgdesc='Extra plugins for Konqueror'
+  depends=('kdebase-konqueror' 'tidyhtml')
+  replaces=('konq-plugins')
+  install='kde-baseapps.install'
 
-    splitdirs="konq-plugins"
-    for i in ${splitdirs} ; do
-        cd ${srcdir}/${pkgbase}-${pkgver}/${i}
-        make DESTDIR=${pkgdir} install
-    done
+  cd "$srcdir"/build/konq-plugins
+  make DESTDIR="$pkgdir" install
+}
+
+package_kdebase-konqueror() {
+  pkgdesc='KDE File Manager & Web Browser'
+  depends=('dolphinpart4' 'kdebase-keditbookmarks')
+  optdepends=('kwebkitpart: to enable webkit engine')
+  url="http://kde.org/applications/internet/konqueror/"
+  install='konqueror.install'
+  conflicts=('kdebase-nsplugins')
+  replaces=('kdebase-nsplugins')
+
+  for i in konqueror doc/konqueror nsplugins; do
+    cd "$srcdir"/build/${i}
+    make DESTDIR="$pkgdir" install
+  done
+}
+
+package_kdebase-lib() {
+  pkgdesc='KDE libraries for the basic desktop applications'
+  groups=()
+  depends=('kdelibs')
+
+  cd "$srcdir"/build/lib
+  make DESTDIR="$pkgdir" install
+}
+
+package_kdebase-plasma() {
+  pkgdesc='Display the contents of folders (User´s home folder as default)'
+  depends=('kdebase-workspace' 'kdebase-lib')
+  groups=()
+
+  cd "$srcdir"/build/plasma
+  make DESTDIR="$pkgdir" install
 }

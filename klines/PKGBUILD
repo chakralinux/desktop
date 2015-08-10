@@ -1,0 +1,35 @@
+# Contributions from Arch: https://www.archlinux.org/packages/extra/x86_64/kdegames-klines/
+# Include global configuration
+source ../kdeapps.conf
+
+pkgname=klines
+pkgver=${_kdever}
+pkgrel=1
+pkgdesc="A simple but highly addictive, one player game"
+arch=('x86_64')
+url='http://kde.org/applications/games/klines/'
+screenshot='https://www.kde.org/images/screenshots/klines.png'
+license=('GPL' 'LGPL' 'FDL')
+depends=('libkdegames')
+makedepends=('cmake' 'extra-cmake-modules' 'python' 'kdoctools')
+groups=('kde' 'kde-uninstall' 'kde-applications' 'kdegames')
+replaces=('kdegames-klines')
+conflicts=('kdegames-klines')
+options=('docs' 'debug')
+source=("$_mirror/${pkgname}-$_kdever.tar.xz")
+sha256sums=(`grep ${pkgname}-$_kdever.tar.xz  ../checksums.txt | cut -d " " -f1`)
+
+prepare() {
+  mkdir -p build
+}
+
+build() {
+  cd build
+  cmake_kf5 ../${pkgname}-${pkgver}
+  make
+}
+
+package() {
+  cd build
+  make DESTDIR=${pkgdir} install
+}

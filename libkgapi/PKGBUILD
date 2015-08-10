@@ -1,40 +1,33 @@
-# Maintainer:   H W Tovetjärn (totte) <totte@tott.es>
-# Contributors: Manuel Tortosa <manutortosa@chakra-project.org>
-#               Andrea Scarpino <andrea@archlinux.org>
 
 pkgname=libkgapi
-pkgver=2.2.0
-pkgrel=2
-pkgdesc='A KDE-based library for accessing various Google services via their public API'
-url='https://projects.kde.org/projects/kdereview/libkgapi'
+pkgver=4.80.0
+pkgrel=1
+pkgdesc="A KDE-based library for accessing various Google services via their public API"
+url='https://projects.kde.org/projects/extragear/libs/libkgapi'
 arch=('x86_64')
-license=('GPL'
-         'LGPL'
-         'FDL')
-options=("debug")
-depends=('kdepimlibs'
-         'qjson')
-makedepends=('cmake'
-             'automoc4'
-             'boost')
-source=("http://download.kde.org/stable/${pkgname}/${pkgver}/src/${pkgname}-${pkgver}.tar.bz2")
-sha512sums=('c5f37aacb89243d7985d7064aa8941d3d2a6c26685113e876b38c737ea2e1126b40b0f88b0908e7ea8a7bcb2fade1dc528c2f73f22890b9e892c6d18d9d3bb42')
+license=('GPL' 'LGPL' 'FDL')
+depends=('kcalcore' 'kcontacts')
+makedepends=('extra-cmake-modules' 'kdoctools')
+source=("http://download.kde.org/stable/${pkgname}/${pkgver}/src/${pkgname}-${pkgver}.tar.xz")
+#source=("git://anongit.kde.org/libkgapi")
+md5sums=('4602f8ded81bbd62f033e589fbd85203')
 
 prepare() {
-    [[ -d ${srcdir}/build ]] || rm -rf ${srcdir}/build
-    mkdir -p "${srcdir}/build"
+  mkdir -p build
 }
 
 build() {
-    cd "${srcdir}/build"
-    cmake "../${pkgname}-${pkgver}" \
-        -DCMAKE_BUILD_TYPE=RelWithDebInfo \
-        -DCMAKE_INSTALL_PREFIX=/usr \
-        -DKDE4_BUILD_TESTS=ON
-    make
+  cd build
+  cmake ../${pkgname}-${pkgver} \
+    -DCMAKE_BUILD_TYPE=Release \
+    -DCMAKE_INSTALL_PREFIX=/usr \
+    -DLIB_INSTALL_DIR=lib \
+    -DKDE_INSTALL_USE_QT_SYS_PATHS=ON \
+    -DBUILD_TESTING=OFF 
+  make
 }
 
 package() {
-    cd "${srcdir}/build"
-    make DESTDIR="${pkgdir}" install
+  cd build
+  make DESTDIR="${pkgdir}" install
 }

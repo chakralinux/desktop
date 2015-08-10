@@ -1,34 +1,70 @@
 # Include global configuration
 source ../kdeapps.conf
 
-pkgname="kdepimlibs"
-arch=('x86_64')
-pkgver=${_libsver}
+pkgbase=kdepimlibs
+pkgname=(akonadi-client akonadi-contact akonadi-mime akonadi-notes akonadi-socialutils kio-pim)
+pkgver=${_kdever}
 pkgrel=1
-pkgdesc="KDE PIM libraries"
-url="http://www.kde.org"
-license=('GPL' 'LGPL' 'FDL')
-install=${pkgname}.install
+pkgdesc="KDE PIM Libraries"
+arch=('x86_64')
+url='https://projects.kde.org/kdepimlibs'
+license=(GPL LGPL)
+makedepends=(extra-cmake-modules qt5-tools kcalcore kmbox kcontacts kldap akonadi prison-frameworks boost kdoctools)
 options=('docs' 'debug')
-depends=("kdelibs>=${_libsver}" 'akonadi' 'libical' 'gpgme' 'prison' 'libdmtx' 'qrencode' 'qjson')
-makedepends=('pkg-config' 'cmake' 'automoc4' 'boost' 'cyrus-sasl' 'openldap' 'prison' 'docbook-xsl')
-groups=('kde' 'kde-uninstall' 'kde-minimal')
-source=($_mirror/${pkgname}-$_libsver.tar.xz)
-sha256sums=(`grep ${pkgname}-$_libsver.tar.xz  ../checksums.txt | cut -d" " -f1`)
+source=("$_mirror/${pkgbase}-$_kdever.tar.xz")
+sha256sums=(`grep ${pkgbase}-$_kdever.tar.xz  ../checksums.txt | cut -d " " -f1`)
 
-build() {
-    cd ${srcdir}
-    mkdir -p build
-    cd build
-    cmake ../${pkgname}-${pkgver} \
-        -DCMAKE_BUILD_TYPE=${_build_type} \
-        -DCMAKE_INSTALL_PREFIX=${_installprefix} \
-        -DCMAKE_SKIP_RPATH=ON \
-        -DCMAKE_{SHARED,MODULE,EXE}_LINKER_FLAGS='-Wl,--no-undefined -Wl,--as-needed'
-    make
+prepare() {
+  mkdir -p build
 }
 
-package() {
-    cd ${srcdir}/build
-    make DESTDIR=${pkgdir} install
+build() {
+  cd build
+  cmake_kf5 ../${pkgbase}-${pkgver}
+  make
+}
+
+package_akonadi-client() {
+  depends=(akonadi kdelibs4support)
+
+  cd build/akonadi
+  make DESTDIR="$pkgdir" install
+}
+
+package_akonadi-contact() {
+  depends=(akonadi-client kmime kcontacts kcalcore prison-frameworks)
+
+  cd build/akonadi-contact
+  make DESTDIR="$pkgdir" install
+}
+
+package_akonadi-mime() {
+  depends=(akonadi-client kmime)
+  install=akonadi-mime.install
+
+  cd build/akonadi-mime
+  make DESTDIR="$pkgdir" install
+}
+
+package_akonadi-notes() {
+  depends=(kmime)
+
+  cd build/akonadi-notes
+  make DESTDIR="$pkgdir" install
+}
+
+package_akonadi-socialutils() {
+  depends=(akonadi-client)
+  install=akonadi-socialutils.install
+
+  cd build/akonadi-socialutils
+  make DESTDIR="$pkgdir" install
+}
+
+package_kio-pim() {
+  pkgdesc='PIM kioslaves'
+  depends=(kldap kio)
+
+  cd build/kioslave
+  make DESTDIR="$pkgdir" install
 }

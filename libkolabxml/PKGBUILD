@@ -1,9 +1,6 @@
-# Maintainer:   H W Tovetjärn (totte) <totte@tott.es>
-# Contributors: Manuel Tortosa <manutortosa@chakra-project.org>
-#               Andrea Scarpino <andrea@archlinux.org>
 
 pkgname=libkolabxml
-pkgver=1.0.2
+pkgver=1.1.1
 pkgrel=1
 pkgdesc="Kolab XML format schema definitions library"
 url='http://git.kolab.org/libkolabxml/'
@@ -17,23 +14,24 @@ makedepends=('cmake'
              'qt'
              'swig')
 source=("http://mirror.kolabsys.com/pub/releases/${pkgname}-${pkgver}.tar.gz"{,.gpg})
-sha512sums=('6ae1a5c5de0ccb0d4ac00aee583ed566b3aff4d5a88edaab6d1d174752d13aa694901c08f9ba887b58826e9e0e79421b00b4fe16e2b29978dc9ba09f9a750207'
-            '4ed776c125ac5d2cec4285ca93bf3adac17eb497793b4976a3faa4a25e850beefc4bfc1c672aa181676cfc2126059a29a3e51b31f791bbfaa3908c11a851f01e')
+sha256sums=('98b6a9fb9e792fd0a1e4e249f22e5f85670a9a4432c5b58b1b625b2985042f3b'
+            '0557db50cfa1a3d6e3841af898b21d29f1c17182b9091fb22f264b4d78ad4981')
 
 prepare() {
-    mkdir "${srcdir}/build"
+  mkdir -p build
 }
 
 build() {
-    cd "${srcdir}/build"
-    cmake "../${pkgname}-${pkgver}" \
-        -DCMAKE_BUILD_TYPE=Release \
-        -DCMAKE_INSTALL_PREFIX=/usr \
-        -DQT_QMAKE_EXECUTABLE=qmake
-    make
+  cd build
+  cmake ../${pkgname}-${pkgver} \
+    -DCMAKE_BUILD_TYPE=Release \
+    -DCMAKE_INSTALL_PREFIX=/usr \
+    -DQT5_BUILD=ON \
+    -DBUILD_TESTS=OFF  
+  make
 }
 
 package() {
-    cd "${srcdir}/build"
-    make DESTDIR="${pkgdir}" install
+  cd build
+  make DESTDIR="${pkgdir}" install
 }

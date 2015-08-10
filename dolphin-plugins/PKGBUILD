@@ -1,0 +1,33 @@
+# Include global configuration
+source ../kdeapps.conf
+
+pkgname=dolphin-plugins
+pkgver=${_kdever}
+pkgrel=1
+pkgdesc='Dolphin plugins'
+url="http://www.kde.org"
+arch=('x86_64')
+license=('GPL' 'LGPL' 'FDL')
+depends=('dolphin')
+makedepends=('extra-cmake-modules' 'kdoctools')
+conflicts=('kdesdk-dolphin-plugins')
+replaces=('kdesdk-dolphin-plugins')
+groups=('kde' 'kde-uninstall' 'kde-applications' 'kdesdk')
+options=('docs' 'debug')
+source=("$_mirror/${pkgname}-$_kdever.tar.xz")
+sha256sums=(`grep ${pkgname}-$_kdever.tar.xz  ../checksums.txt | cut -d " " -f1`)
+
+prepare() {
+  mkdir -p build
+}
+
+build() {
+  cd build
+  cmake_kf5 ../${pkgname}-${pkgver}
+  make
+}
+
+package() {
+  cd build
+  make DESTDIR=${pkgdir} install
+}
