@@ -1,26 +1,29 @@
 pkgname=libtorrent-rasterbar
-pkgver=1.0.5
-pkgrel=1
+pkgver=1.0.6
+pkgrel=2
 pkgdesc="A C++ library that aims to be a good alternative to all the other bittorrent implementations around"
 url="http://www.rasterbar.com/products/libtorrent/"
 arch=('x86_64')
 license=('BSD')
 depends=('boost-libs' 'python2' 'geoip')
-makedepends=('boost')
+makedepends=('boost' 'cmake')
 options=('!emptydirs')
-source=(http://downloads.sourceforge.net/sourceforge/libtorrent/$pkgname-$pkgver.tar.gz)
-sha512sums=('1ec54dfac1555ac1a843d12e239d781e940ef81ca13a943c58812b0fb62686e89bc5e0135feb94267fb624077cb0ad9971d496d8474b91f3687ef3b90a524df6')
+source=(https://github.com/arvidn/libtorrent/releases/download/libtorrent-${pkgver//./_}/$pkgname-$pkgver.tar.gz)
+sha512sums=('798529f877dc94aa8eb635677a2fffb6deead3937153e78ac5344fd81422f9fd9594e227db3ec0ae954dfc59e4dd5f3b8f6dbed2e3aa1f9a710c32b0622f54ee')
 
 build() {
-  cd "${srcdir}/${pkgname}-${pkgver}"
-  PYTHON=/usr/bin/python2 ./configure --prefix=/usr \
-      --enable-python-binding \
-      --with-libgeoip=system
+  cd $pkgname-$pkgver
+  PYTHON=/usr/bin/python2 \
+  ./configure \
+    --prefix=/usr \
+    --enable-python-binding \
+    --with-libgeoip=system \
+    --with-libiconv
   make
 }
 
 package() {
-  cd "${srcdir}/${pkgname}-${pkgver}"
+  cd $pkgname-$pkgver
   make DESTDIR="${pkgdir}" install
   install -D COPYING "${pkgdir}/usr/share/licenses/$pkgname/LICENSE"
 }
