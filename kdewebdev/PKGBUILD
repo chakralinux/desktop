@@ -8,11 +8,11 @@ pkgname=('kdewebdev-kfilereplace'
          'kdewebdev-klinkstatus')
 arch=('x86_64')
 pkgver=${_kdever}
-pkgrel=1
+pkgrel=2
 url="http://www.kde.org/"
 license=('GPL' 'LGPL' 'FDL')
 options=('docs' 'debug')
-makedepends=('pkgconfig' 'cmake' 'automoc4' 'ruby' "kdepimlibs>=${_libsver}"
+makedepends=('pkgconfig' 'cmake' 'automoc4' 'ruby' "kdepimlibs4"
              "kde-runtime" 'tidyhtml' "kdepim-runtime>=${_libsver}" 'kdoctools')
 source=($_mirror/${pkgbase}-$_kdever.tar.xz)
 sha256sums=(`grep ${pkgbase}-$_kdever.tar.xz  ../checksums.txt | cut -d" " -f1`)
@@ -74,7 +74,7 @@ package_kdewebdev-kommander() {
 
 package_kdewebdev-klinkstatus() {
     pkgdesc="Link checking utility"
-    depends=("kde-runtime" "kdelibs>=${_libsver}" 'tidyhtml' "kdepimlibs>=${_libsver}") # "kdepim-runtime>=${_kdever}"
+    depends=("kde-runtime" "kdelibs>=${_libsver}" 'tidyhtml' "kdepimlibs4") # "kdepim-runtime>=${_kdever}"
     conflicts=('kdewebdev-common' 'kdewebdev-doc')
     groups=("kde" "${pkgbase}" "kde-uninstall")
     categories=('utils')
