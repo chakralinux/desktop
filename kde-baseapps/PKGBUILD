@@ -11,7 +11,7 @@ pkgname=('kdebase-kdepasswd'
          'kdebase-lib'
          'kdebase-plasma')
 pkgver=${_kdever}
-pkgrel=1
+pkgrel=3
 arch=('x86_64')
 url='http://www.kde.org'
 license=('GPL' 'LGPL' 'FDL')
@@ -27,11 +27,9 @@ prepare() {
 
 build() {
   cd build
-  cmake ../kde-baseapps-${pkgver} \
-    -DCMAKE_BUILD_TYPE=Release \
+  cmake_kf5 ../${pkgbase}-${pkgver} \
     -DKDE4_BUILD_TESTS=OFF \
-    -DCMAKE_SKIP_RPATH=ON \
-    -DCMAKE_INSTALL_PREFIX=/usr
+    -DCMAKE_SKIP_RPATH=ON
   make
 }
 
@@ -102,6 +100,9 @@ package_kdebase-lib() {
   pkgdesc='KDE libraries for the basic desktop applications'
   groups=()
   depends=('kdelibs')
+  replaces=('kde-baseapps')
+  conflicts=('kde-baseapps')
+  provides=('kde-baseapps')
 
   cd "$srcdir"/build/lib
   make DESTDIR="$pkgdir" install

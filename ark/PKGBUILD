@@ -4,16 +4,16 @@ source ../kdeapps.conf
 pkgname=ark
 arch=('x86_64')
 pkgver=${_kdever}
-pkgrel=1
+pkgrel=2
 pkgdesc="Archiver for various compression formats"
 url="http://www.kde.org"
-license=('GPL' 'LGPL' 'FDL')
+license=(GPL)
 options=('docs' 'debug')
-depends=('karchive' 'kconfig' 'kpty' 'khtml' 'kdbusaddons' 'ki18n' 'kiconthemes'
-         'kio' 'kservice' 'kwidgetsaddons' 'libarchive' 'kde-baseapps')
-makedepends=('extra-cmake-modules' 'kdoctools' 'p7zip' 'zip' 'unzip' 'unrar')
-optdepends=('p7zip' 'zip' 'unzip' 'unrar')
-conflicts=("kdeutils-common" "kdeutils-doc")
+depends=(kpty khtml libarchive hicolor-icon-theme)
+makedepends=(extra-cmake-modules kdoctools python)
+optdepends=(p7zip zip unzip unrar)
+conflicts=(kdeutils-ark)
+replaces=(kdeutils-ark)
 groups=('kde' 'kde-uninstall' 'kde-applications' 'kdeutils')
 conflicts=('kdeutils-ark')
 replaces=('kdeutils-ark')
