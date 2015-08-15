@@ -2,17 +2,16 @@
 source ../kdeapps.conf
 
 pkgbase=kde-baseapps
-pkgname=('kdebase-dolphin'
-         'kdebase-kdepasswd'
-         'kdebase-kdialog'
-         'kdebase-keditbookmarks'
-         'kdebase-kfind'
-         'kdebase-konq-plugins'
-         'kdebase-konqueror'
-         'kdebase-lib'
-         'kdebase-plasma')
+pkgname=('kde-baseapps-kdepasswd'
+         'kde-baseapps-kdialog'
+         'kde-baseapps-keditbookmarks'
+         'kde-baseapps-kfind'
+         'kde-baseapps-konq-plugins'
+         'kde-baseapps-konqueror'
+         'kde-baseapps-lib'
+         'kde-baseapps-plasma')
 pkgver=${_kdever}
-pkgrel=1
+pkgrel=4
 arch=('x86_64')
 url='http://www.kde.org'
 license=('GPL' 'LGPL' 'FDL')
@@ -34,27 +33,9 @@ build() {
   make
 }
 
-package_kdebase-dolphin() {
-  pkgdesc='File Manager'
-  depends=('kdebase-runtime' 'kdebase-lib' 'baloo4-widgets')
-  optdepends=('kdegraphics-svgpart: thumbailers for SVG files'
-              'kdegraphics-thumbnailers: thumbnailers for various graphics files'
-              'kdemultimedia-ffmpegthumbs: thumbnailers for video files'
-              'kdemultimedia-mplayerthumbs: thumbnailers for video files'
-              'kdesdk-thumbnailers: thumbnailers for development files'
-              'icoutils: thumbnailers for MS files'
-              'ruby: servicemenu installation'
-              'konsolepart4: open terminal in context menu')
-  url="http://kde.org/applications/system/dolphin/"
-  install=dolphin.install
-
-  cd "$srcdir"/build/dolphin
-  make DESTDIR="$pkgdir" install
-}
-
-package_kdebase-kdepasswd() {
+package_kde-baseapps-kdepasswd() {
   pkgdesc='Change Password'
-  depends=('kdebase-runtime' 'kdebase-lib')
+  depends=('kdebase-runtime' 'kde-baseapps-lib')
 
   cd "$srcdir"/build/kdepasswd
   make DESTDIR="$pkgdir" install
@@ -62,7 +43,7 @@ package_kdebase-kdepasswd() {
   make DESTDIR="$pkgdir" install
 }
 
-package_kdebase-kdialog() {
+package_kde-baseapps-kdialog() {
   pkgdesc='A utility for displaying dialog boxes from shell scripts'
   depends=('kdebase-runtime')
 
@@ -70,7 +51,7 @@ package_kdebase-kdialog() {
   make DESTDIR="$pkgdir" install
 }
 
-package_kdebase-keditbookmarks() {
+package_kde-baseapps-keditbookmarks() {
   pkgdesc='Bookmark Organizer and Editor'
   depends=('kdebase-runtime')
 
@@ -78,9 +59,9 @@ package_kdebase-keditbookmarks() {
   make DESTDIR="$pkgdir" install
 }
 
-package_kdebase-kfind() {
+package_kde-baseapps-kfind() {
   pkgdesc='Find Files/Folders'
-  depends=('kdebase-runtime' 'kdebase-lib')
+  depends=('kdebase-runtime' 'kde-baseapps-lib')
   url="http://kde.org/applications/utilities/kfind/"
   install='kde-baseapps.install'
 
@@ -90,9 +71,9 @@ package_kdebase-kfind() {
   make DESTDIR="$pkgdir" install
 }
 
-package_kdebase-konq-plugins() {
+package_kde-baseapps-konq-plugins() {
   pkgdesc='Extra plugins for Konqueror'
-  depends=('kdebase-konqueror' 'tidyhtml')
+  depends=('kde-baseapps-konqueror' 'tidyhtml')
   replaces=('konq-plugins')
   install='kde-baseapps.install'
 
@@ -100,9 +81,9 @@ package_kdebase-konq-plugins() {
   make DESTDIR="$pkgdir" install
 }
 
-package_kdebase-konqueror() {
+package_kde-baseapps-konqueror() {
   pkgdesc='KDE File Manager & Web Browser'
-  depends=('dolphinpart4' 'kdebase-keditbookmarks')
+  depends=('dolphinpart4' 'kde-baseapps-keditbookmarks')
   optdepends=('kwebkitpart: to enable webkit engine')
   url="http://kde.org/applications/internet/konqueror/"
   install='konqueror.install'
@@ -115,21 +96,21 @@ package_kdebase-konqueror() {
   done
 }
 
-package_kdebase-lib() {
+package_kde-baseapps-lib() {
   pkgdesc='KDE libraries for the basic desktop applications'
   groups=()
   depends=('kdelibs')
-  replaces=('kde-baseapps')
   conflicts=('kde-baseapps')
-  provides=('kde-baseapps')
+  replaces=('kdebase-lib') #'kdebase-lib' can be removed
+  provides=('kde-baseapps' 'kdebase-lib')
 
   cd "$srcdir"/build/lib
   make DESTDIR="$pkgdir" install
 }
 
-package_kdebase-plasma() {
+package_kde-baseapps-plasma() {
   pkgdesc='Display the contents of folders (User´s home folder as default)'
-  depends=('kdebase-workspace' 'kdebase-lib')
+  depends=('kdebase-workspace' 'kde-baseapps-lib')
   groups=()
 
   cd "$srcdir"/build/plasma
