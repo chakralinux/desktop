@@ -99,6 +99,7 @@ build() {
     for it in ${pkgname[@]} ; do
 	 if [ ${it} != "kde-l10n-eo" ];
          then
+         msg "Building $it-$_oldkdever"
          pushd "$it-$_oldkdever"
          cmake \
              -DCMAKE_INSTALL_PREFIX=${_installprefix} \
@@ -107,7 +108,18 @@ build() {
          popd
          fi
 
+        msg "Building $it-$pkgver"
         pushd "$it-$pkgver"
+        lang="${it##*-}"
+        if [ ${it} == "kde-l10n-gl" ] || [ ${it} == "kde-l10n-nl" ];
+        then
+          # disable kdeedu for now 15.08.0, waiting for an upstream fix
+          sed -i 's|add_subdirectory(kdeedu)|#add_subdirectory(kdeedu)|' ./5/$lang/messages/CMakeLists.txt
+        fi
+        if [ ${it} == "kde-l10n-pl" ]
+        then
+          sed -i 's|add_subdirectory(kdeedu)|#add_subdirectory(kdeedu)|' ./5/$lang/scripts/CMakeLists.txt
+        fi
         cmake \
             -DCMAKE_INSTALL_PREFIX=${_installprefix} \
             -DCMAKE_BUILD_TYPE=Release

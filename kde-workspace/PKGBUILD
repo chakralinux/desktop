@@ -6,15 +6,15 @@ pkgbase="kde-workspace"
 pkgname=("kde-workspace" "kde4-integration" "libksysguard4" "libkworkspace4")
 arch=('x86_64')
 pkgver=${_workspace_ver}
-pkgrel=4
+pkgrel=1
 url="http://www.kde.org"
 license=('GPL' 'LGPL' 'FDL')
 makedepends=('pkgconfig' 'cmake' 'automoc4' 'networkmanager' 'bluez' "kdebindings-python2>=${_oldkdever}"
              'oxygen-icons' "kde-runtime" 'gpsd' 'samba' 'xf86-input-wacom' 'libraw1394' 'libdmtx' 'docbook-xsl'
-             'prison' 'qrencode' "kdepimlibs>=${_libsver}" 'qimageblitz' 'mesa' "libkactivities4" 'libxcomposite'
+             'prison' 'qrencode' "kdepimlibs4" 'qimageblitz' 'mesa' "libkactivities4" 'libxcomposite'
              'xcb-util-image' 'xcb-util-renderutil' 'libxss' 'lm_sensors' 'libxklavier' 'libxft' 'xkit'
              'libxdamage' 'xorg-utils' 'libxrandr' 'libxres' 'libdmtx' 'libqalculate' 'prison' 'qrencode'
-             "kdepim-runtime>=${_libsver}" "kde-base-artwork>=${_kdever}" 'xcb-util-keysyms' 'xcb-util-wm')
+             "kdepim-runtime" "kde-base-artwork>=${_kdever}" 'xcb-util-keysyms' 'xcb-util-wm')
 options=('docs' 'debug')
 groups=('kde' 'kde-uninstall' 'kde-minimal')
 source=("http://download.kde.org/stable/applications/${_kdever}/src/kde-workspace-${_workspace_ver}.tar.xz"
@@ -88,22 +88,22 @@ build() {
         -DCMAKE_{SHARED,MODULE,EXE}_LINKER_FLAGS='-Wl,--no-undefined -Wl,--as-needed'
     make
 
-    msg "Building kcm_tablet..."
-    cd "${srcdir}/wacomtablet"
-    # Fix desktop to the new layout
-    sed -i -e "s~keyboard-and-mouse~input-devices~g" src/kcmodule/kcm_wacomtablet.desktop
-    CXXFLAGS="${CXXFLAGS} -I /usr/include/freetype2" cmake . \
-        -DCMAKE_BUILD_TYPE=${_build_type} \
-        -DCMAKE_INSTALL_PREFIX=${_installprefix} \
-        -DCMAKE_{SHARED,MODULE,EXE}_LINKER_FLAGS='-Wl,--no-undefined -Wl,--as-needed'
-    make
+    #msg "Building kcm_tablet..."
+    #cd "${srcdir}/wacomtablet"
+    ## Fix desktop to the new layout
+    #sed -i -e "s~keyboard-and-mouse~input-devices~g" src/kcmodule/kcm_wacomtablet.desktop
+    #CXXFLAGS="${CXXFLAGS} -I /usr/include/freetype2" cmake . \
+    #    -DCMAKE_BUILD_TYPE=${_build_type} \
+    #    -DCMAKE_INSTALL_PREFIX=${_installprefix} \
+    #    -DCMAKE_{SHARED,MODULE,EXE}_LINKER_FLAGS='-Wl,--no-undefined -Wl,--as-needed'
+    #make
 }
 
 package_kde-workspace() {
     pkgdesc="KDE Workspace"
     install=${pkgname}.install
     depends=('polkit-kde-agent'
-            "kdepimlibs>=${_libsver}"
+            "kdepimlibs4"
             "kde-runtime"
             'qimageblitz'
             'mesa'
@@ -125,7 +125,7 @@ package_kde-workspace() {
             'libqalculate'
             'prison'
             'qrencode'
-            "kdepim-runtime>=${_libsver}"
+            "kdepim-runtime"
             "kde-base-artwork>=${_kdever}"
             'xcb-util-keysyms'
             'xcb-util-wm'
@@ -157,8 +157,8 @@ package_kde-workspace() {
     cd "${srcdir}/${pkgname}-${pkgver}"
     make DESTDIR=${pkgdir} install
 
-    cd "${srcdir}/wacomtablet"
-    make DESTDIR=${pkgdir} install
+    #cd "${srcdir}/wacomtablet"
+    #make DESTDIR=${pkgdir} install
 
     # Install PAM configuration
     install -D -m644 ${srcdir}/kde.pam ${pkgdir}/etc/pam.d/kde

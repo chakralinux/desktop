@@ -11,6 +11,7 @@ url="https://www.kde.org/applications/system/marble"
 screenshot="http://www.kde.org/images/screenshots/marble.png"
 license=(GPL)
 makedepends=(extra-cmake-modules gpsd libwlocate phonon-qt5 qt5-webkit krunner kparts knewstuff qt5-tools) # quazip-qt5
+options=('docs' 'debug')
 source=("$_mirror/${pkgbase}-$_kdever.tar.xz")
 sha256sums=(`grep ${pkgbase}-$_kdever.tar.xz  ../checksums.txt | cut -d " " -f1`)
 
@@ -43,10 +44,16 @@ build() {
   make
 }
 
+build() {
+  cd build
+  cmake_kf5 ../${pkgname}-${pkgver}
+  make
+}
+
 package_libastro() {
   pkgdesc='Marble astronomy library'
   depends=(gcc-libs)
-  conflicts=('kdeedu-marble<15.07' marble-qt)
+  conflicts=('kdeedu-marble<15.07')
 
   cd build/src/lib/astro
   make DESTDIR="$pkgdir" install
@@ -59,8 +66,8 @@ package_marble() {
             'libwlocate: WLAN based geolocation'
             'phonon-qt5: enables the use of audio and video content'
             'krunner: Krunner plugin')
-  conflicts=('kdeedu-marble<15.04.3-1' marble-qt)
-  replaces=(kdeedu-marble 'marble-qt<15.07')
+  conflicts=('kdeedu-marble<15.04.3-1')
+  replaces=('kdeedu-marble')
   groups=(kde-applications kdeedu)
   install=marble.install
 
@@ -77,7 +84,7 @@ package_marble() {
 
 package_marble-data() {
   pkgdesc='Data for Marble'
-  conflicts=('kdeedu-marble<15.07' marble-qt)
+  conflicts=('kdeedu-marble<15.07')
 
   cd build/data
   make DESTDIR="$pkgdir" install

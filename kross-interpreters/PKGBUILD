@@ -18,6 +18,15 @@ sha256sums=(`grep ${pkgname}-$_kdever.tar.xz  ../checksums.txt | cut -d " " -f1`
 
 prepare() {
   mkdir -p build
+  
+  # wrong version detected, force searching a Python2.x version
+  # source (http://www.cmake.org/Bug/view.php?id=13794)
+  # from
+  #find_package(PythonLibs 2 EXACT REQUIRED)
+  # to
+  #find_package(PythonLibs 2.7 REQUIRED)
+  
+  sed -i 's/EXACT//g' ${srcdir}/${pkgname}-${pkgver}/CMakeLists.txt
 }
 
 build() {

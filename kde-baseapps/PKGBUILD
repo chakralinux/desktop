@@ -2,7 +2,8 @@
 source ../kdeapps.conf
 
 pkgbase=kde-baseapps
-pkgname=('kdebase-kdepasswd'
+pkgname=('kdebase-dolphin'
+         'kdebase-kdepasswd'
          'kdebase-kdialog'
          'kdebase-keditbookmarks'
          'kdebase-kfind'
@@ -11,7 +12,7 @@ pkgname=('kdebase-kdepasswd'
          'kdebase-lib'
          'kdebase-plasma')
 pkgver=${_kdever}
-pkgrel=3
+pkgrel=1
 arch=('x86_64')
 url='http://www.kde.org'
 license=('GPL' 'LGPL' 'FDL')
@@ -31,6 +32,24 @@ build() {
     -DKDE4_BUILD_TESTS=OFF \
     -DCMAKE_SKIP_RPATH=ON
   make
+}
+
+package_kdebase-dolphin() {
+  pkgdesc='File Manager'
+  depends=('kdebase-runtime' 'kdebase-lib' 'baloo4-widgets')
+  optdepends=('kdegraphics-svgpart: thumbailers for SVG files'
+              'kdegraphics-thumbnailers: thumbnailers for various graphics files'
+              'kdemultimedia-ffmpegthumbs: thumbnailers for video files'
+              'kdemultimedia-mplayerthumbs: thumbnailers for video files'
+              'kdesdk-thumbnailers: thumbnailers for development files'
+              'icoutils: thumbnailers for MS files'
+              'ruby: servicemenu installation'
+              'konsolepart4: open terminal in context menu')
+  url="http://kde.org/applications/system/dolphin/"
+  install=dolphin.install
+
+  cd "$srcdir"/build/dolphin
+  make DESTDIR="$pkgdir" install
 }
 
 package_kdebase-kdepasswd() {

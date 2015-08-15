@@ -12,10 +12,9 @@ license=('GPL' 'LGPL' 'FDL')
 depends=('knewstuff' 'ktexteditor' 'threadweaver' 'kded' 'kitemmodels')
 makedepends=('extra-cmake-modules' 'kdoctools' 'python3' 'plasma-framework')
 optdepends=('kio-extras: extra protocols support (sftp, fish and more)')
-source=("$_mirror/${pkgbase}-$_kdever.tar.xz"
-        'fix-dolphin-hang.patch')
-sha256sums=("`grep ${pkgbase}-$_kdever.tar.xz  ../checksums.txt | cut -d " " -f1`"
-            '43ee92486397dcc1541911fca92454a28a5887140c5d4e32ceba98ccf35ddefd')
+options=('docs' 'debug')
+source=("$_mirror/${pkgbase}-$_kdever.tar.xz")
+sha256sums=("`grep ${pkgbase}-$_kdever.tar.xz  ../checksums.txt | cut -d " " -f1`")
 
 prepare() {
   mkdir build
@@ -49,7 +48,7 @@ package_kate() {
   groups=('kde')
   url="http://www.kde.org/applications/utilities/kate/"
   screenshot="https://www.kde.org/images/screenshots/kate.png"
-    install='kate.install'
+  install='kate.install'
   replaces=('kdesdk-kate')
   conflicts=('kdesdk-kate')
   provides=('kdesdk-kate')

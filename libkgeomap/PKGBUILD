@@ -18,6 +18,9 @@ sha256sums=(`grep ${pkgname}-$_kdever.tar.xz  ../checksums.txt | cut -d " " -f1`
 
 prepare() {
   mkdir build
+
+  # Fix build with libmarble4
+  sed -e 's|#include <marble|#include <marble4|' -i $pkgname-$pkgver/libkgeomap/*.cpp -i $pkgname-$pkgver/libkgeomap/*.h
 }
 
 build() {
