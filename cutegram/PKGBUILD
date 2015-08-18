@@ -1,31 +1,48 @@
+# NOTE cutegram-2.5.0 depends on libqtelegram-ae-2:5.0 and telegramqml
+# but it keeps crashing on my system
+# So I will upload the .deb version, which is fine
+# I will leave libqtelegram-ae as dependency just for semplicity
+# but the .deb version doesn't need it
+
 pkgname=cutegram
 _pkgname=Cutegram
-pkgver=2.4.0
+pkgver=2.5.0
 pkgrel=1
 pkgdesc="A different telegram client from Aseman team"
 arch=('x86_64')
 url="http://aseman.co/en/products/cutegram/"
 license=('GPL')
-depends=('qt5-base' 'qt5-declarative' 'qt5-multimedia' 'qt5-quick1'
-'qt5-graphicaleffects' 'qt5-quickcontrols' 'qt5-webengine' 'qt5-imageformats'
-'gstreamer0.10-base-plugins' 'gstreamer0.10-good-plugins'
-'libqtelegram-ae>=1:4.1')
+depends=('qt5-imageformats' 'qt5-webkit>=5.5' 'libqtelegram-ae' 'gst-libav' 'gstreamer0.10-bad-plugins' 'gstreamer0.10-ugly-plugins')
+optdepends=('gst-plugins-bad: audio support'
+'gst-plugins-good: audio and notification sound')
 conflicts=('cutegram-git')
-source=("https://github.com/Aseman-Land/Cutegram/archive/v$pkgver-stable.tar.gz")
-sha512sums=('0d21075df229f1a1cf17d3efd40a35b55bdbb915a2c065fa90c4573d1278c614901742cdfa2a1cb3f5b736543c9ba73e81e4f02f7bb10cd30bfbcaf48554043e')
+source=(
+#"https://github.com/Aseman-Land/Cutegram/archive/v$pkgver-stable.tar.gz"
+"http://aseman.co/downloads/cutegram/2/cutegram_${pkgver}-1-amd64.deb")
+sha512sums=(
+#'a86fdb467685eb01c978caed34d961b6e7d65496c063eea9066bfe3644be1b84c57c3658c3e9a414180b83352976e3ca6d1f21e0d617e3c56c617b5ceb0c014e'
+'6d81be75a85c1a91adc16617693c57edcd6b1a327e5c3fe7280c9192dba5cb56ca04e835d167ba8eca366f5310590feeeb6808fa9cc78f1119a4daeafdeb8f2b')
 
 prepare() {
-  cd "${srcdir}/${_pkgname}-$pkgver-stable"
-  mkdir -p build 
+ # cd "${srcdir}/${_pkgname}-$pkgver-stable"
+ # mkdir -p build
+ tar -Jxf ${srcdir}/data.tar.xz
 }
 
-build() {
-  cd "${srcdir}/${_pkgname}-$pkgver-stable/build"
-  qmake-qt5 -r .. PREFIX=/usr DEFINES+=WEBENGINE_ASEMAN_WEBGRABBER
-  make
-}
+#build() {
+#  cd "${srcdir}/${_pkgname}-$pkgver-stable/build"
+#  qmake-qt5 -r .. PREFIX=/usr DEFINES+=WEBENGINE_ASEMAN_WEBGRABBER
+#  make
+#}
 
 package() {
-  cd "${srcdir}/${_pkgname}-$pkgver-stable/build"
-  make INSTALL_ROOT="${pkgdir}" install
+#  cd "${srcdir}/${_pkgname}-$pkgver-stable/build"
+# make INSTALL_ROOT="${pkgdir}" install
+  
+#  cp -r ../Cutegram/qml ${pkgdir}/usr/share/cutegram
+  install -d ${pkgdir}/usr/{bin,share/cutegram}
+  cp -r ${srcdir}/opt/cutegram/* ${pkgdir}/usr/share/cutegram
+  install -D ${srcdir}/usr/share/applications/Cutegram.desktop ${pkgdir}/usr/share/applications/cutegram.desktop
+  install -D ${srcdir}/usr/share/pixmaps/cutegram.png ${pkgdir}/usr/share/pixmaps/cutegram.png
+  ln -s /usr/share/cutegram/cutegram ${pkgdir}/usr/bin/cutegram
 }
