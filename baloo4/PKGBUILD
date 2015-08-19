@@ -1,35 +1,23 @@
-# Maintainer:   H W Tovetjärn (totte) <totte@tott.es>
-# Contributors: Manuel Tortosa <manutortosa@chakra-project.org>
-
 # Include global configuration
-source ../_buildscripts/${current_repo}-${_arch}-cfg.conf
+source ../kdeapps.conf
 
 _pkgname=baloo
 pkgbase=baloo4
 pkgname=('baloo4' 'baloo4-akonadi' 'libbaloo4')
 arch=('x86_64')
-pkgver=${_kdever}
-pkgrel=2
+pkgver=${_oldkdever}
+pkgrel=3
 pkgdesc="The core baloo system"
 url="http://www.kde.org"
 license=('GPL'
          'LGPL'
          'FDL')
 options=('docs'
-         '!header'
-         'debug'
-         'log')
-depends=("kdelibs>=${_kdever}"
-         "kfilemetadata>=${pkgver}"
-         'kdepimlibs'
-         'xapian-core')
-makedepends=('pkg-config'
-             'cmake'
-             'automoc4'
-             'doxygen')
+         'debug')
+makedepends=('cmake' 'automoc4' 'boost' 'kdepimlibs' 'xapian-core' 'kfilemetadata4' 'libakonadi-qt4')
 optdepends=("nepomuk-core: To migrate nepomuk metadata to baloo")
-source=($_mirror/${_pkgname}-$_kdever.tar.xz)
-sha256sums=(`grep ${_pkgname}-$_kdever.tar.xz  ../checksums.txt | cut -d" " -f1`)
+source=("http://download.kde.org/stable/${pkgver}/src/baloo-${pkgver}.tar.xz")
+sha1sums=('bf90846545c5b5a0b0badab25dc3e839dc0c6574')
 
 prepare() {
   cd "${srcdir}/${_pkgname}-${pkgver}"
@@ -72,7 +60,7 @@ package_baloo4-akonadi() {
 
 package_libbaloo4() {
   pkgdesc='Libraries for baloo4'
-  depends=('kdepimlibs' 'xapian-core' 'kfilemetadata' 'baloo_file')
+  depends=('kdepimlibs' 'xapian-core' 'kfilemetadata4' 'baloo_file')
   conflicts=('baloo<=4.14.3-1')
   replaces=('baloo<=4.14.3-1')
   provides=("baloo=${pkgver}-${pkgrel}")
