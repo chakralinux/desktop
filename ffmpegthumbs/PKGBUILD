@@ -3,7 +3,7 @@ source ../kdeapps.conf
 
 pkgname=ffmpegthumbs
 pkgver=${_kdever}
-pkgrel=1
+pkgrel=2
 pkgdesc='FFmpeg-based thumbnail creator for video files'
 url='https://projects.kde.org/projects/kde/kdemultimedia/ffmpegthumbs'
 arch=('x86_64')
@@ -15,17 +15,18 @@ options=('debug')
 source=("$_mirror/${pkgname}-$_kdever.tar.xz")
 sha256sums=(`grep ${pkgname}-$_kdever.tar.xz  ../checksums.txt | cut -d " " -f1`)
 
-prepare() {
-  mkdir -p build
-}
-
 build() {
+  cd "${srcdir}"
+  mkdir build
   cd build
-  cmake_kf5 ../${pkgname}-${pkgver}
+  cmake ../ffmpegthumbs-${pkgver} \
+    -DCMAKE_BUILD_TYPE=Release \
+    -DKDE4_BUILD_TESTS=OFF \
+    -DCMAKE_INSTALL_PREFIX=/usr
   make
 }
 
 package() {
-  cd build
-  make DESTDIR=${pkgdir} install
+  cd "${srcdir}"/build
+  make DESTDIR="${pkgdir}" install
 }

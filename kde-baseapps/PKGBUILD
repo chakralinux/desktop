@@ -11,7 +11,7 @@ pkgname=('kde-baseapps-kdepasswd'
          'kde-baseapps-lib'
          'kde-baseapps-plasma')
 pkgver=${_kdever}
-pkgrel=4
+pkgrel=5
 arch=('x86_64')
 url='http://www.kde.org'
 license=('GPL' 'LGPL' 'FDL')
@@ -27,9 +27,11 @@ prepare() {
 
 build() {
   cd build
-  cmake_kf5 ../${pkgbase}-${pkgver} \
+  cmake ../kde-baseapps-${pkgver} \
+    -DCMAKE_BUILD_TYPE=Release \
     -DKDE4_BUILD_TESTS=OFF \
-    -DCMAKE_SKIP_RPATH=ON
+    -DCMAKE_SKIP_RPATH=ON \
+    -DCMAKE_INSTALL_PREFIX=/usr
   make
 }
 
