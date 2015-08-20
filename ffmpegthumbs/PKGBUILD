@@ -3,14 +3,14 @@ source ../kdeapps.conf
 
 pkgname=ffmpegthumbs
 pkgver=${_kdever}
-pkgrel=2
+pkgrel=3
 pkgdesc='FFmpeg-based thumbnail creator for video files'
 url='https://projects.kde.org/projects/kde/kdemultimedia/ffmpegthumbs'
 arch=('x86_64')
 license=('GPL' 'LGPL' 'FDL')
 groups=('kde' 'kde-uninstall' 'kde-applications' 'kdemultimedia')
-depends=('kdelibs' 'ffmpeg')
-makedepends=('cmake' 'automoc4')
+depends=('kio' 'ffmpeg')
+makedepends=('cmake' 'extra-cmake-modules')
 options=('debug')
 source=("$_mirror/${pkgname}-$_kdever.tar.xz")
 sha256sums=(`grep ${pkgname}-$_kdever.tar.xz  ../checksums.txt | cut -d " " -f1`)
