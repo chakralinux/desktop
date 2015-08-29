@@ -11,7 +11,7 @@ pkgname=('kde-baseapps-kdepasswd'
          'kde-baseapps-lib'
          'kde-baseapps-plasma')
 pkgver=${_kdever}
-pkgrel=5
+pkgrel=6
 arch=('x86_64')
 url='http://www.kde.org'
 license=('GPL' 'LGPL' 'FDL')
@@ -103,8 +103,8 @@ package_kde-baseapps-lib() {
   groups=()
   depends=('kdelibs')
   conflicts=('kde-baseapps')
-  replaces=('kdebase-lib') #'kdebase-lib' can be removed
-  provides=('kde-baseapps' 'kdebase-lib')
+  replaces=('kde-baseapps')
+  provides=('kde-baseapps')
 
   cd "$srcdir"/build/lib
   make DESTDIR="$pkgdir" install
