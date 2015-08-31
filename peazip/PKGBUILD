@@ -1,5 +1,5 @@
 pkgname=peazip
-pkgver=5.7.1
+pkgver=5.7.2
 pkgrel=1
 pkgdesc="Free, Open Source file and archive manager. Supports 7Z, ACE, ARC, CAB, ISO, PAQ, PEA, RAR, TAR, ZIP and many more archive formats."
 arch=('x86_64')
@@ -10,9 +10,11 @@ makedepends=('lazarus')
 optdepends=('rar: support for RAR archive compression')
 categories=('utils')
 source=("https://github.com/giorgiotani/PeaZip/releases/download/${pkgver}/${pkgname}-${pkgver}.src.zip"
-        'altconf.txt')
-md5sums=('22f798991a4f93277cadf4298c36161e'
-         '8bc81e527370ae11c78511db5e2bbeb4')
+        'altconf.txt'
+        'peazip.desktop')
+sha512sums=('315eb019cf78b360c0cf430b09edbcf197fbe49b56a4f367fcb7762f3ae7293c77f6946f8f4bf372c273962adab5c38ac84447a2e21c093678224612a0caa5d0'
+         'cbf521241954b242ed002449a0ad249fec2e434ee676b4dd51fcc768f0ba443dbde2d7dfa2b42627fa8384cd61179346d0d303865273cc0043d1f8d91166073f'
+         'e9625c790e41d6b805f57d228114760cd2f8efc9ce5eff0328ae75805110d2241dc8de4eeb97391cfb7a56cd1b1b330d4496f03a753aba290479a9e9ee9ed370')
 
 build() {
   cd ${srcdir}/${pkgname}-${pkgver}.src
@@ -63,9 +65,10 @@ package() {
     install -Dm755 kde4-dolphin/usr/share/kde4/services/ServiceMenus/${i} \
 		   ${pkgdir}/usr/share/kde4/services/ServiceMenus/${i}
   done
-
-  # Move mimetypes and icons
-  install -Dm755 peazip.desktop ${pkgdir}/usr/share/applications/peazip.desktop
+  
+  #use own .desktop file to fix error name
+  install -D ../../peazip.desktop ${pkgdir}/usr/share/applications/peazip.desktop
+  # Move icons
   install -Dm755 peazip.png ${pkgdir}/usr/share/icons/hicolor/256x256/apps/peazip.png
   
   # License file
