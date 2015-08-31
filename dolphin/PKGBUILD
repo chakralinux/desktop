@@ -3,7 +3,7 @@ source ../kdeapps.conf
 
 pkgname=dolphin
 pkgver=${_kdever}
-pkgrel=2
+pkgrel=3
 pkgdesc="File Manager"
 arch=('x86_64')
 url="http://kde.org/applications/system/dolphin/"
@@ -15,8 +15,10 @@ replaces=(kde-baseapps-dolphin)
 groups=('kde' 'kde-uninstall' 'kde-applications' 'kdebase')
 install=$pkgname.install
 options=('docs' 'debug')
-source=("$_mirror/${pkgname}-$_kdever.tar.xz")
-sha256sums=(`grep ${pkgname}-$_kdever.tar.xz  ../checksums.txt | cut -d " " -f1`)
+source=("$_mirror/${pkgname}-$_kdever.tar.xz"
+        'konqpopupmenuplugin.desktop')
+sha256sums=(`grep ${pkgname}-$_kdever.tar.xz  ../checksums.txt | cut -d " " -f1`
+            '992d383b854427fcd5fc6b7ea6ccd050d2d6c5d24859b6a5a3fec62a9e261540')
 
 prepare() {
   mkdir -p build
@@ -31,4 +33,8 @@ build() {
 package() {
   cd build
   make DESTDIR=${pkgdir} install
+
+  # workaround for service menu to work, the devs are using mix DE so they didn't notice this
+  install -Dm644 ${srcdir}/konqpopupmenuplugin.desktop \
+                 ${pkgdir}/usr/share/kservicetypes5/konqpopupmenuplugin.desktop
 }
