@@ -4,7 +4,7 @@ source ../kdeapps.conf
 pkgname=chakra-common
 arch=('x86_64')
 pkgver=${_kdever}
-pkgrel=1
+pkgrel=2
 pkgdesc="Common configuration files, scripts and artwork"
 url="http://www.chakraos.org"
 license=('GPL'
@@ -30,7 +30,7 @@ replaces=('kde-common'
 conflicts=('kde-common'
            'chakra-paste')
 install=chakra-common.install
-source=('http://www.kde-apps.org/CONTENT/content-files/48411-rootactions_servicemenu_2.8.2.tar.gz'
+source=('http://kde-apps.org/CONTENT/content-files/48411-rootactions_servicemenu_2.8.6.tar.gz'
         'servicemenu-copy-path.desktop'
         'http://www.kde-apps.org/CONTENT/content-files/102825-compressattach.desktop.bz2'
         'servicemenu-rootactions.patch'
@@ -58,7 +58,7 @@ source=('http://www.kde-apps.org/CONTENT/content-files/48411-rootactions_service
         'kde4.sh')
         # skipping chakra-paste because gitorious has issues with wget
 #        'https://gitorious.org/chakra-paste/chakra-paste/archive/05f0a884a4de1460309ee95d678eb034c4c964b5.tar.gz'
-sha256sums=('39e41a6acf246af4050d3e253b028f6abb739e19ec03d3c17ebf467b68be3962'
+sha256sums=('9b2cdc947f1da2c56d0f009ff470f7aa9021f214a2470c33ee4628281b7c1163'
             '2bf00472d9b50bc9befcf9cdca92a1a6d31690287de330e6390ca65c17aba02e'
             'ca7d66aec559282581dd577746dff86b9b4127ae871ee2788b74ab66f99edbfa'
             'ba4b1f429bd6900f6989df6e50b69fea38110ccb4a304a903de6e291d0af8b74'
@@ -117,14 +117,19 @@ package() {
     install -D -m755 -o root -g root ${srcdir}/updates.conf ${pkgdir}/etc/chakra/updates.conf
 
     # Install root actions service menu
-    cd ${srcdir}/rootactions_servicemenu_2.8.2/Root_Actions_2.8.2/dolphin-KDE4/
+    cd ${srcdir}/rootactions_servicemenu_2.8.6/Root_Actions_2.8.6/dolphin-KDE4/
     mkdir -p ${pkgdir}/usr/share/kde4/services/ServiceMenus/
     install -m755 *.desktop ${pkgdir}/usr/share/kde4/services/ServiceMenus/
-        cd ${srcdir}/rootactions_servicemenu_2.8.2/Root_Actions_2.8.2
+        cd ${srcdir}/rootactions_servicemenu_2.8.6/Root_Actions_2.8.6
         patch -p2 < ${srcdir}/servicemenu-rootactions.patch      
     install -Dm755 rootactions-servicemenu.pl ${pkgdir}/usr/bin/rootactions-servicemenu.pl
         sed "s~Icon=terminal~Icon=utilities-terminal~g" -i ${pkgdir}/usr/share/kde4/services/ServiceMenus/10-rootactionsfolders.desktop
         sed "s~Icon=terminal~Icon=utilities-terminal~g" -i ${pkgdir}/usr/share/kde4/services/ServiceMenus/11-rootactionsfiles.desktop
+
+    # Install root actions kf5
+    cd ${srcdir}/rootactions_servicemenu_2.8.6/Root_Actions_2.8.6/dolphin-KDE4/
+    install -dm755 ${pkgdir}/usr/share/kservices5/ServiceMenus/
+    install -m755 *.desktop ${pkgdir}/usr/share/kservices5/ServiceMenus/
 
     # Install all other service menus
     install -m755 ${srcdir}/servicemenu-copy-path.desktop ${pkgdir}/usr/share/kde4/services/ServiceMenus/copy-path.desktop
