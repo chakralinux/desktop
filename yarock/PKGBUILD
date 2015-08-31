@@ -1,31 +1,33 @@
 pkgname=yarock
 _pkgname=Yarock
-pkgver=1.1.3
+pkgver=1.1.4
 pkgrel=1
 pkgdesc="A Modern Music Player with collection browser based on cover art."
 arch=('x86_64')
 url="https://launchpad.net/yarock"
 screenshot="http://qt-apps.org/CONTENT/content-pre2/129372-2.png"
 license=('GPL3')
-depends=('qt5-x11extras' 'taglib' 'phonon-qt5' 'boost' 'qjson' 'htmlcxx')
+depends=('qt5-x11extras' 'taglib' 'phonon' 'phonon-qt5' 'boost' 'qjson' 'htmlcxx')
 makedepends=('cmake' 'mpv')
 optdepends=('mpv: alternative (working) engine')
 categories=('multimedia')
 source=("http://launchpad.net/$pkgname/1.x/$pkgver/+download/${_pkgname}_${pkgver}_source.tar.gz"
 	"qt-build.patch"
         "phonon.patch")
-sha512sums=('daff56a49232eb22edee5f3588f1461f7ab9ed17affc7aec288d61d58ecf28d8ce773eb9a867271112538431debb380749d2fd72340716d7f7ecde41684351df'
+sha512sums=('3175acae4df5c9df1f7174065f1a0e82a8e1dfbc85e49c6e9edd431bb15416fe2fafec2ac8172818c168fbc1771fad96da196bb2aed99be98a262830831b13c5'
 	    '59a0fe566e016f339b660a9773759708055493d1265652340c9b9a42121d4cc98d5e3777f9e2ab045e168df2f63fb9d37d3a2a7a0a2faf91bd217fb94c611300'
 	    '44d88dee63e056daf1d7176dcbff0b54d8c8b23cbe937ad68a712a7ce02bcb919067a47c201f793f3143ff2941ff7d3009868c7a3e603076cb8493651568ced6')
 
 prepare() {
   rm -rf "build"
   mkdir "build"
+  
+  #seems not needed anymore but better keep them for now
 
   # phonon include patch
-  patch -p0 -i "phonon.patch"
+ # patch -p0 -i "phonon.patch"
   # patch to fix build with recent qt5
-  patch -p0 -i "qt-build.patch"
+#  patch -p0 -i "qt-build.patch"
 }	    
 	    
 build() {
