@@ -1,24 +1,23 @@
 pkgname=opencc
-pkgver=0.4.3
+pkgver=1.0.3
 pkgrel=1
 pkgdesc="Library for Open Chinese Convert"
-arch=(x86_64)
-url="http://code.google.com/p/opencc/"
-license=('Apache License 2.0')
-depends=('glibc')
+arch=('x86_64')
+url="https://github.com/BYVoid/OpenCC/"
+license=('Apache')
+depends=('gcc-libs' 'doxygen' 'python2')
 makedepends=('cmake')
-source=("http://opencc.googlecode.com/files/${pkgname}-${pkgver}.tar.gz")
-sha1sums='4677e63fa36fb2b92a52c01df2acc83664aaf882'
+source=("https://github.com/BYVoid/OpenCC/archive/ver.${pkgver}.tar.gz")
+sha1sums=('f841d1e4383c4d27640f9230548c51a094959ad3')
 screenshot='http://opencc.googlecode.com/files/screenshot-gui-ubuntu.png'
 
 build() {
-  cd $srcdir/${pkgname}-${pkgver}
-  cmake -DCMAKE_INSTALL_PREFIX=/usr -DCMAKE_BUILD_TYPE=Release
+  cd ${srcdir}/OpenCC-ver.${pkgver}
+  cmake -DCMAKE_INSTALL_PREFIX=/usr -DCMAKE_BUILD_TYPE=Release -DBUILD_DOCUMENTATION=ON
   make
 }
 
 package() {
-  cd $srcdir/${pkgname}-${pkgver}
+  cd ${srcdir}/OpenCC-ver.${pkgver}
   make DESTDIR="${pkgdir}" install
 }
-
