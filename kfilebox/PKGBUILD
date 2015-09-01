@@ -2,52 +2,41 @@
 # Contributions from AUR: https://aur.archlinux.org/packages/kfilebox/
 
 pkgname=kfilebox
-pkgver=0.4.9
-pkgrel=3
+pkgver=0.4.10.r8.g5294287
+pkgrel=1
 pkgdesc="KDE4 Dropbox client (with own daemon)"
 arch=('x86_64')
 url="http://kdropbox.deuteros.es"
 license=('GPL')
-depends=('kde-workspace' 'gettext')
-provides=('dropbox')
-replaces=('kfilebox-gtkfree')
+depends=('kconfig' 'kcoreaddons' 'ki18n' 'knotifications' 'dropbox')
+makedepends=('extra-cmake-modules' 'qt5-tools')
 categories=('network' 'backup' 'cloud')
-source=(${pkgname}-${pkgver}.tar.gz::http://downloads.sourceforge.net/project/kdropbox/kfilebox-${pkgver}/Source/${pkgname}_${pkgver}.tar.gz)
-install=${pkgname}.install
-noextract=(${pkgname}-${pkgver}.tar.gz})
-md5sums=('4b40b7a2e52c0d3d126dd4f8c404efdd')
+source=("git+https://github.com/marcpayne/kfilebox.git#branch=qt5-kf5-port")
+md5sums=('SKIP')
+
+pkgver() {
+    cd ${srcdir}/${pkgname}
+    git describe --long --tags | sed 's/\([^-]*-g\)/r\1/;s/-/./g'
+}
 
 prepare() {
-    cd "$srcdir"
-    gunzip -f "${pkgname}-${pkgver}.tar.gz"
-    mv "${pkgname}-${pkgver}.tar" "${pkgname}-${pkgver}.tar.gz"
-    tar fxvz "${pkgname}-${pkgver}.tar.gz"
+    cd ${srcdir}/${pkgname}
+    [[ -e build ]] && rm -rf build
+    mkdir build
 }
 
 build() {
-    cd "${srcdir}/${pkgname}_${pkgver}" 
-    qmake
+    cd "${srcdir}/${pkgname}/build"
+    cmake -DCMAKE_INSTALL_PREFIX=/usr \
+          -DCMAKE_BUILD_TYPE=Release ..
     make
 }
 
 package() {
-    cd "${srcdir}/${pkgname}_${pkgver}"
-    msg 'install binary'
-    install -Dm 755 "${srcdir}/${pkgname}_${pkgver}/bin/kfilebox" "${pkgdir}/usr/bin/kfilebox"
-    msg 'create data directory'
-    install -dm 755 "${pkgdir}/usr/share/kfilebox"
-    msg 'copy all icons'
-    cp -pr "${srcdir}/${pkgname}_${pkgver}/img/"* "${pkgdir}/usr/share/kfilebox"
-    msg 'install notifyrc file'
-    install -Dm 644 "${srcdir}/${pkgname}_${pkgver}/kfilebox.notifyrc" "${pkgdir}/usr/share/apps/kfilebox/kfilebox.notifyrc"
-    msg 'install desktop file'
-    install -Dm 644 "${srcdir}/${pkgname}_${pkgver}/kfilebox.desktop" "${pkgdir}/usr/share/applications/kde4/kfilebox.desktop"
-    msg 'install locales'
-    for language in `ls "${srcdir}/${pkgname}_${pkgver}/locale"`
-    do
-      if [ -e ${srcdir}/${pkgname}_${pkgver}/locale/$language/kfilebox.mo ]; then
-	install -Dm 644 ${srcdir}/${pkgname}_${pkgver}/locale/$language/kfilebox.mo ${pkgdir}/usr/share/locale/$language/LC_MESSAGES/kfilebox.mo
-      fi
-    done
+    cd "${srcdir}/${pkgname}/build"
+    make DESTDIR=${pkgdir} install
+    # Move wrong locale name
+    mv -v ${pkgdir}/usr/share/locale/tw/ ${pkgdir}/usr/share/locale/zh_TW/
+    mv -v ${pkgdir}/usr/share/locale/zh ${pkgdir}/usr/share/locale/zh_CN/
 }
 
