@@ -3,7 +3,7 @@
 
 pkgname=kfilebox
 pkgver=0.4.10.r8.g5294287
-pkgrel=1
+pkgrel=2
 pkgdesc="KDE4 Dropbox client (with own daemon)"
 arch=('x86_64')
 url="http://kdropbox.deuteros.es"
@@ -35,8 +35,12 @@ build() {
 package() {
     cd "${srcdir}/${pkgname}/build"
     make DESTDIR=${pkgdir} install
+
     # Move wrong locale name
     mv -v ${pkgdir}/usr/share/locale/tw/ ${pkgdir}/usr/share/locale/zh_TW/
     mv -v ${pkgdir}/usr/share/locale/zh ${pkgdir}/usr/share/locale/zh_CN/
-}
 
+    # Desktop file is wrong
+    sed "s|Icon=/usr/share/kfilebox/kfilebox.png|Icon=kfilebox|g" -i \
+        ${pkgdir}/usr/share/applications/kfilebox.desktop
+}
