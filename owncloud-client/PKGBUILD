@@ -1,45 +1,35 @@
 _name=owncloudclient
 pkgname=owncloud-client
-pkgver=2.0.0
+pkgver=2.0.1
 pkgrel=1
 pkgdesc="ownCloud client based on mirall"
 arch=('x86_64')
 url="http://owncloud.org/"
 screenshot="http://owncloud.org/wp-content/uploads/2012/03/linux3.png"
 license=('GPL2')
-depends=('qtwebkit' 'neon' 'sqlite3' 'qtkeychain')
-makedepends=('cmake' 'libssh' 'smbclient' 'python3-sphinx')
+depends=('qtkeychain-qt5' 'qt5-webkit' 'hicolor-icon-theme')
+makedepends=('cmake' 'python3-sphinx' 'qt5-tools' 'doxygen')
 groups=('network')
 conflicts=('csync-owncloud')
 backup=('etc/owncloud-client/sync-exclude.lst')
 install=${pkgname}.install
 source=("https://download.owncloud.com/desktop/stable/$_name-$pkgver.tar.xz")
-sha512sums=('5602c4055bdae98dec7eb72ca4ec38c881ebb55be0fc44387ae6a1ee8b8ab72f69e2061d807cb34f26a900c2399b170973af5d53a635d19b07df086745ae7123')
-
-prepare() {
-  cd ${_name}-${pkgver}/
-  if [[ -d build ]]; then rm -rf build; fi
-  mkdir build
-}
+md5sums=('e87a01e464f005cf95cde83f46cf318d')
 
 build() {
-  cd ${_name}-${pkgver}/build
+  mkdir -p build && cd build
 
-  cmake -DBUILD_WITH_QT4=on \
-        -DQT_QMAKE_EXECUTABLE=/usr/bin/qmake \
+  cmake ../${_name}-${pkgver} \
         -DCMAKE_INSTALL_PREFIX=/usr \
         -DCMAKE_INSTALL_LIBDIR=lib \
+        -DCMAKE_BUILD_TYPE=Release \
         -DCMAKE_INSTALL_SYSCONFDIR=/etc/${pkgname} \
-        -WITH_DOC=TRUE \
-        -DMEM_NULL_TESTS=On \
-        -DUNIT_TESTING=On \
-        -DCMAKE_BUILD_TYPE="Release" \
-        ..
+        
   make
   make doc-man
 }
- 
+
 package() {
-  cd ${_name}-${pkgver}/build
+  cd build
   make DESTDIR="${pkgdir}" install
 }
