@@ -1,115 +1,65 @@
 pkgname=calibre
-pkgver=2.36.0
-pkgrel=2
+pkgver=2.37.1
+pkgrel=1
 pkgdesc="Ebook management application"
 arch=('x86_64')
 url="http://calibre-ebook.com/"
 license=('GPL3')
-depends=('python2-six' 'python2-dateutil' 'python2-cssutils' 'python2-cherrypy' 
+depends=('python2-six' 'python2-dateutil' 'python2-cssutils' 'python2-cherrypy'
          'python2-mechanize' 'podofo' 'libwmf'
-         'imagemagick' 'chmlib' 'python2-lxml' 'libusb' 
-         'python2-pillow' 'shared-mime-info' 'python2-dns' 
-         'python2-pyqt5' 'python2-psutil' 'icu' 'libmtp' 'python2-dbus' 
+         'imagemagick' 'chmlib' 'python2-lxml' 'libusbx'
+         'python2-pillow' 'shared-mime-info' 'python2-dns'
+         'python2-pyqt5' 'python2-psutil' 'icu' 'libmtp' 'python2-dbus'
          'python2-netifaces' 'python2-cssselect' 'python2-apsw' 'qt5-webkit'
-         'qt5-svg' 'python2-chardet' 'python2-html5lib' 'python2-pygments')
-makedepends=('python2-pycountry' 'qt5-x11extras')
+         'qt5-svg' 'python2-chardet' 'python2-html5lib' 'python2-pygments' 'mtdev'
+         'desktop-file-utils')
+makedepends=('qt5-x11extras' 'xdg-utils')
 optdepends=('ipython2: to use calibre-debug'
-            'udisks: required for mounting certain devices')
+            'udisks: required for mounting certain devices'
+            'poppler: required for converting pdf to html')
 screenshot=('https://lh5.googleusercontent.com/_lG58t3XWd3c/TcNwiXkAx_I/AAAAAAAAAEc/M34I4uY9UUY/s800/gui.jpeg')
 install=${pkgname}.install
-source=("http://download.calibre-ebook.com/${pkgver}/${pkgname}-${pkgver}.tar.xz"
-	"calibre-gui.desktop"
-	"calibre-ebook-viewer.desktop"
-	"calibre-ebook-edit.desktop"
-	"calibre-lrfviewer.desktop"
-	"calibre-azw2.png"
-	"calibre-azw3.png"
-	"calibre-ebook-edit.png"
-	"calibre-gui.png"
-	"calibre-lrf.png"
-	"calibre-mobi.png"
-	"calibre-tpz.png"
-	"calibre-viewer.png")
-sha512sums=('4e3734e154036d33281e3f769c56b2a6ffab896a069de4dd1b05435458e8158a69e6692c82b146b943a7bc13527e2cf2a15ffc2ad68beb3a0102ad382f1c8565'
-	    '0d8a63b22f6f9aa02969b15cba0a1c3c5f4dff14d64a607b2d3938f429257233d989b658a48425247bd4205419bf6ed9da93981f0dc00c913e87bb06c714b4cd'
-	    'a2bca12168bfc8042a4e71d72e3f342e5b5a2ec4dad60a9391a3ce74bca8eb7a8ffa569863ef9b0f590914f54547e170c24bd52190df240e23abd693f6cc4cfa'
-	    'aebf543a584ee89ca52202febf78f25c9e31aa3eabb2f029dc15cb8c57c9d6ed5310b8421cc46cc05803a0ab9aa5cd3f7db1c4b141867f32c8bd6246ee4baf51'
-	    'f4e0c00a611cfe48d93f40693e6cafdf5dcd2979397f527aaaeb26c4662eba58160337236ccf346c09824230f70580b114aedba83ee70dfb9c8a47599e66d261'
-	    '0950a59bca86f4ab95c8bcdc4cc08319bc33a2222c766b3b64e40e1c2eb03077b88732c3d8c3567fa8f137a0cc6965de29884a6c97107c51ead29ffb5587d16d'
-	    'e7ef806b1509491699b5afbcb758b24424c897a817ee2c6329425d150b69b936a477c83cddbc0db496705768c7d9ada246d7b80d81a13981d34b9e7b04d539e5'
-	    '952885acc449ef2f97954e9b826de73c3fe2f55752f5058c857520477b728041839abf1b8c87b4c6b0ab8c70ff99eea4791a0c994c3648a510e74480420d4356'
-	    '6431e414d4736fcd357611cd14c1b2f8c7b8cf054b802aaf28b6b9eff42f3b8aabb798b2f7b56a71d3d22376d8baa8a8c21621811ac648d02e6c7e6a8ca737a2'
-	    '75cd978166fe38119c7a75dfe78595bc47e94c1bf8a98d4d65aa4d348a7ee3c58e3f78aed4f7a5d468fa8eb05a159c006b6ba3d4f8ef954a64d9dc20dcb2ac9a'
-	    '26d8154342fadc2461ca99a8d7b257f18c8f890590390d7c16976e335dca4c6b677acb139b7294047a95e4f8bc849e9e5fa3d40ff64c08a5164710202e35eac5'
-	    '0967c532496349fe033ad90d9b37f7b821997cd18568d291edd5bb0b8fdab335bf5507d76cf9d0daf12e89e026524f7ed306eb26da963754495a4db1180ff0a6'
-	    '762e749b906784c097d44ef524aa5f6247a30624b2e546141c20083456d2d57f1ea72f4a7dabf3df17e4806c37a2d36ebeaf49da1632b3a54eb6a99975e7e427')
+source=("http://download.calibre-ebook.com/${pkgver}/calibre-${pkgver}.tar.xz")
+md5sums=('d2e97c9e690ce2d877d6390445b76994')
 
-prepare() {  
-  
-  cd ${pkgname}-${pkgver}
-  
-  # Remove unneded files and libs
+prepare(){
+  cd "${pkgname}-${pkgver}"
+
+  # Remove unneeded files and libs
   rm -rf resources/${pkgname}-portable.* \
-	 src/cherrypy \
-         #src/chardet \
-         #src/html5lib 
+         src/cherrypy \
+         src/html5lib \
+         src/chardet
 
-  sed -i -e "s/shlex.split(ldflags)/& + ['-fPIC']/" setup/extensions.py
-
-  sed -i 's:\(env[ ]\+python$\|/usr/bin/python$\):\12:g' \
-    $(find . -regex ".*\.py\|.*\.recipe")
-
-  sed -i "/pyqt_sip_dir/ s:=.*:= '/usr/share/sip/Py2-PyQt5':" setup/build_environment.py
-  
   # Desktop integration (e.g. enforce arch defaults)
   sed -e "/self.create_uninstaller()/,/os.rmdir(config_dir)/d" \
-      -e "/\(cc('xdg-icon-resource\|self.icon_resources.append\|'128'))\)/d" \
-      -e "/render_img/ s/\('calibre-.*\.png'\)/os.path.join(dir, \1)/g" \
-      -e "/dir, 'calibre-lrf.png'/i \
-\                dir = os.path.join(self.opts.staging_sharedir,'../pixmaps')\n\
-\                os.mkdir(dir)" \
-      -e "/f = open/ s/\('calibre-.*\.desktop'\)/os.path.join(dir, \1)/g" \
-      -e "/dir, 'calibre-lrfviewer.desktop'/i \
-\                dir = os.path.join(self.opts.staging_sharedir,'../applications')\n\
-\                os.mkdir(dir)" \
+      -e "/cc(\['xdg-desktop-menu', 'forceupdate'\])/d" \
+      -e "/cc(\['xdg-mime', 'install', MIME\])/d" \
       -e "s/'ctc-posml'/'text' not in mt and 'pdf' not in mt and 'xhtml'/" \
       -e "s/^Name=calibre/Name=Calibre/g" \
       -i  src/calibre/linux.py
 }
 
 build() {
-  cd ${pkgname}-${pkgver}
-  
-  LANG=en_US.UTF-8 python2 setup.py build
-  LANG=en_US.UTF-8 python2 setup.py translations
+  cd "${pkgname}-${pkgver}"
+
+  LANG='en_US.UTF-8' python2 setup.py build
+  LANG='en_US.UTF-8' python2 setup.py gui
 }
 
 package() {
-  cd ${pkgname}-${pkgver}
+  cd "${pkgname}-${pkgver}"
 
-  # Fix the environment module location
-  sed -i -e "s|(prefix=.*)|(prefix='${pkgdir}/usr')|g" setup/install.py
+  install -d "${pkgdir}/usr/share/zsh/site-functions" \
+             "${pkgdir}"/usr/share/{applications,desktop-directories,icons/hicolor}
 
-  install -d "${pkgdir}/usr/lib/python2.7/site-packages"
-  install -d "${pkgdir}/usr/share/zsh/site-functions"
-  
-  LANG=en_US.UTF-8 python2 setup.py install \
-    --root="${pkgdir}" \
-    --prefix=/usr \
-    --staging-bindir="${pkgdir}/usr/bin" \
-    --staging-libdir="${pkgdir}/usr/lib" \
-    --staging-sharedir="${pkgdir}/usr/share"
-    
+  install -Dm644 resources/calibre-mimetypes.xml \
+    "${pkgdir}/usr/share/mime/packages/calibre-mimetypes.xml"
+
+  XDG_DATA_DIRS="${pkgdir}/usr/share" LANG='en_US.UTF-8' \
+    python2 setup.py install --staging-root="${pkgdir}/usr" --prefix=/usr
+
+  # Compiling bytecode FS#33392
   python2 -m compileall "${pkgdir}/usr/lib/calibre/"
   python2 -O -m compileall "${pkgdir}/usr/lib/calibre/"
-  
-    # I don't know why .desktop files are no more present starting from 2.36.0
-  
-  install -d ${pkgdir}/usr/share/{applications,pixmaps}
-  cp -R ../../{calibre-gui,calibre-ebook-viewer,calibre-lrfviewer,calibre-ebook-edit}.desktop \
-  ${pkgdir}/usr/share/applications
-  
-  cp -R ../../{calibre-azw2,calibre-azw3,calibre-ebook-edit,calibre-gui,calibre-lrf,calibre-mobi,calibre-tpz,calibre-viewer}.png \
-  ${pkgdir}/usr/share/pixmaps
-  
 }
