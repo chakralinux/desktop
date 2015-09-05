@@ -1,0 +1,31 @@
+
+pkgname=chakra-heritage-themes
+pkgver=2015.09
+pkgrel=1
+pkgdesc='Chakra Plasma 5 Look & Feel theme files'
+url='http://www.chakraos.org'
+arch=('x86_64')
+license=('LGPL')
+depends=('plasma-framework')
+makedepends=('extra-cmake-modules')
+
+_gitsha='59f4b49'
+source=("git://git.chakraos.org/heritage.git#commit=${_gitsha}")
+md5sums=('SKIP')
+
+build() {
+  mkdir -p build
+  cd build
+  
+  cmake ../heritage \
+    -DCMAKE_BUILD_TYPE=Release \
+    -DCMAKE_INSTALL_PREFIX=/usr \
+    -DKDE_INSTALL_USE_QT_SYS_PATHS=ON  
+  make
+}
+
+package() {
+  cd build
+
+  make DESTDIR=${pkgdir} install
+}
