@@ -1,0 +1,20 @@
+
+pkgname=("chakra-wallpapers-lichene")
+pkgver=2015.09
+pkgrel=1
+pkgdesc="Chakra Lichene Wallpapers by almack"
+url="http://www.chakraos.org"
+license=("GPL" "Creative Commons, BY-ND")
+arch=('any')
+makedepends=('automoc4')
+groups=("kde" "kde-uninstall" "chakra-wallpapers")
+source=("http://rsync.chakraos.org/sources/chakra-artwork/wallpapers/lichene/lichene_${pkgver}-1.tar.gz")
+http://rsync.chakraos.org/sources/chakra-artwork/wallpapers/lichene/Lichene_2015.09-1.tar.gz
+md5sums=('559ba5acdfced26ad36aef21ed026141')
+
+package() {
+	cd ${srcdir}/lichene
+	
+	mkdir -pv ${pkgdir}/usr/share/wallpapers/lichene/contents/
+	cp -Rv * ${pkgdir}/usr/share/wallpapers/lichene
+}
