@@ -5,7 +5,7 @@ pkgbase='kde-runtime'
 pkgname=('kde-runtime' 'khelpcenter4')
 arch=('x86_64')
 pkgver=${_kdever}
-pkgrel=3
+pkgrel=4
 url='http://www.kde.org'
 license=('GPL' 'LGPL' 'FDL')
 options=('docs' 'debug')
@@ -19,7 +19,6 @@ makedepends=('pkgconfig'
              'xine-lib'
              'libcanberra-pulse'
              "kdelibs>=${_libsver}"
-             "baloo4>=${_oldkdever}"
              "kactivities"
              'oxygen-icons'
              'xorg-xauth'
@@ -63,7 +62,6 @@ build() {
 package_kde-runtime() {
     pkgdesc='Plugins and applications necessary for the running of KDE applications'
     depends=("kdelibs>=${_libsver}"
-             "baloo4>=${_oldkdever}"
              "kactivities"
              'oxygen-icons'
              'xorg-xauth'
@@ -76,7 +74,8 @@ package_kde-runtime() {
              'libcanberra'
              'sound-theme-freedesktop'
              'libgcrypt')
-    optdepends=('htdig: to build the search index'
+    optdepends=('kdepimlibs4: for kwalletd, and is needed by DrKonqi to send crash reports to KDE.org'
+		'htdig: to build the search index'
                 'gdb: drkonq crash handler')
     replaces=('kdebase-runtime'
               'kde-runtime-doc')
