@@ -1,13 +1,6 @@
-#
-# Apps Packages for Chakra, part of chakra-project.org
-#
-# Contributor : Giuseppe Calà <jiveaxe@gmail.com>
-
-# include global config
-source ../_buildscripts/${current_repo}-${_arch}-cfg.conf
 
 pkgname=zanshin
-pkgver=0.2.1
+pkgver=0.2.2
 pkgrel=1
 pkgdesc="A Getting Things Done application which aims at getting your mind like water."
 url="http://quickgit.kde.org/?p=zanshin.git&a=summary"
@@ -18,16 +11,16 @@ makedepends=('boost' 'automoc4')
 categories=('utils')
 source=("http://files.kde.org/zanshin/${pkgname}-${pkgver}.tar.bz2")
 screenshot=('http://zanshin.kde.org/images/screenshot.png')
-md5sums=('e8c920f07374cb08200f990ef592938c')
+md5sums=('94b2c142b7afcab0ee4fdb4e5000329c')
 
 build() {
-  cd $srcdir/$pkgname-$pkgver
+  cd $pkgname-$pkgver
   mkdir build && cd build
   cmake .. -DCMAKE_INSTALL_PREFIX=`kde4-config --prefix` -DCMAKE_BUILD_TYPE=Release
-  make || return 1
+  make
 }
 
 package() {
-   cd $srcdir/$pkgname-$pkgver/build
+   cd $pkgname-$pkgver/build
    make DESTDIR="$pkgdir/" install
 }
