@@ -2,6 +2,8 @@
 pkgname=calamares
 pkgver=1.1.2
 pkgrel=8
+_releaseName="Fermi"
+_releaseYear="2015"
 pkgdesc='Distribution-independent installer framework'
 arch=('x86_64')
 url='https://github.com/calamares/calamares'
@@ -13,7 +15,7 @@ makedepends=('extra-cmake-modules' 'git' 'qt5-tools')
 _gitsha='a6cfa251715173b8b75027b5c0a3e5bc02eaed3a'
 #source=("git://github.com/calamares/calamares#commit=${_gitsha}"
 source=("git://github.com/rshipp/calamares#commit=${_gitsha}"
-        http://rsync.chakraos.org/sources/chakra-artwork/calamares/chakra-branding_2015.09-2.tar.gz
+        http://rsync.chakraos.org/sources/chakra-artwork/calamares/chakra-branding_2015.09-3.tar.gz
         'displaymanagers.conf'
         'locale.conf'
         'prepare.conf'
@@ -29,7 +31,7 @@ source=("git://github.com/rshipp/calamares#commit=${_gitsha}"
 #        'JobQueue.diff'
 #        'along_UEFI.diff')
 md5sums=('SKIP'
-         '1585fde86cad4ae518d92bb06a6d761a'
+         '6ee44ac48ff9dc794e7d67008c899bb2'
          '0364830e843823dff80b18509ea4042e'
          'c05b2dda2e0a8a57cf25cc89913a1f4f'
          '76cf16c8e4347d369330ed64ff28083b'
@@ -56,6 +58,9 @@ prepare () {
   
   # copy our branding files to the correct location
   cp -avr ${srcdir}/chakra src/branding/chakra
+  # apply the current version Name and Year
+  sed -i -e "s/UnknownName/${_releaseName}/" "src/branding/chakra/branding.desc"
+  sed -i -e "s/UnknownYear/${_releaseYear}/" "src/branding/chakra/branding.desc"
 }
 
 build() {
