@@ -3,6 +3,7 @@ pkgname=('calligra-braindump'
          'calligra-devtools'
          'calligra-extras'
          'calligra-flow'
+         'calligra-gemini'
          'calligra-handbook'
          'calligra-karbon'
          'calligra-kexi'
@@ -12,8 +13,8 @@ pkgname=('calligra-braindump'
          'calligra-sheets'
          'calligra-stage'
          'calligra-words')
-pkgver=2.9.6
-pkgrel=2
+pkgver=2.9.7
+pkgrel=1
 arch=('x86_64')
 url='http://www.calligra.org'
 screenshot=("http://upload.wikimedia.org/wikipedia/commons/thumb/3/3e/Calligra_Stage_2.4.png/800px-Calligra_Stage_2.4.png")
@@ -31,14 +32,14 @@ makedepends=('automoc4'
              'glew'
              'gsl'
              'icu'
-             'kdeedu-marble'
              'kdegraphics-okular'
              'kdelibs'
-             'kdepimlibs'
+             'kdepimlibs4'
              'lcms2'
              'libdmtx'
              'libgsf'
              'libkdcraw'
+             'libmarble4'
              'libmariadbclient'
              'libodfgen'
              'libpqxx'
@@ -59,13 +60,18 @@ options=("debug")
 groups=('calligra')
 source=("http://download.kde.org/stable/${pkgbase}-${pkgver}/${pkgbase}-${pkgver}.tar.xz"
         'libwps-0.4.patch')
-md5sums=('a576450e8c0ea63b7dff50681a236d61'
+md5sums=('d99288b1492cf9ae6a6f602b513b93e7'
          '6ea15f8b3938838d89ea0aa08921afd1')
 
 build() {
     # Fix build against libwps 0.4
     cd $pkgbase-$pkgver
     patch -p1 -i "$srcdir"/libwps-0.4.patch
+    
+    # Fix build against libmarble4
+    sed -e 's|PATH_SUFFIXES marble|PATH_SUFFIXES marble4|g' -i CMakeLists.txt
+    sed -e 's|#include <marble/|#include <marble4/|g' -e 's|#include "marble/|#include "marble4/|g' \
+    -i plugins/reporting/maps/{*.cpp,*.h,marble/*.h} -i kexi/plugins/forms/widgets/mapbrowser/{*.cpp,*.h}
     
     cd "${srcdir}"
     mkdir -p build && cd build
@@ -74,7 +80,11 @@ build() {
         -DCMAKE_BUILD_TYPE=RelWithDebInfo \
         -DCMAKE_INSTALL_PREFIX=/usr \
         -DCMAKE_INSTALL_LIBDIR=lib \
-        -DBUILD_active=OFF
+        -DBUILD_active=OFF \
+        -DWITH_Soprano=OFF \
+        -DMARBLE_INCLUDE_DIR=/usr/include/marble4 \
+        -DMARBLE_GLOBAL_HEADER=/usr/include/marble4/MarbleGlobal.h \
+        -DMARBLE_LIBRARIES=/usr/lib/libmarblewidget.so
     make
 }
 
@@ -120,9 +130,20 @@ package_calligra-flow() {
     make DESTDIR="${pkgdir}" install
 }
 
+package_calligra-gemini() {
+  pkgdesc="QML interface for Calligra Words and Stage"
+  depends=('calligra-words' 'calligra-stage')
+  install=calligra-gemini.install
+
+  cd build/qtquick
+  make DESTDIR="${pkgdir}" install
+  cd "${srcdir}"/build/gemini
+  make DESTDIR="${pkgdir}" install
+}
+
 package_calligra-handbook() {
     pkgdesc="Documentation for Calligra"
- options=('docs')
+    options=('docs')
     categories=('documentation')
 
     cd build/doc/calligra
@@ -152,7 +173,7 @@ package_calligra-kexi() {
              'sqlite3')
     optdepends=('calligra-sheets'
                 'freetds'
-                'kdeedu-marble'
+                'libmarble4'
                 'libmariadbclient'
                 'libpqxx'
                 'xbase')
@@ -196,9 +217,9 @@ package_calligra-libs() {
     pkgdesc="Libraries for Calligra"
     depends=('create-resources'
              'icu'
-             'kactivities'
-             'kdeedu-marble'
-             'kdepimlibs'
+             'libkactivities4'
+             'libmarble4'
+             'kdepimlibs4'
              'lcms2'
              'libspnav'
              'libvisio'
