@@ -1,7 +1,7 @@
 
 pkgname=calamares
 pkgver=1.1.2
-pkgrel=10
+pkgrel=11
 _releaseName="Fermi"
 _releaseYear="2015"
 pkgdesc='Distribution-independent installer framework'
@@ -12,7 +12,7 @@ depends=('qt5-svg' 'kconfig' 'ki18n' 'kcoreaddons' 'solid' 'yaml-cpp'
          'parted' 'libatasmart' 'udisks2' 'polkit-qt5' 'boost-libs'
          'rsync' 'python3' 'keyboardctl')
 makedepends=('extra-cmake-modules' 'git' 'qt5-tools')
-_gitsha='a6cfa251715173b8b75027b5c0a3e5bc02eaed3a'
+_gitsha='fe80c12'
 #source=("git://github.com/calamares/calamares#commit=${_gitsha}"
 source=("git://github.com/rshipp/calamares#commit=${_gitsha}"
         http://rsync.chakraos.org/sources/chakra-artwork/calamares/chakra-branding_2015.09-3.tar.gz
@@ -22,6 +22,7 @@ source=("git://github.com/rshipp/calamares#commit=${_gitsha}"
         'settings.conf'
         'packages.conf'
         'unpackfs.conf'
+        '_bootldr.conf'
         'launch-calamares.sh'
         'installer.svg'
         'calamares.desktop')
@@ -35,9 +36,10 @@ md5sums=('SKIP'
          '0364830e843823dff80b18509ea4042e'
          'c05b2dda2e0a8a57cf25cc89913a1f4f'
          '76cf16c8e4347d369330ed64ff28083b'
-         'ee752ca04615b78792ce33ada19d2f8b'
-         '9e4578efd664f835416984559cc9b575'
+         '15481fa420d024db7b1960fca8ded00e'
+         '7fcdb437a7b20b15439689fef3a7d1be'
          'f8e10a9fa0324f68650a646769339da9'
+         'f1e81e458a0fc485a8dd3db77e799fae'
          '2437e44479a54376ad9244d120369f6c'
          'f005a6e10b8e0425e04207920b6231b7'
          '31a21df45f1f6a9fb0aaf0d5418895f2')
@@ -87,6 +89,7 @@ package() {
   install -D -m644 "${srcdir}/prepare.conf" "${pkgdir}/etc/calamares/modules/prepare.conf"
   install -D -m644 "${srcdir}/unpackfs.conf" "${pkgdir}/etc/calamares/modules/unpackfs.conf"
   install -D -m644 "${srcdir}/packages.conf" "${pkgdir}/etc/calamares/modules/packages.conf"
+  install -D -m644 "${srcdir}/_bootldr.conf" "${pkgdir}/etc/calamares/modules/_bootldr.conf"
   
   sed 's|linux312|linux|' -i "${pkgdir}/usr/share/calamares/modules/initcpio.conf"
   
