@@ -1,7 +1,7 @@
 
 pkgname=calamares
 pkgver=1.1.2
-pkgrel=12
+pkgrel=13
 _releaseName="Fermi"
 _releaseYear="2015"
 pkgdesc='Distribution-independent installer framework'
@@ -12,7 +12,7 @@ depends=('qt5-svg' 'kconfig' 'ki18n' 'kcoreaddons' 'solid' 'yaml-cpp'
          'parted' 'libatasmart' 'udisks2' 'polkit-qt5' 'boost-libs'
          'rsync' 'python3' 'keyboardctl')
 makedepends=('extra-cmake-modules' 'git' 'qt5-tools')
-_gitsha='fe80c12'
+_gitsha='70e9935'
 #source=("git://github.com/calamares/calamares#commit=${_gitsha}"
 source=("git://github.com/rshipp/calamares#commit=${_gitsha}"
         http://rsync.chakraos.org/sources/chakra-artwork/calamares/chakra-branding_2015.09-3.tar.gz
@@ -22,23 +22,20 @@ source=("git://github.com/rshipp/calamares#commit=${_gitsha}"
         'settings.conf'
         'packages.conf'
         'unpackfs.conf'
+        'grubcfg.conf'
         '_bootldr.conf'
         'launch-calamares.sh'
         'installer.svg'
         'calamares.desktop')
-#        'GreetingPage.diff'
-#        'CalamaresStyle.diff'
-#        'UEFI.diff'
-#        'JobQueue.diff'
-#        'along_UEFI.diff')
 md5sums=('SKIP'
          '6ee44ac48ff9dc794e7d67008c899bb2'
          '0364830e843823dff80b18509ea4042e'
          'c05b2dda2e0a8a57cf25cc89913a1f4f'
          '76cf16c8e4347d369330ed64ff28083b'
          '326a4bce8d7756104b9b34e68f6c42f4'
-         '7fcdb437a7b20b15439689fef3a7d1be'
+         'cecbccde59c9b0a26466c8998fc9ec30'
          'f8e10a9fa0324f68650a646769339da9'
+         'd018586fa1b3402d46103c9df6b1df0f'
          'f1e81e458a0fc485a8dd3db77e799fae'
          '2437e44479a54376ad9244d120369f6c'
          'f005a6e10b8e0425e04207920b6231b7'
@@ -52,11 +49,6 @@ prepare () {
   #sed -i 's|Ext4|Xfs|' ${srcdir}/${pkgname}/src/modules/partition/tests/PartitionJobTests.cpp
   #sed -i 's|Ext4|Xfs|' ${srcdir}/${pkgname}/src/modules/partition/gui/EraseDiskPage.cpp
   #sed -i 's|Ext4|Xfs|' ${srcdir}/${pkgname}/src/modules/partition/gui/ReplacePage.cpp
-  #patch -p1 -i ${srcdir}/GreetingPage.diff
-  #patch -p1 -i ${srcdir}/CalamaresStyle.diff
-  #patch -p1 -i ${srcdir}/UEFI.diff
-  #patch -p1 -i ${srcdir}/JobQueue.diff
-  #patch -p1 -i ${srcdir}/along_UEFI.diff
   
   # copy our branding files to the correct location
   cp -avr ${srcdir}/chakra src/branding/chakra
@@ -89,6 +81,7 @@ package() {
   install -D -m644 "${srcdir}/prepare.conf" "${pkgdir}/etc/calamares/modules/prepare.conf"
   install -D -m644 "${srcdir}/unpackfs.conf" "${pkgdir}/etc/calamares/modules/unpackfs.conf"
   install -D -m644 "${srcdir}/packages.conf" "${pkgdir}/etc/calamares/modules/packages.conf"
+  install -D -m644 "${srcdir}/grubcfg.conf" "${pkgdir}/etc/calamares/modules/grubcfg.conf"
   install -D -m644 "${srcdir}/_bootldr.conf" "${pkgdir}/etc/calamares/modules/_bootldr.conf"
   
   sed 's|linux312|linux|' -i "${pkgdir}/usr/share/calamares/modules/initcpio.conf"
