@@ -17,11 +17,18 @@ conflicts=('kdesdk-umbrello')
 replaces=('kdesdk-umbrello')
 install=kdesdk.install
 options=('docs' 'debug')
-source=("$_mirror/${pkgname}-$_kdever.tar.xz")
-sha256sums=(`grep ${pkgname}-$_kdever.tar.xz  ../checksums.txt | cut -d " " -f1`)
+source=("$_mirror/${pkgname}-$_kdever.tar.xz"
+        0001-Add-AppStream-metadata.patch)
+sha256sums=(`grep ${pkgname}-$_kdever.tar.xz  ../checksums.txt | cut -d " " -f1`
+            'f3b2fa086f1952c622f669bdf413c05144ae789ac7c8105ac6d94051b3ec3467')
 
 prepare() {
   mkdir -p build
+  
+  cd $pkgname-$pkgver
+  # patch to fix install process
+  # https://bugs.kde.org/show_bug.cgi?id=352607
+  patch -p1 -i ../0001-Add-AppStream-metadata.patch
 }
 
 build() {
