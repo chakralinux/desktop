@@ -1,7 +1,7 @@
 pkgbase=digikam
 pkgname=('digikam' 'kipi-plugins')
 pkgver=4.13.0
-pkgrel=1
+pkgrel=2
 url="http://digikam.sourceforge.net"
 arch=('x86_64')
 license=('GPL')
@@ -10,7 +10,7 @@ makedepends=('kde-runtime' 'kdegraphics-kgamma' 'kdepimlibs4' 'lensfun' 'libmarb
              'liblqr' 'opencv' 'lapack' 'libgpod' 'libkvkontakte' 'pkgconfig' 'cmake' 'automoc4'
              'doxygen' 'docbook-xsl' 'qjson' 'kdegraphics-libkexiv2' 'kdegraphics-libkdcraw'
              'kdegraphics-libksane' 'mariadb' 'qt-gstreamer' 'boost' 'hugin-tools' 'eigen3' 
-             'libbluray' 'baloo4' 'libpgf' 'libkface' 'libkgeomap')
+             'libbluray' 'libpgf' 'libkface' 'libkgeomap' 'kfilemetadata')
 source=("http://download.kde.org/stable/${pkgname}/${pkgname}-${pkgver}.tar.bz2")
 options=("debug")
 md5sums=('930b9a89244afd1f28490d0acabbecc5')
@@ -23,6 +23,7 @@ build() {
    cmake ../${pkgname}-${pkgver} \
      -DCMAKE_BUILD_TYPE=RelWithDebInfo \
      -DCMAKE_INSTALL_PREFIX=/usr \
+     -DCMAKE_INSTALL_LIBDIR=/usr/lib \
      -DCMAKE_SKIP_RPATH=ON \
      -DBUILD_tests=OFF \
      -DDIGIKAMSC_COMPILE_LIBMEDIAWIKI=ON \
@@ -35,7 +36,7 @@ build() {
 package_digikam() {
   pkgdesc="Digital photo management application for kde"
   depends=('kde-runtime' 'kdegraphics-kgamma' 'kdepimlibs' 'lensfun' 'kdeedu-marble' 'liblqr'
-           'mariadb' 'opencv' 'kipi-plugins' 'lapack' 'libgpod' 'baloo' 'libpgf' 'libkface' 'libkgeomap')
+           'mariadb' 'opencv' 'kipi-plugins' 'lapack' 'libgpod' 'libpgf' 'libkface' 'libkgeomap')
   install=digikam.install
   replaces=('digikamimageplugins')
   categories=('graphics')
@@ -54,7 +55,7 @@ package_kipi-plugins() {
   pkgdesc="Kipi plugins and additional libs for digikam and kde apps"
   depends=('kdegraphics-kgamma' 'kdepimlibs' 'opencv' 'libgpod' 'sane' 'hugin-tools'
            'libgphoto2-nolimit' 'libkvkontakte' 'kdegraphics-libkexiv2' 'kdegraphics-libkdcraw'
-           'kdegraphics-libksane' 'qt-gstreamer')
+           'kdegraphics-libksane' 'qt-gstreamer' 'kfilemetadata')
   optdepends=('imagemagick: for picture manipulation'
 	      'qca: for shwup webservice support'
 	      'libkgeomap: Geolocalize tool')
