@@ -1,5 +1,5 @@
 pkgname=unvanquished
-pkgver=0.41.0
+pkgver=0.43.0
 pkgrel=1
 
 _depbasename=linux64-3
@@ -15,14 +15,14 @@ depends=("unvanquished-data>=${pkgver}"
          'zlib' 'gmp' 'nettle' 'geoip' 'curl' 'sdl2' 'glew' 'libpng'
          'libjpeg-turbo' 'libwebp>=0.2.0' 'freetype2' 'openal' 'libogg'
          'libvorbis' 'speex' 'libtheora' 'opusfile' 'ncurses' 'xdg-utils'
-         'desktop-file-utils' 'shared-mime-info' 'hicolor-icon-theme')
+         'desktop-file-utils' 'shared-mime-info' 'hicolor-icon-theme' 'lua')
 makedepends=('cmake')
 options=('emptydirs' '!strip')
 backup=('etc/conf.d/unvanquished.conf' 'etc/unvanquished/server.cfg' 'etc/unvanquished/maprotation.cfg')
 install='unvanquished.install'
 source=("https://github.com/Unvanquished/Unvanquished/archive/${_gitver}.tar.gz"
         'unvanquished.install' "https://dl.unvanquished.net/deps/${_depname}")
-md5sums=('2364a818a1cd0e3802ace010f09d0645'
+md5sums=('1097eb8b5607d6e4887a8eabc35184ac'
          'a5246cf3bed53798ddc4d95c6b8c1b37'
          '9f73b3b0b4536b022be5d3e218b48ea1')
 
@@ -31,7 +31,10 @@ build() {
 
 	cp -r "${srcdir}/${_depbasename}" external_deps/
 
-	cmake -D BUILD_GAME_NATIVE_EXE=OFF -D BUILD_GAME_NACL=OFF -D BUILD_GAME_NACL_NATIVE_DLL=OFF .
+	mkdir -p build
+	cd build
+
+	cmake -D BUILD_GAME_NACL=OFF -D BUILD_GAME_NATIVE_DLL=OFF -D BUILD_GAME_NATIVE_EXE=OFF ..
 	make
 }
 
@@ -54,12 +57,17 @@ package() {
 	# install content
 	cd "${srcdir}/${_gitdir}"
 
-	install -m 755 daemon*                 "${pkgdir}/usr/lib/unvanquished/"
-	install -m 755 *.so                    "${pkgdir}/usr/lib/unvanquished/"
-	install -m 755 nacl_helper_bootstrap   "${pkgdir}/usr/lib/unvanquished/"
-	install -m 755 irt_core-x86*.nexe      "${pkgdir}/usr/lib/unvanquished/"
 	install -m 644 debian/unvanquished.png "${pkgdir}/usr/share/icons/hicolor/128x128/apps/"
 	install -m 644 COPYING.txt             "${pkgdir}/usr/share/licenses/unvanquished/"
+
+	cd "${srcdir}/${_gitdir}/build"
+
+	install -m 755 daemon                  "${pkgdir}/usr/lib/unvanquished/"
+	install -m 755 daemonded               "${pkgdir}/usr/lib/unvanquished/"
+	install -m 755 daemon-tty              "${pkgdir}/usr/lib/unvanquished/"
+	install -m 755 irt_core-x86*.nexe      "${pkgdir}/usr/lib/unvanquished/"
+	install -m 755 nacl_helper_bootstrap   "${pkgdir}/usr/lib/unvanquished/"
+	install -m 755 nacl_loader             "${pkgdir}/usr/lib/unvanquished/"
 
 	# install starters and dedicated server config
 	cd "${srcdir}/${_gitdir}/archlinux"
