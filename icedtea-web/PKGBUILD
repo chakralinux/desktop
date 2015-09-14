@@ -1,6 +1,6 @@
 pkgname=icedtea-web
-pkgver=1.6
-pkgrel=2
+pkgver=1.6.1
+pkgrel=1
 arch=('x86_64')
 pkgdesc="Provides a Free Software web browser plugin running applets written in the Java programming language and an implementation of Java Web Start, originally based on the NetX project."
 url="http://icedtea.classpath.org/wiki/IcedTea-Web"
@@ -12,12 +12,11 @@ _jvmdir="/usr/lib/jvm/java-${_javaver}-openjdk"
 depends=("java-environment=${_javaver}" 'qt' 'desktop-file-utils')
 makedepends=("java-environment=${_javaver}" 'zip' 'qt' 'npapi-sdk' 'rhino' 'junit' 'cups' 'autoconf')
 categories=('network')
-provides=('icedtea-web' 'icedtea-web-doc')
-install="${pkgname}.install"
+istall="${pkgname}.install"
 source=("http://icedtea.classpath.org/download/source/${pkgname}-${pkgver}.tar.gz")
 # due to broken path names in the tarball that fails with LANG=C in our chroot
 noextract="${pkgname}-$pkgver.tar.gz"
-sha512sums=('fa2250e2583914f4d84fd9c6f8e765fd50ffbbbd8566863ce227223e37d9f1e769e9a92342f880d5cf151c9b25147aa988e2822221b833903cc959c837f345fa')
+sha512sums=('dae39818f74a098289acd0736d27c2e68b10b603a3fb0a180cf4b6444345cbe71ab1ba77dfb198f053f9567bb18aa96de09049c3b595b3d292d142a7ae7d3ef9')
 
 build() {
   cd "${srcdir}"
@@ -36,7 +35,8 @@ build() {
 
   ./configure --prefix="${_jvmdir}" \
               --with-jdk-home="${_jvmdir}" \
-              --datarootdir=/usr/share 
+              --datarootdir=/usr/share \
+              --disable-docs
 
   make
 }
