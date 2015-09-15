@@ -1,0 +1,36 @@
+# Maintainer: Weng Xuetian <wengxt@gmail.com>
+# Contributor: Antonio Rojas <arojas@archlinux.org>
+# Contributor: Maxime Gauduin <alucryd@archlinux.org>
+# Contributor: Balló György <ballogyor+arch@gmail.com>
+
+pkgname=libsignon-glib
+pkgver=1.12
+pkgrel=1
+pkgdesc='GLib-based client library for applications handling account authentication through the Online Accounts Single Sign-On service'
+arch=(i686 x86_64)
+url='https://gitlab.com/accounts-sso/libsignon-glib'
+license=(LGPL2.1)
+depends=(signon)
+makedepends=(python2-gobject gtk-doc gobject-introspection)
+source=("https://gitlab.com/accounts-sso/$pkgname/repository/archive.tar.gz?ref=$pkgver")
+md5sums=('e1b6d28984b1a2ac7072eec81f7df3df')
+
+build() {
+  cd $pkgname-$pkgver-*
+
+  export PYTHON='/usr/bin/python2'
+
+  NOCONFIGURE=1 ./autogen.sh
+  ./configure \
+    --prefix='/usr' \
+    --localstatedir='/var' \
+    --sysconfdir='/etc'
+  make -j1
+}
+
+package() {
+  cd $pkgname-$pkgver-*
+
+  make DESTDIR="$pkgdir" install
+}
+
