@@ -1,40 +1,30 @@
-# Maintainer: Neophytos Kolokotronis <tetris4@gmail.com>
-
 pkgname=kamoso
-pkgver=2.0.3.3
-pkgrel=4
+pkgver=3.0
+pkgrel=1
 pkgdesc="Kamoso is an application to take pictures and videos out of your webcam."
-url="https://projects.kde.org/projects/extragear/multimedia/kamoso/"
+url="https://userbase.kde.org/Kamoso"
 arch=('x86_64')
 license=('GPL')
-depends=('kde-runtime' 'qt-gstreamer' 'kdegraphics-libkipi')
-makedepends=('cmake' 'git' 'automoc4')
+depends=('qt5-gstreamer' 'purpose')
+makedepends=('extra-cmake-modules' 'kdoctools' 'boost')
 conflicts=('kamoso-git')
 categories=('multimedia')
 screenshot=('http://kde-apps.org/CONTENT/content-pre1/111750-1.png')
-source=("${pkgname}-${pkgver}.tar.bz2"::"http://quickgit.kde.org/?p=kamoso.git&a=snapshot&h=93188573e21a4c839f346a67431155c16f01828a&fmt=tbz2")
-sha256sums=('6fa17195fe854217891594dbb66152360b9667c54cf15dc7e6df595c551cbfcc')
-
-# create tarball: source PKGBUILD && mksource
-#
-#mksource() {
-#  git clone git://anongit.kde.org/kamoso
-#  pushd kamoso
-#  popd
-#  tar -cvJf kamoso-${pkgver}.tar.xz kamoso/*
-#  md5sum kamoso-${pkgver}.tar.xz
-#}
-
+source=("http://download.kde.org/stable/${pkgname}/${pkgver}/src/${pkgname}-${pkgver}.tar.xz")
+md5sums=('29f09cf9f6c6cb14989c3c0a8580d175')
 
 build() {
-    cd ${pkgname}
-    cmake . \
-    -DCMAKE_INSTALL_PREFIX=$(kde4-config --prefix) \
-    -DCMAKE_BUILD_TYPE=Release 
-    make 
+  mkdir -p build && cd build 
+  cmake ../${pkgname}-${pkgver} \
+    -DCMAKE_BUILD_TYPE=Release \
+    -DCMAKE_INSTALL_PREFIX=/usr \
+    -DLIB_INSTALL_DIR=lib \
+    -DKDE_INSTALL_USE_QT_SYS_PATHS=ON \
+    -DBUILD_TESTING=OFF 
+  make
 }
 
-package(){
-  cd ${pkgname}
-  make DESTDIR="${pkgdir}" install
+package() {
+  cd build
+  make DESTDIR=$pkgdir install
 }
