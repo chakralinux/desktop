@@ -2,30 +2,30 @@
 # Contributors: Manuel Tortosa <manutortosa@chakra-project.org>
 
 # Include global configuration
-source ../_buildscripts/${current_repo}-${_arch}-cfg.conf
+source ../kdeapps.conf
 
 pkgname=kdebindings-smokekde
 _pkgname=smokekde
-pkgver=${_kdever}
-pkgrel=1
+pkgver=${_oldkdever}
+pkgrel=2
 pkgdesc="Language independent library for KDE bindings"
 url="http://kde.org/"
 arch=('x86_64')
 license=('GPL' 'LGPL' 'FDL')
-depends=("kdebindings-smokeqt>=${_kdever}"
-         "kdepimlibs>=${_kdever}"
+depends=("kdebindings-smokeqt>=${_oldkdever}"
+         "kdepimlibs4>=${_oldkdever}"
          "soprano>=2.8.0")
 makedepends=('cmake'
              'automoc4'
-             "kdebindings-smokegen>=${_kdever}"
-             "kdegraphics-okular>=${_kdever}"
-             "kdesdk-kate>=${_kdever}")
+             "kdebindings-smokegen>=${_oldkdever}"
+             "kdegraphics-okular>=${_oldkdever}"
+             "kdesdk-kate>=${_oldkdever}")
 replaces=('kdebindings-common')
 groups=("kde" "kdebindings" "kde-uninstall")
 provides=('smokekde')
 options=('docs' 'debug')
-source=("$_mirror/${_pkgname}-$_kdever.tar.xz")
-sha256sums=(`grep ${_pkgname}-$_kdever.tar.xz  ../checksums.txt | cut -d " " -f1`)
+source=("$_oldkdemirror/${_pkgname}-$_oldkdever.tar.xz")
+md5sums=('bbda223b9a33fb07c695479cec968fbc')
 
 build() {
     cd "${srcdir}"
