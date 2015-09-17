@@ -1,36 +1,25 @@
-#
-# Chakra Packages for Chakra, part of chakra-project.org
-#
-# maintainer (i686): Phil Miller <philm[at]chakra-project[dog]org>
-# maintainer (x86_64): Manuel Tortosa <manutortosa[at]chakra-project[dot]org>
-
-# include global config
+# Maintainer: FranzMari <framari [at] opmbx [dot] org>
 
 pkgname=imagewriter
 pkgver=1.10
-pkgrel=8
-pkgrelsuse=2.1.2
-pkgdesc="SUSE Studio Imagewriter"
+_pkgver=1d253d960a28f9de4468b0b091c231083f03c1c8
+pkgrel=9
+pkgdesc="A graphical utility for writing raw disk images & hybrid isos to USB keys"
 arch=('x86_64')
-url="http://kiwi.berlios.de"
-license=('GPLv2')
-depends=('coreutils' 'syslinux' 'udisks2')
-makedepends=('rpmextract')
-provides=('imagewriter')
-categories=('utils')
-source=(http://download.opensuse.org/distribution/12.3/repo/oss/suse/x86_64/$pkgname-$pkgver-$pkgrelsuse.x86_64.rpm)
-sha256sums=('0bb2a7585a2edd74803d1ea56d2ed77b37c165f6dc164258115f538dccba213c')
+url='https://github.com/mbarringer/imagewriter'
+license=('GPL2')
+depends=('qt5-base' 'udisks2' 'kde-runtime')
+source=("$pkgname-$pkgver.zip::https://github.com/openSUSE/imagewriter/archive/$_pkgver.zip")
+sha256sums=('e8868d622d85f4563d6e0fd3a80a6c727d97b3a6debbe8f90c0fda5003e0a197')
 
 build() {
-    cd ${pkgdir}/
-
-    rpmextract.sh ${srcdir}/$pkgname-$pkgver-$pkgrelsuse.x86_64.rpm
-
-    chmod a+rx -R *
-    find . -type f -exec chmod -x \{\} \;
-    chmod +x usr/bin/imagewriter
+	cd $pkgname-$_pkgver
+	CFLAGS="$CFLAGS -DKIOSKHACK"
+	qmake-qt5 PREFIX="$pkgdir/usr" DEFINES=USEUDISKS2 $pkgname.pro
+	make
 }
 
 package() {
-    sed s/xdg-su/kdesu/ -i $pkgdir/usr/share/applications/imagewriter.desktop
+	cd $pkgname-$_pkgver
+	make DESTDIR="$pkgdir/" install
 }
