@@ -1,20 +1,20 @@
 pkgname=minitube
-pkgver=2.4
-pkgrel=2
+pkgver=2.5
+pkgrel=1
 pkgdesc="A native YouTube client in QT. Watch YouTube videos without Flash Player"
 arch=('x86_64')
 url="http://flavio.tordini.org/minitube"
 license=('GPL')
-depends=('phonon' 'qt' 'phonon-backend-vlc')
+depends=('qt5-base' 'phonon-qt5' 'phonon-qt5-backend-vlc' 'qt5-script' 'qt5-tools')
 categories=('multimedia')
 install=${pkgname}.install
 screenshot="http://flavio.tordini.org/files/minitube/minitube-01.jpg"
 source=("https://github.com/flaviotordini/${pkgname}/archive/${pkgver}.tar.gz")
-md5sums=('90e8f7c8adfe633553e08d98edd77961')
+sha512sums=('89f94fc7c44e6ad0e32b5a312ae3d20101e5a514a8c5e30a0845dd19d0c84c497bf2c811ef314552c8a6b498b267978e13a204f9c9440951427ccdab980e382e')
 
 build() {
         cd "${srcdir}/${pkgname}-${pkgver}"      
-        qmake "DEFINES += APP_GOOGLE_API_KEY=AIzaSyBt58M-8FXF3Rwj5hmK2k4ATbkqBk8c-JA"
+        qmake-qt5 "DEFINES += APP_GOOGLE_API_KEY=AIzaSyBt58M-8FXF3Rwj5hmK2k4ATbkqBk8c-JA"
 }
 
 package() {
