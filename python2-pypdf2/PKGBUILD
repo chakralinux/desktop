@@ -1,0 +1,17 @@
+pkgname=python2-pypdf2
+pkgver=1.25.1
+pkgrel=1
+pkgdesc="PDF toolkit"
+arch=('any')
+url="https://github.com/mstamy2/PyPDF2"
+license=('BSD')
+depends=('python2')
+makedepends=('python2-setuptools')
+source=(https://github.com/mstamy2/PyPDF2/archive/v${pkgver}.tar.gz)
+sha512sums=('b54825ed5a5444892b7bf8a1f09913297f30c9967df7d8ae41bdc3c03baa7ee45ea991fcf007e87ea99ccbd2743a336526b427c5e4448759a6d21a135f5d80ff')
+
+package(){
+  cd "$srcdir/PyPDF2-$pkgver"
+  python2 setup.py install --root="$pkgdir/" --optimize=1
+  install -D -m644 LICENSE "${pkgdir}/usr/share/licenses/${pkgname}/LICENSE"
+}
