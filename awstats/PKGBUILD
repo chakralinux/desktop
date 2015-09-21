@@ -1,7 +1,5 @@
-# Maintainer: UtG <utg.chakra.linux[at]gmail[dot]com>
-
 pkgname=awstats
-pkgver=7.3
+pkgver=7.4
 pkgrel=1
 pkgdesc="Tool that generates web, streaming, ftp and mail server statistics, graphically"
 arch=('any')
@@ -13,12 +11,8 @@ categories=('network')
 install="awstats.install"
 backup=('etc/awstats/awstats.model.conf' 'etc/httpd/conf/extra/httpd-awstats.conf')
 source=("http://downloads.sourceforge.net/${pkgname}/${pkgname}-${pkgver}.tar.gz" "cron.awstats")
-md5sums=('a76bf324d8836a8ba97f13a3c20ec6bc'
-         '2103e3d97f8b4ff31cd4022c4ee839f7')
-
-build() {
-	msg "Nothing to compile for $pkgname"
-}
+sha512sums=('5bce97c71aabeab35e4ff5e5168531e4955d7c1474322c7b4a47d1d06e06ebd0e74d1def73826498e6253f24aeca99309777617b7a914685c927bb6e1c020e1a'
+         '6fba798a4e6afe5a4dd2def9bf87999df511781851b1d7d630c3d55f8b4e8e5f7e1b99fa976442545daa99740ac64e20e76990898204463f6d56fbfb911c056e')
 
 package() {
 	_SYSCONFDIR='etc'
@@ -55,7 +49,7 @@ package() {
 	# www files
 	cp -ra wwwroot/* $pkgdir/${_WWWROOT}/ || return 1
 	rm -f $pkgdir/${_WWWROOT}/cgi-bin/awstats.model.conf || return 1
-	install -Dm444 README.TXT $pkgdir/{$_INSTDIR}/README.TXT || return 1
+	install -Dm444 README.md $pkgdir/${_INSTDIR}/README.md || return 1
 
 	# fix the default http config
 	sed \
