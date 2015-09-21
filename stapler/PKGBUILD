@@ -1,6 +1,6 @@
 pkgname=stapler
 pkgver=0.4
-pkgrel=2
+pkgrel=3
 epoch=1
 pkgdesc="A small utility making use of the pypdf library to provide a (somewhat) lighter alternative to pdftk"
 arch=('x86_64')
@@ -20,6 +20,6 @@ package() {
   install -d "${pkgdir}/usr/share/${pkgname}"
   cp -rv "${srcdir}/${pkgname}-${pkgver}/"* "${pkgdir}/usr/share/${pkgname}"
   install -d ${pkgdir}/usr/bin
-  ln -s "${pkgdir}/usr/share/${pkgname}/${pkgname}" "${pkgdir}/usr/bin/${pkgname}"
+  ln -s "/usr/share/${pkgname}/${pkgname}" "${pkgdir}/usr/bin/${pkgname}"
 }
 
