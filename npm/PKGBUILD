@@ -2,19 +2,19 @@
 # Maintainer: Felix Yan <felixonmars@archlinux.org>
 
 pkgname=npm
-pkgver=2.14.3
+pkgver=3.3.4
 pkgrel=1
 pkgdesc='A package manager for javascript'
 arch=('any')
 url='https://www.npmjs.com/'
 license=('custom:Artistic')
 depends=('nodejs')
-provides=('nodejs-node-gyp')
 makedepends=('procps-ng')
 optdepends=('python2: for node-gyp')
+provides=('nodejs-node-gyp')
 options=('!emptydirs')
 source=("https://github.com/${pkgname}/${pkgname}/archive/v${pkgver}.tar.gz")
-md5sums=('9d0ade9da3acdc9ff788b66ae2d53f0a')
+md5sums=('f07f154ec1ebb6fd5c5442547a0eaed7')
 
 build() {
   cd ${pkgname}-${pkgver}
@@ -32,7 +32,7 @@ package() {
   chown -R root "$pkgdir/usr/lib/node_modules" 
 
   # Fix wrong symlinks
-  for _dir in man1 man3 man5 man7; do
+  for _dir in man1 man5 man7; do
     rm -f "$pkgdir"/usr/share/man/$_dir/*
     cd "$pkgdir"/usr/lib/node_modules/npm/man/$_dir
     for _file in *; do
