@@ -1,0 +1,40 @@
+pkgname=glfw
+pkgver=3.1.1
+pkgrel=1
+pkgdesc="A free, open source, portable framework for OpenGL application development"
+arch=('x86_64')
+url="http://www.glfw.org/"
+license=('custom:ZLIB')
+depends=('libgl' 'libxrandr' 'glu' 'xorg-xinput' 'libxxf86vm' 'libxcursor')
+makedepends=('mesa' 'cmake' 'doxygen')
+conflicts=('glfw2')
+provides=('glfw2')
+replaces=('glfw2')
+source=("https://github.com/glfw/glfw/archive/${pkgver}.tar.gz")
+sha512sums=('31a68f4bac3477b144c73301f418805dea7509e701e3106b8e5b493a31024753aabf1c6c58a9b3f3385e036b6248d5a6decb137b323702bc5d1af23c344e503d')
+
+build() {
+  cd "$srcdir/$pkgname-$pkgver"
+
+  [[ -d build ]] && rm -r build
+  mkdir build && cd build
+
+  cmake .. \
+      -DCMAKE_INSTALL_PREFIX=/usr \
+      -DBUILD_SHARED_LIBS=ON
+  make docs
+}
+
+package() {
+  cd "$srcdir/$pkgname-$pkgver"
+
+  cd build
+  make DESTDIR=$pkgdir install
+
+  cd ../
+  install -Dm644 COPYING.txt "$pkgdir/usr/share/licenses/$pkgname/COPYING"
+  
+  #docs
+  install -d "${pkgdir}/usr/share/doc/glfw/"
+  cp -r "${srcdir}/glfw-${pkgver}/build/docs/html" "${pkgdir}/usr/share/doc/glfw"
+}
