@@ -1,30 +1,25 @@
-# Maintainer:  Jeff Huang <s8321414[at]gmail[dot]com>
-# Origianl CCR Maintainer:
-# Maintainer:  Francesco Marinucci <franzmari[at]chakra-project[dot]it>
-# Contributer: giacomogiorgianni@gmail.com 
- 
 pkgname=qwinff
-pkgver=0.2.0
-pkgrel=3
+pkgver=0.2.1
+pkgrel=1
 pkgdesc="Another Qt frontend for ffmpeg"
 arch=('x86_64')
 url="http://qwinff.github.io/"
 screenshot="http://1.bp.blogspot.com/-Vv6C_jq52aY/UDzr4i1p20I/AAAAAAAAD1A/ywf_EGgptaE/s1600/1920x1080.jpg"
 license=('GPL3')
-depends=('qt' 'ffmpeg')
-makedepends=('gcc' 'cmake')
+depends=('qt5-base' 'ffmpeg' 'libnotify')
+makedepends=('qt5-tools' 'sox')
+optdepends=('sox: audio speed adjusting support'
+	    'mplayer: video cutting preview')
 source=(http://sourceforge.net/projects/qwinff/files/release/v${pkgver}/${pkgname}_${pkgver}.tar.gz)
-sha256sums=('5cbb998364106a2e034ce994ed95c34290234319cfabccc7ac40d7c766d17fcf')
+sha1sums=('85b6ca7bcc8a144409d823d9b536f80e259a9092')
  
  
-build() {
- 
+build() { 
   cd "$srcdir/${pkgname}-${pkgver}"
-  make
+  make QMAKE=qmake-qt5 LRELEASE=lrelease-qt5 PREFIX=/usr USE_LIBNOTIFY=1
 }
  
-package() {
- 
+package() { 
   cd "$srcdir/${pkgname}-${pkgver}"
   make DESTDIR="$pkgdir/" install
 }
