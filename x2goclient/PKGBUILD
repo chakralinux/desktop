@@ -1,10 +1,7 @@
-# Maintainer: UtG <utg[dot]chakra.linux[at]gmail[dot]com>
-# Contributor from CCR: Gui||aume <michaudg@gmail.com>
-
 pkgname=x2goclient
-pkgver=4.0.4.0
+pkgver=4.0.5.0
 pkgrel=1
-pkgdesc="x2go qt4 client"
+pkgdesc="a graphical client (Qt4) for the X2Go system"
 arch=('x86_64')
 license=('GPL2')
 url="http://www.x2go.org"
@@ -12,7 +9,7 @@ depends=('qt' 'libldap' 'libcups' 'nxproxy' 'libssh' 'libxpm' 'hicolor-icon-them
 makedepends=('man2html')
 install=x2goclient.install
 source=(http://code.x2go.org/releases/source/${pkgname}/${pkgname}-${pkgver}.tar.gz)
-sha512sums=('53c12e31e9cddc732f1d85f963103c99d3e051946f56b6eef861cb450a5ac69b7d09aceb2a1cb4ff8af949d56abe0c00dff649a1980e21ffbc6980a1a1f87e14')
+sha1sums=('7ab3ed4300ae740e3583391024ea7dacec94c03c')
 
 build() {
   cd ${pkgname}-${pkgver}
@@ -33,4 +30,4 @@ build() {
 package() {
   cd ${pkgname}-${pkgver}
   make PREFIX=/usr DESTDIR="$pkgdir" install
-} 
+}
