@@ -1,7 +1,7 @@
 pkgname=libqtelegram-ae
 _pkgname=libqtelegram-aseman-edition
 pkgver=6.0
-pkgrel=1
+pkgrel=2
 pkgdesc="Telegram library written in Qt based on telegram-cli code"
 arch=('x86_64')
 license=('GPL3')
@@ -19,7 +19,7 @@ prepare() {
 
 build() {
   cd $_pkgname-$pkgver/build
-  qmake-qt5 -r .. PREFIX=/usr
+  qmake-qt5 -r .. PREFIX=/usr INSTALL_LIBS_PREFIX=/usr/lib INSTALL_HEADERS_PREFIX=/usr/include
   make
 }
 
