@@ -1,35 +1,24 @@
-#
-# Chakra Packages for Chakra, part of chakra-project.org
-#
-# Maintainer: UtG <utg.chakra.linux[at]gmail[dot]com>
-
 pkgname=kamerka
-pkgver=0.8.5
-pkgdesc="take photos using your webcam and shiny animated QML interface."
-pkgrel=3
+pkgver=0.12
+pkgdesc="Take photos using your webcam and shiny animated QML interface."
+pkgrel=1
 arch=('x86_64')
-_kdeapps=142415
-url="http://kde-apps.org/content/show.php?content=${_kdeapps}"
+url="http://dos1.github.io/kamerka/"
 screenshot="http://kde-apps.org/CONTENT/content-pre1/142415-1.jpg"
 license=(GPL)
+depends=('kdelibs' 'qt' 'v4l-utils' 'qimageblitz')
 makedepends=('cmake' 'automoc4')
-depends=('kdelibs' 'qt' 'v4l-utils')
-options=()
-source=(http://dosowisko.net/${pkgname}/downloads/${pkgname}-${pkgver}.tar.gz)
-md5sums=('92e5a274a9818b504186ce42e7211a7c')
- 
+source=(${pkgname}-${pkgver}.tar.gz::https://github.com/dos1/${pkgname}/archive/${pkgver}.tar.gz)
+sha256sums=('8390a98476b34b658a0b5d4a26875ec3a76aeece64782b2dde2e32175d8a88d6')
+
 build(){
- cd $pkgname-$pkgver
-  [[ -d build ]] && rm -r build
-  mkdir build && cd build
-  cmake \
-    -DCMAKE_INSTALL_PREFIX=/usr \
-    -DCMAKE_BUILD_TYPE=RelWithDebInfo\
-    ..
+  cd ${srcdir}/${pkgname}-${pkgver}
+  cmake -DCMAKE_INSTALL_PREFIX=/usr \
+        -DCMAKE_BUILD_TYPE=RelWithDebInfo
   make
 }
  
 package(){
-  cd $pkgname-$pkgver/build
+  cd $pkgname-$pkgver
   make DESTDIR=$pkgdir install
 }

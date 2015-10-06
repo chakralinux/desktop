@@ -1,11 +1,12 @@
 pkgname=qftp
 pkgver=1.5.5
-pkgrel=1
+pkgrel=2
 pkgdesc="A Qt client for FTP file transfers."
 arch=('x86_64')
 url="http://hugo.pereira.free.fr/software/index.php?page=package&package_list=software_list_qt4&package=qftp&full=0"
 license=('GPLv2')
-depends=('qt' 'xcb-util-keysyms')
+depends=('qt5-base' 'xcb-util-keysyms')
+makedepends=('cmake')
 categories=('network')
 source=("http://hugo.pereira.free.fr/software/tgz/${pkgname}-${pkgver}.tar.gz"
 	"qftp.desktop")
@@ -19,7 +20,7 @@ build() {
   # in /etc/makepkg.conf will break the linkage procedure.
   export LDFLAGS="-lX11" # Fix linking error.
 
-  cmake ./ -DCMAKE_INSTALL_PREFIX=/usr
+  cmake ./ -DCMAKE_INSTALL_PREFIX=/usr -DUSE_QT5=1
   make
 }
 
