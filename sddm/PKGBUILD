@@ -2,7 +2,7 @@
 
 pkgname=sddm
 pkgver=0.12.0
-pkgrel=3
+pkgrel=4
 pkgdesc='QML based X11 and Wayland display manager'
 arch=('x86_64')
 url='http://github.com/sddm/sddm'
@@ -17,10 +17,20 @@ backup=('usr/share/sddm/scripts/Xsetup'
         'etc/sddm.conf'
         'etc/pam.d/sddm')
 source=("${pkgname}-${pkgver}.tar.gz::https://github.com/${pkgname}/${pkgname}/archive/v${pkgver}.tar.gz"
-        'sddm.conf')
+        'sddm.conf'
+        fix-segfault.patch::"https://github.com/davispuh/sddm/commit/671c11d0.patch")
 md5sums=('e3261ac93a50c71c973cc79b85387765'
-         'e5343e5886aef3c9e043c0b1100aa659')
+         'e5343e5886aef3c9e043c0b1100aa659'
+         '208f3b1b49792984989172dd809a03bf')
 
+prepare() {
+  cd ${srcdir}
+
+# Fix segfault https://github.com/sddm/sddm/issues/489
+  cd $pkgname-$pkgver
+  patch -p1 -i ../fix-segfault.patch
+}
+         
 build() {
   mkdir -p build && cd build
   cmake ../${pkgname}-${pkgver} \
