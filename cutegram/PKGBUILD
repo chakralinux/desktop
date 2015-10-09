@@ -14,7 +14,9 @@ sha512sums=('b6a8b3f75936f71ba913e86b4ede5bb8ee0339dae70bc86faafc10b93cec2f3d067
 
 prepare() {
   cd "${srcdir}/${_pkgname}-$pkgver-stable"
-  mkdir -p build 
+  mkdir -p build
+
+  # TODO: Add chakra-specific search engine option
 }
 
 build() {
@@ -26,4 +28,7 @@ build() {
 package() {
   cd "${srcdir}/${_pkgname}-$pkgver-stable/build"
   make INSTALL_ROOT="${pkgdir}" install
+
+  # Remove fonts
+  rm -rf ${pkgdir}/usr/share/cutegram/files/fonts/
 }
