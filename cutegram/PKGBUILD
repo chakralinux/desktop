@@ -1,7 +1,7 @@
 pkgname=cutegram
 _pkgname=Cutegram
 pkgver=2.7.0
-pkgrel=1
+pkgrel=2
 pkgdesc="A different telegram client from Aseman team"
 arch=('x86_64')
 url="http://aseman.co/en/products/cutegram/"
@@ -9,14 +9,17 @@ license=('GPL')
 depends=('qt5-base' 'qt5-declarative' 'qt5-multimedia' 'qt5-quick1'
          'qt5-graphicaleffects' 'qt5-quickcontrols' 'qt5-webengine' 'qt5-imageformats'
 	 'gstreamer' 'libqtelegram-ae>=6.0' 'telegramqml')
-source=("https://github.com/Aseman-Land/Cutegram/archive/v$pkgver-stable.tar.gz")
-sha512sums=('b6a8b3f75936f71ba913e86b4ede5bb8ee0339dae70bc86faafc10b93cec2f3d06796f8b042e8909748c50397fc31c884a80b17825c8a86c1f14427f90a3df86')
+source=("https://github.com/Aseman-Land/Cutegram/archive/v$pkgver-stable.tar.gz"
+        '0001-Add-Chakra-specific-search-option.patch')
+sha1sums=('53008ca4c61e06f211b0948dc5733b77e30d6945'
+          'bcd6d726359a83619a9743283a58990e055556f5')
 
 prepare() {
   cd "${srcdir}/${_pkgname}-$pkgver-stable"
   mkdir -p build
 
-  # TODO: Add chakra-specific search engine option
+  # Add chakra-specific search engine option
+  patch -Np1 -i ${srcdir}/0001-Add-Chakra-specific-search-option.patch
 }
 
 build() {
