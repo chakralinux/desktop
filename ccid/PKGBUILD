@@ -1,8 +1,8 @@
 # contribution from Arch https://www.archlinux.org/packages/community/x86_64/ccid/
 
 pkgname=ccid
-pkgver=1.4.19
-_code=4132
+pkgver=1.4.20
+_code=112
 pkgrel=1
 pkgdesc="A generic USB Chip/Smart Card Interface Devices driver"
 arch=('x86_64')
@@ -10,20 +10,22 @@ url="http://pcsclite.alioth.debian.org/ccid.html"
 license=('LGPL' 'GPL')
 depends=('pcsclite')
 backup=(etc/reader.conf.d/libccidtwin)
-source=("https://alioth.debian.org/frs/download.php/file/${_code}/$pkgname-$pkgver.tar.bz2")
-sha512sums=('24d37a22703b15cfffbc1606dd3d6388fcc101924f2feafbf6b23793171b25b91c66b3d7e3739f3e6ee3b981fdf9972c0feeebb1878e8eb899cd8629cc7d6669')
+source=("https://alioth.debian.org/frs/download.php/latestfile/${_code}/ccid-${pkgver}.tar.bz2")
+sha512sums=('4ce0694e268fe962f5eb49d3d640333a4c7ef54af5f9939b3682341b19ffad7470f5e1816b3b3af1bce8cf31f4335c3177f7e6b8190e187125ce1da73692cbab')
 
 build() {
   cd $srcdir/$pkgname-$pkgver
-  ./configure \
-    --enable-twinserial \
-    --prefix=/usr \
-    --sysconfdir=/etc
+  ./configure --prefix=/usr \
+              --sysconfdir=/etc \
+              --enable-twinserial \
+              --enable-serialconfdir=/etc/reader.conf.d
   make
 }
 
 package() {
   cd $srcdir/$pkgname-$pkgver
   make DESTDIR=$pkgdir install
-  install -D -m644 src/92_pcscd_ccid.rules  $pkgdir/usr/lib/udev/rules.d/85-pcscd-ccid.rules
+    # move the configuration file in /etc and create a symbolic link
+  mv "${pkgdir}/usr/lib/pcsc/drivers/ifd-ccid.bundle/Contents/Info.plist" "${pkgdir}/etc/libccid_Info.plist"
+  ln -s /etc/libccid_Info.plist ${pkgdir}/usr/lib/pcsc/drivers/ifd-ccid.bundle/Contents/Info.plist
 }
