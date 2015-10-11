@@ -1,5 +1,5 @@
 pkgname=kodi
-pkgver=15.0
+pkgver=15.1
 _codename=Isengard
 pkgrel=1
 arch=('x86_64')
@@ -41,7 +41,7 @@ provides=('xbmc')
 conflicts=('xbmc')
 replaces=('xbmc')
 source=("$pkgname-$pkgver-$_codename.tar.gz::https://github.com/xbmc/xbmc/archive/$pkgver-$_codename.tar.gz")
-sha256sums=('27dba173cfe74b323f4dbaa72ae2bfe5961f76c27bddcd5210253be91cae0dff')
+sha256sums=('72b2610d8fbff807128d74429f25bf6716ba880c27c2c5d9fad012ec7fc70705')
 
 prepare() {
   cd "$srcdir/xbmc-$pkgver-$_codename"
@@ -49,6 +49,7 @@ prepare() {
   find -type f -name *.py -exec sed 's|^#!.*python$|#!/usr/bin/python2|' -i "{}" +
   sed 's|^#!.*python$|#!/usr/bin/python2|' -i tools/depends/native/rpl-native/rpl
 	sed 's/python/python2/' -i tools/Linux/kodi.sh.in
+  sed 's/shell python/shell python2/' -i tools/EventClients/Makefile.in
 }
 
 build() {
@@ -57,10 +58,7 @@ build() {
   # Bootstrapping
   MAKEFLAGS=-j1 ./bootstrap
 
-  #./configure --help
-  #return 1
-
-  # Configuring XBMC
+  # Configuring Kodi
   export PYTHON_VERSION=2  # external python v2
   ./configure --prefix=/usr --exec-prefix=/usr \
     --disable-debug \
@@ -68,7 +66,8 @@ build() {
     --enable-libbluray \
     --enable-external-libraries \
     --disable-gtest \
-    --with-lirc-device=/run/lirc/lircd
+    --with-lirc-device=/run/lirc/lircd \
+    ac_cv_type__Bool=yes
 
   # Now (finally) build
   make
