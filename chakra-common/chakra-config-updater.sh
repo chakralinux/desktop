@@ -26,6 +26,7 @@ rebuild_global_config_cache() {
 			launch_dbus &> /dev/null
 
 			/usr/bin/kbuildsycoca4 --global --noincremental &> /dev/null
+			/usr/bin/kbuildsycoca5 --global --noincremental &> /dev/null
 
 			kill ${DBUS_SESSION_BUS_PID}
 			unset DBUS_SESSION_BUS_ADDRESS DBUS_SESSION_BUS_PID

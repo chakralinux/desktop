@@ -10,6 +10,7 @@ rebuild_user_config_cache() {
 				echo -e  -n " > Rebuilding configuration cache for user: $victim ..."
 				pushd /home/$victim &> /dev/null
 				su -c kbuildsycoca4 $victim &> /dev/null
+				su -c kbuildsycoca5 $victim &> /dev/null
 				popd &> /dev/null
 				echo " DONE"
 			fi

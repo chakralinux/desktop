@@ -4,7 +4,7 @@ source ../kdeapps.conf
 pkgname=chakra-common
 arch=('x86_64')
 pkgver=${_kdever}
-pkgrel=3
+pkgrel=5
 pkgdesc="Common configuration files, scripts and artwork"
 url="http://www.chakraos.org"
 license=('GPL'
@@ -63,18 +63,18 @@ sha256sums=('9b2cdc947f1da2c56d0f009ff470f7aa9021f214a2470c33ee4628281b7c1163'
             'ca7d66aec559282581dd577746dff86b9b4127ae871ee2788b74ab66f99edbfa'
             'ba4b1f429bd6900f6989df6e50b69fea38110ccb4a304a903de6e291d0af8b74'
             '30625733e2873f6945062868678e3408f6f224f1358623a2857fee6649615e37'
-            'cff1d0489f5f4b7eb92a0cee9a7cf100bd8c401c9395a78d95068c5437330a28'
+            'f2d97bebfd43f947c66ea21b989caa3970ba339a2b8f5de8ba90429ca0e41ddd'
             '04022df9f6cebb4b6fc18f66c8c84c531128c9856ef735a59c9efc7a6976b7f5'
             '2c3f6664fbc74dcc6e3f420165d6bddb380b8018b7bce4b78ef40ba6ccb3d781'
-            'c6847dfeff0564fe569774281b59dc9d1f8328852a36dd0b48bc69f2f41d6738'
+            '67b29fc6c1d5d8e35bedc16b6f79e7533559aeb1da1b3836c5f2369c8914fc1a'
             '53923c57c87eac8370e83c1d45ccc9b08cf49d4857a90d5245978b8127779a1f'
             '276034a97d1a07ee348b9c975e5ddf948e0aee2cba90196aa07c53cbedf856b6'
             'cf6be6c5dd059021b140f97f82be4ed33e887aa8b588b5d4adb0b035d05a90a6'
-            '9ef92be376fde231946ab995afd15ac457bd67aac25779e81b1980e8b337cfd4'
+            '18c53e91e5ff32754e0a71d208bff62f5f6880e68a86699e734b28d5e2387aab'
             '7e947d88d6c5464b5e11770d597af11bcfb01283bc9bed2bea15fcb3dbb90e33'
             'd155420e3db5ec0d43ec4e53f568b55cd718c42fef7792f1e8bdc75b960ff1e3'
-            '8b3a4020008c8506b5b7110b4d070746b134d751c769035ee2ffbb7b9fd7c31b'
-            '83fe20e57cc05cd869cb468cf90d554ff45f9c993e6a3c48829fb9230ebe5c4c'
+            'a99cbf6a29700b71564baffeb8b8d7f645a4e67a9868b68609c31937beef3d15'
+            '79bd1a0dbce88e1ab12a5db3aa87b1a7bbd464df7e64facc6c33abd507706bbf'
             '3ac5808d9da1b37e0787ee11f4154306847840697e5590c1856b5bd13727c119'
             'fdbf09b51795af2603569805e00c43e05f531e901e81c7b9189b4897a89a50ee'
             '2ea8bc1cbe178d66f3560d166e4158d1ce953a349d8c7658891f5600736e67b7'
@@ -83,7 +83,7 @@ sha256sums=('9b2cdc947f1da2c56d0f009ff470f7aa9021f214a2470c33ee4628281b7c1163'
             '904b6dbc2b8ed914e89a6b13ef1a6de9b5ec6c5c3bf7dbe4b3ff5ca876a4e470'
             '530ecdbe32c8f33991cd6c2ccf29212f28bb4462d1844f5acba335b5984a9347'
             '9e0c9408c9bc12aeca2fd66a4723b57a6878307ba956df7cca43f8112dd71429'
-            '0e419422afb09ccebd3f532cde784e97adfd5ad7816701c17966597f54915bfc')
+            '7e4ae4587973d6cc253b20ff7573ac25801f148f794a9000901c5137cd4780b3')
 #            'a5b01c1f41bad239e05dff01a497db68d80806bf72a76b89ef8eb053853986c4'
 
 package() {
@@ -116,26 +116,10 @@ package() {
     # Install config file for updates
     install -D -m755 -o root -g root ${srcdir}/updates.conf ${pkgdir}/etc/chakra/updates.conf
 
-    # Install root actions service menu
-    cd ${srcdir}/rootactions_servicemenu_2.8.6/Root_Actions_2.8.6/dolphin-KDE4/
-    mkdir -p ${pkgdir}/usr/share/kde4/services/ServiceMenus/
-    install -m755 *.desktop ${pkgdir}/usr/share/kde4/services/ServiceMenus/
-        cd ${srcdir}/rootactions_servicemenu_2.8.6/Root_Actions_2.8.6
-        patch -p2 < ${srcdir}/servicemenu-rootactions.patch      
-    install -Dm755 rootactions-servicemenu.pl ${pkgdir}/usr/bin/rootactions-servicemenu.pl
-        sed "s~Icon=terminal~Icon=utilities-terminal~g" -i ${pkgdir}/usr/share/kde4/services/ServiceMenus/10-rootactionsfolders.desktop
-        sed "s~Icon=terminal~Icon=utilities-terminal~g" -i ${pkgdir}/usr/share/kde4/services/ServiceMenus/11-rootactionsfiles.desktop
-
     # Install root actions kf5
     cd ${srcdir}/rootactions_servicemenu_2.8.6/Root_Actions_2.8.6/dolphin-KDE4/
     install -dm755 ${pkgdir}/usr/share/kservices5/ServiceMenus/
     install -m755 *.desktop ${pkgdir}/usr/share/kservices5/ServiceMenus/
-
-    # Install all other service menus
-    install -m755 ${srcdir}/servicemenu-copy-path.desktop ${pkgdir}/usr/share/kde4/services/ServiceMenus/copy-path.desktop
-
-    install -m755 ${srcdir}/102825-compressattach.desktop ${pkgdir}/usr/share/kde4/services/ServiceMenus/compress-attach.desktop
-        sed "s~Icon=attach~Icon=mail-attachment~g" -i ${pkgdir}/usr/share/kde4/services/ServiceMenus/compress-attach.desktop
 
     # Install Chakra icons
     cd ${srcdir}/chakra-icons/
@@ -151,9 +135,9 @@ package() {
     # Install menu entries
     cd ${srcdir}
     install -m755 -d ${pkgdir}/usr/share/desktop-directories
-    install -m755 -d ${pkgdir}/usr/share/applications/kde4
+    install -m755 -d ${pkgdir}/usr/share/applications
     install -m755 -d ${pkgdir}/usr/share/pixmaps
-    install -m644 Chakra*.desktop ${pkgdir}/usr/share/applications/kde4
+    install -m644 Chakra*.desktop ${pkgdir}/usr/share/applications
     install -m644 Chakra.directory ${pkgdir}/usr/share/desktop-directories/
   
     # chakra-paste
