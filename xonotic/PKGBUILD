@@ -2,14 +2,13 @@ pkgbase=xonotic
 _pkgbase=Xonotic
 pkgname=($pkgbase $pkgbase-data)
 pkgver=0.8.1
-pkgrel=1
+pkgrel=2
 pkgdesc="A free, fast-paced crossplatform first-person shooter"
 arch=('x86_64')
 url="http://xonotic.org"
-license=('GPL2')
-depends=('alsa-lib' 'curl' 'libjpeg' 'libmodplug' 'libpng' 'libvorbis' 'libxpm' 'libxxf86dga'
-'libxxf86vm' 'sdl2')
-makedepends=('unzip' 'mesa')
+license=('GPL')
+makedepends=('alsa-lib' 'curl' 'libjpeg' 'libmodplug' 'libpng' 'libvorbis' 'libxpm' 'libxxf86dga'
+	     'libxxf86vm' 'sdl2' 'unzip' 'mesa')
 categories=('games')
 source=("http://dl.xonotic.org/$pkgbase-$pkgver.zip"
         "xonotic-glx.desktop"
@@ -33,7 +32,7 @@ build() {
 package_xonotic() {
   cd $srcdir/$_pkgbase
   depends=('alsa-lib' 'curl' 'libjpeg' 'libmodplug' 'libpng' 'libvorbis' 'libxpm' 'libxxf86dga'
-  'libxxf86vm' 'sdl' 'xonotic-data')
+           'libxxf86vm' 'sdl2' 'xonotic-data')
 
   # Binaries.
   install -Dm755 source/darkplaces/darkplaces-dedicated $pkgdir/usr/share/$pkgbase/$pkgbase-server
