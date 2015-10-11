@@ -2,7 +2,7 @@
 
 pkgname=flightgear
 pkgver=3.4.0
-pkgrel=1
+pkgrel=2
 pkgdesc="An open-source, multi-platform flight simulator."
 arch=('x86_64')
 depends=('libxmu' 'libxi' 'openal' 'openscenegraph' 'zlib' 'simgear' 'subversion' 'libxrandr' 'glu' )
@@ -20,7 +20,7 @@ md5sums=('0a6f4c27baf64f3e7d58fd44612118df')
 
 build() {
 
-  cd $srcdir/flightgear-$pkgver
+  cd $pkgname-$pkgver
   cmake \
 	-DCMAKE_INSTALL_PREFIX=/usr \
 	-DCMAKE_INSTALL_LIBDIR=lib \
@@ -35,7 +35,7 @@ build() {
 package() {
   depends=( "${depends[@]}" "flightgear-data" )
 
-  cd $srcdir/flightgear-$pkgver
+  cd $pkgname-$pkgver
   
   make DESTDIR=$pkgdir install
 
