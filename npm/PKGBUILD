@@ -1,20 +1,17 @@
-# Contribution from Arch:
-# Maintainer: Felix Yan <felixonmars@archlinux.org>
-
 pkgname=npm
-pkgver=3.3.4
+pkgver=3.3.8
 pkgrel=1
 pkgdesc='A package manager for javascript'
 arch=('any')
 url='https://www.npmjs.com/'
 license=('custom:Artistic')
 depends=('nodejs')
+provides=('nodejs-node-gyp')
 makedepends=('procps-ng')
 optdepends=('python2: for node-gyp')
-provides=('nodejs-node-gyp')
 options=('!emptydirs')
 source=("https://github.com/${pkgname}/${pkgname}/archive/v${pkgver}.tar.gz")
-md5sums=('f07f154ec1ebb6fd5c5442547a0eaed7')
+sha512sums=('80dd50eccd8c93505991f17cd83b01861b0759ca825b9491ea96feff5dfdd45369e0fac11f68f2d42d31a21d9372dd174db022be0df1cd48465a13d8ad24e331')
 
 build() {
   cd ${pkgname}-${pkgver}
