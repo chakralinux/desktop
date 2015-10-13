@@ -3,19 +3,19 @@
 
 _pkgname=kdev-python
 pkgname=kdev-python-py3
-pkgver=1.7.1
-_pkgver=4.7.1
+pkgver=1.7.2
+_pkgver=4.7.2
 _branch=stable
-pkgrel=2
+pkgrel=1
 pkgdesc="Python language plugin for KDevelop"
 arch=('x86_64')
 url="http://www.kdevelop.org/"
 license=('GPL')
-depends=('kdevelop')
+depends=('kdevelop' 'python3>=3.4.3')
 makedepends=('cmake' 'automoc4' 'kdevelop-pg-qt')
 conflicts=('kdev-python')
 source=("http://download.kde.org/${_branch}/kdevelop/${_pkgver}/src/${_pkgname}-${pkgver}-py3.tar.xz")
-md5sums=('f670af81e55bbc68fd3bd0443b0fc34e')
+md5sums=('8703b00e63b40bba8137d5ef164554af')
 
 build() {
     mkdir build && cd build 
@@ -23,7 +23,7 @@ build() {
         -DCMAKE_BUILD_TYPE=RELWITHDEBINFO \
         -DCMAKE_{SHARED,MODULE,EXE}_LINKER_FLAGS='-Wl,--no-undefined -Wl,--as-needed' \
         -DCMAKE_INSTALL_PREFIX=/usr \
-        "../${_pkgname}-${pkgver}-py3"
+        "../${_pkgname}-${pkgver}"
     make parser
     make
 }
