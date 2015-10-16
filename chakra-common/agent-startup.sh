@@ -10,8 +10,8 @@
 # lines in KDEDIR/shutdown/agent-shutdown.sh to
 # properly kill the agents when the session ends.
 
-if [ -x /usr/bin/gpg-agent ]; then
-  eval "$(/usr/bin/gpg-agent --daemon --pinentry-program /usr/bin/pinentry-qt)"
+if [ -x /usr/bin/gpg-agent -a -x /usr/bin/pinentry-qt ]; then
+  /usr/bin/gpg-agent --daemon --pinentry-program /usr/bin/pinentry-qt
 fi 
 #
 if [ -x /usr/bin/ssh-agent ]; then
