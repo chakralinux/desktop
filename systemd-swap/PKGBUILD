@@ -1,8 +1,5 @@
-# Maintainer: Jeff Huang <s8321414[at]gmail[dot]com>
-# Contributer: Manuel UtG <utg[dot]chakra.linux[at]gmail[dot]com>
-
 pkgname=systemd-swap
-pkgver=2.25.1
+pkgver=2.25.2
 pkgrel=1
 pkgdesc="Script for creating hybrid swap space from zram swaps, swap files and swap partitions."
 arch=('x86_64')
@@ -10,16 +7,15 @@ url="https://github.com/TimofeyTitovets/systemd-swap"
 license=('GPL3')
 conflicts=('systemd-loop-swapfile' 'zramswap' 'zram')
 depends=('systemd' 'bash')
-makedepends=('git')
 replace=('zramswap')
 backup=(etc/systemd-swap.conf)
 install=$pkgname.install
-source=("git://github.com/TimofeyTitovets/systemd-swap.git#tag=$pkgver")
-md5sums=('SKIP')
+source=("https://github.com/Nefelim4ag/${pkgname}/archive/${pkgver}.tar.gz")
+md5sums=('f01d21720946b939c20a667f1bf8cc84')
 
 package() {
-  install -Dm644 "$srcdir"/$pkgname/90-systemd-swap.conf "$pkgdir"/etc/modprobe.d/90-systemd-swap.conf
-  install -Dm644 "$srcdir"/$pkgname/systemd-swap.service "$pkgdir"/usr/lib/systemd/system/systemd-swap.service
-  install -Dm755 "$srcdir"/$pkgname/systemd-swap.sh      "$pkgdir"/usr/lib/systemd/scripts/systemd-swap.sh
-  install -Dm644 "$srcdir"/$pkgname/systemd-swap.conf    "$pkgdir"/etc/systemd-swap.conf
+  install -Dm644 "${srcdir}"/${pkgname}-${pkgver}/90-systemd-swap.conf "${pkgdir}"/etc/modprobe.d/90-systemd-swap.conf
+  install -Dm644 "${srcdir}"/${pkgname}-${pkgver}/systemd-swap.service "${pkgdir}"/usr/lib/systemd/system/systemd-swap.service
+  install -Dm755 "${srcdir}"/${pkgname}-${pkgver}/systemd-swap.sh      "${pkgdir}"/usr/lib/systemd/scripts/systemd-swap.sh
+  install -Dm644 "${srcdir}"/${pkgname}-${pkgver}/systemd-swap.conf    "${pkgdir}"/etc/systemd-swap.conf
 }
