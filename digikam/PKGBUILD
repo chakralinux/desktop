@@ -1,7 +1,7 @@
 pkgbase=digikam
 pkgname=('digikam' 'kipi-plugins')
-pkgver=4.13.0
-pkgrel=2
+pkgver=4.14.0
+pkgrel=1
 url="http://digikam.sourceforge.net"
 arch=('x86_64')
 license=('GPL')
@@ -9,11 +9,11 @@ screenshot=('http://i.imgur.com/6YnUM.png')
 makedepends=('kde-runtime' 'kdegraphics-kgamma' 'kdepimlibs4' 'lensfun' 'libmarble4'
              'liblqr' 'opencv' 'lapack' 'libgpod' 'libkvkontakte' 'pkgconfig' 'cmake' 'automoc4'
              'doxygen' 'docbook-xsl' 'qjson' 'kdegraphics-libkexiv2' 'kdegraphics-libkdcraw'
-             'kdegraphics-libksane' 'mariadb' 'qt-gstreamer' 'boost' 'hugin-tools' 'eigen3' 
-             'libbluray' 'libpgf' 'libkface' 'libkgeomap' 'kfilemetadata')
+             'kdegraphics-libksane' 'mariadb' 'qt4-gstreamer' 'boost' 'hugin-tools' 'eigen3' 
+             'libbluray' 'libpgf' 'libkface' 'libkgeomap' 'kfilemetadata4')
 source=("http://download.kde.org/stable/${pkgname}/${pkgname}-${pkgver}.tar.bz2")
 options=("debug")
-md5sums=('930b9a89244afd1f28490d0acabbecc5')
+md5sums=('8fd3cb0a822e8c2d4102e8adc00c082f')
 
 build() {
    cd ${srcdir}
@@ -35,7 +35,7 @@ build() {
 
 package_digikam() {
   pkgdesc="Digital photo management application for kde"
-  depends=('kde-runtime' 'kdegraphics-kgamma' 'kdepimlibs' 'lensfun' 'kdeedu-marble' 'liblqr'
+  depends=('kde-runtime' 'kdegraphics-kgamma' 'kdepimlibs4' 'lensfun' 'libmarble4' 'liblqr'
            'mariadb' 'opencv' 'kipi-plugins' 'lapack' 'libgpod' 'libpgf' 'libkface' 'libkgeomap')
   install=digikam.install
   replaces=('digikamimageplugins')
@@ -53,22 +53,16 @@ package_digikam() {
 
 package_kipi-plugins() {
   pkgdesc="Kipi plugins and additional libs for digikam and kde apps"
-  depends=('kdegraphics-kgamma' 'kdepimlibs' 'opencv' 'libgpod' 'sane' 'hugin-tools'
+  depends=('kdegraphics-kgamma' 'kdepimlibs4' 'opencv' 'libgpod' 'sane' 'hugin-tools'
            'libgphoto2-nolimit' 'libkvkontakte' 'kdegraphics-libkexiv2' 'kdegraphics-libkdcraw'
-           'kdegraphics-libksane' 'qt-gstreamer' 'kfilemetadata')
+           'kdegraphics-libksane' 'qt4-gstreamer' 'kfilemetadata4')
   optdepends=('imagemagick: for picture manipulation'
 	      'qca: for shwup webservice support'
 	      'libkgeomap: Geolocalize tool')
   install=kipi-plugins.install
-  provides=('libmediawiki')
-  replaces=('libmediawiki')
-  conflicts=('libmediawiki')
   categories=('graphics')
 
-  splitdirs="libmediawiki kipi-plugins"
-  for i in ${splitdirs} ; do
-      cd ${srcdir}/build/extra/${i}
+  cd ${srcdir}/build/extra/kipi-plugins
 
-      make DESTDIR="${pkgdir}" install
-  done
+  make DESTDIR="${pkgdir}" install
 }
