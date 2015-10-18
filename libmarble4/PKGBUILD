@@ -4,14 +4,14 @@ source ../kdeapps.conf
 pkgname=libmarble4
 _pkgname=marble
 pkgver=${_kdever}
-pkgrel=2
+pkgrel=1
 pkgdesc="KDE4 Marble libraries"
 url="http://kde.org/applications/education/marble/"
 arch=(x86_64)
 license=(GPL LGPL FDL)
 depends=(qtwebkit libastro marble-data)
-makedepends=(cmake automoc4 gpsd libwlocate qt-mobility)
-optdepends=('qt-mobility: enable QtMobility Location Provider' 'gpsd: GPS support' 'libwlocate: WLAN based geolocation')
+makedepends=(cmake automoc4 gpsd libwlocate)
+optdepends=('gpsd: GPS support' 'libwlocate: WLAN based geolocation')
 conflicts=('kdeedu-marble')
 provides=('kdeedu-marble')
 source=("$_mirror/${_pkgname}-$pkgver.tar.xz")
@@ -31,10 +31,8 @@ build() {
     -DBUILD_MARBLE_TESTS=OFF \
     -DBUILD_MARBLE_APPS=OFF \
     -DCMAKE_INSTALL_PREFIX=/usr \
-    -DCMAKE_SKIP_RPATH=ON \
-    -DQTONLY=FALSE  \
-    -DWITH_DESIGNER_PLUGIN=OFF \
-    -DQT5BUILD=FALSE \
+    -DCMAKE_INSTALL_LIBDIR=lib \
+    -DQT5BUILD=OFF \
     -DMARBLE_PLUGIN_PATH=/usr/lib/marble4/plugins
   make
 }
