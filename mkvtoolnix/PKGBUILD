@@ -1,6 +1,6 @@
 pkgbase=mkvtoolnix
 pkgname=('mkvtoolnix-cli' 'mkvtoolnix-gui')
-pkgver=8.4.0
+pkgver=8.5.0
 pkgrel=1
 pkgdesc="Set of tools to create, edit and inspect Matroska files."
 arch=('x86_64')
@@ -15,7 +15,7 @@ makedepends=('flac' 'libmatroska' 'libogg' 'libvorbis' 'qt5-base' 'xdg-utils' 'l
              'zlib' 'boost-libs' 'expat' 'boost' 'ruby')
 categories=('multimedia')
 source=("http://www.bunkus.org/videotools/${pkgbase}/sources/${pkgbase}-${pkgver}.tar.xz")
-sha512sums=('ab9ab49baf06a8ef713872a09c58fdb1560628dbe3b2b661d809972f56a36c751a390a78ae260624510963b92e177d090088030bb96f9ab9e96e1a372772d22f')
+sha512sums=('18f1bac6ba46d3ec3235d4b8ec8fc9bd0b5993344205172f254d3ca8aa7afdb399d81d9e7d8b24fe004661c83757e82b4874865acaa231e7721b1d8382adfdd3')
 
 prepare() {
   cd "${srcdir}/${pkgbase}-${pkgver}"
@@ -85,6 +85,7 @@ package_mkvtoolnix-gui() {
   rm -rf "${pkgdir}"/usr/bin/mkvpropedit
   rm -rf "${pkgdir}"/usr/share/doc
   rm -rf "${pkgdir}"/usr/share/locale
+    rm -rf "${pkgdir}"/usr/share/man/ca/man1/mkv*
   rm -rf "${pkgdir}"/usr/share/man/de/man1/mkv*
   rm -rf "${pkgdir}"/usr/share/man/es/man1/mkv*
   rm -rf "${pkgdir}"/usr/share/man/ja/man1/mkv*
