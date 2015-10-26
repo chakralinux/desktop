@@ -1,0 +1,32 @@
+pkgname=gammu
+pkgver=1.36.6
+pkgrel=1
+pkgdesc="GNU All Mobile Management Utilities"
+arch=('x86_64')
+url="http://wammu.eu/"
+license=('GPL')
+depends=('bluez' 'curl' 'libmysqlclient'
+         'postgresql-libs' 'python2' 'libusb' 'gnutls')
+makedepends=('cmake' 'doxygen' 'mysql')
+optdepends=('dialog: support for the gammu-config script')
+categories=('utils')
+source=(http://downloads.sourceforge.net/$pkgname/$pkgname-$pkgver.tar.bz2)
+sha512sums=('1ccc9cdf6c50ffbd4ceb715502ff052724b17348377117818fd34c844598fd7c45239a2c7c0259a8e5e8af2abb51fb1e55fedc5ccea026ad869464bfd6767703')
+
+build() {
+  cd "$srcdir/$pkgname-$pkgver"
+
+  # bash completion dir change
+  sed -i 's,DESTINATION "/etc/bash_completion.d",DESTINATION "/usr/share/bash-completion/completions",' contrib/CMakeLists.txt
+  cmake . -DCMAKE_INSTALL_PREFIX="/usr"
+
+  make
+}
+
+package() {
+  cd "$srcdir/$pkgname-$pkgver"
+
+  make DESTDIR="$pkgdir" install
+  mv $pkgdir/usr/lib64/* $pkgdir/usr/lib
+  rm -d $pkgdir/usr/lib64
+}

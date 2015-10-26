@@ -1,0 +1,69 @@
+# Maintainer: Daniele Cocca <jmc@chakra-project.org>
+# Contributor: Ernesto Manríquez <alejandronova@gmail.com>
+
+#_pkgname=ZynAddSubFX
+pkgname=zynaddsubfx
+pkgver=2.5.0
+pkgrel=1
+pkgdesc="Open source additive and substractive software synthesizer, with an integrated effect engine."
+arch=('x86_64')
+url="http://zynaddsubfx.sourceforge.net/"
+license=('GPL2')
+depends=('fftw' 'mxml' 'zlib' 'fltk' 'lash' 'dssi' 'fftw')
+makedepends=('jack' 'ladspa' 'cmake' 'gendesk' 'setconf')
+source=("https://downloads.sourceforge.net/project/${pkgname}/${pkgname}/${pkgver}/${pkgname}-${pkgver}.tar.gz")
+#        'gentoo-zynaddsubfx-2.4.1-docs.patch'
+categories=('multimedia')
+sha256sums=('a3810708291367298e04002eda29237ff5f70240e432be84ea48b54895746aa7')
+
+prepare() {
+  cd "$srcdir"
+  gendesk $startdir/PKGBUILD
+  setconf "$pkgname.desktop" Icon "$pkgname.svg"
+ 
+  cd "${srcdir}"
+  [[ -e build ]] && rm -rf build
+  mkdir -p build
+}
+
+build() {
+  # Patch it first
+#  cd "${srcdir}/${pkgname}-${pkgver}"
+#  patch -Np1 -i "${srcdir}/gentoo-zynaddsubfx-2.4.1-docs.patch"
+  cd "${srcdir}/build"
+  
+  cmake "${srcdir}/${pkgname}-${pkgver}" \
+        -DCMAKE_BUILD_TYPE=RelWithDebInfo \
+        -DCMAKE_INSTALL_PREFIX=/usr \
+        -DDefaultOutput=jack \
+        -DDefaultInput=jack \
+        -DGuiModule=fltk \
+        -DDssiEnable=true
+  make
+
+  # build external programs
+  cd ${srcdir}/${pkgname}-${pkgver}/ExternalPrograms/Spliter && make
+  cd ../Controller && sed -i "s|Box\.h|Box\.H|" ControllerUI.fl && make
+}
+
+package() {
+  cd "${srcdir}/build"
+  make DESTDIR="${pkgdir}" install
+
+  # Dirty hack on libraries
+  #mv ${pkgdir}/usr/lib64 ${pkgdir}/usr/lib
+
+  # Also copy the data files...
+  install -dm755 "${pkgdir}/usr/share/${pkgname}"
+  cp -a "${srcdir}/${pkgname}-${pkgver}/instruments/banks" "${pkgdir}/usr/share/${pkgname}"
+  cp -a "${srcdir}/${pkgname}-${pkgver}/instruments/examples" "${pkgdir}/usr/share/${pkgname}"
+
+  # install external programs
+  install -Dm755 ${srcdir}/${pkgname}-${pkgver}/ExternalPrograms/Spliter/spliter "$pkgdir/usr/bin/spliter"
+  install -Dm755 ${srcdir}/${pkgname}-${pkgver}/ExternalPrograms/Controller/controller "$pkgdir/usr/bin/controller"
+  install -Dm644 ${srcdir}/${pkgname}-${pkgver}/ExternalPrograms/Spliter/readme.txt "$pkgdir/usr/share/doc/$pkgname/SPLITER.txt"
+
+  # desktop file and icon
+  install -Dm644 "${srcdir}/${pkgname}-${pkgver}/$pkgname.svg" "$pkgdir/usr/share/pixmaps/$pkgname.svg"
+  install -Dm644 "$srcdir/$pkgname.desktop" "$pkgdir/usr/share/applications/$pkgname.desktop"
+}

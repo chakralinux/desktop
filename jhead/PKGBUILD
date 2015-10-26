@@ -1,0 +1,28 @@
+pkgname=jhead
+pkgver=3.00
+pkgrel=1
+pkgdesc="EXIF JPEG info parser and thumbnail remover"
+url="http://www.sentex.net/~mwandel/jhead/"
+arch=('x86_64')
+license=('custom:Public Domain')
+depends=('glibc')
+optdepends=('libjpeg-turbo: to up-right images according to rotation tag')
+categories=('graphics')
+source=(http://www.sentex.net/~mwandel/${pkgname}/${pkgname}-${pkgver}.tar.gz 
+        license.txt)
+md5sums=('86cc05ad59d049c35963c7c1a5296801'
+         '1f0db611d2642a981719f45252762a45')
+
+build() {
+  cd $srcdir/$pkgname-$pkgver
+  make
+}
+
+package() {
+  cd $srcdir/$pkgname-$pkgver
+  install -D -m755 jhead $pkgdir/usr/bin/jhead
+  install -D -m644 jhead.1 $pkgdir/usr/share/man/man1/jhead.1
+
+  # License.
+  install -D -m644 $srcdir/license.txt $pkgdir/usr/share/licenses/$pkgname/LICENSE
+}

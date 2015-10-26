@@ -1,0 +1,27 @@
+pkgname=mpc
+pkgver=0.27
+pkgrel=1
+pkgdesc="Minimalist command line interface to MPD"
+arch=('x86_64')
+url='http://www.musicpd.org/clients/mpc/'
+license=('GPL2')
+depends=('libmpdclient')
+options=('!emptydirs')
+source=("http://www.musicpd.org/download/${pkgname}/${pkgver%.*}/${pkgname}-${pkgver}.tar.xz")
+sha512sums=('f73550004697c6d4ae44f25c82a9e4477fa878accb8725f58b74b2785c02b175a35e675c5484c58766e9032fe19beabd35a64c57cd1afd81478619d2f51916d4')
+
+
+build() {
+    cd "$srcdir/$pkgname-$pkgver"
+    ./configure --prefix=/usr
+    make
+}
+
+package() {
+    cd "$srcdir/$pkgname-$pkgver"
+    make DESTDIR="$pkgdir" install
+	
+    # Install bash completion file
+    install -Dm644 doc/mpc-completion.bash "${pkgdir}/usr/share/bash-completion/completions/mpc"
+}
+ 

@@ -1,0 +1,28 @@
+# Maintainer: UtG  <utg[dot]chakra.linux[at]gmail[dot]com>
+
+pkgname=miniupnpc
+pkgver=1.9.20140401
+pkgrel=1
+pkgdesc="A small UPnP client library/tool to access Internet Gateway Devices"
+arch=('x86_64')
+url='http://miniupnp.free.fr'
+license=('BSD')
+depends=('sh')
+categories=('network')
+source=("http://miniupnp.free.fr/files/$pkgname-$pkgver.tar.gz")
+md5sums=('e4a4de55eadf8d90b2721769ccf328db')
+
+build() {
+  cd $srcdir/$pkgname-$pkgver
+  make
+}
+
+package() {
+  cd $srcdir/$pkgname-$pkgver
+  make INSTALLPREFIX=$pkgdir/usr install
+  
+  # man page + License
+  install -Dm644 man3/miniupnpc.3 "${pkgdir}"/usr/share/man/man3/miniupnpc.3
+  install -Dm644 LICENSE "${pkgdir}"/usr/share/licenses/${pkgname}/LICENSE
+}
+

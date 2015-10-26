@@ -1,0 +1,21 @@
+pkgname=youtube-dl
+pkgver=2015.09.28
+pkgrel=1
+pkgdesc='A small command-line program to download videos from YouTube.com'
+arch=('x86_64')
+url='http://rg3.github.com/youtube-dl/'
+license=('custom')
+depends=('python3' 'python3-setuptools')
+optdepends=('ffmpeg: for video post-processing'
+            'rtmpdump: for rtmp streams support')
+categories=('network')
+source=(http://youtube-dl.org/downloads/${pkgver}/${pkgname}-${pkgver}.tar.gz)
+sha1sums=('c11638eb5c965c58bf6e7274e6dfab61db819980')
+
+package() {
+  cd "${srcdir}/${pkgname}"
+  sed -i -e 's|etc/bash_completion.d|share/bash-completion/completions|' \
+         -e 's|youtube-dl.bash-completion|youtube-dl|' setup.py
+  python3 setup.py install --root="${pkgdir}/" --optimize=1
+  install -Dm644 LICENSE "${pkgdir}/usr/share/licenses/${pkgname}/LICENSE"
+}

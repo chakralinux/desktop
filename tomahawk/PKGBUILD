@@ -1,0 +1,36 @@
+pkgname=tomahawk
+pkgver=0.8.4
+pkgrel=2
+pkgdesc="The social media player. A Music Player App written in C++/Qt"
+arch=('x86_64')
+url="http://tomahawk-player.org/"
+screenshot="https://img.skitch.com/20110813-n6w28ugdugyeptxgaj83y4ptp5.medium.jpg"
+license=('GPL3')
+depends=('phonon' 'taglib' 'boost' 'lucene++' 'libechonest-qt4>=2.1.0' 'jreen>=1.1.1' 'qtweetlib'
+         'attica' 'quazip' 'qtwebkit' 'liblastfm-qt4' 'sparsehash' 'qtkeychain-qt4' 'gnutls' 'websocketpp')
+makedepends=('cmake' 'automoc4' 'sparsehash' 'boost')
+conflicts=('tomahawk-git')
+categories=('multimedia')
+options=(!strip)
+source=("http://download.tomahawk-player.org/${pkgname}-${pkgver}.tar.bz2")
+md5sums=('04832abe1786edcc55805875b5882445')
+
+build() {
+ 
+  cd ${srcdir}/${pkgname}-${pkgver}
+
+  rm -rf ${srcdir}/${pkgname}-${pkgver}-build
+  cp -r ${srcdir}/${pkgname}-${pkgver} ${srcdir}/${pkgname}-${pkgver}-build
+  cd ${srcdir}/${pkgname}-${pkgver}-build
+
+  cmake -DCMAKE_INSTALL_PREFIX=/usr \
+        -DCMAKE_BUILD_TYPE=Release \
+        -DCMAKE_INSTALL_LIBDIR=lib \
+        -DCMAKE_INSTALL_LIBEXECDIR=lib/${pkgname} 
+  make
+}
+
+package() {
+  cd ${srcdir}/${pkgname}-${pkgver}-build
+  make DESTDIR=${pkgdir} install
+}

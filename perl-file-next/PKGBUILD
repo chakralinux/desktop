@@ -1,0 +1,31 @@
+# Maintainer: Manuel Tortosa <manutortosa[at]chakra-project[dot]org>
+
+_pkgname=file-next
+pkgname=perl-${_pkgname}
+pkgver=1.12
+pkgrel=1
+pkgdesc='File::Next - File-finding iterator'
+arch=('x86_64')
+license=('GPL' 'PerlArtistic')
+url="https://github.com/petdance/${_pkgname}"
+depends=('perl>=5.10.0')
+options=(!emptydirs)
+source=("${url}/archive/${pkgver}.tar.gz")
+md5sums=('c26878ea3998ff85836b6156bfe7b170')
+
+build() {
+  cd "$srcdir/${_pkgname}-$pkgver"
+
+  PERL_MM_USE_DEFAULT=1 perl Makefile.PL INSTALLDIRS=vendor
+  make
+}
+
+package() {
+  cd "$srcdir/${_pkgname}-$pkgver"
+
+  make install DESTDIR="$pkgdir"
+
+  find "$pkgdir" -name perllocal.pod -delete
+  find "$pkgdir" -name .packlist -delete
+}
+

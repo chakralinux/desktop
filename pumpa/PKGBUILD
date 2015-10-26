@@ -1,0 +1,45 @@
+# Contributor: speps <speps dot aur dot archlinux dot org>
+
+pkgname=pumpa
+pkgver=0.9.1
+pkgrel=1
+pkgdesc="A simple pump.io client written in C++ and Qt"
+arch=('x86_64')
+url="https://pumpa.branchable.com/"
+license=('GPL3')
+depends=('qt5-base' 'qjson' 'tidyhtml' 'aspell')
+install="$pkgname.install"
+source=("$pkgname-$pkgver::http://download.opensuse.org/source/factory/repo/oss/suse/src/pumpa-${pkgver}-1.1.src.rpm")
+sha512sums=('66df75ed31812d907a38bc7b47c28bf57c37266977747ac6d69b53286e41556df7d8cde43f4219997ce00b39176b944e0eb9723fde49abc7313196f758d2b783')
+
+prepare() {
+  cd $srcdir
+  
+  tar -Jxf $pkgname-$pkgver.tar.xz
+}
+
+build() {
+  cd "$srcdir/$pkgname-$pkgver"
+  qmake-qt5
+  make
+}
+
+package() {
+  cd "$srcdir/$pkgname-$pkgver"
+  
+  # bin
+  install -Dm755 $pkgname \
+    "$pkgdir/usr/bin/$pkgname"
+
+  # desktop file
+  install -Dm644 $pkgname.desktop \
+    "$pkgdir/usr/share/applications/$pkgname.desktop"
+
+  # icon
+  install -Dm644 icons/512x512/$pkgname.png \
+    "$pkgdir/usr/share/pixmaps/$pkgname.png"
+    
+  # man
+  install -Dm644 docs/$pkgname.1 \
+    "$pkgdir/usr/share/man/man1/$pkgname.1.gz"
+}

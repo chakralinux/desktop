@@ -1,0 +1,36 @@
+pkgname=flacon
+pkgver=1.2.0
+pkgrel=2
+pkgdesc="Tool to extract individual tracks from one big audio file."
+arch=('x86_64')
+url="http://flacon.github.io/"
+license=('GPL3')
+screenshot="http://wiki.flacon.googlecode.com/hg/imgs/flacon-1-small.png"
+depends=('uchardet' 'shntool' 'qt5-base')
+makedepends=('cmake' 'qt5-tools')
+optdepends=('flac: for encoding and decoding FLAC files'
+            'mac: for APE support'
+            'ttaenc: for TrueAudio support'
+            'lame: for MP3 support'
+            'mp3gain: for MP3 Replay Gain support'
+            'vorbis-tools: for OGG support'
+            'vorbisgain: for OGG Replay Gain support'
+            'wavpack: for WavPack support')
+categories=('multimedia')
+source=(https://github.com/$pkgname/$pkgname/archive/v$pkgver.tar.gz)
+sha512sums=('4cc64467350c941eed16299a562ddc3c6c83d785dddffe6825e3df50a988ce9494517b3ea862d90398110564ec3f828ef6760a6c02d24163f9247930330a3b6d')
+
+build() {
+  cd $srcdir/$pkgname-$pkgver
+  mkdir build
+  cd build
+  cmake .. -DCMAKE_INSTALL_PREFIX=/usr \
+	   -DBUILD_TESTS=Yes \
+	   -DUSE_QT5=Yes
+  make
+}
+
+package() {
+  cd $srcdir/$pkgname-$pkgver/build
+  make DESTDIR=$pkgdir install
+}

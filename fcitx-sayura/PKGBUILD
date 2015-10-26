@@ -1,0 +1,36 @@
+#
+# Apps Packages for Chakra, part of chakra-project.org
+#
+# Maintainer: Weng Xuetian <wengxt@gmail.com>
+
+# include global config
+source ../_buildscripts/${current_repo}-${_arch}-cfg.conf
+
+pkgname=fcitx-sayura
+pkgver=0.1.1
+pkgrel=1
+pkgdesc="Sinhala for fcitx."
+arch=('i686' 'x86_64')
+url="http://code.google.com/p/fcitx"
+license=('GPL')
+depends=('fcitx>=4.2.5')
+makedepends=('cmake')
+source=(http://download.fcitx-im.org/${pkgname}/${pkgname}-${pkgver}.tar.xz)
+
+build(){
+    cd "$srcdir/${pkgname}-${pkgver}"
+    rm -rf build
+    mkdir build
+    cd build
+    
+    cmake -DCMAKE_INSTALL_PREFIX=/usr -DCMAKE_BUILD_TYPE=Release ..
+    make
+}
+
+package ()
+{
+    cd "$srcdir/${pkgname}-${pkgver}/build"
+    make DESTDIR=${pkgdir} install
+}
+md5sums=('66c3a797cdc1f5a5ae19690cc8fd7cbd')
+md5sums=('62dfcb1fe9a5658c95f3cb5c3713a7de')

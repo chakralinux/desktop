@@ -1,0 +1,92 @@
+# Contributions from Arch: https://www.archlinux.org/packages/community/x86_64/blender/
+
+_gittag=v2.74
+#_gitcommit=b4d8fb57
+
+pkgname=blender
+pkgver=2.74
+[[ -n ${_gitcommit} ]] && pkgver=${pkgver}.git1.${_gitcommit}
+pkgrel=1
+epoch=1
+pkgdesc="A fully integrated 3D graphics creation suite"
+arch=('x86_64')
+license=('GPL')
+url="http://www.blender.org"
+depends=('libpng' 'libtiff' 'openexr' 'python3' 'desktop-file-utils'
+         'shared-mime-info' 'hicolor-icon-theme' 'xdg-utils' 'glew'
+         'freetype2' 'openal' 'ffmpeg' 'fftw' 'boost-libs' 'opencollada' 'llvm'
+         'openimageio' 'libsndfile' 'jack' 'opencolorio' 'openjpeg' 'x264')
+makedepends=('cmake' 'boost' 'mesa' 'git' 'cuda')
+optdepends=('cuda: cycles renderer cuda support')
+screenshot=('http://www.blender.org/index.php?eID=tx_cms_showpic&file=uploads%2Fpics%2Fblender_screenshot3_03.png&width=800m&height=600m&bodyTag=%3Cbody%20style%3D%22margin%3A0%3B%20background%3A%23fff%3B%22%3E&wrap=%3Ca%20href%3D%22javascript%3Aclose%28%29%3B%22%3E%20%7C%20%3C%2Fa%3E&md5=cddc8ef0fbe1e90d0d22e78b4911860b')
+options=(!strip)
+install=blender.install
+#source=("http://download.blender.org/source/${pkgname}-${pkgver}.tar.gz")
+source=("git://git.blender.org/blender-addons.git"
+        "git://git.blender.org/blender-addons-contrib.git"
+        "git://git.blender.org/blender-translations.git"
+        "git://git.blender.org/scons.git")
+if [[ -n $_gittag ]]; then
+    source+=("${pkgname}-${pkgver}::git://git.blender.org/blender.git#tag=${_gittag}")
+else
+    source+=("${pkgname}-${pkgver}::git://git.blender.org/blender.git#commit=${_gitcommit}")
+fi
+sha256sums=('SKIP'
+            'SKIP'
+            'SKIP'
+            'SKIP'
+            'SKIP')
+
+prepare() {
+  cd "$srcdir/$pkgname-$pkgver"
+
+  git submodule init
+  git config submodule."release/scripts/addons".url "${srcdir}/blender-addons"
+  git config submodule."release/scripts/addons_contrib".url "${srcdir}/blender-addons-contrib"
+  git config submodule."release/datafiles/locale".url "${srcdir}/blender-translations"
+  git config submodule."scons".url "${srcdir}/scons"
+  git submodule update
+}
+
+build() {
+  cd ${pkgname}-${pkgver}
+  
+  mkdir -p build && cd build
+
+  # enable again -DWITH_OPENCOLLADA=ON when 2.71 is build!
+  # Still does not work. Does opencollada need a rebuild or a new version?
+
+  cmake -C../build_files/cmake/config/blender_full.cmake .. \
+    -DCMAKE_INSTALL_PREFIX=/usr \
+    -DCMAKE_BUILD_TYPE=Release \
+    -DWITH_INSTALL_PORTABLE=OFF \
+    -DWITH_PYTHON_INSTALL=OFF \
+    -DWITH_SYSTEM_OPENJPEG=ON \
+    -DOPENIMAGEIO_ROOT_DIR=/usr \
+    -DWITH_GAMEENGINE=ON \
+    -DWITH_JACK=ON \
+    -DWITH_PLAYER=ON \
+    -DWITH_CODEC_FFMPEG=ON \
+    -DWITH_CODEC_SNDFILE=ON \
+    -DWITH_CYCLES_OSL=ON \
+    -DWITH_CYCLES_CUDA_BINARIES=ON \
+    -DWITH_LLVM=ON \
+    -DLLVM_VERSION=3.5 \
+    -DLLVM_STATIC=OFF \
+    -DWITH_FFTW3=ON \
+    -DWITH_MOD_OCEANSIM=ON \
+    -DWITH_OPENCOLLADA=OFF \
+    -DPYTHON_VERSION=3.4 \
+    -DPYTHON_LIBPATH=/usr/lib \
+    -DPYTHON_LIBRARY=python3.4m \
+    -DPYTHON_INCLUDE_DIRS=/usr/include/python3.4m 
+  make
+}
+
+package() {
+  cd ${pkgname}-${pkgver}/build
+
+  make DESTDIR="${pkgdir}" install
+  python3 -m compileall "${pkgdir}/usr/share/blender"
+  python3 -O -m compileall "${pkgdir}/usr/share/blender"
+}

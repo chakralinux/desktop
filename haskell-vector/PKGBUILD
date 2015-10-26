@@ -1,0 +1,58 @@
+# Maintainer: UtG <utg[dot]chakra.linux[at]gmail[dot]com>
+# Contributors: H W TovetjÃ¤rn (totte) <totte@tott.es>
+#		Stephen McIntosh <stephenmac7[at]gmail[dot]com>
+#               Thomas Dziedzic <gostrc@gmail.com>
+#               Vesa Kaihlavirta <vesa@archlinux.org>
+#               Arch Haskell Team <arch-haskell@haskell.org>
+
+## NOTE: when you update Haskell packages you'll have to update the entire stack to not break it ##
+
+_pkgname=vector
+pkgname=haskell-vector
+pkgver=0.10.12.2
+pkgrel=1
+pkgdesc="Efficient Arrays"
+url="http://hackage.haskell.org/package/vector"
+license=('custom:BSD3')
+arch=('x86_64')
+depends=('ghc' 'haskell-deepseq>=1.1' 'haskell-deepseq<1.5' 'haskell-primitive>=0.5.0.1' 'haskell-primitive<0.6')
+options=('strip' 'staticlibs')
+source=("http://hackage.haskell.org/packages/archive/${_pkgname}/${pkgver}/${_pkgname}-${pkgver}.tar.gz")
+install="${pkgname}.install"
+sha256sums=('455427a217e98cc20af71906700bf36fed265ac15b7fb21b78a0a61f66380c06')
+
+build() {
+    cd "${srcdir}/${_pkgname}-${pkgver}"
+    runhaskell Setup configure \
+        -O -p \
+        --enable-split-objs \
+        --enable-shared \
+        --prefix=/usr \
+        --docdir="/usr/share/doc/${pkgname}" \
+        --libsubdir=\$compiler/site-local/\$pkgid
+    runhaskell Setup build
+    runhaskell Setup haddock
+    runhaskell Setup register   --gen-script
+    runhaskell Setup unregister --gen-script
+    sed -i -r -e "s|ghc-pkg.*unregister[^ ]* |&'--force' |" unregister.sh
+}
+
+package() {
+    cd "${srcdir}/${_pkgname}-${pkgver}"
+    install -D -m744 register.sh \
+        "${pkgdir}/usr/share/haskell/${pkgname}/register.sh"
+    install -m744 unregister.sh \
+        "${pkgdir}/usr/share/haskell/${pkgname}/unregister.sh"
+    install -d -m755 "${pkgdir}/usr/share/doc/ghc/html/libraries"
+
+    # Documentation
+    ln -s "/usr/share/doc/${pkgname}/html" \
+        "${pkgdir}/usr/share/doc/ghc/html/libraries/vector"
+
+    # License
+    install -D -m644 LICENSE \
+        "${pkgdir}/usr/share/licenses/${pkgname}/LICENSE"
+    rm -f "${pkgdir}/usr/share/doc/${pkgname}/LICENSE"
+
+    runhaskell Setup copy --destdir="${pkgdir}"
+}

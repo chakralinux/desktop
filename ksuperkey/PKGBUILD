@@ -1,0 +1,23 @@
+pkgname=ksuperkey
+pkgver=0.4
+pkgrel=1
+pkgdesc="Allows you to open the application launcher in KDE Plasma Desktop using the Super key"
+url="http://kde-apps.org/content/show.php/ksuperkey?content=154569"
+license=('GPL3')
+arch=('x86_64')
+depends=('libxtst')
+source=("http://kde-apps.org/CONTENT/content-files/154569-${pkgname}-${pkgver}.tar.gz")
+install=ksuperkey.install
+md5sums=('d07a6e43132ecf76bcbf8ad344979b44')
+
+build() {
+        cd "${srcdir}"/$pkgname-$pkgver
+        make
+}
+
+package() {
+        cd "${srcdir}"/$pkgname-$pkgver
+        make DESTDIR="$pkgdir" install
+}
+
+

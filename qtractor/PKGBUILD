@@ -1,0 +1,31 @@
+pkgname=qtractor
+pkgver=0.7.1
+pkgrel=2
+pkgdesc="Audio/MIDI multitrack sequencer"
+arch=('x86_64')
+url="http://qtractor.sourceforge.net/"
+screenshot=("http://kde-apps.org/CONTENT/content-pre1/56325-1.png")
+license=('GPL')
+depends=('qt5-base' 'qt5-x11extras' 'jack' 'slv2' 'libmad' 'libsamplerate' 'rubberband' 'liblo')
+makedepends=('ladspa' 'dssi' 'qt5-tools')
+categories=('multimedia')
+source=("http://downloads.sourceforge.net/$pkgname/$pkgname-$pkgver.tar.gz")
+sha512sums=('fa2210426388d0efdf920f591ad776c582867e9a556efaad3a03b575cd1f5702b686d347ad6a3991db07fcd7142b227d4b812095d91e280a01dc3f8dddfc8ede')
+
+build() {
+  cd "$srcdir/$pkgname-$pkgver"
+
+  ./configure --prefix=/usr \
+	      --enable-qt5 \
+	      --disable-lv2-ui-gtk2
+  make
+}
+
+package () {
+  cd "$srcdir/$pkgname-$pkgver"
+
+  make DESTDIR="$pkgdir/" install
+  install -d ${pkgdir}/usr/share/pixmaps
+  cp ${pkgdir}/usr/share/icons/hicolor/scalable/apps/qtractor.svg \
+  ${pkgdir}/usr/share/pixmaps/qtractor.svg
+}

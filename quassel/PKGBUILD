@@ -1,0 +1,50 @@
+pkgname=quassel
+pkgver=0.12.2
+pkgrel=2
+pkgdesc="Next-generation distributed IRC client"
+url="http://quassel-irc.org"
+arch=('x86_64')
+license=('GPL')
+depends=('qt5-base>=5.5' 'knotifyconfig' 'qt5-webkit' 'qt5-script' 'qca-qt5')
+makedepends=('cmake' 'extra-cmake-modules' 'qt5-tools' 'python3')
+categories=('communication')
+screenshot=('http://quassel-irc.org/files/images/snapshot13.preview.png')
+source=("http://quassel-irc.org/pub/quassel-${pkgver}.tar.bz2"
+        "http://bugs.quassel-irc.org/attachments/download/449/0001-Fix-build-with-Qt-5.5.patch"
+	'quassel.service'
+        'quassel.conf')
+install=quassel.install
+backup=(etc/conf.d/quassel.conf)
+md5sums=('f5473a9c5927a0e8cb3a204ced887aa8'
+         '314e6b01dc6657ba48e87c2244f78377'
+         '95045bafa9bf965d0e2febd5b49514ea'
+         '479229556ba0dd94e3ce28e31e5deea9')
+
+prepare() {
+  cd ${pkgname}-${pkgver}
+  patch -Np1 -i ../0001-Fix-build-with-Qt-5.5.patch
+}
+         
+build() {
+  [[ ! -d build ]] && mkdir build
+  cd build
+
+  cmake \
+    -DCMAKE_INSTALL_PREFIX=/usr/ \
+    -DUSE_QT5=ON \
+    -DWITH_KDE=ON \
+    -DCMAKE_BUILD_TYPE="Release" \
+    ../${pkgname}-${pkgver}/ \
+    -Wno-dev
+
+  make
+}
+
+package() {
+  cd build
+
+  make DESTDIR=${pkgdir} install
+
+  install -D ${srcdir}/$pkgname.service ${pkgdir}/usr/lib/systemd/system/$pkgname.service
+  install -D -m644 ${srcdir}/$pkgname.conf ${pkgdir}/etc/conf.d/$pkgname
+}

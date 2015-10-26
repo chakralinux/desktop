@@ -1,0 +1,39 @@
+# Maintainer: Ernesto Manríquez <alejandronova@gmail.com>
+
+pkgbase=py-oauth2
+pkgname=("python2-${pkgbase}" "python3-${pkgbase}")
+pkgver=0.0.10
+pkgrel=1
+arch=('x86_64')
+url=("http://liluo.org/${pkgbase}/")
+license=('MIT')
+makedepends=('python2-setuptools' 'python3-setuptools')
+source=("https://pypi.python.org/packages/source/p/py-oauth2/${pkgbase}-${pkgver}.tar.gz")
+md5sums=('8b6875c1ab9c01fc9bc8fc5525d82452')
+
+build() {
+  install -d ${srcdir}/build{2,3} && for i in 2 3; do
+  cp -r "${srcdir}/${pkgbase}-${pkgver}" ${srcdir}/build${i}
+  cd ${srcdir}/build${i}/${pkgbase}-${pkgver}/
+  python${i} setup.py build
+  done
+}
+
+package_python2-py-oauth2() {
+  depends=('python2-requests')
+  pkgdesc="A Python wrapper for the OAuth2 specification - Python2 version"
+  provides="${pkgbase}"
+  conflicts="${pkgbase}"
+  replaces="${pkgbase}"
+  
+  cd "${srcdir}/build2/${pkgbase}-${pkgver}/"
+  python2 setup.py install --root=$pkgdir
+}
+
+package_python3-py-oauth2() {
+  depends=('python3-requests')
+  pkgdesc="A Python wrapper for the OAuth2 specification - Python3 version"
+  
+  cd "${srcdir}/build3/${pkgbase}-${pkgver}/"
+  python3 setup.py install --root=$pkgdir
+}

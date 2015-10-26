@@ -1,0 +1,41 @@
+# Maintainer: Manuel 'UtG' <utg[dot]chakra.linux[at]gmail[dot]com>
+
+pkgbase=python-magic
+pkgname=(python2-magic python3-magic)
+pkgver=5.19
+pkgrel=1
+pkgdesc="Python bindings to the magic library"
+arch=('x86_64')
+url='http://darwinsys.com/file/'
+license=('custom')
+makedepends=('python2' 'python3' 'python2-setuptools' 'python3-setuptools')
+source=("ftp://ftp.astron.com/pub/file/file-${pkgver}.tar.gz")
+md5sums=('e3526f59023f3f7d1ffa4d541335edab')
+install=$pkgbase.install
+
+prepare() {
+  cp -r file-${pkgver} python2-file-${pkgver}
+}
+
+package_python3-magic() {
+  depends=('python3' 'file')
+
+  cd "${srcdir}/file-${pkgver}/python"
+  
+  python3 setup.py install --root="${pkgdir}" --optimize=1
+  install -Dm0644 "${srcdir}/file-${pkgver}/COPYING" \
+    "${pkgdir}/usr/share/licenses/${pkgname}/COPYING"
+}
+
+package_python2-magic() {
+  depends=('python2' 'file')
+
+  cd "${srcdir}/python2-file-${pkgver}/python"
+  
+  #mkdir -p "${pkgdir}/usr/lib/python2.7/lib-dynload"
+  #cp build/lib/magic.py "${pkgdir}/usr/lib/python2.7/lib-dynload/"
+
+  python2 setup.py install --root="${pkgdir}" --optimize=1
+  install -Dm0644 "${srcdir}/python2-file-${pkgver}/COPYING" \
+    "${pkgdir}/usr/share/licenses/${pkgname}/COPYING"
+}

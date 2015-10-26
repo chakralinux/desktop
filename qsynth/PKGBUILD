@@ -1,0 +1,23 @@
+pkgname=qsynth
+pkgver=0.4.0
+pkgrel=1
+pkgdesc="Qt GUI for fluidsynth"
+arch=('x86_64')
+url="http://qsynth.sourceforge.net/qsynth-index.html"
+license=('GPL')
+depends=('fluidsynth' 'qt5-base' 'qt5-x11extras')
+makedepends=('qt5-tools')
+categories=('multimedia')
+source=(http://downloads.sourceforge.net/${pkgname}/${pkgname}-${pkgver}.tar.gz)
+sha1sums=('a05399aa9f841a18b605c846c44a653b781773e1')
+
+build() {
+  cd "${srcdir}/${pkgname}-${pkgver}"
+  ./configure --prefix=/usr
+  make
+}
+
+package() {
+  cd "${srcdir}/${pkgname}-${pkgver}"
+  make DESTDIR="${pkgdir}" install
+}  

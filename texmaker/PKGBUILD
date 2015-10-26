@@ -1,0 +1,26 @@
+# Maintainer: Francesco Marinucci <franzmari[at]chakra-project[dot]it>
+
+pkgname=texmaker
+pkgver=4.4.1
+pkgrel=2
+pkgdesc="Free, modern and cross-platform LaTeX editor that integrates many tools."
+arch=('x86_64')
+url="http://www.xm1math.net/texmaker/"
+license=('GPL')
+depends=('qtwebkit' 'poppler-qt4')
+optdepends=('texlive-core')
+categories=('office')
+screenshots=('http://www.xm1math.net/texmaker/texmakertop_big.png')
+source=("http://www.xm1math.net/texmaker/texmaker-$pkgver.tar.bz2")
+md5sums=('d6af622aa9ab1ec29c799842f2b76dc7')
+
+build() {
+    cd $srcdir/$pkgname-$pkgver
+    qmake texmaker.pro
+    make
+}
+
+package() {
+    cd $srcdir/$pkgname-$pkgver
+    make install INSTALL_ROOT="$pkgdir"
+}

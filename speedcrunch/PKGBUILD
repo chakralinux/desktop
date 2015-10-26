@@ -1,0 +1,34 @@
+#
+# Chakra Packages for Chakra, part of chakra-project.org
+#
+# Maintainer (x86_64): Manuel Tortosa <manutortosa[at]chakra-project[dot]org>
+
+# include global config
+source ../_buildscripts/${current_repo}-${_arch}-cfg.conf
+
+pkgname=speedcrunch
+pkgver=0.11
+pkgrel=1
+pkgdesc="Simple but powerful calculator using Qt"
+url="http://speedcrunch.org/"
+arch=('x86_64')
+depends=('qt')
+makedepends=('cmake')
+license=('GPL2')
+categories=('utils')
+source=("https://github.com/speedcrunch/SpeedCrunch/archive/$pkgver.tar.gz")
+md5sums=('0d4458d98a3630cc121ca04d5a36e38c')
+
+build() {
+  cd SpeedCrunch-$pkgver/src
+  cmake . -DCMAKE_INSTALL_PREFIX=/usr
+  make
+}
+
+#  fix make install issue	
+#  lrelease speedcrunch.pro
+
+package() {
+  cd SpeedCrunch-$pkgver/src
+  make DESTDIR=$pkgdir install
+}

@@ -1,0 +1,43 @@
+#
+# Chakra Packages for Chakra, part of chakra-project.org
+#
+
+pkgname=nmap
+pkgver=6.47
+pkgrel=1
+pkgdesc="A network exploration tool and security/port scanner"
+arch=('x86_64')
+url="http://nmap.org"
+license=('custom:GPL')
+depends=('pcre' 'openssl' 'libpcap>=1.0.0' 'lua')
+# pygtk is needed for zenmap
+makedepends=('python2')
+optdepends=('pygtk: gui for nmap - zenmap')
+options=('!makeflags')
+source=(http://nmap.org/dist/${pkgname}-${pkgver}.tar.bz2)
+md5sums=('edfe81f6763223c0a29bfa15a8526e2a')
+
+build() {
+  cd "${srcdir}/${pkgname}-${pkgver}"
+
+  export PYTHON=python2
+  ./configure \
+	  --prefix=/usr \
+	  --libexecdir=/usr/lib \
+	  --mandir=/usr/share/man
+
+  # added LUA_LIBS as workaround to liblua not correctly referenced (http://ubuntuforums.org/showthread.php?t=2164741)
+  make "LUA_LIBS=../liblua/liblua.a -ldl -lm"
+}
+
+package() {
+  cd "${srcdir}/${pkgname}-${pkgver}"
+
+  make DESTDIR="${pkgdir}" install
+
+  # remove zenmap uninstall script
+  rm "${pkgdir}/usr/bin/uninstall_zenmap"
+
+  # install custom GPL2 license
+  install -D -m644 COPYING "${pkgdir}/usr/share/licenses/${pkgname}/LICENSE"
+}

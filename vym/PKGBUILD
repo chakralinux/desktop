@@ -1,0 +1,42 @@
+pkgname=vym
+pkgver=2.2.4
+pkgrel=2
+pkgdesc="A mindmapping tool"
+arch=('x86_64')
+url="http://www.insilmaril.de/vym/"
+license=('GPL')
+depends=('qt' 'unzip' 'zip')
+options=('!emptydirs')
+install=$pkgname.install
+screenshot="http://a.fsdn.com/con/app/proj/vym/screenshots/328321.jpg"
+source=(http://downloads.sourceforge.net/sourceforge/$pkgname/$pkgname-$pkgver.tar.bz2 \
+        $pkgname.desktop)
+sha512sums=('b82d2100a3f26f6e19167066ec512e23c8f50ab7ef41ff130dd775964e189fb345e1e9877c96ceffe3db5c7ff6c361330f12a3eba554523f0c2dcf7c4877a712'
+            '3300862f7e9a70c01293ac9d2a73d365faf9a6851e2e8ff792a013ec45f3a23f07be98338be22f3d6952d9f285ecdb09ff54f276b5ebfddc0c88e8512697c30a')
+
+build() {
+  cd ${srcdir}/$pkgname-$pkgver
+
+  qmake PREFIX=/usr
+  lrelease vym.pro
+  make
+}
+
+package() {
+  cd "${srcdir}"/$pkgname-$pkgver
+
+# install files
+  make INSTALL_ROOT="${pkgdir}" install
+
+# correct doc location
+  install -d "${pkgdir}"/usr/share/{doc/$pkgname,man/man1}
+  install -m644 doc/* "${pkgdir}"/usr/share/doc/$pkgname
+  rm -rf "${pkgdir}"/usr/share/doc/packages
+  mv "${pkgdir}"/usr/share/doc/vym/vym.1.gz "${pkgdir}"/usr/share/man/man1/
+
+# .desktop and icon file
+  install -D -m644 "${srcdir}"/$pkgname.desktop \
+    "${pkgdir}"/usr/share/applications/$pkgname.desktop
+  install -D -m644 "${pkgdir}"/usr/share/vym/icons/$pkgname-128x128.png \
+    "${pkgdir}"/usr/share/pixmaps/$pkgname.png
+}

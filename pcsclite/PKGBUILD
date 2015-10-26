@@ -1,0 +1,37 @@
+pkgname=pcsclite
+_pkgname=pcsc-lite
+pkgver=1.8.14
+_code=39
+pkgrel=1
+pkgdesc="PC/SC Architecture smartcard middleware library"
+arch=('x86_64')
+url="https://alioth.debian.org/projects/pcsclite/"
+license=('BSD')
+depends=('udev')
+options=('!libtool' '!docs')
+source=("https://alioth.debian.org/frs/download.php/latestfile/${_code}/pcsc-lite-${pkgver}.tar.bz2")
+sha512sums=('a374ee254403b57a9bb24629e1d2d867b4b2046126f06fcc9df5d2e4b1ab9e8e2daddf371082c829e40d0874d2e84a8d657240857cc928242adfbbb1516c3362')
+
+build() {
+
+  cd "${srcdir}/${_pkgname}-${pkgver}"
+  sed -i -e "s:python:python2:g" src/spy/pcsc-spy
+
+  ./configure --enable-ipcdir=/run/pcscd \
+              --enable-libudev \
+              --enable-usbdropdir=/usr/lib/pcsc/drivers \
+              --prefix=/usr \
+              --sysconfdir=/etc \
+              --with-systemdsystemunitdir=/usr/lib/systemd/system
+
+  make
+}
+
+package() {
+  cd "${srcdir}/${_pkgname}-${pkgver}"
+
+  make DESTDIR="${pkgdir}" install
+
+  install -D "${srcdir}/${_pkgname}-${pkgver}/COPYING" "${pkgdir}/usr/share/licenses/${pkgname}/license.txt"
+  install -d "${pkgdir}/usr/lib/pcsc/drivers"
+}

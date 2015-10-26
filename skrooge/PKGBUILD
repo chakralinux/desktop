@@ -1,0 +1,31 @@
+pkgname=skrooge
+pkgver=2.1.1
+pkgrel=1
+pkgdesc="Allows you to manage your personal finances in KDE"
+arch=('x86_64')
+url="http://skrooge.org"
+license=('GPL')
+depends=('qt5-base' 'qt5-tools' 'qca-qt5' 'qt5-script' 'libofx' 'grantlee-qt5' 'python3'
+         'kross' 'knewstuff' 'krunner' 'knotifyconfig' 'kdelibs4support' 'sqlcipher')
+makedepends=('cmake' 'kdoctools' 'extra-cmake-modules')
+options=('!emptydirs')
+categories=('office')
+install=$pkgname.install
+source=("http://download.kde.org/stable/skrooge/$pkgname-$pkgver.tar.xz")
+sha256sums=('4c7b82991b56d28274b7e00c2909009c858b43f489c401a46a2dca637caccd12')
+
+build() {
+  cd "${srcdir}"/$pkgname-$pkgver
+
+  cmake . -DCMAKE_BUILD_TYPE=Release \
+          -DCMAKE_INSTALL_PREFIX=`kf5-config --prefix` \
+          -DQT_PLUGIN_INSTALL_DIR=`kf5-config --qt-plugins` \
+          -DKDE_INSTALL_LIBDIR=/usr/lib
+  make
+}
+
+package() {
+  cd "${srcdir}"/$pkgname-$pkgver
+
+  make DESTDIR="${pkgdir}" install
+}

@@ -1,0 +1,29 @@
+pkgname=perl-exiftool
+_srcname=Image-ExifTool
+pkgver=9.99
+pkgrel=1
+license=('GPL')
+pkgdesc="Reader and rewriter of EXIF informations that supports raw files"
+url="http://www.sno.phy.queensu.ca/~phil/exiftool/"
+arch=('x86_64')
+depends=('perl')
+optdepends=('perl-archive-zip: decode compressed zip information')
+source=(http://www.sno.phy.queensu.ca/~phil/exiftool/${_srcname}-${pkgver}.tar.gz)
+options=(!emptydirs)
+sha512sums=('1c3808cf0f5de563afc6061126addb54b4037efd6d88d3875cb4e17c3cbf8a3061248a38ac014b14260a530ad523e3d3dbe09f946f95008db71f1fad235d8dbd')
+
+build() {
+  cd ${srcdir}/${_srcname}-${pkgver}
+  # install module in vendor directories.
+  perl Makefile.PL INSTALLDIRS=vendor 
+  make
+}
+
+package() {
+  cd ${srcdir}/${_srcname}-${pkgver}
+  make DESTDIR=${pkgdir} install
+  # remove *.pod, .packlist, and empty dirs:
+  find ${pkgdir} -name '.packlist' -delete
+  find ${pkgdir} -name '*.pod' -delete
+}
+

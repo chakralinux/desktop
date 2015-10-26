@@ -1,0 +1,81 @@
+# Contributor: Anke Boersma <abveritas@chakra-project.org>
+# Maintainer: Bruce Liu <brli@users.sourceforge.net>
+
+_pkgname=QupZilla
+pkgbase=qupzilla
+pkgname=('qupzilla-qt5' 'qupzilla')
+pkgver=1.8.6
+pkgrel=6
+pkgdesc="A very fast open source browser based on WebKit core"
+url="http://www.qupzilla.com"
+arch=('x86_64')
+license=('GPL3')
+makedepends=('qt5-tools' 'qt5-webkit' 'qt5-script' 'kwallet' 'kdelibs' 'qt')
+optdepends=('bash-completion: bash completion support')
+install=${pkgbase}.install
+categories=('network') 
+screenshot='http://www.qupzilla.com/screens/kde.png'
+source=("https://github.com/QupZilla/qupzilla/releases/download/v${pkgver}/${_pkgname}-${pkgver}.tar.xz"
+	'browserui.patch'
+	'preference.patch'
+	'searchmanager.patch'
+	'start-white.png')
+	#'qupzilla-qt5.desktop') # only for now
+sha1sums=('e1164dd6afb1ee121c2d53acc95b1c7b7d51603e'
+          'c3d9f661c3243764afc24c661678ad96d5c423f9'
+          'ac27b9415e74f2b6771b9011b7e415f8086abf5a'
+          '86ead03eb48b2eca44125755ff55f76eedde3b10'
+          '6ec67993bda3054d4210cc08177b124f873774e3')
+          #'995413e503c4cd3b49edc711200174f09c5e649e')          
+
+prepare() {
+  cd ${srcdir}/${_pkgname}-${pkgver}
+  msg 'Applying browserUI patch...'
+  patch -Np1 -i ${srcdir}/browserui.patch
+  msg 'Applying preference patch'
+  patch -Np1 -i ${srcdir}/preference.patch  
+  msg 'Applying search engine patch...'
+  patch -Np1 -i ${srcdir}/searchmanager.patch
+  
+  # split
+  mkdir ${srcdir}/qt{4,5}
+  cp -rv ${srcdir}/${_pkgname}-${pkgver}/* ${srcdir}/qt4
+  cp -rv ${srcdir}/${_pkgname}-${pkgver}/* ${srcdir}/qt5
+}
+         
+build() {
+  export USE_WEBGL="true"
+  export KDE_INTEGRATION="true"
+  export ENABLE_OPACITY_EFFECT="true"
+  
+  msg 'Qt4 build'
+  cd "${srcdir}/qt4"
+  qmake
+  make
+  
+  msg 'Qt5 build'
+  cd "${srcdir}/qt5"
+  /usr/lib/qt5/bin/qmake
+  make
+
+}
+
+package_qupzilla() {
+  pkgdesc+=('(Qt4 build)')
+  depends=('qt' 'qtwebkit-plugins' 'qtwebkit')
+  optdepends=('kdelibs: kwallet integration')
+  cd "${srcdir}/qt4"
+  make INSTALL_ROOT="${pkgdir}" install
+  install -Dm 644 "${srcdir}/start-white.png" "${pkgdir}/usr/share/pixmaps/start-white.png"
+}
+
+package_qupzilla-qt5() {
+  pkgdesc+=('(Qt5 build)')
+  depends=('qt5-webkit' 'qt5-script')
+  optdepends=('kwallet: kf5 kwallet integration')
+  provides=("${pkgbase}")
+  conflicts=("${pkgbase}")
+  cd "${srcdir}/qt5"
+  make INSTALL_ROOT="${pkgdir}" install
+  install -Dm 644 "${srcdir}/start-white.png" "${pkgdir}/usr/share/pixmaps/start-white.png"  
+}

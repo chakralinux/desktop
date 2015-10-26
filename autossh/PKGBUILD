@@ -1,0 +1,35 @@
+pkgname=autossh
+pkgver=1.4.1
+_pkgver=1.4e
+pkgrel=2
+pkgdesc="Automatically restart SSH sessions and tunnels"
+arch=('x86_64')
+url="http://www.harding.motd.ca/autossh/"
+license=('custom')
+depends=('openssh')
+source=("http://www.harding.motd.ca/autossh/$pkgname-$_pkgver.tgz"
+	"LICENSE")
+sha512sums=('2f71403ee005103c6a3e2e669f6b26153161c95c8dacd3e73d61673461b3512348636877760d911341771e744c0a682b107df4ac48621661ff36a9fc0191f2fb'
+            '59b757619d264840c5057ae71b783660a765b4ba30b1d0d2c98a70c7184ce9c489db243809f50b8e56d7e7939713148770cdb4db5604c1210c7c545937077e34')
+
+build() {
+  cd $srcdir/$pkgname-$_pkgver
+
+  msg "Configuring"
+  ./configure --prefix=$pkgdir/usr --sysconfdir=/etc --localstatedir=/var
+
+  msg "Building"
+  make
+}
+
+package() {
+  cd $srcdir/$pkgname-$_pkgver
+  msg "Creating package"
+  install -D -m755 autossh $pkgdir/usr/bin/autossh
+  install -D -m644 CHANGES $pkgdir/usr/share/doc/autossh/CHANGES
+  install -D -m644 README $pkgdir/usr/share/doc/autossh/README
+  install -D -m644 autossh.host $pkgdir/usr/share/autossh/examples/autossh.host
+  install -D -m644 rscreen $pkgdir/usr/share/autossh/examples/rscreen
+  install -D -m644 autossh.1 $pkgdir/usr/share/man/man1/autossh.1
+  install -D -m644 ${srcdir}/LICENSE ${pkgdir}/usr/share/licenses/${pkgname}/LICENSE
+}

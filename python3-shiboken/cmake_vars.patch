@@ -1,0 +1,26 @@
+diff --git a/data/CMakeLists.txt b/data/CMakeLists.txt
+index c40d552..474132e 100644
+--- a/data/CMakeLists.txt
++++ b/data/CMakeLists.txt
+@@ -16,6 +16,11 @@ configure_file("${CMAKE_CURRENT_SOURCE_DIR}/ShibokenConfigVersion.cmake.in"
+                "${CMAKE_CURRENT_BINARY_DIR}/ShibokenConfigVersion.cmake" @ONLY)
+ configure_file("${CMAKE_CURRENT_SOURCE_DIR}/shiboken.pc.in"
+                "${CMAKE_CURRENT_BINARY_DIR}/shiboken${shiboken_SUFFIX}.pc" @ONLY)
++# begin: arsooy_ changes
++# we need this to make makepkg's install() aware of cmake variables
++configure_file("${CMAKE_CURRENT_SOURCE_DIR}/cmake_vars.in"
++               "${CMAKE_CURRENT_BINARY_DIR}/cmake_vars" @ONLY)
++# end: arsooy_ changes
+ 
+ install(FILES "${CMAKE_CURRENT_BINARY_DIR}/ShibokenConfig.cmake"
+         DESTINATION "${LIB_INSTALL_DIR}/cmake/Shiboken-${shiboken_VERSION}")
+diff --git a/data/cmake_vars.in b/data/cmake_vars.in
+new file mode 100644
+index 0000000..00a781c
+--- /dev/null
++++ b/data/cmake_vars.in
+@@ -0,0 +1,3 @@
++@shiboken_VERSION@
++@shiboken_SUFFIX@
++@PYTHON_SUFFIX@
+\ No newline at end of file

@@ -1,0 +1,46 @@
+pkgname=xdebug
+pkgver=2.3.3
+pkgrel=1
+pkgdesc="PHP debugging extension"
+arch=('x86_64')
+url="http://www.xdebug.org"
+license=('GPL')
+depends=('php')
+makedepends=('php-curl')
+install="${pkgname}.install"
+backup=('etc/php/conf.d/xdebug.ini')
+categories=('programming')
+source=(http://www.xdebug.org/files/$pkgname-$pkgver.tgz
+	xdebug-5.2.ini
+	xdebug.ini)
+sha512sums=('212604e87caa67b3734befa0f57580532b0edd346ed871bbaba72ba8319ba60eb8d66649cb5716df250f28ef1cd2384ccc6f651b90ab4936dbcb45ef6c5f7438'
+         '0105a26a653b7c1dfc63df73a2d3e4cb14683b079f915fc41c24d123436a546980c0d82e14040c0bc82919edf7fdda59db67873afb26209635f114c66db6b074'
+         '3b667dd97486df407662b80dfbef2a69a4eba964161ee9831556b9fa87823fa235323a5a3663fdfb08f649a9d98a5b5cae3de514f68a340158285abb4b50a4d4')
+
+build() {
+  local PHPVER=`php -r 'echo phpversion();'`
+
+  cd $srcdir/$pkgname-$pkgver
+  phpize
+  ./configure --prefix=/usr --enable-xdebug
+  make
+
+  cd debugclient
+  ./configure --prefix=/usr
+  make
+}
+
+package() {
+  cd $srcdir/$pkgname-$pkgver/debugclient
+  make DESTDIR=$pkgdir install
+
+  cd $srcdir/$pkgname-$pkgver
+  make INSTALL_ROOT=$pkgdir install
+  if [ "$PHPVER" \< "5.3.0" ] ; then
+    install -D -m 744 modules/xdebug.so $pkgdir/usr/lib/php/xdebug.so
+    install -D -m 644 $srcdir/xdebug-5.2.ini $pkgdir/etc/php/conf.d/xdebug.ini
+  else
+    install -D -m 744 modules/xdebug.so $pkgdir/usr/lib/php/modules/xdebug.so
+    install -D -m 644 $srcdir/xdebug.ini $pkgdir/etc/php/conf.d/xdebug.ini
+  fi
+}

@@ -1,0 +1,46 @@
+pkgname=quassel-qt4
+_pkgname=quassel
+pkgver=0.12.2
+pkgrel=1
+pkgdesc="Next-generation distributed IRC client"
+url="http://quassel-irc.org"
+arch=('x86_64')
+license=('GPL')
+depends=('kde-runtime' 'hicolor-icon-theme')
+makedepends=('cmake' 'automoc4')
+conflicts=("${_pkgname}")
+provides=("${_pkgname}")
+replaces=("${_pkgname}")
+categories=('communication')
+screenshot=('http://quassel-irc.org/files/images/snapshot13.preview.png')
+source=("http://quassel-irc.org/pub/"${_pkgname}"-${pkgver}.tar.bz2"
+	'quassel.service'
+        'quassel.conf')
+install=quassel.install
+backup=(etc/conf.d/quassel.conf)
+md5sums=('f5473a9c5927a0e8cb3a204ced887aa8'
+         '95045bafa9bf965d0e2febd5b49514ea'
+         '479229556ba0dd94e3ce28e31e5deea9')
+
+build() {
+  cd ${_pkgname}-${pkgver}
+  [[ ! -d build ]] && mkdir build
+  cd build
+
+  cmake \
+    -DCMAKE_INSTALL_PREFIX=/usr/ \
+    -Wno-dev \
+    -DWITH_KDE=ON \
+    -DCMAKE_BUILD_TYPE="Release" \
+    ..
+  make
+}
+
+package() {
+  cd ${_pkgname}-${pkgver}/build
+
+  make DESTDIR=${pkgdir} install
+
+  install -D ${srcdir}/$_pkgname.service ${pkgdir}/usr/lib/systemd/system/$_pkgname.service
+  install -D -m644 ${srcdir}/$_pkgname.conf ${pkgdir}/etc/conf.d/$pkgname
+}

@@ -1,0 +1,27 @@
+#
+# Apps Packages for Chakra, part of chakra-project.org
+#
+# Maintainer: Adrian Chaves Fernandez (Gallaecio) <adriyetichaves@gmail.com>
+# Contributor (x86_64): Giuseppe Calà <jiveaxe@gmail.com>
+
+pkgname=python2-mechanize
+_pkgname=mechanize
+pkgver=0.2.5
+pkgrel=1
+pkgdesc="Stateful programmatic web browsing in Python"
+arch=(any)
+url="http://wwwsearch.sourceforge.net/mechanize/"
+license=(BSD ZPL)
+depends=(python2)
+replaces=(python-mechanize)
+provides=(python-mechanize)
+makedepends=(setuptools)
+source=(http://wwwsearch.sourceforge.net/$_pkgname/src/$_pkgname-$pkgver.tar.gz)
+md5sums=('32657f139fc2fb75bcf193b63b8c60b2')
+
+package() {
+    cd "$srcdir/$_pkgname-$pkgver"
+    python2 setup.py install --root="$pkgdir" --optimize=1
+    install -D -m644 "$srcdir/$_pkgname-$pkgver/COPYING.txt" "$pkgdir/usr/share/licenses/$pkgname/COPYING.txt"
+}
+

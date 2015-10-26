@@ -1,0 +1,46 @@
+# Maintainer: Neophytos Kolokotronis <tetris AT @gmail DOT com>
+# Contributions from AUR: https://aur.archlinux.org/packages/kfilebox/
+
+pkgname=kfilebox
+pkgver=0.4.10.r8.g5294287
+pkgrel=2
+pkgdesc="KDE4 Dropbox client (with own daemon)"
+arch=('x86_64')
+url="http://kdropbox.deuteros.es"
+license=('GPL')
+depends=('kconfig' 'kcoreaddons' 'ki18n' 'knotifications' 'dropbox')
+makedepends=('extra-cmake-modules' 'qt5-tools')
+categories=('network' 'backup' 'cloud')
+source=("git+https://github.com/marcpayne/kfilebox.git#branch=qt5-kf5-port")
+md5sums=('SKIP')
+
+pkgver() {
+    cd ${srcdir}/${pkgname}
+    git describe --long --tags | sed 's/\([^-]*-g\)/r\1/;s/-/./g'
+}
+
+prepare() {
+    cd ${srcdir}/${pkgname}
+    [[ -e build ]] && rm -rf build
+    mkdir build
+}
+
+build() {
+    cd "${srcdir}/${pkgname}/build"
+    cmake -DCMAKE_INSTALL_PREFIX=/usr \
+          -DCMAKE_BUILD_TYPE=Release ..
+    make
+}
+
+package() {
+    cd "${srcdir}/${pkgname}/build"
+    make DESTDIR=${pkgdir} install
+
+    # Move wrong locale name
+    mv -v ${pkgdir}/usr/share/locale/tw/ ${pkgdir}/usr/share/locale/zh_TW/
+    mv -v ${pkgdir}/usr/share/locale/zh ${pkgdir}/usr/share/locale/zh_CN/
+
+    # Desktop file is wrong
+    sed "s|Icon=/usr/share/kfilebox/kfilebox.png|Icon=kfilebox|g" -i \
+        ${pkgdir}/usr/share/applications/kfilebox.desktop
+}

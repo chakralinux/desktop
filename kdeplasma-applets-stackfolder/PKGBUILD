@@ -1,0 +1,40 @@
+# Maintainer: 	UtG  <utg[dot]chakra.linux[at]gmail[dot]com>
+# Contributor: 	palmtree5
+#		imrahil (Hugo Lobo) <hugo_alobo@hotmail.com>
+
+pkgname=kdeplasma-applets-stackfolder
+pkgver=2.4
+pkgrel=1
+_rosa_pkgname='plasma-applet-stackfolder'
+_rosa_pkgrel=7
+pkgdesc="Browse the stack of folders"
+url="http://www.rosalab.ru"
+arch=('x86_64')
+license=('GPL')
+depends=('kde-workspace' 'libjpeg')
+makedepends=('cmake' 'automoc4' 'kde-baseapps-konqueror')
+categories=('accessories')
+source=(http://mirror.rosalab.ru/rosa2012.1/repository/SRPMS/main/updates/$_rosa_pkgname-$pkgver-$_rosa_pkgrel.src.rpm)
+md5sums=('ef740d0832d390d3df3283d3e0de7087')
+
+
+prepare() {
+    cd "${srcdir}"
+    tar -zxvf ${_rosa_pkgname}-${pkgver}.tar.gz
+    cd  ${_rosa_pkgname}-${pkgver}
+    [[ -d build ]] && rm -rf build
+    mkdir build
+}
+
+build() {
+    cd  ${srcdir}/${_rosa_pkgname}-${pkgver}/build
+    cmake -DCMAKE_INSTALL_PREFIX=$(kde4-config --prefix) ../
+    make clean
+    make
+
+}
+
+package() {
+  cd "${srcdir}/${_rosa_pkgname}-${pkgver}/build"
+  make DESTDIR="${pkgdir}" install
+}

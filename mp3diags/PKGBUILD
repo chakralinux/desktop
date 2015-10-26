@@ -1,0 +1,39 @@
+pkgname=mp3diags
+pkgver=1.2.02
+pkgrel=1
+pkgdesc="GUI-based application that allows end-users to identify issues with their MP3 files, fix some of the issues and make other changes."
+url="http://sourceforge.net/projects/mp3diags/"
+license=('GPL')
+arch=('x86_64')
+depends=('qt' 'boost-libs')
+makedepends=('boost')
+optdepends=('mp3gain: MP3 normalization support')
+categories=('multimedia')
+install=mp3diags.install
+source=("http://downloads.sourceforge.net/project/mp3diags/mp3diags-src/MP3Diags-${pkgver}.tar.gz")
+sha512sums=('51498646ad3c9a19aeb0bcbf8cd280de75a24eb252790cc71d1eba433b986bbc58d4198d8bdfc0339dd6845ddfd966dd482f991b976e2da8f49e9d4e4f0464d0')
+
+build() {
+  cd ${srcdir}/MP3Diags-$pkgver
+  msg 'Building main application...'
+  ./AdjustMt.sh
+  echo 'QMAKE_MOC = $$QMAKE_MOC -DBOOST_TT_HAS_OPERATOR_HPP_INCLUDED -DBOOST_NO_TEMPLATE_PARTIAL_SPECIALIZATION' >> src/src.pro
+  qmake
+  make
+
+  msg 'Building translation...'
+  ./MakeTranslations.sh
+}
+
+package() {
+  cd ${srcdir}/MP3Diags-$pkgver
+  install -D bin/MP3Diags ${pkgdir}/usr/bin/MP3Diags
+  install -D desktop/MP3Diags.desktop ${pkgdir}/usr/share/applications/MP3Diags.desktop
+  for i in "16" "22" "24" "32" "36" "40" "48"; do
+		install -d "${pkgdir}/usr/share/icons/hicolor/${i}x${i}/apps"
+		install -p -m644 "desktop/MP3Diags${i}.png" "${pkgdir}/usr/share/icons/hicolor/${i}x${i}/apps/MP3Diags.png"
+  done
+  install -D ${srcdir}/MP3Diags-$pkgver/src/images/logo.svg ${pkgdir}/usr/share/pixmaps/MP3Diags.svg
+  install -d ${pkgdir}/usr/share/${pkgname}/translations/
+  install -Dm644 ${srcdir}/MP3Diags-$pkgver/src/translations/*.qm ${pkgdir}/usr/share/${pkgname}/translations/
+}

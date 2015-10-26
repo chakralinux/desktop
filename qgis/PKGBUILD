@@ -1,0 +1,83 @@
+# Contributions from Arch: https://aur.archlinux.org/packages/qgis/
+
+pkgname=qgis
+pkgver=2.8.2
+pkgrel=1
+pkgdesc='A Geographic Information System (GIS) that supports vector, raster and database formats'
+url='http://qgis.org/'
+license=('GPL')
+arch=('x86_64')
+depends=('bison' 
+         'cfitsio'
+         'curl'
+         'flex'
+         'gdal'
+         'jasper'
+         'libmariadbclient'
+         'libspatialite'
+         'postgresql-libs'
+         'pyqt4-python2'
+         'python2'
+         'qscintilla-python2'
+         'python2-psycopg2'
+         'qt'
+         'qwt6'
+         'spatialindex'
+         'sqlite3')
+makedepends=('cmake'
+             'fcgi'
+             'grass'
+             'gsl'
+             'netcdf'
+             'postgis'
+             'python2-sip')
+optdepends=('fcgi: qgis mapserver'
+            'grass: grass plugin'
+            'gsl: georeferencer'
+            'python2-sip: python-support'
+            'postgis: postgis support and SPIT plugin')
+source=("http://qgis.org/downloads/${pkgname}-${pkgver}.tar.bz2")
+sha512sums=('16b8320768e132aae71267db9f22c150740cfb948af7c1d6f6d8ea796acd1ce2eb8369f239e6cea62adb0b9c6a3febcd55a5c2d45f30b2c988a14504e3f9e8f5')
+
+prepare() {
+    rm -rf ${srcdir}/${pkgname}-${pkgver}/build
+    mkdir ${srcdir}/${pkgname}-${pkgver}/build
+}
+
+build() {
+    cd ${srcdir}/${pkgname}-${pkgver}/build
+    cmake ../ \
+        -DCMAKE_BUILD_TYPE=Release \
+        -DCMAKE_INSTALL_PREFIX=/usr \
+        -DWITH_GRASS=OFF \
+        -DGRASS_PREFIX=/opt/grass \
+        -DGRASS_INCLUDE_DIR=/opt/grass/include/ \
+        -DQGIS_MANUAL_SUBDIR=share/man \
+        -DPYTHON_LIBRARY=/usr/lib/libpython2.7.so \
+        -DPYTHON_EXECUTABLE=/usr/bin/python2 \
+        -DPYTHON_SITE_PACKAGES_DIR=/usr/lib/python2.7/site-packages \
+        -DPYTHON_INCLUDE_PATH=/usr/include/python2.7
+    make
+}
+
+package() {
+    cd ${srcdir}/${pkgname}-${pkgver}/build
+    make DESTDIR=${pkgdir} install
+
+    # create a more user-friendly application name link
+    ln -s /usr/bin/qgis "${pkgdir}/usr/bin/quantum-gis"
+
+    # install some freedesktop.org compatibility
+    install -D -m644 "${srcdir}/${pkgname}-${pkgver}/debian/qgis.desktop" \
+    "${pkgdir}/usr/share/applications/qgis.desktop"
+    install -D -m644 "${srcdir}/${pkgname}-${pkgver}/debian/qbrowser.desktop" \
+    "${pkgdir}/usr/share/applications/qbrowser.desktop"
+    install -dm755 "${pkgdir}/usr/share/pixmaps" \
+    "${pkgdir}/usr/share/mimelnk/application"
+    for mime in "${srcdir}/${pkgname}-${pkgver}/debian/mime/application/"*.desktop
+        do install -m644 "${mime}" \
+            "${pkgdir}/usr/share/mimelnk/application"
+        done
+    ln -s /usr/share/qgis/images/icons/qgis-icon.png "${pkgdir}/usr/share/pixmaps/qgis-icon.png"
+    ln -s /usr/share/qgis/images/icons/qgis-mime-icon.png "${pkgdir}/usr/share/pixmaps/qgis-mime-icon.png"
+}

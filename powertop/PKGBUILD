@@ -1,0 +1,28 @@
+# Contributor: abveritas@chakra-project.org
+# Maintainer: Bruce Liu <brli@user.sourceforge.net>
+
+pkgname=powertop
+pkgver=2.7
+pkgrel=1
+pkgdesc="Tool that finds the software that makes your laptop use more power than necessary"
+arch=('x86_64')
+url="https://01.org/powertop"
+license=('GPL2')
+depends=('gcc-libs' 'libnl' 'ncurses' 'pciutils')
+categories=('utils')
+screenshot=('https://01.org/powertop/sites/default/files/resize/users/u8/powertop20_overview-640x381.png')
+source=("https://01.org/sites/default/files/downloads/powertop/${pkgname}-${pkgver}.tar.gz")
+md5sums=('e0d686e47daaf7e9d89031f7763432ef')
+
+build() {
+  cd ${srcdir}/${pkgname}-${pkgver}
+  ./autogen.sh
+	./configure --prefix=/usr 
+  make 
+}
+
+package() {
+  cd ${srcdir}/${pkgname}-${pkgver}
+
+  make DESTDIR=${pkgdir} install
+}

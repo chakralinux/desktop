@@ -1,0 +1,27 @@
+# Maintainer: 	UtG <utg[dot]chakra.linux[at]gmail[dot]com>
+# Contributors: Adrián Chaves Frenández (Gallaecio) <adriyetichaves@gmail.com>
+
+## NOTE: when you update Haskell packages you'll have to update the entire stack to not break it ##
+
+pkgname=happy
+pkgver=1.19.5
+pkgrel=1
+pkgdesc="The Parser Generator for Haskell"
+url="http://hackage.haskell.org/package/happy"
+arch=('x86_64')
+license=("custom:BSD3")
+depends=('gmp')
+makedepends=('ghc' 'haskell-mtl')
+options=(strip)
+source=(http://hackage.haskell.org/packages/archive/$pkgname/$pkgver/$pkgname-$pkgver.tar.gz)
+md5sums=('ffa56a1c312a60dfb1110afd25b28785')
+
+package() {
+  cd ${srcdir}/${pkgname}-${pkgver}
+
+  runhaskell Setup.lhs configure --prefix=/usr
+  runhaskell Setup.lhs build
+  runhaskell Setup.lhs copy --destdir=$pkgdir
+
+  install -D -m644 LICENSE ${pkgdir}/usr/share/licenses/$pkgname/LICENSE
+}

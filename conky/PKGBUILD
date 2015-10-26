@@ -1,0 +1,61 @@
+# contribution from Arch https://www.archlinux.org/packages/extra/x86_64/conky/
+
+pkgname=conky
+pkgver=1.10.0
+pkgrel=1
+pkgdesc="An advanced, highly configurable system monitor for X based on torsmo"
+arch=('x86_64')
+url="https://github.com/brndnmtthws/conky"
+license=('custom')
+replaces=('torsmo')
+depends=('glib2' 'curl' 'lua' 'wireless_tools' 'libxml2' 'libxft' 'libxdamage' 'imlib2')
+makedepends=('cmake' 'docbook2x' 'docbook-xml' 'man-db')
+categories=('utils')
+options=('!strip' 'debug')
+source=("https://github.com/brndnmtthws/conky/archive/v${pkgver}.tar.gz"
+	'ascii.patch'
+	'curl.patch'
+        'lua53.patch'
+        'ipv6.patch')
+sha512sums=('08664c2c736c078848e4864f7a2df5ed536e683da6aa482cf003c675b03c274802cfd27127adb3d99145fe6c4103cc06046b40322383beafc4ca2e7e811b5caf'
+'9298f6fde037af84f5065ae67253c2924a4d3937fdb20e978bfbf14f67085c2a70a02c5ba269356ecdef3cbf144c8eaf4166c389f49a7a3eadb5cec24c852f0a'
+'be6c5940d97c206a784a1d3e7db151f0e7ea80e9e142d8ec59d3092d580f3b604dff83f2d06c8ebccb6391d338bf9c77ce6b9c0b119c923a80fc2a8126960f53'
+'727b4c93c1bcb80be40b24c3d71ee0cf6839757566848ac50961ea6731b531c6bd18800aec909b19183ef58359f45eab4e117c5a9815ea82842c03eb63b29f0c'
+'68fea9bb0ecc40974e94ac88cb4cfaf51db463857495db6c875ca7671668d0f8b69e50276e370551b0cb5034e71eb18a84bab86ffaf9ed2f76673404af2eab55')
+
+
+
+prepare() {
+	cd "${srcdir}/${pkgname}-${pkgver}"
+	patch -p1 -i ../ascii.patch # db2x_manxml fails on non-ascii chars
+#	patch -p1 -i ../lua53.patch # lua_gettable returns an int in lua-5.3
+	patch -p1 -i ../ipv6.patch # https://bugs.archlinux.org/task/45626
+	patch -p1 -i ../curl.patch # https://github.com/bagder/curl/issues/342
+}
+
+build() {
+	cd "${srcdir}/${pkgname}-${pkgver}"
+
+	cmake \
+		-D CMAKE_BUILD_TYPE=Release \
+		-D MAINTAINER_MODE=ON \
+		-D BUILD_CURL=ON \
+		-D BUILD_XDBE=ON \
+		-D BUILD_IMLIB2=ON \
+		-D BUILD_RSS=ON \
+		-D BUILD_WEATHER_METAR=ON \
+		-D BUILD_WEATHER_XOAP=ON \
+		-D BUILD_WLAN=ON \
+		-D CMAKE_INSTALL_PREFIX=/usr \
+		.
+
+	make
+}
+
+package() {
+	cd "${srcdir}/${pkgname}-${pkgver}"
+	make DESTDIR="${pkgdir}" install
+	install -Dm644 COPYING "${pkgdir}/usr/share/licenses/${pkgname}/LICENSE"
+	install -Dm644 extras/vim/syntax/conkyrc.vim "${pkgdir}"/usr/share/vim/vimfiles/syntax/conkyrc.vim
+	install -Dm644 extras/vim/ftdetect/conkyrc.vim "${pkgdir}"/usr/share/vim/vimfiles/ftdetect/conkyrc.vim
+}

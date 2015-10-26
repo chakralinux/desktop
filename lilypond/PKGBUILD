@@ -1,0 +1,53 @@
+# contributor Giuseppe Calà <jiveaxe@gmail.com>
+
+pkgname=lilypond
+pkgver=2.18.2
+_pkgver=2.18
+pkgrel=3
+pkgdesc="A music engraving program, devoted to producing the highest-quality sheet music possible."
+arch=('x86_64')
+url="http://lilypond.org/"
+license=('GPL')
+depends=('fontconfig' 'freetype2' 'ghostscript'
+         'guile1.8' 'pango' 'python')
+makedepends=('bison' 'flex' 'fontforge' 'gettext' 'gsfonts'
+             'perl' 'texinfo' 't1utils' 'texlive-core' 'texlive-langcyrillic' 'netpbm' 'texi2html' 'dblatex' 'zip' 'imagemagick')
+optdepends=('netpbm: building HTML documentation'
+            'ttf-kochi-substitute: building HTML documentation'
+            'texi2html>=1.82: building HTML documentation'
+            'rsync: installing HTML documentation')
+categories=('multimedia')
+screenshot=('http://createdigitalmusic.com/files/2010/05/frescobaldi.png')
+install=$pkgname.install
+source=("http://download.linuxaudio.org/${pkgname}/sources/v${_pkgver}/${pkgname}-${pkgver}.tar.gz")
+md5sums=('3c4bcbb708d12644668b32bfe82ebf25')
+
+prepare() {
+  cd "$srcdir/$pkgname-$pkgver"
+
+  # python2 fix
+  for file in $(find . -name '*.py' -print); do
+    sed -i 's_^#!.*/usr/bin/python_#!/usr/bin/python2_' $file
+    sed -i 's_^#!.*/usr/bin/env.*python_#!/usr/bin/env python2_' $file
+  done
+
+  sed -i 's|GUILE_CFLAGS=.*|GUILE_CFLAGS="`pkg-config --cflags guile-1.8`"|' configure
+  sed -i 's|GUILE_LDFLAGS=.*|GUILE_LDFLAGS="`pkg-config --libs guile-1.8`"|' configure
+
+  rm -rf lily/out/ python/out/
+}
+
+build() {
+  cd "$srcdir/$pkgname-$pkgver"
+  export PYTHON=/usr/bin/python2
+  export GUILE=/usr/bin/guile1.8
+  export GUILE_CONFIG=/usr/bin/guile-config1.8
+  export LDFLAGS="$LDFLAGS -lpthread"
+  ./configure --prefix=/usr
+  make
+}
+
+package() {
+  cd "$srcdir/$pkgname-$pkgver"
+  make DESTDIR="$pkgdir" vimdir="/usr/share/vim/vimfiles" install
+}

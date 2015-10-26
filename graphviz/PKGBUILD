@@ -1,0 +1,57 @@
+# Maintainer: Francesco Marinucci <franzmari[at]chakra-project[dot]it>
+# maintainer abveritas@chakra-project.org
+
+pkgname=graphviz
+pkgver=2.38.0
+pkgrel=1
+pkgdesc="Creates acircular graph images"
+arch=('x86_64')
+license=('CPL')
+depends=('gd' 'librsvg' 'libxaw' 'ghostscript' 'pango' 'libltdl')
+makedepends=('swig' 'guile' 'lua' 'ocaml' 'perl' 'php' 'python2' 'r' 'ruby' 'tk' 'qt')
+optdepends=('guile: guile bindings'
+            'lua: lua bindings'
+            'ocaml: ocaml bindings'
+            'perl: perl bindings'
+            'php: php bindings'
+            'python2: python bindings'
+            'r: r bindings'
+            'ruby: ruby bindings'
+            'tcl: tcl bindings'
+            'qt: gvedit')
+url="http://www.graphviz.org/"
+options=('!libtool')
+categories=('graphics')
+install='graphviz.install'
+source=(${url}/pub/${pkgname}/stable/SOURCES/${pkgname}-${pkgver}.tar.gz
+       'LICENSE')
+sha1sums=('053c771278909160916ca5464a0a98ebf034c6ef'
+          '5a83febc0974e17d6b2356a4b1be9a834b715378')
+
+build() {
+	cd "${srcdir}/${pkgname}-${pkgver}"
+
+	sed \
+		-e '/"archdir"/s:$:+" '"$(echo -I/usr/include/ruby-1.9.1/{$CARCH-linux,ruby/backward,})"'":' \
+		-e '/CONFIG/s:site:vendor:' \
+		-i config/config_ruby.rb
+	sed -i '/LIBPOSTFIX="64"/d' configure
+	export PYTHON=python2
+
+	./configure --prefix=/usr --disable-swig
+	make
+}
+
+package() {
+	cd "${srcdir}/${pkgname}-${pkgver}"
+	make DESTDIR="${pkgdir}" install
+
+	# cf. http://www.graphviz.org/License.php
+	install -Dm644 ../LICENSE "${pkgdir}"/usr/share/licenses/graphviz/LICENSE
+
+	# Workaround symlink upgrade bug (fixed in pacman trunk)
+	# Also deduplicates the tcl libraries (upstream bug?)
+	# Might have been this commit: https://github.com/ellson/graphviz/commit/f11aead
+	rm -r "${pkgdir}/usr/lib/tcl8.6/graphviz"
+	ln -s ../graphviz/tcl "$pkgdir/usr/lib/tcl8.6/graphviz"
+}

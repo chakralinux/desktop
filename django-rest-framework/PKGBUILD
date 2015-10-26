@@ -1,0 +1,29 @@
+pkgname=django-rest-framework
+pkgver=3.2.4
+pkgrel=1
+pkgdesc="Lightweight REST framework for Django to write RESTful Web APIs"
+url="http://django-rest-framework.org/"
+arch=('x86_64')
+license=('BSD')
+depends=('django' 'python2' 'python2-urlobject')
+makedepends=('python2-distribute')
+optdepends=('django-oauth2-provider: Support for OAuth2 authentication.')
+source=("https://github.com/tomchristie/django-rest-framework/archive/${pkgver}.tar.gz"
+        "LICENSE")
+sha512sums=('8e736f4f58e7e8123614518357dfdbd53d4a3f96f8691e6c8c0b92d58b500346a2591c3feab3e1bb434c0e2abbe59d16781d5cd47bf9ec7a16978f6f4867614e'
+         '03098ef062914bb990791f77659df2844a73065ac9e912bc96bfa51c25ad76c7ee1d41e028804fce95590609912317cbcb03fbd41828c642b289d6bb0ca46f5a')
+
+build() {
+    cd $srcdir/$pkgname-$pkgver
+    python2 setup.py build
+}
+
+package() {
+    cd $srcdir/$pkgname-$pkgver
+    python2 setup.py install --prefix=/usr --root="$pkgdir/" --optimize=1
+    
+    # License.
+    install -d $pkgdir/usr/share/licenses/$pkgname
+    cp $srcdir/LICENSE $pkgdir/usr/share/licenses/$pkgname/LICENSE
+}
+

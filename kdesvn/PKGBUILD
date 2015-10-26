@@ -1,0 +1,43 @@
+#
+# Chakra Packages for Chakra, part of chakra-project.org
+#
+
+pkgname=kdesvn
+pkgver=1.6.0
+pkgrel=2
+pkgdesc="A pure C++ SVN-client for KDE"
+arch=('x86_64')
+url="http://kdesvn.alwins-world.de/"
+license=('GPL')
+depends=('hicolor-icon-theme' 'kdelibs' 'subversion' 'xdg-utils' 'qt')
+makedepends=('automoc4' 'cmake' 'docbook-xsl')
+conflicts=('qsvn')
+options=('libtool')
+categories=('programming')
+install=$pkgname.install
+source=(https://launchpad.net/ubuntu/+archive/primary/+files/${pkgname}_${pkgver}.orig.tar.bz2)
+md5sums=('7e6adc98ff4777a06d5752d3f2b58fa3')
+
+build() {
+  cd $pkgname-$pkgver
+
+  cmake . \
+    -DCMAKE_INSTALL_PREFIX=/usr \
+    -DCMAKE_BUILD_TYPE=RelWithDebInfo \
+    -DCMAKE_CXX_FLAGS="-DQT_THREAD_SUPPORT" \
+    -DLIB_SUFFIX=
+
+  make
+}
+
+ package() {
+  cd $pkgname-$pkgver
+
+  make DESTDIR=$pkgdir install
+
+#removing conflicting files - kdesdk
+  rm -f $pkgdir/usr/share/kde4/services/svn*
+
+ #removing $srcdir reference
+  rm -rf $pkgdir/usr/share/doc
+}

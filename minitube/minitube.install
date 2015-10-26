@@ -1,0 +1,15 @@
+post_install() {
+  xdg-icon-resource forceupdate --theme hicolor &> /dev/null
+
+  echo    "NOTE: Minitube has known issues with phonon-gstreamer.
+      If you are affected, please install 'phonon-backend-vlc' 
+      and set as default backend in systemsettings > multimedia".
+}
+
+post_upgrade() {
+  post_install
+}
+
+post_remove() {
+  post_install
+}

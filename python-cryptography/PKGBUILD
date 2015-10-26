@@ -1,0 +1,55 @@
+# Maintainer: Samir Benmendil <samir.benmendil@gmail.com>
+# Contributor: Felix Yan <felixonmars@gmail.com>
+
+pkgbase=python-cryptography
+pkgname=('python3-cryptography' 'python2-cryptography')
+pkgver=0.5.4
+pkgrel=2
+pkgdesc="A package designed to expose cryptographic recipes and primitives to Python developers"
+arch=('i686' 'x86_64')
+license=('Apache')
+url="http://pypi.python.org/pypi/cryptography"
+makedepends=('python3-setuptools' 'python2-setuptools' 'python3-six' 'python2-six' 'python3-cffi' 'python2-cffi')
+#checkdepends=('python3-pytest' 'python2-pytest' 'python3-cryptography-vectors' 'python2-cryptography-vectors'
+#              'python3-iso8601' 'python2-iso8601' 'python3-pretend' 'python2-pretend' 'python3-pyasn1' 'python2-pyasn1')
+source=("http://pypi.python.org/packages/source/c/cryptography/cryptography-${pkgver}.tar.gz")
+md5sums=('4fd1f10e9f99009a44667fabe7980aec')
+
+prepare() {
+   cp -a cryptography-${pkgver}{,-python2}
+}
+
+build() {
+   # Build python 3 module
+   cd cryptography-${pkgver}
+   python3 setup.py build
+ 
+   # Build python 2 module
+   cd ../cryptography-${pkgver}-python2
+   python2 setup.py build
+}
+
+# disabled for now, too many deps not in the repos
+#check() {
+#   # Check python3 module
+#   cd "${srcdir}"/cryptography-${pkgver}
+#   python3 setup.py test
+#
+#   # Check python2 module
+#   cd "${srcdir}"/cryptography-${pkgver}-python2
+#   python2 setup.py test
+#}
+ 
+package_python3-cryptography() {
+   depends=('python3-six' 'python3-cffi')
+ 
+   cd cryptography-${pkgver}
+   python3 setup.py install --root="${pkgdir}" --optimize=1 --skip-build
+}
+ 
+package_python2-cryptography() {
+   depends=('python2-six' 'python2-cffi')
+ 
+   cd cryptography-${pkgver}-python2
+   python2 setup.py install --root="${pkgdir}" --optimize=1 --skip-build
+}

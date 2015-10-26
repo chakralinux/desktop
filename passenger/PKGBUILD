@@ -1,0 +1,43 @@
+pkgname=passenger
+pkgver=5.0.20
+pkgrel=1
+pkgdesc="A fast and robust web server and application server for Ruby, Python and Node.js"
+arch=('x86_64')
+url="https://www.phusionpassenger.com/"
+license=('GPL')
+depends=('ruby' 'ruby-rack' 'curl')
+makedepends=('apache')
+install=passenger.install
+options=('!emptydirs')
+source=($pkgname-$pkgver.tar.gz::https://github.com/FooBarWidget/passenger/archive/release-$pkgver.tar.gz)
+sha512sums=('3452bbd85bcf19d8da58678d9292afaa8719c41f82e20226898dee1c8f40a6008114a50708c98080720495d98e819be2513d2b5e7ed5f65e05c4cb7bac87da38')
+
+prepare() {
+  cd $srcdir/passenger-release-$pkgver
+  sed -i '1,1i#include <stdint.h>' \
+    src/cxx_supportlib/Logging.cpp \
+    src/cxx_supportlib/Utils/StrIntUtils.cpp \
+    src/cxx_supportlib/Utils.cpp \
+    src/cxx_supportlib/AppTypes.cpp \
+    src/cxx_supportlib/vendor-modified/boost/libs/thread/src/pthread/once.cpp \
+    src/cxx_supportlib/vendor-modified/boost/libs/thread/src/pthread/once_atomic.cpp \
+    src/cxx_supportlib/vendor-modified/boost/libs/thread/src/pthread/thread.cpp \
+    src/cxx_supportlib/vendor-modified/boost/atomic/atomic.hpp
+}
+
+build(){
+  cd $srcdir/passenger-release-$pkgver
+
+  ./bin/passenger-install-apache2-module -a
+  rake nginx
+}
+
+package() {
+  cd $srcdir/passenger-release-$pkgver
+
+  install -dm755 "$pkgdir/usr/lib/passenger/"
+  cp -R * $pkgdir/usr/lib/passenger/
+
+  install -dm755 "$pkgdir/usr/lib/httpd/modules"
+  ln -sf "/usr/lib/passenger/libout/apache2/mod_passenger.so" "$pkgdir/usr/lib/httpd/modules/mod_passenger.so"
+}

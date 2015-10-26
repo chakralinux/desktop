@@ -1,0 +1,34 @@
+
+pkgname=kcm-fcitx
+pkgver=0.5.2
+pkgrel=1
+pkgdesc="KDE Config Module for Fcitx"
+arch=('x86_64')
+url="https://github.com/fcitx/kcm-fcitx"
+license=('GPL')
+depends=('fcitx-qt5' 'kcoreaddons' 'kwidgetsaddons' 'kcmutils' 'kitemviews' 'ki18n' 'kio' 'knewstuff')
+makedepends=('extra-cmake-modules' 'make' 'cmake')
+source=(http://download.fcitx-im.org/$pkgname/$pkgname-${pkgver}.tar.xz{,.sig})
+sha512sums=('9418001ad92ada2e7c48c426b24b6babebb3e41510c9ff2aac01e25f84f79cd02a3e413267a31feb677beca51070a4ca55f5d64bd103ddd9ab7853f207370882'
+            'SKIP')
+validpgpkeys=('2CC8A0609AD2A479C65B6D5C8E8B898CBF2412F9')
+
+prepare() {
+  mkdir build
+}
+
+build() {
+  cd build
+    
+  cmake ../$pkgname-$pkgver \
+    -DCMAKE_INSTALL_PREFIX=/usr \
+    -DCMAKE_BUILD_TYPE=Release \
+    -DCMAKE_INSTALL_LIBDIR=lib \
+    -DKDE_INSTALL_USE_QT_SYS_PATHS=ON
+  make
+}
+
+package() {
+  cd build
+  make DESTDIR="$pkgdir" install
+}

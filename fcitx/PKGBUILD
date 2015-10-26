@@ -1,0 +1,70 @@
+pkgbase=fcitx
+pkgname=('fcitx' 'fcitx-pinyin' 'fcitx-table')
+pkgver=4.2.9
+pkgrel=1
+arch=('x86_64')
+license=('GPL')
+url="https://fcitx-im.org/wiki/Fcitx"
+#giturl="https://github.com/fcitx/"
+makedepends=('cmake' 'extra-cmake-modules' 'qt' 'icu' 'wget' 'opencc' 'lua' 'iso-codes' 'enchant' 'libxkbfile' 'libxkbcommon' 'cairo' 'pango' 'mesa' 'python2')
+source=("http://download.fcitx-im.org/${pkgname}/${pkgname}-${pkgver}.tar.xz")
+categories=('localization')
+
+build() {
+  msg "Creating make environment..."
+  
+  mkdir -p build
+
+  msg "Starting make..."
+  cd build
+  cmake ../${pkgname}-${pkgver} -DCMAKE_INSTALL_PREFIX=/usr -DCMAKE_BUILD_TYPE=Release \
+      -DSYSCONFDIR=/etc \
+      -DENABLE_QT_IM_MODULE=On \
+      -DENABLE_GTK2_IM_MODULE=Off \
+      -DENABLE_GTK3_IM_MODULE=Off \
+      -DENABLE_OPENCC=On \
+      -DENABLE_LUA=On \
+      -DENABLE_GIR=Off
+  make
+}
+
+package_fcitx(){
+    pkgdesc="A Flexible Input Method Framework"
+    depends=('pango' 'dbus-core' 'opencc' 'lua' 'iso-codes' 'icu' 'libxkbfile')
+    install=fcitx.install
+    cd build
+    make DESTDIR=$pkgdir install
+
+    # remove table
+    rm ${pkgdir}/usr/lib/fcitx/fcitx-table.so
+    rm -r ${pkgdir}/usr/share/fcitx/table/
+    rm ${pkgdir}/usr/share/fcitx/*/fcitx-table.*
+    rm ${pkgdir}/usr/share/fcitx/configdesc/table.desc
+
+    # remove pinyin
+    rm ${pkgdir}/usr/lib/fcitx/fcitx-pinyin.so
+    rm -r ${pkgdir}/usr/share/fcitx/pinyin/
+    rm ${pkgdir}/usr/share/fcitx/*/fcitx-pinyin.*
+    rm -r ${pkgdir}/usr/include/fcitx/module/pinyin/
+    rm ${pkgdir}/usr/share/fcitx/inputmethod/{pinyin,shuangpin}.conf
+}
+
+package_fcitx-pinyin() {
+    pkgdesc="Pinyin Support for Fcitx"
+    depends=('fcitx')
+    pushd .
+    cd build/src/im/pinyin
+    make DESTDIR=$pkgdir install
+    popd
+}
+
+package_fcitx-table() {
+    pkgdesc="Table Support for Fcitx"
+    depends=('fcitx' 'fcitx-pinyin')
+
+    pushd .
+    cd build/src/im/table
+    make DESTDIR=$pkgdir install
+    popd
+}
+sha512sums=('f5eea414d57a701546675b19e6fac9b96e96b60cc063b2d66692866ae5969a9b3fada0c8a6da79e019aca939fd28051ccd12406fc43c3f76e6dcced3952374fe')

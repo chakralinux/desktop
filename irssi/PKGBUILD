@@ -1,0 +1,38 @@
+#
+# Apps Packages for Chakra, part of chakra-project.org
+#
+# maintainer Neophytos Kolokotronis <tetris4@gmail.com>
+
+
+pkgname=irssi
+pkgver=0.8.17
+pkgrel=1
+pkgdesc="Modular text mode IRC client with Perl scripting"
+arch=('x86_64')
+url="http://irssi.org/"
+license=('GPL')
+depends=('glib2' 'openssl' 'perl')
+categories=('communication')
+optdepends=('perl-libwww: for the scriptassist script')
+backup=(etc/irssi.conf)
+source=(http://irssi.org/files/$pkgname-$pkgver.tar.bz2)
+options=('!libtool')
+md5sums=('ecf64be47978d89a742b435a81cb47db')
+screenshot=('http://irssi.org/themefiles/dma147.png')
+
+build() {
+  cd "$srcdir/$pkgname-$pkgver"
+
+  ./configure --prefix=/usr \
+              --enable-ipv6 \
+	      --with-proxy \
+	      --with-bot \
+	      --sysconfdir=/etc \
+	      --with-perl-lib=vendor
+  make
+}
+
+package() {
+  cd "$srcdir/$pkgname-$pkgver"
+  make DESTDIR="$pkgdir" install
+}

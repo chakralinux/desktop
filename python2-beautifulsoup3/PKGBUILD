@@ -1,0 +1,23 @@
+# Maintainer: Manuel 'UtG' <utg[dot]chakra.linux[at]gmail[dot]com>
+
+pkgname=python2-beautifulsoup3
+pkgver=3.2.1
+pkgrel=2
+pkgdesc="A Python HTML/XML parser designed for quick turnaround projects like screen-scraping."
+arch=('x86_64')
+url="http://www.crummy.com/software/BeautifulSoup/index.html"
+license=('PSF')
+depends=('python2')
+replaces=('python2-beautifulsoup' 'beautiful-soup')
+provides=('python2-beautifulsoup=3.2.1' 'beautiful-soup')
+conflicts=('python2-beautifulsoup' 'beautiful-soup')
+
+source=(http://www.crummy.com/software/BeautifulSoup/download/3.x/BeautifulSoup-$pkgver.tar.gz)
+md5sums=('5ad1a8550a19bfc945baac23eb8293ed')
+
+package() {
+    cd "${srcdir}/BeautifulSoup-$pkgver"
+    
+    python2 setup.py install --root=${pkgdir} -O1
+}
+ 

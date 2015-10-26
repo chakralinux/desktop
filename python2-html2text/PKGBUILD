@@ -1,0 +1,25 @@
+# Maintainer: Ernesto Manríquez <alejandronova@gmail.com>
+
+pkgname=python2-html2text
+pkgver=2014.12.5
+pkgrel=1
+pkgdesc="Converts a page of HTML into clean, easy-to-read plain ASCII text."
+arch=('x86_64')
+url="http://www.aaronsw.com/2002/html2text"
+license=('GPL3')
+depends=('python2')
+makedepends=('python-distribute')
+source=("http://pypi.python.org/packages/source/h/html2text/html2text-$pkgver.tar.gz")
+md5sums=('165c314c5957cc8cf847c9a8cac3e4d2')
+
+package() {
+  cd "$srcdir/html2text-$pkgver"
+  python2 setup.py install --root="$pkgdir" --optimize=1
+  find "$pkgdir" -name '*.py' -print0 |xargs -0 \
+    sed -i -e 's,^#!/usr/bin/env python$,#!/usr/bin/env python2,' \
+    -e 's,^#!/usr/bin/python$,#!/usr/bin/python2,'
+  install -Dm644 README.md "$pkgdir/usr/share/doc/$pkgname/README.md"
+  install -m755 "$pkgdir/usr/bin/html2text" "$pkgdir/usr/bin/html2text_py"
+  rm "$pkgdir/usr/bin/html2text"
+}
+

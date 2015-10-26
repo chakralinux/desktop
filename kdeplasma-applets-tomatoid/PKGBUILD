@@ -1,0 +1,36 @@
+# Original contributor: kei (Kevin)
+# Mantainer: Martín Cigorraga Müller <msx (@) archlinux (dot) us>
+
+pkgname=kdeplasma-applets-tomatoid
+_pkgname=Tomatoid
+pkgver=1.2
+pkgrel=1
+pkgdesc="A Pomodoro plasmoid made in QML."
+arch=('x86_64')
+url='https://github.com/arthurtaborda/Tomatoid'
+screenshot='http://i.imgur.com/lgtynZB.png'
+license=('GPL')
+depends=('kde-workspace' 'qt-mobility')
+makedepends=('cmake' 'automoc4')
+conflicts=('kdeplasma-applets-tomatoid-git')
+install=install.sh
+source=("https://github.com/arthurtaborda/Tomatoid/archive/$pkgver.tar.gz")
+md5sums=('f421080c74455d52c3d5fa2bab2c4d4d')
+
+package() {
+  cd "${srcdir}/${_pkgname}-${pkgver}"
+  
+  install_folder="${pkgdir}/usr/share/apps/plasma/plasmoids/tomatoid/"
+  install -d "${install_folder}"/contents/{code,config,data,images,locale,ui}
+  install -m644 metadata.desktop "${install_folder}"
+  install -m644 contents/code/* "${install_folder}"/contents/code/
+  install -m644 contents/config/* "${install_folder}"/contents/config/
+  install -m644 contents/data/* "${install_folder}"/contents/data/
+  install -m644 contents/images/* "${install_folder}"/contents/images/
+  install -m644 contents/locale/*.{sh,pot} "${install_folder}"/contents/locale/
+  install -d "${install_folder}"/contents/locale/pt_BR/LC_MESSAGES/
+  install -m644 contents/locale/pt_BR/LC_MESSAGES/* "${install_folder}"/contents/locale/pt_BR/LC_MESSAGES/
+  install -m644 contents/ui/*.{ui,qml} "${install_folder}"/contents/ui/
+  install -Dm644 metadata.desktop \
+    "${pkgdir}"/usr/share/kde4/services/plasma-applet-tomatoid.desktop 
+}

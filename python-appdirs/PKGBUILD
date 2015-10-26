@@ -1,0 +1,41 @@
+# Arch contribution https://www.archlinux.org/packages/community/any/python2-appdirs/
+
+pkgbase=python-appdirs
+pkgname=('python3-appdirs' 'python2-appdirs')
+pkgver=1.4.0
+pkgrel=1
+pkgdesc='A small Python module for determining appropriate platform-specific dirs, e.g. a "user data dir".'
+arch=('any')
+url="https://github.com/ActiveState/appdirs"
+license=('MIT')
+makedepends=('python3-setuptools' 'python2-setuptools')
+source=("https://pypi.python.org/packages/source/a/appdirs/appdirs-$pkgver.tar.gz")
+sha512sums=('a16fbad419e593acf1b58a3f8f893d206b3fc1a269757213a34d129e6fc39aa041efacb7964d326b82376373315357c93e85b272f374a096d9a63e73e3ce1dac')
+
+prepare() {
+  cp -a appdirs-$pkgver{,-py2}
+}
+
+check() {
+  cd "$srcdir/appdirs-$pkgver"
+  python setup.py test
+
+  cd "$srcdir/appdirs-$pkgver-py2"
+  python2 setup.py test
+}
+
+package_python3-appdirs() {
+  depends=('python')
+
+  cd "$srcdir/appdirs-$pkgver"
+  python3 setup.py install --root="$pkgdir/" --optimize=1
+  install -Dm644 LICENSE.txt "$pkgdir/usr/share/licenses/$pkgname/LICENSE.txt"
+}
+
+package_python2-appdirs() {
+  depends=('python2')
+
+  cd "$srcdir/appdirs-$pkgver-py2"
+  python2 setup.py install --root="$pkgdir/" --optimize=1
+  install -Dm644 LICENSE.txt "$pkgdir/usr/share/licenses/$pkgname/LICENSE.txt"
+}

@@ -1,0 +1,35 @@
+pkgname=bomi
+pkgver=0.9.11
+pkgrel=1
+pkgdesc="Powerful and easy-to-use multimedia player"
+arch=('x86_64')
+url="http://bomi-player.github.io"
+license=('GPL2')
+screenshot='http://i.imgur.com/j76hzyd.png'
+install=$pkgname.install
+depends=('qt5-base' 'qt5-declarative' 'qt5-x11extras' 'qt5-quickcontrols' 'qt5-svg'
+         'libdvdread' 'libdvdnav' 'libcdio-paranoia' 'libcdio' 'smbclient'
+         'alsa-lib' 'libpulse' 'jack' 'libchardet' 'libbluray'
+         'libva' 'libgl' 'fribidi' 'libass' 'ffmpeg')
+makedepends=('mesa' 'gcc' 'pkg-config' 'python3' 'qt5-tools')
+optdepends=('libaacs: AACS decryption for Blu-ray support'
+            'libbdplus: BD+ decryption for Blu-ray support'
+            'youtube-dl: streaming website support including YouTube'
+            'yle-dl:  rtmpdump frontend for Yle servers'
+            'mesa-vdpau: hardware acceleration for nvidia')
+provides=('cmplayer')
+replace=('cmplayer')
+conflicts=('cmplayer' 'bomi-git')
+source=(https://github.com/xylosper/bomi/archive/v$pkgver.tar.gz)
+sha512sums=('e24f4f9e5d0f2b5aa6223a70339f24287a18ab7f2904e5efabd8bb4e1b61206c294e061e6c71f7bbeb623a22321ee7775585ff2a568d116dc9aa7701087a8de7')
+
+build() {
+  cd "$srcdir/$pkgname-$pkgver"
+    ./configure --prefix=/usr
+  make
+}
+
+package() {
+  cd "$srcdir/$pkgname-$pkgver"
+  make DEST_DIR=$pkgdir install
+}

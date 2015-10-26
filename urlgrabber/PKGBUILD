@@ -1,0 +1,18 @@
+# Maintainer: Giuseppe Calà <jiveaxe@gmail.com>
+
+pkgname=urlgrabber
+pkgver=3.10.1
+pkgrel=1
+pkgdesc="A high-level cross-protocol url-grabber and Python library"
+url="http://urlgrabber.baseurl.org/"
+arch=('x86_64')
+license=('LGPL')
+depends=('python' 'python-pycurl')
+source=("http://$pkgname.baseurl.org/download/$pkgname-$pkgver.tar.gz")
+md5sums=('1f5dc63805623cc473e06204fd240bb2')
+
+package() {
+      cd $pkgname-$pkgver
+      python setup.py install --prefix=/usr --root="$pkgdir" --optimize=1 
+}
+

@@ -1,0 +1,23 @@
+pkgname=brise
+pkgver=0.35
+pkgrel=2
+pkgdesc="Rime schema repository"
+arch=('x86_64')
+url=" http://rime.im/"
+license=('GPL3')
+depends=()
+makedepends=('cmake' 'git' 'librime>=1.2')
+provides=('librime-data')
+conflicts=('librime<1.2' 'ibus-rime<1.2')
+source=("git+https://github.com/lotem/brise.git#tag=brise-$pkgver")
+md5sums=('SKIP')
+
+build() {
+  cd $pkgname
+  make
+}
+
+package() {
+  cd $pkgname
+  make DESTDIR="$pkgdir" install
+}

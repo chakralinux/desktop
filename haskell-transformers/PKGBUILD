@@ -1,0 +1,62 @@
+# Maintainer: UtG <utg[dot]chakra.linux[at]gmail[dot]com>
+# Contributors: H W TovetjÃ¤rn (totte) <totte@tott.es>
+#		Stephen McIntosh <stephenmac7[at]gmail[dot]com>
+#               Thomas Dziedzic <gostrc@gmail.com>
+#               Vesa Kaihlavirta <vesa@archlinux.org>
+#               Arch Haskell Team <arch-haskell@haskell.org>
+
+## NOTE: when you update Haskell packages you'll have to update the entire stack to not break it ##
+
+_hkgname=transformers
+pkgname=haskell-transformers
+pkgver=0.4.2.0
+pkgrel=1
+pkgdesc="Concrete functor and monad transformers"
+url="http://hackage.haskell.org/package/${_hkgname}"
+license=('custom:BSD3')
+arch=('x86_64')
+depends=('ghc')
+options=('staticlibs')
+source=(http://hackage.haskell.org/packages/archive/${_hkgname}/${pkgver}/${_hkgname}-${pkgver}.tar.gz)
+install=${pkgname}.install
+md5sums=('594f4ef92938ef431c958ed2ef3f57c8')
+
+build() {
+    cd ${srcdir}/${_hkgname}-${pkgver}
+    
+ runhaskell Setup configure \
+    -O \
+    -p \
+    --enable-split-objs \
+    --enable-shared \
+    --prefix=/usr \
+    --docdir=/usr/share/doc/haskell-transformers \
+    --libsubdir=\$compiler/site-local/\$pkgid
+    
+    runhaskell Setup build
+    runhaskell Setup haddock
+    runhaskell Setup register   --gen-script
+    runhaskell Setup unregister --gen-script
+    sed -i -r -e "s|ghc-pkg.*unregister[^ ]* |&'--force' |" unregister.sh
+}
+package() {
+    cd ${srcdir}/${_hkgname}-${pkgver}
+
+    install -D -m744 register.sh \
+        "${pkgdir}/usr/share/haskell/haskell-transformers/register.sh"
+    install -m744 unregister.sh \
+        "${pkgdir}/usr/share/haskell/haskell-transformers/unregister.sh"
+    install -d -m755 "${pkgdir}/usr/share/doc/ghc/html/libraries"
+
+    # Documentation
+    ln -s "/usr/share/doc/haskell-transformers/html" \
+        "${pkgdir}/usr/share/doc/ghc/html/libraries/transformers"
+
+    # License
+    install -D -m644 LICENSE \
+        "${pkgdir}/usr/share/licenses/haskell-transformers/LICENSE"
+    rm -f "${pkgdir}/usr/share/doc/haskell-transformers/LICENSE"
+
+    runhaskell Setup copy --destdir="${pkgdir}" 
+}
+#-p \

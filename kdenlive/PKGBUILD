@@ -1,39 +1,37 @@
-# Contributions from Arch: https://www.archlinux.org/packages/kde-unstable/x86_64/kdenlive/
-# Include global configuration
-source ../kdeapps.conf
+#
+# Apps Packages for Chakra, part of chakraos.org
+#
+# maintainer almack[at]chakraos[dot]org>
 
 pkgname=kdenlive
-pkgver=${_kdever}
-pkgrel=1
+pkgver=0.9.10
+pkgrel=3
 pkgdesc="A non-linear video editor for Linux"
 arch=('x86_64')
 url="http://www.kdenlive.org/"
 license=('GPL')
-depends=('knewstuff' 'knotifyconfig' 'kplotting' 'mlt' 'glu' 'hicolor-icon-theme')
+depends=('kdelibs' 'mlt' 'dvgrab' 'kde-runtime' 'frei0r-plugins' 'qjson' 'qimageblitz')
 optdepends=("dvdauthor: for creating dvds"
-	    "recordmydesktop: for desktop-recordings"
-	    "dvgrab: for firewire capture"
-	    "xine-ui: for DVD preview"
-	    "ffmpeg: for FFmpeg plugin"
-	    "cdrkit: for creation of DVD ISO images"
-	    "libdv: for webcam capture (if FFmpeg is not installed)")
-makedepends=('extra-cmake-modules' 'kdoctools' 'v4l-utils' 'python')
+	    "recordmydesktop: for desktop-recordings")
+makedepends=('automoc4' 'cmake' 'gettext' 'docbook-xsl')
 categories=('multimedia')
+source=("http://download.kde.org/stable/$pkgname/$pkgver/src/$pkgname-$pkgver.tar.bz2")
+md5sums=('40d7ee8e388cb084f5eb1ad1596a14b2')
 screenshot=('http://kdenlive.org/sites/default/files/kdenlive-090a_0.png')
-source=("$_mirror/${pkgname}-$_kdever.tar.xz")
-sha256sums=(`grep ${pkgname}-$_kdever.tar.xz  ../checksums.txt | cut -d " " -f1`)
-
-prepare() {
-  mkdir -p build
-}
 
 build() {
-  cd build
-  cmake_kf5 ../${pkgname}-${pkgver}
+  export LDFLAGS="$LDFLAGS -lX11"
+
+  cd "$srcdir/$pkgname-$pkgver"
+
+  cmake \
+    -DCMAKE_BUILD_TYPE=Release \
+    -DCMAKE_INSTALL_PREFIX=/usr \
+    -DLIB_INSTALL_DIR=/usr/lib 
   make
 }
 
 package() {
-    cd build
-    make DESTDIR=${pkgdir} install
+  cd "$srcdir/$pkgname-$pkgver"
+  make DESTDIR="${pkgdir}" install
 }

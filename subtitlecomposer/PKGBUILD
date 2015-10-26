@@ -1,0 +1,42 @@
+# Maintainer: Francesco Marinucci <franzmari[at]chakra-project[dot]it>
+
+
+pkgname=subtitlecomposer
+pkgver=0.5.7
+pkgrel=2
+pkgdesc="A text-based subtitles editor for KDE"
+arch=('x86_64')
+url="http://kde-apps.org/content/show.php/Subtitle+Composer?content=162048"
+license=('GPL')
+depends=('kdelibs' 'gettext' 'xine-lib')
+makedepends=('cmake' 'automoc4')
+optdepends=("mplayer: for MPlayer backend"
+            "mplayer2: for MPlayer backend")
+categories=('multimedia')
+screenshot="http://kde-apps.org/CONTENT/content-pre1/162048-1.png"
+source=(https://github.com/maxrd2/$pkgname/archive/v$pkgver.tar.gz 
+#'https://github.com/wengxt/subtitlecomposer/commit/26ce31879bb05447b266c84cfb8dc4e484ff0f8a.patch'
+) 
+install="${pkgname}.install"
+md5sums=('9e1fef4dca5a15e5c0435f1b099d4ab4')
+
+#prepare()
+#{
+#	cd ${srcdir}/${pkgname}-${pkgver}
+#	patch -Np1 -i ../26ce31879bb05447b266c84cfb8dc4e484ff0f8a.patch
+#}
+
+build()
+{
+	cd ${srcdir}/${pkgname}-${pkgver}
+	mkdir -p build
+	cd build
+	cmake .. -DCMAKE_INSTALL_PREFIX=/usr -DWITH_GStreamer=OFF
+	make
+}
+
+package()
+{ 
+	cd ${srcdir}/${pkgname}-${pkgver}/build
+	make DESTDIR=${pkgdir} install
+}

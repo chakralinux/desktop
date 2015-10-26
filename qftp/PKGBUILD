@@ -1,0 +1,36 @@
+pkgname=qftp
+pkgver=1.5.5
+pkgrel=2
+pkgdesc="A Qt client for FTP file transfers."
+arch=('x86_64')
+url="http://hugo.pereira.free.fr/software/index.php?page=package&package_list=software_list_qt4&package=qftp&full=0"
+license=('GPLv2')
+depends=('qt5-base' 'xcb-util-keysyms')
+makedepends=('cmake')
+categories=('network')
+source=("http://hugo.pereira.free.fr/software/tgz/${pkgname}-${pkgver}.tar.gz"
+	"qftp.desktop")
+sha512sums=('87899aef4c66ef961b7f32bc85d58e66007e4cb5d61a2fbc2c2593110d0ad8469847a395ee05d2224742d232105c7d17fb654bb934eb6430d01547acfd6acfce'
+            '6ed143708fb12f53426616d6ac778fa8b6e153d4f28bd833159710c94c652511fecd5a471765b6620e9328945ccdd75132118f9a4a6d94cf4c2737913b474510')
+        
+build() {
+  cd "${srcdir}/${pkgname}-${pkgver}"
+
+  # The default LDFLAGS="-Wl,--hash-style=gnu -Wl,--as-needed" specified
+  # in /etc/makepkg.conf will break the linkage procedure.
+  export LDFLAGS="-lX11" # Fix linking error.
+
+  cmake ./ -DCMAKE_INSTALL_PREFIX=/usr -DUSE_QT5=1
+  make
+}
+
+
+package() {
+  cd "${srcdir}/${pkgname}-${pkgver}"
+  make install DESTDIR="${pkgdir}" 
+  install -Dm644 COPYING "$pkgdir/usr/share/licenses/$pkgname/COPYING"
+  
+  install -d "${pkgdir}"/usr/share/{pixmaps,applications}
+  install -m644 "${srcdir}"/qftp.desktop "${pkgdir}"/usr/share/applications
+  install -m644 "${srcdir}"/"${pkgname}-${pkgver}"/qftp.png "${pkgdir}"/usr/share/pixmaps/qftp.png
+}

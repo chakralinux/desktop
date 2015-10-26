@@ -1,0 +1,31 @@
+pkgname=knemo
+pkgver=0.7.7
+pkgrel=1
+pkgdesc="The KDE Network Monitor"
+arch=('i686' 'x86_64')
+url="http://www.kde-apps.org/content/show.php?content=12956"
+license=('GPL')
+depends=('kde-runtime' 'wireless_tools' 'iw' 'networkmanager' 'libnl' 'libksysguard4')
+makedepends=('cmake' 'automoc4' 'kde-workspace')
+install=${pkgname}.install
+categories=('network')
+options=('libtool')
+source=(http://kde-apps.org/CONTENT/content-files/12956-knemo-0.7.7.tar.xz)
+sha512sums=('4a5214c2f0146aae60bbcf4bb09230823f13c53eab13489b67fb7eab6c19cac80a036b3e920bf2d99430f98144fae935448915953de785126bc05fcd4ed93065')
+
+build() {
+  cd ${srcdir}
+  mkdir build
+  cd build
+  cmake ../${pkgname}-${pkgver} \
+    -DCMAKE_BUILD_TYPE=Release \
+    -DCMAKE_SKIP_RPATH=ON \
+    -DCMAKE_INSTALL_PREFIX=/usr
+  make
+
+}
+
+package() {
+  cd ${srcdir}/build
+  make DESTDIR=${pkgdir} install
+}

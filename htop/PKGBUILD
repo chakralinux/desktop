@@ -1,0 +1,39 @@
+#
+# Chakra Packages for Chakra, part of chakra-project.org
+#
+
+pkgname=htop
+pkgver=1.0.3
+pkgrel=1
+pkgdesc="Interactive process viewer"
+arch=('x86_64')
+url="http://htop.sourceforge.net/"
+license=('GPL')
+depends=('ncurses')
+makedepends=('python2')
+source=("http://hisham.hm/$pkgname/releases/$pkgver/$pkgname-$pkgver.tar.gz")
+md5sums=('e768b9b55c033d9c1dffda72db3a6ac7')
+
+prepare() {
+  cd ${srcdir}/${pkgname}-${pkgver}
+  
+  sed -i 's|ncursesw/curses.h|curses.h|' RichString.h RichString.c configure 
+  sed -i 's|python|python2|' scripts/MakeHeader.py
+}
+
+build() {
+  cd ${srcdir}/${pkgname}-${pkgver}
+  ./configure \
+      --prefix=/usr  \
+      --enable-unicode  \
+      --enable-openvz \
+      --enable-vserver \
+      --enable-cgroup
+      
+  make 
+}
+
+package() {
+  cd ${srcdir}/${pkgname}-${pkgver}
+  make DESTDIR=${pkgdir} install 
+}

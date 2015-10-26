@@ -1,0 +1,50 @@
+pkgname=frostwire
+pkgver=6.1.5
+pkgrel=1
+pkgdesc="BitTorrent client with integrated search"
+arch=('x86_64')
+url="http://www.frostwire.com"
+license=('GPL')
+depends=('java-runtime' 'mplayer' 'hicolor-icon-theme' 'desktop-file-utils')
+optdepends=('vlc: video playback.')
+makedepends=('libicns')
+categories=('network')
+source=("http://dl.frostwire.com/$pkgname/$pkgver/$pkgname-$pkgver.noarch.tar.gz"
+        'frostwire.sh'
+        'frostwire.png')
+sha512sums=('efd7473186e242b7a8820b0037ba3b8cae09b0ddcfbdf79e69d9a589807a8b4f03cc68f10fb84ce1e7686a1d1da61fbd62761b07e70e48ee3d80e14592e8de63'
+            'ef228e47880ed75a409b055601cabd6dfef6ebe3d451c2b01dee76dbf1ca5b4188df7138dc11b1bc7ad38a2c26eeb9d2eff4aca782938063d5ebc823f7eea9f2'
+            '398b50d5b84c25a6b9f9fada275a57bac067fc9683f4cdb2e9bad0026e83da953a9973de257fee4ae686a622eea343ce2603b3a535dd8a46e71a5d975eed7ee1')
+
+package() {
+  cd $srcdir/$pkgname-$pkgver.noarch
+  
+  # Install files.
+  #install -d $pkgdir/usr/share/$pkgname
+  #cp -r $pkgname *.jar $pkgdir/usr/share/$pkgname
+  install -d $pkgdir/usr/share/{frostwire,pixmaps}
+  cp -r * "$pkgdir/usr/share/$pkgname"
+  cp -r "../../frostwire.png" "$pkgdir/usr/share/pixmaps/frostwire.png"
+
+  # Desktop integration.
+  install -Dm644 $pkgname.desktop "$pkgdir/usr/share/applications/$pkgname.desktop"
+  
+  # Execution script.
+  #install -dm755 $pkgdir/usr/bin
+  install -D "$srcdir/$pkgname.sh" "$pkgdir/usr/bin/$pkgname"
+  #echo '#!/bin/bash'					 > $pkgdir/usr/bin/$pkgname
+  #echo "cd /usr/share/$pkgname && ./$pkgname \$@"	>> $pkgdir/usr/bin/$pkgname
+  #chmod +x $pkgdir/usr/bin/$pkgname
+  
+  # Documentation.
+  install -Dm664 changelog $pkgdir/usr/share/doc/$pkgname/ChangeLog
+
+  # License.
+  install -Dm664 COPYING $pkgdir/usr/share/licenses/$pkgname/LICENSE
+  install -Dm664 EULA.txt $pkgdir/usr/share/licenses/$pkgname/EULA
+  
+  # Remove uneeded files
+  rm -rf "$pkgdir"/usr/share/frostwire/{runFrostwireOSX.sh,unpack200.py,root/{.svn,magnet10/.svn}}
+}
+
+

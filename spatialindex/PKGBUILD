@@ -1,0 +1,27 @@
+pkgname=spatialindex
+pkgver=1.8.5
+pkgrel=1
+pkgdesc="An extensible framework that supports robust spatial indexing methods and sophisticated spatial queries."
+arch=('x86_64')
+url="http://libspatialindex.github.com/"
+license=('MIT')
+depends=('gcc-libs')
+source=("http://download.osgeo.org/libspatialindex/$pkgname-src-$pkgver.tar.gz")
+sha512sums=('a6aa547a16f728dbb576878c9e208027fb5007a3f5d8a1bd8ec9e116cf6a2923dda4ad213d1936bd1002ec6994cf0b86e39d96107a86819083ad3ecfc6512b22')
+
+build() {
+  cd "$srcdir/$pkgname-src-$pkgver/"
+  ./configure --prefix=/usr
+  make
+}
+
+check() {
+  cd "$srcdir/$pkgname-src-$pkgver/"
+  make -k check
+}
+
+package() {
+  cd "$srcdir/$pkgname-src-$pkgver/"
+  make DESTDIR="$pkgdir/" install
+}
+

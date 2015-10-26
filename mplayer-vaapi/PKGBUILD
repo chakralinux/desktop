@@ -1,0 +1,64 @@
+# Maintainer: Neophytos Kolokotronis <tetris4 AT gmail DOT com>
+# Contributor: abveritas@chakra-project.org
+
+pkgname=mplayer-vaapi
+pkgver=36265
+pkgrel=2
+pkgdesc="A movie player, compiled with vaapi support"
+arch=('x86_64')
+url="http://gitorious.org/vaapi/mplayer"
+license=('GPL')
+depends=('libxxf86dga' 'libxxf86vm' 'libmad' 'libcdio' 'libxinerama' 'sdl' 'lame' 'fontconfig'
+         'libtheora' 'xvidcore' 'libmng' 'libxss' 'mesa' 'smbclient' 'aalib' 'jack' 'libcaca' 'x264'
+         'faac' 'faad2' 'lirc-utils' 'ttf-dejavu' 'libxvmc' 'enca' 'opencore-amr' 'libdca' 'a52dec'
+         'schroedinger' 'mpg123' 'libvpx' 'pulseaudio' 'fribidi' 'faad2' 'libva' 'desktop-file-utils'
+         'libbs2b' 'nas' 'libass')
+makedepends=('unzip' 'live-media' 'yasm' 'ladspa' 'git')
+optdepends=('libva-intel-driver: video acceleration for Intel graphic cards')
+provides=("mplayer=${pkgver}" 'mencoder')
+conflicts=('mplayer')
+backup=('etc/mplayer/codecs.conf' 'etc/mplayer/input.conf')
+categories=('multimedia')
+options=('!buildflags' '!emptydirs')
+install=${pkgname}.install
+source=("http://pkgbuild.com/~foutrelis/sources/${pkgname}/${pkgname}-${pkgver}.tar.xz"
+        'tweak-desktop-file.patch'
+        'subreader-fix-srt-parsing.patch')
+md5sums=('dda55251fd65c046ddeaf5927c676ec2'
+         '5e9a31281933ab5fd1c0c2b094eae4a7'
+         '4f2b5b0a5801ca607c8dbbe62047feab')
+
+
+    prepare() {
+  cd "$srcdir/$pkgname-$pkgver"
+  patch -d etc -Np0 -i "$srcdir/tweak-desktop-file.patch"
+  # http://bugzilla.mplayerhq.hu/show_bug.cgi?id=2139
+  patch -Np0 -i "$srcdir/subreader-fix-srt-parsing.patch"
+}
+
+build() {
+  cd "${srcdir}/mplayer-vaapi-${pkgver}"
+
+  ./configure --prefix=/usr \
+    --enable-runtime-cpudetection \
+    --enable-xvmc \
+    --enable-radio \
+    --enable-radio-capture \
+    --enable-vaapi \
+    --language=all \
+    --confdir=/etc/mplayer
+
+  make
+}
+
+package() {
+  cd "${srcdir}/mplayer-vaapi-${pkgver}"
+
+  make -j1 DESTDIR="${pkgdir}" install
+  install -Dm644 etc/{codecs.conf,input.conf,example.conf} "${pkgdir}/etc/mplayer/"
+  install -Dm644 etc/mplayer.desktop "${pkgdir}/usr/share/applications/mplayer.desktop"
+  install -d "${pkgdir}/usr/share/mplayer/"
+  ln -s /usr/share/fonts/TTF/DejaVuSans.ttf "${pkgdir}/usr/share/mplayer/subfont.ttf"
+  rm -rf "${pkgdir}/usr/share/mplayer/font"
+  install -Dm644 etc/mplayer256x256.png "${pkgdir}/usr/share/pixmaps/mplayer.png"
+}

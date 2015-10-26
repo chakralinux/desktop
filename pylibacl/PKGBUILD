@@ -1,0 +1,21 @@
+# 
+# Part of chakra-project.org
+# 
+# Maintainer: FranzMari <franzmari@chakra-project.it>
+ 
+pkgname=pylibacl
+pkgver=0.5.1
+pkgrel=2
+pkgdesc='A python extension module that allows you to manipulate the POSIX.1e ACLs.'
+arch=('x86_64')
+url='http://pylibacl.k1024.org/'
+license=('GPL')
+depends=('python2')
+makedepends=('python2-setuptools')
+source=("https://github.com/downloads/iustin/${pkgname}/${pkgname}-${pkgver}.tar.gz")
+md5sums=('a429256345ffdc2cea57fd24da0d980d')
+ 
+package() {
+  cd "${srcdir}/${pkgname}-${pkgver}"
+  python2 setup.py install --root="${pkgdir}"
+} 

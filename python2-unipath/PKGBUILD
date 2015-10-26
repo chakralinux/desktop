@@ -1,0 +1,32 @@
+# Maintainer:  Adrián Chaves Fernández (Gallaecio) <adriyetichaves@gmail.com>
+# Contributor: Anthony T. Brown <brown dot anthony dot t at gmail dot com>
+# Contributor: Ryan Coyner <rcoyner@gmail.com>
+# Contributor: Kozec <kozec at kozec dot com>
+
+pkgname=python2-unipath
+_pkgname=Unipath
+_pkgname2=unipath
+pkgver=1.0
+pkgrel=1
+pkgdesc="Python library for calculating pathname and filesystem access"
+arch=('x86_64')
+depends=('python2')
+conflicts=('python-unipath')
+replaces=('python-unipath')
+provides=('python-unipath')
+url="http://sluggo.scrapping.cc/python/${_pkgname2}/"
+license=('Python')
+source=(http://pypi.python.org/packages/source/U/Unipath/Unipath-$pkgver.tar.gz)
+md5sums=('a422f66fdb9113c6c96af220193c22f4')
+
+build() {
+    cd $srcdir/${_pkgname}-$pkgver
+
+    python2 setup.py build
+}
+
+package() {
+    cd $srcdir/${_pkgname}-$pkgver
+
+    python2 setup.py install --root=$pkgdir
+}

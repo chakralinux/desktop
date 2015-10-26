@@ -1,0 +1,13 @@
+[Unit]
+Description=Yate: Next-generation telephony engine
+After=network.target
+
+[Service]
+Type=forking
+KillMode=process
+EnvironmentFile=/etc/conf.d/yate
+ExecStart=/usr/bin/yate -d $OPTS
+ExecReload=/bin/kill -HUP $MAINPID
+
+[Install]
+WantedBy=multi-user.target

@@ -1,0 +1,32 @@
+pkgname=kup
+_pkgname=Kup
+pkgver=0.6.0
+pkgrel=2
+pkgdesc="A KDE-based frontend for the bup backup software"
+arch=('x86_64')
+url="http://kde-apps.org/content/show.php/Kup+Backup+System?content=147465"
+license=('GPL')
+depends=('qt5-base' 'kcoreaddons' 'kdbusaddons' 'ki18n' 'kio' 'solid' 'kidletime' 
+         'knotifications' 'kiconthemes' 'kconfig' 'kinit' 'bup' 'rsync' 'python2-pyxattr')
+makedepends=('cmake' 'extra-cmake-modules')
+source=("https://github.com/spersson/${_pkgname}/archive/${pkgname}-${pkgver}.tar.gz")
+sha256sums=('c27bbe35bb56088b1ceb944b7de92d407ee4f505ae92b53d235607e6c853e5fd')
+ 
+build() {
+	cd ${_pkgname}-${pkgname}-${pkgver}
+	[ -d "build" ] && rm -rf build
+	mkdir build
+	cd build
+ 
+	cmake ../ \
+		-DCMAKE_BUILD_TYPE=Release \
+		-DCMAKE_INSTALL_PREFIX=/usr \
+		-DKDE_INSTALL_USE_QT_SYS_PATHS=ON
+	make
+}
+ 
+package() {
+	cd ${_pkgname}-${pkgname}-${pkgver}
+	cd build
+	make DESTDIR=${pkgdir} install
+}

@@ -1,0 +1,47 @@
+pkgname=dianara
+pkgver=1.3.1
+pkgrel=1
+pkgdesc="A Qt pump.io client"
+arch=('x86_64')
+url="http://dianara.nongnu.org/"
+license=('GPL')
+depends=('qjson' 'qoauth' 'qca-ossl')
+install="$pkgname.install"
+screenshot=('http://dianara.nongnu.org/images/dianara-v0.9-release-main.png')
+source=("http://download-mirror.savannah.gnu.org/releases/$pkgname/$pkgname-v$pkgver.tar.gz")
+sha512sums=('8d8f4aa07af5a71cdd2778ae8cc8c095df42e415df4bbc8997d44886a98879184b316e7c76c49e9167b95838ac11b6844775f930359820a07927a12890becacf')
+
+build() {
+  cd $pkgname-v$pkgver
+  [ -d bld ] || mkdir bld && cd bld
+  qmake ..
+  make
+}
+
+
+package() {
+  cd $pkgname-v$pkgver
+
+  # bin
+  install -Dm755 bld/$pkgname \
+    "$pkgdir/usr/bin/$pkgname"
+
+  # desktop file
+  install -Dm644 $pkgname.desktop \
+    "$pkgdir/usr/share/applications/$pkgname.desktop"
+
+  # icons
+  install -Dm644 icon/32x32/$pkgname.png \
+    "$pkgdir/usr/share/icons/hicolor/32x32/apps/$pkgname.png"
+  install -Dm644 icon/64x64/$pkgname.png \
+    "$pkgdir/usr/share/icons/hicolor/64x64/apps/$pkgname.png"
+
+  # translations
+  install -d "$pkgdir/usr/share/locale"
+  install -Dm644 translations/*.qm \
+    "$pkgdir/usr/share/locale"
+
+  # man
+  install -Dm644 manual/$pkgname.1 \
+    "$pkgdir/usr/share/man/man1/$pkgname.1"
+}

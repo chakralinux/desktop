@@ -1,0 +1,22 @@
+#
+# Apps Packages for Chakra, part of chakra-project.org
+#
+# Maintainer: george <george[at]chakra-project[dot]org>
+
+pkgname=zramswap
+pkgver=1.1
+pkgrel=2
+pkgdesc="Sets up zram swap devices on boot."
+arch=('any')
+url="http://en.wikipedia.org/wiki/ZRam"
+license=('GPL')
+install=${pkgname}.install
+source=('zramswap.service'
+        'zramctrl')
+sha256sums=('f682f5199d72b38d37b7f92d84ce49bd9b1b3c7ff146507a08a3d602abde5f6f'
+            '1d0a4ea2e48a3cd2aacdbfa5ddc4eea4abc43ad4fd3ff0e64cf40272f1adada6')
+
+package() {
+  install -Dm755 zramctrl $pkgdir/usr/lib/systemd/scripts/zramctrl
+  install -Dm644 zramswap.service $pkgdir/usr/lib/systemd/system/zramswap.service
+}

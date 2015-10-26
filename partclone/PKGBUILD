@@ -1,0 +1,30 @@
+pkgname=partclone
+pkgver=0.2.84
+pkgrel=1
+pkgdesc="Backup and restore a partition for numerous file-systems types."
+arch=('x86_64')
+url="https://github.com/Thomas-Tsai/partclone"
+license=('GPL2')
+depends=('e2fsprogs' 'progsreiserfs' 'ncurses')
+makedepends=('ncurses')
+categories=('utils')
+changelog=ChangeLog
+source=("https://github.com/Thomas-Tsai/partclone/archive/${pkgver}.tar.gz")
+sha512sums=('f46de76632be3502d85aa2ee914562daba196474bee15b805cd8c98b2ba18d592c039df447cd5e08c1d5ff24464e88adb378f748fc57857bcd613a4214acfaa9')
+
+build() {
+  cd $srcdir/$pkgname-$pkgver
+  ./configure \
+    --prefix=/usr \
+    --enable-extfs \
+    --enable-reiserfs \
+    --enable-hfsp \
+    --enable-fat \
+    --enable-ncursesw
+  make
+}
+
+package() {
+  cd $srcdir/$pkgname-$pkgver
+  make DESTDIR=$pkgdir install
+}

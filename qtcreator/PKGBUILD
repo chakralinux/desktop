@@ -1,0 +1,54 @@
+pkgname=qtcreator
+pkgver=3.4.2
+_pkgver=3.4
+pkgrel=1
+pkgdesc='Lightweight, cross-platform integrated development environment'
+arch=('x86_64')
+url='http://qt-project.org'
+license=('LGPL')
+depends=('qt5-quick1' 'qt5-tools' 'qt5-quickcontrols' 'libxkbcommon' 'qbs')
+makedepends=('mesa' 'clang')
+options=('docs')
+optdepends=('qt5-doc: for the integrated Qt documentation'
+            'gdb: for the debugger'
+            'cmake: for cmake project support'
+            'openssh-askpass: for ssh support'
+            'git: for git support'
+            'mercurial: for mercurial support'
+            'bzr: for bazaar support'
+            'clang: Clang code model'
+            'valgrind: for analyze support')
+install=${pkgname}.install
+source=("http://download.qt.io/official_releases/${pkgname}/${_pkgver}/${pkgver}/qt-creator-opensource-src-${pkgver}.tar.gz"
+        'qtcreator.desktop')
+md5sums=('4a72e361a07576c140d1d67a54b16226'
+         '5aa242e0262fa22f75c3b59d3a4ec198')
+
+build() {
+  cd ${srcdir}/qt-creator-opensource-src-${pkgver}
+  
+  [[ -d build ]] && rm -r build
+  mkdir build && cd build
+
+  LLVM_INSTALL_DIR=/usr qmake-qt5 -r ../qtcreator.pro
+  make
+  make docs -j1
+}
+
+package() {
+  cd ${srcdir}/qt-creator-opensource-src-${pkgver}/build
+
+  make INSTALL_ROOT="${pkgdir}/usr/" install
+  make INSTALL_ROOT="${pkgdir}/usr/" install_docs
+
+  # Workaround for FS#40583
+  mv "${pkgdir}"/usr/bin/qtcreator "${pkgdir}"/usr/bin/qtcreator-bin
+  echo "#!/bin/sh" > "${pkgdir}"/usr/bin/qtcreator
+  echo "QT_LOGGING_TO_CONSOLE=1 qtcreator-bin \$@" >> "${pkgdir}"/usr/bin/qtcreator
+  chmod +x "${pkgdir}"/usr/bin/qtcreator
+
+  install -Dm644 ${srcdir}/qtcreator.desktop ${pkgdir}/usr/share/applications/qtcreator.desktop
+  install -Dm644 ${srcdir}/qt-creator-opensource-src-${pkgver}/LGPL_EXCEPTION.TXT ${pkgdir}/usr/share/licenses/qtcreator/LGPL_EXCEPTION.TXT
+  
+  rm -f ${pkgdir}/usr/bin/qbs*
+}

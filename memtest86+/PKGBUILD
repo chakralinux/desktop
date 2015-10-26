@@ -1,0 +1,21 @@
+# Maintainer: Neophytos Kolokotronis <tetris4@ AT gmail DOT com>
+# Contributor: dinolib
+# Contributions from Arch: https://www.archlinux.org/packages/extra/any/memtest86+/
+
+pkgname=memtest86+
+pkgver=5.01
+pkgrel=1
+pkgdesc="An advanced memory diagnostic tool"
+arch=('x86_64')
+url="http://www.memtest.org"
+license=('GPL2')
+install=memtest86+.install
+source=(http://www.memtest.org/download/${pkgver}/${pkgname}-${pkgver}.bin.gz
+	60_memtest86+)
+md5sums=('14ec4c4d827a49629c41b499303355ed'
+	 'ed9c4a0612971521d9d8f81ed61f6ecd')
+
+package() {
+  install -D -m644 "${srcdir}/${pkgname}-${pkgver}.bin" "${pkgdir}/boot/memtest86+/memtest.bin"
+  install -D "${srcdir}/60_memtest86+" "${pkgdir}/etc/grub.d/60_memtest86+"
+}

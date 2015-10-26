@@ -1,0 +1,31 @@
+# Arch Contributor: Lazy  <lazymen.k@gmail.com>
+# CCR Contributor: enoop <enoopt.adams@gmail.com>
+# Maintainer: Bruce Liu <rainman at Gmail dot com>
+
+pkgname=kdeplasma-applets-adjustable-clock
+pkgver=4.1.4
+pkgrel=2
+pkgdesc="Customizable kdeplasma clock"
+arch=('x86_64')
+url="http://www.kde-look.org/content/show.php/Adjustable+Clock?content=92825"
+license=('GPL')
+screenshot="http://kde-look.org/CONTENT/content-pre1/92825-1.png"
+depends=('kde-workspace')
+makedepends=('cmake' 'automoc4')
+conflicts=('kde-extragear-plasmoids' 'adjustable-clock-plasmoid')
+replaces=('adjustable-clock-plasmoid')
+source=(http://www.kde-look.org/CONTENT/content-files/92825-adjustableclock-$pkgver.tar.bz2)
+md5sums=('9dd16be8c1bf520bd8bf49353a82b9c6')
+
+build() {
+    cd $srcdir/adjustableclock-$pkgver
+    mkdir build
+    cd build
+    cmake -DCMAKE_INSTALL_PREFIX=`kde4-config --prefix` ..
+    make
+}
+
+package() {
+    cd $srcdir/adjustableclock-$pkgver/build
+    make DESTDIR=$pkgdir install
+}

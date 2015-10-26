@@ -1,0 +1,43 @@
+pkgname=usb-modeswitch
+_pkgname=usb_modeswitch
+pkgver=2.2.1
+pkgrel=1
+_pkgdata=20150115
+pkgdesc="Activating switchable USB devices on Linux."
+arch=('x86_64')
+url="http://www.draisberghof.de/usb_modeswitch/"
+license=('GPL3')
+depends=('libusb' 'tcl')
+makedepends=('gcc' 'make')
+conflicts=(usb_modeswitch)
+replaces=(usb_modeswitch)
+categories=('system')
+backup=("etc/$_pkgname.conf")
+source=("http://www.draisberghof.de/$_pkgname/$pkgname-$pkgver.tar.bz2"
+	"http://www.draisberghof.de/$_pkgname/$pkgname-data-$_pkgdata.tar.bz2"
+	"usb-modeswitch-${pkgver}-device_reference.txt::http://www.draisberghof.de/$_pkgname/device_reference.txt")
+sha512sums=('fc11824f78512f6e1547f311159730e45efda777f207eb791c6afddf9aced6b1ce4d1b4f402faf7cdf4bc3ac7853e2ae719bb45883843770592cd06daad09a2e'
+         'f2c116535c405b8d5abd4efc4055fe853181b2dcc810da4b4190ee3d54b62f7c227ff19a03f48cbb3d8f18fa5f63b4d4087396b484061e4195802341b4c3d0ae'
+         '2076c0767746c5232ba7b426a233aa93e31185e7c0ef8c8b422e1ee8de088f86fa7b09bf0e62cf4750c9f342d11514174f4f68887812694f337b347623027c7b')
+
+build() {
+  cd $srcdir/usb-modeswitch-$pkgver/
+  make clean
+  make
+}
+
+package() {
+  cd $srcdir/usb-modeswitch-$pkgver/
+
+  mkdir -p $pkgdir/usr/lib/udev
+  mkdir -p $pkgdir/etc
+  mkdir -p $pkgdir/usr/share/man/man1
+
+  make DESTDIR=${pkgdir} UDEVDIR=${pkgdir}/usr/lib/udev install
+
+  cp $srcdir/usb-modeswitch-${pkgver}-device_reference.txt $pkgdir/etc/usb_modeswitch.setup
+
+  cd $srcdir/usb-modeswitch-data-${_pkgdata}
+  make DESTDIR=$pkgdir install RULESDIR=${pkgdir}/usr/lib/udev/rules.d
+}
+

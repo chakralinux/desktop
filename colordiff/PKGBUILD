@@ -1,0 +1,17 @@
+pkgname=colordiff
+pkgver=1.0.15
+pkgrel=1
+pkgdesc="A tool to colorize diff output"
+arch=('x86_64')
+url="http://www.colordiff.org/"
+license=('GPL')
+depends=('diffutils')
+makedepends=('xmlto')
+install="colordiff.install"
+source=("http://colordiff.org/${pkgname}-${pkgver}.tar.gz")
+sha512sums=('8e7396b5c1a0be7f1a9a73af2cecc44dff3f808fae7e43b452ad9c9d9337e1c67942a14685b4100b0190bae99174102f8e4c233c980af6b8a63f23db02bae59e')
+
+package() {
+  cd "$srcdir/$pkgname-$pkgver"
+  make DESTDIR="$pkgdir" INSTALL_DIR="/usr/bin" MAN_DIR="/usr/share/man/man1" install
+}

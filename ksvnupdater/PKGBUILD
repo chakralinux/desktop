@@ -1,0 +1,28 @@
+pkgname=ksvnupdater
+pkgver=1.4.1
+pkgrel=1
+pkgdesc="ksvnupdater is a utility oriented to KDE translation teams."
+url="http://www.eloihr.net/ksvnupdater"
+license=('GPL')
+arch=('x86_64')
+depends=('kde-runtime' 'pology')
+makedepends=('cmake' 'automoc4' 'docbook-xsl')
+install=${pkgname}.install
+screenshot=('http://www.eloihr.net/ksvnupdater/img/ksvnupdater_update.png')
+source=(http://www.eloihr.net/ksvnupdater/files/ksvnupdater-$pkgver.tar.bz2)
+sha512sums=('4b7779762ce0d7812ccc46efb4af3066f829ed976a8cbea3d06bbb48748355ec3f486151a0101e7a7aa69badc9297120963ca808358472b28c192f86c3634d33')
+
+build() {
+  cd $srcdir
+
+  mkdir build && cd build
+
+  cmake -DCMAKE_INSTALL_PREFIX=/usr $srcdir/$pkgname-$pkgver
+  make
+}
+
+package() {
+  cd $srcdir/build
+  make DESTDIR=$pkgdir install
+}
+

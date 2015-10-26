@@ -1,0 +1,27 @@
+pkgname=fcitx-table-extra
+pkgver=0.3.7
+pkgrel=1
+pkgdesc="Extra table data for fcitx, including Zhengma, Cangjie, Boshiamy"
+arch=('x86_64')
+url="http://code.google.com/p/fcitx"
+license=('GPL')
+depends=('fcitx>=4.2.8.4')
+makedepends=('cmake')
+source=(http://download.fcitx-im.org/${pkgname}/${pkgname}-${pkgver}.tar.xz)
+
+build(){
+    cd "$srcdir/${pkgname}-${pkgver}"
+    [[ -d build ]] && rm -rf build ; mkdir build
+    cd build
+    
+    cmake -DCMAKE_INSTALL_PREFIX=/usr -DCMAKE_BUILD_TYPE=Release ..
+    make
+}
+
+package ()
+{
+    cd "$srcdir/${pkgname}-${pkgver}/build"
+    make DESTDIR=${pkgdir} install
+}
+
+sha512sums=('628eb7d2b09a3383ab92460dc8c2bc86771482cc84bdce847a394ee595423642dff29a39ccf31f56ea8de833f25e9d42952b55b754dd234d0831b5de5431d16a')

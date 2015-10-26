@@ -1,0 +1,31 @@
+# Maintainer: Francesco Marinucci <franzmari[at]chakra-project[dot]it>
+
+pkgbase=python-pyxattr
+pkgname=('python2-pyxattr' 'python3-pyxattr')
+_pkgname=pyxattr
+pkgver=0.5.3
+pkgrel=2
+pkgdesc='A python extension module that allows you to manipulate the extended attributes.'
+arch=('x86_64')
+url='http://pyxattr.k1024.org/'
+license=('GPL')
+makedepends=('python2' 'python3' 'python2-setuptools' 'python3-setuptools')
+source=("http://pyxattr.k1024.org/downloads/pyxattr-$pkgver.tar.gz")
+md5sums=('579cf6ccccd70916f7eb5304ffd9e837')
+
+package_python2-pyxattr() {
+  depends=('python2')
+
+  cd "${srcdir}/${_pkgname}-${pkgver}"
+  python2 setup.py install --root="${pkgdir}"
+}
+
+package_python3-pyxattr() {
+  depends=('python3')
+  replaces=('python-pyxattr')
+  conflicts=('python-pyxattr')
+  provides=('python-pyxattr')
+
+  cd "${srcdir}/${_pkgname}-${pkgver}"
+  python3 setup.py install --root="${pkgdir}"
+}

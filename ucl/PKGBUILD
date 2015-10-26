@@ -1,0 +1,29 @@
+#
+# Apps Packages for Chakra, part of chakra-project.org
+#
+# Maintainer: Adrián Chaves Fernández (Gallaecio) <adriyetichaves@gmail.com>
+# Contributor: Daniele Cocca <daniele.cocca@gmail.com>
+
+pkgname=ucl
+pkgver=1.03
+pkgrel=1
+pkgdesc="Portable lossless data compression library written in ANSI C"
+arch=('i686' 'x86_64')
+license=('GPL')
+url="http://www.oberhumer.com/opensource/ucl/"
+options=(!libtool)
+source=(http://www.oberhumer.com/opensource/$pkgname/download/$pkgname-$pkgver.tar.gz)
+md5sums=('852bd691d8abc75b52053465846fba34')
+
+build() {
+  cd "${srcdir}/${pkgname}-${pkgver}"
+
+  ./configure --prefix=/usr
+  make
+}
+
+package() {
+  cd "${srcdir}/${pkgname}-${pkgver}"
+
+  make DESTDIR="${pkgdir}" install
+}

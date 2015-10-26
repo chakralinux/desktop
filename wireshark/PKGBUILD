@@ -1,0 +1,70 @@
+pkgname=wireshark
+pkgver=1.12.8
+pkgrel=1
+pkgdesc='A free network protocol analyzer for Unix/Linux and Windows'
+arch=('x86_64')
+license=('GPL2')
+depends=('libpcap' 'libcap' 'krb5' 'glib2' 'desktop-file-utils' 'hicolor-icon-theme' 
+         'lua' 'libgcrypt' 'qt' 'harfbuzz' 'graphite' 'python2' 'portaudio' 'bash')
+makedepends=('bison' 'flex' 'gnutls')
+url='http://www.wireshark.org/'
+install=${pkgname}.install
+source=(http://www.wireshark.org/download/src/${pkgname}-${pkgver}.tar.bz2)
+sha1sums=('d8c23120525a2f3505e822b7684e7367bcd0ba70')
+
+prepare() {
+  cd ${pkgname}-${pkgver}
+  
+  sed -i 's/Exec=wireshark/Exec=wireshark-qt/g' wireshark.desktop
+}
+
+build() {
+  cd ${pkgname}-${pkgver}
+  
+  ./autogen.sh
+  ./configure \
+      --prefix=/usr \
+      --with-ssl \
+      --with-pcap \
+      --with-libcap \
+      --with-zlib \
+      --with-lua \
+      --with-krb5 \
+      --with-portaudio \
+      --with-gtk2=no \
+      --with-gtk3=no \
+      --with-qt
+  make all
+}
+
+package() {
+  cd ${pkgname}-${pkgver}
+
+  make DESTDIR="${pkgdir}" install
+
+  #wireshark uid group is 150
+  chgrp 150 "${pkgdir}/usr/bin/dumpcap"
+  chmod 754 "${pkgdir}/usr/bin/dumpcap"
+  #rm "${pkgdir}/usr/bin/wireshark"
+
+  # Headers
+  install -dm755 ${pkgdir}/usr/include/${pkgname}/{epan/{crypt,dfilter,dissectors,ftypes},wiretap,wsutil}
+
+  install -m644 color.h config.h register.h "${pkgdir}/usr/include/${pkgname}"
+  for d in epan epan/crypt epan/dfilter epan/dissectors epan/ftypes wiretap wsutil; do
+    install -m644 ${d}/*.h ${pkgdir}/usr/include/${pkgname}/${d}
+  done
+  
+
+  for d in 16 32 48; do
+    install -Dm644 image/hi${d}-app-wireshark.png  \
+                   "${pkgdir}/usr/share/icons/hicolor/${d}x${d}/apps/wireshark.png"
+  done
+
+  for d in 16 24 32 48 64 128 256 ; do
+    install -Dm644 image/WiresharkDoc-${d}.png \
+                   "${pkgdir}/usr/share/icons/hicolor/${d}x${d}/mimetypes/application-vnd.tcpdump.pcap.png"
+  done
+
+  install -Dm644 wireshark.desktop "${pkgdir}/usr/share/applications/wireshark.desktop"
+}

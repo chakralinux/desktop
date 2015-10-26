@@ -1,0 +1,35 @@
+# Maintainer: Manuel 'UtG' <utg[dot]chakra.linux[at]gmail[dot]com>
+
+pkgname=unetbootin
+pkgver=608
+pkgrel=1
+pkgdesc="Allows the creation of bootable Live USB drives."
+url="http://unetbootin.sourceforge.net/"
+license=('GPL3')
+arch=('x86_64')
+depends=('kde-runtime' 'libpng' 'mtools' 'p7zip' 'qt' 'syslinux') 
+groups=('system')
+screenshot=('http://sourceforge.net/dbimage.php?id=300347')
+# kdebase-runtime is added as dependency so kdesu is used to ask for password.
+source=("http://downloads.sourceforge.net/$pkgname/$pkgname-source-$pkgver.tar.gz")
+md5sums=('8c0f9f565a3dc0b093a0a9afd58fa9a7')
+
+build() {
+  lupdate $pkgname.pro
+  lrelease $pkgname.pro
+  qmake
+  make
+}
+
+package() {
+  # Executable installation.
+  install -Dm755 $pkgname $pkgdir/usr/bin/$pkgname
+
+  # Translations installation.
+  mkdir -p $pkgdir/usr/share/$pkgname
+  install -m644 $pkgname_*.qm $pkgdir/usr/share/$pkgname/
+
+  # Desktop integration.
+  install -Dm644 $pkgname.desktop $pkgdir/usr/share/applications/$pkgname.desktop
+  install -Dm644 ${pkgname}_48.png $pkgdir/usr/share/pixmaps/$pkgname.png
+}

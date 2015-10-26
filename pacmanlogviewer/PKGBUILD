@@ -1,0 +1,40 @@
+# Maintainer: Jeff Huang <s8321414[at]gmail[dot]com>
+
+pkgbase=pacmanlogviewer
+pkgname=('pacmanlogviewer' 'pacmanlogviewer-qt5')
+pkgver=1.3.1
+pkgrel=1
+arch=('x86_64')
+url=('https://opendesktop.org/content/show.php?content=150484')
+license=('GPL')
+makedepends=('qt' 'qt5-base' 'qt5-tools' 'cmake')
+categories=('system')
+source=("http://qt-apps.org/CONTENT/content-files/150484-$pkgname-$pkgver.tar.gz")
+md5sums=('da1bb1c4573b20dc4d2ff764a25c0479')
+
+package_pacmanlogviewer() {
+    pkgdesc="Inspect pacman log file."
+    depends=('qt')
+    conflicts=("pacmanlogviewer-qt5")
+    
+    cd "$srcdir/$pkgbase-$pkgver"
+    mkdir build
+    cd build
+    cmake .. -DCMAKE_INSTALL_PREFIX=/usr
+    make
+    make DESTDIR="$pkgdir" install
+}
+
+package_pacmanlogviewer-qt5() {
+    pkgdesc="Inspect pacman log file. (Qt5 version)"
+    depends=('qt5-base' 'qt5-tools')
+    provides=("pacmanlogviewer")
+    conflicts=("pacmanlogviewer")
+    
+    cd "$srcdir/$pkgbase-$pkgver"
+    mkdir build-qt5
+    cd build-qt5
+    cmake .. -DCMAKE_INSTALL_PREFIX=/usr -DBUILD_WITH_QT5=ON
+    make
+    make DESTDIR="$pkgdir" install
+}

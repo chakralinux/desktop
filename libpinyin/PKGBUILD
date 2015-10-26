@@ -1,0 +1,30 @@
+pkgname=libpinyin
+pkgver=1.2.0
+pkgrel=1
+_modelver=10
+pkgdesc="Library to deal with pinyin."
+arch=('x86_64')
+url="https://github.com/libpinyin/libpinyin"
+license=('GPL')
+depends=('db' 'glib2')
+makedepends=('git' 'libtool' 'autoconf' 'automake')
+source=("https://github.com/libpinyin/libpinyin/archive/${pkgver}.tar.gz"
+        "http://downloads.sourceforge.net/libpinyin/model${_modelver}.text.tar.gz")
+noextract=("model${_modelver}.text.tar.gz")
+sha512sums=('9091ad42ac1e73e89886b70deb39339ada936bbf881cb53e2e0f8b018c43c690fcdc1d78d206ab415de4bae1638f8ee6083479bf10e730cf8bb07afa1b5719eb'
+            '75006472fc522026605a6f93a0328fa7d0a9b01da7c1d804a168f390b39cf7fac3985852b6efcb0f3ef01bec0b48a73652042af44191d11ca7e54097414c140a')
+
+build() {
+  cd ${srcdir}/${pkgname}-${pkgver}
+
+  cp ../model${_modelver}.text.tar.gz data/
+  sed -i "/wget.*model${_modelver}\.text\.tar\.gz/ d" data/Makefile.am
+
+  aclocal && libtoolize --force && autoheader && automake -a && autoconf
+  ./configure --prefix=/usr && make
+}
+
+package() {
+  cd ${srcdir}/${pkgname}-${pkgver}
+  make DESTDIR="${pkgdir}" install
+}

@@ -1,0 +1,68 @@
+pkgname=owncloud
+pkgver=8.1.2
+pkgrel=1
+pkgdesc="A cloud server to store your files centrally on a hardware controlled by you"
+arch=('x86_64')
+url="http://owncloud.org/"
+license=('GPL')
+depends=('php-gd' 'php-intl')
+optdepends=('php-apache: to use the Apache web server'
+            'nginx: to use the nginx web server'
+            'php-sqlite: to use the SQLite database backend'
+            'php-pgsql: to use the PostgreSQL database backend'
+            'php-ldap: LDAP authentication'
+            'php-intl'
+            'php-apcu'
+            'php-xcache'
+            'mariadb: to use the MySQL database backend' 
+            'smbclient: to mount SAMBA shares' 
+            'php-mcrypt' 
+            'php-imagick: file preview' 
+            'ffmpeg: file preview' 
+            'libreoffice-common: file preview')
+categories=('network')
+conflicts=('owncloud-git')
+screenshot=(http://karlitschek.de/wp-content/uploads/2014/07/oc7.jpg)
+backup=('etc/httpd/conf/extra/owncloud.conf')
+source=("$pkgname-$pkgver.tar.gz::https://github.com/owncloud/core/archive/v$pkgver.tar.gz"
+	"$pkgname-3rdparty-$pkgver.tar.gz::https://github.com/owncloud/3rdparty/archive/v$pkgver.tar.gz"
+        'owncloud.conf')
+options=('!strip')
+install=owncloud.install
+sha512sums=('9075f634b62b465a9c46b75a340792c5acde002dfb42805700e25f968529b91de3b4a7c590ef7486e9f034d63ba110f15410eeac8625e5e5687e02202357e29e'
+            '2b50cc49bd7ba7454e6e28c106caa7734e9688906584ccf1dc206fa96ffdac62ec01b1cd8b0338e329036cbbc2187a44c7e49e6682896d2b58de24ace4f69ff6'
+            '2d6ed0a120c58e88c6792204f2079965d50e510c8a13b51f0be18858c78997c662bec24fd8547704fad01a2a08667121d50fddd906e4ab617c4c14e34297cf49')
+
+prepare() {
+  cd $srcdir/core-$pkgver
+  #sed -i "s|'appstoreenabled'.*|'appstoreenabled' => false,|" config/config.sample.php
+  rm -rf $srcdir/core-$pkgver/3rdparty
+  mv $srcdir/3rdparty-$pkgver $srcdir/core-$pkgver/3rdparty
+}         
+         
+package() {
+  cd $srcdir/core-$pkgver
+# install license
+  install -d ${pkgdir}/usr/share/licenses/${pkgname}
+  cp ${srcdir}/core-$pkgver/COPYING-* ${pkgdir}/usr/share/licenses/${pkgname}
+
+# install project
+  install -d ${pkgdir}/usr/share/webapps/
+  cp -a ${srcdir}/core-$pkgver ${pkgdir}/usr/share/webapps/${pkgname}
+  rm -rf ${pkgdir}/usr/share/webapps/${pkgname}/tests
+
+# install apache config file
+  install -d  ${pkgdir}/etc/webapps/${pkgname}
+  install -m 644 ${srcdir}/owncloud.conf  ${pkgdir}/etc/webapps/${pkgname}
+
+# move config to /etc
+  mv ${pkgdir}/usr/share/webapps/owncloud/config ${pkgdir}/etc/webapps/${pkgname}/config
+  chown -R http:http ${pkgdir}/etc/webapps/${pkgname}
+  ln -s /etc/webapps/${pkgname}/config ${pkgdir}/usr/share/webapps/owncloud/config
+  chown -R root:http ${pkgdir}/usr/share/webapps/${pkgname}
+
+  find ${pkgdir}/usr/share/webapps/owncloud -type f -exec chmod 0644 {} \;
+  find ${pkgdir}/usr/share/webapps/owncloud -type d -exec chmod 0755 {} \;
+#  find ${pkgdir}/etc/webapps/owncloud -type f -print0 | xargs -0 chmod 0640
+#  find ${pkgdir}/etc/webapps/owncloud -type d -print0 | xargs -0 chmod 0750
+}

@@ -1,0 +1,34 @@
+diff -ruN ksshaskpass-0.5.3-orig/CMakeLists.txt ksshaskpass-0.5.3/CMakeLists.txt
+--- ksshaskpass-0.5.3-orig/CMakeLists.txt	2010-01-01 23:12:21.000000000 +0000
++++ ksshaskpass-0.5.3/CMakeLists.txt	2010-09-06 17:33:37.427336334 +0000
+@@ -15,4 +15,7 @@
+ install(TARGETS ksshaskpass DESTINATION ${BIN_INSTALL_DIR})
+ install(FILES src/ksshaskpass.desktop DESTINATION ${XDG_APPS_INSTALL_DIR})
+ 
++install(PROGRAMS autostart/start-ksshaskpass.sh DESTINATION ${BIN_INSTALL_DIR})
++install(FILES autostart/start-ksshaskpass.desktop DESTINATION $ENV{XDG_CONFIG_DIRS}/autostart)
++
+ install(FILES doc/ksshaskpass.1 DESTINATION ${MAN_INSTALL_DIR}/man1)
+diff -ruN ksshaskpass-0.5.3-orig/autostart/start-ksshaskpass.desktop ksshaskpass-0.5.3/autostart/start-ksshaskpass.desktop
+--- ksshaskpass-0.5.3-orig/autostart/start-ksshaskpass.desktop	1970-01-01 00:00:00.000000000 +0000
++++ ksshaskpass-0.5.3/autostart/start-ksshaskpass.desktop	2010-09-06 17:24:01.410669667 +0000
+@@ -0,0 +1,11 @@
++[Desktop Entry]
++Version=1.0
++Encoding=UTF-8
++Name=Ksshaskpass
++Comment=Start ksshaskpass
++Exec=start-ksshaskpass.sh
++Terminal=false
++Type=Application
++Categories=
++GenericName=
++OnlyShowIn=KDE;
+diff -ruN ksshaskpass-0.5.3-orig/autostart/start-ksshaskpass.sh ksshaskpass-0.5.3/autostart/start-ksshaskpass.sh
+--- ksshaskpass-0.5.3-orig/autostart/start-ksshaskpass.sh	1970-01-01 00:00:00.000000000 +0000
++++ ksshaskpass-0.5.3/autostart/start-ksshaskpass.sh	2010-09-06 17:24:01.504003002 +0000
+@@ -0,0 +1,4 @@
++#!/bin/bash
++
++export SSH_ASKPASS=/usr/bin/ksshaskpass
++/usr/bin/ssh-add < /dev/null

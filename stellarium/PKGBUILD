@@ -1,0 +1,37 @@
+pkgname=stellarium
+pkgver=0.13.3
+pkgrel=1
+pkgdesc="A stellarium with great graphics and a nice database of sky-objects"
+arch=('x86_64')
+url="http://www.stellarium.org/"
+screenshot=('http://www.stellarium.org/img/screenshots/0.10-from-mars.jpg')
+license=('GPL2')
+depends=('libpng' 'libgl' 'qt5-quick1' 'glu' 'openssl' 'zlib' 'gettext' 
+         'xdg-utils' 'freetype2' 'phonon' 'qt5-multimedia' 'desktop-file-utils')
+makedepends=('cmake' 'boost' 'mesa' 'mesa-libgl' 'qt5-tools')
+categories=('education')
+source=("http://downloads.sourceforge.net/${pkgname}/${pkgname}-${pkgver}.tar.gz")
+sha512sums=('9d8b8d4e045dd3e8052a7f6af4dd21205c2e66c2e4db254fbb6e897f3df1f049a6e2080f6598210da162917e1f6a3535972c8826e5e696f4ab954a5b26d0d083')
+
+build() {
+  cd ${pkgname}-${pkgver}
+
+  cmake . -DCMAKE_INSTALL_PREFIX=/usr -DCMAKE_BUILD_TYPE=RELEASE -DENABLE_SOUND=1
+  make
+}
+
+package() {
+  cd ${pkgname}-${pkgver}
+ 
+  make DESTDIR="${pkgdir}" install
+
+  # install desktop file
+  install -Dm644 data/stellarium.desktop \
+	"${pkgdir}/usr/share/applications/stellarium.desktop"
+
+  # install desktop icons
+  for i in 16 32 48 64 128 256 512; do
+    install -Dm644 data/icons/${i}x${i}/stellarium.png \
+      "${pkgdir}/usr/share/icons/hicolor/${i}x${i}/apps/stellarium.png"
+  done    
+}

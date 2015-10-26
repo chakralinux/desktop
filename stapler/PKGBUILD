@@ -1,0 +1,25 @@
+pkgname=stapler
+pkgver=0.4
+pkgrel=3
+epoch=1
+pkgdesc="A small utility making use of the pypdf library to provide a (somewhat) lighter alternative to pdftk"
+arch=('x86_64')
+url="https://github.com/fwenzel/stapler"
+license=('BSD')
+depends=('python2-pypdf2')
+conflicts=('stapler-git')
+source=("https://github.com/fwenzel/stapler/archive/$pkgver.zip")
+sha512sums=('ae5ad14d3361b553a69a4b99401a1efc95f3640d2f6d74cb9b0ecefda336e562dee4872e1e1fc382a9bb6f0dfe5a63bcbf9ab5522cb38114109fa06f41ec06dd')
+
+prepare() {
+    cd "${srcdir}/${pkgname}-${pkgver}"
+    sed -i 's_#!/usr/bin/env python$_#!/usr/bin/env python2_' stapler
+}
+
+package() {
+  install -d "${pkgdir}/usr/share/${pkgname}"
+  cp -rv "${srcdir}/${pkgname}-${pkgver}/"* "${pkgdir}/usr/share/${pkgname}"
+  install -d ${pkgdir}/usr/bin
+  ln -s "/usr/share/${pkgname}/${pkgname}" "${pkgdir}/usr/bin/${pkgname}"
+}
+

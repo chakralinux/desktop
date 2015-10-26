@@ -1,0 +1,38 @@
+# Maintainer: 	UtG <utg[dot]chakra.linux[at]gmail[dot]com>
+# Contributors: H W TovetjÃ¤rn (totte) <totte@tott.es>
+#		Stephen McIntosh <stephenmac7[at]gmail[dot]com>
+#               Thomas Dziedzic <gostrc@gmail.com>
+#               Vesa Kaihlavirta <vesa@archlinux.org>
+#               Arch Haskell Team <arch-haskell@haskell.org>
+
+## NOTE: when you update Haskell packages you'll have to update the entire stack to not break it ##
+
+pkgname=hasktags
+pkgver=0.69.1
+pkgrel=1
+pkgdesc='Produces ctags “tags” and etags “TAGS” files for Haskell software'
+url="http://hackage.haskell.org/package/$pkgname"
+license=('custom:BSD3')
+arch=('x86_64')
+makedepends=('ghc' 'haskell-utf8-string' 'haskell-json')
+source=("http://hackage.haskell.org/packages/archive/$pkgname/$pkgver/$pkgname-$pkgver.tar.gz")
+md5sums=('997eb5ccc1a236c4a66b134bf60e9135')
+
+build() {
+  cd $srcdir/$pkgname-$pkgver
+  runhaskell Setup configure -O -p \
+    --prefix=/usr
+  runhaskell Setup build
+}
+
+package() {
+  cd $srcdir/$pkgname-$pkgver
+  runhaskell Setup copy --destdir=$pkgdir
+
+  # Documentation
+  install -Dm644 README $pkgdir/usr/share/doc/$pkgname/usage.txt
+  rm -Rf $pkgdir/usr/share/doc/$pkgname-$pkgver
+
+  # Legal
+  install -Dm644 LICENSE $pkgdir/usr/share/licenses/$pkgname/license.txt
+}

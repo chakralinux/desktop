@@ -1,0 +1,36 @@
+# Maintainer: Jeff Huang <philm[at]chakra-project[dog]org>
+# Contributer: Phil Miller <philm[at]chakraos[dog]org>
+# Contributer: Manuel Tortosa <manutortosa[at]chakraos[dot]org>
+
+pkgname=kchmviewer
+pkgver=7.3
+pkgrel=1
+pkgdesc="A .chm files (MS HTML help file format) viewer"
+arch=('i686' 'x86_64')
+url="http://kchmviewer.sourceforge.net/"
+license=('GPL')
+depends=('desktop-file-utils' 'chmlib' 'xdg-utils' 'libzip' 'qt5-webkit')
+makedepends=('qt5-tools')
+categories=('office')
+options=('libtool')
+install=${pkgname}.install
+source=("http://downloads.sourceforge.net/${pkgname}/${pkgname}-${pkgver}.tar.gz")
+sha256sums=('7cb805c9a836b7622bbea1d5df8873fb711979285abb21bccf095f25cf3f6007')
+
+build() {
+  cd $pkgname-$pkgver
+
+  qmake-qt5 PREFIX=/usr
+  make
+}
+
+package() {
+  cd $pkgname-$pkgver
+
+#   make DISTDIR="${pkgdir}" install
+
+  install -Dm755 bin/$pkgname "${pkgdir}"/usr/bin/$pkgname
+#icon/desktop file
+  install -Dm644 packages/$pkgname.png "${pkgdir}"/usr/share/pixmaps/$pkgname.png
+  install -Dm644 packages/$pkgname.desktop "${pkgdir}"/usr/share/applications/$pkgname.desktop
+}

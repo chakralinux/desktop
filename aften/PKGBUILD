@@ -1,0 +1,30 @@
+# contribution from Arch https://aur.archlinux.org/packages/aften/
+
+pkgname=aften
+pkgver=0.0.8
+pkgrel=1
+arch=('x86_64')
+pkgdesc="Audio encoder which generates compressed audio streams based on ATSC A/52 specification."
+url="http://sourceforge.net/projects/aften/"
+license=('GPL')
+depends=('glibc')
+makedepends=('cmake')
+source=("http://downloads.sourceforge.net/aften/${pkgname}-${pkgver}.tar.bz2")
+sha512sums=('1261297eac5065c6f028618d3e15e9b152ac35440c74cfb09d98cd99a90fb1c6a49585f70928834c3f6ddbcdd1d8721f7329d24f57cd30901dff09bbc0d419e3')
+
+prepare() {
+  mkdir -p build
+}
+
+build() {
+  cd build
+  cmake "../${pkgname}-${pkgver}" \
+    -DCMAKE_BUILD_TYPE=Release \
+    -DCMAKE_INSTALL_PREFIX=/usr \
+    -DSHARED=ON
+  make
+}
+
+package() {
+  make -C build DESTDIR="${pkgdir}" install
+}

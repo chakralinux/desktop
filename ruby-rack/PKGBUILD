@@ -1,0 +1,20 @@
+pkgname=ruby-rack
+pkgver=1.6.4
+pkgrel=1
+pkgdesc="Rack provides minimal, modular and adaptable interface for developing web applications in Ruby"
+arch=(any)
+url="http://rack.github.io/"
+license=('MIT')
+depends=('ruby')
+noextract=("rack-$pkgver.gem")
+source=(http://gems.rubyforge.org/gems/rack-$pkgver.gem)
+sha512sums=('304a6ae21bfd38008fd7d147f82c44397f3a1d2e689bd01de689aedc6ea0e8784605207fd314bc796974edc5dfcab81636664ea2becb0489302999f99501d41a')
+
+package() {
+  cd $srcdir
+  export HOME=/tmp
+  local _gemdir="$(ruby -rubygems -e'puts Gem.default_dir')"
+  gem install --no-user-install --ignore-dependencies -i "$pkgdir$_gemdir" -n "$pkgdir/usr/bin" rack-$pkgver.gem
+  mkdir -p $pkgdir/usr/share/licenses/ruby-rack
+  ln -s `find $pkgdir/usr/lib/ruby/ -type f -name COPYING | sed "s|$pkgdir||"` $pkgdir/usr/share/licenses/ruby-rack/COPYING
+}

@@ -1,0 +1,19 @@
+#maintainer: Neophytos Kolokotronis <tetris4@gmail.com>
+
+pkgname=iotop
+pkgver=0.6
+pkgrel=2
+pkgdesc="Python program with a top like UI used to show of behalf of which process is the I/O going on"
+arch=('any')
+url="http://guichaz.free.fr/iotop/"
+license=('GPL')
+depends=('python')
+changelog=
+source=(http://guichaz.free.fr/$pkgname/files/$pkgname-$pkgver.tar.bz2)
+md5sums=('5ef9456b26d7694abf3101a72e1e0d1d')
+ 
+package() {
+  cd ${srcdir}/$pkgname-$pkgver
+ 
+  python2 setup.py install --root=${pkgdir}
+}

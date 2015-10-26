@@ -1,0 +1,23 @@
+pkgname=rbtools
+pkgver=0.7.4
+pkgrel=1
+pkgdesc="Client tools for Review Board"
+arch=('x86_64')
+url="http://www.reviewboard.org/"
+license=('custom:MIT')
+depends=('python2')
+makedepends=('python2-setuptools')
+source=("$pkgname-$pkgver::https://github.com/reviewboard/rbtools/archive/release-${pkgver}.tar.gz")
+sha512sums=('f8aac6aa642ea7a0433ec93d9cde33b538473448331bccc0d1f4e699f417537456e1d6c3e570fc0d01f6296a1032acd5049bff29d19fe48d1d508730b8b75717')
+
+build() {
+  cd "$srcdir/$pkgname-release-$pkgver"
+  python2 setup.py build
+}
+
+package() {
+  cd "$srcdir/$pkgname-release-$pkgver"
+  python2 setup.py install --root "${pkgdir}"
+  install -d -m755 "${pkgdir}/usr/share/licenses/${pkgname}"
+  install -m644 COPYING "${pkgdir}/usr/share/licenses/${pkgname}/LICENSE"
+}

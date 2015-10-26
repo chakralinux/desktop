@@ -1,0 +1,105 @@
+pkgname=mendeleydesktop
+pkgver=1.15
+pkgrel=1
+pkgdesc="Academic software for managing and sharing research papers (desktop client)"
+url=http://www.mendeley.com/release-notes/
+arch=('x86_64')
+depends=('python2' 'qtwebkit')
+license=('custom:mendeley_eula')
+install=mendeleydesktop.install
+categories=('education')
+screenshot=('http://www.timelordz.com/blog/wp-content/uploads/2010/08/MendeleyClient.png')
+source=("http://download.mendeley.com/linux/$pkgname-$pkgver-linux-x86_64.tar.bz2")
+sha512sums=('3f9e820e74de76fc97d093188eafa7bf39ff92a5d8f2c3b7315c1120b544cfd4980435f92da4f383f099198e6bb85903a10f188183c13ba02382024cc104406f')
+
+prepare() {
+    cd "${srcdir}/$pkgname-$pkgver-linux-x86_64"
+
+    sed -i '1s@^#!/usr/bin/python$@&2@' bin/mendeleydesktop
+    
+    # remember, if you upgrade from 1.13.6 or older,
+    # remove any old versions of ".desktop" file of mendeley in ~/.local/share/applications/
+    # stop the creations of .desktop file of mendeley in ~/.local/share/applications/ 
+ echo   '#!/bin/sh
+
+DESKTOP_PATH=$HOME/.local/share/applications/
+DESKTOP_FILE=$DESKTOP_PATH/mendeleydesktop.desktop
+MENDELEYDESKTOP_BIN=$HOME/.local/share/mendeleydesktop
+GCONF_TOOL=`which gconftool-2`
+
+if [ $? -ne 0 ]; then
+	echo "Unable to find gconftool-2.  The mendeley:// link handler may not be installed correctly." >&2
+fi
+if [ ! -d "$DESKTOP_PATH" ]; then
+	mkdir -p "$DESKTOP_PATH"
+fi
+
+while getopts "u" flag
+do
+	case $flag in
+	u)
+		# Uninstall the link handler
+		rm -f $DESKTOP_FILE
+		$GCONF_TOOL -u /desktop/gnome/url-handlers/mendeley
+
+		exit 0
+		;;
+	\?)
+		echo "Unknown option: -$OPTARG" >&2
+		;;
+  	esac
+done
+
+shift $(($OPTIND - 1))
+if [ $# -ne 1 ]; then
+	echo "Usage: "`basename $0`" [options] <path>"
+	echo " -u : Uninstall the mendeley:// link handler"
+	echo ""
+	echo "Install the mendeley:// link handler to launch <path>"
+	echo ""
+	exit 1
+fi
+
+if [ ! -f "$1" ]; then
+	echo "Mendeley Desktop binary '$1' does not exist"
+	exit 1
+fi
+
+# install the gnome link handler
+$GCONF_TOOL -s /desktop/gnome/url-handlers/mendeley/command "$MENDELEYDESKTOP_BIN %s" --type String
+$GCONF_TOOL -s /desktop/gnome/url-handlers/mendeley/enabled --type Boolean true' > bin/install-mendeley-link-handler.sh
+
+    #Remove unneeded lines if gconf is not installed.
+    if ! which gconftool-2 &>/dev/null;then
+    sed -i '6d;74d;75d' \
+        bin/install-mendeley-link-handler.sh
+    fi
+
+}
+
+package() {
+    cd "$pkgname-$pkgver-linux-x86_64"
+    
+    install -d ${pkgdir}/usr/{bin,lib,share}
+    
+    cp -R bin ${pkgdir}/usr
+    
+    # remove bundled Qt from package
+    rm -rf lib/qt
+    cp -R lib ${pkgdir}/usr
+    
+    install -D share/applications/${pkgname}.desktop ${pkgdir}/usr/share/applications/${pkgname}.desktop
+    install -D share/doc/${pkgname}/License.txt ${pkgdir}/usr/share/licenses/${pkgname}/LICENSE
+    
+    install -d ${pkgdir}/usr/share/{icons,mendeleydesktop}
+    cp -R share/icons ${pkgdir}/usr/share
+    cp -R share/mendeleydesktop ${pkgdir}/usr/share
+
+    #Remove bundled Qt from package
+    cat << __EOF__
+Removing bundled Qt library.
+If you used "--force-bundled-qt" to start mendeley,
+make sure you remove any old versions of ".desktop" file of mendeley in ~/.local/share/applications/,
+because mendeley will automatically create one there. This will apply only to version 1.13.6 or older.
+__EOF__
+}

@@ -1,0 +1,31 @@
+#
+# Apps Packages for Chakra, part of chakraos.org
+#
+# maintainer (x86_64): almack
+
+# include global config
+
+pkgname=libmpdclient
+pkgver=2.10
+pkgrel=1
+pkgdesc='Asynchronous API library for interfacing MPD in the C, C++ & Objective C languages'
+arch=('x86_64')
+url='http://www.musicpd.org/libs/libmpdclient/'
+license=('custom:BSD')
+source=("http://www.musicpd.org/download/${pkgname}/${pkgver%.*}/${pkgname}-${pkgver}.tar.xz")
+sha1sums=('32e090b70fa91978734830c67527e8e2fca70225')
+
+build() {
+	cd "${srcdir}/${pkgname}-${pkgver}"
+	./configure --prefix=/usr --disable-documentation
+	make
+}
+
+package() {
+	cd "${srcdir}/${pkgname}-${pkgver}"
+	make DESTDIR="${pkgdir}" install
+	
+	cd "${pkgdir}"
+	install -d usr/share/licenses/libmpdclient
+	ln -s ../../doc/libmpdclient/COPYING usr/share/licenses/libmpdclient/COPYING
+}

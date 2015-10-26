@@ -1,0 +1,26 @@
+# maintainer: Neophytos Kolokotronis <tetris4@gmail.com>
+
+pkgname=smb4k
+pkgver=1.2.1
+pkgrel=1
+pkgdesc="A KDE program that browses samba shares"
+arch=('x86_64')
+url="http://sourceforge.net/projects/smb4k/"
+license=('GPL')
+depends=('kde-runtime')
+makedepends=('cmake' 'automoc4' 'docbook-xsl')
+source=("http://sourceforge.net/projects/smb4k/files/$pkgver/$pkgname-$pkgver.tar.xz")
+md5sums=('19043c4c13a7e552e6d30f26dc750089')
+
+build() {
+  cd $pkgname-$pkgver
+
+  cmake -DCMAKE_INSTALL_PREFIX=/usr \
+        -DCMAKE_BUILD_TYPE=RELEASE
+  make VERBOSE=1 
+}
+package() {
+  cd $pkgname-$pkgver
+
+  make DESTDIR=$pkgdir install
+}

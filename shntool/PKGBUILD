@@ -1,0 +1,31 @@
+#
+# Apps Packages for Chakra, part of chakra-project.org
+#
+# Maintainer: Adrián Chaves Fernández (Gallaecio) <adriyetichaves gmail.com>
+
+# include global config
+source ../_buildscripts/${current_repo}-${_arch}-cfg.conf
+
+pkgname=shntool
+pkgver=3.0.10
+pkgrel=1
+pkgdesc="A multi-purpose WAVE data processing and reporting utility."
+arch=('i686' 'x86_64')
+url="http://www.etree.org/shnutils/shntool/"
+license=('GPL2')
+options=(!emptydirs)
+changelog=ChangeLog
+source=("http://www.etree.org/shnutils/$pkgname/dist/src/$pkgname-$pkgver.tar.gz")
+md5sums=('5d41f8f42c3c15e3145a7a43539c3eae')
+
+build() {
+  cd $srcdir/$pkgname-$pkgver
+  ./configure \
+    --prefix=/usr
+  make
+}
+
+package() {
+  cd $srcdir/$pkgname-$pkgver
+  make DESTDIR=$pkgdir install
+}

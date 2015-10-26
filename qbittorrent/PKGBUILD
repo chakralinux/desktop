@@ -1,0 +1,30 @@
+pkgname=qbittorrent
+pkgver=3.2.4
+pkgrel=1
+pkgdesc="A bittorrent client written in C++ / Qt using the good libtorrent library"
+arch=('x86_64')
+url="http://www.qbittorrent.org/"
+license=('GPL')
+depends=('qt5-base' 'libtorrent-rasterbar>=1.0.6' 'xdg-utils' 'boost-libs')
+makedepends=('boost' 'geoip' 'qt5-tools')
+optdepends=('python3: needed for search'
+            'geoip: improves peer country resolution')
+categories=('network')
+screenshot=('http://sourceforge.net/projects/qbittorrent/screenshots/242189.jpg')
+install=qbittorrent.install
+source=("https://github.com/qbittorrent/qBittorrent/archive/release-${pkgver}.tar.gz")
+md5sums=('991573fd3f2c8be181a9f802592ff7fc')
+
+build() {
+    cd ${srcdir}/qBittorrent-release-${pkgver}
+    ./configure --prefix=/usr \
+                --enable-systemd \
+                --with-qt5
+    make
+}
+
+package() {
+    cd ${srcdir}/qBittorrent-release-${pkgver}
+    make INSTALL_ROOT=${pkgdir} install
+    install -Dm644 COPYING ${pkgdir}/usr/share/licenses/$pkgname/COPYING
+}

@@ -1,0 +1,29 @@
+# Maintainer: UtG  <utg[dot]chakra.linux[at]gmail[dot]com>
+
+pkgname=linkchecker
+_pkgname=LinkChecker
+pkgver=9.3
+pkgrel=1
+pkgdesc="An utility to check HTML documents for broken links."
+arch=('x86_64')
+url="http://wummel.github.io/linkchecker/"
+license=('GPL')
+depends=('python2' 'python2-requests')
+makedepends=('qt')
+optdepends=('python2-pyqt4: for gui version'
+	    'qscintilla-python2: for gui version'
+	    'python2-dns: a DNS toolkit for Python')
+source=("https://pypi.python.org/packages/source/L/${_pkgname}/${_pkgname}-${pkgver}.tar.gz")
+sha256sums=('ee0aa60de440fdcf8587ddebf1f691bc777a32d8d4f119beed63f405dc56176d')
+
+build() {
+  cd $srcdir/${_pkgname}-$pkgver
+  python2 setup.py sdist --manifest-only
+  (cd doc/html; make)
+  python2 setup.py build
+}
+
+package() {
+  cd $srcdir/${_pkgname}-$pkgver
+  python2 setup.py install --root=$pkgdir
+}

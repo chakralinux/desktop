@@ -1,0 +1,31 @@
+
+pkgname=kdeplasma-applets-welcome-plasmoid
+_gitname=welcome-plasmoid
+pkgver=2015.09
+pkgrel=2
+depends=('plasma-workspace')
+makedepends=('extra-cmake-modules' 'git' 'make' 'cmake')
+pkgdesc="Chakra's Welcome plasmoid, for live ISO info sharing"
+arch=("x86_64")
+license=('GPL')
+#install=$pkgname.install
+url="http://chakraos.org/"
+#source=("$pkgname"::"git://git.chakraos.org/${_gitname}.git#tag=${pkgver}")
+_gitsha='bf9a487'
+source=("$pkgname"::"git://git.chakraos.org/${_gitname}.git#commit=${_gitsha}")
+md5sums=('SKIP')
+
+
+ 
+build() {
+  cd "$srcdir/$pkgname"
+  cmake  \
+    -DCMAKE_INSTALL_PREFIX=/usr \
+    -DCMAKE_BUILD_TYPE=Release
+  make 
+}
+
+package() {
+  cd "$srcdir/$pkgname"
+  make DESTDIR=${pkgdir} install
+}

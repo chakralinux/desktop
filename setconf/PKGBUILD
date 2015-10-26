@@ -1,0 +1,23 @@
+# Contributions from Arch: https://www.archlinux.org/packages/community/any/setconf/
+
+pkgname=setconf
+pkgver=0.6.7
+pkgrel=1
+pkgdesc="A utility to easily change settings in Makefiles and other configuration files"
+arch=('x86_64')
+url="http://setconf.roboticoverlords.org/"
+license=('GPL')
+depends=('python2')
+source=("http://setconf.roboticoverlords.org/$pkgname-$pkgver.tar.xz")
+sha512sums=('8b247de9f7ac06f77e6251e95c045886cde5b6ca21b0152cb6fdc1456381aacd9051d5221c9fc8149608555e14f85ee2b51acbe65f78d129b1c8b732e093236d')
+
+prepare() {
+  sed -i 's:usr/bin/python$:usr/bin/python2:' "$pkgname-$pkgver/$pkgname.py"
+}
+
+package() {
+  cd "$pkgname-$pkgver"
+
+  install -Dm755 "$pkgname.py" "$pkgdir/usr/bin/$pkgname"
+  install -Dm644 "$pkgname.1.gz" "$pkgdir/usr/share/man/man1/$pkgname.1.gz"
+}

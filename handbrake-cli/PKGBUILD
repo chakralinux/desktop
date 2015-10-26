@@ -1,0 +1,43 @@
+# cpntributions from ArchLinux: https://www.archlinux.org/packages/community/x86_64/handbrake-cli/
+
+pkgname=handbrake-cli
+pkgver=0.10.2
+pkgrel=1
+pkgdesc="Multithreaded video transcoder (CLI)"
+arch=('x86_64')
+url="http://handbrake.fr/"
+license=('GPL')
+depends=('bzip2' 'gcc-libs' 'zlib' 'fribidi' 'libass' 'lame' 'libxml2' 'libtheora' 'libsamplerate' 'libbluray' 'x264' 'libdvdnav')
+makedepends=('intltool' 'python2' 'yasm' 'wget' 'libnotify' 'gst-plugins-base' 'dbus-glib')
+source=("https://handbrake.fr/mirror/HandBrake-$pkgver.tar.bz2")
+categories=('multimedia')
+sha512sums=('7059a88fac1e4810c54880eb4afe58716af7ac81e5b098e34f3a68c19d7c03e51b57e1a196603e2c8d377e94bb3a910d20f1d9ed62d3eab6422031e62730d4a2')
+
+prepare() {
+  cd "$srcdir/HandBrake-$pkgver"
+  
+  # Use more system libs
+  # We had ffmpeg here as well but it broke PGS subtitle processing
+  # https://forum.handbrake.fr/viewtopic.php?f=13&t=27581
+  sed -i \
+    -e '/MODULES += contrib\/libbluray/d' \
+    -e '/MODULES += contrib\/libdvdnav/d' \
+    -e '/MODULES += contrib\/libdvdread/d' \
+    make/include/main.defs
+}    
+build() {
+  cd "$srcdir/HandBrake-$pkgver"
+  
+  ./configure --prefix=/usr \
+              --force \
+              --disable-gtk \
+              --disable-gtk-update-checks
+  cd build
+  make
+}
+
+package() {
+  cd "$srcdir/HandBrake-$pkgver/build"
+  
+  install -D HandBrakeCLI "$pkgdir/usr/bin/handbrake-cli"
+}

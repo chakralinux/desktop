@@ -1,0 +1,29 @@
+pkgname=django-simple-captcha
+pkgver=0.4.5
+pkgrel=1
+pkgdesc="A simple customizable application to add captcha images to Django forms"
+arch=('x86_64')
+url="http://pypi.python.org/pypi/django-simple-captcha"
+license=('BSD')
+depends=('django' 'python2' 'python2-imaging' 'python-distribute')
+provides=('django_simple_captcha')
+conflicts=('django_simple_captcha')
+replaces=('django_simple_captcha')
+source=(https://github.com/mbi/django-simple-captcha/archive/${pkgver}.tar.gz)
+sha512sums=('e2fda2c78377f999ac93e6011479615f8c23ad63735ebdcefc8f3077a7009e56b30a652a5fbfe6d303b5667d9a38e46f71b0f38ce95eea3da969dc7148bd6f4b')
+
+build() {
+    cd "${srcdir}/${pkgname}-${pkgver}"
+   
+    # Build.
+    python2 setup.py build
+}
+
+package() {
+    cd "${srcdir}/${pkgname}-${pkgver}"
+    python2 setup.py install --prefix=/usr --root=${pkgdir}
+    
+    # License.
+    install -d ${pkgdir}/usr/share/licenses/${pkgname}
+    install -Dm644 LICENSE ${pkgdir}/usr/share/licenses/${pkgname}/LICENSE
+}

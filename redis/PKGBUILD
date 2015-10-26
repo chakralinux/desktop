@@ -1,0 +1,47 @@
+pkgname=redis
+pkgver=3.0.4
+pkgrel=1
+pkgdesc="Advanced key-value store"
+arch=('x86_64')
+url="http://redis.io/"
+license=('BSD')
+depends=('bash')
+makedepends=('gcc' 'make' 'pkgconfig')
+backup=("etc/redis.conf"
+        "etc/logrotate.d/redis")
+install=${pkgname}.install
+source=("http://download.redis.io/releases/${pkgname}-${pkgver}.tar.gz"
+        "redis.service"
+        "redis.logrotate"
+        "redis.tmpfiles.d")
+sha512sums=('7d8d681222892c759e7c3809203522a96a547457e0ff123cca296bac911395c7d8c1ded06331ae5cb487b87d0adcbaa02aa12c2dd724196a7b86111e236b023a'
+            'f0023679111706a8b34f952f6f5c77204ee5751043e493d5f5d48d314d4c342dc66b3a7faf3f075403cbbc1d500d7af7ec09cf7ebdb86a36ae806054328648ab'
+            'df11492df0458b224f75fff31475d39b85116cba6deb06d80d0fd8c467d221db51a2a8f5fc5d2e3e8239c0718e1cf5dc12e99cac9019cb99d3f11835ad00aa5d'
+            '28cb7e52902a56ac2fc38543e557d76e7370a62ecfaf24734989de1aba09c8b8969174a7741cdb9ac0c2bbf6c135575cfd6c45ff645b113ce987b6e7170958f6')
+
+prepare() {
+  cd ${pkgname}-${pkgver}
+  sed -i 's|# bind 127.0.0.1|bind 127.0.0.1|' redis.conf
+  sed -i 's|daemonize no|daemonize yes|' redis.conf
+  sed -i 's|dir \./|dir /var/lib/redis/|' redis.conf
+  sed -i 's|pidfile .*|pidfile /run/redis/redis.pid|' redis.conf
+  sed -i 's|logfile stdout|logfile /var/log/redis.log|' redis.conf
+}
+
+build() {
+  cd ${pkgname}-${pkgver}
+  #make MALLOC=libc
+  make
+}
+
+package() {
+  cd ${pkgname}-${pkgver}
+  mkdir -p "${pkgdir}/usr/bin"
+  make INSTALL_BIN="${pkgdir}/usr/bin" PREFIX=/usr install
+
+  install -D -m755 COPYING "${pkgdir}/usr/share/licenses/redis/COPYING"
+  install -Dm644 "${srcdir}/redis.service" "${pkgdir}/usr/lib/systemd/system/redis.service"
+  install -Dm644 "${srcdir}/redis.logrotate" "${pkgdir}/etc/logrotate.d/redis"
+  install -D -m644 redis.conf "${pkgdir}/etc/redis.conf"
+  install -Dm644 "${srcdir}/redis.tmpfiles.d" "${pkgdir}/usr/lib/tmpfiles.d/redis.conf"
+}

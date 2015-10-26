@@ -1,0 +1,26 @@
+pkgname=injeqt
+pkgver=1.0.1
+pkgrel=1
+pkgdesc='Dependency injection framework for Qt'
+arch=('x86_64')
+url='https://github.com/vogel/injeqt'
+license=('LGPL2.1')
+depends=('qt5-base')
+makedepends=('cmake')
+source=($pkgname-$pkgver.tar.gz::$url/archive/$pkgver.tar.gz)
+sha512sums=('b090c8d5c9fc6091ca55d8b2abe408f10c0c93209755d7fc548723cb5c7fc49e913d4e1360c822b74886df885e08b4d634c53082ce2d8da649e1cc79f6207dc8')
+
+build() {
+  cd $pkgname-$pkgver
+  cmake -DCMAKE_BUILD_TYPE=Release \
+    -DCMAKE_INSTALL_PREFIX=/usr \
+    -DCMAKE_INSTALL_LIBDIR=/usr/lib \
+    -DDISABLE_EXAMPLES=ON \
+    -DDISABLE_TESTS=ON
+  make
+}
+
+package() {
+  cd $pkgname-$pkgver
+  make DESTDIR="$pkgdir" install
+}

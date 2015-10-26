@@ -1,0 +1,63 @@
+# NOTE seems qt5 build are not fully ready yet, I prefer stick with qt4
+
+pkgname=librecad
+pkgver=2.0.8
+pkgrel=1
+pkgdesc="A 2D CAD drawing tool based on the community edition of QCad"
+arch=('x86_64')
+url="http://www.librecad.org/"
+license=('GPL')
+depends=('qt' 'libxcb' 'muparser')
+makedepends=('boost' 'imagemagick' 'librsvg')
+conflicts=('librecad-git')
+replaces=('librecad-svn' 'caduntu' 'caduntu-svn')
+install=librecad.install
+source=("${pkgname}-${pkgver}.tar.gz::https://github.com/LibreCAD/LibreCAD/archive/v${pkgver}.tar.gz")
+sha512sums=('040ce852c8c7b2c01a9d0ce07673de7bea359679942d241f03e6278fb675044ae1086ee3a673c75526f95ac13fb4489f1215404aa4401aea5d5ee6eeb072d298')
+
+prepare() {
+	cd "${srcdir}/LibreCAD-${pkgver}"
+	
+	# fix version string
+	sed -i "/^SCMREVISION/c SCMREVISION=\"${pkgver}\"" librecad/src/src.pro
+
+	# fix qcollectiongenerator name
+#	sed -i 's/qcollectiongenerator/qcollectiongenerator-qt5/g' scripts/postprocess-unix.sh
+	
+	# fix lrelease name
+#	sed -i 's/lrelease/lrelease-qt5/g' scripts/postprocess-unix.sh
+}
+
+build() {
+	cd "${srcdir}/LibreCAD-${pkgver}"
+
+	export CPPFLAGS="-std=c++0x"
+        qmake librecad.pro
+	make
+}
+
+package() {
+	cd "${srcdir}/LibreCAD-${pkgver}"
+
+	install -D -m 755 unix/librecad "${pkgdir}/usr/bin/librecad"
+	install -D -m 755 unix/ttf2lff "${pkgdir}/usr/bin/ttf2lff"
+
+	install -D -m 644 desktop/librecad.desktop "${pkgdir}/usr/share/applications/librecad.desktop"
+	install -D -m 644 desktop/librecad.1 "${pkgdir}/usr/share/man/man1/librecad.1"
+        
+        install -D -m0644 librecad/support/doc/README "${pkgdir}/usr/share/doc/librecad/index.README"
+	install -D -m0644 librecad/support/doc/index.html "${pkgdir}/usr/share/doc/librecad/index.html"
+	install -D -m0644 librecad/support/doc/style.css "${pkgdir}/usr/share/doc/librecad/style.css"
+	install -D -m0644 librecad/support/doc/img/librecadlogo.png "${pkgdir}/usr/share/doc/librecad/img/librecadlogo.png"
+	
+	for SIZE in 16 24 32 48 64 96 128; do
+		convert -scale ${SIZE} \
+			desktop/graphics_icons_and_splash/Icon\ LibreCAD/Icon_Librecad.svg \
+			${srcdir}/librecad.png
+		install -D -m 644 ${srcdir}/librecad.png "${pkgdir}/usr/share/icons/hicolor/${SIZE}x${SIZE}/apps/librecad.png"
+	done
+	install -D -m 644 desktop/graphics_icons_and_splash/Icon\ LibreCAD/Icon_Librecad.svg "${pkgdir}/usr/share/icons/hicolor/scalable/apps/librecad.svg"
+
+	mkdir -p "${pkgdir}/usr/share/librecad/"
+	cp -r unix/resources/{library,patterns,fonts,qm} "${pkgdir}/usr/share/librecad/"
+}

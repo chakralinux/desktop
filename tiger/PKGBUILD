@@ -1,0 +1,44 @@
+# Original AUR Maintainer: Jaroslav Lichtblau <dragonlord@aur.archlinux.org>
+
+pkgname=tiger
+pkgver=3.2.3
+pkgrel=2
+pkgdesc="A security scanner, that checks computer for known problems. Can also use tripwire, aide and chkrootkit."
+arch=('i686' 'x86_64')
+url="http://www.nongnu.org/tiger/"
+license=('GPL')
+depends=('perl')
+makedepends=('patch' 'debianutils')
+categories=('system')
+backup=('etc/tiger/tigerrc' 'etc/tiger/cronrc')
+source=("http://download.savannah.gnu.org/releases/${pkgname}/${pkgname}-${pkgver}.tar.gz"
+        'tiger-makefile.diff'
+        'fix-genmsgidx-basedir.patch')
+md5sums=('f41076f645da9de937819bf6d516e546'
+         'aadd12186c717dfe202d55d1192851c2'
+         '97255dbd16a663b2494df8d90829945e')
+
+build() {
+  cd "${srcdir}/${pkgname}-${pkgver}"
+
+  patch -Np0 -i "${srcdir}/tiger-makefile.diff"
+
+  patch -Np1 -i "${srcdir}/fix-genmsgidx-basedir.patch"
+
+  ./configure --prefix=/usr \
+              --mandir=/usr/share/man \
+              --with-tigerhome=/usr/share/tiger \
+              --with-tigerconfig=/etc/tiger \
+              --with-tigerwork=/run/tiger \
+              --with-tigerlog=/var/log/tiger \
+              --with-tigerbin=/usr/sbin
+  make
+}
+
+package() {
+  cd "${srcdir}/${pkgname}-${pkgver}"
+  
+  install -d "${pkgdir}/usr/share/tiger" "${pkgdir}/usr/sbin"
+  
+  make DESTDIR="${pkgdir}" install
+}

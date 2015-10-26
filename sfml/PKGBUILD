@@ -1,0 +1,38 @@
+# Contribution from Arch https://www.archlinux.org/packages/community/x86_64/sfml/
+
+pkgname=sfml
+pkgver=2.3
+pkgrel=1
+pkgdesc='A simple, fast, cross-platform, and object-oriented multimedia API'
+arch=('x86_64')
+url='http://www.sfml-dev.org/'
+license=('zlib')
+depends=('libsndfile' 'libxrandr' 'libjpeg' 'openal' 'glew' 'freetype2' 'xcb-util-image')
+makedepends=('mesa' 'cmake' 'doxygen')
+source=("https://github.com/SFML/SFML/archive/${pkgver}.tar.gz")
+sha512sums=('bc7ba359d77c3b8baf76192574a9b18e3e277199438becf2533177fe6b1a0bb476769fa5ca8555252ccf08414cd553e26a3f0480fcf1815ac166233bb8b8a001')
+
+build() {
+  cd "$srcdir"/SFML-${pkgver}
+
+  mkdir -p build && cd build
+  cmake .. \
+      -DCMAKE_INSTALL_PREFIX=/usr \
+      -DSFML_BUILD_EXAMPLES=1 \
+      -DSFML_BUILD_DOC=1 \
+      -DSFML_INSTALL_PKGCONFIG_FILES=1 \
+      -DCMAKE_CXX_FLAGS="-DGLXContextID=XID $CXXFLAGS"
+  make
+  make doc
+}
+
+package() {
+  cd "$srcdir"/SFML-${pkgver}/build
+
+  make DESTDIR="$pkgdir/" install
+
+  install -Dm644 "$pkgdir/usr/share/SFML/cmake/Modules/FindSFML.cmake" "$pkgdir/usr/share/cmake-3.0/Modules/FindSFML.cmake"
+
+  install -Dm644 ../license.txt "${pkgdir}/usr/share/licenses/${pkgname}/LICENSE"
+}
+

@@ -1,0 +1,29 @@
+# Contributions from Arch: https://projects.archlinux.org/svntogit/community.git/tree/trunk/PKGBUILD?h=packages/clipgrab
+
+pkgname=clipgrab
+pkgver=3.5.1
+pkgrel=1
+pkgdesc='A video downloader and converter for YouTube, Vimeo, DailyMotion, MyVideo and many other'
+arch=('x86_64')
+url='http://clipgrab.de/en'
+screenshot='http://download.clipgrab.de/img/screenshot_videosearch_x11.png'
+license=('GPL3')
+depends=('qtwebkit')
+optdepends=('ffmpeg: for the conversion functionality')
+source=("http://download.clipgrab.de/${pkgname}-${pkgver}.tar.gz"
+        "${pkgname}.desktop")
+sha256sums=('e911afb98b30f3ac2a9c354ccd22345302df99148660d4da3bb2430ff63f159a'
+            'a12c0501d2f46b4a2a7103a0cce8a35d9b44245dee6cc12eb7d3e5c083cc5809')
+
+build() {
+  cd ${pkgname}-${pkgver}
+  qmake clipgrab.pro
+  make
+}
+
+package() {
+  cd ${pkgname}-${pkgver}
+  install -Dm755 ${pkgname} "${pkgdir}/usr/bin/${pkgname}"
+  install -Dm644 icon.png "${pkgdir}/usr/share/pixmaps/${pkgname}.png"
+  install -Dm644 "${srcdir}/${pkgname}.desktop" "${pkgdir}/usr/share/applications/${pkgname}.desktop"
+}

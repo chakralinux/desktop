@@ -1,0 +1,28 @@
+# Maintainer: UtG  <utg[dot]chakra.linux[at]gmail[dot]com>
+# Contributor: Andrei Nistor <coder[dot]tux[at]chakra-project[dot]org>
+
+pkgname=quazip
+pkgver=0.7.1
+pkgrel=1
+pkgdesc="C++ wrapper for the Gilles Vollant's ZIP/UNZIP C package"
+url="http://sourceforge.net/projects/quazip/"
+license=('LGPL')
+arch=('x86_64')
+depends=('qt')
+source=("http://downloads.sourceforge.net/$pkgname/$pkgname-$pkgver.tar.gz")
+md5sums=('3b99effb2a9417707d463e6f19cf2629')
+
+build() {
+  cd $pkgname-$pkgver/$pkgname
+  qmake PREFIX=/usr
+  make
+}
+
+package() {
+  cd $pkgname-$pkgver/$pkgname
+  make INSTALL_ROOT=$pkgdir install
+
+  install -d $pkgdir/usr/share/apps/cmake-3.0/Modules
+  install -m644 ../FindQuaZip.cmake\
+    $pkgdir/usr/share/apps/cmake-3.0/Modules
+}

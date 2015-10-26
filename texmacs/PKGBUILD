@@ -1,0 +1,71 @@
+pkgname=texmacs
+pkgver=1.99.2
+pkgrel=1
+pkgdesc="WYSIWYG Qt4 editor and graphical frontend to various CASes"
+arch=('x86_64')
+url='http://texmacs.org/'
+screenshot="http://www.texmacs.org/tmweb/images/texmacs-1.png"
+license=('GPL3')
+depends=('qt' 'texlive-core' 'guile1.8' 'cairo' 'freetype2' 'imlib2'
+         'perl' 'python2' 'libxext'
+         'desktop-file-utils' 'shared-mime-info')
+makedepends=('ghostscript')
+optdepends=('gawk: conversion of some files'
+            'transfig: convert images using fig2ps')
+provides=('texmacs')
+conflicts=('texmacs-qt')
+install=${pkgname}.install
+options=('!emptydirs')
+source=("http://www.texmacs.org/Download/ftp/tmftp/source/TeXmacs-$pkgver-src.tar.gz")
+sha512sums=('e9d2dd0aab2e66470c4ae860e13b6fad2cc07913f14f7bca042c703d4d8b4a62fafafa711b81a0d8f8c125a3641b8bb5f38cd3adac74ec18895671423aa60be9')
+
+prepare() {
+  cd "${srcdir}/TeXmacs-${pkgver}-src"
+  sed -i 's/env python/env python2/' \
+    plugins/{mathematica/bin/realpath.py,python/bin/tm_python,sage/bin/tm_sage} \
+    TeXmacs/misc/inkscape_extension/texmacs_reedit.py
+  sed -i 's/"python"/"python2"/' plugins/python/progs/init-python.scm
+  sed -i '/^LDPATH/d' src/makefile.in
+  sed -i -e 's/guile /guile1.8 /g' \
+         -e 's/guile-config/guile-config1.8/g' \
+         configure
+
+ # Don't generate icon-cache and mime-database (namcap tells that they should not be in a package)
+  sed -i '/update-mime-database/d' Makefile.in
+  sed -i '/gtk-update-icon-cache/d' Makefile.in
+  sed -i '\/icons\/gnome 2>\/dev\/null/d' Makefile.in
+
+}
+
+build() {
+  cd "${srcdir}/TeXmacs-${pkgver}-src"
+  
+  export QMAKE=qmake
+  export MOC=moc
+  export UIC=uic
+  export LDFLAGS=-lz
+  ./configure \
+  	--prefix=/usr \
+	--enable-pdf-renderer \
+	--enable-optimize \
+	--with-freetype \
+	--with-imlib2 \
+	--enable-guile2=no \
+	--with-qt
+  make
+}
+
+package() {
+  cd "${srcdir}/TeXmacs-${pkgver}-src"
+  make DESTDIR=${pkgdir} install
+  
+  cp ${pkgdir}/usr/share/icons/gnome/scalable/apps/TeXmacs.svg \
+  ${pkgdir}/usr/share/pixmaps/texmacs.svg 
+  rm ${pkgdir}/usr/share/pixmaps/TeXmacs.xpm
+  sed -i s!Icon=TeXmacs!Icon=texmacs! \
+  ${pkgdir}/usr/share/applications/texmacs.desktop
+ 
+
+ # fix fig2ps script
+ sed -i 's|${prefix}|/usr|' "${pkgdir}/usr/bin/fig2ps"
+}

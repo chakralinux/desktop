@@ -1,0 +1,28 @@
+pkgname=cantata
+pkgver=1.5.2
+pkgrel=1
+pkgdesc="KDE client for MPD (Music Player Daemon)"
+arch=('x86_64')
+url="http://kde-apps.org/content/show.php/Cantata?content=147733"
+license=('GPL')
+screenshot='http://kde-apps.org/CONTENT/content-pre1/147733-1.png'
+makedepends=('cmake' 'automoc4' 'libbluray' 'mpg123' 'ffmpeg' 'libcddb')
+depends=('kdelibs' 'qjson' 'taglib' 'libmtp' 'taglib-extras')
+optdepends=('ffmpeg: ReplayGain detection'
+'mpg123: ReplayGain detection'
+'perl-uri: Dynamic playlist support'
+'cdparanoia: Read/rip Audio CDs')
+source=("https://drive.google.com/uc?export=download&id=0Bzghs6gQWi60LV9rM3RMQk85Z1E")
+sha1sums=('dd6f403746c0e0b2be66883b6c0990622399b02b')
+
+build() {
+ cd $pkgname-$pkgver
+ mkdir -p build && cd build
+ cmake -DCMAKE_INSTALL_PREFIX=/usr .. -DENABLE_HTTP_STREAM_PLAYBACK=ON -DENABLE_REMOTE_DEVICES=ON -DENABLE_KDE=On
+ make
+ }
+
+package() {
+ cd $pkgname-$pkgver/build
+ make DESTDIR=$pkgdir install
+ }

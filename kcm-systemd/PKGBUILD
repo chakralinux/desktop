@@ -1,0 +1,30 @@
+pkgname=kcm-systemd
+_pkgname=systemd-kcm
+pkgver=1.2.1
+pkgrel=1
+pkgdesc="Systemd control module for KDE"
+arch=('x86_64')
+url='https://github.com/rthomsen/kcmsystemd'
+screenshot="http://wstaw.org/m/2013/11/19/screen27.png"
+license=('GPL')
+depends=('kconfigwidgets' 'kservice' 'boost-libs' 'kde-cli-tools')
+makedepends=('extra-cmake-modules' 'python3' 'boost')
+optdepends=('kde-cli-tools: to edit unit files')
+source=("http://download.kde.org/stable/${_pkgname}/${_pkgname}-${pkgver}.tar.xz")
+sha256sums=('51960f4d3b4a1ceae28737c172c35aec8c1f4e534327fbc6dda76f1c17341389')
+ 
+build() {
+  mkdir -p build && cd build
+  cmake ../$_pkgname-$pkgver \
+   -DCMAKE_INSTALL_PREFIX=/usr \
+   -DCMAKE_BUILD_TYPE=Release \
+   -DCMAKE_INSTALL_LIBDIR=lib \
+   -DKDE_INSTALL_USE_QT_SYS_PATHS=ON
+  make
+}
+
+package() {
+  cd build
+  make DESTDIR="$pkgdir" install
+}
+ 

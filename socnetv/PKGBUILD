@@ -1,0 +1,31 @@
+pkgname=socnetv
+pkgver=1.9
+pkgrel=1
+pkgdesc="Social Networks Analysis and Visualisation"
+arch=('x86_64')
+url="http://socnetv.sourceforge.net/"
+license=('GPL3')
+depends=('qt5-base')
+source=(http://downloads.sourceforge.net/socnetv/SocNetV-$pkgver.tar.gz)
+sha512sums=('97750ca139d4eb72ade66109e4116567735354870ef46107af51d3ca6419c6ee69fb7781421de1a224253ed17307cc9fbe9df2d7e619624fbf076e3d60a96473')
+
+build() {
+  cd "${srcdir}/$pkgname-$pkgver"
+	qmake-qt5
+	make
+}
+
+package() {
+	cd "${srcdir}/$pkgname-$pkgver"
+
+	install -d "$pkgdir/usr/share/doc/socnetv/"
+	install -d "$pkgdir/usr/share/socnetv/"
+	install -D socnetv "$pkgdir/usr/bin/socnetv"
+	install -D socnetv.desktop "$pkgdir/usr/share/applications/socnetv.desktop"
+	install -D "src/images/socnetv.png" "$pkgdir/usr/share/pixmaps/socnetv.png"
+	install -D "man/socnetv.1.gz" "$pkgdir/usr/share/man/man1/socnetv.1.gz"
+
+	cp -r translations/ "$pkgdir/usr/share/socnetv/"
+	cp -r manual/ "$pkgdir/usr/share/doc/socnetv/"
+}
+

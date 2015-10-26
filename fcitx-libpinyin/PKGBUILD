@@ -1,0 +1,27 @@
+pkgname=fcitx-libpinyin
+pkgver=0.3.2
+pkgrel=2
+pkgdesc="Fcitx Wrapper for libpinyin."
+arch=('x86_64')
+url="https://fcitx-im.org/wiki/Fcitx"
+license=('GPL')
+depends=('fcitx>=4.2.8' 'libpinyin>=0.9.92' 'qt' 'qtwebkit')
+makedepends=('cmake')
+source=("http://download.fcitx-im.org/${pkgname}/${pkgname}-${pkgver}.tar.xz")
+sha512sums=('523927788735f15ad7c4d997f029e26b40f0ff761c8161566497fb5cf84ddc0c1ad3edaaa470baa762cc5445384f2d9f1af32c2eaabc28311b92e1dab28a7e53')
+
+build(){
+    cd "$srcdir/${pkgname}-${pkgver}"
+    rm -rf build
+    mkdir build
+    cd build
+    
+    cmake -DCMAKE_INSTALL_PREFIX=/usr -DCMAKE_BUILD_TYPE=Release ..
+    make
+}
+
+package ()
+{
+    cd "$srcdir/${pkgname}-${pkgver}/build"
+    make DESTDIR=${pkgdir} install
+}

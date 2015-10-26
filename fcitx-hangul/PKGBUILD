@@ -1,0 +1,36 @@
+#
+# Apps Packages for Chakra, part of chakra-project.org
+#
+# Maintainer: Neo Kolokotronis <tetris4@gmail.com>
+# Contributor: csslayer <wengxt AT gmail com>
+
+# include global config
+source ../_buildscripts/${current_repo}-${_arch}-cfg.conf
+
+pkgname=fcitx-hangul
+pkgver=0.3.0
+pkgrel=2
+pkgdesc="Fcitx Wrapper for Hangul."
+arch=('i686' 'x86_64')
+url="http://code.google.com/p/fcitx"
+license=('GPL')
+depends=('fcitx>=4.2.7' 'libhangul')
+makedepends=('cmake')
+source=(http://download.fcitx-im.org/${pkgname}/${pkgname}-${pkgver}.tar.xz)
+
+build(){
+    cd "$srcdir/${pkgname}-${pkgver}"
+    rm -rf build
+    mkdir build
+    cd build
+    
+    cmake -DCMAKE_INSTALL_PREFIX=/usr -DCMAKE_BUILD_TYPE=Release ..
+    make
+}
+
+package ()
+{
+    cd "$srcdir/${pkgname}-${pkgver}/build"
+    make DESTDIR=${pkgdir} install
+}
+md5sums=('9405521000303c64861df2e49ae2d7c5')

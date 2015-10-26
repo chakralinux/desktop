@@ -1,0 +1,28 @@
+# Maintainer: Weng Xuetian <wengxt AT gmail com>
+
+pkgname=fcitx-table-other
+pkgver=0.2.3
+pkgrel=1
+pkgdesc="Extra non-chinese table data for fcitx"
+arch=('i686' 'x86_64')
+url="http://code.google.com/p/fcitx"
+license=('GPL')
+depends=('fcitx-table>=4.2.7')
+makedepends=('cmake')
+source=(http://download.fcitx-im.org/${pkgname}/${pkgname}-${pkgver}.tar.xz)
+
+build(){
+    cd "$srcdir/${pkgname}-${pkgver}"
+    [[ -d build ]] && rm -rf build ; mkdir build
+    cd build
+    
+    cmake -DCMAKE_INSTALL_PREFIX=/usr -DCMAKE_BUILD_TYPE=Release ..
+    make
+}
+
+package ()
+{
+    cd "$srcdir/${pkgname}-${pkgver}/build"
+    make DESTDIR=${pkgdir} install
+}
+md5sums=('dcd8d64a5411421dc0df94317ba355e8')

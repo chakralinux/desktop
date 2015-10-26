@@ -1,0 +1,27 @@
+# contributor (x86_64): Giuseppe Calà <jiveaxe@gmail.com>
+
+pkgname=cppunit
+pkgver=1.13.2
+pkgrel=1
+pkgdesc="A C++ unit testing framework"
+arch=('x86_64')
+url="http://www.freedesktop.org/wiki/Software/cppunit"
+license=('LGPL')
+depends=('sh' 'gcc-libs')
+makedepends=('gcc')
+options=('!libtool')
+source=("http://dev-www.libreoffice.org/src/${pkgname}-${pkgver}.tar.gz")
+md5sums=('d1c6bdd5a76c66d2c38331e2d287bc01')
+
+build() {
+  cd ${srcdir}/$pkgname-$pkgver
+  autoreconf
+  libtoolize -f
+  ./configure --prefix=/usr
+  make
+}
+
+package() {
+  cd ${srcdir}/$pkgname-$pkgver
+  make DESTDIR=${pkgdir} install
+}

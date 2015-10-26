@@ -1,0 +1,49 @@
+# Maintainer : Samir Benmendil <samir.benmendil@gmail.com>
+# Contributor: Ionut Biru <ibiru@archlinux.org>
+# Contributor: Sergej Pupykin <pupykin.s+arch@gmail.com>
+
+pkgbase=pyopenssl
+pkgname=('python3-pyopenssl' 'python2-pyopenssl')
+pkgver=0.15.1
+pkgrel=1
+arch=('x86_64')
+url="http://pypi.python.org/pypi/pyOpenSSL"
+license=('LGPL2.1')
+makedepends=('python3-setuptools' 'python2-setuptools' 'openssl' 'python3-six' 'python2-six' 'python3-cryptography' 'python2-cryptography')
+source=(http://pypi.python.org/packages/source/p/pyOpenSSL/pyOpenSSL-${pkgver}.tar.gz)
+md5sums=('f447644afcbd5f0a1f47350fec63a4c6')
+
+build() {
+  cd "${srcdir}"
+  cp -a "pyOpenSSL-${pkgver}"{,-python2}
+
+  #build python 3 module
+  cd "pyOpenSSL-${pkgver}"
+  python3 setup.py build
+
+  #build python 2 module
+  cd ../"pyOpenSSL-${pkgver}-python2"
+  python2 setup.py build
+}
+
+package_python3-pyopenssl(){
+  pkgdesc="Python3 wrapper module around the OpenSSL library"
+  depends=('python3>=3.4' 'openssl' 'python3-six' 'python3-cryptography')
+  replaces=('pyopenssl' 'python3-openssl')
+  provides=('pyopenssl' 'python3-openssl')
+  conflicts=('pyopenssl' 'python3-openssl')
+
+  cd "${srcdir}/pyOpenSSL-${pkgver}"
+  python3 setup.py install --root "${pkgdir}" --optimize=1
+}
+
+package_python2-pyopenssl(){
+  pkgdesc="Python2 wrapper module around the OpenSSL library"
+  depends=('python2>=2.7' 'openssl' 'python2-six' 'python2-cryptography')
+  replaces=('python2-openssl')
+  provides=('python2-openssl')
+  conflicts=('python2-openssl')
+
+  cd "${srcdir}/pyOpenSSL-${pkgver}-python2"
+  python2 setup.py install --root "${pkgdir}" --optimize=1
+}

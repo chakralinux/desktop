@@ -1,0 +1,13 @@
+[Unit]
+Description=Mumble Daemon
+After=network.target
+
+[Service]
+Type=forking
+PIDFile=/run/murmur/murmur.pid
+EnvironmentFile=/etc/conf.d/murmur
+ExecStart=/usr/sbin/murmurd $PARAMS
+Restart=always
+
+[Install]
+WantedBy=multi-user.target

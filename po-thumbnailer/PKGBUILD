@@ -1,0 +1,33 @@
+#
+# Apps Packages for Chakra, part of chakra-project.org
+#
+# Maintainer: Adrián Chaves Fernández (Gallaecio) <adriyetichaves gmail.com>
+
+pkgname=po-thumbnailer
+_pkgname=kde-thumbnailer-po
+pkgver=2.0
+pkgrel=1
+pkgdesc="Preview image generator plugin for GNU Gettext translation and template files."
+arch=('i686' 'x86_64')
+url="http://kde-apps.org/content/show.php?content=142036"
+license=('GPL3')
+depends=('kdebase-workspace' 'gettext')
+makedepends=('automoc4' 'cmake')
+categories=('accessories')
+source=("http://kde-apps.org/CONTENT/content-files/142036-$_pkgname-$pkgver.tar.bz2")
+md5sums=('e03862003730068d40f3a54b86ae8986')
+
+build() {
+  cd $srcdir/$_pkgname
+  mkdir build && cd build
+  cmake \
+    -DCMAKE_INSTALL_PREFIX=/usr \
+    -DCMAKE_BUILD_TYPE=RelWithDebInfo \
+    ..
+  make
+}
+ 
+package() {
+  cd $srcdir/$_pkgname/build
+  make DESTDIR=$pkgdir install
+}

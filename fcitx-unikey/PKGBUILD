@@ -1,0 +1,29 @@
+# Maintainer: Weng Xuetian <wengxt@gmail.com>
+
+pkgname=fcitx-unikey
+pkgver=0.2.4
+pkgrel=1
+pkgdesc="Fcitx Wrapper for Unikey (Vietnamese)."
+arch=('i686' 'x86_64')
+url="https://fcitx-im.org/wiki/Fcitx"
+license=('GPL')
+depends=('fcitx>=4.2.7' 'qt')
+makedepends=('cmake')
+source=(http://download.fcitx-im.org/${pkgname}/${pkgname}-${pkgver}.tar.xz)
+
+build(){
+    cd "$srcdir/${pkgname}-${pkgver}"
+    [[ -d build ]] && rm -rf build ; mkdir build
+    cd build
+    
+    cmake -DCMAKE_INSTALL_PREFIX=/usr -DCMAKE_BUILD_TYPE=Release ..
+    make
+}
+
+package ()
+{
+    cd "$srcdir/${pkgname}-${pkgver}/build"
+    make DESTDIR=${pkgdir} install
+}
+
+md5sums=('26509b3b99372e01421f4cb8d1080054')

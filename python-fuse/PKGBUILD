@@ -1,0 +1,21 @@
+# 
+# Part of chakra-project.org
+#
+# Maintainer: FranzMari <franzmari[at]chakra-project[dot]it>
+ 
+pkgname=python-fuse
+pkgver=0.2.1
+pkgrel=3
+arch=('x86_64')
+pkgdesc="Python2 bindings for FUSE"
+url="http://fuse.sourceforge.net/wiki/index.php/FusePython"
+license=('LGPL')
+depends=('fuse' 'python2')
+makedepends=('pkgconfig')
+source=(http://downloads.sourceforge.net/sourceforge/fuse/fuse-python-${pkgver}.tar.gz)
+md5sums=('9d9c5c2311ac04291ce822dfece108f8')
+ 
+package() {
+  cd "$srcdir/fuse-python-$pkgver"
+  python2 setup.py install --prefix=/usr --root="$pkgdir" --optimize=1
+}

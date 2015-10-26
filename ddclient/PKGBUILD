@@ -1,0 +1,34 @@
+pkgname=ddclient
+pkgver=3.8.3
+pkgrel=1
+pkgdesc="Update dynamic DNS entries for accounts on many dynamic DNS services."
+arch=('x86_64')
+url="http://ddclient.sourceforge.net/"
+license=('GPL2')
+depends=('perl' 'perl-io-socket-ssl')
+categories=('network')
+backup=('etc/ddclient/ddclient.conf' 'etc/conf.d/ddclient')
+install=ddclient.install
+source=("http://downloads.sourceforge.net/sourceforge/$pkgname/$pkgname-$pkgver.tar.bz2" 
+	"ddclient.service" 
+	"ddclient.conf.d")
+sha512sums=('5f2546687faf82a44c1addf058ef23bd29efba163c7fc1e9660f236aa092e9e51d301320cfdb72b78f2e65860386c30d85773d791f7c298d4ce42ba7dcdb4d2d'
+         '2666995eed6ac14e4b266214bbcb67586843e180bdbdc9aa80c2ae92132e38072014b4618e45077db5a5b15c0dc260452bb6e7118fb347d0d044a596e3885bc0'
+         'e28d3738b66e1edb9dd4ea46021af20528103fe4d6498f668773d2501f3f5614828cad06173bfb7ad350f030e0cf3cf0914a00bf8b6087b077d621f42ea3cab7')
+
+package() {
+  cd ${srcdir}/ddclient-${pkgver}
+
+  # core files
+  install -D -m755 ddclient ${pkgdir}/usr/sbin/ddclient
+  install -D -m755 ${srcdir}/ddclient.service ${pkgdir}/usr/lib/systemd/system/ddclient.service
+  install -D -m600 sample-etc_ddclient.conf ${pkgdir}/etc/ddclient/ddclient.conf
+  install -D -m644 ${srcdir}/ddclient.conf.d ${pkgdir}/etc/conf.d/ddclient
+  install -d ${pkgdir}/var/cache/ddclient
+
+  # additional instructions, sample configs
+  install -D -m644 README.md ${pkgdir}/etc/ddclient/samples/README.md
+  install -D -m644 sample-etc_cron.d_ddclient ${pkgdir}/etc/ddclient/samples/sample-etc_cron.d_ddclient
+  install -D -m644 sample-etc_dhcpc_dhcpcd-eth0.exe ${pkgdir}/etc/ddclient/samples/sample-etc_dhcpc_dhcpcd-eth0.exe
+  install -D -m644 sample-etc_ppp_ip-up.local ${pkgdir}/etc/ddclient/samples/sample-etc_ppp_ip-up.local
+}

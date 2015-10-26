@@ -1,0 +1,28 @@
+#
+# Apps Packages for Chakra, part of chakra-project.org
+#
+# Maintainer: Fabian Kosmale <0inkane@googlemail.com>
+# Contributions from Arch:https://aur.archlinux.org/packages/libspatialite/
+
+pkgname=libspatialite
+pkgver=4.2.0
+pkgrel=1
+pkgdesc="SQLite extension to support spatial data types and operations"
+arch=('x86_64')
+url="https://www.gaia-gis.it/fossil/libspatialite/index"
+license=('MPL')
+depends=('geos' 'proj' 'sqlite3' 'freexl')
+options=('!libtool')
+source=("http://www.gaia-gis.it/gaia-sins/$pkgname-$pkgver.tar.gz")
+md5sums=('83305ed694a77152120d1f74c5151779')
+
+build() {
+    cd "$srcdir/$pkgname-$pkgver"
+    ./configure --prefix=/usr --enable-geosadvanced
+    make
+}
+
+package() {
+    cd "$srcdir/$pkgname-$pkgver"
+    make DESTDIR="$pkgdir/" install
+}

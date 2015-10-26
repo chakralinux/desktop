@@ -1,0 +1,24 @@
+# Maintainer: UtG <utg[dot]chakra.linux[at]gmail[dot]com>
+# Contributor from CCR: Gui||aume <michaudg@gmail.com>
+
+pkgname=man2html
+pkgver=3.0.1
+pkgrel=1
+pkgdesc="A Unix manpage-to-HTML converter"
+arch=('x86_64')
+#url="http://www.oac.uci.edu/indiv/ehood/man2html.html"
+url="http://dcssrv1.oit.uci.edu/indiv/ehood/man2html.html"
+license=('GPL')
+depends=('man-db' 'perl')
+# source=(http://www.oac.uci.edu/indiv/ehood/tar/$pkgname$pkgver.tar.gz)
+source=("http://dcssrv1.oit.uci.edu/indiv/ehood/tar/$pkgname$pkgver.tar.gz")
+md5sums=('1c0d28c83225d0ebc845f2386c8f8384')
+
+package() {
+  cd ${srcdir}/${pkgname}${pkgver}
+  install -d ${pkgdir}/usr/bin ${pkgdir}/usr/share/man/man1 
+  perl install.me -batch -binpath ${pkgdir}/usr/bin -manpath ${pkgdir}/usr/share/man
+  
+  sed -i "s:/usr/local:/usr:" man.cgi
+  install -m755 man.cgi ${pkgdir}/usr/bin/
+}

@@ -1,0 +1,47 @@
+pkgname=sigil
+_pkgname=Sigil
+pkgver=0.8.7
+pkgrel=1
+pkgdesc="A multi-platform WYSIWYG ebook editor. It is designed to edit books in ePub format."
+arch=('x86_64')
+url="http://sigil-ebook.com/"
+license=('GPL3')
+depends=('qt5-webkit' 'boost-libs' 'hicolor-icon-theme')
+makedepends=('qt5-tools' 'qt5-svg' 'cmake' 'boost' 'qt5-multimedia')
+categories=('office')
+install=sigil.install
+screenshot=('http://1.bp.blogspot.com/-K2Q-tdVbPRI/UI08v7LhzHI/AAAAAAAAABY/vZ5LHjM6nb4/s1600/Screen+Shot+2012-10-28+at+10.07.03+AM.png')
+source=("https://github.com/user-none/Sigil/releases/download/${pkgver}/${_pkgname}-${pkgver}-Code.zip")
+sha512sums=('a7068c0abcb21b827b5990ed55e72739d347dd294b4042ae3fb075bf5ca5fa27ce7e18a45ae028ae6c21d6a7cd842e3b9a660214130080690efb84f22e3f82b8')
+
+
+build() {
+  cd "${srcdir}/Sigil-${pkgver}"
+
+  mkdir -p build 
+  cd build
+
+  cmake -G "Unix Makefiles" \
+    -DCMAKE_INSTALL_PREFIX=/usr \
+    -DCMAKE_C_FLAGS:STRING="$CFLAGS" \
+    -DCMAKE_CXX_FLAGS:STRING="$CXXFLAGS" \
+    -DCMAKE_BUILD_TYPE=Release \
+    -DCMAKE_SKIP_RPATH=ON ..
+  make
+}
+
+package() {
+  cd "${srcdir}/Sigil-${pkgver}/build"
+  
+  make DESTDIR=$pkgdir install
+  
+  install -Dm0644 $srcdir/${_pkgname}-${pkgver}/src/$_pkgname/Resource_Files/freedesktop/$pkgname.desktop \
+  $pkgdir/usr/share/applications/$pkgname.desktop
+  
+  for _pic in 16 32 48 128 256; do
+    install -Dm0644 ../src/Sigil/Resource_Files/icon/app_icon_$_pic.png \
+      $pkgdir/usr/share/icons/hicolor/${_pic}x${_pic}/apps/$pkgname.png
+  done
+   install -Dm644 ../src/Sigil/Resource_Files/icon/app_icon_512.png \
+       "$pkgdir/usr/share/pixmaps/$pkgname.png"
+}

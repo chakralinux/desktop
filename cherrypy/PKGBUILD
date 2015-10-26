@@ -1,0 +1,68 @@
+pkgbase=cherrypy
+pkgname=('python2-cherrypy' 'python3-cherrypy')
+pkgver=3.8.0
+pkgrel=1
+pkgdesc="A pythonic, object-oriented web development framework"
+arch=('x86_64')
+makedepends=('python2' 'python3')
+url="http://www.cherrypy.org"
+license=('BSD')
+categories=('programming')
+source=("https://pypi.python.org/packages/source/C/CherryPy/CherryPy-${pkgver}.tar.gz")
+sha512sums=('25f84093e30d814c0980f7d77b98492113470c3297c66ee8652e40650757f8e2b7db01bb8de6d7a1ea9b4bed8b764502b1f563ac6f0d082970bc2d46739d19c2')
+
+build() {
+  cp -r CherryPy-${pkgver} build2
+  cp -r CherryPy-${pkgver} build3
+
+  cd build2
+  sed \
+    -e 's_#! /usr/bin/env python_&3_' \
+    -i cherrypy/cherryd
+  sed \
+    -e 's_#!/usr/bin/python_&3_' \
+    -i cherrypy/test/sessiondemo.py
+  python3 ./setup.py build
+
+  cd "${srcdir}/build3"
+  sed \
+    -e 's_#! /usr/bin/env python_&2_' \
+    -i cherrypy/cherryd
+  sed \
+    -e 's_#!/usr/bin/python_&2_' \
+    -i cherrypy/test/sessiondemo.py
+  python2 ./setup.py build
+
+}
+
+
+package_python3-cherrypy() {
+  depends=('python3')
+  
+  cd $srcdir/build3
+  
+  python3 ./setup.py install --root="${pkgdir}" --optimize=1
+  mv $pkgdir/usr/bin/cherryd $pkgdir/usr/bin/cherryd-python3
+
+  install -Dm644 cherrypy/LICENSE.txt \
+    "${pkgdir}/usr/share/licenses/${pkgname}/LICENSE.txt"
+}
+
+package_python2-cherrypy() {
+depends=('python2')
+provides=('cherrypy')
+conflicts=('cherrypy')
+replaces=('cherrypy')
+  cd $srcdir/build2
+  python2 ./setup.py install --root="${pkgdir}" --optimize=1
+  install -Dm644 cherrypy/LICENSE.txt \
+    "${pkgdir}/usr/share/licenses/${pkgname}/LICENSE.txt"
+}
+
+check() {
+  cd build2
+  python2 ./setup.py check
+
+  cd ../build3
+  python3 ./setup.py check
+}

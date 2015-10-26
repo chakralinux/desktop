@@ -1,0 +1,29 @@
+# Maintainer: Neo Kolokotronis <tetris4@gmail.com>
+# Contributor: poplarch <poplarch@gmail.com>
+
+pkgname=fcitx-cloudpinyin
+pkgver=0.3.4
+pkgrel=1
+pkgdesc="This is a standalone module for fcitx, it can use pinyin API on the internet to input."
+arch=('i686' 'x86_64')
+url="https://github.com/fcitx/fcitx-cloudpinyin"
+license=('GPL')
+depends=('fcitx')
+makedepends=('cmake' 'fcitx-pinyin')
+source=(http://download.fcitx-im.org/${pkgname}/${pkgname}-${pkgver}.tar.xz)
+
+build(){
+    cd "$srcdir/${pkgname}-${pkgver}"
+    [[ -d build ]] && rm -rf build ; mkdir build
+    cd build
+    cmake -DCMAKE_INSTALL_PREFIX=/usr -DCMAKE_BUILD_TYPE=Release ..
+    make
+}
+
+package ()
+{
+    cd "$srcdir/${pkgname}-${pkgver}/build"
+    make DESTDIR=${pkgdir} install
+}
+
+md5sums=('033a4d4afcf8f8fd0bcde345aecab3c0')

@@ -1,0 +1,35 @@
+pkgname=django
+_pkgname=Django
+pkgver=1.8.5
+_pkgver=1.8
+pkgrel=1
+pkgdesc="A high-level Python Web framework."
+arch=('x86_64')
+license=('BSD')
+url="http://www.djangoproject.com/"
+depends=('python2')
+makedepends=('python-distribute')
+optdepends=('mysql-python: for MySQL backend'
+            'python2-psycopg2: for PostgreSQL backend')
+source=("https://www.djangoproject.com/m/releases/$_pkgver/$_pkgname-$pkgver.tar.gz")
+sha512sums=('91a8788ec6a9f3592615da55948d080719425a2135e241e7b5014c6b9c354daa53c2caeadd9ac3d991730c8ef8fba579a0aa4f3094a1e83b0600811e9a3bd20b')
+
+build() {
+  cd "$srcdir/$_pkgname-$pkgver"
+  python2 setup.py build
+}
+
+package() {
+  cd "$srcdir/$_pkgname-$pkgver"
+  python2 setup.py install --root="$pkgdir" --optimize=1
+
+  install -Dm644 extras/django_bash_completion \
+    "$pkgdir"/usr/share/bash-completion/completions/django-admin.py
+  ln -s django-admin.py \
+    "$pkgdir"/usr/share/bash-completion/completions/manage.py
+
+  find "$pkgdir"/usr/lib/python2.7/site-packages/django/ -name '*.py' | \
+    xargs sed -i "s|#!/usr/bin/env python$|#!/usr/bin/env python2|"
+
+  install -Dm644 LICENSE "$pkgdir"/usr/share/licenses/$pkgname/LICENSE
+}

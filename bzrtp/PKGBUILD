@@ -1,0 +1,24 @@
+# Arch contribution https://www.archlinux.org/packages/community/x86_64/bzrtp/
+
+pkgname=bzrtp
+pkgver=1.0.2
+pkgrel=1
+pkgdesc="Opensource implementation of ZRTP keys exchange protocol"
+arch=('x86_64')
+url="http://www.linphone.org/"
+license=('GPL2')
+depends=('libxml2' 'mbedtls')
+source=("http://download.savannah.gnu.org/releases/linphone/$pkgname/$pkgname-$pkgver.tar.gz")
+sha512sums=('f214f04aaa4a4ce400d4547ab009200fe59bcb49d010165e79e857ef37c43347b0fab7e1a92576fa7e0a3e8b14c70de58d80857a3259ec8ecdfcc49130c97e3d')
+
+build() {
+  cd ${pkgname}-${pkgver}
+
+  ./configure --prefix=/usr
+  make
+}
+
+package() {
+  cd ${pkgname}-${pkgver}
+  make DESTDIR="${pkgdir}" install
+}

@@ -1,0 +1,68 @@
+pkgname=mpv
+pkgver=0.11.0
+pkgrel=1
+pkgdesc="A movie player and encoder for linux, based on MPlayer/mplayer2"
+arch=('x86_64')
+license=('GPL')
+url="http://mpv.io"
+depends=('pulseaudio' 'ffmpeg' 'lcms2' 'libdvdread' 'libgl' 'libbs2b' 
+         'libxinerama' 'libxv' 'libxkbcommon' 'libva'  'libass' 
+	 'wayland' 'desktop-file-utils' 'hicolor-icon-theme' 
+         'xdg-utils' 'lua' 'libdvdnav' 'libcdio-paranoia' 'libbluray'
+         'enca' 'libguess' 'harfbuzz' 'graphite' 'libxrandr' 'rubberband')
+makedepends=('mesa' 'python3-docutils' 'ladspa' 'x264' 'jack'
+             'samba')
+options=('!emptydirs')
+install=${pkgname}.install
+source=("https://github.com/mpv-player/${pkgname}/archive/v${pkgver}.tar.gz")
+sha256sums=('a2157174e46db46dad5deb1fde94283e72ebe922fd15447cb16a2a243fae5bda')
+
+prepare() {
+  # point python to python3
+  sed -i 's|#!/usr/bin/env python|#!/usr/bin/env python3|' ${srcdir}/${pkgname}-${pkgver}/bootstrap.py
+  # initialize
+  cd ${pkgname}-${pkgver}
+  ./bootstrap.py
+  sed -i 's/vendor-completions/site-functions/' wscript_build.py
+
+  # waf looking for python2...
+  sed -i 's|#!/usr/bin/env python|#!/usr/bin/env python3|' ${srcdir}/${pkgname}-${pkgver}/waf
+}
+ 
+build() {
+  cd ${pkgname}-${pkgver}
+ 
+  # disable SDL, since they are just legacy drivers
+  ./waf configure \
+    --prefix=/usr \
+    --confdir=/etc/mpv \
+    --enable-libmpv-shared \
+    --enable-cdda \
+    --enable-zsh-comp \
+    --enable-pulse \
+    --disable-sdl2 \
+    --disable-sdl1 \
+    --enable-openal \
+    --enable-wayland \
+    --enable-gl-wayland \
+    --enable-egl-x11 \
+    --enable-libsmbclient \
+    --enable-dvdread
+  ./waf build
+}
+ 
+package() {
+  cd ${pkgname}-${pkgver}
+ 
+  ./waf install --destdir="${pkgdir}" 
+  
+  install -d "${pkgdir}/usr/share/doc/mpv/examples"
+ 
+  # some extra useful stuff "make install" doesn't install
+  install -m755 TOOLS/umpv \
+    "${pkgdir}"/usr/bin/umpv
+  install -m644 etc/{input,example}.conf \
+    "${pkgdir}"/usr/share/doc/mpv/examples
+  install -m644 DOCS/{encoding.rst,tech-overview.txt} \
+    "${pkgdir}"/usr/share/doc/mpv
+}

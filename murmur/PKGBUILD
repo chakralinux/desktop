@@ -1,0 +1,78 @@
+#
+# Core Packages for Chakra, part of chakra-project.org
+#
+# maintainer (i686): Phil Miller <philm[at]chakra-project[dog]org>
+# maintainer (x86_64): Manuel Tortosa <manutortosa[at]chakra-project[dot]org>
+
+pkgname=murmur
+pkgver=1.2.3
+pkgrel=1
+pkgdesc="The voice chat application server for Mumble"
+arch=('i686' 'x86_64')
+url="http://mumble.sourceforge.net"
+license=('GPL')
+depends=('avahi' 'lsb-release' 'protobuf' 'qt>=4.4.0' 'icu')
+makedepends=('boost')
+conflicts=('murmur-ice' 'murmur-static' 'murmur-git')
+categories=('communication')
+backup=("etc/murmur.ini"
+        "etc/logrotate.d/murmur"
+        "etc/conf.d/murmur")
+install="${pkgname}.install"
+source=("http://downloads.sourceforge.net/mumble/mumble-${pkgver}.tar.gz"
+    "murmur.rc.d"
+    "murmur.conf.d"
+    "murmur.dbus.conf"
+    "murmur.logrotate.d"
+    "murmur.service"
+    "murmur.tmpfiles.conf")
+sha256sums=('05895122ae4abec3fb62ef24ed9d167ffd768e7080ed179c8bf3afca96d18a5c'
+            '6278deb8376922f27b169a48f908846087edcda3c4a967002e5f64193d48d785'
+            '44b4d0e63cadff37d94043bca5e63cfef2a49d16862c7dee99efd377ce5c4fa9'
+            '472c5be5aaa6a954c5327e747a9cac75851595adff3fdb81e9abd620329d3bf5'
+            '56dc6bb5b7d199dfc444ba2e23a51687263a6244beaaa1e998024314698fd79f'
+            'f7b5e69f4baa1167ce1af54731d1c12193f937ab43c8f567e1bfd30009abd2a3'
+            'c33388d062d5b0fa8cc46d4c45c6484ee6485f771dc33fa05e22c0e0a0a9f147')
+
+build() {
+    cd "${srcdir}/mumble-${pkgver}"
+
+    qmake main.pro CONFIG+="no-client no-ice"
+    make release
+}
+
+package() {
+  cd "${srcdir}/mumble-${pkgver}"
+
+  sed -e "1i# vi:ft=cfg" \
+      -e "s|database=|database=/var/lib/murmur/murmur.sqlite|" \
+      -e "s|dbus=session|#dbus=system|" \
+      -e "s|#logfile=murmur.log|logfile=/var/log/murmur/murmur.log|" \
+      -e "s|#pidfile=|pidfile=/var/run/murmur/murmur.pid|" \
+      -e "s|#uname=|uname=murmur|" \
+      -i scripts/murmur.ini
+
+  # Create directories
+  install -dm755 "${pkgdir}/var/lib/murmur"
+  install -dm755 "${pkgdir}/var/log/murmur"
+  
+  # Install executable
+  install -Dm755 "release/murmurd" "${pkgdir}/usr/sbin/murmurd"
+  
+  # Install rc.d script
+  install -Dm755 "${srcdir}/murmur.rc.d" "${pkgdir}/etc/rc.d/murmur"
+
+  # Install Systemd units
+  install -Dm644 ${srcdir}/murmur.tmpfiles.conf ${pkgdir}/usr/lib/tmpfiles.d/murmur.conf
+  install -Dm644 ${srcdir}/murmur.service ${pkgdir}/usr/lib/systemd/system/murmur.service
+  
+  # Copy config files
+  install -Dm644 "scripts/murmur.ini" "${pkgdir}/etc/murmur.ini"
+  install -Dm644 "${srcdir}/murmur.conf.d" "${pkgdir}/etc/conf.d/murmur"
+  install -Dm644 "${srcdir}/murmur.dbus.conf" "${pkgdir}/etc/dbus-1/system.d/murmur.conf"
+  install -Dm644 "${srcdir}/murmur.logrotate.d" "${pkgdir}/etc/logrotate.d/murmur"
+
+  # Install Readme and man page
+  install -Dm644 README "${pkgdir}/usr/share/doc/murmur/README"
+  install -Dm644 man/murmurd.1 "${pkgdir}/usr/share/man/man1/murmurd.1"
+}

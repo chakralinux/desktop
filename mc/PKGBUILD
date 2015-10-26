@@ -1,0 +1,63 @@
+pkgname=mc
+pkgver=4.8.14
+pkgrel=1
+pkgdesc="Midnight Commander is a text based filemanager/shell that emulates Norton Commander"
+arch=('x86_64')
+url="http://www.ibiblio.org/mc/"
+license=('GPL')
+depends=('e2fsprogs' 'glib2' 'pcre' 'gpm>=1.20.4' 'slang')
+makedepends=('libxt' 'libx11')
+optdepends=(
+    'cabextract: ucab extfs'
+    'cdparanoia: audio extfs'
+    'cdrkit: iso9660 extfs'
+    'gawk: hp48+ extfs'
+    'aspell: spelling corrections'
+    'cvs: CVS support'
+    'mtools: a+ extfs'
+    'perl: needed by several extfs scripts'
+    'unarj: uarj extfs'
+    'unrar: urar extfs'
+    'zip: uzip extfs'
+    'p7zip: support for 7zip archives')
+screenshot=('http://ompldr.org/vOG9vNg')
+options=('!emptydirs' '!makeflags')
+backup=('etc/mc/edit.indent.rc'
+        'etc/mc/filehighlight.ini'
+        'etc/mc/mcedit.menu'
+        'etc/mc/mc.ext'
+        'etc/mc/mc.keymap'
+        'etc/mc/mc.menu'
+        'etc/mc/sfs.ini')
+source=("https://www.midnight-commander.org/downloads/${pkgname}-${pkgver}.tar.xz")
+sha256sums=('6b1f74efbdf394bfab084f4d2ea2e72173de5f12cd42be2533ca2c3b72edb8e6')
+
+build() {
+	cd ${srcdir}/${pkgname}-${pkgver}
+
+	./configure \
+	    --prefix=/usr --sysconfdir=/etc --mandir=/usr/share/man \
+	    --enable-background --enable-charset --enable-largefile \
+	    --with-edit --with-gpm-mouse --with-mmap --enable-vfs-smb \
+	    --with-screen=slang --with-subshell --with-vfs --with-x \
+	    --without-debug --without-gnome --without-included-gettext \
+	    --libexecdir=/usr/lib
+
+	make 
+}
+
+package() {
+	cd ${srcdir}/${pkgname}-${pkgver}
+
+	make DESTDIR=${pkgdir} install
+
+	# Fixes
+	sed -i 's|op_has_zipinfo = 0|op_has_zipinfo = 1|' \
+	    ${pkgdir}/usr/lib/mc/extfs.d/uzip
+
+	rm "${pkgdir}/usr/lib/mc/extfs.d/u7z"
+
+	sed 's#/usr/bin/env python#/usr/bin/python2#' \
+		-i "${pkgdir}/usr/lib/mc/extfs.d/s3+"
+}
+

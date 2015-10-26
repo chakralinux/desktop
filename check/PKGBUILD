@@ -1,0 +1,29 @@
+pkgname=check
+pkgver=0.10.0
+pkgrel=1
+pkgdesc="A unit testing framework for C"
+arch=('x86_64')
+url="http://check.sourceforge.net/"
+license=('LGPL')
+options=('!libtool')
+categories=('programming')
+install=$pkgname.install
+source=(http://downloads.sourceforge.net/sourceforge/$pkgname/$pkgname-$pkgver.tar.gz)
+sha512sums=('82103a98382c41cf16f172ded66c0399d3da6eceb6728aab11120c028e8796f6d545a98dc4aa5f76ee68c0bfd1f842a4dd371f5d670c8ba84ce4209812bf1ac5')
+
+build() {
+  cd ${srcdir}/$pkgname-$pkgver
+
+  ./configure --prefix=/usr --disable-static
+  make || return 1
+}
+
+package() {
+  cd ${srcdir}/$pkgname-$pkgver
+
+  make DESTDIR=${pkgdir} install
+
+  #get rid of the package's info directory, install-info adds entries for us at install-time
+  rm ${pkgdir}/usr/share/info/dir || return 1
+}
+

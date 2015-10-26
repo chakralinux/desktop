@@ -1,0 +1,29 @@
+# Maintainer: Neo Kolokotronis <tetris4@gmail.com>
+# Contributor: csslayer <wengxt AT gmail com>
+
+pkgname=fcitx-m17n
+pkgver=0.2.3
+pkgrel=1
+pkgdesc="Fcitx Wrapper for m17n."
+arch=('i686' 'x86_64')
+url="https://fcitx-im.org/wiki/Fcitx"
+license=('GPL')
+depends=('fcitx>=4.2.8' 'm17n-lib')
+makedepends=('cmake')
+source=(http://download.fcitx-im.org/${pkgname}/${pkgname}-${pkgver}.tar.xz)
+
+build(){
+    cd "$srcdir/${pkgname}-${pkgver}"
+    [[ -d build ]] && rm -rf build ; mkdir build
+    cd build
+    
+    cmake -DCMAKE_INSTALL_PREFIX=/usr -DCMAKE_BUILD_TYPE=Release ..
+    make
+}
+
+package () {
+    cd "$srcdir/${pkgname}-${pkgver}/build"
+    make DESTDIR=${pkgdir} install
+}
+
+md5sums=('d69323cf42620ce62ec0560028c6150c')

@@ -1,0 +1,43 @@
+pkgname=backintime
+pkgver=1.1.8
+pkgrel=1
+pkgdesc="A simple backup system for Linux inspired from 'flyback project' and 'TimeVault'."
+arch=('x86_64')
+url="https://launchpad.net/backintime"
+license="GPL"
+depends=('rsync' 'cron' 'python' 'xorg-utils' 'python3-pyqt4' 'python3-keyring' 'icu' 'polkit'
+	 'openssh' 'python3-dbus' 'libnotify')
+categories=('utils' 'backup')
+provides=('backintime-kde')
+conflicts=('backintime-kde')
+replaces=('backintime-kde')
+source=("https://launchpad.net/backintime/1.1/${pkgver}/+download/backintime-${pkgver}.tar.gz"
+	"${pkgname}.png")
+sha512sums=('550e270dcf341ec5ad952f4decd836007d19ff9bf60cada834dfb488dbf29954b6fd3ed80a4f8fb4406a0166895a7f7c922e5622d06c43086dd54073e5aabd99'
+	    '596dc61d734877baa1fcf8af1afd910581dbe4670517a74229f850b284eb135e11b7bb09963521379c3513e736d183258fc142f246cd74a680c759f0bfa4a382')
+
+build() {
+ 
+  cd "${srcdir}/${pkgname}-${pkgver}/common"
+  ./configure --python3 --no-fuse-group
+  make
+
+  cd "${srcdir}/${pkgname}-${pkgver}/qt4"
+  ./configure --python3
+  make
+}
+
+package(){
+  cd "${srcdir}/${pkgname}-${pkgver}/common"
+  make DESTDIR="${pkgdir}" install
+  
+  cd "${srcdir}/${pkgname}-${pkgver}/qt4"
+  make DESTDIR="${pkgdir}" install
+  
+  install -D ../../${pkgname}.png ${pkgdir}/usr/share/pixmaps/${pkgname}.png
+  
+  sed -i s!"Icon=document-save"!"Icon=backintime"! \
+  ${pkgdir}/usr/share/applications/${pkgname}-qt4-root.desktop
+  sed -i s!"Icon=document-save"!"Icon=backintime"! \
+  ${pkgdir}/usr/share/applications/${pkgname}-qt4.desktop
+}

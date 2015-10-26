@@ -1,0 +1,54 @@
+pkgname=yate
+pkgver=5.5.0
+subver=1
+pkgrel=1
+pkgdesc="Next-generation telephony engine, qt4 client for VoIP"
+arch=('x86_64')
+url="http://yate.null.ro"
+license=('GPL2')
+depends=('qt' 'speex' 'gsm' 'postgresql-libs' 'libmysqlclient' 'alsa-lib')
+makedepends=('pkg-config' 'desktop-file-utils')
+categories=('communication')
+options=(!makeflags)
+source=( #"http://yate.null.ro/tarballs/yate5/${pkgname}-${pkgver}-1.tar.gz"
+	"http://voip.null.ro/tarballs/yate5/${pkgname}-${pkgver}-${subver}.tar.gz"
+        "yate.service"
+        "yate.conf.d"
+        "yate.png")
+sha512sums=('8f19253ed140e53895c2df73eb961d0fc2cf2688ee59e9957ce9a1f7f32e4be85aff8221ecbcb7b4dda1560d52d14e3b252670f71a563310788e0d1e30c5f9bc'
+            '3dfa16e2baf496c3e82d5176c3b6da579796ead2d6a57fe682841aafd4a5a3c7e02d0f459dc7e9f96a933c626dc141606a4fa51f640fcd36a98812996c0bf8ec'
+            '24dcb9c54a27806e6c6c1f486f0b9aee4ee68acc05083165149dafa582ecf56c7e615680774ab053a160d18343dc724272dee263897abb6ca189f39d0f2ae3ed'
+            'ca6781f6088ab440c2ca9ce91f2b1e24e25e699465b49204f4f04d267ff75f6accb6030caa4272b2869e810ad1ccc3160a49904ac9285e65f877d9ff2f061fa5')
+
+build() {
+  cd "${srcdir}/${pkgname}"
+  
+  export LDFLAGS="${LDFLAGS//-Wl,--as-needed}"
+  ./configure --prefix=/usr \
+              --sysconfdir=/etc \
+              --with-libpq \
+              --with-mysql \
+              --without-openh323 
+
+  make
+}
+
+package() {
+  cd "${srcdir}/${pkgname}"
+  
+  make DESTDIR="${pkgdir}" install
+  install -D ../yate.png ${pkgdir}/usr/share/pixmaps/yate.png
+  
+  # Fix desktop file
+  desktop-file-edit --remove-key="Encoding" \
+                    --set-icon="null_team-48" \
+                    "${pkgdir}/usr/share/applications/yate-qt4.desktop"
+  
+  # Install system units
+  install -Dm0644 "${srcdir}/yate.service" "${pkgdir}/usr/lib/systemd/system/yate.service"
+  install -Dm0644 "${srcdir}/yate.conf.d" "${pkgdir}/etc/conf.d/yate"
+  
+  sed -i s!"null_team-48"!"yate"! \
+  ${pkgdir}/usr/share/applications/yate-qt4.desktop
+}
+

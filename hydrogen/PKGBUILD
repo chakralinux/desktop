@@ -1,0 +1,39 @@
+
+#
+# Apps Packages for Chakra, part of chakra-project.org
+#
+# Maintainer: Adrián Chaves Fernández (Gallaecio) <adriyetichaves@gmail.com>
+
+pkgname=hydrogen
+pkgver=0.9.6
+pkgrel=1
+pkgdesc="Advanced drum machine."
+arch=('x86_64')
+license=('GPL2')
+url="http://www.hydrogen-music.org/"
+depends=('alsa-lib' 'flac' 'lash' 'jack' 'libarchive' 'libsndfile' 'qt' 'tar' 'zlib' 'ladspa' 'pulseaudio')
+makedepends=('cmake')
+categories=('multimedia')
+source=(https://github.com/hydrogen-music/$pkgname/archive/$pkgver.tar.gz)
+md5sums=('e4424926a88af82fb2048b3548723827')
+
+build() {
+msg "Compiling..."
+  cd $srcdir/$pkgname-$pkgver
+  mkdir -p build/
+  cd build
+  cmake ../ \
+    -DCMAKE_BUILD_TYPE=Release \
+    -DCMAKE_INSTALL_PREFIX=/usr \
+    -DWANT_LASH=true \
+    -DWANT_LIBARCHIVE=true
+  make
+}
+
+package() {
+
+msg "Installing..."
+  cd $srcdir/$pkgname-$pkgver/build
+  make DESTDIR=$pkgdir install
+
+}

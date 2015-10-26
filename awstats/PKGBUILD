@@ -1,0 +1,60 @@
+pkgname=awstats
+pkgver=7.4
+pkgrel=1
+pkgdesc="Tool that generates web, streaming, ftp and mail server statistics, graphically"
+arch=('any')
+license=('GPL')
+url="http://awstats.sourceforge.net/"
+depends=('perl')
+optdepends=('mod_perl: if you are using Apache as your HTTP server' 'mod_cgi: if you are using lighttpd as your HTTP server')
+categories=('network')
+install="awstats.install"
+backup=('etc/awstats/awstats.model.conf' 'etc/httpd/conf/extra/httpd-awstats.conf')
+source=("http://downloads.sourceforge.net/${pkgname}/${pkgname}-${pkgver}.tar.gz" "cron.awstats")
+sha512sums=('5bce97c71aabeab35e4ff5e5168531e4955d7c1474322c7b4a47d1d06e06ebd0e74d1def73826498e6253f24aeca99309777617b7a914685c927bb6e1c020e1a'
+         '6fba798a4e6afe5a4dd2def9bf87999df511781851b1d7d630c3d55f8b4e8e5f7e1b99fa976442545daa99740ac64e20e76990898204463f6d56fbfb911c056e')
+
+package() {
+	_SYSCONFDIR='etc'
+	_WWWROOT='srv/http/awstats'
+	_INSTDIR="usr/share/${pkgname}"
+	_DOCDIR="usr/share/doc/${pkgname}-${pkgver}"
+
+	cd $srcdir/${pkgname}-${pkgver}
+
+	mkdir -p $pkgdir/${_INSTDIR}/tools/webmin/ || return 1
+	mkdir -p $pkgdir/${_INSTDIR}/tools/xslt/ || return 1
+	mkdir -p $pkgdir/${_WWWROOT}/ || return 1
+	mkdir -p $pkgdir/${_DOCDIR}/ || return 1
+	mkdir -p $pkgdir/var/lib/$pkgname || return 1
+
+	# Chakra specific path:
+	install -Dm644 tools/httpd_conf $pkgdir/${_SYSCONFDIR}/httpd/conf/extra/httpd-awstats.conf || return 1
+	install -Dm644 wwwroot/cgi-bin/awstats.model.conf $pkgdir/${_SYSCONFDIR}/awstats/awstats.model.conf || return 1
+	install -Dm744 $srcdir/cron.awstats $pkgdir/${_SYSCONFDIR}/cron.hourly/awstats || return 1
+
+	install -m 755 tools/logresolvemerge.pl $pkgdir/${_INSTDIR}/tools/logresolvemerge.pl || return 1
+	install -m 755 tools/maillogconvert.pl $pkgdir/${_INSTDIR}/tools/maillogconvert.pl || return 1
+	install -m 755 tools/urlaliasbuilder.pl $pkgdir/${_INSTDIR}/tools/urlaliasbuilder.pl || return 1
+	install -m 755 tools/awstats_buildstaticpages.pl $pkgdir/${_INSTDIR}/tools/awstats_buildstaticpages.pl || return 1
+	install -m 755 tools/awstats_configure.pl $pkgdir/${_INSTDIR}/tools/awstats_configure.pl || return 1
+	install -m 755 tools/awstats_exportlib.pl $pkgdir/${_INSTDIR}/tools/awstats_exportlib.pl || return 1
+	install -m 755 tools/awstats_updateall.pl $pkgdir/${_INSTDIR}/tools/awstats_updateall.pl || return 1
+	install -m 755 tools/webmin/* $pkgdir/${_INSTDIR}/tools/webmin || return 1
+	install -m 755 tools/xslt/* $pkgdir/${_INSTDIR}/tools/xslt || return 1
+
+	# install the documentation
+	cp -ra docs/* $pkgdir/${_DOCDIR}/ || return 1
+
+	# www files
+	cp -ra wwwroot/* $pkgdir/${_WWWROOT}/ || return 1
+	rm -f $pkgdir/${_WWWROOT}/cgi-bin/awstats.model.conf || return 1
+	install -Dm444 README.md $pkgdir/${_INSTDIR}/README.md || return 1
+
+	# fix the default http config
+	sed \
+	-e "s|/usr/local/awstats/wwwroot|/${_WWWROOT}|g" \
+	-i $pkgdir/${_SYSCONFDIR}/httpd/conf/extra/httpd-awstats.conf || return 1
+
+	echo "deny from all" > $pkgdir/${_WWWROOT}.htaccess
+}

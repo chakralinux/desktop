@@ -1,0 +1,24 @@
+# Maintainer: Neophytos Kolokotronis <tetris4 AT gmail DOT com>
+# Contributions from Arch: https://projects.archlinux.org/svntogit/packages.git/tree/trunk?h=packages/libquvi-scripts
+
+pkgname=libquvi-scripts
+pkgver=0.9.20131130
+pkgrel=1
+pkgdesc='Library for parsing video download links.'
+arch=('x86_64')
+url='http://quvi.sourceforge.net/'
+license=('AGPL3')
+depends=('lua-socket' 'lua-expat')
+source=("http://downloads.sourceforge.net/sourceforge/quvi/${pkgname}-${pkgver}.tar.xz")
+md5sums=('46ddfd887260a515199c2e1ba8c46d8a')
+
+build() {
+  cd "${pkgname}-${pkgver}"
+  ./configure --prefix=/usr --with-nsfw --with-geoblocked
+  make
+}
+
+package() {
+  cd "${pkgname}-${pkgver}"
+  make DESTDIR="${pkgdir}" install
+}
