@@ -1,0 +1,32 @@
+#
+# Games Packages for Chakra, part of chakra-project.org
+#
+# Maintainer: Adrián Chaves Fernández (Gallaecio) <adriyetichaves gmail.com>
+
+# include global config
+source ../_buildscripts/${current_repo}-${_arch}-cfg.conf
+
+pkgname=toluapp
+pkgver=1.0.93
+pkgrel=1
+pkgdesc="Tool to integrate C/C++ code with Lua."
+arch=('i686' 'x86_64')
+url="http://www.codenix.com/~tolua/"
+license=('MIT')
+depends=('lua')
+makedepends=('scons')
+changelog=ChangeLog
+source=(http://www.codenix.com/~tolua/tolua++-$pkgver.tar.bz2 config_linux.py)
+md5sums=('100aa6907b8108582080b37d79c0afd7'
+	 'f85232adfa873ea012088dd4d7fb63d7')
+
+build() {
+   cp $srcdir/config_linux.py $srcdir/tolua++-$pkgver
+   cd $srcdir/tolua++-$pkgver
+   scons all || return 1
+}
+
+package() {
+   cd $srcdir/tolua++-$pkgver
+   scons prefix=$pkgdir/usr install || return 1
+}

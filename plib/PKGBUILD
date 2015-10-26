@@ -1,0 +1,32 @@
+#
+# Games Packages for Chakra, part of chakra-project.org
+#
+# Maintainer: Adrián Chaves Fernández (Gallaecio) <adriyetichaves gmail.com>
+
+# include global config
+source ../_buildscripts/${current_repo}-${_arch}-cfg.conf
+
+pkgname=plib
+pkgver=1.8.5
+pkgrel=1
+pkgdesc="Set of libraries to write games and other realtime interactive applications."
+arch=('i686' 'x86_64')
+url="http://plib.sourceforge.net/"
+license=('LGPL')
+makedepends=('libxi' 'libxmu' 'mesa')
+changelog=ChangeLog
+source=(http://plib.sourceforge.net/dist/$pkgname-$pkgver.tar.gz)
+md5sums=('47a6fbf63668c1eed631024038b2ea90')
+
+build() {
+  cd $srcdir/$pkgname-$pkgver
+
+  [ "$CARCH" = "x86_64" ] && export CXXFLAGS="$CXXFLAGS -fPIC"
+  ./configure --prefix=/usr
+  make
+}
+
+package() {
+  cd $srcdir/$pkgname-$pkgver
+  make DESTDIR=$pkgdir install
+}

@@ -1,0 +1,30 @@
+From 2d29046f12180c00f66539a99b0328140d9fa711 Mon Sep 17 00:00:00 2001
+From: Sam Thursfield <sam.thursfield@codethink.co.uk>
+Date: Tue, 2 Dec 2014 15:37:10 +0000
+Subject: [PATCH] Fix Rakefile when RVM is not installed
+
+This fixes https://github.com/jimweirich/builder/issues/51
+---
+ rakelib/tags.rake | 9 +++++++--
+ 1 file changed, 7 insertions(+), 2 deletions(-)
+
+diff --git a/rakelib/tags.rake b/rakelib/tags.rake
+index 93b47df..b614a17 100644
+--- a/rakelib/tags.rake
++++ b/rakelib/tags.rake
+@@ -12,8 +12,13 @@ module Tags
+ 
+   PROJECT_DIR = ['.']
+ 
+-  RVM_GEMDIR = File.join(`rvm gemdir`.strip, "gems")
+-  SYSTEM_DIRS = File.exists?(RVM_GEMDIR) ? RVM_GEMDIR : []
++  RVM = `which rvm`
++  if File.exists?(RVM)
++    RVM_GEMDIR = File.join(`rvm gemdir`.strip, "gems")
++    SYSTEM_DIRS = File.exists?(RVM_GEMDIR) ? RVM_GEMDIR : []
++  else
++    SYSTEM_DIRS = []
++  end
+ 
+   module_function
+ 

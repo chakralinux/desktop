@@ -1,0 +1,41 @@
+pkgname=supertuxkart
+_pkgname=SuperTuxKart
+pkgver=0.9.1
+pkgrel=1
+pkgdesc="Kart racing game featuring Tux and friends."
+url="http://supertuxkart.sourceforge.net/"
+arch=('x86_64')
+license=('GPL3' 'GPL2' 'CCPL-by' 'CCPL-by-sa' 'custom:Public Domain')
+depends=('bzip2' 'curl' 'enet' 'fribidi' 'freeglut' 'libgl' 'libjpeg' 'libogg' 
+         'libpng' 'libvorbis' 'openal' 'wiiuse' 'bluez-libs' 'glu' 'xorg-xrandr')
+makedepends=('cmake' 'subversion' 'mesa' 'imagemagick' 'setconf' 'mesa-libgl')
+conflicts=('supertuxkart-svn')
+categories=('games')
+source=("http://downloads.sourceforge.net/project/${pkgname}/${_pkgname}/${pkgver}/${pkgname}-${pkgver}-src.tar.xz")
+md5sums=('5d87d943f2e746043aed87dc80004701')
+
+build() {
+  cd "${srcdir}/${pkgname}-${pkgver}"
+
+  mkdir -p build && cd build
+  cmake \
+    -DCMAKE_INSTALL_PREFIX=/usr \
+    -DIRRLICHT_DIR="$srcdir/irrlicht" \
+    -DCMAKE_BUILD_TYPE=Release \
+    -DCMAKE_CXX_FLAGS="-lpthread -lm -ldl $CXXFLAGS" \
+    -DUSE_WIIUSE=ON \
+    -DUSE_FRIBIDI=ON \
+    ..
+  make
+}
+
+package() {
+  cd "${srcdir}/${pkgname}-${pkgver}/build"
+  
+  make DESTDIR="${pkgdir}" install
+
+  # Licensing
+  install -d "${pkgdir}/usr/share/licenses/${pkgname}"
+  ln -s "${pkgdir}/usr/share/${pkgname}/data/CREDITS" "${pkgdir}/usr/share/licenses/${pkgname}/AUTHORS"
+  cp "${srcdir}/${pkgname}-$pkgver/COPYING" "${pkgdir}/usr/share/licenses/${pkgname}/LICENSE"
+}

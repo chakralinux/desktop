@@ -1,0 +1,35 @@
+#
+# Games Packages for Chakra, part of chakra-project.org
+#
+# Maintainer: Adrián Chaves Fernández (Gallaecio) <adriyetichaves gmail.com>
+
+pkgname=libxdg-basedir
+pkgver=1.1.1
+pkgrel=1
+pkgdesc="An implementation of the XDG Base Directory specifications."
+arch=('i686' 'x86_64')
+url="http://n.ethz.ch/student/nevillm/download/libxdg-basedir"
+license=('MIT')
+depends=('glibc')
+source=(http://n.ethz.ch/student/nevillm/download/${pkgname}/${pkgname}-${pkgver}.tar.gz)
+options=('!libtool')
+sha1sums=('133b2b66a6ea43560f4ac41d1235d3282e31da84')
+
+build() {
+   cd $srcdir/$pkgname-$pkgver
+
+   ./configure \
+    --prefix=/usr
+
+   make
+}
+
+package() {
+   cd $srcdir/$pkgname-$pkgver
+
+   make DESTDIR=$pkgdir install
+
+   # License.
+   install -Dm644 $srcdir/libxdg-basedir-1.1.1/COPYING $pkgdir/usr/share/licenses/$pkgname/COPYING
+}
+

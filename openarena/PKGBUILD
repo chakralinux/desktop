@@ -1,0 +1,88 @@
+#
+# Games Packages for Chakra, part of chakra-project.org
+#
+# Maintainer: Adrián Chaves Fernández (Gallaecio) <adriyetichaves gmail.com>
+
+pkgbase=openarena
+pkgname=(openarena openarena-data)
+pkgver=0.8.8
+pkgrel=3
+pkgdesc="A violent, sexy, multiplayer first person shooter based on the ioquake3 engine"
+arch=('i686' 'x86_64')
+url="http://openarena.ws/"
+screenshot="http://openarena.ws/e107_images/custom/085-3.jpg"
+license=('GPL2')
+makedepends=('curl' 'libvorbis' 'mesa' 'openal' 'sdl')
+categories=('games')
+source=(http://download.tuxfamily.org/$pkgbase/rel/081/oa081.zip
+        http://download.tuxfamily.org/$pkgbase/rel/085/oa085p.zip
+        http://178.63.102.135/svens_stuff/oa088p.zip
+        $url/svn/source/081/$pkgbase-engine-0.8.1-1.tar.bz2
+        $pkgbase.png::http://projects.archlinux.org/svntogit/community.git/plain/trunk/openarena.png?h=packages/openarena
+        $pkgbase-server.png::http://projects.archlinux.org/svntogit/community.git/plain/trunk/openarena-server.png?h=packages/openarena
+        $pkgbase.desktop::http://projects.archlinux.org/svntogit/community.git/plain/trunk/openarena.desktop?h=packages/openarena
+        $pkgbase-server.desktop::http://projects.archlinux.org/svntogit/community.git/plain/trunk/openarena-server.desktop?h=packages/openarena)
+md5sums=('49006bcb02b4e8ea3d06749e8f4e4887'
+         'b2a0437da751cd50dd2351ed9e0c4e9d'
+         '45da37955eba40cfd0e6e0f89cbb4b61'
+         '4ee696eacc4b0350f9dbb5588dcd74a2'
+         'c69f824dc500d436fc631b78b6a62dc8'
+         '17e2f4fa060ed97ff6fe1eaff647bcfb'
+         '229c87648c10e48b523c25d24aba8372'
+         '00649517a4dd08cd9c6e99d6703f01f1')
+build() {
+    cd $srcdir/$pkgbase-engine-0.8.1
+
+    # Fix arch.
+    _ARCH=$CARCH
+    if [[ $_ARCH = i686 ]]; then _ARCH=i386; fi
+
+    make ARCH=$_ARCH \
+        DEFAULT_BASEDIR=/usr/share/$pkgbase \
+        BUILD_CLIENT_SMP=0 \
+        USE_LOCAL_HEADERS=0 \
+        GENERATE_DEPENDENCIES=0 \
+        OPTIMIZE=
+}
+
+package_openarena() {
+    pkgrel=3
+    depends=('curl' 'libvorbis' 'openarena-data' 'sdl')
+    optdepends=('openal')
+
+    cd $srcdir/$pkgbase-engine-0.8.1
+
+    # Needed folders.
+    install -d $pkgdir/usr/{bin,share/{$pkgbase,applications,pixmaps}}
+
+    # Fix arch.
+    _ARCH=$CARCH
+    if [[ $_ARCH = i686 ]]; then _ARCH=i386; fi
+
+    make \
+      COPYDIR=$pkgdir/usr/share/$pkgbase \
+      ARCH=$_ARCH \
+      copyfiles
+
+    # Executables.
+    mv -f $pkgdir/usr/share/$pkgbase/$pkgbase.$_ARCH $pkgdir/usr/bin/$pkgbase
+    mv -f $pkgdir/usr/share/$pkgbase/oa_ded.$_ARCH $pkgdir/usr/bin/$pkgbase-server
+
+    find $pkgdir/usr/share -type f -exec chmod 644 {} +
+
+    # Desktop Integration.
+    install -m 644 $srcdir/$pkgbase{,-server}.png $pkgdir/usr/share/pixmaps/
+    install -m 644 $srcdir/$pkgbase{,-server}.desktop $pkgdir/usr/share/applications/
+}
+
+package_openarena-data() {
+    pkgrel=1
+    pkgdesc="Data files for Open Arena (openarena package)."
+    arch=(any)
+
+    # Data:
+    install -d $pkgdir/usr/share/$pkgbase/
+    cp -rf $srcdir/$pkgbase-0.8.1/{baseoa,missionpack}/ $pkgdir/usr/share/$pkgbase/
+    find $pkgdir/usr/share -type f -exec chmod 644 {} +
+}
+

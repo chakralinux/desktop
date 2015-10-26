@@ -1,0 +1,40 @@
+#
+# Games Packages for Chakra, part of chakra-project.org
+#
+# Maintainer: Adrián Chaves Fernández (Gallaecio) <adriyetichaves gmail.com>
+
+pkgname=deutex-dev
+_pkgname=deutex
+pkgver=4.4.902
+pkgrel=1
+pkgdesc="A WAD file composer for Doom, Heretic, Hexen and Strife."
+arch=('i686' 'x86_64')
+url="http://www.teaser.fr/~amajorel/deutex/"
+license=('custom:GPL, LGPL and Pbmplus license')
+provides=('deutex')
+conflicts=('deutex')
+source=(http://www.teaser.fr/~amajorel/$_pkgname/fungus/$_pkgname-$pkgver.tar.gz)
+md5sums=('5f2d6184b69e2e05f4e7c5bcd6a74cb9')
+
+build() {
+    cd $srcdir/$_pkgname-$pkgver
+
+    ./configure \
+      --cflags="$CFLAGS"
+
+    make
+}
+
+package() {
+    cd $srcdir/$_pkgname-$pkgver
+
+    install -d $pkgdir/usr/{bin,share/man/man6}
+
+    make \
+      BINDIR=$pkgdir/usr/bin \
+      MANDIR=$pkgdir/usr/share/man \
+      install
+
+    # License.
+    install -Dm 644 LICENCE $pkgdir/usr/share/licenses/$pkgname/LICENSE
+}

@@ -1,0 +1,29 @@
+#
+# Games Packages for Chakra, part of chakra-project.org
+#
+# Maintainer: Adrián Chaves Fernández (Gallaecio) <adriyetichaves@gmail.com>
+
+pkgname=cpptest
+pkgver=1.1.2
+pkgrel=1
+pkgdesc="A portable and powerful unit testing framework for handling automated tests in C++." 
+arch=('i686' 'x86_64')
+url="http://cpptest.sourceforge.net/"
+license="LGPL"
+depends=('gcc-libs')
+source=(http://downloads.sourceforge.net/sourceforge/$pkgname/$pkgname-$pkgver.tar.gz)
+md5sums=('79b9bff371d182f11a3235969f84ccb6')
+
+build()
+{ 
+  cd $srcdir/$pkgname-$pkgver
+  ./configure \
+    --prefix=/usr
+  make
+}
+
+package()
+{
+  cd $srcdir/$pkgname-$pkgver
+  make DESTDIR=$pkgdir install
+}

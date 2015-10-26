@@ -1,0 +1,53 @@
+# Maintainer: UtG <utg.chakra.linux[at]gmail[dot]com>
+
+pkgname=flightgear
+pkgver=3.4.0
+pkgrel=2
+pkgdesc="An open-source, multi-platform flight simulator."
+arch=('x86_64')
+depends=('libxmu' 'libxi' 'openal' 'openscenegraph' 'zlib' 'simgear' 'subversion' 'libxrandr' 'glu' )
+makedepends=('boost' 'cmake' 'mesa' 'sharutils')
+#optdepends=('flightgear-aircrafts: Additional aircrafts.')
+license=(GPL)
+url="http://www.flightgear.org"
+screenshot="http://www.flightgear.org/wp-content/gallery/gallery-v2-6/737-300_egkk_hom.jpg"
+categories=('games')
+options=('!makeflags')
+#source=("$pkgname-$pkgver.tar.gz::https://gitorious.org/fg/flightgear/archive-tarball/release/$pkgver")
+#source=("ftp://ftp.de.flightgear.org/pub/fgfs/Source/flightgear-$pkgver.tar.bz2")
+source=("http://mirrors.ibiblio.org/pub/mirrors/flightgear/ftp/Source/flightgear-$pkgver.tar.bz2")
+md5sums=('0a6f4c27baf64f3e7d58fd44612118df')
+
+build() {
+
+  cd $pkgname-$pkgver
+  cmake \
+	-DCMAKE_INSTALL_PREFIX=/usr \
+	-DCMAKE_INSTALL_LIBDIR=lib \
+	-DFG_DATA_DIR:STRING="/usr/share/flightgear/data" .
+  uudecode -o package/flightgear.png package/flightgear.png.uue
+  make
+  sed -i 's|Exec=.*|Exec=fgfs --fg-root=/usr/share/flightgear/data|' package/flightgear.desktop
+  
+  
+}
+
+package() {
+  depends=( "${depends[@]}" "flightgear-data" )
+
+  cd $pkgname-$pkgver
+  
+  make DESTDIR=$pkgdir install
+
+  # Execution script.
+  # echo "#!/bin/bash"	 > $pkgdir/usr/bin/$pkgname
+  # echo "fgfs --fg-root=/usr/share/$pkgname/data \$@"	>> $pkgdir/usr/bin/$pkgname
+  # chmod +x $pkgdir/usr/bin/$pkgname
+  
+  # Desktop Integration
+  install -Dm0644 package/flightgear.desktop $pkgdir/usr/share/applications/flightgear.desktop
+  install -Dm0644 package/flightgear.ico $pkgdir/usr/share/icons/flightgear.ico
+  install -Dm0644 package/flightgear.png $pkgdir/usr/share/icons/flightgear.png
+  ln -sf flightgear $pkgdir/usr/share/FlightGear
+
+}

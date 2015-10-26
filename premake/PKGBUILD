@@ -1,0 +1,26 @@
+#
+# Games Packages for Chakra, part of chakra-project.org
+#
+# Maintainer: Adrián Chaves Fernández (Gallaecio) <adriyetichaves gmail.com>
+
+pkgname=premake
+_pkgname=Premake
+_pkgname2=premake4
+pkgver=4.3
+pkgrel=1
+pkgdesc="A build configuration tool."
+arch=('i686' 'x86_64')
+url="http://industriousone.com/premake"
+license=('GPL2')
+source=(http://downloads.sourceforge.net/project/$pkgname/$_pkgname/$pkgver/$pkgname-$pkgver-src.zip)
+md5sums=('8cfafee76f9665c93b2e9ad15b015eb7')
+
+build() {
+  cd $srcdir/$pkgname-$pkgver/build/gmake.unix
+  make
+}
+
+package() {
+  install -dm755 $pkgdir/usr/bin
+  install -m755 $srcdir/$pkgname-$pkgver/bin/release/$_pkgname2 $pkgdir/usr/bin/$pkgname
+}

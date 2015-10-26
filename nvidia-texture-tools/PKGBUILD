@@ -1,0 +1,36 @@
+#
+# Games Packages for Chakra, part of chakra-project.org
+#
+# Maintainer: Adrián Chaves Fernández (Gallaecio) <adriyetichaves@gmail.com>
+# Contributor: Yggdrasil
+
+pkgname=nvidia-texture-tools
+pkgver=2.0.8
+pkgrel=1
+pkgdesc="GPU-accelerated Texture Tools with support for DirectX 10 texture formats."
+arch=('i686' 'x86_64')
+url="http://code.google.com/p/$pkgname/"
+license=('MIT')
+depends=('libjpeg' 'libpng' 'libtiff' 'openexr')
+makedepends=('cmake')
+source=(http://$pkgname.googlecode.com/files/$pkgname-$pkgver-1.tar.gz
+	$pkgname-2.0.8-add-pthread.patch)
+md5sums=('7449c95ca1583b512561c83c5a5f401c'
+	 '55d011f08ef9c924a7fd5b2c8b9e2c85')
+
+build() {
+  cd $srcdir/$pkgname
+  
+  # Patch 2.0.8 version.
+  patch -p1 -i $srcdir/$pkgname-2.0.8-add-pthread.patch
+
+  ./configure \
+    --prefix=/usr \
+    --release
+  make
+}
+
+package() {
+  cd $srcdir/$pkgname
+  make DESTDIR=$pkgdir install
+}

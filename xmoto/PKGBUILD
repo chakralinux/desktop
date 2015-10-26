@@ -1,0 +1,44 @@
+#
+# Games Packages for Chakra, part of chakra-project.org
+#
+# Maintainer: Adrián Chaves Fernández (Gallaecio) <adriyetichaves gmail.com>
+
+pkgname=xmoto
+pkgver=0.5.11
+pkgrel=1
+pkgdesc="A challenging 2D motocross platform game, where physics play an important role."
+arch=('x86_64')
+url="http://xmoto.tuxfamily.org"
+license=('GPL')
+depends=('bzip2' 'libjpeg' 'libpng' 'lua' 'sdl_mixer' 'ode' 'curl'
+         'mesa' 'sqlite3' 'sdl_ttf' 'desktop-file-utils' 'sdl_net' 'libxdg-basedir')
+makedepends=('desktop-file-utils')
+categories=('games')
+source=("http://download.tuxfamily.org/${pkgname}/${pkgname}/${pkgver}/${pkgname}-${pkgver}-src.tar.gz")
+sha256sums=('a584a6f9292b184686b72c78f16de4b82d5c5b72ad89e41912ff50d03eca26b2')
+
+build() {
+  cd ${pkgname}-${pkgver}
+
+  ./configure \
+    LDFLAGS="-L/usr/lib" \
+    --prefix=/usr \
+    --disable-sdltest
+
+  make
+}
+
+package() {
+  cd ${pkgname}-${pkgver}
+
+  make DESTDIR="${pkgdir}" mangdir=/usr/share/man/man6 install
+
+  # install desktop file
+  desktop-file-install --set-key=Icon --set-value=xmoto -m 0644 \
+    --dir="${pkgdir}/usr/share/applications" \
+    extra/xmoto.desktop
+
+  # install icon
+  install -Dm0644 extra/xmoto.xpm \
+    "${pkgdir}/usr/share/pixmaps/xmoto.xpm"
+}

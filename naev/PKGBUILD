@@ -1,0 +1,58 @@
+#
+# Games Packages for Chakra, part of chakra-project.org
+#
+# Maintainer: Adrián Chaves Fernández (Gallaecio) <adriyetichaves gmail.com>
+
+pkgbase=naev
+pkgname=(naev naev-data)
+pkgver=0.5.3
+pkgrel=3
+pkgdesc="2D action/rpg space game."
+arch=('i686' 'x86_64')
+url="http://code.google.com/p/naev/"
+screenshot="http://blog.naev.org/wp-content/gallery/media/bigplanet.png"
+depends=('binutils' 'freetype2' 'libgl' 'libpng' 'libvorbis' 'libxml2' 'openal' 'sdl_image' 'sdl_mixer')
+makedepends=('freeglut')
+categories=('games')
+changelog=ChangeLog
+source=("http://downloads.sourceforge.net/project/$pkgbase/$pkgbase-$pkgver/$pkgbase-$pkgver.tar.bz2"
+	"http://downloads.sourceforge.net/project/$pkgbase/$pkgbase-$pkgver/ndata-$pkgver")
+md5sums=('bec719b3daa33ec190d785120a7b0159'
+         '652db194ffd2f45fc5f8ecee2ad2985c')
+
+build() {
+
+  cd $srcdir/$pkgname-$pkgver
+
+  ./configure \
+    --prefix=/usr \
+    --enable-debug \
+    --with-ndata-path=/usr/share/$pkgbase/data
+  make
+}
+
+package_naev() {
+  depends=( "${depends[@]}" naev-data )
+  conflicts=('naev-dev')
+  license=('GPL3')
+
+  cd $srcdir/$pkgname-$pkgver
+
+  # Main.
+  make DESTDIR=$pkgdir install
+
+  # License:
+  mkdir -p $pkgdir/usr/share/licenses/$pkgbase/
+  install -m644 $srcdir/$pkgbase-$pkgver/LICENSE $pkgdir/usr/share/licenses/$pkgbase/
+}
+
+package_naev-data() {
+  arch=('any')
+  depends=()
+  license=('custom: mixture of public domain, GPLv2, GPLv3, CC:BY 3.0, CC:BY-SA 3.0')
+
+  cd $srcdir/$pkgbase-$pkgver
+
+  mkdir -p $pkgdir/usr/share/$pkgbase/
+  install -m644 $srcdir/ndata-$pkgver $pkgdir/usr/share/$pkgbase/data
+}

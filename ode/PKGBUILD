@@ -1,0 +1,33 @@
+#
+# Games Packages for Chakra, part of chakra-project.org
+#
+# Contributor: Giuseppe Calà <jiveaxe@gmail.com>
+
+pkgname=ode
+pkgver=0.12
+pkgrel=1
+pkgdesc="An open source, high performance library for simulating rigid body dynamics"
+arch=('i686' 'x86_64')
+url="http://www.ode.org"
+license=('LGPL' 'BSD')
+depends=('gcc-libs' 'bash')
+source=(http://downloads.sourceforge.net/sourceforge/opende/${pkgname}-${pkgver}.tar.bz2)
+options=('!libtool')
+md5sums=('83766cae59692c2843d9afccc1768988')
+
+build() {
+  cd $srcdir/$pkgname-$pkgver
+  ./configure \
+    --prefix=/usr \
+    --enable-shared
+  make
+}
+
+package() {
+  cd $srcdir/$pkgname-$pkgver
+  make DESTDIR=$pkgdir install
+
+  # License.
+  install -Dm0644 ${srcdir}/${pkgname}-${pkgver}/ou/LICENSE-BSD.TXT \
+ 		  ${pkgdir}/usr/share/licenses/${pkgname}/LICENSE-BSD.TXT
+}

@@ -1,0 +1,46 @@
+#
+# Games Packages for Chakra, part of chakra-project.org
+#
+# Maintainer: Adrián Chaves Fernández (Gallaecio) <adriyetichaves@gmail.com>
+
+pkgname=flare
+_pkgname=flare-game
+_shared_name=${pkgname}
+pkgver=0.19
+pkgrel=1
+pkgdesc="Action roleplaying game from an isometric perspective"
+arch=('i686' 'x86_64')
+url="http://clintbellanger.net/rpg/"
+license=('CCPL-by-sa')
+depends=('flare-engine')
+makedepends=('cmake')
+replaces=('osare')
+categories=('games')
+changelog=ChangeLog
+source=(http://downloads.sourceforge.net/project/flare-game/Linux/${_pkgname}.$pkgver.tar.gz)
+md5sums=('0d2950b8f6facc640a019aecd3a1fdb8')
+
+build() {
+  cd $srcdir/${_pkgname}.$pkgver
+
+  # Some CMake changes.
+  sed -i -e "s#share/games#share#" -e "s#/games#/bin#" CMakeLists.txt
+ 
+  # Executable compilation.
+  mkdir -p build && cd build
+  cmake \
+    -DCMAKE_INSTALL_PREFIX=/usr \
+    -DCMAKE_BUILD_TYPE=Release \
+    -DBINDIR=bin \
+    -DDATADIR=share/${_shared_name} \
+    ..
+  make
+}
+
+package() {
+  cd $srcdir/${_pkgname}.$pkgver/build
+  make DESTDIR=$pkgdir install
+ 
+  # Documentation.
+  install -Dm644 ../README $pkgdir/usr/share/doc/$pkgname/readme.txt
+}

@@ -1,0 +1,27 @@
+#
+# Games Packages for Chakra, part of chakra-project.org
+#
+# Maintainer: Adrián Chaves Fernández (Gallaecio) <adriyetichaves gmail.com>
+
+pkgname=zeromq
+pkgver=2.2.0
+pkgrel=1
+pkgdesc="Fast messaging system built on sockets, C and C++ bindings."
+arch=('i686' 'x86_64')
+url="http://www.zeromq.org"
+license=('LGPL')
+depends=('gcc-libs' 'util-linux-ng')
+source=(http://download.zeromq.org/$pkgname-$pkgver.tar.gz)
+md5sums=('1b11aae09b19d18276d0717b2ea288f6')
+
+build() {
+  cd $srcdir/$pkgname-$pkgver
+  ./configure \
+    prefix=$pkgdir/usr
+  make
+}
+
+package() {
+  cd $srcdir/$pkgname-$pkgver
+  make install
+}

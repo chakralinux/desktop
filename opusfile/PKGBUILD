@@ -1,0 +1,26 @@
+# The initial version of this file came from Arch Linux, and newer revisions may be based on theirs.
+# See https://projects.archlinux.org/svntogit/community.git/tree/trunk?h=packages/opusfile for a list of Arch Linux contributors.
+
+pkgname=opusfile
+pkgver=0.2
+pkgrel=1
+pkgdesc='Library for opening, seeking, and decoding .opus files'
+arch=('i686' 'x86_64')
+url='http://www.opus-codec.org/'
+license=('custom')
+depends=('libogg' 'openssl' 'opus')
+source=(http://downloads.xiph.org/releases/opus/${pkgname}-${pkgver}.tar.gz)
+md5sums=('454375f51fb2f84bef9bf2fbf9535bb1')
+
+build() {
+  cd $pkgname-$pkgver
+  ./configure --prefix=/usr
+  make
+}
+
+package() {
+  cd $pkgname-$pkgver
+  make DESTDIR="$pkgdir" install
+
+  install -Dm644 COPYING "$pkgdir"/usr/share/licenses/opusfile/LICENSE
+}

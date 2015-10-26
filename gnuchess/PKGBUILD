@@ -1,0 +1,29 @@
+#
+# Games Packages for Chakra, part of chakra-project.org
+#
+# Maintainer: Adrián Chaves Fernández (Gallaecio) <adriyetichaves@gmail.org>
+
+pkgname=gnuchess
+pkgver=6.2.1
+pkgrel=1
+pkgdesc="Application able to play chess (against another software or a human)"
+url="http://www.gnu.org/software/chess/chess.html"
+arch=('i686' 'x86_64')
+license=('GPL3')
+depends=('bash')
+install=$pkgname.install
+categories=('games')
+source=(ftp://ftp.gnu.org/pub/gnu/chess/$pkgname-$pkgver.tar.gz)
+md5sums=('389ef6f98b61f432cb15065277d0ad71')
+
+build() {
+  cd $srcdir/$pkgname-$pkgver
+  ./configure \
+    --prefix=/usr
+  make
+}
+
+package() {
+  cd $srcdir/$pkgname-$pkgver
+  make prefix=$pkgdir/usr install
+}

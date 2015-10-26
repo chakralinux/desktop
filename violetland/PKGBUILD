@@ -1,0 +1,64 @@
+# Maintainer: Adrián Chaves Fernández (Gallaecio) <adriyetichaves@gmail.com>
+
+pkgname=violetland
+pkgver=0.4.3
+pkgrel=4
+pkgdesc="Game where a girl, Violet, struggles with hordes of monsters."
+arch=('x86_64')
+url="http://code.google.com/p/violetland/"
+license=('GPL3' 'CCPL:by-sa')
+depends=('boost' 'intltool' 'sdl_image' 'sdl_mixer' 'sdl_ttf' 'libgl' 'mesa')
+makedepends=('cmake' 'desktop-file-utils' 'git')
+conflicts=('violetland-dev' 'violetland-svn')
+categories=('games')
+
+_gitroot="https://github.com/ooxi/violetland.git"
+_gitname="$pkgname"
+
+build() {
+  cd "${srcdir}"
+
+  msg "Connecting to GIT server...."
+ 
+  if [ -d $_gitname ] ; then
+    cd $_gitname && git pull origin
+    git submodule update
+    msg "The local files are updated."
+  else
+    git clone $_gitroot $_gitname --depth=1
+    cd $_gitname
+    git submodule init
+    git submodule update 
+  fi
+ 
+  msg "GIT checkout done or server timeout"
+  msg "Starting make..."
+ 
+  rm -rf $srcdir/$_gitname-build
+  cp -R $srcdir/$_gitname $srcdir/$_gitname-build
+  cd $srcdir/$_gitname-build
+
+  cmake \
+    -DCMAKE_INSTALL_PREFIX=/usr \
+    -DCMAKE_BUILD_TYPE=RelWithDebInfo \
+    .
+  make
+}
+
+package() {
+  cd "${srcdir}/${_gitname}-build"
+  
+  # Install icon
+  install -D -m0644 "${srcdir}/${pkgname}/icon-light.png" \
+    "${pkgdir}/usr/share/pixmaps/${pkgname}.png"
+  
+  # Install desktop file
+  desktop-file-install -m 0644 --dir="${pkgdir}/usr/share/applications" \
+    "${srcdir}/${pkgname}/${pkgname}.desktop"
+
+  # Install Readme
+  install -D -m0644 "${srcdir}/${pkgname}/CHANGELOG.md" \
+    "${pkgdir}/usr/share/doc/${pkgname}/CHANGELOG.md"
+    
+  make DESTDIR="${pkgdir}" install
+}

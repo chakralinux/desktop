@@ -1,0 +1,74 @@
+#
+# Games Packages for Chakra, part of chakra-project.org
+#
+# Maintainer: Adrián Chaves Fernández (Gallaecio) <adriyetichaves@gmail.com>
+
+pkgname=sumwars
+pkgver=0.5.8
+pkgrel=1
+pkgdesc="Summoning Wars is a role-playing game, featuring both a single-player and a multiplayer mode for about 2 to 8 players."
+arch=('x86_64')
+url="http://sumwars.org/"
+license=('GPL3' 'CCPL-by-sa')
+depends=('cegui-0.8' 'freealut' 'libogg' 'libvorbis' 'lua' 'ogre' 'ois' 'openal' 'poco' 'boost-libs' 'enet' 'physfs')
+categories=('games')
+source=("http://downloads.sourceforge.net/project/${pkgname}/${pkgver}/${pkgname}-${pkgver}-src.tar.bz2")
+sha256sums=('2f432d5f84708447507f6686b847b8538de373cd951f5842cfec5a09aba0aabf')
+
+prepare() {
+  cd ${pkgname}-${pkgver}
+
+  sed \
+    -e "s#/games/#/bin/#g" \
+    -e "s#icons/hicolor/128x128/${pkgname}.png#/pixmaps/${pkgname}.png#" \
+    -i "packaging/${pkgname}.desktop"
+}
+
+build() {
+  cd ${pkgname}-${pkgver}
+
+  mkdir -p build && cd build
+  cmake \
+    -DCMAKE_INSTALL_PREFIX=/usr \
+    -DCMAKE_BUILD_TYPE=RelWithDebInfo \
+    ..
+  make
+}
+ 
+package() {
+  cd ${pkgname}-${pkgver}
+
+  #make install is broken
+  #make DESTDIR="${pkgdir}" install
+
+  # Executable.
+  install -Dm755 build/${pkgname} "${pkgdir}/usr/share/${pkgname}/${pkgname}"
+  
+  # Credits.
+  install -Dm644 AUTHORS "${pkgdir}/usr/share/doc/${pkgname}/authors.txt"
+  
+  # License
+  install -Dm644 COPYING "${pkgdir}/usr/share/licenses/${pkgname}/COPYING"
+
+  # Savegames.
+  install -dm775 "${pkgdir}/usr/share/${pkgname}/save"
+  chown :games "${pkgdir}/usr/share/${pkgname}/save"
+
+  # Desktop Integration.
+  install -Dm644 share/icon/SumWarsIcon_128x128.png "${pkgdir}/usr/share/pixmaps/${pkgname}.png"
+  install -Dm755 packaging/${pkgname}.desktop "${pkgdir}/usr/share/applications/${pkgname}.desktop"
+
+  cp -r share/* "${pkgdir}/usr/share/${pkgname}"
+  
+  for _filename in CEGUI Ogre ${pkgname}; do
+    touch "${pkgdir}/usr/share/${pkgname}/${_filename}.log"
+    chmod 777 "${pkgdir}/usr/share/${pkgname}/${_filename}.log"
+  done
+  
+  # Execution script.
+  install -dm755 "${pkgdir}/usr/bin"
+  echo "#!/bin/bash"		>  "${pkgdir}/usr/bin/${pkgname}"
+  echo "cd /usr/share/${pkgname}"	>> "${pkgdir}/usr/bin/${pkgname}"
+  echo "./${pkgname}"		>> "${pkgdir}/usr/bin/${pkgname}"
+  chmod 775 "${pkgdir}/usr/bin/${pkgname}"
+}

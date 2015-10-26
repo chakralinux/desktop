@@ -1,0 +1,66 @@
+pkgbase=xonotic
+_pkgbase=Xonotic
+pkgname=($pkgbase $pkgbase-data)
+pkgver=0.8.1
+pkgrel=2
+pkgdesc="A free, fast-paced crossplatform first-person shooter"
+arch=('x86_64')
+url="http://xonotic.org"
+license=('GPL')
+makedepends=('alsa-lib' 'curl' 'libjpeg' 'libmodplug' 'libpng' 'libvorbis' 'libxpm' 'libxxf86dga'
+	     'libxxf86vm' 'sdl2' 'unzip' 'mesa')
+categories=('games')
+source=("http://dl.xonotic.org/$pkgbase-$pkgver.zip"
+        "xonotic-glx.desktop"
+        "xonotic-sdl.desktop")
+md5sums=('f7a9cd8ab68a00336acca164f983b569'
+         'c4d94fcbfbef47cf614f2b6f381ea89b'
+         '541cf57a483f540220eb08c898f6dbc2')
+
+build() {
+  # compile engine
+	make -C Xonotic/source/darkplaces CPUOPTIMIZATIONS="${CFLAGS}" DP_FS_BASEDIR=/usr/share/xonotic/ DP_LINK_TO_LIBJPEG=1 cl-release
+	make -C Xonotic/source/darkplaces CPUOPTIMIZATIONS="${CFLAGS}" DP_FS_BASEDIR=/usr/share/xonotic/ DP_LINK_TO_LIBJPEG=1 sdl2-release
+	make -C Xonotic/source/darkplaces CPUOPTIMIZATIONS="${CFLAGS}" DP_FS_BASEDIR=/usr/share/xonotic/ DP_LINK_TO_LIBJPEG=1 sv-release
+
+  cd $srcdir/Xonotic/source/d0_blind_id
+  sh autogen.sh
+  ./configure --prefix=/usr --disable-rijndael
+  make
+}
+
+package_xonotic() {
+  cd $srcdir/$_pkgbase
+  depends=('alsa-lib' 'curl' 'libjpeg' 'libmodplug' 'libpng' 'libvorbis' 'libxpm' 'libxxf86dga'
+           'libxxf86vm' 'sdl2' 'xonotic-data')
+
+  # Binaries.
+  install -Dm755 source/darkplaces/darkplaces-dedicated $pkgdir/usr/share/$pkgbase/$pkgbase-server
+  install -Dm755 source/darkplaces/darkplaces-glx $pkgdir/usr/share/$pkgbase/$pkgbase-glx
+  install -Dm755 source/darkplaces/darkplaces-sdl $pkgdir/usr/share/$pkgbase/$pkgbase-sdl
+
+  # Execution scripts.
+  install -d $pkgdir/usr/bin
+  for TYPE in server glx sdl
+  do
+    cat > $pkgdir/usr/bin/$pkgbase-$TYPE << EOF
+#!/bin/sh
+cd /usr/share/$pkgbase
+./$pkgbase-$TYPE \$@
+EOF
+    chmod +x $pkgdir/usr/bin/$pkgbase-$TYPE
+  done
+
+  # Desktop integration.
+  install -Dm644 $srcdir/$pkgbase-glx.desktop $pkgdir/usr/share/applications/$pkgbase-glx.desktop
+  install -Dm644 $srcdir/$pkgbase-sdl.desktop $pkgdir/usr/share/applications/$pkgbase-sdl.desktop
+  install -Dm644 $srcdir/$_pkgbase/misc/logos/${pkgbase}_icon.svg $pkgdir/usr/share/pixmaps/$pkgbase.svg
+}
+
+package_xonotic-data() {
+  pkgdesc="A free, fast-paced crossplatform first-person shooter (data files)"
+  arch=('x86_64')
+
+  install -d $pkgdir/usr/share/$pkgbase
+  cp -R $srcdir/$_pkgbase/data $pkgdir/usr/share/$pkgbase/data
+}

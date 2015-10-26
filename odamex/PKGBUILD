@@ -1,0 +1,49 @@
+#
+# Games Packages for Chakra, part of chakra-project.org
+#
+# Maintainer: Adrián Chaves Fernández (Gallaecio) <adriyetichaves gmail.com>
+
+pkgname=odamex
+pkgver=0.6.4
+pkgrel=1
+pkgdesc='A free client/server multiplayer engine for the classic FPS Doom.'
+arch=('x86_64')
+url='http://odamex.net/'
+license=('GPL')
+depends=('portmidi' 'sdl_mixer')
+makedepends=('cmake')
+categories=('games')
+install=install.sh
+source=("http://downloads.sourceforge.net/$pkgname/$pkgname-src-$pkgver.tar.bz2")
+md5sums=('5a33cb9cd54037d9475d15f87782c04d')
+
+build() {
+  cd $srcdir/$pkgname-src-$pkgver
+
+  sed \
+    -e 's|getenv("DOOMWADPATH")|"/usr/share/doom"|g' \
+    -i client/src/cl_download.cpp \
+    -i common/d_main.cpp
+
+  mkdir -p build && cd build
+  cmake \
+    -DCMAKE_INSTALL_PREFIX=/usr \
+    -DCMAKE_BUILD_TYPE=Release \
+    ..
+  make
+}
+
+package() {
+  cd $srcdir/$pkgname-src-$pkgver/build
+#  make DESTDIR=$pkgdir install
+
+  install -Dm755 client/odamex $pkgdir/usr/bin/odamex
+  install -Dm755 server/odasrv $pkgdir/usr/bin/odasrv
+
+  cd ..
+  install -Dm644 odamex.wad $pkgdir/usr/share/doom/odamex.wad
+  install -Dm644 media/icon_odamex_96.png $pkgdir/usr/share/pixmaps/odamex.png
+  install -Dm644 media/icon_odasrv_96.png $pkgdir/usr/share/pixmaps/odasrv.png
+  install -Dm644 installer/arch/odamex.desktop $pkgdir/usr/share/applications/odamex.desktop
+  install -Dm644 installer/arch/odasrv.desktop $pkgdir/usr/share/applications/odasrv.desktop
+}

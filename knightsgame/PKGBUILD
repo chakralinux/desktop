@@ -1,0 +1,38 @@
+# Maintainer: Adrián Chaves Fernández (Gallaecio) <adriyetichaves gmail.com>
+# Contributor: Thomas Dziedzic < gostrc at gmail >
+# Contributor: Lauri Niskanen <ape@ape3000.com>
+
+pkgname=knightsgame
+_pkgname=knights
+pkgver=023
+pkgrel=3
+pkgdesc='Action game that was originally released for Amiga in 1994.'
+arch=('x86_64')
+url='http://www.knightsgame.org.uk/'
+license=('GPL3')
+depends=('boost-libs' 'curl' 'directfb' 'fontconfig' 'sdl')
+makedepends=(boost)
+options=('!makeflags')
+categories=('games')
+source=("http://www.knightsgame.org.uk/files/${_pkgname}_${pkgver}_src.tar.gz")
+md5sums=('12f47d35ba497400833e744e03d89376')
+
+
+build() {
+  cd ${_pkgname}_${pkgver}_src
+
+  sed \
+    -e 's/-mt//g' \
+    -e "s/KNIGHTS_BINARY_NAME = knights/KNIGHTS_BINARY_NAME = $pkgname/" \
+    -e "s/SERVER_BINARY_NAME = knights_server/SERVER_BINARY_NAME = $pkgname-server/" \
+    -e "/^BOOST_LIBS/s|$| -lrt|" \
+    -i Makefile \
+    -i python/makemakefile.py
+  make PREFIX=/usr
+}
+
+package() {
+  cd ${_pkgname}_${pkgver}_src
+
+  make PREFIX=$pkgdir/usr install
+}

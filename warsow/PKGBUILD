@@ -1,0 +1,80 @@
+#
+# Games Packages for Chakra, part of chakra-project.org
+#
+# Maintainer: Adrián Chaves Fernández (Gallaecio) <adriyetichaves@gmail.com>
+#
+# NOTE: The package must be built in a system with a matching architecture.
+
+pkgbase=warsow
+pkgname=('warsow' 'warsow-data')
+pkgver=1.51 # Warsow data version
+_pkgver=15  # Launchpad version
+pkgrel=2
+arch=('x86_64')
+url="http://www.warsow.net/"
+makedepends=('mesa' 'openal' 'imagemagick' 'gendesk' 'curl' 'libjpeg' 'libtheora' 'libvorbis'
+             'libxxf86dga' 'sdl' 'libxinerama' 'libxrandr' 'libxxf86vm' 'libxi')
+categories=('games')
+source=("http://www.warsow.eu/${pkgname}_${pkgver}_sdk.tar.gz"
+        "http://www.warsow.eu/${pkgname}_${pkgver}_unified.tar.gz")
+sha256sums=('ac635c654e088566d30d53e8fab21abd2d40762d7f4ab0e09faa827aac5c4f97'
+            '94510d85e4a245b5f8c0c715ae41b1d162c96e06dbfe75ccd99fffb9a76426b5')
+
+build() {
+  gendesk -n
+
+  # Compile Warsow.
+  cd source/source
+  make -j1 # Error finding a library if -j is higher.
+}
+
+generateAndInstall() {
+  echo "#!/bin/bash"             > "${pkgdir}"/usr/bin/$1
+  echo "cd /usr/share/$pkgname" >> "${pkgdir}"/usr/bin/$1
+  echo "./$1 \$*"               >> "${pkgdir}"/usr/bin/$1
+  echo "exit \$?"               >> "${pkgdir}"/usr/bin/$1
+  chmod +x "${pkgdir}"/usr/bin/$1
+}
+
+package_warsow-data() {
+  _pkgname=warsow
+  pkgdesc="A free online multiplayer competitive FPS based on the Qfusion engine (data files)"
+  arch=('any')
+  license=('custom:Warsow Content License')
+
+  # Create the destination directories.
+  install -d "${pkgdir}/usr/share/${_pkgname}"
+
+    # Move Data to destination directory.
+  cp -r ${_pkgname}_${_pkgver}/basewsw "${pkgdir}/usr/share/${_pkgname}"
+  chmod -R g+rx,o+rx "${pkgdir}/usr/share/${_pkgname}/basewsw"
+
+  # Install custom license: Warsow Content License.
+  install -Dm0644 ${_pkgname}_${_pkgver}/docs/license.txt "${pkgdir}/usr/share/licenses/${pkgname}/license.txt"
+}
+
+package_warsow() {
+  pkgdesc="A free online multiplayer competitive FPS based on the Qfusion engine"
+  arch=('x86_64')
+  license=('GPL')
+  depends=('curl' 'libjpeg' 'libtheora' 'libvorbis' 'libxinerama' 'libxrandr' 'libxxf86dga' 'libxxf86vm' 'sdl' 'warsow-data')
+  optdepends=('openal: for openal audio support')
+  
+  cd source/source
+
+  # Manual installation.
+  install -d "${pkgdir}/usr/share/${pkgname}/"
+  cp -r release/* "${pkgdir}/usr/share/${pkgname}"
+  chmod +r "${pkgdir}/usr/share/${pkgname}/"*
+
+  # Execution scripts:
+  install -d "${pkgdir}/usr/bin"
+  for script in ${pkgname} wsw_server wswtv_server
+  do
+    generateAndInstall ${script}
+  done
+
+  # Desktop integration:
+  install -Dm0644 "${srcdir}/${pkgname}.desktop" "${pkgdir}/usr/share/applications/${pkgname}.desktop"
+  install -Dm0644 unix/warsow128x128.xpm "${pkgdir}/usr/share/pixmaps/warsow.xpm"
+}

@@ -1,0 +1,27 @@
+# Maintainer: UtG <utg.chakra.linux[at]gmail[dot]com>
+
+pkgname=simgear
+pkgver=3.4.0
+pkgrel=1
+pkgdesc="FOSS libraries for quickly assembling 3d simulations, games, and visualization applications."
+arch=('x86_64')
+depends=('glu' 'freeglut' 'freealut'  'plib' 'openscenegraph' 'libxrandr')
+makedepends=('boost' 'cmake' 'mesa')
+license=("GPL")
+#url="http://www.simgear.org"
+url="https://gitorious.org/fg"
+options=('!makeflags' 'staticlibs')
+#source=("SimGear-$pkgver.tar.gz::https://gitorious.org/fg/simgear/archive-tarball/release/$pkgver")
+source=("http://mirrors.ibiblio.org/pub/mirrors/simgear/ftp/Source/simgear-$pkgver.tar.bz2")
+md5sums=('4db6c80a7f5e23f53361e3ef6d36835e')
+
+build() {
+  cd $srcdir/$pkgname-$pkgver
+  cmake -DCMAKE_INSTALL_PREFIX=/usr -DCMAKE_INSTALL_LIBDIR=lib .
+  make
+}
+
+package() {
+  cd $srcdir/$pkgname-$pkgver
+  make DESTDIR=$pkgdir install
+}

@@ -1,0 +1,43 @@
+#
+# Games Packages for Chakra, part of chakra-project.org
+#
+# Maintainer: Adrián Chaves Fernández (Gallaecio) <adriyetichaves gmail.com>
+#
+# Note: Using Git until a stable version of Lips of Suna supports Ogre 1.9.0.
+# See: http://forum.freegamedev.net/viewtopic.php&t=550
+
+pkgname=lipsofsuna
+pkgver=0.8.0
+pkgrel=3
+pkgdesc="Tongue-in-cheek dungeon crawl game that takes place in the chaotic dungeons of Suna."
+arch=('i686' 'x86_64')
+url="http://lipsofsuna.org/"
+license=('LGPL3' 'CCPL:by-sa' 'CCPL:by' 'custom:CC0')
+depends=('bullet' 'enet' 'flac' 'glew' 'inotify-tools' 'libogg' 'libvorbis' 'lua' 'ogre' 'openal' 'sdl' 'sdl_ttf' 'sqlite3')
+makedepends=('python')
+categories=('games')
+changelog=ChangeLog
+#source=("http://downloads.sourceforge.net/project/$pkgname/$pkgname/$pkgver/$pkgname-$pkgver.tar.gz")
+#md5sums=('92bc72aab1236714e31545e930ae16bf')
+source=(${pkgname}-${pkgver}::git://git.code.sf.net/p/lipsofsuna/code)
+md5sums=('SKIP')
+
+build() {
+  cd $srcdir/$pkgname-$pkgver
+
+  LDFLAGS=-lboost_system \
+  ./waf configure \
+    --bindir=/usr/bin \
+    --libdir=/usr/lib \
+    --datadir=/usr/share \
+    --disable-relpath \
+    --enable-optimization
+  ./waf build
+}
+
+package() {
+  cd $srcdir/$pkgname-$pkgver
+
+  ./waf install \
+    --destdir=$pkgdir
+}

@@ -1,0 +1,28 @@
+#
+# Games Packages for Chakra, part of chakra-project.org
+#
+# Maintainer: Adrián Chaves Fernández (Gallaecio) <adriyetichaves gmail.com>
+
+pkgname=wfmath
+pkgver=1.0.2
+pkgrel=1
+pkgdesc="WorldForge math library."
+arch=('i686' 'x86_64')
+url="http://sourceforge.net/projects/worldforge/"
+license=('GPL')
+categories=('games')
+source=(http://downloads.sourceforge.net/project/worldforge/wfmath%20\(math%20lib\)/$pkgver/$pkgname-$pkgver.tar.bz2)
+sha256sums=('7072d640597bf102c6641e9237aaec6582849ef6c1cdc3062e369f070e20d883')
+
+build() {
+  cd ${srcdir}/$pkgname-$pkgver
+
+  ./configure --prefix=/usr
+  make
+}
+
+package() {
+  cd ${srcdir}/$pkgname-$pkgver
+
+  make DESTDIR=${pkgdir} install
+}

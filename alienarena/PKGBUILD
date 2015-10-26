@@ -1,0 +1,35 @@
+#
+# Games Packages for Chakra, part of chakra-project.org
+#
+# Contributor: Giuseppe Calà <jiveaxe@gmail.com>
+
+pkgname=alienarena
+pkgver=7.66
+pkgrel=1
+_verdate=20130827
+pkgdesc="Multiplayer retro sci-fi deathmatch game"
+arch=('x86_64')
+url='http://icculus.org/alienarena/rpa/'
+license=('GPL' 'LGPL' 'custom:Non-free data')
+depends=('curl' 'freetype2' 'libgl' 'libjpeg' 'libvorbis' 'libxxf86dga' 'libxxf86vm' 'mesa' 'ode' 'sdl' 'openal')
+categories=('games')
+source=("http://red.planetarena.org/files/${pkgname}-${pkgver}-linux${_verdate}.tar.gz"
+        'alienarena.desktop')
+ sha256sums=('29086098eacb18319e6dcc9156355c44db4b1aa8a4f7b0bb63e6856d8128b012'
+            '139506ee00ccae23748c257ababebb87dd509ad83f87d545d776f62501b6f04a')
+
+build() {
+  cd ${pkgname}-${pkgver}
+  ./configure --prefix=/usr
+  make
+}
+
+package() {
+  cd ${pkgname}-${pkgver}
+
+  make DESTDIR="${pkgdir}" install
+  install -d -m755 "${pkgdir}/usr/share/pixmaps"
+  mv -f "${pkgdir}/usr/share/icons/alienarena.png" "${pkgdir}/usr/share/pixmaps/"
+  rm -r "${pkgdir}/usr/share/icons"
+  install -D -m644 "${srcdir}/alienarena.desktop" "${pkgdir}/usr/share/applications/alienarena.desktop"
+}

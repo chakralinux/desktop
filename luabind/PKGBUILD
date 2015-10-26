@@ -1,0 +1,32 @@
+#
+# Games Packages for Chakra, part of chakra-project.org
+#
+# Maintainer: Adrián Chaves Fernández (Gallaecio) <adriyetichaves@gmail.com>
+
+# include global config
+source ../_buildscripts/${current_repo}-${_arch}-cfg.conf
+
+pkgname=luabind
+pkgver=0.9.1
+pkgrel=1
+pkgdesc="A library that helps you create bindings between C++ and Lua."
+arch=('i686' 'x86_64')
+url="http://www.rasterbar.com/products/luabind.html"
+license=('MIT')
+depends=('gcc-libs' 'lua')
+makedepends=('boost-build' 'unzip')
+source=(http://downloads.sourceforge.net/$pkgname/$pkgname-$pkgver.tar.gz)
+md5sums=('8a323fb51d07dad5cfdb12c432793d55')
+
+package()
+{
+  cd $srcdir/$pkgname-$pkgver/
+
+  bjam release \
+    --prefix=$pkgdir/usr/ \
+    link=static,shared \
+    install
+
+  # License.
+  install -Dm644 LICENSE $pkgdir/usr/share/licenses/$pkgname/LICENSE
+}

@@ -1,0 +1,63 @@
+#
+# Games Packages for Chakra, part of chakra-project.org
+#
+# Maintainer: Adrián Chaves Fernández (Gallaecio) <adriyetichaves@gmail.com>
+
+pkgname=hale
+pkgver=0.6.3
+pkgrel=1
+pkgdesc="Role-playing game with a deep tactical combat system and storyline"
+arch=(any)
+url="http://sourceforge.net/apps/mediawiki/hale/index.php?title=Main_Page"
+screenshot="http://sourceforge.net/apps/gallery/hale/main.php?g2_view=core.DownloadItem&g2_itemId=92&g2_serialNumber=2"
+license=('GPL2')
+depends=('java-runtime')
+options=('!strip')
+categories=('games')
+source=(http://downloads.sourceforge.net/project/$pkgname/$pkgname-$pkgver.zip)
+md5sums=('fbf9a175bf60220b9795ad9a6e807dc8')
+
+build() {
+    cd $srcdir/$pkgname
+
+    mkdir -p bin
+    javac @compilerargs.txt
+
+    cd bin
+    jar cf hale.jar *
+    cp hale.jar ../
+}
+
+package() {
+  cd $srcdir/$pkgname
+
+  # Main.
+  install -Dm755 hale.sh $pkgdir/usr/share/$pkgname/hale.sh
+  install -Dm755 hale.jar $pkgdir/usr/share/$pkgname/hale.jar
+  install -Dm755 core.zip $pkgdir/usr/share/$pkgname/core.zip
+
+  for FOLDER in campaigns characters core docs lib
+  do
+    cp -R $FOLDER $pkgdir/usr/share/$pkgname/
+  done
+
+  mkdir -p $pkgdir/usr/share/$pkgname/lib/native/linux
+  cp lib/*.jar $pkgdir/usr/share/$pkgname/lib/
+
+  SUFFIX=64
+  for FILE in libjinput-linux liblwjgl libopenal
+  do
+    cp lib/native/linux/${FILE}${SUFFIX}.so $pkgdir/usr/share/$pkgname/lib/native/linux/
+  done
+
+  # Execution script.
+  install -d $pkgdir/usr/bin
+  echo "#!/bin/bash"                              > $pkgdir/usr/bin/$pkgname
+  echo "cd /usr/share/$pkgname && ./$pkgname.sh" >> $pkgdir/usr/bin/$pkgname
+  chmod +x $pkgdir/usr/bin/$pkgname
+
+  # Legal.
+  install -d $pkgdir/usr/share/licenses/$pkgname
+  cp docs/* $pkgdir/usr/share/licenses/$pkgname/
+  cp lib/*.txt $pkgdir/usr/share/licenses/$pkgname/
+}

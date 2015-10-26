@@ -1,0 +1,49 @@
+#
+# Games Packages for Chakra, part of chakra-project.org
+#
+# Maintainer: Adrián Chaves Fernández (Gallaecio) <adriyetichaves@gmail.com>
+
+pkgname=physfs
+pkgver=2.0.3
+pkgrel=1
+pkgdesc="A library to provide abstract access to various archives."
+arch=('i686' 'x86_64')
+url="http://icculus.org/physfs/"
+license=('ZLIB')
+depends=('zlib' 'readline')
+makedepends=('cmake' 'doxygen' 'man')
+changelog=ChangeLog
+source=(http://icculus.org/$pkgname/downloads/$pkgname-$pkgver.tar.bz2)
+md5sums=('c2c727a8a8deb623b521b52d0080f613')
+
+build() {
+  cd $srcdir/$pkgname-$pkgver
+
+  export CFLAGS="$CFLAGS -fno-strict-aliasing"
+  export CXXFLAGS="$CXXFLAGS -fno-strict-aliasing"
+  
+  cmake \
+    -DCMAKE_INSTALL_PREFIX=/usr \
+    -DCMAKE_BUILD_TYPE=RelWithDebInfo \
+    -DPHYSFS_BUILD_TEST=OFF \
+    -DPHYSFS_BUILD_WX_TEST=OFF \
+    .
+  make all docs
+}
+
+package() {
+  cd $srcdir/$pkgname-$pkgver
+  make DESTDIR=$pkgdir install docs
+
+  # Documentation:
+  install -d $pkgdir/usr/share/{doc/physfs,man/man3}
+  install -m644 docs/html/* $pkgdir/usr/share/doc/physfs
+  install -m644 docs/man/man3/* $pkgdir/usr/share/man/man3
+
+  for i in author Deinit description extension Free Init major Malloc minor opaque patch Realloc url ; do
+    mv $pkgdir/usr/share/man/man3/$i.3 $pkgdir/usr/share/man/man3/PHYSFS_$i.3
+  done
+
+  # License:
+  install -D -m644 $srcdir/$pkgname-$pkgver/LICENSE.txt $pkgdir/usr/share/licenses/$pkgname/LICENSE
+}

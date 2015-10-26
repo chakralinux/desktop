@@ -1,0 +1,29 @@
+#
+# Games Packages for Chakra, part of chakra-project.org
+#
+# Maintainer: Adrián Chaves Fernández (Gallaecio) <adriyetichaves gmail.com>
+
+pkgname=libwfut
+pkgver=0.2.3
+pkgrel=1
+pkgdesc="C++ implementation of the client side of WFUT"
+arch=(i686 x86_64)
+url="http://worldforge.org/"
+license=('LGPL')
+depends=('curl' 'swig' 'libsigc++2.0')
+source=("http://kent.dl.sourceforge.net/sourceforge/worldforge/$pkgname-$pkgver.tar.gz")
+md5sums=('b212f840613c9b84a0de86693a7ee4bf')
+
+build() {
+  cd $srcdir/$pkgname-$pkgver
+  
+  ./configure \
+    --prefix=/usr
+  make
+}
+
+package() {
+  cd $srcdir/$pkgname-$pkgver
+  make DESTDIR=$pkgdir install
+}
+

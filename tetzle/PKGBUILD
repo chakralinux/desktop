@@ -1,0 +1,25 @@
+pkgname=tetzle
+pkgver=2.0.3
+pkgrel=2
+pkgdesc="A jigsaw puzzle with tetrominoes for pieces."
+arch=('x86_64')
+url="http://gottcode.org/${pkgname}/"
+license=('GPL3')
+depends=('qt5-base')
+makedepends=('qt5-tools')
+optdepends=('jhead: auto-orient images')
+install=${pkgname}.install
+source=(http://gottcode.org/${pkgname}/${pkgname}-${pkgver}-src.tar.bz2)
+md5sums=('f28c63680835fd69ed1a30221dc7730b')
+screenshot='http://gottcode.org/tetzle/screenshots/small.png'
+
+build() {
+  cd "${srcdir}/${pkgname}-${pkgver}"
+  qmake-qt5 PREFIX=/usr
+  make
+}
+
+package() {
+  cd "${srcdir}/${pkgname}-${pkgver}"
+  make INSTALL_ROOT="${pkgdir}/" install
+}

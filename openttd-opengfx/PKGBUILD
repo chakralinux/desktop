@@ -1,0 +1,20 @@
+pkgname=openttd-opengfx
+_pkgname=opengfx
+pkgver=0.5.3
+pkgrel=1
+pkgdesc='Graphics set for OpenTTD.'
+arch=('any')
+url='http://dev.openttdcoop.org/projects/opengfx'
+license=('GPL2')
+categories=('games')
+source=("http://bundles.openttdcoop.org/${_pkgname}/releases/${pkgver}/${_pkgname}-${pkgver}.zip")
+md5sums=('423ef43a025f5e31330620adf0a057b3')
+
+package() {
+  cd "${srcdir}"
+  tar xvf "${_pkgname}-${pkgver}.tar"
+  cd ${_pkgname}-${pkgver}
+  install -d ${pkgdir}/usr/share/openttd/data   
+  install -m644 *.grf ${pkgdir}/usr/share/openttd/data
+  install -m644 *.obg ${pkgdir}/usr/share/openttd/data
+}

@@ -1,0 +1,30 @@
+# Contributor: MCMic <come.bernigaud@laposte.net>
+
+pkgname=valyria-tear
+pkgver=0.6.0
+pkgrel=1
+pkgdesc="Valyria Tear is an attempt at creating a free (as meant in the Gnu Public License) J-RPG game."
+arch=('any')
+url="http://valyriatear.blogspot.fr"
+license=('GPL')
+depends=('sdl' 'sdl_image' 'sdl_ttf' 'openal' 'libogg' 'libvorbis' 'glu' 'libpng' 'libjpeg' 'gettext' 'lua')
+makedepends=('cmake')
+conflicts=()
+source=("https://github.com/Bertram25/ValyriaTear/archive/${pkgver}/valyriatear-${pkgver}.tar.gz")
+md5sums=('b7f0fcdf5d640c26acb1b3ef6e2899e4')
+
+build() {
+    cd $srcdir/ValyriaTear-$pkgver
+    
+    mkdir -p build && cd build
+    cmake \
+        -DCMAKE_INSTALL_PREFIX=/usr \
+        -DCMAKE_BUILD_TYPE=Release \
+        ..
+    make
+}
+
+package() {
+    cd $srcdir/ValyriaTear-$pkgver/build
+    make install DESTDIR=$pkgdir
+}

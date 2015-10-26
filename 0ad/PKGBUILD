@@ -1,0 +1,68 @@
+#
+# Games Packages for Chakra, part of chakra-project.org
+#
+# Maintainer: Adrian Chaves Fernandez (Gallaecio) <adriyetichaves@gmail.com>
+
+pkgname=0ad
+pkgver=0.0.18
+_pkgver=$pkgver-alpha
+pkgrel=1
+pkgdesc="Cross-platform, 3D and historically-based real-time strategy game"
+screenshot=http://www.wildfiregames.com/0ad/images/news_images/dynamic-borders.jpg
+arch=('i686' 'x86_64')
+url="http://play0ad.com/"
+license=('GPL2' 'CCPL') # source licenses.
+depends=('boost-libs' 'curl' 'enet' 'gamin' 'gloox' 'libgl' 'libogg' 'libpng' 'libvorbis' 'libxcursor' 'libxml2' 'mesa' 'miniupnpc' 'nspr' 'nvidia-texture-tools' 'openal' 'sdl' 'zip' 'zlib' 0ad-data=$pkgver)
+makedepends=('boost' 'python2')
+replaces=(0ad-debug) # If someone wants a debug version, they should rebuild 0ad with config=debug.
+categories=('games')
+changelog=ChangeLog
+source=(http://downloads.sourceforge.net/project/zero-ad/releases/$pkgname-$_pkgver-unix-build.tar.xz)
+md5sums=('84aedae3ab86955f87c55607600daa12')
+
+prepare() {
+  cd "$srcdir/$pkgname-$_pkgver/"
+  sed -i "s/env python/env python2/g" libraries/source/cxxtest-4.4/bin/cxxtestgen
+}         
+
+build() {
+  cd $srcdir/$pkgname-$_pkgver/build/workspaces
+
+  unset CPPFLAGS # for le spidermonkey
+  
+  # Atlas disabled because it requires GTK.
+  ./update-workspaces.sh \
+    --disable-atlas \
+    --with-system-miniupnpc \
+    --with-system-nvtt \
+    --bindir=/usr/bin \
+    --libdir=/usr/lib/0ad \
+    --datadir=/usr/share/${pkgname}/data
+
+  cd gcc
+  make
+}
+
+package() {
+
+  cd $srcdir/$pkgname-$_pkgver
+
+  # Manual installation.
+  install -d ${pkgdir}/usr/{bin,lib,share/"${pkgname}"/data}
+  install -Dm755 ${srcdir}/${pkgbase}-${_pkgver}/binaries/system/pyrogenesis ${pkgdir}/usr/bin
+  install -Dm755 ${srcdir}/${pkgbase}-${_pkgver}/binaries/system/*.so ${pkgdir}/usr/lib
+  
+  # Copy l10n files.
+  cp -r binaries/data/l10n/ ${pkgdir}/usr/share/${pkgname}/data/
+  
+  # Execution script.
+  install -Dm755 ./build/resources/$pkgname.sh $pkgdir/usr/bin/$pkgname
+
+  # Desktop Integration.
+  install -Dm644 ./build/resources/$pkgname.desktop $pkgdir/usr/share/applications/$pkgname.desktop
+  install -Dm644 ./build/resources/$pkgname.png $pkgdir/usr/share/pixmaps/$pkgname.png
+
+  # Legal.
+  install -Dm644 LICENSE.txt $pkgdir/usr/share/licenses/$pkgname/license.txt
+  
+}

@@ -1,0 +1,37 @@
+pkgname=performous
+pkgver=1.0
+pkgrel=2
+pkgdesc='A free game like Singstar™, Rockband™ or Stepmania™'
+arch=('x86_64')
+url="http://$pkgname.org/"
+license=('GPL2' 'custom: Menu song: CC:BY-SA.')
+screenshot="http://performous.org/screenshots/Performous-0.4.0-Windows.jpg"
+depends=('boost-libs' 'cairo' 'ffmpeg' 'glew' 'jack' 'libjpeg' 'libpng' 'librsvg' 'libxml++' 'opencv' 'portaudio' 'portmidi' 'sdl2')
+makedepends=('boost' 'cmake' 'help2man' 'tar')
+optdepends=('performous-songs: some songs for Performous')
+source=($pkgname-$pkgver.tar.gz::https://github.com/performous/${pkgname}/archive/${pkgver}.tar.gz
+        cast-basic_istream-to-bool.patch)
+md5sums=('cbeec2f0c0114cc499746c1e33f56055'
+	 'c883cce82d0359c6b40ce38bd4ccf4bf')
+
+prepare() {
+  cd performous-${pkgver}
+
+  patch -Np1 -i ../cast-basic_istream-to-bool.patch
+}
+
+build() {
+  cd $pkgname-$pkgver
+  
+  mkdir -p build && cd build
+  cmake \
+    -DCMAKE_INSTALL_PREFIX=/usr \
+    -DCMAKE_BUILD_TYPE=Release \
+    ..
+  make
+}
+
+package() {
+  cd $srcdir/$pkgname-$pkgver/build
+  make DESTDIR="$pkgdir" install
+}

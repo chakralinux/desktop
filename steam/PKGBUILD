@@ -1,0 +1,47 @@
+#
+# Chakra Packages for Chakra, part of chakra-project.org
+#
+# maintainer (x86_64): AlmAck <gluca86 [at] gmail.com>
+# contributor (ccr): blablub <spamalicious.steve@gmail.com>
+
+pkgname=steam
+pkgver=1.0.0.36
+pkgrel=1
+pkgdesc="Installer for the Steam software distribution service"
+arch=('x86_64')
+url="http://steampowered.com/"
+license=('custom')
+depends=('bash' 'desktop-file-utils' 'hicolor-icon-theme' 'curl'
+      'dbus' 'freetype2'  'gdk-pixbuf2' 'ttf-liberation'
+      'lib32-sdl' 'lib32-libvorbis' 'lib32-alsa-lib'
+      'lib32-libgcrypt' 'lib32-nss' 'lib32-openal'
+      'lib32-gcc-libs' 'lib32-libx11')
+      
+optdepends=(
+      'lib32-mesa: for open source ATI/Intel/Nouveau users'
+      'lib32-catalyst-utils: for AMD Catalyst users'
+      'lib32-catalyst-legacy-utils: for AMD Catalyst Legacy users'
+      'lib32-nvidia-utils-bumblebee: for NVIDIA + Bumblebee users'
+      'lib32-nvidia-utils: for NVIDIA proprietary blob users'
+      'lib32-nvidia-304xx-utils: for NVIDIA 304xx series proprietary users')
+
+makedepends=('librsvg')
+
+install=steam.install  
+source=("http://repo.steampowered.com/$pkgname/pool/$pkgname/s/$pkgname/${pkgname}_$pkgver.tar.gz"
+	'steam.svg')
+md5sums=('85b0e502ee7842225935348da85e4c85 '
+	 '89204aaf2b4f7cb37fed255c32f4e5e3')
+
+package() {
+    cd "$srcdir/$pkgname"
+
+    # Install
+    make DESTDIR=${pkgdir} install
+        
+    # Install license
+    install -Dm644 "$pkgdir/usr/share/doc/steam/steam_install_agreement.txt" "$pkgdir/usr/share/licenses/steam/LICENSE"
+    
+    # remove steamdeps not needed for chakra linux
+    rm "$pkgdir/usr/bin/steamdeps"
+}
