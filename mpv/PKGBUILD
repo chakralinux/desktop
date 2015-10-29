@@ -1,21 +1,21 @@
 pkgname=mpv
-pkgver=0.11.0
+pkgver=0.12.0
 pkgrel=1
 pkgdesc="A movie player and encoder for linux, based on MPlayer/mplayer2"
 arch=('x86_64')
 license=('GPL')
 url="http://mpv.io"
-depends=('pulseaudio' 'ffmpeg' 'lcms2' 'libdvdread' 'libgl' 'libbs2b' 
-         'libxinerama' 'libxv' 'libxkbcommon' 'libva'  'libass' 
-	 'wayland' 'desktop-file-utils' 'hicolor-icon-theme' 
-         'xdg-utils' 'lua' 'libdvdnav' 'libcdio-paranoia' 'libbluray'
+depends=('pulseaudio' 'ffmpeg' 'lcms2' 'libdvdread' 'libgl' 'libbs2b' 'libvdpau'
+         'libxinerama' 'libxv' 'libxkbcommon' 'libva'  'libass' 'uchardet' 
+	 'wayland' 'desktop-file-utils' 'hicolor-icon-theme' 'v4l-utils'
+         'xdg-utils' 'lua' 'libdvdnav' 'libcdio-paranoia' 'libbluray' 'libxss'
          'enca' 'libguess' 'harfbuzz' 'graphite' 'libxrandr' 'rubberband')
 makedepends=('mesa' 'python3-docutils' 'ladspa' 'x264' 'jack'
              'samba')
 options=('!emptydirs')
 install=${pkgname}.install
 source=("https://github.com/mpv-player/${pkgname}/archive/v${pkgver}.tar.gz")
-sha256sums=('a2157174e46db46dad5deb1fde94283e72ebe922fd15447cb16a2a243fae5bda')
+sha256sums=('df242044c749d850344f5499860d852849147f20c63d36d2cd678627bd8d6cc4')
 
 prepare() {
   # point python to python3
@@ -39,15 +39,16 @@ build() {
     --enable-libmpv-shared \
     --enable-cdda \
     --enable-zsh-comp \
+    --enable-alsa \
     --enable-pulse \
-    --disable-sdl2 \
-    --disable-sdl1 \
     --enable-openal \
     --enable-wayland \
     --enable-gl-wayland \
     --enable-egl-x11 \
     --enable-libsmbclient \
-    --enable-dvdread
+    --enable-dvdread \
+    --enable-libv4l2 \
+    --enable-vdpau
   ./waf build
 }
  
