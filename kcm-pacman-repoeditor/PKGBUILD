@@ -1,0 +1,37 @@
+
+pkgname=kcm-pacman-repoeditor
+pkgver=0.2.0
+pkgdesc="A KDE control module for pacman's repositories management."
+pkgrel=2
+arch=('x86_64')
+url="https://github.com/gcala/kcmpacmanrepoeditor"
+license=('GPL3')
+depends=('kcoreaddons' 'kwidgetsaddons' 'kcmutils' 'ki18n' 'kauth')
+makedepends=('extra-cmake-modules' 'kdoctools')
+categories=('system')
+_gitsha=33591f4
+source=("git://git.chakraos.org/${pkgname}.git#commit=${_gitsha}")
+md5sums=('SKIP')
+
+build() {
+  cd "${srcdir}"
+  
+  mkdir -p build
+  cd build
+  cmake ../$pkgname\
+    -DQT_QMAKE_EXECUTABLE=/usr/bin/qmake-qt5 \
+    -DCMAKE_BUILD_TYPE=Release \
+    -DCMAKE_INSTALL_PREFIX=/usr \
+    -DLIB_INSTALL_DIR=lib \
+    -DKDE_INSTALL_USE_QT_SYS_PATHS=ON \
+    -DSYSCONF_INSTALL_DIR=/etc \
+    -DQML_INSTALL_DIR=/usr/lib/qt5/qml \
+    -DPLUGIN_INSTALL_DIR=/usr/lib/qt5/plugins \
+    -DBUILD_TESTING=OFF
+  make
+}
+
+package(){
+  cd "${srcdir}/build"
+  make DESTDIR="${pkgdir}" install
+}
