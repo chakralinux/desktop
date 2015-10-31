@@ -4,7 +4,7 @@
 _pkgname=QupZilla
 pkgname='qupzilla'
 pkgver=1.8.8
-pkgrel=1
+pkgrel=2
 pkgdesc="A very fast open source browser based on WebKit core"
 url="http://www.qupzilla.com"
 arch=('x86_64')
@@ -13,7 +13,10 @@ makedepends=('qt5-tools' 'kwallet')
 depends=('qt5-webkit' 'qt5-script')
 optdepends=('bash-completion: bash completion support'
             'kwallet: kf5 kwallet integration')
-install=${pkgbase}.install
+provides=('qupzilla-qt5')
+conflicts=('qupzilla-qt5')
+replaces=('qupzilla-qt5')
+install=${pkgname}.install
 categories=('network') 
 screenshot='http://www.qupzilla.com/screens/kde.png'
 source=("https://github.com/QupZilla/qupzilla/releases/download/v${pkgver}/${_pkgname}-${pkgver}.tar.xz"
