@@ -2,16 +2,17 @@
 # Maintainer: Bruce Liu <brli@users.sourceforge.net>
 
 _pkgname=QupZilla
-pkgbase=qupzilla
-pkgname=('qupzilla' 'qupzilla-qt4')
+pkgname='qupzilla'
 pkgver=1.8.8
 pkgrel=1
 pkgdesc="A very fast open source browser based on WebKit core"
 url="http://www.qupzilla.com"
 arch=('x86_64')
 license=('GPL3')
-makedepends=('qt5-tools' 'qt5-webkit' 'qt5-script' 'kwallet' 'kdelibs' 'qt')
-optdepends=('bash-completion: bash completion support')
+makedepends=('qt5-tools' 'kwallet')
+depends=('qt5-webkit' 'qt5-script')
+optdepends=('bash-completion: bash completion support'
+            'kwallet: kf5 kwallet integration')
 install=${pkgbase}.install
 categories=('network') 
 screenshot='http://www.qupzilla.com/screens/kde.png'
@@ -39,47 +40,21 @@ prepare() {
   msg 'Applying search engine patch...'
   cd ${srcdir}/${_pkgname}-${pkgver}/src/lib/opensearch/
   sed 's|https://duckduckgo.com/?q=%s&t=qupzilla|https://duckduckgo.com/?t=chakra&q=%s|' -i searchenginesmanager.cpp
-  
-  # split
-  mkdir ${srcdir}/qt{4,5}
-  cp -r ${srcdir}/${_pkgname}-${pkgver}/* ${srcdir}/qt4
-  cp -r ${srcdir}/${_pkgname}-${pkgver}/* ${srcdir}/qt5
 }
          
 build() {
   export USE_WEBGL="true"
   export KDE_INTEGRATION="true"
   export ENABLE_OPACITY_EFFECT="true"
-  
-  msg 'Qt4 build'
-  cd "${srcdir}/qt4"
-  qmake
-  make
-  
-  msg 'Qt5 build'
-  cd "${srcdir}/qt5"
+
+  cd "${srcdir}/${_pkgname}-${pkgver}/"
   /usr/lib/qt5/bin/qmake
   make
 
 }
 
-package_qupzilla-qt4() {
-  pkgdesc+=('(Qt4 build)')
-  depends=('qt' 'qtwebkit-plugins' 'qtwebkit')
-  optdepends=('kdelibs: kwallet integration')
-  provides=("${pkgbase}")
-  conflicts=("${pkgbase}")
-  cd "${srcdir}/qt4"
-  make INSTALL_ROOT="${pkgdir}" install
-  install -Dm 644 "${srcdir}/start-white.png" "${pkgdir}/usr/share/pixmaps/start-white.png"
-}
-
 package_qupzilla() {
-  pkgdesc+=('(Qt5 build)')
-  depends=('qt5-webkit' 'qt5-script')
-  optdepends=('kwallet: kf5 kwallet integration')
-  cd "${srcdir}/qt5"
+  cd "${srcdir}/${_pkgname}-${pkgver}"
   make INSTALL_ROOT="${pkgdir}" install
   install -Dm 644 "${srcdir}/start-white.png" "${pkgdir}/usr/share/pixmaps/start-white.png"  
 }
-
