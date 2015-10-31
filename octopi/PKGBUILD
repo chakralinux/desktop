@@ -1,18 +1,15 @@
 pkgbase=octopi
-pkgname=('octopi' 'octopi-notifier' 'octopi-qt5' 'octopi-notifier-qt5')
+pkgname=('octopi' 'octopi-notifier')
 pkgver=0.7.0
-pkgrel=2
+pkgrel=3
 url="https://octopiproject.wordpress.com/"
 arch=('x86_64')
 license=('GPL3')
-depends=('pacman' 'pacmanlogviewer' 'mirror-check' 'gist')
-makedepends=('automoc4' 'qt' 'qt5-declarative')
-conflicts=('oktopi')
-replaces=('oktopi')
+depends=('pacman' 'pacmanlogviewer' 'mirror-check' 'gist' 'qt5-quickcontrols')
 categories=('system') 
 screenshot=('http://octopiproject.files.wordpress.com/2014/01/octopi_in_kaos.png')
 
-gitsha=43b7526
+gitsha=55f63bc
 source=("$pkgname"::"git://github.com/aarnt/${pkgname}.git#commit=${gitsha}")
 md5sums=('SKIP')
 
@@ -26,39 +23,10 @@ prepare(){
 
     # enable the kstatus switch
     sed -e "s/# DEFINES += KSTATUS/ DEFINES += KSTATUS/" -i notifier/octopi-notifier/octopi-notifier.pro
-
-    # prepare for package split
-    cp -r "${srcdir}/${pkgbase}" "${srcdir}/${pkgbase}-qt5"
 }
 
 build() {
-   # first we build Qt4 version
    cd "${srcdir}/${pkgbase}"
-   qmake octopi.pro
-   make
-
-   pushd "notifier/pacmanhelper"
-   qmake pacmanhelper.pro
-   make
-   popd
-
-   pushd "notifier/octopi-notifier"
-   qmake octopi-notifier.pro
-   make
-   popd
-
-   pushd "repoeditor"
-   qmake octopi-repoeditor.pro
-   make
-   popd
-
-   pushd "cachecleaner"
-   qmake octopi-cachecleaner.pro
-   make
-   popd
-
-   # next, the qt5 flavor
-   cd "${srcdir}/${pkgbase}-qt5"
    qmake-qt5 octopi.pro
    make
 
@@ -85,7 +53,10 @@ build() {
 
 package_octopi() {
    pkgdesc="Octopi, a powerful Pacman frontend using Qt libs"
-   depends+=('qt')
+   depends+=('qt5-declarative' 'knotifications')
+   provides=('octopi-qt5')
+   conflicts=('oktopi' 'octopi-qt5')
+   replaces=('oktopi' 'octopi-qt5')
 
    # start package
    cd ${srcdir}/${pkgbase}
@@ -102,53 +73,16 @@ package_octopi() {
 
 package_octopi-notifier() {
    pkgdesc="Octopi system tray notification"
-   depends+=('qt')
+   depends+=('qt5-declarative')
+   provides=('octopi-notifier-qt5')
+   conflicts=('octopi-notifier-qt5')
+   replaces=('octopi-notifier-qt5')
 
    # main application
    cd "${srcdir}/${pkgbase}"
    install -Dm755 notifier/bin/octopi-notifier ${pkgdir}/usr/bin/${pkgname}
    install -Dm644 octopi-notifier.desktop ${pkgdir}/usr/share/applications/octopi-notifier.desktop
    install -Dm644 resources/images/octopi_red.png ${pkgdir}/usr/share/icons/${pkgname}.png
-   
-   #Pacmanhelper service files
-   install -Dm755 notifier/bin/pacmanhelper ${pkgdir}/usr/lib/octopi/pacmanhelper
-
-   install -Dm644 notifier/pacmanhelper/polkit/org.octopi.pacman.policy ${pkgdir}/usr/share/polkit-1/actions/org.octopi.pacman.policy
-   install -Dm644 notifier/pacmanhelper/polkit/org.octopi.pacmanhelper.conf ${pkgdir}/etc/dbus-1/system.d/org.octopi.pacmanhelper.conf
-   install -Dm644 notifier/pacmanhelper/polkit/org.octopi.pacmanhelper.xml ${pkgdir}/usr/share/dbus-1/interfaces/org.octopi.pacmanhelper.xml
-   install -Dm644 notifier/pacmanhelper/polkit/org.octopi.pacmanhelper.service ${pkgdir}/usr/share/dbus-1/system-services/org.octopi.pacmanhelper.service
-}
-
-package_octopi-qt5() {
-   pkgdesc="Octopi, a powerful Pacman frontend using Qt libs - Qt5 version"
-   depends+=('qt5-declarative' 'knotifications')
-   provides+=('octopi')
-   conflicts+=('octopi')
-   
-   # start package
-   cd ${srcdir}/${pkgbase}-qt5
-
-   install -Dm 755 bin/octopi ${pkgdir}/usr/bin/octopi
-   install -Dm 755 repoeditor/bin/octopi-repoeditor ${pkgdir}/usr/bin/octopi-repoeditor
-   install -Dm 644 octopi.desktop ${pkgdir}/usr/share/applications/octopi.desktop
-   install -Dm 644 resources/images/octopi_green.png ${pkgdir}/usr/share/icons/octopi.png
-
-   #Octopi-cachecleaner file
-   install -Dm 755 cachecleaner/bin/octopi-cachecleaner ${pkgdir}/usr/bin/octopi-cachecleaner
-   install -Dm 644 cachecleaner/octopi-cachecleaner.desktop ${pkgdir}/usr/share/applications/octopi-cachecleaner.desktop
-}
-
-package_octopi-notifier-qt5() {
-   pkgdesc="Octopi system tray notification - Qt5 version"
-   depends+=('qt5-declarative')
-   provides+=('octopi-notifier')
-   conflicts+=('octopi-notifier')
-
-   # main application
-   cd "${srcdir}/${pkgbase}-qt5"
-   install -Dm755 notifier/bin/octopi-notifier ${pkgdir}/usr/bin/octopi-notifier
-   install -Dm644 octopi-notifier.desktop ${pkgdir}/usr/share/applications/octopi-notifier.desktop
-   install -Dm644 resources/images/octopi_red.png ${pkgdir}/usr/share/icons/octopi-notifier.png
    
    #Pacmanhelper service files
    install -Dm755 notifier/bin/pacmanhelper ${pkgdir}/usr/lib/octopi/pacmanhelper
