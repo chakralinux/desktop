@@ -1,7 +1,7 @@
 
 pkgname=calamares
 pkgver=1.1.4.2
-pkgrel=2
+pkgrel=3
 _releaseName="Fermi"
 _releaseYear="2015"
 pkgdesc='Distribution-independent installer framework'
@@ -23,6 +23,7 @@ source=("git://github.com/rshipp/calamares#commit=${_gitsha}"
         'packages.conf'
         'unpackfs.conf'
         'grubcfg.conf'
+        'partition.conf'
         #'license.conf'
         '_bootldr.conf'
         'launch-calamares.sh'
@@ -37,6 +38,7 @@ md5sums=('SKIP'
          'cecbccde59c9b0a26466c8998fc9ec30'
          'f8e10a9fa0324f68650a646769339da9'
          '799aa88237b4680bcc4ef4b919c05cce'
+         'e2bc605a72109ce842bb6666ec5497fb'
          '72f00d0ce1ddbfb687b688281639b611'
          '2437e44479a54376ad9244d120369f6c'
          'f005a6e10b8e0425e04207920b6231b7'
@@ -83,6 +85,7 @@ package() {
   install -D -m644 "${srcdir}/unpackfs.conf" "${pkgdir}/etc/calamares/modules/unpackfs.conf"
   install -D -m644 "${srcdir}/packages.conf" "${pkgdir}/etc/calamares/modules/packages.conf"
   install -D -m644 "${srcdir}/grubcfg.conf" "${pkgdir}/etc/calamares/modules/grubcfg.conf"
+  install -D -m644 "${srcdir}/partition.conf" "${pkgdir}/etc/calamares/modules/partition.conf"
   #install -D -m644 "${srcdir}/license.conf" "${pkgdir}/etc/calamares/modules/license.conf"
   install -D -m644 "${srcdir}/_bootldr.conf" "${pkgdir}/etc/calamares/modules/_bootldr.conf"
   
