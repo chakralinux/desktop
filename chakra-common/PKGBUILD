@@ -4,7 +4,7 @@ source ../kdeapps.conf
 pkgname=chakra-common
 arch=('x86_64')
 pkgver=${_kdever}
-pkgrel=1
+pkgrel=2
 pkgdesc="Common configuration files, scripts and artwork"
 url="http://www.chakraos.org"
 license=('GPL'
@@ -122,10 +122,12 @@ package() {
     # Install config file for updates
     install -D -m755 -o root -g root ${srcdir}/updates.conf ${pkgdir}/etc/chakra/updates.conf
 
-    # Install root actions kf5
-    cd ${srcdir}/rootactions_servicemenu_2.8.6/Root_Actions_2.8.6/dolphin-KDE4/
+    # Install root actions
+    cd ${srcdir}/rootactions_servicemenu_2.8.6/Root_Actions_2.8.6/
     install -dm755 ${pkgdir}/usr/share/kservices5/ServiceMenus/
-    install -m755 *.desktop ${pkgdir}/usr/share/kservices5/ServiceMenus/
+    install -Dm755 dolphin-KDE4/*.desktop ${pkgdir}/usr/share/kservices5/ServiceMenus/
+    install -Dm644 krusader-KDE4/krusader_rootactions.xml "$pkgdir"/usr/share/apps/krusader/krusader_rootactions.xml
+    install -Dm755 rootactions-servicemenu.pl "$pkgdir"/usr/bin/rootactions-servicemenu.pl
 
     # Install Chakra icons
     cd ${srcdir}/chakra-icons/
