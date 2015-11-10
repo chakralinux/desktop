@@ -1,15 +1,14 @@
-# maintainer: Neophytos Kolokotronis <tetris4@gmail.com>
-
 pkgname=partitionmanager
 epoch=1
-pkgver=1.1.0
-pkgrel=2
-pkgdesc="A KDE utility that allows you to manage disks, partitions, and file systems - Patched for Chakra Live ISO"
+pkgver=1.2.1
+pkgrel=1
+pkgdesc="A KDE utility that allows you to manage disks, partitions, and file systems"
 arch=('x86_64')
 url="https://sourceforge.net/projects/partitionman"
 license=('GPL2')
-depends=('kde-runtime' 'parted' 'libatasmart')
-makedepends=('cmake' 'automoc4' 'pkg-config' 'ntfs-3g')
+depends=('kio' 'parted' 'libatasmart' 'qt5-base' 'kconfig' 'kcrash' 'kdoctools'
+         'kiconthemes' 'kjobwidgets' 'kwindowsystem' 'kxmlgui' 'kwidgetsaddons')
+makedepends=('extra-cmake-modules' 'ntfs-3g' 'pkg-config')
 optdepends=('e2fsprogs: ext2/3/4 support'
 	    'xfsprogs: XFS support'
 	    'jfsutils: JFS support'
@@ -21,23 +20,19 @@ conflicts=('tribe-partitionmanager')
 provides=('tribe-partitionmanager')
 replaces=('tribe-partitionmanager<=1358163-8')
 install=partitionmanager.install
-options=(debug)
-source=("http://download.kde.org/stable/${pkgname}/${pkgver}/src/${pkgname}-${pkgver}.tar.xz" tribe.patch) # disable-gpt.patch)
-md5sums=('4a752c250fc5c98e22aba1d2ea309bec'
-         'fae7de6edb04f8b17c31ed594a9a9b8e')
-
-prepare() {
-  cd ${pkgname}-${pkgver}
-  patch -Np1 -i ${srcdir}/tribe.patch
- } 
+options=('debug')
+source=("http://download.kde.org/stable/${pkgname}/${pkgver}/src/${pkgname}-${pkgver}.tar.xz") #tribe.patch # disable-gpt.patch)
+sha256sums=('eb5b8b00ab6f0a2c5ef494b1c70441100ff70bf691006c4aa95f39d00b43e4e0')
 
 build() {
   cd ${pkgname}-${pkgver}
 
-  cmake -DCMAKE_INSTALL_PREFIX=/usr -DCMAKE_BUILD_TYPE=RelWithDebInfo -DENABLE_UDISKS2=on
-
-  make 
+  cmake ../$pkgname-$pkgver \
+    -DCMAKE_BUILD_TYPE=RelWithDebInfo \
+    -DCMAKE_INSTALL_LIBDIR=lib
+  make
 }
+
 
 package() {
   cd ${pkgname}-${pkgver}
