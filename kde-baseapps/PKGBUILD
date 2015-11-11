@@ -8,8 +8,7 @@ pkgname=('kde-baseapps-kdepasswd'
          'kde-baseapps-kfind'
          'kde-baseapps-konq-plugins'
          'kde-baseapps-konqueror'
-         'kde-baseapps-lib'
-         'kde-baseapps-plasma')
+         'kde-baseapps-lib')
 pkgver=${_kdever}
 pkgrel=1
 arch=('x86_64')
@@ -107,14 +106,5 @@ package_kde-baseapps-lib() {
   provides=('kde-baseapps')
 
   cd "$srcdir"/build/lib
-  make DESTDIR="$pkgdir" install
-}
-
-package_kde-baseapps-plasma() {
-  pkgdesc='Display the contents of folders (User´s home folder as default)'
-  depends=('kdebase-workspace' 'kde-baseapps-lib')
-  groups=()
-
-  cd "$srcdir"/build/plasma
   make DESTDIR="$pkgdir" install
 }
