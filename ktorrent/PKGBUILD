@@ -6,13 +6,13 @@
 
 pkgname=ktorrent
 pkgver=4.3.1
-pkgrel=3
+pkgrel=4
 pkgdesc="A powerful BitTorrent client for KDE"
-arch=('i686' 'x86_64')
+arch=('x86_64')
 url='http://ktorrent.pwsp.net/'
 license=('GPL2')
 depends=('libktorrent' 'kdebase-runtime' 'taglib')
-makedepends=('automoc4' 'cmake' 'boost' 'kdebase-workspace' 'docbook-xsl')
+makedepends=('automoc4' 'cmake' 'boost' 'kde-runtime' 'docbook-xsl')
 install=${pkgname}.install
 source=("http://ktorrent.pwsp.net/downloads/${pkgver}/${pkgname}-${pkgver}.tar.bz2"
         'kde412.patch'
@@ -33,7 +33,8 @@ build() {
 	cd build
 	cmake ../${pkgname}-${pkgver} \
 	  -DCMAKE_BUILD_TYPE=Release \
-	  -DCMAKE_INSTALL_PREFIX=/usr
+	  -DCMAKE_INSTALL_PREFIX=/usr \
+	  -DENABLE_SYNDICATION_PLUGIN=false
 	make
 }
 
