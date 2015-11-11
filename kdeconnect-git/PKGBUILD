@@ -1,8 +1,8 @@
 # Maintainer: Antonio Rojas <arojas@archlinux.org>
 # Contributor: Kuba Serafinowski <zizzfizzix(at)gmail(dot)com>
 
-pkgname=kdeconnect-git
-pkgver=r1080.e424bce
+pkgname=kdeconnect
+pkgver=10.8.e424bce
 pkgrel=1
 pkgdesc='Adds communication between KDE and your smartphone'
 arch=(i686 x86_64)
@@ -13,13 +13,13 @@ makedepends=(extra-cmake-modules git python3)
 optdepends=('sshfs: remote filesystem browser')
 provides=(kdeconnect)
 conflicts=(kdeconnect)
-source=("git://anongit.kde.org/kdeconnect-kde.git")
+source=("git://anongit.kde.org/kdeconnect-kde.git#commit=e424bce")
 install=$pkgname.install
 sha256sums=('SKIP')
 
 pkgver() {
   cd kdeconnect-kde
-  printf "r%s.%s" "$(git rev-list --count HEAD)" "$(git rev-parse --short HEAD)"
+  printf "10.8.$(git rev-parse --short HEAD)"
 }
 
 prepare() {
