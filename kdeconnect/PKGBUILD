@@ -1,39 +1,43 @@
-# Maintainer: Neophytos Kolokotronis <tetris4@gmail.com>
-# Contributions from AUR: https://aur.archlinux.org/packages/kdeconnect/
+# Maintainer: Chaoting Liu <brli@chakraos.org>
 
-pkgname=kdeconnect
-pkgver=0.8
-_pkgver=${pkgver}
-pkgrel=2
-pkgdesc='KDE Connect - kded and kcm'
-url='https://albertvaka.wordpress.com/2013/08/05/introducing-kde-connect/'
-license=('GPL')
-arch=('x86_64')
-depends=('kdelibs' 'qjson' 'qca-ossl' 'libfakekey')
-makedepends=('automoc4' 'cmake')
+pkgname=kdeconnect-git
+pkgver=10.8.e424bce
+pkgrel=1
+pkgdesc='Adds communication between KDE and your smartphone (Experimental build)'
+arch=(i686 x86_64)
+url='https://projects.kde.org/projects/playground/base/kdeconnect-kde'
+license=(GPL2)
+depends=(kio kcmutils qca-qt5 libfakekey hicolor-icon-theme kwayland) # telepathy-qt5 - requires 0.9.7
+makedepends=(extra-cmake-modules git python3)
 optdepends=('sshfs: remote filesystem browser')
-install=kdeconnect.install
+provides=(kdeconnect)
+conflicts=(kdeconnect)
 screenshot=('http://albertvaka.files.wordpress.com/2013/08/kcm.png')
-source=("http://download.kde.org/unstable/kdeconnect/${_pkgver}/src/${pkgname}-kde-${pkgver}.tar.xz")
-md5sums=('7b84ebf785f44a1d022a1c0915555f5d')
+source=("git://anongit.kde.org/kdeconnect-kde.git#commit=e424bce")
+install=$pkgname.install
+sha256sums=('SKIP')
+
+pkgver() {
+  cd kdeconnect-kde
+  printf "10.8.$(git rev-parse --short HEAD)"
+}
 
 prepare() {
   mkdir -p build
-
-  cd ${pkgname}-kde-${pkgver}
 }
- 
+
 build() {
   cd build
- 
-  cmake -DCMAKE_INSTALL_PREFIX=/usr \
-        -DKDE4_BUILD_TESTS=OFF \
-        -DCMAKE_BUILD_TYPE=Release \
-        ../${pkgname}-kde-${pkgver}
+  cmake ../kdeconnect-kde \
+    -DCMAKE_INSTALL_PREFIX=/usr \
+    -DCMAKE_BUILD_TYPE=Release \
+    -DLIB_INSTALL_DIR=lib \
+    -DLIBEXEC_INSTALL_DIR=lib \
+    -DKDE_INSTALL_USE_QT_SYS_PATHS=ON
   make
 }
- 
+
 package() {
   cd build
-  make DESTDIR=${pkgdir} install
+  make DESTDIR="$pkgdir" install
 }
