@@ -1,7 +1,7 @@
 pkgname=partitionmanager
 epoch=1
 pkgver=1.2.1
-pkgrel=1
+pkgrel=2
 pkgdesc="A KDE utility that allows you to manage disks, partitions, and file systems"
 arch=('x86_64')
 url="https://sourceforge.net/projects/partitionman"
@@ -21,15 +21,17 @@ provides=('tribe-partitionmanager')
 replaces=('tribe-partitionmanager<=1358163-8')
 install=partitionmanager.install
 options=('debug')
-source=("http://download.kde.org/stable/${pkgname}/${pkgver}/src/${pkgname}-${pkgver}.tar.xz") #tribe.patch # disable-gpt.patch)
+source=("http://download.kde.org/stable/${pkgname}/${pkgver}/src/${pkgname}-${pkgver}.tar.xz")
 sha256sums=('eb5b8b00ab6f0a2c5ef494b1c70441100ff70bf691006c4aa95f39d00b43e4e0')
 
 build() {
   cd ${pkgname}-${pkgver}
 
   cmake ../$pkgname-$pkgver \
+    -DCMAKE_INSTALL_PREFIX=/usr \
     -DCMAKE_BUILD_TYPE=RelWithDebInfo \
-    -DCMAKE_INSTALL_LIBDIR=lib
+    -DCMAKE_INSTALL_LIBDIR=lib \
+    -DKDE_INSTALL_USE_QT_SYS_PATHS=ON
   make
 }
 
