@@ -6,8 +6,8 @@
 
 pkgbase=virtualbox
 pkgname=('virtualbox' 'virtualbox-ext-oracle' 'virtualbox-guest-additions')
-pkgver=5.0.8
-_build_virtualbox=103449
+pkgver=5.0.10
+_build_virtualbox=104061
 pkgrel=1
 arch=('x86_64')
 url='http://virtualbox.org/'
@@ -28,9 +28,9 @@ source=("VirtualBox-${pkgver}-${_build_virtualbox}-Linux_amd64.run::http://downl
         'PUEL'
         'vboxservice.service')
 # the checksum can be found here: https://www.virtualbox.org/download/hashes/${pkgver}/SHA256SUMS
-sha256sums=('91bea0393f0b0afdc139660f23d77512723d367446d482545ded2eeeaba851d0'
-	    'febd2c99909cb932a98c2b9f73ce8eb03fc183c8c8f2fc874985cf3d598f6b94'
-	    'a6ab45a043e460c87f145ec626c1cc2a1ae74222f15aa725004cdc84bf48e9f3'
+sha256sums=('77c3500f460f24850c796fbef84d7ecd7cf05b5a34256e712172e6f159f119e9'
+	    'c846fa26fec8587e57180c85c408cad377c48ad26830b0dc839ebf9025e3d29c'
+	    '8f7ffee3fac75793e48d1859b65a95879b3ed5bc1c3164c967e85d69244c594b'
             'e0122a9a33df9704bf73c1904330f95dde25488b49972e8a28f48934f3921c67'
             '71740893a5f226f9d9fcc607ab9d39b7de816b2759625b34da19162bc7e579ff'
             '12dbba3b59991f2b68cddeeeda20236aeff63e11b7e2d1b08d9d6a82225f6651'
@@ -169,7 +169,7 @@ package_virtualbox() {
   rm "${pkgdir}/opt/VirtualBox/libQtCoreVBox.so.4"
   rm "${pkgdir}/opt/VirtualBox/libQtGuiVBox.so.4"
   rm "${pkgdir}/opt/VirtualBox/libQtOpenGLVBox.so.4"
-  rm "${pkgdir}/opt/VirtualBox/libQtNetworkVBox.so.4"
+  #rm "${pkgdir}/opt/VirtualBox/libQtNetworkVBox.so.4"
   cd "${pkgdir}/opt/VirtualBox"
   ln -s /usr/lib/libQtCore.so.4 libQtCoreVBox.so.4
   ln -s /usr/lib/libQtGui.so.4 libQtGuiVBox.so.4
