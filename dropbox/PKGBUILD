@@ -1,13 +1,13 @@
 pkgname=dropbox
 pkgver=3.10.11
-pkgrel=1
+pkgrel=2
 pkgdesc="A free service that lets you bring your photos, docs, and videos anywhere and share them easily."
 arch=('x86_64')
 url="http://www.dropbox.com"
 license=('custom')
-depends=('dbus-glib' 'libsm' 'libxmu' 'libxslt')
-optdepends=('dropbox-servicemenu: servicemenu for KDE4'
-            'dolphin-plugins: for integration of dolphin under plasma 5')
+depends=('dbus-glib' 'libsm' 'libxmu' 'libxslt'
+         'qt5-base' 'qt5-declarative' 'qt5-webkit')
+optdepends=('dolphin-plugins: for integration of dolphin under plasma 5')
 options=('!strip' '!upx')
 source=("https://dl-web.dropbox.com/u/17/${pkgname}-lnx.${arch}-${pkgver}.tar.gz"
         "dropbox.png"
@@ -58,4 +58,7 @@ package() {
         #         libQt5Widgets.so.5 ; do
         #ln -sfv /usr/lib/${i} ${pkgdir}/opt/dropbox/
         #done
+        rm ${pkgdir}/opt/dropbox/libQt5*
+        rm ${pkgdir}/opt/dropbox/plugins/platforms/libqxcb.so
+        rm ${pkgdir}/opt/dropbox/qt.conf
 }
