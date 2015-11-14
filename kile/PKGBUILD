@@ -1,16 +1,11 @@
-#
-# Apps Packages for Chakra, part of chakraos.org
-#
-# Maintainer: Jeff Huang <s8321414[at]gmail[dot]com>
-
 pkgname=kile
 pkgver=2.1.3
-pkgrel=3
+pkgrel=4
 pkgdesc="A user friendly TeX/LaTeX frontend for KDE."
 arch=("i686" "x86_64")
 license=('GPL2')
 url="http://kile.sourceforge.net/"
-depends=('kdelibs' 'texlive-core' 'docbook-xsl' 'kdesdk-kate')
+depends=('kdelibs' 'texlive-core' 'docbook-xsl' 'kde-baseapps-katepart')
 makedepends=('cmake' 'automoc4')
 categories=('office')
 install=kile.install
@@ -23,7 +18,6 @@ build() {
   cd build
   cmake ../${pkgname}-${pkgver} \
     -DCMAKE_BUILD_TYPE=Release \
-    -DCMAKE_SKIP_RPATH=ON \
     -DCMAKE_INSTALL_PREFIX=/usr
   make
 }
