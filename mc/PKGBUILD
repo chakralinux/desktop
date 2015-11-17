@@ -1,5 +1,5 @@
 pkgname=mc
-pkgver=4.8.14
+pkgver=4.8.15
 pkgrel=1
 pkgdesc="Midnight Commander is a text based filemanager/shell that emulates Norton Commander"
 arch=('x86_64')
@@ -29,8 +29,8 @@ backup=('etc/mc/edit.indent.rc'
         'etc/mc/mc.keymap'
         'etc/mc/mc.menu'
         'etc/mc/sfs.ini')
-source=("https://www.midnight-commander.org/downloads/${pkgname}-${pkgver}.tar.xz")
-sha256sums=('6b1f74efbdf394bfab084f4d2ea2e72173de5f12cd42be2533ca2c3b72edb8e6')
+source=("http://www.midnight-commander.org/downloads/${pkgname}-${pkgver}.tar.xz")
+sha256sums=('cf4e8f5dfe419830d56ca7e5f2495898e37ebcd05da1e47ff7041446c87fba16')
 
 build() {
 	cd ${srcdir}/${pkgname}-${pkgver}
@@ -60,4 +60,3 @@ package() {
 	sed 's#/usr/bin/env python#/usr/bin/python2#' \
 		-i "${pkgdir}/usr/lib/mc/extfs.d/s3+"
 }
-
