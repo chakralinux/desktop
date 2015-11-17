@@ -1,0 +1,184 @@
+diff -ruN tomahawk-0.8.4.orig/CMakeModules/FindEchonest.cmake tomahawk-0.8.4/CMakeModules/FindEchonest.cmake
+--- tomahawk-0.8.4.orig/CMakeModules/FindEchonest.cmake	2015-08-16 22:42:45.703388001 +0300
++++ tomahawk-0.8.4/CMakeModules/FindEchonest.cmake	2015-08-16 23:10:08.985694721 +0300
+@@ -13,7 +13,7 @@
+ 
+ PKG_CHECK_MODULES(PC_ECHONEST QUIET libechonest${LIBECHONEST_SUFFIX})
+ 
+-FIND_PATH(ECHONEST_INCLUDE_DIR NAMES echonest/Track.h
++FIND_PATH(ECHONEST_INCLUDE_DIR NAMES echonest${LIBECHONEST_SUFFIX}/Track.h
+     HINTS
+         ${PC_ECHONEST_INCLUDEDIR}
+         ${PC_ECHONEST_INCLUDE_DIRS}
+diff -ruN tomahawk-0.8.4.orig/src/infoplugins/generic/echonest/EchonestPlugin.cpp tomahawk-0.8.4/src/infoplugins/generic/echonest/EchonestPlugin.cpp
+--- tomahawk-0.8.4.orig/src/infoplugins/generic/echonest/EchonestPlugin.cpp	2015-08-16 22:42:45.763385657 +0300
++++ tomahawk-0.8.4/src/infoplugins/generic/echonest/EchonestPlugin.cpp	2015-08-16 23:17:40.127977670 +0300
+@@ -23,7 +23,7 @@
+ #include "utils/Logger.h"
+ #include "utils/NetworkAccessManager.h"
+ 
+-#include <echonest/ArtistTypes.h>
++#include <echonest5/ArtistTypes.h>
+ 
+ #include <QNetworkConfiguration>
+ 
+diff -ruN tomahawk-0.8.4.orig/src/infoplugins/generic/echonest/EchonestPlugin.h tomahawk-0.8.4/src/infoplugins/generic/echonest/EchonestPlugin.h
+--- tomahawk-0.8.4.orig/src/infoplugins/generic/echonest/EchonestPlugin.h	2015-08-16 22:42:45.763385657 +0300
++++ tomahawk-0.8.4/src/infoplugins/generic/echonest/EchonestPlugin.h	2015-08-16 23:17:47.547686503 +0300
+@@ -25,7 +25,7 @@
+ #include "infosystem/InfoSystem.h"
+ #include "infosystem/InfoSystemWorker.h"
+ 
+-#include <echonest/Artist.h>
++#include <echonest5/Artist.h>
+ 
+ #include <QObject>
+ 
+@@ -49,7 +49,7 @@
+ 
+ protected slots:
+     virtual void init();
+-    
++
+     virtual void getInfo( Tomahawk::InfoSystem::InfoRequestData requestData );
+ 
+     virtual void pushInfo( Tomahawk::InfoSystem::InfoPushData pushData )
+diff -ruN tomahawk-0.8.4.orig/src/libtomahawk/EchonestCatalogSynchronizer.cpp tomahawk-0.8.4/src/libtomahawk/EchonestCatalogSynchronizer.cpp
+--- tomahawk-0.8.4.orig/src/libtomahawk/EchonestCatalogSynchronizer.cpp	2015-08-16 22:42:45.710054407 +0300
++++ tomahawk-0.8.4/src/libtomahawk/EchonestCatalogSynchronizer.cpp	2015-08-16 23:15:20.363463651 +0300
+@@ -34,8 +34,8 @@
+ #include "TomahawkSettings.h"
+ #include "Track.h"
+ 
+-#include <echonest/CatalogUpdateEntry.h>
+-#include <echonest/Config.h>
++#include <echonest5/CatalogUpdateEntry.h>
++#include <echonest5/Config.h>
+ 
+ using namespace Tomahawk;
+ 
+diff -ruN tomahawk-0.8.4.orig/src/libtomahawk/EchonestCatalogSynchronizer.h tomahawk-0.8.4/src/libtomahawk/EchonestCatalogSynchronizer.h
+--- tomahawk-0.8.4.orig/src/libtomahawk/EchonestCatalogSynchronizer.h	2015-08-16 22:42:45.713387610 +0300
++++ tomahawk-0.8.4/src/libtomahawk/EchonestCatalogSynchronizer.h	2015-08-16 23:15:55.898735270 +0300
+@@ -22,7 +22,7 @@
+ #include "DllMacro.h"
+ #include "Query.h"
+ 
+-#include <echonest/Catalog.h>
++#include <echonest5/Catalog.h>
+ 
+ #include <QObject>
+ #include <QQueue>
+diff -ruN tomahawk-0.8.4.orig/src/libtomahawk/GlobalActionManager.cpp tomahawk-0.8.4/src/libtomahawk/GlobalActionManager.cpp
+--- tomahawk-0.8.4.orig/src/libtomahawk/GlobalActionManager.cpp	2015-08-16 22:42:45.713387610 +0300
++++ tomahawk-0.8.4/src/libtomahawk/GlobalActionManager.cpp	2015-08-16 23:17:05.605999154 +0300
+@@ -61,7 +61,7 @@
+ #include <QClipboard>
+ #include <QMessageBox>
+ 
+-#include <echonest/Playlist.h>
++#include <echonest5/Playlist.h>
+ 
+ 
+ GlobalActionManager* GlobalActionManager::s_instance = 0;
+diff -ruN tomahawk-0.8.4.orig/src/libtomahawk/network/acl/AclRegistry.cpp tomahawk-0.8.4/src/libtomahawk/network/acl/AclRegistry.cpp
+--- tomahawk-0.8.4.orig/src/libtomahawk/network/acl/AclRegistry.cpp	2015-08-16 22:42:45.756719250 +0300
++++ tomahawk-0.8.4/src/libtomahawk/network/acl/AclRegistry.cpp	2015-08-16 23:24:07.856104293 +0300
+@@ -19,6 +19,7 @@
+ 
+ #include "AclRegistry.h"
+ 
++#include <QDataStream>
+ #include <QThread>
+ #include <QVariant>
+ 
+diff -ruN tomahawk-0.8.4.orig/src/libtomahawk/playlist/dynamic/echonest/EchonestControl.h tomahawk-0.8.4/src/libtomahawk/playlist/dynamic/echonest/EchonestControl.h
+--- tomahawk-0.8.4.orig/src/libtomahawk/playlist/dynamic/echonest/EchonestControl.h	2015-08-16 22:42:45.716720814 +0300
++++ tomahawk-0.8.4/src/libtomahawk/playlist/dynamic/echonest/EchonestControl.h	2015-08-16 23:16:49.516630633 +0300
+@@ -24,7 +24,7 @@
+ #include <QTimer>
+ #include <QPointer>
+ 
+-#include <echonest/Playlist.h>
++#include <echonest5/Playlist.h>
+ 
+ namespace Tomahawk
+ {
+diff -ruN tomahawk-0.8.4.orig/src/libtomahawk/playlist/dynamic/echonest/EchonestGenerator.h tomahawk-0.8.4/src/libtomahawk/playlist/dynamic/echonest/EchonestGenerator.h
+--- tomahawk-0.8.4.orig/src/libtomahawk/playlist/dynamic/echonest/EchonestGenerator.h	2015-08-16 22:42:45.716720814 +0300
++++ tomahawk-0.8.4/src/libtomahawk/playlist/dynamic/echonest/EchonestGenerator.h	2015-08-16 23:16:32.817286086 +0300
+@@ -28,7 +28,7 @@
+ 
+ #include "DllMacro.h"
+ 
+-#include <echonest/Playlist.h>
++#include <echonest5/Playlist.h>
+ 
+ namespace Tomahawk
+ {
+diff -ruN tomahawk-0.8.4.orig/src/libtomahawk/playlist/dynamic/echonest/EchonestSteerer.cpp tomahawk-0.8.4/src/libtomahawk/playlist/dynamic/echonest/EchonestSteerer.cpp
+--- tomahawk-0.8.4.orig/src/libtomahawk/playlist/dynamic/echonest/EchonestSteerer.cpp	2015-08-16 22:42:45.716720814 +0300
++++ tomahawk-0.8.4/src/libtomahawk/playlist/dynamic/echonest/EchonestSteerer.cpp	2015-08-16 23:18:03.627055530 +0300
+@@ -24,7 +24,7 @@
+ #include "utils/TomahawkUtils.h"
+ #include "utils/Logger.h"
+ 
+-#include <echonest/Playlist.h>
++#include <echonest5/Playlist.h>
+ 
+ #include <QPaintEvent>
+ #include <QHBoxLayout>
+diff -ruN tomahawk-0.8.4.orig/src/libtomahawk/utils/TomahawkCache.h tomahawk-0.8.4/src/libtomahawk/utils/TomahawkCache.h
+--- tomahawk-0.8.4.orig/src/libtomahawk/utils/TomahawkCache.h	2015-08-16 22:42:45.740053235 +0300
++++ tomahawk-0.8.4/src/libtomahawk/utils/TomahawkCache.h	2015-08-16 23:25:34.106102925 +0300
+@@ -22,6 +22,7 @@
+ #include "DllMacro.h"
+ #include "utils/TomahawkUtils.h"
+ 
++#include <QDataStream>
+ #include <QMutex>
+ #include <QSettings>
+ #include <QObject>
+diff -ruN tomahawk-0.8.4.orig/src/tomahawk/sourcetree/items/CategoryItems.cpp tomahawk-0.8.4/src/tomahawk/sourcetree/items/CategoryItems.cpp
+--- tomahawk-0.8.4.orig/src/tomahawk/sourcetree/items/CategoryItems.cpp	2015-08-16 22:42:45.706721204 +0300
++++ tomahawk-0.8.4/src/tomahawk/sourcetree/items/CategoryItems.cpp	2015-08-16 23:17:24.248600839 +0300
+@@ -33,7 +33,7 @@
+ #include "utils/ImageRegistry.h"
+ #include "utils/Logger.h"
+ 
+-#include <echonest/Playlist.h>
++#include <echonest5/Playlist.h>
+ 
+ using namespace Tomahawk;
+ 
+diff -ruN tomahawk-0.8.4.orig/CMakeModules/FindQCA2.cmake tomahawk-0.8.4/CMakeModules/FindQCA2.cmake
+--- tomahawk-0.8.4.orig/CMakeModules/FindQCA2.cmake	2015-08-17 21:43:38.870990247 +0300
++++ tomahawk-0.8.4/CMakeModules/FindQCA2.cmake	2015-08-17 21:48:26.224024129 +0300
+@@ -16,6 +16,10 @@
+ 
+ include(FindLibraryWithDebug)
+ 
++if( TOMAHAWK_QT5 )
++  set(QCA_SUFFIX "-qt5")
++endif()
++
+ if (QCA2_INCLUDE_DIR AND QCA2_LIBRARIES)
+ 
+   # in cache already
+@@ -26,13 +30,13 @@
+ 
+   if (NOT WIN32)
+     find_package(PkgConfig)
+-    pkg_check_modules(PC_QCA2 qca2)
++    pkg_check_modules(PC_QCA2 qca2${QCA_SUFFIX})
+     set(QCA2_DEFINITIONS ${PC_QCA2_CFLAGS_OTHER})
+   endif (NOT WIN32)
+ 
+   find_library_with_debug(QCA2_LIBRARIES
+                   WIN32_DEBUG_POSTFIX d
+-                  NAMES qca
++                  NAMES qca${QCA_SUFFIX}
+                   HINTS ${PC_QCA2_LIBDIR} ${PC_QCA2_LIBRARY_DIRS}
+                   )
+ 
+
