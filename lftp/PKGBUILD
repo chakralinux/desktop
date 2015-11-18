@@ -1,29 +1,31 @@
 pkgname=lftp
 pkgver=4.6.4
-pkgrel=1
-pkgdesc="Sophisticated command line based FTP client with openssl"
+pkgrel=2
+pkgdesc="Sophisticated command line based FTP client"
 arch=('x86_64')
 url="http://lftp.yar.ru/"
 license=('GPL3')
-depends=('gcc-libs' 'readline' "gnutls>=2.6.8" "expat>=2.0.1" 'perl' 'sh')
-makedepends=('autoconf')
+depends=('gcc-libs' 'readline' "gnutls>=2.6.8" "expat>=2.0.1" 'sh')
+optdepends=('perl: needed for convert-netscape-cookies and verify-file')
 categories=('network')
-source=(http://lftp.yar.ru/ftp/${pkgname}-${pkgver}.tar.xz)
 backup=('etc/lftp.conf')
-md5sums=('84987c1095df84bfb5ac9c95c6aba6be')
+source=(http://lftp.yar.ru/ftp/${pkgname}-${pkgver}.tar.xz{,.asc})
+md5sums=('84987c1095df84bfb5ac9c95c6aba6be'
+         'SKIP')
+validpgpkeys=('C027FA3148652A5513036413A824BB69F2A99A18') # "Alexander V. Lukyanov <lav@yars.free.net>"
 
 build() {
-  cd ${srcdir}/${pkgname}-${pkgver}
+  cd ${pkgname}-${pkgver}
   ./configure --prefix=/usr \
-        --with-gnutls \
-	--without-openssl \
-	--without-included-regex \
-	--disable-static
+    --with-gnutls \
+    --without-openssl \
+    --without-included-regex \
+    --disable-static
   make
 }
 
 package() {
-  cd ${srcdir}/${pkgname}-${pkgver}
+  cd ${pkgname}-${pkgver}
   make DESTDIR=${pkgdir} install
   rm -rf ${pkgdir}/usr/lib
 }
