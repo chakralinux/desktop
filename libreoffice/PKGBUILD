@@ -13,15 +13,15 @@ pkgname=('libreoffice-common'
 	'libreoffice-postgresql-connector'
 	'libreoffice-extension-wiki-publisher'
 	'libreoffice-extension-nlpsolver')
-_LOver=5.0.2.2
-pkgver=5.0.2
+_LOver=5.0.3.2
+pkgver=5.0.3
 pkgrel=1
 arch=('x86_64')
 license=('LGPL3')
 url="http://www.libreoffice.org/"
 screenshot="http://wstaw.org/m/2012/04/20/libre2.png"
 makedepends=( # makedepends
-             'sane' 'perl-archive-zip' 'zip' 'unzip' 'unixodbc' # boost -> internal 
+             'sane' 'perl-archive-zip' 'zip' 'unzip' 'unixodbc' 
              'apache-ant' 'gperf' 'poppler' 'kdelibs' 'cppunit' 'glu'
              'beanshell'  'vigra' 'libldap' 'libmythes' 'junit' 'libwpg' 'imagemagick'
              'mesa' 'gst-plugins-base' 'java-runtime' 'postgresql-libs' 'clucene' 'doxygen' 'libvisio' 'bluez-libs' 'junit'
@@ -83,9 +83,9 @@ source=(${_mirror}/${pkgbase}{,-help,-translations}-${_LOver}.tar.xz
         ${_additional_source_url}/libodfgen-0.1.4.tar.bz2
         make-pyuno-work-with-system-wide-module-install.diff)
 
-md5sums=('e3d129dd7a579b14984c9c1231e851a5'
-         '61217b85dc31902fc97976d482cf064f'
-         '5a4f0148a5cbe4c85be7e4e8c378fe61'
+md5sums=('879471fa970c30bb080e11906a3bcdab'
+         '0ba4c4939e01ed63e39b0751da54ae8f'
+         '8439f56d4696e64571bbdc8224ede59d'
          'd6eef4b4cacb2183f2bf265a5a03a354'
          '1f24ab1d39f4a51faf22244c94a6203f'
          '35c94d2df8893241173de1d16b6034c0'
@@ -246,7 +246,6 @@ build() {
                 --enable-ext-wiki-publisher \
                 --enable-ext-nlpsolver \
                 --without-fonts \
-                --without-system-libwps \
                 --without-system-glm \
                 --without-system-libcdr \
                 --without-system-jfreereport \
@@ -279,7 +278,7 @@ build() {
                 --without-system-libodfgen \
                 --with-system-redland \
                 --with-ant-home="/usr/share/java/apache-ant"\
-                --with-system-boost \
+                --without-system-boost \
                 --with-system-cairo \
                 --with-system-libs \
                 --with-system-mythes \
