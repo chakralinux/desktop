@@ -4,7 +4,7 @@
 # Maintainer: Adrian Chaves Fernandez (Gallaecio) <adriyetichaves@gmail.com>
 
 pkgname=0ad
-pkgver=0.0.18
+pkgver=0.0.19
 _pkgver=$pkgver-alpha
 pkgrel=1
 pkgdesc="Cross-platform, 3D and historically-based real-time strategy game"
@@ -12,13 +12,13 @@ screenshot=http://www.wildfiregames.com/0ad/images/news_images/dynamic-borders.j
 arch=('i686' 'x86_64')
 url="http://play0ad.com/"
 license=('GPL2' 'CCPL') # source licenses.
-depends=('boost-libs' 'curl' 'enet' 'gamin' 'gloox' 'libgl' 'libogg' 'libpng' 'libvorbis' 'libxcursor' 'libxml2' 'mesa' 'miniupnpc' 'nspr' 'nvidia-texture-tools' 'openal' 'sdl' 'zip' 'zlib' 0ad-data=$pkgver)
+depends=('boost-libs' 'curl' 'enet' 'gamin' 'gloox' 'libgl' 'libogg' 'libpng' 'libvorbis' 'libxcursor' 'libxml2' 'mesa' 'miniupnpc' 'nspr' 'nvidia-texture-tools' 'openal' 'sdl2' 'zip' 'zlib' 0ad-data=$pkgver)
 makedepends=('boost' 'python2')
 replaces=(0ad-debug) # If someone wants a debug version, they should rebuild 0ad with config=debug.
 categories=('games')
 changelog=ChangeLog
-source=(http://downloads.sourceforge.net/project/zero-ad/releases/$pkgname-$_pkgver-unix-build.tar.xz)
-md5sums=('84aedae3ab86955f87c55607600daa12')
+source=(http://releases.wildfiregames.com/$pkgname-$_pkgver-unix-build.tar.xz)
+md5sums=('1c16fdab6886ee21b076c69903054374')
 
 prepare() {
   cd "$srcdir/$pkgname-$_pkgver/"
@@ -28,12 +28,17 @@ prepare() {
 build() {
   cd $srcdir/$pkgname-$_pkgver/build/workspaces
 
-  unset CPPFLAGS # for le spidermonkey
-  
+  # Required to build SpiderMonkey.
+  unset CPPFLAGS
+
+  # Required to build SpiederMonkey in a chroot, see:
+  # http://ur1.ca/obpvf
+  # http://ur1.ca/obpvi
+  export SHELL=/bin/bash
+
   # Atlas disabled because it requires GTK.
   ./update-workspaces.sh \
     --disable-atlas \
-    --with-system-miniupnpc \
     --with-system-nvtt \
     --bindir=/usr/bin \
     --libdir=/usr/lib/0ad \
