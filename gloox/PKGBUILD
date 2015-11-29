@@ -1,7 +1,7 @@
 # Maintainer: Martin Lee <hellnest.fuah at gmail dot com>
 
 pkgname=gloox
-pkgver=1.0
+pkgver=1.0.14
 pkgrel=1
 pkgdesc="C++ libraries for development of Jabber client/component/server"
 arch=('any')
@@ -10,11 +10,15 @@ options=('!libtool')
 license=("GPL")
 depends=('libidn' 'gnutls')
 source=(http://camaya.net/download/gloox-$pkgver.tar.bz2)
-md5sums=('f8eacf1c6476e0a309b453fd04f90e31')
+md5sums=('4dc0ad33070312e6a59fd913415cde4a')
 
 build() {
   cd $srcdir/gloox-$pkgver
   ./configure --prefix=/usr
-  make || return 1
-  make DESTDIR=$pkgdir install
+  make
+}
+
+package() {
+  cd $srcdir/gloox-$pkgver
+  make DESTDIR=$pkgdir install  
 }
