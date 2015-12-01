@@ -1,31 +1,31 @@
-#
-# Games Packages for Chakra, part of chakra-project.org
-#
-# Maintainer: Adrián Chaves Fernández (Gallaecio) <adriyetichaves@gmail.com>
-#
-# NOTE: The package must be built in a system with a matching architecture.
-
 pkgbase=warsow
 pkgname=('warsow' 'warsow-data')
-pkgver=1.51 # Warsow data version
-_pkgver=15  # Launchpad version
-pkgrel=2
+pkgver=2.0 # Warsow data version
+_pkgver=20  # Launchpad version
+pkgrel=1
 arch=('x86_64')
-url="http://www.warsow.net/"
+url="http://www.warsow.gg/"
 makedepends=('mesa' 'openal' 'imagemagick' 'gendesk' 'curl' 'libjpeg' 'libtheora' 'libvorbis'
-             'libxxf86dga' 'sdl' 'libxinerama' 'libxrandr' 'libxxf86vm' 'libxi')
+             'libxxf86dga' 'sdl2' 'libxinerama' 'libxrandr' 'libxxf86vm' 'libxi' 'cmake')
 categories=('games')
-source=("http://www.warsow.eu/${pkgname}_${pkgver}_sdk.tar.gz"
-        "http://www.warsow.eu/${pkgname}_${pkgver}_unified.tar.gz")
-sha256sums=('ac635c654e088566d30d53e8fab21abd2d40762d7f4ab0e09faa827aac5c4f97'
-            '94510d85e4a245b5f8c0c715ae41b1d162c96e06dbfe75ccd99fffb9a76426b5')
+source=("http://mirror.null.one/${pkgname}_${_pkgver}_sdk.tar.gz"
+        "http://www.warsow.gg/${pkgname}_${_pkgver}_unified.tar.gz"
+        "warsow-cmakelists.patch")
+sha256sums=('f6a40995caae788695fa58b36ae1fe5c3e4813c69c0684fafdf39c07c0561128'
+            '175a3f76925fb8713e6a83971f36653514a51909f0e0a892851c05c2cbde6e38'
+            '34bfcdd4e12d75c1e6a38afd9aacdc7523ef071b77c4542088f9d67a0c1da591')
+
+prepare() {
+  gendesk -n -f --pkgname 'warsow' --pkgdesc "${pkgdesc}" --name 'Warsow' --categories 'Game;ActionGame'
+
+  cd "${srcdir}/source/source"
+  patch < "${srcdir}/warsow-cmakelists.patch"
+}
 
 build() {
-  gendesk -n
-
-  # Compile Warsow.
-  cd source/source
-  make -j1 # Error finding a library if -j is higher.
+  cd "${srcdir}/source/source"
+  cmake .
+  make ${MAKE_FLAGS}
 }
 
 generateAndInstall() {
@@ -57,15 +57,20 @@ package_warsow() {
   pkgdesc="A free online multiplayer competitive FPS based on the Qfusion engine"
   arch=('x86_64')
   license=('GPL')
-  depends=('curl' 'libjpeg' 'libtheora' 'libvorbis' 'libxinerama' 'libxrandr' 'libxxf86dga' 'libxxf86vm' 'sdl' 'warsow-data')
+  depends=('curl' 'libjpeg' 'libtheora' 'libvorbis' 'libxinerama' 'libxrandr' 'libxxf86dga' 'libxxf86vm' 'sdl2' 'warsow-data')
   optdepends=('openal: for openal audio support')
   
   cd source/source
-
-  # Manual installation.
+  
+  local builddir="${srcdir}/source/source/build"
+  
+  # Create Destination Directories
   install -d "${pkgdir}/usr/share/${pkgname}/"
-  cp -r release/* "${pkgdir}/usr/share/${pkgname}"
-  chmod +r "${pkgdir}/usr/share/${pkgname}/"*
+
+  # Move Compiled Data to Destination Directory except basewsw.
+  # NOTE: We don't need cgame library because it's a pure lib provided by
+  # modules_16.pk3 from warsow-data package.
+  cp -r "${builddir}/libs" "${pkgdir}/usr/share"
 
   # Execution scripts:
   install -d "${pkgdir}/usr/bin"
@@ -76,5 +81,5 @@ package_warsow() {
 
   # Desktop integration:
   install -Dm0644 "${srcdir}/${pkgname}.desktop" "${pkgdir}/usr/share/applications/${pkgname}.desktop"
-  install -Dm0644 unix/warsow128x128.xpm "${pkgdir}/usr/share/pixmaps/warsow.xpm"
+  install -Dm0644 "${srcdir}/source/icons/warsow256x256.xpm" "${pkgdir}/usr/share/pixmaps/warsow.xpm"
 }
