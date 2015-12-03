@@ -4,28 +4,27 @@
  
 pkgname=kfoldersync
 pkgver=3.0.0
-pkgrel=1
+pkgrel=2
 pkgdesc="Folder synchronization tool"
 arch=('x86_64')
 url="http://kde-apps.org/content/show.php/KFolderSync?content=164092"
 screenshot='http://kde-apps.org/CONTENT/content-pre1/164092-1.png'
 depends=('kcoreaddons' 'kdbusaddons' 'ki18n' 'kio' 'knotifications' 'kxmlgui')
-makedepends=('automoc4' 'cmake' 'gettext' 'extra-cmake-modules')
+makedepends=('cmake' 'gettext' 'extra-cmake-modules')
 license=('GPLv2')
 source=("http://kde-apps.org/CONTENT/content-files/164092-${pkgname}_${pkgver}.orig.tar.xz")
 sha256sums=('4b9761abe7a1df7616963594eeb381a388d43c6e17ee9a2dfdd59842d0ee0240')
  
 build() {
-  mkdir -p $srcdir/build
-  
-  cd $srcdir/build
+  cd ${srcdir}/${pkgname}-${pkgver}
+  mkdir -p build && cd build
  
   CXXFLAGS="$CXXFLAGS -std=gnu++11"
-  cmake -DCMAKE_INSTALL_PREFIX=$(kde4-config --prefix) -DCMAKE_BUILD_TYPE=Release ../${pkgname}-${pkgver}
+  cmake -DCMAKE_INSTALL_PREFIX=/usr -DCMAKE_BUILD_TYPE=Release ..
   make
 }
  
 package() {
-  cd $srcdir/build
+  cd ${srcdir}/${pkgname}-${pkgver}/build
   make DESTDIR="$pkgdir/" install
 }
