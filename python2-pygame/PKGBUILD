@@ -1,29 +1,28 @@
-#
-# Chakra Packages for Chakra, part of chakra-project.org
-#
-# maintainer (x86_64): Daniele Cocca <daniele.cocca@gmail.com>
-
-# include global config
-source ../_buildscripts/${current_repo}-${_arch}-cfg.conf
-
-pkgname=python-pygame
+pkgname=python2-pygame
 pkgver=1.9.1
-pkgrel=4
+pkgrel=5
 pkgdesc="Python game library"
-arch=('i686' 'x86_64')
+arch=('x86_64')
 url="http://www.pygame.org/"
 license=('LGPL')
 depends=('python2' 'sdl_mixer' 'libvorbis' 'sdl_ttf' 'sdl_image' 'smpeg')
-replaces=('pygame')
-provides=('pygame')
-changelog=ChangeLog
-source=(http://pygame.org/ftp/pygame-${pkgver}release.tar.gz 'config.patch')
-md5sums=('1c4cdc708d17c8250a2d78ef997222fc' 'aaa668f3cd710d8604114501ea6a6f48')
-sha1sums=('a45aeb0623e36ae7a1707b5f41ee6274f72ca4fa' '285815e28705d5a2aea53c9d952d35fddf10dd13')
+conflicts=('pygame' 'python-pygame')
+replaces=('pygame' 'python-pygame')
+provides=('pygame' 'python-pygame')
+source=(http://pygame.org/ftp/pygame-${pkgver}release.tar.gz 
+        'pygame-config.patch'
+        'pygame-v4l.patch'
+        'pygame-joystick.patch')
+md5sums=('1c4cdc708d17c8250a2d78ef997222fc'
+         'aaa668f3cd710d8604114501ea6a6f48'
+         '9915b63865c16519e80007909beed876'
+         'c236b303ba3fe2dfd310d47b496ac1c2')
 
 build() {
         cd "${srcdir}/pygame-${pkgver}release"
-        patch -Np0 -i "${srcdir}/config.patch"
+        patch -p0 -i "${srcdir}/pygame-config.patch"
+        patch -p1 -i "${srcdir}/pygame-v4l.patch"
+        patch -p1 -i "${srcdir}/pygame-joystick.patch"
         python2 config.py -auto
 }
 
