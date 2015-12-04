@@ -1,0 +1,31 @@
+# Contributions from Arch: https://www.archlinux.org/packages/extra/x86_64/libkexiv2/
+# Include global configuration
+source ../kdeapps.conf
+
+pkgname=libkexiv2
+pkgver=${_kdever}
+pkgrel=1
+pkgdesc="A library to manipulate pictures metadata"
+url="https://projects.kde.org/projects/kde/kdegraphics/libs/libkexiv2"
+arch=(x86_64)
+license=(GPL LGPL FDL)
+depends=(qt5-base exiv2)
+makedepends=(extra-cmake-modules)
+options=('docs' 'debug')
+source=("$_mirror/${pkgname}-$_kdever.tar.xz")
+sha256sums=(`grep ${pkgname}-$_kdever.tar.xz  ../checksums.txt | cut -d " " -f1`)
+
+prepare() {
+    mkdir -p build
+}
+
+build() {
+    cd build
+    cmake_kf5 ../${pkgname}-${pkgver}
+    make
+}
+
+package() {
+    cd build
+    make DESTDIR=${pkgdir} install
+}

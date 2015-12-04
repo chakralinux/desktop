@@ -1,0 +1,34 @@
+# Include global configuration
+source ../kdeapps.conf
+
+pkgname=ktuberling
+pkgver=${_kdever}
+pkgrel=1
+pkgdesc="A simple constructor game suitable for children and adults alike"
+url="http://kde.org/applications/games/ktuberling/"
+arch=(x86_64)
+license=(GPL LGPL FDL)
+groups=(kde kde-applications kdegames kde-uninstall)
+depends=(hicolor-icon-theme libkdegames knotifyconfig)
+makedepends=(extra-cmake-modules kdoctools kdelibs4support)
+conflicts=(kdegames-ktuberling)
+replaces=(kdegames-ktuberling)
+install=$pkgname.install
+options=('docs' 'debug')
+source=("$_mirror/${pkgname}-$_kdever.tar.xz")
+sha256sums=(`grep ${pkgname}-$_kdever.tar.xz  ../checksums.txt | cut -d " " -f1`)
+
+prepare() {
+    mkdir -p build
+}
+
+build() {
+    cd build
+    cmake_kf5 ../${pkgname}-${pkgver}
+    make
+}
+
+package() {
+    cd build
+    make DESTDIR=${pkgdir} install
+}

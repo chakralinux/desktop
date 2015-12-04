@@ -9,8 +9,8 @@ pkgdesc="A Qt/C++ wrapper around LibFace library to perform face recognition and
 url="https://projects.kde.org/projects/kde/kdegraphics/libs/libkface"
 arch=('x86_64')
 license=('GPL' 'LGPL' 'FDL')
-depends=("kdelibs>=${_libsver}" 'opencv')
-makedepends=('cmake' 'automoc4')
+depends=(qt5-base opencv)
+makedepends=(extra-cmake-modules)
 install=${pkgname}.install
 options=('docs' 'debug')
 source=("$_mirror/${pkgname}-$_kdever.tar.xz")
@@ -22,14 +22,11 @@ prepare() {
 
 build() {
   cd build
-  cmake ../${pkgname}-${pkgver} \
-    -DCMAKE_BUILD_TYPE=Release \
-    -DKDE4_BUILD_TESTS=OFF \
-    -DCMAKE_INSTALL_PREFIX=/usr
+  cmake_kf5 ../${pkgname}-${pkgver}
   make
 }
 
 package() {
   cd build
-  make DESTDIR="${pkgdir}" install
+  make DESTDIR="$pkgdir" install
 }

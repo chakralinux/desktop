@@ -1,0 +1,33 @@
+# Include global configuration
+source ../kdeapps.conf
+
+pkgname=ksystemlog
+pkgver=${_kdever}
+pkgrel=1
+pkgdesc='System log viewer tool'
+url='http://kde.org/applications/system/ksystemlog/'
+arch=(x86_64)
+license=(GPL LGPL FDL)
+groups=(kde kde-applications kdeadmin kde-uninstall)
+depends=(kio)
+makedepends=(extra-cmake-modules kdoctools)
+conflicts=(kdeadmin-ksystemlog)
+replaces=(kdeadmin-ksystemlog)
+options=('docs' 'debug')
+source=("$_mirror/${pkgname}-$_kdever.tar.xz")
+sha256sums=(`grep ${pkgname}-$_kdever.tar.xz  ../checksums.txt | cut -d " " -f1`)
+
+prepare() {
+    mkdir -p build
+}
+
+build() {
+    cd build
+    cmake_kf5 ../${pkgname}-${pkgver}
+    make
+}
+
+package() {
+    cd build
+    make DESTDIR=${pkgdir} install
+}

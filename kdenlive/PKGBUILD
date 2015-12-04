@@ -4,7 +4,7 @@ source ../kdeapps.conf
 
 pkgname=kdenlive
 pkgver=${_kdever}
-pkgrel=2
+pkgrel=1
 pkgdesc="A non-linear video editor for Linux"
 arch=('x86_64')
 url="http://www.kdenlive.org/"
@@ -21,17 +21,13 @@ optdepends=("dvdauthor: for creating dvds"
 makedepends=('extra-cmake-modules' 'kdoctools' 'v4l-utils' 'python')
 categories=('multimedia')
 screenshot=('http://kdenlive.org/sites/default/files/kdenlive-090a_0.png')
-source=("$_mirror/${pkgname}-$_kdever.tar.xz"
-        fix-freeze-monitor.patch::"https://quickgit.kde.org/?p=kdenlive.git&a=commitdiff&h=858a855&o=plain")
-sha256sums=(`grep ${pkgname}-$_kdever.tar.xz  ../checksums.txt | cut -d " " -f1`
-            '78d3c3783e340c84e973c53c90eafcd5decc6dbb565182869aa5a0e1cc3ab9ee')
+source=("$_mirror/${pkgname}-$_kdever.tar.xz")
+sha256sums=(`grep ${pkgname}-$_kdever.tar.xz  ../checksums.txt | cut -d " " -f1`)
 
 prepare(){
   mkdir -p build
 
   cd $pkgname-$pkgver
-# Fix freeze on monitor https://bugs.kde.org/show_bug.cgi?id=353936
-  patch -p1 -i ../fix-freeze-monitor.patch
 }
 
 prepare() {

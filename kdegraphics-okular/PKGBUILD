@@ -6,25 +6,21 @@ pkgname=kdegraphics-okular
 _pkgname=okular
 arch=('x86_64')
 pkgver=${_kdever}
-pkgrel=1
+pkgrel=2
 pkgdesc='Universal document viewer'
 url='http://kde.org/applications/graphics/okular/'
 license=('GPL' 'LGPL' 'FDL')
 options=('docs' 'debug')
 groups=('kde' 'kdegraphics' 'kde-uninstall')
 provides=('okular')
-categories=('office')
 # note on libxxf86vm:
 #       not detected by namcap because libgl depends on it
 #       but nvidia providing libgl does not depend on libxxf86vm
-depends=("kdelibs>=${_libsver}"
-         "kde-runtime"
-         "kdegraphics-libkdcraw>=${_kdever}"
-         "kdegraphics-libkexiv2>=${_kdever}"
-         'libxxf86vm' 'sane' 'lcms' 'qimageblitz' 'poppler-qt' 'chmlib' 'djvulibre' 'libspectre')
+depends=('kde-runtime' 'qimageblitz' 'chmlib' 'djvulibre' 'libspectre'
+         'libxxf86vm' 'libkexiv2_4' 'poppler-qt' 'libkscreen4')
+makedepends=('cmake' 'automoc4' 'ebook-tools' 'docbook-xsl' 'kdegraphics-mobipocket')
 optdepends=('ebook-tools: epub support'
             'kdegraphics-mobipocket: mobi support')
-makedepends=('pkg-config' 'cmake' 'automoc4' 'qca' 'kdoctools' 'ebook-tools' 'kdegraphics-mobipocket')
 install=okular.install
 source=("$_mirror/${_pkgname}-$_kdever.tar.xz")
 sha256sums=(`grep ${_pkgname}-$_kdever.tar.xz  ../checksums.txt | cut -d " " -f1`)

@@ -1,33 +1,32 @@
 # Include global configuration
 source ../kdeapps.conf
 
-pkgname="kdenetwork-filesharing"
-arch=('x86_64')
+pkgname=kdenetwork-filesharing
 pkgver=${_kdever}
 pkgrel=1
-pkgdesc='Konqueror plugin to share a directory with the local network'
-depends=("kdelibs>=${_libsver}" 'smbclient')
-conflicts=("kdenetwork-common" "kdenetwork-doc")
-groups=("kde" "kdenetwork" "kde-uninstall")
-categories=('network')
-url="http://www.kde.org"
-license=('GPL' 'LGPL' 'FDL')
+pkgdesc='Properties dialog plugin to share a directory with the local network'
+url='https://projects.kde.org/projects/kde/kdenetwork/kdenetwork-filesharing'
+arch=(x86_64)
+license=(GPL LGPL FDL)
+groups=(kde-applications kdenetwork)
+depends=(kio)
+makedepends=(extra-cmake-modules kdoctools)
+optdepends=('samba: folder sharing')
 options=('docs' 'debug')
-makedepends=('pkg-config' 'cmake' 'automoc4' 'docbook-xsl')
 source=("$_mirror/${pkgname}-$_kdever.tar.xz")
 sha256sums=(`grep ${pkgname}-$_kdever.tar.xz  ../checksums.txt | cut -d" " -f1`)
 
+prepare() {
+    mkdir -p build
+}
+
 build() {
-    cd ${srcdir}/${pkgname}-${pkgver}
-    cmake . \
-        -DCMAKE_BUILD_TYPE=${_build_type} \
-        -DCMAKE_INSTALL_PREFIX=${_installprefix} \
-        -DCMAKE_SKIP_RPATH=ON \
-        -DCMAKE_{SHARED,MODULE,EXE}_LINKER_FLAGS='-Wl,--no-undefined -Wl,--as-needed'
+    cd build
+    cmake_kf5 ../${pkgname}-${pkgver}
     make
 }
 
 package() {
-    cd ${srcdir}/${pkgname}-${pkgver}
+    cd build
     make DESTDIR=${pkgdir} install
 }

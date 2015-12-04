@@ -9,8 +9,8 @@ pkgdesc="A wrapper around world map components for browsing and arranging photos
 url="https://projects.kde.org/projects/kde/kdegraphics/libs/libkgeomap"
 arch=('x86_64')
 license=('GPL' 'LGPL' 'FDL')
-depends=('kdelibs' 'libmarble4')
-makedepends=('cmake' 'automoc4')
+depends=(marble)
+makedepends=(extra-cmake-modules)
 install=${pkgname}.install
 options=('docs' 'debug')
 source=("$_mirror/${pkgname}-$_kdever.tar.xz")
@@ -18,21 +18,15 @@ sha256sums=(`grep ${pkgname}-$_kdever.tar.xz  ../checksums.txt | cut -d " " -f1`
 
 prepare() {
   mkdir build
-
-  # Fix build with libmarble4
-  sed -e 's|#include <marble|#include <marble4|' -i $pkgname-$pkgver/libkgeomap/*.cpp -i $pkgname-$pkgver/libkgeomap/*.h
 }
 
 build() {
   cd build
-  cmake ../${pkgname}-${pkgver} \
-    -DCMAKE_BUILD_TYPE=Release \
-    -DKDE4_BUILD_TESTS=OFF \
-    -DCMAKE_INSTALL_PREFIX=/usr
+  cmake_kf5 ../${pkgname}-${pkgver}
   make
 }
 
 package() {
   cd build
-  make DESTDIR="${pkgdir}" install
+  make DESTDIR="$pkgdir" install
 }

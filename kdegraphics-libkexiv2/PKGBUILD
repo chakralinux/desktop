@@ -4,20 +4,17 @@ source ../kdeapps.conf
 
 pkgname=kdegraphics-libkexiv2
 _pkgname=libkexiv2
-pkgver=${_kdever}
-pkgrel=1
-pkgdesc='Wrapper around the Exiv2 library for image metadata manipulation'
-arch=('x86_64')
-url='https://projects.kde.org/projects/kde/kdegraphics/libs/libkexiv2'
-license=('GPL' 'LGPL' 'FDL')
-depends=("kdelibs>=${_libsver}" 'lcms' 'libjpeg' 'exiv2>=0.24')
-makedepends=('pkg-config' 'cmake' 'automoc4')
-groups=('kde' 'kdegraphics' 'kde-uninstall')
-provides=('libkexiv2')
-conflicts=('libkexiv2')
-options=('docs' 'debug')
-source=("$_mirror/${_pkgname}-$_kdever.tar.xz")
-sha256sums=(`grep ${_pkgname}-$_kdever.tar.xz  ../checksums.txt | cut -d " " -f1`)
+pkgver=15.08.3
+pkgrel=2
+pkgdesc="A library to manipulate pictures metadata"
+url="https://projects.kde.org/projects/kde/kdegraphics/libs/libkexiv2"
+arch=(x86_64)
+license=(GPL LGPL FDL)
+depends=(kdelibs)
+makedepends=(cmake automoc4)
+source=("http://download.kde.org/stable/applications/$pkgver/src/$_pkgname-$pkgver.tar.xz")
+sha1sums=('09adf7887dc644431a6930ba645162707c16bb3d')
+
 
 build() {
     cd ${srcdir}/${_pkgname}-${pkgver}

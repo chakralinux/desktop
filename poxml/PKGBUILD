@@ -1,0 +1,34 @@
+# Include global configuration
+source ../kdeapps.conf
+
+pkgname=poxml
+pkgver=${_kdever}
+pkgrel=1
+pkgdesc='Translates DocBook XML files using gettext po files'
+url='https://projects.kde.org/projects/kde/kdesdk/poxml'
+arch=(x86_64)
+depends=(qt5-base gettext)
+makedepends=(extra-cmake-modules kdoctools)
+conflicts=(kdesdk-poxml)
+replaces=(kdesdk-poxml)
+groups=(kde-applications kdesdk)
+install=kdesdk.install
+license=('GPL' 'LGPL' 'FDL')
+options=('docs' 'debug')
+source=("$_mirror/${pkgname}-$_kdever.tar.xz")
+sha256sums=(`grep ${pkgname}-$_kdever.tar.xz  ../checksums.txt | cut -d " " -f1`)
+
+prepare() {
+  mkdir -p build
+}
+
+build() {
+  cd build
+  cmake_kf5 ../${pkgname}-${pkgver}
+  make
+}
+
+package() {
+    cd build
+    make DESTDIR=${pkgdir} install
+}

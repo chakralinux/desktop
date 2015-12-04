@@ -1,0 +1,34 @@
+# Include global configuration
+source ../kdeapps.conf
+
+pkgname=krfb
+arch=('x86_64')
+pkgver=${_kdever}
+pkgrel=1
+pkgdesc='Desktop Sharing'
+url='http://www.kde.org/applications/system/krfb'
+arch=(x86_64)
+license=(LGPL)
+depends=(kdnssd kxmlgui kwallet libvncserver libxdamage)
+makedepends=(extra-cmake-modules kdoctools python)
+conflicts=(kdenetwork-krfb)
+replaces=(kdenetwork-krfb)
+groups=(kde-applications kdenetwork)
+options=('docs' 'debug')
+source=("$_mirror/krfb-$_kdever.tar.xz")
+sha256sums=(`grep krfb-$_kdever.tar.xz  ../checksums.txt | cut -d " " -f1`)
+
+prepare() {
+    mkdir -p build
+}
+
+build() {
+    cd build
+    cmake_kf5 ../${pkgname}-${pkgver}
+    make
+}
+
+package() {
+    cd build
+    make DESTDIR=${pkgdir} install
+}
