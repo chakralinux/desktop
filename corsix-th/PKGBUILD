@@ -1,46 +1,47 @@
-#
-# Games Packages for Chakra, part of chakra-project.org
-#
-# Maintainer: Adrián Chaves Fernández (Gallaecio) <adriyetichaves gmail.com>
-
 pkgname=corsix-th
 _pkgname=CorsixTH
-pkgver=0.30
+pkgver=0.50
 _pkgver=$pkgver
 pkgrel=1
 pkgdesc='Reimplementation of the game engine of Theme Hospital.'
-arch=('i686' 'x86_64')
-url='http://corsix-th.googlecode.com'
+arch=('x86_64')
+url='https://github.com/CorsixTH/CorsixTH'
 license=('MIT')
-depends=('ffmpeg' 'lua' 'sdl_mixer' 'timidity++' 'x264')
+depends=('ffmpeg' 'lua' 'sdl2_mixer' 'timidity++' 'x264')
 categories=('games')
 makedepends=('cmake')
 install=$pkgname.install
 source=("https://github.com/CorsixTH/CorsixTH/archive/v${pkgver}.tar.gz"
+        $pkgname-fix-parameters-to-sws_scale.patch::"https://github.com/CorsixTH/CorsixTH/commit/4ae56e100911c1763cb9fd9a4b8647e323ecc032.patch"
         "$pkgname.sh")
-sha1sums=('033644d2115888093f65c683022fb5ad9ea0d74b'
-          '7fd6ae8db366b7f9c4671708e8ea7beb48f1bea3')
+sha256sums=('822cb5b4a4ec863ba410b6a37e456b360516b2362337532689070e4555c037ee'
+            '65161006dfc0aaff77d0beffd3894203ca2f304d0db71f54329859fa08c712ab'
+            '3614197a30498774fff4055ee54d82a812a8b88eba353b70c3288a09ff700158')
 
-# The code below has been strongly based on
-# https://gist.github.com/Rayman2200/8118205
-# for version 0.30.
+prepare() {
+  # fix location in .desktop entry
+  cp -up CorsixTH-$pkgver/DebianPackage/usr/share/applications/CorsixTH.desktop $pkgname.desktop
+  sed 's/games/share/g' -i $pkgname.desktop
+  # fix crash in ffmpeg 2.8+
+#  patch -d CorsixTH-$pkgver -Np1 < $pkgname-fix-parameters-to-sws_scale.patch
+}
+
 build() {
-  cd "${srcdir}/CorsixTH-${pkgver}"
-  # CMake config is broke for corsix-th v0.30, so the LICENSE need to be moved to the right location
-  mv LICENSE CorsixTH/LICENSE.txt
-  cmake \
-    -D CMAKE_INSTALL_PREFIX=/usr/share/ \
-    -D CMAKE_BUILD_TYPE=Release \
-    -Wno-dev \
-    .
+  cd CorsixTH-$pkgver
+
+  cmake -DCMAKE_BUILD_TYPE=Release -Wno-dev \
+        -DLUA_PROGRAM_PATH=/usr/bin/lua -DLUA_INCLUDE_DIR=/usr/include -DLUA_LIBRARY=/usr/lib/liblua.so \
+        -DCMAKE_INSTALL_PREFIX=/usr/share/ .
   cd CorsixTH
   make
 }
- 
+
 package() {
-  cd "${srcdir}/CorsixTH-${pkgver}/CorsixTH"
-  make DESTDIR="${pkgdir}" install
-  install -Dm755 CorsixTH "${pkgdir}/usr/bin/CorsixTH"
-  install -Dm644 ../DebianPackage/usr/share/applications/CorsixTH.desktop "${pkgdir}/usr/share/applications/CorsixTH.desktop"
-  sed -e 's/games/share/g' -i "${pkgdir}/usr/share/applications/CorsixTH.desktop"
-} 
+  make -C CorsixTH-$pkgver/CorsixTH DESTDIR="$pkgdir/" install
+  # launcher
+  install -Dm0755 $pkgname.sh "$pkgdir"/usr/bin/CorsixTH
+  # license
+  install -Dm0644 CorsixTH-$pkgver/LICENSE.txt "$pkgdir"/usr/share/licenses/$pkgname/LICENSE
+  # .desktop integration
+  install -Dm0644 $pkgname.desktop "$pkgdir"/usr/share/applications/CorsixTH.desktop
+}
