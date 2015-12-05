@@ -1,20 +1,15 @@
-#
-# Apps Packages for Chakra, part of chakra-project.org
-#
-# Maintainer: Adrián Chaves Fernández (Gallaecio) <adriyetichaves gmail.com>
-
 pkgname=mupen64plus
-pkgver=2.0
+pkgver=2.5
 pkgrel=1
 pkgdesc='Nintendo64™ Emulator.'
-arch=('i686' 'x86_64')
-url='http://code.google.com/p/mupen64plus/'
+arch=('x86_64')
+url='http://www.mupen64plus.org/'
 license=('GPL3')
-depends=('freetype2' 'mesa' 'libpng' 'libsamplerate' 'sdl')
+depends=('freetype2' 'mesa' 'libpng' 'libsamplerate' 'sdl_image' 'sdl_mixer' 'glu')
 categories=('system')
 screenshot='http://mupen64plus.googlecode.com/svn/wiki/Screenshot-01-PaperMario.png'
-source=("http://mupen64plus.googlecode.com/files/${pkgname}-bundle-src-${pkgver}.tar.gz")
-sha1sums=('078a518e1b162bd88993e1815967fdafe61d9e28')
+source=("https://github.com/mupen64plus/mupen64plus-core/releases/download/$pkgver/mupen64plus-bundle-src-$pkgver.tar.gz")
+sha256sums=('9c75b9d826f2d24666175f723a97369b3a6ee159b307f7cc876bbb4facdbba66')
 
 build() {
   cd $srcdir/$pkgname-bundle-src-$pkgver
