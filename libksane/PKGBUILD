@@ -4,7 +4,7 @@ source ../kdeapps.conf
 
 pkgname=libksane
 pkgver=${_kdever}
-pkgrel=1
+pkgrel=2
 pkgdesc="An image scanning library"
 url="https://projects.kde.org/projects/kde/kdegraphics/libs/libksane"
 arch=(x86_64)
@@ -12,8 +12,6 @@ license=(GPL LGPL FDL)
 depends=(ktextwidgets kwallet sane)
 makedepends=(extra-cmake-modules)
 install=$pkgname.install
-replaces=('kdegraphics-libksane')
-conflicts=('kdegraphics-libksane')
 options=('docs' 'debug')
 source=("$_mirror/${pkgname}-$_kdever.tar.xz")
 sha256sums=(`grep ${pkgname}-$_kdever.tar.xz  ../checksums.txt | cut -d " " -f1`)
