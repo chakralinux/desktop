@@ -1,15 +1,15 @@
 pkgbase=digikam
 pkgname=('digikam' 'kipi-plugins')
 pkgver=4.14.0
-pkgrel=1
+pkgrel=2
 url="http://digikam.sourceforge.net"
 arch=('x86_64')
 license=('GPL')
 screenshot=('http://i.imgur.com/6YnUM.png')
-makedepends=('kde-runtime' 'kdegraphics-kgamma' 'kdepimlibs4' 'lensfun' 'libmarble4'
+makedepends=('kde-runtime' 'kdepimlibs4' 'lensfun' 'libmarble4'
              'liblqr' 'opencv' 'lapack' 'libgpod' 'libkvkontakte' 'pkgconfig' 'cmake' 'automoc4'
-             'doxygen' 'docbook-xsl' 'qjson' 'kdegraphics-libkexiv2' 'kdegraphics-libkdcraw'
-             'kdegraphics-libksane' 'mariadb' 'qt4-gstreamer' 'boost' 'hugin-tools' 'eigen3' 
+             'doxygen' 'docbook-xsl' 'qjson' 'libkexiv2_4' 'libkdcraw4'
+             'libksane4' 'mariadb' 'qt4-gstreamer' 'boost' 'hugin-tools' 'eigen3' 
              'libbluray' 'libpgf' 'libkface' 'libkgeomap' 'kfilemetadata4')
 source=("http://download.kde.org/stable/${pkgname}/${pkgname}-${pkgver}.tar.bz2")
 options=("debug")
@@ -35,7 +35,7 @@ build() {
 
 package_digikam() {
   pkgdesc="Digital photo management application for kde"
-  depends=('kde-runtime' 'kdegraphics-kgamma' 'kdepimlibs4' 'lensfun' 'libmarble4' 'liblqr'
+  depends=('kde-runtime' 'kdepimlibs4' 'lensfun' 'libmarble4' 'liblqr'
            'mariadb' 'opencv' 'kipi-plugins' 'lapack' 'libgpod' 'libpgf' 'libkface' 'libkgeomap')
   install=digikam.install
   replaces=('digikamimageplugins')
@@ -53,9 +53,9 @@ package_digikam() {
 
 package_kipi-plugins() {
   pkgdesc="Kipi plugins and additional libs for digikam and kde apps"
-  depends=('kdegraphics-kgamma' 'kdepimlibs4' 'opencv' 'libgpod' 'sane' 'hugin-tools'
-           'libgphoto2-nolimit' 'libkvkontakte' 'kdegraphics-libkexiv2' 'kdegraphics-libkdcraw'
-           'kdegraphics-libksane' 'qt4-gstreamer' 'kfilemetadata4')
+  depends=('kdepimlibs4' 'opencv' 'libgpod' 'sane' 'hugin-tools'
+           'libgphoto2-nolimit' 'libkvkontakte' 'libkexiv2_4' 'libkdcraw4'
+           'libksane4' 'qt4-gstreamer' 'kfilemetadata4')
   optdepends=('imagemagick: for picture manipulation'
 	      'qca: for shwup webservice support'
 	      'libkgeomap: Geolocalize tool')
