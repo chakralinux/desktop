@@ -1,15 +1,17 @@
 # Contributions from Arch: https://www.archlinux.org/packages/community/x86_64/postgis/
 
 pkgname=postgis
-pkgver=2.1.8
+pkgver=2.2.0
 pkgrel=1
 pkgdesc="Adds support for geographic objects to PostgreSQL"
 arch=('x86_64')
 url="http://postgis.refractions.net/"
 license=('GPL')
+options=('!makeflags')
 depends=('postgresql' 'proj' 'geos' 'gdal' 'json-c' 'jasper' 'unixodbc')
 source=(http://download.osgeo.org/postgis/source/$pkgname-$pkgver.tar.gz)
-sha512sums=('e8aeb739a1ecf95b224a3908d2af3aa38933b56c63713af30d14243653745436165b418a3368601a699b744f6fe61ce645c980319eb159395d68166a3815c5f4')
+sha256sums=('66f0f8480d535959b8bb9abb5ee5d602d1001413ca770df120baf3de627f9e91')
+
 
 build() {
 	cd ${srcdir}/$pkgname-$pkgver
