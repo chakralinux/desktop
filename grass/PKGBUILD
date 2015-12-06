@@ -1,8 +1,9 @@
-# Contributions from Arch: https://aur.archlinux.org/packages/grass70-svn/
+# Contributions from AUR: https://aur.archlinux.org/packages/grass70-svn/
 
 pkgname='grass'
-pkgver=7.0.0
+pkgver=7.0.2
 pkgrel=1
+_shortver=${pkgver%.*}; _shortver=${_shortver/./}
 pkgdesc="GRASS GIS: geospatial data management and analysis, image processing, graphics/maps production, spatial modeling and visualization."
 arch=('x86_64')
 url='http://grass.osgeo.org/'
@@ -21,39 +22,33 @@ optdepends=('r: R language interface; see http://grasswiki.osgeo.org/wiki/R_stat
             'blas: required for GMATH library'
             'lesstif: motif support')
 source=("http://grass.osgeo.org/grass70/source/${pkgname}-${pkgver}.tar.gz")
-md5sums=('25b00b74ddb15284ffe2eacbb8999c7d')
+md5sums=('1f2c8f5cba2fe2d681a01b9519180e9e')
 
 
 prepare() {
-  cd "$pkgname-${pkgver}"
+  cd $pkgname-$pkgver
 
-  msg 'Patching source...'
-  # INSTDIR is partly hardcoded in `configure'. Fix it, so that INST_DIR, which
-  # is derived from it, is set as needed:
-  sed -i "s,INSTDIR='\${prefix}'\"/grass-\${GRASS_VERSION_MAJOR}\.\${GRASS_VERSION_MINOR}\.\${GRASS_VERSION_RELEASE}\",INSTDIR='\${prefix}/${pkgname}'," configure
-  # This e.g. prevents ./configure from not telling true about the "Installation directory:".
+  # Change everything to use python2
+  sed -i 's/\(env \|\/usr\/bin\/\)python$/&2/' $(find . -iname "*.py")
+  sed -i '/os\.environ.*GRASS_PYTHON/ s/"python"/"python2"/' lib/init/grass.py
+  sed -i '/^PYTHON/ s/python$/&2/' include/Make/Platform.make.in
 
-  # Custom desktop file:
-  sed -i -e "s,^Name=GRASS GIS 7\$,Name=GRASS GIS 7.0.x SVN r${pkgver}," \
-         -e "s,^Icon=grass\$,Icon=/usr/share/icons/${pkgname}-64x64.png," \
-         -e "s,^Exec=grass7\$,Exec=${pkgname}," \
-         "${srcdir}/${pkgname}-${pkgver}/gui/icons/grass.desktop"
+  # Fix path
+  sed -i '/^\s*INSTDIR/ s/".*"//' configure
 }
 
 build() {
   cd "$pkgname-$pkgver"
-  msg 'Configuring build...'
-  PATH="${srcdir}/${pkgname}-${pkgver}:$PATH"
-  export PATH
-   # I don't have any better idea than removing any -D_FORTIFY_SOURCE occurences from CPPFLAGS:
-  CPPFLAGS=`echo $CPPFLAGS | sed 's/-D_FORTIFY_SOURCE=.//g'` CFLAGS="$CFLAGS -Wall" CXXFLAGS="$CXXFLAGS -Wall"
+ # Ancient autoconf used upstream can't handle CPPFLAGS correctly
+  export CFLAGS="$CPPFLAGS $CFLAGS"
+  export CXXFLAGS="$CPPFLAGS $CXXFLAGS"
+  unset CPPFLAGS
   
   #No way to bypass wxpython failures, no need to have it since we don't use it
-  rm -r ${srcdir}/grass-7.0.0/gui/wxpython
+  rm -r ${srcdir}/${pkgname}-${pkgver}/gui/wxpython
   
   ./configure \
-    --prefix=/opt \
-    --exec-prefix="/opt/$pkgname" \
+    --prefix=/opt/$pkgname \
     --with-cxx \
     --with-cairo \
     --with-freetype \
@@ -81,31 +76,29 @@ build() {
   #make sure wxpython is not attempted by make
   sed -i "s/SUBDIRS = icons images scripts xml wxpython/SUBDIRS = icons images scripts xml/g" ${srcdir}/${pkgname}-${pkgver}/gui/Makefile
   
-  msg 'Building...'
   make
 }
 
 package() {
-  cd "${pkgname}-${pkgver}"
-  # Install GRASS in $pkgir of makepkg's fakeroot env:
-  make prefix="${pkgdir}/opt" exec_prefix="${pkgdir}/opt/${pkgname}" INST_DIR="${pkgdir}/opt/${pkgname}" install
+  cd $pkgname-$pkgver
 
-  msg 'Patching the build results...'
-  # During `make install' several files get a content based on `INST_DIR' and
-  # `UNIX_BIN' make vars. It's not possible to avoid this without changing
-  # GRASS build system. Some post-install tweaks are needed:
-  sed -i "s,${pkgdir},,g" "${pkgdir}/opt/${pkgname}/include/Make/Platform.make" \
-                          "${pkgdir}/opt/${pkgname}/include/Make/Grass.make" \
-                          "${pkgdir}/opt/${pkgname}/etc/fontcap" \
-                          "${pkgdir}/opt/${pkgname}/bin/grass70" \
-                          "${pkgdir}/opt/${pkgname}/demolocation/.grassrc70"
+  make exec_prefix="$pkgdir/usr" INST_DIR="$pkgdir/opt/$pkgname" install
 
-  # Install an ldconfig conf for GRASS libs in /opt to be visible on the
-  # system. Arch runs `ldconfig' after install automatically:
-  echo "/opt/${pkgname}/lib" > "${srcdir}/${pkgname}.conf"
-  install -D -m644 "${srcdir}/${pkgname}.conf" "${pkgdir}/etc/ld.so.conf.d/${pkgname}.conf"
+  # Install linker config file, needed for qgis to find grass
+  install -d "$pkgdir/etc/ld.so.conf.d/"
+  echo "/opt/$pkgname/lib" > "$pkgdir/etc/ld.so.conf.d/$pkgname.conf"
 
-  # Desktop integration:
-  install -D -m644 "${srcdir}/${pkgname}-${pkgver}/gui/icons/grass-64x64.png" "${pkgdir}/usr/share/icons/${pkgname}-64x64.png"
-  install -D -m644 "${srcdir}/${pkgname}-${pkgver}/gui/icons/grass.desktop" "${pkgdir}/usr/share/applications/${pkgname}.desktop"
+  cd "$pkgdir/opt/$pkgname"
+
+  # Put freedesktop.org files in correct location
+  mv share "$pkgdir/usr"
+  install -Dm644 gui/icons/grass-48x48.png "$pkgdir/usr/share/icons/hicolor/48x48/apps/grass.png"
+  install -Dm644 gui/icons/grass-64x64.png "$pkgdir/usr/share/icons/hicolor/64x64/apps/grass.png"
+
+  # Fix some paths that get hard coded by make install
+  sed -i "s|$pkgdir||g" demolocation/.grassrc$_shortver \
+                        include/Make/{Platform,Grass}.make \
+                        etc/fontcap \
+                        "$pkgdir/usr/bin/grass$_shortver"
+  sed -i "s|$srcdir||g" docs/html/t.connect.html
 }
