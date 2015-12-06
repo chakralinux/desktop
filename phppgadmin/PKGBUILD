@@ -1,45 +1,23 @@
-#
-# Apps Packages for Chakra, part of chakra-project.org
-#
-# Maintainer: Adrián Chaves Fernández (Gallaecio) <adriyetichaves@gmail.com
-# Contributor: Sergej Pupykin <pupykin.s+arch@gmail.com>
-# Contributor: wizzomafizzo <wizzomafizzo@gmail.com>
-# Contributor: Benjamin Andresen <benny@klapmuetz.org>
+#contributions from Arch: https://projects.archlinux.org/svntogit/community.git/tree/trunk?h=packages/phppgadmin
 
 pkgname=phppgadmin
-_pkgname=phpPgAdmin
 pkgver=5.1
-_pkgver=$pkgver
-pkgrel=1
-pkgdesc="A web-based administration tool for PostgreSQL. It is perfect for PostgreSQL DBAs, newbies and hosting services"
+pkgrel=2
+pkgdesc="A web-based administration tool for PostgreSQL"
 arch=('any')
 url="http://sourceforge.net/projects/phppgadmin"
 license=('GPL')
-backup=('etc/webapps/phppgadmin/config.inc.php'
-        'etc/webapps/phppgadmin/.htaccess')
-categories=('network')
-install=phppgadmin.install
-source=("http://downloads.sourceforge.net/project/$pkgname/$_pkgname [stable]/$_pkgname-$_pkgver/$_pkgname-$pkgver.tar.gz")
+depends=('php' 'php-pgsql')
+backup=('etc/webapps/phppgadmin/config.inc.php')
+source=(http://downloads.sourceforge.net/sourceforge/$pkgname/phpPgAdmin-$pkgver.tar.gz)
 md5sums=('554c94f5b38a1c6e8327ec3aa4cc6538')
 
 package() {
-  depends=('php' 'postgresql' 'php-pgsql')
-
   _instdir=$pkgdir/usr/share/webapps/phppgadmin
   mkdir -p ${_instdir} $pkgdir/etc/webapps/phppgadmin
   cd ${_instdir}
   cp -ra $srcdir/phpPgAdmin-$pkgver/* .
   cp ./conf/config.inc.php-dist $pkgdir/etc/webapps/phppgadmin/config.inc.php
-  echo "deny from all" >$pkgdir/etc/webapps/phppgadmin/.htaccess
-  ln -s /etc/webapps/phppgadmin/.htaccess ${_instdir}/.htaccess
-  ln -s /etc/webapps/phppgadmin/config.inc.php ${_instdir}/config.inc.php
-  cat >$pkgdir/etc/webapps/phppgadmin/apache.example.conf <<EOF
-	Alias /phppgadmin "/usr/share/webapps/phppgadmin"
-	<Directory "/usr/share/webapps/phppgadmin">
-		AllowOverride All
-		Options FollowSymlinks
-		Order allow,deny
-		Allow from all
-	</Directory>
-EOF
+  rm -f ${_instdir}/conf/config.inc.php
+  ln -s /etc/webapps/phppgadmin/config.inc.php ${_instdir}/conf/config.inc.php
 }
