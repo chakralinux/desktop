@@ -1,28 +1,33 @@
-#
-# Chakra Packages for Chakra, part of chakra-project.org
-#
-# maintainer (i686): Phil Miller <philm[at]chakra-project[dog]org>
-# maintainer (x86_64): Manuel Tortosa <manutortosa[at]chakra-project[dot]org>
-
-# include global config
-source ../_buildscripts/${current_repo}-${_arch}-cfg.conf
-
 pkgname=keepassx
-pkgver=0.4.3
-pkgrel=2
+pkgver=2.0
+pkgrel=1
 pkgdesc="Cross platform password manager"
-arch=('i686' 'x86_64')
+arch=('x86_64')
 url="http://www.keepassx.org/"
 license=('GPL2')
-depends=('qt' 'libxtst')
+depends=('qt' 'libxtst' 'libgcrypt' 'zlib')
+makedepends=('cmake')
 categories=('utils')
-source=(http://downloads.sourceforge.net/keepassx/keepassx-$pkgver.tar.gz)
-md5sums=('1df67bb22b2e08df49f09e61d156f508')
+source=("https://www.keepassx.org/releases/$pkgver/keepassx-$pkgver.tar.gz")
+sha256sums=('0eb40fac3a44d8283dfc1ee28cc6de5c660b22ab975472de82c2b04675c822e6')
+
+prepare() {
+        cd "$srcdir/keepassx-$pkgver"
+        mkdir -p build
+        cd build
+}
 
 build() {
-	cd "$srcdir/keepassx-$pkgver"
+	cd "$srcdir/keepassx-$pkgver/build"
 
-	qmake PREFIX=/usr || return 1
-	make || return 1
-	make INSTALL_ROOT="$pkgdir" install || return 1
+	cmake -DCMAKE_INSTALL_PREFIX=/usr ../
+	make
+}
+
+package() {
+        cd "$srcdir/keepassx-$pkgver/build"
+
+        make DESTDIR="$pkgdir" install
+        #change lib directory from /usr/lib64 to /usr/lib
+        mv $pkgdir/usr/lib64 $pkgdir/usr/lib
 }
