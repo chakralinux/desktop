@@ -5,7 +5,7 @@ pkgbase=kate
 pkgname=('kwrite'
          'kate')
 pkgver=${_kdever}
-pkgrel=1
+pkgrel=2
 pkgdesc='Advanced editor component which is used in numerous KDE applications requiring a text editing component'
 arch=('x86_64')
 license=('GPL' 'LGPL' 'FDL')
@@ -13,11 +13,16 @@ depends=('knewstuff' 'ktexteditor' 'threadweaver' 'kded' 'kitemmodels')
 makedepends=('extra-cmake-modules' 'kdoctools' 'python3' 'plasma-framework')
 optdepends=('kio-extras: extra protocols support (sftp, fish and more)')
 options=('docs' 'debug')
-source=("$_mirror/${pkgbase}-$_kdever.tar.xz")
-sha256sums=("`grep ${pkgbase}-$_kdever.tar.xz  ../checksums.txt | cut -d " " -f1`")
+source=("$_mirror/${pkgbase}-$_kdever.tar.xz"
+        'fix_close_and_dbus.patch')
+sha256sums=("`grep ${pkgbase}-$_kdever.tar.xz  ../checksums.txt | cut -d " " -f1`"
+            'dc2a82037145b6ded90c5e3fa63fef4bc95c597a8bcb5a00e5200dce61a281a8')
 
 prepare() {
   mkdir build
+  
+  cd ${pkgbase}-${pkgver}
+  patch -Np1 -i ${srcdir}/fix_close_and_dbus.patch
 }
 
 build() {
