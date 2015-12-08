@@ -1,19 +1,26 @@
-#maintainer: Neophytos Kolokotronis <tetris4@gmail.com>
-
 pkgname=iotop
 pkgver=0.6
-pkgrel=2
+pkgrel=3
 pkgdesc="Python program with a top like UI used to show of behalf of which process is the I/O going on"
 arch=('any')
 url="http://guichaz.free.fr/iotop/"
 license=('GPL')
-depends=('python')
-changelog=
+depends=('python3')
 source=(http://guichaz.free.fr/$pkgname/files/$pkgname-$pkgver.tar.bz2)
-md5sums=('5ef9456b26d7694abf3101a72e1e0d1d')
+sha256sums=('3adea2a24eda49bbbaeb4e6ed2042355b441dbd7161e883067a02bfc8dcef75b')
  
+prepare() {
+  cd "${srcdir}"/$pkgname-$pkgver
+
+# Install binary to /usr/bin
+  sed -i '7,13d' setup.py
+}
+
 package() {
-  cd ${srcdir}/$pkgname-$pkgver
- 
-  python2 setup.py install --root=${pkgdir}
+  cd "${srcdir}"/$pkgname-$pkgver
+
+  python3 setup.py install --prefix=/usr --root="${pkgdir}" --optimize=1
+
+#FS#33906 fix
+  chmod 644 "${pkgdir}"/usr/share/man/man8/iotop.8
 }
