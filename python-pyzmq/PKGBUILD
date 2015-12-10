@@ -29,14 +29,14 @@ build() {
 
 package_python2-pyzmq() {
   pkgdesc="Python2 bindings for zeromq, written in Cython"
-  depends=('zeromq' 'python2')
+  depends=(zeromq python2)
   cd "$srcdir/py2zmq-$pkgver"
   python2 setup.py install --root="$pkgdir" --optimize=0
 }
 
 package_python3-pyzmq() {
   pkgdesc="Python3 bindings for zeromq, written in Cython"
-  depends=('zeromq' 'python3')
+  depends=(zeromq python)
   cd "$srcdir/pyzmq-$pkgver"
   python3 setup.py install --root="$pkgdir" --optimize=0
 }
