@@ -1,0 +1,147 @@
+pkgbase=jupyter
+pkgname=('jupyter' 'ipython2-notebook')
+pkgver=4.0.6
+pkgrel=1
+pkgdesc="A language-agnostic web-based interactive shell/notebook server."
+arch=('any')
+url="http://jupyter.org/"
+license=('BSD')
+depends=('ipython3>4.0.0' 'python3-setuptools' 'mathjax'
+         'python3-jinja' 'python3-pyzmq' 'python3-tornado' 'python3-jsonschema'
+         'python3-terminado' 'python3-mistune' 'python3-pygments')
+makedepends=('python3-setuptools' 'python2-setuptools' 'npm' 'git')
+optdepends=('mathjax: latex equation rendering'
+            'qt5-svg: jupyter-qtconsole'
+            'python3-pyqt5: jupyter-qtconsole'
+            'python3-sip: jupyter-qtconsole')
+
+# some of these will update rapidly, others never
+# so _vers will be phased in as new updates are released
+_ipykv=4.0.3  # ipykernel
+_ipywv=4.0.2  # ipywidgets
+_qtcv=4.0.1   # qtconsole
+_notev=4.0.4  # notebook
+
+source=("jupyter_core.tgz::https://github.com/jupyter/jupyter_core/archive/$pkgver.tar.gz"
+        "ipykernel.tgz::https://github.com/ipython/ipykernel/archive/$_ipykv.tar.gz"
+        "ipywidgets.tgz::https://github.com/ipython/ipywidgets/archive/$_ipywv.tar.gz"
+        "nbconvert.tgz::https://github.com/jupyter/nbconvert/archive/4.0.0.tar.gz"
+        "nbformat.tar.gz::https://github.com/jupyter/nbformat/archive/4.0.0.tar.gz"
+        "jupyter_console.tgz::https://github.com/jupyter/jupyter_console/archive/4.0.2.tar.gz"
+        "jupyter_client.tgz::https://github.com/jupyter/jupyter_client/archive/4.0.0.tar.gz"
+        "notebook.tgz::https://github.com/jupyter/notebook/archive/$_notev.tar.gz"
+        "https://pypi.python.org/packages/source/q/qtconsole/qtconsole-$_qtcv.tar.gz")
+sha256sums=('76d9f95eec679d1ce8a07fba4e373bda3b17ca89e3b03ee6186a7dbdc117d7e8'
+         '61ee8838decae364cd2291a88983473d74c352babb4d1896b6a2b9718cfc1d85'
+         '5eb4f1012ee6f45fb2bf6586b9a6934c4ad3e46a2de90d67410a60ac820be2e5'
+         '00e25eeca90523ba6b774b289073631ef5ac65bb2de9774e9b7f29604516265c'
+         'f0dc6c6b47b9b0dcda1dfb02dd99c0818eb709571690a688d4e38a3129d2e95b'
+         '116a56763899bbb12c762f865372eb52c08619ef070c237c7f1387e192bfd3df'
+         '33b15abb1307d8d3716b0d3b5d07aa22fdfbbf65a9f1aedf478a274a6adc11c0'
+         '8b92dac44a8ddf0a4a77be71eb7b82b8e35f5a6bd77cc8c7c4d023c9ec98043c'
+         '7d2cf976bb960df11f413709b5b5b809365c48426110e946d0c12117e6ced3a5')
+
+# notebook optdeps ?
+# 'haskell-pandoc: ipython notebook conversion'
+# 'texlive-bin: notebook pdf export'
+
+# qtconsole deps?
+# python-pyqt4 python-sip python-pygments python-pyzmq
+# is qt5 now?
+
+prepare() {
+  cd "$srcdir"
+  cp -r jupyter_core-$pkgver python2-jupyter_core-$pkgver
+  cp -r jupyter_client-4.0.0 python2-jupyter_client-4.0.0
+  cp -r ipykernel-$_ipykv    python2-ipykernel-$_ipykv
+  cp -r qtconsole-$_qtcv      python2-qtconsole-$_qtcv
+}
+
+build() {
+  cd "$srcdir"
+
+  # FS45999 disable bundled mathjax
+  cd "$srcdir/notebook-$_notev"
+  sed -i 's/^.*MathJax.*$//' bower.json 
+  #sed -i '/Trim mathjax/,/^                static_data.append/d' setupbase.py
+  sed -i 's/mj(/#mj(/' setupbase.py
+  # needs node, downloads a lot of stuff
+  python3 setup.py build
+
+  cd "$srcdir/ipywidgets-$_ipywv"
+  # needs node, downloads a lot of stuff
+  python3 setup.py build
+}
+
+package_jupyter() {
+  provides=('ipython3-notebook')
+  replaces=('ipython3-notebook')
+
+  cd "$srcdir/jupyter_core-$pkgver"
+  python3 setup.py install --prefix=/usr --root="$pkgdir" --optimize=0
+
+  cd "$srcdir/ipykernel-$_ipykv"
+  # this is in the ipython package
+  #python3 setup.py install --prefix=/usr --root="$pkgdir" --optimize=0
+
+  cd "$srcdir/ipywidgets-$_ipywv"
+  python3 setup.py install --prefix=/usr --root="$pkgdir" --optimize=0
+
+  cd "$srcdir/notebook-$_notev"
+  # needs node
+  python3 setup.py install --prefix=/usr --root="$pkgdir" --optimize=0
+  # FS45999 use system mathjax
+  ln -s /usr/share/mathjax \
+  "$pkgdir/usr/lib/python3.4/site-packages/notebook/static/components/MathJax"
+
+  cd "$srcdir/nbconvert-4.0.0"
+  python3 setup.py install --prefix=/usr --root="$pkgdir" --optimize=0
+
+  cd "$srcdir/nbformat-4.0.0"
+  python3 setup.py install --prefix=/usr --root="$pkgdir" --optimize=0
+
+  cd "$srcdir/jupyter_console-4.0.2"
+  python3 setup.py install --prefix=/usr --root="$pkgdir" --optimize=0
+
+  cd "$srcdir/jupyter_client-4.0.0"
+  python3 setup.py install --prefix=/usr --root="$pkgdir" --optimize=0
+
+  cd "$srcdir/qtconsole-$_qtcv"
+  python3 setup.py install --prefix=/usr --root="$pkgdir" --optimize=0
+  install -Dm644 examples/jupyter-qtconsole.desktop "$pkgdir/usr/share/applications/ipython-qtconsole.desktop"
+
+  cd "$srcdir"
+  install -Dm644 "jupyter_core-$pkgver/COPYING.md" "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
+}
+
+package_ipython2-notebook() {
+  pkgdesc="An enhanced Interactive Python2 shell."
+  depends=('ipython2>4.0.0' 'jupyter' 'python2-pyzmq')
+  optdepends=('python2-pyqt5: jupyter-qtconsole-py2'
+              'qt5-svg: jupyter-qtconsole-py2'
+              'python2-sip: jupyter-qtconsole-py2')
+
+  cd "$srcdir/python2-ipykernel-$_ipykv"
+  python2 setup.py install --prefix=/usr --root="$pkgdir" --optimize=0
+
+  cd "$srcdir/python2-jupyter_core-$pkgver"
+  python2 setup.py install --prefix=/usr --root="$pkgdir" --optimize=0
+
+  cd "$srcdir/python2-jupyter_client-4.0.0"
+  python2 setup.py install --prefix=/usr --root="$pkgdir" --optimize=0
+
+  cd "$srcdir/python2-qtconsole-$_qtcv"
+  python2 setup.py install --prefix=/usr --root="$pkgdir" --optimize=0
+
+  cd "$pkgdir/usr/bin"
+  rm jupyter
+  rm jupyter-kernelspec
+  rm jupyter-migrate
+  mv jupyter-qtconsole jupyter-qtconsole-py2
+
+  cd "$srcdir"
+  install -d "$pkgdir/usr/share/jupyter/kernels/python2"
+  echo '{"display_name": "Python 2", "language": "python2", "argv": ["python2", "-c", "from IPython.kernel.zmq.kernelapp import main; main()", "-f", "{connection_file}"],"codemirror_mode": {"version": 2, "name": "ipython2"}}' > "$pkgdir/usr/share/jupyter/kernels/python2/kernel.json"
+
+  install -Dm644 "jupyter_core-$pkgver/COPYING.md" "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
+}
