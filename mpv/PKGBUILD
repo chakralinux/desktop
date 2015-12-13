@@ -1,9 +1,9 @@
 pkgname=mpv
 pkgver=0.14.0
-pkgrel=1
+pkgrel=2
 pkgdesc="A movie player and encoder for linux, based on MPlayer/mplayer2"
 arch=('x86_64')
-license=('GPL')
+license=('LGPL3')
 url="http://mpv.io"
 depends=('pulseaudio' 'ffmpeg' 'lcms2' 'libdvdread' 'libgl' 'libbs2b' 'libvdpau'
          'libxinerama' 'libxv' 'libxkbcommon' 'libva'  'libass' 'uchardet' 
@@ -49,7 +49,8 @@ build() {
     --enable-libsmbclient \
     --enable-dvdread \
     --enable-libv4l2 \
-    --enable-vdpau
+    --enable-vdpau \
+    --enable-gpl3
   ./waf build
 }
  
