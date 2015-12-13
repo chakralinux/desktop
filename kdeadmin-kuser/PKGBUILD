@@ -16,16 +16,11 @@ depends=("kde-runtime")
 groups=("kdeadmin" "kde" "kde-minimal" "kde-uninstall")
 conflicts=("kdeadmin-doc")
 categories=('system')
-source=("$_mirror/${_pkgname}-$_kdever.tar.xz"
-        kuser-cmake-3.4.patch::"https://quickgit.kde.org/?p=kuser.git&a=commitdiff&h=0bf52af&o=plain")
-sha256sums=(`grep ${_pkgname}-$_kdever.tar.xz  ../checksums.txt | cut -d " " -f1`
-            '0b76f4b4f160a841309132a217c6ca22b89855bd6170e56c761e39f92f5afac5')
+source=("$_mirror/${_pkgname}-$_kdever.tar.xz")
+sha256sums=(`grep ${_pkgname}-$_kdever.tar.xz  ../checksums.txt | cut -d " " -f1`)
 
 build() {
     cd ${srcdir}/${_pkgname}-${pkgver}
-    
-    # Fix build with cmake 3.4
-    patch -p1 -i ../kuser-cmake-3.4.patch
     
     # Set KUser default starting user to 1000
     sed -i "s|ID 500 CACHE|ID 1000 CACHE|" CMakeLists.txt
