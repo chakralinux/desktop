@@ -1,0 +1,30 @@
+# Include global configuration
+source ../kdeapps.conf
+
+pkgname=libmediawiki
+pkgver=0.1.0
+pkgrel=1
+pkgdesc="KDE C++ interface for MediaWiki based web service as wikipedia.org"
+url="https://projects.kde.org/projects/extragear/libs/libmediawiki"
+arch=('x86_64')
+license=('GPL' 'LGPL' 'FDL')
+depends=('kcoreaddons')
+makedepends=('extra-cmake-modules' 'kdoctools' 'git')
+groups=('kde' 'kde-graphics' 'kde-uninstall')
+source=("git://anongit.kde.org/libmediawiki.git")
+md5sums=('SKIP')
+
+prepare() {
+  mkdir -p build
+}
+
+build() {
+  cd build
+  cmake_kf5 ../${pkgname}
+  make
+}
+
+package() {
+  cd build
+  make DESTDIR=${pkgdir} install
+}
