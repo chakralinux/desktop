@@ -1,7 +1,8 @@
+source ../kdeapps.conf
 
 pkgname=ffmpegthumbs
-pkgver=15.08.91.c06602f
-pkgrel=4
+pkgver=15.12.0
+pkgrel=1
 pkgdesc='FFmpeg-based thumbnail creator for video files'
 url='https://projects.kde.org/ffmpegthumbs'
 arch=(x86_64)
@@ -11,13 +12,8 @@ depends=(kio ffmpeg)
 makedepends=(extra-cmake-modules git)
 conflicts=(kdemultimedia-ffmpegthumbs kdemultimedia-thumbnailers kdemultimedia-mplayerthumbs kffmpegthumbnailer)
 replaces=(kdemultimedia-ffmpegthumbs kdemultimedia-thumbnailers kdemultimedia-mplayerthumbs kffmpegthumbnailer)
-source=("git://git.kde.org/ffmpegthumbs#commit=c06602ff")
-sha1sums=('SKIP')
-
-pkgver() {
-  cd $pkgname
-  printf "15.08.%s.%s" "$(git rev-list --count HEAD)" "$(git rev-parse --short HEAD)"
-}
+source=("$_mirror/${pkgname}-$_kdever.tar.xz")
+sha256sums=("`grep ${pkgname}-$_kdever.tar.xz  ../checksums.txt | cut -d " " -f1`")
 
 prepare() {
   mkdir -p build
@@ -25,12 +21,7 @@ prepare() {
 
 build() {
   cd build
-  cmake ../$pkgname \
-    -DCMAKE_BUILD_TYPE=Release \
-    -DBUILD_TESTING=OFF \
-    -DCMAKE_INSTALL_PREFIX=/usr \
-    -DCMAKE_INSTALL_LIBDIR=lib \
-    -DKDE_INSTALL_USE_QT_SYS_PATHS=ON
+  cmake_kf5 ../${pkgbase}-${pkgver} 
   make
 }
 
