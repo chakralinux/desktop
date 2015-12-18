@@ -2,12 +2,11 @@
 # Contributors: Manuel Tortosa <manutortosa@chakra-project.org>
 
 # Include global configuration
-source ../_buildscripts/${current_repo}-${_arch}-cfg.conf
+#source ../_buildscripts/${current_repo}-${_arch}-cfg.conf
 
-pkgbase=kactivities4
-pkgname=('kactivities4' 'libkactivities4')
+pkgname='libkactivities4'
 pkgver=4.13.3 # there is no 4.14 version!
-pkgrel=5
+pkgrel=6
 arch=('x86_64')
 pkgdesc='API for using and interacting with Activities'
 url='http://kde.org/'
@@ -16,11 +15,8 @@ license=('GPL'
 depends=("kdelibs>=${_kdever}")
 makedepends=('cmake'
              'automoc4')
-options=('docs'
-         '!header'
-         'debug'
-         'log')
-source=($_mirror/kactivities-$pkgver.tar.xz)
+options=('debug')
+source=(http://download.kde.org/stable/${pkgver}/src/kactivities-$pkgver.tar.xz)
 #sha256sums=(`grep ${pkgname}-$_kdever.tar.xz  ../checksums.txt | cut -d" " -f1`)
 sha256sums=("c7cb9d023f6e5cd01d76568c3590303ea3ecb4ebe9535b31862957846f5e898a")
 
@@ -35,17 +31,6 @@ build() {
     -DCMAKE_INSTALL_PREFIX=/usr \
     -DWITH_NepomukCore=OFF
   make
-}
-
-package_kactivities4() {
-  pkgdesc='The KActivity Manager Daemon'
-  depends=('libkactivities4')
-  provides=('kactivitymanagerd')
-  conflicts=('kactivities<=4.13.3-3')
-
-  cd build
-  install -Dm755 src/service/kactivitymanagerd \
-    "${pkgdir}"/usr/bin/kactivitymanagerd
 }
 
 package_libkactivities4() {
