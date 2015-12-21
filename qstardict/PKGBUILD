@@ -1,13 +1,8 @@
-#
-# Apps Packages for Chakra, part of chakra-project.org
-#
-# contributor (x86_64): Giuseppe Calà <jiveaxe@gmail.com>
-
 pkgname=qstardict
-pkgver=1.0.1
+pkgver=1.1
 pkgrel=1
 pkgdesc="Qt4 clone of StarDict with full support of StarDict dictionaries."
-arch=('i686' 'x86_64')
+arch=('x86_64')
 url="http://qstardict.ylsoftware.com/index.php"
 license=('GPL2')
 depends=('qt')
@@ -18,16 +13,17 @@ optdepends=('festival-awb-arctic: for pronouncing words, Scottish English male s
 provides=('stardict')
 categories=('utils')
 screenshot=('http://qstardict.ylsoftware.com/images/screenshot1.png')
-source=(http://qstardict.ylsoftware.com/files/${pkgname}-${pkgver}.tar.bz2
-        stardict_new.diff)       
-md5sums=('4e058439edad45103a9f5c74d2a381e5'
-         '0d4da45440c0d34ed06f82fc4f142e07')
+source=(https://github.com/a-rodin/qstardict/archive/qstardict-${pkgver}.tar.gz)       
+sha256sums=('d804abd17891f29fe5f093f44dc6dba026839fc2c21813907a6510bc6831d6e3')
 
 build() {
-  cd ${srcdir}/$pkgname-$pkgver
-  patch -p1 -i ${srcdir}/stardict_new.diff
-
+  cd ${srcdir}/$pkgname-$pkgname-$pkgver
   qmake ENABLED_PLUGINS="stardict web swac" 
   make 
+}
+
+package() {
+  cd ${srcdir}/$pkgname-$pkgname-$pkgver
   make INSTALL_ROOT=${pkgdir} install
+
 }
