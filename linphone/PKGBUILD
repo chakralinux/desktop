@@ -1,24 +1,29 @@
+## This is the linphone stack,
+## normally along with linphone you should update the following packages:
+## bcg729, belle-sip, bzrtp, mbedtls, mediastreamer, ortp, libantlr3c
+
 pkgname=linphone
-pkgver=3.8.5
+pkgver=3.9.1
 pkgrel=1
 pkgdesc="A Voice-over-IP phone - cli version"
 arch=('x86_64')
 url="http://www.linphone.org/index.php/eng"
 license=('GPL')
 depends=('alsa-lib' 'ffmpeg' 'speex' 'libv4l' 'v4l-utils' 'libxml2'
-	 'libpulse' 'libxv' 'libvpx' 'mediastreamer' 'ortp' 'bzrtp' 'bcg729'
+	 'libpulse' 'libxv' 'libvpx' 'mediastreamer' 'ortp>=0.25.0' 'bzrtp' 'bcg729'
 	 'belle-sip' 'mesa-libgl' 'glew' 'gsm' 'sqlite3' 'readline' 'libupnp')
 makedepends=('pkg-config' 'libtool' 'intltool' )
 # 'perl-xml-parser' 'sgmltools-lite'
 optdepends=('pulseaudio')
 options=('!emptydirs')
-source=("http://download-mirror.savannah.gnu.org/releases/${pkgname}/3.8.x/sources/${pkgname}-$pkgver.tar.gz")
-sha512sums=('be6e0fedd81e80e859c303926ec9c651e3242a5bbaa9e9be4d7e1ce3738a35d8ca68e924bcdf9b54c4f716f3cb30a3ae8f7b8caab3349915730c6041ce49ec88')
+source=("http://download-mirror.savannah.gnu.org/releases/${pkgname}/3.9.x/sources/${pkgname}-$pkgver.tar.gz")
+sha256sums=('84e6eae51336f98817643f85f962a43351dafc4f2e1611825d1a3433307f24ac')
 
 build() {
   cd $pkgname-$pkgver
   export PKG_CONFIG=/usr/bin/pkg-config
   unset SGML_CATALOG_FILES
+  ./autogen.sh
   ./configure --prefix=/usr --disable-static --disable-gtk-ui --enable-console-ui --enable-ipv6 --enable-video \
 	--enable-alsa --enable-pulseaudio --disable-artsc --disable-strict \
 	--libexecdir=/usr/lib/$pkgname \
