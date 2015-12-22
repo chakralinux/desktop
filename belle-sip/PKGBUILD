@@ -1,7 +1,7 @@
 # Arch contribution https://www.archlinux.org/packages/community/x86_64/belle-sip/
 
 pkgname=belle-sip
-pkgver=1.4.1
+pkgver=1.4.2
 pkgrel=1
 pkgdesc="A Voice-over-IP phone"
 arch=('x86_64')
@@ -10,14 +10,15 @@ license=('GPL')
 depends=('libantlr3c' 'gcc-libs' 'mbedtls')
 makedepends=('java-runtime')
 options=('!emptydirs')
-source=("http://download-mirror.savannah.gnu.org/releases/linphone/belle-sip/belle-sip-$pkgver.tar.gz"
+source=("https://github.com/BelledonneCommunications/belle-sip/archive/${pkgver}.tar.gz"
 	"antlr.jar::https://github.com/antlr/website-antlr3/blob/gh-pages/download/antlr-3.4-complete.jar?raw=true")
 noextract=('antlr.jar')
-sha512sums=('29b2b0d6997e8764976cdaa5d83e8e943d37f1a35cecbbd621d86c568e6b507c4dec5b38bf32130afabd2c88f6d0319f1a33a2a796189f466391e2fa09d7e101'
+sha512sums=('39590df959d22dc2c8f122176653e4254c4994f8ebfcd3f9066fd207d727b2d84708e4a4aa26ead109061be4d3084fafc3c8a7c3c5b7e4a3eed9bb0679e17c6e'
          '04be4dfba3a21f3ab9d9e439a64958bd8e844a9f151b798383bd9e0dd6ebc416783ae7cb1d1dbb27fb7288ab9756b13b8338cdb8ceb41a10949c852ad45ab1f2')
 
 prepare() {
   cd $pkgname-$pkgver
+  ./autogen.sh
   sed -i \
     -e "s#antlr_java_prefixes=.*#antlr_java_prefixes=$srcdir#" \
     -e "s|-Werror||g" \
