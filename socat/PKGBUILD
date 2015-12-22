@@ -1,0 +1,26 @@
+# Contribution from Archlinux: https://projects.archlinux.org/svntogit/packages.git/plain/trunk/PKGBUILD?h=packages/socat
+
+pkgname=socat
+pkgver=1.7.3.0
+pkgrel=1
+pkgdesc='Multipurpose relay'
+url='http://www.dest-unreach.org/socat/'
+license=('GPL2')
+arch=('x86_64')
+depends=('readline' 'openssl')
+source=("http://www.dest-unreach.org/socat/download/${pkgname}-${pkgver}.tar.gz")
+sha1sums=('c09ec6539647cebe8fccdfcf0f1ace1243231ec3')
+
+build() {
+	cd "${srcdir}/${pkgname}-${pkgver}"
+	./configure \
+		--prefix=/usr \
+		--mandir=/usr/share/man \
+
+	make
+}
+
+package() {
+	cd "${srcdir}/${pkgname}-${pkgver}"
+	make DESTDIR="${pkgdir}" install
+}
