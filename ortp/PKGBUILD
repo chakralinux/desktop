@@ -1,0 +1,23 @@
+pkgname=ortp
+pkgver=0.25.0
+pkgrel=1
+pkgdesc="A Real-time Transport Protocol (RTP) library"
+arch=('x86_64')
+url="http://www.linphone.org/index.php/eng/code_review/ortp"
+license=('LGPL')
+depends=('openssl')
+options=('!libtool')
+source=("https://github.com/BelledonneCommunications/ortp/archive/${pkgver}.tar.gz")
+sha256sums=('cc76bf057b362332a0b3143d4d1fdf6d8651fb2f161f30b575071665e9dac231')
+
+build() {
+  cd ${srcdir}/${pkgname}-${pkgver}
+  ./autogen.sh
+  ./configure --prefix=/usr
+  make 
+}
+
+package() {
+  cd ${srcdir}/${pkgname}-${pkgver}
+  make DESTDIR=${pkgdir} install
+}
