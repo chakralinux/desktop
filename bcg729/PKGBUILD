@@ -1,18 +1,19 @@
 # Arch contribution https://www.archlinux.org/packages/community/x86_64/bcg729/
 
 pkgname=bcg729
-pkgver=1.0.0
+pkgver=1.0.1
 pkgrel=1
 pkgdesc="g729 codec"
 arch=('x86_64')
 url="http://www.linphone.org/eng/documentation/dev/bcg729.html"
 license=('GPL')
 depends=('mediastreamer')
-source=(http://download-mirror.savannah.gnu.org/releases/linphone/plugins/sources/$pkgname-$pkgver.tar.gz)
-sha512sums=('015f18ce485e53f74879c762ed520ae37cdefcb18a445c3c00eae432b3506c41c8d13a68e2d70c9d134270269d92ed3ddb36026fc59c71de955ebac25fcbcebf')
+source=("https://github.com/BelledonneCommunications/bcg729/archive/${pkgver}.tar.gz")
+sha256sums=('20f04d1d45c62cb6c06df2177db0701f376940a55744386da3651104251fd5fc')
 
 build() {
   cd $pkgname-$pkgver
+  ./autogen.sh
   ./configure --prefix=/usr
   make
 }
