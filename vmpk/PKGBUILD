@@ -1,15 +1,29 @@
 pkgname=vmpk
-pkgver=0.6.1
+pkgver=0.6.2
 pkgrel=1
 pkgdesc="MIDI event generator and receiver"
 arch=('x86_64')
 url="http://sourceforge.net/projects/vmpk/"
 depends=('qt5-x11extras' 'drumstick')
 makedepends=('cmake' 'docbook-xsl' 'qt5-tools')
+optdepends=('soundfont-fluidr3: for MIDI sound'
+            'soundfont-personalcopy: for MIDI sound'
+            'soundfont-unison: for MIDI sound')
 license=('GPL3')
 install="$pkgname.install"
 source=("http://downloads.sourceforge.net/project/$pkgname/$pkgname/$pkgver/$pkgname-$pkgver.tar.bz2")
-sha512sums=('6ca63abb3cc8a586173ace6ba42e9c26620c0597340317674326e45d2aeb7c47896f50ed636168e16cf574822d4f7c11c5083acbe51ea05330acfafd423b871c')
+sha512sums=('fd98943f5e74a8df6e94a1400224621c4ee362a380a9a4a934a298d99377091e8807a4f08d837843961e8f62b4ccff4ce2fc5088d60e20ef7d5a0706c089fff7')
+
+prepare() {
+  cd $pkgname-$pkgver
+  [ -d b ] || mkdir b
+  
+  #fix missing translation files
+  sed -i s!vmpk_gl.ts!! \
+  translations/CMakeLists.txt
+  sed -i s!vmpk_sr.ts!! \
+  translations/CMakeLists.txt
+}
 
 build() {
   cd "$srcdir/$pkgname-$pkgver"
