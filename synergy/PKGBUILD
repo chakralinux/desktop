@@ -1,25 +1,28 @@
 # Arch contribution https://www.archlinux.org/packages/community/x86_64/synergy/
 
 pkgname=synergy
-pkgver=1.7.3
+pkgver=1.7.5
 pkgrel=1
 pkgdesc="Share your mouse and keyboard between several computers"
 url="http://synergy-foss.org"
 arch=('x86_64')
 license=('GPL2')
 depends=('gcc-libs' 'libxtst' 'libxinerama' 'crypto++' 'libxkbcommon' 'avahi' 'qt5-base')
-makedepends=('libxt' 'cmake' 'qt5-base' 'unzip' 'subversion')
+makedepends=('libxt' 'cmake' 'qt5-base' 'unzip')
 license=('GPL2')
 source=("synergy-${pkgver}.tar.gz::https://github.com/synergy/synergy/archive/v${pkgver}-stable.tar.gz"
-        "synergys.socket"
-        "synergys.service"
+        "synergys_at.socket"
+        "synergys_at.service"
         "fix-incompetence.patch"
-        "synergy.png")
-sha512sums=('334cad16b843f0a6c1337960d76b37724bdb2a5f9841cffab4dbcbe6393cb0c4323860b64a15cccba1158763ef8cbea820900a5c53d0abbb6a92cfbeff827287'
-          'f9c124533dfd0bbbb1b5036b7f4b06f7f86f69165e88b9146ff17798377119eb9f1a4666f3b2ee9840bc436558d715cdbfe2fdfd7624348fae64871f785a1a62'
-          'ed968fc898a74deb4b5048ba864a8bdc2fcac5eca154d489c5f859414689d3ff18b05240fd28376a202ccf8b6820f1680a22627b434556cfd523968600392c2d'
-          'c178e0cb3051c2981172d95a7212a5b3459daa18c29abb260f20c804572e2f86d7b10da7a47ae53cefe7e646a062921405de6befb2208a362a933e89e74bcf98'
-          'cd109f2701bbc8373816e1209e9e224dba0fae1d9444dc069c2bb0a19fe9d7e4d2238c1d1656572ac14026323d815d357cb9e5fe3b284dba36707320e8ed4d21')
+        "synergy.png"
+        "wrapper")
+sha256sums=('b50c79f5c8aca2048cb0e11ba37f75722d1acdda23b0352e25ad66aff999f192'
+            '3754b87a9164b498ff2726668c2daced901692c2cc816a1594e5ea5b15b65dc5'
+            'af2d1d7622ea189d773577a92d13164ca6a33f052f39de3fe466314265e59e0f'
+            '9ff6798513f780d13d9c8bff2291d59e0317f1cadc0dc784466e5f4cbba29e16'
+            '0ce7f2e35da4f17daedc93c44266810ecdaa605a33432e2c596b17eb29aca061'
+            'cc0bfa75b0ee514eb6a349d5aebdc26e100ce6c88e6bf4270a237c223a2cd200')
+
 
 prepare() {
   cd "${srcdir}/synergy-${pkgver}-stable"
@@ -48,32 +51,45 @@ check() {
 
 
 package() {
-  cd "${srcdir}/synergy-${pkgver}-stable"
+  cd synergy-${pkgver}-stable
 
   # install binary
-  install -Dm755 bin/synergy "${pkgdir}/usr/bin/synergy"
-  install -Dm755 bin/synergyc "${pkgdir}/usr/bin/synergyc"
-  install -Dm755 bin/synergyd "${pkgdir}/usr/bin/synergyd"
-  install -Dm755 bin/synergys "${pkgdir}/usr/bin/synergys"
-  install -Dm755 bin/syntool "${pkgdir}/usr/bin/syntool"
-  install -Dm755 bin/usynergy "${pkgdir}/usr/bin/usynergy"
+  install -Dm 755 bin/synergy "${pkgdir}/usr/lib/synergy/synergy"
+  install -Dm 755 bin/synergyc "${pkgdir}/usr/lib/synergy/synergyc"
+  install -Dm 755 bin/synergyd "${pkgdir}/usr/lib/synergy/synergyd"
+  install -Dm 755 bin/synergys "${pkgdir}/usr/lib/synergy/synergys"
+  install -Dm 755 bin/syntool "${pkgdir}/usr/lib/synergy/syntool"
+  install -Dm 755 bin/usynergy "${pkgdir}/usr/lib/synergy/usynergy"
+
+  # unfuck wrapper
+  install -Dm 755 "${srcdir}/wrapper" "${pkgdir}/usr/lib/synergy/wrapper"
+  install -d "${pkgdir}/usr/bin"
+  ln -sf /usr/lib/synergy/wrapper "${pkgdir}/usr/bin/synergy"
+  ln -sf /usr/lib/synergy/wrapper "${pkgdir}/usr/bin/synergyc"
+  ln -sf /usr/lib/synergy/wrapper "${pkgdir}/usr/bin/synergyd"
+  ln -sf /usr/lib/synergy/wrapper "${pkgdir}/usr/bin/synergys"
+  ln -sf /usr/lib/synergy/wrapper "${pkgdir}/usr/bin/syntool"
+  ln -sf /usr/lib/synergy/wrapper "${pkgdir}/usr/bin/usynergy"
+
+  # plugin
+  install -Dm 755 bin/plugins/libns.so "${pkgdir}/usr/lib/${pkgname}/libns.so"
 
   # install config
-  install -Dm644 "doc/${pkgname}.conf.example" "${pkgdir}/etc/${pkgname}.conf.example" 
-  install -Dm644 "doc/${pkgname}.conf.example-advanced" "${pkgdir}/etc/${pkgname}.conf.example-advanced"
-  install -Dm644 "doc/${pkgname}.conf.example-basic" "${pkgdir}/etc/${pkgname}.conf.example-basic" 
+  install -Dm 644 "doc/${pkgname}.conf.example" "${pkgdir}/etc/${pkgname}.conf.example" 
+  install -Dm 644 "doc/${pkgname}.conf.example-advanced" "${pkgdir}/etc/${pkgname}.conf.example-advanced"
+  install -Dm 644 "doc/${pkgname}.conf.example-basic" "${pkgdir}/etc/${pkgname}.conf.example-basic" 
 
   # install manfiles
-  install -Dm644 "doc/${pkgname}c.man" "${pkgdir}/usr/share/man/man1/${pkgname}c.1"
-  install -Dm644 "doc/${pkgname}s.man" "${pkgdir}/usr/share/man/man1/${pkgname}s.1"
+  install -Dm 644 "doc/${pkgname}c.man" "${pkgdir}/usr/share/man/man1/${pkgname}c.1"
+  install -Dm 644 "doc/${pkgname}s.man" "${pkgdir}/usr/share/man/man1/${pkgname}s.1"
 
   # install systemd service and socket
-  install -Dm644 "$srcdir/synergys.service" "$pkgdir/usr/lib/systemd/system/synergys@.service"
-  install -Dm644 "$srcdir/synergys.socket" "$pkgdir/usr/lib/systemd/system/synergys@.socket"
+  install -Dm 644 "${srcdir}/synergys_at.service" "${pkgdir}/usr/lib/systemd/system/synergys@.service"
+  install -Dm 644 "${srcdir}/synergys_at.socket" "${pkgdir}/usr/lib/systemd/system/synergys@.socket"
 
   # install desktop/icon stuff
   install -Dm644 "$srcdir/synergy.png" "$pkgdir/usr/share/pixmaps/synergy.png"
-  install -Dm644 "res/synergy.desktop" "$pkgdir/usr/share/applications/synergy.desktop"
+  install -Dm644 "res/synergy.desktop" "${pkgdir}/usr/share/applications/synergy.desktop"
   
   sed -i s!/usr/share/icons/synergy.ico!synergy! \
   $pkgdir/usr/share/applications/synergy.desktop
