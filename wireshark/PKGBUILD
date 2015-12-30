@@ -1,5 +1,5 @@
 pkgname=wireshark
-pkgver=2.0.0
+pkgver=2.0.1
 pkgrel=1
 pkgdesc='A free network protocol analyzer for Unix/Linux and Windows'
 arch=('x86_64')
@@ -10,7 +10,7 @@ makedepends=('bison' 'flex')
 url='http://www.wireshark.org/'
 install=${pkgname}.install
 source=(http://www.wireshark.org/download/src/${pkgname}-${pkgver}.tar.bz2)
-sha1sums=('f8b226b40e36e4c431b4f70bc3f523b6dd53a501')
+sha256sums=('c9bd07dd0d0045d6ca7537390a1afbcdf33716d193ea7d7084ae4f6c30b683ab')
 
 prepare() {
   cd ${pkgname}-${pkgver}
@@ -67,4 +67,7 @@ package() {
   done
 
   install -Dm644 wireshark.desktop "${pkgdir}/usr/share/applications/wireshark.desktop"
+  sed -i s!wireshark-qt!wireshark! \
+  ${pkgdir}/usr/share/applications/wireshark.desktop
+  rm "${pkgdir}/usr/share/applications/wireshark-gtk.desktop"
 }
