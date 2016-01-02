@@ -1,0 +1,45 @@
+pkgname=kcm-ufw
+_pkgname=ufw-kde
+pkgver=0.5.0
+pkgrel=1
+pkgdesc="UFW KControl Module"
+arch=('x86_64')
+url="http://kde-apps.org/content/show.php/UFW+KControl+Module?content=137789"
+license=('GPL')
+depends=('ufw' 'kdelibs' 'python3' 'openssl' 'polkit-kde-agent')
+makedepends=('automoc4' 'cmake' 'docbook-xsl')
+categories=('network')
+source=(https://launchpad.net/ubuntu/+archive/primary/+files/ufw-kde_${pkgver}.orig.tar.gz)
+sha256sums=('d5436b2ffc41599aeab65bc6ac6fbcc19d99074bf0076c8a4d25649391b601bb')
+
+prepare() {
+    cd "${srcdir}/${_pkgname}-${pkgver}/kcm"
+    sed -i s!"Categories=Qt;KDE;X-KDE-settings-system;"!"Categories=Utility;"! \
+    ufw.desktop
+}
+
+build() {
+
+  cd "${srcdir}/${_pkgname}-${pkgver}/"
+
+  if [ -d build ] ; then
+    true
+  else
+    mkdir build
+  fi
+
+  cd build
+
+  cmake  -DCMAKE_INSTALL_PREFIX=/usr ..
+
+  make
+}
+
+package() {
+  cd "${srcdir}/${_pkgname}-${pkgver}/build"
+  make DESTDIR="${pkgdir}" install
+  
+  install -d $pkgdir/usr/share/applications
+  mv $pkgdir/usr/share/kde4/services/ufw.desktop $pkgdir/usr/share/applications/ufw.desktop
+  rm -dr $pkgdir/usr/share/kde4
+}
