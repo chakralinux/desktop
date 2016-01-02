@@ -1,21 +1,20 @@
-
 pkgname=zanshin
-pkgver=0.2.2
+pkgver=0.3.0
 pkgrel=1
 pkgdesc="A Getting Things Done application which aims at getting your mind like water."
-url="http://quickgit.kde.org/?p=zanshin.git&a=summary"
+url="hhttps://zanshin.kde.org/"
 arch=('x86_64')
 license=('GPL3')
-depends=('kde-baseapps' 'kdepimlibs')
-makedepends=('boost' 'automoc4')
+depends=('kde-baseapps' 'kdepimlibs' 'libbaloo4')
+makedepends=('boost' 'automoc4' 'cmake')
 categories=('utils')
 source=("http://files.kde.org/zanshin/${pkgname}-${pkgver}.tar.bz2")
 screenshot=('http://zanshin.kde.org/images/screenshot.png')
-md5sums=('94b2c142b7afcab0ee4fdb4e5000329c')
+sha256sums=('4447ab7c334e764c6f6503a5747b88db075a09bb8ae787bea2caeff930fb8ec4')
 
 build() {
   cd $pkgname-$pkgver
-  mkdir build && cd build
+  mkdir -p build && cd build
   cmake .. -DCMAKE_INSTALL_PREFIX=`kde4-config --prefix` -DCMAKE_BUILD_TYPE=Release
   make
 }
