@@ -1,5 +1,5 @@
 pkgname=htmlcxx
-pkgver=0.85
+pkgver=0.86
 pkgrel=1
 pkgdesc="A simple non-validating CSS1 and HTML parser for C++."
 arch=('x86_64')
@@ -7,15 +7,13 @@ url="http://sourceforge.net/projects/htmlcxx/"
 license=('LGPL')
 source=("http://heanet.dl.sourceforge.net/project/${pkgname}/${pkgname}/${pkgver}/${pkgname}-${pkgver}.tar.gz"
         "missing-header.patch")
-sha512sums=('a385b65fb668727b0034a95e5dcda18939e4cd2fa5140bbf3bc63907abc481cb4e6f2f46089eac131cde2b8234a4fc5db4f81253b10e6dff6b42632cea990a61'
-            'e97cbd8884e4704579676d28c37e002fbcff06234934aa324b9cd84d54b6c30b8adf92cdfc40a3a730e0cde4b0bdd1b5f2011a0702434f02259fc2ec2339aca5')
+sha256sums=('07542b5ea2442143b125ba213b6823ff4a23fff352ecdd84bbebe1d154f4f5c1'
+            '2df7ea556410979f4ede3cb70d2067ba83eaadd437e3f68d67d0834cc8e4d33c')
+
 
 build() {
 	cd "${srcdir}/${pkgname}-${pkgver}"
-	
-	# Thanks to jgehring for the patch.
-	patch -p1 -i "${srcdir}/missing-header.patch"
-	
+    
 	LDFLAGS="$LDFLAGS -Wl,--no-as-needed"
 	./configure --prefix=/usr
 	make
