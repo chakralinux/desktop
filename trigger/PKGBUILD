@@ -1,32 +1,27 @@
-#
-# Games Packages for Chakra, part of chakra-project.org
-#
-# Maintainer: Neophytos Kolokotronis <tetris4@gmail.com>
-# Contributor: Joao Cordeiro <jlcordeiro at gmail dot com>
-# Contributor: Joekey joekey1@gmail.com
-
 pkgbase=trigger
 pkgname=("${pkgbase}" "${pkgbase}-data")
-pkgver=0.6.0
-pkgrel=3
+pkgver=0.6.2
+pkgrel=1
 pkgdesc="Free OpenGL rally car racing game."
-arch=('i686' 'x86_64')
+arch=('x86_64')
 url="http://sourceforge.net/projects/trigger-rally/"
 license=('GPL2')
 makedepends=('ftjam' 'glew' 'sdl_mixer' 'sdl_image' 'physfs' 'mesa' 'freeglut'
              'freealut')
 categories=('games')
-source=("http://sourceforge.net/projects/trigger-rally/files/trigger-rally/trigger-${pkgver}/trigger-rally-${pkgver}-src.tar.bz2"
-        "http://sourceforge.net/projects/trigger-rally/files/trigger-rally/trigger-${pkgver}/trigger-rally-${pkgver}-data.tar.bz2")
-md5sums=('f67301aa4e0f07dad2d696b2abbeb1f2'
-         '741fdd681d9387a220aff295b4ba353a')
+source=("http://sourceforge.net/projects/trigger-rally/files/trigger-$pkgver/trigger-rally-${pkgver}-src.tar.bz2"
+        "http://sourceforge.net/projects/trigger-rally/files/trigger-$pkgver/trigger-rally-${pkgver}-data.tar.bz2"
+        "trigger.desktop")
+sha256sums=('0e554cbb362e41019f2495657dec8378126d4d21128774daecd6d2f7632ceb55'
+            '22cb5de00b9cd71b25c7ebc245e6d93318435c5541ce36940e8269c6be756030'
+            '3272cd424bd48dca72490975b9305f5e2abe40774ef9e4b6e9ab741b0879bd2a')
 
 build() {
     cd "${srcdir}/trigger-rally-${pkgver}-src"
 
     ./autogen.sh
     ./configure --prefix=/usr \
-                --datadir="/opt/games/trigger/trigger-${pkgver}-data"
+                --datadir="/usr/share/trigger/trigger-${pkgver}-data"
 
     jam -qa
 }
@@ -37,14 +32,17 @@ depends=('sdl_mixer' 'sdl_image' 'physfs' 'mesa' 'freeglut' 'freealut'
     
     cd "${srcdir}/trigger-rally-${pkgver}-src"
     install -d -m755 "${pkgdir}/usr/bin"
-    install -m755 trigger "${pkgdir}/usr/bin/trigger" 
+    install -m755 trigger "${pkgdir}/usr/bin/trigger"
+    install -D ../trigger.desktop ${pkgdir}/usr/share/applications/trigger.desktop
+    install -D ${srcdir}/trigger-rally-${pkgver}-data/icon/trigger-rally-icons.svg\
+    ${pkgdir}/usr/share/pixmaps/trigger.svg
 }
 
 package_trigger-data() {
-local _dest_dir="${pkgdir}/opt/games/trigger/trigger-${pkgver}-data"
+local _dest_dir="${pkgdir}/usr/share/trigger/trigger-${pkgver}-data"
 
   install -d -m755 "${_dest_dir}"
-  mv "${srcdir}/trigger-rally-${pkgver}-data"/* "${_dest_dir}"
+  cp -r "${srcdir}/trigger-rally-${pkgver}-data"/* "${_dest_dir}"
 }
 
 # vim:set ts=2 sw=2 et:
