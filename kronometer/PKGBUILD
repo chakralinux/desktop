@@ -1,6 +1,6 @@
 pkgname=kronometer
 pkgver=2.0.1
-pkgrel=1
+pkgrel=2
 pkgdesc="A simple chronometer application built for KDE."
 arch=('x86_64')
 url="http://aelog.org/kronometer"
@@ -12,15 +12,20 @@ makedepends=('automoc4' 'cmake>=3.1' 'make' 'extra-cmake-modules')
 source=(http://download.kde.org/stable/$pkgname/$pkgver/src/$pkgname-$pkgver.tar.xz)
 sha256sums=('6e407a295819b61e6ef2e3bdc47d59671cd66d1928c4e5667518bf2e0bcf2651')
  
-build() {
-  cd "$srcdir/$pkgname-$pkgver"
-  	cmake -DCMAKE_INSTALL_PREFIX=`kde4-config --prefix` \
-		  -DCMAKE_BUILD_TYPE=RelWithDebInfo \
-		  .
-	make
+prepare() {
+  mkdir -p build
 }
- 
+
+build() {
+  cd build
+  cmake ../$pkgname-$pkgver \
+    -DCMAKE_BUILD_TYPE=Release \
+    -DCMAKE_INSTALL_PREFIX=/usr \
+    -DBUILD_TESTING=OFF
+  make
+}
+
 package() {
-  cd "$srcdir/$pkgname-$pkgver"
+  cd build
   make DESTDIR="$pkgdir" install
-} 
+}
