@@ -4,7 +4,7 @@ source ../kdeapps.conf
 pkgname=ark
 arch=('x86_64')
 pkgver=${_kdever}
-pkgrel=3
+pkgrel=1
 pkgdesc="Archiver for various compression formats"
 url="http://www.kde.org"
 license=(GPL)
@@ -17,23 +17,11 @@ replaces=(kdeutils-ark)
 groups=('kde' 'kde-uninstall' 'kde-applications' 'kdeutils')
 install=kdeutils.install
 
-source=("$_mirror/${pkgname}-$_kdever.tar.xz"
-        'ark-rar-path-with-space.patch'
-        'bug357057.patch::https://quickgit.kde.org/?p=ark.git&a=commitdiff&h=087e5a&o=plain')
-sha256sums=(`grep ${pkgname}-$_kdever.tar.xz  ../checksums.txt | cut -d " " -f1`
-            '4cc0fbec1c958560fc65dab30a612562eb29963a72af904b94ac21787da42d16'
-            '8e170483d793094b6eb20a808425e6216da2f6d75e3599d9a8cd4084a6975544')
+source=("$_mirror/${pkgname}-$_kdever.tar.xz")
+sha256sums=(`grep ${pkgname}-$_kdever.tar.xz  ../checksums.txt | cut -d " " -f1`)
 
 prepare() {
   mkdir -p build
-  
-  cd  ${pkgbase}-${pkgver}
-  
-  # Ark 15.12 can't open rar file with space in path correctly.
-  # https://git.reviewboard.kde.org/r/126360/diff/2#0
-  patch  -Np1  -i  ../ark-rar-path-with-space.patch
-  patch  -Np1  -i  ../bug357057.patch
-  
 }
 
 build() {

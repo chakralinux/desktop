@@ -4,22 +4,18 @@ source ../kdeapps.conf
 pkgbase=kdepimlibs
 pkgname=(akonadi-client akonadi-contact akonadi-mime akonadi-notes akonadi-socialutils kio-pim)
 pkgver=${_kdever}
-pkgrel=2
+pkgrel=1
 pkgdesc="KDE PIM Libraries"
 arch=('x86_64')
 url='https://projects.kde.org/kdepimlibs'
 license=(GPL LGPL)
 makedepends=(extra-cmake-modules qt5-tools kcalcore kmbox kcontacts kldap akonadi prison-kf5 boost kdoctools)
 options=('docs' 'debug')
-source=("$_mirror/${pkgbase}-$_kdever.tar.xz"
-        "fix-crash-on-exit.patch")
-sha256sums=(`grep ${pkgbase}-$_kdever.tar.xz  ../checksums.txt | cut -d " " -f1`
-            "5401cefbcda65a0d31dde7541d57ddbc772a7bc0c70f111aca79c29e1da72bac")
+source=("$_mirror/${pkgbase}-$_kdever.tar.xz")
+sha256sums=(`grep ${pkgbase}-$_kdever.tar.xz  ../checksums.txt | cut -d " " -f1`)
 
 prepare() {
   mkdir -p build
-  cd ${pkgbase}-${pkgver}
-  patch -Np1 -i ../fix-crash-on-exit.patch
 }
 
 build() {

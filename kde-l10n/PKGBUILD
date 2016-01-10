@@ -120,6 +120,10 @@ build() {
         then
           sed -i 's|add_subdirectory(kdeedu)|#add_subdirectory(kdeedu)|' ./5/$lang/scripts/CMakeLists.txt
         fi
+        if [ ${it} == "kde-l10n-pt_BR" ]
+        then
+          sed -i 's|add_subdirectory(autocorrect)|#add_subdirectory(autocorrect)|' ./5/$lang/data/CMakeLists.txt
+        fi
         cmake \
             -DCMAKE_INSTALL_PREFIX=${_installprefix} \
             -DCMAKE_BUILD_TYPE=Release
