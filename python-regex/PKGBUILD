@@ -1,0 +1,42 @@
+# contribution from Arch https://aur.archlinux.org/packages/python-regex/
+
+pkgbase=python-regex
+pkgname=('python3-regex' 'python2-regex')
+pkgver=2015.11.22
+pkgrel=1
+pkgdesc="Alternative python regular expression module."
+arch=('any')
+url="https://bitbucket.org/mrabarnett/mrab-regex"
+license=('Python')
+makedepends=('python3-setuptools' 'python2-setuptools')
+options=(!emptydirs)
+source=("https://pypi.python.org/packages/source/r/regex/regex-${pkgver}.tar.gz")
+sha256sums=('f74ef48cc8901b679bda0c5096129147d793a17c98f22c7559abe92208731a87')
+
+package_python2-regex() {
+  depends=('python2')
+  conflicts=('python2-regex-hg')
+  pkgdesc="Alternative python regular expression module. (python2 version)"
+  
+  cd "${srcdir}/regex-${pkgver}"
+  python2 setup.py install --root="${pkgdir}/" --optimize=1
+
+  install -v -m755 -d "${pkgdir}/usr/share/doc/python2-regex"
+  install -v -m644 ./docs/Features.html "${pkgdir}/usr/share/doc/python2-regex/"
+  install -v -m644 ./docs/Features.rst "${pkgdir}/usr/share/doc/python2-regex/"
+  install -v -m644 ./docs/UnicodeProperties.txt "${pkgdir}/usr/share/doc/python2-regex/"
+}
+
+package_python3-regex() {
+  depends=('python3')
+  conflicts=('python3-regex-hg')
+  pkgdesc="Alternative python regular expression module. (python3 version)"
+
+  cd "${srcdir}/regex-${pkgver}"  
+  python3 setup.py install --root="${pkgdir}/" --optimize=1
+
+  install -v -m755 -d "${pkgdir}/usr/share/doc/python-regex"
+  install -v -m644 ./docs/Features.html "${pkgdir}/usr/share/doc/python-regex/"
+  install -v -m644 ./docs/Features.rst "${pkgdir}/usr/share/doc/python-regex/"
+  install -v -m644 ./docs/UnicodeProperties.txt "${pkgdir}/usr/share/doc/python-regex/"
+}
