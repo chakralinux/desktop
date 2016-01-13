@@ -1,23 +1,13 @@
-#
-# Chakra Packages for Chakra, part of chakra-project.org
-#
-# maintainer (i686): Phil Miller <philm[at]chakra-project[dog]org>
-# maintainer (x86_64): Manuel Tortosa <manutortosa[at]chakra-project[dot]org>
-
-# include global config
-
 pkgname=cherokee
-pkgver=1.2.101
-pkgrel=4
+pkgver=1.2.104
+pkgrel=1
 pkgdesc="A very fast, flexible and easy to configure Web Server"
-arch=('i686' 'x86_64')
+arch=('x86_64')
 url="http://www.cherokee-project.com/"
 license=('GPL2')
-depends=('openssl' 'pcre')
-makedepends=('python2' 'gettext' 'libldap' 'pam' 'libmysqlclient'
-             'ffmpeg' 'geoip')
-optdepends=('python2: cherokee-admin (administrative web interface)'
-            'libldap: ldap validator'
+depends=('openssl' 'pcre' 'python2')
+makedepends=('libldap' 'pam' 'libmysqlclient' 'php-fpm' 'ffmpeg' 'geoip' 'rrdtool')
+optdepends=('libldap: ldap validator'
             'pam: pam validator'
             'libmysqlclient: mysql validator'
             'ffmpeg: Audio/Video streaming handler'
@@ -27,48 +17,60 @@ categories=('network')
 backup=('etc/cherokee/cherokee.conf'
         'etc/logrotate.d/cherokee')
 options=('!libtool')
-source=("http://www.cherokee-project.com/download/1.2/${pkgver}/${pkgname}-${pkgver}.tar.gz"
+_srcdir="webserver-${pkgver}"
+_srcfile="v${pkgver}.zip"
+source=("https://github.com/cherokee/webserver/archive/${_srcfile}"
         'cherokee.rc'
         'cherokee.logrotate'
+        'cherokee.service'
         'fix-ctk-path-handler-match.patch'
         'gentoo-cherokee-1.2.98-linux3.patch'
         'gentoo-cherokee-1.2.99-chakra-customized.patch')
-md5sums=('ef47003355a2e368e4d9596cd070ef23'
-         'aaf900097afba950f0a0a15d906a3648'
-         '8d69341bd4002bffd69c6e82ff6c905f'
-         '565326a51632bd803671b36b13d02f1d'
-         'f8a102f6b4711a2af4ce17e7f59437ae'
-         'e6800e28a2487698a04ad870412f42a9')
+sha256sums=('dea5e45e9ebdb0b6889e1c83041832637d5571af5592735be9a2d572c01e098b'
+            'dc58e8d33e528f32058953e7666e95a634cdff032d8fb26bcf3175d189299a09'
+            '20e26d633f8c1cd90eb21f41dd163b73a83846e405b1ce995e072c4efefc522e'
+            '415a2e4cd7d04afe21e502dd0ad76301f85a7087cadbfdab5566bec469679a68'
+            'f682e9e6287e1db7d1843843143afa70b687f59807346aca9ddf19a35bacee45'
+            'cc03fa321bb01cd4a7026685ef2e3fc606fd53da056f629307c6e1904987ad1b'
+            '298a9394ca7c0e50c320bfc08f8674d23929272825cd3001c955fc560e62b662')
 
 build() {
-  cd "${srcdir}/${pkgname}-${pkgver}"
+  cd "${srcdir}/${_srcdir}"
 
   # Fix path matching bug in CTK apps (e.g. market)
-  patch -Np1 -i "${srcdir}/fix-ctk-path-handler-match.patch"
+#  patch -Np1 -i "${srcdir}/fix-ctk-path-handler-match.patch"
 
   # Apply Gentoo patches
-  patch -Np1 -i "${srcdir}/gentoo-cherokee-1.2.98-linux3.patch"
-  patch -Np1 -i "${srcdir}/gentoo-cherokee-1.2.99-chakra-customized.patch"
+#  patch -Np2 -i "${srcdir}/gentoo-cherokee-1.2.98-linux3.patch"
+#  patch -Np1 -i "${srcdir}/gentoo-cherokee-1.2.99-chakra-customized.patch"
 
   # Use subdirectory for logs
   sed -i -r 's|(%localstatedir%/log)|\1/cherokee|' cherokee.conf.sample.pre
 
-  ./configure --prefix=/usr \
-              --sysconfdir=/etc \
-              --localstatedir=/var \
-              --with-wwwroot=/srv/http \
-              --disable-static \
-              --with-wwwuser=http \
-              --with-wwwgroup=http \
-              --enable-os-string="Chakra Linux"
+  # Use Python 2 in cherokee-admin
+  sed -i -e 's|"python"|"python2"|' 'cherokee/main_admin.c'
+  
+    ./autogen.sh \
+    --prefix='/usr' \
+    --sysconfdir='/etc' \
+    --localstatedir='/var' \
+    --sbindir='/usr/bin' \
+    --with-wwwroot='/srv/cherokee/http' \
+    --with-cgiroot='/src/cherokee/cgi-bin' \
+    --with-wwwuser='http' \
+    --with-wwwgroup='http' \
+    --disable-static \
+    --with-php='/usr/bin/php-fpm' \
+    --with-python='python2' \
+    --enable-os-string="Chakra Linux"
 
   make
 }
 
 package() {
-  cd "${srcdir}/${pkgname}-${pkgver}"
+  cd "${_srcdir}"
 
-  make -j1 DESTDIR="${pkgdir}" install
+  make DESTDIR="${pkgdir}" install
 
   # PAM configuration file for cherokee
   install -D -m644 pam.d_cherokee "${pkgdir}/etc/pam.d/${pkgname}"
@@ -77,22 +79,24 @@ package() {
   chown -R http:http "${pkgdir}/var/lib/${pkgname}/graphs"
 
   # Use Python 2
-  sed -i 's/env python$/&2/' \
-    "${pkgdir}/usr/share/cherokee/admin/"{server,upgrade_config}.py \
-    "${pkgdir}/usr/bin/"{CTK-run,cherokee-{admin-launcher,tweak}}
-  sed -i -r "s/['\"]python/&2/g" \
-    "${pkgdir}/usr/share/cherokee/admin/wizards/django.py"
+  sed -i -e 's/env python$/&2/' "${pkgdir}/usr/bin/CTK-run"
+#    "${pkgdir}/usr/share/cherokee/admin/"{server,upgrade_config}.py \
+#    "${pkgdir}/usr/bin/"{CTK-run,cherokee-{admin-launcher,tweak}}
+#  sed -i -r "s/['\"]python/&2/g" \
+#    "${pkgdir}/usr/share/cherokee/admin/wizards/django.py"
 
   # Compile Python scripts
   python2 -m compileall "${pkgdir}"
   python2 -O -m compileall "${pkgdir}"
 
   install -d -o http -g http "${pkgdir}/var/log/${pkgname}"
-  install -D "${srcdir}/${pkgname}.rc" "${pkgdir}/etc/rc.d/${pkgname}"
+# install -D "${srcdir}/${pkgname}.rc" "${pkgdir}/etc/rc.d/${pkgname}"
   install -Dm644 "${srcdir}/${pkgname}.logrotate" "${pkgdir}/etc/logrotate.d/${pkgname}"
+  install -Dpm644 "${srcdir}/${pkgname}.service" -t "${pkgdir}/usr/lib/systemd/system/"
 
   # Cleanup
   rm -rf "${pkgdir}/srv"
+  rm -rf "${pkgdir}/var/run"
 }
 
 # vim:set ts=2 sw=2 et:
