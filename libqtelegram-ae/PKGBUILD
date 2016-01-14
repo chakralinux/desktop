@@ -1,29 +1,29 @@
 pkgname=libqtelegram-ae
 _pkgname=libqtelegram-aseman-edition
-pkgver=6.0
-pkgrel=2
+pkgver=6.1
+pkgrel=1
 pkgdesc="Telegram library written in Qt based on telegram-cli code"
 arch=('x86_64')
 license=('GPL3')
 url=("https://launchpad.net/libqtelegram")
 depends=('qt5-base' 'qt5-multimedia')
 makedepends=('cmake')
-source=("https://github.com/Aseman-Land/libqtelegram-aseman-edition/archive/v$pkgver.tar.gz")
-sha1sums=('a4e44e98083ce70667271e007b7bda49427e1158')
+source=("https://github.com/Aseman-Land/libqtelegram-aseman-edition/archive/v$pkgver-stable.tar.gz")
+sha1sums=('2221f71a3f97023bbaeca801cf1f0217475ac12a')
 
 prepare() {
-  cd $_pkgname-$pkgver
-  sed -i 's#target.path = $$PREFIX/lib/$$LIB_PATH#target.path = $$PREFIX/lib#' libqtelegram-ae.pro
+  cd $_pkgname-$pkgver-stable
+#  sed -i 's#target.path = $$PREFIX/lib/$$LIB_PATH#target.path = $$PREFIX/lib#' libqtelegram-ae.pro
   mkdir -p build
 }
 
 build() {
-  cd $_pkgname-$pkgver/build
+  cd $_pkgname-$pkgver-stable/build
   qmake-qt5 -r .. PREFIX=/usr INSTALL_LIBS_PREFIX=/usr/lib INSTALL_HEADERS_PREFIX=/usr/include
   make
 }
 
 package() {
-  cd $_pkgname-$pkgver/build
+  cd $_pkgname-$pkgver-stable/build
   make INSTALL_ROOT="$pkgdir" install
 }
