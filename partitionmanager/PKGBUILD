@@ -1,28 +1,21 @@
 pkgname=partitionmanager
 epoch=1
-pkgver=1.2.1
-pkgrel=2
+pkgver=2.0.0
+pkgrel=1
 pkgdesc="A KDE utility that allows you to manage disks, partitions, and file systems"
 arch=('x86_64')
 url="https://sourceforge.net/projects/partitionman"
 license=('GPL2')
-depends=('kio' 'parted' 'libatasmart' 'qt5-base' 'kconfig' 'kcrash' 'kdoctools'
+depends=('kpmcore' 'kio' 'qt5-base' 'kconfig' 'kcrash' 'kdoctools'
          'kiconthemes' 'kjobwidgets' 'kwindowsystem' 'kxmlgui' 'kwidgetsaddons')
 makedepends=('extra-cmake-modules' 'ntfs-3g' 'pkg-config')
-optdepends=('e2fsprogs: ext2/3/4 support'
-	    'xfsprogs: XFS support'
-	    'jfsutils: JFS support'
-	    'reiserfsprogs: Reiser support'
-	    'ntfs-3g: NTFS support'
-	    'dosfstools: FAT32 support'
-            'btrfs-progs: btrfs support')
 conflicts=('tribe-partitionmanager')
 provides=('tribe-partitionmanager')
 replaces=('tribe-partitionmanager<=1358163-8')
 install=partitionmanager.install
 options=('debug')
 source=("http://download.kde.org/stable/${pkgname}/${pkgver}/src/${pkgname}-${pkgver}.tar.xz")
-sha256sums=('eb5b8b00ab6f0a2c5ef494b1c70441100ff70bf691006c4aa95f39d00b43e4e0')
+sha256sums=('26f880c0955797778612223d3cd68345bc47ec4903b4c541dd04e7998d3083c6')
 
 build() {
   cd ${pkgname}-${pkgver}
