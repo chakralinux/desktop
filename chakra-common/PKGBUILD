@@ -4,7 +4,7 @@ source ../kdeapps.conf
 pkgname=chakra-common
 arch=('x86_64')
 pkgver=${_kdever}
-pkgrel=1
+pkgrel=2
 pkgdesc="Common configuration files, scripts and artwork"
 url="http://www.chakraos.org"
 license=('GPL'
@@ -18,10 +18,7 @@ depends=("qt5-base"
          'pinentry'
          'openssh'
          'bash>=4.2'
-         'glibc>=2.15'
-         'python3'
-         'python3-requests'
-         'python3-appdirs')
+         'glibc>=2.15')
 provides=('kde-common'
           'tcp_wrappers'
           'chakra-paste')
@@ -54,7 +51,6 @@ source=('http://kde-apps.org/CONTENT/content-files/48411-rootactions_servicemenu
         'chakra-icons.tar.gz'
         'agent-startup.sh'
         'agent-shutdown.sh'
-        'akonadi-shutdown.sh'
         'chakra-helper.sh'
         'kde4.sh')
         # skipping chakra-paste because gitorious has issues with wget
@@ -83,7 +79,6 @@ sha256sums=('9b2cdc947f1da2c56d0f009ff470f7aa9021f214a2470c33ee4628281b7c1163'
             'b20160225a990513ae58027b7e70bb958253da881be02f296e54e9ccca09b348'
             '15dbeea94793a9d6922f7c5fed107f63d5b2b5715c12874f0884e4dc5905d5c6'
             '80da5b02a11ff9471775b2173a8c251d649d292a0c822469be43a5227b403444'
-            'd12207e5c982d5aab1ca82b02ee71e96d1b4ae8e56cdc7af916121ddc3405f58'
             '9e0c9408c9bc12aeca2fd66a4723b57a6878307ba956df7cca43f8112dd71429'
             '7e4ae4587973d6cc253b20ff7573ac25801f148f794a9000901c5137cd4780b3')
 #            'a5b01c1f41bad239e05dff01a497db68d80806bf72a76b89ef8eb053853986c4'
@@ -93,14 +88,10 @@ package() {
     install -D -m 755 -o root -g root $srcdir/agent-startup.sh $pkgdir/etc/kde/env/agent-startup.sh
     install -D -m 755 -o root -g root $srcdir/agent-shutdown.sh $pkgdir/etc/kde/shutdown/agent-shutdown.sh
  
-    # Install workaround for akonadi
-    install -D -m 755 -o root -g root $srcdir/akonadi-shutdown.sh $pkgdir/etc/kde/shutdown/akonadi-shutdown.sh
-   
     # Install scripts for kf5 
     install -D -m 755 -o root -g root $srcdir/agent-startup.sh $pkgdir/etc/xdg/plasma-workspace/env/agent-startup.sh
     install -D -m 755 -o root -g root $srcdir/agent-shutdown.sh $pkgdir/etc/xdg/plasma-workspace/shutdown/agent-shutdown.sh
     install -D -m 755 -o root -g root $srcdir/kde4.sh $pkgdir/etc/xdg/plasma-workspace/env/kde4.sh
-    install -D -m 755 -o root -g root $srcdir/akonadi-shutdown.sh $pkgdir/etc/xdg/plasma-workspace/shutdown/akonadi-shutdown.sh
 
     # Install KDM RC script
     #install -D -m755 -o root -g root ${srcdir}/kdm.daemon ${pkgdir}/etc/rc.d/kdm
