@@ -1,23 +1,21 @@
-# Maintainer: Chaoting Liu <brli@chakraos.org>
 source ../kdeapps.conf
 
 pkgname=kdeconnect
-pkgver=0.9
+pkgver=0.9g
+_pkgver=0.9
 pkgrel=1
 epoch=1
 pkgdesc='Adds communication between KDE and your smartphone'
-arch=(i686 x86_64)
+arch=(x86_64)
 url='https://projects.kde.org/projects/playground/base/kdeconnect-kde'
 license=(GPL2)
 depends=(kio kcmutils qca-qt5 libfakekey hicolor-icon-theme kwayland) # telepathy-qt5 - requires 0.9.7
 makedepends=(extra-cmake-modules python3)
 optdepends=('sshfs: remote filesystem browser')
-screenshot=('http://albertvaka.files.wordpress.com/2013/08/kcm.png')
-source=("http://download.kde.org/unstable/$pkgname/$pkgver/src/$pkgname-kde-$pkgver.tar.xz")
-sha1sums=('f7e946c3e50ecf2057f2ee56c166ca914d759ae0')
-
 install=$pkgname.install
-
+screenshot=('http://albertvaka.files.wordpress.com/2013/08/kcm.png')
+source=("http://download.kde.org/unstable/$pkgname/$_pkgver/src/$pkgname-kde-$pkgver.tar.xz")
+sha1sums=('7f9d20800652588b61a417a0d3e0e699b68e61bd')
 
 prepare() {
   mkdir -p build
