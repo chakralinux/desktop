@@ -1,6 +1,6 @@
 pkgname=mpv
-pkgver=0.14.0
-pkgrel=4
+pkgver=0.15.0
+pkgrel=1
 pkgdesc="A movie player and encoder for linux, based on MPlayer/mplayer2"
 arch=('x86_64')
 license=('LGPL3')
@@ -16,7 +16,7 @@ options=('!emptydirs')
 provides=('mplayer')
 install=${pkgname}.install
 source=("https://github.com/mpv-player/${pkgname}/archive/v${pkgver}.tar.gz")
-sha256sums=('042937f483603f0c3d1dec11e8f0045e8c27f19eee46ea64d81a3cdf01e51233')
+sha256sums=('7d31217ba8572f364fcea2955733f821374ae6d8c6d8f22f8bc63c44c0400bdc')
 
 prepare() {
   # point python to python3
@@ -64,7 +64,7 @@ package() {
   # some extra useful stuff "make install" doesn't install
   install -m755 TOOLS/umpv \
     "${pkgdir}"/usr/bin/umpv
-  install -m644 etc/{input,example}.conf \
+  install -m644 etc/input.conf \
     "${pkgdir}"/usr/share/doc/mpv/examples
   install -m644 DOCS/{encoding.rst,tech-overview.txt} \
     "${pkgdir}"/usr/share/doc/mpv
