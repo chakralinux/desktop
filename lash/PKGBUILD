@@ -1,5 +1,4 @@
-# Contributor: Sergej Pupykin <pupykin.s+arch@gmail.com>
-# Contributor: DonVla <donvla@users.sourceforge.net>
+# Contributions from Arch: https://projects.archlinux.org/svntogit/community.git/tree/trunk?h=packages/lash
 
 pkgname=lash
 pkgver=0.6.0
@@ -7,8 +6,7 @@ _pkgver=0.6.0~rc2
 _relver=0.6.0.594
 pkgrel=1
 pkgdesc="A session management system for JACK and ALSA"
-arch=('i686' 'x86_64')
-options=('!libtool' '!buildflags')
+arch=('x86_64')
 #url="http://lash-audio.org"
 url="http://lash.nongnu.org/"
 license=('GPL')
@@ -18,17 +16,17 @@ source=("http://download.savannah.gnu.org/releases/lash/${pkgname}-${_pkgver}.ta
 md5sums=('af1dc4f4ceb284b1b0845de4f4c2fe47'
          '24ceb7e3d008c25e1490102983165612')
 
-
-
-build() {
+prepare() {
   cd "${srcdir}/${pkgname}-${_relver}"
   patch -p0 < "${srcdir}/makefile.patch"
-
   # Python2 fixes
   export PYTHON="python2"
   sed -i "s#env python#&2#" clients/lash_control
+}
 
-  export CFLAGS='-ldl -lpthread -lm'
+build() {
+  cd "${srcdir}/${pkgname}-${_relver}"
+  export LDFLAGS="-ldl -lm"
   ./configure --prefix=/usr
   make
 }
