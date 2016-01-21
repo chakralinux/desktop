@@ -4,7 +4,7 @@ source ../kdeapps.conf
 
 pkgname=libkface
 pkgver=${_kdever}
-pkgrel=1
+pkgrel=2
 pkgdesc="A Qt/C++ wrapper around LibFace library to perform face recognition and detection over pictures"
 url="https://projects.kde.org/projects/kde/kdegraphics/libs/libkface"
 arch=('x86_64')
@@ -13,16 +13,19 @@ depends=(qt5-base opencv)
 makedepends=(extra-cmake-modules)
 install=${pkgname}.install
 options=('docs' 'debug')
-source=("$_mirror/${pkgname}-$_kdever.tar.xz")
-sha256sums=(`grep ${pkgname}-$_kdever.tar.xz  ../checksums.txt | cut -d " " -f1`)
+source=("$_mirror/${pkgname}-$_kdever.tar.xz" "opencv-3.1-support.patch")
+sha256sums=(`grep ${pkgname}-$_kdever.tar.xz  ../checksums.txt | cut -d " " -f1`
+            'b778be1f87897205bc4ea22ae94177a4aa4dcf9ae25b74a272818eed1049a779')
 
 prepare() {
   mkdir build
+  cd ${pkgname}-${pkgver}
+  patch -Np1 -i ../opencv-3.1-support.patch
 }
 
 build() {
   cd build
-  cmake_kf5 ../${pkgname}-${pkgver}
+  cmake_kf5 ../${pkgname}-${pkgver} -DENABLE_OPENCV3=On
   make
 }
 

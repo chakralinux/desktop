@@ -1,68 +1,80 @@
- pkgbase=digikam
+pkgbase=digikam
 pkgname=('digikam' 'kipi-plugins')
-pkgver=4.14.0
-pkgrel=2
+_pkgver=5.0.0-beta2
+pkgver=${_pkgver//-/_}
+pkgrel=4
 url="http://digikam.sourceforge.net"
 arch=('x86_64')
 license=('GPL')
-screenshot=('http://i.imgur.com/6YnUM.png')
-makedepends=('kde-runtime' 'kdepimlibs4' 'lensfun' 'libmarble4'
-             'liblqr' 'opencv' 'lapack' 'libgpod' 'libkvkontakte' 'pkgconfig' 'cmake' 'automoc4'
-             'doxygen' 'docbook-xsl' 'qjson' 'libkexiv2_4' 'libkdcraw4'
-             'libksane4' 'mariadb' 'qt4-gstreamer' 'boost' 'hugin-tools' 'eigen3' 
-             'libbluray' 'libpgf' 'libkface' 'libkgeomap' 'kfilemetadata4')
-source=("http://download.kde.org/stable/${pkgname}/${pkgname}-${pkgver}.tar.bz2")
 options=("debug")
-md5sums=('8fd3cb0a822e8c2d4102e8adc00c082f')
+makedepends=('extra-cmake-modules' 'libkipi' 'libksane' 'liblqr' 'boost'
+             'libgpod' 'hugin' 'opencv' 'qt5-webkit' 'doxygen' 'lensfun' 'imagemagick' 'eigen3' 'libpgf'
+             'libusb' 'kio' 'kdoctools' 'marble' 'kfilemetadata' 'akonadi-contact' 'qt5-multimedia'
+             'threadweaver' 'kcalcore' 'knotifyconfig' 'kdelibs4support' 'libkvkontakte' 'libmediawiki')
+source=("http://download.kde.org/unstable/${pkgname}/${pkgname}-${_pkgver}.tar.bz2")
+sha1sums=('db2f6d7e84e67a338bee9373bdba2dc116f5e1f0')
+
+
+prepare() {
+  mkdir -p build
+
+  sed -e 's|${KF5_MIN_VERSION}||' -i $pkgname-$_pkgver/core/CMakeLists.txt -i $pkgname-$_pkgver/extra/kipi-plugins/CMakeLists.txt
+}
 
 build() {
-   cd ${srcdir}
- 
-   mkdir -p build && cd build
 
-   cmake ../${pkgname}-${pkgver} \
-     -DCMAKE_BUILD_TYPE=RelWithDebInfo \
-     -DCMAKE_INSTALL_PREFIX=/usr \
-     -DCMAKE_INSTALL_LIBDIR=/usr/lib \
-     -DCMAKE_SKIP_RPATH=ON \
-     -DBUILD_tests=OFF \
-     -DDIGIKAMSC_COMPILE_LIBMEDIAWIKI=ON \
-     -DENABLE_KDEPIMLIBSSUPPORT=ON \
-     -DENABLE_MYSQLSUPPORT=ON
+  cd build
 
-   make 
+  cmake ../${pkgname}-${_pkgver} \
+    -DCMAKE_INSTALL_PREFIX=/usr \
+    -DCMAKE_INSTALL_LIBDIR=lib \
+    -DCMAKE_BUILD_TYPE=RelWithDebInfo \
+    -DCMAKE_SKIP_RPATH=ON \
+    -DBUILD_TESTING=OFF \
+    -DKDE_INSTALL_USE_QT_SYS_PATHS=ON \
+    -DENABLE_KFILEMETADATASUPPORT=ON \
+    -DENABLE_MEDIAPLAYER=ON \
+    -DENABLE_AKONADICONTACTSUPPORT=ON \
+    -DENABLE_OPENCV3=On \
+    -DDIGIKAMSC_CHECKOUT_PO=ON 
+  make
 }
 
 package_digikam() {
-  pkgdesc="Digital photo management application for kde"
-  depends=('kde-runtime' 'kdepimlibs4' 'lensfun' 'libmarble4' 'liblqr'
-           'mariadb' 'opencv' 'kipi-plugins' 'lapack' 'libgpod' 'libpgf' 'libkface' 'libkgeomap')
+  pkgdesc="Digital photo management application for KDE"
+  depends=('liblqr' 'libkipi' 'lensfun' 'libpgf' 'opencv' 'akonadi-contact'
+	'knotifyconfig' 'libksane' 'kfilemetadata' 'qt5-multimedia' 'marble')
+  optdepends=('kipi-plugins: more tools and plugins')
   install=digikam.install
-  replaces=('digikamimageplugins')
-  categories=('graphics')
-  screenshot=('http://farm4.staticflickr.com/3197/2606712653_e9b9dc6ca1_o.png')
 
-  splitdirs="core doc po"
-  for i in ${splitdirs} ; do
-      cd ${srcdir}/build/${i}
-      make DESTDIR="${pkgdir}" install
-  done
-  rm -rf "${pkgdir}/usr/share/icons/oxygen"
-  rm "${pkgdir}"/usr/share/locale/kde4/*/LC_MESSAGES/libkipi.mo
+  pushd build/core
+  make DESTDIR="${pkgdir}" install
+  popd
+  
+  pushd build/doc/digikam
+  make DESTDIR="${pkgdir}" install
+  popd
 }
 
 package_kipi-plugins() {
-  pkgdesc="Kipi plugins and additional libs for digikam and kde apps"
-  depends=('kdepimlibs4' 'opencv' 'libgpod' 'sane' 'hugin-tools'
-           'libgphoto2-nolimit' 'libkvkontakte' 'libkexiv2_4' 'libkdcraw4'
-           'libksane4' 'qt4-gstreamer' 'kfilemetadata4')
-  optdepends=('imagemagick: for picture manipulation'
-	      'qca: for shwup webservice support'
-	      'libkgeomap: Geolocalize tool')
+  pkgdesc="A collection of plugins extending the KDE graphics and image applications as digiKam"
+  depends=('kio' 'libkipi')
+  optdepends=('kcalcore: Calendar plugin'
+      #       'libmediawiki: MediaWiki Export plugin'
+      #       'libkvkontakte: VKontakte.ru Exporter plugin'
+              'libgpod: iPodExport plugin'
+              'opencv: Remove Red Eyes plugin'
+              'imagemagick: Video SlideShow plugin'
+              'qt5-gstreamer: Video SlideShow plugin'
+              'threadweaver: panorama plugin'
+	      'hugin: panorama plugin')
   install=kipi-plugins.install
-  categories=('graphics')
 
-  cd ${srcdir}/build/extra/kipi-plugins
-
+  pushd build/extra/kipi-plugins
   make DESTDIR="${pkgdir}" install
+  popd
+
+  pushd build/doc/kipi-plugins
+  make DESTDIR="${pkgdir}" install
+  popd
 }
