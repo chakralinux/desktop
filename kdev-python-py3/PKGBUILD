@@ -1,9 +1,6 @@
-# maintainer: Neophytos Kolokotronis <tetris4@gmail.com>
-# contributor: Jakub Kozisek <nodevel at gmail dot com>
-
 _pkgname=kdev-python
 pkgname=kdev-python-py3
-pkgver=1.7.2
+pkgver=1.7.3
 _pkgver=4.7.2
 _branch=stable
 pkgrel=1
@@ -14,21 +11,26 @@ license=('GPL')
 depends=('kdevelop' 'python3>=3.4.3')
 makedepends=('cmake' 'automoc4' 'kdevelop-pg-qt')
 conflicts=('kdev-python')
-source=("http://download.kde.org/${_branch}/kdevelop/${_pkgver}/src/${_pkgname}-${pkgver}-py3.tar.xz")
-md5sums=('8703b00e63b40bba8137d5ef164554af')
+source=("http://download.kde.org/${_branch}/kdevelop/${_pkgname}/${pkgver}/src/${_pkgname}-v${pkgver}-py3.tar.xz")
+sha256sums=('bcc8bb08e34e5c721896e154b1efb7039eb0b206845c0400503a6e0990cf08f5')
+
+prepare() {
+    cd $_pkgname-v$pkgver-py3
+    mkdir -p build
+}
 
 build() {
-    mkdir build && cd build 
+    cd $_pkgname-v$pkgver-py3/build
     cmake \
         -DCMAKE_BUILD_TYPE=RELWITHDEBINFO \
         -DCMAKE_{SHARED,MODULE,EXE}_LINKER_FLAGS='-Wl,--no-undefined -Wl,--as-needed' \
         -DCMAKE_INSTALL_PREFIX=/usr \
-        "../${_pkgname}-${pkgver}"
+        "../"
     make parser
     make
 }
 
 package() {
-    cd build
+    cd $_pkgname-v$pkgver-py3/build
     make DESTDIR="${pkgdir}" install
 }
