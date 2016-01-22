@@ -2,7 +2,7 @@ pkgbase=digikam
 pkgname=('digikam' 'kipi-plugins')
 _pkgver=5.0.0-beta2
 pkgver=${_pkgver//-/_}
-pkgrel=4
+pkgrel=5
 url="http://digikam.sourceforge.net"
 arch=('x86_64')
 license=('GPL')
@@ -10,7 +10,7 @@ options=("debug")
 makedepends=('extra-cmake-modules' 'libkipi' 'libksane' 'liblqr' 'boost'
              'libgpod' 'hugin' 'opencv' 'qt5-webkit' 'doxygen' 'lensfun' 'imagemagick' 'eigen3' 'libpgf'
              'libusb' 'kio' 'kdoctools' 'marble' 'kfilemetadata' 'akonadi-contact' 'qt5-multimedia'
-             'threadweaver' 'kcalcore' 'knotifyconfig' 'kdelibs4support' 'libkvkontakte' 'libmediawiki')
+             'threadweaver' 'kcalcore' 'knotifyconfig' 'kdelibs4support' 'libkvkontakte' 'libmediawiki' 'mariadb')
 source=("http://download.kde.org/unstable/${pkgname}/${pkgname}-${_pkgver}.tar.bz2")
 sha1sums=('db2f6d7e84e67a338bee9373bdba2dc116f5e1f0')
 
@@ -35,15 +35,17 @@ build() {
     -DENABLE_KFILEMETADATASUPPORT=ON \
     -DENABLE_MEDIAPLAYER=ON \
     -DENABLE_AKONADICONTACTSUPPORT=ON \
-    -DENABLE_OPENCV3=On \
-    -DDIGIKAMSC_CHECKOUT_PO=ON 
+    -DENABLE_OPENCV3=ON \
+    -DDIGIKAMSC_CHECKOUT_PO=ON  \
+    -DENABLE_MYSQLSUPPORT=ON
+    
   make
 }
 
 package_digikam() {
   pkgdesc="Digital photo management application for KDE"
   depends=('liblqr' 'libkipi' 'lensfun' 'libpgf' 'opencv' 'akonadi-contact'
-	'knotifyconfig' 'libksane' 'kfilemetadata' 'qt5-multimedia' 'marble')
+	'knotifyconfig' 'libksane' 'kfilemetadata' 'qt5-multimedia' 'marble' 'mariadb')
   optdepends=('kipi-plugins: more tools and plugins')
   install=digikam.install
 
