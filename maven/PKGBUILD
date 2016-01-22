@@ -1,7 +1,5 @@
-# Maintainer: AlmAck
-
 pkgname=maven
-pkgver=3.2.1
+pkgver=3.3.9
 pkgrel=1
 pkgdesc="A Java project management and project comprehension tool"
 arch=('any')
@@ -12,8 +10,8 @@ makedepends=('apache-ant')
 backup=('opt/maven/conf/settings.xml')
 source=(http://apache-mirror.rbc.ru/pub/apache/maven/maven-3/$pkgver/source/apache-maven-$pkgver-src.tar.gz
 	maven.sh)
-md5sums=('92753b8a1076637ad7c0907f1ec9f1b6'
-         '5ed0bddbf5c5375fe5032a76a9506426')
+sha256sums=('9150475f509b23518e67a220a9d3a821648ab27550f4ece4d07b92b1fc5611bc'
+            '24dc65607ff9e25c74ff2f75711911471910eaf415bce1856789c9d047209b8b')
 
 package() {
   cd $srcdir/apache-maven-$pkgver
@@ -32,6 +30,6 @@ package() {
   ant -Dmaven.repo.local=$srcdir/repo
   install -D -m 755 $srcdir/maven.sh $pkgdir/etc/profile.d/maven.sh
   rm $pkgdir/opt/maven/*.txt
-  mkdir -p $pkgdir/usr/bin
+  install -d $pkgdir/usr/bin
   ln -s /opt/maven/bin/mvn $pkgdir/usr/bin/mvn
 }
