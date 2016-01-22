@@ -2,7 +2,7 @@ pkgbase=python-jsonschema
 _pkgname=jsonschema
 pkgname=('python3-jsonschema' 'python2-jsonschema')
 pkgver=2.5.1
-pkgrel=1
+pkgrel=2
 pkgdesc="An implementation of JSON Schema validation for Python"
 arch=('any')
 url="http://pypi.python.org/pypi/jsonschema"
@@ -19,7 +19,7 @@ prepare(){
 package_python3-jsonschema() {
   depends=('python3')
   cd "$srcdir/$_pkgname-$pkgver"
-  python setup.py install --root="$pkgdir/" --optimize=1
+  python3 setup.py install --root="$pkgdir/" --optimize=1
   install -D -m644 json/LICENSE $pkgdir/usr/share/licenses/$pkgname/LICENSE
 }
 
