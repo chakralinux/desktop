@@ -1,0 +1,34 @@
+pkgname=plasma5-applets-gmail-feed
+_name=gmailfeed
+pkgver=1.1
+pkgrel=1
+pkgdesc="Plasmoid showing your Gmail feed "
+arch=('x86_64')
+url="https://github.com/anthon38/gmailfeed"
+license=('GPL')
+group=('plasma5-applets')
+depends=('plasma-workspace' 'qt5-graphicaleffects')
+makedepends=('extra-cmake-modules')
+source=("https://github.com/anthon38/gmailfeed/archive/v${pkgver}.tar.gz")
+sha256sums=('b505d54922ca69952d33ab6ebe28593df3726063499936efe5a68e4294ba9623')
+ 
+prepare() {
+  cd "${_name}-${pkgver}"
+  mkdir -p build
+}
+
+build() {
+  cd "${_name}-${pkgver}/build"
+ 
+  cmake .. \
+    -DCMAKE_INSTALL_PREFIX=/usr \
+    -DCMAKE_BUILD_TYPE=Release \
+    -DLIB_INSTALL_DIR=lib \
+    -DKDE_INSTALL_USE_QT_SYS_PATHS=ON
+}
+ 
+package() {
+  cd "${_name}-${pkgver}"/build
+ 
+  make install DESTDIR="${pkgdir}"
+}

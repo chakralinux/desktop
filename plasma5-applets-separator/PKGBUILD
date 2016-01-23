@@ -1,0 +1,32 @@
+pkgname=plasma5-applets-separator
+_name=Separator
+pkgver=0.1
+pkgrel=1
+pkgdesc="Just a separator."
+arch=('x86_64')
+url="http://kde-apps.org/content/show.php/Separator?content=174531"
+license=('GPL')
+group=('plasma5-applets')
+depends=('plasma-workspace' 'kdeclarative' 'kglobalaccel' 'kconfigwidgets' 'kxmlgui' 'kwindowsystem' 'kdoctools')
+makedepends=('extra-cmake-modules')
+source=("http://kde-apps.org/CONTENT/content-files/174531-Separator.tar.gz")
+sha256sums=('26b4558e3e1ba0b4f20e1bfdf0d3a376cfbf42bdd3a654af6a6f492b40101156')
+ 
+prepare() {
+  cd "${_name}"
+  mkdir -p build
+}
+
+build() {
+  cd "${_name}/build"
+ 
+  cmake .. \
+    -DCMAKE_INSTALL_PREFIX=/usr \
+    -DCMAKE_BUILD_TYPE=Release
+}
+ 
+package() {
+  cd "${_name}"/build
+ 
+  make install DESTDIR="${pkgdir}"
+}

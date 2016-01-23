@@ -1,0 +1,20 @@
+pkgname=plasma5-applets-webslice
+_name=webslice-plasmoid
+pkgver=0.8.1
+pkgrel=1
+pkgdesc="Add a slice of web on your desktop"
+arch=('x86_64')
+url="https://github.com/Cqoicebordel/webslice-plasmoid"
+license=('GPL')
+group=('plasma5-applets')
+depends=('plasma-workspace' 'qt5-graphicaleffects')
+makedepends=('extra-cmake-modules')
+source=("https://github.com/Cqoicebordel/webslice-plasmoid/archive/${pkgver}.tar.gz")
+sha256sums=('04d6c317b88805f8c3c26cf95727463495b708a7ff61c45e162a088f3e2a013d')
+ 
+package() {
+  cd "${_name}-$pkgver"
+ 
+  install -d $pkgdir/usr/share/plasma/plasmoids/cqcb.plasma.webslice/contents
+  cp -r cqcb.plasma.webslice $pkgdir/usr/share/plasma/plasmoids
+}

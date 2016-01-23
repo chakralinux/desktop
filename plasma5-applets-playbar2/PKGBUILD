@@ -1,0 +1,33 @@
+pkgname=plasma5-applets-playbar2
+_name=PlayBar2
+pkgver=2.3
+pkgrel=1
+pkgdesc="Client MPRIS2, allows you to control your favorite media player"
+arch=('x86_64')
+url="https://github.com/audoban/PlayBar2"
+license=('GPL')
+group=('plasma5-applets')
+depends=('plasma-workspace' 'kdeclarative' 'kglobalaccel' 'kconfigwidgets' 'kxmlgui' 'kwindowsystem' 'kdoctools')
+makedepends=('extra-cmake-modules')
+source=("https://github.com/audoban/PlayBar2/archive/v${pkgver}.tar.gz")
+sha256sums=('b4962901b08af21e7e173a33dc89523d5319f49a9f495dcb4247400f3e5f5a45')
+ 
+prepare() {
+  cd "${_name}-${pkgver}"
+  mkdir -p build
+}
+
+build() {
+  cd "${_name}-${pkgver}/build"
+ 
+  cmake .. \
+    -DCMAKE_INSTALL_PREFIX=/usr \
+    -DCMAKE_BUILD_TYPE=Release
+}
+ 
+package() {
+  cd "${_name}-${pkgver}"/build
+ 
+  make install DESTDIR="${pkgdir}"
+  mv ${pkgdir}/usr/lib64 ${pkgdir}/usr/lib
+}

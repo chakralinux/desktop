@@ -1,0 +1,28 @@
+pkgname=plasma5-applets-yahoo-weather
+_name=com.librehat.yahooweather
+pkgver=5.0.0
+pkgrel=1
+pkgdesc="Yahoo! Weather Widget for Plasma Desktop"
+arch=('x86_64')
+url="https://github.com/librehat/com.librehat.yahooweather"
+license=('GPL')
+group=('plasma5-applets')
+depends=('plasma-workspace' 'qt5-tools')
+makedepends=('extra-cmake-modules' 'zip')
+source=("https://github.com/librehat/com.librehat.yahooweather/archive/v${pkgver}.tar.gz")
+sha256sums=('dfd45d9ae0632b4845838a3277645b85e257dec74758128bd1a9e089e966cb2e')
+ 
+build() {
+  cd "${_name}-${pkgver}"
+  
+  ver=`grep "X-KDE-PluginInfo-Version" metadata.desktop | sed 's/.*=//'`
+  app=`grep "X-KDE-PluginInfo-Name" metadata.desktop | sed 's/.*=//'`
+}
+ 
+package() {
+  cd "${_name}-${pkgver}"
+ 
+  install -d $pkgdir/usr/share/plasma/plasmoids/com.librehat.yahooweather/contents
+  install -D metadata.desktop $pkgdir/usr/share/plasma/plasmoids/com.librehat.yahooweather
+  cp -r contents $pkgdir/usr/share/plasma/plasmoids/com.librehat.yahooweather
+}

@@ -1,0 +1,34 @@
+pkgname=plasma5-applets-thermal-monitor
+_name=plasma-applet-thermal-monitor
+pkgver=1.2.6
+pkgrel=1
+pkgdesc="Applet for monitoring CPU, GPU and other available temperature sensors."
+arch=('x86_64')
+url="https://github.com/kotelnik/plasma-applet-thermal-monitor"
+license=('GPL')
+group=('plasma5-applets')
+depends=('plasma-workspace' 'qt5-graphicaleffects')
+makedepends=('extra-cmake-modules')
+source=("https://github.com/kotelnik/plasma-applet-thermal-monitor/archive/v${pkgver}.tar.gz")
+sha256sums=('d8ff3a7eda0a672d763ff2e0b83deab4e9010e15bc73cd8cd3379408d264e08d')
+ 
+prepare() {
+  cd "${_name}-${pkgver}"
+  mkdir -p build
+}
+
+build() {
+  cd "${_name}-${pkgver}/build"
+ 
+  cmake .. \
+    -DCMAKE_INSTALL_PREFIX=/usr \
+    -DCMAKE_BUILD_TYPE=Release \
+    -DLIB_INSTALL_DIR=lib \
+    -DKDE_INSTALL_USE_QT_SYS_PATHS=ON
+}
+ 
+package() {
+  cd "${_name}-${pkgver}"/build
+ 
+  make install DESTDIR="${pkgdir}"
+}
