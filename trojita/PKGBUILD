@@ -1,24 +1,26 @@
-# Maintainer: Jeff Huang <s8321414[at]gmail[dot]com>
-# Contributor: Neo Kolokotronis <tetris4@gmail.com>
-
 pkgname=trojita
-pkgver=0.5
-pkgrel=2
+pkgver=0.6
+pkgrel=1
 pkgdesc="Trojita is a Qt IMAP e-mail client."
 arch=('x86_64')
 url="http://trojita.flaska.net"
 license=('GPL')
-depends=('qtwebkit')
-makedepends=('cmake' 'automoc4')
+depends=('qt5-webkit' 'qt5-tools' 'qt5-translations' 'qtkeychain-qt5' 'zlib')
+makedepends=('cmake')
 categories=('network')
 screenshot=('http://trojita.flaska.net/trojita-2013-01-09--overview.png')
 source=("http://downloads.sourceforge.net/$pkgname/$pkgname-$pkgver.tar.bz2")
-md5sums=('c583bb4d82620cda1c49e5f1b084f550')
+sha256sums=('4c1083f48b51cc37bb318c5a8ada67b64b38ed95d8ad30b4621755fcf45efa10')
+
+prepare() {
+  cd "$srcdir/$pkgname-$pkgver"
+  mkdir -p build
+}
 
 build() {
-  cd "$srcdir/$pkgname-$pkgver"
-  mkdir build ;  cd build
-  cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=/usr ..
+  cd "$srcdir/$pkgname-$pkgver/build"
+  cmake -DCMAKE_BUILD_TYPE=Release \
+  -DCMAKE_INSTALL_PREFIX=/usr ..
   make
 }
 
