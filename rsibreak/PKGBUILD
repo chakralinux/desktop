@@ -1,29 +1,26 @@
-#
-# Apps Packages for Chakra, part of chakra-project.org
-#
-# Maintainer: Adrián Chaves Fernández (Gallaecio) <adriyetichaves gmail.com>
-
-# include global config
-source ../_buildscripts/${current_repo}-${_arch}-cfg.conf
-
 pkgname=rsibreak
-pkgver=0.11
-pkgrel=2
+pkgver=0.12
+pkgrel=1
 pkgdesc="A small utility to help prevent Repetive Strain Injury."
-arch=('i686' 'x86_64')
+arch=('x86_64')
 url="http://www.rsibreak.org/"
 license=('GPL2')
-depends=('libxss' 'kdelibs' 'oxygen-icons')
-makedepends=('automoc4' 'cmake' 'docbook-xsl')
+depends=('libxss' 'qt5-tools' 'qt5-x11extras' 'ki18n' 'kconfigwidgets' 'kdbusaddons' 'kdoctools' 'kiconthemes' 'kidletime' 'knotifyconfig' 'kxmlgui' 'kwindowsystem')
+makedepends=('extra-cmake-modules' 'cmake' 'docbook-xsl')
 categories=('utils')
 # options=('libtool')
 changelog=ChangeLog
-source=("http://www.rsibreak.org/files/$pkgname-$pkgver.tar.bz2")
-md5sums=('d5dd540efd18900aa508eee381bcaafd')
+source=("http://download.kde.org/stable/rsibreak/$pkgver/rsibreak-$pkgver.tar.xz")
+sha256sums=('5c6b579e4287dced4b56d81fcb28f6f12130522fdd4358d36ed5ac24f0848ce1')
+
+prepare() {
+  cd $srcdir/$pkgname-$pkgver
+  mkdir -p build
+}
 
 build() {
-  cd $srcdir/$pkgname-$pkgver
-  mkdir build && cd build
+  cd $srcdir/$pkgname-$pkgver/build
+  
   cmake -DCMAKE_INSTALL_PREFIX=/usr \
         -DCMAKE_BUILD_TYPE=RelWithDebInfo \
         ..
