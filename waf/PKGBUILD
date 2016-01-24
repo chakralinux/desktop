@@ -1,52 +1,44 @@
-# Maintainer: UtG  <utg[dot]chakra.linux[at]gmail[dot]com>
+# contribution from Arch https://aur4.archlinux.org/packages/waf/
 
 pkgname=waf
-pkgver=1.7.16
+pkgver=1.8.19
 pkgrel=1
 pkgdesc='General-purpose build system modelled after Scons'
-url='http://code.google.com/p/waf/'
-arch=('x86_64')
+url='http://waf.io/'
+arch=('any')
 license=('BSD')
 depends=('python3')
-makedepends=('setconf')
+makedepends=('unzip')
 provides=('python3-waf')
 options=('!emptydirs')
-source=("http://ftp.waf.io/pub/release/$pkgname-$pkgver.tar.bz2")
-sha256sums=('ec12c8a4df1e7900afa5df117a48467a41bd81e951aca9f160394ddda53e5435')
+source=("https://github.com/waf-project/waf/archive/waf-$pkgver.tar.gz")
+sha256sums=('4d9000e19aa279e997aaf744336cd055864bd4e10062578a957f541d6c761a40')
 
 prepare() {
-  cd "$pkgname-$pkgver"
+  cd "$pkgname-$pkgname-$pkgver"
 
   # Extracting license
-  head -n 30 waf | tail -n 25 > LICENSE
+  head -n 30 waf-light | tail -n 25 > LICENSE
   # Python 3 fix
-  sed -i '0,/env python/s//python3/' waf
+  sed -i '0,/env python/s//python3/' waf-light
 }
 
 build() {
-  cd "$pkgname-$pkgver"
-
-  ./waf-light configure --prefix=/usr
-  ./waf-light --make-waf
+  cd "$pkgname-$pkgname-$pkgver"
+  ./waf-light \
+    configure --prefix=/usr \
+    build --make-waf --tools='compat,compat15,ocaml,go,cython,scala,erlang,cuda,gcj,boost,pep8,eclipse'
 }
 
 package() {
-  cd "$pkgname-$pkgver"
-
-  ./waf-light install -f --destdir="$pkgdir" \
-    --tools='compat,compat15,ocaml,go,cython,scala,erlang,cuda,gcj,boost,pep8,eclipse'
-
+  cd "$pkgname-$pkgname-$pkgver"
+  install -Dm644 LICENSE "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
   install -Dm755 waf "$pkgdir/usr/bin/waf"
 
-  # Force the generation of .waf.admin files
-  cd demos/c
-  "$pkgdir/usr/bin/waf" configure build >& /dev/null
-  cd ../..
+  local waflib="$pkgdir/usr/lib/waf3-$pkgver-$(grep -aPom1 '(?<=^REVISION=")[[:xdigit:]]*(?="$)' "$pkgdir/usr/bin/waf")"
+  install -dm755 "$waflib"
+  unzip -d "$waflib" zip/waflib.zip
 
-  # Fix weird directory placement (FS#38216, FS#38300)
-  mkdir -p "$pkgdir/usr/lib/waf"
-  mv "$pkgdir/usr/bin/.waf-$pkgver-"* "$pkgdir/usr/lib/waf/"
-  setconf "$pkgdir/usr/bin/waf" base '"/usr/lib/waf"'
-
-  install -Dm644 LICENSE "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
+  # compile all python sources for once to be used after installation.
+  python3 -m compileall "$waflib"
 }
