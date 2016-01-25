@@ -1,52 +1,46 @@
-#
-# Games Packages for Chakra, part of chakra-project.org
-#
-# Maintainer: Adrián Chaves Fernández (Gallaecio) <adriyetichaves gmail.com>
-
-# include global config
-source ../_buildscripts/${current_repo}-${_arch}-cfg.conf
-
 pkgname=nethack
-pkgver=3.4.3
-_pkgver=343
+pkgver=3.6.0
 pkgrel=1
 pkgdesc='A single player dungeon exploration game.'
-arch=('i686' 'x86_64')
+arch=('x86_64')
 url="http://www.nethack.org/index.html"
 license=('custom:NetHack GPL')
 depends=('ncurses' 'gzip')
 categories=('games')
-source=("http://downloads.sourceforge.net/$pkgname/$pkgname-$_pkgver-src.tgz")
-md5sums=('21479c95990eefe7650df582426457f9')
+source=("http://downloads.sourceforge.net/$pkgname/$pkgname-${pkgver//.}-src.tgz")
+sha256sums=('1ade698d8458b8d87a4721444cb73f178c74ed1b6fde537c12000f8edf2cb18a')
 
-build(){
+prepare() {
   cd $srcdir/$pkgname-$pkgver/
-  sh sys/unix/setup.sh
-
-  sed -e '/define HACKDIR/ s|/usr/games/lib/nethackdir|/usr/share/nethack/|' \
-      -e '/^#define COMPRESS\s/ s|/usr/bin/compress|/bin/gzip|' \
-      -e '/^#define COMPRESS_EXTENSION/ s|".Z"|".gz"|' \
-      -e 's|^/\* \(#define DLB\) \*/|\1|' -i include/config.h
 
   sed -e 's|^/\* \(#define LINUX\) \*/|\1|' \
       -e 's|^/\* \(#define TIMED_DELAY\) \*/|\1|' -i include/unixconf.h
 
-  sed -e 's|^# \(WINTTYLIB = -lncurses\)|\1|' \
-      -e 's|^WINTTYLIB = -ltermlib|#&|' -i src/Makefile
-
   # we are setting up for setgid games, so modify all necessary permissions
   # to allow full access for groups
 
-  sed -e '/^GAMEDIR\s*=/ s|/games/.*$|/share/$(GAME)|' \
-      -e '/^GAMEUID\s*=/ s|games|root|' \
-      -e '/^GAMEGRP\s*=/ s|bin|games|' \
-      -e '/^GAMEPERM\s*=/ s|04755|02755|' \
+  sed -e '/^HACKDIR/ s|/games/lib/\$(GAME)dir|/var/games/nethack/|' \
+      -e '/^SHELLDIR/ s|/games|/usr/bin|' \
+      -e '/^VARDIRPERM/ s|0755|0775|' \
+      -e '/^VARFILEPERM/ s|0600|0664|' \
+      -e '/^GAMEPERM/ s|0755|02755|' \
+      -e 's|\(DSYSCF_FILE=\)\\"[^"]*\\"|\1\\"/var/games/nethack/sysconf\\"|' \
+      -e 's|\(DHACKDIR=\)\\"[^"]*\\"|\1\\"/var/games/nethack/\\"|' -i sys/unix/hints/linux
+
+  sed -e 's|^#GAMEUID.*|GAMEUID = root|' \
+      -e 's|^#GAMEGRP.*|GAMEGRP = games|' \
       -e '/^FILEPERM\s*=/ s|0644|0664|' \
-      -e '/^DIRPERM\s*=/ s|0755|0775|' \
-      -e '/^SHELLDIR\s*=/ s|/games|/bin|' -i Makefile
+      -e '/^DIRPERM\s*=/ s|0755|0775|' -i sys/unix/Makefile.top
 
-  sed -e "/^MANDIR\s*=/s|/usr/man/man6|$pkgdir/usr/share/man/man6|" -i doc/Makefile
+  sed -e "/^MANDIR\s*=/s|/usr/man/man6|$pkgdir/usr/share/man/man6|" -i sys/unix/Makefile.doc
 
+}
+
+build(){
+  cd $srcdir/$pkgname-$pkgver/sys/unix
+  sh setup.sh hints/linux
+
+  cd $srcdir/$pkgname-$pkgver
   make
 }
   
@@ -54,15 +48,20 @@ package() {
   cd $srcdir/$pkgname-$pkgver/
 
   install -dm755 $pkgdir/usr/share/{man/man6,doc/nethack}
-  make PREFIX=$pkgdir/usr install manpages
-  sed -e "s|HACKDIR=$pkgdir/usr/|HACKDIR=/usr/|" \
+  install -dm775 $pkgdir/var/games/
+  make PREFIX=$pkgdir -j1 install manpages # Multi-threaded builds fail.
+  sed -e "s|HACKDIR=$pkgdir/|HACKDIR=/|" \
       -e 's|HACK=$HACKDIR|HACK=/usr/lib/nethack|' \
       -i $pkgdir/usr/bin/nethack
 
   install -dm755 $pkgdir/usr/lib/nethack
-  mv $pkgdir/usr/share/nethack/{nethack,recover} $pkgdir/usr/lib/nethack/
+  mv $pkgdir/var/games/nethack/{nethack,recover} $pkgdir/usr/lib/nethack/
+
+  # FS#43414: /var/games should be owned by root:games.
+  chown -R root:games $pkgdir/var/games/
+  chown root:games $pkgdir/usr/lib/nethack/nethack
+  #chmod 02755 $pkgdir/usr/lib/nethack/nethack
 
   install -Dm644 doc/Guidebook.txt $pkgdir/usr/share/doc/nethack/Guidebook.txt
-      
   install -Dm644 dat/license $pkgdir/usr/share/licenses/$pkgname/LICENSE
 }
