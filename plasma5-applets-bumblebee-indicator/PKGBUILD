@@ -1,0 +1,36 @@
+pkgname=plasma5-applets-bumblebee-indicator
+_name=bumblebee-indicator
+pkgver=0.2
+pkgrel=1
+pkgdesc="Indicates the Nvidia card's on or off status on the Optimus systems, when bumblebee is used."
+arch=('x86_64')
+url="https://github.com/bxabi/bumblebee-indicator"
+license=('GPL')
+group=('plasma5-applets')
+depends=('plasma-workspace' 'qt5-graphicaleffects')
+makedepends=('extra-cmake-modules')
+source=("https://github.com/bxabi/bumblebee-indicator/archive/master.zip")
+sha256sums=('b5175b767c474c1da5f1e9243c45fb1782cf8a0c5270a7b07da3cc8a6015b0a7')
+ 
+prepare() {
+  cd "${_name}-master"
+  mkdir -p build
+}
+
+build() {
+  cd "${_name}-master/build"
+ 
+  cmake .. \
+    -DCMAKE_INSTALL_PREFIX=/usr \
+    -DCMAKE_BUILD_TYPE=Release \
+    -DLIB_INSTALL_DIR=lib \
+    -DKDE_INSTALL_USE_QT_SYS_PATHS=ON
+}
+ 
+package() {
+  cd "${_name}-master"/build
+ 
+  make install DESTDIR="${pkgdir}"
+  mv $pkgdir/usr/share/plasma/plasmoids/bumblebee-kde5-plasmoid \
+  $pkgdir/usr/share/plasma/plasmoids/com.bxabi.bumblebee-indicator
+}
