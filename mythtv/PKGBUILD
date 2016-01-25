@@ -2,7 +2,7 @@
 
 pkgname=mythtv
 pkgver=0.27.5
-pkgrel=1
+pkgrel=2
 pkgdesc="A Homebrew PVR project"
 arch=('x86_64')
 url="http://www.mythtv.org/"
@@ -22,13 +22,17 @@ optdepends=('glew: for GPU commercial flagging'
 install='mythtv.install'
 source=("$pkgname-$pkgver.tar.gz::https://github.com/MythTV/$pkgname/archive/v$pkgver.tar.gz"
 	'mythbackend.service'
-	'http://code.mythtv.org/trac/raw-attachment/ticket/11338/libcec-2-support.2.patch')
-sha512sums=('7f4c1c0efa1fe7e404723853d48447a8c9396406803f641c83979a083cdb9fa0319535945080033789e7af5e288d2f8ad71efa7a979918d4db2188824e581309'
-            '8c5327ef450296f33f725ccbca82b9cb71e0eb8c6239cddab57817c085b962ec31f39a337ee55ed22c7eea0c79b104d73f6dbfbfa7a583f956d8c1f17cc38a5b'
-            '5d4db25c767e5417148fc7b9dd6a8276cb7737203a2247e7a5c5e24084a3fa9246ebef177f4c65491d84eb40f91774f9821c5051cb3a0258c625b0315b4d3d87')
+	'http://code.mythtv.org/trac/raw-attachment/ticket/11338/libcec-2-support.2.patch'
+	'ffmpeg-libvpxenc-remove-some-unused-ctrl-id-mappings.patch')
+sha256sums=('7e625f94332effeadfba8e7ae7c98d44a83bfc25b7c59e39adce67dc2f4e1e1b'
+            '30a301d31e2396b08eee97188619b900a834081d9792a36ae274fb0dfa65a9dc'
+            '8270407c2074b305e0c32151f89c84f6bf980a32665a2da8e4727405fa3911f3'
+            '54d0996af14b6c3b9cef6cc127ce1cebefc434481368991e40f9f6e2f9f703ee')
 
 prepare() {
   cd $srcdir/$pkgname-$pkgver/$pkgname
+  
+  patch -d external/FFmpeg -Np1 -i "$srcdir/ffmpeg-libvpxenc-remove-some-unused-ctrl-id-mappings.patch"
 
   find 'bindings/python' 'contrib' -type f | xargs sed -i 's@^#!.*python$@#!/usr/bin/python2@'
   patch -Np2 -i $srcdir/libcec-2-support.2.patch
