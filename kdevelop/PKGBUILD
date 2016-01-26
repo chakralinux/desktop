@@ -1,18 +1,26 @@
-#maintainer: Neophytos Kolokotronis <tetris4@gmail.com>
+# Contributions from Arch: https://projects.archlinux.org/svntogit/packages.git/tree/trunk?h=packages/kdevelop
 
 pkgname=kdevelop
-pkgver=4.7.1
-pkgrel=2
+pkgver=4.7.3
+pkgrel=1
 pkgdesc="A C/C++ development environment for KDE"
 arch=('x86_64')
 url="http://www.kdevelop.org/"
 license=('GPL')
-depends=('kde-baseapps-katepart' 'kde-runtime' 'kdevplatform' 'kdesdk-okteta')
-makedepends=('cmake' 'automoc4' 'perl' 'docbook-xsl')
+depends=('kde-baseapps-katepart' 'kde-runtime' 'kdevplatform')
+makedepends=('cmake' 'automoc4' 'docbook-xsl')
+optdepends=('konsolepart4: embedded terminal'
+            #'oktetapart4: hex editor integration' > enable in kf5 version
+            'git: Git support'
+            'subversion: SVN support'
+            'cvs: Concurrent Versions System support'
+            'gdb: GNU Debugger support'
+            'qt5-doc: Qt documentation integration'
+            'cmake: cmake integration')
 categories=('programming')
 install=${pkgname}.install
-source=("http://download.kde.org/stable/${pkgname}/${pkgver}/src/${pkgname}-${pkgver}.tar.xz")      
-md5sums=('dc7e6259a999bd34ce644ffea4727e76')
+source=("http://download.kde.org/stable/${pkgname}/${pkgver}/src/${pkgname}-${pkgver}.tar.bz2")      
+sha1sums=('5ebd56ee348d7688eff55ffc6a83018ccf42a4fb')
 
 build() {
   cd ${srcdir}
