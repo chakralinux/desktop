@@ -1,0 +1,38 @@
+# Include global configuration
+source ../kdeapps.conf
+
+pkgname=kjots
+pkgver=5.0.0
+#pkgver=${_kdever}
+pkgrel=1
+pkgdesc="Note taker"
+arch=('x86_64')
+url='http://kde.org/applications/games/bomber/'
+license=('GPL' 'LGPL' 'FDL')
+depends=('kcmutils' 'kio' 'kconfig' 'kconfigwidgets' 'kparts' 'kbookmarks' 'kxmlgui' 
+         'akonadi-client' 'kmime' 'akonadi-notes' 'kpimtextedit' 'kontactinterface' 'grantlee' 'libxslt')
+makedepends=('extra-cmake-modules' 'python3' 'kdoctools')
+groups=('kde' 'kde-uninstall' 'kde-applications' 'kdepim')
+replaces=('kdepim-kjots')
+conflicts=('kdepim-kjots')
+provides=('kdepim-kjots')
+options=('docs' 'debug')
+source=("http://download.kde.org/stable/${pkgname}/${pkgver}/src/${pkgname}-${pkgver}.tar.xz")
+sha256sums=('fa2f2731d51125f780e3bc68d5640a31898331871ac4cf307417c1fb755e7729')
+#source=("$_mirror/${pkgname}-$_kdever.tar.xz")
+#sha256sums=(`grep ${pkgname}-$_kdever.tar.xz  ../checksums.txt | cut -d " " -f1`)
+
+prepare() {
+  mkdir -p build
+}
+
+build() {
+  cd build
+  cmake_kf5 ../${pkgname}-${pkgver}
+  make
+}
+
+package() {
+  cd build
+  make DESTDIR=${pkgdir} install
+}
