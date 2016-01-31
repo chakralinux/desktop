@@ -1,7 +1,7 @@
 pkgbase=avidemux
 pkgname=('avidemux-cli' 'avidemux')
-pkgver=2.6.10
-pkgrel=3
+pkgver=2.6.11
+pkgrel=1
 pkgdesc='Simple video editor for cutting, filtering and encoding tasks.'
 arch=('x86_64')
 license=('GPL')
@@ -13,7 +13,7 @@ makedepends=('cmake' 'libxslt' 'qt5-base' 'qt5-tools' 'qt5-script' 'qt5-multimed
 categories=('multimedia')
 options=("!makeflags")
 source=("http://downloads.sourceforge.net/avidemux/avidemux_${pkgver}.tar.gz")
-sha512sums=('f9414810925b2eeb0b6dc0094ac9a42809ab11274d2cd591eef753538d5719df893dc2352b85c8a1047b890bb03079678e6619af9bb25834a2428cfdae5005ef')
+sha256sums=('936ff5e10ad0551460c1233c217e4cee642623f2899a8fe48cd7f0144cfd1b3a')
          
 build() {
   cd "${srcdir}/${pkgbase}_${pkgver}"
@@ -25,8 +25,8 @@ build() {
                         --with-plugins
 
   # Create qm files
-  cd po
-  lrelease-qt5 *.po
+#  cd po
+#  lrelease-qt5 *.po
 }
 
 package_avidemux-cli() {
