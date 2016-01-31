@@ -1,8 +1,7 @@
-# Maintainer: s8321414[at]gmail[dot]com
-# Contributer: abveritas@chakra-project.org
+# Contributor: https://www.archlinux.org/packages/community/x86_64/privoxy/
 
 pkgname=privoxy
-pkgver=3.0.23
+pkgver=3.0.24
 pkgrel=1
 pkgdesc='A web proxy with advanced filtering capabilities.'
 arch=('x86_64')
@@ -17,13 +16,14 @@ backup=('etc/conf.d/privoxy'
 categories=('network')
 install=${pkgname}.install
 source=("http://downloads.sourceforge.net/ijbswa/${pkgname}-${pkgver}-stable-src.tar.gz"
-        'privoxy-logrotate' # renamed the entry, because *.log is in gitignore
-        'privoxy.conf.d'
-        'privoxy.service')
-md5sums=('bbe47d5ff1a54d9f9fc93a160532697f'
-         'fc3046377137003726a151ee27b142a2'
-         '27830ef79418e277b90c1c1fa933f876'
-         '4c154a126ec17b02c623e3d451e062d9')
+        'privoxy.logrotate.d' # renamed the entry, because *.log is in gitignore
+        'privoxy.service'
+        'privoxy.conf.d')
+sha256sums=('a381f6dc78f08de0d4a2342d47a5949a6608073ada34b933137184f3ca9fb012'
+            '21323dcfb6b3e571e23112a437db66208f73e32a400b40c192fbb30d7489ce28'
+            'df6ba82e58fc109a9a0ae76304d6028f699e494232b10f4558bee7b209df4694'
+            'c47c327b0fb91f08f46ec474f4aa551025e4a8dfdf18230a6977646b04ef5638')
+
 
 build() {
   cd "${srcdir}/${pkgname}-${pkgver}-stable"
@@ -38,29 +38,23 @@ build() {
 package() {
   cd "${srcdir}/${pkgname}-${pkgver}-stable"
 
-  make prefix="${pkgdir}/usr" MAN_DEST="${pkgdir}/usr/share/man/man1" GROUP=42 \
+  make prefix="${pkgdir}/usr" SBIN_DEST="${pkgdir}/usr/bin" \
+    MAN_DEST="${pkgdir}/usr/share/man/man1" GROUP=42 \
     CONF_BASE="${pkgdir}/etc/privoxy" VAR_DEST="${pkgdir}/var" install
-
-  # Don't overwrite existing log files!
-  rm "${pkgdir}/var/log/privoxy/"*
 
   # Install start scripts and config files
   install -Dm0644 "${srcdir}/privoxy.service" "${pkgdir}/usr/lib/systemd/system/privoxy.service"
-  install -Dm0644 "${srcdir}/privoxy-logrotate" "${pkgdir}/etc/logrotate.d/privoxy"
-  install -Dm0644 "${srcdir}/privoxy.conf.d" "${pkgdir}/etc/conf.d/privoxy"
+  install -Dm0644 "${srcdir}/privoxy.logrotate.d" "${pkgdir}/etc/logrotate.d/privoxy"
+# install -Dm0644 "${srcdir}/privoxy.conf.d" "${pkgdir}/etc/conf.d/privoxy"
 
   # Fix config paths.
   sed -i -e 's#^confdir.*$#confdir /etc/privoxy#' -e 's#^logdir.*$#logdir /var/log/privoxy#' \
     -e '/^user-manual/s#.*#\#user-manual /usr/share/doc/privoxy/user-manual/#' \
     "${pkgdir}/etc/privoxy/config"
 
-  # Fix group ownership and permissions.
-  chgrp -R 42 "${pkgdir}/etc/privoxy/"
-  chgrp -R 42 "${pkgdir}/var/log/privoxy/"
-
-  find "${pkgdir}/etc/privoxy/" -type d | xargs chmod 0770
-  find "${pkgdir}/etc/privoxy/" -type f | xargs chmod 0660
-  chmod 0700 "${pkgdir}/var/log/privoxy"
+  # Don't overwrite existing log files and fix log directory permissions.
+  rm "${pkgdir}/var/log/privoxy/"*
+  chown -R 42:42 "${pkgdir}"/etc/privoxy "${pkgdir}"/var/log/privoxy
 
   # Avoid conflict with /var/run
   rmdir "${pkgdir}/var/run"
