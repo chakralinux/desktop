@@ -1,7 +1,7 @@
 pkgname=plasma5-applets-redshift-control
 _name=plasma-applet-redshift-control
-pkgver=1.0.10
-pkgrel=2
+pkgver=1.0.11
+pkgrel=1
 pkgdesc="Applet for controlling redshift (screen temperature modifying)"
 arch=('x86_64')
 url="https://github.com/kotelnik/plasma-applet-redshift-control"
@@ -9,16 +9,16 @@ license=('GPL')
 group=('plasma5-applets')
 depends=('plasma-workspace' 'qt5-graphicaleffects' 'redshift')
 makedepends=('extra-cmake-modules')
-source=("https://github.com/kotelnik/plasma-applet-redshift-control/archive/v${pkgver}.tar.gz")
-sha256sums=('7e7a3f927e870ed754c3f2124e92cc0a57432ead3f5d500917cd03bd7d5ed706')
+source=("https://github.com/kotelnik/plasma-applet-redshift-control/archive/v$pkgver.tar.gz")
+sha256sums=('645513ffdb834cd0d6df3c1e75805ab8a062c3f159df1cb15ae6222b99fbe0b1')
  
 prepare() {
-  cd "${_name}-${pkgver}"
+  cd $_name-$pkgver
   mkdir -p build
 }
 
 build() {
-  cd "${_name}-${pkgver}/build"
+  cd $_name-$pkgver/build
  
   cmake .. \
     -DCMAKE_INSTALL_PREFIX=/usr \
@@ -28,7 +28,7 @@ build() {
 }
  
 package() {
-  cd "${_name}-${pkgver}"/build
+  cd $_name-$pkgver/build
  
-  make install DESTDIR="${pkgdir}"
+  make install DESTDIR="$pkgdir"
 }
