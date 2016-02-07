@@ -1,58 +1,69 @@
+# Arch contribution https://aur4.archlinux.org/packages/rstudio-desktop/
+
 pkgname=rstudio
 _pkgname=rstudio-rstudio
-pkgver=0.99.447
-_pkgver=4ff3524
+pkgver=0.99.491
+_pkgver=b3a4f1f
 pkgrel=1
 pkgdesc="A new integrated development environment (IDE) for R - The Desktop Client"
 arch=('x86_64')
 url="http://www.rstudio.org/"
 license=('AGPL')
-depends=('boost-libs' 'java-environment' 'qt5-svg' 'qt5-webkit' 'r')
+depends=('boost-libs' 'java-environment' 'qt5-base' 'qt5-declarative' 'qt5-location' 'qt5-sensors' 'qt5-svg' 'qt5-webkit' 'qt5-xmlpatterns' 'pango' 'r')
 makedepends=('apache-ant' 'boost' 'bzip2' 'cmake' 'git' 'icu' 'openssl' 'pam' 'unzip' 'wget' 'libcups')
 provides=('rstudio-desktop')
 categories=('programming')
+install=rstudio-desktop.install
 source=("https://github.com/$pkgname/$pkgname/tarball/v$pkgver"
-	"http://www.rstudio.com/wp-content/uploads/2014/06/RStudio-Ball.png")
-sha512sums=('cfb2c10c9d28eda104d6f69eb8630c6748c55a553bc5c57e0ba2dd4d80ca9eb2e0bea3163ce3ab22f28cbd3d0e219ea9aa5d307b260865e24ed59218c5408aa1'
-	    'c045e7efa05c57fa04d2a3cfce4222d3b34309822b0be8ebb89b11fb800cfe711f41c01c567e1075a570d0f569cfb82b62fc9080a9fa312e8b596c499e4c5663')
+	"http://www.rstudio.com/wp-content/uploads/2014/06/RStudio-Ball.png"
+	"qdatastream.patch")
+sha256sums=('78ce1a5b6288d61332781c9dac7a894c322950e476322bc5268c4d8866892ac1'
+            'b14d11376099fe27e3f355367aca779e985840ea36ec08235feca62c67bd53c3'
+            '3147f02fe9fb557c7dee4d332db9626da4ac4b563ad3d00fc68c6f955afd0a41')
 
 build() {
-  cd $srcdir/$_pkgname-$_pkgver/dependencies/common
-  sh install-boost
+  cd "$srcdir/$pkgname-$pkgname-"*
+  patch -p 1 -i "$srcdir/qdatastream.patch"
+  
+  cd dependencies/common
+
   sh install-cef
-  sh install-common
   sh install-dictionaries
+  sh install-mathjax
+  # ln -sfT /usr/share/mathjax mathjax-23
   sh install-gwt
   sh install-libclang
-  sh install-mathjax
-  sh install-packages
   sh install-pandoc
-  sh update-mathjax.sh
-  sh update-pandoc
-
+  sh install-packages
+  
+  
   # Configure and build.
-  cd $srcdir/$_pkgname-$_pkgver
+  cd ../../
 
   mkdir -p build 
   cd build
   unset LDFLAGS
   cmake \
     -DRSTUDIO_TARGET=Desktop \
-    -DCMAKE_BUILD_TYPE=RelWithDebInfo \
+    -DCMAKE_BUILD_TYPE=Release \
+    -DQT_QMAKE_EXECUTABLE=/usr/bin/qmake-qt5 \
     -DCMAKE_INSTALL_PREFIX=/usr/lib/$pkgname \
     ..
 }
 
 package() {
-  cd $srcdir/$_pkgname-$_pkgver/build
+  cd "$srcdir/$pkgname-$pkgname-"*/build
+  
   make DESTDIR=$pkgdir install
   
   install -Dm644 ../COPYING "$pkgdir/usr/share/licenses/${pkgname}/COPYING"
   echo "#! /bin/sh
-  exec /usr/lib/rstudio/bin/rstudio" > $srcdir/rstudio.sh
+  /usr/lib/rstudio/bin/rstudio %F" > $srcdir/rstudio.sh
   install -D $srcdir/rstudio.sh $pkgdir/usr/bin/rstudio
   sed -i s!/usr/lib/rstudio/bin/rstudio!rstudio! \
   $pkgdir/usr/share/applications/rstudio.desktop
   install -D ../../RStudio-Ball.png $pkgdir/usr/share/pixmaps/rstudio.png
+  sed -i s!'text/x-tex;text/x-markdown;text/html;text/css;text/javascript;text/x-chdr;text/x-csrc;text/x-c++hdr;text/x-c++src;'!''! \
+  $pkgdir/usr/share/applications/rstudio.desktop
   
 }
