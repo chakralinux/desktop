@@ -1,7 +1,7 @@
 # contribution from Arch https://www.archlinux.org/packages/extra/x86_64/conky/
 
 pkgname=conky
-pkgver=1.10.0
+pkgver=1.10.1
 pkgrel=1
 pkgdesc="An advanced, highly configurable system monitor for X based on torsmo"
 arch=('x86_64')
@@ -17,20 +17,19 @@ source=("https://github.com/brndnmtthws/conky/archive/v${pkgver}.tar.gz"
 	'curl.patch'
         'lua53.patch'
         'ipv6.patch')
-sha512sums=('08664c2c736c078848e4864f7a2df5ed536e683da6aa482cf003c675b03c274802cfd27127adb3d99145fe6c4103cc06046b40322383beafc4ca2e7e811b5caf'
-'9298f6fde037af84f5065ae67253c2924a4d3937fdb20e978bfbf14f67085c2a70a02c5ba269356ecdef3cbf144c8eaf4166c389f49a7a3eadb5cec24c852f0a'
-'be6c5940d97c206a784a1d3e7db151f0e7ea80e9e142d8ec59d3092d580f3b604dff83f2d06c8ebccb6391d338bf9c77ce6b9c0b119c923a80fc2a8126960f53'
-'727b4c93c1bcb80be40b24c3d71ee0cf6839757566848ac50961ea6731b531c6bd18800aec909b19183ef58359f45eab4e117c5a9815ea82842c03eb63b29f0c'
-'68fea9bb0ecc40974e94ac88cb4cfaf51db463857495db6c875ca7671668d0f8b69e50276e370551b0cb5034e71eb18a84bab86ffaf9ed2f76673404af2eab55')
-
+sha256sums=('b4e66a71e8211d02b8dbe8cd4873af209af25326e63afd90c90ba9416c79cf21'
+            '4c91fb4925b62f53255b3777d812ff6736a8d20692066d901c49d885050b9552'
+            '415460524c6e22b3ed534df9bab1c0bdfcadfd67c59282372c5c6e4f47ab2d9e'
+            '50844ccdd2b1f8e1b4b110d8b9069dc35af11650163013e2b98cc2e59aeda569'
+            '09e13fc56fe87cba6fafe27c1215dd2f8b1db7930ee5ebb7d076ec6ca8335012')
 
 
 prepare() {
 	cd "${srcdir}/${pkgname}-${pkgver}"
-	patch -p1 -i ../ascii.patch # db2x_manxml fails on non-ascii chars
+#	patch -p1 -i ../ascii.patch # db2x_manxml fails on non-ascii chars
 #	patch -p1 -i ../lua53.patch # lua_gettable returns an int in lua-5.3
-	patch -p1 -i ../ipv6.patch # https://bugs.archlinux.org/task/45626
-	patch -p1 -i ../curl.patch # https://github.com/bagder/curl/issues/342
+#	patch -p1 -i ../ipv6.patch # https://bugs.archlinux.org/task/45626
+#	patch -p1 -i ../curl.patch # https://github.com/bagder/curl/issues/342
 }
 
 build() {
