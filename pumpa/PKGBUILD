@@ -1,7 +1,7 @@
 # Contributor: speps <speps dot aur dot archlinux dot org>
 
 pkgname=pumpa
-pkgver=0.9.1
+pkgver=0.9.2
 pkgrel=1
 pkgdesc="A simple pump.io client written in C++ and Qt"
 arch=('x86_64')
@@ -9,24 +9,25 @@ url="https://pumpa.branchable.com/"
 license=('GPL3')
 depends=('qt5-base' 'qjson' 'tidyhtml' 'aspell')
 install="$pkgname.install"
-source=("$pkgname-$pkgver::http://download.opensuse.org/source/factory/repo/oss/suse/src/pumpa-${pkgver}-1.1.src.rpm")
-sha512sums=('66df75ed31812d907a38bc7b47c28bf57c37266977747ac6d69b53286e41556df7d8cde43f4219997ce00b39176b944e0eb9723fde49abc7313196f758d2b783')
+source=("https://saz.im/software/downloads/pumpa/pumpa-${pkgver}.tar.xz")
+sha256sums=('3ff51a0dc8a966e06d3472b0424c86980c34fc18fede3c59a442d95505922315')
 
-prepare() {
-  cd $srcdir
-  
-  tar -Jxf $pkgname-$pkgver.tar.xz
-}
+# A small comentary on the source URL. I'm avoiding using the git tags from
+# pumpa.branchable.com because it would imply much more work (cloning the repo
+# specifying the tag, etc.). The source URL points to the personal server of the
+# main developer of Pumpa, "Sazius".
 
 build() {
-  cd "$srcdir/$pkgname-$pkgver"
-  qmake-qt5
+  cd $pkgname-$pkgver
+  qmake-qt5 PREFIX=/usr
   make
 }
+
 
 package() {
   cd "$srcdir/$pkgname-$pkgver"
   
+  make INSTALL_ROOT="$pkgdir/" install
   # bin
   install -Dm755 $pkgname \
     "$pkgdir/usr/bin/$pkgname"
