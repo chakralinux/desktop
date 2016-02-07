@@ -5,7 +5,7 @@ pkgbase=kdepim
 pkgname=(akonadiconsole akregator blogilo kdepim-console kaddressbook kalarm kleopatra kmail knotes
          kontact korganizer ktnef libkdepim)
 pkgver=${_kdever}
-pkgrel=1
+pkgrel=2
 arch=('x86_64')
 url='http://pim.kde.org'
 license=('GPL' 'LGPL' 'FDL')
@@ -219,4 +219,7 @@ package_libkdepim() {
 
   mkdir -p "$pkgdir"/etc/xdg
   install -m644 "$srcdir"/$pkgbase-$pkgver/kdepim.categories "$pkgdir"/etc/xdg
+
+  # remove oxygen icons, are provided by the oxygen-icons pkg
+  rm -rf "$pkgdir"/usr/share/icons/oxygen
 }
