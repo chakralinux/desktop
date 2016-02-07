@@ -2,7 +2,7 @@
  
 pkgname=cabal-install
 pkgver=1.22.8.0
-pkgrel=1
+pkgrel=2
 pkgdesc="The command-line interface for Cabal and Hackage."
 url="http://hackage.haskell.org/package/cabal-install"
 license=('custom:BSD3')
@@ -22,13 +22,13 @@ package() {
   cd cabal-install-${pkgver}
  
   install -Dm755 dist/build/cabal/cabal \
-    ${pkgdir}/usr/bin
+    ${pkgdir}/usr/bin/cabal
  
  
   install -Dm644 LICENSE \
-    ${pkgdir}/usr/share/licenses/${pkgname}
+    ${pkgdir}/usr/share/licenses/${pkgname}/LICENSE
  
   # add bash completion
   install -Dm644 bash-completion/cabal \
-    ${pkgdir}/usr/share/bash-completion/completions
+    ${pkgdir}/usr/share/bash-completion/completions/cabal
 }
