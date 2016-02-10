@@ -3,8 +3,8 @@
 # Contributor: Pafrape <pafrape@free.fr
  
 pkgname=kfoldersync
-pkgver=3.0.0
-pkgrel=2
+pkgver=3.1.0
+pkgrel=1
 pkgdesc="Folder synchronization tool"
 arch=('x86_64')
 url="http://kde-apps.org/content/show.php/KFolderSync?content=164092"
@@ -12,11 +12,11 @@ screenshot='http://kde-apps.org/CONTENT/content-pre1/164092-1.png'
 depends=('kcoreaddons' 'kdbusaddons' 'ki18n' 'kio' 'knotifications' 'kxmlgui')
 makedepends=('cmake' 'gettext' 'extra-cmake-modules')
 license=('GPLv2')
-source=("http://kde-apps.org/CONTENT/content-files/164092-${pkgname}_${pkgver}.orig.tar.xz")
-sha256sums=('4b9761abe7a1df7616963594eeb381a388d43c6e17ee9a2dfdd59842d0ee0240')
+source=("http://kde-apps.org/CONTENT/content-files/164092-$pkgname-$pkgver.tar.xz")
+sha256sums=('6442e7fd9b2a2b0e64e11b9241a608832c01019f0d8edb912b61cce11d6e5915')
  
 build() {
-  cd ${srcdir}/${pkgname}-${pkgver}
+  cd $pkgname-$pkgver
   mkdir -p build && cd build
  
   CXXFLAGS="$CXXFLAGS -std=gnu++11"
@@ -25,6 +25,6 @@ build() {
 }
  
 package() {
-  cd ${srcdir}/${pkgname}-${pkgver}/build
-  make DESTDIR="$pkgdir/" install
+  cd $pkgname-$pkgver/build
+  make DESTDIR="$pkgdir" install
 }
