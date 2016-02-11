@@ -1,0 +1,23 @@
+# Arch contribution https://www.archlinux.org/packages/community/x86_64/ktoblzcheck/
+
+pkgname=ktoblzcheck
+pkgver=1.48
+pkgrel=1
+pkgdesc="Tool for verification of account numbers and bank codes"
+arch=('x86_64')
+license=('LGPL')
+url="http://ktoblzcheck.sourceforge.net/"
+depends=('python2' 'gcc-libs')
+source=("http://downloads.sourceforge.net/project/$pkgname/$pkgname-$pkgver.tar.gz")
+sha1sums=('80d1a586e2d581dce62094fed61b9292f2c72c6b')
+
+build() {
+  cd $srcdir/$pkgname-$pkgver
+  ./configure --prefix=/usr
+  make
+}
+
+package() {
+  cd "$srcdir/ktoblzcheck-$pkgver"
+   make DESTDIR="$pkgdir" install
+}
