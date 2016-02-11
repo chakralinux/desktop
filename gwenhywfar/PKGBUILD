@@ -1,0 +1,34 @@
+# Arch contribution https://www.archlinux.org/packages/community/x86_64/gwenhywfar/
+
+pkgname=gwenhywfar
+pkgver=4.13.1
+_releasenumber=78
+pkgrel=1
+pkgdesc="OS abstraction functions for various projects"
+arch=('x86_64')
+url="http://www.aquamaniac.de"
+license=("LGPL")
+depends=('openssl' 'qt' 'gnutls' 'libgcrypt')
+source=("http://www2.aquamaniac.de/sites/download/download.php?package=01&release=${_releasenumber}&file=01&dummy=${pkgname}-${pkgver}.tar.gz"
+        "gnutls.patch")
+sha256sums=('4beca892c1235548ea0ae30132a6d2e57911c22340746585395ccb01d84ec72b'
+            '0bdb91e13dae4145bd2b5e0f9029a58873b1b0f01c95bb5421e39e64405571df')
+
+
+prepare() {
+  cd $srcdir/${pkgname}-${pkgver}
+  patch -p1 <$srcdir/gnutls.patch
+}
+
+build() {
+  cd $srcdir/${pkgname}-${pkgver}
+  ./configure --prefix=/usr --sysconfdir=/etc --enable-ssl --with-guis=qt4
+  sed -i 's|gnutls_transport_set_lowat||g' src/sio/syncio_tls.c
+  make
+}
+
+package() {
+  cd $srcdir/${pkgname}-${pkgver}
+  
+  make DESTDIR=$pkgdir install
+}
