@@ -1,0 +1,34 @@
+# Arch contribution https://www.archlinux.org/packages/community/x86_64/libalkimia/
+
+pkgname=libalkimia	
+pkgver=5.0.0
+pkgrel=1
+pkgdesc="A library with common classes and functionality used by finance applications for the KDE SC."
+arch=('x86_64')
+depends=('kdelibs')
+makedepends=('cmake' 'automoc4' 'doxygen')
+url=('http://kde-apps.org/content/show.php/libalkimia?content=137323')
+license=('LGPL')
+replaces=('alkimia')
+provides=('alkimia')
+source=("http://download.kde.org/stable/alkimia/$pkgver/src/$pkgname-$pkgver.tar.xz")
+sha256sums=('eea8a2a0f6788a1b9fd464b370598ed6e55353fb40da53375e6f022e71526cb5')
+
+build() {
+  cd "${srcdir}"
+
+  mkdir -p build
+  cd build
+
+  cmake ../libalkimia-${pkgver} \
+    -DCMAKE_INSTALL_PREFIX=/usr \
+    -DCMAKE_BUILD_TYPE=Release \
+    -Wno-dev
+  make
+}
+
+package() {
+  cd "${srcdir}"/build
+ 
+  make DESTDIR="${pkgdir}" install  
+}
