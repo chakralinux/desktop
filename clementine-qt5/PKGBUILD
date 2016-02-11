@@ -1,6 +1,7 @@
 pkgname=clementine-qt5
 _pkgname=Clementine
-pkgver=1.2.3.r1378.ge0578a2
+pkgver=1.2.3.r1504.gf770030 #This autoupdates when running makepkg,check below at pkgver() on how this is retrieved automatically
+_pkgver=f770030
 pkgrel=1
 pkgdesc="Experimental Qt5 version of Clementine, a modern music player and library organiser."
 arch=('x86_64')
@@ -18,10 +19,9 @@ optdepends=('gst-pluginsbase: for more open formats'
                          with ccr yourself'
             'dropbox: add support for Dropbox')
 url="http://www.clementine-player.org/"
-source=('git+https://github.com/clementine-player/Clementine.git#commit=e0578a2')
+source=("git+https://github.com/clementine-player/Clementine.git#commit=${_pkgver}")
 sha256sums=('SKIP')
 conflicts=('clementine' 'clementine-lxqt' 'clementine-git' 'clementine-qt5-git')
-
 
 pkgver() {
   cd ${srcdir}/${_pkgname}
