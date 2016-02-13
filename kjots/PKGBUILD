@@ -1,38 +1,38 @@
-# Include global configuration
-source ../kdeapps.conf
+# Contributions from Arch: https://projects.archlinux.org/svntogit/community.git/tree/trunk?h=packages/kjots
 
 pkgname=kjots
-pkgver=5.0.0
-#pkgver=${_kdever}
+pkgver=5.0.1
 pkgrel=1
 pkgdesc="Note taker"
 arch=('x86_64')
-url='http://kde.org/applications/games/bomber/'
-license=('GPL' 'LGPL' 'FDL')
-depends=('kcmutils' 'kio' 'kconfig' 'kconfigwidgets' 'kparts' 'kbookmarks' 'kxmlgui' 
-         'akonadi-client' 'kmime' 'akonadi-notes' 'kpimtextedit' 'kontactinterface' 'grantlee' 'libxslt')
-makedepends=('extra-cmake-modules' 'python3' 'kdoctools')
-groups=('kde' 'kde-uninstall' 'kde-applications' 'kdepim')
-replaces=('kdepim-kjots')
-conflicts=('kdepim-kjots')
-provides=('kdepim-kjots')
-options=('docs' 'debug')
-source=("http://download.kde.org/stable/${pkgname}/${pkgver}/src/${pkgname}-${pkgver}.tar.xz")
-sha256sums=('fa2f2731d51125f780e3bc68d5640a31898331871ac4cf307417c1fb755e7729')
-#source=("$_mirror/${pkgname}-$_kdever.tar.xz")
-#sha256sums=(`grep ${pkgname}-$_kdever.tar.xz  ../checksums.txt | cut -d " " -f1`)
+url="https://www.kde.org/applications/utilities/kjots/"
+screenshot="https://www.kde.org/images/screenshots/kjots.png"
+license=('GPL')
+depends=(kcmutils kontactinterface akonadi-client akonadi-notes kdelibs4support kpimtextedit hicolor-icon-theme)
+makedepends=(extra-cmake-modules kdoctools boost)
+source=("http://download.kde.org/stable/$pkgname/$pkgver/src/$pkgname-$pkgver.tar.xz")
+conflicts=(kdepim-kjots)
+replaces=(kdepim-kjots)
+provides=(kdepims-kjots)
+install=$pkgname.install
+md5sums=('edb0a82781dbb75d1fe69f2eb6f7cf28')
 
 prepare() {
   mkdir -p build
 }
 
 build() {
-  cd build
-  cmake_kf5 ../${pkgname}-${pkgver}
+  cd build 
+  cmake ../$pkgname-$pkgver \
+    -DCMAKE_BUILD_TYPE=Release \
+    -DCMAKE_INSTALL_PREFIX=/usr \
+    -DLIB_INSTALL_DIR=lib \
+    -DKDE_INSTALL_USE_QT_SYS_PATHS=ON \
+    -DBUILD_TESTING=OFF 
   make
 }
 
 package() {
   cd build
-  make DESTDIR=${pkgdir} install
+  make DESTDIR="$pkgdir" install
 }
