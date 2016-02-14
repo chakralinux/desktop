@@ -1,20 +1,21 @@
 pkgname=kadu
-pkgver=2.1
+pkgver=3.0
 pkgrel=1
 pkgdesc="A Qt-based Gadu-Gadu client"
 arch=('x86_64')
 url="http://www.kadu.net/"
 license=('GPL')
-depends=('libgadu' 'libxss' 'enchant' 'phonon-qt5' 'qca-ossl' 'qca-qt5' 'libidn'
+depends=('libgadu' 'libxss' 'enchant' 'phonon-qt5' 'qca-qt5'
          'libmpdclient' 'libotr' 'libarchive' 'injeqt' 'xdg-utils' 'qt5-multimedia'
-         'qt5-quick1' 'qt5-declarative' 'qt5-webkit' 'qt5-x11extras')
+         'qt5-x11extras' 'qt5-svg' 'qt5-script' 'qt5-webkit' 'hicolor-icon-theme')
 makedepends=('cmake' 'libao' 'libsndfile' 'libxtst' 'curl' 'chrpath' 'ninja'
-             'qt5-tools')
+             'qt5-tools' 'qxmpp')
+optdepends=('qxmpp: Jabber protocol')
 conflicts=('kadu-svn')
 screenshot=('http://www.kadu.im/wiki/images/thumb/2/24/Screen_mainpage_pl.png/450px-Screen_mainpage_pl.png')
 install=kadu.install
 source=(http://download.kadu.im/stable/$pkgname-$pkgver.tar.bz2)
-md5sums=('b40f95123b1167c51c26bee8d56577d2')
+md5sums=('9d42c16682b338c14e6a912efd739447')
 
 prepare() {
   sed -i 's/unity_integration//g' $pkgname-$pkgver/Plugins.cmake
@@ -29,8 +30,7 @@ build() {
     -GNinja \
     -DCMAKE_BUILD_TYPE=Release \
     -DCMAKE_INSTALL_PREFIX=/usr \
-    -DCMAKE_INSTALL_LIBDIR=/usr/lib \
-    -DQT_QMAKE_EXECUTABLE=/usr/bin/qmake-qt5
+    -DCMAKE_INSTALL_LIBDIR=/usr/lib
   ninja
 }
 
