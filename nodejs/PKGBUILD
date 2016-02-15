@@ -1,5 +1,5 @@
 pkgname=nodejs
-pkgver=5.5.0
+pkgver=5.6.0
 pkgrel=1
 pkgdesc='Evented I/O for V8 javascript'
 arch=('x86_64')
@@ -10,7 +10,7 @@ makedepends=('python2' 'procps-ng')
 optdepends=('npm: nodejs package manager')
 checkdepends=('curl')
 source=("http://nodejs.org/dist/v$pkgver/node-v$pkgver.tar.gz")
-sha256sums=('d69b18cc20699a35434858fb853997616762280610a510ec4b4ff1a94798b432')
+sha256sums=('3af2cc5e5970afc83e59f2065fea2e2df846a544a100cd3c0527f0db05bec27f')
 
 prepare() {
   cd node-v$pkgver
@@ -34,7 +34,8 @@ build() {
     --prefix=/usr \
     --with-intl=system-icu \
     --without-npm \
-    --shared-zlib
+    --shared-zlib \
+    --shared-openssl
 
   make
 }
