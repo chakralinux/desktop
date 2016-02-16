@@ -4,7 +4,7 @@ source ../kdeapps.conf
 pkgname=kdepimlibs4
 pkgver=4.14.10
 _kdeappver=15.04.3
-pkgrel=5
+pkgrel=6
 pkgdesc="KDE4 PIM Libraries"
 arch=('x86_64')
 url='https://projects.kde.org/projects/kde/kdepimlibs'
@@ -15,7 +15,7 @@ conflicts=('kdepimlibs')
 provides=('kdepimlibs')
 replaces=('kdepimlibs')
 install='kdepimlibs4.install'
-source=("http://download.kde.org/stable/applications/${_kdeappver}/src/kdepimlibs-${pkgver}.tar.xz")
+source=("http://download.kde.org/Attic/applications/${_kdeappver}/src/kdepimlibs-${pkgver}.tar.xz")
 sha1sums=('8db2f59b8a33f4d1bbebfdff8b772d30669c9932')
 
 prepare() {
@@ -37,6 +37,6 @@ package() {
   make DESTDIR="${pkgdir}" install
 
 # Conflicts with KF5 libs
-  rm -r "$pkgdir"/usr/{bin,share/{config.kcfg,mime}}
+  rm -r "$pkgdir"/usr/{bin,share/{akonadi,config.kcfg}}
 }
 
