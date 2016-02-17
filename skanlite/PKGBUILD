@@ -1,12 +1,14 @@
+source ../kdeapps.conf
+
 pkgname=skanlite
 pkgver=2.0
-pkgrel=1
+pkgrel=2
 pkgdesc="Image Scanning Application for KDE"
 arch=('x86_64')
 url='http://www.kde.org'
 license=('LGPL')
-depends=('libksane4' 'qt5-base' 'kcoreaddons' 'ki18n' 'kxmlgui' 'kio' 'kdoctools' 'libksane' 'ktextwidgets')
-makedepends=( 'cmake' 'extra-cmake-modules')
+depends=('libksane' 'qt5-base' 'kcoreaddons' 'ki18n' 'kxmlgui' 'kio' 'kdoctools' 'libksane' 'ktextwidgets')
+makedepends=('cmake' 'extra-cmake-modules')
 categories=('graphics')
 options=('docs')
 source=("http://download.kde.org/stable/$pkgname/$pkgver/$pkgname-$pkgver.tar.xz")
@@ -19,7 +21,7 @@ prepare() {
 
 build() {
   cd $pkgname-$pkgver/build
-  cmake .. \
+  cmake_kf5 .. \
     -DCMAKE_BUILD_TYPE=Release \
     -DCMAKE_INSTALL_PREFIX=/usr
   make 
