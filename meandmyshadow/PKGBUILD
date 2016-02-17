@@ -1,20 +1,23 @@
-# Games Packages for Chakra, part of chakra-project.org
-# Maintainer: Adrián Chaves Fernández (Gallaecio) <adriyetichaves@gmail.com>
-# Contributions from: https://aur.archlinux.org/packages/meandmyshadow/
-
 pkgname=meandmyshadow
-pkgver=0.4
+pkgver=0.4.1
 pkgrel=1
 pkgdesc="Puzzle/platform game with an interesting concept and rather unique gameplay"
 arch=('x86_64')
 url="http://meandmyshadow.sourceforge.net/"
 license=('GPL3')
-depends=('sdl_gfx' 'sdl_image' 'curl' 'libarchive' 'sdl_ttf' 'sdl_mixer' 'hicolor-icon-theme' 'libgl' 'mesa')
+depends=('sdl_gfx' 'sdl_image' 'curl' 'libarchive' 'sdl_ttf' 'sdl_mixer' 'hicolor-icon-theme' 'libgl' 'mesa' 'glu')
 makedepends=('cmake')
 categories=('games')
 screenshot=('http://meandmyshadow.sourceforge.net/public/images/screenshot_thumbnail.png')
-source=("http://sourceforge.net/projects/$pkgname/files/$pkgver/$pkgname-${pkgver}-src.tar.gz/download")
-md5sums=('8a40de429d0ac7820d367825ba38d08a')
+source=("http://sourceforge.net/projects/$pkgname/files/$pkgver/$pkgname-${pkgver}-src.tar.gz/download"
+        "XFree.patch")
+md5sums=('724cb4a1822572dbe04131b5db658d19'
+         '571408e6efdf82358570e9f89db115e4')
+
+prepare() {
+  cd "$pkgname-$pkgver"
+  patch --binary < "$startdir/XFree.patch"
+}
 
 build() {
   cd "$srcdir/$pkgname-$pkgver"
