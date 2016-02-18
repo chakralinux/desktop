@@ -1,8 +1,8 @@
 pkgname=unvanquished
-pkgver=0.44.0
+pkgver=0.48.0
 pkgrel=1
 
-_depbasename=linux64-3
+_depbasename=linux64-4
 _depname="${_depbasename}.tar.bz2"
 _gitver="archlinux/${pkgver}-${pkgrel}"
 _gitdir="${pkgname/u/U}-${_gitver/\//-}"
@@ -22,19 +22,23 @@ backup=('etc/conf.d/unvanquished.conf' 'etc/unvanquished/server.cfg' 'etc/unvanq
 install='unvanquished.install'
 source=("https://github.com/Unvanquished/Unvanquished/archive/${_gitver}.tar.gz"
         'unvanquished.install' "https://dl.unvanquished.net/deps/${_depname}")
-md5sums=('65c8a23d5b35776d24c7af6abc8931bb'
-         'a5246cf3bed53798ddc4d95c6b8c1b37'
-         '9f73b3b0b4536b022be5d3e218b48ea1')
+sha1sums=('16ccad3e78127fc42a544158a9bbd085f98b5f7c'
+          '1f6ea4e142cf438a2ae026974546b7e593757bc7'
+          'faf94dc4a5c6e7b4a1c4a162b4d16f9e3cc31452')
 
+prepare() {
+	cd "${srcdir}"
+
+	ln -sfr "${_depbasename}" -t "${_gitdir}/daemon/external_deps"
+}          
+          
 build() {
 	cd "${srcdir}/${_gitdir}"
-
-	cp -r "${srcdir}/${_depbasename}" external_deps/
 
 	mkdir -p build
 	cd build
 
-	cmake -D BUILD_GAME_NACL=OFF -D BUILD_GAME_NATIVE_DLL=OFF -D BUILD_GAME_NATIVE_EXE=OFF ..
+	cmake -D BUILD_CGAME=OFF -D BUILD_SGAME=OFF BUILD_GAME_NACL=OFF -D BUILD_GAME_NATIVE_DLL=OFF -D BUILD_GAME_NATIVE_EXE=OFF ..
 	make
 }
 
