@@ -3,7 +3,7 @@ source ../kdeapps.conf
 
 pkgname=kio-extras
 pkgver=${_kdever}
-pkgrel=1
+pkgrel=2
 pkgdesc="Additional components to increase the functionality of KIO"
 arch=('x86_64')
 url='https://projects.kde.org/projects/kde/workspace/kio-extras'
@@ -14,6 +14,8 @@ makedepends=('extra-cmake-modules' 'kdoctools' 'python3')
 groups=('kde' 'kde-applications' 'kdenetwork')
 options=("debug")
 install=${pkgname}.install
+conflicts=('kio-mtp-git')
+replaces=('kio-mtp-git')
 source=("$_mirror/${pkgname}-$_kdever.tar.xz")
 sha256sums=(`grep ${pkgname}-$_kdever.tar.xz  ../checksums.txt | cut -d " " -f1`)
 
