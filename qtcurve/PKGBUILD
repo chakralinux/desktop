@@ -1,23 +1,23 @@
 pkgbase=qtcurve
-pkgname=('qtcurve-utils' 'qtcurve-qt5' 'qtcurve-kde4')
-pkgver=1.8.18
-pkgrel=10
+pkgname=('qtcurve-utils' 'qtcurve-kf5' 'qtcurve-qt4')
+pkgver=1.8.18.r247.d126bd5
+pkgrel=1
 pkgdesc='A configurable set of widget styles for KDE and Gtk'
 arch=('x86_64')
 url='https://github.com/QtCurve/qtcurve'
 license=('LGPL')
 groups=('qtcurve')
-makedepends=('cmake' 'automoc4' 'qt' 'qt5-svg' 'qt5-x11extras' 'kdelibs' 'kde-workspace')
-source=("$pkgbase-$pkgver.tar.gz::$url/archive/$pkgver.tar.gz"
-        "https://github.com/QtCurve/qtcurve/commit/323402d8b99502300f65e909c61153cbd5d5d997.diff")
-sha512sums=('0ba7927db11d1f2d7bad08fa923d3f0f2167d89fdf0d09bf0b677ffd4f2cc547c22890c87b8f18495e73f8ce21ffbd40899792a512dd9e2a481b81a52abd84eb'
-         '71a112077f92ce5101b3b27d9ab73225987ea1c8c8921ce3509327bd2a62213235e929cf1a677fcde13105bb364b058ad5908451e5657298e0fbe7306d805ba9')
+makedepends=('qt' 'qt5-svg' 'qt5-x11extras' 'extra-cmake-modules' 'kdelibs4support' 'kdoctools')
+source=('git://anongit.kde.org/qtcurve.git#commit=d126bd5')
+sha1sums=('SKIP')
+
+pkgver() {
+  cd $srcdir/$pkgbase 
+  printf "%s" "$(git describe --long | sed 's/\([^-]*-\)g/r\1/;s/-/./g')"
+}
 
 prepare() {
-  cd $pkgbase-$pkgver
-
-  # fix FS#40524 - Qt 5.3 build fix
-  patch -p1 -i ../${source[1]##*/}
+  cd $srcdir/$pkgbase
 
   # prepare for build
   [[ -e build ]] && rm -rf build
@@ -25,32 +25,30 @@ prepare() {
 }
 
 build() {
-  cd $pkgbase-$pkgver/build
+  cd $srcdir/$pkgbase/build
   cmake .. -DCMAKE_BUILD_TYPE=Release \
            -DCMAKE_INSTALL_PREFIX=/usr \
-           -DENABLE_GTK2=Off
+           -DENABLE_GTK2=Off \
+           -DQTC_QT4_ENABLE_KDE=false
   make
 }
 
 package_qtcurve-utils() {
   depends=('libx11')
-  cd ${srcdir}/${pkgbase}-${pkgver}/build/lib/utils
+  cd ${srcdir}/${pkgbase}/build/lib/utils
   make DESTDIR="$pkgdir" install
-  cd ${srcdir}/${pkgbase}-${pkgver}/build/po
-  make DESTDIR="${pkgdir}" install
 }
 
-package_qtcurve-kde4() {
-  replaces=('qtcurve')
-  depends=('qtcurve-utils' 'kdelibs' 'kde-workspace')
+package_qtcurve-qt4() {
+  depends=('qtcurve-utils' 'qt')
 
-  cd ${pkgbase}-${pkgver}/build
+  cd $srcdir/${pkgbase}/build
   make -C qt4 DESTDIR="${pkgdir}" install
 }
 
-package_qtcurve-qt5() {
-  depends=('qtcurve-utils' 'qt5-svg' 'qt5-x11extras' 'qt5-base')
+package_qtcurve-kf5() {
+  depends=('qtcurve-utils' 'qt5-svg' 'qt5-x11extras' 'qt5-base' 'plasma-workspace')
   
-  cd ${srcdir}/${pkgbase}-${pkgver}/build/qt5
+  cd ${srcdir}/${pkgbase}/build/qt5
   make DESTDIR="${pkgdir}" install
 }
