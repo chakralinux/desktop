@@ -48,7 +48,8 @@ package_qtcurve-qt4() {
 
 package_qtcurve-kf5() {
   depends=('qtcurve-utils' 'qt5-svg' 'qt5-x11extras' 'qt5-base' 'plasma-workspace')
-  
+  replaces=('qtcurve-qt5')
+  conflicts=('qtcurve-qt5')
   cd ${srcdir}/${pkgbase}/build/qt5
   make DESTDIR="${pkgdir}" install
 }
