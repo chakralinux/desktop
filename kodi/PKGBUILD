@@ -1,6 +1,6 @@
 pkgname=kodi
-pkgver=15.2
-_codename=Isengard
+pkgver=16.0
+_codename=Jarvis
 pkgrel=1
 arch=('x86_64')
 url="http://kodi.tv"
@@ -13,7 +13,7 @@ screenshot=http://kodi.tv/wp-content/uploads/kodi_about.jpg
   # 'mesa-demos' 'xorg-xdpyinfo'
 depends=('python2-pillow' 'python2-simplejson' 'mesa-demos' 'bluez-libs' 'fribidi' 'glew' 'hicolor-icon-theme'
          'libcdio' 'libjpeg-turbo' 'libmariadbclient' 'libmicrohttpd' 'libpulse' 'libssh' 'libva' 'libxrandr'
-         'libxslt' 'lzo2' 'sdl2' 'smbclient' 'taglib' 'tinyxml' 'yajl' 'libusb' 'nettle')
+         'libxslt' 'lzo2' 'sdl2' 'smbclient' 'taglib' 'tinyxml' 'yajl' 'libusb' 'nettle' 'dcadec' 'crossguid-git')
 optdepends=(
     'bluez: Blutooth support'
     'libnfs: NFS shares support'
@@ -39,7 +39,7 @@ provides=('xbmc')
 conflicts=('xbmc')
 replaces=('xbmc')
 source=("$pkgname-$pkgver-$_codename.tar.gz::https://github.com/xbmc/xbmc/archive/$pkgver-$_codename.tar.gz")
-sha256sums=('dd8aeb942e6de5d1488e243e1346cff3f6597e21b5131a3ba72ff5cc82037110')
+sha256sums=('0421ea1337cdee674f8a36d995f54152b5ddc4100e53410b3aeeb3b3f7d53946')
 
 prepare() {
   cd "$srcdir/xbmc-$pkgver-$_codename"
@@ -62,7 +62,6 @@ build() {
     --disable-debug \
     --enable-optimizations \
     --enable-libbluray \
-    --enable-external-libraries \
     --disable-gtest \
     --with-lirc-device=/run/lirc/lircd \
     ac_cv_type__Bool=yes
