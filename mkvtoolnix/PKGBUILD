@@ -1,7 +1,7 @@
 pkgbase=mkvtoolnix
 pkgname=('mkvtoolnix-cli' 'mkvtoolnix-gui')
 pkgver=8.9.0
-pkgrel=1
+pkgrel=2
 pkgdesc="Set of tools to create, edit and inspect Matroska files."
 arch=('x86_64')
 license=('GPL')
@@ -33,6 +33,20 @@ prepare() {
   autoreconf -vfi
 }
 
+build() {
+  cd mkvtoolnix-${pkgver}
+
+  ./configure --prefix='/usr' \
+              --without-curl \
+              --disable-qt
+  ./drake apps:mkvinfo $MAKEFLAGS
+  mv src/mkvinfo{,-cli}
+
+  ./configure --prefix='/usr' \
+              --without-curl
+  ./drake $MAKEFLAGS
+}
+
 package_mkvtoolnix-cli() {
   pkgdesc="Set of tools to create, edit and inspect Matroska files - CLI version"
   depends=('libmatroska' 'expat' 'flac' 'libvorbis' 'file' 'boost-libs' 'lzo2')
@@ -42,28 +56,10 @@ package_mkvtoolnix-cli() {
 
   cd "${srcdir}/${pkgbase}-${pkgver}"
   
-  ./configure --prefix=/usr \
-              --with-boost-libdir=/usr/lib \
-              --disable-gui
-  ./drake
-
-  mv src/mkvinfo{,-cli}
-
   ./drake DESTDIR="${pkgdir}" install
-  rm -rf "${pkgdir}"/usr/bin/mkvinfo
-  install -Dm755 src/mkvinfo-cli "${pkgdir}"/usr/bin/mkvinfo
-
-  rm -rf "${pkgdir}"/usr/bin/mmg
-  rm -rf "${pkgdir}"/usr/share/man/de/man1/mmg.1
-  rm -rf "${pkgdir}"/usr/share/man/es/man1/mmg.1
-  rm -rf "${pkgdir}"/usr/share/man/ja/man1/mmg.1
-  rm -rf "${pkgdir}"/usr/share/man/man1/mmg.1
-  rm -rf "${pkgdir}"/usr/share/man/nl/man1/mmg.1
-  rm -rf "${pkgdir}"/usr/share/man/zh_CN/man1/mmg.1
-  rm -rf "${pkgdir}"/usr/share/man/uk/man1/mmg.1
-  rm -rf "${pkgdir}"/usr/share/applications
-  rm -rf "${pkgdir}"/usr/share/icons
-  rm -rf "${pkgdir}"/usr/share/mime
+  install -m 755 src/mkvinfo-cli "${pkgdir}"/usr/bin/mkvinfo
+  rm -rf "${pkgdir}"/usr/share/{applications,icons,mime}
+  find "${pkgdir}" -name mkvtoolnix-gui* -delete
 }
 
 package_mkvtoolnix-gui() {
@@ -73,27 +69,12 @@ package_mkvtoolnix-gui() {
 
   cd "${srcdir}/${pkgbase}-${pkgver}"
   
-  ./configure --prefix=/usr \
-              --with-boost-libdir=/usr/lib
-  ./drake
-
   ./drake DESTDIR="${pkgdir}" install
-  
-  rm -rf "${pkgdir}"/usr/bin/mkvextract
-  rm -rf "${pkgdir}"/usr/bin/mkvinfo
-  rm -rf "${pkgdir}"/usr/bin/mkvmerge
-  rm -rf "${pkgdir}"/usr/bin/mkvpropedit
-  rm -rf "${pkgdir}"/usr/share/doc
   rm -rf "${pkgdir}"/usr/share/locale
-    rm -rf "${pkgdir}"/usr/share/man/ca/man1/mkv*
-  rm -rf "${pkgdir}"/usr/share/man/de/man1/mkv*
-  rm -rf "${pkgdir}"/usr/share/man/es/man1/mkv*
-  rm -rf "${pkgdir}"/usr/share/man/ja/man1/mkv*
-  rm -rf "${pkgdir}"/usr/share/man/man1/mkv*
-  rm -rf "${pkgdir}"/usr/share/man/nl/man1/mkv*
-  rm -rf "${pkgdir}"/usr/share/man/zh_CN/man1/mkv*
-  rm -rf "${pkgdir}"/usr/share/man/uk/man1/mkv*
+  for t in mkv{extract,info,merge,propedit}; do
+    find "${pkgdir}" -name $t* -delete
+  done
   
-  install -Dm755 src/mkvinfo "${pkgdir}"/usr/bin/mkvinfo-gui
-  sed -ri 's/^(Exec=mkvinfo)/\1-gui/' "${pkgdir}"/usr/share/applications/mkvinfo.desktop
+#  install -Dm755 src/mkvinfo "${pkgdir}"/usr/bin/mkvinfo-gui
+#  sed -ri 's/^(Exec=mkvinfo)/\1-gui/' "${pkgdir}"/usr/share/applications/mkvinfo.desktop
 }
