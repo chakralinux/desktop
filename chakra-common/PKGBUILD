@@ -4,28 +4,17 @@ source ../kdeapps.conf
 pkgname=chakra-common
 arch=('x86_64')
 pkgver=${_kdever}
-pkgrel=1
+pkgrel=2
 pkgdesc="Common configuration files, scripts and artwork"
 url="http://www.chakraos.org"
-license=('GPL'
-         'BSD')
-options=('!debug'
-         'strip')
-groups=("kde"
-        "kde-minimal"
-        "kde-uninstall")
+license=('GPL' 'BSD')
+options=('!debug' 'strip')
+groups=("kde" "kde-minimal" "kde-uninstall")
 depends=("qt5-base"
          'pinentry'
          'openssh'
          'bash>=4.2'
          'glibc>=2.15')
-provides=('kde-common'
-          'tcp_wrappers'
-          'chakra-paste')
-replaces=('kde-common'
-          'chakra-paste')
-conflicts=('kde-common'
-           'chakra-paste')
 install=chakra-common.install
 source=('http://kde-apps.org/CONTENT/content-files/48411-rootactions_servicemenu_2.8.6.tar.gz'
         'servicemenu-copy-path.desktop'
@@ -52,7 +41,8 @@ source=('http://kde-apps.org/CONTENT/content-files/48411-rootactions_servicemenu
         'agent-startup.sh'
         'agent-shutdown.sh'
         'chakra-helper.sh'
-        'kde4.sh')
+        'kde4.sh'
+        'chakra-check-links.sh::http://git.chakraos.org/buildsystem.git/blob_plain/HEAD:/chakra/bin/check_links.sh')
         # skipping chakra-paste because gitorious has issues with wget
 #        'https://gitorious.org/chakra-paste/chakra-paste/archive/05f0a884a4de1460309ee95d678eb034c4c964b5.tar.gz'
 sha256sums=('9b2cdc947f1da2c56d0f009ff470f7aa9021f214a2470c33ee4628281b7c1163'
@@ -80,7 +70,8 @@ sha256sums=('9b2cdc947f1da2c56d0f009ff470f7aa9021f214a2470c33ee4628281b7c1163'
             '15dbeea94793a9d6922f7c5fed107f63d5b2b5715c12874f0884e4dc5905d5c6'
             '80da5b02a11ff9471775b2173a8c251d649d292a0c822469be43a5227b403444'
             '9e0c9408c9bc12aeca2fd66a4723b57a6878307ba956df7cca43f8112dd71429'
-            '7e4ae4587973d6cc253b20ff7573ac25801f148f794a9000901c5137cd4780b3')
+            '7e4ae4587973d6cc253b20ff7573ac25801f148f794a9000901c5137cd4780b3'
+            '2cacce6574ec50b8038a5be6fa7afeebed394f697ca362f4de41835f877e1133')
 
 
 package() {
@@ -140,8 +131,11 @@ package() {
     install -m644 Chakra.directory ${pkgdir}/usr/share/desktop-directories/
   
     # chakra-paste
-  #  install -D -m777 chakra-paste-chakra-paste/chakra-paste "${pkgdir}/usr/bin/chakra-paste"
+    #install -Dm755 chakra-paste-chakra-paste/chakra-paste "${pkgdir}/usr/bin/chakra-paste"
   
     # chakra-helper
-    install -D -m777 chakra-helper.sh "${pkgdir}/usr/bin/chakra-helper"
+    install -Dm755 chakra-helper.sh "${pkgdir}/usr/bin/chakra-helper"
+
+    # chakra-check-links
+    install -Dm755 chakra-check-links.sh "${pkgdir}/usr/bin/chakra-check-links"
 }

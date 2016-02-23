@@ -1,27 +1,53 @@
 pkgname=sigil
 _pkgname=Sigil
-pkgver=0.8.7
+pkgver=0.9.3
 pkgrel=1
 pkgdesc="A multi-platform WYSIWYG ebook editor. It is designed to edit books in ePub format."
 arch=('x86_64')
 url="http://sigil-ebook.com/"
 license=('GPL3')
-depends=('qt5-webkit' 'boost-libs' 'hicolor-icon-theme')
-makedepends=('qt5-tools' 'qt5-svg' 'cmake' 'boost' 'qt5-multimedia')
+depends=('qt5-webkit' 'python3' 'hicolor-icon-theme' 'python3-lxml>=3.5.0' 'python3-six')
+makedepends=('qt5-tools' 'qt5-svg' 'cmake')
+optdepends=('hunspell-en: for English dictionary support'
+            'hyphen-en: for English hyphenation support in plugins'
+            'python3-html5lib: recommended for plugins'
+            'python3-chardet: recommended for plugins'
+            'python3-cssselect: recommended for plugins'
+            'python3-cssutils: recommended for plugins'
+            'python3-pillow: recommended for plugins'
+            'python3-regex: recommended for plugins')
 categories=('office')
 install=sigil.install
 screenshot=('http://1.bp.blogspot.com/-K2Q-tdVbPRI/UI08v7LhzHI/AAAAAAAAABY/vZ5LHjM6nb4/s1600/Screen+Shot+2012-10-28+at+10.07.03+AM.png')
-source=("https://github.com/user-none/Sigil/releases/download/${pkgver}/${_pkgname}-${pkgver}-Code.zip")
-sha512sums=('a7068c0abcb21b827b5990ed55e72739d347dd294b4042ae3fb075bf5ca5fa27ce7e18a45ae028ae6c21d6a7cd842e3b9a660214130080690efb84f22e3f82b8')
+source=("https://github.com/user-none/Sigil/releases/download/${pkgver}/${_pkgname}-${pkgver}-Code.zip"
+        "0001-Set-environment-variable-for-Sigil-dictionaries.patch")
+sha256sums=('af8596fe7f235a3da240afc042efe8f8ff049ca063c72ae975716931cbb06406'
+            '8a1d6085c1ba2c2a919581096af20d0851a6a7a70c4c001a3d30881a511e52c6')
 
+prepare() {
+    cd "${srcdir}"
+
+    # Upstream would prefer we *manually* set this env var when using the
+    # build option "-DINSTALL_BUNDLED_DICTS=0"
+    patch -p1 < ../0001-Set-environment-variable-for-Sigil-dictionaries.patch
+
+    if [[ "${_localepurge}" != "" ]]; then
+        for trans in src/Resource_Files/ts/*; do
+            if [[ "$(basename $trans | sed -r 's/(_.*)_.*/\1/g')" != "sigil_${_localepurge}" ]]; then
+                rm $trans
+            fi
+        done
+    fi
+}
 
 build() {
-  cd "${srcdir}/Sigil-${pkgver}"
+  cd "${srcdir}"
 
   mkdir -p build 
   cd build
 
-  cmake -G "Unix Makefiles" \
+  cmake -G "Unix Makefiles"  \
+    -DINSTALL_BUNDLED_DICTS=0 \
     -DCMAKE_INSTALL_PREFIX=/usr \
     -DCMAKE_C_FLAGS:STRING="$CFLAGS" \
     -DCMAKE_CXX_FLAGS:STRING="$CXXFLAGS" \
@@ -31,17 +57,19 @@ build() {
 }
 
 package() {
-  cd "${srcdir}/Sigil-${pkgver}/build"
+  cd "${srcdir}/build"
   
   make DESTDIR=$pkgdir install
   
-  install -Dm0644 $srcdir/${_pkgname}-${pkgver}/src/$_pkgname/Resource_Files/freedesktop/$pkgname.desktop \
+  install -Dm0644 $srcdir/src/Resource_Files/freedesktop/$pkgname.desktop \
   $pkgdir/usr/share/applications/$pkgname.desktop
   
   for _pic in 16 32 48 128 256; do
-    install -Dm0644 ../src/Sigil/Resource_Files/icon/app_icon_$_pic.png \
+    install -Dm0644 ../src/Resource_Files/icon/app_icon_$_pic.png \
       $pkgdir/usr/share/icons/hicolor/${_pic}x${_pic}/apps/$pkgname.png
   done
-   install -Dm644 ../src/Sigil/Resource_Files/icon/app_icon_512.png \
+   install -Dm644 ../src/Resource_Files/icon/app_icon_512.png \
        "$pkgdir/usr/share/pixmaps/$pkgname.png"
+  python3 -m compileall "${pkgdir}"/usr/share/sigil/{plugin_launchers/python/,python3lib}
+  python3 -O -m compileall "${pkgdir}"/usr/share/sigil/{plugin_launchers/python/,python3lib}
 }
