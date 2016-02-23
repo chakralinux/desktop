@@ -2,8 +2,8 @@
 
 pkgname=rstudio
 _pkgname=rstudio-rstudio
-pkgver=0.99.491
-_pkgver=b3a4f1f
+pkgver=0.99.879
+_pkgver=9ac9183
 pkgrel=1
 pkgdesc="A new integrated development environment (IDE) for R - The Desktop Client"
 arch=('x86_64')
@@ -17,13 +17,13 @@ install=rstudio-desktop.install
 source=("https://github.com/$pkgname/$pkgname/tarball/v$pkgver"
 	"http://www.rstudio.com/wp-content/uploads/2014/06/RStudio-Ball.png"
 	"qdatastream.patch")
-sha256sums=('78ce1a5b6288d61332781c9dac7a894c322950e476322bc5268c4d8866892ac1'
+sha256sums=('e9135161e93ed3268fabb425524d61bcb5dd680da90ab32d5d85cb2e93f6bcfb'
             'b14d11376099fe27e3f355367aca779e985840ea36ec08235feca62c67bd53c3'
             '3147f02fe9fb557c7dee4d332db9626da4ac4b563ad3d00fc68c6f955afd0a41')
 
 build() {
   cd "$srcdir/$pkgname-$pkgname-"*
-  patch -p 1 -i "$srcdir/qdatastream.patch"
+#  patch -p 1 -i "$srcdir/qdatastream.patch"
   
   cd dependencies/common
 
