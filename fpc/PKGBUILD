@@ -1,0 +1,59 @@
+pkgname=('fpc' 'fpc-src')
+pkgver=3.0.0
+pkgrel=1
+_gdbver=7.10
+pkgdesc="The Free Pascal Compiler is a Turbo Pascal 7.0 and Delphi compatible 32bit Pascal Compiler. It comes with fully TP 7.0 compatible run-time library."
+arch=('x86_64')
+url="http://www.freepascal.org/"
+license=('GPL' 'LGPL' 'custom')
+backup=("etc/fpc.cfg")
+depends=('ncurses' 'zlib' 'expat')
+makedepends=('fpc')
+options=('zipman' 'staticlibs' '!strip')
+source=("ftp://ftp.freepascal.org/pub/fpc/dist/$pkgver/source/fpcbuild-$pkgver.tar.gz"
+        "http://ftp.gnu.org/gnu/gdb/gdb-${_gdbver}.tar.xz")
+sha1sums=('915007eee997234c454e63f9b716b0f2fabf64b9'
+          '95338f65ae9f61ecb76592f2cbe336a7d948b905')
+
+package_fpc-src(){
+  pkgdesc='Sources for the FreePascal compiler (required by the Lazarus IDE)'
+  arch=('any')
+
+  cd $srcdir/fpcbuild-$pkgver/fpcsrc
+  mkdir -p $pkgdir/usr/lib/fpc/src
+  cp -R . $pkgdir/usr/lib/fpc/src
+}          
+          
+build() {
+  cd ${srcdir}/fpcbuild-$pkgver
+  export GDBLIBDIR=${srcdir}/gdb-${_gdbver}/gdb
+  export LIBGDBFILE=$GDBLIBDIR/libgdb.a
+  pushd fpcsrc/compiler
+  fpcmake -Tall
+  popd
+  make NOGDB=1 build
+}
+
+package_fpc() {
+  cd ${srcdir}/fpcbuild-$pkgver
+
+  export HOME=$srcdir
+
+  make -j1 NOGDB=1 PREFIX=${pkgdir}/usr install
+
+  export PATH=$pkgdir/usr/bin:$PATH
+
+  install -Dm0644 fpcsrc/rtl/COPYING.FPC ${pkgdir}/usr/share/licenses/${pkgname}/COPYING.FPC
+
+  [ "$CARCH" = "x86_64" ] && ln -s /usr/lib/fpc/${pkgver}/ppcx64 ${pkgdir}/usr/bin/
+
+  mkdir -p ${pkgdir}/etc
+  ${pkgdir}/usr/lib/fpc/${pkgver}/samplecfg $pkgdir/usr/lib/fpc/${pkgver} ${pkgdir}/etc
+
+  # use -fPIC by default
+  echo -e "#ifdef cpux86_64\n# for x86_64 use -fPIC by default\n-Cg\n#endif" >> "$pkgdir/etc/fpc.cfg"
+
+  mv $pkgdir/usr/man $pkgdir/usr/share/
+
+  find $pkgdir/etc/ -type f -exec sed -i "s|$pkgdir||g" {} \;
+}
