@@ -3,13 +3,13 @@
 pkgname=amarok
 replaces=('amarok-base' 'amarok-engine-xine' 'amarok-base-mysqlfree')
 pkgver=2.8.0
-pkgrel=6
+pkgrel=7
 pkgdesc="A media player for KDE"
 arch=('x86_64')
 url="http://amarok.kde.org"
 screenshot="http://amarok.kde.org/files/Amarok-2.6-InDulciJubilo-screenie4.png"
 license=('GPL2' 'LGPL2.1' 'FDL')
-depends=('kde-runtime' 'mariadb' 'qtscriptgenerator' 'taglib-extras' 'liblastfm' 'ffmpeg' 'libofa'
+depends=('kde-runtime' 'mariadb' 'qtscriptgenerator' 'taglib-extras' 'liblastfm-qt4' 'ffmpeg' 'libofa'
          'qjson' 'libbluray')
 makedepends=('pkgconfig' 'automoc4' 'cmake' 'libgpod' 'libmtp' 'docbook-xsl' 'libmygpo-qt' 'mesa' 'clamz' 'loudmouth')
 optdepends=("libgpod: support Apple iPod audio devices"
@@ -20,11 +20,13 @@ optdepends=("libgpod: support Apple iPod audio devices"
             "loudmouth: backend needed by mp3tunes for syncing")
 categories=('multimedia')
 install="${pkgname}.install"
-source=("http://mirrors.mit.edu/kde/stable/${pkgname}/${pkgver}/src/${pkgname}-${pkgver}.tar.bz2")
-md5sums=('53cfcb4819668b10e13b061478c7b32a')
-
+source=("http://mirrors.mit.edu/kde/stable/${pkgname}/${pkgver}/src/${pkgname}-${pkgver}.tar.bz2"
+	taglib_version_comparison.patch)
+md5sums=('53cfcb4819668b10e13b061478c7b32a'
+         'ef7849e457357a1bdac7970a3633da45')
 prepare(){
    cd "${srcdir}/${pkgname}-${pkgver}"
+   patch -Np1 -i ../taglib_version_comparison.patch
    if [[ -e build ]]; then rm -rf build; fi
    mkdir build
 }
@@ -45,3 +47,4 @@ package(){
   cd "${srcdir}/${pkgname}-${pkgver}/build"
   make DESTDIR="${pkgdir}" install
 }
+
