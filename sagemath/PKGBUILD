@@ -1,10 +1,10 @@
 # WARNING!! It will takes some hours to compile.
 # Make sure you have plenty of time.
 
-
-pkgname=sagemath
+pkgbase=sagemath
+pkgname=('sagemath' 'sagemath-doc' 'sagemath-src')
 pkgver=7.0
-pkgrel=1
+pkgrel=2
 pkgdesc="Open Source Mathematics Software, free alternative to Magma, Maple, Mathematica, and Matlab - includes Sage-Notebook"
 arch=('x86_64')
 url="http://www.sagemath.org"
@@ -14,13 +14,13 @@ replaces=('sage-mathematics')
 provides=('sage-mathematics' 'sage-notebook')
 makedepends=('gcc-fortran' 'python2')
 optdepends=('imagemagick: some plotting functionality benefits from it'
-            'texlive-core: some plotting functionality benefits from it, also to use SageTeX'
+            'texlive-core: to use SageTeX, also some plotting functionality benefits from it'
             'openssh: to use the notebook in secure mode'
             'ffmpeg: to show animations'
             'cairo: R plots')
 options=('!makeflags')
-install="${pkgname}.install"
-source=("$pkgname-$pkgver.tar.gz::http://mirror.switch.ch/mirror/sagemath/src/sage-${pkgver}.tar.gz"
+install="${pkgbase}.install"
+source=("$pkgbase-$pkgver.tar.gz::http://mirror.switch.ch/mirror/sagemath/src/sage-${pkgver}.tar.gz"
         'sage.service'
         'sage-notebook.desktop')
 sha1sums=('07c9574530de2c8bd0b6f5d3c73c4d166601538d'
@@ -70,7 +70,7 @@ build() {
 }
 
 
-package() {
+package_sagemath() {
   cd sage-${pkgver}
 
   # remove build logs
@@ -118,5 +118,28 @@ package() {
   rm -f ${pkgdir}/usr/lib/sage/spkg/standard/*spkg
   
   # remove unused files
-  rm -rf ${pkgdir}/usr/lib/sage/src/build
+  rm -rf ${pkgdir}/usr/lib/sage/src/{build,doc,sage,sage_setup}
+}
+
+package_sagemath-doc() {
+  pkgdesc="HTML documentation and inline help for Sage"
+  depends=('sagemath' 'python2-sphinx')
+  provides=('sage-mathematics-doc')
+  replaces=('sage-mathematics-doc')
+  conflicts=('sage-mathematics-doc')
+  
+  install -d $pkgdir/usr/share/doc/sage
+
+  cp -r ${srcdir}/sage-${pkgver}/src/doc/*   $pkgdir/usr/share/doc/sage
+}
+
+package_sagemath-src() {
+  pkgdesc="Source files for sagemath"
+  provides=('sage-mathematics-src')
+  replaces=('sage-mathematics-src')
+  conflicts=('sage-mathematics-src')
+  
+  install -d "$pkgdir"/usr/share/sage/source
+  cp -r  ${srcdir}/sage-${pkgver}/src/{sage,sage_setup}
+  ln -s /usr/share/doc/sage "$pkgdir"/usr/share/sage/source/doc
 }
