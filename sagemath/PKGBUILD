@@ -1,0 +1,122 @@
+# WARNING!! It will takes some hours to compile.
+# Make sure you have plenty of time.
+
+
+pkgname=sagemath
+pkgver=7.0
+pkgrel=1
+pkgdesc="Open Source Mathematics Software, free alternative to Magma, Maple, Mathematica, and Matlab - includes Sage-Notebook"
+arch=('x86_64')
+url="http://www.sagemath.org"
+license=('GPL')
+conflicts=('sage-mathematics')
+replaces=('sage-mathematics')
+provides=('sage-mathematics' 'sage-notebook')
+makedepends=('gcc-fortran' 'python2')
+optdepends=('imagemagick: some plotting functionality benefits from it'
+            'texlive-core: some plotting functionality benefits from it, also to use SageTeX'
+            'openssh: to use the notebook in secure mode'
+            'ffmpeg: to show animations'
+            'cairo: R plots')
+options=('!makeflags')
+install="${pkgname}.install"
+source=("$pkgname-$pkgver.tar.gz::http://mirror.switch.ch/mirror/sagemath/src/sage-${pkgver}.tar.gz"
+        'sage.service'
+        'sage-notebook.desktop')
+sha1sums=('07c9574530de2c8bd0b6f5d3c73c4d166601538d'
+          '5196c3b61b1006dc13c3c1fce8b985758e76b0fc'
+          'd28dbdb3a48d924709593b6ecbac30cdd50517fd')
+
+prepare() {
+  # create DOT_SAGE directory
+  if [[ -d ${srcdir}/build ]]; then
+    rm -rf "${srcdir}/build"
+  fi
+  mkdir -p "${srcdir}/build"
+
+  # according to FS#34769
+#  sed -e 's/FREETYPE/#FREETYPE/' -i "${srcdir}/sage-${pkgver}/build/install"
+
+#  sed -e 's/READLINE/#READLINE/' -i "${srcdir}/sage-${pkgver}/build/install"
+}
+
+
+build() {
+  cd sage-${pkgver}
+
+  # disable default makepkg flags (needed for singular and libgap)
+  unset CFLAGS
+  unset CXXFLAGS
+  unset LDFLAGS
+  ## flags
+  # enable multiple threads while building, is this really needed? check if uses MAKEFLAGS
+  export SAGE_BUILD_THREADS=$(lscpu | awk '/^CPU\(s\):/ { print $2 }')
+  export MAKE="make -j${SAGE_BUILD_THREADS}"
+  # do not build own gcc
+  export SAGE_INSTALL_GCC='no'
+  # disable debug
+  export SAGE_DEBUG='no'
+  # enable fat binaries
+  export SAGE_FAT_BINARY='yes'
+  # can't write to root in a clean chroot
+  export DOT_SAGE="${srcdir}/build"
+  # singular is broken
+  export CPP='/usr/bin/cpp'
+  # use chakra's fortran rather then the one that ships with sage to compile sage's fortran
+  export FC='/usr/bin/gfortran'
+  export SAGE64='yes'
+
+  make
+}
+
+
+package() {
+  cd sage-${pkgver}
+
+  # remove build logs
+  rm -f *.log
+  rm -rf "${srcdir}/sage-${pkgver}/"{logs,upstream}
+  
+  # cp because make install is experimental and will corrupt the install
+  install -dm755 "${pkgdir}/usr/lib/sage"
+  cp -r * "${pkgdir}/usr/lib/sage/"
+  
+  # move SageTeX files to more appropriate directory
+  install -d ${pkgdir}/usr/share
+  mv ${pkgdir}/usr/lib/sage/local/share/texmf \
+    ${pkgdir}/usr/share
+
+  # according to FS#37090
+  # install scripts
+  install -dm755 "${pkgdir}/usr/bin"
+  ./sage -c "install_scripts('${pkgdir}/usr/bin', ignore_existing=True)"
+  # rename scripts to avoid conflicts
+  for ITEM in $(ls "${pkgdir}/usr/bin"); do
+    mv "${pkgdir}/usr/bin/${ITEM}" "${pkgdir}/usr/bin/sage-${ITEM}"
+  done
+  # create link to main binary
+  ln -s "/usr/lib/sage/sage" "${pkgdir}/usr/bin/sage"
+  
+  # FIXME fix bad mtime
+  cd "${pkgdir}/usr/lib/sage/local/lib/python2.7"
+  find . -name '*.py' -exec sh -c "rm {}c 2> /dev/null && python2 -m compileall {}" \;
+
+  # install a systemd user unit
+  install -Dm644 "${srcdir}/sage.service" "${pkgdir}/usr/lib/systemd/user/sage.service"
+  # install *.desktop and icon files
+  install -Dm644 "${srcdir}/sage-notebook.desktop" \
+                 "${pkgdir}/usr/share/applications/sage-notebook.desktop"
+  install -Dm644 "${pkgdir}/usr/lib/sage/local/lib/python2.7/site-packages/sagenb-0.11.6.1-py2.7.egg/sagenb/data/sage/images/icon128x128.png" \
+                 "${pkgdir}/usr/share/pixmaps/sage-notebook.png"
+
+  # remove build logs
+  rm -f ${pkgdir}/usr/lib/sage/*.log
+  rm -rf ${pkgdir}/usr/lib/sage/spkg/logs
+
+  # remove source packages, since they are rarely needed, they are 300mb in size (compressed)
+  rm -f ${pkgdir}/usr/lib/sage/spkg/base/*spkg
+  rm -f ${pkgdir}/usr/lib/sage/spkg/standard/*spkg
+  
+  # remove unused files
+  rm -rf ${pkgdir}/usr/lib/sage/src/build
+}
