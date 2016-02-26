@@ -1,5 +1,5 @@
 pkgname=debianutils
-pkgver=4.5.1
+pkgver=4.7
 pkgrel=1
 pkgdesc="Utility programs from Debian."
 url="http://packages.debian.org/source/sid/debianutils"
@@ -8,16 +8,16 @@ license=('GPL')
 depends=('glibc')
 categories=('utils')
 source=("http://ftp.de.debian.org/debian/pool/main/d/debianutils/debianutils_${pkgver}.tar.xz")
-sha512sums=('4cdb030946e8063607f102f58d4a1225b0e2795c5e01aeec45740b0a6fa0754013a9ae1239d89a23f6e4bf67e4d67fd669e84ed14b58695aff93a93b6e961b58')
+sha256sums=('a269cacd40f52f2fa5d5636357714a49e8538459c16d77772efaa23711fe53d9')
 
 build() {
-  cd "${srcdir}/${pkgname}"
+  cd "${srcdir}/${pkgname}-$pkgver"
   ./configure --prefix=/usr
   make
 }
 
 package() {
-  cd "${srcdir}/${pkgname}"
+  cd "${srcdir}/${pkgname}-$pkgver"
   make DESTDIR="${pkgdir}" install
 
   msg "Removing files already provided by the \"which\" package..."
