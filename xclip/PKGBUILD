@@ -1,25 +1,24 @@
-#
-# Apps Packages for Chakra, part of chakra-project.org
-#
-# maintainer (i686): Phil Miller <philm[at]chakra-project[dog]org>
-# maintainer (x86_64): Manuel Tortosa <manutortosa[at]chakra-project[dot]org>
-
 pkgname=xclip
-pkgver=0.12
+pkgver=0.12_20160201
 pkgrel=1
 pkgdesc="A command line utility that provides interface to Xclipboard."
-arch=('i686' 'x86_64')
+arch=('x86_64')
 url="http://sourceforge.net/projects/xclip"
 license=('GPL')
 depends=('libxmu' 'sh')
+makedepends=('git')
 categories=('utils')
-source=(http://downloads.sourceforge.net/sourceforge/xclip/$pkgname-$pkgver.tar.gz)
-md5sums=('f7e19d3e976fecdc1ea36cd39e39900d')
-sha1sums=('aed2cff18b9aecfe3377ad064c6a67518bbec211')
+source=('git+https://github.com/astrand/xclip#commit=e2dd115d66ecf5c772fd5359362990c17ee0defd')
+sha1sums=('SKIP')
 
 build() {
-  cd "$srcdir/$pkgname-$pkgver"
-  ./configure --prefix=/usr || return 1
-  make || return 1
-  make DESTDIR="$pkgdir" install || return 1
+	cd "${srcdir}/${pkgname}"
+	./bootstrap
+	./configure --prefix=/usr
+	make
+}
+
+package() {
+	cd "${srcdir}/${pkgname}"
+	make DESTDIR="${pkgdir}" install
 }
