@@ -1,34 +1,38 @@
-#
-# Games Packages for Chakra, part of chakra-project.org
-#
-# Maintainer: Daniele Cocca <daniele.cocca [at] gmail.com>
-
-# include global config
-source ../_buildscripts/${current_repo}-${_arch}-cfg.conf
-
 pkgname=ardentryst
 pkgver=1.7.1
 _pkgver=1.71
-pkgrel=3
+pkgrel=4
 pkgdesc="Ardentryst is an action/RPG sidescroller, focused not just on fighting, but on story, and character development."
 arch=('any')
 license=('GPL3' 'CCPL:by')
 url="http://jordan.trudgett.com/"
-depends=('python2' 'python-pygame' 'python-pyxml')
+depends=('python2-pygame')
 categories=('games')
-source=(http://downloads.sourceforge.net/project/ardentryst/ardentryst/1.71%20Comet/${pkgname}${_pkgver}.tar.gz)
-md5sums=('eccdea0817ebb5996535834b842a5046')
+source=("http://downloads.sourceforge.net/$pkgname/$pkgname$_pkgver.tar.gz"
+        "$pkgname.sh")
+sha1sums=('13fea2736b8289587c1cefa98ee4df2a76681e2e'
+          '10fecc08847f9a26fc57b6e4cd7f6df7501df053')
 
 package() {
-  cd "${srcdir}/${pkgname}${_pkgver}"
+  cd "$srcdir"/$pkgname$_pkgver
 
-  # Create the needed directories
-  install -d "${pkgdir}/usr/bin" "${pkgdir}/usr/share/games" "${pkgdir}/usr/share/pixmaps"
+  # install data
+  install -m755 -d "$pkgdir"/usr/share/$pkgname
+  cp -rf \
+    {Base,Data,Fonts,Levels,Music,Sounds,COPYING*} \
+    *.{py,txt,png,xml,dig} \
+    "$pkgdir"/usr/share/$pkgname/
 
-  # Actually copy the needed files
-  install icon.png "${pkgdir}/usr/share/pixmaps/ardentryst.png"
-  install -m 0755 ardentryst "${pkgdir}/usr/bin"
+  # set permissions
+  find "$pkgdir"/usr/share/$pkgname -type d -exec chmod 755 {} +
+  find "$pkgdir"/usr/share/$pkgname -type f -exec chmod 644 {} +
 
-  # Maybe replace this with coreutils' "install"?
-  cp -r . "${pkgdir}/usr/share/games/ardentryst"
+  # install icon
+  install -Dm644 icon.png "$pkgdir"/usr/share/pixmaps/$pkgname.png
+
+  # isntall .desktop file
+  install -Dm644 ${pkgname^a}.desktop "$pkgdir"/usr/share/applications/$pkgname.desktop
+
+  # install launcher
+  install -Dm755 ../$pkgname.sh "$pkgdir"/usr/bin/$pkgname
 }
