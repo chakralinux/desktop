@@ -1,6 +1,8 @@
+source ../kdeapps.conf
+
 pkgname=labplot
 pkgver=2.1.0
-pkgrel=1
+pkgrel=2
 pkgdesc="A free software data analysis and visualization application build on top of KDE SC"
 arch=('x86_64')
 url='http://labplot.sourceforge.net/'
@@ -13,17 +15,9 @@ source=("http://download.kde.org/stable/${pkgname}/${pkgver}/src/${pkgname}-kf5-
 sha256sums=('53f1e4c2fb1f08843b5c387a6259f1e8d6072c0efe0f2b2df64e38ade0080120')
  
 build() { 
-  cd "${srcdir}"/${pkgname}-kf5-${pkgver}
-  
-  ./compile
-  
-  cmake -DCMAKE_INSTALL_PREFIX=/usr \
-        -DCMAKE_BUILD_TYPE=Release \
-        -DKDE_INSTALL_USE_QT_SYS_PATHS=ON \
-        -DSYSCONF_INSTALL_DIR=/etc \
-        -DBUILD_TESTING=OFF
+  cd "${srcdir}"/${pkgname}-kf5-${pkgver}  
+  cmake_kf5
   make 
- 
 }
  
 package() {
