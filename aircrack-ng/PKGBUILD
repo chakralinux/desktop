@@ -1,26 +1,26 @@
-#
-# Apps Packages for Chakra, part of chakra-project.org
-#
-# maintainer (i686): Phil Miller <philm[at]chakra-project[dog]org>
-# maintainer (x86_64): Manuel Tortosa <manutortosa[at]chakra-project[dot]org>
-
-# include global config
-source ../_buildscripts/${current_repo}-${_arch}-cfg.conf
- 
 pkgname=aircrack-ng
-pkgver=1.1
-pkgrel=2
+_pkgver=1.2-rc4
+pkgver=${_pkgver//-/}
+pkgrel=1
 pkgdesc="A key cracker for the 802.11 WEP and WPA-PSK protocols"
-arch=('i686' 'x86_64')
+arch=('x86_64')
 url="http://www.aircrack-ng.org"
 license=('GPL2')
-depends=('openssl' 'sqlite3' 'iw')
+depends=('openssl' 'sqlite3' 'iw' 'net-tools' 'wireless_tools' 'ethtool')
 categories=('network')
-source=("http://download.aircrack-ng.org/${pkgname}-${pkgver}.tar.gz")
-md5sums=('f7a24ed8fad122c4187d06bfd6f998b4')
+source=("http://download.aircrack-ng.org/${pkgname}-${_pkgver}.tar.gz")
+sha1sums=('2b2fbe50fedb606b3bd96a34d49f07760e8e618a')
 
 build() {
-  cd ${srcdir}/${pkgname}-${pkgver}
-  make SQLITE=true unstable=true || return 1
-  make DESTDIR=${pkgdir} SQLITE=true unstable=true bindir=/usr/bin mandir=/usr/share/man/man1 sbindir=/usr/sbin install || return 1
+  cd $pkgname-$_pkgver
+
+  make sqlite=true experimental=true
+}
+
+package() {
+  cd $pkgname-$_pkgver
+
+  make DESTDIR="$pkgdir" sqlite=true experimental=true \
+    bindir=/usr/bin sbindir=/usr/bin mandir=/usr/share/man/man1/ \
+    smandir=/usr/share/man/man8/ install
 }
