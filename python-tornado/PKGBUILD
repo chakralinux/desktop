@@ -1,0 +1,83 @@
+pkgname=('python3-tornado' 'python2-tornado')
+pkgver=4.3.0
+pkgrel=1
+pkgdesc='open source version of the scalable, non-blocking web server and tools'
+arch=('x86_64')
+url='http://www.tornadoweb.org/'
+license=('Apache')
+makedepends=('python3-setuptools' 'python2-setuptools' 'git')
+checkdepends=('python3-pycurl' 'python2-pycurl' 'python3-mock' 'python2-mock' 'python3-twisted' 'python2-twisted' 'python2-futures' 'python2-singledispatch')
+source=("git+https://github.com/facebook/tornado.git#tag=v$pkgver"
+        0001-use_system_ca_certificates.patch
+        0002-get-rid-of-backports-ssl-match-hostname.patch
+        0003-support-monotonic.patch)
+sha512sums=('SKIP'
+            'cf3dbed20b0bb78cdaa16d4141adc7e12e0b5fd339d2ee9edb5d618dd1c87a643b6ecee19455235b1df712154ce83a1f4149c5579a5a1df5bdf2cd865c766b66'
+            '798f1c5f659138aa4d775edde7c962ec6410671f528b7ec44ca12ac342ddf9ec51d998c676b9025292a58c2140ba8492fcc76759b63adaf08320f96b11bcbfea'
+            '12bb182b009a38198500005fa977b55643647ba93bafe92495a242d4c80a698b21e3e4c59244dca22763a5d1037dc80e3f09236bdabf72e4ebf77d7b16c16e50')
+
+prepare() {
+  cd tornado
+  # patch -p1 -i ../0001-use_system_ca_certificates.patch
+  # patch -p1 -i ../0002-get-rid-of-backports-ssl-match-hostname.patch
+  # patch -p1 -i ../0003-support-monotonic.patch
+
+  cd "$srcdir"
+  cp -a tornado{,-py2}
+
+  # python -> python2 rename
+  find tornado-py2 -name '*py' -exec sed -e 's_#!/usr/bin/env python_&2_' -i {} \;
+  
+  export TORNADO_EXTENSION=1
+}
+
+build() {
+  cd tornado
+  python3 setup.py build
+
+  cd ../tornado-py2
+  python2 setup.py build
+}
+
+check() {
+  (
+    cd tornado
+    # TODO: exporting PYTHONPATH didn't fix the tornado.speedups not found problem...
+    export PYTHONPATH="$(pwd)/build/lib.linux-$CARCH-3.4:$PYTHONPATH"
+    python3 -m tornado.test.runtests
+    python3 -m tornado.test.runtests --httpclient=tornado.curl_httpclient.CurlAsyncHTTPClient
+    # python -m tornado.test.runtests --resolver=tornado.platform.caresresolver.CaresResolver  # pycares not in the repos
+    python3 -m tornado.test.runtests --resolver=tornado.netutil.ThreadedResolver
+    python3 -m tornado.test.runtests --ioloop=tornado.platform.asyncio.AsyncIOLoop
+    python3 -m tornado.test.runtests --ioloop=tornado.platform.select.SelectIOLoop
+    python3 -m tornado.test.runtests --ioloop=tornado.platform.twisted.TwistedIOLoop
+    python3 -m tornado.test.runtests --ioloop=tornado.test.twisted_test.LayeredTwistedIOLoop --resolver=tornado.platform.twisted.TwistedResolver
+  ) || warning "Python 3 tests failed"
+
+  (
+    cd tornado-py2
+    export PYTHONPATH="$(pwd)/build/lib.linux-$CARCH-2.7:$PYTHONPATH"
+    python2 -m tornado.test.runtests
+    python2 -m tornado.test.runtests --httpclient=tornado.curl_httpclient.CurlAsyncHTTPClient
+    # python2 -m tornado.test.runtests --resolver=tornado.platform.caresresolver.CaresResolver  # pycares not in the repos
+    python2 -m tornado.test.runtests --resolver=tornado.netutil.ThreadedResolver
+    python2 -m tornado.test.runtests --ioloop=tornado.platform.select.SelectIOLoop
+    python2 -m tornado.test.runtests --ioloop=tornado.platform.twisted.TwistedIOLoop
+    python2 -m tornado.test.runtests --ioloop=tornado.test.twisted_test.LayeredTwistedIOLoop --resolver=tornado.platform.twisted.TwistedResolver
+  ) || warning "Python 2 tests failed"
+}
+
+package_python3-tornado() {
+  depends=('python3')
+
+  cd tornado
+  python3 setup.py install --root="${pkgdir}" --optimize=1
+}
+
+package_python2-tornado() {
+  depends=('python2>=2.7.9')
+
+  cd tornado-py2
+  python2 setup.py install --root="${pkgdir}" --optimize=1
+}
+
