@@ -2,11 +2,11 @@
 
 pkgbase=bitcoin
 pkgname=('bitcoin-daemon' 'bitcoin-cli' 'bitcoin-qt')
-pkgver=0.11.0
-pkgrel=3
+pkgver=0.12.0
+pkgrel=1
 arch=('x86_64')
 url="http://www.bitcoin.org/"
-makedepends=('boost' 'qrencode' 'miniupnpc' 'protobuf' 'qt5-tools')
+makedepends=('boost' 'qrencode' 'miniupnpc' 'protobuf' 'qt5-tools' 'libevent')
 license=('MIT')
 source=(http://bitcoin.org/bin/bitcoin-core-$pkgver/bitcoin-$pkgver.tar.gz
 	https://raw.github.com/bitcoin/bitcoin/v$pkgver/contrib/debian/bitcoin-qt.desktop
@@ -14,12 +14,12 @@ source=(http://bitcoin.org/bin/bitcoin-core-$pkgver/bitcoin-$pkgver.tar.gz
 	https://raw.github.com/bitcoin/bitcoin/v$pkgver/contrib/debian/examples/bitcoin.conf
 	https://raw.github.com/bitcoin/bitcoin/v$pkgver/contrib/debian/manpages/bitcoind.1
 	https://raw.github.com/bitcoin/bitcoin/v$pkgver/contrib/debian/manpages/bitcoin.conf.5)
-sha512sums=('5c6a1aa75dc4c8518b62dfa8f0b0a21850cc2e7b6a741cebcd9ec8c8eca32091aa172c6d9bcd1a4d22a9111d9486ce2f12e2ae0635e74cdb9d0cd9eadd7afa9c'
+sha512sums=('b7bd91bdac369c6d949ae5487801d98cc6db8779d73922d49013bbf9e7fb98c6bf03af87adde27b1b8e2664ad7e931daa1f8d65f6e84d13ea2d043432769e02b'
             '9ada8dacb1b47c80460f66799d81319d11af2c0ae670d81348561eb4a69d852fd463df98428dc3d60fb90d47eda401524fe33aad318d1a07044fb27385f9e306'
             '57613bb7caf28bb1aba0d76dd6e500ea29437f1f2442345183c57f988c0eecb51dfe8dc42ed964971569ea3a79d712740cf319176f111174e61688bc26e4d9c0'
-            'b45741863c93eadfd4a38f207679c02b485642c376d5907f50441e69ee94139f12ac0b77696402021c6637a7c205a23cc389a16ab4d59db039cf69d0bee87587'
-            '0b798fba30e50a6ead4a12fa4c0a3bf93e40a738f76a4d71f8595f885e6d026fe1d2f03ea100315f2013bd0214bc2e6431c833d3b77fe3b04e99f4371660854c'
-            'd9a0686e6931701a851b75ea700cfa68bdf8b09fd1faae365ab3803a1deb278bece7d7c88e6e4f8bd735774cc4d6e29ee18db7e3450faffa50f8fa5ac6b876e3')
+            '736f7c975004cd8cd5409fb29e986ea28888f07086ec618c704b41855feea92959b9d00880ebc769dc52430dc6638a20424491ac9ae9405ffc8c228c3de2af02'
+            '53cbf4694e33dd08caafe1f9e4d55729fa17a02881082f7095f665431ea654d5665255dab05209a5a7ef3b269220b2d84368762eb4ec2c35ecf11c6d92fb41b1'
+            '1dd9dfdfb530d1bfb20bc84590034ab6902f25714b3c5bfa2418ad27515bc895fa16968880ec326641f0e58f9364e666764972b5a8782acb2e7494207d629888')
 
 build() {
   cd "$srcdir/$pkgbase-$pkgver"
@@ -50,7 +50,7 @@ package_bitcoin-qt() {
 
 package_bitcoin-daemon() {
   pkgdesc="Bitcoin is a peer-to-peer network based digital currency - daemon"
-  depends=('boost-libs' 'miniupnpc' 'openssl')
+  depends=('boost-libs' 'miniupnpc' 'libevent')
 
   cd "$pkgbase-$pkgver"
   install -Dm755 src/bitcoind "$pkgdir"/usr/bin/bitcoind
@@ -65,7 +65,7 @@ package_bitcoin-daemon() {
 
 package_bitcoin-cli() {
   pkgdesc="Bitcoin is a peer-to-peer network based digital currency - RPC client"
-  depends=('boost-libs' 'openssl')
+  depends=('boost-libs' 'libevent')
 
   cd "$pkgbase-$pkgver"
   install -Dm755 src/bitcoin-cli "$pkgdir"/usr/bin/bitcoin-cli
