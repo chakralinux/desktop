@@ -1,26 +1,15 @@
-# maintainer abveritas@chakra-project.org
-# contributor : Stephen McIntosh <stephenmac7@gmail.com>
-# Maintainer: Bruce Liu <bril@users.sourceforge.net>
-
 pkgbase=transmission
 pkgname=('transmission-cli' 'transmission')
-pkgver=2.84
-pkgrel=5
+pkgver=2.90
+pkgrel=1
 arch=('x86_64')
 url="http://www.transmissionbt.com/"
 license=('MIT')
 makedepends=('intltool' 'curl' 'pkgconfig' 'desktop-file-utils' 'libevent' 'gettext' 'qt5-tools' 'miniupnpc')
-source=("http://mirrors.m0k.org/transmission/files/${pkgbase}-${pkgver}.tar.xz"
-        'transmission.tmpfiles'
-        'transmission-2.80-translations-path-fix.patch') # patch from Gentoo
-md5sums=('411aec1c418c14f6765710d89743ae42'
-         '23f2320361ad54373c3a4551ef634fe8'
-         '2c751d74f728d36353201a4cd5a88803')
-
-prepare() {
-  cd "${srcdir}/${pkgbase}-${pkgver}"
-  patch -Np0 -i ${srcdir}/transmission-2.80-translations-path-fix.patch
-}
+source=("http://download.transmissionbt.com/files/${pkgbase}-${pkgver}.tar.xz"
+        'transmission.tmpfiles')
+md5sums=('0792c67fcbf722f7823e964e09eb16bc'
+         '23f2320361ad54373c3a4551ef634fe8')
 
 build() {
   msg 'Configure source code...'
