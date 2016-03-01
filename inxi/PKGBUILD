@@ -1,9 +1,9 @@
 #Contributions from Arch: https://projects.archlinux.org/svntogit/community.git/tree/trunk/PKGBUILD?h=packages/inxi
 
 pkgname=inxi
-pkgver=2.2.30
+pkgver=2.2.35
 pkgrel=1
-gitcommit=f667be4
+gitcommit=8a3c62c
 pkgdesc="a full featured CLI system information tool"
 url="https://github.com/smxi/inxi"
 license=('GPL')
@@ -18,14 +18,14 @@ optdepends=(
   "lm_sensors: inxi -s sensors output"
   "usbutils: inxi -A usb audio;-N usb networking"
   "kmod: inxi -Ax,-Nx module version"
-  "systemd-sysvcompat: inxi -I runlevel"
+  "systemd: inxi -I runlevel"
   "mesa-demos: inxi -G glx info"
   "xorg-xdpyinfo: inxi -G multi screen resolution"
   "xorg-xprop: inxi -S desktop data"
   "xorg-xrandr: inxi -G single screen resolution"
 )
 source="https://github.com/smxi/inxi/tarball/$gitcommit"
-md5sums=('120fcc43422a5919d465e5e56948a309')
+md5sums=('e793db930699fb6ef37c6e1306f2b64e')
 
 package() {
   cd "smxi-$pkgname-$gitcommit"
