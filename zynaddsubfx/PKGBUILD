@@ -4,17 +4,18 @@
 #_pkgname=ZynAddSubFX
 pkgname=zynaddsubfx
 pkgver=2.5.3
-pkgrel=1
+pkgrel=2
 pkgdesc="Open source additive and substractive software synthesizer, with an integrated effect engine."
 arch=('x86_64')
 url="http://zynaddsubfx.sourceforge.net/"
 license=('GPL2')
 depends=('fftw' 'mxml' 'zlib' 'fltk' 'lash' 'dssi' 'fftw')
 makedepends=('jack' 'ladspa' 'cmake' 'gendesk' 'setconf')
-source=("https://downloads.sourceforge.net/project/${pkgname}/${pkgname}/${pkgver}/${pkgname}-${pkgver}.tar.bz2")
-#        'gentoo-zynaddsubfx-2.4.1-docs.patch'
+source=("https://downloads.sourceforge.net/project/${pkgname}/${pkgname}/${pkgver}/${pkgname}-${pkgver}.tar.bz2"
+        'cmakelist-dssi.diff')
 categories=('multimedia')
-sha1sums=('591aa5e67c02b5dffc3fbc209930010af59b262d')
+sha1sums=('591aa5e67c02b5dffc3fbc209930010af59b262d'
+          'd20477c0468e9597d62c0a1015bbd8402bbfdbe5')
 
 prepare() {
   cd "$srcdir"
@@ -24,12 +25,13 @@ prepare() {
   cd "${srcdir}"
   [[ -e build ]] && rm -rf build
   mkdir -p build
+
+  # patch dssi installation directory
+  cd ${srcdir}/${pkgname}-${pkgver}
+  patch ${srcdir}/${pkgname}-${pkgver}/src/CMakeLists.txt < $srcdir/cmakelist-dssi.diff
 }
 
 build() {
-  # Patch it first
-#  cd "${srcdir}/${pkgname}-${pkgver}"
-#  patch -Np1 -i "${srcdir}/gentoo-zynaddsubfx-2.4.1-docs.patch"
   cd "${srcdir}/build"
   
   cmake "${srcdir}/${pkgname}-${pkgver}" \
@@ -51,7 +53,8 @@ package() {
   make DESTDIR="${pkgdir}" install
 
   # Dirty hack on libraries
-  #mv ${pkgdir}/usr/lib64 ${pkgdir}/usr/lib
+  #mv -v ${pkgdir}/usr/lib64/* ${pkgdir}/usr/lib/
+  #rm -rfv ${pkgdir}/usr/lib64/
 
   # Also copy the data files...
   install -dm755 "${pkgdir}/usr/share/${pkgname}"
