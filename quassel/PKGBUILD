@@ -1,6 +1,6 @@
 pkgname=quassel
-pkgver=0.12.2
-pkgrel=5
+pkgver=0.12.3
+pkgrel=1
 pkgdesc="Next-generation distributed IRC client"
 arch=('x86_64')
 url="http://quassel-irc.org"
@@ -17,16 +17,16 @@ source=("http://quassel-irc.org/pub/quassel-${pkgver}.tar.bz2"
         'quassel.conf')
 install=quassel.install
 backup=(etc/conf.d/quassel.conf)
-md5sums=('f5473a9c5927a0e8cb3a204ced887aa8'
-         '314e6b01dc6657ba48e87c2244f78377'
-         '54137dc71bd4d68acf414f65571dcb07'
-         '95045bafa9bf965d0e2febd5b49514ea'
-         '479229556ba0dd94e3ce28e31e5deea9')
+sha1sums=('8e84e0fd56f17fb5047277bb9107949e610872bd'
+          'd20ca972194142795dae7bcda79012915856452c'
+          '2fb960dc3cafd0a90e52f10c67704ff9b312db71'
+          '40b801ad664e9e0f0d5f1260f7545b6842dd11e8'
+          '575d09f165f12ba35e560be54c8e1cd92321bb4b')
 
 prepare() {
   cd ${pkgname}-${pkgver}
-  patch -Np1 -i ../0001-Fix-build-with-Qt-5.5.patch
-  patch -Np1 -i ../fix-ssl-detection.patch
+#  patch -Np1 -i ../0001-Fix-build-with-Qt-5.5.patch
+#  patch -Np1 -i ../fix-ssl-detection.patch
 }
          
 build() {
