@@ -1,31 +1,33 @@
-# Maintainer: Jeff Huang <s8321414[at]gmail[dot]com>
+source ../kdeapps.conf
 
 pkgname=yakuake
-pkgver=2.9.9
-pkgrel=2
-pkgdesc="A KDE konsole application with the look and feel of that in the Quake engine"
+pkgver=3.0.2
+pkgrel=1
+pkgdesc="A KDE konsole application with the look and feel of that in the Quake engine, kf5 version"
 arch=('x86_64')
 url="http://yakuake.kde.org"
 license=('GPL')
-depends=('kde-baseapps-konsole')
-makedepends=('cmake' 'automoc4')
-categories=('system')
-install="${pkgname}.install"
-source=("http://download.kde.org/stable/${pkgname}/${pkgver}/src/${pkgname}-${pkgver}.tar.xz")
-md5sums=('ef97612710b28d62e43a58bed49cbead')
+depends=('karchive' 'kconfig' 'kcoreaddons' 'kdbusaddons' 'kglobalaccel' 'ki18n' 'kiconthemes' 'kio'
+         'knewstuff' 'knotifications' 'knotifyconfig' 'kparts' 'kwidgetsaddons' 'kwindowsystem')
+makedepends=('extra-cmake-modules')
+conflicts=('yakuake-kf5')
+replaces=('yakuake-kf5')
+source=("http://download.kde.org/stable/yakuake/${pkgver}/src/${pkgname}-${pkgver}.tar.xz")
+md5sums=('6c5eaea40770283078dad6fa288615c5')
 
 build() {
-  cd ${srcdir}
-  mkdir build
-  cd build
-  cmake ../${pkgname}-${pkgver} \
-    -DCMAKE_BUILD_TYPE=Release \
-    -DCMAKE_SKIP_RPATH=ON \
-    -DCMAKE_INSTALL_PREFIX=/usr
+  mkdir -p build && cd build
+  cmake_kf5 ../${pkgname}-${pkgver}
   make
 }
 
-package() {
-  cd ${srcdir}/build
-  make DESTDIR=${pkgdir} install
+check() {
+  cd build
+  make test || return 0
 }
+
+package() {
+  cd build
+  make DESTDIR="${pkgdir}" install
+}
+ 
