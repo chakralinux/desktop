@@ -1,29 +1,27 @@
 pkgname=qmc2
-pkgver=0.57
+pkgver=0.61
 pkgrel=1
 pkgdesc="Qt 4 based UNIX MAME frontend supporting SDLMAME."
 url="http://qmc2.batcom-it.net/"
 license=("GPL")
 arch=('x86_64')
-depends=('qtwebkit' 'phonon' 'sdl' 'libxslt')
+depends=('qtwebkit' 'phonon' 'sdl2' 'libxslt' 'libarchive')
 makedepends=('rsync' 'mesa')
 source=(http://downloads.sourceforge.net/$pkgname/$pkgname-$pkgver.tar.bz2
         'qmamecat.desktop')
-sha1sums=('544c532274bd43c15f082f94e38477327ff77a61'
+sha1sums=('31d6f0aa8d2678fe25be85598b50dcdd53119c1e'
           'b495666abfaca7f9d1241c14d010b6037f66f4d4')
 
 package() {
   cd "$srcdir/$pkgname"
 
-  export CTIME=0
-
-  make PREFIX=/usr DATADIR=/usr/share SYSCONFDIR=/etc QTDIR=/usr
+  make PREFIX=/usr DATADIR=/usr/share SYSCONFDIR=/etc QTDIR=/usr LIBARCHIVE=1
 }
 
 package(){
   cd "$srcdir/$pkgname"
   
-  make PREFIX=/usr DATADIR=/usr/share SYSCONFDIR=/etc QTDIR=/usr DESTDIR=$pkgdir install
+  make PREFIX=/usr DATADIR=/usr/share SYSCONFDIR=/etc QTDIR=/usr LIBARCHIVE=1 DESTDIR=$pkgdir install
 
   install -d $pkgdir/usr/share/{applications,pixmaps}
   install -D -m644 "$srcdir/qmamecat.desktop" "$pkgdir/usr/share/applications"
