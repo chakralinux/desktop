@@ -1,30 +1,31 @@
 pkgname=kwave
 pkgver=0.9.1
-pkgrel=1
+pkgrel=2
 pkgdesc="A sound editor for KDE"
 arch=('x86_64')
 url="http://kwave.sourceforge.net/"
 license=('GPL')
 depends=('audiofile' 'flac' 'fftw' 'plasma-framework' 'libvorbis' 'id3lib' 'libsamplerate' 'libmad' 'opus' 'qt5-multimedia' 'kdoctools' 'kinit' 'qt5-base')
-makedepends=('cmake' 'poxml' 'gettext' 'imagemagick' 'automoc4' 'docbook-xsl' 'librsvg' 'extra-cmake-modules')
+makedepends=('cmake' 'poxml' 'gettext' 'imagemagick' 'automoc4' 'docbook-xsl' 'librsvg' 'extra-cmake-modules' 'kdoctools')
 categories=('multimedia')
 screenshot=('http://kde-apps.org/CONTENT/content-pre1/11781-1.png')
 source=(http://downloads.sourceforge.net/sourceforge/$pkgname/$pkgname-$pkgver-1.tar.bz2)
 md5sums=('414ff3024368a1aea8af8d5ad1d784be')
 
 build() {
+  cd $pkgname-$pkgver
   mkdir -p build && cd build
-
-  cmake "../$pkgname-$pkgver" -DCMAKE_INSTALL_PREFIX=/usr \
+  cmake -DCMAKE_INSTALL_PREFIX=/usr \
   -DLIB_INSTALL_DIR=/usr/lib \
   -DCMAKE_BUILD_TYPE=Release \
+  -DKDE_INSTALL_USE_QT_SYS_PATHS=ON \
   -DWITH_PULSEAUDIO=OFF \
   -DWITH_PHONON=OFF \
-  -DWITH_MP3=ON 
+  -DWITH_MP3=ON ..
   make
 }
 
 package() {
-  cd build/
+  cd $pkgname-$pkgver/build
   make DESTDIR=$pkgdir install
 }
