@@ -1,6 +1,6 @@
 pkgname=chocolate-doom
 pkgver=2.2.1
-pkgrel=1
+pkgrel=2
 pkgdesc="A Doom port reproducing the behavior of the original DOS version."
 arch=('x86_64')
 url="http://www.chocolate-doom.org/"
@@ -10,7 +10,14 @@ makedepends=('python3')
 categories=('games')
 install=$pkgname.install
 source=(http://www.chocolate-doom.org/downloads/${pkgver}/chocolate-doom-${pkgver}.tar.gz)
-md5sums=('20ef24c517f701023aa187c07b587ce6')
+sha1sums=('be0f2b5d642beca8c9ef21ad0472ee9329bc2a78')
+
+prepare() {
+  cd $srcdir/$pkgname-$pkgver
+  
+  # Change binary dir from /usr/games to /usr/bin
+  sed 's|/games|/bin|g' -i src{,/setup}/Makefile.in
+}
 
 build() {
   cd $srcdir/$pkgname-$pkgver
@@ -23,4 +30,24 @@ package() {
   cd $srcdir/$pkgname-$pkgver
 
   make DESTDIR=$pkgdir install
+  
+  mv $pkgdir/usr/share/applications/chocolate-doom.desktop $pkgdir/usr/share/applications/chocolate-doom-setup.desktop
+  mv $pkgdir/usr/share/applications/chocolate-heretic.desktop $pkgdir/usr/share/applications/chocolate-heretic-setup.desktop
+  mv $pkgdir/usr/share/applications/chocolate-hexen.desktop $pkgdir/usr/share/applications/chocolate-hexen-setup.desktop
+  mv $pkgdir/usr/share/applications/chocolate-strife.desktop $pkgdir/usr/share/applications/chocolate-strife-setup.desktop
+  
+  sed -i s!Exec=chocolate-doom!Exec=chocolate-doom-setup!  $pkgdir/usr/share/applications/chocolate-doom-setup.desktop
+  sed -i s!'Name=Chocolate Doom'!'Name=Chocolate Doom Setup'!  $pkgdir/usr/share/applications/chocolate-doom-setup.desktop
+  
+  sed -i s!Exec=chocolate-heretic!Exec=chocolate-heretic-setup!  $pkgdir/usr/share/applications/chocolate-heretic-setup.desktop
+  sed -i s!'Name=Chocolate Heretic'!'Name=Chocolate Heretic Setup'!  $pkgdir/usr/share/applications/chocolate-heretic-setup.desktop
+  
+  sed -i s!Exec=chocolate-hexen!Exec=chocolate-hexen-setup!  $pkgdir/usr/share/applications/chocolate-hexen-setup.desktop
+  sed -i s!'Name=Chocolate Hexen'!'Name=Chocolate Hexen Setup'!  $pkgdir/usr/share/applications/chocolate-hexen-setup.desktop
+  
+  sed -i s!Exec=chocolate-strife!Exec=chocolate-strife-setup!  $pkgdir/usr/share/applications/chocolate-strife-setup.desktop
+  sed -i s!'Name=Chocolate Strife'!'Name=Chocolate Strife Setup'!  $pkgdir/usr/share/applications/chocolate-strife-setup.desktop
+  
+  rm $pkgdir/usr/share/applications/chocolate-setup.desktop
+  rm -dr $pkgdir/usr/share/applications/screensavers
 }
