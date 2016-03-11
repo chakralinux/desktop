@@ -1,6 +1,6 @@
 pkgname=spideroak
 _PkgName=SpiderOak
-pkgver=6.0.1
+pkgver=6.1.3
 pkgrel=1
 pkgdesc="Secure and consolidated free online backup, storage, access, sharing & sync tool for Windows, Mac OS X, and Linux."
 url="https://spideroak.com/"
@@ -13,10 +13,10 @@ options=(!strip)
 install=spideroak.install
 source=("${_PkgName}_${pkgver}_${arch}.tgz"::"https://spideroak.com/getbuild?platform=slackware&arch=x86_64"
         "terms.txt")
-sha512sums=('efbbc74944cc5b2458c6ebf96d932f41a604ed6e17d220454cef299ae991973ff890f69322da6f2109812597fb87d126438c897d057e144ad9a92b12989a4601'
-            '02088e1836db22b3d0b9b95173c258c5d195fb7df418f81708b1be3ec3088b7b079c3cd8ae975fb9831b55a762b7f280225297da7bc847fa8fd3000c5ccbea71')
+sha256sums=('02918c37e3279e3e6e7c49bc5e88a1c8f5a367e1e816b25ddbc559c21753cab7'
+            '4819c8d923ab19e552e877b87adf1d45aca6adcb5dffcb238d7819501e6e6737')
 
 package() {
-  # the lazist way of package
+  # the laziest way of package
   cp -rp ${srcdir}/{opt,etc,usr}/ ${pkgdir}/
 }
