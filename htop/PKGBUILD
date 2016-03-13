@@ -3,7 +3,7 @@
 #
 
 pkgname=htop
-pkgver=1.0.3
+pkgver=2.0.1
 pkgrel=1
 pkgdesc="Interactive process viewer"
 arch=('x86_64')
@@ -22,18 +22,20 @@ prepare() {
 }
 
 build() {
-  cd ${srcdir}/${pkgname}-${pkgver}
+  cd "$pkgname-$pkgver"
+
   ./configure \
-      --prefix=/usr  \
-      --enable-unicode  \
+      --prefix=/usr \
+      --sysconfdir=/etc \
+      --enable-unicode \
       --enable-openvz \
       --enable-vserver \
       --enable-cgroup
-      
-  make 
+
+  make
 }
 
 package() {
-  cd ${srcdir}/${pkgname}-${pkgver}
-  make DESTDIR=${pkgdir} install 
+  make -C "$pkgname-$pkgver" DESTDIR="$pkgdir" install
 }
+md5sums=('f75fe92b4defaa80d99109830f34b5e2')
