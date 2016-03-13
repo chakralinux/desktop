@@ -1,35 +1,19 @@
 pkgbase=python-sympy
 pkgname=('python2-sympy' 'python3-sympy')
-pkgver=0.7.6.1
+pkgver=1.0
 pkgrel=1
 arch=('any')
 pkgdesc='Symbolic manipulation package (Computer Algebra System), written in pure Python'
 url='http://sympy.org/en/index.html'
 license=('BSD')
-makedepends=('python2-mpmath' 'python3-mpmath' 'git')
-source=("git+https://github.com/sympy/sympy.git#tag=sympy-${pkgver}"
+makedepends=('python2-mpmath' 'python3-mpmath' 'python3-setuptools' 'python2-setuptools')
+source=("https://github.com/sympy/sympy/archive/sympy-${pkgver}.tar.gz"
         sympy-0.7.6-strip-internal-mpmath.patch)
-sha512sums=('SKIP'
-            '0b3836580e742c4a22c0b7306a219ebf56eb87b62f7c119cbe56887e642a28097f5223af043874968183601c06c327ad2beade9f34066ab2fd49d365cbc2caec')
+sha256sums=('bf6f4c6c79d7c0c5057f59274ab9c71ae1d35f1c9f979d1c9787ad54ef7cb282'
+            '35eccae3897d2e89ba64c922afa2c93434f2ba3e37d2170d875f6d1910c89327')
 
 prepare() {
-  cd sympy
-  # FS#43210
-  patch -p1 -i ../sympy-0.7.6-strip-internal-mpmath.patch
-
-  cd "$srcdir"
-  cp -a sympy py3-sympy
-
-  sed -i -e 's|#!/usr/bin/env python|#!/usr/bin/env python2|' \
-         -e 's|#!/usr/bin/python|#!/usr/bin/python2|' \
-    sympy/sympy/mpmath/tests/{runtests.py,test_eigen.py,test_levin.py,test_eigen_symmetric.py} \
-    sympy/sympy/mpmath/matrices/{eigen.py,eigen_symmetric.py} \
-    sympy/sympy/utilities/tests/diagnose_imports.py sympy/sympy/benchmarks/bench_symbench.py
-  sed -i -e 's|#!/usr/bin/env python|#!/usr/bin/env python3|' \
-         -e 's|#!/usr/bin/python|#!/usr/bin/python3|' \
-    py3-sympy/sympy/mpmath/tests/{runtests.py,test_eigen.py,test_levin.py,test_eigen_symmetric.py} \
-    py3-sympy/sympy/mpmath/matrices/{eigen.py,eigen_symmetric.py} \
-    py3-sympy/sympy/utilities/tests/diagnose_imports.py py3-sympy/sympy/benchmarks/bench_symbench.py
+  cp -a sympy{,-py2}
 }
 
 build() {
