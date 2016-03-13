@@ -1,32 +1,30 @@
-#
-# Maintainer: Adrián Chaves Fernández (Gallaecio) <adriyetichaves@gmail.com>
-
 pkgname=boost-build
-pkgver=2.0_m12
-pkgrel=4
+pkgver=2016.03
+pkgrel=1
 pkgdesc="Boost build system."
-arch=('i686' 'x86_64')
+arch=('x86_64')
 url="http://www.boost.org/doc/tools/build/"
 license=('custom')
-depends=('boost-libs' 'gcc' 'python')
-makedeps=('boost')
-source=("http://downloads.sourceforge.net/sourceforge/boost/$pkgname-2.0-m12.tar.bz2"
+depends=('boost-libs' 'gcc' 'python3')
+source=("https://github.com/boostorg/build/archive/${pkgver}.tar.gz"
 	"http://www.boost.org/LICENSE_1_0.txt")
-md5sums=('38a40f1c0c2d6eb4f14aa4cf52e9236a'
-         'e4224ccaecb14d942c71d31bef20d78c')
+sha1sums=('0e6936337c25fc87d2aff8ea6c63019e9c1e319a'
+          '3cba29011be2b9d59f6204d6fa0a386b1b2dbd90')
 
+prepare() {
+  cd ${srcdir}/build-${pkgver}
+
+  ./bootstrap.sh
+}          
+          
 package(){
+  cd ${srcdir}/build-${pkgver}
 
-  cd $srcdir
-
-  mkdir -p $pkgdir/usr/share
-  mkdir -p $pkgdir/etc
-
-  rm -Rf $pkgname/jam_src
-
-  cp -R $pkgname $pkgdir/usr/share
-
-  echo "using gcc ;" > $pkgdir/etc/site-config.jam
+  ./b2 install --prefix=${pkgdir}/usr
+  
+  # Removing b2 and bjam, already installed by boost
+  msg2 "Removing /usr/bin/b2 and /usr/bin/bjam files, already installed by boost"
+  rm -rf ${pkgdir}/usr/bin/
 
   # License.
   install -Dm 644 $srcdir/LICENSE_1_0.txt $pkgdir/usr/share/licenses/$pkgname/LICENSE
