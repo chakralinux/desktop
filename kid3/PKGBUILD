@@ -1,27 +1,31 @@
 pkgname=kid3
-pkgver=3.3.1
-pkgrel=2
+pkgver=3.3.2
+pkgrel=1
 pkgdesc="An MP3, Ogg/Vorbis and FLAC tag editor for KDE"
 arch=('x86_64')
 url="http://kid3.sourceforge.net/"
 license=('GPL')
-depends=('id3lib' 'libmp4v2' 'chromaprint' 'ffmpeg' 'qt5-multimedia' 'plasma-framework')
-makedepends=('automoc4' 'cmake' 'taglib' 'docbook-xsl' 'docbook-xml' 'phonon' 'qt5-tools' 
-             'extra-cmake-modules' 'kdoctools' 'kde-runtime')
+depends=('id3lib' 'libmp4v2' 'chromaprint' 'ffmpeg' 'qt5-multimedia' 'plasma-framework'
+	 'phonon-qt5' 'taglib' 'kio' 'desktop-file-utils' 'hicolor-icon-theme')
+makedepends=('cmake' 'docbook-xsl' 'docbook-xml' 'qt5-tools' 'extra-cmake-modules' 'kdoctools')
 categories=('multimedia')
 conflicts='kid3-kf5'
 replaces='kid3-kf5'
 screenshot=('http://pkgs.org/images/linux-software/kid3/kid3-screenshot.png')
 install=${pkgname}.install
 source=("http://sourceforge.net/projects/$pkgname/files/$pkgname/$pkgver/$pkgname-$pkgver.tar.gz")
-sha1sums=('9d69c372b2416f721aed089481d97ab688298f00')
+sha1sums=('592cded9ae52fa1c025b5489fd2b8a4ece69489a')
 
 
 build() {
   mkdir -p ${srcdir}/build
   cd ${srcdir}/build
   cmake ../${pkgname}-${pkgver} \
-    -DWITH_QT5=ON -DWITH_QML=ON  -DWITH_FFMPEG=ON \
+    -DWITH_QT5=ON \
+    -DWITH_QML=ON  \
+    -DWITH_FFMPEG=ON \
+    -DWITH_MP4V2=ON \
+    -DWITH_GSTREAMER=ON \
     -DWITH_APPS="CLI;KDE" \
     -DCMAKE_INSTALL_PREFIX=/usr \
     -DCMAKE_BUILD_TYPE=Release 
