@@ -5,7 +5,7 @@
 
 pkgname=avogadro
 pkgver=1.1.1
-pkgrel=2
+pkgrel=3
 pkgdesc="An advanced molecular editor based on Qt"
 arch=('x86_64')
 url="http://avogadro.cc/wiki/Main_Page"
@@ -15,14 +15,18 @@ makedepends=('cmake' 'boost' 'doxygen' 'libgl')
 categories=('education')
 screenshot=('http://avogadro.openmolecules.net/w/images/7/75/Avogadro-unitcell.png')
 source=("http://downloads.sourceforge.net/${pkgname}/${pkgname}-${pkgver}.tar.bz2"
-        "boost153.patch")
+        "boost153.patch"
+        "avogadro-0001-fix-undefined-reference-to-symbol-XInitThreads.patch"
+)
 sha512sums=('37e2fc9400f8727b7e69d84c13989aaba6fc88287e106a6ed137e4d0fd8ea181dc4ab49b08148d2077754f014748c8ed6f46881f31a1455029f876b599754827'
-            'b8ebad1e70a91408be97554ac4af5872ca9ce62a387568ed32c40c50f0b29b3f6c3db38333408fda119b08f99531fd87e4dec6a5483e3492a1e8fe30b4e42d26')
+            'b8ebad1e70a91408be97554ac4af5872ca9ce62a387568ed32c40c50f0b29b3f6c3db38333408fda119b08f99531fd87e4dec6a5483e3492a1e8fe30b4e42d26'
+            'a0181f4e4d9d649f638c05cc623e52eb62a32e262b9bd4865f986c5015ba5bb8ed59672c1883d7a9521e2bbe46f739eb9346186b227eb14188c1c4f7011970c0')
 
 prepare() {
   mkdir -p build
   cd "${srcdir}/${pkgname}-${pkgver}"
   patch -p1 -i "${srcdir}"/boost153.patch
+  patch -p1 -i "${srcdir}"/avogadro-0001-fix-undefined-reference-to-symbol-XInitThreads.patch
 }
 
 build() {
