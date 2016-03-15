@@ -1,13 +1,14 @@
 # Maintainer: UtG  <utg[dot]chakra.linux[at]gmail[dot]com>
 
 pkgname=openimageio
-pkgver=1.4.14
+pkgver=1.6.11
 pkgrel=1
 pkgdesc="A library for reading and writing images, including classes, utilities, and applications."
 arch=(x86_64)
 url="http://www.openimageio.org/"
 license=('custom')
-depends=('openexr' 'boost-libs' 'jasper' 'glew' 'libtiff' 'opencolorio' 'intel-tbb')
+depends=('openexr' 'boost-libs' 'jasper' 'glew' 'libtiff' 'opencolorio' 'intel-tbb'
+         'ffmpeg' 'openssl' 'libraw' 'openjpeg' 'libwebp')
 makedepends=('cmake' 'qt' 'python2' 'boost' 'mesa' 'git')
 optdepends=('qt: iv image viewer'
             'python2: bindings support')
@@ -23,7 +24,6 @@ build() {
   cmake \
       -DCMAKE_INSTALL_PREFIX=/usr \
       -DPYLIB_INSTALL_DIR=lib/python2.7/site-packages \
-      -DUSE_EXTERNAL_TBB=ON \
       -DOIIO_BUILD_TESTS=OFF \
       ..
   make
