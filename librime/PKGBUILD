@@ -3,23 +3,18 @@
 # Contributor: 	 網軍總司令
 
 pkgname=librime
-_basever=1.2.9
-pkgver=1.2.9.cbe2ffc
+pkgver=1.2.20160314
+_commit=df4192cc0980b21bc45f4eb142ba24cfa78a50e0
 pkgrel=1
 pkgdesc="Rime input method engine"
 arch=('x86_64')
 url="http://code.google.com/p/rimeime/"
 license=('GPL3')
-depends=('boost-libs' 'google-glog' 'kyotocabinet' 'opencc' 'yaml-cpp>=0.5.0' 'marisa')
+depends=('boost-libs' 'opencc' 'yaml-cpp>=0.5.0' 'kyotocabinet' 'google-glog' 'marisa')
 optdepends=('brise: Rime schema repository')
 makedepends=('cmake' 'boost' 'git')
-source=("git+https://github.com/rime/librime.git#commit=cbe2ffcbbde147a741b1d03f4f5b4e408f6ccdb8")
+source=("git+https://github.com/rime/librime.git#commit=$_commit")
 sha512sums=('SKIP')
-
-pkgver() {
-  cd "$pkgname"
-  printf "%s.%s" "${_basever}" "$(git rev-parse --short HEAD)"
-}
 
 build() {
   cd $pkgname
