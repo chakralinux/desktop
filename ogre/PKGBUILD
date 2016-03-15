@@ -7,13 +7,13 @@
 pkgbase=ogre
 pkgname=('ogre' 'ogre-docs')
 pkgver=1.9.0
-pkgrel=1
+pkgrel=2
 pkgdesc="A scene-oriented, flexible 3D engine written in C++"
 arch=('x86_64')
 url='http://www.ogre3d.org'
 license=('custom:MIT')
 depends=('boost-libs' 'freeimage' 'freetype2' 'libxaw' 'libxrandr' 
-         'nvidia-cg-toolkit' 'mesa' 'zziplib' 'ois')
+         'nvidia-cg-toolkit' 'mesa' 'zziplib' 'ois' 'glu')
 makedepends=('boost' 'cmake' 'doxygen' 'graphviz' 'ttf-dejavu' 'mercurial')
 optdepends=('cppunit: unit testing'
             'intel-tbb: better threading support'
@@ -21,10 +21,16 @@ optdepends=('cppunit: unit testing'
             'boost: for developing using ogre')
 categories=('graphics')
 install=ogre.install
-source=("hg+https://bitbucket.org/sinbad/ogre#tag=v${pkgver//./-}")
-md5sums=('SKIP')
+source=("hg+https://bitbucket.org/sinbad/ogre#tag=v${pkgver//./-}"
+        "gcc_gentoo.patch")
+md5sums=('SKIP'
+         'ff86c68ce440b66431cc2d1d4bed1fec')
 #source=("http://downloads.sourceforge.net/${pkgname}/${pkgname}_src_v${pkgver//./-}.tar.bz2")
-#md5sums=('b85e3dcf370a46b3a8624d4fdd722d39')
+
+prepare() {
+  cd ${srcdir}/${pkgbase}
+  patch -Np1 -i ${srcdir}/gcc_gentoo.patch
+}
 
 build() {
   cd ${srcdir}/${pkgbase}
@@ -35,6 +41,7 @@ build() {
   cd build
 
   # generate CMake Makefile
+  CXXFLAGS+=' -Wno-deprecated-declarations'
   cmake .. \
  	 -DCMAKE_INSTALL_PREFIX=/usr \
 	 -DOGRE_INSTALL_PLUGINS_HEADERS=TRUE \
