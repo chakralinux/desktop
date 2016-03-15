@@ -2,29 +2,29 @@
 # CCR Maintainer: ahjolinna <ahjolinna@ovi.com>
 
 pkgname=lucene++
-pkgver=3.0.6
-pkgrel=2
+pkgver=3.0.7
+pkgrel=1
 pkgdesc='C++ port of the popular Java Lucene library'
 arch=('x86_64')
 url='https://github.com/luceneplusplus/LucenePlusPlus'
 license=('GPL' 'Apache')
 depends=('boost-libs')
 makedepends=('boost' 'cmake' 'subversion')
-source=("$pkgname-$pkgver.tar.gz::https://github.com/luceneplusplus/LucenePlusPlus/archive/master.tar.gz")
-md5sums=('a93c682330197516ce7a60137b261f48')
+source=("$pkgname-$pkgver.tar.gz::https://github.com/luceneplusplus/LucenePlusPlus/archive/rel_${pkgver}.tar.gz"
+        "boost.patch")
+md5sums=('e260c1ff9c10af7070faee29f325f955'
+         'e1124c9fc9d971b6a12135257992b15c')
 
 prepare() {
   mkdir build
-  sed -i \
-    -e 's#SET(LUCENE++_VERSION_REVISION.*#SET(LUCENE++_VERSION_REVISION "5")#' \
-    -e 's#SET(LUCENE++_VERSION_PATCH.*#SET(LUCENE++_VERSION_PATCH "0")#' \
-    $srcdir/LucenePlusPlus-master/CMakeLists.txt
+  cd LucenePlusPlus-rel_${pkgver}
+  patch -Np1 -i ${srcdir}/boost.patch
 }
 
 build() {
   cd build
 
-  cmake ../LucenePlusPlus-master \
+  cmake ../LucenePlusPlus-rel_${pkgver} \
     -DCMAKE_INSTALL_PREFIX=/usr \
     -DLIB_DESTINATION=/usr/lib \
     -DBoost_LIBRARY_DIR=/usr/lib \
