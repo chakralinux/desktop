@@ -3,15 +3,30 @@
 pkgname=pokerth
 _realname=PokerTH
 pkgver=1.1.1
-pkgrel=6
+pkgrel=7
 pkgdesc="PokerTH is a Texas Holdem poker game written in C++/Qt."
 arch=('x86_64')
 license=('AGPL3' 'custom:Variety of FOSS licenses for data files')
 depends=('boost-libs' 'curl' 'gnutls' 'libgsasl' 'libircclient' 'qt' 'sdl_mixer' 'tinyxml' 'protobuf')
 makedepends=('boost')
 url="http://www.pokerth.net/"
-source=("http://downloads.sourceforge.net/sourceforge/${pkgname}/${_realname}-${pkgver}-src.tar.bz2")
-md5sums=('a7f76f95782099f966e5f2b6809f502a')
+
+source=("http://downloads.sourceforge.net/sourceforge/pokerth/$_realname-$pkgver-src.tar.bz2"
+        '0001-Qt-5.5.0-patch-for-qtsingleapplication.patch'
+        'pokerth-1.1.1-Qualify-std-ifstream-and-std-ofstream.patch')
+md5sums=('a7f76f95782099f966e5f2b6809f502a'
+         'f4ecab0a6435f1b3b0654145b75d6e7c'
+         '26b02c7e5c50484485570ace9b63be5b')
+
+prepare() {
+  cd "$srcdir/$_realname-$pkgver-src"
+
+  # https://github.com/pokerth/pokerth/commit/731f5f05f540
+  patch -Np1 -i ../0001-Qt-5.5.0-patch-for-qtsingleapplication.patch
+
+  # https://github.com/pokerth/pokerth/commit/69f820bb3
+  patch -p1 -i ../pokerth-1.1.1-Qualify-std-ifstream-and-std-ofstream.patch
+}
 
 build() {
   cd "${srcdir}/${_realname}-${pkgver}-src"
