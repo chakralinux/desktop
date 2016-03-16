@@ -1,0 +1,59 @@
+# $Id$
+# Maintainer: Sven-Hendrik Haase <sh@lutzhaase.com>
+# Contributor: Alexander Rødseth <rodseth@gmail.com>
+# Contributor: Thomas Dziedzic < gostrc at gmail >
+# Contributor: Tarmo Heiskanen <turskii@gmail.com>
+
+pkgname=('python3-flask' 'python2-flask')
+pkgver=0.10.1
+pkgrel=1
+pkgdesc='Micro webdevelopment framework for Python'
+url='http://flask.pocoo.org/'
+arch=('any')
+license=('custom:BSD')
+makedepends=('python3-setuptools' 'python2-setuptools')
+source=("http://pypi.python.org/packages/source/F/Flask/Flask-$pkgver.tar.gz")
+sha256sums=('4c83829ff83d408b5e1d4995472265411d2c414112298f2eb4b359d9e4563373')
+
+prepare() {
+  cp -r "Flask-$pkgver" "python3-flask-$pkgver"
+  cp -r "Flask-$pkgver" "python2-flask-$pkgver"
+}
+
+build_python3-flask() {
+  cd "$pkgname-$pkgver"
+
+  python3 setup.py build
+}
+
+build_python2-flask() {
+  cd "$pkgname-$pkgver"
+
+  python setup.py build
+}
+
+check_python3-flask() {
+  cd "$pkgname-$pkgver"
+  python3 setup.py test
+
+  cd "$pkgname-$pkgver"
+  python2 setup.py test
+}
+
+package_python3-flask() {
+  depends=('python3-werkzeug' 'python3-jinja' 'python3-itsdangerous')
+  cd "$pkgname-$pkgver"
+
+  python3 setup.py install --prefix=/usr --root="$pkgdir" --optimize=1
+  install -Dm644 LICENSE "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
+}
+
+package_python2-flask() {
+  depends=('python2-werkzeug' 'python2-jinja' 'python2-itsdangerous')
+  cd "$pkgname-$pkgver"
+
+  python2 setup.py install --root="$pkgdir" --optimize=1
+  install -Dm644 LICENSE "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
+}
+
+# vim:set ts=2 sw=2 et:

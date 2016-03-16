@@ -2,17 +2,17 @@
 
 pkgbase=python-numpy
 pkgname=('python2-numpy' 'python3-numpy')
-pkgver=1.10.2
+pkgver=1.10.4
 pkgrel=1
 pkgdesc="Scientific tools for Python"
-arch=('i686' 'x86_64')
+arch=('x86_64')
 license=('custom')
 url="http://www.numpy.org/"
 makedepends=('cblas' 'lapack' 'python3' 'python2' 'python3-setuptools' 'python2-setuptools' 'gcc-fortran'
 	'python3-nose' 'python2-nose' 'python3-cython' 'python2-cython')
 options=('staticlibs')
 source=("$pkgbase-$pkgver.tar.gz::https://github.com/numpy/numpy/archive/v$pkgver.tar.gz" 'site.cfg')
-md5sums=('74268c2ec25fd917756e10e39bd179c0'
+md5sums=('3cb325c3dff03b5bc15206c757a26116'
          '6ac5f9dac5d4c0e25a2eba6c98bf5b3c')
 
 prepare() {
@@ -70,8 +70,8 @@ package_python3-numpy() {
   depends=('lapack' 'python3' 'cblas')
   optdepends=('python3-nose: testsuite' 'atlas-lapack: for improved performance of some linear algebra operations')
 
-  _pyver=3.4
-  _pyinc=3.4m
+  _pyver=3.5
+  _pyinc=3.5m
 
   export ATLAS=None
   export LDFLAGS="$LDFLAGS -shared"

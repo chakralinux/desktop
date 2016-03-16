@@ -6,28 +6,17 @@
 _pkgname=feedparser
 pkgbase=python-feedparser
 pkgname=('python2-feedparser' 'python3-feedparser' 'python3-sgmllib')
-pkgver=5.1.3
-pkgrel=3
+pkgver=5.2.1
+pkgrel=1
 pkgdesc="feedparser is a Python library that parses feeds in all known formats, including Atom, RSS, and RDF."
 arch=('any')
-url="http://code.google.com/p/feedparser/"
+url="https://github.com/kurtmckee/feedparser/"
 license=('MIT')
-depends=('python2' 'libxml2')
 makedepends=('python2-setuptools' 'python3-setuptools')
-replaces=('python-feedparser')
-provides=('python-feedparser')
-source=("http://${_pkgname}.googlecode.com/files/${_pkgname}-${pkgver}.tar.bz2"
-        fix-chardet-support-in-python-3.patch)
-md5sums=('6fb6372a1dc2f56d4d79d740b8f49f25'
-         '8d169c4abcccfcde1681f845a9c6cbd4')
+source=(feedparser-${pkgver}.tar.gz::https://github.com/kurtmckee/feedparser/archive/${pkgver}.tar.gz)
+sha1sums=('13c9a17f821e46ba9a34d8777e0ae47a6eb86de4')
 
 prepare() {
-  # http://code.google.com/p/feedparser/issues/detail?id=384
-  # https://bugs.archlinux.org/task/33254
-  patch -d "feedparser-$pkgver" -p1 -i \
-    "$srcdir/fix-chardet-support-in-python-3.patch"
-
-  chmod 644  feedparser-${pkgver}/feedparser/feedparser.egg-info/*
   cp -r feedparser-${pkgver} feedparser-${pkgver}-python2
   cp -r feedparser-${pkgver} feedparser-${pkgver}-python3
   cp -r feedparser-${pkgver} feedparser-${pkgver}-sgmllib
@@ -38,7 +27,7 @@ prepare() {
 
 build() {
   cd feedparser-${pkgver}-sgmllib
-  python3 /usr/lib/python3.4/compileall.py feedparser/sgmllib3.py
+  python3 /usr/lib/python3.5/compileall.py feedparser/sgmllib3.py
 }
 
 package_python2-feedparser() {
@@ -65,7 +54,7 @@ package_python3-sgmllib() {
   
   cd "${srcdir}/feedparser-${pkgver}-sgmllib"
   install -Dm644 feedparser/sgmllib3.py \
-    "${pkgdir}/usr/lib/python3.4/site-packages/sgmllib.py"
-  install -Dm644 feedparser/__pycache__/sgmllib3.cpython-34.pyc \
-    "${pkgdir}/usr/lib/python3.4/site-packages/__pycache__/sgmllib.cpython-34.pyc"
+    "${pkgdir}/usr/lib/python3.5/site-packages/sgmllib.py"
+  install -Dm644 feedparser/__pycache__/sgmllib3.cpython-35.pyc \
+    "${pkgdir}/usr/lib/python3.5/site-packages/__pycache__/sgmllib.cpython-35.pyc"
 }

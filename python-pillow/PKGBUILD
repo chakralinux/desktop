@@ -1,25 +1,27 @@
 pkgbase=python-pillow
 pkgname=(python3-pillow python2-pillow)
-pkgver=2.7.0
+pkgver=3.1.1
 pkgrel=1
+# consider splitting out sane if this gets weird enough
+_sanever=2.8.2
 _appname=Pillow
 _py2basever=2.7
-_py3basever=3.4m
+_py3basever=3.5m
 pkgdesc="Python Imaging Library (PIL) fork. Python3 version."
 arch=('x86_64')
 url="http://python-pillow.github.io/"
 license=('BSD')
 makedepends=('python3-setuptools' 'python2-setuptools' 'lcms' 'libwebp' 'tk' 'sane')
-source=("http://pypi.python.org/packages/source/P/$_appname/$_appname-$pkgver.zip"
-        "$pkgbase-$pkgver.tar.gz::https://github.com/python-pillow/Sane/archive/v$pkgver.tar.gz")
-sha256sums=('33a5d0145e82326e781ddee1ad375f92cb84f8cfafea56e9504682adff64a5ee'
-            '65c943d6f36f2e85205816ad52da1bf9046025c79568412dad6fef1a37edfa42')
+source=("http://pypi.python.org/packages/source/P/$_appname/$_appname-$pkgver.tar.gz"
+        "Sane-$_sanever.tar.gz::https://github.com/python-pillow/Sane/archive/v$_sanever.tar.gz")
+md5sums=('d382a86c4b9b1c8de684bd00dad43bb8'
+         '295f1c745ab4da6a34b524019b181978')
 
 prepare() {
   cd "$srcdir"
   # allow sane to build
-  sed -i "s|os.path.join|'../libImaging', &|" "$srcdir/Sane-$pkgver/setup.py"
-  cp -r "$srcdir/Sane-$pkgver" "$srcdir/$_appname-$pkgver/Sane"
+  sed -i "s|os.path.join|'../libImaging', &|" "$srcdir/Sane-$_sanever/setup.py"
+  cp -r "$srcdir/Sane-$_sanever" "$srcdir/$_appname-$pkgver/Sane"
   # py2 and py3
   cp -r "$srcdir/$_appname-$pkgver" "$srcdir/${_appname}2-$pkgver"
 }  
@@ -34,7 +36,7 @@ package_python3-pillow() {
   pushd Sane
     python3 setup.py install --root="${pkgdir}/" --optimize=0
   popd
-  install -Dm644 docs/LICENSE "${pkgdir}/usr/share/licenses/${pkgname}/LICENSE"
+  install -Dm644 LICENSE "${pkgdir}/usr/share/licenses/${pkgname}/LICENSE"
 
   install -dm755 "${pkgdir}/usr/include/python${_py3basever}/"
   install -m644 -t "${pkgdir}/usr/include/python${_py3basever}/" libImaging/*.h
@@ -62,7 +64,7 @@ package_python2-pillow() {
     python2 setup.py install --root="${pkgdir}/" --optimize=0
   popd
 
-  install -Dm644 docs/LICENSE "${pkgdir}/usr/share/licenses/$pkgname/LICENSE"
+  install -Dm644 LICENSE "${pkgdir}/usr/share/licenses/$pkgname/LICENSE"
 
   install -dm755 "${pkgdir}/usr/include/python${_py2basever}/"
   install -m644 -t "${pkgdir}/usr/include/python${_py2basever}/" libImaging/*.h

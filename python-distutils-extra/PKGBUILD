@@ -3,21 +3,19 @@
 
 pkgbase=python-distutils-extra
 pkgname=('python3-distutils-extra' 'python2-distutils-extra')
-pkgver=2.38
-pkgrel=2
+pkgver=2.39
+pkgrel=1
 pkgdesc='Enhancements to the Python build system'
 arch=('x86_64')
 license=('GPL')
 url=https://launchpad.net/python-distutils-extra
 makedepends=('python2-setuptools' 'python3-setuptools' 'intltool')
 source=(http://launchpad.net/$pkgbase/trunk/$pkgver/+download/$pkgbase-$pkgver.tar.gz)
-md5sums=('4e4c9bee92a3ca8bfd915f3adcf14648')
+md5sums=('16e06db0ef73a35b4bff4b9eed5699b5')
 
 
 package_python2-distutils-extra() {
   depends=('intltool' 'python2')
-  replaces=('python-distutils-extra')
-  provides=('python-distutils-extra')
 
   cd "${srcdir}/$pkgbase-$pkgver"
   python2 setup.py install --root="${pkgdir}"

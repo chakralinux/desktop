@@ -1,35 +1,33 @@
 pkgbase=python-sympy
 pkgname=('python2-sympy' 'python3-sympy')
 pkgver=1.0
-pkgrel=1
+pkgrel=2
 arch=('any')
 pkgdesc='Symbolic manipulation package (Computer Algebra System), written in pure Python'
 url='http://sympy.org/en/index.html'
 license=('BSD')
 makedepends=('python2-mpmath' 'python3-mpmath' 'python3-setuptools' 'python2-setuptools')
-source=("https://github.com/sympy/sympy/archive/sympy-${pkgver}.tar.gz"
-        sympy-0.7.6-strip-internal-mpmath.patch)
-sha256sums=('bf6f4c6c79d7c0c5057f59274ab9c71ae1d35f1c9f979d1c9787ad54ef7cb282'
-            '35eccae3897d2e89ba64c922afa2c93434f2ba3e37d2170d875f6d1910c89327')
+source=("https://github.com/sympy/sympy/archive/sympy-${pkgver}.tar.gz")
+sha256sums=('bf6f4c6c79d7c0c5057f59274ab9c71ae1d35f1c9f979d1c9787ad54ef7cb282')
 
 prepare() {
   cp -a sympy{,-py2}
 }
 
 build() {
-  cd sympy
+  cd "$srcdir"/sympy
   python2 setup.py build
 
-  cd ../py3-sympy
+  cd "$srcdir"/sympy-py2
   python3 setup.py build
 }
 
 check() {
-  cd sympy
-#  python2 setup.py test
+  cd "$srcdir"/sympy
+  python2 setup.py test
 
-  cd ../py3-sympy
-#  python3 setup.py test
+  cd "$srcdir"/sympy-py2
+  python3 setup.py test
 }
 
 package_python2-sympy() {

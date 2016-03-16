@@ -1,14 +1,13 @@
 pkgbase=python-psutil
 pkgname=('python3-psutil' 'python2-psutil')
-pkgver=3.3.0
+pkgver=4.0.0
 pkgrel=1
 arch=('x86_64')
 url='https://github.com/giampaolo/psutil'
 license=('custom: BSD')
-makedepends=('python3' 'python3-setuptools' 'python2' 'python2-setuptools' 'python2-mock' 'python3-mock')
-checkdepends=('net-tools' 'procps-ng')
+makedepends=('python3' 'python3-setuptools' 'python2' 'python2-setuptools')
 source=("https://pypi.python.org/packages/source/p/psutil/psutil-${pkgver}.tar.gz")
-sha256sums=('421b6591d16b509aaa8d8c15821d66bb94cb4a8dc4385cad5c51b85d4a096d85')
+md5sums=('6f327b7cc813ad6d4584be54ac89bae8')
 
 build() {
   cd psutil-${pkgver}
@@ -20,20 +19,6 @@ build() {
   python2 setup.py build --build-lib=build/python2
   find build/python2 -type f -exec \
     sed -i '1s,^#! \?/usr/bin/\(env \|\)python$,#!/usr/bin/python2,' {} \;
-}
-
-check() {
-  cd psutil-${pkgver}
-
-  msg2 python3
-  export PYTHONPATH="$PWD/build/python3"
-  #python test/test_psutil.py
-  python3 test/test_memory_leaks.py
-
-  msg2 python2
-  export PYTHONPATH="$PWD/build/python2"
-  #python2 test/test_psutil.py
-  python2 test/test_memory_leaks.py
 }
 
 package_python3-psutil() {

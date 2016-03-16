@@ -3,37 +3,36 @@
 
 pkgbase=python-simplejson
 pkgname=('python2-simplejson' 'python3-simplejson')
-pkgver=3.6.3
+pkgver=3.8.2
 pkgrel=1
 pkgdesc="Simple, fast, extensible JSON encoder/decoder for Python"
 license=('MIT')
 arch=('x86_64')
 url='http://undefined.org/python/#simplejson'
 makedepends=('python2-setuptools' 'python3-setuptools')
-#source=(http://pypi.python.org/packages/source/s/$_pkgname/$_pkgname-${pkgver}.tar.gz)
-source=("$pkgname-$pkgver.tar.gz::https://github.com/simplejson/simplejson/tarball/v${pkgver}")
-sha256sums=('27418332d37ec41be6752ce44d63a5af34abf74f7288958baa3f83aaa1a4db0e')
+source=("git://github.com/simplejson/simplejson.git#tag=v$pkgver")
+md5sums=('SKIP')
 
 package_python2-simplejson() {
   depends=('python2')
   replaces=(python-simplejson)
   provides=(python-simplejson)
   
-  cd "simplejson-simplejson-"*
+  cd simplejson
   python2 setup.py install --root=${pkgdir}
 
   # License
-  install -Dm644 "$srcdir/simplejson-simplejson"-*/LICENSE.txt \
+  install -Dm644 "$srcdir/simplejson/LICENSE.txt" \
     "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
 }
 
 package_python3-simplejson() {
   depends=('python3')
 
-  cd "simplejson-simplejson-"*
+  cd simplejson
   python3 setup.py install --root="$pkgdir"
   
   # License
-  install -Dm644 "$srcdir/simplejson-simplejson"-*/LICENSE.txt \
+  install -Dm644 "$srcdir/simplejson/LICENSE.txt" \
     "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
 }

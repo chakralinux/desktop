@@ -1,0 +1,58 @@
+
+pkgbase=python-pytest-httpbin
+pkgname=('python3-pytest-httpbin' 'python2-pytest-httpbin')
+_pypiname=pytest-httpbin
+pkgver=0.2.0
+pkgrel=1
+pkgdesc='A py.test fixture for httpbining code'
+arch=('any')
+license=('MIT')
+url='https://github.com/kevin1024/pytest-httpbin'
+makedepends=('python3-pytest' 'python2-pytest' 'python3-flask' 'python2-flask'
+             'python3-decorator' 'python2-decorator' 'python3-six' 'python2-six'
+             'python3-httpbin' 'python2-httpbin' 'git')
+checkdepends=('python3-requests' 'python2-requests' 'python3-pytest-runner' 'python2-pytest-runner')
+source=("git+https://github.com/kevin1024/pytest-httpbin.git#tag=v$pkgver"
+        LICENSE)
+md5sums=('SKIP'
+         '784ac13962be640b76df58e023712ddd')
+
+prepare() {
+  cp -a "${srcdir}/${_pypiname}"{,-py2}
+}
+
+build() {
+  cd "$srcdir/$_pypiname"
+  python3 setup.py build
+
+  cd "$srcdir/$_pypiname-py2"
+  python2 setup.py build
+}
+
+check() {
+  cd "$srcdir/$_pypiname"
+  python3 setup.py install --root="$PWD/tmp_install" --optimize=1
+  PYTHONPATH="$PWD/tmp_install/usr/lib/python3.5/site-packages:$PYTHONPATH" python setup.py ptr
+
+  cd "$srcdir/$_pypiname-py2"
+  python2 setup.py install --root="$PWD/tmp_install" --optimize=1
+  PYTHONPATH="$PWD/tmp_install/usr/lib/python2.7/site-packages:$PYTHONPATH" python2 setup.py ptr
+}
+
+package_python3-pytest-httpbin() {
+  depends=('python3-pytest' 'python3-flask' 'python3-decorator' 'python3-six' 'python3-httpbin')
+
+  cd "$srcdir/$_pypiname"
+  python3 setup.py install --root="$pkgdir"/ --optimize=1
+  install -D -m644 ../LICENSE "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
+}
+
+package_python2-pytest-httpbin() {
+  depends=('python2-pytest' 'python2-flask' 'python2-decorator' 'python2-six' 'python2-httpbin')
+
+  cd "$srcdir/$_pypiname-py2"
+  python2 setup.py install --root="$pkgdir"/ --optimize=1
+  install -D -m644 ../LICENSE "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
+}
+
+# vim:set ts=2 sw=2 et:

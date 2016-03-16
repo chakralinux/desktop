@@ -5,7 +5,7 @@
 pkgbase=python-py
 pkgname=('python2-py' 'python3-py')
 pkgver=1.4.31
-pkgrel=1
+pkgrel=2
 pkgdesc="Python rapid development tools"
 arch=('any')
 license=('MIT')
@@ -30,10 +30,10 @@ build() {
 
 check() {
   cd "$srcdir/py-${pkgver}-py3"
-  PYTHONPATH="$PWD/build/lib:$PYTHONPATH" LANG=en_US.utf8 py.test
+  PYTHONPATH="$PWD/build/lib:$PYTHONPATH" LC_ALL="en_US.UTF-8" py.test
 
   cd "$srcdir/py-${pkgver}-py2"
-  PYTHONPATH="$PWD/build/lib:$PYTHONPATH" LANG=en_US.utf8 py.test2
+  PYTHONPATH="$PWD/build/lib:$PYTHONPATH" LC_ALL="en_US.UTF-8" py.test2
 }
 
 package_python3-py() {
