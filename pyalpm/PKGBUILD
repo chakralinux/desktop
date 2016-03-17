@@ -4,20 +4,24 @@
 
 pkgname=pyalpm
 pkgver=0.7
-pkgrel=1
+pkgrel=2
 pkgdesc="Libalpm bindings for Python 3"
 arch=('x86_64')
 url="http://projects.archlinux.org/users/remy/pyalpm.git/"
 license=('GPL')
-depends=('python3>=3.4' 'pacman>=4.2')
-source=("https://sources.archlinux.org/other/pyalpm/$pkgname-$pkgver.tar.gz")
-sha1sums=('62fafb93d30c27b5a5a09df3e802d6e50fed9802')
+depends=('python3>=3.5' 'pacman>=4.2')
+source=("https://sources.archlinux.org/other/pyalpm/$pkgname-$pkgver.tar.gz" 
+        "py35.patch::https://projects.archlinux.org/users/remy/pyalpm.git/patch/?id=dc61782e9bd085a8a09bc7954231eb15e6e085e5")
+sha1sums=('62fafb93d30c27b5a5a09df3e802d6e50fed9802'
+          'f8ec083281e4b4815381fb5388f83703ff692102')
+
+prepare() {
+  cd ${srcdir}/${pkgname}-${pkgver}
+  patch -Np1 -i ../py35.patch
+}
 
 build() {
   cd ${srcdir}/${pkgname}-${pkgver}
-
-  # workaround Python packaging issue (FS#34658)
-  export CFLAGS="$CFLAGS -Wno-format"
 
   python3 setup.py build
 }
