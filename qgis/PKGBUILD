@@ -1,7 +1,5 @@
-# Contributions from AUR: https://aur.archlinux.org/packages/qgis/
-
 pkgname=qgis
-pkgver=2.12.3
+pkgver=2.14.0
 pkgrel=1
 pkgdesc='A Geographic Information System (GIS) that supports vector, raster and database formats'
 url='http://qgis.org/'
@@ -16,49 +14,67 @@ optdepends=('fcgi: qgis mapserver'
             'gsl: georeferencer'
             'python2-sip: python-support'
             'postgis: postgis support and SPIT plugin')
-source=("http://qgis.org/downloads/${pkgname}-${pkgver}.tar.bz2")
-sha1sums=('b2b8b6bda01ebec7ccbc8ab41d0e00fa6be217be')
+source=("http://qgis.org/downloads/$pkgname-$pkgver.tar.bz2")
+sha1sums=('9257ada87b63b1517edfb27ef9d4b6e55544cda0')
 
 
 prepare() {
-    rm -rf ${srcdir}/${pkgname}-${pkgver}/build
-    mkdir ${srcdir}/${pkgname}-${pkgver}/build
+  cd $pkgname-$pkgver
+
+  # Fix references to "python"
+  sed -i 's/\(env \|\/usr\/bin\/\)python$/&2/' $(find . -iname "*.py")
+  sed -i 's/python /python2 /' scripts/pyuic4-wrapper.sh
+
+  # Remove mime types already defined by freedesktop.org
+  sed -e '/type="image\/tiff"/,/<\/mime-type>/d' \
+      -e '/type="image\/jpeg"/,/<\/mime-type>/d' \
+      -e '/type="image\/jp2"/,/<\/mime-type>/d' \
+      -e '/type="application\/x-adobe-mif"/,/<\/mime-type>/d' \
+      -i debian/qgis.xml
+
+  # Fix console.py for new pyqt build system
+  sed -e '/from PyQt4.QtCore/ s/$/, QT_VERSION/' \
+      -e '/import pyqtconfig/d' \
+      -e 's/pyqtconfig.*qt_version/QT_VERSION/' \
+      -i python/console/console.py
+
+  [[ -d build ]] || mkdir build
 }
 
 build() {
-    cd ${srcdir}/${pkgname}-${pkgver}/build
-    cmake ../ \
+  cd $pkgname-$pkgver/build
+
+  cmake -G "Unix Makefiles" ../ \
         -DCMAKE_BUILD_TYPE=Release \
         -DCMAKE_INSTALL_PREFIX=/usr \
         -DWITH_GRASS=OFF \
         -DGRASS_PREFIX=/opt/grass \
         -DGRASS_INCLUDE_DIR=/opt/grass/include/ \
         -DQGIS_MANUAL_SUBDIR=share/man \
-        -DPYTHON_LIBRARY=/usr/lib/libpython2.7.so \
         -DPYTHON_EXECUTABLE=/usr/bin/python2 \
-        -DPYTHON_SITE_PACKAGES_DIR=/usr/lib/python2.7/site-packages \
-        -DPYTHON_INCLUDE_PATH=/usr/include/python2.7
-    make
+        -DENABLE_TESTS=FALSE \
+        -DCMAKE_SKIP_RPATH=TRUE
+  make
 }
 
 package() {
-    cd ${srcdir}/${pkgname}-${pkgver}/build
-    make DESTDIR=${pkgdir} install
+    cd $pkgname-$pkgver/build
+    make DESTDIR=$pkgdir install
 
     # create a more user-friendly application name link
-    ln -s /usr/bin/qgis "${pkgdir}/usr/bin/quantum-gis"
+    ln -s /usr/bin/qgis "$pkgdir/usr/bin/quantum-gis"
 
     # install some freedesktop.org compatibility
-    install -D -m644 "${srcdir}/${pkgname}-${pkgver}/debian/qgis.desktop" \
-    "${pkgdir}/usr/share/applications/qgis.desktop"
-    install -D -m644 "${srcdir}/${pkgname}-${pkgver}/debian/qbrowser.desktop" \
-    "${pkgdir}/usr/share/applications/qbrowser.desktop"
-    install -dm755 "${pkgdir}/usr/share/pixmaps" \
-    "${pkgdir}/usr/share/mimelnk/application"
-    for mime in "${srcdir}/${pkgname}-${pkgver}/debian/mime/application/"*.desktop
-        do install -m644 "${mime}" \
-            "${pkgdir}/usr/share/mimelnk/application"
+    install -D -m644 ../debian/qgis.desktop \
+    "$pkgdir/usr/share/applications/qgis.desktop"
+    install -D -m644 ../debian/qbrowser.desktop \
+    "$pkgdir/usr/share/applications/qbrowser.desktop"
+    install -dm755 "$pkgdir/usr/share/pixmaps" \
+    "$pkgdir/usr/share/mimelnk/application"
+    for mime in ../debian/mime/application/*.desktop
+        do install -m644 "$mime" \
+            "$pkgdir/usr/share/mimelnk/application"
         done
-    ln -s /usr/share/qgis/images/icons/qgis-icon.png "${pkgdir}/usr/share/pixmaps/qgis-icon.png"
-    ln -s /usr/share/qgis/images/icons/qgis-mime-icon.png "${pkgdir}/usr/share/pixmaps/qgis-mime-icon.png"
+    ln -s /usr/share/qgis/images/icons/qgis-icon.png "$pkgdir/usr/share/pixmaps/qgis-icon.png"
+    ln -s /usr/share/qgis/images/icons/qgis-mime-icon.png "$pkgdir/usr/share/pixmaps/qgis-mime-icon.png"
 }
