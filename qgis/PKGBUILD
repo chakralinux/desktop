@@ -1,6 +1,6 @@
 pkgname=qgis
 pkgver=2.14.0
-pkgrel=1
+pkgrel=2
 pkgdesc='A Geographic Information System (GIS) that supports vector, raster and database formats'
 url='http://qgis.org/'
 license=('GPL')
@@ -20,24 +20,6 @@ sha1sums=('9257ada87b63b1517edfb27ef9d4b6e55544cda0')
 
 prepare() {
   cd $pkgname-$pkgver
-
-  # Fix references to "python"
-  sed -i 's/\(env \|\/usr\/bin\/\)python$/&2/' $(find . -iname "*.py")
-  sed -i 's/python /python2 /' scripts/pyuic4-wrapper.sh
-
-  # Remove mime types already defined by freedesktop.org
-  sed -e '/type="image\/tiff"/,/<\/mime-type>/d' \
-      -e '/type="image\/jpeg"/,/<\/mime-type>/d' \
-      -e '/type="image\/jp2"/,/<\/mime-type>/d' \
-      -e '/type="application\/x-adobe-mif"/,/<\/mime-type>/d' \
-      -i debian/qgis.xml
-
-  # Fix console.py for new pyqt build system
-  sed -e '/from PyQt4.QtCore/ s/$/, QT_VERSION/' \
-      -e '/import pyqtconfig/d' \
-      -e 's/pyqtconfig.*qt_version/QT_VERSION/' \
-      -i python/console/console.py
-
   [[ -d build ]] || mkdir build
 }
 
