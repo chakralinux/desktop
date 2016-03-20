@@ -16,7 +16,8 @@ post_install() {
 
 EOF
 # see which is the user name
-NAME=$(logname)
+NAME=$(who -m)
+NAME=${NAME%% *}
 
 # create a .desktop entry for autostart
 runuser $NAME -c 'echo "[Desktop Entry]
