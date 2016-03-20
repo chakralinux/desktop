@@ -1,5 +1,5 @@
-pkgname=routino-experimental
-pkgver=r1853
+pkgname=routino
+pkgver=3.1.1
 pkgrel=1
 pkgdesc='Router for OpenStreetMap Data'
 arch=('x86_64')
@@ -7,20 +7,13 @@ url='http://www.routino.org/'
 license=('AGPL3')
 depends=('zlib' 'bzip2')
 makedepends=('make' 'subversion')
-conflicts=('routino')
-provides=('routino')
-source=("$pkgname::svn+http://routino.org/svn/trunk/")
-sha256sums=('SKIP')
-
-pkgver() {
-    cd "$pkgname"
-
-    local ver="$(svnversion)"
-    printf "r%s" "${ver//[[:alpha:]]}"
-}
+conflicts=('routino-experimental')
+replaces=('routino-experimental')
+source=("http://routino.org/download/routino-$pkgver.tgz")
+sha256sums=('23b9fce43f0a85c9efe220c6c72026dd7b37f6a4a5153bb9dc4c4b0747c7f282')
 
 prepare() {
-    cd "$pkgname"
+    cd "$pkgname-$pkgver"
 
     sed -i 's|prefix=/usr/local|prefix=/usr|' Makefile.conf
 }
@@ -34,13 +27,13 @@ build() {
         exit 1
     fi
 
-    cd "$pkgname"
+    cd "$pkgname-$pkgver"
 
     make
 }
 
 package() {
-    cd "$pkgname"
+    cd "$pkgname-$pkgver"
 
     make DESTDIR="${pkgdir}" install
     mv "${pkgdir}/usr/doc" "${pkgdir}/usr/share/"
