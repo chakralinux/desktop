@@ -1,5 +1,5 @@
 pkgname=owncloud
-pkgver=8.2.0
+pkgver=9.0.0
 pkgrel=1
 pkgdesc="A cloud server to store your files centrally on a hardware controlled by you"
 arch=('x86_64')
@@ -28,9 +28,10 @@ source=("$pkgname-$pkgver.tar.gz::https://github.com/owncloud/core/archive/v$pkg
         'owncloud.conf')
 options=('!strip')
 install=owncloud.install
-sha512sums=('467e53c21b1f7e0dfb9d913e318cc0407f151c351efd0f01adadbc69fd23c0b7b770a8757f074bd1be46096017b77686cfe2285e8d53eb3378e581ed632a0365'
-            'eb4069c50779d877019838fdfa143bcbc317a449eb5216fd789f2e6e62552cb05d0d4c813a6869357ce5fa751b84dc847d8296edc6a588624ea1f0f418591934'
-            '2d6ed0a120c58e88c6792204f2079965d50e510c8a13b51f0be18858c78997c662bec24fd8547704fad01a2a08667121d50fddd906e4ab617c4c14e34297cf49')
+sha256sums=('3be2d98654ca763fa9c23e125a0e5fa2f4d702bc6ec2828242908ed5c71cc172'
+            '8fe304e48453ec4c88e0369db871921c4d14add6f72bacf98c5c1797cc963a62'
+            '1e9252f266cfa27af5bcb573b2fe932ce0d1578722ddc47431de9e92a65bd16c')
+
 
 prepare() {
   cd $srcdir/core-$pkgver
@@ -51,14 +52,14 @@ package() {
   rm -rf ${pkgdir}/usr/share/webapps/${pkgname}/tests
 
 # install apache config file
-  install -d  ${pkgdir}/etc/webapps/${pkgname}
-  install -m 644 ${srcdir}/owncloud.conf  ${pkgdir}/etc/webapps/${pkgname}
+  install -d  ${pkgdir}/usr/share/webapps/${pkgname}
+  install -m 644 ${srcdir}/owncloud.conf  ${pkgdir}/usr/share/webapps/${pkgname}
 
 # move config to /etc
-  mv ${pkgdir}/usr/share/webapps/owncloud/config ${pkgdir}/etc/webapps/${pkgname}/config
-  chown -R http:http ${pkgdir}/etc/webapps/${pkgname}
-  ln -s /etc/webapps/${pkgname}/config ${pkgdir}/usr/share/webapps/owncloud/config
-  chown -R root:http ${pkgdir}/usr/share/webapps/${pkgname}
+#  mv ${pkgdir}/usr/share/webapps/owncloud/config ${pkgdir}/etc/webapps/${pkgname}/config
+#  chown -R http:http ${pkgdir}/etc/webapps/${pkgname}
+#  ln -s /etc/webapps/${pkgname}/config ${pkgdir}/usr/share/webapps/owncloud/config
+#  chown -R root:http ${pkgdir}/usr/share/webapps/${pkgname}
 
   find ${pkgdir}/usr/share/webapps/owncloud -type f -exec chmod 0644 {} \;
   find ${pkgdir}/usr/share/webapps/owncloud -type d -exec chmod 0755 {} \;
