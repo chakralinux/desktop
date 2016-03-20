@@ -1,6 +1,6 @@
 pkgname=tomahawk
 pkgver=0.8.4
-pkgrel=6
+pkgrel=7
 pkgdesc="The social media player. A Music Player App written in C++/Qt"
 arch=('x86_64')
 url="http://tomahawk-player.org/"
@@ -8,8 +8,8 @@ screenshot="https://img.skitch.com/20110813-n6w28ugdugyeptxgaj83y4ptp5.medium.jp
 license=('GPL3')
 depends=('attica-qt5' 'gnutls' 'libechonest' 'liblastfm' 'lucene++'
          'phonon-qt5' 'qca-qt5' 'qt5-svg' 'qt5-webkit' 'qtkeychain-qt5' 'quazip'
-         'taglib')
-makedepends=('boost' 'cmake' 'sparsehash' 'qt5-tools' 'telepathy-qt5')
+         'taglib>=1.10' 'boost')
+makedepends=('cmake' 'sparsehash' 'qt5-tools' 'telepathy-qt5')
 optdepends=('telepathy-qt5: integration with Telepathy')
 conflicts=('tomahawk-git')
 categories=('multimedia')
@@ -35,6 +35,7 @@ build() {
         -DCMAKE_BUILD_TYPE=Release \
         -DBUILD_WITH_QT4=OFF \
         -DBUILD_HATCHET=OFF \
+        -DTAGLIB_MIN_VERSION=1.10 \
         "../${pkgname}-${pkgver}"
   make
 }
