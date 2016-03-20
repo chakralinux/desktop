@@ -1,34 +1,49 @@
-#
-# Games Packages for Chakra, part of chakra-project.org
-#
-# Maintainer: Adrián Chaves Fernández (Gallaecio) <adriyetichaves gmail.com>
-
-pkgname=freedoom
+pkgname='freedoom'
 _pkgname=doom
-pkgver=0.7
+pkgver=0.10.1
 pkgrel=1
-pkgdesc="Completely free Doom IWADs (game data)"
+pkgdesc="Completely free Doom IWADs (game data) - you need a game engine to play with it (e.g. Odamex)"
 arch=('any')
-url="http://www.nongnu.org/freedoom/"
+url="https://freedoom.github.io/"
 license=('custom:Modified BSD')
-makedepends=('deutex' 'imagemagick' 'python2')
+makedepends=('deutex' 'imagemagick' 'python2' 'asciidoc' 'ttf-dejavu')
 provides=('doom-data')
 categories=('games')
-source=(http://savannah.nongnu.org/download/$pkgname/source/$pkgname-$pkgver.tar.gz)
-md5sums=('109b1a10a13cfa9c72f9096f4a0ef0cd')
+source=("https://github.com/freedoom/freedoom/archive/v$pkgver.tar.gz"
+        "dist.tar.xz")
+sha1sums=('ace8c06839ea6953410116b4cb0f9629d6b96bf2'
+          'c76acb52ff5f74f9e4a93d9d8b51c078713774b2')
 
 build() {
   cd $srcdir/$pkgname-$pkgver
 
-  make wads/{doom,doom2,freedm}.wad
+  make
+  make wads/{freedm,freedoom1,freedoom2}.wad
 }
 
 package() {
   cd $srcdir/$pkgname-$pkgver
 
   install -d $pkgdir/usr/share/$_pkgname
-  install -m644 wads/{doom,doom2,freedm}.wad $pkgdir/usr/share/$_pkgname/
+  install -m644 wads/{freedm,freedoom1,freedoom2}.wad $pkgdir/usr/share/$_pkgname/
 
   # License.
   install -Dm644 COPYING $pkgdir/usr/share/licenses/$pkgname/COPYING
+  
+  # Thanks to an Arch linux user, Mike Swanson or chungy
+  install -Dm 444 "$srcdir"/dist/freedm.6 "$pkgdir"/usr/share/man/man6/freedm.6
+  install -Dm 444 "$srcdir"/dist/freedoom1.6 "$pkgdir"/usr/share/man/man6/freedoom1.6
+  install -Dm 444 "$srcdir"/dist/freedoom2.6 "$pkgdir"/usr/share/man/man6/freedoom2.6
+  
+  install -D "$srcdir"/dist/freedm.png "$pkgdir"/usr/share/icons/freedm.png
+  install -D "$srcdir"/dist/freedoom1.png "$pkgdir"/usr/share/icons/freedoom1.png
+  install -D "$srcdir"/dist/freedoom2.png "$pkgdir"/usr/share/icons/freedoom2.png
+  
+  install -D "$srcdir"/dist/freedm.desktop "$pkgdir"/usr/share/applications/freedm.desktop
+  install -D "$srcdir"/dist/freedoom1.desktop "$pkgdir"/usr/share/applications/freedoom1.desktop
+  install -D "$srcdir"/dist/freedoom2.desktop "$pkgdir"/usr/share/applications/freedoom2.desktop
+  
+  install -D "$srcdir"/dist/freedoom "$pkgdir"/usr/bin/freedm
+  install -D "$srcdir"/dist/freedoom "$pkgdir"/usr/bin/freedoom1
+  install -D "$srcdir"/dist/freedoom "$pkgdir"/usr/bin/freedoom2
 }
