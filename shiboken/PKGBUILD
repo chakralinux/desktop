@@ -1,0 +1,84 @@
+# Contributions from Arch: https://projects.archlinux.org/svntogit/community.git/tree/trunk/PKGBUILD?h=packages/shiboken
+
+pkgbase=shiboken
+pkgname=(python{2,3}-shiboken shiboken)
+pkgver=1.2.4
+pkgrel=1
+arch=('x86_64')
+license=('LGPL')
+url="http://www.pyside.org"
+makedepends=('cmake' 'python2' 'python3' 'qt4' 'libxslt')
+source=("$pkgbase-$pkgver.tar.gz::https://github.com/PySide/Shiboken/archive/$pkgver.tar.gz")
+md5sums=('c284197d06ad25d78009ff55f18dd512')
+
+build(){
+    cd "$srcdir/Shiboken-$pkgver"
+    # build python2
+    mkdir -p build-py2 && cd build-py2
+    cmake ../ -DCMAKE_INSTALL_PREFIX=/usr  \
+              -DCMAKE_BUILD_TYPE=Release   \
+              -DBUILD_TESTS=OFF            \
+              -DPYTHON_EXECUTABLE=/usr/bin/python2 \
+              -DPYTHON_LIBRARY=/usr/lib/libpython2.7.so \
+              -DPYTHON_INCLUDE_DIR=/usr/include/python2.7 
+    make
+
+    # build python3
+    cd "$srcdir/Shiboken-$pkgver"
+    mkdir -p build-py3 && cd build-py3
+    cmake ../ -DCMAKE_INSTALL_PREFIX=/usr  \
+              -DCMAKE_BUILD_TYPE=Release   \
+              -DBUILD_TESTS=OFF            \
+              -DUSE_PYTHON3=yes            
+    make
+}
+
+package_shiboken() {
+  pkgdesc="CPython bindings generator for C++ libraries"
+  depends=(python3 qt4 libxslt)
+  optdepends=("python2-shiboken: for compilation against python2"
+              "python3-shiboken: for compilation against python3")
+
+  # Header files/ /usr/bin/shiboke, pkgconfig, man page
+  cd "$srcdir/Shiboken-$pkgver/build-py3"
+  make DESTDIR="$pkgdir" install
+
+  cd "$srcdir/Shiboken-$pkgver/build-py2"
+  cd data
+  install -Dm 644 ShibokenConfig-python2.7.cmake "$pkgdir/usr/lib/cmake/Shiboken-$pkgver/"
+  install -Dm 644 shiboken.pc "$pkgdir/usr/lib/pkgconfig/shiboken-py2.pc"
+
+  rm -rf "$pkgdir/usr/lib/python"*
+  rm -rf "$pkgdir/usr/lib/libshiboken"*
+  rm -rf "$pkgdir/usr/lib/pkgconfig/"
+  rm "$pkgdir"/usr/lib/cmake/Shiboken-$pkgver/ShibokenConfig*python*.cmake
+}
+
+package_python2-shiboken() {
+  pkgdesc="Support library for Python2 bindings"
+  depends=("qt4" "libxslt" "python2" "shiboken")
+
+  cd "$srcdir/Shiboken-$pkgver/build-py2"
+  make DESTDIR="$pkgdir" install
+
+  cd "$srcdir/Shiboken-$pkgver/build-py2"
+  cd data
+  install -Dm 644 ShibokenConfig-python2.7.cmake "$pkgdir/usr/lib/cmake/Shiboken-$pkgver/"
+  mv "$pkgdir"/usr/lib/pkgconfig/shiboken{,-py2}.pc
+
+  rm -rf "$pkgdir"/usr/{include,bin,share}
+  rm "$pkgdir/usr/lib/cmake/Shiboken-$pkgver/ShibokenConfigVersion.cmake"
+  rm "$pkgdir/usr/lib/cmake/Shiboken-$pkgver/ShibokenConfig.cmake"
+}
+
+package_python3-shiboken() {
+  pkgdesc="Support library for Python3 bindings"
+  depends=("qt4" "libxslt" "python3" "shiboken")
+
+  cd "$srcdir/Shiboken-$pkgver/build-py3"
+  make DESTDIR="$pkgdir" install
+
+  rm -rf "$pkgdir"/usr/{include,bin,share}
+  rm "$pkgdir/usr/lib/cmake/Shiboken-$pkgver/ShibokenConfigVersion.cmake"
+  rm "$pkgdir/usr/lib/cmake/Shiboken-$pkgver/ShibokenConfig.cmake"
+}
