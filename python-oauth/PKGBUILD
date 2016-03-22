@@ -1,0 +1,27 @@
+pkgbase=python-oauth2
+pkgname=(python{2,3}-oauth2)
+pkgver=1.9
+pkgrel=1
+pkgdesc="A fully tested, abstract interface to creating OAuth clients and servers"
+arch=(any)
+url="https://github.com/simplegeo/python-oauth2"
+license=('GPL')
+makedepends=(python{2,3}-setuptools python{2,3}-httplib2)
+source=(https://github.com/joestump/${pkgbase}/archive/v${pkgver}.tar.gz)
+md5sums=('c4283a076be24d03db3748af07951bf6')
+
+package_python2-oauth2() {
+   pkgdesc+=(' (python2 version)')
+   depends=('python2' 'python2-httplib2')
+	cd "$srcdir/$pkgbase-$pkgver"
+	python2 setup.py install --root=$pkgdir
+	rm -rf "$pkgdir"/usr/lib/python*/site-packages/tests
+}
+
+package_python3-oauth2() {
+   pkgdesc+=(' (python3 version)')
+   depends=('python3' 'python3-httplib2')
+        cd "$srcdir/$pkgbase-$pkgver"
+        python3 setup.py install --root=$pkgdir
+        rm -rf "$pkgdir"/usr/lib/python*/site-packages/tests
+}
