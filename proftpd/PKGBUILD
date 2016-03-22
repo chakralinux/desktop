@@ -1,6 +1,8 @@
+# Contributions from AUR: https://aur.archlinux.org/packages/proftpd/
+
 pkgname=proftpd
-pkgver=1.3.5.a
-_pkgver=1.3.5a
+pkgver=1.3.5.b
+_pkgver=1.3.5b
 pkgrel=1
 pkgdesc="A high-performance, scalable FTP server"
 arch=('x86_64')
@@ -13,12 +15,10 @@ install=proftpd.install
 source=("ftp://ftp.proftpd.org/distrib/source/${pkgname}-${_pkgver}.tar.gz"
 	'proftpd.service'
         'proftpd.logrotate'
-	'proftpd.conf.d'
 	'proftpd.tmpfiles')
-md5sums=('b9d3092411478415b31d435f8e26d173'
+md5sums=('f7b8e3a383b34a894c2502db74ccccde'
          '2bf74515d84036cb0acd60406fcd25b0'
          'ddb09eb13131becdf0e081eef413116b'
-         '2a1a9bab12655bd8694ac49d48c6f0e4'
          '907b149a120b046f05647c73502e23c9')
 build() {
 	cd ${srcdir}/${pkgname}-${_pkgver}
@@ -40,15 +40,19 @@ build() {
 }
 
 package() {
-	cd ${srcdir}/${pkgname}-${_pkgver}
+  cd "${srcdir}/${pkgname}-${_pkgver}"
 
-	make DESTDIR=${pkgdir} install
-	install -Dm644 ../proftpd.logrotate ${pkgdir}/etc/logrotate.d/proftpd
-	install -Dm644 ../proftpd.conf.d ${pkgdir}/etc/conf.d/proftpd
-	install -Dm755 contrib/xferstats.holger-preiss ${pkgdir}/usr/bin/ftpstats
-	
-	install -d ${pkgdir}/usr/lib/systemd/system/
-        install -m644 ${srcdir}/proftpd.service ${pkgdir}/usr/lib/systemd/system/
-        install -Dm644 ${srcdir}/proftpd.tmpfiles ${pkgdir}/usr/lib/tmpfiles.d/proftpd.conf
-	rmdir ${pkgdir}/run/{proftpd,}
+  make DESTDIR="${pkgdir}" install
+  sed -i 's|nogroup|nobody|g' "${pkgdir}/etc/proftpd.conf"
+
+  install -Dm644 ../proftpd.logrotate "${pkgdir}/etc/logrotate.d/proftpd"
+  install -Dm755 contrib/xferstats.holger-preiss "${pkgdir}/usr/bin/ftpstats"
+
+  install -d "${pkgdir}/usr/lib/systemd/system/"
+  install -m644 "${srcdir}"/proftpd.service "${pkgdir}/usr/lib/systemd/system/"
+  install -Dm644 "${srcdir}"/proftpd.tmpfiles \
+    "${pkgdir}"/usr/lib/tmpfiles.d/proftpd.conf
+
+  # /run is tmpfs
+  rmdir "${pkgdir}"/run/{proftpd,}
 }
