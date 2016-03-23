@@ -1,6 +1,6 @@
 pkgname=youtube-dl
-pkgver=2016.03.06
-pkgrel=2
+pkgver=2016.03.18
+pkgrel=1
 pkgdesc='A small command-line program to download videos from YouTube.com'
 arch=('x86_64')
 url='http://rg3.github.com/youtube-dl/'
@@ -9,8 +9,10 @@ depends=('python3' 'python3-setuptools')
 optdepends=('ffmpeg: for video post-processing'
             'rtmpdump: for rtmp streams support')
 categories=('network')
-source=(http://youtube-dl.org/downloads/${pkgver}/${pkgname}-${pkgver}.tar.gz)
-sha1sums=('f29c66263a3c97c4e30781b2efe694afff75de0b')
+source=(http://youtube-dl.org/downloads/${pkgver}/${pkgname}-${pkgver}.tar.gz{,.sig})
+sha1sums=('9ec09c30fe2fac272f3002d3942da3b873a82981'
+          'SKIP')
+validpgpkeys=('7D33D762FD6C35130481347FDB4B54CBA4826A18') # Philipp Hagemeister
 
 package() {
   cd "${srcdir}/${pkgname}"
