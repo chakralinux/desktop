@@ -1,6 +1,6 @@
 pkgname=kdstatemachineeditor
 pkgver=1.0.0
-pkgrel=2
+pkgrel=3
 pkgdesc="framework for creating Qt State Machine metacode using graphical user interfaces"
 arch=('x86_64')
 url="http://kdab.github.io/KDStateMachineEditor"
@@ -19,12 +19,12 @@ prepare()
 
 build() {
   cd "$srcdir/${pkgname}-$pkgver/build"
-  cmake -DCMAKE_INSTALL_PREFIX=${pkgdir}/usr ..
+  cmake -DCMAKE_INSTALL_PREFIX=/usr ..
   make
 }
 
 package()
 {
  cd "$srcdir/$pkgname-$pkgver/build"
- make install
+ make DESTDIR=${pkgdir} install
 }
