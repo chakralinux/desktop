@@ -1,0 +1,22 @@
+pkgname=libfastjson
+pkgver=0.99.2
+pkgrel=1
+pkgdesc="A performance-focused json library for C"
+arch=('x86_64')
+url="https://github.com/rsyslog/libfastjson"
+license=('GPL')
+depends=()
+source=(https://github.com/rsyslog/$pkgname/archive/v$pkgver.tar.gz)
+sha1sums=('b7001d137baee571ad38efbbf99e7d4a74720c8a')
+
+build() {
+  cd "$pkgname-$pkgver"
+  autoreconf -fvi
+  ./configure --prefix=/usr
+  make
+}
+
+package() {
+  cd "$pkgname-$pkgver"
+  make DESTDIR="$pkgdir/" install
+}
