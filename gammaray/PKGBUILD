@@ -1,0 +1,34 @@
+pkgname=gammaray
+pkgver=2.4.1
+pkgrel=1
+pkgdesc="tool to poke around in a Qt-application and also to manipulate the application to some extent"
+arch=('x86_64')
+url="http://www.kdab.com/gammaray"
+license=('GPL')
+depends=('qt5-base>=5.6' 'qt5-location' 'qt5-xmlpatterns' 'qt5-script' 'qt5-svg'
+         'qt5-declarative' 'qt5-webkit' 'qt5-3d' 'qt5-connectivity' 'kcoreaddons'
+         'git' 'qt5-graphicaleffects' 'qt5-tools' 'graphviz' 'kdstatemachineeditor')
+conflicts=('qt5-base<=5.7') # uses private API
+makedepends=("cmake" 'doxygen' 'perl') # perl for pod2man
+source=("https://github.com/KDAB/GammaRay/releases/download/v${pkgver}/gammaray-${pkgver}.tar.gz")
+sha256sums=('08b151eaa4afeaaebc28eaae789f8da47d99012f1071f19d20d8d4d91115b6ab')
+
+
+prepare()
+{
+  cd "$srcdir/${pkgname}-$pkgver"
+  sed -i 's/enable_testing()//' ./CMakeLists.txt
+  mkdir -p build
+}
+
+build() {
+  cd "$srcdir/${pkgname}-$pkgver/build"
+  cmake -DCMAKE_INSTALL_PREFIX=${pkgdir}/usr ..
+  make
+}
+
+package()
+{
+ cd "$srcdir/$pkgname-$pkgver/build"
+ make install
+}
