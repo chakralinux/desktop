@@ -1,12 +1,12 @@
 pkgname=dropbox
 pkgver=3.16.1
-pkgrel=1
+pkgrel=2
 pkgdesc="A free service that lets you bring your photos, docs, and videos anywhere and share them easily."
 arch=('x86_64')
 url="http://www.dropbox.com"
 license=('custom')
-depends=('dbus-glib' 'libsm' 'libxmu' 'libxslt')
-#         'qt5-base' 'qt5-declarative' 'qt5-webkit')
+depends=('dbus-glib' 'libsm' 'libxmu' 'libxslt'
+         'qt5-base' 'qt5-declarative' 'qt5-webkit')
 optdepends=('dolphin-plugins: for integration of dolphin under plasma 5')
 options=('!strip' '!upx')
 source=("https://dl-web.dropbox.com/u/17/${pkgname}-lnx.${arch}-${pkgver}.tar.gz"
@@ -17,7 +17,7 @@ source=("https://dl-web.dropbox.com/u/17/${pkgname}-lnx.${arch}-${pkgver}.tar.gz
         "dropbox@.service")
 sha1sums=('b61677ecad7604bc18a40116c601864158b93c1d'
           '64073af76a2bbc7dba4a6886b82af0bb3e71a2a0'
-          'd5ad720762b9052a4fd6af839038318b37d5fd39'
+          'f17894457eb9c32b249f19169386e423163f0e37'
           'b69765536f67fab1080bd623019c8d859edb75dc'
           'ca22e7fcd94c45854e0b6516efa37ed30df56abf'
           '0019b370924494390b071ed6e607e5f70c88fc12')
@@ -44,8 +44,8 @@ package() {
 	rm -f "$pkgdir"/opt/dropbox/library.zip
 	ln -s dropbox "$pkgdir"/opt/dropbox/library.zip
 
-        # FIXME: dirty hack to replace Qt5 libs with system ones
-        #rm ${pkgdir}/opt/dropbox/libQt5*
-        #rm -rf ${pkgdir}/opt/dropbox/plugins/
-        #rm ${pkgdir}/opt/dropbox/qt.conf
+        # Works with the prefix `XDG_CURRENT_DESKTOP=Unity` under new simplesystemtray in testing
+        rm ${pkgdir}/opt/dropbox/libQt5*
+        rm -rf ${pkgdir}/opt/dropbox/plugins/
+        rm ${pkgdir}/opt/dropbox/qt.conf
 }
