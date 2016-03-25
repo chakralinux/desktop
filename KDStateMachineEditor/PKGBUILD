@@ -1,0 +1,30 @@
+pkgname=kdstatemachineeditor
+pkgver=1.0.0
+pkgrel=2
+pkgdesc="framework for creating Qt State Machine metacode using graphical user interfaces"
+arch=('x86_64')
+url="http://kdab.github.io/KDStateMachineEditor"
+license=('LGPL')
+depends=('qt5-base>=5.6' 'qt5-base<5.7'  'qt5-graphicaleffects' 'graphviz')
+makedepends=("cmake" 'doxygen')
+source=("https://github.com/KDAB/KDStateMachineEditor/releases/download/v1.0.0/kdstatemachineeditor-${pkgver}.tar.gz")
+sha256sums=('35c5d6b0c0bbea3cb651c55dfb6117eeb7fe7eb09b602b6aa63465bdd69b4b3f')
+
+
+prepare()
+{
+  cd "$srcdir/${pkgname}-$pkgver"
+  mkdir -p build
+}
+
+build() {
+  cd "$srcdir/${pkgname}-$pkgver/build"
+  cmake -DCMAKE_INSTALL_PREFIX=${pkgdir}/usr ..
+  make
+}
+
+package()
+{
+ cd "$srcdir/$pkgname-$pkgver/build"
+ make install
+}
