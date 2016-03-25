@@ -1,6 +1,6 @@
 pkgname=dropbox
 pkgver=3.16.1
-pkgrel=2
+pkgrel=3
 pkgdesc="A free service that lets you bring your photos, docs, and videos anywhere and share them easily."
 arch=('x86_64')
 url="http://www.dropbox.com"
@@ -19,7 +19,7 @@ sha1sums=('b61677ecad7604bc18a40116c601864158b93c1d'
           '64073af76a2bbc7dba4a6886b82af0bb3e71a2a0'
           'f17894457eb9c32b249f19169386e423163f0e37'
           'b69765536f67fab1080bd623019c8d859edb75dc'
-          'ca22e7fcd94c45854e0b6516efa37ed30df56abf'
+          '9bda78faca76d55d0cf1b16af782066bab3029fe'
           '0019b370924494390b071ed6e607e5f70c88fc12')
 
 install="${pkgname}.install"
@@ -45,7 +45,16 @@ package() {
 	ln -s dropbox "$pkgdir"/opt/dropbox/library.zip
 
         # Works with the prefix `XDG_CURRENT_DESKTOP=Unity` under new simplesystemtray in testing
-        rm ${pkgdir}/opt/dropbox/libQt5*
-        rm -rf ${pkgdir}/opt/dropbox/plugins/
-        rm ${pkgdir}/opt/dropbox/qt.conf
+        cd ${pkgdir}/opt/dropbox/
+        msg 'removing libQt5'
+        rm -v libQt5*
+        rm -vrf plugins/
+        rm -v qt.conf
+        msg 'removing other libraries'
+        rm -v libicu*
+        rm -v libffi*
+        rm -v libGL*
+        rm -v libpopt*
+        rm -v libX11-xcb*
+        rm -v libdrm*
 }
