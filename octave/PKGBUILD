@@ -1,11 +1,11 @@
 pkgname=octave
 pkgver=4.0.0
-pkgrel=5
+pkgrel=6
 pkgdesc="A high-level language, primarily intended for numerical computations."
 arch=('x86_64')
 url="http://www.octave.org"
 license=('GPL')
-depends=('atlas-lapack' 'readline' 'glu' 'fftw' 'curl' 'graphicsmagick' 'glpk' 'hdf5' 'qhull' 'fltk' 'suitesparse' 'arpack' 'pcre' 'qt' 'fontconfig' 'zlib' 'qrupdate' 'freetype2' 'qscintilla' 'gl2ps')
+depends=('openblas' 'lapack' 'readline' 'glu' 'fftw' 'curl' 'graphicsmagick' 'glpk' 'hdf5' 'qhull' 'fltk' 'suitesparse' 'arpack' 'pcre' 'qt' 'fontconfig' 'zlib' 'qrupdate' 'freetype2' 'qscintilla' 'gl2ps')
 makedepends=('texlive-core' 'gcc-fortran' 'texinfo' 'gnuplot' 'openjdk')
 optdepends=('texinfo: for help-support in octave'
 	    'gnuplot: alternative plotting'
@@ -18,7 +18,6 @@ build() {
   cd ${srcdir}/${pkgname}-${pkgver}
   
   autoreconf -vfi
-    # --enable-64 needs atlas-lapack/blas support to be enabled first, check FS#174 comments:
     
   ./configure --prefix=/usr \
     --libexecdir=/usr/lib \
