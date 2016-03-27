@@ -2,7 +2,7 @@
 
 pkgname=grass
 pkgver=7.0.3
-pkgrel=1
+pkgrel=2
 _shortver=${pkgver%.*}; _shortver=${_shortver/./}
 pkgdesc="GRASS GIS: geospatial data management and analysis, image processing, graphics/maps production, spatial modeling and visualization."
 arch=('x86_64')
@@ -11,15 +11,14 @@ license=('GPL')
 
 # More about GRASS build and runtime deps on http://grasswiki.osgeo.org/wiki/Compile_and_Install.
 depends=('zlib' 'freetype2' 'cfitsio' 'fftw' 'gdal' 'geos' 'glu' 'libjpeg'
-         'blas' 'libpng' 'libtiff' 'libxmu' 'mesa' 'postgresql' 'proj'
+         'openblas' 'libpng' 'libtiff' 'libxmu' 'mesa' 'postgresql' 'proj'
          'xorg-server' 'cairo' 'unixodbc' 'python2'
-         'python2-numpy' 'python2-pillow')
+         'python2-numpy' 'python2-pillow' 'lapack')
 makedepends=('subversion' 'doxygen')
 optdepends=('r: R language interface; see http://grasswiki.osgeo.org/wiki/R_statistics'
             'mariadb: mysql database interface'
             'ffmpeg: ffmpeg support'
             'lapack: required for GMATH library'
-            'blas: required for GMATH library'
             'lesstif: motif support')
 source=("http://grass.osgeo.org/grass70/source/${pkgname}-${pkgver}.tar.gz")
 md5sums=('dfbd39829036ee2d59b13c35a183ec0e')
@@ -55,7 +54,7 @@ build() {
     --with-freetype-includes=/usr/include/freetype2 \
     --with-geos \
     --with-python \
-    --with-blas \
+    --with-openblas \
     --with-lapack \
     --with-nls \
     --with-netcdf \
