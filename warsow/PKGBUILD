@@ -1,31 +1,26 @@
 pkgbase=warsow
 pkgname=('warsow' 'warsow-data')
-pkgver=2.0 # Warsow data version
-_pkgver=20  # Launchpad version
+pkgver=2.1.0
+_pkgver=21  # Warsow-data version
 pkgrel=1
 arch=('x86_64')
 url="http://www.warsow.gg/"
-makedepends=('mesa' 'openal' 'imagemagick' 'gendesk' 'curl' 'libjpeg' 'libtheora' 'libvorbis'
+makedepends=('mesa' 'openal' 'imagemagick' 'gendesk' 'curl' 'libjpeg' 'libpng' 'libtheora' 'libvorbis'
              'libxxf86dga' 'sdl2' 'libxinerama' 'libxrandr' 'libxxf86vm' 'libxi' 'cmake')
 categories=('games')
 source=("http://mirror.null.one/${pkgname}_${_pkgver}_sdk.tar.gz"
-        "http://www.warsow.gg/${pkgname}_${_pkgver}_unified.tar.gz"
-        "warsow-cmakelists.patch")
-sha256sums=('f6a40995caae788695fa58b36ae1fe5c3e4813c69c0684fafdf39c07c0561128'
-            '175a3f76925fb8713e6a83971f36653514a51909f0e0a892851c05c2cbde6e38'
-            '34bfcdd4e12d75c1e6a38afd9aacdc7523ef071b77c4542088f9d67a0c1da591')
+        "http://mirror.null.one/${pkgname}_${_pkgver}_unified.tar.gz")
+sha256sums=('d99708925203193b65943116f8dc7dee23d932ebdcd14618950e54307d63fd50'
+            '7f509ef5da77d150ee7f30a560e366795a23b67ad2037ad9fd547cf5cb432a9b')
 
 prepare() {
   gendesk -n -f --pkgname 'warsow' --pkgdesc "${pkgdesc}" --name 'Warsow' --categories 'Game;ActionGame'
-
-  cd "${srcdir}/source/source"
-  patch < "${srcdir}/warsow-cmakelists.patch"
 }
 
 build() {
   cd "${srcdir}/source/source"
-  cmake .
-  make ${MAKE_FLAGS}
+  cmake -DQFUSION_GAME=Warsow .
+  make
 }
 
 generateAndInstall() {
@@ -41,11 +36,11 @@ package_warsow-data() {
   pkgdesc="A free online multiplayer competitive FPS based on the Qfusion engine (data files)"
   arch=('any')
   license=('custom:Warsow Content License')
-
+  
   # Create the destination directories.
   install -d "${pkgdir}/usr/share/${_pkgname}"
 
-    # Move Data to destination directory.
+  # Move Data to destination directory.
   cp -r ${_pkgname}_${_pkgver}/basewsw "${pkgdir}/usr/share/${_pkgname}"
   chmod -R g+rx,o+rx "${pkgdir}/usr/share/${_pkgname}/basewsw"
 
@@ -57,7 +52,8 @@ package_warsow() {
   pkgdesc="A free online multiplayer competitive FPS based on the Qfusion engine"
   arch=('x86_64')
   license=('GPL')
-  depends=('curl' 'libjpeg' 'libtheora' 'libvorbis' 'libxinerama' 'libxrandr' 'libxxf86dga' 'libxxf86vm' 'sdl2' 'warsow-data')
+  depends=('curl' 'libjpeg' 'libpng' 'libtheora' 'libvorbis' 'libxinerama' 'libxrandr' 'libxxf86dga'
+           'libxxf86vm' 'sdl2' 'warsow-data')
   optdepends=('openal: for openal audio support')
   
   cd source/source
