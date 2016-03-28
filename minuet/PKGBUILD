@@ -3,12 +3,15 @@ source ../kdeapps.conf
 
 pkgname=minuet
 pkgver=${_kdever}
-pkgrel=1
+pkgrel=3
 pkgdesc="A KDE Software for Music Education"
 arch=('x86_64')
 url='https://github.com/KDE/pimcommon'
 license=('LGPL')
-depends=('ki18n' 'kxmlgui' 'kio' 'kcrash' 'drumstick')
+depends=('ki18n' 'kxmlgui' 'kio' 'kcrash' 'drumstick' 'timidity++')
+optdepends=('soundfont-fluidr3: for MIDI sound'
+            'soundfont-personalcopy: for MIDI sound'
+            'soundfont-unison: for MIDI sound')
 makedepends=('extra-cmake-modules' 'kdoctools')
 groups=(kde kde-applications kdeedu kde-uninstall)
 options=('docs' 'debug')
