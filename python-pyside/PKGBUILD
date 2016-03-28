@@ -1,8 +1,5 @@
-# Maintainer: Florian Pritz <bluewind@xinu.at>
-# Contributor: lilydjwg <lilydjwg@gmail.com>
-# Contributor: Matthias Maennich <arch@maennich.net>
-# Contributor: Massimiliano Torromeo <massimiliano.torromeo@gmail.com>
-# Contributor: Jan-Erik Meyer-Luetgens <nyan at meyer-luetgens dot de>
+# Contributions from Arch: https://projects.archlinux.org/svntogit/community.git/tree/trunk/PKGBUILD?h=packages/python-pyside
+
 pkgbase=python-pyside
 pkgname=(python-pyside-common python2-pyside python3-pyside)
 _pkgrealname=pyside
@@ -24,17 +21,21 @@ build(){
     cd "$srcdir/PySide-$pkgver/sources/pyside"
     mkdir -p build_py3
     cd build_py3
-    cmake .. -DCMAKE_INSTALL_PREFIX=/usr -DCMAKE_BUILD_TYPE=Release -DBUILD_TESTS=OFF \
-      -DQT_PHONON_INCLUDE_DIR=/usr/include/qt4/phonon -DPYTHON_SUFFIX=-python3.5 \
-      -DQT_SRC_DIR=/usr/include/Qt
+    cmake .. -DCMAKE_INSTALL_PREFIX=/usr \
+             -DCMAKE_BUILD_TYPE=Release -DBUILD_TESTS=OFF \
+             -DQT_PHONON_INCLUDE_DIR=/usr/include/phonon \
+             -DPYTHON_SUFFIX=.cpython-35m-x86_64-linux-gnu \
+             -DQT_SRC_DIR=/usr/include/Qt
     make
 
-    cd "$srcdir/${_pkgrealname}-qt${_qtver}+$pkgver"
+    cd "$srcdir/PySide-$pkgver/sources/pyside"
     mkdir -p build_py2
     cd build_py2
-    cmake .. -DCMAKE_INSTALL_PREFIX=/usr -DCMAKE_BUILD_TYPE=Release -DBUILD_TESTS=OFF \
-      -DQT_PHONON_INCLUDE_DIR=/usr/include/qt4/phonon -DPYTHON_SUFFIX=-python2.7 \
-      -DQT_SRC_DIR=/usr/include/Qt
+    cmake .. -DCMAKE_INSTALL_PREFIX=/usr \
+             -DCMAKE_BUILD_TYPE=Release -DBUILD_TESTS=OFF \
+             -DQT_PHONON_INCLUDE_DIR=/usr/include/phonon \
+             -DPYTHON_SUFFIX=-python2.7 \
+             -DQT_SRC_DIR=/usr/include/Qt
     make
 }
 
