@@ -5,14 +5,14 @@ pkgbase=kdepim
 pkgname=(akonadiconsole akregator blogilo kdepim-console kaddressbook kalarm kleopatra kmail knotes
          kontact korganizer ktnef libkdepim)
 pkgver=${_kdever}
-pkgrel=2
+pkgrel=3
 arch=('x86_64')
 url='http://pim.kde.org'
 license=('GPL' 'LGPL' 'FDL')
 groups=('kde' 'kde-uninstall' 'kde-applications' 'kdepim')
 makedepends=(extra-cmake-modules kdepim-runtime qt5-tools grantlee-qt5 kdoctools knewstuff khtml
              ktexteditor kdnssd kldap libktnef boost gpgmepp kontactinterface kxmlrpcclient kblog
-             akonadi-search)
+             akonadi-search libktnef)
 options=('docs' 'debug')
 source=("$_mirror/${pkgbase}-$_kdever.tar.xz")
 sha256sums=(`grep ${pkgbase}-$_kdever.tar.xz  ../checksums.txt | cut -d " " -f1`)
@@ -199,7 +199,7 @@ package_ktnef() {
 package_libkdepim() {
   pkgdesc='Common libraries and resources for KDE PIM applications'
   groups=()
-  depends=('kdepim-runtime' 'gpgmepp' 'grantlee-qt5' 'akonadi-search' 'knewstuff' 'kldap' 'kdnssd')
+  depends=('kdepim-runtime' 'gpgmepp' 'grantlee-qt5' 'akonadi-search' 'knewstuff' 'kldap' 'kdnssd' 'libktnef')
   conflicts=('kdepimlib' 'kdepim-common')
   provides=('kdepimlib' 'kdepim-common') # to allow smooth upgrade from 4.14
   replaces=('kdepimlib' 'kdepim-common')
