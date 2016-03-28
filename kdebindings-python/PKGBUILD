@@ -1,47 +1,30 @@
-# Maintainer:   H W Tovetjärn (totte) <totte@tott.es>
-# Contributors: Manuel Tortosa <manutortosa@chakra-project.org>
-#               A Scarpino <andrea@archlinux.org>
-
-# Include global buildsystem configuration
-source ../_buildscripts/${current_repo}-${_arch}-cfg.conf
+# Contributions from Arch: https://projects.archlinux.org/svntogit/packages.git/tree/trunk?h=packages/kdebindings-python
 
 pkgbase=kdebindings-python
 pkgname=('kdebindings-python-common'
          'kdebindings-python2'
          'kdebindings-python3')
-pkgver=${_kdever}
-pkgrel=1
+pkgver=4.14.3
+pkgrel=2
 url='https://projects.kde.org/projects/kde/kdebindings/pykde4'
 arch=('x86_64')
-license=('GPL'
-         'LGPL'
-         'FDL')
-makedepends=('automoc4'
-             'boost'
-             'boost-libs'
-             'cmake'
-             "kdepim-runtime>=${_kdever}"
-             'polkit-qt'
-             'python-sip-common'
-             'python2-pyqt4'
-             'python2-sip'
-             'python3-pyqt4'
-             'python3-sip'
-             'qscintilla-python2>=2.7.2-1')
-groups=('kde'
-        'kdebindings'
-        'kde-uninstall')
-options=('docs'
-         '!header'
-         'debug'
-         'log')
+license=('GPL' 'LGPL' 'FDL')
+makedepends=('cmake' 'automoc4' 'boost' 'kdepimlibs4' 'python2-pyqt4' 'python3-pyqt4' 'python2-sip' 
+             'python3-sip' 'qscintilla')
+groups=('kde' 'kdebindings' 'kde-uninstall')
 source=("$_mirror/pykde4-$_kdever.tar.xz")
-sha256sums=(`grep pykde4-$_kdever.tar.xz  ../checksums.txt | cut -d" " -f1`)
+source=("http://download.kde.org/stable/${pkgver}/src/pykde4-${pkgver}.tar.xz"
+        pykde4-4.14.3-missing_symbols.patch)
+sha1sums=('9cc8e70d3b107a876cf579beab1f582861cd2c48'
+          'd91cc58a649bb0a8a5ba269c3012ae2e72ffaa09')
 
 prepare() {
-    cd "${srcdir}" 
-    rm -rf build-python2 build-python3
-    mkdir -p build-python2 build-python3
+  cd "${srcdir}"
+  rm -rf build-python2 build-python3
+  mkdir -p build-python2 build-python3
+  
+  cd pykde4-${pkgver}
+  patch -p1 -i ../pykde4-4.14.3-missing_symbols.patch
 }
 
 build() {
@@ -52,7 +35,9 @@ build() {
         -DCMAKE_INSTALL_PREFIX=/usr \
         -DCMAKE_BUILD_TYPE=Release \
         -DPYTHON_EXECUTABLE=/usr/bin/python2 \
-        -DPYKDEUIC4_ALTINSTALL=TRUE
+        -DPYKDEUIC4_ALTINSTALL=TRUE \
+        -DWITH_Nepomuk=OFF \
+        -DWITH_Soprano=OFF
     make
 
     cd ${srcdir}/build-python3
@@ -60,39 +45,30 @@ build() {
         -DCMAKE_INSTALL_PREFIX=/usr \
         -DCMAKE_BUILD_TYPE=Release \
         -DPYTHON_EXECUTABLE=/usr/bin/python3 \
-        -DPYTHON_LIBRARY=/usr/lib/libpython3.4m.so.1.0 \
-        -DPYKDEUIC4_ALTINSTALL=TRUE
+        -DPYTHON_LIBRARY=/usr/lib/libpython3.5m.so.1.0 \
+        -DPYKDEUIC4_ALTINSTALL=TRUE \
+        -DWITH_Nepomuk=OFF \
+        -DWITH_Soprano=OFF
     make
 }
 
 package_kdebindings-python3() {
     pkgdesc='A set of Python 3.x bindings for KDE'
-    depends=('python3-pyqt4'
-             'qscintilla-python3'
-             'boost-libs'
-             "kdepim-runtime>=${_kdever}"
-             'kdebindings-python-common')
+    depends=('python3-pyqt4' 'kdebindings-python-common' 'kdepimlibs4')
 
     cd "${srcdir}"/build-python3
     make DESTDIR="${pkgdir}" install
 
-    # Fix issue with wrong number of given arguments
-    sed -i 's/winfo = comp.compileUi(uifile, output, None)/winfo = comp.compileUi(uifile, output, None, "")/g' \
-        "${pkgdir}"/usr/lib/python3.4/site-packages/PyQt4/uic/pykdeuic4.py
+ # Provided by kdebindings-python-common
+  rm -r "${pkgdir}"/usr/share/apps/pykde4/examples
+  rm -r "${pkgdir}"/usr/share/sip/PyKDE4
 
-    # Provided by common
-    #rm -r "${pkgdir}"/usr/share/apps/pykde4/examples
-    #rm -r "${pkgdir}"/usr/share/sip/PyKDE4
-    rm -r "${pkgdir}"/usr/share
+  ln -s /usr/bin/pykdeuic4-3.4 "${pkgdir}"/usr/bin/pykdeuic4
 }
 
 package_kdebindings-python2() {
     pkgdesc='A set of Python 2.x bindings for KDE'
-    depends=('python2-pyqt4'
-             'qscintilla-python2'
-             'boost-libs'
-             "kdepim-runtime>=${_kdever}"
-             'kdebindings-python-common')
+    depends=('python2-pyqt4' 'kdebindings-python-common' 'kdepimlibs4')
     conflicts=('kdebindings-pykde4<4.11.2')
     provides=("kdebindings-pykde4=${pkgver}"
               'kdebindings-python'
@@ -102,17 +78,13 @@ package_kdebindings-python2() {
 
     cd "${srcdir}"/build-python2
     make DESTDIR="${pkgdir}" install
+    
+  # Provided by kdebindings-python-common
+  rm -r "${pkgdir}"/usr/share/apps/pykde4/examples
+  rm -r "${pkgdir}"/usr/share/sip/PyKDE4
 
-    # Fix issue with wrong number of given arguments
-    sed -i 's/winfo = comp.compileUi(uifile, output, None)/winfo = comp.compileUi(uifile, output, None, "")/g' "${pkgdir}"/usr/lib/python2.7/site-packages/PyQt4/uic/pykdeuic4.py
-
-    # Symlink
-    ln -s /usr/bin/pykdeuic4-2.7 "${pkgdir}"/usr/bin/pykdeuic4
-
-    # Provided by common
-    #rm -r "${pkgdir}"/usr/share/apps/pykde4/examples
-    #rm -r "${pkgdir}"/usr/share/sip/PyKDE4
-    rm -r "${pkgdir}"/usr/share
+  # Use the python2 executable
+  find "${pkgdir}" -name '*.py' | xargs sed -i 's|#!/usr/bin/env python|#!/usr/bin/env python2|'
 }
 
 package_kdebindings-python-common() {
@@ -120,14 +92,10 @@ package_kdebindings-python-common() {
     conflicts=('kdebindings-pykde<4.11.2'
                'kdebindings-pykde4-common')
     replaces=('kdebindings-pykde4-common')
+    depends=('qscintilla')
 
     cd ${srcdir}/build-python2
     make DESTDIR="${pkgdir}" install
 
     rm -r "${pkgdir}"/usr/{bin,lib}
-
-
-    # This doesn't seem right, we shouldn't need to install the file manually
-    install -Dm 644 pykde_config.sip ${pkgdir}/usr/share/sip/PyKDE4/pykde_config.sip
-
 }
