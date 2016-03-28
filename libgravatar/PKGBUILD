@@ -1,0 +1,31 @@
+# Include global configuration
+source ../kdeapps.conf
+
+pkgname=libgravatar
+pkgver=${_kdever}
+pkgrel=1
+pkgdesc="Lib that provides gravatar support"
+arch=('x86_64')
+url='https://github.com/KDE/libgravatar'
+license=('LGPL')
+depends=('ki18n' 'kconfig' 'kwidgetsaddons' 'pimcommon')
+groups=(kde kde-applications kde-uninstall)
+makedepends=('extra-cmake-modules' 'kdoctools')
+options=('docs' 'debug')
+source=("$_mirror/${pkgname}-$_kdever.tar.xz")
+sha256sums=(`grep " ${pkgname}-${_kdever}.tar.xz"  ../checksums.txt | cut -d " " -f1`)
+
+prepare() {
+    mkdir -p build
+}
+
+build() {
+    cd build
+    cmake_kf5 ../${pkgname}-${pkgver}
+    make
+}
+
+package() {
+    cd build
+    make DESTDIR=${pkgdir} install
+}

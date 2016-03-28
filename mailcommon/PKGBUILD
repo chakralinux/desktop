@@ -1,0 +1,33 @@
+# Include global configuration
+source ../kdeapps.conf
+
+pkgname=mailcommon
+pkgver=${_kdever}
+pkgrel=1
+pkgdesc="Lib which provides support for mail apps"
+arch=('x86_64')
+url='https://github.com/KDE/mailcommon'
+license=('LGPL')
+depends=('akonadi' 'ki18n' 'kmime' 'kdepimlibs' 'kcodecs' 'kiconthemes' 'karchive' 'kitemviews'
+         'kwindowsystem' 'kxmlgui' 'messagelib' 'libkdepim' 'pimcommon' 'mailimporter' 'kmailtransport'
+         'kldap' 'phonon-qt5')
+makedepends=('extra-cmake-modules' 'kdoctools' 'qt5-tools')
+groups=(kde kde-applications kdepim kde-uninstall)
+options=('docs' 'debug')
+source=("$_mirror/${pkgname}-$_kdever.tar.xz")
+sha256sums=(`grep " ${pkgname}-${_kdever}.tar.xz"  ../checksums.txt | cut -d " " -f1`)
+
+prepare() {
+    mkdir -p build
+}
+
+build() {
+    cd build
+    cmake_kf5 ../${pkgname}-${pkgver}
+    make
+}
+
+package() {
+    cd build
+    make DESTDIR=${pkgdir} install
+}

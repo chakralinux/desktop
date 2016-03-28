@@ -1,0 +1,31 @@
+# Include global configuration
+source ../kdeapps.conf
+
+pkgname=kleopatra
+pkgver=${_kdever}
+pkgrel=1
+pkgdesc="Certificate manager and GUI for OpenPGP and CMS cryptography."
+arch=('x86_64')
+url='https://projects.kde.org/projects/kde/pim/kleopatra'
+license=('LGPL')
+depends=('gnupg' 'pinentry' 'gpgmepp' 'kmime' 'kcodecs' 'kdbusaddons' 'kcmutils' 'kconfig'
+         'ki18n' 'kiconthemes' 'knotifications' 'kxmlgui' 'kwindowsystem' 'ktextwidgets')
+makedepends=('extra-cmake-modules' 'kdoctools' 'boost')
+groups=(kde kde-applications kde-uninstall)
+source=("$_mirror/${pkgname}-$_kdever.tar.xz")
+sha256sums=(`grep ${pkgname}-$_kdever.tar.xz  ../checksums.txt | cut -d " " -f1`)
+
+prepare() {
+    mkdir -p build
+}
+
+build() {
+    cd build
+    cmake_kf5 ../${pkgname}-${pkgver}
+    make
+}
+
+package() {
+    cd build
+    make DESTDIR=${pkgdir} install
+}

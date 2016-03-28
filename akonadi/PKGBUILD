@@ -3,19 +3,21 @@ source ../kdeapps.conf
 
 pkgname=akonadi
 pkgver=${_kdever}
-pkgrel=2
+pkgrel=1
 pkgdesc="PIM layer, which provides an asynchronous API to access all kind of PIM data"
 arch=('x86_64')
 url='http://community.kde.org/KDE_PIM/Akonadi'
 license=('LGPL')
-depends=('shared-mime-info' 'qt5-base' 'libxslt' 'mariadb')
+depends=('shared-mime-info' 'qt5-base' 'libxslt' 'mariadb' 'kitemviews' 'kio'
+        'kdesignerplugin' 'kitemmodels')
 makedepends=('extra-cmake-modules' 'postgresql')
 checkdepends=('xorg-server-xvfb')
 optdepends=('postgresql: PostgreSQL backend'
             'mariadb: MariaDB backend')
 install="${pkgname}.install"
-replaces=('akonadi-qt4')
-conflicts=('akonadi-qt4')
+conflicts=('akonadi-client')
+provides=('akonadi-client' 'akonadi-qt4')
+replaces=('akonadi-client' 'akonadi-qt4')
 source=("$_mirror/${pkgname}-$_kdever.tar.xz")
 sha256sums=(`grep ${pkgname}-$_kdever.tar.xz  ../checksums.txt | cut -d " " -f1`)
 

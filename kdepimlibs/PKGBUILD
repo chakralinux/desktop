@@ -2,14 +2,14 @@
 source ../kdeapps.conf
 
 pkgbase=kdepimlibs
-pkgname=(akonadi-client akonadi-contact akonadi-mime akonadi-notes akonadi-socialutils kio-pim)
+pkgname=(akonadi-contact akonadi-mime akonadi-notes akonadi-socialutils kio-pim)
 pkgver=${_kdever}
-pkgrel=2
+pkgrel=1
 pkgdesc="KDE PIM Libraries"
 arch=('x86_64')
 url='https://projects.kde.org/kdepimlibs'
 license=(GPL LGPL)
-makedepends=(extra-cmake-modules qt5-tools kcalcore kmbox kcontacts kldap akonadi prison-kf5 boost kdoctools)
+makedepends=(extra-cmake-modules qt5-tools kcalcore kmbox kcontacts kldap akonadi prison-kf5 boost kdoctools grantlee-qt5)
 options=('docs' 'debug')
 source=("$_mirror/${pkgbase}-$_kdever.tar.xz")
 sha256sums=(`grep ${pkgbase}-$_kdever.tar.xz  ../checksums.txt | cut -d " " -f1`)
@@ -24,22 +24,15 @@ build() {
   make
 }
 
-package_akonadi-client() {
-  depends=(akonadi kdelibs4support)
-
-  cd build/akonadi
-  make DESTDIR="$pkgdir" install
-}
-
 package_akonadi-contact() {
-  depends=(akonadi-client kmime kcontacts kcalcore prison-kf5)
+  depends=(akonadi kmime kcontacts kcalcore prison-kf5)
 
   cd build/akonadi-contact
   make DESTDIR="$pkgdir" install
 }
 
 package_akonadi-mime() {
-  depends=(akonadi-client kmime)
+  depends=(akonadi kmime)
   install=akonadi-mime.install
 
   cd build/akonadi-mime
@@ -54,7 +47,7 @@ package_akonadi-notes() {
 }
 
 package_akonadi-socialutils() {
-  depends=(akonadi-client)
+  depends=(akonadi)
   install=akonadi-socialutils.install
 
   cd build/akonadi-socialutils

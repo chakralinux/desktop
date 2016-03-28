@@ -1,0 +1,34 @@
+# Include global configuration
+source ../kdeapps.conf
+
+pkgname=kdepim-addons
+pkgver=${_kdever}
+pkgrel=1
+arch=('x86_64')
+pkgdesc="Addons for kdepim apps (as kmail addons/ kmail theme/ kaddressbook addons etc.)"
+url="https://github.com/KDE/kdepim-addons"
+license=('GPL' 'LGPL' 'FDL')
+depends=(khtml mailcommon incidenceeditor libktnef libkgapi)
+makedepends=('extra-cmake-modules' 'kdoctools' 'clang')
+groups=('kde' 'kde-applications' 'kdepim' 'kde-uninstall')
+groups=(kde kde-applications kdepim kde-uninstall)
+install=kdepim-addons.install
+options=('docs' 'debug')
+source=("$_mirror/${pkgname}-$_kdever.tar.xz")
+sha256sums=(`grep " ${pkgname}-${_kdever}.tar.xz"  ../checksums.txt | cut -d " " -f1`)
+
+prepare() {
+    mkdir -p build
+}
+
+build() {
+    cd build
+    cmake_kf5 ../${pkgname}-${pkgver}
+    make
+}
+
+package() {
+    cd build
+    make DESTDIR=${pkgdir} install
+}
+

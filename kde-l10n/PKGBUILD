@@ -7,1001 +7,116 @@
 # Include global configuration
 source ../kdeapps.conf
 
-_origname=kde-l10n
-pkgbase=('kde-l10n')
-pkgname=('kde-l10n-ar'
-         'kde-l10n-bg'
-         'kde-l10n-bs'
-         'kde-l10n-ca'
-         'kde-l10n-ca@valencia'
-         'kde-l10n-cs'
-         'kde-l10n-da'
-         'kde-l10n-de'
-         'kde-l10n-el'
-         'kde-l10n-en_GB'
-         'kde-l10n-eo'
-         'kde-l10n-es'
-         'kde-l10n-et'
-         'kde-l10n-eu'
-         'kde-l10n-fa'
-         'kde-l10n-fi'
-         'kde-l10n-fr'
-         'kde-l10n-ga'
-         'kde-l10n-gl'
-         'kde-l10n-he'
-         'kde-l10n-hi'
-         'kde-l10n-hr'
-         'kde-l10n-hu'
-         'kde-l10n-ia'
-         'kde-l10n-id'
-         'kde-l10n-is'
-         'kde-l10n-it'
-         'kde-l10n-ja'
-         'kde-l10n-kk'
-         'kde-l10n-km'
-         'kde-l10n-ko'
-         'kde-l10n-lt'
-         'kde-l10n-lv'
-         'kde-l10n-mr'
-         'kde-l10n-nb'
-         'kde-l10n-nds'
-         'kde-l10n-nn'
-         'kde-l10n-nl'
-         'kde-l10n-pa'
-         'kde-l10n-pl'
-         'kde-l10n-pt'
-         'kde-l10n-pt_BR'
-         'kde-l10n-ro'
-         'kde-l10n-ru'
-         'kde-l10n-sk'
-         'kde-l10n-sl'
-         'kde-l10n-sr'
-         'kde-l10n-sv'
-         'kde-l10n-tr'
-         'kde-l10n-ug'
-         'kde-l10n-uk'
-#         'kde-l10n-vi'
-         'kde-l10n-wa'
-         'kde-l10n-zh_CN'
-         'kde-l10n-zh_TW')
+pkgbase=kde-l10n
 arch=('x86_64')
 pkgver=${_kdever}
 pkgrel=1
 url="http://www.kde.org"
-license=('GPL' 'FDL')
-depends=("kdelibs>=${_libsver}" 'automoc4' 'docbook-xsl')
-makedepends=('kdoctools' 'ki18n' 'qt5-tools' 'extra-cmake-modules')
+license=('GPL')
+depends=("kdelibs>=${_libsver}")
+makedepends=('kdoctools' 'ki18n' 'qt5-tools' 'extra-cmake-modules' 'automoc4' 'docbook-xsl')
 options=('docs')
 
+_languages=(
+  'ar     "Arabic"'
+  'ast    "Asturian"'
+  'bg     "Bulgarian"'
+  'bs     "Bosnian"'
+  'ca     "Catalan"'
+  'ca@valencia     "Catalan (Valencian)"'
+  'cs     "Czech"'
+  'da     "Danish"'
+  'de     "German"'
+  'el     "Greek"'
+  'en_GB  "British English"'
+  'eo     "Esperanto"'
+  'es     "Spanish"'
+  'et     "Estonian"'
+  'eu     "Basque"'
+  'fa     "Farsi"'
+  'fi     "Finnish"'
+  'fr     "French"'
+  'ga     "Irish"'
+  'gl     "Galician"'
+  'he     "Hebrew"'
+  'hi     "Hindi"'
+  'hr     "Croatian"'
+  'hu     "Hungarian"'
+  'ia     "Interlingua"'
+  'id     "Indonesian"'
+  'is     "Icelandic"'
+  'it     "Italian"'
+  'ja     "Japanese"'
+  'kk     "Kazakh"'
+  'km     "Khmer"'
+  'ko     "Korean"'
+  'lt     "Lithuanian"'
+  'lv     "Latvian"'
+  'mr     "Marathi"'
+  'nb     "Norwegian Bokmal"'
+  'nds    "Low Saxon"'
+  'nl     "Dutch"'
+  'nn     "Norwegian Nynorsk"'
+  'pa     "Panjabi/Punjabi"'
+  'pl     "Polish"'
+  'pt     "Portuguese"'
+  'pt_BR  "Brazilian Portuguese"'
+  'ro     "Romanian"'
+  'ru     "Russian"'
+  'sk     "Slovak"'
+  'sl     "Slovenian"'
+  'sr     "Serbian"'
+  'sv     "Swedish"'
+  'tr     "Turkish"'
+  'ug     "Uyghur"'
+  'uk     "Ukrainian"'
+  'wa     "Walloon"'
+  'zh_CN  "Chinese Simplified"'
+  'zh_TW  "Chinese Traditional"'
+)
+
+pkgname=()
 source=()
 sha256sums=()
 
-for _name in "${pkgname[@]}"; do
-  source+=(${_mirror}/${pkgbase}/${_name}-${pkgver}.tar.xz)
-  [[ ${_name} != "kde-l10n-eo" ]] && source+=(${_oldkdemirror}/${pkgbase}/${_name}-${_oldkdever}.tar.xz)
-  sha256sums+=(`grep  "${_name}-${pkgver}.tar.xz"             ../checksums.txt  |  cut  -d  " "  -f1`)
-  [[ ${_name} != "kde-l10n-eo" ]] && sha256sums+=(`grep  "${_name}-${_oldkdever}.tar.xz"             ../checksums.txt  |  cut  -d  " "  -f1`)
+for _lang in "${_languages[@]}"; do
+  _locale=${_lang%% *}
+  _pkgname=kde-l10n-${_locale,,}
+  
+  pkgname+=($_pkgname)
+  source+=("http://download.kde.org/stable/applications/$pkgver/src/$pkgbase/$pkgbase-$_locale-$pkgver.tar.xz")
+  eval "package_$_pkgname() {
+    _package $_lang
+  }"
+  sha256sums+=(`grep  "$pkgbase-$_locale-$pkgver.tar.xz"             ../checksums.txt  |  cut  -d  " "  -f1`)
 done
 
+prepare() {
+  for _lang in "${_languages[@]}"; do
+    _locale=${_lang%% *}
+
+# Remove kde-runtime and kde-workspace docs, conflicts with plasma-desktop
+  sed -e '/kde-runtime/d' -e '/kde-workspace/d' -i $pkgbase-$_locale-$pkgver/4/$_locale/docs/CMakeLists.txt || true
+
+  done
+}
+
 build() {
-    cd ${srcdir}
-
-#   This has been replaced from the following section, to handle the build of both 14.12.3 and 4.14.3
-#       
-#   for it in `find . -maxdepth 1 -type d|sed -e '/^\.$/d'` ; do
-#       pushd "$it"
-#       cmake -DCMAKE_INSTALL_PREFIX=${_installprefix} -DCMAKE_BUILD_TYPE=Release
-#       make
-#       make DESTDIR=${pkgdir} install
-#       popd
-#   done
-
-    for it in ${pkgname[@]} ; do
-	 if [ ${it} != "kde-l10n-eo" ];
-         then
-         msg "Building $it-$_oldkdever"
-         pushd "$it-$_oldkdever"
-         cmake \
-             -DCMAKE_INSTALL_PREFIX=${_installprefix} \
-             -DCMAKE_BUILD_TYPE=Release
-         make
-         popd
-         fi
-
-        msg "Building $it-$pkgver"
-        pushd "$it-$pkgver"
-        lang="${it##*-}"
-        if [ ${it} == "kde-l10n-gl" ] || [ ${it} == "kde-l10n-nl" ];
-        then
-          # disable kdeedu for now 15.08.0, waiting for an upstream fix
-          sed -i 's|add_subdirectory(kdeedu)|#add_subdirectory(kdeedu)|' ./5/$lang/messages/CMakeLists.txt
-        fi
-        if [ ${it} == "kde-l10n-pl" ]
-        then
-          sed -i 's|add_subdirectory(kdeedu)|#add_subdirectory(kdeedu)|' ./5/$lang/scripts/CMakeLists.txt
-        fi
-        if [ ${it} == "kde-l10n-pt_BR" ]
-        then
-          sed -i 's|add_subdirectory(autocorrect)|#add_subdirectory(autocorrect)|' ./5/$lang/data/CMakeLists.txt
-        fi
-        cmake \
-            -DCMAKE_INSTALL_PREFIX=${_installprefix} \
-            -DCMAKE_BUILD_TYPE=Release
-        make
-        popd
-    done
-}
-
-package_helper()
-{
-    if [ ${1} != "eo" ];
-    then
-      pushd ${srcdir}/kde-l10n-${1}-${_oldkdever}
-      make DESTDIR=${pkgdir} install
-      popd
-    fi
-    # overwrite old 4.14.3 with new one
-    pushd ${srcdir}/kde-l10n-${1}-${pkgver}
-    make DESTDIR=${pkgdir} install
-    popd
-}
-
-package_kde-l10n-ar()
-{
-    pkgdesc="KDE language support: Arabic"
-    groups=("kde-uninstall" "kde-l10n")
-    categories=('localization')
-
-    package_helper ar
-}
-
-package_kde-l10n-as()
-{
-    pkgdesc="KDE language support: Assamese"
-    groups=("kde-uninstall" "kde-l10n")
-    categories=('localization')
-
-    package_helper as
-}
-
-package_kde-l10n-ast()
-{
-    pkgdesc="KDE language support: Asturian"
-    groups=("kde-uninstall" "kde-l10n")
-    categories=('localization')
-
-    package_helper ast
-}
-
-package_kde-l10n-be()
-{
-    pkgdesc="KDE language support: Belarusian"
-    groups=("kde-uninstall" "kde-l10n")
-    categories=('localization')
-
-    package_helper be
-}
-
-package_kde-l10n-be@latin()
-{
-    pkgdesc="KDE language support: Belarusian (Latin)"
-    groups=("kde-uninstall" "kde-l10n")
-    categories=('localization')
-
-    package_helper be@latin
-}
-
-package_kde-l10n-bg()
-{
-    pkgdesc="KDE language support: Bulgarian"
-    groups=("kde-uninstall" "kde-l10n")
-    categories=('localization')
-
-    package_helper bg
-}
-
-package_kde-l10n-bn-in()
-{
-    pkgdesc="KDE language support: Bengali (India)"
-    groups=("kde-uninstall" "kde-l10n")
-    categories=('localization')
-
-    package_helper bn_IN
-}
-
-
-package_kde-l10n-bn()
-{
-    pkgdesc="KDE language support: Bengali"
-    groups=("kde-uninstall" "kde-l10n")
-    categories=('localization')
-
-    package_helper bn
-}
-
-package_kde-l10n-bs()
-{
-    pkgdesc="KDE language support: Bosnian"
-    groups=("kde-uninstall" "kde-l10n")
-    categories=('localization')
-
-    package_helper bs
-}
-
-package_kde-l10n-ca()
-{
-    pkgdesc="KDE language support: Catalan"
-    groups=("kde-uninstall" "kde-l10n")
-    categories=('localization')
-
-    package_helper ca
-}
-
-package_kde-l10n-ca@valencia()
-{
-    pkgdesc="KDE language support: Valencian (southern Catalan)"
-    groups=("kde-uninstall" "kde-l10n")
-    categories=('localization')
-
-    package_helper ca@valencia
-}
-
-package_kde-l10n-crh()
-{
-    pkgdesc="KDE language support: Crimean Tatar"
-    groups=("kde-uninstall" "kde-l10n")
-    categories=('localization')
-
-    package_helper crh
-}
-
-package_kde-l10n-cs()
-{
-    pkgdesc="KDE language support: Czech"
-    groups=("kde-uninstall" "kde-l10n")
-    categories=('localization')
-
-    package_helper cs
-}
-
-package_kde-l10n-csb()
-{
-    pkgdesc="KDE language support: Kashubian"
-    groups=("kde-uninstall" "kde-l10n")
-    categories=('localization')
-
-    package_helper csb
-}
-
-package_kde-l10n-cy()
-{
-    pkgdesc="KDE language support: Welsh"
-    groups=("kde-uninstall" "kde-l10n")
-    categories=('localization')
-
-    package_helper cy
-}
-
-package_kde-l10n-da()
-{
-    pkgdesc="KDE language support: Danish"
-    groups=("kde-uninstall" "kde-l10n")
-    categories=('localization')
-
-    package_helper da
-}
-
-package_kde-l10n-de()
-{
-    pkgdesc="KDE language support: German"
-    groups=("kde-uninstall" "kde-l10n")
-    categories=('localization')
-
-    package_helper de
-}
-
-package_kde-l10n-el()
-{
-    pkgdesc="KDE language support: Greek"
-    groups=("kde-uninstall" "kde-l10n")
-    categories=('localization')
-
-    package_helper el
-}
-
-package_kde-l10n-eo()
-{
-    pkgdesc="KDE language support: Esperanto"
-    groups=("kde-uninstall" "kde-l10n")
-    categories=('localization')
-
-    package_helper eo
-}
-
-package_kde-l10n-en_GB()
-{
-    pkgdesc="KDE language support: British English"
-    groups=("kde-uninstall" "kde-l10n")
-    categories=('localization')
-    conflicts=('kde-l10n-en_gb')
-    provides=("kde-l10n-en_gb=${pkgver}")
-    replaces=("kde-l10n-en_gb")
-
-    package_helper en_GB
-}
-
-package_kde-l10n-eo()
-{
-    pkgdesc="KDE language support: Esperanto"
-    groups=("kde-uninstall" "kde-l10n")
-    categories=('localization')
-
-    package_helper eo
-}
-
-package_kde-l10n-es()
-{
-    pkgdesc="KDE language support: Spanish"
-    groups=("kde-uninstall" "kde-l10n")
-    categories=('localization')
-
-    package_helper es
-}
-
-package_kde-l10n-et()
-{
-    pkgdesc="KDE language support: Estonian"
-    groups=("kde-uninstall" "kde-l10n")
-    categories=('localization')
-
-    package_helper et
-}
-
-package_kde-l10n-eu()
-{
-    pkgdesc="KDE language support: Basque"
-    groups=("kde-uninstall" "kde-l10n")
-    categories=('localization')
-
-    package_helper eu
-}
-
-package_kde-l10n-fa()
-{
-    pkgdesc="KDE language support: Persian"
-    groups=("kde-uninstall" "kde-l10n")
-    categories=('localization')
-
-    package_helper fa
-}
-
-package_kde-l10n-fi()
-{
-    pkgdesc="KDE language support: Finnish"
-    groups=("kde-uninstall" "kde-l10n")
-    categories=('localization')
-
-    package_helper fi
-}
-
-package_kde-l10n-fr()
-{
-    pkgdesc="KDE language support: French"
-    groups=("kde-uninstall" "kde-l10n")
-    categories=('localization')
-
-    package_helper fr
-}
-
-package_kde-l10n-fy()
-{
-    pkgdesc="KDE language support: Frisian"
-    groups=("kde-uninstall" "kde-l10n")
-    categories=('localization')
-
-    package_helper fy
-}
-
-package_kde-l10n-ga()
-{
-    pkgdesc="KDE language support: Irish Gaelic"
-    groups=("kde-uninstall" "kde-l10n")
-    categories=('localization')
-
-    package_helper ga
-}
-
-package_kde-l10n-gl()
-{
-    pkgdesc="KDE language support: Galician"
-    groups=("kde-uninstall" "kde-l10n")
-    categories=('localization')
-
-    package_helper gl
-}
-
-package_kde-l10n-gu()
-{
-    pkgdesc="KDE language support: Gujarati"
-    groups=("kde-uninstall" "kde-l10n")
-    categories=('localization')
-
-    package_helper gu
-}
-
-package_kde-l10n-ha()
-{
-    pkgdesc="KDE language support: Hausa"
-    groups=("kde-uninstall" "kde-l10n")
-    categories=('localization')
-
-    package_helper ha
-}
-
-package_kde-l10n-he()
-{
-    pkgdesc="KDE language support: Hebrew"
-    groups=("kde-uninstall" "kde-l10n")
-    categories=('localization')
-
-    package_helper he
-}
-
-package_kde-l10n-hi()
-{
-    pkgdesc="KDE language support: Hindi"
-    groups=("kde-uninstall" "kde-l10n")
-    categories=('localization')
-
-    package_helper hi
-}
-
-package_kde-l10n-hne()
-{
-    pkgdesc="KDE language support: Chhattisgarhi"
-    groups=("kde-uninstall" "kde-l10n")
-    categories=('localization')
-
-    package_helper hne
-}
-
-package_kde-l10n-hr()
-{
-    pkgdesc="KDE language support: Croatian"
-    groups=("kde-uninstall" "kde-l10n")
-    categories=('localization')
-
-    package_helper hr
-}
-
-package_kde-l10n-hsb()
-{
-    pkgdesc="KDE language support: Upper Sorbian"
-    groups=("kde-uninstall" "kde-l10n")
-    categories=('localization')
-
-    package_helper hsb
-}
-
-package_kde-l10n-hu()
-{
-    pkgdesc="KDE language support: Hungarian"
-    groups=("kde-uninstall" "kde-l10n")
-    categories=('localization')
-
-    package_helper hu
-}
-
-package_kde-l10n-hy()
-{
-    pkgdesc="KDE language support: Armenian"
-    groups=("kde-uninstall" "kde-l10n")
-    categories=('localization')
-
-    package_helper hy
-}
-
-package_kde-l10n-ia()
-{
-    pkgdesc="KDE language support: Interlingua"
-    groups=("kde-uninstall" "kde-l10n")
-    categories=('localization')
-
-    package_helper ia
-}
-
-package_kde-l10n-id()
-{
-    pkgdesc="KDE language support: Indonesian"
-    groups=("kde-uninstall" "kde-l10n")
-    categories=('localization')
-
-    package_helper id
-}
-
-package_kde-l10n-is()
-{
-    pkgdesc="KDE language support: Icelandic"
-    groups=("kde-uninstall" "kde-l10n")
-    categories=('localization')
-
-    package_helper is
-}
-
-package_kde-l10n-it()
-{
-    pkgdesc="KDE language support: Italian"
-    groups=("kde-uninstall" "kde-l10n")
-    categories=('localization')
-
-    package_helper it
-}
-
-package_kde-l10n-ja()
-{
-    pkgdesc="KDE language support: Japanese"
-    groups=("kde-uninstall" "kde-l10n")
-    categories=('localization')
-
-    package_helper ja
-}
-
-package_kde-l10n-ka()
-{
-    pkgdesc="KDE language support: Georgian"
-    groups=("kde-uninstall" "kde-l10n")
-    categories=('localization')
-
-    package_helper ka
-}
-
-package_kde-l10n-kk()
-{
-    pkgdesc="KDE language support: Kazakh"
-    groups=("kde-uninstall" "kde-l10n")
-    categories=('localization')
-
-    package_helper kk
-}
-
-package_kde-l10n-km()
-{
-    pkgdesc="KDE language support: Khmer"
-    groups=("kde-uninstall" "kde-l10n")
-    categories=('localization')
-
-    package_helper km
-}
-
-package_kde-l10n-kn()
-{
-    pkgdesc="KDE language support: Kannada"
-    groups=("kde-uninstall" "kde-l10n")
-    categories=('localization')
-
-    package_helper kn
-}
-
-package_kde-l10n-ko()
-{
-    pkgdesc="KDE language support: Korean"
-    groups=("kde-uninstall" "kde-l10n")
-    categories=('localization')
-
-    package_helper ko
-}
-
-package_kde-l10n-ku()
-{
-    pkgdesc="KDE language support: Kurdish"
-    groups=("kde-uninstall" "kde-l10n")
-    categories=('localization')
-
-    package_helper ku
-}
-
-package_kde-l10n-lb()
-{
-    pkgdesc="KDE language support: Luxembourgish"
-    groups=("kde-uninstall" "kde-l10n")
-    categories=('localization')
-
-    package_helper lb
-}
-
-package_kde-l10n-lt()
-{
-    pkgdesc="KDE language support: Lithuanian"
-    groups=("kde-uninstall" "kde-l10n")
-    categories=('localization')
-
-    package_helper lt
-}
-
-package_kde-l10n-lv()
-{
-    pkgdesc="KDE language support: Latvian"
-    groups=("kde-uninstall" "kde-l10n")
-    categories=('localization')
-
-    package_helper lv
-}
-
-package_kde-l10n-mai()
-{
-    pkgdesc="KDE language support: Maithili"
-    groups=("kde-uninstall" "kde-l10n")
-    categories=('localization')
-
-    package_helper mai
-}
-
-package_kde-l10n-mk()
-{
-    pkgdesc="KDE language support: Macedonian"
-    groups=("kde-uninstall" "kde-l10n")
-    categories=('localization')
-
-    package_helper mk
-}
-
-package_kde-l10n-ml()
-{
-    pkgdesc="KDE language support: Malayalam"
-    groups=("kde-uninstall" "kde-l10n")
-    categories=('localization')
-
-    package_helper ml
-}
-
-package_kde-l10n-mr()
-{
-    pkgdesc="KDE language support: Marathi"
-    groups=("kde-uninstall" "kde-l10n")
-    categories=('localization')
-
-    package_helper mr
-}
-
-package_kde-l10n-ms()
-{
-    pkgdesc="KDE language support: Malay"
-    groups=("kde-uninstall" "kde-l10n")
-    categories=('localization')
-
-    package_helper ms
-}
-
-package_kde-l10n-nb()
-{
-    pkgdesc="KDE language support: Norwegian Bokmal"
-    groups=("kde-uninstall" "kde-l10n")
-    categories=('localization')
-
-    package_helper nb
-}
-
-package_kde-l10n-nds()
-{
-    pkgdesc="KDE language support: Low Saxon"
-    groups=("kde-uninstall" "kde-l10n")
-    categories=('localization')
-
-    package_helper nds
-}
-
-package_kde-l10n-ne()
-{
-    pkgdesc="KDE language support: Nepali"
-    groups=("kde-uninstall" "kde-l10n")
-    categories=('localization')
-
-    package_helper ne
-}
-
-package_kde-l10n-nl()
-{
-    pkgdesc="KDE language support: Dutch"
-    groups=("kde-uninstall" "kde-l10n")
-    categories=('localization')
-
-    package_helper nl
-}
-
-package_kde-l10n-nn()
-{
-    pkgdesc="KDE language support: Norwegian Nynorsk"
-    groups=("kde-uninstall" "kde-l10n")
-    categories=('localization')
-
-    package_helper nn
-}
-
-package_kde-l10n-oc()
-{
-    pkgdesc="KDE language support: Occitan"
-    groups=("kde-uninstall" "kde-l10n")
-    categories=('localization')
-
-    package_helper oc
-}
-
-package_kde-l10n-or()
-{
-    pkgdesc="KDE language support: Oriya"
-    groups=("kde-uninstall" "kde-l10n")
-    categories=('localization')
-
-    package_helper or
-}
-
-package_kde-l10n-pa()
-{
-    pkgdesc="KDE language support: Panjabi & Punjabi"
-    groups=("kde-uninstall" "kde-l10n")
-    categories=('localization')
-
-    package_helper pa
-}
-
-package_kde-l10n-pl()
-{
-    pkgdesc="KDE language support: Polish"
-    groups=("kde-uninstall" "kde-l10n")
-    categories=('localization')
-
-    package_helper pl
-}
-
-package_kde-l10n-ps()
-{
-    pkgdesc="KDE language support: Pashto"
-    groups=("kde-uninstall" "kde-l10n")
-    categories=('localization')
-
-    package_helper ps
-}
-
-package_kde-l10n-pt()
-{
-    pkgdesc="KDE language support: Portugese"
-    groups=("kde-uninstall" "kde-l10n")
-    categories=('localization')
-
-    package_helper pt
-}
-
-package_kde-l10n-pt_BR()
-{
-    pkgdesc="KDE language support: Brazilian Portuguese"
-    groups=("kde-uninstall" "kde-l10n")
-    categories=('localization')
-
-    package_helper pt_BR
-}
-
-package_kde-l10n-ro()
-{
-    pkgdesc="KDE language support: Romanian"
-    groups=("kde-uninstall" "kde-l10n")
-    categories=('localization')
-
-    package_helper ro
-}
-
-package_kde-l10n-ru()
-{
-    pkgdesc="KDE language support: Russian"
-    groups=("kde-uninstall" "kde-l10n")
-    categories=('localization')
-
-    package_helper ru
-}
-
-package_kde-l10n-se()
-{
-    pkgdesc="KDE language support: Northern Sami"
-    groups=("kde-uninstall" "kde-l10n")
-    categories=('localization')
-
-    package_helper se
-}
-
-package_kde-l10n-si()
-{
-    pkgdesc="KDE language support: Sinhala"
-    groups=("kde-uninstall" "kde-l10n")
-    categories=('localization')
-
-    package_helper si
-}
-
-
-package_kde-l10n-sk()
-{
-    pkgdesc="KDE language support: Slovak"
-    groups=("kde-uninstall" "kde-l10n")
-    categories=('localization')
-
-    package_helper sk
-}
-
-package_kde-l10n-sl()
-{
-    pkgdesc="KDE language support: Slovenian"
-    groups=("kde-uninstall" "kde-l10n")
-    categories=('localization')
-
-    package_helper sl
-}
-
-package_kde-l10n-sr()
-{
-    pkgdesc="KDE language support: Serbian"
-    groups=("kde-uninstall" "kde-l10n")
-    categories=('localization')
-
-    package_helper sr
-}
-
-package_kde-l10n-sr@ijekavian()
-{
-    pkgdesc="KDE language support: Serbian (Ijekavian)"
-    groups=("kde-uninstall" "kde-l10n")
-    categories=('localization')
-
-    package_helper sr@ijekavian
-}
-
-package_kde-l10n-sr@ijekavianlatin()
-{
-    pkgdesc="KDE language support: Serbian (Ijekavian Latin)"
-    groups=("kde-uninstall" "kde-l10n")
-    categories=('localization')
-
-    package_helper sr@ijekavianlatin
-}
-
-package_kde-l10n-sr@latin()
-{
-    pkgdesc="KDE language support: Serbian (Latin)"
-    groups=("kde-uninstall" "kde-l10n")
-    categories=('localization')
-
-    package_helper sr@latin
-}
-
-package_kde-l10n-sv()
-{
-    pkgdesc="KDE language support: Swedish"
-    groups=("kde-uninstall" "kde-l10n")
-    categories=('localization')
-
-    package_helper sv
-}
-
-package_kde-l10n-ta()
-{
-    pkgdesc="KDE language support: Tamil"
-    groups=("kde-uninstall" "kde-l10n")
-    categories=('localization')
-
-    package_helper ta
-}
-
-package_kde-l10n-te()
-{
-    pkgdesc="KDE language support: Telugu"
-    groups=("kde-uninstall" "kde-l10n")
-    categories=('localization')
-
-    package_helper te
-}
-
-package_kde-l10n-th()
-{
-    pkgdesc="KDE language support: Thai"
-    groups=("kde-uninstall" "kde-l10n")
-    categories=('localization')
-
-    package_helper th
-}
-
-package_kde-l10n-tr()
-{
-    pkgdesc="KDE language support: Turkish"
-    groups=("kde-uninstall" "kde-l10n")
-    categories=('localization')
-
-    package_helper tr
-}
-
-package_kde-l10n-ug()
-{
-    pkgdesc="KDE language support: Uyghur"
-    groups=("kde-uninstall" "kde-l10n")
-    categories=('localization')
-
-    package_helper ug
-}
-
-package_kde-l10n-uk()
-{
-    pkgdesc="KDE language support: Ukrainian"
-    groups=("kde-uninstall" "kde-l10n")
-    categories=('localization')
-
-    package_helper uk
-}
-
-package_kde-l10n-uz()
-{
-    pkgdesc="KDE language support: Uzbek"
-    groups=("kde-uninstall" "kde-l10n")
-    categories=('localization')
-
-    package_helper uz
-}
-
-package_kde-l10n-uz@cyrillic()
-{
-    pkgdesc="KDE language support: Uzbek (Cyrillic)"
-    groups=("kde-uninstall" "kde-l10n")
-    categories=('localization')
-
-    package_helper uz@cyrillic
-}
-
-package_kde-l10n-vi()
-{
-    pkgdesc="KDE language support: Vietnamese"
-    groups=("kde-uninstall" "kde-l10n")
-    categories=('localization')
-
-    package_helper vi
-}
-
-package_kde-l10n-wa()
-{
-    pkgdesc="KDE language support: Walloon"
-    groups=("kde-uninstall" "kde-l10n")
-    categories=('localization')
-
-    package_helper wa
-}
-
-package_kde-l10n-xh()
-{
-    pkgdesc="KDE language support: Xhosa"
-    groups=("kde-uninstall" "kde-l10n")
-    categories=('localization')
-
-    package_helper xh
-}
-
-package_kde-l10n-zh_CN()
-{
-    pkgdesc="KDE language support: Chinese Simplified"
-    groups=("kde-uninstall" "kde-l10n")
-    categories=('localization')
-
-    package_helper zh_CN
-}
-
-package_kde-l10n-zh_hk()
-{
-    pkgdesc="KDE language support: Chinese Hong Kong"
-    groups=("kde-uninstall" "kde-l10n")
-    categories=('localization')
-
-    package_helper zh_HK
-}
-
-package_kde-l10n-zh_TW()
-{
-    pkgdesc="KDE language support: Chinese Traditional"
-    groups=("kde-uninstall" "kde-l10n")
-    categories=('localization')
-
-    package_helper zh_TW
+  for _lang in "${_languages[@]}"; do
+    _locale=${_lang%% *}
+    msg "Building $_locale"
+    mkdir -p build/$_locale
+    cd build/$_locale
+    cmake $srcdir/$pkgbase-$_locale-$pkgver \
+      -DCMAKE_BUILD_TYPE=Release \
+      -DCMAKE_INSTALL_PREFIX=/usr
+    make
+    cd ../..
+  done
+}
+
+_package() {
+  pkgdesc="$2 localization for KDE"
+  cd build/$1
+  make DESTDIR="$pkgdir" install
 }

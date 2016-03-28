@@ -1,19 +1,20 @@
 # Contributors from Arch: https://www.archlinux.org/packages/extra/x86_64/libaccounts-glib/
 
 pkgname=libaccounts-glib
-pkgver=1.18
+pkgver=1.21
 pkgrel=1
 pkgdesc="Glib-based client library for accessing the online accounts database"
 arch=('x86_64')
 url="http://code.google.com/p/accounts-sso/"
 license=('LGPL')
 depends=('dbus-glib' 'libxml2' 'sqlite3')
-makedepends=('python2-gobject' 'docbook-xsl')
-source=("http://rsync.chakraos.org/sources/${pkgname}/${pkgname}-${pkgver}.tar.gz")
-md5sums=('fa37ebbe1cc1e8b738368ba86142c197')
+makedepends=('python2-gobject' 'docbook-xsl' 'gtk-doc')
+source=("https://gitlab.com/accounts-sso/libaccounts-glib/repository/archive.tar.gz?ref=VERSION_$pkgver")
+md5sums=('88184b9d613e04ae17b164019661d35d')
 
 build() {
-  cd $pkgname-$pkgver
+  cd $pkgname-*
+  ./autogen.sh
   PYTHON=/usr/bin/python2 HAVE_GCOV_FALSE='#' ./configure \
     --prefix=/usr \
     --disable-static \
@@ -22,6 +23,6 @@ build() {
 }
 
 package() {
-  cd $pkgname-$pkgver
+  cd $pkgname-*
   make DESTDIR="$pkgdir" install
 }

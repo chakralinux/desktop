@@ -1,0 +1,35 @@
+# Include global configuration
+source ../kdeapps.conf
+
+pkgname="kfloppy"
+arch=('x86_64')
+pkgver=${_kdever}
+pkgrel=1
+pkgdesc="Floppy formatter"
+url="http://www.kde.org"
+license=('GPL' 'LGPL' 'FDL')
+options=('docs' 'debug')
+install=kdeutils.install
+groups=(kde kde-applications kdegraphics kde-uninstall)
+depends=(kdelibs4support )
+makedepends=(extra-cmake-modules kdoctools)
+conflicts=(kdeutils-kfloppy)
+replaces=(kdeutils-kfloppy)
+
+source=($_mirror/${pkgname}-$_kdever.tar.xz)
+sha256sums=(`grep ${pkgname}-$_kdever.tar.xz  ../checksums.txt | cut -d " " -f1`)
+
+prepare() {
+    mkdir -p build
+}
+
+build() {
+    cd build
+    cmake_kf5 ../${pkgname}-${pkgver}
+    make
+}
+
+package() {
+    cd build
+    make DESTDIR=${pkgdir} install
+}

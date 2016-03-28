@@ -2,224 +2,199 @@
 source ../kdeapps.conf
 
 pkgbase=kdepim
-pkgname=(akonadiconsole akregator blogilo kdepim-console kaddressbook kalarm kleopatra kmail knotes
-         kontact korganizer ktnef libkdepim)
+pkgname=(akonadiconsole akregator blogilo kdepim-console kaddressbook kalarm kmail knotes kontact korganizer ktnef libkdepim)
 pkgver=${_kdever}
-pkgrel=3
+pkgrel=1
 arch=('x86_64')
 url='http://pim.kde.org'
 license=('GPL' 'LGPL' 'FDL')
 groups=('kde' 'kde-uninstall' 'kde-applications' 'kdepim')
-makedepends=(extra-cmake-modules kdepim-runtime qt5-tools grantlee-qt5 kdoctools knewstuff khtml
-             ktexteditor kdnssd kldap libktnef boost gpgmepp kontactinterface kxmlrpcclient kblog
-             akonadi-search libktnef)
+makedepends=(extra-cmake-modules kdepim-runtime qt5-tools grantlee-qt5 kdoctools knewstuff khtml ktexteditor kdnssd kldap libktnef boost gpgmepp kontactinterface kxmlrpcclient kblog akonadi-search libgravatar mailimporter mailcommon incidenceeditor libksieve)
 options=('docs' 'debug')
 source=("$_mirror/${pkgbase}-$_kdever.tar.xz")
 sha256sums=(`grep ${pkgbase}-$_kdever.tar.xz  ../checksums.txt | cut -d " " -f1`)
 
 prepare() {
-  mkdir -p build
+    mkdir -p build
 }
 
 build() {
-  cd build
-  cmake_kf5 ../${pkgbase}-${pkgver}
-  make
+    cd build
+    cmake_kf5 ../${pkgbase}-${pkgver}
+    make
 }
 
 package_akonadiconsole() {
-  pkgdesc='Akonadi Management and Debugging Console'
-  depends=('libkdepim')
-  conflicts=("kdepim-$pkgname")
-  replaces=("kdepim-$pkgname")
-  url='http://pim.kde.org'
-  install='kdepim.install'
-  cd build/akonadiconsole
-  make DESTDIR="$pkgdir" install
+    pkgdesc='Akonadi Management and Debugging Console'
+    depends=(calendarsupport messagelib hicolor-icon-theme)
+    conflicts=("kdepim-$pkgname")
+    replaces=("kdepim-$pkgname")
+    url='http://pim.kde.org'
+    install='kdepim.install'
+    cd build/akonadiconsole
+    make DESTDIR="$pkgdir" install
 }
 
 package_akregator() {
-  pkgdesc='A Feed Reader for KDE'
-  depends=('libkdepim' 'khtml' 'kontactinterface')
-  conflicts=("kdepim-$pkgname")
-  replaces=("kdepim-$pkgname")
-  url="http://kde.org/applications/internet/akregator/"
-  install='akregator.install'
-  cd build/akregator
-  make DESTDIR="$pkgdir" install
-  cd "$srcdir"/build/doc/akregator
-  make DESTDIR="$pkgdir" install
+    pkgdesc='A Feed Reader for KDE'
+    depends=('kdepim-common' 'khtml' 'kontactinterface')
+    conflicts=("kdepim-$pkgname")
+    replaces=("kdepim-$pkgname")
+    url="http://kde.org/applications/internet/akregator/"
+    install='akregator.install'
+    cd build/akregator
+    make DESTDIR="$pkgdir" install
+    cd "$srcdir"/build/doc/akregator
+    make DESTDIR="$pkgdir" install
 }
 
 package_blogilo() {
-  pkgdesc='A KDE Blogging Client'
-  depends=('libkdepim' 'kblog' 'ktexteditor')
-  conflicts=("kdepim-$pkgname")
-  replaces=("kdepim-$pkgname")
-  url="http://kde.org/applications/internet/blogilo/"
-  install='kdepim.install'
-  cd build/blogilo
-  make DESTDIR="$pkgdir" install
-  cd "$srcdir"/build/composereditor-ng
-  make DESTDIR="$pkgdir" install
-  cd "$srcdir"/build/doc/blogilo
-  make DESTDIR="$pkgdir" install
+    pkgdesc='A KDE Blogging Client'
+    depends=('kdepim-common' 'kblog' 'ktexteditor')
+    conflicts=("kdepim-$pkgname")
+    replaces=("kdepim-$pkgname")
+    url="http://kde.org/applications/internet/blogilo/"
+    install='kdepim.install'
+    cd build/blogilo
+    make DESTDIR="$pkgdir" install
+    cd "$srcdir"/build/doc/blogilo
+    make DESTDIR="$pkgdir" install
 }
 
 package_kdepim-console() {
-  pkgdesc='Command line tool for accessing calendar files'
-  depends=('libkdepim')
-  url='http://pim.kde.org'
-  install='kdepim.install'
-  cd build/console
-  make DESTDIR="$pkgdir" install
-  cd "$srcdir"/build/doc/konsolekalendar
-  make DESTDIR="$pkgdir" install
+    pkgdesc='Command line tool for accessing calendar files'
+    depends=('kdepim-common')
+    url='http://pim.kde.org'
+    install='kdepim.install'
+    cd build/console
+    make DESTDIR="$pkgdir" install
+    cd "$srcdir"/build/doc/konsolekalendar
+    make DESTDIR="$pkgdir" install
 }
 
 package_kaddressbook() {
-  pkgdesc='Contact Manager'
-  depends=('libkdepim' 'kontactinterface')
-  conflicts=("kdepim-$pkgname")
-  replaces=("kdepim-$pkgname")
-  url="http://kde.org/applications/office/kaddressbook/"
-  install='kaddressbook.install'
-  for _i in kaddressbook plugins/kaddressbook; do
-      cd "$srcdir"/build/$_i
-      make DESTDIR="$pkgdir" install
-  done
+    pkgdesc='Contact Manager'
+    depends=('kdepim-common' 'kontactinterface')
+    conflicts=("kdepim-$pkgname")
+    replaces=("kdepim-$pkgname")
+    url="http://kde.org/applications/office/kaddressbook/"
+    install='kaddressbook.install'
+  
+    cd "$srcdir"/build/kaddressbook
+    make DESTDIR="$pkgdir" install
 }
 
 package_kalarm() {
-  pkgdesc='Personal Alarm Scheduler'
-  depends=('libkdepim')
-  conflicts=("kdepim-$pkgname")
-  replaces=("kdepim-$pkgname")
-  url="http://kde.org/applications/utilities/kalarm/"
-  install='kdepim.install'
-  cd build/kalarm
-  make DESTDIR="$pkgdir" install
-  cd "$srcdir"/build/doc/kalarm
-  make DESTDIR="$pkgdir" install
-}
-
-package_kleopatra() {
-  pkgdesc='Certificate Manager and Unified Crypto GUI'
-  depends=('libkdepim')
-  conflicts=("kdepim-$pkgname")
-  replaces=("kdepim-$pkgname")
-  install=kleopatra.install
-  url="http://kde.org/applications/utilities/kleopatra/"
-  cd build/kleopatra
-  make DESTDIR="$pkgdir" install
-  cd "$srcdir"/build/doc/kleopatra
-  make DESTDIR="$pkgdir" install
-  cd "$srcdir"/build/doc/kwatchgnupg
-  make DESTDIR="$pkgdir" install
+    pkgdesc='Personal Alarm Scheduler'
+    depends=('kdepim-common')
+    conflicts=("kdepim-$pkgname")
+    replaces=("kdepim-$pkgname")
+    url="http://kde.org/applications/utilities/kalarm/"
+    install='kdepim.install'
+    cd build/kalarm
+    make DESTDIR="$pkgdir" install
+    cd "$srcdir"/build/doc/kalarm
+    make DESTDIR="$pkgdir" install
 }
 
 package_kmail() {
-  pkgdesc='Mail Client'
-  depends=('kaddressbook' 'kontactinterface' 'kio-pim')
-  conflicts=("kdepim-$pkgname")
-  replaces=("kdepim-$pkgname")
-  url="http://kde.org/applications/internet/kmail/"
-  install='kmail.install'
-        for _i in kmail agents/archivemailagent agents/mailfilteragent \
-            storageservicemanager importwizard libksieve messagelist grantleeeditor mboximporter sieveeditor; do
-            cd "$srcdir"/build/$_i
-            make DESTDIR="$pkgdir" install
-        done
-        for _i in akonadi_archivemail_agent kmail importwizard sieveeditor; do
-            cd "$srcdir"/build/doc/$_i
-            make DESTDIR="$pkgdir" install
-        done
+    pkgdesc='Mail Client'
+    depends=(kdepim-common kontactinterface kio-pim libksieve)
+    conflicts=("kdepim-$pkgname")
+    replaces=("kdepim-$pkgname")
+    url="http://kde.org/applications/internet/kmail/"
+    install='kmail.install'
+    
+    for _i in kmail agents/archivemailagent agents/mailfilteragent \
+        storageservicemanager importwizard grantleeeditor mboximporter sieveeditor; do
+        cd "$srcdir"/build/$_i
+        make DESTDIR="$pkgdir" install
+    done
+
+    for _i in akonadi_archivemail_agent kmail importwizard sieveeditor; do
+        cd "$srcdir"/build/doc/$_i
+        make DESTDIR="$pkgdir" install
+    done
 }
 
 package_knotes() {
-  pkgdesc='Popup Notes'
-  depends=('libkdepim' 'kontactinterface')
-  conflicts=("kdepim-$pkgname")
-  replaces=("kdepim-$pkgname")
-  url="http://kde.org/applications/utilities/knotes/"
-  install='kdepim.install'
-        for _i in knotes noteshared agents/notesagent; do
-          cd "$srcdir"/build/$_i
-          make DESTDIR="$pkgdir" install
-        done
-        for _i in knotes akonadi_notes_agent; do
-          cd "$srcdir"/build/doc/$_i
-          make DESTDIR="$pkgdir" install
-        done
+    pkgdesc='Popup Notes'
+    depends=('kdepim-common' 'kontactinterface')
+    conflicts=("kdepim-$pkgname")
+    replaces=("kdepim-$pkgname")
+    url="http://kde.org/applications/utilities/knotes/"
+    install='kdepim.install'
+    
+    cd "$srcdir"/build/knotes
+    make DESTDIR="$pkgdir" install
+
+    for _i in knotes akonadi_notes_agent; do
+        cd "$srcdir"/build/doc/$_i
+        make DESTDIR="$pkgdir" install
+    done
 }
 
 package_kontact() {
-  pkgdesc='Personal Information Manager'
-  depends=('libkdepim' 'kontactinterface')
-  conflicts=("kdepim-$pkgname")
-  replaces=("kdepim-$pkgname")
-  url="http://kde.org/applications/office/kontact/"
-  install='kdepim.install'
-  cd build/kontact
-  make DESTDIR="$pkgdir" install
-  cd "$srcdir"/build/doc/kontact
-  make DESTDIR="$pkgdir" install
-  cd "$srcdir"/build/doc/kontact-admin
-  make DESTDIR="$pkgdir" install
+    pkgdesc='Personal Information Manager'
+    depends=('kdepim-common' 'kontactinterface')
+    conflicts=("kdepim-$pkgname")
+    replaces=("kdepim-$pkgname")
+    url="http://kde.org/applications/office/kontact/"
+    install='kdepim.install'
+    cd build/kontact
+    make DESTDIR="$pkgdir" install
+    cd "$srcdir"/build/doc/kontact
+    make DESTDIR="$pkgdir" install
+    cd "$srcdir"/build/doc/kontact-admin
+    make DESTDIR="$pkgdir" install
 }
 
 package_korganizer() {
-  pkgdesc='Calendar and Scheduling Program'
-  depends=('libkdepim' 'kontactinterface')
-  conflicts=("kdepim-$pkgname")
-  replaces=("kdepim-$pkgname")
-  url="http://kde.org/applications/office/korganizer"
-  install='korganizer.install'
-  for _i in korganizer korgac; do
+    pkgdesc='Calendar and Scheduling Program'
+    depends=('kdepim-common' 'kontactinterface')
+    conflicts=("kdepim-$pkgname")
+    replaces=("kdepim-$pkgname")
+    url="http://kde.org/applications/office/korganizer"
+    install='korganizer.install'
+    for _i in korganizer korgac; do
     cd "$srcdir"/build/$_i
     make DESTDIR="$pkgdir" install
-  done
-  cd "$srcdir"/build/doc/korganizer
-  make DESTDIR="$pkgdir" install
+    done
+    cd "$srcdir"/build/doc/korganizer
+    make DESTDIR="$pkgdir" install
 }
 
 package_ktnef() {
-  pkgdesc='A viewer/extractor for TNEF files'
-  depends=('libktnef' 'hicolor-icon-theme')
-  conflicts=("kdepim-$pkgname")
-  replaces=("kdepim-$pkgname")
-  url="https://projects.kde.org/projects/kde/kdepim/ktnef"
-  install=ktnef.install
-  cd build/ktnef
-  make DESTDIR="$pkgdir" install
-  cd "$srcdir"/build/doc/ktnef
-  make DESTDIR="$pkgdir" install
+    pkgdesc='A viewer/extractor for TNEF files'
+    depends=('libktnef' 'hicolor-icon-theme')
+    conflicts=("kdepim-$pkgname")
+    replaces=("kdepim-$pkgname")
+    url="https://projects.kde.org/projects/kde/kdepim/ktnef"
+    install=ktnef.install
+    cd build/ktnef
+    make DESTDIR="$pkgdir" install
+    cd "$srcdir"/build/doc/ktnef
+    make DESTDIR="$pkgdir" install
 }
 
 package_libkdepim() {
-  pkgdesc='Common libraries and resources for KDE PIM applications'
-  groups=()
-  depends=('kdepim-runtime' 'gpgmepp' 'grantlee-qt5' 'akonadi-search' 'knewstuff' 'kldap' 'kdnssd' 'libktnef')
-  conflicts=('kdepimlib' 'kdepim-common')
-  provides=('kdepimlib' 'kdepim-common') # to allow smooth upgrade from 4.14
-  replaces=('kdepimlib' 'kdepim-common')
-  url='http://pim.kde.org'
-  install=kdepim.install
-  for _i in agents/sendlateragent calendarsupport grantleetheme incidenceeditor-ng kdgantt2 libkdepim \
-    accountwizard icons libkdepimdbusinterfaces libkleo mailcommon mailimporter libgravatar eventviews \
-    messagecomposer messagecore messageviewer templateparser agents/followupreminderagent \
-    plugins/messageviewer pimcommon pimsettingexporter kaddressbookgrantlee libfollowupreminder libsendlater; do
-          cd "$srcdir"/build/$_i
-          make DESTDIR="$pkgdir" install
-  done
-  for _i in akonadi_sendlater_agent akonadi_followupreminder_agent contactthemeeditor headerthemeeditor pimsettingexporter; do 
-        cd "$srcdir"/build/doc/$_i
+    pkgdesc='Common libraries and resources for KDE PIM applications'
+    groups=()
+    depends=(incidenceeditor mailcommon kdepim-runtime kdnssd libktnef)
+    conflicts=('kdepimlib' 'kdepim-common')
+    provides=('kdepimlib' 'kdepim-common') # to allow smooth upgrade from 4.14
+    replaces=('kdepimlib' 'kdepim-common')
+    url='http://pim.kde.org'
+    install=kdepim.install
+    for _i in agents/sendlateragent accountwizard agents/followupreminderagent plugins/messageviewer pimsettingexporter; do
+        cd "$srcdir"/build/$_i
         make DESTDIR="$pkgdir" install
-  done
+    done
+    for _i in akonadi_sendlater_agent akonadi_followupreminder_agent contactthemeeditor headerthemeeditor pimsettingexporter; do 
+    cd "$srcdir"/build/doc/$_i
+    make DESTDIR="$pkgdir" install
+    done
 
-  mkdir -p "$pkgdir"/etc/xdg
-  install -m644 "$srcdir"/$pkgbase-$pkgver/kdepim.categories "$pkgdir"/etc/xdg
-
-  # remove oxygen icons, are provided by the oxygen-icons pkg
-  rm -rf "$pkgdir"/usr/share/icons/oxygen
+    mkdir -p "$pkgdir"/etc/xdg
+    install -m644 "$srcdir"/$pkgbase-$pkgver/kdepim.categories "$pkgdir"/etc/xdg
 }

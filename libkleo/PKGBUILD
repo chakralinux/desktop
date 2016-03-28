@@ -1,0 +1,32 @@
+# Include global configuration
+source ../kdeapps.conf
+
+pkgname=libkleo
+pkgver=${_kdever}
+pkgrel=1
+pkgdesc="This lib provides crypto for mails."
+arch=('x86_64')
+url='https://projects.kde.org/projects/kde/pim/libkleo'
+license=('LGPL')
+depends=('gpgmepp' 'kpimtextedit' 'kconfig' 'ki18n' 'kwidgetsaddons' 'kcompletion' 'kwindowsystem'
+         'kcoreaddons')
+makedepends=('extra-cmake-modules')
+groups=(kde kde-applications kdepim kde-uninstall)
+options=('docs' 'debug')
+source=("$_mirror/${pkgname}-$_kdever.tar.xz")
+sha256sums=(`grep " ${pkgname}-${_kdever}.tar.xz"  ../checksums.txt | cut -d " " -f1`)
+
+prepare() {
+    mkdir -p build
+}
+
+build() {
+    cd build
+    cmake_kf5 ../${pkgname}-${pkgver}
+    make
+}
+
+package() {
+    cd build
+    make DESTDIR=${pkgdir} install
+}

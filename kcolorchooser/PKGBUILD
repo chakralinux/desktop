@@ -1,0 +1,35 @@
+# Contributions from Arch: https://www.archlinux.org/packages/extra/x86_64/kdegraphics-kcolorchooser/
+# Include global configuration
+source ../kdeapps.conf
+
+pkgname=kcolorchooser
+pkgver=${_kdever}
+pkgrel=1
+pkgdesc='Colour chooser'
+url='http://kde.org/applications/graphics/kcolorchooser/'
+arch=('x86_64')
+license=('GPL' 'LGPL' 'FDL')
+depends=(kio libgphoto2)
+makedepends=(extra-cmake-modules)
+groups=(kde kde-applications kdegraphics kde-uninstall)
+conflicts=(kdegraphics-kcolorchooser)
+replaces=(kdegraphics-kcolorchooser)
+options=('docs' 'debug')
+install=${pkgname}.install
+source=("$_mirror/${pkgname}-$_kdever.tar.xz")
+sha256sums=(`grep ${pkgname}-$_kdever.tar.xz  ../checksums.txt | cut -d " " -f1`)
+
+prepare() {
+    mkdir -p build
+}
+
+build() {
+    cd build
+    cmake_kf5 ../${pkgname}-${pkgver}
+    make
+}
+
+package() {
+    cd build
+    make DESTDIR=${pkgdir} install
+}
