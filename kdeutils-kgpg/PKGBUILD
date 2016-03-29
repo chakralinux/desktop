@@ -5,7 +5,7 @@ pkgname="kdeutils-kgpg"
 _pkgname="kgpg"
 arch=('x86_64')
 pkgver=${_kdever}
-pkgrel=1
+pkgrel=2
 pkgdesc="GPG encryption and key management"
 url="http://www.kde.org"
 license=('GPL' 'LGPL' 'FDL')
@@ -29,7 +29,11 @@ build() {
     cd ${srcdir}/${_pkgname}-${pkgver}
     mkdir build
     cd build
-    cmake ..
+    cmake .. \
+        -DCMAKE_BUILD_TYPE=${_build_type} \
+        -DCMAKE_INSTALL_PREFIX=${_installprefix} \
+        -DCMAKE_SKIP_RPATH=ON \
+        -DCMAKE_{SHARED,MODULE,EXE}_LINKER_FLAGS='-Wl,--no-undefined -Wl,--as-needed'
     make
 }
 
