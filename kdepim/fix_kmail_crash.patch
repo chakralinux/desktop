@@ -1,0 +1,23 @@
+From: Niels Ole Salscheider <niels_ole@salscheider-online.de>
+Date: Sun, 27 Mar 2016 10:46:58 +0000
+Subject: Fix a crash when no plugins are found
+X-Git-Url: http://quickgit.kde.org/?p=kdepim.git&a=commitdiff&h=937ac1e328c1251e0b2d4f4bf6130e261488078e
+---
+Fix a crash when no plugins are found
+
+REVIEW: 127508
+---
+
+
+--- a/kmail/kmmainwidget.cpp
++++ b/kmail/kmmainwidget.cpp
+@@ -3757,7 +3757,7 @@
+ 
+     mTrashThreadAction->setEnabled(thread_actions && canDeleteMessages);
+     mDeleteThreadAction->setEnabled(thread_actions && canDeleteMessages);
+-    if (messageView() && messageView()->viewer()) {
++    if (messageView() && messageView()->viewer() && messageView()->viewer()->headerStylePlugin()) {
+         messageView()->viewer()->headerStylePlugin()->headerStyle()->setReadOnlyMessage(!canDeleteMessages);
+     }
+ 
+
