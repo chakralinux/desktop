@@ -4,14 +4,18 @@ source ../kdeapps.conf
 pkgname=ark
 arch=('x86_64')
 pkgver=${_kdever}
-pkgrel=1
+pkgrel=2
 pkgdesc="Archiver for various compression formats"
 url="http://www.kde.org"
 license=(GPL)
 options=('docs' 'debug')
 depends=(kpty khtml libarchive hicolor-icon-theme)
 makedepends=(extra-cmake-modules kdoctools python)
-optdepends=(p7zip zip unzip unrar)
+optdepends=("p7zip: 7Z format support"
+            "zip: ZIP format support"
+            "unzip: ZIP format support"
+            "unrar: RAR format support"
+            "lrzip: Lzop, lzip and lrz format support")
 conflicts=(kdeutils-ark)
 replaces=(kdeutils-ark)
 groups=('kde' 'kde-uninstall' 'kde-applications' 'kdeutils')
