@@ -1,5 +1,5 @@
 pkgname=icedtea-web
-pkgver=1.6.1
+pkgver=1.6.2
 pkgrel=1
 arch=('x86_64')
 pkgdesc="Provides a Free Software web browser plugin running applets written in the Java programming language and an implementation of Java Web Start, originally based on the NetX project."
@@ -10,17 +10,17 @@ _javaver=8
 _jvmdir="/usr/lib/jvm/java-${_javaver}-openjdk"
 
 depends=("java-environment=${_javaver}" 'qt' 'desktop-file-utils')
-makedepends=("java-environment=${_javaver}" 'zip' 'qt' 'npapi-sdk' 'rhino' 'junit' 'cups' 'autoconf')
+makedepends=('zip' 'npapi-sdk' 'rhino' 'junit' 'cups' 'autoconf')
 categories=('network')
 istall="${pkgname}.install"
 source=("http://icedtea.classpath.org/download/source/${pkgname}-${pkgver}.tar.gz")
 # due to broken path names in the tarball that fails with LANG=C in our chroot
 noextract="${pkgname}-$pkgver.tar.gz"
-sha512sums=('dae39818f74a098289acd0736d27c2e68b10b603a3fb0a180cf4b6444345cbe71ab1ba77dfb198f053f9567bb18aa96de09049c3b595b3d292d142a7ae7d3ef9')
+md5sums=('ef9b7746dab933afa871428da73169f6')
 
-build() {
+prepare() {
   cd "${srcdir}"
-  
+
   # if you encounter this error "bsdtar: Failed to set default locale"
   # you will need to set locale of your chroot   https://wiki.archlinux.org/index.php/Locale
   # do this (inside your chroot):
@@ -28,9 +28,11 @@ build() {
   # then uncomment a locale (like en_US.UTF-8 for example)
   # save and type
   # sudo locale-gen
-  
-  LANG=en_US.UTF-8 bsdtar -x -f "${srcdir}/${pkgname}-$pkgver.tar.gz"
 
+  LANG=en_US.UTF-8 bsdtar -x -f "${srcdir}/${pkgname}-$pkgver.tar.gz"
+}
+
+build() {
   cd "${srcdir}"/icedtea-web*
 
   ./configure --prefix="${_jvmdir}" \
@@ -48,7 +50,7 @@ package() {
   make install-exec-local install-data-local DESTDIR="${pkgdir}"
 
   # Install desktop files.
-  install -m755 -d "${pkgdir}/usr/share"/{applications,pixmaps}
+  install -dm755 "${pkgdir}/usr/share"/{applications,pixmaps}
   install -m644 javaws.png "${pkgdir}/usr/share/pixmaps"
   install -m644 {javaws,itweb-settings}.desktop "${pkgdir}/usr/share/applications"
 
@@ -63,7 +65,7 @@ package() {
   popd
 
   # link the mozilla-plugin - test it here http://www.java.com/en/download/help/testvm.xml
-  install -m755 -d "${pkgdir}/usr/lib/mozilla/plugins/"
+  install -dm755 "${pkgdir}/usr/lib/mozilla/plugins/"
   ln -sf "${_jvmdir}/lib/IcedTeaPlugin.so" "${pkgdir}/usr/lib/mozilla/plugins/"
   
   make DESTDIR="${pkgdir}" install-data-local
