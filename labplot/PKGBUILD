@@ -1,8 +1,8 @@
 source ../kdeapps.conf
 
 pkgname=labplot
-pkgver=2.1.0
-pkgrel=2
+pkgver=2.2.0
+pkgrel=1
 pkgdesc="A free software data analysis and visualization application build on top of KDE SC"
 arch=('x86_64')
 url='http://labplot.sourceforge.net/'
@@ -11,16 +11,16 @@ depends=('hdf5' 'netcdf' 'gsl' 'qt5-base' 'qt5-svg' 'karchive' 'ki18n' 'kwidgets
          'kxmlgui' 'kio' 'kdelibs4support' 'kdoctools')
 makedepends=('cmake' 'extra-cmake-modules')
 conflicts=('labplot2-svn')
-source=("http://download.kde.org/stable/${pkgname}/${pkgver}/src/${pkgname}-kf5-${pkgver}.tar.xz")
-sha256sums=('53f1e4c2fb1f08843b5c387a6259f1e8d6072c0efe0f2b2df64e38ade0080120')
+source=("http://download.kde.org/stable/${pkgname}/${pkgver}/${pkgname}-${pkgver}-kf5.tar.xz")
+sha256sums=('ba02f3faf1e9c9757e4f2497d828bdeed5af15200c94faab9066ea32e1105119')
  
 build() { 
-  cd "${srcdir}"/${pkgname}-kf5-${pkgver}  
+  cd "${srcdir}"/${pkgname}-${pkgver}-kf5  
   cmake_kf5
   make 
 }
  
 package() {
-  cd "${srcdir}"/${pkgname}-kf5-${pkgver}
+  cd "${srcdir}"/${pkgname}-${pkgver}-kf5
   make DESTDIR="${pkgdir}" install
 }
