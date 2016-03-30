@@ -2,8 +2,8 @@
 
 _pkgname=QupZilla
 pkgname='qupzilla'
-pkgver=1.9.90
-_commit=a16c21b
+pkgver=2.0.0
+_commit=e546053
 pkgrel=1
 pkgdesc="A very fast open source browser based on WebKit core"
 url="http://www.qupzilla.com"
@@ -20,9 +20,11 @@ install=${pkgname}.install
 categories=('network') 
 screenshot='http://www.qupzilla.com/screens/kde.png'
 source=("https://github.com/QupZilla/QupZilla/tarball/master/QupZilla-qupzilla-${pkgver}.tar.gz"
+https://github.com/QupZilla/qupzilla/archive/v2.0.0.tar.gz
         '0001-branded-speeddial.patch'
         'start-white.png')
-sha1sums=('54f760f18880f9b453e12152a425a9c7449efd1d'
+sha1sums=('2b796be6ffcb4b71a4062836f54da3a96409d025'
+          '4083006116d8ce79829a2155ac075c76153a8c13'
           '7ae942d114016e5971caffd8a5cef8e20495f127'
           '6ec67993bda3054d4210cc08177b124f873774e3')
 
@@ -49,7 +51,7 @@ build() {
   export USE_WEBGL="true"
   export KDE_INTEGRATION="true"
   export ENABLE_OPACITY_EFFECT="true"
-  #export NO_X11="true"
+  export NO_X11="true"
 
   cd "${srcdir}/${_pkgname}-${pkgname}-${_commit}"
   /usr/lib/qt5/bin/qmake
