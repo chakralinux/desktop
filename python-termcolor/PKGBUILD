@@ -1,0 +1,38 @@
+pkgbase=termcolor
+pkgname=('python3-termcolor' 'python2-termcolor')
+pkgver=1.1.0
+pkgrel=2
+pkgdesc="ANSII Color formatting for output in terminal"
+arch=('any')
+license=('GPL')
+url="http://pypi.python.org/pypi/termcolor"
+makedepends=('python3' 'python2' 'python3-setuptools' 'python2-setuptools')
+source=(http://pypi.python.org/packages/source/t/termcolor/termcolor-$pkgver.tar.gz)
+md5sums=('043e89644f8909d462fbbfa511c768df')
+
+prepare() {
+    cp -a "${srcdir}/${pkgbase}-${pkgver}"{,-py2}
+}
+
+build() {
+    cd "${srcdir}/${pkgbase}-${pkgver}"
+    python setup.py build
+
+    cd "${srcdir}/${pkgbase}-${pkgver}-py2"
+    python2 setup.py build
+}
+
+package_python3-termcolor() {
+  depends=('python3')
+
+  cd $srcdir/termcolor-$pkgver
+  python3 setup.py install --root=$pkgdir --optimize=1
+}
+
+package_python2-termcolor() {
+  depends=('python2')
+
+  cd $srcdir/termcolor-$pkgver-py2
+  python2 setup.py install --root=$pkgdir --optimize=1
+}
+
