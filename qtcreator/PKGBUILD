@@ -1,13 +1,13 @@
 pkgname=qtcreator
-pkgver=3.6.0
-_pkgver=v3.6.0
+pkgver=3.6.1
+_pkgver=3.6
 pkgrel=1
 pkgdesc='Lightweight, cross-platform integrated development environment'
 arch=('x86_64')
 url='http://qt-project.org'
 license=('LGPL')
 depends=('qt5-quick1' 'qt5-tools' 'qt5-quickcontrols' 'gnutls' 'qbs')
-makedepends=('git' 'mesa' 'clang')
+makedepends=('mesa' 'clang')
 options=('docs')
 optdepends=('qt5-doc: for the integrated Qt documentation'
             'gdb: for the debugger'
@@ -19,37 +19,24 @@ optdepends=('qt5-doc: for the integrated Qt documentation'
             'clang: Clang code model'
             'valgrind: for analyze support')
 install=${pkgname}.install
-source=("git://code.qt.io/qt-creator/qt-creator.git#tag=${_pkgver}"
-        "git://code.qt.io/qt-labs/qbs.git"
+source=("http://download.qt.io/official_releases/${pkgname}/${_pkgver}/${pkgver}/qt-creator-opensource-src-${pkgver}.tar.gz"
         'qtcreator.desktop')
-md5sums=('SKIP'
-         'SKIP'
+md5sums=('3b6631cf6ff00bb2a2146553ea6864bf'
          '5aa242e0262fa22f75c3b59d3a4ec198')
 
-prepare() {
-  cd qt-creator
-  git submodule init
-  git config submodule.qbs.url $srcdir/qbs
-  git submodule update
-
-  # Debugger: Allow LLDB-MI to be used as debugger
-  # https://bugreports.qt.io/browse/QTCREATORBUG-15131
-  # https://code.qt.io/cgit/qt-creator/qt-creator.git/commit/?id=97e9f113879c
-  # https://code.qt.io/cgit/qt-creator/qt-creator.git/commit/?id=e57b0db0f959
-  git cherry-pick -n 97e9f113879c e57b0db0f959
-}
-
 build() {
+  cd ${srcdir}/qt-creator-opensource-src-${pkgver}
+
   [[ -d build ]] && rm -r build
   mkdir build && cd build
 
-  LLVM_INSTALL_DIR=/usr qmake-qt5 CONFIG+=journald -r ../qt-creator/qtcreator.pro
+  LLVM_INSTALL_DIR=/usr qmake-qt5 CONFIG+=journald -r ../qtcreator.pro
   make
   make docs -j1
 }
 
 package() {
-  cd build
+  cd ${srcdir}/qt-creator-opensource-src-${pkgver}/build
 
   make INSTALL_ROOT="${pkgdir}/usr/" install
   make INSTALL_ROOT="${pkgdir}/usr/" install_docs
@@ -61,7 +48,7 @@ package() {
   chmod +x "${pkgdir}"/usr/bin/qtcreator
 
   install -Dm644 ${srcdir}/qtcreator.desktop ${pkgdir}/usr/share/applications/qtcreator.desktop
-  install -Dm644 ${srcdir}/qt-creator/LGPL_EXCEPTION.TXT ${pkgdir}/usr/share/licenses/qtcreator/LGPL_EXCEPTION.TXT
+  install -Dm644 ${srcdir}/qt-creator-opensource-src-${pkgver}/LGPL_EXCEPTION.TXT ${pkgdir}/usr/share/licenses/qtcreator/LGPL_EXCEPTION.TXT
   
   # Split qbs to its package
   rm -f ${pkgdir}/usr/bin/qbs*
