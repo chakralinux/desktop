@@ -1,33 +1,32 @@
 # maintainer: Neophytos Kolokotronis <tetris4@gmail.com>
 # contributor: Jakub Kozisek <nodevel at gmail dot com>
 
+source ../kdeapps.conf
+
 pkgname=kdev-python
-pkgver=1.7.2
-_pkgver=4.7.2
-_branch=stable
+pkgver=4.90.91
+_branch=unstable
 pkgrel=1
-pkgdesc="Python language plugin for KDevelop"
+pkgdesc="Python language and documentation plugin for KDevelop"
 arch=('x86_64')
 url="http://www.kdevelop.org/"
-license=('GPL')
-depends=('kdevelop')
-makedepends=('cmake' 'automoc4' 'kdevelop-pg-qt')
-source=("http://download.kde.org/${_branch}/kdevelop/${_pkgver}/src/${pkgname}-${pkgver}.tar.xz")
-md5sums=('e0430e3e3872db3cee523f041235facb')
+license=(GPL)
+depends=(kdevelop)
+makedepends=(extra-cmake-modules)
+source=("http://download.kde.org/${_branch}/kdevelop/${pkgver}/src/${pkgname}-${pkgver}.tar.xz")
+sha1sums=('5efb8ab1003a10534db1783a9cacc70d89a98b0e')
+
+prepare() {
+  mkdir -p build
+}
 
 build() {
-    cd "${srcdir}/${pkgname}-${pkgver}"
-    mkdir build && cd build 
-    cmake \
-        -DCMAKE_BUILD_TYPE=RELWITHDEBINFO \
-        -DCMAKE_{SHARED,MODULE,EXE}_LINKER_FLAGS='-Wl,--no-undefined -Wl,--as-needed' \
-        -DCMAKE_INSTALL_PREFIX=/usr \
-        ..
-    make parser
-    make
+  cd build
+  cmake_kf5 ../${pkgname}-$pkgver
+  make
 }
 
 package() {
-    cd "${srcdir}/${pkgname}-${pkgver}/build"
-    make DESTDIR="${pkgdir}" install
+  cd build
+  make DESTDIR="$pkgdir" install
 }

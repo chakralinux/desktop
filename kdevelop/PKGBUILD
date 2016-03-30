@@ -1,35 +1,39 @@
 # Contributions from Arch: https://projects.archlinux.org/svntogit/packages.git/tree/trunk?h=packages/kdevelop
+source ../kdeapps.conf
 
 pkgname=kdevelop
-pkgver=4.7.3
+pkgver=4.90.91
 pkgrel=1
-pkgdesc="A C/C++ development environment for KDE"
-arch=('x86_64')
-url="http://www.kdevelop.org/"
-license=('GPL')
-depends=('kde-baseapps-katepart' 'kde-runtime' 'kdevplatform')
-makedepends=('cmake' 'automoc4' 'docbook-xsl')
-optdepends=('konsolepart4: embedded terminal'
-            #'oktetapart4: hex editor integration' > enable in kf5 version
-            'git: Git support'
-            'subversion: SVN support'
-            'cvs: Concurrent Versions System support'
-            'gdb: GNU Debugger support'
-            'qt5-doc: Qt documentation integration'
-            'cmake: cmake integration')
-categories=('programming')
-install=${pkgname}.install
-source=("http://download.kde.org/stable/${pkgname}/${pkgver}/src/${pkgname}-${pkgver}.tar.bz2")      
-sha1sums=('5ebd56ee348d7688eff55ffc6a83018ccf42a4fb')
+pkgdesc='A C/C++ development environment for KDE'
+arch=(x86_64)
+url='http://www.kdevelop.org/'
+license=(GPL)
+option=('debug')
+depends=(kdevplatform clang libksysguard)
+makedepends=(extra-cmake-modules kdoctools kdevelop-pg-qt clang llvm qt5-tools plasma-framework krunner okteta)
+optdepends=('konsole: embedded terminal'
+	'git: Git support'
+	'subversion: SVN support'
+	'cvs: CVS support'
+	'gdb: GNU Debugger support'
+	'qt5-doc: Qt documentation integration'
+	'cmake: cmake integration'
+	'qt5-tools: qthelp plugin'
+ 	'okteta: hex editor integration'
+	'plasma-framework: for the plasma addons')
+conflicts=(kdevelop-qmljs)
+replaces=(kdevelop-qmljs)
+install="$pkgname.install"
+source=("http://download.kde.org/unstable/$pkgname/$pkgver/src/$pkgname-$pkgver.tar.xz")
+sha1sums=('b56ba171d6ec42259664c088d80588a765d9c132')
+
+prepare() {
+  mkdir -p build
+}
 
 build() {
-  cd ${srcdir}
-  mkdir build
-  cd build 
-  cmake ../${pkgname}-${pkgver} \
-    -DCMAKE_INSTALL_PREFIX=/usr \
-    -DCMAKE_BUILD_TYPE=Release \
-    -DCMAKE_SKIP_RPATH=ON
+  cd build
+  cmake_kf5 ../${pkgname}-${pkgver}
   make 
 }
 

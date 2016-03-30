@@ -1,29 +1,32 @@
+
+source ../kdeapps.conf
+
 pkgname=kdevplatform
-pkgver=1.7.3
-_pkgver=4.7.3
+pkgver=4.90.91
 pkgrel=1
-pkgdesc="A C/C++ development platform for KDE"
-arch=('x86_64')
-url="http://www.kdevelop.org/"
-license=('GPL')
-depends=('kdelibs' 'boost' 'subversion' 'qjson')
-#optdepends=("kompare: difference checking") > no kf5 version available yet
-makedepends=('cmake' 'automoc4')
-install=${pkgname}.install
-source=("http://download.kde.org/stable/kdevelop/${_pkgver}/src/${pkgname}-${pkgver}.tar.bz2")
-sha1sums=('7201629fb4fa9bec83def4bf691f4eda41bfc555')
+pkgdesc='A C/C++ development platform for KDE'
+arch=(x86_64)
+url='http://www.kdevelop.org/'
+license=(GPL)
+option=('debug')
+depends=(grantlee-qt5 hicolor-icon-theme kcmutils threadweaver kitemmodels ktexteditor knotifyconfig knewstuff libkomparediff2 qt5-webkit)
+makedepends=(extra-cmake-modules boost subversion)
+optdepends=('subversion: Subversion plugin')
+install="$pkgname.install"
+source=("http://download.kde.org/unstable/kdevelop/$pkgver/src/$pkgname-$pkgver.tar.xz")
+sha1sums=('aaeaf7833ed18941d44f43e5b0d87b60ae067751')
+
+prepare() {
+  mkdir -p build
+}
 
 build() {
-  cd ${srcdir}
-  mkdir build
   cd build 
-  cmake ../${pkgname}-${pkgver} \
-    -DCMAKE_INSTALL_PREFIX=/usr \
-    -DCMAKE_BUILD_TYPE=Release 
+  cmake_kf5 ../${pkgname}-${pkgver}
   make 
 }
 
 package() {
-  cd ${srcdir}/build
-  make DESTDIR=${pkgdir} install
+  cd build
+  make DESTDIR="$pkgdir" install
 }

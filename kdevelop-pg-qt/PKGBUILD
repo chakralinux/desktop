@@ -4,30 +4,32 @@
 # maintainer (i686): Phil Miller <philm[at]chakra-project[dog]org>
 # maintainer (x86_64): Manuel Tortosa <manutortosa[at]chakra-project[dot]org>
 
+source ../kdeapps.conf
+
 pkgname=kdevelop-pg-qt
-pkgver=1.0.0
+pkgver=1.90.92
 pkgrel=1
 pkgdesc="KDevelop Parser Generator, a LL(1) parser generator used by KDevelop language plugins"
 arch=('i686' 'x86_64')
 url="http://www.kdevelop.org/"
-license=('GPL')
-depends=('kdelibs')
-makedepends=('cmake' 'automoc4')
-categories=('programming')
-source=("http://download.kde.org/stable/${pkgname}/${pkgver}/src/${pkgname}-${pkgver}.tar.bz2")
-sha1sums=('468bc91c5be16061dc265e9471f75462b32b73d5')
+license=(GPL)
+option=('debug')
+depends=(qt5-base)
+makedepends=(extra-cmake-modules)
+source=("http://download.kde.org/unstable/$pkgname/$pkgver/src/$pkgname-$pkgver.tar.xz")
+sha1sums=('cbe2ed7a0fa2a81ad3e3bd6da70e78c8ab2a99bf')
+
+prepare() {
+  mkdir -p build
+}
 
 build() {
-  cd ${srcdir}
-  mkdir build
-  cd build 
-  cmake ../${pkgname}-${pkgver} \
-    -DCMAKE_INSTALL_PREFIX=/usr \
-    -DCMAKE_BUILD_TYPE=Release
+  cd build
+  cmake_kf5 ../$pkgname-$pkgver
   make
 }
 
 package() {
-  cd ${srcdir}/build
-  make DESTDIR=${pkgdir} install
+  cd build
+  make DESTDIR="$pkgdir" install
 }
