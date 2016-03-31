@@ -12,10 +12,13 @@ categories=('network')
 source=("http://youtube-dl.org/downloads/${pkgver}/${pkgname}-${pkgver}.tar.gz")
 sha1sums=('9ec09c30fe2fac272f3002d3942da3b873a82981')
 
-package() {
-  cd "${srcdir}/${pkgname}"
+prepare() {
+  cd "${pkgname}"
   sed -i -e 's|etc/bash_completion.d|share/bash-completion/completions|' \
          -e 's|youtube-dl.bash-completion|youtube-dl|' setup.py
+}
+package() {
+  cd "${pkgname}"
   python3 setup.py install --root="${pkgdir}/" --optimize=1
   install -Dm644 LICENSE "${pkgdir}/usr/share/licenses/${pkgname}/LICENSE"
 }
