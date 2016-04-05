@@ -1,6 +1,6 @@
 pkgname=mpv
 pkgver=0.16.0
-pkgrel=1
+pkgrel=2
 pkgdesc="A movie player and encoder for linux, based on MPlayer/mplayer2"
 arch=('x86_64')
 license=('LGPL3')
@@ -10,30 +10,36 @@ depends=('pulseaudio' 'ffmpeg' 'lcms2' 'libdvdread' 'libgl' 'libvdpau'
 	 'wayland' 'desktop-file-utils' 'hicolor-icon-theme' 'v4l-utils'
          'xdg-utils' 'lua' 'libdvdnav' 'libcdio-paranoia' 'libbluray' 'libxss'
          'enca' 'libguess' 'harfbuzz' 'libxrandr' 'rubberband' 'smbclient')
-makedepends=('mesa' 'python3-docutils' 'ladspa' 'x264' 'jack' 'samba' 'openal')
+makedepends=('mesa' 'python3-docutils' 'ladspa' 'x264' 'jack' 'samba' 'openal' 'waf')
 options=('!emptydirs')
 provides=('mplayer')
 install=${pkgname}.install
-source=("https://github.com/mpv-player/${pkgname}/archive/v${pkgver}.tar.gz")
-sha256sums=('fc3619de0ede16fbb023ac72589090e8e77fd9d9e03a81adc728105d50ef38ba')
+source=("https://github.com/mpv-player/${pkgname}/archive/v${pkgver}.tar.gz"
+        'mpv-x11-do-not-set-set-_NET_WM_BYPASS_COMPOSITOR-by-default.patch::https://github.com/mpv-player/mpv/commit/2720e60ad00ff7cce1d80724bbd4b2b981748195.patch')
+sha256sums=('fc3619de0ede16fbb023ac72589090e8e77fd9d9e03a81adc728105d50ef38ba'
+            'eb44faeddb707d2cee26eb844876e4594277e46454393defe6f6608f9a4362e5')
 
 prepare() {
   # point python to python3
-  sed -i 's|#!/usr/bin/env python|#!/usr/bin/env python3|' ${srcdir}/${pkgname}-${pkgver}/bootstrap.py
+#  sed -i 's|#!/usr/bin/env python|#!/usr/bin/env python3|' ${srcdir}/${pkgname}-${pkgver}/bootstrap.py
   # initialize
   cd ${pkgname}-${pkgver}
-  ./bootstrap.py
-  sed -i 's/vendor-completions/site-functions/' wscript_build.py
+#  ./bootstrap.py
+#  sed -i 's/vendor-completions/site-functions/' wscript_build.py
 
   # waf looking for python2...
-  sed -i 's|#!/usr/bin/env python|#!/usr/bin/env python3|' ${srcdir}/${pkgname}-${pkgver}/waf
+#  sed -i 's|#!/usr/bin/env python|#!/usr/bin/env python3|' ${srcdir}/${pkgname}-${pkgver}/waf
+  
+  # https://github.com/mpv-player/mpv/issues/2997
+  # https://github.com/mpv-player/mpv/commit/2720e60ad00ff7cce1d80724bbd4b2b981748195
+  patch -Np1 < "${srcdir}"/mpv-x11-do-not-set-set-_NET_WM_BYPASS_COMPOSITOR-by-default.patch
 }
  
 build() {
   cd ${pkgname}-${pkgver}
  
   # disable SDL, since they are just legacy drivers
-  ./waf configure \
+  waf configure \
     --prefix=/usr \
     --confdir=/etc/mpv \
     --enable-libmpv-shared \
@@ -50,13 +56,13 @@ build() {
     --enable-libv4l2 \
     --enable-vdpau \
     --enable-gpl3
-  ./waf build
+  waf build
 }
  
 package() {
   cd ${pkgname}-${pkgver}
  
-  ./waf install --destdir="${pkgdir}" 
+  waf install --destdir="${pkgdir}" 
   
   install -d "${pkgdir}/usr/share/doc/mpv/examples"
  
