@@ -1,6 +1,6 @@
 pkgname=ufw
 pkgver=0.34
-pkgrel=1
+pkgrel=2
 pkgdesc="Uncomplicated and easy to use CLI tool for managing a netfilter firewall"
 arch=('x86_64')
 url="https://launchpad.net/ufw"
@@ -31,10 +31,10 @@ package() {
 
   python3 setup.py install --root="$pkgdir"
   
-  rm -rf ${pkgdir}/usr/lib/python3.4/site-packages/ufw/__pycache__
+  rm -rf ${pkgdir}/usr/lib/python3.5/site-packages/ufw/__pycache__
 
   # Correct iptables location
-  sed -i -e 's|sbin|bin|g' "$pkgdir/usr/lib/python3.4/site-packages/ufw/"*
+  sed -i -e 's|sbin|bin|g' "$pkgdir/usr/lib/python3.5/site-packages/ufw/"*
 
   install -Dm644 "$srcdir/ufw.service" "$pkgdir/usr/lib/systemd/system/ufw.service"
   chmod 644 "$pkgdir/etc/ufw/"*.rules "$pkgdir/usr/lib/ufw/"*.rules
