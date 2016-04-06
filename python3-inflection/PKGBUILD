@@ -1,0 +1,24 @@
+# Contributions from Arch/AUR: https://aur.archlinux.org/packages/python-inflection/
+
+_pipname=inflection
+pkgname=python3-inflection
+pkgver=0.3.1
+pkgrel=2
+pkgdesc="A port of Ruby on Rails inflector to Python"
+arch=('any')
+url="https://github.com/jpvanhal/inflection"
+license=('MIT')
+makedepends=('python3-setuptools')
+depends=('python3')
+source=("https://pypi.python.org/packages/source/${_pipname:0:1}/$_pipname/$_pipname-$pkgver.tar.gz")
+md5sums=('7941165e9f148e0520023941c0886b40')
+
+package() {
+    cd "${_pipname}-${pkgver}"
+    python3 setup.py install --root="${pkgdir}/" --optimize=1
+
+    mkdir -p "${pkgdir}/usr/share/licenses/${pkgname}"
+    install -m644 LICENSE "${pkgdir}/usr/share/licenses/${pkgname}"
+}
+
+

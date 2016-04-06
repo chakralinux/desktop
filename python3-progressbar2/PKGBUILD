@@ -1,0 +1,17 @@
+pkgname=python3-progressbar2
+_pkgname=progressbar2
+pkgver=3.6.2
+pkgrel=1
+pkgdesc='Provide visual (yet text based) progress to long running operations'
+arch=('any')
+url='https://github.com/WoLpH/python-progressbar'
+license=('BSD')
+depends=('python3')
+makedepends=('python3-setuptools')
+source=("https://pypi.python.org/packages/source/p/${_pkgname}/${_pkgname}-${pkgver}.tar.gz")
+sha256sums=('0dbf2c89f900f0e420933ed0679562d7624e54b6e2bad70577a4682e476f45d6')
+
+package() {
+  cd "${_pkgname}-${pkgver}"
+  python3 setup.py install --root="${pkgdir}/"
+}

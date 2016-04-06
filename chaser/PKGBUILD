@@ -1,0 +1,17 @@
+pkgname=chaser
+pkgver=0.9.2
+pkgrel=1
+pkgdesc='A Python wrapper for the CCR'
+arch=('any')
+url='http://github.com/ccr-tools/chaser/'
+license=('BSD3')
+depends=('python3' 'python3-requests' 'python3-aur' 'python3-ccr'                                                    
+         'python3-toposort' 'python3-setuptools' 'python3-progressbar2'                                              
+         'python3-termcolor')                                                                                        
+source=("https://github.com/ccr-tools/${pkgname}/archive/${pkgver}.tar.gz")                                          
+sha256sums=('a5f1c3e0271e69dec705c7d24050caa76cdaf388fc74f831c70361b274580de4')                                      
+                                                                                                                     
+package() {                                                                                                          
+  cd "${pkgname}-${pkgver}"                                                                                          
+  python3 setup.py install --root="${pkgdir}/"                                                                       
+}                                                                                                                    

@@ -1,0 +1,17 @@
+pkgname=python3-aur
+_pkgname=aur
+pkgver=0.11.0
+pkgrel=2
+pkgdesc='A Python library for working with the Arch User Repository.'
+arch=('any')
+url='https://github.com/cdown/aur'
+license=('ISC')
+depends=('python3' 'python3-inflection')
+makedepends=('python3-setuptools')
+source=("https://pypi.python.org/packages/source/a/${_pkgname}/${_pkgname}-${pkgver}.tar.gz")
+sha256sums=('0115e934ce5541f935e38538833006319dc0a311695539e43880b4c3066d8446')
+
+package() {
+  cd "${_pkgname}-${pkgver}"
+  python3 setup.py install --root="${pkgdir}/"
+}
