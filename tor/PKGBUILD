@@ -1,5 +1,5 @@
 pkgname=tor
-pkgver=0.2.6.10
+pkgver=0.2.7.6
 pkgrel=1
 pkgdesc="Anonymizing overlay network"
 arch=('x86_64')
@@ -11,14 +11,16 @@ backup=('etc/tor/torrc' 'etc/tor/torrc-dist')
 categories=('network')
 install=${pkgname}.install
 option=('!docs' '!emptydirs')
-source=("http://www.torproject.org/dist/${pkgname}-${pkgver}.tar.gz"
+source=("http://www.torproject.org/dist/${pkgname}-${pkgver}.tar.gz"{,.asc}
         'torrc'
         'tor.conf.d'
         'tor.service') 
-md5sums=('04f919e7882d1ca80f835545af562bad'
+md5sums=('cc19107b57136a68e8c563bf2d35b072'
+         'SKIP'
          'bb7b85a70c2997a3e05f023c97768f5e'
          'f656f3e93f0c2ed46464d9b784876dbc'
          '98901f7dfa85b352b806ba7b0d66b7d0')
+validpgpkeys=('B35BF85BF19489D04E28C33C21194EBB165733EA')
 
 
 build() {
