@@ -1,8 +1,8 @@
 #Contributions from Arch: https://projects.archlinux.org/svntogit/packages.git/tree/trunk?h=packages/quazip
 
 pkgname=quazip
-pkgver=0.7.1
-pkgrel=3
+pkgver=0.7.2
+pkgrel=1
 pkgdesc="C++ wrapper for the Gilles Vollant's ZIP/UNZIP C package"
 url="http://sourceforge.net/projects/quazip/"
 license=('LGPL')
@@ -13,12 +13,12 @@ replaces=(quazip-qt4)
 provides=(quazip-qt4)
 conflicts=(quazip-qt4)
 source=("http://downloads.sourceforge.net/$pkgname/$pkgname-$pkgver.tar.gz")
-md5sums=('3b99effb2a9417707d463e6f19cf2629')
+md5sums=('84163487a4c3470781c93e5f56c4ca43')
 
 
 build() {
   cd $pkgbase-$pkgver
-  cmake -DCMAKE_INSTALL_PREFIX=/usr -DBUILD_WITH_QT4:BOOL=OFF
+  cmake -DCMAKE_INSTALL_PREFIX=/usr -DBUILD_WITH_QT4:BOOL=OFF -DCMAKE_CXX_FLAGS="$CFLAGS -fPIC"
   make
 }
 
