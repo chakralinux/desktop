@@ -4,21 +4,19 @@ source ../kdeapps.conf
 pkgbase=kdepim
 pkgname=(akonadiconsole akregator blogilo kdepim-console kaddressbook kalarm kmail knotes kontact korganizer ktnef kdepim-common)
 pkgver=${_kdever}
-pkgrel=3
+pkgrel=1
 arch=('x86_64')
 url='http://pim.kde.org'
 license=('GPL' 'LGPL' 'FDL')
 groups=('kde' 'kde-uninstall' 'kde-applications' 'kdepim')
 makedepends=(libkdepim extra-cmake-modules kdepim-runtime qt5-tools grantlee-qt5 kdoctools knewstuff khtml ktexteditor kdnssd kldap libktnef boost gpgmepp kontactinterface kxmlrpcclient kblog akonadi-search libgravatar mailimporter mailcommon incidenceeditor libksieve)
 options=('docs' 'debug')
-source=("$_mirror/${pkgbase}-$_kdever.tar.xz" "fix_kmail_crash.patch")
-sha256sums=(`grep " ${pkgbase}-$_kdever.tar.xz"  ../checksums.txt | cut -d " " -f1` 
-            "9834ea5d1ad7931091a3d02c3ad9fb7c2099eb41ac636e07f56e16f73e3c96b0")
+source=("$_mirror/${pkgbase}-$_kdever.tar.xz")
+sha256sums=(`grep " ${pkgbase}-$_kdever.tar.xz"  ../checksums.txt | cut -d " " -f1`)
 
 prepare() {
     mkdir -p build
     cd ${srcdir}/${pkgbase}-${pkgver}
-    patch -p1 -i ${srcdir}/fix_kmail_crash.patch
 }
 
 build() {
