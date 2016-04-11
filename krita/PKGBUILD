@@ -1,0 +1,36 @@
+# Contribution from Arch:
+# Maintainer: Antonio Rojas <arojas@archlinux,org>
+
+pkgname=krita
+pkgver=2.99.89
+pkgrel=1
+pkgdesc="Edit and paint images"
+arch=('x86_64')
+url="http://krita.org"
+license=('LGPL')
+depends=('kio' 'kitemmodels' 'gsl' 'libraw' 'opencolorio' 'exiv2' 'openexr' 'openjpeg' 'fftw' 'curl' 'boost-libs' 
+         'hicolor-icon-theme')
+makedepends=('extra-cmake-modules' 'kdoctools' 'python3' 'boost' 'eigen3' 'vc' 'poppler-qt5')
+optdepends=('poppler-qt5: PDF filter')
+conflicts=('calligra-krita')
+provides=('calligra-krita')
+replaces=('calligra-krita')
+source=("http://download.kde.org/unstable/$pkgname/$pkgver/$pkgname-$pkgver.tar.xz")
+install=$pkgname.install
+md5sums=('d16b99b0c7962db5b98365e2175015d8')
+
+build() {
+  mkdir -p build && cd build
+  cmake ../$pkgname-$pkgver \
+    -DCMAKE_BUILD_TYPE=Release \
+    -DCMAKE_INSTALL_PREFIX=/usr \
+    -DLIB_INSTALL_DIR=lib \
+    -DKDE_INSTALL_USE_QT_SYS_PATHS=ON \
+    -DBUILD_TESTING=OFF
+  make
+}
+
+package() {
+  cd build
+  make DESTDIR="$pkgdir" install
+}
