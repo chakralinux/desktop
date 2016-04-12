@@ -1,41 +1,32 @@
 # Contributions from Arch: https://projects.archlinux.org/svntogit/community.git/tree/trunk?h=packages/mythtv
 
 pkgname=mythtv
-pkgver=0.27.6
+pkgver=0.28
 pkgrel=1
 pkgdesc="A Homebrew PVR project"
 arch=('x86_64')
 url="http://www.mythtv.org/"
 license=('GPL')
 depends=('avahi' 'fftw' 'lame' 'libass' 'libavc1394' 'libcdio' 'libiec61883'
-         'libgl' 'libpulse' 'libva' 'libvpx' 'libxinerama' 'lirc'
-         'mariadb-clients' 'mysql-python' 'perl-dbd-mysql'
+         'libgl' 'libpulse' 'libva' 'libvpx' 'libxinerama' 'lirc' 'libxrandr'
+         'mariadb-clients' 'mysql-python' 'perl-dbd-mysql' 'exiv2'
          'perl-io-socket-inet6' 'perl-libwww' 'perl-net-upnp' 'python2-lxml'
-         'qtwebkit' 'taglib' 'urlgrabber' 'x264' 'libvdpau')
-makedepends=('glew' 'libcec' 'libxml2' 'mesa' 'openssl' 'yasm' 'gdb')
+         'qt5-webkit' 'qt5-script' 'taglib' 'urlgrabber' 'libx264' 'libvdpau')
+makedepends=('glew' 'libcec' 'libxml2' 'mesa' 'openssl' 'x264' 'yasm' 'gdb')
 optdepends=('glew: for GPU commercial flagging'
             'libcec: for consumer electronics control capabilities'
             'libxml2: to read blu-ray metadata'
-            'openssl: for AirTunes (RAOP) support'
-            'udisks: detect changes to removable media'
-            'xmltv: to download tv listings')
+            'openssl: for AirTunes (RAOP) support')
 install='mythtv.install'
 source=("$pkgname-$pkgver.tar.gz::https://github.com/MythTV/$pkgname/archive/v$pkgver.tar.gz"
-	'mythbackend.service'
-	'http://code.mythtv.org/trac/raw-attachment/ticket/11338/libcec-2-support.2.patch'
-	'ffmpeg-libvpxenc-remove-some-unused-ctrl-id-mappings.patch')
-sha256sums=('d1db6db2341427f044224a18f7787630c4cbd47a8659aa867bd551bee729af36'
-            '30a301d31e2396b08eee97188619b900a834081d9792a36ae274fb0dfa65a9dc'
-            '8270407c2074b305e0c32151f89c84f6bf980a32665a2da8e4727405fa3911f3'
-            '54d0996af14b6c3b9cef6cc127ce1cebefc434481368991e40f9f6e2f9f703ee')
+	'mythbackend.service')
+sha256sums=('1c152d43206d971168e2234448f689548c9a073c865d3ae8f4f1fdd607d01129'
+            '30a301d31e2396b08eee97188619b900a834081d9792a36ae274fb0dfa65a9dc')
 
 prepare() {
   cd $srcdir/$pkgname-$pkgver/$pkgname
   
-  patch -d external/FFmpeg -Np1 -i "$srcdir/ffmpeg-libvpxenc-remove-some-unused-ctrl-id-mappings.patch"
-
   find 'bindings/python' 'contrib' -type f | xargs sed -i 's@^#!.*python$@#!/usr/bin/python2@'
-  patch -Np2 -i $srcdir/libcec-2-support.2.patch
 }
 
 build() {
