@@ -5,10 +5,10 @@ pkgbase='kde-runtime'
 pkgname=('kde-runtime' 'khelpcenter4')
 arch=('x86_64')
 pkgver=${_kdever}
-pkgrel=1
+pkgrel=2
 url='http://www.kde.org'
 license=('GPL' 'LGPL' 'FDL')
-options=('docs' 'debug')
+options=('!docs' 'debug')
 makedepends=('pkgconfig'
              'cmake'
              'automoc4'
@@ -30,7 +30,8 @@ makedepends=('pkgconfig'
              'libssh>=0.6.0'
              'libcanberra'
              'sound-theme-freedesktop'
-             'libgcrypt')
+             'libgcrypt'
+             'boost')
 groups=('kde' 'kde-minimal' 'kde-uninstall')
 install=kde-runtime.install
 noextract=(branding.svgz)
@@ -104,7 +105,9 @@ package_kde-runtime() {
         "${pkgdir}"/usr/lib/kde4/libexec/khc_mansearch.pl \
         "${pkgdir}"/usr/lib/kde4/libexec/khc_docbookdig.pl
     rm -r "${pkgdir}"/usr/share/apps/khelpcenter/
-
+    # useless in plasma5
+    rm -rf ${pkgdir}/usr/share/desktop-directories/
+    rm -rf ${pkgdir}/etc/xdg/menus/
 }
 
 package_khelpcenter4() {

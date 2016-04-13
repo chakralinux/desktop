@@ -4,11 +4,11 @@ source ../kdeapps.conf
 pkgname="kdelibs"
 arch=('x86_64')
 pkgver=${_libsver}
-pkgrel=3
+pkgrel=5
 pkgdesc="KDE Core Libraries"
 url="http://www.kde.org"
 license=('GPL' 'LGPL' 'FDL')
-options=('docs' 'debug')
+options=('!docs' 'debug')
 depends=("${_qtpkg}>=${_qtver}" "chakra-common>=${_kdever}" 
          'shared-mime-info' 'upower' 'udisks2' 'xz' 'enchant' 'jasper' 'openexr' 'giflib' 'strigi' 'libxtst'
          'ca-certificates' 'xdg-utils' 'qca' 'polkit-qt4' 'libxss' 'phonon' 'shared-desktop-ontologies'
@@ -34,25 +34,29 @@ source=($_mirror/${pkgname}-$_libsver.tar.xz
         02_kde_applications_menu.patch
         03_chakra_menu.patch
         MergeDir.patch)
-sha256sums=(`grep $pkgname-$_libsver.tar.xz  ../checksums.txt | cut -d " " -f1`
+sha256sums=('778e86392f2c61e36d1cf335e763d06a18487121b3cd5e583a75933f22d3ce63'
             '029e2d07c5fc8676d143b903aa181fc470e5b469d49ccf107e19031f562bf4e3'
             'b2d25c76081ea6bb31d90c4c6b619ce64ac36de3a6eefb2f9990d3dbf8cd9c91'
             '505e9e5e969be5094b3f713b865d5927cc3de1f4693915174732b20793228c4f'
             'd7d2fac1ceb1551081a5f3fa860c14d4aeb0c774d56067e931c20b8d79c4450f')
 
-build() {
+prepare() {
     # main patches
     msg "Applying patches..."
     cd ${srcdir}/${pkgname}-${pkgver}
     patch -Np1 -i ${srcdir}/01_chakra_tag.patch
     patch -Np1 -i ${srcdir}/02_kde_applications_menu.patch
     patch -Np1 -i ${srcdir}/03_chakra_menu.patch
-    
+
     # right positioning of applications' entries in kmenu
     patch -p1 -i ${srcdir}/MergeDir.patch
     cd ${srcdir}
     rm -rf build
-    mkdir -p build && cd build
+    mkdir -p build
+}
+
+build() {
+    cd build
     cmake ../${pkgname}-${pkgver} \
         -DCMAKE_BUILD_TYPE=${_build_type} \
         -DCMAKE_INSTALL_PREFIX=${_installprefix} \
@@ -66,7 +70,7 @@ build() {
         -DCMAKE_SKIP_RPATH=ON \
         -DWITH_SOLID_UDISKS2=ON \
         -DCMAKE_{SHARED,MODULE,EXE}_LINKER_FLAGS='-Wl,--no-undefined -Wl,--as-needed'
-    make VERBOSE=1
+    make
 }
 
 package() {
@@ -75,4 +79,7 @@ package() {
     # link cert bundle to the one from ca-certificates
     rm -f ${pkgdir}/usr/share/apps/kssl/ca-bundle.crt
     ln -sf /etc/ssl/certs/ca-certificates.crt ${pkgdir}/usr/share/apps/kssl/ca-bundle.crt
+    # remove wastes of KDE SC, which does nothing on Plamsa
+    rm -rf ${pkgdir}/etc/xdg/menus
+    rm -rf ${pkgdir}/usr/share/doc
 }
