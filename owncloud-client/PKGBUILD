@@ -1,14 +1,16 @@
+# Contributions from Arch: 
+
 _name=client
 pkgname=owncloud-client
 pkgver=2.1.1
-pkgrel=1
+pkgrel=2
 pkgdesc="ownCloud client based on mirall"
 arch=('x86_64')
 url="http://owncloud.org/"
 screenshot="http://owncloud.org/wp-content/uploads/2012/03/linux3.png"
 license=('GPL2')
-depends=('qtkeychain-qt5' 'qt5-webkit' 'hicolor-icon-theme')
-makedepends=('cmake' 'python3-sphinx' 'qt5-tools' 'doxygen')
+depends=('qtkeychain-qt5' 'qt5-webkit' 'hicolor-icon-theme' 'xdg-utils')
+makedepends=('extra-cmake-modules' 'python3-sphinx' 'qt5-tools' 'doxygen' 'kio')
 groups=('network')
 conflicts=('csync-owncloud')
 backup=('etc/owncloud-client/sync-exclude.lst')
@@ -24,7 +26,8 @@ build() {
         -DCMAKE_INSTALL_LIBDIR=lib \
         -DCMAKE_BUILD_TYPE=Release \
         -DCMAKE_INSTALL_SYSCONFDIR=/etc/${pkgname} \
-        
+        -DKDE_INSTALL_USE_QT_SYS_PATHS=ON 
+
   make
   make doc-man
 }
