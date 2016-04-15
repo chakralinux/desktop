@@ -2,7 +2,7 @@
 
 pkgname=mythtv
 pkgver=0.28
-pkgrel=1
+pkgrel=2
 pkgdesc="A Homebrew PVR project"
 arch=('x86_64')
 url="http://www.mythtv.org/"
@@ -19,9 +19,11 @@ optdepends=('glew: for GPU commercial flagging'
             'openssl: for AirTunes (RAOP) support')
 install='mythtv.install'
 source=("$pkgname-$pkgver.tar.gz::https://github.com/MythTV/$pkgname/archive/v$pkgver.tar.gz"
-	'mythbackend.service')
+	'mythbackend.service'
+        '99-mythbackend.rules')
 sha256sums=('1c152d43206d971168e2234448f689548c9a073c865d3ae8f4f1fdd607d01129'
-            '30a301d31e2396b08eee97188619b900a834081d9792a36ae274fb0dfa65a9dc')
+            '30a301d31e2396b08eee97188619b900a834081d9792a36ae274fb0dfa65a9dc'
+            'ecfd02bbbef5de9773f4de2c52e9b2b382ce8137735f249d7900270d304fd333')
 
 prepare() {
   cd $srcdir/$pkgname-$pkgver/$pkgname
@@ -57,4 +59,8 @@ package() {
 
   install -d $pkgdir/{usr/share/mythtv,var/log/mythtv}
   cp -R 'contrib' $pkgdir/usr/share/mythtv
+  
+  # Install udev rules
+  # https://www.mythtv.org/wiki/Systemd_mythbackend_Configuration#Delay_starting_the_backend_until_tuners_have_initialized
+  install -Dm644 "$srcdir"/99-mythbackend.rules "$pkgdir"/usr/lib/udev/rules.d/99-mythbackend.rules
 }
