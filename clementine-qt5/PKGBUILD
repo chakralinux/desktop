@@ -31,13 +31,15 @@ pkgver() {
 prepare() {
   cd ${srcdir}/${_pkgname}
   mkdir -p build
+  sed 's,<lastfm5,<lastfm,g' -i src/internet/lastfm/* -i src/core/*.cpp
 }
 build() {
   cd ${srcdir}/${_pkgname}/build
-  cmake ".." -DCMAKE_INSTALL_PREFIX=/usr \
+  cmake ".." -DLASTFM5_INCLUDE_DIRS=/usr/include/lastfm \
+             -DLASTFM51_INCLUDE_DIRS=/usr/include/lastfm \
+             -DCMAKE_INSTALL_PREFIX=/usr \
              -DCMAKE_BUILD_TYPE=Release \
-             -DBUILD_WERROR=OFF \
-             -DSTATIC_SQLITE=ON
+             -DBUILD_WERROR=OFF
   make 
 }
 
