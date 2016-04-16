@@ -1,14 +1,14 @@
-# Maintainer: Jeff Huang <s8321414[at]gmail[dot]com>
-# Contributer: abveritas[at]chakraos[dot]org>
+# Include global configuration
+source ../kdeapps.conf
 
 pkgname=konversation
 pkgver=1.6
-pkgrel=1
+pkgrel=2
 pkgdesc="A user friendly IRC client for KDE"
 arch=('x86_64')
 url="http://konversation.kde.org"
-depends=('knotifyconfig' 'kemoticons' 'kparts' 'kidletime' 'qca-qt5' 'python2')
-makedepends=('extra-cmake-modules' 'kdoctools' 'python')
+depends=('knotifyconfig' 'kemoticons' 'kparts' 'kidletime' 'qca-qt5' 'python3')
+makedepends=('extra-cmake-modules' 'kdoctools')
 license=('GPL2' 'FDL')
 categories=('communication')
 screenshots=('http://konversation.kde.org/screenshots/konversation13_2.png')
@@ -16,19 +16,17 @@ install=${pkgname}.install
 source=("http://download.kde.org/stable/${pkgname}/${pkgver}/src/${pkgname}-${pkgver}.tar.xz")
 sha1sums=('16e8c1969b04c0946b48a436e8825654b0029bb9')
 
+prepare(){
+  mkdir -p build
+}
+
 build() {
-  cd "${srcdir}"
-  [[ -e build ]] || rm -rf build
-  mkdir build && cd build
-  cmake ../${pkgname}-${pkgver} \
-    -DCMAKE_BUILD_TYPE=Release \
-    -DCMAKE_SKIP_RPATH=ON \
-    -DCMAKE_INSTALL_PREFIX=/usr \
-    -DKDE_INSTALL_USE_QT_SYS_PATHS=ON
+  cd build
+  cmake_kf5 ../${pkgname}-${pkgver}
   make
 }
 
 package() {
-  cd "${srcdir}"/build
-  make DESTDIR="${pkgdir}" install
+  cd build
+  make DESTDIR=${pkgdir} install
 }
