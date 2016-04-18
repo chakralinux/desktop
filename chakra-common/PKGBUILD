@@ -4,7 +4,7 @@ source ../kdeapps.conf
 pkgname=chakra-common
 arch=('x86_64')
 pkgver=${_kdever}
-pkgrel=2
+pkgrel=3
 pkgdesc="Common configuration files, scripts and artwork"
 url="http://www.chakraos.org"
 license=('GPL' 'BSD')
@@ -14,7 +14,8 @@ depends=("qt5-base"
          'pinentry'
          'openssh'
          'bash>=4.2'
-         'glibc>=2.15')
+         'glibc>=2.15'
+         'python3'  'python3-jinja' 'python3-pyelftools' 'python3-tqdm')
 install=chakra-common.install
 source=('http://kde-apps.org/CONTENT/content-files/48411-rootactions_servicemenu_2.8.6.tar.gz'
         'servicemenu-copy-path.desktop'
@@ -42,7 +43,7 @@ source=('http://kde-apps.org/CONTENT/content-files/48411-rootactions_servicemenu
         'agent-shutdown.sh'
         'chakra-helper.sh'
         'kde4.sh'
-        'chakra-check-links.sh::http://git.chakraos.org/buildsystem.git/blob_plain/HEAD:/chakra/bin/check_links.sh')
+        'chakra-check-links.py::https://raw.githubusercontent.com/Inkane/listMissingLibs/master/list_missing_libs.py')
         # skipping chakra-paste because gitorious has issues with wget
 #        'https://gitorious.org/chakra-paste/chakra-paste/archive/05f0a884a4de1460309ee95d678eb034c4c964b5.tar.gz'
 sha256sums=('9b2cdc947f1da2c56d0f009ff470f7aa9021f214a2470c33ee4628281b7c1163'
@@ -71,7 +72,7 @@ sha256sums=('9b2cdc947f1da2c56d0f009ff470f7aa9021f214a2470c33ee4628281b7c1163'
             '80da5b02a11ff9471775b2173a8c251d649d292a0c822469be43a5227b403444'
             '9e0c9408c9bc12aeca2fd66a4723b57a6878307ba956df7cca43f8112dd71429'
             '7e4ae4587973d6cc253b20ff7573ac25801f148f794a9000901c5137cd4780b3'
-            '2cacce6574ec50b8038a5be6fa7afeebed394f697ca362f4de41835f877e1133')
+            '9d3c09db7e5f6ae0c8cdb47ba686b22260266126a214c87af0fae2bb355eb03e')
 
 
 package() {
@@ -137,5 +138,5 @@ package() {
     install -Dm755 chakra-helper.sh "${pkgdir}/usr/bin/chakra-helper"
 
     # chakra-check-links
-    install -Dm755 chakra-check-links.sh "${pkgdir}/usr/bin/chakra-check-links"
+    install -Dm755 chakra-check-links.py "${pkgdir}/usr/bin/chakra-check-links"
 }
