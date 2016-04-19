@@ -4,7 +4,7 @@ source ../kdeapps.conf
 pkgbase=kdepimlibs
 pkgname=(akonadi-contact akonadi-mime akonadi-notes akonadi-socialutils kio-pim)
 pkgver=${_kdever}
-pkgrel=1
+pkgrel=2
 pkgdesc="KDE PIM Libraries"
 arch=('x86_64')
 url='https://projects.kde.org/kdepimlibs'
@@ -25,7 +25,7 @@ build() {
 }
 
 package_akonadi-contact() {
-  depends=(akonadi kmime kcontacts kcalcore prison-kf5)
+  depends=(akonadi kmime kcontacts kcalcore prison-kf5 grantlee-qt5)
 
   cd build/akonadi-contact
   make DESTDIR="$pkgdir" install
