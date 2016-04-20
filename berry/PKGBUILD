@@ -1,6 +1,6 @@
 pkgname=berry
 pkgver=1.0.0
-pkgrel=1
+pkgrel=2
 pkgdesc="A simple, modern and light image viewer"
 replaces=('limoo')
 conflicts=('limoo')
@@ -10,11 +10,14 @@ license=('GPL')
 url=("http://aseman.co/berry")
 screenshot='http://qt-apps.org/CONTENT/content-pre3/169391-3.jpg'
 depends=('qt5-base' 'qt5-declarative' 'qt5-svg' 'qt5-multimedia' 'qt5-graphicaleffects' 'qt5-imageformats' 'exiv2')
-source=("http://aseman.co/downloads/berry/1/berry-${pkgver}-src.tar.gz")
-sha512sums=('06289812b6d709bc2db64b41832974a66e8a38e19efef19ef1560717dc0929639aaf912319b6eed986f4422fa273c987f17e5921024b0b155288a2509b995d6b')
+source=("http://aseman.co/downloads/berry/1/berry-${pkgver}-src.tar.gz" "qt.patch")
+sha512sums=('06289812b6d709bc2db64b41832974a66e8a38e19efef19ef1560717dc0929639aaf912319b6eed986f4422fa273c987f17e5921024b0b155288a2509b995d6b'
+            '4cf58678e4d641207b7af3828c33876ec0591e72094a01e39a88daa7c7e38d3b18bc2a3c6cae1195dd4f12c900077ceb983d5462634566adbc5b715647632b2e')
  
 prepare() {
   cd ${srcdir}/${pkgname}
+
+  patch -Np2 -i ../qt.patch
   
   sed -i s!/usr/share/berry/files/icons/berry.png!berry! \
   files/shortcuts/normal/Berry.desktop
