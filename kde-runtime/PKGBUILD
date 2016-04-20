@@ -1,11 +1,11 @@
 # Include global configuration
 source ../kdeapps.conf
 
-pkgbase='kde-runtime'
-pkgname=('kde-runtime')
-arch=('x86_64')
+pkgname='kde-runtime'
 pkgver=${_kdever}
-pkgrel=3
+pkgrel=4
+pkgdesc="Plugins and applications necessary for the running of KDE applications"
+arch=('x86_64')
 url='https://projects.kde.org/projects/kde/kde-runtime'
 license=('GPL' 'LGPL')
 options=('debug')
@@ -19,8 +19,8 @@ install=kde-runtime.install
 replaces=('kdebase-runtime')
 provides=('kdebase-runtime')
 conflicts=('kdebase-runtime')
-source=("$_mirror/${pkgbase}-$_kdever.tar.xz")
-sha256sums=(`grep ${pkgbase}-$_kdever.tar.xz  ../checksums.txt | cut -d" " -f1`)
+source=("$_mirror/${pkgname}-$_kdever.tar.xz")
+sha256sums=(`grep ${pkgname}-$_kdever.tar.xz  ../checksums.txt | cut -d" " -f1`)
 
 prepare() {
   mkdir -p build
@@ -39,8 +39,7 @@ build() {
     -DBUILD_khelpcenter=OFF \
     -DBUILD_kglobalaccel=OFF \
     -DBUILD_kuiserver=OFF \
-    -DBUILD_doc=OFF \
-    -DCMAKE_{SHARED,MODULE,EXE}_LINKER_FLAGS='-Wl,--no-undefined -Wl,--as-needed'
+    -DBUILD_doc=OFF
   make
 }
 
