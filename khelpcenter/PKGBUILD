@@ -1,0 +1,33 @@
+#contributions from Arch: https://projects.archlinux.org/svntogit/packages.git/tree/trunk?h=packages/khelpcenter
+source ../kdeapps.conf
+
+pkgname=khelpcenter
+pkgver=${_kdever}
+pkgrel=2
+pkgdesc="Application to show KDE Applications' documentation"
+arch=('x86_64')
+url='https://projects.kde.org/projects/kde/workspace/khelpcenter'
+license=('LGPL')
+depends=('khtml' 'kinit' 'kdoctools' 'xapian-core' 'grantlee-qt5')
+makedepends=('extra-cmake-modules' 'python3')
+groups=('kde' 'kde-minimal' 'kde-uninstall')
+options=("debug")
+conflicts=('khelpcenter4' 'kde-runtime-doc')
+replaces=('khelpcenter4' 'kde-runtime-doc')
+source=("$_mirror/${pkgbase}-$_kdever.tar.xz")
+sha256sums=(`grep ${pkgbase}-$_kdever.tar.xz  ../checksums.txt | cut -d" " -f1`)
+
+prepare() {
+  mkdir -p build
+}
+
+build() {
+  cd build
+  cmake_kf5 ../${pkgname}-${pkgver} 
+  make
+}
+
+package() {
+  cd build
+  make DESTDIR="${pkgdir}" install
+}
