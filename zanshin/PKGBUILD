@@ -1,25 +1,31 @@
+# Maintainer: Antonio Rojas <arojas@archlinux.org>
+# Source global configuration
+source ../kdeapps.conf 
+
 pkgname=zanshin
-pkgver=0.3.1
+pkgver=0.4.0
 pkgrel=1
-pkgdesc="A Getting Things Done application which aims at getting your mind like water."
-url="hhttps://zanshin.kde.org/"
-arch=('x86_64')
-license=('GPL3')
-depends=('kde-baseapps' 'kdepimlibs' 'libbaloo4')
-makedepends=('boost' 'automoc4' 'cmake')
-categories=('utils')
-source=("http://files.kde.org/zanshin/${pkgname}-${pkgver}.tar.bz2")
-screenshot=('http://zanshin.kde.org/images/screenshot.png')
-sha256sums=('f4fb120499eb6f64e11aff714d44cc5fb4a70ccc4db3179a6926a0883eb362b2')
+pkgdesc="To-do management application for KDE based on Akonadi"
+arch=(i686 x86_64)
+url="http://zanshin.kde.org"
+license=(GPL)
+install=$pkgname.install
+depends=(kdepim-runtime kldap kontactinterface akonadi-search)
+makedepends=(extra-cmake-modules kdoctools boost python krunner)
+source=("http://files.kde.org/$pkgname/$pkgname-$pkgver.tar.gz")
+sha1sums=('b16edb23258278f8212204892dff9aff643af476')
+
+prepare() {
+  mkdir -p build
+}
 
 build() {
-  cd $pkgname-$pkgver
-  mkdir -p build && cd build
-  cmake .. -DCMAKE_INSTALL_PREFIX=`kde4-config --prefix` -DCMAKE_BUILD_TYPE=Release
+  cd build
+  cmake_kf5 ../$pkgname-$pkgver
   make
 }
 
 package() {
-   cd $pkgname-$pkgver/build
-   make DESTDIR="$pkgdir/" install
+  cd build
+  make DESTDIR="$pkgdir" install
 }
