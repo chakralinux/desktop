@@ -1,0 +1,53 @@
+pkgname=vokoscreen
+_pkgver=2.4.21-beta
+pkgver=${_pkgver/-/.}
+pkgrel=1
+pkgdesc='An easy to use screencast creator to record educational videos, live recordings of browser, installation, videoconferences, etc'
+arch=('x86_64')
+url='http://linuxecke.volkoh.de/vokoscreen/vokoscreen.html'
+license=('GPL2')
+depends=('qt5-x11extras' 'ffmpeg' 'lame' 'desktop-file-utils' 'xdg-utils' 'lsof')
+optdepends=('pulseaudio-alsa: for PulseAudio support')
+makedepends=('qt5-tools')
+install=${pkgname}.install
+source=("${pkgname}-${_pkgver}.tar.gz::https://github.com/vkohaupt/vokoscreen/archive/${_pkgver}.tar.gz"
+        'fix_lrelease.patch')
+sha1sums=('69f20cda2f259b7e0140308e909c75ab21b133d1'
+          'fa76417491ba68119395b82381d290b9c1155f9a')
+
+prepare() {
+	cd "${srcdir}"/${pkgname}-${_pkgver}
+
+	# Fix lrelease path
+	patch -Np1 < ../fix_lrelease.patch
+
+	# Create build directory
+	mkdir -p "${srcdir}"/build
+	
+	#fix .desktop file
+	sed -i s!"Comment=screencast"!"Comment=An easy to use screencast creator"! \
+	applications/vokoscreen.desktop
+}
+
+build() {
+	# Number of jobs
+	declare -i njobs=$(nproc)
+
+	if [[ ${njobs} -ge 8 ]]; then
+		njobs=$(( $njobs - 2 ))
+	fi
+
+	# Building package
+	cd "${srcdir}"/build
+	qmake-qt5 ../${pkgname}-${_pkgver} \
+		CONFIG+=release \
+		CONFIG+=c++14
+
+	make -j${njobs}
+}
+
+package() {
+	# Installing package
+	cd "${srcdir}"/build
+	make INSTALL_ROOT="${pkgdir}" install
+}
