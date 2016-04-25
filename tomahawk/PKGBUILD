@@ -1,6 +1,6 @@
 pkgname=tomahawk
 pkgver=0.8.4
-pkgrel=7
+pkgrel=8
 pkgdesc="The social media player. A Music Player App written in C++/Qt"
 arch=('x86_64')
 url="http://tomahawk-player.org/"
@@ -15,9 +15,11 @@ conflicts=('tomahawk-git')
 categories=('multimedia')
 options=(!strip)
 source=("http://download.tomahawk-player.org/${pkgname}-${pkgver}.tar.bz2"
-        'chakra-build.patch')
+        'chakra-build.patch'
+	'quazip5.patch')
 md5sums=('04832abe1786edcc55805875b5882445'
-         '2f46cf4c280e9130f5b9a0ab0270bf37')
+         '2f46cf4c280e9130f5b9a0ab0270bf37'
+         'd95c02d871ee6895df0612aba44f98f8')
 
 prepare() {
   rm -rf "build"
@@ -25,6 +27,10 @@ prepare() {
 
   # patch to enable libechonest and liblastfm
   patch -p0 -i "chakra-build.patch"
+
+  # patch to use quazip 5
+  patch -p0 -i "quazip5.patch"
+
 }
 
 build() {
@@ -36,6 +42,8 @@ build() {
         -DBUILD_WITH_QT4=OFF \
         -DBUILD_HATCHET=OFF \
         -DTAGLIB_MIN_VERSION=1.10 \
+        -DQuaZip_INCLUDE_DIR=/usr/include/quazip5 \
+        -DQuaZip_LIBRARY=/usr/lib/libquazip5.so.1 \
         "../${pkgname}-${pkgver}"
   make
 }
