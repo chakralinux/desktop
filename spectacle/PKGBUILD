@@ -3,24 +3,31 @@ source ../kdeapps.conf
 
 pkgname=spectacle
 pkgver=${_kdever}
-pkgrel=1
+pkgrel=2
 pkgdesc="KDE screenshot capture utility"
 arch=(x86_64)
 url='https://projects.kde.org/spectacle'
 license=(GPL)
-depends=(kio xcb-util-cursor libkscreen libkipi hicolor-icon-theme kdeclarative)
+depends=(kio xcb-util-cursor libkscreen libkipi hicolor-icon-theme kdeclarative purpose)
 makedepends=(extra-cmake-modules kdoctools)
 conflicts=(kdegraphics-ksnapshot kscreengenie)
 replaces=(kdegraphics-ksnapshot kscreengenie)
 groups=(kde-applications kdegraphics)
 options=('docs' 'debug')
 install=$pkgname.install
-source=("$_mirror/${pkgname}-$_kdever.tar.xz")
-sha256sums=(`grep ${pkgname}-$_kdever.tar.xz  ../checksums.txt | cut -d " " -f1`)
+source=("$_mirror/${pkgname}-$_kdever.tar.xz"
+	"hidpi.patch"
+	"nvidia.patch")
+sha256sums=(`grep ${pkgname}-$_kdever.tar.xz  ../checksums.txt | cut -d " " -f1`
+	    "3876ae138df2a3ba7436d99bfb97cbed3d4a3a1aadb8cc252ea3565adf3dd555"
+	    "909cb41c8fc960a97f24835cca28f1bbadbc51182e9ceaf85445387f13f66869")
 
 
 prepare() {
   mkdir -p build
+  cd ${srcdir}/${pkgname}-${pkgver}
+  patch -Np1 -i ../hidpi.patch
+  patch -Np1 -i ../nvidia.patch
 }
 
 build() {

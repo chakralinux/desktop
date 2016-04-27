@@ -1,0 +1,38 @@
+From 6dca37a73272b4f71a7d4344f490490090a847fd Mon Sep 17 00:00:00 2001
+From: Boudhayan Gupta <me@BaloneyGeek.com>
+Date: Mon, 25 Apr 2016 23:15:43 +0530
+Subject: [PATCH] Unbreak HiDPI
+
+---
+ src/QuickEditor/EditorRoot.qml | 10 +++++-----
+ 1 file changed, 5 insertions(+), 5 deletions(-)
+
+diff --git a/src/QuickEditor/EditorRoot.qml b/src/QuickEditor/EditorRoot.qml
+index 55c6177..f7fb33b 100644
+--- a/src/QuickEditor/EditorRoot.qml
++++ b/src/QuickEditor/EditorRoot.qml
+@@ -36,10 +36,10 @@ Item {
+         }
+ 
+         selection = cropRectangle.createObject(parent, {
+-             "x": xx,
+-             "y": yy,
++             "x":      xx,
++             "y":      yy,
+              "height": hh,
+-             "width": ww
++             "width":  ww
+         });
+ 
+         cropDisplayCanvas.requestPaint();
+@@ -73,8 +73,8 @@ Item {
+         source: "image://snapshot/rawimage";
+         cache: false;
+ 
+-        height: Window.height;
+-        width: Window.width;
++        height: Window.height / Screen.devicePixelRatio;
++        width: Window.width / Screen.devicePixelRatio;
+         fillMode: Image.PreserveAspectFit;
+     }
+ 

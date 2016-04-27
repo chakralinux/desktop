@@ -1,0 +1,53 @@
+From 2f5e7b8257663d59d12c0413f79ebfaaa918437a Mon Sep 17 00:00:00 2001
+From: Boudhayan Gupta <me@BaloneyGeek.com>
+Date: Mon, 25 Apr 2016 23:57:49 +0530
+Subject: [PATCH] Unbreak rectangular image grabs for nvidia users.
+
+BUG: 362241
+FIXED-IN: 16.04.1
+---
+ src/QuickEditor/QuickEditor.cpp | 19 +------------------
+ src/QuickEditor/QuickEditor.h   |  1 -
+ 2 files changed, 1 insertion(+), 19 deletions(-)
+
+diff --git a/src/QuickEditor/QuickEditor.cpp b/src/QuickEditor/QuickEditor.cpp
+index 81a8fd0..a9bb72f 100644
+--- a/src/QuickEditor/QuickEditor.cpp
++++ b/src/QuickEditor/QuickEditor.cpp
+@@ -138,23 +138,6 @@ void QuickEditor::acceptImageHandler(int x, int y, int width, int height)
+     d->mGrabRect = QRect(x, y, width, height);
+     SpectacleConfig::instance()->setCropRegion(d->mGrabRect);
+ 
+-    QQuickItem *target = d->mQuickView->rootObject()->findChild<QQuickItem *>(QStringLiteral("imageBackground"));
+-    d->mCurrentGrabResult = target->grabToImage();
+-    if (d->mCurrentGrabResult.isNull()) {
+-        emit grabCancelled();
+-        return;
+-    }
+-
+-    connect(d->mCurrentGrabResult.data(), &QQuickItemGrabResult::ready, this, &QuickEditor::grabReadyHandler);
+-}
+-
+-void QuickEditor::grabReadyHandler()
+-{
+-    Q_D(QuickEditor);
+-
+-    QImage croppedImage = d->mCurrentGrabResult->image().copy(d->mGrabRect);
+-    QPixmap croppedPixmap = QPixmap::fromImage(croppedImage);
+-
+     d->mQuickView->hide();
+-    emit grabDone(croppedPixmap, d->mGrabRect);
++    emit grabDone(mImageStore->mPixmap.copy(d->mGrabRect), d->mGrabRect);
+ }
+diff --git a/src/QuickEditor/QuickEditor.h b/src/QuickEditor/QuickEditor.h
+index cadd5bb..5cca825 100644
+--- a/src/QuickEditor/QuickEditor.h
++++ b/src/QuickEditor/QuickEditor.h
+@@ -39,7 +39,6 @@ class QuickEditor : public QObject
+     private slots:
+ 
+     void acceptImageHandler(int x, int y, int width, int height);
+-    void grabReadyHandler();
+ 
+     private:
+ 
