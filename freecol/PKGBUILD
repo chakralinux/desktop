@@ -1,40 +1,30 @@
-#
-# Games Packages for Chakra, part of chakraos.org
-#
-# Maintainer: Adrián Chaves Fernández (Gallaecio) <adriyetichaves gmail.com>
-
 pkgname=freecol
 _pkgname=FreeCol
-pkgver=0.11.2
+pkgver=0.11.6
 pkgrel=1
 pkgdesc="A turn-based strategy game based on Colonization"
 arch=('x86_64')
 url="http://www.freecol.org/"
 license=('GPL')
 depends=('java-runtime')
-#makedepends=('apache-ant')
 categories=('games')
-source=(http://downloads.sourceforge.net/$pkgname/$pkgname-$pkgver-src.zip
+source=(http://downloads.sourceforge.net/$pkgname/$pkgname-$pkgver.zip
         main.desktop
         main.sh)
-md5sums=('25ff61ef058d34bc62c276d33c066639'
-         '68922dfb7c1db20c13c4eb6930f9bd93'
-         '058e8125acc3b475e90cb2be7cd8f55a')
-
-build() {
-  cd "$srcdir/$pkgname"
-}
+sha1sums=('084acb6c3c86ce7b1935dfc9a60596ab9547c8fe'
+          '1c0b0f685bf88a3c3618bcf6414ace6cddf1ffd0'
+          'f14f60f487e96ce5bd848357e5ba5a2c4d7d2fd2')
 
 package() {
   cd "$srcdir/$pkgname"
 
-  install -Dm644 FreeCol.jar "$pkgdir/usr/share/java/$pkgname/FreeCol.jar"
-  install -Dm644 doc/FreeCol.tex "$pkgdir/usr/share/doc/$pkgname/FreeCol.pdf"
+  install -Dm644 FreeCol.jar "$pkgdir/usr/share/$pkgname/FreeCol.jar"
+  install -Dm644 FreeCol.pdf "$pkgdir/usr/share/doc/$pkgname/FreeCol.pdf"
   install -Dm644 $pkgname.xpm "$pkgdir/usr/share/pixmaps/$pkgname.xpm"
   install -Dm644 ../main.desktop "$pkgdir/usr/share/applications/$pkgname.desktop"
   install -Dm755 ../main.sh "$pkgdir/usr/bin/$pkgname"
 
-  cp -r data jars "$pkgdir/usr/share/java/$pkgname/"
-  find "$pkgdir/usr/share/java/$pkgname" -type d -exec chmod 755 '{}' \;
-  find "$pkgdir/usr/share/java/$pkgname" -type f -exec chmod 644 '{}' \;
+  cp -r data jars "$pkgdir/usr/share/$pkgname/"
+  find "$pkgdir/usr/share/$pkgname" -type d -exec chmod 755 '{}' \;
+  find "$pkgdir/usr/share/$pkgname" -type f -exec chmod 644 '{}' \;
 }
