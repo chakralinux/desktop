@@ -1,9 +1,10 @@
 # Contributor : Arch Linux https://www.archlinux.org/packages/community/any/ipython/
+# https://projects.archlinux.org/svntogit/community.git/tree/trunk/PKGBUILD?h=packages/ipython
 
 pkgbase=ipython 
 pkgname=('ipython3' 'ipython2')
-pkgver=4.1.2
-pkgrel=2
+pkgver=4.2.0
+pkgrel=1
 pkgdesc="An enhanced Interactive Python shell."
 arch=('any')
 url="http://ipython.org"
@@ -13,23 +14,28 @@ optdepends=("python3-nose: for IPython's test suite")
 
 # some of these will update rapidly, others never
 # so _vars will be phased in as new updates are released
-#_ipykv=4.3.0
 _traitv=4.1.0
+_psharev=0.7.2
+_backshutil=1.0.0
+_pathlib=1.0.1
 
-source=("https://pypi.python.org/packages/source/i/ipython/$pkgbase-$pkgver.tar.gz"
-#        "https://pypi.python.org/packages/source/i/ipykernel/ipykernel-$_ipykv.tar.gz"
+source=("ipython-$pkgver.tgz::https://github.com/ipython/ipython/archive/$pkgver.tar.gz"
         "https://pypi.python.org/packages/source/t/traitlets/traitlets-$_traitv.tar.gz"
         "https://pypi.python.org/packages/source/i/ipython_genutils/ipython_genutils-0.1.0.tar.gz"
-        "https://pypi.python.org/packages/source/p/pickleshare/pickleshare-0.5.tar.gz"
+        "https://pypi.python.org/packages/source/p/pickleshare/pickleshare-$_psharev.tar.gz"
         "https://pypi.python.org/packages/source/s/simplegeneric/simplegeneric-0.8.1.zip"
+        #only ipython2
+        "https://github.com/chrippa/backports.shutil_get_terminal_size/archive/v$_backshutil.tar.gz"
+        "http://pypi.python.org/packages/source/p/pathlib/pathlib-$_pathlib.tar.gz"
         "ipython.png")
-sha256sums=('052f9692a227f285febecec856d749811ac6a20b32c7629b4de31f04ea701692'
-#            'f214c661328c836e02b6f185f98f3eccd7ce396791937493ffa1babf5e3267ab'
+sha256sums=('2c5cce143b6a2aa1d17c2d37b63cfddf60a3240fbe52d362a02e3bdb9243f6d0'
             '440e38dfa5d2a26c086d4b427cfb7aed17d0a2dca78bce90c33354da2592af5b'
             '3a0624a251a26463c9dfa0ffa635ec51c4265380980d9a50d65611c3c2bd82a6'
-            'c0be5745035d437dbf55a96f60b7712345b12423f7d0951bd7d8dc2141ca9286'
+            '92ee3b0e21632542ecc9a0a245e69a126f62e5114081bdb0d32e0edd10410033'
             'dc972e06094b9af5b855b3df4a646395e43d1c9d0d39ed345b7393560d0b9173'
-            'ae11c25d6c269c3938fe32fce5ec21118f24dd8cd8360ef59e21df10928b4ac6')
+            'ebeddf414a973f6b1c08c35892a8c5330aa9368171d9f70d749909525d72c9f1'
+            '6940718dfc3eff4258203ad5021090933e5c04707d5ca8cc9e73c94a7894ea9f'
+            '6dea629da7ed8ad8109029e27ec435b400e98fcd7f73a2cd00fc383f26250852')
 
 # With 4.0 many previously bundled external libraries are no longer bundled
 # Since there are so many and they are so small, they get re-bundled here
@@ -42,17 +48,19 @@ sha256sums=('052f9692a227f285febecec856d749811ac6a20b32c7629b4de31f04ea701692'
 # (still required for now though, but drop at first chance)
 # pickleshare (depends on path.py)
 # simplegeneric (so old that it only comes in .zip and still refers to the cheeseshop)
-
-# confirm that an update does not break sage?         
+      
    
 prepare() {
   cd "$srcdir"
   cp -r ipython-$pkgver        ipython2-$pkgver
-#  cp -r ipykernel-$_ipykv      python2-ipykernel-$_ipykv
   cp -r ipython_genutils-0.1.0 ipython2_genutils-0.1.0
-  cp -r pickleshare-0.5        python2-pickleshare-0.5
+  cp -r pickleshare-$_psharev  python2-pickleshare-$_psharev
   cp -r traitlets-$_traitv     python2-traitlets-$_traitv
   cp -r simplegeneric-0.8.1    python2-simplegeneric-0.8.1
+  
+  # python 3.5 does not need a 3.3 backport hack
+  cd "$srcdir/ipython-$pkgver"
+  sed -i 's|backports.shutil_get_terminal_size|shutil|' IPython/utils/terminal.py
 }
 
 package_ipython3() {
@@ -66,7 +74,7 @@ package_ipython3() {
   cd "$srcdir/ipython_genutils-0.1.0"
   python3 setup.py install --prefix=/usr --root="$pkgdir" --optimize=0
 
-  cd "$srcdir/pickleshare-0.5"
+  cd "$srcdir/pickleshare-$_psharev"
   python3 setup.py install --prefix=/usr --root="$pkgdir" --optimize=0
 
   cd "$srcdir/traitlets-$_traitv"
@@ -74,9 +82,6 @@ package_ipython3() {
 
   cd "$srcdir/simplegeneric-0.8.1"
   python3 setup.py install --prefix=/usr --root="$pkgdir" --optimize=0
-
-#  cd "$srcdir/ipykernel-$_ipykv"
-#  python3 setup.py install --prefix=/usr --root="$pkgdir" --optimize=0
 
   cd "$srcdir/ipython-$pkgver"
   install -Dm644 docs/source/about/license_and_copyright.rst "$pkgdir/usr/share/licenses/ipython/LICENSE"
@@ -87,8 +92,10 @@ package_ipython3() {
   sed -i s!"IPython"!"IPython3"! *.desktop
   sed -i s!"Name[en_US]=ipython"!"Name[en_US]=ipython3"! *.desktop
   sed -i s!"Name=ipython"!"Name=ipython3"! *.desktop
+  sed -i s!"Icon=ipython"!"Icon=ipython3"! *.desktop
   sed -i s!"Development;Utility;"!"Development;"! *.desktop
-  install -Dm644 ipython.desktop "$pkgdir/usr/share/applications/ipython.desktop"
+  install -Dm644 ipython.desktop "$pkgdir/usr/share/applications/ipython3.desktop"
+  install -Dm644 "$srcdir/ipython.png" "$pkgdir/usr/share/pixmaps/ipython3.png"
   }
 
 package_ipython2() {
@@ -104,7 +111,7 @@ package_ipython2() {
   cd "$srcdir/ipython2_genutils-0.1.0"
   python2 setup.py install --prefix=/usr --root="$pkgdir" --optimize=0
 
-  cd "$srcdir/python2-pickleshare-0.5"
+  cd "$srcdir/python2-pickleshare-$_psharev"
   python2 setup.py install --prefix=/usr --root="$pkgdir" --optimize=0
 
   cd "$srcdir/python2-traitlets-$_traitv"
@@ -113,8 +120,11 @@ package_ipython2() {
   cd "$srcdir/python2-simplegeneric-0.8.1"
   python2 setup.py install --prefix=/usr --root="$pkgdir" --optimize=0
 
-#  cd "$srcdir/python2-ipykernel-$_ipykv"
-  #python2 setup.py install --prefix=/usr --root="$pkgdir" --optimize=0
+  cd "$srcdir/backports.shutil_get_terminal_size-$_backshutil"
+  python2 setup.py install --prefix=/usr --root="$pkgdir" --optimize=0
+  
+  cd "$srcdir/pathlib-$_pathlib"
+  python2 setup.py install --root="$pkgdir/" --optimize=1
 
   cd "$srcdir/ipython2-$pkgver"
   install -Dm644 docs/source/about/license_and_copyright.rst "$pkgdir/usr/share/licenses/ipython2/LICENSE"
@@ -129,8 +139,7 @@ package_ipython2() {
   cd "$srcdir/ipython2-$pkgver/examples/IPython Kernel/"
   sed -i 's/ython/ython2/g' *.desktop
   sed -i 's/gnome-netstatus-idle/ipython2/' *.desktop
-  sed -i s!"Icon=ipython2"!"Icon=ipython"! *.desktop
   sed -i s!"Development;Utility;"!"Development;"! *.desktop
   install -Dm644 ipython.desktop "$pkgdir/usr/share/applications/ipython2.desktop"
-  install -Dm644 "$srcdir/ipython.png" "$pkgdir/usr/share/pixmaps/ipython.png"
+  install -Dm644 "$srcdir/ipython.png" "$pkgdir/usr/share/pixmaps/ipython2.png"
 }
