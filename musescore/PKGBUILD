@@ -1,5 +1,6 @@
 pkgname=musescore
-pkgver=2.0.2
+_pkgname=MuseScore
+pkgver=2.0.3
 pkgrel=1
 pkgdesc="A music score editor written in Qt"
 arch=('x86_64')
@@ -10,20 +11,20 @@ makedepends=('cmake' 'doxygen' 'lame' 'qt5-script' 'texlive-core')
 optdepends=('lame: MP3 export')
 categories=('multimedia')
 install=musescore.install
-source=("musescore-${pkgver}.tar.gz::https://github.com/musescore/MuseScore/archive/v${pkgver}.tar.gz"
+source=("$pkgname-$pkgver.tar.gz::https://github.com/$pkgname/$_pkgname/archive/v$pkgver.tar.gz"
         'musescore.conf')
-sha512sums=('aeb5f0c696a3c0796604c687cb3ea7303dd3536da71cf1b1e71f909cd5caa0864a879ffb19931f6ab0dc6fff854c9f2e05a64905e186b417fa954b73e3e9f08c'
+sha512sums=('4cd1301036781a54fba06870cc6a3235919ca702ccbe45dcfd74b1d3a1173fa124cca7bcec2fdfb080fb7e3eaf870ba1879ea6738c764836b2f7cae6f7c2d3c1'
             '1cd9ff64ef0b53281cc73bb64539a2222b38ce92566154587229b78e39e8b2825b0590714c451c6e65cd5a5a31e3272ab38f8fba31afff6e64e7dcff902abfc1')
 
 build() {
-  cd MuseScore-${pkgver}
+  cd $_pkgname-$pkgver
 
   make PREFIX='/usr' release
 }
 
 package() {
-  cd MuseScore-${pkgver}/build.release
+  cd $_pkgname-$pkgver/build.release
 
-  make DESTDIR="${pkgdir}" install
-  install -Dm 644 ../assets/musescore-icon-round-512.png "${pkgdir}"/usr/share/pixmaps/mscore.png
+  make DESTDIR=$pkgdir install
+  install -Dm 644 ../assets/musescore-icon-round-512.png $pkgdir/usr/share/pixmaps/mscore.png
 }
