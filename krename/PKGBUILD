@@ -1,14 +1,7 @@
-#
-# Chakra Packages for Chakra, part of chakra-project.org
-#
-# maintainer (x86_64): Manuel Tortosa <manutortosa[at]chakra-project[dot]org>
-
-# include global config
-source ../_buildscripts/${current_repo}-${_arch}-cfg.conf
 
 pkgname=krename
 pkgver=4.0.9
-pkgrel=2
+pkgrel=3
 pkgdesc="A very powerfull batch file renamer for KDE"
 arch=('x86_64')
 url="http://www.krename.net"
@@ -17,22 +10,21 @@ depends=('kdelibs' 'taglib' 'xdg-utils')
 makedepends=('cmake' 'automoc4')
 options=('libtool')
 categories=('utils')
-install=${pkgname}.install
-source=("http://sourceforge.net/projects/krename/files/KDE4%20krename-stable/${pkgver}/${pkgname}-${pkgver}.tar.bz2")
+install=$pkgname.install
+source=("http://sourceforge.net/projects/krename/files/KDE4%20krename-stable/$pkgver/$pkgname-$pkgver.tar.bz2")
 md5sums=('21b2daeee6d81155bd3c0fa2bc1b9a63')
 
 build() {
-  cd ${srcdir}
+  cd $pkgname-$pkgver
   mkdir build
   cd build
-  cmake ../${pkgname}-${pkgver} \
-    -DCMAKE_INSTALL_PREFIX=/usr \
+  cmake .. -DCMAKE_INSTALL_PREFIX=/usr \
     -DCMAKE_BUILD_TYPE=Release -DCMAKE_CXX_FLAGS="-I/usr/include/freetype2"
   sed -i 's|/share/locale|/share/locale/kde4|' po/cmake_install.cmake
   make
 }
 
 package() {
-  cd ${srcdir}/build
-  make DESTDIR=${pkgdir} install
+  cd $pkgname-$pkgver/build
+  make DESTDIR=$pkgdir install
 }
