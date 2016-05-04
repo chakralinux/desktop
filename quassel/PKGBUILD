@@ -1,33 +1,23 @@
 pkgname=quassel
-pkgver=0.12.3
+pkgver=0.12.4
 pkgrel=1
 pkgdesc="Next-generation distributed IRC client"
 arch=('x86_64')
 url="http://quassel-irc.org"
 license=('GPL')
-depends=('qt5-base>=5.5' 'knotifyconfig' 'qt5-webkit' 'qt5-script' 'qca-qt5')
+depends=('qt5-base' 'knotifyconfig' 'qt5-webkit' 'qt5-script' 'qca-qt5' 'openssl')
 makedepends=('cmake' 'extra-cmake-modules' 'qt5-tools' 'python3')
 replaces=('quassel-qt4')
 categories=('communication')
 screenshot=('http://quassel-irc.org/files/images/snapshot13.preview.png')
 source=("http://quassel-irc.org/pub/quassel-${pkgver}.tar.bz2"
-        "http://bugs.quassel-irc.org/attachments/download/449/0001-Fix-build-with-Qt-5.5.patch"
-        "fix-ssl-detection.patch"
 	'quassel.service'
         'quassel.conf')
 install=quassel.install
 backup=(etc/conf.d/quassel.conf)
-sha1sums=('8e84e0fd56f17fb5047277bb9107949e610872bd'
-          'd20ca972194142795dae7bcda79012915856452c'
-          '2fb960dc3cafd0a90e52f10c67704ff9b312db71'
+sha1sums=('0976e6c08a73d4138c7e09eba8975746562c6b76'
           '40b801ad664e9e0f0d5f1260f7545b6842dd11e8'
           '575d09f165f12ba35e560be54c8e1cd92321bb4b')
-
-prepare() {
-  cd ${pkgname}-${pkgver}
-#  patch -Np1 -i ../0001-Fix-build-with-Qt-5.5.patch
-#  patch -Np1 -i ../fix-ssl-detection.patch
-}
          
 build() {
   [[ ! -d build ]] && mkdir build
@@ -37,6 +27,7 @@ build() {
     -DCMAKE_INSTALL_PREFIX=/usr/ \
     -DUSE_QT5=ON \
     -DWITH_KDE=ON \
+    -DHAVE_SSL=TRUE \
     -DCMAKE_BUILD_TYPE="Release" \
     ../${pkgname}-${pkgver}/ \
     -Wno-dev
