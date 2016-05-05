@@ -1,6 +1,6 @@
 pkgname=octave
-pkgver=4.0.1
-pkgrel=2
+pkgver=4.0.2
+pkgrel=1
 pkgdesc="A high-level language, primarily intended for numerical computations."
 arch=('x86_64')
 url="http://www.octave.org"
@@ -13,10 +13,10 @@ optdepends=('texinfo: for help-support in octave'
 	    'openjdk: to call Java functions')
 source=(ftp://ftp.gnu.org/gnu/octave/octave-$pkgver.tar.xz)
 install='octave.install'
-sha1sums=('76b531063e37df13fdbe3467a6e3c14dce364d9e')
+sha1sums=('34384a5ddeea1b29bdfedd5e8d2bdb13b7b2daf5')
 
 build() {
-  cd ${srcdir}/${pkgname}-${pkgver}
+  cd $pkgname-$pkgver
   
   autoreconf -vfi
     
@@ -31,11 +31,11 @@ build() {
 }
 
 package(){
-  cd "${srcdir}/${pkgname}-${pkgver}"
+  cd $pkgname-$pkgver
 
-  make DESTDIR="${pkgdir}" install
+  make DESTDIR=$pkgdir install
 
   # add path to ld.so.conf.d
-  install -d "${pkgdir}/etc/ld.so.conf.d"
-  echo "/usr/lib/${pkgname}/${pkgver}" > "${pkgdir}/etc/ld.so.conf.d/${pkgname}.conf"
+  install -d $pkgdir/etc/ld.so.conf.d
+  echo "/usr/lib/$pkgname/$pkgver" > "$pkgdir/etc/ld.so.conf.d/$pkgname.conf"
 }
