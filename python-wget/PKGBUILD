@@ -1,0 +1,28 @@
+pkgbase=python-wget
+pkgname=('python3-wget' 'python2-wget')
+pkgver=3.2
+pkgrel=1
+pkgdesc='Pure Python download utility and API'
+arch=('any')
+license=('Public Domain')
+url=https://pypi.python.org/pypi/wget
+source=("https://bitbucket.org/techtonik/${pkgbase}/get/${pkgver}.tar.bz2")
+md5sums=('79b67b59aca8748f0758cbff74d9e68f')
+
+_pkgdir=techtonik-${pkgbase}-e19779610914
+
+
+package_python2-wget() {
+  depends+=('python2')
+  cd ${_pkgdir}
+  python2 setup.py install --root="${pkgdir}"
+  install -m644 -D UNLICENSE ${_pkgdir}/usr/share/licenses/${pkgbase}/UNLICENSE
+}
+
+package_python3-wget() {
+  depends+=('python3')
+  cd ${_pkgdir}
+  python3 setup.py install --root="${pkgdir}"
+  install -m644 -D UNLICENSE ${_pkgdir}/usr/share/licenses/${pkgbase}/UNLICENSE
+}
+
