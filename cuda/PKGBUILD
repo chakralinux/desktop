@@ -2,8 +2,8 @@
 # Maintainer on CCR: Rondey90 <rondey90@gmail.com>
 
 pkgname=cuda
-pkgver=6.5.14
-pkgrel=2
+pkgver=7.5.18
+pkgrel=1
 pkgdesc="NVIDIA's GPU programming toolkit"
 arch=('x86_64')
 url="http://www.nvidia.com/object/cuda_home.html"
@@ -14,15 +14,15 @@ provides=('cuda-toolkit' 'cuda-sdk')
 optdepends=('gdb: for cuda-gdb')
 options=(!strip staticlibs)
 install=cuda.install
-source=(http://developer.download.nvidia.com/compute/cuda/6_5/rel/installers/cuda_${pkgver}_linux_64.run
+source=(http://developer.download.nvidia.com/compute/cuda/7.5/Prod/local_installers/cuda_${pkgver}_linux.run
         cuda.sh
         cuda.conf)
-md5sums=('90b1b8f77313600cc294d9271741f4da'
+md5sums=('4b3bcecf0dfc35928a0898793cf3e4c6'
          '7e5990e03eea90075f5a500e91a0c3d3'
          '0a50e9e04f8165a5ff60512cbb49bc30')
 
 prepare() {
-  sh cuda_${pkgver}_linux_64.run -extract=${srcdir}
+  sh cuda_${pkgver}_linux.run -extract=${srcdir}
   ./cuda-linux64-rel-*.run --noexec --keep
   ./cuda-samples-linux-*.run --noexec --keep
 
