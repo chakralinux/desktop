@@ -1,0 +1,29 @@
+pkgbase=python-gnupg
+pkgname=('python2-gnupg' 'python3-gnupg')
+pkgver=0.3.8
+pkgrel=1
+pkgdesc="This module allows easy access to GnuPG's key management, encryption and signature functionality from Python programs." 
+url="https://pypi.python.org/pypi/python-gnupg" 
+license=("BSD")
+arch=("any")
+depends=('gnupg') 
+source=("https://pypi.python.org/packages/source/p/${pkgbase}/${pkgbase}-${pkgver}.tar.gz")
+md5sums=('54d312056cb8903358bdd0a18522f702')
+
+package_python2-gnupg() {
+  depends+=('python2')
+
+  cd $srcdir/${pkgbase}-${pkgver}
+  python2 setup.py build
+  python2 setup.py install --prefix="${pkgdir}/usr"
+  install -D -m644 LICENSE.txt "${pkgdir}/usr/share/licenses/${pkgname}/LICENSE"
+}
+
+package_python3-gnupg() {
+  depends+=('python3')
+
+  cd $srcdir/${pkgbase}-${pkgver}/
+  python3 setup.py build
+  python3 setup.py install --prefix="${pkgdir}/usr"
+  install -D -m644 LICENSE.txt "${pkgdir}/usr/share/licenses/${pkgname}/LICENSE"
+}
