@@ -3,7 +3,7 @@ source ../kdeapps.conf
 
 pkgname=konversation
 pkgver=1.6
-pkgrel=2
+pkgrel=3
 pkgdesc="A user friendly IRC client for KDE"
 arch=('x86_64')
 url="http://konversation.kde.org"
@@ -13,11 +13,15 @@ license=('GPL2' 'FDL')
 categories=('communication')
 screenshots=('http://konversation.kde.org/screenshots/konversation13_2.png')
 install=${pkgname}.install
-source=("http://download.kde.org/stable/${pkgname}/${pkgver}/src/${pkgname}-${pkgver}.tar.xz")
-sha1sums=('16e8c1969b04c0946b48a436e8825654b0029bb9')
+source=("http://download.kde.org/stable/${pkgname}/${pkgver}/src/${pkgname}-${pkgver}.tar.xz"
+	avoid-dcc-crashes.patch)
+sha1sums=('16e8c1969b04c0946b48a436e8825654b0029bb9'
+          '357fe9815f3ac35bde5718fc6f556ba037e0b72c')
 
 prepare(){
   mkdir -p build
+  cd ${srcdir}/${pkgname}-${pkgver}
+  patch -p1 -i ../../avoid-dcc-crashes.patch
 }
 
 build() {
@@ -30,3 +34,4 @@ package() {
   cd build
   make DESTDIR=${pkgdir} install
 }
+

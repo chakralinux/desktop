@@ -1,0 +1,57 @@
+From 459d1f949caee1e15ee8d3f1b55dccedf923b1cc Mon Sep 17 00:00:00 2001
+From: shainer <syn.shainer@gmail.com>
+Date: Thu, 5 May 2016 00:36:10 +0100
+Subject: [PATCH] canMoveView{Left,Right} returns a safe default in case of
+ invalid views.
+
+---
+ src/viewer/viewcontainer.cpp | 12 +++++++++++-
+ 1 file changed, 11 insertions(+), 1 deletion(-)
+
+diff --git a/src/viewer/viewcontainer.cpp b/src/viewer/viewcontainer.cpp
+index aafa5cc..a2308bc 100644
+--- a/src/viewer/viewcontainer.cpp
++++ b/src/viewer/viewcontainer.cpp
+@@ -54,7 +54,6 @@
+ #include <KWindowSystem>
+ #include <KIconLoader>
+ 
+-
+ using namespace Konversation;
+ 
+ ViewMimeData::ViewMimeData(ChatWindow *view) : QMimeData()
+@@ -1818,6 +1817,11 @@ bool ViewContainer::canMoveViewLeft() const
+ 
+     ChatWindow* view = static_cast<ChatWindow*>(m_tabWidget->widget(index));
+ 
++    // Safeguard in case we get returned an invalid object for some reason
++    if (view == nullptr) {
++        return false;
++    }
++
+     if (view->isTopLevelView() && index > 0) {
+         return true;
+     } else if (!view->isTopLevelView()) {
+@@ -1842,6 +1846,11 @@ bool ViewContainer::canMoveViewRight() const
+ 
+     ChatWindow* view = static_cast<ChatWindow*>(m_tabWidget->widget(index));
+ 
++    // Safeguard in case we get returned an invalid object for some reason
++    if (view == nullptr) {
++        return false;
++    }
++
+     if (view->isTopLevelView()) {
+         int lastTopLevelView = -1;
+ 
+@@ -2630,6 +2639,7 @@ void ViewContainer::closeDccPanel()
+     {
+         // hide it from view, does not delete it
+         if (m_tabWidget) m_tabWidget->removeTab(m_tabWidget->indexOf(m_dccPanel));
++
+         m_dccPanelOpen=false;
+         (dynamic_cast<KToggleAction*>(actionCollection()->action("open_dccstatus_window")))->setChecked(false);
+     }
+-- 
+2.7.4
+
