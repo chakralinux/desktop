@@ -1,30 +1,33 @@
 # Contributor: MCMic <come.bernigaud@laposte.net>
 
 pkgname=valyria-tear
-pkgver=0.6.0
-pkgrel=1
-pkgdesc="Valyria Tear is an attempt at creating a free (as meant in the Gnu Public License) J-RPG game."
-arch=('any')
+pkgver=1.0.0
+pkgrel=2
+pkgdesc="An attempt at creating a free (as meant in the Gnu Public License) J-RPG game."
+arch=('x86_64')
 url="http://valyriatear.blogspot.fr"
 license=('GPL')
-depends=('sdl' 'sdl_image' 'sdl_ttf' 'openal' 'libogg' 'libvorbis' 'glu' 'libpng' 'libjpeg' 'gettext' 'lua')
-makedepends=('cmake')
-conflicts=()
-source=("https://github.com/Bertram25/ValyriaTear/archive/${pkgver}/valyriatear-${pkgver}.tar.gz")
-md5sums=('b7f0fcdf5d640c26acb1b3ef6e2899e4')
+depends=('sdl' 'sdl_image' 'sdl_ttf' 'openal' 'libogg' 'libvorbis' 'glu' 'libpng' 'libjpeg' 'gettext' 'lua' 'glew' 'boost-libs')
+makedepends=('cmake' 'boost' 'git')
+conflicts=('valyria-tear')
+source=("git+https://github.com/Bertram25/ValyriaTear.git#tag=${pkgver}-gcc5"
+        "valyriatear.sh")
+md5sums=('SKIP'                                                                                                                                                 
+         '5e783c05fb31d6125f6b771035d3808b')  
 
 build() {
-    cd $srcdir/ValyriaTear-$pkgver
-    
-    mkdir -p build && cd build
-    cmake \
-        -DCMAKE_INSTALL_PREFIX=/usr \
-        -DCMAKE_BUILD_TYPE=Release \
-        ..
-    make
+  cd $srcdir/ValyriaTear
+  git submodule update --init --remote
+  cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=/usr -DLUA_LIBRARIES=/usr/lib/liblua.so.5.1 .
+  make
 }
 
 package() {
-    cd $srcdir/ValyriaTear-$pkgver/build
-    make install DESTDIR=$pkgdir
+  cd $srcdir/ValyriaTear
+  make install DESTDIR=$pkgdir
+  install -d $pkgdir/usr/lib
+  # Provide wrapper to load data from /usr/share/valyriatear https://github.com/ValyriaTear/ValyriaTear/issues/505
+  mv $pkgdir/usr/{bin,lib}/valyriatear
+  install -m755 $srcdir/valyriatear.sh $pkgdir/usr/bin/valyriatear
 }
+
