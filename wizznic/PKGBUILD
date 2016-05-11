@@ -5,32 +5,29 @@
 # Contributor: Jesse Jaara <jesse.jaara@gmail.com>
 
 pkgname=wizznic
-pkgver=0.9.9
-pkgrel=2
-pkgdesc="Puzzle game where you have to match equal bricks (it is harder than it sounds)"
-arch=(i686 x86_64)
-url="http://wizznic.sourceforge.net/"
+pkgver=380
+pkgrel=1
+pkgdesc="Most awesome puzzlegame where you have to match bricks of the same kind, is not as easy as you may think."
+arch=(x86_64)
+url="http://wizznic.org/"
 license=('GPL3')
-depends=('mesa' 'sdl' 'sdl_mixer' 'sdl_image')
-categories=('games')
-source=("http://downloads.sourceforge.net/project/$pkgname/Source%20Releases/$pkgname-$pkgver-src.tar.bz2")
-md5sums=('1b017cd84903f40f2a3ae7aef9951e8d')
+depends=('sdl_mixer' 'sdl_image' 'mesa' 'glu' 'wget')
+source=("http://contigrator.wizznic.org/jobs/Wizznic/builds/0380/output/Wizznic_src_build_380.tar.bz2")
 
 build() {
-  cd $srcdir/$pkgname-$pkgver-src
-
-  make \
-    -f Makefile.linux \
-    DATADIR=/usr/share/$pkgname/ \
-    BINDIR=/usr/bin/
+  cd "$srcdir/Wizznic_src_build_380"
+  export BUILD_NUMBER=380_CHAKRA
+  make -f Makefile.linux DATADIR=/usr/share/wizznic/ BINDIR=/usr/bin/
 }
 
 package() {
-  cd $srcdir/$pkgname-$pkgver-src
+  cd "$srcdir/Wizznic_src_build_380"
 
-  make \
-    -f Makefile.linux \
-    DATADIR=$pkgdir/usr/share/$pkgname/ \
-    BINDIR=$pkgdir/usr/bin/ \
-    install
+  make -f Makefile.linux DATADIR=$pkgdir/usr/share/wizznic/ BINDIR=$pkgdir/usr/bin/ MANDIR=$pkgdir/usr/share/man/ install
+
+  mkdir -p "${pkgdir}"/usr/share/{applications,pixmaps}
+  install -m644 tools/releaser/data/lin/wizznic.png "${pkgdir}"/usr/share/pixmaps/wizznic.png
+  install -m644 tools/releaser/data/lin/wizznic.desktop "${pkgdir}"/usr/share/applications/
 }
+
+md5sums=('c5666cbbc3e19b9f94ee9913cf89170a')
