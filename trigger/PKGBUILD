@@ -1,48 +1,96 @@
+_plugins=(map-volcanic map-delta map-desertrush map-ghats map-greengrounds map-helicoil
+          map-icypeak map-labrally map-marsspirit map-monza map-mountainclimbing map-mountainpass
+          map-pistol map-pulp map-roundhouse map-santa map-serpentine map-snowlevel map-snowyhills
+          map-tea map-tobago event-rscup event-westernchallenge map-banana map-crossmountain)
+
 pkgbase=trigger
 pkgname=("${pkgbase}" "${pkgbase}-data")
-pkgver=0.6.2
+pkgver=0.6.4
 pkgrel=1
 pkgdesc="Free OpenGL rally car racing game."
 arch=('x86_64')
 url="http://sourceforge.net/projects/trigger-rally/"
 license=('GPL2')
 makedepends=('ftjam' 'glew' 'sdl_mixer' 'sdl_image' 'physfs' 'mesa' 'freeglut'
-             'freealut')
+             'freealut' 'glu')
 categories=('games')
-source=("http://sourceforge.net/projects/trigger-rally/files/trigger-$pkgver/trigger-rally-${pkgver}-src.tar.bz2"
-        "http://sourceforge.net/projects/trigger-rally/files/trigger-$pkgver/trigger-rally-${pkgver}-data.tar.bz2"
-        "trigger.desktop")
-sha256sums=('0e554cbb362e41019f2495657dec8378126d4d21128774daecd6d2f7632ceb55'
-            '22cb5de00b9cd71b25c7ebc245e6d93318435c5541ce36940e8269c6be756030'
-            '3272cd424bd48dca72490975b9305f5e2abe40774ef9e4b6e9ab741b0879bd2a')
+source=(http://sourceforge.net/projects/trigger-rally/files/trigger-$pkgver/trigger-rally-${pkgver}.tar.gz
+        trigger.desktop
+        hiscore1.h.patch
+        # Get all plugins
+        $(for l in ${_plugins[@]}; do echo https://sourceforge.net/projects/${pkgbase}-rally/files/plugins/plugins-${pkgver}/${l}.zip; done))
+        
+noextract=(
+        # Don't extract plugins
+        $(for l in ${_plugins[@]}; do echo ${l}.zip; done))
+        
+sha256sums=('a60439cd21f427427794e33bad5e72a3d38929d547c36eae044f0f21d35eb7e4'
+            '91de87dcaa2287038b9a8d08a6b8d1953b31a836b0e457d27932499a1e92b592'
+            '4aa86231344b8faaed67203a9adfb83663ed49e2bc8e2f4fe86c7dedb60c7c72'
+            '212e60d6edf4c1f215168a9e048cc42e7ea08c371d2a0386c21fa4edea986bce'
+            'b9d4ab677bd368ed86852be9d0519e1d97e53b20cb0a3fadf68286f0fcfc026e'
+            '56a9e9e63913dd78df369115cadadd3fa78d5afb99c20f17d9876bd81b373752'
+            '8ece4b7074ec6097f14ddcbeb7a7ac75ebc1183d7bb5cf57612a76ca09e4e4a0'
+            '588cfde7a9a339b07754db6b10b5c2a7186ece32a48814c1fdeeb702106fedc8'
+            'fa9357f297a34be54998a29b3bf8f6eacbfa7a9facf8be95d34e22d0080df5bb'
+            'b5b2082b2295b86454cb216ae10a5de0da6b4d851205cb22bcc3f18f9af9e850'
+            '6471df06f97f2a1e330388c703ff6c54c0e8de18fc3c91f0d2045f12607c1eb7'
+            '7bc2a3d1a05d5081773fd155122892f723666fcde8cf9c1b13d10d16575736dd'
+            'b44294cb3ed9955f42591ad0c7be7dc5a02108077b0621817af357b3a62a6e0d'
+            'e59a2e18b3febea08bb779d4fa164eefe07d61f30c7a572c0f2b83cdaeb12982'
+            '35b86f443b6adf5c14cee61158afe13dedc84d6ee5991bda41e687dba38a7e8b'
+            '59f0b3b3f90b324c28c4e2dc209f757cc14394fa715b26d35ff866dc631bea3f'
+            'a509da33602504be6b20be270788abad730da39f38ed584ab3e710c18e7f980d'
+            '061297b3da15d37a198a337914fec7296ad199d9281d1054b2fb5236234022ab'
+            'f5a76b6b1d525d55fb3f352c5ee17fa21dfd30e49f3e7f99327a3a872f1496c5'
+            '83e460227f256c93fa13131d4ea18bb7f40e0777e23d84a30127bc57cd4df17f'
+            '0dbf5e6a0f889e14d3cf0465b88f0f48f9dcea7d653cddf444be019bc60c03bb'
+            '7d0073a16ce72fbdf6cf7e456346fc9e9c3fa808676907c86958c344a2de0156'
+            'f5a09577ba060a1a59021f372cb4312a79ea93af33247e9e9cb65b37baaf32b5'
+            '3813037a0c8b3f2ddb1d246ac79ce77cfe75743fe729a47be9e9bbe76e79a2f9'
+            'd20c740cdf2df9a97c68cc96ff835d1379462b083997cd89653459ad219bdaf6'
+            '1775b599c59df9b11673d3b46c27f0f988f2c4c9de8825d1e9ea4252f108f631'
+            '6a67d2b168c3e71863da5db68fb4014086ee74f200d2fe9374ee0920f8fb85c8'
+            'a6dc7be760dea247ec3ed871c4502a29f38205898ae941366c09223087d49237')
 
+
+prepare(){
+    cd "${srcdir}/trigger-rally-${pkgver}"
+    sed -i 's,\.\.\/data,\/usr\/share\/trigger\/trigger-'${pkgver}'-data,' bin/trigger-rally.config.defs
+    sed -i 's,automatic="yes",automatic="no",' bin/trigger-rally.config.defs
+    patch -p0 -i ../hiscore1.h.patch
+}
+            
 build() {
-    cd "${srcdir}/trigger-rally-${pkgver}-src"
-
-    ./autogen.sh
-    ./configure --prefix=/usr \
-                --datadir="/usr/share/trigger/trigger-${pkgver}-data"
-
-    jam -qa
+    cd "${srcdir}/trigger-rally-${pkgver}/src"
+    OPTIMS=${CFLAGS} make prefix=/usr exec_prefix=/usr/bin
 }
 
 package_trigger() {
 depends=('sdl_mixer' 'sdl_image' 'physfs' 'mesa' 'freeglut' 'freealut'
-         'trigger-data')
+         'trigger-data' 'glu')
     
-    cd "${srcdir}/trigger-rally-${pkgver}-src"
+    cd "${srcdir}/trigger-rally-${pkgver}"
     install -d -m755 "${pkgdir}/usr/bin"
-    install -m755 trigger "${pkgdir}/usr/bin/trigger"
+    install -m644 bin/trigger-rally.config.defs "${pkgdir}/usr/bin/trigger-rally.config.defs"
     install -D ../trigger.desktop ${pkgdir}/usr/share/applications/trigger.desktop
-    install -D ${srcdir}/trigger-rally-${pkgver}-data/icon/trigger-rally-icons.svg\
-    ${pkgdir}/usr/share/pixmaps/trigger.svg
+    install -D ${srcdir}/trigger-rally-${pkgver}/data/icon/trigger-rally-icons.svg\
+    ${pkgdir}/usr/share/pixmaps/trigger-rally.svg
+    cd "src"
+    DESTDIR="${pkgdir}" OPTIMS=${CFLAGS} make install prefix=/usr exec_prefix=/usr/bin
+    rm -rf "${pkgdir}/usr/share/games"
+    mv -f "${pkgdir}/usr/bin/games"/* "${pkgdir}/usr/bin"
+    rmdir "${pkgdir}/usr/bin/games"
 }
 
 package_trigger-data() {
 local _dest_dir="${pkgdir}/usr/share/trigger/trigger-${pkgver}-data"
 
   install -d -m755 "${_dest_dir}"
-  cp -r "${srcdir}/trigger-rally-${pkgver}-data"/* "${_dest_dir}"
+  cp -r "${srcdir}/trigger-rally-${pkgver}/data/"* "${_dest_dir}"
+  
+  # Copy plugins
+  install -m644 $(for l in ${_plugins[@]}; do echo "${srcdir}/${l}.zip"; done) -t "${_dest_dir}/plugins/"
 }
 
 # vim:set ts=2 sw=2 et:
