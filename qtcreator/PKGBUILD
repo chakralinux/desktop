@@ -1,15 +1,16 @@
 pkgname=qtcreator
-pkgver=3.6.1
-_pkgver=3.6
+pkgver=4.0.0
+_pkgver=4.0
 pkgrel=1
 pkgdesc='Lightweight, cross-platform integrated development environment'
 arch=('x86_64')
 url='http://qt-project.org'
 license=('LGPL')
 depends=('qt5-quick1' 'qt5-tools' 'qt5-quickcontrols' 'gnutls' 'qbs')
-makedepends=('mesa' 'clang')
+makedepends=('git' 'mesa' 'clang')
 options=('docs')
 optdepends=('qt5-doc: for the integrated Qt documentation'
+            'qt5-examples: welcome page examples'
             'gdb: for the debugger'
             'cmake: for cmake project support'
             'openssh-askpass: for ssh support'
@@ -21,7 +22,7 @@ optdepends=('qt5-doc: for the integrated Qt documentation'
 install=${pkgname}.install
 source=("http://download.qt.io/official_releases/${pkgname}/${_pkgver}/${pkgver}/qt-creator-opensource-src-${pkgver}.tar.gz"
         'qtcreator.desktop')
-md5sums=('3b6631cf6ff00bb2a2146553ea6864bf'
+md5sums=('4846b041e2a0dcc5edfc91a8eed720d7'
          '5aa242e0262fa22f75c3b59d3a4ec198')
 
 build() {
@@ -48,7 +49,7 @@ package() {
   chmod +x "${pkgdir}"/usr/bin/qtcreator
 
   install -Dm644 ${srcdir}/qtcreator.desktop ${pkgdir}/usr/share/applications/qtcreator.desktop
-  install -Dm644 ${srcdir}/qt-creator-opensource-src-${pkgver}/LGPL_EXCEPTION.TXT ${pkgdir}/usr/share/licenses/qtcreator/LGPL_EXCEPTION.TXT
+  install -Dm644 ${srcdir}/qt-creator-opensource-src-${pkgver}/LICENSE.GPL3-EXCEPT ${pkgdir}/usr/share/licenses/qtcreator/LICENSE.GPL3-EXCEPT
   
   # Split qbs to its package
   rm -f ${pkgdir}/usr/bin/qbs*
