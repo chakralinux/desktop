@@ -4,7 +4,7 @@ source ../kdeapps.conf
 pkgname=ark
 arch=('x86_64')
 pkgver=${_kdever}
-pkgrel=2
+pkgrel=1
 pkgdesc="Archiver for various compression formats"
 url="http://www.kde.org"
 license=(GPL)
@@ -21,15 +21,11 @@ replaces=(kdeutils-ark)
 groups=('kde' 'kde-uninstall' 'kde-applications' 'kdeutils')
 install=kdeutils.install
 
-source=("$_mirror/${pkgname}-$_kdever.tar.xz"
-        "ark-fix-deb-plugin-missing.patch")
-sha256sums=(`grep ${pkgname}-$_kdever.tar.xz  ../checksums.txt | cut -d " " -f1`
-            '738d6d17004455cdca27e7602bd2a6bf53ab71c2759fc28df56b1940115f0ad8')
+source=("$_mirror/${pkgname}-$_kdever.tar.xz")
+sha256sums=(`grep ${pkgname}-$_kdever.tar.xz  ../checksums.txt | cut -d " " -f1`)
 
 prepare() {
   mkdir -p build
-  # this is fixed in 16.04.01
-  patch ${srcdir}/${pkgname}-${pkgver}/plugins/libarchive/CMakeLists.txt < "${srcdir}"/ark-fix-deb-plugin-missing.patch
 }
 
 build() {

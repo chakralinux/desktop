@@ -3,7 +3,7 @@ source ../kdeapps.conf
 
 pkgname='kde-runtime'
 pkgver=${_kdever}
-pkgrel=6
+pkgrel=1
 pkgdesc="Plugins and applications necessary for the running of KDE applications"
 arch=('x86_64')
 url='https://projects.kde.org/projects/kde/kde-runtime'
@@ -49,6 +49,8 @@ package() {
   make DESTDIR="$pkgdir" install
 
   rm "$pkgdir"/usr/share/icons/hicolor/index.theme
+  # included in oxygen-icons
+  rm "$pkgdir"/usr/share/icons/default.kde4
   ln -s /usr/lib/kde4/libexec/kdesu "$pkgdir"/usr/bin/kdesu4
 
   # FS#36668
