@@ -5,20 +5,21 @@
 
 pkgbase=naev
 pkgname=(naev naev-data)
-pkgver=0.5.3
-pkgrel=3
+pkgver=0.6.1
+pkgrel=1
 pkgdesc="2D action/rpg space game."
-arch=('i686' 'x86_64')
-url="http://code.google.com/p/naev/"
+arch=('x86_64')
+url="http://blog.naev.org/"
 screenshot="http://blog.naev.org/wp-content/gallery/media/bigplanet.png"
-depends=('binutils' 'freetype2' 'libgl' 'libpng' 'libvorbis' 'libxml2' 'openal' 'sdl_image' 'sdl_mixer')
+depends=('glu' 'binutils' 'freetype2' 'libgl' 'libzip' 'libpng' 'libvorbis' 'libxml2' 'openal' 'sdl_image' 'sdl_mixer')
 makedepends=('freeglut')
 categories=('games')
 changelog=ChangeLog
 source=("http://downloads.sourceforge.net/project/$pkgbase/$pkgbase-$pkgver/$pkgbase-$pkgver.tar.bz2"
-	"http://downloads.sourceforge.net/project/$pkgbase/$pkgbase-$pkgver/ndata-$pkgver")
-md5sums=('bec719b3daa33ec190d785120a7b0159'
-         '652db194ffd2f45fc5f8ecee2ad2985c')
+	"http://downloads.sourceforge.net/project/$pkgbase/$pkgbase-$pkgver/ndata-$pkgver.zip")
+noextract=("ndata-$pkgver.zip")
+md5sums=('6cbdcbfa945ce5268bbd751f54082b9c'
+         'f24d79d23b29fbef70dff2cc0f4605be')
 
 build() {
 
@@ -51,8 +52,6 @@ package_naev-data() {
   depends=()
   license=('custom: mixture of public domain, GPLv2, GPLv3, CC:BY 3.0, CC:BY-SA 3.0')
 
-  cd $srcdir/$pkgbase-$pkgver
-
   mkdir -p $pkgdir/usr/share/$pkgbase/
-  install -m644 $srcdir/ndata-$pkgver $pkgdir/usr/share/$pkgbase/data
+  install -m644 $srcdir/ndata-$pkgver.zip $pkgdir/usr/share/$pkgbase/data
 }
