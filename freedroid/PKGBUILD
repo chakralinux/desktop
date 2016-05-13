@@ -2,7 +2,7 @@
 
 pkgname=freedroid
 _pkgname1=freedroidrpg
-pkgver=0.16
+pkgver=0.16.1
 pkgrel=1
 pkgdesc="A mature science-fiction role-playing game set in the future."
 arch=('x86_64')
@@ -10,16 +10,16 @@ url="http://freedroid.sourceforge.net"
 screenshot='http://www.freedroid.org/typo3temp/pics/469c9a5549.jpg'
 license=(GPL2)
 depends=('lua' 'sdl_gfx' 'sdl_mixer' 'sdl_image' 'libogg' 'libvorbis' 'libgl' 'mesa' 'glu')
+makedepends=('python2' 'espeak')
 optdepends=('python2' 'espeak')
 categories=('games')
 replaces=($_pkgname1)
-source=(ftp://ftp.osuosl.org/pub/freedroid/freedroidRPG-$pkgver/freedroidRPG-$pkgver.tar.gz           
+source=(ftp://ftp.osuosl.org/pub/${pkgname}/${pkgname}RPG-${pkgver:0:4}/freedroidRPG-${pkgver}.tar.gz           
         $pkgname.jpg::http://projects.archlinux.org/svntogit/community.git/plain/trunk/$_pkgname1.jpg?h=packages/$_pkgname1
         $pkgname.desktop::http://projects.archlinux.org/svntogit/community.git/plain/trunk/$_pkgname1.desktop?h=packages/$_pkgname1)
-md5sums=('f74aaf41868dcceac64ffba9474327da'
+md5sums=('ba19730c0139df810602ea9252d47120'
          'b73d9dac44c7e83a6c80fbe4eb96ba79'
          '9a10c2a2064439cdcff5b945dfb1c3ac')
-
 build() {
   cd $srcdir/$_pkgname1-$pkgver
   ./configure \
