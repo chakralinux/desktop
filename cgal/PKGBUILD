@@ -1,25 +1,25 @@
 # Arch contribution https://www.archlinux.org/packages/community/x86_64/cgal/
 
 pkgname=cgal
-pkgver=4.6.3
-pkgrel=2
+pkgver=4.8
+pkgrel=1
 _pkgid=35139
 pkgdesc="Computational Geometry Algorithms Library"
 arch=('x86_64')
 url="http://www.cgal.org"
 license=('GPL' 'LGPL')
-source=(http://gforge.inria.fr/frs/download.php/$_pkgid/CGAL-$pkgver.tar.xz)
+source=(https://github.com/CGAL/cgal/archive/releases/CGAL-$pkgver.tar.gz)
 depends=('mpfr' 'boost-libs' 'gmp' 'mesa' 'glu')
 optdepends=('qt: for CGAL_Qt4'
             'eigen3: for some packages, see the CGAL manual')
 makedepends=('cmake' 'qt' 'eigen3' 'boost')
-sha256sums=('e338027b8767c0a7a6e4fd8679182d1b83b5b1a0da0a1fe4546e7c0ca094fc21')
+sha256sums=('98f9eafbf7faffc48d0a5c3a1217d8d8e80bb0a753c76d1634236ea033722e36')
 
 # consider building with swig for python stuff
 # https://gforge.inria.fr/frs/?group_id=52  for _pkgid
 
 build() {
-  cd "$srcdir/CGAL-$pkgver"
+  cd "$srcdir/cgal-releases-CGAL-$pkgver"
   mkdir build
   cd build
   cmake ../ -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=/usr
@@ -27,11 +27,10 @@ build() {
 }
 
 package() {
-  cd "$srcdir/CGAL-$pkgver/build"
+  cd "$srcdir/cgal-releases-CGAL-$pkgver/build"
   make install DESTDIR="$pkgdir"
 
   # The tarball still has all these licenses included
-  for _license in LICENSE{,.FREE_USE,.GPL,.LGPL}; do
-    install -D -m644 "$srcdir/CGAL-$pkgver/$_license" "$pkgdir/usr/share/licenses/$pkgname/$_license"
-  done
+  cd ..
+  install -D -m644 LICENSE.md "$pkgdir/usr/share/licenses/$pkgname/LICENSE.md"
 }
