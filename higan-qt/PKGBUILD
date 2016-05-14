@@ -1,6 +1,11 @@
 # Maintainer: Francesco Marinucci <franzmari [at] chakra-project [dot] it>
+#
+# Note: Newer versions of higan do not provide a Qt GUI. We should probably
+#       drop this package at some point, and simply keep the regular, up-to-date
+#       version of higan in the CCR.
 
-pkgname=higan
+pkgname=higan-qt
+_pkgname=higan
 pkgver=094
 pkgrel=1
 pkgdesc='Nintendo multi-system emulator'
@@ -10,16 +15,17 @@ license=('GPL3')
 depends=('libao' 'libpulse' 'openal' 'qt' 'sdl' 'dialog')
 makedepends=('mesa')
 optdepends=('beat: Delta patcher')
-conflicts=('higan-gtk')
-source=("http://byuu.org/files/${pkgname}_v${pkgver}-source.tar.xz"
+provides=("higan=${pkgver}")
+conflicts=('higan-gtk' 'higan')
+source=("https://gitlab.com/higan/higan/repository/archive.tar.gz?ref=v${pkgver}"
         'higan')
-sha256sums=('5e149df9d50c1066eb97c0d66665428d75304da782bba5a87078b87fc311151b'
-            'c799232a0f67c4b7f40fc6ad05325a6c04e86d78e40f361d02f168a16d11d048')
+md5sums=('7568af5467b435d94ea51f35554647d4'
+         '2dbbb988e9ea452e9c2d5a4c57ea5bdc')
 
 _profiles='accuracy balanced performance'
 
 prepare() {
-  cd higan_v${pkgver}-source
+  cd ${srcdir}/higan-v${pkgver}-*
 
   sed "s/-march=native/-march=${CARCH/_/-} -mtune=generic/g" -i Makefile
 
@@ -27,7 +33,7 @@ prepare() {
 }
 
 build() {
-  cd higan_v${pkgver}-source
+  cd ${srcdir}/higan-v${pkgver}-*
 
   make phoenix=qt -C ananke
 
@@ -39,7 +45,7 @@ build() {
 }
 
 package() {
-  cd higan_v${pkgver}-source
+  cd ${srcdir}/higan-v${pkgver}-*
 
   install -dm 755 "${pkgdir}"/usr/{bin,lib,share/{applications,pixmaps,higan/Video\ Shaders}}
   install -m 755 {..,"${pkgdir}"/usr/bin}/higan
@@ -55,5 +61,3 @@ package() {
     install -m 755 {out,"${pkgdir}"/usr/bin}/higan-${_profile}
   done
 }
-
-# vim: ts=2 sw=2 et:
