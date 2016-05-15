@@ -9,30 +9,33 @@
 
 _hkgname=HTTP
 pkgname=haskell-http
-pkgver=4000.2.19
+pkgver=4000.3.3
 pkgrel=1
 pkgdesc="A library for client-side HTTP"
 url="http://hackage.haskell.org/package/HTTP"
 license=('custom:BSD3')
 arch=('x86_64')
-depends=('ghc' 'haskell-mtl>=2.0' 'haskell-mtl<2.3' 'haskell-network<2.7' 'haskell-parsec')
+depends=('ghc' 'haskell-mtl>=2.0' 'haskell-mtl<2.3' 'haskell-network<2.7' 'haskell-parsec'
+         'haskell-network-uri')
 options=('strip' 'staticlibs')
 source=("http://hackage.haskell.org/packages/archive/HTTP/${pkgver}/HTTP-${pkgver}.tar.gz")
-md5sums=('92f1d0d3ca56ddf1519aa4ea5b9c7a93')
+md5sums=('3f2d84d59e36476ca02c882419632d7d')
 
 build() {
     cd "${srcdir}/HTTP-${pkgver}"
-    runhaskell Setup configure \
-        -O \
-        -p \
-        --enable-split-objs \
-        --enable-shared \
-        --prefix=/usr \
-        --docdir=/usr/share/doc/haskell-http \
-        --libsubdir=\$compiler/site-local/\$pkgid
+
+    runhaskell Setup configure -O  \
+      --enable-library-profiling \
+      --enable-shared \
+      --prefix=/usr \
+      --docdir=/usr/share/doc/${pkgname} \
+      --libsubdir=\$compiler/site-local/\$pkgid
+
     runhaskell Setup build
+
     runhaskell Setup haddock
-    runhaskell Setup register   --gen-script
+
+    runhaskell Setup register --gen-script
     runhaskell Setup unregister --gen-script
     sed -i -r -e "s|ghc-pkg.*unregister[^ ]* |&'--force' |" unregister.sh
 }

@@ -2,11 +2,11 @@
 
 ## NOTE: when you update Haskell packages you'll have to update the entire stack to not break it ##
 
-_hkgname=dataenc
-pkgname=haskell-dataenc
-pkgver=0.14.0.7
+_hkgname=old-locale
+pkgname=haskell-old-locale
+pkgver=1.0.0.7
 pkgrel=1
-pkgdesc="Data encoding library"
+pkgdesc="Versatile logging framework"
 url="http://hackage.haskell.org/package/${_hkgname}"
 license=('custom:BSD3')
 arch=('x86_64')
@@ -14,7 +14,7 @@ depends=('ghc')
 options=('strip' 'staticlibs')
 source=(http://hackage.haskell.org/packages/archive/${_hkgname}/${pkgver}/${_hkgname}-${pkgver}.tar.gz)
 install=${pkgname}.install
-md5sums=('28491649dbeafb9512b4ea187cc6fddf')
+md5sums=('507bd2d3ce2407403e2a2d1136c3d149')
 
 build() {
     cd ${srcdir}/${_hkgname}-${pkgver}
@@ -24,7 +24,7 @@ build() {
         --enable-split-objs \
         --enable-shared \
         --prefix="/usr" \
-        --docdir="/usr/share/doc/haskell-dataenc" \
+        --docdir="/usr/share/doc/${pkgname}" \
         --libsubdir='$compiler/site-local/$pkgid'
     runhaskell Setup build
     runhaskell Setup haddock
@@ -39,13 +39,13 @@ package() {
     install -d -m755 ${pkgdir}/usr/share/doc/ghc/html/libraries
     
     # Documentation
-    ln -s "/usr/share/doc/haskell-dataenc/html" \
-        "${pkgdir}/usr/share/doc/ghc/html/libraries/dataenc"
+    ln -s "/usr/share/doc/${pkgname}/html" \
+        "${pkgdir}/usr/share/doc/ghc/html/libraries/${_hkgname}"
 
     # License
     install -D -m644 LICENSE \
-        "${pkgdir}/usr/share/licenses/haskell-dataenc/LICENSE"
-    rm -f "${pkgdir}/usr/share/doc/haskell-dataenc/LICENSE"
+        "${pkgdir}/usr/share/licenses/${pkgname}/LICENSE"
+    rm -f "${pkgdir}/usr/share/doc/${pkgname}/LICENSE"
 
     runhaskell Setup copy --destdir="${pkgdir}"
 }
