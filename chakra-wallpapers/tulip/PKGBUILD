@@ -1,0 +1,19 @@
+
+pkgname=("chakra-wallpapers-tulip")
+pkgver=2016.05
+pkgrel=1
+pkgdesc="Chakra Tulip Wallpaper by almack"
+url="http://www.chakraos.org"
+license=("GPL" "Creative Commons, BY-SA")
+arch=('any')
+makedepends=('automoc4')
+groups=("kde" "kde-uninstall" "chakra-wallpapers")
+source=("http://rsync.chakraos.org/sources/chakra-artwork/wallpapers/tulip/tulip_${pkgver}-1.tar.gz")
+md5sums=('25b914f22d367cedca93084ea10a898e')
+
+package() {
+    cd ${srcdir}/tulip
+
+    mkdir -pv ${pkgdir}/usr/share/wallpapers/tulip/contents/
+    cp -Rv * ${pkgdir}/usr/share/wallpapers/tulip
+}
