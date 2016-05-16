@@ -1,28 +1,26 @@
 # Arch contribution https://www.archlinux.org/packages/community/x86_64/gwenhywfar/
 
 pkgname=gwenhywfar
-pkgver=4.13.1
-_releasenumber=78
-pkgrel=2
+pkgver=4.15.3
+_releasenumber=201
+pkgrel=1
 pkgdesc="OS abstraction functions for various projects"
 arch=('x86_64')
 url="http://www.aquamaniac.de"
 license=("LGPL")
-depends=('openssl' 'qt' 'gnutls' 'libgcrypt')
-source=("gwenhywfar-$pkgver.tar.gz::http://www2.aquamaniac.de/sites/download/download.php?package=01&release=${_releasenumber}&file=01&dummy=${pkgname}-${pkgver}.tar.gz"
-        "gnutls.patch")
-sha256sums=('4beca892c1235548ea0ae30132a6d2e57911c22340746585395ccb01d84ec72b'
-            '0bdb91e13dae4145bd2b5e0f9029a58873b1b0f01c95bb5421e39e64405571df')
-
-
-prepare() {
-  cd $srcdir/${pkgname}-${pkgver}
-  patch -p1 <$srcdir/gnutls.patch
-}
+depends=('openssl' 'qt' 'qt5-base' 'gnutls' 'libgcrypt' 'libgpg-error')
+source=("gwenhywfar-$pkgver.tar.gz::http://www2.aquamaniac.de/sites/download/download.php?package=01&release=${_releasenumber}&file=01&dummy=${pkgname}-${pkgver}.tar.gz")
+sha256sums=('6a0e8787c99620414da6140e567c616b55856c5edf8825a9ebc67431923ee63a')
 
 build() {
   cd $srcdir/${pkgname}-${pkgver}
-  ./configure --prefix=/usr --sysconfdir=/etc --enable-ssl --with-guis=qt4
+  ./configure --prefix=/usr \
+	      --sysconfdir=/etc \
+	      --enable-ssl \
+	      --with-guis="qt4 qt5" \
+	      --with-qt5-qmake=/usr/lib/qt5/bin/qmake \
+	      --with-qt5-moc=/usr/lib/qt5/bin/moc \
+	      --with-qt5-uic=/usr/lib/qt5/bin/uic
   sed -i 's|gnutls_transport_set_lowat||g' src/sio/syncio_tls.c
   make
 }
