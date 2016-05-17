@@ -1,24 +1,24 @@
 pkgname=kmymoney
 pkgver=4.7.2
-pkgrel=3
+pkgrel=4
 pkgdesc="A finance manager for KDE4 with HBCI support"
 arch=('x86_64')
 url="http://kmymoney2.sourceforge.net"
 license=('GPL')
-depends=('kde-runtime' 'shared-mime-info' 'aqbanking' 'libofx>=0.9.10' 'libalkimia' 'boost-libs' 'kdepimlibs')
+depends=('kde-runtime' 'shared-mime-info' 'aqbanking' 'libofx>=0.9.10' 'libalkimia' 'boost-libs' 'kdepimlibs4')
 makedepends=('cmake' 'automoc4' 'docbook-xml' 'gwenhywfar>=4.13.1' 'docbook-xsl' 'boost' 'doxygen')
-conflicts=('kmymoney2')
-replaces=('kmymoney2')
 categories=('office')
 install=$pkgname.install
 source=(http://download.kde.org/stable/$pkgname/$pkgver/src/$pkgname-$pkgver.tar.xz)
 sha256sums=('bfb2c29ff30988f46324c2dae197a06b58d07336a1947adc22bcfed3e554393d')
 
-build() {
+prepare() {
   cd "${srcdir}/${pkgname}-${pkgver}"
+  mkdir -p build
+}
 
-  mkdir -p build && cd build
-
+build() {
+  cd "${srcdir}/${pkgname}-${pkgver}/build"
   cmake ../ \
     -DCMAKE_INSTALL_PREFIX=/usr \
     -DCMAKE_BUILD_TYPE=RELEASE -DCMAKE_SKIP_RPATH=YES
