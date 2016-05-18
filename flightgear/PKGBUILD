@@ -1,8 +1,8 @@
 pkgbase=flightgear
 pkgname=('flightgear' 'flightgear-data')
-pkgver=2016.1.1
-_pkgver=2016.1
-pkgrel=2
+pkgver=2016.2.1
+_pkgver=2016.2
+pkgrel=1
 pkgdesc="An open-source, multi-platform flight simulator."
 arch=('x86_64')
 depends=('fltk' 'libxmu' 'libxi' 'openal' 'openscenegraph' 'zlib' "simgear=$pkgver" 'subversion' 'libxrandr' 'glu')
@@ -12,17 +12,24 @@ url="http://flightgear.sourceforge.net/"
 screenshot="http://www.flightgear.org/wp-content/gallery/gallery-v2-6/737-300_egkk_hom.jpg"
 categories=('games')
 options=('!makeflags' '!strip')
-source=(
-        # flightgear
+source=(# flightgear
         "http://downloads.sourceforge.net/project/flightgear/release-$_pkgver/flightgear-$pkgver.tar.bz2"
+	"build-fix.patch"
         # flightgear-data
         "http://downloads.sourceforge.net/project/flightgear/release-$_pkgver/FlightGear-$pkgver-data.tar.bz2"
         # addons - global object and sharedmodels (from latest version)
         "http://downloads.sourceforge.net/project/flightgear/scenery/GlobalObjects.tgz"
         "http://downloads.sourceforge.net/project/flightgear/scenery/SharedModels.tgz")
-sha1sums=('ccdcb7361c0d1e245e3699fd372d24545e2915a1'
-          '976bbb15035040184546fd248b21e316600afe35'
-          'SKIP' 'SKIP')
+sha1sums=('6564eb63a466b38b43214c7647734c5dedad9a3c'
+          '3261cab4abe211c86602cdf3965a612407f77f9d'
+          '85834559a66e394077087ab8710e7c0312776160'
+          '07ac0123038d2b5dd091cd02341c6f69da14f32e'
+          '9b72a729e36f4dee674858dd419e59b6aa480d56')
+
+prepare() {
+  cd $srcdir/flightgear-$pkgver
+  patch -p1 -i $srcdir/build-fix.patch
+}
 
 build() {
 
