@@ -1,28 +1,31 @@
 pkgname=kraft
-pkgver=0.58
-pkgrel=1
+pkgver=0.59
+pkgrel=2
 pkgdesc="A program suitable for all trades or crafts"
 arch=('x86_64')
 url="http://www.volle-kraft-voraus.de/"
 screenshot="http://kde-apps.org/content/preview.php?preview=3&id=54172&file1=54172-1.jpg&file2=54172-2.jpg&file3=54172-3.jpg&name=Kraft"
 license=('GPL')
-depends=('kdepimlibs' 'ctemplate' 'python-reportlab' 'python2-pdf')
+depends=('kdepimlibs4' 'ctemplate' 'python-reportlab' 'python2-pdf')
 makedepends=('cmake' 'automoc4' 'boost')
-source=("http://downloads.sourceforge.net/project/${pkgname}/${pkgname}-${pkgver}.tar.xz")
-sha512sums=('450d68022f5ea1a19b6b9461f3db65233cdc6939cae5367a4c95d22eb6207881cbd798d723a87d43d3f20e84d8ffb2d601a3245324fa1c10078300c5b8e06845')
+source=("git://anongit.kde.org/kraft.git#commit=ae1f09c")
+sha512sums=('SKIP')
 
-build() {
+prepare() {
   cd "${srcdir}"
   rm -rf build
   mkdir -p build
+}
+
+build() {
   cd build
-  cmake "../${pkgname}-${pkgver}" \
+  cmake "../${pkgname}" \
     -DCMAKE_BUILD_TYPE=Release \
     -DCMAKE_INSTALL_PREFIX=/usr
   make
 
   # fix wrong exception raising (shouldn't be fatal)
-  sed -i 's/raise ValueError, "Not enough space"/raise ValueError("Not enough space")/' "${srcdir}/${pkgname}-${pkgver}/tools/erml2pdf.py"
+  sed -i 's/raise ValueError, "Not enough space"/raise ValueError("Not enough space")/' "${srcdir}/${pkgname}/tools/erml2pdf.py"
 }
 
 package() {
