@@ -1,21 +1,16 @@
-# Maintainer:   H W Tovetjärn (totte) <totte@tott.es>
-# Contributors: Manuel Tortosa <manutortosa@chakra-project.org>
-#               Andrea Scarpino <andrea@archlinux.org>
-#               birdflesh <antkoul@gmail.com>
+source ../kdeapps.conf
 
 pkgname=libkfbapi
-pkgver=1.0
-pkgrel=11
+pkgver=5.3.0
+pkgrel=1
 pkgdesc="KDE library for accessing Facebook services"
 arch=('x86_64')
 url='https://projects.kde.org/projects/extragear/libs/libkfbapi'
 license=('GPL')
-depends=('kdepimlibs')
-makedepends=('cmake'
-             'automoc4'
-             'boost')
-source=("http://download.kde.org/stable/$pkgname/$pkgver/src/$pkgname-$pkgver.tar.bz2")
-sha512sums=('d9587752008aeecd061e27fa1415920b938cc71d117d59673ea9f0fe985be68fdf682ed9caf5caf8528b9486ad44d832b06e59c545a349aad1416f49df7d6a85')
+depends=('qt5-base' 'kcoreaddons' 'kio' 'ki18n')
+makedepends=('cmake' 'extra-cmake-modules' 'libaccounts-qt5' 'kaccounts-integration' 'signon')
+source=("git://anongit.kde.org/libkfbapi.git#commit=8b7ab6f")
+sha512sums=('SKIP')
 
 prepare() {
     mkdir "${srcdir}/build"
@@ -23,10 +18,7 @@ prepare() {
 
 build() {
     cd "${srcdir}/build"
-    cmake "../$pkgname-$pkgver" \
-        -DQT_QMAKE_EXECUTABLE=/usr/bin/qmake \
-        -DCMAKE_BUILD_TYPE=Release \
-        -DCMAKE_INSTALL_PREFIX=/usr
+    cmake_kf5 "../$pkgname"
     make
 }
 
