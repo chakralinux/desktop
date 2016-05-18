@@ -1,5 +1,5 @@
 pkgname=dc3dd
-pkgver=7.2.641
+pkgver=7.2.646
 pkgrel=1
 pkgdesc="A patched version of dd that includes a number of features useful for computer forensics."
 url="http://dc3dd.sourceforge.net/"
@@ -8,11 +8,12 @@ arch=('x86_64')
 makedepends=('autoconf' 'gperf' 'perl-locale-gettext')
 categories=('utils')
 changelog=ChangeLog
-source=(http://downloads.sf.net/sourceforge/$pkgname/$pkgname-$pkgver.tar.bz2)
-sha512sums=('9afa57bfbfce00778130eb75b4add915f132ad2b19d9271faed87f807bb646d2083e1bd5b09acfa378a50e894c57d65472263cd7966acf45c30d174754cdf6c8')
+source=(http://downloads.sourceforge.net/project/dc3dd/dc3dd/${pkgver}/dc3dd%20${pkgver}/dc3dd-${pkgver}.7z)
+sha512sums=('b27f33520b51aff352a3e8b10e126fb80459a18255f0cdd64c0c36762df7168e1df93c93e828ba06aec13e2f0ca30e5742b10b94f74fbee3733d13ed943dbc97')
 
 build() {
   cd $srcdir/$pkgname-$pkgver
+  chmod +x ./configure
   ./configure \
     --prefix=/usr
   make
