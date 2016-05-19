@@ -4,20 +4,19 @@
 # Maintainer: Adrián Chaves Fernández (Gallaecio) <adriyetichaves gmail.com>
 
 pkgname=dnt
-pkgver=0.10
+pkgver=0.12
 pkgrel=1
 pkgdesc="A sarcastic 3D single player RPG set in a post-apocalyptical world."
 arch=('i686' 'x86_64')
 url="http://dnt.dnteam.org/"
 license=('custom:code:GPL' 'custom:media:GPL, CC:BY-SA or Public Domain' )
-depends=('cal3d' 'mesa' 'libgl' 'libvorbis' 'openal' 'sdl' 'sdl_image' 'sdl_ttf')
+depends=('cal3d' 'glu' 'mesa' 'libgl' 'libvorbis' 'openal' 'sdl2' 'sdl2_image' 'sdl2_ttf')
 makedepends=(cmake)
 replaces=(dccnitghtmare)
 categories=('games')
-source=("http://downloads.sourceforge.net/$pkgname/$pkgname-$pkgver.tar.bz2"
-        "http://aur.archlinux.org/packages/dn/$pkgname/$pkgname.tar.gz")
-md5sums=('82c76324634b7d4dc888033c3ba3a35e'
-         'e0ef13025a95341042b1899b092b0c4d')
+source=("http://downloads.sourceforge.net/$pkgname/$pkgname-$pkgver.tar.bz2")
+md5sums=('fde7257adce1e9405caedd3eacb7d4e1')
+
 build() {
   cd $srcdir/$pkgname
   cmake \
@@ -28,10 +27,5 @@ build() {
 
 package() {
   cd $srcdir/$pkgname
-
   make install
-
-  # Desktop Integration.
-  install -Dm644 $srcdir/$pkgname/$pkgname.desktop $pkgdir/usr/share/applications/$pkgname.desktop
 }
-
