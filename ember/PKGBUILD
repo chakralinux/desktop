@@ -5,8 +5,8 @@
 
 pkgname=ember
 pkgver=0.7.2
-_mediaver=$pkgver
-pkgrel=1
+_mediaver=$pkgver.1
+pkgrel=2
 pkgdesc="Ember is a 3D client using the OGRE 3d library, valid for WorldForge server."
 arch=('i686' 'x86_64')
 url="http://wiki.worldforge.org/wiki/Ember"
@@ -14,13 +14,23 @@ license=('GPL3')
 depends=('atlas_cpp' 'boost' 'cegui-0.8' 'curl' 'eris' 'freealut' 'libsigc++2.0' 'libwfut' 'mercator' 'ogre' 'openal' 'sdl' 'skstream' 'toluapp' 'varconf' 'wfmath')
 categories=('games')
 source=("http://downloads.sourceforge.net/worldforge/$pkgname-$pkgver.tar.bz2"
-	"http://downloads.sourceforge.net/worldforge/$pkgname-media-$_mediaver.tar.bz2")
+	"http://downloads.sourceforge.net/worldforge/$pkgname-media-$_mediaver.tar.bz2"
+        "https://raw.githubusercontent.com/tsuna/boost.m4/1489691f65aecb593e33abc3e56ac482dd67da7b/build-aux/boost.m4")
 md5sums=('5fa2cf860ebe66674d5e5e05c8e87009'
-         'fb36fc4770fcea24f0fc839986b786b3')
+         'b5371512872d0146c504fc10f39544a3'
+         '8804cde576714ed33add9e180549dbbc')
+
+prepare() {
+  # NOTE: Remove the whole prepare() function and the corresponding
+  # source entry when the following bug is fixed:
+  # https://bugs.launchpad.net/ember/+bug/1583755
+  cd "$srcdir/$pkgname-$pkgver"
+  cp -f "$srcdir/boost.m4" "m4/boost.m4"
+  autoreconf -f -i
+}
 
 build() {
-  cd $srcdir/$pkgbase-$pkgver
-  
+  cd $srcdir/$pkgname-$pkgver
   ./configure \
     --enable-cegui-toluapp \
     --prefix=/usr \
@@ -29,11 +39,10 @@ build() {
 }
 
 package() {
-  cd $srcdir/$pkgbase-$pkgver
-
-  make DESTDIR=$pkgdir install
-
-  # Data.
+  cd $srcdir/$pkgname-$pkgver
+  # NOTE: Remove '-j1' once the following bug is fixed:
+  # https://bugs.launchpad.net/ember/+bug/1583770
+  make -j1 DESTDIR=$pkgdir install
   mkdir -p $pkgdir/usr/share/$pkgname/media/
   cp -R $srcdir/$pkgname-media-$pkgver/media/* $pkgdir/usr/share/$pkgname/media/
 }
