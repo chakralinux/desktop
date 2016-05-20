@@ -1,6 +1,7 @@
 pkgname=freecad
-pkgver=0.15.4671
-pkgrel=2
+_pkgname=FreeCAD
+pkgver=0.16
+pkgrel=1
 pkgdesc='A general purpose 3D CAD modeler'
 arch=('x86_64')
 url='http://www.freecadweb.org/wiki'
@@ -9,31 +10,15 @@ depends=('boost-libs' 'curl' 'opencascade' 'pivy-hg' 'xerces-c' 'libspnav' 'shar
 makedepends=('boost' 'eigen3' 'gcc-fortran' 'swig' 'xerces-c' 'desktop-file-utils' 'cmake' 'coin' 'zlib' 'glu')
 options=(!libtool !makeflags)
 install=freecad.install
-source=("http://downloads.sourceforge.net/project/free-cad/FreeCAD%20Source/${pkgname}_${pkgver}.tar.gz"
+source=("https://github.com/FreeCAD/FreeCAD/archive/${pkgver}.tar.gz"
 	"${pkgname}.desktop"
-	"${pkgname}.xml"
-        "boost_160.patch"
-)
-sha512sums=('695081117b5511bbc0b7335b63a8760e164987a6dff2c5b0dc86b6b0a93bb7d7b83aa9f4fab1d66d7d2c917a42b0135af78553b463579873a1d1e52e3dd9aecb'
+	"${pkgname}.xml")
+sha512sums=('bc9dc8122cabd9a84f2b955746818e0d77ae90e68747ec96521099472b7803df9ff794ed823d6eb29352bd0538b8f01cf81c306ff427f1af2ee049f8f7096dbb'
             'a58dd5f6d8217b6633d5cc24a0b61954b1044d4156b25b78c00ea29f3ac9ca4932e9bde08bd11fc4327d76c7e82500cf3c2ddc934f426e970757cd200b070aec'
-            'ac0dfe1b2c58335867e94d4ce86696763b6354dcdca68a653bf115b6ea562f0f8ff7d243d42d0c6fd6e758bd488d626e30cd917bb1b5c676c1f0cafdece005d6'
-            '26e3000668e7d02f0b60ede859cfd589d10365f50bf93f6c45b6ab7248fcf12ac56abd48b36cae0343c191dcc0c402b3dce3c5b8db0875043aa3dc17c7d43203')
-
-prepare() {
-  sed -i \
-    -e "46i\\\tModDir = '/usr/share/freecad/Mod'" \
-    -e "50i\\\tLibDir = '/usr/lib/freecad'" \
-    "${srcdir}/freecad-${pkgver}/src/App/FreeCADInit.py"
-
-  sed -i \
-	  -e 's|\bpyside-uic\b|python2-pyside-uic|' \
-	  $srcdir/freecad-$pkgver/cMake/FindPySideTools.cmake
-  cd ${srcdir}/freecad-${pkgver}
-  patch -Np1 -i ${srcdir}/boost_160.patch
-}
+            'ac0dfe1b2c58335867e94d4ce86696763b6354dcdca68a653bf115b6ea562f0f8ff7d243d42d0c6fd6e758bd488d626e30cd917bb1b5c676c1f0cafdece005d6')
 
 build() {
-  cd "${srcdir}/freecad-${pkgver}/"
+  cd "${srcdir}/${_pkgname}-${pkgver}/"
   cmake \
     -DCMAKE_BUILD_TYPE=Release \
     -DCMAKE_INSTALL_PREFIX:PATH="/usr" \
@@ -47,7 +32,7 @@ build() {
 }
 
 package() {
-  cd "${srcdir}/freecad-${pkgver}"
+  cd "${srcdir}/${_pkgname}-${pkgver}"
   make DESTDIR="${pkgdir}" install
 
   # Symlink to /usr/bin
