@@ -4,7 +4,7 @@
 #   henning mueller <henning@orgizm.net>
 
 pkgname=glusterfs
-pkgver=3.7.4
+pkgver=3.7.11
 pkgrel=1
 pkgdesc='Is a cluster file-system capable of scaling to several peta-bytes.'
 arch=(x86_64)
@@ -15,9 +15,8 @@ depends=(fuse python2 libxml2 libaio liburcu)
 makedepends=(flex bison)
 optdepends=('rpcbind: NFS'
 	    'glib2: qemu-block')
-#source=($pkgname-$pkgver.tar.gz::https://github.com/gluster/glusterfs/archive/v$pkgver.tar.gz)
-source=(https://download.gluster.org/pub/gluster/glusterfs/${pkgver%.?}/$pkgver/glusterfs-$pkgver.tar.gz)
-md5sums=('3e2ab64a35a54a43413c2d88971fe32b')
+source=(https://github.com/gluster/glusterfs/archive/v${pkgver}.tar.gz)
+md5sums=('778d6f354ca59d2901183f22667ba423')
 
 prepare() {
   cd $srcdir/$pkgname-$pkgver
@@ -59,5 +58,3 @@ package() {
     $pkgdir/usr/share/doc/glusterfs/
   rm -rf $pkgdir/var/run
 }
-
-# vim:set ts=2 sw=2 et:
