@@ -5,7 +5,7 @@
 # Contributor: Ian Yang <doit.ian@gmail.com>
 
 pkgname=google-glog
-pkgver=0.3.3
+pkgver=0.3.4
 pkgrel=1
 pkgdesc="Logging library for C++"
 arch=('i686' 'x86_64')
@@ -14,8 +14,8 @@ url="http://code.google.com/p/google-glog/"
 depends=('gcc-libs')
 makedepends=('make' 'gcc')
 options=('!libtool')
-source=("http://google-glog.googlecode.com/files/glog-${pkgver}.tar.gz")
-sha1sums='ed40c26ecffc5ad47c618684415799ebaaa30d65'
+source=(https://github.com/google/glog/archive/v$pkgver.tar.gz)
+sha1sums=('69f91cd5a1de35ead0bc4103ea87294b0206a456')
 
 build() {
   cd "$srcdir/glog-${pkgver}"
@@ -33,4 +33,3 @@ package() {
 
   install -Dm644 COPYING "$pkgdir/usr/share/licenses/$pkgname/COPYING"
 }
-
