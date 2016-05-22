@@ -1,14 +1,18 @@
 # Maintainer: UtG <utg.chakra.linux[AT]gmail[dot]com>
 
+# Note: Using clang due to the following issue with latest GCC:
+# https://sourceforge.net/p/freeimage/discussion/36110/thread/605ef8e4/
+# Linked patch is not compatible with the libwebp version that freeimage uses.
+
 pkgname=freeimage
-pkgver=3.16.0
+pkgver=3.17.0
 pkgrel=1
 pkgdesc="Library project for developers who would like to support popular graphics image formats."
 arch=('x86_64')
 license=('GPL' 'custom:FIPL')
 url="http://freeimage.sourceforge.net/"
 depends=('gcc-libs')
-makedepends=('hd2u')
+makedepends=('hd2u' 'clang')
 categories=('programming')
 source=(
 "http://downloads.sourceforge.net/project/freeimage/Source%20Distribution/${pkgver}/FreeImage${pkgver//./}.zip")
@@ -16,6 +20,9 @@ md5sums=('1a2d1fff6204adbd479cc98818892fc1')
 
 build() {
   cp -r FreeImage FreeImagefip
+
+  export CC="clang"
+  export CXX="clang++"
 
   cd FreeImage
   make
@@ -35,3 +42,4 @@ package() {
   install -D -m644 $srcdir/FreeImage/license-fi.txt \
     $pkgdir/usr/share/licenses/$pkgname/license-fi.txt
 }
+md5sums=('459e15f0ec75d6efa3c7bd63277ead86')
