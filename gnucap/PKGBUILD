@@ -1,20 +1,22 @@
 pkgname=gnucap
-pkgver=20091207
-_pkgver=2009-12-07
+pkgver=20151011
 pkgrel=1
 pkgdesc="GNU Circuit Analysis Package"
 arch=('x86_64')
 url="http://gnucap.org/"
 license=('GPL')
 depends=('gcc-libs' 'readline')
-source=(http://gnucap.org/devel/$pkgname-$_pkgver.tar.gz)
-md5sums=('30701d110a3e642c5826358c64d2fb1b')
+source=(http://git.savannah.gnu.org/cgit/gnucap.git/snapshot/gnucap-${pkgver}.tar.gz)
+md5sums=('403e6e5924a49c694df5f975fef15d32')
  
 build() {
-  cd "$srcdir/$pkgname-$_pkgver"
- 
-  ./configure --prefix=/usr
-  make || return 1
-  make DESTDIR="$pkgdir" install
+  cd "$srcdir/$pkgname-$pkgver"
+  ./configure \
+    --prefix=/usr
+  make
 }
- 
+
+package() {
+  cd "$srcdir/$pkgname-$pkgver"
+  make PREFIX="${pkgdir}/usr" install
+}
