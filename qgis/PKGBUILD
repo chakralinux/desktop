@@ -1,6 +1,6 @@
 pkgname=qgis
 pkgver=2.14.1
-pkgrel=1
+pkgrel=2
 pkgdesc='A Geographic Information System (GIS) that supports vector, raster and database formats'
 url='http://qgis.org/'
 license=('GPL')
@@ -14,18 +14,20 @@ optdepends=('fcgi: qgis mapserver'
             'gsl: georeferencer'
             'python2-sip: python-support'
             'postgis: postgis support and SPIT plugin')
-source=("http://qgis.org/downloads/$pkgname-$pkgver.tar.bz2")
-sha1sums=('d9682826e1884760bba86f6e4ee207b7e7d08dce')
+source=("http://qgis.org/downloads/$pkgname-$pkgver.tar.bz2"
+        "conversions.patch::https://github.com/qgis/QGIS/commit/fc6559aa053317cda8ced657c3013a0d4c6549e9.diff")
+sha1sums=('d9682826e1884760bba86f6e4ee207b7e7d08dce'
+          '25e611703b2722bbf25d587121cedfc7ef2090ed')
 
 
 prepare() {
   cd $pkgname-$pkgver
   [[ -d build ]] || mkdir build
+  patch -uNp1 -i "$srcdir/conversions.patch"
 }
 
 build() {
   cd $pkgname-$pkgver/build
-
   cmake -G "Unix Makefiles" ../ \
         -DCMAKE_BUILD_TYPE=Release \
         -DCMAKE_INSTALL_PREFIX=/usr \
