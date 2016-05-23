@@ -1,0 +1,26 @@
+pkgname=cipra
+pkgver=1.2.1
+pkgrel=1
+pkgdesc="C++11 unit testing framework based on Perl's Test::More module"
+arch=('x86_64')
+url="http://cipra.sourceforge.net/"
+license=('BSD')
+makedepends=(cmake doxygen)
+categories=('devel')
+source=(http://downloads.sourceforge.net/project/cipra/cipra-$pkgver.tar.gz)
+md5sums=('014accaed20f5aae1db0b4ec6fede450')
+
+build() {
+  cd $srcdir/$pkgname-$pkgver
+  mkdir build && cd build
+  cmake \
+    -DCMAKE_INSTALL_PREFIX=/usr \
+    -DCMAKE_INSTALL_LIBDIR=lib \
+    ..
+  make
+}
+
+package() {
+  cd $srcdir/$pkgname-$pkgver/build
+  make DESTDIR=$pkgdir install
+}
