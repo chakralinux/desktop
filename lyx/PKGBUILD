@@ -1,19 +1,19 @@
 pkgname=lyx
-pkgver=2.1.4
-pkgrel=3
+pkgver=2.2.0
+pkgrel=1
 pkgdesc="An advanced open-source document processor"
 arch=('x86_64')
 url="http://www.lyx.org"
 screenshot=('http://www.lyx.org/images/about/main_window.png')
-depends=('qt' 'texlive-core' 'python2' 'perl' 'imagemagick' 'enchant' 'libmythes' 'boost-libs' 'icu')
+depends=('qt5-base' 'qt5-svg' 'texlive-core' 'python2' 'perl' 'imagemagick' 'enchant' 'libmythes' 'boost-libs' 'icu')
 makedepends=('boost' 'bc')
 optdepends=('texlive-most: TeX Live goodies'
             'kbibtex: BibTeX reference manager')
 license=('GPL')
-source=("ftp://ftp.lyx.org/pub/lyx/stable/2.1.x/$pkgname-$pkgver.tar.xz"
+source=("ftp://ftp.lyx.org/pub/lyx/stable/2.2.x/$pkgname-$pkgver.tar.xz"
         'lyx.desktop'
         'lyxrc.dist')
-md5sums=('33f6906e5447a193b27c7231986e9f46'
+md5sums=('cb8032fb9f850d3e3e2f8af81e04656f'
          '3827d343670a38d97bdc7e002ff1e4a1'
          'b70fdeab95ba4a6c3ff72410dfa61823')
 
@@ -21,7 +21,7 @@ build() {
   cd ${srcdir}/${pkgname}-${pkgver}
 
   ./configure --prefix=/usr \
-              --with-frontend=qt4 \
+              --enable-qt5 \
               --without-included-boost \
               --without-included-mythes
   make
