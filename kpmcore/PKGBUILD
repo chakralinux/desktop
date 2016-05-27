@@ -1,12 +1,12 @@
 pkgname=kpmcore
-pkgver=2.1.1
+pkgver=2.2.0
 pkgrel=1
 pkgdesc="A KDE utility that allows you to manage disks, partitions, and file systems"
 arch=('x86_64')
 url="http://kde.org/applications/system/kdepartitionmanager/"
 license=('GPL2')
 depends=('kio' 'parted' 'libatasmart' 'util-linux')
-makedepends=('extra-cmake-modules')
+makedepends=('extra-cmake-modules' 'python3')
 optdepends=('e2fsprogs: ext2/3/4 support'
 	    'xfsprogs: XFS support'
 	    'jfsutils: JFS support'
@@ -15,7 +15,7 @@ optdepends=('e2fsprogs: ext2/3/4 support'
 	    'dosfstools: FAT32 support'
             'btrfs-progs: btrfs support')
 source=("http://download.kde.org/stable/${pkgname}/${pkgver}/src/${pkgname}-${pkgver}.tar.xz")
-sha256sums=('13a62768a40b4f23b3d939ebaa96415e6c35176dfdaae0864a92b8ae976c8473')
+sha256sums=('6fbf955bdc710c60abc02db5f50c0a33cbb3c9a37f2e43056cdb2e923cfdf529')
 
 build() {
   cd ${pkgname}-${pkgver}
@@ -24,7 +24,7 @@ build() {
     -DCMAKE_INSTALL_PREFIX=/usr \
     -DCMAKE_BUILD_TYPE=RelWithDebInfo \
     -DCMAKE_INSTALL_LIBDIR=lib \
-    -DKDE_INSTALL_USE_QT_SYS_PATHS=ON
+    -DBUILD_TESTING=OFF
   make
 }
 
