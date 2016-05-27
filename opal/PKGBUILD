@@ -1,32 +1,27 @@
 pkgname=opal
-pkgver=3.14.4
+pkgver=3.16.2
 pkgrel=1
 pkgdesc="Open Phone Abstraction Library"
 arch=('x86_64')
 url="http://www.opalvoip.org/"
 license=('MPL')
-depends=('gsm' 'libtheora' 'ptlib=2.14.4' 'silc-toolkit' 'speex' 'x264')
-makedepends=('ffmpeg')
+depends=('gsm' 'libtheora' 'ptlib' 'silc-toolkit' 'speex' 'libx264' 'gst-plugins-base-libs' 'celt')
+makedepends=('ffmpeg' 'libsrtp' 'spandsp' 'x264' 'gst-plugins-base')
 source=(http://downloads.sourceforge.net/opalvoip/$pkgname-$pkgver.tar.bz2)
-sha512sums=('589f6c8eb236ae41faec199fa807a7c1c5ab32adbf7914f8c14597d797b7dd62d5d1ee40a25c5e8920b276cef0926915784c7bd2ce5b8ef38d7e84833c64cb54')
+sha1sums=('786d0bb251bd14adcdf62703b12440d9ee7ce6cb')
 
 build() {
   cd $srcdir/$pkgname-$pkgver
 
-  export PKG_CONFIG_PATH=/usr/lib/pkgconfig
-  export LD_LIBRARY_PATH=/usr/lib
-  export PTLIBPLUGINDIR=/usr/lib/ptlib-3.14:/usr/lib/opal-3.14
-
-  CXXFLAGS="$CXXFLAGS -fpermissive" \
   ./configure \
     --localstatedir=/var \
     --prefix=/usr \
-    --sysconfdir=/etc
+    --sysconfdir=/etc \
+    --with-srtp-dir=/usr/lib
   make
 }
 
 package() {
   cd $srcdir/$pkgname-$pkgver
   make DESTDIR=$pkgdir install
-  chmod 644 "${pkgdir}/usr/lib/libopal_s.a"
 }
