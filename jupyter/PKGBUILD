@@ -1,12 +1,12 @@
 pkgbase=jupyter
 pkgname=('jupyter' 'ipython2-notebook')
 pkgver=4.1.0
-pkgrel=1
+pkgrel=2
 pkgdesc="A language-agnostic web-based interactive shell/notebook server."
 arch=('any')
 url="http://jupyter.org/"
 license=('BSD')
-depends=('ipython3>4.0.0' 'python3-setuptools'
+depends=('ipython3>4.0.0' 'python3-ipykernel' 'python3-setuptools'
          'python3-jinja' 'python3-pyzmq' 'python3-tornado' 'python3-jsonschema'
          'python3-terminado' 'python3-mistune' 'python3-pygments')
 makedepends=('python3-setuptools' 'python2-setuptools' 'npm' 'git')
@@ -16,7 +16,7 @@ optdepends=('qt5-svg: jupyter-qtconsole'
 
 # some of these will update rapidly, others never
 # so _vers will be phased in as new updates are released
-_ipykv=4.3.1  # ipykernel
+#_ipykv=4.3.1  # ipykernel
 _ipywv=5.0.0  # ipywidgets
 _qtcv=4.2.1   # qtconsole
 _notev=4.2.0  # notebook
@@ -27,15 +27,15 @@ _jcliv=4.2.2
 _pyver=3.5
 
 source=("jupyter_core.tgz::https://github.com/jupyter/jupyter_core/archive/$pkgver.tar.gz"
-        "ipykernel.tgz::https://github.com/ipython/ipykernel/archive/$_ipykv.tar.gz"
-        "ipywidgets.tgz::https://github.com/ipython/ipywidgets/archive/v$_ipywv.tar.gz"
+#        "ipykernel.tgz::https://github.com/ipython/ipykernel/archive/$_ipykv.tar.gz"
+        "ipywidgets.tgz::https://github.com/ipython/ipywidgets/archive/$_ipywv.tar.gz"
         "nbformat.tar.gz::https://github.com/jupyter/nbformat/archive/$_jnbfv.tar.gz"
         "jupyter_console.tgz::https://github.com/jupyter/jupyter_console/archive/$_jconv.tar.gz"
         "jupyter_client.tgz::https://github.com/jupyter/jupyter_client/archive/$_jcliv.tar.gz"
         "notebook.tgz::https://github.com/jupyter/notebook/archive/$_notev.tar.gz"
         "https://pypi.python.org/packages/source/q/qtconsole/qtconsole-$_qtcv.tar.gz")
 sha1sums=('495315ee7299248895f29f511bade0cd8dc7a2ed'
-          '260a6eb67cded6916484deaaad6193a60483e29b'
+ #         '260a6eb67cded6916484deaaad6193a60483e29b'
           '6a2ddeff85de80254992af4e83f9339f9df4b84c'
           '0f2ec7182766980932ea2f895f51fbbe909aac4e'
           '9501b7ae4dd3ca9716abfe540697b2f145257f6b'
@@ -47,7 +47,7 @@ prepare() {
   cd "$srcdir"
   cp -r jupyter_core-$pkgver python2-jupyter_core-$pkgver
   cp -r jupyter_client-$_jcliv python2-jupyter_client-$_jcliv
-  cp -r ipykernel-$_ipykv    python2-ipykernel-$_ipykv
+ # cp -r ipykernel-$_ipykv    python2-ipykernel-$_ipykv
   cp -r qtconsole-$_qtcv      python2-qtconsole-$_qtcv
 }
 
@@ -74,9 +74,9 @@ package_jupyter() {
   cd "$srcdir/jupyter_core-$pkgver"
   python3 setup.py install --prefix=/usr --root="$pkgdir" --optimize=0
 
-  cd "$srcdir/ipykernel-$_ipykv"
+#  cd "$srcdir/ipykernel-$_ipykv"
   # this is in the ipython package
-  python3 setup.py install --prefix=/usr --root="$pkgdir" --optimize=0
+#  python3 setup.py install --prefix=/usr --root="$pkgdir" --optimize=0
 
   cd "$srcdir/ipywidgets-$_ipywv"
   python3 setup.py install --prefix=/usr --root="$pkgdir" --optimize=0
@@ -111,13 +111,13 @@ package_jupyter() {
 
 package_ipython2-notebook() {
   pkgdesc="An enhanced Interactive Python2 shell."
-  depends=('ipython2>4.0.0' 'python2-pyzmq')
+  depends=('ipython2>4.0.0' 'python2-ipykernel' 'python2-pyzmq')
   optdepends=('python2-pyqt5: jupyter-qtconsole-py2'
               'qt5-svg: jupyter-qtconsole-py2'
               'python2-sip: jupyter-qtconsole-py2')
 
-  cd "$srcdir/python2-ipykernel-$_ipykv"
-  python2 setup.py install --prefix=/usr --root="$pkgdir" --optimize=0
+#  cd "$srcdir/python2-ipykernel-$_ipykv"
+#  python2 setup.py install --prefix=/usr --root="$pkgdir" --optimize=0
 
   cd "$srcdir/python2-jupyter_core-$pkgver"
   python2 setup.py install --prefix=/usr --root="$pkgdir" --optimize=0
