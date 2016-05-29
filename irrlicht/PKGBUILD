@@ -4,9 +4,9 @@
 # Maintainer: Adrian Chaves Fernandez (Gallaecio) <adriyetichaves@gmail.com>
 
 pkgname=irrlicht
-pkgver=1.8.0
+pkgver=1.8.3
 verpfx=${pkgver:0:(-2)}
-pkgrel=2
+pkgrel=1
 pkgdesc="High performance realtime 3D graphics engine."
 arch=('i686' 'x86_64')
 url="http://irrlicht.sourceforge.net/"
@@ -17,11 +17,13 @@ conflicts=('irrlicht-svn')
 replaces=('irrlicht-svn')
 source=("http://downloads.sourceforge.net/irrlicht/irrlicht-1.8.zip"
         "include-config.diff"
-        "makefile-systemlibs.diff")
+        "makefile-systemlibs.diff"
+        "glext.h::https://sourceforge.net/p/irrlicht/code/4600/tree/trunk/source/Irrlicht/glext.h?format=raw")
 md5sums=('d06329d8f466658caaf4838ba349e393'
          '7ff49d8ddc50deac316f4e2141828f31'
-         '2385b8b5ed3bf9588b2f5db9af3f4788')
- 
+         '2385b8b5ed3bf9588b2f5db9af3f4788'
+         'c2904eda7cba605debfbd3812faf9019')
+
 build() {
   # Patches.
   patch -uN $srcdir/$pkgname-$verpfx/include/IrrCompileConfig.h $srcdir/include-config.diff
@@ -30,6 +32,10 @@ build() {
   cd $srcdir/$pkgname-$verpfx/source/Irrlicht
   sed -i "/^INSTALL_DIR/s:=.*:=$pkgdir/usr/lib:" \
      Makefile
+
+  # http://irrlicht.sourceforge.net/forum/viewtopic.php?f=7&t=49811
+  # Should not be necessary anymore after 1.8.x
+  cp -R $srcdir/glext.h glext.h
 
   # Compilation.
   make sharedlib NDEBUG=1
