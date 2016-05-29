@@ -4,20 +4,25 @@
 # Maintainer: Francesco Marinucci <franzmari[at]chakra-project[dot]it>
 
 pkgname=libcec
-pkgver=2.2.0
+pkgver=3.1.0
 pkgrel=1
 pkgdesc="Pulse-Eight's libcec for the Pulse-Eight USB-CEC adapter"
 arch=('x86_64')
 url="http://libcec.pulse-eight.com/"
 license=('GPL')
-depends=('udev' 'lockdev')
+depends=('lockdev' 'p8-platform' 'udev')
+makedepends=('cmake')
 source=("$pkgname-$pkgver.tar.gz::https://github.com/Pulse-Eight/$pkgname/archive/$pkgname-$pkgver.tar.gz")
-sha256sums=('fd4f47a18d6e0f4b9e6f5831280207ee2b2a5fc2741ae32ae09ad12a8aa52917')
+sha256sums=('09109d21a1b03f42c9e341d12600f2e4c41038d640269fa75408e2d36126f921')
 
 build() {
   cd "$pkgname-$pkgname-$pkgver"
-  autoreconf -vif
-  ./configure --prefix=/usr
+  cmake . \
+    -DCMAKE_BUILD_TYPE=Release \
+    -DBUILD_SHARED_LIBS=1 \
+    -DCMAKE_INSTALL_PREFIX=/usr \
+    -DCMAKE_INSTALL_LIBDIR=/usr/lib \
+    -DCMAKE_INSTALL_LIBDIR_NOARCH=/usr/lib
   make
 }
 
@@ -25,4 +30,3 @@ package() {
   cd "$pkgname-$pkgname-$pkgver"
   make DESTDIR="$pkgdir" install
 }
-
