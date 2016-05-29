@@ -4,13 +4,18 @@ source ../kdeapps.conf
 
 pkgname=libkdegames
 pkgver=${_kdever}
-pkgrel=1
+pkgrel=2
 pkgdesc="Shared libraries for KDE games"
 arch=('x86_64')
 url='https://projects.kde.org/projects/kde/kdegames/libkdegames'
 license=('GPL' 'LGPL' 'FDL')
-depends=('kdeclarative' 'kdelibs4support' 'kdnssd' 'knewstuff' 'openal')
-makedepends=('extra-cmake-modules' 'kdoctools' 'python3')
+depends=('karchive' 'kbookmarks' 'kcodecs' 'kcompletion' 'kconfig'
+         'kconfigwidgets' 'kcoreaddons' 'kcrash' 'kdbusaddons' 'kdeclarative'
+         'kdnssd' 'kjobwidgets' 'kglobalaccel' 'kguiaddons' 'ki18n'
+         'kiconthemes' 'kio' 'kitemviews' 'knewstuff' 'kservice'
+         'ktextwidgets' 'kwidgetsaddons' 'kxmlgui' 'libsndfile' 'openal'
+         'qt5-base' 'qt5-declarative' 'qt5-svg')
+makedepends=('cmake' 'extra-cmake-modules')
 groups=("kde" "kdegames" "kde-uninstall")
 options=('docs' 'debug')
 source=("$_mirror/${pkgname}-$_kdever.tar.xz")
