@@ -1,49 +1,32 @@
 # Contributors from Arch: https://www.archlinux.org/packages/extra/x86_64/libaccounts-qt4/
 
-pkgbase=libaccounts-qt
-pkgname=('libaccounts-qt4' 'libaccounts-qt5')
+pkgname='libaccounts-qt'
 pkgver=1.14
+_commit=a34ca4b
 pkgrel=1
+pkgdesc="Qt5-based client library for accessing the online accounts database"
 arch=('x86_64')
 url="http://code.google.com/p/accounts-sso/"
 license=('LGPL')
-makedepends=('qt' 'libaccounts-glib' 'doxygen' 'qt5-base')
+depends=('qt5-base' 'libaccounts-glib')
+makedepends=('doxygen')
+replaces=('libaccounts-qt5')
 options=('!docs' '!emptydirs')
-source=("https://gitlab.com/accounts-sso/libaccounts-qt/repository/archive.tar.bz2?ref=VERSION_$pkgver")
-sha1sums=('daa27223ed7bc7d47f761cbaa681b7dad9c99d6f')
+source=("https://gitlab.com/accounts-sso/libaccounts-qt/repository/archive.tar.bz2?ref=$_commit")
+sha1sums=('4cc4dd77888bbc31cb22e97523bfd749a4d01b78')
 
 prepare() {
-  mv $pkgbase-VERSION_$pkgver-* $pkgbase-$pkgver
-  
-  cd $pkgbase-$pkgver
+  cd $pkgname-*
   sed -i 's|SUBDIRS  += Accounts tests|SUBDIRS += Accounts|' accounts-qt.pro
-  cd ..
-
-  cp -a $pkgbase-$pkgver $pkgbase-$pkgver-qt4
 }
 
 build() {
-  cd ${srcdir}/$pkgbase-$pkgver
+  cd ${srcdir}/$pkgname-*
   qmake-qt5 PREFIX=/usr LIBDIR=/usr/lib
   make
-
-  cd ${srcdir}/$pkgbase-$pkgver-qt4
-  qmake PREFIX=/usr LIBDIR=/usr/lib
-  make
 }
 
-package_libaccounts-qt4() {
-  pkgdesc="Qt4-based client library for accessing the online accounts database"
-  depends=('qt' 'libaccounts-glib')
-
-  cd $pkgbase-$pkgver-qt4
-  make INSTALL_ROOT="$pkgdir" install
-}
-
-package_libaccounts-qt5() {
-  pkgdesc="Qt5-based client library for accessing the online accounts database"
-  depends=('qt5-base' 'libaccounts-glib')
-
-  cd $pkgbase-$pkgver
+package() {
+  cd $pkgbase-*
   make INSTALL_ROOT="$pkgdir" install
 }
