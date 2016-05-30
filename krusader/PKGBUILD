@@ -1,31 +1,49 @@
-
 pkgname=krusader
-pkgver=2.4.0beta3
-_pkgver=2.4.0-beta3
-pkgrel=3
+pkgver=15.08.beta1
+pkgrel=1
 pkgdesc="An alternative file manager for KDE resembling Midnight Commander"
 url="http://krusader.sourceforge.net/"
 arch=('x86_64')
 license=('GPL')
-depends=('kde-runtime' 'ark')
-makedepends=('cmake' 'automoc4' 'docbook-xsl')
+depends=('kparts'
+         'hicolor-icon-theme')
+makedepends=('extra-cmake-modules'
+             'kdoctools'
+             'git'
+             'python'
+             'acl')
+optdepends=('acl: Access control list utilities')
 categories=('system')
 screenshot=('http://www.krusader.org/static/img/slideshow/krusader-twinpanel-thumb.png')
 install=${pkgname}.install
-source=("http://downloads.sourceforge.net/$pkgname/$pkgname-$_pkgver.tar.bz2")
-md5sums=('62a02db3f213bb76805ca6c958e9e263')
+source=('git://anongit.kde.org/krusader')
+sha1sums=('SKIP')
+
+prepare() {
+  mkdir -p build
+
+  sed -e '6s|#||g' \
+      -e 's|LibKonq|KF5Konq|g' \
+      -e 's|LIBKONQ|KF5Konq|g' \
+      -i krusader/krusader/CMakeLists.txt
+      
+  sed -i s!"Categories=FileManager;Utility;Qt;KDE;"!"Categories=FileManager;System;Qt;KDE;"! \
+  $srcdir/krusader/krusader/org.kde.krusader.desktop
+}
 
 build() {
-  cd $pkgname-$_pkgver
-  mkdir build
   cd build
-  cmake .. \
+  
+  cmake ../krusader \
+    -DCMAKE_INSTALL_PREFIX=/usr \
     -DCMAKE_BUILD_TYPE=Release \
-    -DCMAKE_INSTALL_PREFIX=/usr
+    -DKDE_INSTALL_LIBDIR=lib \
+    -DKDE_INSTALL_USE_QT_SYS_PATHS=ON \
+    -DBUILD_TESTING=OFF
   make 
 }
 
 package() {
-  cd $pkgname-$_pkgver/build
-  make DESTDIR=$pkgdir install 
+  
+  make -C build DESTDIR="${pkgdir}" install 
 }
