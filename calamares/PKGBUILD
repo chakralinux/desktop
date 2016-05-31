@@ -1,7 +1,7 @@
 pkgname=calamares
-pkgver=2.2.2
+pkgver=2.2.91
 pkgrel=1
-_releaseName="Gödel"
+_releaseName="Goedel"
 _releaseYear="2016"
 pkgdesc='Distribution-independent installer framework'
 arch=('x86_64')
@@ -11,16 +11,20 @@ depends=('qt5-svg' 'kconfig' 'ki18n' 'kcoreaddons' 'solid' 'yaml-cpp'
          'parted' 'kpmcore' 'libatasmart' 'udisks2' 'polkit-qt5' 'boost-libs'
          'rsync' 'python3' 'keyboardctl' 'qt5-webkit')
 makedepends=('extra-cmake-modules' 'git' 'qt5-tools' 'translate-toolkit' 'qt5-tools')
-source+=("$pkgname-$pkgver.tar.gz::https://github.com/calamares/calamares/releases/download/v$pkgver/calamares-$pkgver.tar.gz"
+#source+=("$pkgname-$pkgver.tar.gz::https://github.com/calamares/calamares/releases/download/v$pkgver/calamares-$pkgver.tar.gz"
+_gitsha="09f650ecf586fd7dc43b8b131931a6d0e1d04f98"
+source+=("$pkgname-$pkgver.tar.gz::https://github.com/calamares/calamares/archive/${_gitsha}.zip"
          "calamares-chakra::git://git.chakraos.org/calamares.git#branch=modules")
         
-md5sums=('54637dbfaa1ffd646e568dc33897b9f2'
+md5sums=('1bfa6b27963e4ed36b2f95a68061d384'
          'SKIP')
 
 prepare() {
-    cp -a ${srcdir}/calamares-chakra/* ${srcdir}/calamares-${pkgver}
+    #cp -a ${srcdir}/calamares-chakra/* ${srcdir}/calamares-${pkgver}
+    cp -a ${srcdir}/calamares-chakra/* ${srcdir}/calamares-${_gitsha}
     rm -rf ${srcdir}/calamares-chakra
-    cd ${srcdir}/calamares-${pkgver}
+    #cd ${srcdir}/calamares-${pkgver}
+    cd ${srcdir}/calamares-${_gitsha}
 
     # apply the current version Name and Year
     sed -i -e "s/UnknownName/${_releaseName}/" "src/branding/chakra/branding.desc"
@@ -28,7 +32,8 @@ prepare() {
 }
 
 build() {
-    cd ${srcdir}/calamares-${pkgver}
+    #cd ${srcdir}/calamares-${pkgver}
+    cd ${srcdir}/calamares-${_gitsha}
     mkdir -p build
 
     cd build
@@ -43,7 +48,8 @@ build() {
 }
 
 package() {
-    cd ${srcdir}/calamares-${pkgver}/build
+    #cd ${srcdir}/calamares-${pkgver}/build
+    cd ${srcdir}/calamares-${_gitsha}/build
     make DESTDIR="${pkgdir}" install
 
 
