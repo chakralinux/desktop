@@ -1,7 +1,7 @@
 pkgname=freecad
 _pkgname=FreeCAD
 pkgver=0.16
-pkgrel=1
+pkgrel=2
 pkgdesc='A general purpose 3D CAD modeler'
 arch=('x86_64')
 url='http://www.freecadweb.org/wiki'
@@ -16,7 +16,18 @@ source=("https://github.com/FreeCAD/FreeCAD/archive/${pkgver}.tar.gz"
 sha512sums=('bc9dc8122cabd9a84f2b955746818e0d77ae90e68747ec96521099472b7803df9ff794ed823d6eb29352bd0538b8f01cf81c306ff427f1af2ee049f8f7096dbb'
             'a58dd5f6d8217b6633d5cc24a0b61954b1044d4156b25b78c00ea29f3ac9ca4932e9bde08bd11fc4327d76c7e82500cf3c2ddc934f426e970757cd200b070aec'
             'ac0dfe1b2c58335867e94d4ce86696763b6354dcdca68a653bf115b6ea562f0f8ff7d243d42d0c6fd6e758bd488d626e30cd917bb1b5c676c1f0cafdece005d6')
+prepare() {
+  cd "${srcdir}/FreeCAD-${pkgver}/"
 
+  sed -i \
+    -e "46i\\\tModDir = '/usr/share/freecad/Mod'" \
+    -e "50i\\\tLibDir = '/usr/lib/freecad'" \
+    src/App/FreeCADInit.py
+
+  # http://www.freecadweb.org/tracker/view.php?id=2347
+  sed -i 's/boost::re_detail/boost::BOOST_REGEX_DETAIL_NS/' \
+    src/Mod/Drawing/App/FeaturePage.cpp
+}
 build() {
   cd "${srcdir}/${_pkgname}-${pkgver}/"
   cmake \
