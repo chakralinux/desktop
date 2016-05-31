@@ -1,7 +1,7 @@
 pkgbase=jupyter
 pkgname=('jupyter' 'ipython2-notebook')
 pkgver=4.1.0
-pkgrel=2
+pkgrel=3
 pkgdesc="A language-agnostic web-based interactive shell/notebook server."
 arch=('any')
 url="http://jupyter.org/"
@@ -135,8 +135,5 @@ package_ipython2-notebook() {
   mv jupyter-qtconsole jupyter-qtconsole-py2
 
   cd "$srcdir"
-  install -d "$pkgdir/usr/share/jupyter/kernels/python2"
-  echo '{"display_name": "Python 2", "language": "python2", "argv": ["python2", "-c", "from IPython.kernel.zmq.kernelapp import main; main()", "-f", "{connection_file}"],"codemirror_mode": {"version": 2, "name": "ipython2"}}' > "$pkgdir/usr/share/jupyter/kernels/python2/kernel.json"
-
   install -Dm644 "jupyter_core-$pkgver/COPYING.md" "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
 }
