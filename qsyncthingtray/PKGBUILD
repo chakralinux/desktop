@@ -1,7 +1,7 @@
 # Arch contribution https://aur4.archlinux.org/packages/qsyncthingtray/
 
 pkgname=qsyncthingtray
-pkgver=0.5.0
+pkgver=0.5.1
 pkgrel=1
 pkgdesc="Tray app for syncthing"
 arch=('x86_64')
@@ -12,7 +12,7 @@ makedepends=('cmake')
 install=$pkgname.install
 source=("$pkgname-$pkgver.tar.gz::https://github.com/sieren/QSyncthingTray/archive/$pkgver.tar.gz"
         "$pkgname.desktop")
-sha1sums=('9657502aecc90fcf9e9340510300bac63d14369e'
+sha1sums=('1e405c3265cce86fe3cec8535cf6beaa2dfb3869'
           'bfd5a49e55a34cf2f45641797a8acdd45122042d')
 
 
@@ -32,5 +32,5 @@ package() {
 
   # install .desktop file
   install -Dm755 "$srcdir/$pkgname.desktop" "$pkgdir/usr/share/applications/$pkgname.desktop"
-  install -Dm755 "src/images/Icon1024.png" "$pkgdir/usr/share/pixmaps/$pkgname.png"
+  install -Dm755 "resources/images/Icon1024.png" "$pkgdir/usr/share/pixmaps/$pkgname.png"
 }
