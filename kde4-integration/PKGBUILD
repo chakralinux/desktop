@@ -2,7 +2,7 @@ pkgbase="kde-workspace"
 pkgname=("kde4-integration")
 arch=('x86_64')
 pkgver=4.11.22
-pkgrel=2
+pkgrel=3
 pkgdesc=("Qt4/KDE4 integration")
 url="http://www.kde.org"
 license=('GPL')
@@ -25,7 +25,8 @@ build() {
 
     CXXFLAGS="${CXXFLAGS} -I /usr/include/freetype2" cmake -Wno-dev .. \
         -DCMAKE_BUILD_TYPE=RelWithDebInfo \
-        -DCMAKE_INSTALL_PREFIX=${_installprefix} \
+        -DCMAKE_INSTALL_PREFIX=`kde4-config --prefix` \
+        -DLIB_INSTALL_DIR=/usr/lib \
         -DWITH_Xmms=OFF \
         -DCMAKE_SKIP_RPATH=ON \
         -DWITH_CkConnector=OFF \
