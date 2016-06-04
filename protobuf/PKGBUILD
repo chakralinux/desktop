@@ -1,13 +1,13 @@
 pkgbase=protobuf
-pkgname=('protobuf' 'python2-protobuf')
+pkgname=('protobuf' 'python2-protobuf' 'python3-protobuf')
 pkgver=2.6.1
-pkgrel=1
+pkgrel=2
 pkgdesc="A way of encoding structured data in an efficient yet extensible format"
 arch=('x86_64')
 url="http://code.google.com/p/protobuf/"
 license=('APACHE')
 depends=('gcc-libs' 'zlib')
-makedepends=('python2-setuptools')
+makedepends=('python2-setuptools' 'python3')
 options=(!libtool)
 source=("https://github.com/google/protobuf/releases/download/v$pkgver/protobuf-$pkgver.tar.bz2")
 sha512sums=('8b092b87fcd79223db199cd3d330f3d43689b47f345aa4e34028dcf1680d609a5d5a89ab08588e817b566d3b265834c38f1db580bc1c144b512ce74d35f2a174')
@@ -30,12 +30,20 @@ package_protobuf() {
 }
 
 package_python2-protobuf() {
-    pkgdesc="protobuf python API"
+    pkgdesc="protobuf python2 API"
     depends=("python2" "protobuf=${pkgver}")
     provides=("protobuf-python")
     conflicts=("protobuf-python")
     replaces=("protobuf-python")
 
-	cd $srcdir/protobuf-$pkgver/python
-	python2 setup.py install --prefix=/usr --root $pkgdir
+    cd $srcdir/protobuf-$pkgver/python
+    python2 setup.py install --prefix=/usr --root $pkgdir
+}
+
+package_python3-protobuf() {
+    pkgdesc="protobuf python3 API"
+    depends=("python3" "protobuf=${pkgver}")
+
+    cd $srcdir/protobuf-$pkgver/python
+    python3 setup.py install --prefix=/usr --root $pkgdir
 }
