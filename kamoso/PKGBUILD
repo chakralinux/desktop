@@ -1,25 +1,24 @@
 pkgname=kamoso
-pkgver=3.1.0
+pkgver=3.2
 pkgrel=1
 pkgdesc="Kamoso is an application to take pictures and videos out of your webcam."
 url="https://userbase.kde.org/Kamoso"
 arch=('x86_64')
 license=('GPL')
 depends=('qt5-gstreamer' 'purpose')
-makedepends=('extra-cmake-modules' 'kdoctools' 'boost')
+makedepends=('extra-cmake-modules' 'kdoctools' 'boost' 'python3')
 conflicts=('kamoso-git')
 categories=('multimedia')
 screenshot=('http://kde-apps.org/CONTENT/content-pre1/111750-1.png')
-source=("http://download.kde.org/stable/$pkgname/${pkgver%.*}/src/$pkgname-$pkgver.tar.xz")
-md5sums=('923af7f7e13caec1082efd9a04670409')
+source=("http://download.kde.org/stable/$pkgname/${pkgver}/src/$pkgname-$pkgver.tar.xz")
+md5sums=('55d026b0db2053ff0a434d1ffb0f4fca')
 
 build() {
   mkdir -p build && cd build 
   cmake ../${pkgname}-${pkgver} \
     -DCMAKE_BUILD_TYPE=Release \
     -DCMAKE_INSTALL_PREFIX=/usr \
-    -DLIB_INSTALL_DIR=lib \
-    -DKDE_INSTALL_USE_QT_SYS_PATHS=ON \
+    -DKDE_INSTALL_LIBDIR=lib \
     -DBUILD_TESTING=OFF 
   make
 }
