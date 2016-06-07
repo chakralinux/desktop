@@ -1,6 +1,6 @@
 pkgname=converseen
 pkgver=0.9.2
-pkgrel=1
+pkgrel=2
 pkgdesc="The batch image converter and resizer. It supports more than 100 image formats."
 arch=('x86_64')
 url="http://converseen.sourceforge.net/"
@@ -14,8 +14,7 @@ md5sums=('d08caf7a00ee7761dc1f0551527b56ee')
 
 build() {
   cd "${srcdir}"
-  mkdir -p build
-  cd build
+  mkdir -p build && cd build
   cmake ../${pkgname}-${pkgver} \
           -DCMAKE_BUILD_TYPE=Release \
           -DCMAKE_INSTALL_PREFIX=/usr \
