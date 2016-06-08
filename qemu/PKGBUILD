@@ -7,7 +7,7 @@ pkgname=('qemu'
          'qemu-block-rbd'
          'qemu-block-gluster'
          'qemu-guest-agent')
-pkgver=2.5.1.1
+pkgver=2.6.0
 pkgrel=1
 arch=('x86_64')
 license=('GPL2' 'LGPL2.1')
@@ -21,17 +21,18 @@ source=(http://wiki.qemu.org/download/${pkgname}-${pkgver}.tar.bz2
         qemu.sysusers
         qemu-ga.service
         65-kvm.rules)
-md5sums=('f5ff0e71398b9e428b4f177001ba4285'
-         '49778d11c28af170c4bebcc648b0ace1'
-         '44ee242d758f9318c6a1ea1dae96aa3a'
-         '33ab286a20242dda7743a900f369d68a')
+sha1sums=('d558a11d681dd095b1d7cb03c5b723c9d3045020'
+          '4d74c0477b2f078d6ab0e6887f54a16eeb951662'
+          'ba9206e96f95330a2578f9f21884d357d6fc3a33'
+          '1162065406654d1e0ff4aef7ae9d430ff7679554')
+
 
 _extra_arches=(aarch64 alpha arm armeb cris lm32 m68k microblaze microblazeel mips
 mips64 mips64el mipsel mipsn32 mipsn32el or32 ppc ppc64 ppc64abi32 ppc64le s390x
 sh4 sh4eb sparc sparc32plus sparc64 moxie ppcemb tricore unicore32 xtensa xtensaeb)
 _extra_blob=(QEMU,cgthree.bin QEMU,tcx.bin bamboo.dtb openbios-ppc
 openbios-sparc32 openbios-sparc64 palcode-clipper petalogix-ml605.dtb
-petalogix-s3adsp1800.dtb ppc_rom.bin s390-ccw.img s390-zipl.rom slof.bin
+petalogix-s3adsp1800.dtb ppc_rom.bin s390-ccw.img slof.bin
 spapr-rtas.bin u-boot.e500)
 
 prepare() {
@@ -69,6 +70,7 @@ package_qemu() {
            'ncurses' 'libx11' 'libusb' 'libpulse' 'libssh2' 'curl')
   replaces=('qemu-kvm')
   optdepends=('samba: SMB/CIFS server support'
+              'aqemu: for Qt GUI interface'
               'qemu-arch-extra: extra architectures support'
               'qemu-block-iscsi: iSCSI block support'
               'qemu-block-rbd: RBD block support'
@@ -83,7 +85,6 @@ package_qemu() {
   # provided by seabios package
   rm usr/share/qemu/bios.bin
   rm usr/share/qemu/acpi-dsdt.aml
-  rm usr/share/qemu/q35-acpi-dsdt.aml
   rm usr/share/qemu/bios-256k.bin
   rm usr/share/qemu/vgabios-cirrus.bin
   rm usr/share/qemu/vgabios-qxl.bin
