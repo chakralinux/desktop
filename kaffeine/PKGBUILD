@@ -1,18 +1,21 @@
 # Contributions from ArchLinux: https://projects.archlinux.org/svntogit/packages.git/tree/trunk?h=packages/kaffeine
+# Source global configuration
+source ../kdeapps.conf
 
 pkgname=kaffeine
 pkgver=2.0.2
-pkgrel=1
+pkgrel=2
 pkgdesc='Media player with support for digital television (DVB-C/S/S2/T and ATSC, decryption with CI/CAM)'
 license=('GPL')
 arch=('x86_64')
 url="http://kaffeine.kde.org"
 depends=('kio' 'hicolor-icon-theme' 'libxss' 'vlc')
-makedepends=('extra-cmake-modules' 'kidletime')
+makedepends=('extra-cmake-modules' 'kidletime' 'kdoctools')
 categories=('multimedia')
+options=('debug')
 install=kaffeine.install
-source=("https://github.com/KDE/kaffeine/archive/$pkgver.tar.gz")
-sha1sums=('284f64410d0ac39d1db39d4e282c299347b08d10')
+source=("http://download.kde.org/stable/${pkgname}/${pkgver}/src/${pkgname}-${pkgver}.tar.xz")
+sha1sums=('e9c165fe52c6328f4690ba2c29eb5714262e3f70')
 
 prepare() {
   mkdir -p build
@@ -20,10 +23,7 @@ prepare() {
 
 build() {
   cd build
-  cmake ../$pkgname-$pkgver \
-    -DCMAKE_BUILD_TYPE=Release \
-    -DCMAKE_INSTALL_PREFIX=/usr \
-    -DBUILD_TESTING=OFF
+  cmake_kf5 ../$pkgname-$pkgver
   make
 }
 
