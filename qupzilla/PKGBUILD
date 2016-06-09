@@ -1,7 +1,7 @@
 _pkgname=QupZilla
 pkgname='qupzilla'
-pkgver=2.0.0
-pkgrel=2
+pkgver=2.0.1
+pkgrel=1
 pkgdesc="A very fast open source browser based on WebEngine core"
 url="http://www.qupzilla.com"
 arch=('x86_64')
@@ -15,13 +15,9 @@ categories=('network')
 screenshot='http://www.qupzilla.com/screens/kde.png'
 source=("https://github.com/QupZilla/qupzilla/releases/download/v${pkgver}/${_pkgname}-${pkgver}.tar.xz"
         '0001-branded-speeddial.patch'
-        'webview_cleanup.patch::https://github.com/QupZilla/qupzilla/commit/90e72aa88fcaf11a1cb29d6b36629ad0a8870da3.diff'
-        'fix_parenting_window.patch::https://github.com/QupZilla/qupzilla/commit/838ec366de2878fa44084835012c8d7ce0cc4840.diff'
         'start-white.png')
-sha1sums=('5eea8ec0e2254978f6d0f5a25b7fe0649113776f'
+sha1sums=('db05bb206999b782df4d6ae96c6df24cba81944a'
           '7fbbd3b732e27154ab375f736c167d84a83619d7'
-          'afeac948e5a77284f12fd12acd1b4d12d35db4be'
-          'a3a061167635b03f287a33d3176fa494e4428427'
           '6ec67993bda3054d4210cc08177b124f873774e3')
 
 prepare() {
@@ -36,8 +32,6 @@ prepare() {
   cd ${srcdir}/${_pkgname}-${pkgver}/
   
   patch -Np1 -i ${srcdir}/0001-branded-speeddial.patch
-  patch -Np1 -i ${srcdir}/webview_cleanup.patch
-  patch -Np1 -i ${srcdir}/fix_parenting_window.patch
   
   msg 'Applying preference patch'
   cd ${srcdir}/${_pkgname}-${pkgver}/src/lib/preferences/
