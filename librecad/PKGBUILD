@@ -1,38 +1,30 @@
-# NOTE seems qt5 build are not fully ready yet, I prefer stick with qt4
-
 pkgname=librecad
-pkgver=2.0.11
+pkgver=2.1.0
 pkgrel=1
 pkgdesc="A 2D CAD drawing tool based on the community edition of QCad"
 arch=('x86_64')
 url="http://www.librecad.org/"
 license=('GPL')
-depends=('qt' 'libxcb' 'muparser')
+depends=('qt5-base' 'qt5-svg' 'qt5-tools' 'libxcb' 'muparser')
 makedepends=('boost' 'imagemagick' 'librsvg')
 conflicts=('librecad-git')
 replaces=('librecad-svn' 'caduntu' 'caduntu-svn')
 install=librecad.install
 source=("${pkgname}-${pkgver}.tar.gz::https://github.com/LibreCAD/LibreCAD/archive/${pkgver}.tar.gz")
-sha256sums=('05be8268614771e0c2a65e5ec767b26f516aab1d38e0c79d8137feabf110aa49')
+sha256sums=('dd1855f25d7d083f84a21381024d0e4f05ff3d0f1b6225809b409f30b6b885cf')
 
 prepare() {
 	cd "${srcdir}/LibreCAD-${pkgver}"
 	
 	# fix version string
 	sed -i "/^SCMREVISION/c SCMREVISION=\"${pkgver}\"" librecad/src/src.pro
-
-	# fix qcollectiongenerator name
-#	sed -i 's/qcollectiongenerator/qcollectiongenerator-qt5/g' scripts/postprocess-unix.sh
-	
-	# fix lrelease name
-#	sed -i 's/lrelease/lrelease-qt5/g' scripts/postprocess-unix.sh
 }
 
 build() {
 	cd "${srcdir}/LibreCAD-${pkgver}"
 
 	export CPPFLAGS="-std=c++0x"
-        qmake librecad.pro
+        qmake-qt5 librecad.pro
 	make
 }
 
