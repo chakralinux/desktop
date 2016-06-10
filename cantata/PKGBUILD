@@ -1,6 +1,6 @@
 pkgname=cantata
-pkgver=2.0.0
-pkgrel=2
+pkgver=2.0.1
+pkgrel=1
 pkgdesc='Qt5 client for the music player daemon (MPD)'
 arch=(x86_64)
 url='https://code.google.com/p/cantata/'
@@ -9,11 +9,14 @@ depends=(qt5-svg libmtp libcddb libmusicbrainz5 mpg123 vlc taglib-extras cdparan
 optdepends=('perl-uri: dynamic playlist' 'mpd: playback' 'ffmpeg: ReplayGain support')
 makedepends=(cmake qt5-tools ffmpeg)
 install=$pkgname.install
-source=("https://github.com/CDrummond/cantata/releases/download/v$pkgver/$pkgname-$pkgver.tar.bz2")
-md5sums=('dc7a65145692c5b2cac4c2c8a7c767c5')
+source=("https://github.com/CDrummond/cantata/releases/download/v$pkgver/$pkgname-$pkgver.tar.bz2" "fix.patch")
+md5sums=('dacab1b6bf7639e3d46876db8883fbb2'
+         '9acb7ffd4f279f8115fdf5d3d441cfad')
 
 prepare() {
   mkdir -p build
+  cd $pkgname-$pkgver
+  patch -Np1 -i ../fix.patch
 }
 
 build() {
