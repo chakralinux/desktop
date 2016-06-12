@@ -1,6 +1,6 @@
 pkgname=qgis
-pkgver=2.14.1
-pkgrel=2
+pkgver=2.14.3
+pkgrel=1
 pkgdesc='A Geographic Information System (GIS) that supports vector, raster and database formats'
 url='http://qgis.org/'
 license=('GPL')
@@ -16,15 +16,15 @@ optdepends=('fcgi: qgis mapserver'
             'postgis: postgis support and SPIT plugin')
 source=("http://qgis.org/downloads/$pkgname-$pkgver.tar.bz2"
         "conversions.patch::https://github.com/qgis/QGIS/commit/fc6559aa053317cda8ced657c3013a0d4c6549e9.diff")
-sha1sums=('d9682826e1884760bba86f6e4ee207b7e7d08dce'
+sha1sums=('0763930953d7f6a3a7ce284cc480d78cb130c3b6'
           '25e611703b2722bbf25d587121cedfc7ef2090ed')
 
 
-prepare() {
-  cd $pkgname-$pkgver
-  [[ -d build ]] || mkdir build
-  patch -uNp1 -i "$srcdir/conversions.patch"
-}
+#prepare() {
+#  cd $pkgname-$pkgver
+#  [[ -d build ]] || mkdir build
+#  patch -uNp1 -i "$srcdir/conversions.patch"
+#}
 
 build() {
   cd $pkgname-$pkgver/build
