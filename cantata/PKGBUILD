@@ -1,17 +1,17 @@
 pkgname=cantata
 pkgver=2.0.1
-pkgrel=1
+pkgrel=2
 pkgdesc='Qt5 client for the music player daemon (MPD)'
-arch=(x86_64)
-url='https://code.google.com/p/cantata/'
-license=(GPL)
-depends=(qt5-svg libmtp libcddb libmusicbrainz5 mpg123 vlc taglib-extras cdparanoia media-player-info udisks2)
+arch=('x86_64')
+url='https://github.com/CDrummond/cantata'
+license=('GPL')
+depends=('qt5-svg' 'qt5-multimedia' 'libmtp' 'libcddb' 'libmusicbrainz5' 'mpg123' 'taglib-extras' 'cdparanoia' 'media-player-info' 'udisks2')
 optdepends=('perl-uri: dynamic playlist' 'mpd: playback' 'ffmpeg: ReplayGain support')
-makedepends=(cmake qt5-tools ffmpeg)
+makedepends=('cmake' 'qt5-tools' 'ffmpeg')
 install=$pkgname.install
 source=("https://github.com/CDrummond/cantata/releases/download/v$pkgver/$pkgname-$pkgver.tar.bz2" "fix.patch")
-md5sums=('dacab1b6bf7639e3d46876db8883fbb2'
-         '9acb7ffd4f279f8115fdf5d3d441cfad')
+sha1sums=('90a80b412a21aed72d1b7cc578f0c2ffa62c243c'
+          'dcefb0e9320b6b73c4df37baa8378b0913be2738')
 
 prepare() {
   mkdir -p build
@@ -28,6 +28,7 @@ build() {
     -DCMAKE_BUILD_TYPE=Release \
     -DENABLE_HTTP_STREAM_PLAYBACK=ON \
     -DENABLE_KDE=OFF -DENABLE_QT5=ON \
+    -DENABLE_LIBVLC=OFF \
     -DENABLE_UDISKS2=ON
   make
 }
