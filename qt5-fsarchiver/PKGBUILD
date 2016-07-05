@@ -1,0 +1,49 @@
+pkgname=qt5-fsarchiver
+pkgver=0.6.19.20
+_pkgver=0.6.19-20
+pkgrel=1
+pkgdesc='GUI for fsarchiver'
+arch=('x86_64')
+url='http://sourceforge.net/projects/qt4-fsarchiver/'
+license=('GPL')
+depends=('fsarchiver' 'kdesu' 'qt5-base')
+makedepends=('qt5-tools')
+categories=('utils')
+replaces=('qt4-fsarchiver')
+screenshot=('http://media.cdn.ubuntu-de.org/wiki/attachments/02/04/verzeichnis.jpg')
+source=("http://sourceforge.net/projects/qt4-fsarchiver/files/${pkgname}/source/${pkgname}-${_pkgver}.tar.gz"
+	"${pkgname}.png"
+	"${pkgname}.desktop")
+install="${pkgname}.install"
+sha1sums=('e54664fd91debd3b5cfd5669a40c3064333d92f7'
+          '1f44233bf16f0d67dc285e98eaa8b36dff9f9d33'
+          'cf76cacb4ea61719c4dc9d8f241862130492ea5e')
+
+build() {
+    cd "${srcdir}/${pkgname}"
+    qmake-qt5
+    make
+}
+
+package() {
+  cd "${srcdir}/${pkgname}"
+  make INSTALL_ROOT="${pkgdir}" install
+  
+#  install -d ${pkgdir}/usr/share/pixmaps
+#  install -d ${pkgdir}/usr/share/qt/translations
+#  rm -R ${pkgdir}/usr/share/qt4
+#  rm -R ${pkgdir}/usr/share/app-install
+#  install -D -m644 ${srcdir}/${pkgname}/translations/*.qm ${pkgdir}/usr/share/qt/translations
+  
+  # install icon
+  install -D ${srcdir}/${pkgname}.png ${pkgdir}/usr/share/pixmaps/${pkgname}.png
+  # .desktop file
+  install -D ${srcdir}/${pkgname}.desktop ${pkgdir}/usr/share/applications/${pkgname}.desktop
+  rm ${pkgdir}/usr/share/applications/mate-qt5-fsarchiver.desktop
+  rm ${pkgdir}/usr/share/applications/gnome-qt5-fsarchiver.desktop
+  rm ${pkgdir}/usr/share/applications/kde-qt5-fsarchiver.desktop
+  
+  # remove unused files
+  rm -r ${pkgdir}/usr/share/app-install
+	
+}

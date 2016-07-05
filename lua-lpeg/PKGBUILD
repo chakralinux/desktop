@@ -1,0 +1,25 @@
+pkgname='lua-lpeg'
+_pkgname=lpeg
+pkgver=1.0.0
+pkgrel=1
+pkgdesc='Pattern-matching library for Lua'
+arch=('x86_64')
+url='http://www.inf.puc-rio.br/~roberto/lpeg'
+license=('MIT')
+depends=('lua')
+source=(http://www.inf.puc-rio.br/~roberto/$_pkgname/$_pkgname-$pkgver.tar.gz
+        LICENSE)
+sha1sums=('64a0920c9243b624a277c987d2219b6c50c43971'
+          'e471a511997528dd080d2997580499c37d06111a')
+
+build() {
+  cd $_pkgname-$pkgver
+  make LUADIR=/usr/include
+}
+
+package() {
+  cd $_pkgname-$pkgver
+  install -Dm755 $_pkgname.so "$pkgdir"/usr/lib/lua/5.1/$_pkgname.so
+  install -Dm644 re.lua "$pkgdir"/usr/share/lua/5.1/re.lua
+  install -Dm644 ../LICENSE "$pkgdir"/usr/share/licenses/$pkgname/LICENSE
+}

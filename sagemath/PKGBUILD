@@ -3,8 +3,8 @@
 
 pkgbase=sagemath
 pkgname=('sagemath' 'sagemath-doc' 'sagemath-src')
-pkgver=7.0
-pkgrel=2
+pkgver=7.2
+pkgrel=1
 pkgdesc="Open Source Mathematics Software, free alternative to Magma, Maple, Mathematica, and Matlab - includes Sage-Notebook"
 arch=('x86_64')
 url="http://www.sagemath.org"
@@ -22,10 +22,12 @@ options=('!makeflags')
 install="${pkgbase}.install"
 source=("$pkgbase-$pkgver.tar.gz::http://mirror.switch.ch/mirror/sagemath/src/sage-${pkgver}.tar.gz"
         'sage.service'
-        'sage-notebook.desktop')
-sha1sums=('07c9574530de2c8bd0b6f5d3c73c4d166601538d'
+        'sage-notebook.desktop'
+        'sage-notebook.svg')
+sha1sums=('4032702b05bb765835a51d1e7d363ca153dcf06f'
           '5196c3b61b1006dc13c3c1fce8b985758e76b0fc'
-          'd28dbdb3a48d924709593b6ecbac30cdd50517fd')
+          'd28dbdb3a48d924709593b6ecbac30cdd50517fd'
+          '51fb7257c69240f4266f6e69045156907e721771')
 
 prepare() {
   # create DOT_SAGE directory
@@ -106,8 +108,8 @@ package_sagemath() {
   # install *.desktop and icon files
   install -Dm644 "${srcdir}/sage-notebook.desktop" \
                  "${pkgdir}/usr/share/applications/sage-notebook.desktop"
-  install -Dm644 "${pkgdir}/usr/lib/sage/local/lib/python2.7/site-packages/sagenb-0.11.6.1-py2.7.egg/sagenb/data/sage/images/icon128x128.png" \
-                 "${pkgdir}/usr/share/pixmaps/sage-notebook.png"
+  install -Dm644 "${srcdir}/sage-notebook.svg" \
+                 "${pkgdir}/usr/share/pixmaps/sage-notebook.svg"
 
   # remove build logs
   rm -f ${pkgdir}/usr/lib/sage/*.log

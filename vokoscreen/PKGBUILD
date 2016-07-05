@@ -1,6 +1,5 @@
 pkgname=vokoscreen
-_pkgver=2.4.22-beta
-pkgver=${_pkgver/-/.}
+pkgver=2.5.0
 pkgrel=1
 pkgdesc='An easy to use screencast creator to record educational videos, live recordings of browser, installation, videoconferences, etc'
 arch=('x86_64')
@@ -10,13 +9,13 @@ depends=('qt5-x11extras' 'ffmpeg' 'lame' 'desktop-file-utils' 'xdg-utils' 'lsof'
 optdepends=('pulseaudio-alsa: for PulseAudio support')
 makedepends=('qt5-tools')
 install=${pkgname}.install
-source=("${pkgname}-${_pkgver}.tar.gz::https://github.com/vkohaupt/vokoscreen/archive/${_pkgver}.tar.gz"
+source=("${pkgname}-${pkgver}.tar.gz::https://github.com/vkohaupt/vokoscreen/archive/${pkgver}.tar.gz"
         'fix_lrelease.patch')
-sha1sums=('75b3a1fe3924316a005f90da7657110cb2cc7e80'
+sha1sums=('d435c5687144dfea1025e23ce6e50f822da6ca61'
           'fa76417491ba68119395b82381d290b9c1155f9a')
 
 prepare() {
-	cd "${srcdir}"/${pkgname}-${_pkgver}
+	cd "${srcdir}"/${pkgname}-${pkgver}
 
 	# Fix lrelease path
 	patch -Np1 < ../fix_lrelease.patch
@@ -39,7 +38,7 @@ build() {
 
 	# Building package
 	cd "${srcdir}"/build
-	qmake-qt5 ../${pkgname}-${_pkgver} \
+	qmake-qt5 ../${pkgname}-${pkgver} \
 		CONFIG+=release \
 		CONFIG+=c++14
 

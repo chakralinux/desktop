@@ -1,30 +1,29 @@
 pkgname=corsix-th
 _pkgname=CorsixTH
-pkgver=0.50
+pkgver=0.60
 _pkgver=$pkgver
-pkgrel=1
+pkgrel=2
 pkgdesc='Reimplementation of the game engine of Theme Hospital.'
 arch=('x86_64')
 url='https://github.com/CorsixTH/CorsixTH'
 license=('MIT')
-depends=('ffmpeg' 'lua' 'sdl2_mixer' 'timidity++' 'x264')
+depends=('ffmpeg' 'lua' 'lua-lpeg' 'lua-filesystem' 'luajit' 'sdl2_mixer' 'timidity++' 'x264')
 categories=('games')
 makedepends=('cmake')
 install=$pkgname.install
 source=("https://github.com/CorsixTH/CorsixTH/archive/v${pkgver}.tar.gz"
         $pkgname-fix-parameters-to-sws_scale.patch::"https://github.com/CorsixTH/CorsixTH/commit/4ae56e100911c1763cb9fd9a4b8647e323ecc032.patch"
-        "$pkgname.sh")
-sha256sums=('822cb5b4a4ec863ba410b6a37e456b360516b2362337532689070e4555c037ee'
+        "$pkgname.sh"
+        "org.corsixth.corsixth.desktop")
+sha256sums=('f5ff7839b6469f1da39804de1df0a86e57b45620c26f044a1700e43d8da19ce9'
             '65161006dfc0aaff77d0beffd3894203ca2f304d0db71f54329859fa08c712ab'
-            '3614197a30498774fff4055ee54d82a812a8b88eba353b70c3288a09ff700158')
+            '3614197a30498774fff4055ee54d82a812a8b88eba353b70c3288a09ff700158'
+            '3c53c5888d691ae76a2876eae71220629ef5c91608f559ea15e0ce9e95a16f5d')
 
-prepare() {
-  # fix location in .desktop entry
-  cp -up CorsixTH-$pkgver/DebianPackage/usr/share/applications/CorsixTH.desktop $pkgname.desktop
-  sed 's/games/share/g' -i $pkgname.desktop
+#prepare() {
   # fix crash in ffmpeg 2.8+
 #  patch -d CorsixTH-$pkgver -Np1 < $pkgname-fix-parameters-to-sws_scale.patch
-}
+#}
 
 build() {
   cd CorsixTH-$pkgver
@@ -39,9 +38,11 @@ build() {
 package() {
   make -C CorsixTH-$pkgver/CorsixTH DESTDIR="$pkgdir/" install
   # launcher
-  install -Dm0755 $pkgname.sh "$pkgdir"/usr/bin/CorsixTH
+  install -Dm0755 $pkgname.sh "$pkgdir"/usr/bin/corsixth
   # license
   install -Dm0644 CorsixTH-$pkgver/LICENSE.txt "$pkgdir"/usr/share/licenses/$pkgname/LICENSE
   # .desktop integration
-  install -Dm0644 $pkgname.desktop "$pkgdir"/usr/share/applications/CorsixTH.desktop
+  install -Dm0644 org.corsixth.corsixth.desktop "$pkgdir"/usr/share/applications/org.corsixth.corsixth.desktop
+  # icon
+  install -Dm0644 CorsixTH-$pkgver/CorsixTH/Original_Logo.svg "$pkgdir"/usr/share/pixmaps/corsixth.svg
 }

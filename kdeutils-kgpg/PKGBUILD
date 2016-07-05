@@ -16,19 +16,16 @@ conflicts=("kdeutils-common")
 groups=("kde" "kdeutils" "kde-uninstall")
 categories=('utils')
 install=kdeutils.install
-source=($_mirror/${_pkgname}-$_kdever.tar.xz 'fix-include.patch')
-sha256sums=(`grep ${_pkgname}-$_kdever.tar.xz  ../checksums.txt | cut -d " " -f1`
-            "1129aa5553d26edaded9cb258413844cf3c336b5f02da0a0167ca1ad77602682")
+source=($_mirror/${_pkgname}-$_kdever.tar.xz)
+sha256sums=(`grep ${_pkgname}-$_kdever.tar.xz  ../checksums.txt | cut -d " " -f1`)
 
 prepare() {
     cd ${srcdir}/${_pkgname}-${pkgver}
-    patch -p1 -i ${srcdir}/fix-include.patch
+    mkdir -p build
 }
 
 build() {
-    cd ${srcdir}/${_pkgname}-${pkgver}
-    mkdir build
-    cd build
+    cd ${srcdir}/${_pkgname}-${pkgver}/build
     cmake .. \
         -DCMAKE_BUILD_TYPE=${_build_type} \
         -DCMAKE_INSTALL_PREFIX=${_installprefix} \

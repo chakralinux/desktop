@@ -1,5 +1,5 @@
 pkgname=mpv
-pkgver=0.17.0
+pkgver=0.18.0
 pkgrel=1
 pkgdesc="A movie player and encoder for linux, based on MPlayer/mplayer2"
 arch=('x86_64')
@@ -15,7 +15,7 @@ options=('!emptydirs')
 provides=('mplayer')
 install=${pkgname}.install
 source=("https://github.com/mpv-player/${pkgname}/archive/v${pkgver}.tar.gz")
-sha256sums=('602cd2b0f5fc7e43473234fbb96e3f7bbb6418f15eb8fa720d9433cce31eba6e')
+sha256sums=('b656638d4f6bce2621baaacb60d8be384aa492fcd86dfd43996aaa2c16fee02b')
  
 build() {
   cd ${pkgname}-${pkgver}
@@ -36,8 +36,7 @@ build() {
     --enable-libsmbclient \
     --enable-dvdread \
     --enable-libv4l2 \
-    --enable-vdpau \
-    --enable-gpl3
+    --enable-vdpau
   waf build
 }
  
