@@ -2,7 +2,7 @@ pkgbase=digikam
 pkgname=('digikam' 'kipi-plugins')
 _pkgver=5.0.0
 pkgver=${_pkgver//-/_}
-pkgrel=2
+pkgrel=3
 epoch=1
 url="http://digikam.sourceforge.net"
 arch=('x86_64')
@@ -57,6 +57,9 @@ package_digikam() {
   make DESTDIR="$pkgdir" install
   cd $srcdir/build/po
   make DESTDIR="$pkgdir" install
+
+  # Provided by kipi-plugins
+  rm "$pkgdir"/usr/share/locale/*/LC_MESSAGES/{kipiplugin*,libkvkontakte}.mo
 }
 
 package_kipi-plugins() {
