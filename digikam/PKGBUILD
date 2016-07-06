@@ -2,7 +2,7 @@ pkgbase=digikam
 pkgname=('digikam' 'kipi-plugins')
 _pkgver=5.0.0
 pkgver=${_pkgver//-/_}
-pkgrel=1
+pkgrel=2
 epoch=1
 url="http://digikam.sourceforge.net"
 arch=('x86_64')
@@ -15,12 +15,10 @@ makedepends=('extra-cmake-modules' 'libkipi' 'libksane' 'liblqr' 'boost'
 source=("http://download.kde.org/stable/${pkgname}/${pkgname}-${_pkgver}.tar.xz")
 sha1sums=('e0dec2eba9ab3a51d632b69b3dd6daf8dca64a45')
 
-
 prepare() {
   mkdir -p build
 
   sed -e '/add_subdirectory(showfoto)/d' -i $pkgname-${_pkgver}/doc-translated/digikam/CMakeLists.txt
-  sed -e 's|${KF5_MIN_VERSION}||' -i $pkgname-$_pkgver/core/CMakeLists.txt -i $pkgname-$_pkgver/extra/kipi-plugins/CMakeLists.txt
 }
 
 build() {
@@ -38,7 +36,6 @@ build() {
     -DENABLE_MEDIAPLAYER=ON \
     -DENABLE_AKONADICONTACTSUPPORT=ON \
     -DENABLE_OPENCV3=ON \
-    -DDIGIKAMSC_CHECKOUT_PO=ON  \
     -DENABLE_MYSQLSUPPORT=ON \
     -DENABLE_INTERNALMYSQL=ON
     
@@ -52,13 +49,14 @@ package_digikam() {
   optdepends=('kipi-plugins: more tools and plugins')
   install=digikam.install
 
-  pushd build/core
-  make DESTDIR="${pkgdir}" install
-  popd
-  
-  pushd build/doc/digikam
-  make DESTDIR="${pkgdir}" install
-  popd
+  cd build/core
+  make DESTDIR="$pkgdir" install
+  cd $srcdir/build/doc/digikam
+  make DESTDIR="$pkgdir" install
+  cd $srcdir/build/doc-translated/digikam
+  make DESTDIR="$pkgdir" install
+  cd $srcdir/build/po
+  make DESTDIR="$pkgdir" install
 }
 
 package_kipi-plugins() {
@@ -75,11 +73,15 @@ package_kipi-plugins() {
 	      'hugin: panorama plugin')
   install=kipi-plugins.install
 
-  pushd build/extra/kipi-plugins
-  make DESTDIR="${pkgdir}" install
-  popd
+  cd build/extra
+  make DESTDIR="$pkgdir" install
+  cd $srcdir/build/doc/kipi-plugins
+  make DESTDIR="$pkgdir" install
+  cd $srcdir/build/doc-translated/kipi-plugins
+  make DESTDIR="pkgdir" install
+  cd $srcdir/build/po
+  make DESTDIR="$pkgdir" install
 
-  pushd build/doc/kipi-plugins
-  make DESTDIR="${pkgdir}" install
-  popd
+  # Provided by digikam
+  rm "${pkgdir}"/usr/share/locale/*/LC_MESSAGES/digikam.mo
 }
