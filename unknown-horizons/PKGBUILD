@@ -1,41 +1,27 @@
-#
-# Games Packages for Chakra, part of chakra-project.org
-#
-# Contributor: Biginoz <biginoz _at_ free point fr>
-# Contributor: andy123 < ajs AT online DOT de >
-# Contributor: Deather <deather.jeuxlinux@gmail.com>
-# Contributor: Ronan Rabouin <darkbaboon@gmail.com>
-# Maintainer: Adrián Chaves Fernández (Gallaecio) <adriyetichaves@gmail.com>
-
+# Forked from https://aur.archlinux.org/cgit/aur.git/plain/PKGBUILD?h=unknown-horizons
 pkgname=unknown-horizons
 pkgver=2014.1
-pkgrel=2
-pyver=2.7
-pkgdesc="A 2D realtime strategy simulation with an emphasis on economy and city building"
-arch=('i686' 'x86_64')
+pkgrel=3
+pkgdesc="2D realtime strategy simulation with an emphasis on economy and city building."
+arch=('x86_64')
 url="http://www.unknown-horizons.org/"
 license=('GPL' 'CCPL')
-depends=('python2'  'python2-yaml' 'fife' 'python2-distutils-extra')
-categories=('games')
-options=(!strip)
-source=(https://github.com/unknown-horizons/unknown-horizons/releases/download/${pkgver}/unknown-horizons-${pkgver}.tar.xz)
-md5sums=('276ed6118eba6af615a286ff2989da6c')
+depends=('fife-git' 'python2' 'python2-pillow' 'python2-yaml')
+makedepends=('intltool')
+conflicts=('unknown-horizons-svn' 'unknown-horizons-git')
+source=("https://github.com/${pkgname}/${pkgname}/releases/download/${pkgver}/${pkgname}-${pkgver}.tar.xz"
+        
+"fix-atlas-overlays.diff::https://github.com/unknown-horizons/unknown-horizons/commit/405c514eab9e2abffe8d1a8912646447e6a29cfa.patch")
+sha256sums=('5f9dd483e81ad89bff1bc46739349ab531cc930830bf17ef390ac239940a236b'
+            'e051fb7555d9478e06ee278856b27d1e0ef94cf88db9babdf0f903e5df03ef6f')
 
-package() {
-  cd $srcdir/$pkgname
-  
-  # Workaround for an upstream packaging issue (old language pre-built files are distributed in 2013.2).
-  #rm -rf content/lang/*
-
-  sed -i 's/env python$/env python2/' run_uh.py
-
-  python2 setup.py build_i18n
-
-  python2 setup.py install \
-    --home=$pkgdir/usr \
-    --optimize=1
-
-  mkdir -p $pkgdir/usr/lib/python$pyver/site-packages/
-  mv $pkgdir/usr/lib/python/* $pkgdir/usr/lib/python$pyver/site-packages/
-  rm -rf $pkgdir/usr/lib/python
+prepare() {
+    cd "$srcdir/$pkgname"
+    # Fix crash with color overlays if using atlases (the default)
+    patch -p1 -i "${srcdir}/fix-atlas-overlays.diff"
 }
+package() {
+    cd "$srcdir/$pkgname"
+    python2 setup.py --quiet install --root="$pkgdir" --optimize=1
+}
+

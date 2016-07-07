@@ -1,0 +1,51 @@
+pkgname=logrotate
+pkgver=3.9.2
+pkgrel=1
+pkgdesc="Rotates system logs automatically"
+arch=('x86_64')
+url="https://fedorahosted.org/logrotate/"
+license=('GPL')
+groups=('base')
+depends=('popt' 'gzip' 'acl')
+backup=('etc/logrotate.conf')
+source=("https://github.com/logrotate/logrotate/archive/${pkgver}.tar.gz"
+        'paths.patch'
+        'logrotate.conf'
+        logrotate.{timer,service})
+sha1sums=('5a3c1784890aa5f4d4df2c438ab6b02b9bad37f7'
+          'da069a389f74526648aca8d675f92bb28cd20e42'
+          '2d2678ad876e292d4f4d93f92041e4a158c5c362'
+          'db8b531121793baaf68e05f6bd0f86da918c56e0'
+          '017bb1373ed4cde5b29e16932741eca7b440bb44')
+
+build() {
+        cd "$srcdir/${pkgname}-${pkgver}"
+
+        patch -p0 -i "$srcdir/paths.patch"
+
+        ./autogen.sh
+        ./configure \
+                --prefix=/usr \
+                --sbindir=/usr/bin \
+                --mandir=/usr/share/man \
+                --with-acl
+        make
+}
+
+check() {
+        cd "$srcdir/${pkgname}-${pkgver}"
+        make test
+}
+
+package() {
+        cd "$srcdir/${pkgname}-${pkgver}"
+        make DESTDIR="$pkgdir" install
+
+        install -dm755 "$pkgdir/etc/logrotate.d"
+        install -Dm644 "$srcdir/logrotate.conf" "$pkgdir/etc/logrotate.conf"
+
+        install -D -m644 ${srcdir}/logrotate.timer ${pkgdir}/usr/lib/systemd/system/logrotate.timer
+        install -D -m644 ${srcdir}/logrotate.service ${pkgdir}/usr/lib/systemd/system/logrotate.service
+        install -d -m755 ${pkgdir}/usr/lib/systemd/system/multi-user.target.wants
+        ln -s ../logrotate.timer ${pkgdir}/usr/lib/systemd/system/multi-user.target.wants/logrotate.timer
+}
