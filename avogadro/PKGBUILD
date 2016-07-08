@@ -1,11 +1,6 @@
-# Maintainer:
-# Contributors: H W Tovetjärn (totte) <totte@tott.es>
-#               A Boersma (abveritas)
-#               A Scarpino (bash) <andrea@archlinux.org>
-
 pkgname=avogadro
-pkgver=1.1.1
-pkgrel=3
+pkgver=1.2.0
+pkgrel=1
 pkgdesc="An advanced molecular editor based on Qt"
 arch=('x86_64')
 url="http://avogadro.cc/wiki/Main_Page"
@@ -14,19 +9,18 @@ depends=('eigen2' 'openbabel' 'python2-pyqt4' 'boost-libs' 'glew' 'python2-numpy
 makedepends=('cmake' 'boost' 'doxygen' 'libgl')
 categories=('education')
 screenshot=('http://avogadro.openmolecules.net/w/images/7/75/Avogadro-unitcell.png')
-source=("http://downloads.sourceforge.net/${pkgname}/${pkgname}-${pkgver}.tar.bz2"
+source=("https://downloads.sourceforge.net/${pkgname}/${pkgname}-${pkgver}.tar.gz"
         "boost153.patch"
-        "avogadro-0001-fix-undefined-reference-to-symbol-XInitThreads.patch"
-)
-sha512sums=('37e2fc9400f8727b7e69d84c13989aaba6fc88287e106a6ed137e4d0fd8ea181dc4ab49b08148d2077754f014748c8ed6f46881f31a1455029f876b599754827'
-            'b8ebad1e70a91408be97554ac4af5872ca9ce62a387568ed32c40c50f0b29b3f6c3db38333408fda119b08f99531fd87e4dec6a5483e3492a1e8fe30b4e42d26'
-            'a0181f4e4d9d649f638c05cc623e52eb62a32e262b9bd4865f986c5015ba5bb8ed59672c1883d7a9521e2bbe46f739eb9346186b227eb14188c1c4f7011970c0')
+        "avogadro-fix-linking.patch")
+sha256sums=('6453e36e8ae3e61655cbe062df6d6fa6b2409122c7b5abc0a6f1d410a181640b'
+            '0aaddbac2ed6e9688d7923a303b68c229f435068372f3665d731b1b9fa1d8cfb'
+            '3f7a236ec59684762514e81f8211cee625a44af843c8ce401e1ee002786e9d31')
 
 prepare() {
   mkdir -p build
   cd "${srcdir}/${pkgname}-${pkgver}"
   patch -p1 -i "${srcdir}"/boost153.patch
-  patch -p1 -i "${srcdir}"/avogadro-0001-fix-undefined-reference-to-symbol-XInitThreads.patch
+  patch -p1 -i "${srcdir}"/avogadro-fix-linking.patch
 }
 
 build() {
