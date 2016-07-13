@@ -1,6 +1,6 @@
 pkgname=ccr
 pkgver=4.0.4
-pkgrel=1
+pkgrel=2
 pkgdesc="A Bash wrapper for the CCR"
 license="GPL"
 arch=('any')
@@ -13,6 +13,7 @@ md5sums=('beed30a5dd942e7970ef6c688c91c739')
 
 package() {
     cd ccr-tools-${pkgver}
+    sed -i -- 's/chakraos/chakralinux/g' *
     install -m 755 -D ccr "$pkgdir/usr/bin/ccr"
     install -m 644 -D ccr.8 "$pkgdir/usr/share/man/man8/ccr.8"
     install -m 775 -D ccr-tools "$pkgdir/usr/bin/ccr-tools"
