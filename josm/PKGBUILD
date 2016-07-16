@@ -1,5 +1,5 @@
 pkgname=josm
-pkgver=10327
+pkgver=10526
 pkgrel=1
 pkgdesc="An editor for OpenStreetMap written in Java"
 arch=('x86_64')
@@ -10,9 +10,15 @@ depends=('java-runtime' 'intltool')
 source=("${url}/${pkgname}-tested.jar" 
         "${pkgname}.desktop"
         "$pkgname.conf.d")
-sha256sums=('a4398842fb180ecbc3d5e2acfffcc340e82b71e00ebe9feae2e6247e8de45ece'
+noextract=($pkgname-tested.jar)
+sha256sums=('214e4dce1378b4005906c3a656f7a4381634486140a17f0175e0b8628ddcb91f'
             '970d65819cedaa3f5174044e2e2b5d8b1d923603de9844a9d4d6b94e9b106d90'
             '4d94ccc5d8e6372e9d9eb1557994c8b41d5f011bc37a7dacdbc55b649da3b969')
+
+prepare() {
+  cd "${srcdir}"
+  bsdtar -xf $pkgname-tested.jar images/logo.png
+}
 
 package() {
   install -D -m644 ${pkgname}-tested.jar "${pkgdir}/usr/share/java/${pkgname}/${pkgname}.jar"
