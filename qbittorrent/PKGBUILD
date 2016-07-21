@@ -1,5 +1,5 @@
 pkgname=qbittorrent
-pkgver=3.3.5
+pkgver=3.3.6
 pkgrel=1
 pkgdesc="A bittorrent client written in C++ / Qt using the good libtorrent library"
 arch=('x86_64')
@@ -10,18 +10,17 @@ makedepends=('boost' 'geoip' 'qt5-tools')
 categories=('network')
 screenshot=('http://sourceforge.net/projects/qbittorrent/screenshots/242189.jpg')
 install=qbittorrent.install
-source=("https://github.com/qbittorrent/qBittorrent/archive/release-${pkgver}.tar.gz")
-sha256sums=('f1ea468f9f0c299d3543fca7fce06469c4d143e017cf02a763446a897ba482f9')
+source=("https://sourceforge.net/projects/${pkgname}/files/${pkgname}/${pkgname}-${pkgver}/${pkgname}-${pkgver}.tar.xz")
+sha256sums=('5a1610311edd86023a6475dac20e24e89515d08a289d8bf0bf2ad1e27d4c624c')
 
 build() {
-    cd ${srcdir}/qBittorrent-release-${pkgver}
-    ./configure --prefix=/usr \
-                --enable-systemd 
+    cd ${srcdir}/${pkgname}-${pkgver}
+    ./configure --prefix=/usr
     make
 }
 
 package() {
-    cd ${srcdir}/qBittorrent-release-${pkgver}
+    cd ${srcdir}/${pkgname}-${pkgver}
     make INSTALL_ROOT=${pkgdir} install
     install -Dm644 COPYING ${pkgdir}/usr/share/licenses/$pkgname/COPYING
 }
