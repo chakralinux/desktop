@@ -9,7 +9,7 @@ pkgname=('virtualbox'
          'virtualbox-guest-utils-nox'
          'virtualbox-ext-vnc')
 pkgver=5.1.2
-pkgrel=1
+pkgrel=2
 arch=('i686' 'x86_64')
 url='http://virtualbox.org'
 license=('GPL' 'custom')
@@ -279,6 +279,9 @@ package_virtualbox-host-dkms() {
     local _p="$pkgdir/usr/src/vboxhost-${pkgver}_OSE/dkms.conf"
     install -Dm644 "$srcdir/$pkgname.conf" "$_p"
     sed -i "s,@VERSION@,$pkgver," "$_p"
+
+    install -dm 755 "$pkgdir/var/lib/dkms/vboxhost/$pkgver"
+    ln -s '/usr/src/vboxhost-${pkgver}_OSE/' "$pkgdir/var/lib/dkms/vboxhost/$pkgver/source"
 }
 
 package_virtualbox-guest-dkms() {
@@ -309,6 +312,9 @@ package_virtualbox-guest-dkms() {
     local _p="$pkgdir/usr/src/vboxguest-${pkgver}_OSE/dkms.conf"
     install -Dm644 "$srcdir/$pkgname.conf" "$_p"
     sed -i "s,@VERSION@,$pkgver," "$_p"
+
+    install -dm 755 "$pkgdir/var/lib/dkms/vboxguest/$pkgver"
+    ln -s '/usr/src/vboxguest-${pkgver}_OSE/' "$pkgdir/var/lib/dkms/vboxguest/$pkgver/source"
 }
 
 package_virtualbox-guest-utils() {
