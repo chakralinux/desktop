@@ -3,7 +3,7 @@ source ../kdeapps.conf
 
 pkgname=ktorrent
 pkgver=5.0.1
-pkgrel=1
+pkgrel=3
 pkgdesc="A powerful BitTorrent client for KDE"
 arch=('x86_64')
 url='http://ktorrent.pwsp.net/'
@@ -12,11 +12,18 @@ depends=('libktorrent' 'knotifyconfig' 'kcmutils' 'kdelibs4support' 'kross')
 makedepends=('extra-cmake-modules' 'kdoctools' 'python3' 'boost' 'taglib' 'geoip' 'plasma-workspace' 'kdnssd')
 optdepends=('plasma-workspace: shutdown plugin' 'kdnssd: zeroconf plugin' 'taglib: mediaplayer plugin')
 install=${pkgname}.install
-source=("http://download.kde.org/stable/ktorrent/5.0/${pkgname}-${pkgver}.tar.xz")
-sha1sums=('0f20f529ed08a7d13008945e961c637352aa43b6')
+options=('debug')
+source=("http://download.kde.org/stable/ktorrent/5.0/${pkgname}-${pkgver}.tar.xz"
+        "KSharedConfig.patch::https://quickgit.kde.org/?p=ktorrent.git&a=commitdiff&h=f48acc22f0105ce6bac63294d248873ae231c6cc&o=plain")
+sha1sums=('0f20f529ed08a7d13008945e961c637352aa43b6'
+          '698dc126b34cee23896fdc80955cea414c991cb6')
+
 
 prepare() {
   mkdir -p build
+  
+  cd ${pkgname}-${pkgver}
+  patch -Np1 -i "${srcdir}/KSharedConfig.patch"
 }
 
 build() {
