@@ -10,7 +10,7 @@ pkgname=('virtualbox'
          'virtualbox-ext-vnc'
          'virtualbox-ext-oracle')
 pkgver=5.1.2
-pkgrel=4
+pkgrel=5
 arch=('x86_64')
 url='http://virtualbox.org'
 license=('GPL')
@@ -282,7 +282,7 @@ package_virtualbox-host-dkms() {
     sed -i "s,@VERSION@,$pkgver," "$_p"
 
     install -dm 755 "$pkgdir/var/lib/dkms/vboxhost/$pkgver"
-    ln -s '/usr/src/vboxhost-${pkgver}_OSE/' "$pkgdir/var/lib/dkms/vboxhost/$pkgver/source"
+    ln -s "/usr/src/vboxhost-${pkgver}_OSE/" "$pkgdir/var/lib/dkms/vboxhost/$pkgver/source"
 }
 
 package_virtualbox-guest-dkms() {
@@ -315,7 +315,7 @@ package_virtualbox-guest-dkms() {
     sed -i "s,@VERSION@,$pkgver," "$_p"
 
     install -dm 755 "$pkgdir/var/lib/dkms/vboxguest/$pkgver"
-    ln -s '/usr/src/vboxguest-${pkgver}_OSE/' "$pkgdir/var/lib/dkms/vboxguest/$pkgver/source"
+    ln -s "/usr/src/vboxguest-${pkgver}_OSE/" "$pkgdir/var/lib/dkms/vboxguest/$pkgver/source"
 }
 
 package_virtualbox-guest-utils() {
