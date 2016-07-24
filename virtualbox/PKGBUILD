@@ -7,7 +7,8 @@ pkgname=('virtualbox'
          'virtualbox-sdk'
          'virtualbox-guest-utils'
          'virtualbox-guest-utils-nox'
-         'virtualbox-ext-vnc')
+         'virtualbox-ext-vnc'
+         'virtualbox-ext-oracle')
 pkgver=5.1.2
 pkgrel=2
 arch=('i686' 'x86_64')
@@ -68,25 +69,26 @@ source=("http://download.virtualbox.org/virtualbox/$pkgver/VirtualBox-$pkgver.ta
         '006-rdesktop-vrdp-keymap-path.patch'
         '007-python2-path.patch'
         'cxx11.patch'
-        )
-md5sums=('aff1647170dd92914cddfbd0254b9773'
-         'a19774e8c56f2c4d12c528992525c444'
-         '331f69783ea9d4e762f7103954c500a3'
-         '984412a63aa9c07ddc3cfd970381d5df'
-         '4833c8e0524fd2272b24ba0d94aef006'
-         '6e2722bfd7013c1b0174382626ac1b8d'
-         'ed1341881437455d9735875ddf455fbe'
-         '91811cbc8a4cb69a5b729312568a9e7e'
-         '8ba9179c4a3516904417d773816dd992'
-         'fcf6bcef98b16849d5c9f048592739c0'
-         'bc9efed88e0469cd7fc460d5a5cd7b4b'
-         '0bab94ff2f4835fd907f89eb23ebbe21'
-         '9be7e2703afeee1fca9368bd8750e710'
-         '9e49bbaa2192b141c27ee43cef8cbab7'
-         'ecfd13297d7753ebe7b8763ca5b792d9'
-         'd82a6f19be739341ed7f1cf4ee8070ca'
-         '188ea65918309f737ce28216c2b07c3b'
-         '9893e7742c72593ec981f44f17b68cc3')
+        'PUEL')
+sha256sums=('03c92e3000d4b905d5b18a6abed757998125a37e5efa7864e62eae2baeabe010'
+            'deb03efa7ad0376aa55a087f2e882afe00935f10b0e7aa853ba9147090d341ec'
+            '113f9b92141b85df01f1e74d22f01d1f1aa81650eb79b89ceefc3cae20afe2e2'
+            '2101ebb58233bbfadf3aa74381f22f7e7e508559d2b46387114bc2d8e308554c'
+            'da4c49f6ca94e047e196cdbcba2c321199f4760056ea66e0fbc659353e128c9e'
+            '9c5238183019f9ebc7d92a8582cad232f471eab9d3278786225abc1a1c7bf66e'
+            '033c597e0f5285d2ddb0490868e5b6f945f45c7b1b1152a02a9e6fea438b2c95'
+            '55bd0bfa3265c098f2b67de3af3cdd2ad86f21282a49bfe79cbb22c0094ecfe7'
+            '94a808f46909a51b2d0cf2c6e0a6c9dea792034943e6413bf9649a036c921b21'
+            '01dbb921bd57a852919cc78be5b73580a564f28ebab2fe8d6c9b8301265cbfce'
+            'e6e875ef186578b53106d7f6af48e426cdaf1b4e86834f01696b8ef1c685787f'
+            '2a9d7748dc58f9d091f791da06b733a696943114f7c0d580fa00a0752eb1d2ac'
+            'ee54fe188e27b6e80e2044ea9ba1874db2ca2c026ad04f393be1be69c18d440d'
+            '188014070bce4f6fb9b2535bcd64d066119e182e848c521407ea891ab41a995b'
+            'e4cc776d735b6f0ab71503d4508c0b99402595d22b38d8667b8e02785f0d92e0'
+            '5d5af2de5b1f1c61ec793503350f2440661cf8fd640f11b8a86f10bce499c0dc'
+            '6bdb017459532537199c399eefd3d84d8dc7f1786e79997caebd3b6eb5c75d9f'
+            'f64fc1a660de063817aee8b71feb685a698c12d55c8fcc30f632d77ba3430f12'
+            '50658c653cde4dc43ba73a64c72761d2e996fd8e360fc682aa2844e1ad5b045f')
 
 prepare() {
     cd "VirtualBox-$pkgver"
@@ -384,4 +386,13 @@ package_virtualbox-ext-vnc() {
         "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
 }
 
+package_virtualbox-ext-oracle() {
+    pkgdesc="Oracle VM VirtualBox Extension Pack"
+    arch=('any')
+    license=('custom:PUEL')
+    depends=("virtualbox")
+    install=${pkgname}.install
+    
+    install -Dm0644 PUEL "${pkgdir}/usr/share/licenses/${pkgname}/PUEL"
+}
 # vim:set ts=4 sw=4 et:

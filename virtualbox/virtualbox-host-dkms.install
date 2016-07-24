@@ -7,6 +7,9 @@ post_upgrade() {
     echo '==> Since version 5.0.16-2 kernel modules are loaded at boot by systemd-modules-load.'
     echo '==> Read modules-load.d man page to disable them.'
   fi
+  echo 'Installing VirtualBox host DKMS modules'
+  vboxver=5.1.2
+  dkms autoinstall /usr/src/vboxhost-${pkgver}_OSE/dkms.conf || return 0
 }
 
 # vim:set ts=2 sw=2 ft=sh et:

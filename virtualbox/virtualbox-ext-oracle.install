@@ -1,0 +1,42 @@
+VBOXVER=5.1.2
+SRC_URL=http://download.virtualbox.org/virtualbox/${VBOXVER}/Oracle_VM_VirtualBox_Extension_Pack-${VBOXVER}.vbox-extpack
+MD5SUM=7614ce90e17297f80d6a5822252c90d9
+
+DIR=/usr/share/virtualbox/extensions
+TMP_DIR=/tmp/Oracle_VM_VirtualBox_Extension_Pack
+
+virtualbox-ext-oracle-installer() {
+  [ -d $TMP_DIR ] && rm -rf $TMP_DIR
+  mkdir $TMP_DIR
+  cd $TMP_DIR
+  
+  echo "$MD5SUM  $DIR/Oracle_VM_VirtualBox_Extension_Pack-${VBOXVER}.vbox-extpack" > md5sums.check
+
+  if md5sum -c md5sums.check
+  then
+          echo "nothing to do, you are already using the latest VirtualBox Extension provided by Oracle"
+  else
+          wget $SRC_URL
+          install -m644 Oracle_VM_VirtualBox_Extension_Pack-${VBOXVER}.vbox-extpack ${DIR}/
+  fi
+}
+
+post_install () {
+  virtualbox-ext-oracle-installer
+  VBoxManage extpack install "${DIR}/Oracle_VM_VirtualBox_Extension_Pack.vbox-extpack" >/dev/null
+}
+
+pre_upgrade() {
+  post_remove
+}
+
+post_upgrade() {
+  post_install
+}
+
+post_remove() {
+  VBoxManage extpack uninstall "Oracle VM VirtualBox Extension Pack" >/dev/null
+  rm -rf ${DIR}/Oracle_VM_VirtualBox_Extension_Pack-${VBOXVER}.vbox-extpack >/dev/null
+}
+
+# vim:set ts=2 sw=2 ft=sh et: 
