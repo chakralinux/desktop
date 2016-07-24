@@ -10,10 +10,10 @@ pkgname=('virtualbox'
          'virtualbox-ext-vnc'
          'virtualbox-ext-oracle')
 pkgver=5.1.2
-pkgrel=3
-arch=('i686' 'x86_64')
+pkgrel=4
+arch=('x86_64')
 url='http://virtualbox.org'
-license=('GPL' 'custom')
+license=('GPL')
 makedepends=('alsa-lib'
              'bin86'
              'cdrkit'
@@ -49,8 +49,7 @@ makedepends=('alsa-lib'
              'vde2'
              'xalan-c'
              'xf86driproto'
-             'xorg-server-devel')
-makedepends_x86_64=('gcc-multilib' 'lib32-glibc')
+             'xorg-server-devel' 'gcc' 'lib32-glibc')
 source=("http://download.virtualbox.org/virtualbox/$pkgver/VirtualBox-$pkgver.tar.bz2"
         'virtualbox-host-dkms.conf'
         'virtualbox-guest-dkms.conf'
@@ -391,8 +390,10 @@ package_virtualbox-ext-oracle() {
     arch=('any')
     license=('custom:PUEL')
     depends=("virtualbox")
+    options=('emptydirs')
     install=${pkgname}.install
     
     install -Dm0644 ${srcdir}/PUEL "${pkgdir}/usr/share/licenses/${pkgname}/PUEL"
+    install -dm755 ${pkgdir}/usr/share/virtualbox/extensions
 }
 # vim:set ts=4 sw=4 et:

@@ -17,13 +17,13 @@ virtualbox-ext-oracle-installer() {
           echo "nothing to do, you are already using the latest VirtualBox Extension provided by Oracle"
   else
           wget $SRC_URL
-          install -m644 Oracle_VM_VirtualBox_Extension_Pack-${VBOXVER}.vbox-extpack ${DIR}/
+          cp -f Oracle_VM_VirtualBox_Extension_Pack-${VBOXVER}.vbox-extpack $DIR/
   fi
 }
 
 post_install () {
   virtualbox-ext-oracle-installer
-  VBoxManage extpack install "${DIR}/Oracle_VM_VirtualBox_Extension_Pack.vbox-extpack" >/dev/null
+  VBoxManage extpack install "${DIR}/Oracle_VM_VirtualBox_Extension_Pack-${VBOXVER}.vbox-extpack" >/dev/null
 }
 
 pre_upgrade() {
