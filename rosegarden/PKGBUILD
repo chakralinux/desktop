@@ -1,14 +1,14 @@
 pkgname=rosegarden
 pkgver=16.06
 _pkgver=16.06
-pkgrel=1
+pkgrel=2
 pkgdesc="MIDI/audio sequencer and notation editor"
 arch=('x86_64')
 url="http://www.rosegardenmusic.com/"
 license=('GPL')
 depends=('liblrdf' 'dssi' 'fftw' 'lirc-utils' 'liblo' 'libsamplerate'
-         'perl' 'qt' 'shared-mime-info' 'ladspa' 'libsndfile' 'lilypond')
-makedepends=('pkgconfig' 'imake' 'cmake')
+         'perl' 'qt5-tools' 'shared-mime-info' 'ladspa' 'libsndfile' 'lilypond')
+makedepends=('imake' 'cmake')
 optdepends=('cups: printing support'
             'okular: print preview, or any other PDF viewer'
             'timidity++: MIDI playback, or any other softsynth'
@@ -22,7 +22,8 @@ sha256sums=('1044334f2c1a2ac7560d80910e0721c8913bd924f8185a393f630c89020340db')
 build() {
   cd "$srcdir/$pkgname-$_pkgver"
 
-  cmake ./ -DCMAKE_INSTALL_PREFIX=/usr
+  cmake ./ -DBUILD_TESTING=OFF \
+  -DCMAKE_INSTALL_PREFIX=/usr
   make
 }
 
