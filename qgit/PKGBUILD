@@ -1,34 +1,29 @@
-# Maintainer: UtG  <utg[dot]chakra.linux[at]gmail[dot]com>
-
-# include global config
-source ../_buildscripts/${current_repo}-${_arch}-cfg.conf
-
 pkgname=qgit
-pkgver=2.5
+pkgver=2.6
 pkgrel=1
 pkgdesc="A GIT GUI viewer built on Qt/C++"
 url='http://libre.tibirna.org/projects/qgit/wiki/QGit'
 arch=('x86_64')
 license=('GPL')
-depends=('qt' 'git')
+depends=('qt5-base' 'git')
 categories=('programming')
 options=(!makeflags !ccache) #makepkg3 options, ccache is a no-go
-source=("http://libre.tibirna.org/attachments/download/9/${pkgname}-${pkgver}.tar.gz"
-        'qgit.desktop' 'qgit.png')
+source=("http://libre.tibirna.org/attachments/download/12/${pkgname}-${pkgver}.tar.gz"
+        'qgit.desktop' 'qgit.svg')
     
-md5sums=('0e70fc4468b060ab042933497f6a6f3c'
-         'a2563e1f23db6a68b19ed5cae7add3f9'
-         '85138f44d577b03dfc738d3f27e04992')
+sha1sums=('9b28bfe2f6537bc73c251b950b7467b4e8fe32ed'
+          'd68018b9ca110da0fb01da173fe8060a8304ad29'
+          'c78498e2fa48fdcebda6263af4819c391c1a5442')
 
 build() {
-  cd ${srcdir}/redivivus
-  qmake qgit.pro
+  cd "${srcdir}/redivivus-"*
+  qmake-qt5 qgit.pro
   make || return 1
 }
 
 package() {
-  cd ${srcdir}/redivivus
+  cd "${srcdir}/redivivus-"*
   install -Dm755 bin/qgit ${pkgdir}/usr/bin/qgit || return 1
   install -Dm644 ${srcdir}/qgit.desktop ${pkgdir}/usr/share/applications/qgit.desktop || return 1
-  install -Dm644 ${srcdir}/qgit.png ${pkgdir}/usr/share/pixmaps/qgit.png || return 1
+  install -Dm644 ${srcdir}/qgit.svg ${pkgdir}/usr/share/pixmaps/qgit.svg || return 1
 }
