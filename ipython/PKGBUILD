@@ -3,7 +3,7 @@
 
 pkgbase=ipython 
 pkgname=('ipython3' 'ipython2')
-pkgver=4.2.0
+pkgver=5.0.0
 pkgrel=1
 pkgdesc="An enhanced Interactive Python shell."
 arch=('any')
@@ -14,24 +14,24 @@ optdepends=("python3-nose: for IPython's test suite")
 
 # some of these will update rapidly, others never
 # so _vars will be phased in as new updates are released
-_traitv=4.1.0
-_psharev=0.7.2
+_traitv=4.2.0
+_psharev=0.7.3
 _backshutil=1.0.0
 _pathlib=1.0.1
 
 source=("ipython-$pkgver.tgz::https://github.com/ipython/ipython/archive/$pkgver.tar.gz"
         "https://pypi.python.org/packages/source/t/traitlets/traitlets-$_traitv.tar.gz"
         "https://pypi.python.org/packages/source/i/ipython_genutils/ipython_genutils-0.1.0.tar.gz"
-        "https://pypi.python.org/packages/source/p/pickleshare/pickleshare-$_psharev.tar.gz"
+        "https://files.pythonhosted.org/packages/source/p/pickleshare/pickleshare-$_psharev.tar.gz"
         "https://pypi.python.org/packages/source/s/simplegeneric/simplegeneric-0.8.1.zip"
         #only ipython2
         "https://github.com/chrippa/backports.shutil_get_terminal_size/archive/v$_backshutil.tar.gz"
         "http://pypi.python.org/packages/source/p/pathlib/pathlib-$_pathlib.tar.gz"
         "ipython.png")
-sha256sums=('2c5cce143b6a2aa1d17c2d37b63cfddf60a3240fbe52d362a02e3bdb9243f6d0'
-            '440e38dfa5d2a26c086d4b427cfb7aed17d0a2dca78bce90c33354da2592af5b'
+sha256sums=('5816a693315a705811ce6ae1094e7032ad341a31841609388ce782ce024d3d4d'
+            'e4c39210f2f2ff7361b86043b6512adbcf6f024b44b501f7b42fd9a23402dea9'
             '3a0624a251a26463c9dfa0ffa635ec51c4265380980d9a50d65611c3c2bd82a6'
-            '92ee3b0e21632542ecc9a0a245e69a126f62e5114081bdb0d32e0edd10410033'
+            'b9710d01f777b1bf3b69c8f889b1d05a5145668f79e980cbd0f849e059edd274'
             'dc972e06094b9af5b855b3df4a646395e43d1c9d0d39ed345b7393560d0b9173'
             'ebeddf414a973f6b1c08c35892a8c5330aa9368171d9f70d749909525d72c9f1'
             '6940718dfc3eff4258203ad5021090933e5c04707d5ca8cc9e73c94a7894ea9f'
@@ -64,7 +64,7 @@ prepare() {
 }
 
 package_ipython3() {
-  depends=('python3' 'python3-decorator' 'python3-pexpect' 'sqlite3' 'python3-setuptools' 'python3-path')
+  depends=('python3' 'python3-decorator' 'python3-pexpect' 'sqlite3' 'python3-setuptools' 'python3-path' 'python3-prompt_toolkit')
   # see https://github.com/ipython/ipython/issues/2057
   #export LC_ALL=en_US.UTF-8
   cd "$srcdir/ipython-$pkgver"
@@ -100,7 +100,7 @@ package_ipython3() {
 
 package_ipython2() {
   pkgdesc="An enhanced Interactive Python2 shell."
-  depends=('python2' 'python2-decorator' 'python2-pexpect' 'sqlite3' 'python2-setuptools' 'python2-path')
+  depends=('python2' 'python2-decorator' 'python2-pexpect' 'sqlite3' 'python2-setuptools' 'python2-path' 'python2-prompt_toolkit')
   optdepends=("python2-nose: for IPython's test suite")
 
   cd "$srcdir/ipython2-$pkgver"
