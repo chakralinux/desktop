@@ -1,0 +1,31 @@
+pkgbase=python-wcwidth
+pkgname=('python3-wcwidth' 'python2-wcwidth')
+_name=wcwidth
+pkgver=0.1.7
+pkgrel=1
+pkgdesc="Measures number of Terminal column cells of wide-character codes"
+url="https://github.com/jquast/wcwidth"
+license=('MIT')
+arch=('any')
+depends=('python3' 'python2')
+makedepends=('python3-setuptools' 'python2-setuptools')
+source=("https://files.pythonhosted.org/packages/source/w/$_name/$_name-$pkgver.tar.gz")
+sha1sums=('28df2f5e8cd67ec182d822350252fea9bc3a91c8')
+
+prepare() {
+  cd "$srcdir"
+  cp -r $_name-$pkgver python2-$_name-$pkgver
+}
+
+package_python3-wcwidth() {
+  cd "$srcdir/$_name-$pkgver"
+  python3 setup.py install --root="${pkgdir}" --optimize=1
+  install -Dm644 LICENSE.txt "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
+}
+
+package_python2-wcwidth() {
+  depends=('python2')
+  cd "$srcdir/python2-$_name-$pkgver"
+  python2 setup.py install --root="${pkgdir}" --optimize=1
+  install -Dm644 LICENSE.txt "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
+}
