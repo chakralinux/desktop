@@ -1,17 +1,17 @@
 pkgname=wireshark
-pkgver=2.0.4
+pkgver=2.1.1
 pkgrel=1
 pkgdesc='A free network protocol analyzer for Unix/Linux and Windows'
 arch=('x86_64')
 license=('GPL2')
 depends=('libpcap' 'libcap' 'krb5' 'glib2' 'desktop-file-utils' 'hicolor-icon-theme' 
-         'lua' 'libgcrypt' 'qt5-base' 'harfbuzz' 'python3' 'portaudio' 'bash' 'gnutls')
-makedepends=('bison' 'flex')
+         'lua' 'libgcrypt' 'qt5-base' 'qt5-multimedia' 'harfbuzz' 'portaudio' 'bash' 'gnutls')
+makedepends=('bison' 'flex' 'qt5-tools' 'python2')
 url='http://www.wireshark.org/'
 screenshot='https://blog.wireshark.org/wp-content/uploads/2015/11/Main-window-2.0.0rc2.png'
 install=${pkgname}.install
 source=(http://www.wireshark.org/download/src/${pkgname}-${pkgver}.tar.bz2)
-sha256sums=('9ea9c82da9942194ebc8fc5c951a02e6d179afa7472cb6d96ca76154510de1a5')
+sha256sums=('8f5e604e8e0bc1f5562b166818f7a247f1b4d1f2ed15614138cc82fedad607e5')
 
 prepare() {
   cd ${pkgname}-${pkgver}
@@ -22,7 +22,7 @@ prepare() {
 build() {
   cd ${pkgname}-${pkgver}
   
-  ./autogen.sh
+  ./autogen.sh 
   ./configure \
       --prefix=/usr \
       --with-qt=5 \
@@ -49,10 +49,10 @@ package() {
   #rm "${pkgdir}/usr/bin/wireshark"
 
   # Headers
-  install -dm755 ${pkgdir}/usr/include/${pkgname}/{epan/{crypt,dfilter,dissectors,ftypes},wiretap,wsutil}
+  install -dm755 ${pkgdir}/usr/include/${pkgname}/{epan/{crypt,dfilter,dissectors,ftypes,wmem},wiretap,wsutil}
 
-  install -m644 color.h config.h register.h "${pkgdir}/usr/include/${pkgname}"
-  for d in epan epan/crypt epan/dfilter epan/dissectors epan/ftypes wiretap wsutil; do
+  install -m644 cfile.h config.h file.h register.h ws_diag_control.h ws_symbol_export.h "${pkgdir}/usr/include/${pkgname}"
+  for d in epan epan/crypt epan/dfilter epan/dissectors epan/ftypes epan/wmem wiretap wsutil; do
     install -m644 ${d}/*.h ${pkgdir}/usr/include/${pkgname}/${d}
   done
   
