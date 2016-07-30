@@ -1,5 +1,5 @@
 pkgname=warzone2100
-pkgver=3.1.5
+pkgver=3.2.1
 pkgrel=1
 pkgdesc="3D real-time strategy game where you fight to rebuilt the world destroyed by nuclear war."
 arch=('x86_64')
@@ -7,19 +7,20 @@ url="http://wz2100.net/"
 license=('GPL')
 groups=()
 categories=('games')
-depends=('sdl_net' 'libgl' 'openal' 'libjpeg' 'libpng' 'libvorbis' 'libtheora'
-         'libmad' 'physfs' 'mesa' 'quesoglc' 'popt' 'ttf-dejavu' 'qt' 'glew'
-         'harfbuzz')
-makedepends=('gawk' 'bison' 'flex' 'zip' 'unzip')
+depends=('libgl' 'openal' 'libjpeg' 'libpng' 'libvorbis' 'libtheora' 'libmad'
+	 'physfs' 'mesa' 'quesoglc' 'popt' 'ttf-dejavu' 'qt5-base' 'qt5-script'
+	 'qt5-x11extras' 'glew' 'sdl2')
+makedepends=('gawk' 'bison' 'flex' 'zip' 'unzip' 'libxrandr' 'asciidoc')
 conflicts=('warzone2100-dev')
-changelog=ChangeLog
 source=("http://downloads.sourceforge.net/sourceforge/${pkgname}/${pkgname}-${pkgver}.tar.xz")
-sha256sums=('21aacc3e475d17338cf7a57aefe4517868822a8167fb6c291f6f6f3b454ca442')
+sha256sums=('0f66b76c50c598abcc895134bd49aab5dd46dcf8135645f2505e93077402a6d9')
 
 build() {
   cd ${pkgname}-${pkgver}
   ./configure \
-    --prefix=/usr
+    --prefix=/usr \
+    --with-backend=qt \
+    --with-distributor="Chakra GNU/Linux"
   make
 }
 
