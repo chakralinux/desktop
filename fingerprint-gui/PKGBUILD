@@ -1,0 +1,28 @@
+pkgname=fingerprint-gui
+pkgver=1.08
+pkgrel=1
+pkgdesc="Application for fingerprint-based authentication, automatically support UPEK fingerprint readers with non-free library"
+arch=('x86_64')
+url="http://www.ullrich-online.cc/fingerprint/"
+license=('GPL')
+depends=('libfprint' 'libfakekey' 'polkit-qt4' 'qca' 'libusb')
+source=("http://ullrich-online.cc/nview/Appliance/fingerprint/download/${pkgname}-${pkgver}.tar.gz")
+install="${pkgname}.install"
+sha1sums=('45ea54aa1bf875160a4bc547e8bcca5e156099a0')
+
+build() {
+  cd "${srcdir}/${pkgname}-${pkgver}"
+  qmake PREFIX=/usr LIB=/usr/lib
+  make
+}
+
+package() {
+  cd "${srcdir}/${pkgname}-${pkgver}"
+  make INSTALL_ROOT="${pkgdir}/" install
+  install -Dm644 "CHANGELOG" "COPYING" "${pkgdir}/usr/share/doc/${pkgname}/"
+
+  install -dm770 "${pkgdir}/var/upek_data"
+  install -Dm644 "upek/upek.cfg" "${pkgdir}/etc/"
+  install -Dm644 "upek/91-fingerprint-gui-upek.rules" "${pkgdir}/etc/udev/rules.d/"
+  install -Dm644 upek/lib64/libbsapi.so.* "${pkgdir}/usr/lib/"
+}
