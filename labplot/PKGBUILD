@@ -2,7 +2,7 @@ source ../kdeapps.conf
 
 pkgname=labplot
 pkgver=2.3.0
-pkgrel=1
+pkgrel=2
 pkgdesc="A free software data analysis and visualization application build on top of KDE SC"
 arch=('x86_64')
 url='http://labplot.sourceforge.net/'
@@ -23,4 +23,8 @@ build() {
 package() {
   cd "${srcdir}"/${pkgname}-${pkgver}-kf5
   make DESTDIR="${pkgdir}" install
+  
+  #fix .desktop exec line
+  sed -i s!'Exec=labplot2 -caption %c %i %f'!'Exec=labplot2'! \
+  ${pkgdir}/usr/share/applications/labplot2.desktop
 }
