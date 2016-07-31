@@ -1,0 +1,23 @@
+pkgname=libfprint
+pkgver=0.6.0
+pkgrel=1
+pkgdesc="Library for fingerprint readers"
+arch=('x86_64')
+url="http://www.freedesktop.org/wiki/Software/fprint/libfprint"
+license=(LGPL)
+depends=('libusb' 'nss' 'pixman')
+groups=('fprint')
+options=(!emptydirs)
+source=(http://people.freedesktop.org/~hadess/$pkgname-$pkgver.tar.xz)
+sha1sums=('4e3fff6b1e9a9e4ddd46c7d89d13413fdbf385b2')
+
+build() {
+  cd $pkgname-$pkgver
+  ./configure --prefix=/usr --sysconfdir=/etc --disable-static
+  make
+}
+
+package() {
+  cd $pkgname-$pkgver
+  make DESTDIR="$pkgdir" install
+}
