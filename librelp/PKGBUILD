@@ -1,0 +1,21 @@
+pkgname='librelp'
+pkgver=1.2.12
+pkgrel=1
+pkgdesc="The Reliable Event Logging Protocol"
+url="http://www.librelp.com/"
+arch=('x86_64')
+license=('GPL3')
+depends=('gnutls')
+source=("http://download.rsyslog.com/librelp/librelp-${pkgver}.tar.gz")
+sha1sums=('7582992279eb63012e44208813a672a586b5ab55')
+
+build() {
+  cd ${srcdir}/${pkgname}-${pkgver}
+  ./configure --prefix=/usr
+  make
+}
+
+package() {
+  cd "$srcdir/$pkgname-$pkgver"
+  make DESTDIR="$pkgdir" install
+}
