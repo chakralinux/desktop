@@ -1,16 +1,16 @@
 # Include global configuration
 source ../kdeapps.conf
 
-pkgname=akonadi-calendar
+pkgname=akonadi-mime
 pkgver=${_kdever}
 pkgrel=1
-pkgdesc="Akonadi calendar integration"
-arch=('x86_64')
-url="https://projects.kde.org/$pkgname"
+pkgdesc="Libraries and daemons to implement basic email handling"
+arch=(x86_64)
+url="https://community.kde.org/KDE_PIM"
 license=(LGPL)
-depends=(kmailtransport kcalutils akonadi-contacts)
-makedepends=(extra-cmake-modules kdoctools python3 boost)
-options=('debug')
+depends=(akonadi kmime)
+makedepends=(extra-cmake-modules python kdoctools boost kdelibs4support kdesignerplugin)
+
 source=("$_mirror/${pkgname}-$_kdever.tar.xz")
 sha256sums=(`grep ${pkgname}-$_kdever.tar.xz  ../checksums.txt | cut -d " " -f1`)
 

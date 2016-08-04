@@ -1,0 +1,36 @@
+# Include global configuration
+source ../kdeapps.conf
+
+pkgname=cervisia
+arch=('x86_64')
+pkgver=${_kdever}
+pkgrel=1
+pkgdesc="A CVS GUI frontend for KDE"
+url="http://www.kde.org"
+license=(GPL LGPL FDL)
+groups=(kde-applications kdesdk)
+depends=(kdesu kparts hicolor-icon-theme)
+makedepends=(extra-cmake-modules python kdoctools)
+conflicts=(kdesdk-cervisia)
+replaces=(kdesdk-cervisia)
+groups=('kde' 'kde-uninstall' 'kde-applications' 'kdesdk')
+install=kdesdk.install
+options=('docs' 'debug')
+
+source=("$_mirror/${pkgname}-$_kdever.tar.xz")
+sha256sums=(`grep ${pkgname}-$_kdever.tar.xz  ../checksums.txt | cut -d " " -f1`)
+
+prepare() {
+  mkdir -p build
+}
+
+build() {
+  cd build
+  cmake_kf5 ../${pkgname}-${pkgver}
+  make
+}
+
+package() {
+  cd build
+  make DESTDIR=${pkgdir} install
+}

@@ -106,7 +106,7 @@ package_kmail() {
     url="http://kde.org/applications/internet/kmail/"
     install='kmail.install'
     
-    for _i in kmail accountwizard agents/archivemailagent agents/mailfilteragent \
+    for _i in kmail accountwizard \
         storageservicemanager importwizard grantleeeditor mboximporter sieveeditor; do
         cd "$srcdir"/build/$_i
         make DESTDIR="$pkgdir" install
@@ -157,10 +157,10 @@ package_korganizer() {
     replaces=("kdepim-$pkgname")
     url="http://kde.org/applications/office/korganizer"
     install='korganizer.install'
-    for _i in korganizer korgac; do
-    cd "$srcdir"/build/$_i
+
+    cd "$srcdir"/build/korganizer
     make DESTDIR="$pkgdir" install
-    done
+    
     cd "$srcdir"/build/doc/korganizer
     make DESTDIR="$pkgdir" install
 }
@@ -183,7 +183,7 @@ package_kdepim-common() {
 	depends=(incidenceeditor mailcommon kdepim-runtime kdnssd libktnef libkdepim kdepim-addons)
 	url='http://pim.kde.org'
 	install=kdepim.install
-	for _i in agents/sendlateragent agents/followupreminderagent plugins/messageviewer pimsettingexporter; do
+	for _i in accountwizard pimsettingexporter; do
 		cd "$srcdir"/build/$_i
 		make DESTDIR="$pkgdir" install
 	done
@@ -191,8 +191,5 @@ package_kdepim-common() {
           cd "$srcdir"/build/doc/$_i
           make DESTDIR="$pkgdir" install
         done
-
-	mkdir -p "$pkgdir"/etc/xdg
-	install -m644 "$srcdir"/$pkgbase-$pkgver/kdepim.categories "$pkgdir"/etc/xdg
 }
 
