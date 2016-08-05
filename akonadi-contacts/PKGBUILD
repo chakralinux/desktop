@@ -2,7 +2,7 @@
 source ../kdeapps.conf
 pkgname=akonadi-contacts
 pkgver=${_kdever}
-pkgrel=1
+pkgrel=2
 pkgdesc="Libraries and daemons to implement Contact Management in Akonadi"
 arch=(x86_64)
 url="https://community.kde.org/KDE_PIM"
@@ -11,6 +11,7 @@ depends=(akonadi grantlee-qt5 kcontacts kmime qt5-webengine) # prison
 makedepends=(extra-cmake-modules kdesignerplugin kdoctools python boost akonadi-mime kcalcore)
 conflicts=(akonadi-contact)
 replaces=(akonadi-contact)
+provides=(akonadi-contact)
 
 source=("$_mirror/${pkgname}-$_kdever.tar.xz")
 sha256sums=(`grep ${pkgname}-$_kdever.tar.xz  ../checksums.txt | cut -d " " -f1`)
