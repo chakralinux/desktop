@@ -4,7 +4,7 @@ source ../kdeapps.conf
 pkgbase=kdepim
 pkgname=(akonadiconsole akregator blogilo kdepim-console kaddressbook kalarm kmail knotes kontact korganizer ktnef kdepim-common)
 pkgver=${_kdever}
-pkgrel=1
+pkgrel=2
 arch=('x86_64')
 url='http://pim.kde.org'
 license=('GPL' 'LGPL' 'FDL')
@@ -106,8 +106,7 @@ package_kmail() {
     url="http://kde.org/applications/internet/kmail/"
     install='kmail.install'
     
-    for _i in kmail accountwizard \
-        storageservicemanager importwizard grantleeeditor mboximporter sieveeditor; do
+    for _i in kmail storageservicemanager importwizard grantleeeditor mboximporter sieveeditor; do
         cd "$srcdir"/build/$_i
         make DESTDIR="$pkgdir" install
     done
@@ -184,8 +183,8 @@ package_kdepim-common() {
 	url='http://pim.kde.org'
 	install=kdepim.install
 	for _i in accountwizard pimsettingexporter; do
-		cd "$srcdir"/build/$_i
-		make DESTDIR="$pkgdir" install
+          cd "$srcdir"/build/$_i
+          make DESTDIR="$pkgdir" install
 	done
         for _i in akonadi_sendlater_agent akonadi_followupreminder_agent contactthemeeditor headerthemeeditor pimsettingexporter; do 
           cd "$srcdir"/build/doc/$_i
