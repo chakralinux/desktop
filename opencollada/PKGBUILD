@@ -1,25 +1,20 @@
-#
-# Chakra Packages for Chakra, part of chakra-project.org
-#
-# maintainer almack@chakra-project.org
-# contributor Sven-Hendrik Haase <sh@lutzhaase.com>
-
 pkgname=opencollada
-pkgver=20140108
-pkgrel=2
+pkgver=1.6.25
+pkgrel=1
+epoch=1
 pkgdesc="Stream based reader and writer library for COLLADA files"
 arch=('x86_64')
 url="https://github.com/KhronosGroup/OpenCOLLADA"
 license=('GPL')
 depends=('libxml2' 'pcre' 'boost')
-makedepends=('git' 'cmake')
-source=('opencollada.conf'
-        'git://github.com/KhronosGroup/OpenCOLLADA.git')
-md5sums=('5f7e9d79ab86756648b648ee5ed6ce1d'
-         'SKIP')
+makedepends=('cmake')
+source=("https://github.com/KhronosGroup/OpenCOLLADA/archive/v$pkgver.tar.gz"
+        'opencollada.conf')
+sha1sums=('0f27a355bb85b881388744164a071163532b3a08'
+          '5fe78d788742428856633c65d864aae2977e82a5')
 
 build() {
-  cd "$srcdir"/OpenCOLLADA
+  cd "$srcdir"/OpenCOLLADA-$pkgver
 
   [[ -d build ]] && rm -r build
   mkdir build && cd build
@@ -32,7 +27,7 @@ build() {
 }
 
 package() {
-  cd "$srcdir"/OpenCOLLADA/build
+  cd "$srcdir"/OpenCOLLADA-$pkgver/build
 
   make DESTDIR=$pkgdir install
 
