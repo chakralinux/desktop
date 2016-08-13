@@ -1,0 +1,34 @@
+pkgname=plasma5-applets-showdesktop
+_name=Minimize-All
+pkgver=1.1
+pkgrel=1
+pkgdesc="Applet for minimizing visible windows"
+arch=('x86_64')
+url="https://github.com/bvbfan/Minimize-All"
+license=('GPL')
+group=('plasma5-applets')
+depends=('plasma-workspace' 'qt5-graphicaleffects')
+makedepends=('extra-cmake-modules')
+source=("https://github.com/bvbfan/Minimize-All/archive/master.zip")
+sha256sums=('SKIP')
+ 
+prepare() {
+  cd "${_name}-master"
+  mkdir -p build
+}
+
+build() {
+  cd "${_name}-master/build"
+ 
+  cmake .. \
+    -DCMAKE_INSTALL_PREFIX=/usr \
+    -DCMAKE_BUILD_TYPE=Release \
+    -DLIB_INSTALL_DIR=lib \
+    -DKDE_INSTALL_USE_QT_SYS_PATHS=ON
+}
+ 
+package() {
+  cd "${_name}-master"/build
+ 
+  make install DESTDIR="${pkgdir}"
+}
