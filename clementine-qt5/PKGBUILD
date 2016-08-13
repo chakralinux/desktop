@@ -1,7 +1,7 @@
 pkgname=clementine-qt5
 _pkgname=Clementine
-pkgver=1.2.3.r1648.gc224911
-_pkgver=c224911
+pkgver=1.2.3.r1748.g57d90ab
+_pkgver=57d90ab
 pkgrel=1
 pkgdesc="Experimental Qt5 version of Clementine, a modern music player and library organiser."
 arch=('x86_64')
@@ -9,19 +9,19 @@ license=('GPL')
 depends=('gstreamer' 'taglib' 'glew' 'desktop-file-utils' 'hicolor-icon-theme'
          'qt5-base' 'libechonest' 'protobuf' 'crypto++' 'chromaprint'
          'libmygpo-qt5' 'qt5-x11extras' 'libgpod' 'liblastfm' 'sparsehash' 'libcdio' 'libmtp' 'fftw')
-makedepends=('git' 'boost' 'cmake' 'mesa' 'qt5-tools')
+makedepends=('git' 'boost' 'cmake' 'mesa' 'qt5-tools' 'gst-libav')
 install=clementine.install
-optdepends=('gst-pluginsbase: for more open formats'
-            'gst-pluginsgood: for use with "Good" plugin libraries'
-            'gst-pluginsbad: for use with "Bad" plugin libraries'
-            'gst-pluginsugly: for use with "Ugly" plugin libraries'
+optdepends=('gst-plugins-base: for more open formats'
+            'gst-plugins-good: for use with "Good" plugin libraries'
+            'gst-plugins-bad: for use with "Bad" plugin libraries'
+            'gst-plugins-ugly: for use with "Ugly" plugin libraries'
             'libspotify: add support for Spotify, due to license restriction, please build it 
                          with ccr yourself'
             'dropbox: add support for Dropbox')
 url="http://www.clementine-player.org/"
 source=("git+https://github.com/clementine-player/Clementine.git#commit=${_pkgver}")
 sha256sums=('SKIP')
-conflicts=('clementine' 'clementine-lxqt' 'clementine-git' 'clementine-qt5-git')
+conflicts=('clementine')
 
 pkgver() {
   cd ${srcdir}/${_pkgname}
