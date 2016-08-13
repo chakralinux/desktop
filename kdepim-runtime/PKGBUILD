@@ -3,7 +3,7 @@ source ../kdeapps.conf
 
 pkgname=kdepim-runtime
 pkgver=${_kdever}
-pkgrel=1
+pkgrel=2
 pkgdesc='Extends the functionality of kdepim'
 arch=('x86_64')
 url='https://projects.kde.org/projects/kde/kdepim-runtime'
@@ -15,7 +15,7 @@ install=$pkgname.install
 options=('debug')
 provides=('kio-pim') # the libkdepim pkg was splitted during the 16.08 release
 replaces=('kio-pim') # kio is now part of multiple packages (kmailtransport, kldap, kdepim-runtime)
-conflics=('kio-pim') # can be removed when 16.12 is released
+conflicts=('kio-pim') # can be removed when 16.12 is released
 
 source=("$_mirror/${pkgname}-$_kdever.tar.xz")
 sha256sums=(`grep ${pkgname}-$_kdever.tar.xz  ../checksums.txt | cut -d " " -f1`)
