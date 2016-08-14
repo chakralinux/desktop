@@ -1,0 +1,65 @@
+pkgname=samsung-unified-driver
+pkgver=1.00.37
+pkgrel=1
+pkgdesc="Unified Linux Driver for Samsung printers and scanners."
+arch=('x86_64')
+url="http://www.samsung.com"
+license=('custom:samsung')
+depends=('libxml2' 'libusb-compat' 'cups' 'sane')
+options=(!strip)
+source=( "http://downloadcenter.samsung.com/content/DR/201512/20151210091120064/uld_v${pkgver}_00.99.tar.gz"
+         "xerox_mfp-smfp.conf")
+sha1sums=('adf132fcbeee3cb66426a698c1ee7fe0cddfc330'
+          '9298e2a94d2d12178f2cd059a064774b6d743118')
+
+package() {
+    install -d "$pkgdir"/etc/sane.d
+    cp "$srcdir"/uld/noarch/etc/smfp.conf "$pkgdir"/etc/sane.d
+    cp "$srcdir"/xerox_mfp-smfp.conf "$pkgdir"/etc/sane.d
+
+    install -d "$pkgdir"/etc/sane.d/dll.d
+    echo smfp > "$pkgdir"/etc/sane.d/dll.d/smfp-scanner
+    echo xerox_mfp-smfp > "$pkgdir"/etc/sane.d/dll.d/smfp-scanner-fix
+
+    install -d "$pkgdir"/usr/lib
+    cp "$srcdir"/uld/x86_64/libscmssc.so "$pkgdir"/usr/lib
+
+    install -d "$pkgdir"/usr/lib/cups/backend
+    cp "$srcdir"/uld/x86_64/smfpnetdiscovery "$pkgdir"/usr/lib/cups/backend
+
+    install -d "$pkgdir"/usr/lib/cups/filter
+    cp "$srcdir"/uld/x86_64/pstosecps "$pkgdir"/usr/lib/cups/filter
+    cp "$srcdir"/uld/x86_64/rastertospl "$pkgdir"/usr/lib/cups/filter
+
+    install -d "$pkgdir"/usr/lib/sane
+    cp "$srcdir"/uld/x86_64/libsane-smfp.so.1.0.1 "$pkgdir"/usr/lib/sane
+    ln -s libsane-smfp.so.1.0.1 "$pkgdir"/usr/lib/sane/libsane-smfp.so.1
+    ln -s libsane-smfp.so.1 "$pkgdir"/usr/lib/sane/libsane-smfp.so
+
+    install -d "$pkgdir"/usr/lib/udev/rules.d
+    (
+        OEM_FILE="$srcdir"/uld/noarch/oem.conf
+        INSTALL_LOG_FILE=/dev/null
+        source "$srcdir"/uld/noarch/scripting_utils
+        source "$srcdir"/uld/noarch/package_utils
+        source "$srcdir"/uld/noarch/scanner-script.pkg
+        fill_full_template "$srcdir"/uld/noarch/etc/smfp.rules.in "$pkgdir"/usr/lib/udev/rules.d/60_smfp_samsung.rules
+    )
+
+    install -d "$pkgdir"/usr/share/licenses/$pkgname
+    cp "$srcdir"/uld/noarch/license/eula.txt "$pkgdir"/usr/share/licenses/$pkgname/LICENSE
+    cp "$srcdir"/uld/noarch/license/eula-fr.txt "$pkgdir"/usr/share/licenses/$pkgname
+
+    cp -r "$srcdir"/uld/noarch/share/locale "$pkgdir"/usr/share
+    rm -f "$pkgdir"/usr/share/locale/fr/LC_MESSAGES/install.mo
+
+    install -d "$pkgdir"/usr/share/ppd/suld
+    for ppd in "$srcdir"/uld/noarch/share/ppd/*.ppd; do
+        cp "$ppd" "$pkgdir"/usr/share/ppd/suld
+    done
+
+    install -d "$pkgdir"/usr/share/ppd/suld/cms
+    for cts in "$srcdir"/uld/noarch/share/ppd/cms/*.cts; do
+        cp "$cts" "$pkgdir"/usr/share/ppd/suld/cms
+    done
+}
