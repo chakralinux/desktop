@@ -1,11 +1,7 @@
-# Note: Newer versions of higan do not provide a Qt GUI. We should probably
-#       drop this package at some point, and simply keep the regular, up-to-date
-#       version of higan in the CCR.
-
 pkgname=higan-qt
 _pkgname=higan
-pkgver=094
-pkgrel=2
+pkgver=101
+pkgrel=1
 pkgdesc='Nintendo multi-system emulator'
 arch=('x86_64')
 url='http://byuu.org/'
@@ -15,47 +11,33 @@ makedepends=('mesa')
 optdepends=('beat: Delta patcher')
 provides=("higan=${pkgver}")
 conflicts=('higan-gtk' 'higan')
-source=("https://gitlab.com/higan/higan/repository/archive.tar.gz?ref=v${pkgver}"
-        'higan')
-md5sums=('7568af5467b435d94ea51f35554647d4'
-         '87fe11373998b6e164c3e77abecb23c8')
-
-_profiles='accuracy balanced performance'
+source=("http://download.byuu.org/higan_v${pkgver}-source.7z"
+        '0001-higan-flags.patch')
+sha1sums=('c877108f2554c74e8a8aafea84b432bd8e988d9d'
+          '875c78770b845880d3786b5c2a4f7926c5211e14')
 
 prepare() {
-  cd ${srcdir}/higan-v${pkgver}-*
+  cd ${srcdir}/higan_v${pkgver}-source
 
-  sed "s/-march=native/-march=${CARCH/_/-} -mtune=generic/g" -i Makefile
-
-  moc -i -Iphoenix/qt/ -o phoenix/qt/platform.moc phoenix/qt/platform.moc.hpp
+  patch -Np1 -i ../0001-higan-flags.patch
 }
 
 build() {
-  cd ${srcdir}/higan-v${pkgver}-*
+  cd ${srcdir}/higan_v${pkgver}-source
 
-  make phoenix=qt -C ananke
-
-  for _profile in ${_profiles}; do
-    make phoenix=qt profile=${_profile}
-    mv out/higan{,-${_profile}}
-    make clean
-  done
+  export hiro=qt
+  make -C icarus
+  make -C higan
 }
 
 package() {
-  cd ${srcdir}/higan-v${pkgver}-*
+  cd ${srcdir}/higan_v${pkgver}-source
 
-  install -dm 755 "${pkgdir}"/usr/{bin,lib,share/{applications,pixmaps,higan/Video\ Shaders}}
-  install -m 755 {..,"${pkgdir}"/usr/bin}/higan
-  install -m 644 data/higan.desktop "${pkgdir}"/usr/share/applications/
-  install -m 644 data/higan.png "${pkgdir}"/usr/share/pixmaps/
-  cp -dr --no-preserve=ownership profile/* data/cheats.bml "${pkgdir}"/usr/share/higan/
-  cp -dr --no-preserve=ownership shaders/*.shader "${pkgdir}"/usr/share/higan/Video\ Shaders/
+  install -dm 755 "${pkgdir}"/usr/{bin,share/{applications,higan,pixmaps}}
+  install -m 755 icarus/out/icarus "${pkgdir}"/usr/bin/
+  install -m 755 higan/out/higan "${pkgdir}"/usr/bin/
+  install -m 644 higan/data/higan.desktop "${pkgdir}"/usr/share/applications/
+  install -m 644 higan/data/higan.png "${pkgdir}"/usr/share/pixmaps/
+  cp -dr --no-preserve='ownership' higan/systems/* higan/data/cheats.bml "${pkgdir}"/usr/share/higan/
 
-  install -m 644 ananke/libananke.so "${pkgdir}"/usr/lib/libananke.so.1
-  ln -s libananke.so.1 "${pkgdir}"/usr/lib/libananke.so
-
-  for _profile in ${_profiles}; do
-    install -m 755 {out,"${pkgdir}"/usr/bin}/higan-${_profile}
-  done
 }
