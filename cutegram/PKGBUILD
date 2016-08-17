@@ -1,39 +1,33 @@
 pkgname=cutegram
 _pkgname=Cutegram
-pkgver=2.7.1
+pkgver=2.9.5
 pkgrel=1
 pkgdesc="A different telegram client from Aseman team"
 arch=('x86_64')
 url="http://aseman.co/en/products/cutegram/"
 license=('GPL')
-depends=('qt5-base' 'qt5-declarative' 'qt5-multimedia' 'qt5-quick1'
-         'qt5-graphicaleffects' 'qt5-quickcontrols' 'qt5-webengine' 'qt5-imageformats'
-	 'gstreamer' 'libqtelegram-ae>=6.1' 'telegramqml')
-makedepends=('git')
-source=("https://github.com/Aseman-Land/Cutegram/archive/v$pkgver-stable.tar.gz"
-        '0001-Add-Chakra-specific-search-option.patch'
-        "asemantools"::"git+https://github.com/Aseman-Land/aseman-qt-tools.git#commit=91bf14b790c749bcaaddb09a8124ef6415a93906")
-sha1sums=('e4c36b51586bd1d80074886581ff530cfea27f59'
-          'bcd6d726359a83619a9743283a58990e055556f5'
-          'SKIP')
+depends=('libqtelegram-ae' 'telegramqml' 'aseman-qt-tools')
+optdepends=('gst-plugins-good: for audio and notification support'
+            'gst-plugins-bad: for audio support')
+source=("https://github.com/Aseman-Land/Cutegram/archive/v$pkgver-dev.tar.gz")
+sha1sums=('792c0ac9075638657f1939550508281a8400fde6')
 
 prepare() {
-  cd "${srcdir}/${_pkgname}-$pkgver-stable"
+  cd "${srcdir}/${_pkgname}-$pkgver-dev"
   mkdir -p build
 
-  git clone $srcdir/asemantools Cutegram/asemantools
-  # Add chakra-specific search engine option
-  patch -Np1 -i ${srcdir}/0001-Add-Chakra-specific-search-option.patch
+  # modify desktop file for binaryMode
+  sed -i "s|qmlscene /usr/share/cutegram/3.0/main.qml|/usr/bin/cutegram|" share/Cutegram.desktop
 }
 
 build() {
-  cd "${srcdir}/${_pkgname}-$pkgver-stable/build"
-  qmake-qt5 -r .. PREFIX=/usr DEFINES+=WEBENGINE_ASEMAN_WEBGRABBER
+  cd "${srcdir}/${_pkgname}-$pkgver-dev/build"
+  qmake-qt5 QMAKE_CFLAGS_ISYSTEM= PREFIX=/usr DEFINES+=WEBENGINE_ASEMAN_WEBGRABBER CONFIG+=binaryMode .. 
   make
 }
 
 package() {
-  cd "${srcdir}/${_pkgname}-$pkgver-stable/build"
+  cd "${srcdir}/${_pkgname}-$pkgver-dev/build"
   make INSTALL_ROOT="${pkgdir}" install
 
   # Remove fonts
