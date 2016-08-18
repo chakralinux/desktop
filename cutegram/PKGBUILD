@@ -1,7 +1,7 @@
 pkgname=cutegram
 _pkgname=Cutegram
 pkgver=2.9.5
-pkgrel=1
+pkgrel=2
 pkgdesc="A different telegram client from Aseman team"
 arch=('x86_64')
 url="http://aseman.co/en/products/cutegram/"
@@ -15,14 +15,11 @@ sha1sums=('792c0ac9075638657f1939550508281a8400fde6')
 prepare() {
   cd "${srcdir}/${_pkgname}-$pkgver-dev"
   mkdir -p build
-
-  # modify desktop file for binaryMode
-  sed -i "s|qmlscene /usr/share/cutegram/3.0/main.qml|/usr/bin/cutegram|" share/Cutegram.desktop
 }
 
 build() {
   cd "${srcdir}/${_pkgname}-$pkgver-dev/build"
-  qmake-qt5 QMAKE_CFLAGS_ISYSTEM= PREFIX=/usr DEFINES+=WEBENGINE_ASEMAN_WEBGRABBER CONFIG+=binaryMode .. 
+  qmake-qt5 QMAKE_CFLAGS_ISYSTEM= PREFIX=/usr DEFINES+=WEBENGINE_ASEMAN_WEBGRABBER ..
   make
 }
 
