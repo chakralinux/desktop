@@ -1,42 +1,50 @@
-# maintainer: Manuel 'UtG' <utg[dot]chakra.linux[at]gmail[dot]com>
-# contributor: (locke87) Felix Mauch
+# Contributions from AUR: https://aur.archlinux.org/packages/kde-servicemenus-dropbox/
 
 pkgname=dropbox-servicemenu
 pkgver=0.16.1
-pkgrel=5
-pkgdesc="A servicemenu for KDE4 which allows easy access to most of Dropbox features - Stripped from gtk dependencies. It uses Dropbox CLI to generate public urls, and pyndexer to allow sharing directories in public directory."
+pkgrel=6
+pkgdesc="A servicemenu for KDE4 (patched for Frameworks 5) which allows easy access to most of Dropbox features."
 url="http://kde-apps.org/content/show.php?content=124416"
 license=('GPL')
 arch=('x86_64')
-conflicts=('dropbox-servicemenu-gtkfree')
-replaces=('dropbox-servicemenu-gtkfree')
-depends=('dropbox' 'python' 'python2-m2crypto' 'xdg-utils' 'sharutils' 'recode' 'perl')
+depends=('dropbox' 'python2' 'kde-baseapps-kdialog' 'python2-m2crypto' 'xdg-utils' 'sharutils' 'recode' 'perl' 'sqlite3')
 categories=('network')
-source=("http://kde-look.org/CONTENT/content-files/124416-DropboxServiceMenu-${pkgver}.tar.gz"
-        "folder-path-fix.diff")
+source=("https://dl.opendesktop.org/api/files/download/id/1466690475/124416-DropboxServiceMenu-${pkgver}.tar.gz"
+        "kde5.patch")
 md5sums=('3c0186649311611abfbb8ac016a67791'
-         '813e8dee830d765f94edd400b6a252a7')
+         'a6945d04da03a52d88d8117f785035a3')
 
 prepare() {
-    cd DropboxServiceMenu-${pkgver}/
-    patch -p1 -i $srcdir/folder-path-fix.diff
+  cd "$srcdir"
+
+  # Apply the patch given by "swyear" in the comments section of the kde-look.org page
+  patch -s -p0 < kde5.patch
+}
+
+build() {
+  cd "$srcdir/DropboxServiceMenu-${pkgver}/"
+  sed -i 's/#!\/usr\/bin\/python/#!\/usr\/bin\/python2/' dropbox-scripts/dropbox.py
+  sed -i 's/#!\/usr\/bin\/python/#!\/usr\/bin\/python2/' dropbox-scripts/dropbox-notify.py
+  sed -i 's/#!\/usr\/bin\/env python/#!\/usr\/bin\/env python2/' dropbox-scripts/pyndexer.py
+
+  _SCRIPT_PATH="/usr/"
+  _PATTERN="\$HOME/.local"
+
+  sed -i "s,${_PATTERN},${_SCRIPT_PATH}," dropbox-scripts/dropbox_menu.sh
+  sed -i "s,${_PATTERN},${_SCRIPT_PATH}," dropbox_all.desktop
+  sed -i "s,${_PATTERN},${_SCRIPT_PATH}," dropbox_files.desktop
+  sed -i "s,${_PATTERN},${_SCRIPT_PATH}," dropbox_directories.desktop
+
+
 }
 
 package() {
-    cd "$srcdir/DropboxServiceMenu-${pkgver}/"
+  cd "$srcdir/DropboxServiceMenu-${pkgver}/"
 
-    sed -i 's/localprefix/prefix/' dropbox_all.desktop
-    sed -i 's/localprefix/prefix/' dropbox_files.desktop
-    sed -i 's/localprefix/prefix/' dropbox_directories.desktop
-    sed -i 's/localprefix`/prefix`\//' dropbox-scripts/dropbox_menu.sh
+  mkdir -p                                   "${pkgdir}/usr/share/kservices5/ServiceMenus/dropbox-scripts"
+  install -m 644 dropbox_all.desktop         "${pkgdir}/usr/share/kservices5/ServiceMenus/"
+  install -m 644 dropbox_files.desktop       "${pkgdir}/usr/share/kservices5/ServiceMenus/"
+  install -m 644 dropbox_directories.desktop "${pkgdir}/usr/share/kservices5/ServiceMenus/"
+  install -m 755 dropbox-scripts/*           "${pkgdir}/usr/share/kservices5/ServiceMenus/dropbox-scripts/"
 
-    mkdir -p ${pkgdir}/"`kde4-config --prefix`/share/kde4/services/ServiceMenus/"
-    mkdir -p ${pkgdir}/"`kde4-config --prefix`/share/kde4/services/ServiceMenus/dropbox-scripts/"	
-    mkdir -p ${pkgdir}/"/usr/bin/"
-  
-    install -m 755 dropbox-scripts/* ${pkgdir}/"`kde4-config --prefix`/share/kde4/services/ServiceMenus/dropbox-scripts/"
-    install -m 644 dropbox_all.desktop ${pkgdir}/"`kde4-config --prefix`/share/kde4/services/ServiceMenus/"
-    install -m 644 dropbox_files.desktop ${pkgdir}/"`kde4-config --prefix`/share/kde4/services/ServiceMenus/"
-    install -m 644 dropbox_directories.desktop ${pkgdir}/"`kde4-config --prefix`/share/kde4/services/ServiceMenus/"
-} 
-
+}
