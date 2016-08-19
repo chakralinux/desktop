@@ -1,26 +1,28 @@
 pkgname=dpic
-pkgver=2016.01.12
+pkgver=2016.07.12
 pkgrel=1
 pkgdesc="A pic language interpreter"
 arch=('x86_64')
 url="http://www.ece.uwaterloo.ca/~aplevich/dpic/"
 license=('BSD')
 makedepends=('gcc')
-options=('!docs')
-source=("https://ece.uwaterloo.ca/~aplevich/dpic/dpic.tar.gz")
-sha256sums=('9f197dcb3367a0f9e8f0cb5b7a91f723a927cfdccd56f4732316d50735729c47')
+source=("https://ece.uwaterloo.ca/~aplevich/dpic/dpic.tar.gz"
+        "dpic-$pkgver-destdir.patch")
+sha256sums=('637f642d859a5ff0bd32143f987aeda861f669e080f21647839da23254d1cf72'
+            'b1eae3c4a1cc8e4653231447ff46c905132586ca70039c09e0266ee5beff9fbf')
+
+prepare() {
+  cd $srcdir/$pkgname-$pkgver
+  patch -uNp1 -i $srcdir/dpic-$pkgver-destdir.patch
+}
 
 build() {
   cd $srcdir/$pkgname-$pkgver
+  ./configure --prefix=/usr
   make
 }
 
 package() {
-  # Documentation
-  install -dm 755 ${pkgdir}/usr/share/man/man1
-  install -Dm644 ${srcdir}/${pkgname}-$pkgver/doc/dpic.1 $pkgdir/usr/share/man/man1
-
   cd $srcdir/$pkgname-$pkgver
   make DESTDIR=$pkgdir/usr install
 }
-
