@@ -9,8 +9,8 @@ pkgname=('virtualbox'
          'virtualbox-guest-utils-nox'
          'virtualbox-ext-vnc'
          'virtualbox-ext-oracle')
-pkgver=5.1.2
-pkgrel=7
+pkgver=5.1.4
+pkgrel=1
 arch=('x86_64')
 url='http://virtualbox.org'
 license=('GPL')
@@ -49,7 +49,10 @@ makedepends=('alsa-lib'
              'vde2'
              'xalan-c'
              'xf86driproto'
-             'xorg-server-devel' 'gcc' 'lib32-glibc')
+             'xorg-server-devel'
+             'gcc'
+             'lib32-gcc-libs'
+             'lib32-glibc')
 source=("http://download.virtualbox.org/virtualbox/$pkgver/VirtualBox-$pkgver.tar.bz2"
         'virtualbox-host-dkms.conf'
         'virtualbox-guest-dkms.conf'
@@ -69,7 +72,7 @@ source=("http://download.virtualbox.org/virtualbox/$pkgver/VirtualBox-$pkgver.ta
         '007-python2-path.patch'
         'cxx11.patch'
         'PUEL')
-sha256sums=('03c92e3000d4b905d5b18a6abed757998125a37e5efa7864e62eae2baeabe010'
+sha256sums=('b9a14a7771059c55c44b97f8d4eef9bea84544f3e215e0caa563bc35e2f16aaf'
             'deb03efa7ad0376aa55a087f2e882afe00935f10b0e7aa853ba9147090d341ec'
             '113f9b92141b85df01f1e74d22f01d1f1aa81650eb79b89ceefc3cae20afe2e2'
             '2101ebb58233bbfadf3aa74381f22f7e7e508559d2b46387114bc2d8e308554c'
@@ -83,7 +86,7 @@ sha256sums=('03c92e3000d4b905d5b18a6abed757998125a37e5efa7864e62eae2baeabe010'
             '2a9d7748dc58f9d091f791da06b733a696943114f7c0d580fa00a0752eb1d2ac'
             'ee54fe188e27b6e80e2044ea9ba1874db2ca2c026ad04f393be1be69c18d440d'
             '188014070bce4f6fb9b2535bcd64d066119e182e848c521407ea891ab41a995b'
-            'e4cc776d735b6f0ab71503d4508c0b99402595d22b38d8667b8e02785f0d92e0'
+            '7d2da8fe10a90f76bbfc80ad1f55df4414f118cd10e10abfb76070326abebd46'
             '5d5af2de5b1f1c61ec793503350f2440661cf8fd640f11b8a86f10bce499c0dc'
             '6bdb017459532537199c399eefd3d84d8dc7f1786e79997caebd3b6eb5c75d9f'
             'f64fc1a660de063817aee8b71feb685a698c12d55c8fcc30f632d77ba3430f12'
@@ -322,7 +325,7 @@ package_virtualbox-guest-utils() {
     pkgdesc='VirtualBox Guest userspace utilities'
     depends=('glibc' 'pam' 'libx11' 'libxcomposite'
              'libxdamage' 'libxext' 'libxfixes' 'libxmu' 'libxt' 'xorg-xrandr'
-             'VIRTUALBOX-GUEST-MODULES' 'X-ABI-VIDEODRV_VERSION=20')
+             'VIRTUALBOX-GUEST-MODULES' 'X-ABI-VIDEODRV_VERSION=19')
     replaces=('virtualbox-archlinux-additions' 'virtualbox-guest-additions')
     conflicts=('virtualbox-archlinux-additions' 'virtualbox-guest-additions' 'virtualbox-guest-utils-nox')
     install=virtualbox-guest-utils.install
