@@ -1,7 +1,7 @@
 pkgbase=jupyter
 pkgname=('jupyter' 'ipython2-notebook')
-pkgver=4.1.0
-pkgrel=3
+pkgver=4.1.1
+pkgrel=1
 pkgdesc="A language-agnostic web-based interactive shell/notebook server."
 arch=('any')
 url="http://jupyter.org/"
@@ -16,31 +16,28 @@ optdepends=('qt5-svg: jupyter-qtconsole'
 
 # some of these will update rapidly, others never
 # so _vers will be phased in as new updates are released
-#_ipykv=4.3.1  # ipykernel
-_ipywv=5.0.0  # ipywidgets
+_ipywv=5.2.2  # ipywidgets
 _qtcv=4.2.1   # qtconsole
-_notev=4.2.0  # notebook
+_notev=4.2.2  # notebook
 _nbcv=4.2.0
-_jnbfv=4.0.1
-_jconv=4.1.1  # jupyter_console
-_jcliv=4.2.2
+_jnbfv=4.1.0
+_jconv=5.0.0  # jupyter_console
+_jcliv=4.3.0
 _pyver=3.5
 
 source=("jupyter_core.tgz::https://github.com/jupyter/jupyter_core/archive/$pkgver.tar.gz"
-#        "ipykernel.tgz::https://github.com/ipython/ipykernel/archive/$_ipykv.tar.gz"
         "ipywidgets.tgz::https://github.com/ipython/ipywidgets/archive/$_ipywv.tar.gz"
         "nbformat.tar.gz::https://github.com/jupyter/nbformat/archive/$_jnbfv.tar.gz"
         "jupyter_console.tgz::https://github.com/jupyter/jupyter_console/archive/$_jconv.tar.gz"
         "jupyter_client.tgz::https://github.com/jupyter/jupyter_client/archive/$_jcliv.tar.gz"
         "notebook.tgz::https://github.com/jupyter/notebook/archive/$_notev.tar.gz"
         "https://pypi.python.org/packages/source/q/qtconsole/qtconsole-$_qtcv.tar.gz")
-sha1sums=('495315ee7299248895f29f511bade0cd8dc7a2ed'
- #         '260a6eb67cded6916484deaaad6193a60483e29b'
-          '6a2ddeff85de80254992af4e83f9339f9df4b84c'
-          '0f2ec7182766980932ea2f895f51fbbe909aac4e'
-          '9501b7ae4dd3ca9716abfe540697b2f145257f6b'
-          'fd818e1d91edbc383de0a599398c4716e1020521'
-          '78c028c3dc4fbd8a1fcca590e7534d5eabbe0a6d'
+sha1sums=('28995f6d0e1167b00dbf7365896b002c44d72935'
+          'a4e18ed6a91bca345ee074af8d77b2bebc4a1e96'
+          '378c57a9e89fcd3e76e7a3446d41343168d77f59'
+          '60cbc801c72cd42370a962a26c29c996734d7822'
+          'b7bab44679feb4f85c996333273a3f1abee0e1e5'
+          '2c4ae1adb5b8087a64c80ab3727e11d9709e43ca'
           '4a0ea706c88721e3c6d2cfeb46fcf10c9bd1b4dc')
 
 prepare() {
