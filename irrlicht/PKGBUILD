@@ -4,7 +4,7 @@
 # Maintainer: Adrian Chaves Fernandez (Gallaecio) <adriyetichaves@gmail.com>
 
 pkgname=irrlicht
-pkgver=1.8.3
+pkgver=1.8.4
 verpfx=${pkgver:0:(-2)}
 pkgrel=1
 pkgdesc="High performance realtime 3D graphics engine."
@@ -15,43 +15,37 @@ depends=('bzip2' 'freeglut' 'libgl' 'libjpeg' 'libpng' 'zlib')
 provides=('irrlicht')
 conflicts=('irrlicht-svn')
 replaces=('irrlicht-svn')
-source=("http://downloads.sourceforge.net/irrlicht/irrlicht-1.8.zip"
+source=("http://downloads.sourceforge.net/project/irrlicht/Irrlicht%20SDK/$verpfx/$pkgver/irrlicht-$pkgver.zip"
         "include-config.diff"
-        "makefile-systemlibs.diff"
-        "glext.h::https://sourceforge.net/p/irrlicht/code/4600/tree/trunk/source/Irrlicht/glext.h?format=raw")
-md5sums=('d06329d8f466658caaf4838ba349e393'
+        "makefile-systemlibs.diff")
+md5sums=('9401cfff801395010b0912211f3cbb4f'
          '7ff49d8ddc50deac316f4e2141828f31'
-         '2385b8b5ed3bf9588b2f5db9af3f4788'
-         'c2904eda7cba605debfbd3812faf9019')
+         '2385b8b5ed3bf9588b2f5db9af3f4788')
 
 build() {
   # Patches.
-  patch -uN $srcdir/$pkgname-$verpfx/include/IrrCompileConfig.h $srcdir/include-config.diff
-  patch -uN $srcdir/$pkgname-$verpfx/source/Irrlicht/Makefile $srcdir/makefile-systemlibs.diff
+  patch -uN $srcdir/$pkgname-$pkgver/include/IrrCompileConfig.h $srcdir/include-config.diff
+  patch -uN $srcdir/$pkgname-$pkgver/source/Irrlicht/Makefile $srcdir/makefile-systemlibs.diff
 
-  cd $srcdir/$pkgname-$verpfx/source/Irrlicht
+  cd $srcdir/$pkgname-$pkgver/source/Irrlicht
   sed -i "/^INSTALL_DIR/s:=.*:=$pkgdir/usr/lib:" \
      Makefile
-
-  # http://irrlicht.sourceforge.net/forum/viewtopic.php?f=7&t=49811
-  # Should not be necessary anymore after 1.8.x
-  cp -R $srcdir/glext.h glext.h
 
   # Compilation.
   make sharedlib NDEBUG=1
 }
  
 package() {
-  cd $srcdir/$pkgname-$verpfx/source/Irrlicht
+  cd $srcdir/$pkgname-$pkgver/source/Irrlicht
 
   make install
  
   install -d $pkgdir/usr/share/licenses/$pkgname \
              $pkgdir/usr/share/doc/$pkgname       
 
-  install -m644 $srcdir/$pkgname-$verpfx/readme.txt $pkgdir/usr/share/licenses/$pkgname
+  install -m644 $srcdir/$pkgname-$pkgver/readme.txt $pkgdir/usr/share/licenses/$pkgname
 
   # Install documentation
-  cp -r $srcdir/$pkgname-$verpfx/doc/* $pkgdir/usr/share/doc/$pkgname
+  cp -r $srcdir/$pkgname-$pkgver/doc/* $pkgdir/usr/share/doc/$pkgname
   rm -f $pkgdir/usr/share/doc/$pkgname/*.txt
 }
