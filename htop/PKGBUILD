@@ -3,7 +3,7 @@
 #
 
 pkgname=htop
-pkgver=2.0.1
+pkgver=2.0.2
 pkgrel=1
 pkgdesc="Interactive process viewer"
 arch=('x86_64')
@@ -12,7 +12,7 @@ license=('GPL')
 depends=('ncurses')
 makedepends=('python2')
 source=("http://hisham.hm/$pkgname/releases/$pkgver/$pkgname-$pkgver.tar.gz")
-md5sums=('e768b9b55c033d9c1dffda72db3a6ac7')
+md5sums=('7d354d904bad591a931ad57e99fea84a')
 
 prepare() {
   cd ${srcdir}/${pkgname}-${pkgver}
@@ -38,4 +38,3 @@ build() {
 package() {
   make -C "$pkgname-$pkgver" DESTDIR="$pkgdir" install
 }
-md5sums=('f75fe92b4defaa80d99109830f34b5e2')
