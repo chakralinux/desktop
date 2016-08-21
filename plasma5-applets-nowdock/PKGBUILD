@@ -1,18 +1,18 @@
 pkgname=plasma5-applets-nowdock
 _name=plasmaqmldock
-pkgver=0.1.1
+pkgver=0.2.1
 pkgrel=1
-pkgdesc="A pure qml plasmoid that mimic the dock or mac way of task management"
+pkgdesc="A pure qml plasmoid or kwin script that creates a mac style effect for tasks in Plasma 5"
 arch=('x86_64')
 url="https://github.com/psifidotos/plasmaqmldock"
 license=('GPL')
 group=('plasma5-applets')
 depends=('plasma-workspace' 'qt5-graphicaleffects')
-source=("https://github.com/psifidotos/plasmaqmldock/archive/v$pkgver.tar.gz")
-sha256sums=('e9bc5a624974444332a144fb16a2fc53392e622e405f5dd1dce5bce6dc4b1e9a')
+source=("https://dl.opendesktop.org/api/files/download/id/1471350081/plasmoid-nowdock-v${pkgver}.zip")
+sha256sums=('c062171055b4d0ee993eaee11879db1eef7230ed8b103120f4df8ab83f70b2cb')
  
 package() {
-  cd "${_name}-${pkgver}"
+ # cd "${_name}-$pkgver"
  
   mkdir -p $pkgdir/usr/share/plasma/plasmoids/org.kdelook.nowdock
   cp -r * $pkgdir/usr/share/plasma/plasmoids/org.kdelook.nowdock
