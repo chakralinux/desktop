@@ -1,0 +1,42 @@
+
+pkgname=gcompris
+_pkgname=$pkgname-qt
+pkgver=0.61
+epoch=2  # 15.10 → 0.61
+pkgrel=1
+pkgdesc="High quality educational software suite comprising of numerous activities for children aged 2 to 10."
+arch=('x86_64')
+url="http://gcompris.net/"
+license=('GPL3')
+depends=('qt5-multimedia' 'qt5-tools' 'qt5-declarative' 'qt5-svg' 'qt5-graphicaleffects' 'qt5-sensors'
+         'gnuchess' 'qml-box2d')
+makedepends=('texinfo' 'intltool' 'git' 'extra-cmake-modules' 'kdoctools' 'python2' 'qt5-tools')
+replaces=('kdeedu-pairs')
+source=("http://gcompris.net/download/qt/src/gcompris-qt-${pkgver}.tar.xz")
+md5sums=('b0590750d47540f73551c56d7c66c8f4')
+
+build() {
+  cd $srcdir/$_pkgname-$pkgver
+  [[ -d build ]] && rm -r build
+  mkdir build && cd build
+  cmake \
+    -DCMAKE_INSTALL_PREFIX=/usr \
+    -DCMAKE_BUILD_TYPE=RelWithDebInfo \
+    -DCMAKE_SKIP_RPATH=ON \
+    -DQML_BOX2D_MODULE=system \
+    -DQML_BOX2D_LIBRARY=/usr/lib/qt5/qml/Box2D.2.0 \
+    -DLCONVERT_EXECUTABLE=/usr/lib/qt5/bin/lconvert \
+    -DLRELEASE_EXECUTABLE=/usr/lib/qt5/bin/lrelease \
+    ..
+  make 
+  make BuildTranslations
+}
+
+package() {
+  cd $srcdir/$_pkgname-$pkgver/build
+  make DESTDIR=${pkgdir} install
+  install -Dm644 ${srcdir}/$_pkgname-$pkgver/org.kde.gcompris.desktop ${pkgdir}/usr/share/applications/org.kde.gcompris.desktop             
+  install -Dm644 ${srcdir}/$_pkgname-$pkgver/GCompris64.png ${pkgdir}/usr/share/pixmaps/$_pkgname.png
+  ln -s /usr/bin/$_pkgname $pkgdir/usr/bin/$pkgname
+}
+
