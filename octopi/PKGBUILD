@@ -1,7 +1,7 @@
 pkgbase=octopi
 pkgname=('octopi' 'octopi-notifier')
-pkgver=0.8.1
-pkgrel=2
+pkgver=0.8.1.90
+pkgrel=1
 url="https://octopiproject.wordpress.com/"
 arch=('x86_64')
 license=('GPL2')
@@ -9,8 +9,11 @@ depends=('pacman' 'pacmanlogviewer' 'gist' 'qt5-quickcontrols')
 categories=('system') 
 screenshot=('http://octopiproject.files.wordpress.com/2014/01/octopi_in_kaos.png')
 
-gitsha=0d98280
-source=("$pkgname"::"git://github.com/aarnt/${pkgname}.git#commit=${gitsha}")
+gitsha=7326de5
+#source=("$pkgname"::"git://github.com/aarnt/${pkgname}.git#commit=${gitsha}")
+
+# temporarily use AlmAck's repository as workaround to bug: https://bugs.kde.org/show_bug.cgi?id=367672
+source=("$pkgname"::"git://github.com/almack/${pkgname}.git#commit=${gitsha}")
 md5sums=('SKIP')
 
 prepare(){
