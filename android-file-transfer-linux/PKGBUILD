@@ -1,6 +1,6 @@
 pkgname=android-file-transfer-linux
 pkgver=3.0
-pkgrel=1
+pkgrel=2
 pkgdesc="An interactive MTP client implemented in C++ using Qt toolkit"
 arch=('x86_64')
 url="https://github.com/whoozle/android-file-transfer-linux"
@@ -8,8 +8,10 @@ license=('GPL3')
 depends=('qt5-base' 'fuse' 'hicolor-icon-theme' 'xdg-utils' 'libxkbcommon-x11' 'file')
 makedepends=('cmake' 'ninja' 'mesa')
 install=$pkgname.install
-source=("https://github.com/whoozle/android-file-transfer-linux/archive/v$pkgver.tar.gz")
-sha1sums=('159be0fdf39634ec1eaaf59561034d5447940013')
+source=("https://github.com/whoozle/android-file-transfer-linux/archive/v$pkgver.tar.gz"
+"solid_aftl.desktop")
+sha1sums=('159be0fdf39634ec1eaaf59561034d5447940013'
+          'aa49677dbb6ad58574c274ac11cafd464b13681e')
 
 prepare() {
   cd "$pkgname-$pkgver"
@@ -31,4 +33,7 @@ package() {
   DESTDIR="$pkgdir" ninja install
 
   install -Dm644 ../LICENSE $pkgdir/usr/share/licenses/$pkgname/LICENSE
+  
+  # added plasma5 integration
+  install -D ../../solid_aftl.desktop $pkgdir/usr/share/solid/actions/solid_aftl.desktop
 }
