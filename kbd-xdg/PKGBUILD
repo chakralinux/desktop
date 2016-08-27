@@ -1,0 +1,36 @@
+pkgname=kbd-xkb
+pkgver=0.1.6
+pkgrel=1
+pkgdesc="Keytable files imported from XKB"
+arch=('x86_64')
+url="http://www.kbd-project.org"
+license=('GPL')
+depends=('glibc' 'pam' 'kbd')
+makedepends=(perl keyboardctl=$pkgver)
+source=('xml2lst.pl')
+md5sums=('c2fb8f824d5af81df99d9bd962dd721c')
+
+package() {
+    # Convert X keyboard layouts to console keymaps
+    mkdir -p ${pkgdir}/usr/share/kbd/keymaps/xkb
+    perl xml2lst.pl < /usr/share/X11/xkb/rules/base.xml > layouts-variants.lst
+    while read line; do
+      XKBLAYOUT=`echo "$line" | cut -d " " -f 1`
+      echo "$XKBLAYOUT" >> layouts-list.lst
+      XKBVARIANT=`echo "$line" | cut -d " " -f 2`
+      ckbcomp "$XKBLAYOUT" "$XKBVARIANT" | gzip > ${pkgdir}/usr/share/kbd/keymaps/xkb/"$XKBLAYOUT"-"$XKBVARIANT".map.gz
+    done < layouts-variants.lst
+
+    # Convert X keyboard layouts (plain, no variant)
+    while read line; do
+      ckbcomp "$line" | gzip > ${pkgdir}/usr/share/kbd/keymaps/xkb/"$line".map.gz
+    done < <(sort -u layouts-list.lst)
+
+    # wipe converted layouts which cannot input ASCII (#1031848)
+    zgrep -L "U+0041" ${pkgdir}/usr/share/kbd/keymaps/xkb/* | xargs rm -f
+
+    # Rename the converted default fi (kotoistus) layout (#1117891)
+    gunzip ${pkgdir}/usr/share/kbd/keymaps/xkb/fi.map.gz
+    mv ${pkgdir}/usr/share/kbd/keymaps/xkb/fi.map ${pkgdir}/usr/share/kbd/keymaps/xkb/fi-kotoistus.map
+    gzip ${pkgdir}/usr/share/kbd/keymaps/xkb/fi-kotoistus.map
+}
