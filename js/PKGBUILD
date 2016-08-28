@@ -2,45 +2,34 @@
 # Contributor: Ionut Biru <ibiru@archlinux.org>
 
 pkgname=js
-pkgver=24.2.0
+_pkgname=mozjs
+pkgver=45.0.2
 pkgrel=1
 pkgdesc="JavaScript interpreter and libraries"
 arch=('x86_64')
-url="https://developer.mozilla.org/En/SpiderMonkey/24"
+url="https://developer.mozilla.org/en-US/docs/Mozilla/Projects/SpiderMonkey"
 license=('GPL2')
-depends=('nspr' 'gcc-libs' 'readline' 'zlib')
-makedepends=('python2' 'zip' 'libffi')
-source=(http://ftp.mozilla.org/pub/mozilla.org/js/mozjs-${pkgver}.tar.bz2)
-sha1sums=('ce779081cc11bd0c871c6f303fc4a0091cf4fe66')
-
-prepare() {
-  cd mozjs-$pkgver/js/src
-  rm -rf editline
-  rm -rf ctypes/libffi
-}
+depends=('nspr' 'readline' 'zlib')
+makedepends=('autoconf2.13' 'python2' 'zip' 'libffi')
+options=(!buildflags)
+source=(https://people.mozilla.org/~sfink/$_pkgname-$pkgver.tar.bz2)
+sha1sums=('68a0fbb9c3f988ab28ea3817e0669ee6fe6c93ed')
 
 build() {
-  unset CPPFLAGS
   cd mozjs-$pkgver/js/src
-
-  ./configure \
+  autoconf-2.13
+  [[ -d build ]] && rm -rf build
+  mkdir build && cd build
+  ../configure \
     --prefix=/usr \
     --with-system-nspr \
     --enable-system-ffi \
     --enable-readline \
     --enable-threadsafe
-
-  make
-}
-
-check() {
-  cd mozjs-$pkgver/js/src
-  make check
+  SHELL="/bin/sh" make
 }
 
 package() {
-  cd mozjs-$pkgver/js/src
+  cd $_pkgname-$pkgver/js/src/build
   make DESTDIR="$pkgdir" install
-  find "$pkgdir"/usr/{lib/pkgconfig,include} -type f -exec chmod -x {} +
 }
-
