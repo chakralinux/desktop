@@ -1,29 +1,24 @@
 pkgname=converseen
-pkgver=0.9.2
-pkgrel=2
+pkgver=0.9.5
+_pkgver=${pkgver%.*}
+pkgrel=1
 pkgdesc="The batch image converter and resizer. It supports more than 100 image formats."
 arch=('x86_64')
 url="http://converseen.sourceforge.net/"
 license=('GPL3')
 categories=('graphics')
-depends=('imagemagick' 'qt' 'libwmf' 'openexr' 'fftw')
-makedepends=('cmake')
-source=("http://downloads.sourceforge.net/sourceforge/${pkgname}/${pkgname}-${pkgver}.tar.bz2")
+depends=('imagemagick' 'qt5-base' 'libwmf' 'openexr' 'fftw')
+makedepends=('cmake' 'qt5-tools')
+source=("http://downloads.sourceforge.net/project/${pkgname}/Converseen/Converseen%20$_pkgver/${pkgname}-${pkgver}.tar.bz2")
 screenshot=('http://converseen.sourceforge.net/res/converseen1.png')
-md5sums=('d08caf7a00ee7761dc1f0551527b56ee')
+sha1sums=('41271c22c388940f7fa10660a0f354332c41d374')
 
 build() {
   cd "${srcdir}"
   mkdir -p build && cd build
-  cmake ../${pkgname}-${pkgver} \
+  cmake ../${pkgname} \
           -DCMAKE_BUILD_TYPE=Release \
-          -DCMAKE_INSTALL_PREFIX=/usr \
-          -DImageMagick_Magick++_INCLUDE_DIR:PATH=/usr/include/ImageMagick-6 \
-          -DImageMagick_Magick++_LIBRARY:FILEPATH=/usr/lib/libMagick++-6.Q16HDRI.so \
-          -DImageMagick_MagickWand_INCLUDE_DIR:PATH=/usr/include/ImageMagick-6 \
-          -DImageMagick_MagickWand_LIBRARY:FILEPATH=/usr/lib/libMagickWand-6.Q16HDRI.so \
-          -DImageMagick_MagickCore_INCLUDE_DIR:PATH=/usr/include/ImageMagick-6 \
-          -DImageMagick_MagickCore_LIBRARY:FILEPATH=/usr/lib/libMagickCore-6.Q16HDRI.so
+          -DCMAKE_INSTALL_PREFIX=/usr
   make
 }
 
