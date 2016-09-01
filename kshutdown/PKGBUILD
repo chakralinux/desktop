@@ -1,25 +1,25 @@
-# Maintainer: Adrián Chaves Fernández (Gallaecio)
-
 pkgname=kshutdown
-pkgver=3.2
-pkgrel=3
+pkgver=4.0
+pkgrel=1
 pkgdesc="Advanced shut down utility."
 arch=('x86_64')
 url="http://kshutdown.sourceforge.net/"
 license=('GPL2')
-depends=('kde-runtime')
-makedepends=('cmake' 'automoc4')
+depends=('kconfig' 'kconfigwidgets' 'kdbusaddons' 'kglobalaccel' 'ki18n' 'kidletime'
+	 'knotifications' 'knotifyconfig' 'kxmlgui')
+makedepends=('cmake' 'extra-cmake-modules')
 categories=('utils')
 install=$pkgname.install
-source=(http://switch.dl.sourceforge.net/sourceforge/$pkgname/$pkgname-source-$pkgver.zip)
-md5sums=('3006cb06fb9538eb5fdb0363fc22ae73')
+source=(https://downloads.sourceforge.net/$pkgname/$pkgname-source-$pkgver.zip)
+sha256sums=('75733e5b55b36add775a2788365ee6f5fe8b3d21598e2a17e68b2f8dd62199fc')
 
 build() {
   cd $srcdir/$pkgname-$pkgver
   mkdir build && cd build
   cmake \
     -DCMAKE_INSTALL_PREFIX=/usr \
-    -DCMAKE_BUILD_TYPE=Release ..
+    -DCMAKE_BUILD_TYPE=Release \
+    -DKS_KF5=ON ..
   make
 }
  
