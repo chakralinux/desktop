@@ -1,27 +1,27 @@
 pkgname=qmc2
-pkgver=0.63
+pkgver=0.67
 pkgrel=1
-pkgdesc="Qt 4 based UNIX MAME frontend supporting SDLMAME."
+pkgdesc="Qt based UNIX MAME frontend supporting SDLMAME."
 url="http://qmc2.batcom-it.net/"
 license=("GPL")
 arch=('x86_64')
-depends=('qtwebkit' 'phonon' 'sdl2' 'libxslt' 'libarchive')
-makedepends=('rsync' 'mesa')
+depends=('qt5-webkit' 'qt5-multimedia' 'qt5-svg' 'sdl2' 'libxslt' 'libarchive')
+makedepends=('rsync' 'mesa' 'qt5-tools')
 source=(http://downloads.sourceforge.net/$pkgname/$pkgname-$pkgver.tar.bz2
         'qmamecat.desktop')
-sha1sums=('af1d11ca2dc4917af704d5818aaeb5b244e480d6'
+sha1sums=('056dfea41eaca8572c6b9459e9960aa10af8fbe7'
           'b495666abfaca7f9d1241c14d010b6037f66f4d4')
 
-package() {
+build() {
   cd "$srcdir/$pkgname"
 
-  make PREFIX=/usr DATADIR=/usr/share SYSCONFDIR=/etc QTDIR=/usr LIBARCHIVE=1
+  make PREFIX=/usr DATADIR=/usr/share SYSCONFDIR=/etc QTDIR=/usr QMAKE=/usr/bin/qmake-qt5 LIBARCHIVE=1
 }
 
 package(){
   cd "$srcdir/$pkgname"
   
-  make PREFIX=/usr DATADIR=/usr/share SYSCONFDIR=/etc QTDIR=/usr LIBARCHIVE=1 DESTDIR=$pkgdir install
+  make PREFIX=/usr DATADIR=/usr/share SYSCONFDIR=/etc QTDIR=/usr QMAKE=/usr/bin/qmake-qt5 LIBARCHIVE=1 DESTDIR=$pkgdir install
 
   install -d $pkgdir/usr/share/{applications,pixmaps}
   install -D -m644 "$srcdir/qmamecat.desktop" "$pkgdir/usr/share/applications"
