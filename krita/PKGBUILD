@@ -2,8 +2,8 @@
 # Maintainer: Antonio Rojas <arojas@archlinux,org>
 
 pkgname=krita
-pkgver=3.0
-pkgrel=2
+pkgver=3.0.1
+pkgrel=1
 pkgdesc="Edit and paint images"
 arch=('x86_64')
 url="http://krita.org"
@@ -15,18 +15,9 @@ optdepends=('poppler-qt5: PDF filter')
 conflicts=('calligra-krita')
 provides=('calligra-krita')
 replaces=('calligra-krita')
-source=("http://download.kde.org/stable/$pkgname/$pkgver/$pkgname-$pkgver.tgz"
-         krita-fix-build.patch::"https://quickgit.kde.org/?p=krita.git&a=commitdiff&h=100a148e&o=plain")
+source=("https://files.kde.org/${pkgname}/3/source/${pkgname}-${pkgver}.tar.gz")
 install=$pkgname.install
-sha1sums=('6e0f7763e2ed5e266d916e7f76fadbaaf2c84eb5'
-          '5f21c5f6c00240a1c2b6fe731086ff1169a773d5')
-
-prepare() {
-
-# Fix build
-  cd $pkgname-$pkgver
-  patch -p1 -i ../krita-fix-build.patch
-}
+sha1sums=('fc92ad867324b15b594d5218e115ba9a83d45994')
 
 build() {
   cd $pkgname-$pkgver
@@ -35,8 +26,7 @@ build() {
   cmake .. \
     -DCMAKE_BUILD_TYPE=Release \
     -DCMAKE_INSTALL_PREFIX=/usr \
-    -DLIB_INSTALL_DIR=lib \
-    -DKDE_INSTALL_USE_QT_SYS_PATHS=ON \
+    -DKDE_INSTALL_LIBDIR=lib \
     -DBUILD_TESTING=OFF
   make
 }
