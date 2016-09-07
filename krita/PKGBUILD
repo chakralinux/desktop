@@ -3,7 +3,7 @@
 
 pkgname=krita
 pkgver=3.0.1
-pkgrel=1
+pkgrel=2
 pkgdesc="Edit and paint images"
 arch=('x86_64')
 url="http://krita.org"
@@ -34,4 +34,7 @@ build() {
 package() {
   cd $pkgname-$pkgver/build
   make DESTDIR=$pkgdir install
+
+  # Fix conflicts with breeze
+  rm "$pkgdir"/usr/share/color-schemes/Breeze*
 }
