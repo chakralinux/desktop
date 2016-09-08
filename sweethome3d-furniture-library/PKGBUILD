@@ -1,0 +1,32 @@
+pkgname=sweethome3d-furniture-library
+pkgver=1.19
+pkgrel=1
+pkgdesc="A tool to manage furniture in Sweet Home 3D"
+arch=('x86_64')
+url="http://www.sweethome3d.com/support/forum/viewthread_thread,1550"
+license=('GPL')
+depends=('java-runtime' 'sweethome3d')
+makedepends=('unzip')
+source=("http://downloads.sourceforge.net/project/sweethome3d/FurnitureLibraryEditor/FurnitureLibraryEditor-$pkgver.jar"
+        'furniturelibraryeditor'
+        'furniturelibraryeditor.desktop')
+sha1sums=('b8e919f66c364e98044d87cfae3d131510fba51c'
+          'cfc00f0e8989fa2f397dd069ac9e5369f2df77e6'
+          '0f3e7c9068d2904681238a129d9cd44f0ddd4f00')
+
+prepare() {
+  echo 'cat <<END_OF_TEXT' > temp.sh
+  cat furniturelibraryeditor.desktop >> temp.sh
+  echo 'END_OF_TEXT' >> temp.sh
+  bash temp.sh > furniturelibraryeditor.desktop
+  rm temp.sh
+}
+
+package() {
+
+  mv com/eteks/furniturelibraryeditor/swing/resources/aboutIcon.png furniturelibraryeditor.png
+  install -D FurnitureLibraryEditor-$pkgver.jar $pkgdir/usr/share/sweethome3d/furniturelibraryeditor.jar
+  install -D furniturelibraryeditor.png $pkgdir/usr/share/pixmaps/furniturelibraryeditor.png
+  install -D furniturelibraryeditor $pkgdir/usr/bin/furniturelibraryeditor
+  install -D furniturelibraryeditor.desktop $pkgdir/usr/share/applications/furniturelibraryeditor.desktop
+}
