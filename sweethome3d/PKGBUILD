@@ -1,0 +1,28 @@
+pkgname=sweethome3d
+pkgver=5.2
+pkgrel=1
+pkgdesc="An interior design application"
+arch=('x86_64')
+url="http://sweethome3d.com"
+screenshot="http://sweethome3d.com/images/SweetHome3DLinux.png"
+license=('GPL')
+depends=('bash' 'java-environment')
+optdepends=('sweethome3d-furniture-library: for managing additional forniture')
+source=("http://downloads.sourceforge.net/$pkgname/SweetHome3D-$pkgver.jar"
+        "$pkgname.sh"
+        "$pkgname.desktop"
+        "$pkgname.png")
+sha1sums=('01c1aae4eb6375682d110ea97f6ada4896283c6a'
+          '2cada1e2735f65647b9db596a361287f405e1ec5'
+          'c7066328d054a872964de830cd44436a9d69a1cd'
+          '73d088954b0e75c18daa33c246ae132ea368d0a7')
+ 
+ 
+package() {
+  cd "$srcdir"
+ 
+  install -Dm644 SweetHome3D-$pkgver.jar "$pkgdir"/usr/share/$pkgname/$pkgname.jar
+  install -Dm644 $pkgname.png "$pkgdir"/usr/share/pixmaps/$pkgname.png
+  install -Dm644 $pkgname.desktop "$pkgdir"/usr/share/applications/$pkgname.desktop
+  install -Dm755 $pkgname.sh "$pkgdir"/usr/bin/$pkgname
+}
