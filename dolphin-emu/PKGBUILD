@@ -1,0 +1,43 @@
+pkgname=dolphin-emu
+pkgver=5.0
+pkgrel=1
+pkgdesc='A GameCube / Wii / Triforce emulator'
+arch=('x86_64')
+url='http://www.dolphin-emu.org/'
+license=('GPL')
+depends=('bluez-libs' 'qt5-base' 'enet' 'ffmpeg' 'libao' 'libevdev' 'mbedtls' 'miniupnpc' 'openal' 'portaudio' 'soundtouch' 'xdg-utils')
+makedepends=('cmake' 'qt5-tools')
+optdepends=('pulseaudio: PulseAudio backend')
+options=('!emptydirs')
+source=("$pkgname-$pkgver::https://github.com/dolphin-emu/dolphin/archive/$pkgver.tar.gz")
+sha256sums=('62c4602055767ab314ff50a3b94ea57f792832aa1629e6b1117ebce10518dc0b')
+
+prepare() {
+  cd dolphin-$pkgver
+
+  if [[ -d build ]]; then
+    rm -rf build
+  fi
+  mkdir build
+}
+
+build() {
+  cd dolphin-$pkgver/build
+
+  cmake .. \
+    -DCMAKE_INSTALL_PREFIX='/usr' \
+    -DCMAKE_CXX_FLAGS='-fno-pie' \
+    -DENABLE_QT2='TRUE' \
+    -DDISABLE_WX='TRUE' \
+    -DUSE_SHARED_ENET='TRUE' \
+    -DDISTRIBUTOR='chakralinux.org'
+  make
+}
+
+package() {
+  cd dolphin-$pkgver/build
+
+  make DESTDIR="${pkgdir}" install
+  mv $pkgdir/usr/bin/dolphin-emu-qt2 $pkgdir/usr/bin/dolphin-emu
+  install -Dm 644 ../Data/51-usb-device.rules -t "${pkgdir}"/usr/lib/udev/rules.d/
+}
