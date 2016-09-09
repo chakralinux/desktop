@@ -1,5 +1,5 @@
 pkgname=('go' 'go-tools')
-pkgver=1.7
+pkgver=1.7.1
 pkgrel=1
 arch=('x86_64')
 url='http://golang.org/'
@@ -75,8 +75,8 @@ check() {
   export GOROOT_BOOTSTRAP=/usr/lib/go
 
   # bundle does not compile with 1.6
-  for tool in godoc goimports gomvpkg gorename gotype \
-    benchcmp callgraph digraph eg fiximports html2article oracle present ssadump stress stringer; do
+  for tool in goimports gomvpkg gorename gotype \
+    benchcmp bundle callgraph digraph eg fiximports guru html2article oracle present ssadump stress stringer; do
     GOPATH="$srcdir" $GOROOT/bin/go test -v -x $_gourl/$tool
   done
   
