@@ -1,0 +1,17 @@
+pkgname=xdgurl
+pkgver=1.0.1
+pkgrel=1
+pkgdesc="An install helper program for desktop stuff."
+arch=('any')
+url="https://github.com/xdgurl/xdgurl"
+license=('GPL3')
+depends=('tk')
+source=("$url/archive/release-$pkgver.tar.gz")
+sha1sums=('0cead6ff6f7baf97d99d6e67ef0e608c4f9e15ae')
+
+package() {
+    cd "$pkgname-release-$pkgver"
+
+    install -D -m 755 "src/$pkgname.py" "$pkgdir/usr/bin/$pkgname"
+    install -D -m 644 "src/$pkgname.desktop" "$pkgdir/usr/share/applications/$pkgname.desktop"
+}
