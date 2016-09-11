@@ -1,34 +1,41 @@
 pkgname=cutegram
 _pkgname=Cutegram
 pkgver=2.9.5
-pkgrel=3
+pkgrel=6
 pkgdesc="A different telegram client from Aseman team"
 arch=('x86_64')
 url="http://aseman.co/en/products/cutegram/"
 license=('GPL')
-depends=('libqtelegram-ae' 'telegramqml' 'aseman-qt-tools')
+depends=('libqtelegram-ae' 'telegramqml' 'aseman-qt-tools' 'qt5-declarative')
 optdepends=('gst-plugins-good: for audio and notification support'
             'gst-plugins-bad: for audio support')
-source=("${pkgname}"::"git+https://github.com/Aseman-Land/Cutegram.git#commit=20690bd6b47e0cb56787e9f0e60c7c99de492c91")
-sha1sums=('SKIP')
+source=("https://github.com/Aseman-Land/Cutegram/archive/v$pkgver-dev.tar.gz"
+        'binarymode.patch')
+sha1sums=('792c0ac9075638657f1939550508281a8400fde6'
+          '8a26a19d8742ad024209ad447aa0b7d82c9760f9')
 
 prepare() {
-  cd "${srcdir}/${pkgname}"
+  cd "${srcdir}/${_pkgname}-$pkgver-dev"
+  # patch for binary mode, we didn't do this build way yet
+  patch -Np1 -i ${srcdir}/binarymode.patch
+
+  # change the heading application
+  sed 's,qmlscene,qmlscene-qt5,g' -i share/Cutegram.desktop
+  mkdir -p build
 
   # modify desktop file for binaryMode
   sed -i "s|qmlscene /usr/share/cutegram/3.0/main.qml|/usr/bin/cutegram|" share/Cutegram.desktop
-  mkdir -p build
 }
 
 build() {
-  cd "${srcdir}/${pkgname}/build"
+  cd "${srcdir}/${_pkgname}-$pkgver-dev/build"
   qmake-qt5 QMAKE_CFLAGS_ISYSTEM= PREFIX=/usr DEFINES+=WEBENGINE_ASEMAN_WEBGRABBER CONFIG+=binaryMode ..
   make
 }
 
 package() {
-  cd "${srcdir}/${pkgname}/build"
-
+  cd "${srcdir}/${_pkgname}-$pkgver-dev/build"
+  
   install -Dm755 cutegram "${pkgdir}/usr/bin/cutegram"
   install -Dm644 ../share/Cutegram.desktop "${pkgdir}/usr/share/applications/Cutegram.desktop"
 }
