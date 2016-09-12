@@ -1,8 +1,8 @@
 # Contributions from AUR: https://aur.archlinux.org/packages/merkaartor/
 
 pkgname=merkaartor
-pkgver=0.18.2
-pkgrel=4
+pkgver=0.18.3
+pkgrel=1
 pkgdesc="An editor for the OpenStreetMap project"
 arch=('x86_64')
 url="https://github.com/openstreetmap/merkaartor"
@@ -11,18 +11,16 @@ depends=('desktop-file-utils' 'exiv2' 'gdal' 'libxml2' 'libxslt' 'proj'
 	 'qt5-webkit' 'qt5-svg' 'qt5-tools' 'libspatialite' 'unixodbc')
 optdepends=('gpsd')
 makedepends=('gcc')
-conflicts=('merkaartor-svn')
 categories=('network' 'education')
 screenshot=(http://merkaartor.be/attachments/download/195)
 #source=("http://merkaartor.be/attachments/download/301/merkaartor-0.18.1.tar.bz2")
-source=("https://github.com/openstreetmap/merkaartor/archive/0.18.2.tar.gz")
-sha512sums=('577dd88e522eb3f9c21d3588358137dc9419a4d3961299a2162f7edb07e2b95a46d87022b57f0ea190bf9d76a2b1d2aada61c03e952e29c432e250e4686d594d')
+source=("https://github.com/openstreetmap/merkaartor/archive/${pkgver}.tar.gz")
+sha512sums=('b34087e0317c196b59dd1de57778b9293d23e4530bd5734661dc2ce53eef85317f512ee446056e045aa8a06146bd029d6274fa5a6f68128db27795d44f0ef915')
 
 prepare() {
   cd $srcdir/$pkgname-$pkgver/src
   sed -i s!'Education;Geography;Network;Qt;'!'Education;Geography;'! \
   $pkgname.desktop
-
 }
 
 build() {
