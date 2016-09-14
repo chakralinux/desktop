@@ -1,21 +1,13 @@
-#
-# Apps Packages for Chakra, part of chakra-project.org
-#
-# Maintainer: Adrián Chaves Fernández (Gallaecio) <adriyetichaves gmail.com>
-# Contributor: Stefan Husmann <stefan-husmann@t-online.de>
-# Contributor: corvolino <corvolino@archlinux.com.br>
-# Contributor: Joel Schaerer
-
 pkgname=pdf2svg
-pkgver=0.2.2
-pkgrel=2
+pkgver=0.2.3
+pkgrel=1
 pkgdesc="A PDF to SVG converter."
 arch=('x86_64')
 url="http://www.cityinthesky.co.uk/pdf2svg.html"
 license=('GPL3')
 depends=('lcms2' 'poppler-glib' 'glib2')
-source=(http://www.cityinthesky.co.uk/wp-content/uploads/2013/10/$pkgname-$pkgver.tar.gz)
-sha256sums=('c2a29cc81d01fea220523abad39c400e9c5411b395b6ba3ccbedb4cd398ec6cb')
+source=("https://github.com/dawbarton/pdf2svg/archive/v${pkgver}.tar.gz")
+sha256sums=('4fb186070b3e7d33a51821e3307dce57300a062570d028feccd4e628d50dea8a')
 
 prepare() {
   cd ${pkgname}-${pkgver}
@@ -23,16 +15,11 @@ prepare() {
   sed -i '22a #include <stdlib.h>' ./pdf2svg.c
   sed -i "23,24d" ./configure.ac
   sed -i -e 's/$(GTK2_[^)]*) //g' ./Makefile.am  # reomve notion of gtk2
-  # Copy missing README file
-  cp README.md README
 }
 
 build() {
   cd ${pkgname}-${pkgver}
-  aclocal
-  autoscan
-  autoconf
-  automake
+  autoreconf -vfi
   ./configure \
     --prefix=/usr
   make
