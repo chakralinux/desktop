@@ -1,6 +1,6 @@
 pkgname=simgear
-pkgver=2016.2.1
-_pkgver=2016.2
+pkgver=2016.3.1
+_pkgver=2016.3
 pkgrel=1
 pkgdesc="FOSS libraries for quickly assembling 3d simulations, games, and visualization applications."
 arch=('x86_64')
@@ -10,15 +10,15 @@ license=("GPL")
 url="http://flightgear.sourceforge.net/"
 options=('!makeflags' 'staticlibs')
 source=("http://downloads.sourceforge.net/project/flightgear/release-$_pkgver/simgear-$pkgver.tar.bz2")
-sha1sums=('9b8f9e4104329e6bd37467483bb7a064a495cd76')
+sha1sums=('6174e24fb240e0556158a3c21bac9e7cf4cb2cd4')
 
 build() {
-  cd $srcdir/$pkgname-$pkgver
+  cd $pkgname-$pkgver
   cmake -DCMAKE_INSTALL_PREFIX=/usr -DCMAKE_INSTALL_LIBDIR=lib .
   make
 }
 
 package() {
-  cd $srcdir/$pkgname-$pkgver
+  cd $pkgname-$pkgver
   make DESTDIR=$pkgdir install
 }
