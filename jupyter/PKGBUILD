@@ -1,6 +1,6 @@
 pkgbase=jupyter
 pkgname=('jupyter' 'ipython2-notebook')
-pkgver=4.1.1
+pkgver=4.2.0
 pkgrel=1
 pkgdesc="A language-agnostic web-based interactive shell/notebook server."
 arch=('any')
@@ -16,46 +16,40 @@ optdepends=('qt5-svg: jupyter-qtconsole'
 
 # some of these will update rapidly, others never
 # so _vers will be phased in as new updates are released
+_notev=4.2.3  # notebook
+_jcliv=4.4.0
 _ipywv=5.2.2  # ipywidgets
 _qtcv=4.2.1   # qtconsole
-_notev=4.2.2  # notebook
-_nbcv=4.2.0
 _jnbfv=4.1.0
 _jconv=5.0.0  # jupyter_console
-_jcliv=4.3.0
 _pyver=3.5
 
-source=("jupyter_core.tgz::https://github.com/jupyter/jupyter_core/archive/$pkgver.tar.gz"
-        "ipywidgets.tgz::https://github.com/ipython/ipywidgets/archive/$_ipywv.tar.gz"
-        "nbformat.tar.gz::https://github.com/jupyter/nbformat/archive/$_jnbfv.tar.gz"
-        "jupyter_console.tgz::https://github.com/jupyter/jupyter_console/archive/$_jconv.tar.gz"
-        "jupyter_client.tgz::https://github.com/jupyter/jupyter_client/archive/$_jcliv.tar.gz"
-        "notebook.tgz::https://github.com/jupyter/notebook/archive/$_notev.tar.gz"
+source=("jupyter_core-$pkgver.tgz::https://github.com/jupyter/jupyter_core/archive/$pkgver.tar.gz"
+        "ipywidgets-$_ipywv.tgz::https://github.com/ipython/ipywidgets/archive/$_ipywv.tar.gz"
+        "nbformat-$_jnbfv.tar.gz::https://github.com/jupyter/nbformat/archive/$_jnbfv.tar.gz"
+        "jupyter_console-$_jconv.tgz::https://github.com/jupyter/jupyter_console/archive/$_jconv.tar.gz"
+        "jupyter_client-$_jcliv.tgz::https://github.com/jupyter/jupyter_client/archive/$_jcliv.tar.gz"
+        "notebook-$_notev.tgz::https://github.com/jupyter/notebook/archive/$_notev.tar.gz"
         "https://pypi.python.org/packages/source/q/qtconsole/qtconsole-$_qtcv.tar.gz")
-sha1sums=('28995f6d0e1167b00dbf7365896b002c44d72935'
+sha1sums=('9ad9f27c553cff61a4429f71419981e928369571'
           'a4e18ed6a91bca345ee074af8d77b2bebc4a1e96'
           '378c57a9e89fcd3e76e7a3446d41343168d77f59'
           '60cbc801c72cd42370a962a26c29c996734d7822'
-          'b7bab44679feb4f85c996333273a3f1abee0e1e5'
-          '2c4ae1adb5b8087a64c80ab3727e11d9709e43ca'
+          '84e097a5a1434b9ea3c4cef220c73a8cd4c284e5'
+          'cd42c2013047d2722d3990db4787820cff51cbc8'
           '4a0ea706c88721e3c6d2cfeb46fcf10c9bd1b4dc')
 
 prepare() {
   cd "$srcdir"
   cp -r jupyter_core-$pkgver python2-jupyter_core-$pkgver
   cp -r jupyter_client-$_jcliv python2-jupyter_client-$_jcliv
- # cp -r ipykernel-$_ipykv    python2-ipykernel-$_ipykv
   cp -r qtconsole-$_qtcv      python2-qtconsole-$_qtcv
 }
 
 build() {
   cd "$srcdir"
 
-  # FS45999 disable bundled mathjax
   cd "$srcdir/notebook-$_notev"
-  #sed -i 's/^.*MathJax.*$//' bower.json 
-  #sed -i '/Trim mathjax/,/^                static_data.append/d' setupbase.py
-  #sed -i 's/mj(/#mj(/' setupbase.py
   # needs node, downloads a lot of stuff
   python3 setup.py build
 
@@ -70,10 +64,6 @@ package_jupyter() {
 
   cd "$srcdir/jupyter_core-$pkgver"
   python3 setup.py install --prefix=/usr --root="$pkgdir" --optimize=0
-
-#  cd "$srcdir/ipykernel-$_ipykv"
-  # this is in the ipython package
-#  python3 setup.py install --prefix=/usr --root="$pkgdir" --optimize=0
 
   cd "$srcdir/ipywidgets-$_ipywv"
   python3 setup.py install --prefix=/usr --root="$pkgdir" --optimize=0
@@ -112,9 +102,6 @@ package_ipython2-notebook() {
   optdepends=('python2-pyqt5: jupyter-qtconsole-py2'
               'qt5-svg: jupyter-qtconsole-py2'
               'python2-sip: jupyter-qtconsole-py2')
-
-#  cd "$srcdir/python2-ipykernel-$_ipykv"
-#  python2 setup.py install --prefix=/usr --root="$pkgdir" --optimize=0
 
   cd "$srcdir/python2-jupyter_core-$pkgver"
   python2 setup.py install --prefix=/usr --root="$pkgdir" --optimize=0
