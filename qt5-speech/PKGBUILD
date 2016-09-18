@@ -1,0 +1,31 @@
+# Forked from: https://aur.archlinux.org/cgit/aur.git/plain/PKGBUILD?h=qtspeech-git&id=af3789be6b007d7c3403560af912d6fc194cd8ea
+
+pkgname=qt5-speech
+_pkgname=qtspeech
+pkgver=5.8.0
+_tag=v$pkgver-alpha1
+pkgrel=1
+pkgdesc="Qt Speech support."
+arch=('i686' 'x86_64')
+url="http://qt-project.org/wiki/QtSpeech"
+license=('GPL2' 'LGPL3' 'FDL')
+depends=('qt5-base' 'qt5-multimedia' 'speech-dispatcher')
+makedepends=('flite')
+optdepends=('flite: Speech output using Festival Lite.')
+source=("git+git://code.qt.io/qt/qtspeech.git#tag=$_tag")
+sha1sums=('SKIP')
+
+build() {
+  cd $_pkgname
+  qmake-qt5
+  make
+}
+
+package() {
+  make -C $_pkgname INSTALL_ROOT="${pkgdir}" install
+
+  # Drop QMAKE_PRL_BUILD_DIR because reference the build dir
+  find "${pkgdir}/usr/lib" -type f -name '*.prl' -exec sed -i -e '/^QMAKE_PRL_BUILD_DIR/d' {} \;
+}
+
+
