@@ -1,15 +1,10 @@
-#
-# Games Packages for Chakra, part of chakra-project.org
-#
-# Maintainer: Adrián Chaves Fernández (Gallaecio) <adriyetichaves gmail.com>
-
 pkgname=crypto++
 _pkgname=cryptopp
 pkgver=5.6.4
 _pkgver=${pkgver//./}
-pkgrel=1
+pkgrel=2
 pkgdesc="C++ class library of cryptographic schemes."
-arch=('i686' 'x86_64')
+arch=('x86_64')
 url="http://www.cryptopp.com"
 license=('custom')
 makedepends=('unzip')
@@ -20,9 +15,7 @@ md5sums=('4ee7e5cdd4a45a14756c169eaf2a77fc'
 
 # The code below has been copied from the Arch Linux PKGBUILD.
 build() {
-  sed -i -e 's/^CXXFLAGS/#CXXFLAGS/' GNUmakefile
-  export CXXFLAGS="${CXXFLAGS} -DNDEBUG -fPIC"
-  make -f GNUmakefile  
+  CXXFLAGS+=" -fPIC" make -f GNUmakefile-cross
   make libcryptopp.so
 }
 
