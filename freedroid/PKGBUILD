@@ -3,7 +3,7 @@
 pkgname=freedroid
 _pkgname1=freedroidrpg
 pkgver=0.16.1
-pkgrel=1
+pkgrel=2
 pkgdesc="A mature science-fiction role-playing game set in the future."
 arch=('x86_64')
 url="http://freedroid.sourceforge.net"
@@ -14,12 +14,9 @@ makedepends=('python2' 'espeak')
 optdepends=('python2' 'espeak')
 categories=('games')
 replaces=($_pkgname1)
-source=(ftp://ftp.osuosl.org/pub/${pkgname}/${pkgname}RPG-${pkgver:0:4}/freedroidRPG-${pkgver}.tar.gz           
-        $pkgname.jpg::http://projects.archlinux.org/svntogit/community.git/plain/trunk/$_pkgname1.jpg?h=packages/$_pkgname1
-        $pkgname.desktop::http://projects.archlinux.org/svntogit/community.git/plain/trunk/$_pkgname1.desktop?h=packages/$_pkgname1)
-md5sums=('ba19730c0139df810602ea9252d47120'
-         'b73d9dac44c7e83a6c80fbe4eb96ba79'
-         '9a10c2a2064439cdcff5b945dfb1c3ac')
+source=(ftp://ftp.osuosl.org/pub/${pkgname}/${pkgname}RPG-${pkgver:0:4}/freedroidRPG-${pkgver}.tar.gz)
+md5sums=('ba19730c0139df810602ea9252d47120')
+
 build() {
   cd $srcdir/$_pkgname1-$pkgver
   ./configure \
@@ -30,8 +27,4 @@ build() {
 package() {
   cd $srcdir/$_pkgname1-$pkgver
   make DESTDIR=$pkgdir/ install
-
-  # Desktop integration.
-  install -D -m644 $srcdir/$pkgname.jpg $pkgdir/usr/share/pixmaps/$pkgname.jpg
-  install -D -m644 $srcdir/$pkgname.desktop $pkgdir/usr/share/applications/$pkgname.desktop
 }
