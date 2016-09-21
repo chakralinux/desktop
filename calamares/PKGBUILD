@@ -1,5 +1,5 @@
 pkgname=calamares
-pkgver=2.2.91
+pkgver=2.4.1
 pkgrel=1
 _releaseName="Goedel"
 _releaseYear="2016"
@@ -9,11 +9,11 @@ url='https://github.com/calamares/calamares'
 license=('LGPL')
 depends=('qt5-svg' 'kconfig' 'ki18n' 'kcoreaddons' 'solid' 'yaml-cpp'
          'parted' 'kpmcore' 'libatasmart' 'udisks2' 'polkit-qt5' 'boost-libs'
-         'rsync' 'python3' 'keyboardctl' 'qt5-webkit')
+         'rsync' 'python3' 'keyboardctl' 'qt5-webkit' 'kparts')
 makedepends=('extra-cmake-modules' 'git' 'qt5-tools' 'translate-toolkit' 'qt5-tools')
-#source+=("$pkgname-$pkgver.tar.gz::https://github.com/calamares/calamares/releases/download/v$pkgver/calamares-$pkgver.tar.gz"
-_gitsha="09f650ecf586fd7dc43b8b131931a6d0e1d04f98"
-source+=("$pkgname-$pkgver.tar.gz::https://github.com/calamares/calamares/archive/${_gitsha}.zip"
+source+=("$pkgname-$pkgver.tar.gz::https://github.com/calamares/calamares/releases/download/v$pkgver/calamares-$pkgver.tar.gz"
+#_gitsha="09f650ecf586fd7dc43b8b131931a6d0e1d04f98"
+#source+=("$pkgname-$pkgver.tar.gz::https://github.com/calamares/calamares/archive/${_gitsha}.zip"
          "calamares-chakra::git://git.chakraos.org/calamares.git#branch=modules")
         
 md5sums=('1bfa6b27963e4ed36b2f95a68061d384'
@@ -57,6 +57,7 @@ package() {
     #install -Dm644 "../conf/displaymanagers.conf" "$pkgdir/usr/share/calamares/modules/displaymanagers.conf"
     #install -Dm644 "../conf/locale.conf" "$pkgdir/usr/share/calamares/modules/locale.conf"
     #install -Dm644 "../conf/prepare.conf" "$pkgdir/usr/share/calamares/modules/prepare.conf"
+    install -Dm644 "../conf/user.conf" "$pkgdir/usr/share/calamares/modules/user.conf
     install -Dm644 "../conf/unpackfs.conf" "$pkgdir/usr/share/calamares/modules/unpackfs.conf"
     install -Dm644 "../conf/packages.conf" "$pkgdir/usr/share/calamares/modules/packages.conf"
     install -Dm644 "../conf/grubcfg.conf" "$pkgdir/usr/share/calamares/modules/grubcfg.conf"
