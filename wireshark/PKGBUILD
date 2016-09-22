@@ -1,0 +1,74 @@
+pkgname=wireshark
+pkgver=2.2.0
+pkgrel=3
+pkgdesc='A free network protocol analyzer for Unix/Linux and Windows'
+arch=('x86_64')
+license=('GPL2')
+depends=('libpcap' 'libcap' 'krb5' 'glib2' 'desktop-file-utils' 'hicolor-icon-theme' 
+         'lua52' 'libgcrypt' 'qt5-base' 'qt5-multimedia' 'harfbuzz' 'portaudio' 'bash' 'gnutls')
+makedepends=('bison' 'flex' 'qt5-tools' 'python2')
+url='http://www.wireshark.org/'
+screenshot='https://blog.wireshark.org/wp-content/uploads/2015/11/Main-window-2.0.0rc2.png'
+install=${pkgname}.install
+source=(http://www.wireshark.org/download/src/${pkgname}-${pkgver}.tar.bz2)
+sha256sums=('a6847e741efcba6cb9d92d464d4219917bee3ad0b8f5b0f80d4388ad2f3f1104')
+
+prepare() {
+  cd ${pkgname}-${pkgver}
+  
+  sed -i 's/Exec=wireshark/Exec=wireshark-qt/g' wireshark.desktop
+}
+
+build() {
+  cd ${pkgname}-${pkgver}
+  
+  ./autogen.sh 
+  ./configure \
+      --prefix=/usr \
+      --with-qt=5 \
+      --with-ssl \
+      --with-pcap \
+      --with-libcap \
+      --with-zlib \
+      --with-lua \
+      --with-krb5 \
+      --with-portaudio \
+      --with-gtk2=no \
+      --with-gtk3=no
+  make all
+}
+
+package() {
+  cd ${pkgname}-${pkgver}
+
+  make DESTDIR="${pkgdir}" install
+
+  #wireshark uid group is 150
+  chgrp 150 "${pkgdir}/usr/bin/dumpcap"
+  chmod 754 "${pkgdir}/usr/bin/dumpcap"
+  #rm "${pkgdir}/usr/bin/wireshark"
+
+  # Headers
+  install -dm755 ${pkgdir}/usr/include/${pkgname}/{epan/{crypt,dfilter,dissectors,ftypes,wmem},wiretap,wsutil}
+
+  install -m644 cfile.h config.h file.h register.h ws_diag_control.h ws_symbol_export.h "${pkgdir}/usr/include/${pkgname}"
+  for d in epan epan/crypt epan/dfilter epan/dissectors epan/ftypes epan/wmem wiretap wsutil; do
+    install -m644 ${d}/*.h ${pkgdir}/usr/include/${pkgname}/${d}
+  done
+  
+
+  for d in 16 32 48; do
+    install -Dm644 image/hi${d}-app-wireshark.png  \
+                   "${pkgdir}/usr/share/icons/hicolor/${d}x${d}/apps/wireshark.png"
+  done
+
+  for d in 16 24 32 48 64 128 256 ; do
+    install -Dm644 image/WiresharkDoc-${d}.png \
+                   "${pkgdir}/usr/share/icons/hicolor/${d}x${d}/mimetypes/application-vnd.tcpdump.pcap.png"
+  done
+
+  install -Dm644 wireshark.desktop "${pkgdir}/usr/share/applications/wireshark.desktop"
+  sed -i s!wireshark-qt!wireshark! \
+  ${pkgdir}/usr/share/applications/wireshark.desktop
+  rm "${pkgdir}/usr/share/applications/wireshark-gtk.desktop"
+}
