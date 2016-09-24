@@ -6,7 +6,7 @@ pkgbase="libreoffice-i18n"
 
 _rcver=5.2.1.2
 pkgver=5.2.1
-pkgrel=1
+pkgrel=2
 depends=("libreoffice-common>=$pkgver")
 
 _oodlver=${pkgver}
@@ -138,10 +138,14 @@ _languages=(
 )
 
 prepare() {
-  for i in ${pkgname[@]}
-   do _pkglang=${i#*-}
+  for i in ${pkgname[@]}; do
+    _pkglang=${i#*-}
     echo ${_pkglang} " unpacking..."
     cd ${srcdir}/LibreOffice_${_dirver}_Linux_x86_rpm_langpack_${_pkglang}/RPMS
+
+    # Remove dictionaries, which have duplicate files for different languages,
+    # to be shipped separately.
+    rm -vf *-dict-*.rpm || /bin/true
 
     for j in *.rpm
       do rpmextract.sh $j
@@ -160,13 +164,6 @@ _package() {
   mkdir -p "$pkgdir"/usr/lib/libreoffice
   cp -R opt/libreoffice*/* "$pkgdir"/usr/lib/libreoffice
   chown root:root -R "$pkgdir"/usr/lib/libreoffice
-  
-  # remove en-US.dic from en-GB package
-  if [ $1 == "en-GB" ]; then
-    if [ -e "$pkgdir"/usr/lib/libreoffice/share/wordbook/en-US.dic ]; then
-      rm "$pkgdir"/usr/lib/libreoffice/share/wordbook/en-US.dic
-    fi
-  fi
 }
   
 for _lang in "${_languages[@]}"; do
