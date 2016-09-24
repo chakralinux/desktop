@@ -6,23 +6,24 @@
 
 pkgname=openbsd-netcat
 _pkgver=1.105
-_pkgver_debrel=6
+_pkgver_debrel=7
 pkgver="${_pkgver}.${_pkgver_debrel}"
-pkgrel=1
+pkgrel=2
 pkgdesc="TCP/IP swiss army knife. OpenBSD variant."
 arch=('i686' 'x86_64')
 url="http://packages.debian.org/sid/netcat-openbsd"
 license=('BSD')
 depends=('glib2' 'libbsd')
 makedepends=('gcc' 'make')
+provides=(netcat)
+conflicts=('gnu-netcat')
 source=("http://ftp.debian.org/debian/pool/main/n/netcat-openbsd/netcat-openbsd_${_pkgver}.orig.tar.gz"
         "http://ftp.debian.org/debian/pool/main/n/netcat-openbsd/netcat-openbsd_${_pkgver}-${_pkgver_debrel}.debian.tar.gz")
 md5sums=('7e67b22f1ad41a1b7effbb59ff28fca1'
-         '1928b269b86d404ffb8ff57d3ead1d2c')
+         'e914f8eb7eda5c75c679dd77787ac76b')
 
 build() {
   cd "${srcdir}/netcat-openbsd-${_pkgver}"
-  #patch -p1 < "../netcat-openbsd_${_pkgver}-${_pkgver_debrel}.diff"
   for i in $(cat ../debian/patches/series); do
     echo "** patch ${i}" 1>&2
     cat "../debian/patches/${i}"
@@ -38,5 +39,3 @@ package() {
   install nc "${pkgdir}/usr/bin/nc.openbsd"
   install nc.1 "${pkgdir}/usr/share/man/man1/nc.openbsd.1"
 }
-
-# vim:set ts=2 sw=2 et:
