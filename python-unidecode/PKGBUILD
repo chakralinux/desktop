@@ -5,7 +5,7 @@ pkgbase=python-unidecode
 pkgname=('python2-unidecode' 'python3-unidecode')
 _pkgname=Unidecode
 pkgver=0.04.19
-pkgrel=1
+pkgrel=2
 pkgdesc='ASCII transliterations of Unicode text.'
 arch=('x86_64')
 license=('GPL')
@@ -31,12 +31,14 @@ build() {
 
 package_python2-unidecode() {
   cd python2-unidecode
-
   python2 setup.py install --root="${pkgdir}" --optimize='1'
+  cd $pkgdir/usr/bin
+  mv unidecode unidecode2
+  ln -s unidecode2 unidecode
 }
 
 package_python3-unidecode() {
   cd python3-unidecode
-
   python3 setup.py install --root="${pkgdir}" --optimize='1'
+  mv unidecode unidecode3
 }
