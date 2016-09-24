@@ -2,16 +2,18 @@
 # Contributor: Ionut Biru <ibiru@archlinux.org>
 
 pkgname=js185
-pkgver=1.0.0
-pkgrel=2
+pkgver=1.8.5
+pkgrel=1
 pkgdesc="JavaScript interpreter and libraries (legacy)"
-arch=(i686 x86_64)
+arch=(x86_64)
 url="https://developer.mozilla.org/En/SpiderMonkey/1.8.5"
 license=(MPL)
 depends=(nspr gcc-libs)
 makedepends=(python2 zip)
+provides=("js=$pkgver")
+conflicts=(js)
 options=(!staticlibs)
-source=(http://ftp.mozilla.org/pub/mozilla.org/js/$pkgname-$pkgver.tar.gz)
+source=(http://ftp.mozilla.org/pub/mozilla.org/js/$pkgname-1.0.0.tar.gz)
 md5sums=('a4574365938222adca0a6bd33329cb32')
 
 build() {
