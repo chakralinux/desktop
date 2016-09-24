@@ -1,6 +1,6 @@
 pkgname=opal
 pkgver=3.16.2
-pkgrel=1
+pkgrel=2
 pkgdesc="Open Phone Abstraction Library"
 arch=('x86_64')
 url="http://www.opalvoip.org/"
@@ -12,7 +12,7 @@ sha1sums=('786d0bb251bd14adcdf62703b12440d9ee7ce6cb')
 
 build() {
   cd $srcdir/$pkgname-$pkgver
-
+  CFLAGS+=" -fPIC" \
   ./configure \
     --localstatedir=/var \
     --prefix=/usr \
