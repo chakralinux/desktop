@@ -1,59 +1,47 @@
-#
-# Games Packages for Chakra, part of chakra-project.org
-#
-# Maintainer: Adrián Chaves Fernández (Gallaecio) <adriyetichaves@gmail.com>
-
-pkgname=bullet
-_pkgname=bullet3
+pkgbase=bullet
+_pkgbase=bullet3
+pkgname=('bullet' 'bullet-doc')
 pkgver=2.83.7
-pkgrel=1
+pkgrel=2
 pkgdesc="A 3D Collision Detection and Rigid Body Dynamics Library for games and animation"
 arch=('x86_64')
 url="http://www.bulletphysics.com/Bullet/"
 license=('ZLIB')
-depends=('freeglut')
 makedepends=('cmake' 'doxygen' 'graphviz' 'ttf-dejavu' 'mesa' 'glu')
-changelog=ChangeLog
-source=("https://github.com/bulletphysics/bullet3/archive/${pkgver}.tar.gz")
+source=("https://github.com/bulletphysics/$_pkgbase/archive/$pkgver.tar.gz")
 md5sums=('39fd0138fcb59047c12861f3b65c063e')
 
 build() {
-  cd $srcdir/$_pkgname-$pkgver
-
-  # Get a clean build directory.
+  cd $_pkgbase-$pkgver
   [[ -d build ]] && rm -rf build
-  mkdir build && cd build 
-
-  # Generate CMake Makefile.
+  mkdir build && cd build
   cmake .. \
        -DCMAKE_INSTALL_PREFIX=/usr \
        -DBUILD_SHARED_LIBS=1 \
        -DINSTALL_LIBS=1 \
        -DINSTALL_EXTRA_LIBS=1 \
-       -DCMAKE_BUILD_TYPE=Release
-
+       -DCMAKE_BUILD_TYPE=RelWithDebInfo
   make
-
-  # Generate documentation:
   cd ..
   doxygen
 }
 
-package() {
-  cd $srcdir/$_pkgname-$pkgver/build
-
+package_bullet() {
+  cd $_pkgbase-$pkgver/build
   make DESTDIR=$pkgdir install
+  install -Dm644 ../LICENSE.txt ${pkgdir}/usr/share/licenses/${pkgname}/LICENSE
+}
 
-  install -Dm755 examples/ExampleBrowser/App_ExampleBrowser ${pkgdir}/usr/bin/bullet3_examplebrowser
+package_bullet-doc() {
+  pkgdesc="Documentation for bullet (includes examples and the example browser)"
+  depends=(glu)
 
-  cd ..
-
-  # install docs
-  install -Dm644 docs/GPU_rigidbody_using_OpenCL.pdf ${pkgdir}/usr/share/doc/bullet/GPU_rigidbody_using_OpenCL.pdf
-  install -Dm644 docs/Bullet_User_Manual.pdf ${pkgdir}/usr/share/doc/bullet/Bullet_User_Manual.pdf
-  install -Dm644 docs/BulletQuickstart.pdf ${pkgdir}/usr/share/doc/bullet/BulletQuickstart.pdf
-  cp -r html ${pkgdir}/usr/share/doc/bullet/html 
-
-  # License:
-  install -Dm644 LICENSE.txt ${pkgdir}/usr/share/licenses/${pkgbase}/LICENSE
+  cd $_pkgbase-$pkgver/build
+  install -Dm755 examples/ExampleBrowser/App_ExampleBrowser ${pkgdir}/usr/bin/bullet_examplebrowser
+  mkdir -p $pkgdir/usr/lib
+  find examples/ -name '*.so' -exec cp {} $pkgdir/usr/lib/ \;
+  mkdir -p $pkgdir/usr/share/doc/$pkgbase/
+  cp ../docs/*.pdf $pkgdir/usr/share/doc/$pkgbase/
+  cp -r ../html ${pkgdir}/usr/share/doc/bullet/html
+  install -Dm644 ../LICENSE.txt ${pkgdir}/usr/share/licenses/${pkgname}/LICENSE
 }
