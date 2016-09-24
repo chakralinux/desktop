@@ -4,7 +4,7 @@ source ../kdeapps.conf
 pkgname=chakra-common
 arch=('x86_64')
 pkgver=${_kdever}
-pkgrel=1
+pkgrel=2
 pkgdesc="Common configuration files, scripts and artwork"
 url="http://www.chakraos.org"
 license=('GPL' 'BSD')
@@ -17,9 +17,9 @@ depends=("qt5-base"
          'glibc>=2.15'
          'python3'  'python3-jinja' 'python3-pyelftools' 'python3-tqdm')
 install=chakra-common.install
-source=('http://kde-apps.org/CONTENT/content-files/48411-rootactions_servicemenu_2.8.6.tar.gz'
+source=('https://dl.opendesktop.org/api/files/download/id/1466046059/48411-rootactions_servicemenu_2.9.tar.gz'
         'servicemenu-copy-path.desktop'
-        'http://www.kde-apps.org/CONTENT/content-files/102825-compressattach.desktop.bz2'
+        #'http://www.kde-apps.org/CONTENT/content-files/102825-compressattach.desktop.bz2'
         'servicemenu-rootactions.patch'
         'Chakra-Bugs.desktop'
         'Chakra-ChangeLog.desktop'
@@ -35,8 +35,8 @@ source=('http://kde-apps.org/CONTENT/content-files/48411-rootactions_servicemenu
         'chakra-update-sycoca.sh'
         'chakra-update-user-sycoca.sh'
         'chakra-sysinfo.sh'
-        'chakra-backup.sh'
-        'Chakra-backup.desktop'
+        #'chakra-backup.sh'
+        #'Chakra-backup.desktop'
         'updates.conf'
         'chakra-icons.tar.gz'
         'agent-startup.sh'
@@ -46,9 +46,8 @@ source=('http://kde-apps.org/CONTENT/content-files/48411-rootactions_servicemenu
         'chakra-check-links.py::https://raw.githubusercontent.com/Inkane/listMissingLibs/master/list_missing_libs.py')
         # skipping chakra-paste because gitorious has issues with wget
 #        'https://gitorious.org/chakra-paste/chakra-paste/archive/05f0a884a4de1460309ee95d678eb034c4c964b5.tar.gz'
-sha256sums=('9b2cdc947f1da2c56d0f009ff470f7aa9021f214a2470c33ee4628281b7c1163'
+sha256sums=('0fd5653d11623648286e911631d6b82a45eb2db0f5a341b46289910b12c3abcc'
             '2bf00472d9b50bc9befcf9cdca92a1a6d31690287de330e6390ca65c17aba02e'
-            'ca7d66aec559282581dd577746dff86b9b4127ae871ee2788b74ab66f99edbfa'
             'ba4b1f429bd6900f6989df6e50b69fea38110ccb4a304a903de6e291d0af8b74'
             '6e8e719bff3827844e87dbfa4676ef9a00ec626e2d2d508508badb284f4d7bae'
             '9dc9f3afb6b201e5dc409827d78f5738f0523025b960759026d01fc9b53c64cf'
@@ -64,8 +63,6 @@ sha256sums=('9b2cdc947f1da2c56d0f009ff470f7aa9021f214a2470c33ee4628281b7c1163'
             'a99cbf6a29700b71564baffeb8b8d7f645a4e67a9868b68609c31937beef3d15'
             '79bd1a0dbce88e1ab12a5db3aa87b1a7bbd464df7e64facc6c33abd507706bbf'
             '3ac5808d9da1b37e0787ee11f4154306847840697e5590c1856b5bd13727c119'
-            'fdbf09b51795af2603569805e00c43e05f531e901e81c7b9189b4897a89a50ee'
-            '2ea8bc1cbe178d66f3560d166e4158d1ce953a349d8c7658891f5600736e67b7'
             'da64dc6bc248703da7eb8ad38af73b87c9836b3b35cf0529e988a69ee5922e8b'
             'b20160225a990513ae58027b7e70bb958253da881be02f296e54e9ccca09b348'
             '15dbeea94793a9d6922f7c5fed107f63d5b2b5715c12874f0884e4dc5905d5c6'
@@ -73,7 +70,6 @@ sha256sums=('9b2cdc947f1da2c56d0f009ff470f7aa9021f214a2470c33ee4628281b7c1163'
             '9e0c9408c9bc12aeca2fd66a4723b57a6878307ba956df7cca43f8112dd71429'
             '7e4ae4587973d6cc253b20ff7573ac25801f148f794a9000901c5137cd4780b3'
             '9d3c09db7e5f6ae0c8cdb47ba686b22260266126a214c87af0fae2bb355eb03e')
-
 
 package() {
     # Install scripts for gpg/ssh-agent
@@ -99,14 +95,14 @@ package() {
     install -D -m755 -o root -g root ${srcdir}/chakra-sysinfo.sh ${pkgdir}/usr/bin/chakra-sysinfo
 
     # Install backup script
-    install -D -m755 -o root -g root ${srcdir}/chakra-backup.sh ${pkgdir}/usr/bin/chakra-backup
-    install -D -m644 -o root -g root ${srcdir}/Chakra-backup.desktop ${pkgdir}/usr/share/applications/Chakra-backup.desktop
+    #install -D -m755 -o root -g root ${srcdir}/chakra-backup.sh ${pkgdir}/usr/bin/chakra-backup
+    #install -D -m644 -o root -g root ${srcdir}/Chakra-backup.desktop ${pkgdir}/usr/share/applications/Chakra-backup.desktop
 
     # Install config file for updates
     install -D -m755 -o root -g root ${srcdir}/updates.conf ${pkgdir}/etc/chakra/updates.conf
 
     # Install root actions
-    cd ${srcdir}/rootactions_servicemenu_2.8.6/Root_Actions_2.8.6/
+    cd ${srcdir}/rootactions_servicemenu_2.9/Root_Actions_2.9/
     install -dm755 ${pkgdir}/usr/share/kservices5/ServiceMenus/
     install -Dm755 dolphin-KDE4/*.desktop ${pkgdir}/usr/share/kservices5/ServiceMenus/
     install -Dm644 krusader-KDE4/krusader_rootactions.xml "$pkgdir"/usr/share/apps/krusader/krusader_rootactions.xml
