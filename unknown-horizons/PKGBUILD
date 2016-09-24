@@ -1,12 +1,12 @@
 # Forked from https://aur.archlinux.org/cgit/aur.git/plain/PKGBUILD?h=unknown-horizons
 pkgname=unknown-horizons
 pkgver=2014.1
-pkgrel=3
+pkgrel=4
 pkgdesc="2D realtime strategy simulation with an emphasis on economy and city building."
 arch=('x86_64')
 url="http://www.unknown-horizons.org/"
 license=('GPL' 'CCPL')
-depends=('fife-git' 'python2' 'python2-pillow' 'python2-yaml')
+depends=('fife>0.3.5' 'python2' 'python2-pillow' 'python2-yaml')
 makedepends=('intltool')
 conflicts=('unknown-horizons-svn' 'unknown-horizons-git')
 source=("https://github.com/${pkgname}/${pkgname}/releases/download/${pkgver}/${pkgname}-${pkgver}.tar.xz"
@@ -20,6 +20,7 @@ prepare() {
     # Fix crash with color overlays if using atlases (the default)
     patch -p1 -i "${srcdir}/fix-atlas-overlays.diff"
 }
+
 package() {
     cd "$srcdir/$pkgname"
     python2 setup.py --quiet install --root="$pkgdir" --optimize=1

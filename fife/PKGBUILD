@@ -1,0 +1,42 @@
+# Forked from https://aur.archlinux.org/cgit/aur.git/plain/PKGBUILD?h=fife-git
+
+# NOTE: We are using a Git revision because the latest stable version of Unknown
+# Horizons cannot work with FIFE 0.3.5. As soon as FIFE 0.3.6 is released, we
+# should switch back to stable versions.
+
+pkgname=fife
+_commit=9b2ca6c
+pkgver=0.3.5.2988.9b2ca6c
+pkgrel=1
+pkgdesc="Flexible Isometric Free Engine is a cross platform game creation framework"
+arch=('x86_64')
+url="http://fifengine.net/"
+license=('GPL')
+depends=('boost-libs' 'fifechan-git' 'libgl' 'libogg' 'libpng' 'libvorbis' 'tinyxml'
+         'openal' 'python2' 'sdl2' 'sdl2_image' 'sdl2_ttf' 'tinyxml')
+makedepends=('git' 'cmake' 'boost' 'swig' 'zlib')
+conflicts=(fife-git fife-svn)
+replaces=(fife-git)
+source=(git+https://github.com/fifengine/fifengine.git#commit=$_commit)
+md5sums=('SKIP')
+
+pkgver() {
+  cd "$srcdir/fifengine"
+  printf "0.3.5.%s.%s" $(git rev-list --count HEAD) $(git rev-parse --short HEAD)
+}
+
+build() {
+  cd $srcdir/fifengine
+  [[ -d build ]] && rm -r build
+  mkdir build && cd build
+  cmake \
+    -DCMAKE_INSTALL_PREFIX=/usr \
+    -DCMAKE_BUILD_TYPE=RelWithDebInfo \
+    ..
+  make
+}
+ 
+package() {
+  cd $srcdir/fifengine/build
+  make DESTDIR=$pkgdir install
+}
