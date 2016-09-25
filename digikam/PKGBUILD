@@ -1,8 +1,8 @@
 pkgbase=digikam
 pkgname=('digikam' 'kipi-plugins')
-_pkgver=5.1.0
+_pkgver=5.2.0
 pkgver=${_pkgver//-/_}
-pkgrel=2
+pkgrel=1
 epoch=1
 url="http://digikam.sourceforge.net"
 arch=('x86_64')
@@ -13,12 +13,12 @@ makedepends=('extra-cmake-modules' 'libkipi' 'libksane' 'liblqr' 'boost'
              'libusb' 'kio' 'kdoctools' 'marble' 'kfilemetadata' 'akonadi-contact' 'qt5-multimedia'
              'threadweaver' 'kcalcore' 'knotifyconfig' 'kdelibs4support' 'libkvkontakte' 'libmediawiki' 'mariadb')
 source=("http://download.kde.org/stable/${pkgname}/${pkgname}-${_pkgver}.tar.xz")
-sha1sums=('87a843c39f45b8704ead6e6029e52fb03ee44680')
+sha1sums=('329195ac7ea890a3bec435cd2ed83b04bc80ba1d')
 
 prepare() {
   mkdir -p build
 
-  sed -e '/add_subdirectory(showfoto)/d' -i $pkgname-${_pkgver}/doc-translated/digikam/CMakeLists.txt
+  sed -e '/add_subdirectory(showfoto)/d' -i $pkgname-${_pkgver}/doc-translated/CMakeLists.txt
 }
 
 build() {
@@ -31,13 +31,13 @@ build() {
     -DCMAKE_BUILD_TYPE=RelWithDebInfo \
     -DCMAKE_SKIP_RPATH=ON \
     -DBUILD_TESTING=OFF \
-    -DKDE_INSTALL_USE_QT_SYS_PATHS=ON \
     -DENABLE_KFILEMETADATASUPPORT=ON \
     -DENABLE_MEDIAPLAYER=ON \
     -DENABLE_AKONADICONTACTSUPPORT=ON \
     -DENABLE_OPENCV3=ON \
     -DENABLE_MYSQLSUPPORT=ON \
-    -DENABLE_INTERNALMYSQL=ON
+    -DENABLE_INTERNALMYSQL=ON \
+    -DENABLE_APPSTYLES=ON
     
   make
 }
@@ -46,14 +46,16 @@ package_digikam() {
   pkgdesc="Digital photo management application for KDE"
   depends=('liblqr' 'libkipi' 'lensfun' 'libpgf' 'opencv' 'akonadi-contact'
 	'knotifyconfig' 'libksane' 'kfilemetadata' 'qt5-multimedia' 'marble' 'mariadb' 'kcalcore')
-  optdepends=('kipi-plugins: more tools and plugins')
+  optdepends=('kipi-plugins: more tools and plugins'
+	      'qt5-imageformats: WEBP format support'
+	      'hugin: panorama tool')
   install=digikam.install
 
   cd build/core
   make DESTDIR="$pkgdir" install
   cd $srcdir/build/doc/digikam
   make DESTDIR="$pkgdir" install
-  cd $srcdir/build/doc-translated/digikam
+  cd $srcdir/build/doc-translated
   make DESTDIR="$pkgdir" install
   cd $srcdir/build/po
   make DESTDIR="$pkgdir" install
@@ -78,10 +80,6 @@ package_kipi-plugins() {
 
   cd build/extra
   make DESTDIR="$pkgdir" install
-  cd $srcdir/build/doc/kipi-plugins
-  make DESTDIR="$pkgdir" install
-  cd $srcdir/build/doc-translated/kipi-plugins
-  make DESTDIR="pkgdir" install
   cd $srcdir/build/po
   make DESTDIR="$pkgdir" install
 
