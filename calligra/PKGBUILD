@@ -7,7 +7,6 @@ pkgname=('calligra-braindump'
          'calligra-handbook'
          'calligra-karbon'
          'calligra-kexi'
-         'calligra-krita'
          'calligra-libs'
          'calligra-plan'
          'calligra-sheets'
@@ -48,13 +47,10 @@ makedepends=('automoc4'
              'libwpd'
              'libwpg'
              'libwps'
-             'opencolorio'
              'openjpeg'
-             'poppler-qt4'
              'postgresql'
              'pstoedit'
              'qrencode'
-             'vc'
              'xbase')
 options=("debug")
 groups=('calligra')
@@ -82,6 +78,7 @@ build() {
         -DCMAKE_INSTALL_LIBDIR=lib \
         -DBUILD_active=OFF \
         -DWITH_Soprano=OFF \
+        -DBUILD_KRITA=OFF \
         -DMARBLE_INCLUDE_DIR=/usr/include/marble4 \
         -DMARBLE_GLOBAL_HEADER=/usr/include/marble4/MarbleGlobal.h \
         -DMARBLE_LIBRARIES=/usr/lib/libmarblewidget.so
@@ -184,32 +181,6 @@ package_calligra-kexi() {
     cd build/kexi
     make DESTDIR="${pkgdir}" install
     cd ../doc/kexi
-    make DESTDIR="${pkgdir}" install
-}
-
-package_calligra-krita() {
-    pkgdesc="Digital painting application"
-    depends=('calligra-libs'
-             'fftw'
-             'glew'
-             'curl'
-             'gsl'
-             'hicolor-icon-theme'
-             'kde-runtime'
-             'lcms2'
-             'libkdcraw'
-             'opencolorio'
-             'openexr'
-             'poppler-qt'
-             'qimageblitz'
-             'shared-mime-info'
-             'exiv2>=0.24'
-             'vc')
-    provides=('krita')
-    categories=('graphics')
-    install=calligra-krita.install
-
-    cd build/krita
     make DESTDIR="${pkgdir}" install
 }
 
