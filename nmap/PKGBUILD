@@ -1,6 +1,6 @@
 pkgname=nmap
-pkgver=7.12
-pkgrel=2
+pkgver=7.30
+pkgrel=1
 pkgdesc="A network exploration tool and security/port scanner"
 arch=('x86_64')
 url="http://nmap.org"
@@ -11,7 +11,7 @@ makedepends=('python2')
 optdepends=('pygtk: gui for nmap - zenmap')
 options=('!makeflags')
 source=(http://nmap.org/dist/${pkgname}-${pkgver}.tar.bz2)
-sha256sums=('63df082a87c95a189865d37304357405160fc6333addcf5b84204c95e0539b04')
+sha256sums=('ba38a042ec67e315d903d28a4976b74999da94c646667c0c63f31e587d6d8d0f')
 
 build() {
   cd "${srcdir}/${pkgname}-${pkgver}"
@@ -22,8 +22,7 @@ build() {
 	  --libexecdir=/usr/lib \
 	  --mandir=/usr/share/man
 
-  # added LUA_LIBS as workaround to liblua not correctly referenced (http://ubuntuforums.org/showthread.php?t=2164741)
-  make "LUA_LIBS=../liblua/liblua.a -ldl -lm"
+  make
 }
 
 package() {
