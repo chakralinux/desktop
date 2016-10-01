@@ -1,6 +1,6 @@
 pkgname=yarock
 _pkgname=Yarock
-pkgver=1.1.5
+pkgver=1.1.6
 pkgrel=1
 pkgdesc="A Modern Music Player with collection browser based on cover art."
 arch=('x86_64')
@@ -14,7 +14,7 @@ categories=('multimedia')
 source=("http://launchpad.net/$pkgname/1.x/$pkgver/+download/${_pkgname}_${pkgver}_source.tar.gz"
 	"qt-build.patch"
         "phonon.patch")
-sha256sums=('bd88f136ccf6fbc03dd82839e11ef990940d20834222a0bba3ec35a3b2fa4ec4'
+sha256sums=('a7acaeed92b23addac922ccf5e0ce076a5ac21eeb5d78005e9cfa5ff5413b387'
             'bee9ea2ca4fa4ac4227515cd4533d0b581f91e6a6297544fe3a6bcfa5dcafb7f'
             '2923d2930ba7f1fe4e73ebcbbcae18e9316eb56b1f02132ea89d9d2db3f5c473')
 
@@ -31,7 +31,7 @@ prepare() {
 }	    
 	    
 build() {
-  cd $srcdir/${_pkgname}_${pkgver}_source
+  cd ${_pkgname}_${pkgver}_source
 
   cmake CMakeLists.txt \
     -DCMAKE_BUILD_TYPE=Release \
@@ -42,6 +42,6 @@ build() {
 }
 
 package() {
-  cd $srcdir/${_pkgname}_${pkgver}_source
+  cd ${_pkgname}_${pkgver}_source
   make DESTDIR=$pkgdir install
 }
