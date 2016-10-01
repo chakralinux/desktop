@@ -1,5 +1,5 @@
 pkgname=converseen
-pkgver=0.9.5.1
+pkgver=0.9.5.2
 _pkgver=${pkgver%.*}
 pkgrel=1
 pkgdesc="The batch image converter and resizer. It supports more than 100 image formats."
@@ -11,19 +11,18 @@ depends=('imagemagick' 'qt5-base' 'libwmf' 'openexr' 'fftw')
 makedepends=('cmake' 'qt5-tools')
 source=("https://downloads.sourceforge.net/sourceforge/${pkgname}/${pkgname}-${pkgver}.tar.bz2")
 screenshot=('http://converseen.sourceforge.net/res/converseen1.png')
-sha1sums=('34c65b70a06421dd3c81f55f07ebf37ecf6cab0e')
+sha1sums=('0f1e13157cf553f22b88d48f5d8f7adad3150f91')
 
 build() {
-  cd "${srcdir}"
+  cd $pkgname-$pkgver
   mkdir -p build && cd build
-  cmake ../${pkgname}-${pkgver} \
-          -DCMAKE_BUILD_TYPE=Release \
+  cmake .. -DCMAKE_BUILD_TYPE=Release \
           -DCMAKE_INSTALL_PREFIX=/usr
   make
 }
 
 package() {
-  cd "${srcdir}/build"
+  cd $pkgname-$pkgver/build
 
-  make DESTDIR="${pkgdir}" install
+  make DESTDIR=$pkgdir install
 }
