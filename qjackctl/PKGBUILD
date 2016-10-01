@@ -1,5 +1,5 @@
 pkgname=qjackctl
-pkgver=0.4.2
+pkgver=0.4.3
 pkgrel=1
 pkgdesc="A Qt front-end for the JACK low-latency audio server"
 url="http://qjackctl.sourceforge.net/"
@@ -10,17 +10,23 @@ makedepends=('qt5-tools')
 options=('!makeflags')
 categories=('multimedia')
 source=("http://downloads.sourceforge.net/$pkgname/$pkgname-$pkgver.tar.gz")
-sha1sums=('6496615d305af476387656f8af869e8a76222db9')
+sha1sums=('c093c2c93be9577aa4ef00e6f66cee6fa5d80190')
+
+prepare() {
+  cd $pkgname-$pkgver
+# fix to make .configure recognize Qt>=5.1
+export CXXFLAGS="${CXXFLAGS} -std=c++11" 
+}
 
 build() {
-  cd "$srcdir/$pkgname-$pkgver"
+  cd $pkgname-$pkgver
 
  ./configure --prefix=/usr
   make
 }
 
 package() {
-  cd "$srcdir/$pkgname-$pkgver"
+  cd $pkgname-$pkgver
 
-  make DESTDIR="$pkgdir/" install
+  make DESTDIR=$pkgdir install
 }
