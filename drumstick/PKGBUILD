@@ -1,7 +1,7 @@
 # Arch contribution https://www.archlinux.org/packages/community/x86_64/drumstick/
 
 pkgname=drumstick
-pkgver=1.0.2
+pkgver=1.1.0
 pkgrel=1
 pkgdesc="MIDI libraries for Qt5/C++"
 arch=('x86_64')
@@ -11,15 +11,15 @@ depends=('desktop-file-utils' 'fluidsynth' 'hicolor-icon-theme' 'shared-mime-inf
 makedepends=('cmake' 'doxygen' 'docbook-xsl')
 install="$pkgname.install"
 source=("http://downloads.sourceforge.net/$pkgname/$pkgver/$pkgname-$pkgver.tar.bz2")
-sha256sums=('34aab5812c35ba16f8e606632a56c38879f470e3e395d580412c73ef937f8750')
+sha256sums=('ae1d2c0d21b45d144e181b873ffbc2979a294fab31b8d71a5b0b8cad3276f38e')
 
 prepare() {
   cd $pkgname-$pkgver
-  [ -d b ] || mkdir b
+  [ -d build ] || mkdir build
 }
 
 build() {
-  cd $pkgname-$pkgver/b
+  cd $pkgname-$pkgver/build
   cmake .. -DCMAKE_INSTALL_PREFIX=/usr \
            -DCMAKE_BUILD_TYPE=Release \
            -DLIB_SUFFIX=
@@ -27,6 +27,6 @@ build() {
 }
 
 package() {
-  cd $pkgname-$pkgver/b
-  make DESTDIR="$pkgdir/" install
+  cd $pkgname-$pkgver/build
+  make DESTDIR=$pkgdir install
 }
