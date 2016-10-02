@@ -1,6 +1,5 @@
 pkgname=plasma5-applets-nowdock
-_name=plasmaqmldock
-pkgver=0.3.1
+pkgver=0.3.2
 pkgrel=1
 pkgdesc="A pure qml plasmoid or kwin script that creates a mac style effect for tasks in Plasma 5"
 arch=('x86_64')
@@ -8,14 +7,20 @@ url="https://github.com/psifidotos/plasmaqmldock"
 license=('GPL')
 group=('plasma5-applets')
 depends=('plasma-workspace' 'qt5-graphicaleffects')
-source=("https://dl.opendesktop.org/api/files/download/id/1474742791/plasmoid-nowdock-v$pkgver.plasmoid")
-sha256sums=('f19341a03b757aa29fbfff3a3980a787eb806724107806a569a30038b88a0f3c')
+makedepends=('extra-cmake-modules')
+source=("https://github.com/psifidotos/nowdock-plasmoid/archive/v${pkgver}.tar.gz")
+sha256sums=('6d7993185ac634c244fc35fd2b815a47652aeab3e15a903250686615dba62578')
  
+build() {
+  cd ${srcdir}/nowdock-plasmoid-${pkgver}
+  mkdir -p build && cd build
+
+  cmake -DCMAKE_INSTALL_PREFIX=/usr ..
+  make
+}
+
 package() {
- # cd "${_name}-$pkgver"
- 
-  mkdir -p $pkgdir/usr/share/plasma/plasmoids/org.kde.store.nowdock.plasmoid
-  cp -r * $pkgdir/usr/share/plasma/plasmoids/org.kde.store.nowdock.plasmoid
-  # this is just a symlink to the package
-  rm $pkgdir/usr/share/plasma/plasmoids/org.kde.store.nowdock.plasmoid/plasmoid-nowdock-v$pkgver.plasmoid
+  cd ${srcdir}/nowdock-plasmoid-${pkgver}/build
+  
+  make DESTDIR=${pkgdir} install
 }
