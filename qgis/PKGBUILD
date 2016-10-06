@@ -1,6 +1,6 @@
 pkgname=qgis
 pkgver=2.16.3
-pkgrel=1
+pkgrel=2
 pkgdesc='A Geographic Information System (GIS) that supports vector, raster and database formats'
 url='http://qgis.org/'
 license=('GPL')
@@ -46,12 +46,9 @@ package() {
     ln -s /usr/bin/qgis "$pkgdir/usr/bin/quantum-gis"
 
     # install some freedesktop.org compatibility
-    install -D -m644 ../debian/qgis.desktop \
-    "$pkgdir/usr/share/applications/qgis.desktop"
-    install -D -m644 ../debian/qbrowser.desktop \
-    "$pkgdir/usr/share/applications/qbrowser.desktop"
-    install -dm755 "$pkgdir/usr/share/pixmaps" \
-    "$pkgdir/usr/share/mimelnk/application"
+    install -Dm644 ../debian/qgis.desktop "$pkgdir/usr/share/applications/qgis.desktop"
+    install -Dm644 ../debian/qbrowser.desktop "$pkgdir/usr/share/applications/qbrowser.desktop"
+    install -dm755 "$pkgdir/usr/share/pixmaps" "$pkgdir/usr/share/mimelnk/application"
     for mime in ../debian/mime/application/*.desktop
         do install -m644 "$mime" \
             "$pkgdir/usr/share/mimelnk/application"
