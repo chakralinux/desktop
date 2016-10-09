@@ -1,27 +1,22 @@
 pkgname=choqok
-pkgver=1.5
-pkgrel=2
+pkgver=1.6
+pkgrel=1
 pkgdesc="A Twitter/identi.ca/laconica client for KDE"
 url="http://choqok.gnufolks.org/"
 license=('GPL')
 arch=('x86_64')
-depends=('kde-runtime' 'qjson' 'qoauth' 'qca-ossl')
-makedepends=('cmake' 'automoc4' 'docbook-xsl')
-optdepends=('kde-baseapps-konqueror: proxy support')
+depends=('qt5-base' 'kconfigwidgets' 'kcoreaddons' 'kdoctools' 'ki18n' 'kemoticons' 'kglobalaccel'
+	 'kguiaddons' 'kcmutils' 'kio' 'knotifications' 'knotifyconfig' 'sonnet' 'ktextwidgets' 'kwallet'
+	 'kwidgetsaddons' 'kxmlgui' 'qca-qt5' 'qoauth')
+makedepends=('extra-cmake-modules' 'docbook-xsl')
 categories=('communication')
 screenshot=('http://choqok.gnufolks.org/uploads/choqok.png')
 install=${pkgname}.install
-changelog=${pkgname}.changelog
 source=("http://sourceforge.net/projects/choqok/files/Choqok/${pkgname}-${pkgver}.tar.xz")
 sha256sums=('5cb97ac4cdf9db4699bb7445a9411393073d213fea649ab0713f659f1308efe4')
 
-prepare() {
-  cd ${pkgname}-${pkgver}
-  # Install current changelog.
-  install -Dm644 changelog "${startdir}/${pkgname}.changelog"
-}
-
 build() {
+  cd ${pkgname}-${pkgver}
   mkdir -p build && cd build
   
   cmake ../${pkgname}-${pkgver} \
