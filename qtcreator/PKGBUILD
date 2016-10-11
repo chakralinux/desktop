@@ -1,7 +1,7 @@
 pkgname=qtcreator
-pkgver=4.0.3
-_pkgver=4.0
-pkgrel=2
+pkgver=4.1.0
+_pkgver=4.1
+pkgrel=1
 pkgdesc='Lightweight, cross-platform integrated development environment'
 arch=('x86_64')
 url='http://qt-project.org'
@@ -22,14 +22,20 @@ optdepends=('qt5-doc: for the integrated Qt documentation'
 install=${pkgname}.install
 source=("http://download.qt.io/official_releases/${pkgname}/${_pkgver}/${pkgver}/qt-creator-opensource-src-${pkgver}.tar.gz"
         'qtcreator.desktop')
-md5sums=('49ec41a08200e243bbcd315f258712f0'
+md5sums=('657727e4209befa4bf5889dff62d9e0a'
          '5aa242e0262fa22f75c3b59d3a4ec198')
 
-build() {
+prepare() {
   cd ${srcdir}/qt-creator-opensource-src-${pkgver}
 
   [[ -d build ]] && rm -r build
-  mkdir build && cd build
+  mkdir build
+
+  rm -rfv src/shared/qbs
+}
+
+build() {
+  cd ${srcdir}/qt-creator-opensource-src-${pkgver}/build
 
   LLVM_INSTALL_DIR=/usr qmake-qt5 CONFIG+=journald -r ../qtcreator.pro
   make
@@ -50,7 +56,4 @@ package() {
 
   install -Dm644 ${srcdir}/qtcreator.desktop ${pkgdir}/usr/share/applications/qtcreator.desktop
   install -Dm644 ${srcdir}/qt-creator-opensource-src-${pkgver}/LICENSE.GPL3-EXCEPT ${pkgdir}/usr/share/licenses/qtcreator/LICENSE.GPL3-EXCEPT
-  
-  # Split qbs to its package
-  rm -f ${pkgdir}/usr/bin/qbs*
 }
