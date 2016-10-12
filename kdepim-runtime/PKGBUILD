@@ -3,7 +3,7 @@ source ../kdeapps.conf
 
 pkgname=kdepim-runtime
 pkgver=${_kdever}
-pkgrel=4
+pkgrel=1
 pkgdesc='Extends the functionality of kdepim'
 arch=('x86_64')
 url='https://projects.kde.org/projects/kde/kdepim-runtime'
@@ -17,18 +17,12 @@ provides=('kio-pim') # the libkdepim pkg was splitted during the 16.08 release
 replaces=('kio-pim') # kio is now part of multiple packages (kmailtransport, kldap, kdepim-runtime)
 conflicts=('kio-pim') # can be removed when 16.12 is released
 
-source=("$_mirror/${pkgname}-$_kdever.tar.xz"
-        "krunner-crash.patch::https://quickgit.kde.org/?p=kdepim-runtime.git&a=commitdiff&h=c25dcbd8852879a2f7ee102ef0f6555583b3dad7&hp=5f67eab0ce7c17021f473e180633053ce9ca15bc&o=plain"
-        "krunner-crash2.patch::https://quickgit.kde.org/?p=kdepim-runtime.git&a=commitdiff&h=acb496c86356d2b2fb6df23c108436db879a58ab&hp=c25dcbd8852879a2f7ee102ef0f6555583b3dad7&o=plain")
-sha256sums=(`grep ${pkgname}-$_kdever.tar.xz  ../checksums.txt | cut -d " " -f1`
-            '054a7dccf4457b56cc0722fe6f0f3469fc5d0bee612ca4349240d71e424e4553'
-            'c3b2051eab440219473cbcdc9e5fb80fc3521bdc610758e6ef292316507b838b')
+source=("$_mirror/${pkgname}-$_kdever.tar.xz")
+sha256sums=(`grep ${pkgname}-$_kdever.tar.xz  ../checksums.txt | cut -d " " -f1`)
 
 prepare() {
   mkdir -p build
   cd ${pkgname}-${pkgver}
-  patch -Np1 -i ../krunner-crash.patch
-  patch -Np1 -i ../krunner-crash2.patch
 }
 
 build() {
