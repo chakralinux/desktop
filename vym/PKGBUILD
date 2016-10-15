@@ -1,24 +1,30 @@
 pkgname=vym
-pkgver=2.5.0
+pkgver=2.6.0
 pkgrel=1
 pkgdesc="A mindmapping tool"
 arch=('x86_64')
 url="http://www.insilmaril.de/vym/"
 license=('GPL')
-depends=('qt5-base' 'qt5-tools' 'qt5-svg' 'unzip' 'zip')
+depends=('qt5-base' 'qt5-svg' 'unzip' 'zip')
+makedepends=('qt5-tools')
 options=('!emptydirs')
 install=$pkgname.install
 screenshot="http://a.fsdn.com/con/app/proj/vym/screenshots/328321.jpg"
 source=(http://downloads.sourceforge.net/sourceforge/$pkgname/$pkgname-$pkgver.tar.bz2 \
         $pkgname.desktop)
-sha256sums=('8412c3ce8de3330fb61e7c2c75dfcde0cc955c0804d5a5f384f726eb32cc23dd'
+sha256sums=('7dc1721afb27109adc4b4aeaac6217fdd1294b38e81b33a08a476562fbdfa141'
             'e299c69c213e7aac3f5b5d0ab088132b4ec7cb63a391f272e75ed64f049d541b')
+
+prepare() {
+  cd "${srcdir}"/$pkgname-$pkgver/lang
+
+  lrelease-qt5 *.ts
+}
 
 build() {
   cd ${srcdir}/$pkgname-$pkgver
 
   qmake-qt5 PREFIX=/usr
-  lrelease-qt5 vym.pro
   make
 }
 
@@ -40,6 +46,5 @@ package() {
   
   # correct doc location
   mv doc/* "${pkgdir}"/usr/share/doc/$pkgname
-  rm -rd "${pkgdir}"/usr/doc/packages/vym/*
   mv "${pkgdir}"/usr/share/doc/vym/vym.1.gz "${pkgdir}"/usr/share/man/man1/
 }
