@@ -1,0 +1,46 @@
+# Include global configuration
+source ../kdeapps.conf
+
+pkgbase='kate'
+pkgname=('kde-baseapps-katepart')
+pkgver=${_oldkdever}
+pkgrel=1
+arch=('x86_64')
+license=('GPL' 'LGPL' 'FDL')
+makedepends=("kdelibs>=${_libver}"
+             'cmake'
+             'automoc4'
+             'docbook-xsl'
+             "kdebindings-python2>=${_oldkdever}"
+             "kdebindings-python3>=${_oldkdever}")
+options=('docs' 'debug')
+source=("$_oldmirror/${pkgbase}-$_oldkdever.tar.xz"
+        'pkgbuild-syntax-highlight.patch')
+sha256sums=('513d4ae2c36fa6b59caf3b2b685e3ea1167093d16025859cfac90d75617e707d'
+            'f6a4cc945ceaff04d5882714d19464cc252fe5d56c7b4a42c8b41d8855787fc4')
+
+prepare() {
+    mkdir "${srcdir}/build"
+    cd "${srcdir}/${pkgbase}-${pkgver}"
+    patch -p1 -i "${srcdir}"/pkgbuild-syntax-highlight.patch
+}
+
+build() {
+    cd "${srcdir}/build"
+    cmake "../${pkgbase}-${pkgver}" \
+        -DCMAKE_BUILD_TYPE=RelWithDebInfo \
+        -DKDE4_BUILD_TESTS=ON \
+        -DCMAKE_INSTALL_PREFIX=/usr \
+        -DCMAKE_{SHARED,MODULE,EXE}_LINKER_FLAGS='-Wl,--no-undefined -Wl,--as-needed'
+    make
+}
+
+package() {
+    pkgdesc='A fast and feature-rich text editor component'
+    url='http://kate-editor.org/about-katepart/'
+    depends=('kdelibs')
+    install='katepart.install'
+
+    cd "${srcdir}/build/part"
+    make DESTDIR="${pkgdir}" install
+}
