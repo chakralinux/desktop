@@ -1,22 +1,19 @@
-
 source ../kdeapps.conf
 
 pkgname=kdev-php
-pkgver=5.0.1
-_pkgver=5.0.1
+pkgver=5.0.2
 pkgrel=1
 pkgdesc="PHP language and documentation plugin for KDevelop"
-arch=(i686 x86_64)
+arch=(x86_64)
 url="http://www.kdevelop.org/"
 license=(GPL)
-option=('debug')
 depends=(kdevelop)
+makedepends=(extra-cmake-modules kdoctools kdevelop-pg-qt)
 replaces=(kdevelop-php kdevelop-php-docs)
 conflicts=(kdevelop-php kdevelop-php-docs)
 provides=(kdevelop-php kdevelop-php-docs)
-makedepends=(extra-cmake-modules kdoctools kdevelop-pg-qt)
-source=(http://download.kde.org/stable/kdevelop/$_pkgver/src/${pkgname}-$pkgver.tar.xz)
-sha1sums=('e6593ee234825d660b8cf289446e447ec006b23c')
+source=(http://download.kde.org/stable/kdevelop/$pkgver/src/${pkgname}-$pkgver.tar.xz)
+sha1sums=('80221f44ae04d342e3609f283fcceaac6553376f')
 
 prepare() {
   mkdir -p build
