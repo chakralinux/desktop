@@ -2,7 +2,7 @@
 source ../kdeapps.conf
 
 pkgname=kdevelop
-pkgver=5.0.2
+pkgver=$_kdevver
 pkgrel=1
 pkgdesc='A C/C++ development environment for KDE'
 arch=(x86_64)
@@ -21,11 +21,11 @@ optdepends=('konsole: embedded terminal'
 	'qt5-tools: qthelp plugin'
  	'okteta: hex editor integration'
 	'plasma-framework: for the plasma addons')
-conflicts=(kdevelop-qmljs)
-replaces=(kdevelop-qmljs)
 install="$pkgname.install"
-source=("http://download.kde.org/stable/$pkgname/$pkgver/src/$pkgname-$pkgver.tar.xz")
-sha1sums=('8b8816347ec22b8fa6104981da74b2b82243ea17')
+source=("http://download.kde.org/stable/$pkgname/$pkgver/src/$pkgname-$pkgver.tar.xz"{,.sig})
+sha256sums=("`grep ${pkgname}-${pkgver}.tar.xz  ../kdevelop.checksums | cut -d " " -f1`"
+            'SKIP')
+validpgpkeys=('329FD02C5AA48FCC77A4BBF0AC44AC6DB29779E6')
 
 prepare() {
   mkdir -p build
