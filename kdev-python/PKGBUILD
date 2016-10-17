@@ -1,24 +1,19 @@
-# maintainer: Neophytos Kolokotronis <tetris4@gmail.com>
-# contributor: Jakub Kozisek <nodevel at gmail dot com>
-
 source ../kdeapps.conf
 
 pkgname=kdev-python
-pkgver=5.0.1
-_pkgver=5.0.1
-_branch=stable
+pkgver=5.0.2
 pkgrel=1
 pkgdesc="Python language and documentation plugin for KDevelop"
 arch=('x86_64')
 url="http://www.kdevelop.org/"
 license=(GPL)
-depends=(kdevelop)
+depends=(kdevelop python3)
+makedepends=(extra-cmake-modules)
 provides=(kdev-python-py3)
 conflicts=(kdev-python-py3)
 replaces=(kdev-python-py3)
-makedepends=(extra-cmake-modules)
-source=("http://download.kde.org/${_branch}/kdevelop/${_pkgver}/src/${pkgname}-${pkgver}.tar.xz")
-sha1sums=('b035f78621942469f51a6fb3e14d84b781aff916')
+source=("http://download.kde.org/stable/kdevelop/${pkgver}/src/${pkgname}-${pkgver}.tar.xz")
+sha1sums=('2711050bac439e1597d32dc05f53dddeb96ccf08')
 
 prepare() {
   mkdir -p build
