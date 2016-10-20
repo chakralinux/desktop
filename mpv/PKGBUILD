@@ -1,6 +1,6 @@
 pkgname=mpv
-pkgver=0.20.0
-pkgrel=4
+pkgver=0.21.0
+pkgrel=1
 pkgdesc="A movie player and encoder for linux, based on MPlayer/mplayer2"
 arch=('x86_64')
 license=('LGPL3')
@@ -9,13 +9,13 @@ depends=('pulseaudio' 'ffmpeg' 'lcms2' 'libdvdread' 'libgl' 'libvdpau'
          'libxinerama' 'libxv' 'libxkbcommon' 'libva'  'libass' 'uchardet' 
 	 'wayland' 'desktop-file-utils' 'hicolor-icon-theme' 'v4l-utils'
          'xdg-utils' 'lua52' 'libdvdnav' 'libcdio-paranoia' 'libbluray' 'libxss'
-         'enca' 'libguess' 'harfbuzz' 'libxrandr' 'rubberband' 'smbclient')
+         'enca' 'libguess' 'harfbuzz' 'libxrandr' 'rubberband' 'smbclient' 'libcaca')
 makedepends=('mesa' 'python3-docutils' 'ladspa' 'x264' 'jack' 'samba' 'openal' 'waf')
 options=('!emptydirs')
 provides=('mplayer')
 install=${pkgname}.install
 source=("https://github.com/mpv-player/${pkgname}/archive/v${pkgver}.tar.gz")
-sha256sums=('fe6ec9d2ded5ce84b963f54b812d579d04f944f4a737f3ae639c4d5d9e842b56')
+sha256sums=('d05f8ece859c500ef1649cdfea911ec1529df1898b8fda3e217766dc28dc9bd3')
  
 build() {
   cd ${pkgname}-${pkgver}
@@ -36,7 +36,8 @@ build() {
     --enable-libsmbclient \
     --enable-dvdread \
     --enable-libv4l2 \
-    --enable-vdpau
+    --enable-vdpau \
+    --enable-encoding
   waf build
 }
  
