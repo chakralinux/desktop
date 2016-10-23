@@ -1,44 +1,36 @@
 pkgname=krusader
-pkgver=15.08.beta1
+pkgver=2.5.0
 pkgrel=1
+epoch=1
 pkgdesc="An alternative file manager for KDE resembling Midnight Commander"
 url="http://krusader.sourceforge.net/"
 arch=('x86_64')
 license=('GPL')
-depends=('kparts'
-         'hicolor-icon-theme')
-makedepends=('extra-cmake-modules'
-             'kdoctools'
-             'git'
-             'python'
-             'acl')
+depends=('karchive' 'kbookmarks' 'kcodecs' 'kcompletion' 'kcoreaddons' 'kconfig' 'kdoctools' 'ki18n'
+         'kiconthemes' 'kitemviews' 'kio' 'knotifications' 'kparts' 'solid' 'ktextwidgets'
+         'kwallet' 'kwidgetsaddons' 'kwindowsystem' 'kxmlgui' 'kguiaddons' 'hicolor-icon-theme')
+makedepends=('extra-cmake-modules' 'python3' 'acl')
 optdepends=('acl: Access control list utilities')
 categories=('system')
 screenshot=('http://www.krusader.org/static/img/slideshow/krusader-twinpanel-thumb.png')
 install=${pkgname}.install
-source=('git://anongit.kde.org/krusader')
-sha1sums=('SKIP')
+source=(http://download.kde.org/stable/${pkgname}/${pkgver}/${pkgname}-${pkgver}.tar.xz)
+sha1sums=('c6fed66fcfe1b099cc4dd19a209062c42ed67147')
 
 prepare() {
   mkdir -p build
-
-  sed -e '6s|#||g' \
-      -e 's|LibKonq|KF5Konq|g' \
-      -e 's|LIBKONQ|KF5Konq|g' \
-      -i krusader/krusader/CMakeLists.txt
       
   sed -i s!"Categories=FileManager;Utility;Qt;KDE;"!"Categories=FileManager;System;Qt;KDE;"! \
-  $srcdir/krusader/krusader/org.kde.krusader.desktop
+  $srcdir/${pkgname}-${pkgver}/${pkgname}/org.kde.krusader.desktop
 }
 
 build() {
   cd build
   
-  cmake ../krusader \
+  cmake ../${pkgname}-${pkgver} \
     -DCMAKE_INSTALL_PREFIX=/usr \
     -DCMAKE_BUILD_TYPE=Release \
     -DKDE_INSTALL_LIBDIR=lib \
-    -DKDE_INSTALL_USE_QT_SYS_PATHS=ON \
     -DBUILD_TESTING=OFF
   make 
 }
