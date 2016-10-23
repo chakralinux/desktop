@@ -1,21 +1,30 @@
-# 
-# Part of chakra-project.org
-# 
-# Maintainer: FranzMari <franzmari@chakra-project.it>
- 
-pkgname=pylibacl
-pkgver=0.5.1
-pkgrel=2
+pkgbase=pylibacl
+pkgname=('python2-pylibacl' 'python3-pylibacl')
+pkgver=0.5.3
+pkgrel=1
 pkgdesc='A python extension module that allows you to manipulate the POSIX.1e ACLs.'
 arch=('x86_64')
 url='http://pylibacl.k1024.org/'
 license=('GPL')
-depends=('python2')
-makedepends=('python2-setuptools')
-source=("https://github.com/downloads/iustin/${pkgname}/${pkgname}-${pkgver}.tar.gz")
-md5sums=('a429256345ffdc2cea57fd24da0d980d')
+makedepends=('python2' 'python2-setuptools' 'python3' 'python3-setuptools')
+source=("http://${pkgbase}.k1024.org/downloads/${pkgbase}-${pkgver}.tar.gz")
+md5sums=('5d161e22ba5d94618d50ccffbfeb6050')
+
+prepare() {
+  cd $srcdir
+  cp -r  $pkgbase-$pkgver python3-$pkgbase-$pkgver
+}
  
-package() {
-  cd "${srcdir}/${pkgname}-${pkgver}"
+package_python2-pylibacl() {
+  depends=('python2')
+  conflicts=('pylibacl')
+  cd "${srcdir}/${pkgbase}-${pkgver}"
   python2 setup.py install --root="${pkgdir}"
 } 
+
+package_python3-pylibacl() {
+  depends=('python3')
+  conflicts=('pylibacl')
+  cd "${srcdir}/python3-${pkgbase}-${pkgver}"
+  python3 setup.py install --root="${pkgdir}"
+}
