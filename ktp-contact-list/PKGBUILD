@@ -4,7 +4,7 @@ source ../kdeapps.conf
 
 pkgname=ktp-contact-list
 pkgver=${_kdever}
-pkgrel=1
+pkgrel=2
 pkgdesc="Telepathy contact list application "
 arch=('x86_64')
 url="https://community.kde.org/Real-Time_Communication_and_Collaboration"
@@ -13,9 +13,6 @@ depends=('ktp-common-internals')
 makedepends=('extra-cmake-modules' 'kdoctools' 'python3')
 groups=('kde-telepathy')
 categories=('communication')
-replaces=('ktp-call-ui')
-provides=('ktp-call-ui')
-conflicts=('ktp-call-ui')
 install=${pkgname}.install
 source=("$_mirror/${pkgname}-$_kdever.tar.xz")
 sha256sums=(`grep ${pkgname}-$_kdever.tar.xz  ../checksums.txt | cut -d " " -f1`)
