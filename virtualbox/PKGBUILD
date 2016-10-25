@@ -11,7 +11,7 @@ pkgname=('virtualbox'
          'virtualbox-ext-vnc'
          'virtualbox-ext-oracle')
 pkgver=5.1.8
-pkgrel=2
+pkgrel=4
 arch=('x86_64')
 url='http://virtualbox.org'
 license=('GPL')
@@ -154,8 +154,6 @@ package_virtualbox() {
                 'virtualbox-sdk: Developer kit'
                 'net-tools: Host-only or bridged networking support')
     backup=('etc/vbox/vbox.cfg')
-    replaces=('virtualbox-ose')
-    conflicts=('virtualbox-ose')
     install=virtualbox.install
 
     source "VirtualBox-$pkgver/env.sh"
@@ -262,14 +260,9 @@ package_virtualbox-sdk() {
 package_virtualbox-host-dkms() {
     pkgdesc='VirtualBox Host kernel modules sources'
     depends=('dkms' 'gcc' 'make')
-    replaces=('virtualbox-source'
-              'virtualbox-host-source'
-              'virtualbox-host-modules-lts')
-    conflicts=('virtualbox-source' 'virtualbox-host-source')
     provides=('VIRTUALBOX-HOST-MODULES')
-    optdepends=('linux-headers: build modules against Arch kernel'
-                'linux-lts-headers: build modules against LTS kernel'
-                'linux-zen-headers: build modules against ZEN kernel')
+    optdepends=('linux-headers: build modules against Chakra kernel'
+                'linux-lts-headers: build modules against LTS kernel')
     install=virtualbox-host-dkms.install
 
     install -dm755 "$pkgdir/usr/src"
@@ -297,14 +290,9 @@ package_virtualbox-host-dkms() {
 package_virtualbox-guest-dkms() {
     pkgdesc='VirtualBox Guest kernel modules sources'
     depends=('dkms' 'gcc' 'make')
-    replaces=('virtualbox-archlinux-source'
-              'virtualbox-guest-source'
-              'virtualbox-guest-modules-lts')
     provides=('VIRTUALBOX-GUEST-MODULES')
-    conflicts=('virtualbox-archlinux-source' 'virtualbox-guest-source')
-    optdepends=('linux-headers: build modules against Arch kernel'
-                'linux-lts-headers: build modules against LTS kernel'
-                'linux-zen-headers: build modules against ZEN kernel')
+    optdepends=('linux-headers: build modules against Chakra kernel'
+                'linux-lts-headers: build modules against LTS kernel')
     install=virtualbox-guest-dkms.install
 
     install -dm755 "$pkgdir/usr/src"
@@ -332,8 +320,8 @@ package_virtualbox-guest-utils() {
     depends=('glibc' 'pam' 'libx11' 'libxcomposite'
              'libxdamage' 'libxext' 'libxfixes' 'libxmu' 'libxt' 'xorg-xrandr'
              'VIRTUALBOX-GUEST-MODULES' 'X-ABI-VIDEODRV_VERSION=19')
-    replaces=('virtualbox-archlinux-additions' 'virtualbox-guest-additions')
-    conflicts=('virtualbox-archlinux-additions' 'virtualbox-guest-additions' 'virtualbox-guest-utils-nox')
+    replaces=('virtualbox-guest-additions')
+    conflicts=('virtualbox-guest-additions' 'virtualbox-guest-utils-nox')
     install=virtualbox-guest-utils.install
 
     source "VirtualBox-$pkgver/env.sh"
