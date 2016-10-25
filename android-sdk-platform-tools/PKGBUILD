@@ -1,0 +1,58 @@
+pkgname=android-sdk-platform-tools
+pkgver=r25
+pkgrel=1
+pkgdesc='Platform-Tools for Google Android SDK (adb, aapt, aidl, dexdump, dx and fastboot) - works with Ubuntu Touch too'
+arch=('x86_64')
+url="http://developer.android.com/sdk/index.html"
+license=('custom')
+depends=('zlib' 'ncurses')
+provides=('adb' 'fastboot')
+conflicts=('adb' 'fastboot' 'bash-completion-android')
+_sdk=android-sdk
+_tools=opt/$_sdk/tools
+_ptools=opt/$_sdk/platform-tools
+source=("http://dl-ssl.google.com/android/repository/platform-tools_${pkgver}-linux.zip"
+	"https://github.com/MikereDD/android-completion/archive/master.zip"
+        "adb.service"
+        "license.html")
+sha1sums=('84be2ce1d3c50c13a8b4fe332d644e81d0d35f6f'
+          'SKIP'
+          '49a40c129199844603afe71fce69c0908e062393'
+          'e91e23015f25aec78c03012b2f78f42a1c8392d6')
+
+ 
+package() {
+  cd $srcdir
+  
+  # instal the tools
+  install -d $pkgdir/$_ptools
+  cp -a $srcdir/platform-tools/* $pkgdir/$_ptools
+  chmod +Xr -R $pkgdir/$_ptools
+  
+  
+  # hack to use the tools like they were on /usr/bin
+  install -d $pkgdir/{etc/profile.d,opt/$_sdk}
+ 
+  echo 'export PATH=$PATH:/opt/android-sdk/platform-tools' > $pkgdir/etc/profile.d/$pkgname.sh
+  echo 'setenv PATH ${PATH}:/opt/android-sdk/platform-tools' > $pkgdir/etc/profile.d/$pkgname.csh
+  chmod 755 $pkgdir/etc/profile.d/$pkgname.{csh,sh}
+ 
+  # install bash-completion
+  # license
+  install -d ${pkgdir}/usr/share/licenses/$pkgname
+  sed -e :a -e '$q;N;30,$D;ba' android-completion-master/README.markdown > ${pkgdir}/usr/share/licenses/$pkgname/bash-completion-LICENSE
+  # fastboot
+  install -Dm 0755 android-completion-master/fastboot $pkgdir/usr/share/bash-completion/completions/fastboot
+ 
+  # install adb service
+  install -Dm644 $srcdir/adb.service $pkgdir/usr/lib/systemd/system/adb.service
+  
+  # install license
+  install -Dm644 $srcdir/license.html $pkgdir/usr/share/licenses/$pkgname/LICENSE
+  
+  install -d $pkgdir/usr/bin
+  ln -s /opt/$_sdk/platform-tools/adb      $pkgdir/usr/bin/adb
+  ln -s /opt/$_sdk/platform-tools/fastboot $pkgdir/usr/bin/fastboot
+ 
+}
+
