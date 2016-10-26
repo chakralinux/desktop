@@ -1,6 +1,6 @@
 pkgname=mendeleydesktop
 pkgver=1.17.1
-pkgrel=1
+pkgrel=2
 pkgdesc="Academic software for managing and sharing research papers (desktop client)"
 url=http://www.mendeley.com/release-notes/
 arch=('x86_64')
@@ -87,6 +87,9 @@ package() {
     # remove bundled Qt from package
     rm -rf lib/qt
     cp -R lib ${pkgdir}/usr
+
+    # remove qt.conf to avoid Qt plugins fail to load
+    rm -f ${pkgdir}/usr/bin/qt.conf
     
     install -D share/applications/${pkgname}.desktop ${pkgdir}/usr/share/applications/${pkgname}.desktop
     install -D share/doc/${pkgname}/License.txt ${pkgdir}/usr/share/licenses/${pkgname}/LICENSE
