@@ -1,6 +1,6 @@
 pkgname=dropbox
 pkgver=13.4.21
-pkgrel=1
+pkgrel=2
 pkgdesc="A free service that lets you bring your photos, docs, and videos anywhere and share them easily."
 arch=('x86_64')
 url="http://www.dropbox.com"
@@ -17,7 +17,7 @@ source=("https://dl-web.dropbox.com/u/17/${pkgname}-lnx.${arch}-${pkgver}.tar.gz
         "dropbox@.service")
 sha1sums=('07b0062e895fd080caa74a8df72f5301bb9fe8ae'
           '64073af76a2bbc7dba4a6886b82af0bb3e71a2a0'
-          'f17894457eb9c32b249f19169386e423163f0e37'
+          'd5ad720762b9052a4fd6af839038318b37d5fd39'
           'b69765536f67fab1080bd623019c8d859edb75dc'
           '9bda78faca76d55d0cf1b16af782066bab3029fe'
           '0019b370924494390b071ed6e607e5f70c88fc12')
@@ -43,8 +43,7 @@ package() {
 
 	rm -f "$pkgdir"/opt/dropbox/library.zip
 	ln -s dropbox "$pkgdir"/opt/dropbox/library.zip
-
-        # Works with the prefix `XDG_CURRENT_DESKTOP=Unity` under new simplesystemtray in testing
+	
         cd ${pkgdir}/opt/dropbox/
         msg 'removing libQt5'
         rm -v libQt5*
