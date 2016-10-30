@@ -1,25 +1,25 @@
 
 pkgname=chakra-heritage-themes
 pkgver=2016.10
-pkgrel=1
+pkgrel=2
 pkgdesc='Chakra Plasma 5 Look & Feel theme files'
 url='http://www.chakralinux.org'
 arch=('x86_64')
 license=('LGPL')
 # remember to set the wallpaper name and resolution!! in plasma/heritage/metadata.desktop
-depends=('plasma-framework' 'chakra-wallpapers-lichene' ) #'chakra-wallpapers-tulip'
+depends=('plasma-framework' 'chakra-wallpapers-tulip')
 makedepends=('extra-cmake-modules')
 
-_gitsha='63cf522'
+_gitsha='6460b5812fe5428162ec031b80cd01e345b23ec0'
 source=("git://git.chakralinux.org/heritage.git#commit=${_gitsha}")
 md5sums=('SKIP')
 
 prepare() {
+    mkdir -p build
     cd $srcdir/heritage
 }
 
 build() {
-  mkdir -p build
   cd build
   
   cmake ../heritage \
