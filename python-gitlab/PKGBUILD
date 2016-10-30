@@ -1,0 +1,22 @@
+pkgbase=python-gitlab
+pkgname=("python2-gitlab" "python3-gitlab")
+pkgver=0.16
+pkgrel=1
+pkgdesc=("Python library and CLI tool for the Gitlab API.")
+arch=("any")
+license=("LGPL")
+url=http://python-gitlab.readthedocs.io/
+source=("https://github.com/gpocentek/${pkgbase}/archive/${pkgver}.tar.gz")
+md5sums=("56c9128cb2ea6a9cde118e4291696f19")
+
+package_python2-gitlab() {
+	depends+=("python2" "python2-requests" "python2-six")
+	cd ${srcdir}/${pkgbase}-${pkgver}
+	python2 setup.py install --root="${pkgdir}"
+}
+
+package_python3-gitlab() {
+	depends+=("python3" "python3-requests" "python3-six")
+	cd ${srcdir}/${pkgbase}-${pkgver}
+	python3 setup.py install --root="${pkgdir}"
+}
