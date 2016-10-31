@@ -1,5 +1,5 @@
 pkgname=qmidinet
-pkgver=0.4.0
+pkgver=0.4.1
 pkgrel=1
 pkgdesc="A MIDI network gateway application that sends and receives MIDI data (ALSA Sequencer) over the network, using UDP/IP multicast"
 arch=('x86_64')
@@ -10,9 +10,15 @@ categories=('multimedia')
 install="$pkgname.install"
 source=("http://downloads.sourceforge.net/project/$pkgname/$pkgname/$pkgver/$pkgname-$pkgver.tar.gz"
 	"qmidinet.png")
-sha1sums=('20b417ba0c9dd1cfbda527977c4e78f75b3b3354'
+sha1sums=('5eb3207b7c64f3504d344bebbf665c258ecd9b75'
           '23e962d83cb8d0a32d4d2d2d0c442087f971a90d')
 
+prepare() {
+  cd $pkgname-$pkgver
+# fix to make .configure recognize Qt>=5.1
+export CXXFLAGS="${CXXFLAGS} -std=c++11" 
+}
+          
 build() {
   cd "$srcdir/$pkgname-$pkgver"
 
