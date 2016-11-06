@@ -1,19 +1,19 @@
 pkgbase=digikam
 pkgname=('digikam' 'kipi-plugins')
-_pkgver=5.2.0
+_pkgver=5.3.0
 pkgver=${_pkgver//-/_}
 pkgrel=1
 epoch=1
-url="http://digikam.sourceforge.net"
+url="https://www.digikam.org/"
 arch=('x86_64')
 license=('GPL')
 options=("debug")
 makedepends=('extra-cmake-modules' 'libkipi' 'libksane' 'liblqr' 'boost'
              'libgpod' 'hugin' 'opencv' 'qt5-webkit' 'doxygen' 'lensfun' 'imagemagick' 'eigen3' 'libpgf'
              'libusb' 'kio' 'kdoctools' 'marble' 'kfilemetadata' 'akonadi-contact' 'qt5-multimedia'
-             'threadweaver' 'kcalcore' 'knotifyconfig' 'kdelibs4support' 'libkvkontakte' 'libmediawiki' 'mariadb')
+             'threadweaver' 'kcalcore' 'knotifyconfig' 'libkvkontakte' 'libmediawiki' 'mariadb')
 source=("http://download.kde.org/stable/${pkgname}/${pkgname}-${_pkgver}.tar.xz")
-sha1sums=('329195ac7ea890a3bec435cd2ed83b04bc80ba1d')
+sha1sums=('3a62f6efdfafc37341626cbf0225cd7adc9d0633')
 
 prepare() {
   mkdir -p build
@@ -45,9 +45,9 @@ build() {
 package_digikam() {
   pkgdesc="Digital photo management application for KDE"
   depends=('liblqr' 'libkipi' 'lensfun' 'libpgf' 'opencv' 'akonadi-contact'
-	'knotifyconfig' 'libksane' 'kfilemetadata' 'qt5-multimedia' 'marble' 'mariadb' 'kcalcore')
+	   'knotifyconfig' 'libksane' 'kfilemetadata' 'qt5-multimedia' 'marble' 'mariadb' 'kcalcore')
   optdepends=('kipi-plugins: more tools and plugins'
-	      'qt5-imageformats: WEBP format support'
+	      'qt5-imageformats: support for additional image formats (WEBP, TIFF)'
 	      'hugin: panorama tool')
   install=digikam.install
 
