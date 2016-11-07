@@ -1,5 +1,5 @@
 pkgname=calamares
-pkgver=2.4.2
+pkgver=2.4.4
 pkgrel=1
 _releaseName="Goedel"
 _releaseYear="2016"
@@ -16,7 +16,7 @@ source+=("$pkgname-$pkgver.tar.gz::https://github.com/calamares/calamares/releas
 #source+=("$pkgname-$pkgver.tar.gz::https://github.com/calamares/calamares/archive/${_gitsha}.zip"
          "calamares-chakra::git://git.chakralinux.org/calamares.git#branch=modules")
         
-md5sums=('2f560be68f22db7e799770779d30af7c'
+md5sums=('d95c1ae841f2bbe32cd39c1836dc3576'
          'SKIP')
 
 prepare() {
@@ -43,8 +43,8 @@ build() {
     cmake .. \
     -DCMAKE_BUILD_TYPE=Debug \
     -DCMAKE_INSTALL_PREFIX=/usr \
-    -DWITH_PARTITIONMANAGER=1 \
     -DCMAKE_INSTALL_LIBDIR=lib \
+    -DWITH_CRASHREPORTER=ON \
     -DSKIP_MODULES="webview interactiveterminal"
     make
 }
@@ -56,8 +56,8 @@ package() {
 
 
     install -Dm644 "../conf/settings.conf" "$pkgdir/usr/share/calamares/settings.conf"
-    #install -Dm644 "../conf/displaymanagers.conf" "$pkgdir/usr/share/calamares/modules/displaymanagers.conf"
-    #install -Dm644 "../conf/locale.conf" "$pkgdir/usr/share/calamares/modules/locale.conf"
+    install -Dm644 "../conf/displaymanagers.conf" "$pkgdir/usr/share/calamares/modules/displaymanagers.conf"
+    install -Dm644 "../conf/locale.conf" "$pkgdir/usr/share/calamares/modules/locale.conf"
     #install -Dm644 "../conf/prepare.conf" "$pkgdir/usr/share/calamares/modules/prepare.conf"
     install -Dm644 "../conf/user.conf" "$pkgdir/usr/share/calamares/modules/user.conf"
     install -Dm644 "../conf/unpackfs.conf" "$pkgdir/usr/share/calamares/modules/unpackfs.conf"
@@ -66,13 +66,17 @@ package() {
     #install -Dm644 "../conf/partition.conf" "$pkgdir/usr/share/calamares/modules/partition.conf"
     #install -Dm644 "../conf/_bootldr.conf" "$pkgdir/usr/share/calamares/modules/_bootldr.conf"
     install -Dm644 "../conf/services.conf" "$pkgdir/usr/share/calamares/modules/services.conf"
+    install -Dm644 "../conf/umount.conf" "$pkgdir/usr/share/calamares/modules/umount.conf"
+
 
     install -Dm755 "../data/launch-calamares.sh" "${pkgdir}/usr/bin/launch-calamares.sh"
     install -Dm644 "../data/calamares.desktop" "$pkgdir/usr/share/applications/calamares.desktop"
     install -Dm644 "../data/installer.svg" "${pkgdir}/usr/share/pixmaps/installer.svg"
 
-    sed 's|linux312|linux|' -i "${pkgdir}/usr/share/calamares/modules/initcpio.conf"
+    #sed 's|linux312|linux-CHAKRA|' -i "${pkgdir}/usr/share/calamares/modules/initcpio.conf"
     
+    rm -r "$pkgdir/usr/lib/calamares/modules/dummyccp/"
+    rm "$pkgdir/usr/share/calamares/modules/dummyccp.conf"
     rm -r "$pkgdir/usr/lib/calamares/modules/dummyprocess/"
     rm -r "$pkgdir/usr/lib/calamares/modules/dummypython/"
     rm "$pkgdir/usr/share/calamares/modules/dummypython.conf"
