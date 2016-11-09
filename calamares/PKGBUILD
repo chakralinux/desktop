@@ -1,6 +1,6 @@
 pkgname=calamares
 pkgver=2.4.4
-pkgrel=2
+pkgrel=4
 _releaseName="Goedel"
 _releaseYear="2016"
 pkgdesc='Distribution-independent installer framework'
@@ -26,8 +26,6 @@ prepare() {
     cd ${srcdir}/calamares-${pkgver}
     #cd ${srcdir}/calamares-${_gitsha}
     
-    rm -rf src/modules/_netinstall
-
     # apply the current version Name and Year
     sed -i -e "s/UnknownName/${_releaseName}/" "src/branding/chakra/branding.desc"
     sed -i -e "s/UnknownYear/${_releaseYear}/" "src/branding/chakra/branding.desc"
@@ -45,7 +43,7 @@ build() {
     -DCMAKE_INSTALL_PREFIX=/usr \
     -DCMAKE_INSTALL_LIBDIR=lib \
     -DWITH_CRASHREPORTER=ON \
-    -DSKIP_MODULES="webview interactiveterminal"
+    -DSKIP_MODULES="webview interactiveterminal netinstall"
     make
 }
 
@@ -67,13 +65,12 @@ package() {
     #install -Dm644 "../conf/_bootldr.conf" "$pkgdir/usr/share/calamares/modules/_bootldr.conf"
     install -Dm644 "../conf/services.conf" "$pkgdir/usr/share/calamares/modules/services.conf"
     install -Dm644 "../conf/umount.conf" "$pkgdir/usr/share/calamares/modules/umount.conf"
+    install -Dm644 "../conf/initcpio.conf" "$pkgdir/usr/share/calamares/modules/initcpio.conf"
 
 
     install -Dm755 "../data/launch-calamares.sh" "${pkgdir}/usr/bin/launch-calamares.sh"
     install -Dm644 "../data/calamares.desktop" "$pkgdir/usr/share/applications/calamares.desktop"
     install -Dm644 "../data/installer.svg" "${pkgdir}/usr/share/pixmaps/installer.svg"
-
-    #sed 's|linux312|linux-CHAKRA|' -i "${pkgdir}/usr/share/calamares/modules/initcpio.conf"
 
     rm -r "$pkgdir/usr/lib/calamares/modules/dummyprocess/"
     rm -r "$pkgdir/usr/lib/calamares/modules/dummypython/"
