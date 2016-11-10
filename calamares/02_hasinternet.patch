@@ -1,0 +1,82 @@
+From 3028855a6cc35ac9368a96bb599902c16c4205a8 Mon Sep 17 00:00:00 2001
+From: Kevin Kofler <kevin.kofler@chello.at>
+Date: Sat, 5 Nov 2016 22:11:57 +0100
+Subject: [PATCH] [welcome] Use QNetworkAccessManager in checkHasInternet.
+
+Use QNetworkAccessManager instead of raw QtDBus queries to
+NetworkManager in RequirementsChecker::checkHasInternet(). This is much
+simpler (i.e., less error-prone) and should be more portable (to, e.g.,
+ConnMan).
+---
+ src/modules/welcome/CMakeLists.txt                 |  3 ++-
+ .../welcome/checker/RequirementsChecker.cpp        | 29 +++-------------------
+ 2 files changed, 5 insertions(+), 27 deletions(-)
+
+diff --git a/src/modules/welcome/CMakeLists.txt b/src/modules/welcome/CMakeLists.txt
+index b8d2af2..5e3a6f0 100644
+--- a/src/modules/welcome/CMakeLists.txt
++++ b/src/modules/welcome/CMakeLists.txt
+@@ -1,7 +1,7 @@
+ include_directories( ${PROJECT_BINARY_DIR}/src/libcalamaresui )
+ set( CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${CMAKE_CURRENT_SOURCE_DIR}/CMakeModules )
+ find_package( LIBPARTED REQUIRED )
+-find_package( Qt5 ${QT_VERSION} CONFIG REQUIRED DBus )
++find_package( Qt5 ${QT_VERSION} CONFIG REQUIRED DBus Network )
+ 
+ set_source_files_properties( checker/partman_devices.c PROPERTIES LANGUAGE CXX )
+ 
+@@ -14,6 +14,7 @@ set( CHECKER_SOURCES
+ set( CHECKER_LINK_LIBRARIES
+     ${LIBPARTED_LIBS}
+     Qt5::DBus
++    Qt5::Network
+ )
+ 
+ calamares_add_plugin( welcome
+diff --git a/src/modules/welcome/checker/RequirementsChecker.cpp b/src/modules/welcome/checker/RequirementsChecker.cpp
+index f77847c..12f6817 100644
+--- a/src/modules/welcome/checker/RequirementsChecker.cpp
++++ b/src/modules/welcome/checker/RequirementsChecker.cpp
+@@ -36,6 +36,7 @@
+ #include <QFile>
+ #include <QFileInfo>
+ #include <QLabel>
++#include <QNetworkAccessManager>
+ #include <QProcess>
+ #include <QTimer>
+ 
+@@ -336,32 +337,8 @@ RequirementsChecker::checkHasPower()
+ bool
+ RequirementsChecker::checkHasInternet()
+ {
+-    const QString NM_SVC_NAME( "org.freedesktop.NetworkManager" );
+-    const QString NM_INTF_NAME( "org.freedesktop.NetworkManager" );
+-    const QString NM_PATH( "/org/freedesktop/NetworkManager" );
+-    const int NM_STATE_CONNECTED_GLOBAL = 70;
+-
+-    QDBusInterface nmIntf( NM_SVC_NAME,
+-                           NM_PATH,
+-                           NM_INTF_NAME,
+-                           QDBusConnection::systemBus(), 0 );
+-
+-    bool ok = false;
+-    int nmState = nmIntf.property( "State" ).toInt( &ok );
+-
+-    if ( !ok || !nmIntf.isValid() )
+-    {
+-        // We can't talk to NM, so no idea.  Wild guess: we're connected
+-        // using ssh with X forwarding, and are therefore connected.  This
+-        // allows us to proceed with a minimum of complaint.
+-        Calamares::JobQueue::instance()->globalStorage()->insert( "hasInternet", true );
+-        return true;
+-    }
+-
+-    bool hasInternet = nmState == NM_STATE_CONNECTED_GLOBAL;
+-
+-    Calamares::JobQueue::instance()->globalStorage()->insert( "hasInternet", hasInternet );
+-    return hasInternet;
++    // default to true in the QNetworkAccessManager::UnknownAccessibility case
++    return QNetworkAccessManager(this).networkAccessible() != QNetworkAccessManager::NotAccessible;
+ }
+ 
+  
