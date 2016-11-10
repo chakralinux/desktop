@@ -1,15 +1,17 @@
 pkgbase=fcitx
 pkgname=('fcitx' 'fcitx-pinyin' 'fcitx-table')
 pkgver=4.2.9.1
-pkgrel=4
+pkgrel=6
 arch=('x86_64')
 license=('GPL')
 url="https://fcitx-im.org/wiki/Fcitx"
 #giturl="https://github.com/fcitx/"
 makedepends=('cmake' 'extra-cmake-modules' 'qt' 'wget' 'opencc' 'lua' 'iso-codes' 'enchant' 'libxkbfile' 'libxkbcommon' 'cairo' 'pango' 'mesa' 'python2')
-source=("https://download.fcitx-im.org/${pkgname}/${pkgname}-${pkgver}.tar.xz")
+source=("https://download.fcitx-im.org/${pkgbase}/${pkgbase}-${pkgver}.tar.xz"{,.sig})
 categories=('localization')
-sha512sums=('86e152de3f9ced4bf5f16522cd8bc0818ef28bc1bc9bf86b7b4ae5e5a8049aec73284b721c196eaa62e25fd91a454018fed3a320611c02cfabaaf1ec0534dbe1')
+sha512sums=('86e152de3f9ced4bf5f16522cd8bc0818ef28bc1bc9bf86b7b4ae5e5a8049aec73284b721c196eaa62e25fd91a454018fed3a320611c02cfabaaf1ec0534dbe1'
+            'SKIP')
+validpgpkeys=('2CC8A0609AD2A479C65B6D5C8E8B898CBF2412F9')
 
 build() {
   msg "Creating make environment..."
@@ -18,7 +20,7 @@ build() {
 
   msg "Starting make..."
   cd build
-  cmake ../${pkgname}-${pkgver} -DCMAKE_INSTALL_PREFIX=/usr -DCMAKE_BUILD_TYPE=Release \
+  cmake ../${pkgbase}-${pkgver} -DCMAKE_INSTALL_PREFIX=/usr -DCMAKE_BUILD_TYPE=Release \
       -DSYSCONFDIR=/etc \
       -DENABLE_QT_IM_MODULE=On \
       -DENABLE_GTK2_IM_MODULE=Off \
@@ -49,6 +51,9 @@ package_fcitx(){
     rm ${pkgdir}/usr/share/fcitx/*/fcitx-pinyin.*
     rm -r ${pkgdir}/usr/include/fcitx/module/pinyin/
     rm ${pkgdir}/usr/share/fcitx/inputmethod/{pinyin,shuangpin}.conf
+
+    # remove autostart
+    rm -r ${pkgdir}/etc/xdg
 }
 
 package_fcitx-pinyin() {
@@ -62,7 +67,8 @@ package_fcitx-pinyin() {
 
 package_fcitx-table() {
     pkgdesc="Table Support for Fcitx"
-    depends=('fcitx' 'fcitx-pinyin')
+    depends=('fcitx')
+    optdepends=('fcitx-pinyin: for support of pinyin reverse loopup')
 
     pushd .
     cd build/src/im/table
