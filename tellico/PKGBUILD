@@ -1,23 +1,23 @@
 pkgname=tellico
-pkgver=2.3.11
-pkgrel=3
+pkgver=3.0
+pkgrel=1
 pkgdesc="A collection manager for KDE"
 arch=('x86_64')
 url="http://tellico-project.org/"
 license=('GPL')
-depends=('kde-runtime' 'qimageblitz' 'kdepimlibs4' 'yaz' 'exempi' 'libksane4' 'taglib' 'libkcddb' 'poppler-qt4' 'kdemultimedia-audiocd-kio' 'gnutls')
-makedepends=('automoc4' 'cmake' 'docbook-xsl')
+depends=('exempi' 'qt5-base' 'kio' 'libksane' 'libcddb' 'libdiscid' 'hicolor-icon-theme' 'kfilemetadata'
+         'knewstuff' 'kxmlgui' 'kitemmodels' 'python2' 'solid' 'khtml' 'yaz' 'taglib' 'poppler-qt5')
+makedepends=('cmake' 'extra-cmake-modules' 'kdoctools')
 categories=('office')
 screenshot=('http://tellico-project.org/img/main_screen-2.0.jpg')
 install=$pkgname.install
-source=(http://tellico-project.org/files/${pkgname}-${pkgver}.tar.bz2)
-sha256sums=('3064756f6e1662d07385c37f5821a0f6be8b22b6decad17d6852536016ca2128')
+source=(http://tellico-project.org/files/${pkgname}-${pkgver}.tar.xz)
+md5sums=('08bb7f2fafe6a58449bbe293bc7e095f')
 
 build() {
   cd "${srcdir}"
 
-  mkdir -p build
-  cd build
+  mkdir -p build && cd build
 
   cmake ../${pkgname}-${pkgver} -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=/usr -DWITH_Nepomuk=OFF
   make
