@@ -1,5 +1,5 @@
 pkgname=whois
-pkgver=5.2.12
+pkgver=5.2.13
 pkgrel=1
 pkgdesc="The whois client by Marco d'Itri"
 arch=('x86_64')
@@ -9,7 +9,7 @@ depends=('libidn')
 makedepends=('perl')
 backup=('etc/whois.conf')
 source=("http://ftp.debian.org/debian/pool/main/w/$pkgname/whois_$pkgver.tar.xz")
-sha512sums=('df40e2e7cbd11d00984f865e122ad4ece882a6a45e2f75ad5ea24ce937b7e9452b01fd886f43bae55fd065a6556cfc4577e7126151b5fd43fa806c4b0c886ced')
+sha512sums=('0c9028021415e69116e891696c86b26cbab17f861829fe5f9a5ed1528f7e6d8406890a8d1afdeb17e41856eaa076fe7417557034b20bb59109b9fc5970ad05c7')
  
 build() {
   cd "${srcdir}/${pkgname}-${pkgver}"
@@ -25,5 +25,5 @@ package() {
   cd "${srcdir}/${pkgname}-${pkgver}"
 
   make prefix=/usr BASEDIR="${pkgdir}" install-whois
-  install -D -m644 whois.conf "${pkgdir}/etc/whois.conf"
+  install -Dm644 whois.conf "${pkgdir}/etc/whois.conf"
 }
