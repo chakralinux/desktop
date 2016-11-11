@@ -1,11 +1,11 @@
 pkgname=peazip
 pkgver=6.2.0
-pkgrel=1
-pkgdesc="Free, Open Source file and archive manager. Supports 7Z, ACE, ARC, CAB, ISO, PAQ, PEA, RAR, TAR, ZIP and many more archive formats."
+pkgrel=2
+pkgdesc="Free, Open Source file and archive manager. Supports 7Z, ACE, ARC, CAB, ISO, PEA, RAR, TAR, ZIP and many more archive formats."
 arch=('x86_64')
 url="http://peazip.org/"
 license=('GPL')
-depends=('zip' 'unzip' 'unrar' 'xz' 'p7zip' 'unarj' 'fpc-qtbindings' 'libxslt')
+depends=('zip' 'unzip' 'xz' 'p7zip' 'unarj' 'fpc-qtbindings' 'libxslt')
 makedepends=('lazarus')
 optdepends=('rar: support for RAR archive compression')
 categories=('utils')
@@ -61,14 +61,14 @@ package() {
            peazipextfolder.desktop \
            peazipexthere.desktop \
            peazipopen.desktop ; do 
-    install -Dm755 kde4-dolphin/usr/share/kde4/services/ServiceMenus/${i} \
-		   ${pkgdir}/usr/share/kde4/services/ServiceMenus/${i}
+    install -Dm644 kde4-dolphin/usr/share/kde4/services/ServiceMenus/${i} \
+		   ${pkgdir}/usr/share/kservices5/ServiceMenus/${i}
   done
   
   #use own .desktop file to fix error name
-  install -D ../../peazip.desktop ${pkgdir}/usr/share/applications/peazip.desktop
+  install -Dm644 ${srcdir}/peazip.desktop ${pkgdir}/usr/share/applications/peazip.desktop
   # Move icons
-  install -Dm755 peazip.png ${pkgdir}/usr/share/icons/hicolor/256x256/apps/peazip.png 
+  install -Dm644 peazip.png ${pkgdir}/usr/share/icons/hicolor/256x256/apps/peazip.png 
   
   # License file
   for r in copying.txt copying_we.txt legal.txt; do
