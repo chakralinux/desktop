@@ -1,5 +1,5 @@
 pkgname=tor
-pkgver=0.2.8.7
+pkgver=0.2.8.9
 pkgrel=1
 pkgdesc="Anonymizing overlay network"
 arch=('x86_64')
@@ -8,6 +8,7 @@ license=('BSD')
 depends=('openssl' 'libevent' 'torsocks' 'bash' 'libseccomp')
 makedepends=('ca-certificates')
 backup=('etc/tor/torrc' 'etc/tor/torrc-dist')
+conflicts=('vidalia') # to enforce removal of unsupported software, not really conflicts
 categories=('network')
 install=${pkgname}.install
 option=('!docs' '!emptydirs')
@@ -15,12 +16,13 @@ source=("http://www.torproject.org/dist/${pkgname}-${pkgver}.tar.gz"{,.asc}
         'torrc'
         'tor.conf.d'
         'tor.service') 
-md5sums=('59771fe2d098893fe955edfb8b13401f'
+md5sums=('e1f8bc2b2e2b365fc916388304e5e40d'
          'SKIP'
-         'bb7b85a70c2997a3e05f023c97768f5e'
+         '173621ad48f0052b95eb9786a1c0302c'
          'f656f3e93f0c2ed46464d9b784876dbc'
          '98901f7dfa85b352b806ba7b0d66b7d0')
-validpgpkeys=('B35BF85BF19489D04E28C33C21194EBB165733EA')
+validpgpkeys=('B35BF85BF19489D04E28C33C21194EBB165733EA'
+              '2133BC600AB133E1D826D173FE43009C4607B1FB')
 
 
 build() {
@@ -28,8 +30,15 @@ build() {
 
   ./configure --prefix=/usr \
               --sysconfdir=/etc \
-              --localstatedir=/var 
+              --localstatedir=/var \
+              --enable-systemd
   make
+}
+
+check() {
+  cd "${srcdir}/${pkgname}-${pkgver}"
+  make test
+  make check
 }
 
 package() {
@@ -40,12 +49,11 @@ package() {
   install -dm0700 "${pkgdir}/var/lib/tor"
 
   # Install config files
-  mv "${pkgdir}/etc/tor/torrc.sample" "${pkgdir}/etc/tor/torrc-dist" 
   install -Dm0644 "${srcdir}/torrc" "${pkgdir}/etc/tor/torrc"
   install -Dm0644 "${srcdir}/tor.conf.d" "${pkgdir}/etc/conf.d/tor"
   
   # Install systemd service file
-  install -Dm0644 "${srcdir}/tor.service" "${pkgdir}/usr/lib/systemd/system/tor.service"
+  install -Dm0644 "contrib/dist/tor.service" "${pkgdir}/usr/lib/systemd/system/tor.service"
 
   # Install license
   install -Dm0644 LICENSE "${pkgdir}/usr/share/licenses/${pkgname}/LICENSE" 
