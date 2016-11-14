@@ -1,0 +1,23 @@
+pkgname=qownnotes
+pkgver=16.11.10
+pkgrel=1
+pkgdesc="Open source notepad and todo list manager with markdown support and ownCloud integration"
+arch=('x86_64')
+url='http://www.qownnotes.org/'
+license=('GPL2')
+depends=('qt5-base' 'qt5-svg' 'qt5-declarative' 'openssl')
+makedepends=('qt5-tools')
+source=("http://downloads.sourceforge.net/project/${pkgname}/src/${pkgname}-${pkgver}.tar.xz")
+sha1sums=('fb5e683c286c02f1be3f1035571cee5ee5dc948d')
+
+build() {
+    cd "${pkgname}-${pkgver}"
+    qmake-qt5
+    make
+}
+ 
+package() {
+  cd "${pkgname}-${pkgver}"
+ 
+  make INSTALL_ROOT="${pkgdir}/" install
+}
