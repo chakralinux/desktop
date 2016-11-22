@@ -1,5 +1,5 @@
 pkgname=qtractor
-pkgver=0.7.9
+pkgver=0.8.0
 pkgrel=1
 pkgdesc="Audio/MIDI multitrack sequencer"
 arch=('x86_64')
@@ -11,12 +11,12 @@ depends=('qt5-base' 'qt5-x11extras' 'jack' 'libmad' 'libsamplerate' 'rubberband'
 makedepends=('ladspa' 'dssi' 'qt5-tools')
 categories=('multimedia')
 source=("http://downloads.sourceforge.net/$pkgname/$pkgname-$pkgver.tar.gz")
-sha256sums=('d8e790f961064a6bc515661fe72b15e3cb3e08e5dcbe71867cd6e6e7662ae45e')
+sha256sums=('4710f1c9f377b0e2c678517c6c094921b504aec3c16702048d9b611fe930659f')
 
 prepare() {
   cd $pkgname-$pkgver
-# fix to make .configure recognize Qt>=5.1
-export CXXFLAGS="${CXXFLAGS} -std=c++11" 
+  # fix to make .configure recognize Qt>=5.1
+  export CXXFLAGS="${CXXFLAGS} -std=c++11" 
 }
 
 build() {
