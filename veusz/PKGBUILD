@@ -1,5 +1,5 @@
 pkgname=veusz
-pkgver=1.24
+pkgver=1.25
 pkgrel=1
 pkgdesc="A scientific plotting package, designed to create publication-ready Postscript output"
 arch=('x86_64')
@@ -12,23 +12,23 @@ source=(http://download.gna.org/$pkgname/$pkgname-$pkgver.tar.gz
 categories=('education' 'science')
 install=veusz.install
 screenshot=('http://home.gna.org/veusz/screenshots/linux_mainwin.png')
-sha512sums=('a7530c6324d117c5d09e22b6b41c87e4b4e619595cc7487bdb2f2a1a15ffee4c5c822168444f1db7f0c477e81d486510ac1d719480c1aa15983216ea38af0e34'
-'e301ae597a9310a67f3d5ad6051251ef9389313722a11dded4827414ef061a56301ba7ba602603e1c577e1d4816efd3fc76ee0712ec61f0112830486de599828')
+sha512sums=('392ceeecc730fd34cadcbceaed371585457d5db6419388f6692e58c67a75145bc66dc8af8556e4d876135167b5d2ec5d671020cc7a925ee90e6f0f9bc41b1424'
+            'e301ae597a9310a67f3d5ad6051251ef9389313722a11dded4827414ef061a56301ba7ba602603e1c577e1d4816efd3fc76ee0712ec61f0112830486de599828')
 
 
 build() {
-  cd $srcdir/$pkgname-$pkgver
+  cd $pkgname-$pkgver
   python3 setup.py build 
 }
 
 package() {
-  cd $srcdir/$pkgname-$pkgver
+  cd $pkgname-$pkgver
   python3 setup.py install --root=$pkgdir --prefix=/usr 
   for _i in 16 32 48 64 128; do
-    install -D -m644 $srcdir/$pkgname-$pkgver/icons/veusz_$_i.png \
+    install -D -m644 $pkgname-$pkgver/icons/veusz_$_i.png \
         $pkgdir/usr/share/icons/hicolor/${_i}x${_i}/apps/veusz.png
   done
-  install -D -m644 $srcdir/veusz.desktop \
+  install -D -m644 veusz.desktop \
       $pkgdir/usr/share/applications/veusz.desktop
 }
 
