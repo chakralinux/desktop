@@ -1,24 +1,22 @@
-# maintainer abveritas@chakra-project.org
-
 pkgname=scribus
 pkgver=1.4.6
-pkgrel=2
+pkgrel=3
 pkgdesc="A desktop publishing program"
 arch=('x86_64')
 url="http://www.scribus.net"
 license=('GPL')
-install=${pkgname}.install
+install=$pkgname.install
 depends=('libcups' 'lcms' 'qt' 'ghostscript' 'hyphen' 'podofo'
          'libart-lgpl' 'python2' 'libxml2' 'cairo' 'boost-libs'
          'desktop-file-utils' 'shared-mime-info' 'ruby' 'hunspell')
 makedepends=('cmake' 'boost')
 screenshot=('http://upload.wikimedia.org/wikipedia/commons/f/f4/Scribus-1.3-Linux.png')
 options=(!libtool)
-source=("http://sourceforge.net/projects/${pkgname}/files/${pkgname}/${pkgver}/${pkgname}-${pkgver}.tar.xz")
+source=("http://sourceforge.net/projects/$pkgname/files/$pkgname/$pkgver/$pkgname-$pkgver.tar.xz")
 sha1sums=('f04a2eecfb531af4beb99645f85165be161b00a3')
 
 prepare() {
-  cd ${pkgname}-${pkgver}
+  cd $pkgname-$pkgver
 
   # fix icon path in .desktop file
   sed 's|Icon=scribus|Icon=/usr/share/scribus/icons/scribus.png|' -i scribus.desktop
@@ -28,7 +26,7 @@ build() {
 	mkdir -p build
 	cd build
 	
-	cmake ../${pkgname}-${pkgver} \
+	cmake ../$pkgname-$pkgver \
 	   -DCMAKE_INSTALL_PREFIX=/usr \
 	   -DCMAKE_BUILD_TYPE=Release \
 	   -DCMAKE_SKIP_RPATH=ON \
@@ -41,8 +39,8 @@ build() {
 package() {
 	cd build
 	
-	make DESTDIR="${pkgdir}" install
+	make DESTDIR=$pkgdir install
 	
-	install -Dm644 "${srcdir}/${pkgname}-${pkgver}/scribus.desktop" \
-	   "${pkgdir}/usr/share/applications/scribus.desktop"
+	install -Dm644 $pkgname-$pkgver/scribus.desktop \
+	   $pkgdir/usr/share/applications/scribus.desktop
 }
