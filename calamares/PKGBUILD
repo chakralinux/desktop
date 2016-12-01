@@ -1,6 +1,6 @@
 pkgname=calamares
-pkgver=2.4.4
-pkgrel=9
+pkgver=2.4.5
+pkgrel=1
 _releaseName="Goedel"
 _releaseYear="2016"
 pkgdesc='Distribution-independent installer framework'
@@ -16,13 +16,8 @@ source+=("$pkgname-$pkgver.tar.gz::https://github.com/calamares/calamares/releas
 #source+=("$pkgname-$pkgver.tar.gz::https://github.com/calamares/calamares/archive/${_gitsha}.zip"
          "calamares-chakra::git://git.chakralinux.org/calamares.git#branch=modules")
         
-source+=('01_hasinternet.patch'
-         '02_hasinternet.patch')
-
-md5sums=('d95c1ae841f2bbe32cd39c1836dc3576'
-         'SKIP'
-         'd0ae4b8b51d41465efe51636ff67db1e'
-         '8acbdca9694cd41b7ff5ce31f715e9b5')
+md5sums=('ec4805b7322748d13d869e7f3e1b42f7'
+         'SKIP')
 
 prepare() {
     cp -a ${srcdir}/calamares-chakra/* ${srcdir}/calamares-${pkgver}
@@ -30,10 +25,6 @@ prepare() {
     rm -rf ${srcdir}/calamares-chakra
     cd ${srcdir}/calamares-${pkgver}
     #cd ${srcdir}/calamares-${_gitsha}
-    
-    # add patches
-    patch -Np1 -i "${srcdir}/01_hasinternet.patch"
-    patch -Np1 -i "${srcdir}/02_hasinternet.patch"
     
     # apply the current version Name and Year
     sed -i -e "s/UnknownName/${_releaseName}/" "src/branding/chakra/branding.desc"
