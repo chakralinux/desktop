@@ -12,8 +12,7 @@ else
 fi
 
 if [ -z "$JAVA_EXEC" ]; then
-  echo "No 'java' executable can be found, please set JAVA_HOME variable or"
-  echo "use the 'archlinux-java' script to set the Java version."
+  echo "No 'java' executable can be found, please set JAVA_HOME variable."
   exit 1
 fi
 
