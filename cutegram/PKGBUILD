@@ -1,7 +1,7 @@
 pkgname=cutegram
 _pkgname=Cutegram
-pkgver=2.9.5
-pkgrel=6
+pkgver=2.9.5.de.37.g8439c2e
+pkgrel=5
 pkgdesc="A different telegram client from Aseman team"
 arch=('x86_64')
 url="http://aseman.co/en/products/cutegram/"
@@ -9,33 +9,32 @@ license=('GPL')
 depends=('libqtelegram-ae' 'telegramqml' 'aseman-qt-tools' 'qt5-declarative')
 optdepends=('gst-plugins-good: for audio and notification support'
             'gst-plugins-bad: for audio support')
-source=("https://github.com/Aseman-Land/Cutegram/archive/v$pkgver-dev.tar.gz"
-        'binarymode.patch')
-sha1sums=('792c0ac9075638657f1939550508281a8400fde6'
-          '8a26a19d8742ad024209ad447aa0b7d82c9760f9')
+source=("${pkgname}::git+https://github.com/Aseman-Land/Cutegram.git#commit=8439c2e7c9f43c76f35dbb7a23e1ebc4ed596a6f"
+        '0001-remove-error-dialog.patch')
+sha1sums=('SKIP'
+          '3dc80cb6e95ba413871fa53b1240fc900d2b0b32')
+
+pkgver() {
+  cd ${srcdir}/${pkgname}
+  git describe --long | sed 's/\([^-]*-g\)/\1/;s/-/./g' | sed 's/.stable//g' | sed 's/v//g'
+}
 
 prepare() {
-  cd "${srcdir}/${_pkgname}-$pkgver-dev"
-  # patch for binary mode, we didn't do this build way yet
-  patch -Np1 -i ${srcdir}/binarymode.patch
-
+  cd "${srcdir}/${pkgname}"
+  
+  patch -Np1 -i $srcdir/0001-remove-error-dialog.patch
   # change the heading application
-  sed 's,qmlscene,qmlscene-qt5,g' -i share/Cutegram.desktop
+  sed 's,qmlscene,qmlscene-qt5,g' -i cutegram.pro
   mkdir -p build
-
-  # modify desktop file for binaryMode
-  sed -i "s|qmlscene /usr/share/cutegram/3.0/main.qml|/usr/bin/cutegram|" share/Cutegram.desktop
 }
 
 build() {
-  cd "${srcdir}/${_pkgname}-$pkgver-dev/build"
+  cd "${srcdir}/${pkgname}/build"
   qmake-qt5 QMAKE_CFLAGS_ISYSTEM= PREFIX=/usr DEFINES+=WEBENGINE_ASEMAN_WEBGRABBER CONFIG+=binaryMode ..
   make
 }
 
 package() {
-  cd "${srcdir}/${_pkgname}-$pkgver-dev/build"
-  
-  install -Dm755 cutegram "${pkgdir}/usr/bin/cutegram"
-  install -Dm644 ../share/Cutegram.desktop "${pkgdir}/usr/share/applications/Cutegram.desktop"
+  cd "${srcdir}/${pkgname}/build"
+  make INSTALL_ROOT="${pkgdir}" install
 }

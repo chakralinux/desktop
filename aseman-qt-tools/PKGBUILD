@@ -1,5 +1,5 @@
 pkgname=aseman-qt-tools
-pkgver=1.0.0
+pkgver=1.0.0.37.ged22341
 pkgrel=1
 pkgdesc="the shared tools and functions used in the aseman's projects"
 arch=('x86_64' 'i686')
@@ -7,21 +7,26 @@ license=('GPL3')
 url="https://launchpad.net/libqtelegram"
 depends=('qt5-multimedia' 'qt5-location' 'qt5-declarative' 'qt5-quickcontrols' 'qt5-sensors' 'qtkeychain-qt5')
 makedepends=('cmake')
-source=("https://github.com/Aseman-Land/aseman-qt-tools/archive/v${pkgver}-stable.tar.gz")
-sha256sums=('44ad93a205921ed920b7dbcca1ae4d8150d001b06d6f8f01e46da02cc607ece2')
+source=("$pkgname::git+https://github.com/Aseman-Land/aseman-qt-tools.git")
+sha256sums=('SKIP')
+
+pkgver() {
+  cd ${pkgname}
+  git describe --long | sed 's/\([^-]*-g\)/\1/;s/-/./g' | sed 's/.stable//g' | sed 's/v//g'
+}
 
 prepare() {
-  cd ${pkgname}-${pkgver}-stable
+  cd ${pkgname}
   mkdir -p build
 }
 
 build() {
-  cd ${pkgname}-${pkgver}-stable/build
+  cd ${pkgname}/build
   qmake-qt5 -r QMAKE_CFLAGS_ISYSTEM= QT+=widgets QT+=multimedia QT+=dbus QT+=sensors QT+=positioning  ../asemantools.pro
   make
 }
 
 package() {
-  cd ${pkgname}-${pkgver}-stable/build
+  cd ${pkgname}/build
   make INSTALL_ROOT="$pkgdir" install
 }
