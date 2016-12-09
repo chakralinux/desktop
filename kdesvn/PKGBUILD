@@ -1,22 +1,17 @@
-#
-# Chakra Packages for Chakra, part of chakra-project.org
-#
-
 pkgname=kdesvn
-pkgver=1.7.0
+pkgver=2.0.0
 pkgrel=1
 pkgdesc="A pure C++ SVN-client for KDE"
 arch=('x86_64')
-url="http://kdesvn.alwins-world.de/"
+url="http://projects.kde.org/kdesvn"
 license=('GPL')
-depends=('hicolor-icon-theme' 'kdelibs' 'subversion' 'xdg-utils' 'qt')
-makedepends=('automoc4' 'cmake' 'docbook-xsl')
+depends=('subversion' 'kcoreaddons' 'kdoctools' 'kio' 'knotifications' 'kparts' 'ktexteditor' 'python')
+makedepends=('extra-cmake-modules')
 conflicts=('qsvn')
-options=('libtool')
 categories=('programming')
 install=$pkgname.install
 source=(http://download.kde.org/stable/kdesvn/$pkgver/kdesvn-$pkgver.tar.xz)
-md5sums=('f3d80daf42dad5d07b9a8cd24541d94d')
+md5sums=('fa5bf0058e613750cef85b8da9181d5a')
 
 build() {
   cd $pkgname-$pkgver
@@ -24,8 +19,7 @@ build() {
   cmake . \
     -DCMAKE_INSTALL_PREFIX=/usr \
     -DCMAKE_BUILD_TYPE=RelWithDebInfo \
-    -DCMAKE_CXX_FLAGS="-DQT_THREAD_SUPPORT" \
-    -DLIB_SUFFIX=
+    -DCMAKE_CXX_FLAGS="-DQT_THREAD_SUPPORT"
 
   make
 }
@@ -34,9 +28,6 @@ build() {
   cd $pkgname-$pkgver
 
   make DESTDIR=$pkgdir install
-
-#removing conflicting files - kdesdk
-  rm -f $pkgdir/usr/share/kde4/services/svn*
 
  #removing $srcdir reference
   rm -rf $pkgdir/usr/share/doc
