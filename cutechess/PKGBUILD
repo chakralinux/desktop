@@ -1,0 +1,33 @@
+pkgname=cutechess
+pkgver=0.9.4
+pkgrel=1
+pkgdesc="Graphical user interface, command-line interface and a library for playing chess"
+arch=('x86_64')
+url="https://github.com/cutechess/cutechess"
+license=('GPL3')
+groups=('games')
+depends=('qt5-base' 'qt5-svg')
+source=("https://github.com/$pkgname/$pkgname/archive/gui-$pkgver.tar.gz"
+        "cutechess.desktop")
+md5sums=('2e594803f0959b1486b2d315e9765a28'
+         'a649152fbf23dc0910550f2a877ff345')
+
+build() {
+	cd $pkgname-gui-$pkgver
+	qmake-qt5
+	make
+}
+
+package() {
+	cd $pkgname-gui-$pkgver
+	make DESTDIR=$pkgdir install
+	mkdir -p $pkgdir/usr/bin/
+	mkdir -p $pkgdir/usr/lib/
+	mkdir -p $pkgdir/usr/share/icons/hicolor/512x512/apps/
+	mkdir -p $pkgdir/usr/share/applications/
+	install -Dm 755 projects/gui/cutechess $pkgdir/usr/bin/
+	install -Dm 755 projects/cli/cutechess-cli $pkgdir/usr/bin/
+	install -Dm 644 projects/lib/libcutechess.a $pkgdir/usr/lib/
+	install -Dm 644 projects/gui/res/icons/cutechess_512x512.png $pkgdir/usr/share/icons/hicolor/512x512/apps/cutechess.png
+	install -Dm 644 ../cutechess.desktop $pkgdir/usr/share/applications/
+}
