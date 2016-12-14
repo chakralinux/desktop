@@ -1,26 +1,28 @@
 pkgname=plasma5-applets-nowdock
-pkgver=0.4.0
+pkgver=0.5.0
 pkgrel=1
 pkgdesc="A pure qml plasmoid or kwin script that creates a mac style effect for tasks in Plasma 5"
 arch=('x86_64')
 url="https://github.com/psifidotos/plasmaqmldock"
 license=('GPL')
 group=('plasma5-applets')
-depends=('plasma-workspace' 'qt5-graphicaleffects')
-makedepends=('extra-cmake-modules')
-source=("https://github.com/psifidotos/nowdock-plasmoid/archive/v${pkgver}.tar.gz")
-sha256sums=('bd4e5c93e50f840de4c3e21c4ad8e271df3598b8fb1077e4b04d922650342d42')
+depends=('plasma-framework' 'kwindowsystem' 'kcoreaddons' 'kdelibs4support' 'plasma-workspace')
+makedepends=('cmake' 'extra-cmake-modules' 'kdoctools')
+source=("https://github.com/psifidotos/nowdock-panel/archive/v${pkgver}.tar.gz")
+sha256sums=('7881ca6e79333861947693397dac995d42c05b1fa344e5f01068ea1096ad8b1f')
  
 build() {
-  cd ${srcdir}/nowdock-plasmoid-${pkgver}
+  cd ${srcdir}/nowdock-panel-${pkgver}
   mkdir -p build && cd build
 
-  cmake -DCMAKE_INSTALL_PREFIX=/usr ..
+  cmake .. \
+    -DCMAKE_INSTALL_PREFIX=/usr \
+    -DCMAKE_BUILD_TYPE=Release
   make
 }
 
 package() {
-  cd ${srcdir}/nowdock-plasmoid-${pkgver}/build
+  cd ${srcdir}/nowdock-panel-${pkgver}/build
   
   make DESTDIR=${pkgdir} install
 }
