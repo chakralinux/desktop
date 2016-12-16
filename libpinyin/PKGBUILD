@@ -1,7 +1,7 @@
 pkgname=libpinyin
-pkgver=1.6.0
+pkgver=1.7.0
 pkgrel=1
-_modelver=11
+_modelver=14
 pkgdesc="Library to deal with pinyin."
 arch=('x86_64')
 url="https://github.com/libpinyin/libpinyin"
@@ -11,8 +11,8 @@ makedepends=('git' 'libtool' 'autoconf' 'automake')
 source=("https://github.com/libpinyin/libpinyin/archive/${pkgver}.tar.gz"
         "http://downloads.sourceforge.net/libpinyin/model${_modelver}.text.tar.gz")
 noextract=("model${_modelver}.text.tar.gz")
-sha256sums=('ca4a33f01fb4301cfad1f977276823f0172b1aa5736046a5c2ca73c474386e37'
-            'd0428e87a8c6b214036641a3317834f8352e77cbba0f040c7bd3495d13ef3f71')
+sha256sums=('97bdfb977b62f38122e0408710ea2029bb026a37eb9468ec30848f69b59b72a6'
+            '185f0f175a90bcfc55cf3cf6ceff8d447a6269492c0ca1a1fc0748ea2c181363')
 
 build() {
   cd ${srcdir}/${pkgname}-${pkgver}
@@ -21,6 +21,10 @@ build() {
   sed -i "/wget.*model${_modelver}\.text\.tar\.gz/ d" data/Makefile.am
 
   aclocal && libtoolize --force && autoheader && automake -a && autoconf
+
+  # :/
+  sed -i 's/AX_CXX_COMPILE_STDCXX(11)/AX_CXX_COMPILE_STDCXX_11()/' configure
+
   ./configure --prefix=/usr && make
 }
 
