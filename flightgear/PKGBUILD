@@ -1,34 +1,34 @@
 pkgbase=flightgear
 pkgname=('flightgear' 'flightgear-data')
-pkgver=2016.3.1
-_pkgver=2016.3
+pkgver=2016.4.3
+_pkgver=2016.4
 pkgrel=1
 pkgdesc="An open-source, multi-platform flight simulator."
 arch=('x86_64')
 depends=('fltk' 'libxmu' 'libxi' 'openal' 'openscenegraph' 'zlib' "simgear=$pkgver" 'subversion' 'libxrandr' 'glu')
-makedepends=('boost' 'cmake' 'mesa' 'sharutils' "simgear=$pkgver")
+makedepends=('boost' 'cmake' 'mesa' 'sharutils' "simgear=$pkgver" 'qt5-base')
 license=('GPL')
-url="http://flightgear.sourceforge.net/"
+url="http://www.flightgear.org/"
 screenshot="http://www.flightgear.org/wp-content/gallery/gallery-v2-6/737-300_egkk_hom.jpg"
 categories=('games')
 options=('!makeflags' '!strip')
 source=(# flightgear
         "http://downloads.sourceforge.net/project/flightgear/release-$_pkgver/flightgear-$pkgver.tar.bz2"
-	"build-fix.patch"
+	"sec-fix.patch"
         # flightgear-data
         "http://downloads.sourceforge.net/project/flightgear/release-$_pkgver/FlightGear-$pkgver-data.tar.bz2"
         # addons - global object and sharedmodels (from latest version)
         "http://downloads.sourceforge.net/project/flightgear/scenery/GlobalObjects.tgz"
         "http://downloads.sourceforge.net/project/flightgear/scenery/SharedModels.tgz")
-sha1sums=('77f18e78a8310b7a936abba386bac66223d7ee4a'
-          '3261cab4abe211c86602cdf3965a612407f77f9d'
-          'c6f63b5868c91f160f1adb6c5775b781cc8143f2'
-          '62d1c85661bccfe3f7bfd0075cddeed05bb6692e'
-          '86acad2b4067960a95615d25dcd54a6a2bfd3ecb')
+sha1sums=('4928e3a614bdaaa3539eb70c9b83067939ff62a2'
+          'a5ad2cb30f58da853a62a6a7474af57df1593f75'
+          '6eb39b4290ac7d483042157bc4039650671037c7'
+          '5e7b0ecd30ffffbe47bedc98b090a32f3edc712b'
+          'f503cbe93b7d6bbd9b7172075bc3d06b39ee569c')
 
 prepare() {
   cd $srcdir/flightgear-$pkgver
-  patch -p1 -i $srcdir/build-fix.patch
+  patch -p1 -i $srcdir/sec-fix.patch
 }
 
 build() {
@@ -46,6 +46,7 @@ build() {
 
 package_flightgear() {
   depends=('flightgear-data')
+  optdepends=('qt5-base: fgfs --launcher')
 
   cd $pkgbase-$pkgver
   
