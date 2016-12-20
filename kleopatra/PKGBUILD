@@ -8,12 +8,13 @@ pkgdesc="Certificate manager and GUI for OpenPGP and CMS cryptography."
 arch=('x86_64')
 url='https://projects.kde.org/projects/kde/pim/kleopatra'
 license=('LGPL')
-depends=('gnupg' 'pinentry' 'gpgmepp' 'kmime' 'kcodecs' 'kdbusaddons' 'kcmutils' 'kconfig'
-         'ki18n' 'kiconthemes' 'knotifications' 'kxmlgui' 'kwindowsystem' 'ktextwidgets' 'libkleo')
-makedepends=('extra-cmake-modules' 'kdoctools' 'boost')
-groups=(kde kde-applications kde-uninstall)
-source=("$_mirror/${pkgname}-$_kdever.tar.xz")
-sha256sums=(`grep ${pkgname}-$_kdever.tar.xz  ../checksums.txt | cut -d " " -f1`)
+depends=(hicolor-icon-theme libkleo kcmutils kmime)
+makedepends=(extra-cmake-modules kdoctools boost python3)
+groups=(kde kde-applications kde-uninstall kdepim)
+source=("$_mirror/${pkgname}-$_kdever.tar.xz"{,.sig})
+sha256sums=(`grep ${pkgname}-$_kdever.tar.xz  ../kdeapps.sums | cut -d " " -f1`
+                        'SKIP')
+validpgpkeys=(${Avalidpgpkeys})
 
 prepare() {
     mkdir -p build

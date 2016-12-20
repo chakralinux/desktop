@@ -1,0 +1,36 @@
+# Contributions from Arch: https://www.archlinux.org/packages/extra/x86_64/kdegraphics-svgpart/
+# Include global configuration
+source ../kdeapps.conf
+
+pkgname=svgpart
+pkgver=${_kdever}
+pkgrel=1
+pkgdesc="A KPart for viewing SVGs"
+url="https://www.kde.org/applications/graphics/"
+arch=(x86_64)
+license=(GPL LGPL FDL)
+depends=(kparts)
+makedepends=(extra-cmake-modules python3)
+conflicts=(kdegraphics-svgpart)
+replaces=(kdegraphics-svgpart)
+options=(docs debug)
+groups=(kde kde-uninstall kde-applications kdegraphics)
+source=("$_mirror/${pkgname}-$_kdever.tar.xz"{,.sig})
+sha256sums=(`grep ${pkgname}-$_kdever.tar.xz  ../kdeapps.sums | cut -d " " -f1`
+                        'SKIP')
+validpgpkeys=(${Avalidpgpkeys})
+
+prepare() {
+  mkdir -p build
+}
+
+build() {
+  cd build
+  cmake_kf5 ../${pkgname}-${pkgver}
+  make
+}
+
+package() {
+  cd build
+  make DESTDIR=${pkgdir} install
+}

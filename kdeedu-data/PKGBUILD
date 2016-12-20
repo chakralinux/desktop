@@ -10,8 +10,10 @@ url="https://projects.kde.org/projects/kde/kdeedu/libkdeedu"
 arch=('x86_64')
 license=('GPL' 'LGPL' 'FDL')
 makedepends=('extra-cmake-modules' 'qt5-base')
-source=("$_mirror/${pkgname}-$_kdever.tar.xz")
-sha256sums=(`grep ${pkgname}-$_kdever.tar.xz  ../checksums.txt | cut -d " " -f1`)
+source=("$_mirror/${pkgname}-$_kdever.tar.xz"{,.sig})
+sha256sums=(`grep ${pkgname}-$_kdever.tar.xz  ../kdeapps.sums | cut -d " " -f1`
+                        'SKIP')
+validpgpkeys=(${Avalidpgpkeys})
 
 prepare() {
   mkdir -p build

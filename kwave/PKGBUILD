@@ -1,31 +1,37 @@
+# Include global configuration
+source ../kdeapps.conf
+
 pkgname=kwave
-pkgver=0.9.2
+pkgver=${_kdever}
 pkgrel=1
 pkgdesc="A sound editor for KDE"
-arch=('x86_64')
-url="http://kwave.sourceforge.net/"
-license=('GPL')
-depends=('audiofile' 'flac' 'fftw' 'plasma-framework' 'libvorbis' 'id3lib' 'libsamplerate' 'libmad' 'opus' 'qt5-multimedia' 'kdoctools' 'kinit' 'qt5-base')
-makedepends=('cmake' 'poxml' 'gettext' 'imagemagick' 'automoc4' 'docbook-xsl' 'librsvg' 'extra-cmake-modules' 'kdoctools')
-categories=('multimedia')
+arch=(x86_64)
+url="http://kwave.sourceforge.net"
+license=(GPL)
+depends=(qt5-multimedia kio audiofile libmad libsamplerate hicolor-icon-theme id3lib fftw)
+makedepends=(extra-cmake-modules kdoctools doxygen python librsvg)
+groups=('kde' 'kde-uninstall' 'kde-applications' 'kdemultimedia')
 screenshot=('http://kde-apps.org/CONTENT/content-pre1/11781-1.png')
-source=(http://downloads.sourceforge.net/sourceforge/$pkgname/$pkgname-$pkgver-1.tar.bz2)
-sha1sums=('2dcfe6a2303f9b771f2dfe2d05ba0c878e4576c7')
+options=('docs' 'debug')
+source=("$_mirror/${pkgname}-$_kdever.tar.xz"{,.sig})
+sha256sums=(`grep ${pkgname}-$_kdever.tar.xz  ../kdeapps.sums | cut -d " " -f1`
+                        'SKIP')
+validpgpkeys=(${Avalidpgpkeys})
+
+prepare() {
+  mkdir -p build
+}
 
 build() {
-  cd $pkgname-$pkgver
-  mkdir -p build && cd build
-  cmake -DCMAKE_INSTALL_PREFIX=/usr \
-  -DLIB_INSTALL_DIR=/usr/lib \
-  -DCMAKE_BUILD_TYPE=Release \
-  -DKDE_INSTALL_USE_QT_SYS_PATHS=ON \
-  -DWITH_PULSEAUDIO=OFF \
-  -DWITH_PHONON=OFF \
-  -DWITH_MP3=ON ..
+  cd build
+  cmake_kf5 ../${pkgname}-${pkgver}  \
+    -DWITH_PULSEAUDIO=OFF \
+    -DWITH_PHONON=OFF \
+    -DWITH_MP3=ON
   make
 }
 
 package() {
-  cd $pkgname-$pkgver/build
-  make DESTDIR=$pkgdir install
+  cd build
+  make DESTDIR=${pkgdir} install
 }

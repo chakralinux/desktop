@@ -16,7 +16,9 @@ categories=('accessories')
 install=kdetoys.install
 makedepends=('pkg-config' 'cmake' 'automoc4' "kde-workspace>=${_workspace_ver}" 'docbook-xsl')
 source=($_mirror/${_pkgname}-$_kdever.tar.xz)
-sha256sums=(`grep ${_pkgname}-$_kdever.tar.xz  ../checksums.txt | cut -d " " -f1`)
+sha256sums=(`grep ${_pkgname}-$_kdever.tar.xz  ../kdeapps.sums | cut -d " " -f1`
+                        'SKIP')
+validpgpkeys=(${Avalidpgpkeys})
 
 build() {
     cd ${srcdir}/${_pkgname}-${pkgver}

@@ -1,17 +1,23 @@
 pkgname=libkgapi
 pkgver=5.3.1
-pkgrel=1
+pkgrel=2
 pkgdesc="A KDE-based library for accessing various Google services via their public API"
 url='https://projects.kde.org/projects/extragear/libs/libkgapi'
 arch=('x86_64')
 license=('GPL' 'LGPL' 'FDL')
 depends=('kcalcore' 'kcontacts' 'qt5-webkit')
 makedepends=('extra-cmake-modules' 'python3' 'qt5-tools' 'kdoctools' 'kdesignerplugin')
-source=("http://download.kde.org/stable/${pkgname}/${pkgver}/src/${pkgname}-${pkgver}.tar.xz")
-md5sums=('5f3b1e15ce5dff404bf2a552ae67d890')
+source=("http://download.kde.org/stable/$pkgname/$pkgver/src/$pkgname-$pkgver.tar.xz"
+         bug355908.patch::"https://cgit.kde.org/libkgapi.git/patch/?id=14a57b81")
+md5sums=('5f3b1e15ce5dff404bf2a552ae67d890'
+         'bc20c2c79e13c339517fc87748d4f0f3')
 
 prepare() {
   mkdir -p build
+
+  cd $pkgname-$pkgver
+# Fix syncing Google Calendar events https://bugs.kde.org/show_bug.cgi?id=355908
+  patch -p1 -i ../bug355908.patch
 }
 
 build() {

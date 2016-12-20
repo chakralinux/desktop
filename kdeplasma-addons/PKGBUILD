@@ -102,8 +102,9 @@ makedepends=('pkg-config'
              "kdeedu-marble>=${_kdever}"
              'eigen'
              'qwt')
-source=("$_mirror/${pkgbase}-$_kdever.tar.xz")
-sha256sums=(`grep ${pkgbase}-$_kdever.tar.xz  ../checksums.txt | cut -d" " -f1`)
+source=("$_mirror/${pkgbase}-$_kdever.tar.xz"{,.sig})
+sha256sums=(`grep ${pkgbase}-$_kdever.tar.xz  ../kdeapps.sums | cut -d" " -f1`)
+validpgpkeys=(${Avalidpgpkeys})
 
 prepare() {
     rm -rf "${srcdir}/build"
@@ -671,7 +672,6 @@ package_kdeplasma-addons-runners-dictionary() {
     make DESTDIR=$pkgdir install
 }
 
-
 package_kdeplasma-addons-runners-events() {
     pkgdesc='Calendar Events runner'
     depends=('kde-workspace')
@@ -788,7 +788,6 @@ package_kdeplasma-addons-wallpapers-qmlwallpapers() {
     cd $srcdir/build/wallpapers/qmlwallpapers
     make DESTDIR=$pkgdir install
 }
-
 
 package_kdeplasma-addons-wallpapers-virus() {
     pkgdesc='Virus'

@@ -1,35 +1,35 @@
 # Include global configuration
 source ../kdeapps.conf
 
-pkgname=kdeedu-kalzium
-_pkgname=kalzium
+pkgname=kalzium
 pkgver=${_kdever}
 pkgrel=1
-pkgdesc="Periodic table of elements"
+pkgdesc="Periodic Table of Elements"
 url="http://kde.org/applications/education/kalzium/"
-screenshot='https://www.kde.org/images/screenshots/kalzium.png'
-arch=('x86_64')
-license=('GPL' 'LGPL' 'FDL')
-depends=("kdelibs>=${_libsver}" "avogadro" "ocaml" "facile" "chemical-mime-data")
-makedepends=('cmake' 'automoc4' 'gnome-mime-data' 'docbook-xsl')
-groups=("kde" "kdeedu" "kde-uninstall")
-categories=('education')
-options=('docs' 'debug')
-install=${pkgname}.install
-source=("$_mirror/${_pkgname}-$_kdever.tar.xz")
-sha256sums=(`grep ${_pkgname}-$_kdever.tar.xz  ../checksums.txt | cut -d " " -f1`)
+arch=(x86_64)
+license=(GPL LGPL FDL)
+depends=(hicolor-icon-theme khtml kdelibs4support knewstuff kplotting avogadrolibs)
+makedepends=(extra-cmake-modules kdoctools kdesignerplugin python eigen) # ocaml facile
+conflicts=(kdeedu-kalzium)
+replaces=(kdeedu-kalzium)
+options=(docs debug)
+groups=(kde kde-uninstall kde-applications kdeedu)
+source=("$_mirror/${pkgname}-$_kdever.tar.xz"{,.sig})
+sha256sums=(`grep ${pkgname}-$_kdever.tar.xz  ../kdeapps.sums | cut -d " " -f1`
+                        'SKIP')
+validpgpkeys=(${Avalidpgpkeys})
+
+prepare() {
+  mkdir -p build
+}
 
 build() {
-    cd ${srcdir}/${_pkgname}-${pkgver}
-    cmake . \
-        -DCMAKE_BUILD_TYPE=${_build_type} \
-        -DCMAKE_INSTALL_PREFIX=${_installprefix} \
-        -DCMAKE_SKIP_RPATH=ON \
-        -DCMAKE_{SHARED,MODULE,EXE}_LINKER_FLAGS='-Wl,--no-undefined -Wl,--as-needed'
-    make
+  cd build
+  cmake_kf5 ../${pkgname}-${pkgver}
+  make
 }
 
 package() {
-    cd ${srcdir}/${_pkgname}-${pkgver}
-    make DESTDIR=${pkgdir} install
+  cd build
+  make DESTDIR=${pkgdir} install
 }

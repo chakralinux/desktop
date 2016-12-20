@@ -14,8 +14,10 @@ depends=("kdegames-libkdegames" "qhull")
 makedepends=('pkg-config' 'cmake' 'automoc4' 'docbook-xsl')
 groups=("kde" "kdegames" "kde-uninstall")
 options=('docs' 'debug')
-source=("$_mirror/${_pkgname}-$_kdever.tar.xz")
-sha256sums=(`grep ${_pkgname}-$_kdever.tar.xz  ../checksums.txt | cut -d " " -f1`)
+source=("$_mirror/${_pkgname}-$_kdever.tar.xz"{,.sig})
+sha256sums=(`grep ${_pkgname}-$_kdever.tar.xz  ../kdeapps.sums | cut -d " " -f1`
+                        'SKIP')
+validpgpkeys=(${Avalidpgpkeys})
 
 build() {
     cd ${srcdir}/${_pkgname}-${pkgver}

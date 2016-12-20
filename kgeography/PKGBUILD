@@ -16,8 +16,10 @@ groups=('kde' 'kde-uninstall' 'kde-applications' 'kdeedu')
 replaces=('kdeedu-kgeography')
 conflicts=('kdeedu-kgeography')
 options=('docs' 'debug')
-source=("$_mirror/${pkgname}-$_kdever.tar.xz")
-sha256sums=(`grep ${pkgname}-$_kdever.tar.xz  ../checksums.txt | cut -d " " -f1`)
+source=("$_mirror/${pkgname}-$_kdever.tar.xz"{,.sig})
+sha256sums=(`grep ${pkgname}-$_kdever.tar.xz  ../kdeapps.sums | cut -d " " -f1`
+                        'SKIP')
+validpgpkeys=(${Avalidpgpkeys})
 
 prepare() {
   mkdir -p build

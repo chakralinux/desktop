@@ -12,8 +12,10 @@ screenshot="http://www.kde.org/images/screenshots/marble.png"
 license=(GPL)
 makedepends=(extra-cmake-modules gpsd libwlocate phonon-qt5 qt5-webkit krunner kparts knewstuff qt5-tools) # quazip-qt5
 options=('docs' 'debug')
-source=("$_mirror/${pkgbase}-$_kdever.tar.xz")
-sha256sums=(`grep ${pkgbase}-$_kdever.tar.xz  ../checksums.txt | cut -d " " -f1`)
+source=("$_mirror/${pkgbase}-$_kdever.tar.xz"{,.sig})
+sha256sums=(`grep ${pkgbase}-$_kdever.tar.xz  ../kdeapps.sums | cut -d " " -f1`
+                        'SKIP')
+validpgpkeys=(${Avalidpgpkeys})
 
 prepare() {
   mkdir -p build
@@ -39,7 +41,6 @@ build() {
     -DMOBILE=OFF
   make
 }
-
 
 package_libastro() {
   pkgdesc='Marble astronomy library'

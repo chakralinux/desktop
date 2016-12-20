@@ -6,18 +6,20 @@ arch=('x86_64')
 pkgver=${_kdever}
 pkgrel=1
 pkgdesc='Monitors the network for DNS-SD services'
-depends=("kdelibs>=${_libsver}")
+depends=("kdelibs")
 replaces=("kdenetwork-kdnssd")
 provides=("kdenetwork-kdnssd")
 conflicts=("kdenetwork-common" "kdenetwork-doc" "kdenetwork-kdnssd")
-groups=("kde" "kdenetwork" "kde-uninstall")
+groups=("kde" "kdenetwork" "kde-uninstall" 'kdenetwork')
 categories=('network')
 url="http://www.kde.org"
 license=('GPL' 'LGPL' 'FDL')
 options=('docs' 'debug')
 makedepends=('pkg-config' 'cmake' 'automoc4' 'docbook-xsl')
-source=("$_mirror/zeroconf-ioslave-$_kdever.tar.xz")
-sha256sums=(`grep zeroconf-ioslave-$_kdever.tar.xz  ../checksums.txt | cut -d " " -f1`)
+source=("$_mirror/zeroconf-ioslave-$_kdever.tar.xz"{,.sig})
+sha256sums=(`grep zeroconf-ioslave-$_kdever.tar.xz  ../kdeapps.sums | cut -d " " -f1`
+                        'SKIP')
+validpgpkeys=(${Avalidpgpkeys})
 
 build() {
     cd ${srcdir}/${pkgname}-$pkgver

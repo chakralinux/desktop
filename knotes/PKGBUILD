@@ -1,0 +1,33 @@
+# Include global configuration
+source ../kdeapps.conf
+
+pkgname=knotes
+pkgver=${_kdever}
+pkgrel=1
+pkgdesc="Popup notes"
+arch=(x86_64)
+url="https://community.kde.org/KDE_PIM"
+license=(GPL2)
+depends=(kdepim-runtime kdnssd kontactinterface pimcommon)
+makedepends=(extra-cmake-modules kdoctools kdesignerplugin boost python3)
+options=(docs debug)
+groups=(kde kde-uninstall kde-applications kdepim)
+source=("$_mirror/${pkgname}-$_kdever.tar.xz"{,.sig})
+sha256sums=(`grep ${pkgname}-$_kdever.tar.xz  ../kdeapps.sums | cut -d " " -f1`
+                        'SKIP')
+validpgpkeys=(${Avalidpgpkeys})
+
+prepare() {
+  mkdir -p build
+}
+
+build() {
+  cd build
+  cmake_kf5 ../${pkgname}-${pkgver}
+  make
+}
+
+package() {
+  cd build
+  make DESTDIR=${pkgdir} install
+}

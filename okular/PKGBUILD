@@ -1,0 +1,38 @@
+# Contributions from Arch: https://www.archlinux.org/packages/extra/x86_64/kdegraphics-okular/
+# Include global configuration
+source ../kdeapps.conf
+
+pkgname=okular
+pkgver=${_kdever}
+pkgrel=1
+pkgdesc='Document Viewer'
+arch=(x86_64)
+url="http://kde.org/applications/graphics/okular/"
+license=(GPL LGPL FDL)
+depends=(chmlib djvulibre libspectre libkexiv2 poppler-qt5 qca-qt5 kpty khtml kactivities threadweaver)
+makedepends=(extra-cmake-modules ebook-tools kdegraphics-mobipocket kdoctools python3)
+optdepends=('ebook-tools: mobi and epub support'
+            'kdegraphics-mobipocket: mobi support')
+conflicts=(kdegraphics-okular)
+replaces=(kdegraphics-okular)
+options=(docs debug)
+groups=(kde kde-uninstall kde-applications kdegraphics)
+source=("$_mirror/${pkgname}-$_kdever.tar.xz"{,.sig})
+sha256sums=(`grep ${pkgname}-$_kdever.tar.xz  ../kdeapps.sums | cut -d " " -f1`
+                        'SKIP')
+validpgpkeys=(${Avalidpgpkeys})
+
+prepare() {
+  mkdir -p build
+}
+
+build() {
+  cd build
+  cmake_kf5 ../${pkgname}-${pkgver}
+  make
+}
+
+package() {
+  cd build
+  make DESTDIR=${pkgdir} install
+}

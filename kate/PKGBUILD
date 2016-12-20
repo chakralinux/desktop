@@ -13,8 +13,10 @@ depends=('knewstuff' 'ktexteditor' 'threadweaver' 'kded' 'kitemmodels')
 makedepends=('extra-cmake-modules' 'kdoctools' 'python3' 'plasma-framework')
 optdepends=('kio-extras: extra protocols support (sftp, fish and more)')
 options=('docs' 'debug')
-source=("$_mirror/${pkgbase}-$_kdever.tar.xz")
-sha256sums=("`grep ${pkgbase}-$_kdever.tar.xz  ../checksums.txt | cut -d " " -f1`")
+source=("$_mirror/${pkgbase}-$_kdever.tar.xz"{,.sig})
+sha256sums=("`grep ${pkgbase}-$_kdever.tar.xz  ../kdeapps.sums | cut -d " " -f1`"
+                        'SKIP')
+validpgpkeys=(${Avalidpgpkeys})
 
 prepare() {
   mkdir build

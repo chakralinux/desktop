@@ -84,7 +84,8 @@ for _lang in "${_languages[@]}"; do
   eval "package_$_pkgname() {
     _package $_lang
   }"
-  sha256sums+=(`grep  "$pkgbase-$_locale-$pkgver.tar.xz"             ../checksums.txt  |  cut  -d  " "  -f1`)
+  sha256sums+=(`grep  "$pkgbase-$_locale-$pkgver.tar.xz"             ../kdeapps.sums  |  cut  -d  " "  -f1`)
+validpgpkeys=(${Avalidpgpkeys})
 done
 
 prepare() {

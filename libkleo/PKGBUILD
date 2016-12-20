@@ -8,13 +8,14 @@ pkgdesc="This lib provides crypto for mails."
 arch=('x86_64')
 url='https://projects.kde.org/projects/kde/pim/libkleo'
 license=('LGPL')
-depends=('gpgmepp' 'kpimtextedit' 'kconfig' 'ki18n' 'kwidgetsaddons' 'kcompletion' 'kwindowsystem'
-         'kcoreaddons' 'boost')
-makedepends=('extra-cmake-modules')
+depends=(gpgme kitemmodels kpimtextedit)
+makedepends=(extra-cmake-modules python3 boost)
 groups=(kde kde-applications kdepim kde-uninstall)
 options=('docs' 'debug')
-source=("$_mirror/${pkgname}-$_kdever.tar.xz")
-sha256sums=(`grep " ${pkgname}-${_kdever}.tar.xz"  ../checksums.txt | cut -d " " -f1`)
+source=("$_mirror/${pkgname}-$_kdever.tar.xz"{,.sig})
+sha256sums=(`grep " ${pkgname}-${_kdever}.tar.xz"  ../kdeapps.sums | cut -d " " -f1`
+                        'SKIP')
+validpgpkeys=(${Avalidpgpkeys})
 
 prepare() {
     mkdir -p build

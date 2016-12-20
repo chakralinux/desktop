@@ -14,8 +14,10 @@ groups=('kde' 'kde-minimal' 'kde-uninstall')
 options=("debug")
 conflicts=('khelpcenter4' 'kde-runtime-doc')
 replaces=('khelpcenter4' 'kde-runtime-doc')
-source=("$_mirror/${pkgname}-$_kdever.tar.xz")
-sha256sums=(`grep ${pkgname}-$_kdever.tar.xz  ../checksums.txt | cut -d" " -f1`)
+source=("$_mirror/${pkgname}-$_kdever.tar.xz"{,.sig})
+sha256sums=(`grep ${pkgname}-$_kdever.tar.xz  ../kdeapps.sums | cut -d " " -f1`
+                        'SKIP')
+validpgpkeys=(${Avalidpgpkeys})
 
 prepare() {
   mkdir -p build

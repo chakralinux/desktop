@@ -6,29 +6,29 @@ pkgname=libkcddb
 pkgver=${_kdever}
 pkgrel=1
 pkgdesc="KDE CDDB library"
-url='https://projects.kde.org/projects/kde/kdemultimedia/libkcddb'
-arch=('x86_64')
-license=('GPL' 'LGPL' 'FDL')
-depends=("kdelibs>=${_libsver}" "libmusicbrainz5")
-makedepends=('cmake' 'automoc4' 'kdoctools')
-groups=("kde" "kdemultimedia" "kde-uninstall")
-conflicts=('kdemultimedia-common')
-replaces=('kdemultimedia-common')
-options=('docs' 'debug')
-source=("$_mirror/${pkgname}-$_kdever.tar.xz")
-sha256sums=(`grep ${pkgname}-$_kdever.tar.xz  ../checksums.txt | cut -d" " -f1`)
+url='https://www.kde.org/applications/multimedia/'
+arch=(x86_64)
+license=(GPL LGPL FDL)
+depends=(kio libmusicbrainz5)
+makedepends=(extra-cmake-modules kdoctools python)
+options=(docs debug)
+groups=(kde kde-uninstall kde-applications kdemultimedia)
+source=("$_mirror/${pkgname}-$_kdever.tar.xz"{,.sig})
+sha256sums=(`grep ${pkgname}-$_kdever.tar.xz  ../kdeapps.sums | cut -d " " -f1`
+                        'SKIP')
+validpgpkeys=(${Avalidpgpkeys})
+
+prepare() {
+  mkdir -p build
+}
 
 build() {
-    cd "${srcdir}/${pkgname}-${pkgver}"
-    cmake . \
-        -DCMAKE_BUILD_TYPE=${_build_type} \
-        -DCMAKE_INSTALL_PREFIX=${_installprefix} \
-        -DCMAKE_SKIP_RPATH=ON \
-        -DCMAKE_{SHARED,MODULE,EXE}_LINKER_FLAGS='-Wl,--no-undefined -Wl,--as-needed'
-    make
+  cd build
+  cmake_kf5 ../${pkgname}-${pkgver}
+  make
 }
 
 package() {
-    cd "${srcdir}/${pkgname}-${pkgver}"
-    make DESTDIR=${pkgdir} install
+  cd build
+  make DESTDIR=${pkgdir} install
 }

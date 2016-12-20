@@ -1,0 +1,35 @@
+# Include global configuration
+source ../kdeapps.conf
+
+pkgname=ktouch
+pkgver=${_kdever}
+pkgrel=1
+pkgdesc="Touch Typing Tutor"
+url="http://kde.org/applications/education/ktouch/"
+arch=(x86_64)
+license=(GPL LGPL FDL)
+depends=(kqtquickcharts libxkbfile ktexteditor kcmutils knewstuff hicolor-icon-theme)
+makedepends=(extra-cmake-modules mesa kdoctools python3)
+conflicts=(kdeedu-ktouch)
+replaces=(kdeedu-ktouch)
+options=(docs debug)
+groups=(kde kde-uninstall kde-applications kdeedu)
+source=("$_mirror/${pkgname}-$_kdever.tar.xz"{,.sig})
+sha256sums=(`grep ${pkgname}-$_kdever.tar.xz  ../kdeapps.sums | cut -d " " -f1`
+                        'SKIP')
+validpgpkeys=(${Avalidpgpkeys})
+
+prepare() {
+  mkdir -p build
+}
+
+build() {
+  cd build
+  cmake_kf5 ../${pkgname}-${pkgver}
+  make
+}
+
+package() {
+  cd build
+  make DESTDIR=${pkgdir} install
+}

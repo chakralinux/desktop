@@ -11,8 +11,9 @@ license=('GPL' 'LGPL' 'FDL')
 groups=('kde' 'kde-uninstall' 'kde-applications' 'kdepim')
 makedepends=(libkdepim extra-cmake-modules kdepim-runtime qt5-tools grantlee-qt5 kdoctools knewstuff khtml ktexteditor kdnssd kldap libktnef boost gpgmepp kontactinterface kxmlrpcclient kblog akonadi-search libgravatar mailimporter mailcommon incidenceeditor libksieve kdepim-addons)
 options=('docs' 'debug')
-source=("$_mirror/${pkgbase}-$_kdever.tar.xz")
-sha256sums=(`grep " ${pkgbase}-$_kdever.tar.xz"  ../checksums.txt | cut -d " " -f1`)
+source=("$_mirror/${pkgbase}-$_kdever.tar.xz"{,.sig})
+sha256sums=(`grep " ${pkgbase}-$_kdever.tar.xz"{,.sig}  ../kdeapps.sums | cut -d " " -f1`)
+validpgpkeys=(${Avalidpgpkeys})
 
 prepare() {
     mkdir -p build

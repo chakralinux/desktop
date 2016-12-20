@@ -15,11 +15,13 @@ install=kdenetwork.install
 license=('GPL' 'LGPL' 'FDL')
 options=('docs' 'debug')
 makedepends=('pkg-config' 'cmake' 'automoc4' 'docbook-xsl' 'boost')
-source=("$_mirror/kget-$_kdever.tar.xz"
+source=("$_mirror/kget-$_kdever.tar.xz"{,.sig}
         list_view_header_recovery.patch)
-sha256sums=(`grep kget-$_kdever.tar.xz  ../checksums.txt | cut -d " " -f1`
-            '6c48b3111c3ed4f9a5834f69edbf7a60faa92054bdeb6c9cf7ee78da580a3e22')
-
+sha256sums=(`grep kget-$_kdever.tar.xz  ../kdeapps.sums | cut -d " " -f1`
+                        'SKIP'
+                        '6c48b3111c3ed4f9a5834f69edbf7a60faa92054bdeb6c9cf7ee78da580a3e22')
+validpgpkeys=(${Avalidpgpkeys})
+            
 
 prepare(){
   cd ${srcdir}/kget-$pkgver

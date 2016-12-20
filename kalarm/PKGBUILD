@@ -1,0 +1,33 @@
+# Include global configuration
+source ../kdeapps.conf
+
+pkgname=kalarm
+pkgver=${_kdever}
+pkgrel=1
+pkgdesc="Personal alarm scheduler"
+arch=(x86_64)
+url="https://community.kde.org/KDE_PIM"
+license=(GPL2)
+depends=(kdepim-runtime kdepim-apps-libs mailcommon)
+makedepends=(extra-cmake-modules kdoctools boost python3 kdesignerplugin)
+options=(docs debug)
+groups=(kde kde-uninstall kde-applications kdepim)
+source=("$_mirror/${pkgname}-$_kdever.tar.xz"{,.sig})
+sha256sums=(`grep ${pkgname}-$_kdever.tar.xz  ../kdeapps.sums | cut -d " " -f1`
+                        'SKIP')
+validpgpkeys=(${Avalidpgpkeys})
+
+prepare() {
+  mkdir -p build
+}
+
+build() {
+  cd build
+  cmake_kf5 ../${pkgname}-${pkgver}
+  make
+}
+
+package() {
+  cd build
+  make DESTDIR=${pkgdir} install
+}

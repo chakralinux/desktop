@@ -1,6 +1,6 @@
 pkgname=tomahawk
 pkgver=0.8.4
-pkgrel=10
+pkgrel=11
 pkgdesc="The social media player. A Music Player App written in C++/Qt"
 arch=('x86_64')
 url="http://tomahawk-player.org/"
@@ -16,10 +16,12 @@ categories=('multimedia')
 options=(!strip)
 source=("http://download.tomahawk-player.org/${pkgname}-${pkgver}.tar.bz2"
         'chakra-build.patch'
-	'quazip5.patch')
+	'quazip5.patch'
+	"https://github.com/tomahawk-player/tomahawk/commit/09e9a6e960b7cc29018721075d82ba994dc87ab6.patch")
 md5sums=('04832abe1786edcc55805875b5882445'
          '2f46cf4c280e9130f5b9a0ab0270bf37'
-         'd95c02d871ee6895df0612aba44f98f8')
+         'd95c02d871ee6895df0612aba44f98f8'
+         '691561b9c53d3df487e7305bc361bce0')
 
 prepare() {
   rm -rf "build"
@@ -30,6 +32,11 @@ prepare() {
 
   # patch to use quazip 5
   patch -p0 -i "quazip5.patch"
+  
+  cd ${srcdir}/${pkgname}-${pkgver}
+  # Fixed crash in TrackView.cpp triggered by Qt >5.6.1.
+  # https://github.com/tomahawk-player/tomahawk/commit/09e9a6e960b7cc29018721075d82ba994dc87ab6
+  patch -Np1 -i "${srcdir}/09e9a6e960b7cc29018721075d82ba994dc87ab6.patch"
 
 }
 

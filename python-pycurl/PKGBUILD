@@ -27,7 +27,6 @@ prepare() {
   sed -i "s/nosetests/nosetests2/" Makefile
 }
 
-
 build() {
   cd "${srcdir}/${_pypiname}"
   make
@@ -47,7 +46,6 @@ check() {
   cd "${srcdir}/python2-${_pypiname}"
   PYTHONPATH="$PWD/build/lib.linux-$CARCH-2.7:$PYTHONPATH" make test || warning "Tests failed"
 }
-
 
 package_python3-pycurl() {
   pkgdesc="A Python 3.x interface to libcurl"

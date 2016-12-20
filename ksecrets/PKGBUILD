@@ -1,6 +1,4 @@
 
-
-
 # Maintainer (i686): Phil Miller <philm@chakra-project[dog]org>
 # Maintainer (x86_64): Manuel Tortosa <manutortosa@chakra-project@org>
 
@@ -19,8 +17,9 @@ makedepends=('cmake')
 options=('docs' 'debug')
 
 source=($_mirror/${pkgname}-$_kdever.tar.xz)
-sha256sums=(`grep ${pkgname}-$_kdever.tar.xz  ../checksums.txt | cut -d" " -f1`)
-
+sha256sums=(`grep ${pkgname}-$_kdever.tar.xz  ../kdeapps.sums | cut -d " " -f1`
+                        'SKIP')
+validpgpkeys=(${Avalidpgpkeys})
 
 build() {
 	cd "${srcdir}"

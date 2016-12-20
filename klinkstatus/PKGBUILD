@@ -1,0 +1,36 @@
+# Include global configuration
+source ../kdeapps.conf
+
+pkgname=klinkstatus
+pkgver=16.12.0
+pkgrel=1
+arch=(x86_64)
+pkgdesc="Link Checker"
+url='http://www.kde.org'
+license=(GPL LGPL FDL)
+groups=(kde-applications kdewebdev)
+depends=(kdebase-runtime kdepimlibs4 tidyhtml)
+makedepends=(cmake automoc4 boost)
+replaces=(kdewebdev-klinkstatus)
+conflicts=(kdewebdev-klinkstatus)
+options=(docs debug)
+groups=(kde kde-uninstall kde-applications kdewebdev)
+source=("$_mirror/${pkgname}-$_kdever.tar.xz"{,.sig})
+sha256sums=(`grep ${pkgname}-$_kdever.tar.xz  ../kdeapps.sums | cut -d " " -f1`
+                        'SKIP')
+validpgpkeys=(${Avalidpgpkeys})
+
+prepare() {
+  mkdir -p build
+}
+
+build() {
+  cd build
+  cmake_kf5 ../${pkgname}-${pkgver}
+  make
+}
+
+package() {
+  cd build
+  make DESTDIR=${pkgdir} install
+}

@@ -9,14 +9,16 @@ pkgdesc="Character selector"
 url="http://kde.org/applications/utilities/kcharselect/"
 license=('GPL' 'LGPL' 'FDL')
 options=('docs' 'debug')
-depends=('kxmlgui')
+depends=('kbookmarks')
 makedepends=('extra-cmake-modules' 'python3' 'kdoctools')
 groups=('kde' 'kde-uninstall' 'kde-applications' 'kdeutils')
 conflicts=("kdeutils-kcharselect")
 replaces=("kdeutils-kcharselect")
 install=kdeutils.install
-source=($_mirror/${pkgname}-$_kdever.tar.xz)
-sha256sums=(`grep ${pkgname}-$_kdever.tar.xz  ../checksums.txt | cut -d " " -f1`)
+source=($_mirror/${pkgname}-$_kdever.tar.xz{,.sig})
+sha256sums=(`grep ${pkgname}-$_kdever.tar.xz  ../kdeapps.sums | cut -d " " -f1`
+                        'SKIP')
+validpgpkeys=(${Avalidpgpkeys})
 
 prepare() {
   mkdir -p build

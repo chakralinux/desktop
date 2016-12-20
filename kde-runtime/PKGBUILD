@@ -19,8 +19,9 @@ install=kde-runtime.install
 replaces=('kdebase-runtime')
 provides=('kdebase-runtime')
 conflicts=('kdebase-runtime')
-source=("$_mirror/${pkgname}-$_kdever.tar.xz")
-sha256sums=(`grep ${pkgname}-$_kdever.tar.xz  ../checksums.txt | cut -d" " -f1`)
+source=("$_mirror/${pkgname}-$_kdever.tar.xz"{,.sig})
+sha256sums=(`grep ${pkgname}-$_kdever.tar.xz  ../kdeapps.sums | cut -d" " -f1`)
+validpgpkeys=(${Avalidpgpkeys})
 
 prepare() {
   mkdir -p build
@@ -42,7 +43,6 @@ build() {
     -DBUILD_doc=OFF
   make
 }
-
 
 package() {
   cd build

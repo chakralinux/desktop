@@ -30,8 +30,10 @@ options=('docs'
          'debug'
          'log')
 install=${pkgname}.install
-source=("$_mirror/${_pkgname}-$_kdever.tar.xz")
-sha256sums=(`grep ${_pkgname}-$_kdever.tar.xz  ../checksums.txt | cut -d " " -f1`)
+source=("$_mirror/${_pkgname}-$_kdever.tar.xz"{,.sig})
+sha256sums=(`grep ${_pkgname}-$_kdever.tar.xz  ../kdeapps.sums | cut -d " " -f1`
+                        'SKIP')
+validpgpkeys=(${Avalidpgpkeys})
 
 build() {
     cd ${srcdir}/${_pkgname}-${pkgver}
