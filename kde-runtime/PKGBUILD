@@ -3,7 +3,7 @@ source ../kdeapps.conf
 
 pkgname='kde-runtime'
 pkgver=${_kdever}
-pkgrel=1
+pkgrel=2
 pkgdesc="Plugins and applications necessary for the running of KDE applications"
 arch=('x86_64')
 url='https://projects.kde.org/projects/kde/kde-runtime'
@@ -20,7 +20,8 @@ replaces=('kdebase-runtime')
 provides=('kdebase-runtime')
 conflicts=('kdebase-runtime')
 source=("$_mirror/${pkgname}-$_kdever.tar.xz"{,.sig})
-sha256sums=(`grep ${pkgname}-$_kdever.tar.xz  ../kdeapps.sums | cut -d" " -f1`)
+sha256sums=(`grep ${pkgname}-$_kdever.tar.xz  ../kdeapps.sums | cut -d" " -f1`
+	    'SKIP')
 validpgpkeys=(${Avalidpgpkeys})
 
 prepare() {
