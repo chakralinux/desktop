@@ -4,14 +4,14 @@
 
 pkgname=k3b
 pkgver=2.0.3.a
-pkgrel=3
+pkgrel=4
 pkgdesc="Feature-rich and easy to handle CD burning application"
 arch=("x86_64")
 url="http://sourceforge.net/projects/k3b/"
 license=('GPL')
-depends=('kde-runtime' 'libkcddb' 'libkcompactdisc' 'libsamplerate' 'libmad'
-         'ffmpeg>=0.5' 'taglib>=1.4' 'libmpcdec>=1.2.5' 'libdvdread>=4.1.3' 'cdrkit' 'shared-mime-info' 'libxft' 'libmusicbrainz3')
-makedepends=('cmake' 'automoc4' 'docbook-xml' 'docbook-xsl')
+depends=('kdebase-runtime' 'libkcddb4' 'libsamplerate' 'libmad'
+         'ffmpeg' 'taglib' 'libmpcdec' 'libdvdread' 'cdrkit' 'libxft')
+makedepends=('cmake' 'automoc4' 'docbook-xml')
 optdepends=('dvd+rw-tools: for dvd burning support'
             'vcdimager: for vcd burning support'
             'transcode: for advanced mpeg conversion support'
@@ -25,6 +25,8 @@ sha256sums=('2d0bb2746802c1d3ad7ddd10e29234cf2053074f376feb200306a5570c39c081')
 
 prepare() {
   cd ${pkgname}-2.0.3
+  # Workaround build failure with cmake 3.4
+  sed -e "s|^cmake_minimum_required|#cmake_minimum_required|" -i CMakeLists.txt
 }
 
 build() {
