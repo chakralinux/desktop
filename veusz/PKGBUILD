@@ -1,5 +1,5 @@
 pkgname=veusz
-pkgver=1.25
+pkgver=1.25.1
 pkgrel=1
 pkgdesc="A scientific plotting package, designed to create publication-ready Postscript output"
 arch=('x86_64')
@@ -12,22 +12,21 @@ source=(http://download.gna.org/$pkgname/$pkgname-$pkgver.tar.gz
 categories=('education' 'science')
 install=veusz.install
 screenshot=('http://home.gna.org/veusz/screenshots/linux_mainwin.png')
-sha512sums=('392ceeecc730fd34cadcbceaed371585457d5db6419388f6692e58c67a75145bc66dc8af8556e4d876135167b5d2ec5d671020cc7a925ee90e6f0f9bc41b1424'
-            'e301ae597a9310a67f3d5ad6051251ef9389313722a11dded4827414ef061a56301ba7ba602603e1c577e1d4816efd3fc76ee0712ec61f0112830486de599828')
+sha256sums=('d268df3f92404c0a045a124265f57ebc453069b09729bce8e265401993d56e37'
+            '33e17492c79986d0e7c545648fc50ab17d62f0207a73329689d0c4192a0d0b1d')
 
 build() {
-  cd $pkgname-$pkgver
+  cd $srcdir/$pkgname-$pkgver
   python3 setup.py build 
 }
 
 package() {
-  cd $pkgname-$pkgver
+  cd $srcdir/$pkgname-$pkgver
   python3 setup.py install --root=$pkgdir --prefix=/usr 
   for _i in 16 32 48 64 128; do
-    install -D -m644 $pkgname-$pkgver/icons/veusz_$_i.png \
+    install -D -m644 "icons/veusz_$_i.png" \
         $pkgdir/usr/share/icons/hicolor/${_i}x${_i}/apps/veusz.png
   done
-  install -D -m644 veusz.desktop \
+  install -D -m644 $srcdir/veusz.desktop \
       $pkgdir/usr/share/applications/veusz.desktop
 }
-
