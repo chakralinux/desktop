@@ -1,12 +1,31 @@
 pkgname=soundkonverter
 pkgver=2.2.2
-pkgrel=1
+pkgrel=2
 pkgdesc="soundKonverter is a frontend to various audio converters"
 arch=('x86_64')
 url="https://github.com/HessiJames/soundkonverter"
 license=('GPL')
-depends=('kdemultimedia-audiocd-kio' 'libkcddb' 'taglib' 'opusfile')
+depends=('audiocd-kio' 'libkcddb4' 'taglib' 'opusfile')
 makedepends=('cmake' 'automoc4')
+optdepends=('cdrkit: cdda2wav backend'
+            'faac: faac backend'
+            'faad2: faad backend'
+            'ffmpeg: ffmpeg backend'
+            'flac: flac backend'
+            'fluidsynth: flouidsynth backend'
+            'lame: lame backend'
+            'mac: mac backend'
+            'mplayer: mplayer backend'
+            'mp3gain: mp3gain backend'
+            'opus-tools: opus backend'
+            'speex: speexenc, speexdec backends'
+            'timidity++: midi backend'
+            'twolame: twolame backend'
+            'vorbisgain: vorbisgain backend'
+            'vorbis-tools: vorbis tools backend'
+            'wavpack: wavpack backend'
+            'sox: sox plugin (change sample rate, various effects)')
+
 categories=('multimedia')
 screenshot=('http://kde-apps.org/CONTENT/content-pre2/29024-2.png')
 source=("$pkgname-$pkgver::https://github.com/HessiJames/soundkonverter/archive/v${pkgver}.tar.gz")
@@ -21,8 +40,8 @@ build() {
 }
 
 package() {
-	cd "$srcdir"/$pkgname-$pkgver/src
-	make DESTDIR="$pkgdir" install
-	
+    cd "$srcdir"/$pkgname-$pkgver/src
+    make DESTDIR="$pkgdir" install
+    
     mv ${pkgdir}/usr/share/applications/kde4/$pkgname.desktop ${pkgdir}/usr/share/applications/$pkgname.desktop
 }
