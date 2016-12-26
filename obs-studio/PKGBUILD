@@ -1,5 +1,5 @@
 pkgname=obs-studio
-pkgver=0.16.6
+pkgver=17.0.0
 pkgrel=1
 pkgdesc="Free and open source software for video recording and live streaming."
 arch=('x86_64')
@@ -7,12 +7,13 @@ url="https://github.com/jp9000/obs-studio"
 license=('GPL2')
 depends=('ffmpeg' 'jansson' 'libxinerama' 'libxkbcommon-x11'
          'qt5-x11extras' 'curl' 'hicolor-icon-theme' 'jack')
-makedepends=('cmake' 'libfdk-aac' 'libxcomposite' 'x264')
+makedepends=('cmake' 'libfdk-aac' 'libxcomposite' 'x264' 'vlc')
 optdepends=('libfdk-aac: FDK AAC codec support'
-            'libxcomposite: XComposite capture support')
+            'libxcomposite: XComposite capture support'
+            'vlc: VLC plugin')
 install=$pkgname.install
 source=("$pkgname-$pkgver::https://github.com/jp9000/obs-studio/archive/$pkgver.tar.gz")
-sha1sums=('6b59c39f009b22dddb88bee2d376900e86f7d152')
+sha1sums=('02abf548509f2b4d019288bd3c29ad916179c80e')
 
 prepare() {
   cd $pkgname-$pkgver
