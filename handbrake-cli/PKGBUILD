@@ -1,29 +1,34 @@
-# cpntributions from ArchLinux: https://www.archlinux.org/packages/community/x86_64/handbrake-cli/
+# contributions from ArchLinux: https://www.archlinux.org/packages/community/x86_64/handbrake-cli/
 
 pkgname=handbrake-cli
-pkgver=0.10.5
+pkgver=1.0.0
 pkgrel=1
 pkgdesc="Multithreaded video transcoder (CLI)"
 arch=('x86_64')
 url="http://handbrake.fr/"
 license=('GPL')
-depends=('bzip2' 'gcc-libs' 'zlib' 'fribidi' 'libass' 'lame' 'libxml2' 'libtheora' 'libsamplerate' 'libbluray' 'x264' 'libdvdnav' 'libx264')
-makedepends=('intltool' 'python2' 'yasm' 'wget' 'libnotify' 'gst-plugins-base' 'dbus-glib')
-source=("https://handbrake.fr/mirror/HandBrake-$pkgver.tar.bz2")
+depends=('bzip2' 'gcc-libs' 'zlib' 'fribidi' 'libass' 'lame' 'libxml2'
+         'libtheora' 'libsamplerate' 'ffmpeg' 'libx264' 'x264' 'x265' 'libvpx'
+         'libdvdnav' 'jansson')
+makedepends=('intltool' 'python2' 'yasm' 'wget' 'libnotify' 'gst-plugins-base' 'dbus-glib' 'cmake')
+source=("https://handbrake.fr/mirror/HandBrake-$pkgver.tar.bz2"
+        "handbrake-fix-missing-x265-link-flag.patch")
 categories=('multimedia')
-sha256sums=('fb9230dd121b456f6829d1d25ac8bbf76e503b51c4efc70f0a7fd2bb8607e2f0')
+sha256sums=('15fb4593c70d75621212e4499f018c3c93d7ce39f1083bf527d4616ded0044c5'
+            '05e212e76b6e0b94a04de02cbeb7bf9db607059e19297b5bd3d0d143135285c4')
 
 prepare() {
   cd "$srcdir/HandBrake-$pkgver"
   
+  # https://bugs.gentoo.org/show_bug.cgi?id=552792
+  patch -Np1 -i ../handbrake-fix-missing-x265-link-flag.patch
+
   # Use more system libs
-  # We had ffmpeg here as well but it broke PGS subtitle processing
-  # https://forum.handbrake.fr/viewtopic.php?f=13&t=27581
-  sed -i \
-    -e '/MODULES += contrib\/libbluray/d' \
-    -e '/MODULES += contrib\/libdvdnav/d' \
-    -e '/MODULES += contrib\/libdvdread/d' \
-    make/include/main.defs
+  # Bundled libbluray is kept because it is patched locally
+  # Our ffmpeg is a liitle old so keep using bundled version
+  for _lib in x265 libvpx libdvdnav libdvdread; do
+    sed -i "/MODULES += contrib\/$_lib/d" make/include/main.defs
+  done
 }    
 build() {
   cd "$srcdir/HandBrake-$pkgver"
