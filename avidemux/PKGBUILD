@@ -1,19 +1,27 @@
 pkgbase=avidemux
 pkgname=('avidemux-cli' 'avidemux')
-pkgver=2.6.15
+pkgver=2.6.16
 pkgrel=1
 pkgdesc='Simple video editor for cutting, filtering and encoding tasks.'
 arch=('x86_64')
 license=('GPL')
 url="http://fixounet.free.fr/avidemux/"
 screenshot="http://upload.wikimedia.org/wikipedia/commons/7/77/Avidemux_Screenshot_Qt.png"
-makedepends=('cmake' 'libxslt' 'qt5-base' 'qt5-tools' 'qt5-script' 'qt5-multimedia' 'qt' 'jack' 'libvorbis' 'sdl' 'libxv' 'alsa-lib' 'lame'
+makedepends=('cmake' 'libxslt' 'qt5-base' 'qt5-tools' 'qt5-script' 'qt5-multimedia' 'jack' 'libvorbis' 'sdl' 'libxv' 'alsa-lib' 'lame'
              'faad2' 'faac' 'x264' 'x265' 'libsamplerate' 'opencore-amr' 'yasm' 'mesa' 'libvpx' 'sqlite3' 'xvidcore'
              'pulseaudio' 'libva' 'desktop-file-utils' 'libdca' 'fribidi' 'glu' 'aften' 'dcaenc' 'twolame' 'gettext')
 categories=('multimedia')
 options=("!makeflags")
 source=("http://downloads.sourceforge.net/avidemux/avidemux_${pkgver}.tar.gz")
-sha256sums=('b0e59b3dc75878b0c00d9a2bc9412125e42a53a8904e64746829ce8028b52257')
+sha256sums=('ec6d6ce038d2454c51ad7f0f2236117cb99d18ce394fef2784381cc4f7dd374a')
+
+prepare() {
+  cd ${pkgbase}_${pkgver}
+  sed -i 's|../avidemux/qt4|../avidemux/qt4 -DLRELEASE_EXECUTABLE=/usr/bin/lrelease-qt5|' bootStrap.bash
+  cp avidemux2.desktop avidemux-qt.desktop
+  sed -ri 's|(Name=).*|\1avidemux (Qt)|' avidemux-qt.desktop
+  sed -ri 's|(Exec=).*|\1avidemux3_qt5|' avidemux-qt.desktop
+}
          
 build() {
   cd "${srcdir}/${pkgbase}_${pkgver}"
@@ -23,7 +31,6 @@ build() {
 
   bash ./bootStrap.bash --with-core \
                         --with-cli \
-                        --without-gtk \
                         --with-plugins
 }
 
