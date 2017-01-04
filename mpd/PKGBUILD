@@ -1,10 +1,10 @@
 # Contributions from Arch: https://projects.archlinux.org/svntogit/packages.git/tree/trunk/PKGBUILD?h=packages/mpd
 
 pkgname=mpd
-pkgver=0.19.21
+pkgver=0.20
 pkgrel=1
 pkgdesc='Flexible, powerful, server-side application for playing music'
-url='http://www.musicpd.org/'
+url='https://www.musicpd.org/'
 license=('GPL')
 arch=('x86_64')
 depends=('audiofile' 'avahi' 'curl' 'faad2' 'ffmpeg' 'jack' 'libao' 'libid3tag'
@@ -12,20 +12,14 @@ depends=('audiofile' 'avahi' 'curl' 'faad2' 'ffmpeg' 'jack' 'libao' 'libid3tag'
          'libmpdclient' 'yajl' 'opus' 'libbluray' 'libgme' 'icu' 'libupnp' 'libnfs'
          'x264')
 makedepends=('boost' 'doxygen')
-source=("http://www.musicpd.org/download/mpd/stable/${pkgname}-${pkgver}.tar.xz"
+source=("https://www.musicpd.org/download/mpd/0.20/${pkgname}-${pkgver}.tar.xz"
         'tmpfiles.d'
         'mpd.conf')
 backup=('etc/mpd.conf')
 install=install
-sha256sums=('8305b8bc026f4b6bde28b8dd09bfdddbe5590acf36358eed4d083a396e301730'
+sha256sums=('48e9dde0f5c22dc26ff36e8d13e3dc575a1ee7558b5537a064f78a3b9dee1619'
             'c1683ba35774c85e16c70e89f7e2ed1c09619512b1a273daabbd5e34d40439bd'
             'f40f68205834ca53cea3372e930bfe6c2f9ecc9df3b1605df2fec63a658b2e03')
-
-prepare() {
-	# Temporary; see Arch's FS#48372
-	install -d "${srcdir}"/pkg-config
-	ln -s /usr/lib/pkgconfig/libsystemd.pc "${srcdir}"/pkg-config/libsystemd-daemon.pc
-}
 
 build() {
     cd "${srcdir}/${pkgname}-${pkgver}"
