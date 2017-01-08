@@ -1,6 +1,6 @@
 pkgname=stellarium
-pkgver=0.15.0
-pkgrel=2
+pkgver=0.15.1
+pkgrel=1
 pkgdesc="A stellarium with great graphics and a nice database of sky-objects"
 arch=('x86_64')
 url="http://www.stellarium.org/"
@@ -11,12 +11,12 @@ depends=('libpng' 'libgl' 'glu' 'openssl' 'zlib' 'gettext' 'qt5-script'
 makedepends=('cmake' 'boost' 'mesa' 'mesa-libgl' 'qt5-tools')
 categories=('education')
 source=("http://downloads.sourceforge.net/${pkgname}/${pkgname}-${pkgver}.tar.gz")
-sha256sums=('74d0e3a69fcbaf1c6278f601a44497fd3e9f2de7dfa11a60197d3afb68288746')
+sha256sums=('0fe52fc496c11d92728742ae6d71bac116746dca7885d34d17b1a288fe8b5b11')
 
 build() {
   cd ${pkgname}-${pkgver}
 
-  cmake . -DCMAKE_INSTALL_PREFIX=/usr -DCMAKE_BUILD_TYPE=RELEASE -DENABLE_SOUND=1
+  cmake . -DCMAKE_INSTALL_PREFIX=/usr -DCMAKE_BUILD_TYPE=RELEASE
   make
 }
 
