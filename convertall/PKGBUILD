@@ -1,24 +1,22 @@
 pkgname=convertall
-pkgver=0.6.1
+pkgver=0.7.0
 pkgrel=1
 pkgdesc="Unit conversion program (Qt)"
 arch=('x86_64')
 url="http://convertall.bellz.org/"
 license=('GPL')
-depends=('pyqt')
+depends=('python3-pyqt5')
 categories=('utils')
-source=(http://downloads.sourceforge.net/sourceforge/$pkgname/$pkgver/$pkgname-$pkgver.tar.gz \
-	correctpaths.patch use-default-qt-style.patch convertall.desktop)
-sha512sums=('273b2f42e87317f04d56cff5740f2757abddc513ed3ceee6cd857fd14f0050fd3953b6d6bf73aaeb8f8514777673fae40be3a2157daf0c0a3b798fa34a988ae5'
-         '9d2323564f1bf3b00bd6b46e7a75c5ecdab4ffd298c99afc81722166b88574244af283cdb3d9e9d65f9a5f721f74591d3d96a3e75815212f9e2096842695a77d'
-         'e9e08fffb47d7f224b7d5ae44c3f8c98b82dcb56833a320ebcc436790902b6893ffd2e398267dfd3d880224f18c8bf2dedbce8871a52a6c413757a8b2e223de7'
-         'f1e4813ca66df48ca221da99eed4f335220db4625cbce52d61abc04386b6104b30179c6fd1e466f8f3e2223555fd05928b9e2bdeb92023fb61ffa69f1512235b')
+source=(http://downloads.sourceforge.net/sourceforge/$pkgname/$pkgver/$pkgname-$pkgver.tar.gz
+        "correctpaths.patch"
+        "convertall.desktop")
+sha256sums=('7e002bbeba7e3aeeaa3deba20707bffd2aa93057ea1c43df7406873a22c1b9e3'
+            '366ea0e23197b469402c2b3d6cdf4a77388813b91254d1ce3603e6cd0787fc3b'
+            '939c566d8015b6b0ab8dc82ba5161643c25c8619bd81b7d165c03eda33669ccb')
 
 package() {
 # patch executable to have the correct paths
-patch -Np0 < $srcdir/correctpaths.patch || return 1
-#patch to correct the qt style used
-patch -Np0 < ${srcdir}/use-default-qt-style.patch || return 1
+patch -Np0 < $srcdir/correctpaths.patch
 
 # create install directories
   install -d $pkgdir/usr/{bin,share/pixmaps}
