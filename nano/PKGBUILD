@@ -1,5 +1,5 @@
 pkgname=nano
-pkgver=2.7.2
+pkgver=2.7.4
 _mainver=2.7
 pkgrel=1
 pkgdesc="Pico editor clone with enhancements"
@@ -11,7 +11,7 @@ depends=('glibc' 'ncurses' 'sh')
 source=(http://www.nano-editor.org/dist/v${_mainver}/nano-${pkgver}.tar.gz)
 backup=(etc/nanorc)
 install=nano.install
-md5sums=('8b880355f88bfa521d18dc6f18437095')
+md5sums=('e3a6b2740eb31f8a06d585f44d883895')
 
 build() {
   cd ${srcdir}/${pkgname}-${pkgver}
@@ -27,5 +27,5 @@ build() {
 package() {
   cd ${srcdir}/${pkgname}-${pkgver}
   make DESTDIR=${pkgdir} install
-  install -DTm644 ${srcdir}/${pkgname}-${pkgver}/doc/nanorc.sample ${pkgdir}/etc/nanorc
+  install -DTm644 ${srcdir}/${pkgname}-${pkgver}/doc/sample.nanorc ${pkgdir}/etc/nanorc
 }

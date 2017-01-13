@@ -1,6 +1,6 @@
 pkgname=kpmcore
-pkgver=2.2.1
-pkgrel=1
+pkgver=3.0.2
+pkgrel=2
 pkgdesc="A KDE utility that allows you to manage disks, partitions, and file systems"
 arch=('x86_64')
 url="http://kde.org/applications/system/kdepartitionmanager/"
@@ -15,7 +15,7 @@ optdepends=('e2fsprogs: ext2/3/4 support'
 	    'dosfstools: FAT32 support'
             'btrfs-progs: btrfs support')
 source=("http://download.kde.org/stable/${pkgname}/${pkgver}/src/${pkgname}-${pkgver}.tar.xz")
-sha256sums=('573c662fce7077180bafa62461e0bf0000d6e7ca5f8fce3cfc7561668da291ae')
+sha256sums=('4ec0e1014cfa40b02563fa225912cb339cbc2b0ffd20c6bde9f3336974c8cfe3')
 
 build() {
   cd ${pkgname}-${pkgver}
@@ -27,7 +27,6 @@ build() {
     -DBUILD_TESTING=OFF
   make
 }
-
 
 package() {
   cd ${pkgname}-${pkgver}

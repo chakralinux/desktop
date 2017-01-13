@@ -1,8 +1,8 @@
 pkgbase=digikam
 pkgname=('digikam' 'kipi-plugins')
-_pkgver=5.3.0
+_pkgver=5.4.0
 pkgver=${_pkgver//-/_}
-pkgrel=2
+pkgrel=1
 epoch=1
 url="https://www.digikam.org/"
 arch=('x86_64')
@@ -10,15 +10,19 @@ license=('GPL')
 options=("debug")
 makedepends=('extra-cmake-modules' 'libkipi' 'libksane' 'liblqr' 'boost'
              'libgpod' 'hugin' 'opencv' 'qt5-webkit' 'doxygen' 'lensfun' 'imagemagick' 'eigen3' 'libpgf'
-             'libusb' 'kio' 'kdoctools' 'marble' 'kfilemetadata' 'akonadi-contact' 'qt5-multimedia'
-             'threadweaver' 'kcalcore' 'knotifyconfig' 'libkvkontakte' 'libmediawiki' 'mariadb')
-source=("http://download.kde.org/stable/${pkgname}/${pkgname}-${_pkgver}.tar.xz")
-sha1sums=('3a62f6efdfafc37341626cbf0225cd7adc9d0633')
+             'libusb' 'kio' 'kdoctools' 'marble' 'kfilemetadata' 'akonadi-contact' 'qtav'
+             'threadweaver' 'kcalcore' 'knotifyconfig' 'libkvkontakte' 'libmediawiki' 'mariadb' 'prison')
+source=("http://download.kde.org/stable/${pkgname}/${pkgname}-${_pkgver}.tar.xz"
+        digikam-find-qtav.patch)
+sha1sums=('6c58ee30cd84b40acf4427f1bb9dbb8b891eb894'
+          'b170e5eab5a8c40d1c8c8f2d2cfe5e911ad66939')
 
 prepare() {
   mkdir -p build
 
-  sed -e '/add_subdirectory(showfoto)/d' -i $pkgname-${_pkgver}/doc-translated/CMakeLists.txt
+  # Fix QtAV location
+  cd $pkgname-$pkgver
+  patch -p1 -i ../digikam-find-qtav.patch
 }
 
 build() {
@@ -45,7 +49,7 @@ build() {
 package_digikam() {
   pkgdesc="Digital photo management application for KDE"
   depends=('liblqr' 'libkipi' 'lensfun' 'libpgf' 'opencv' 'akonadi-contact'
-	   'knotifyconfig' 'libksane' 'kfilemetadata' 'qt5-multimedia' 'marble' 'mariadb' 'kcalcore')
+	   'knotifyconfig' 'libksane' 'kfilemetadata' 'qtav' 'marble' 'mariadb' 'kcalcore')
   optdepends=('kipi-plugins: more tools and plugins'
 	      'qt5-imageformats: support for additional image formats (WEBP, TIFF)'
 	      'hugin: panorama tool')
@@ -54,8 +58,6 @@ package_digikam() {
   cd build/core
   make DESTDIR="$pkgdir" install
   cd $srcdir/build/doc/digikam
-  make DESTDIR="$pkgdir" install
-  cd $srcdir/build/doc-translated
   make DESTDIR="$pkgdir" install
   cd $srcdir/build/po
   make DESTDIR="$pkgdir" install

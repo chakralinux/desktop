@@ -1,18 +1,19 @@
 pkgname=dustrac
-pkgver=1.11.0
+_name=DustRacing2D
+pkgver=1.12.0
 pkgrel=1
 pkgdesc="Dust Racing (Dustrac) is a tile-based, 2D racing game."
 arch=('x86_64')
-url="http://sourceforge.net/projects/dustrac/"
+url="https://github.com/juzzlin/DustRacing2D"
 screenshot="http://sourceforge.net/projects/dustrac/screenshots/325655"
 license=('GPL3')
-depends=('qt5-base' 'qt5-tools' 'openal' 'libvorbis' 'glu')
-makedepends=('cmake')
-source=(http://downloads.sourceforge.net/project/$pkgname/src/$pkgname-$pkgver.tar.gz)
-md5sums=('bac37f501a6fbc17307ad6ce223ddb60')
+depends=('qt5-base' 'openal' 'libvorbis' 'glu')
+makedepends=('cmake' 'qt5-tools')
+source=(https://github.com/juzzlin/$_name/archive/$pkgver.tar.gz)
+sha1sums=('859dcfab8ceb6c27adb73d2627ada17991b400ac')
 
 build() {
-  cd $srcdir/$pkgname-$pkgver
+  cd $srcdir/$_name-$pkgver
   cmake \
     -DCMAKE_INSTALL_PREFIX=/usr \
     -DCMAKE_BUILD_TYPE=Release \
@@ -21,24 +22,29 @@ build() {
 }
  
 package() {
-  cd $srcdir/$pkgname-$pkgver
+  cd $srcdir/$_name-$pkgver
   
   # Manual installation.
-  mkdir -p $pkgdir/usr/share/$pkgname
+  install -d $pkgdir/usr/share/$pkgname
+  install -d $pkgdir/usr/bin
   cp -R data $pkgname-game $pkgname-editor $pkgdir/usr/share/$pkgname
   
-  # Executables:
-  mkdir -p $pkgdir/usr/bin
-  
   # Game.
-  echo "#!/bin/bash"             > $pkgdir/usr/bin/$pkgname
-  echo "cd /usr/share/$pkgname" >> $pkgdir/usr/bin/$pkgname
-  echo "./$pkgname-game"        >> $pkgdir/usr/bin/$pkgname
-  chmod +x $pkgdir/usr/bin/$pkgname
+  echo "#!/bin/bash"             > $pkgdir/usr/bin/$pkgname-game
+  echo "cd /usr/share/$pkgname" >> $pkgdir/usr/bin/$pkgname-game
+  echo "./$pkgname-game"        >> $pkgdir/usr/bin/$pkgname-game
+  chmod +x $pkgdir/usr/bin/$pkgname-game
   
   # Editor.
   echo "#!/bin/bash"             > $pkgdir/usr/bin/$pkgname-editor
   echo "cd /usr/share/$pkgname" >> $pkgdir/usr/bin/$pkgname-editor
   echo "./$pkgname-editor"      >> $pkgdir/usr/bin/$pkgname-editor
-  chmod +x $pkgdir/usr/bin/$pkgname-editor  
+  chmod +x $pkgdir/usr/bin/$pkgname-editor 
+   
+  # .desktop files and icons
+  install -D $srcdir/$_name-$pkgver/src/dustrac-game.desktop.in $pkgdir/usr/share/applications/dustrac-game.desktop
+  install -D $srcdir/$_name-$pkgver/src/dustrac-editor.desktop.in $pkgdir/usr/share/applications/dustrac-editor.desktop
+  
+  install -D $srcdir/$_name-$pkgver/data/icons/dustrac-game.png $pkgdir/usr/share/pixmaps/dustrac-game.png
+  install -D $srcdir/$_name-$pkgver/data/icons/dustrac-editor.png $pkgdir/usr/share/pixmaps/dustrac-editor.png
 }

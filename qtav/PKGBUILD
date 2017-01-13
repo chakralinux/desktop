@@ -1,0 +1,33 @@
+# Contributions from Arch
+# Maintainer: Felix Yan <felixonmars@archlinux.org>
+
+pkgname=qtav
+pkgver=1.11.0
+pkgrel=1
+pkgdesc="A cross-platform multimedia playback framework based on Qt and FFmpeg"
+arch=('x86_64')
+url="http://www.qtav.org/"
+license=('LGPL')
+depends=('qt5-declarative' 'ffmpeg' 'libxv' 'openal' 'uchardet' 'desktop-file-utils')
+source=(https://github.com/wang-bin/QtAV/archive/v${pkgver}.tar.gz)
+sha256sums=('888675b2734940c693eec24f8b35a434a428f6827868876e149e0979d629bba5')
+
+prepare() {
+  cd QtAV-${pkgver}
+
+  # fix mkspecs install dir
+  sed -e 's|\$\$\[QT_INSTALL_BINS\]\/\.\.\/mkspecs|\$\$\[QT_INSTALL_ARCHDATA\]\/mkspecs|g' -i tools/install_sdk/install_sdk.pro
+}
+
+build() {
+  cd QtAV-${pkgver}
+
+  qmake-qt5 "CONFIG+=no_rpath recheck"
+  make
+}
+
+package() {
+  cd QtAV-${pkgver}
+
+  make INSTALL_ROOT="${pkgdir}" install
+}
