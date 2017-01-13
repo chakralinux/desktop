@@ -3,7 +3,7 @@ source ../kdeapps.conf
 
 pkgname=kdepim-runtime
 pkgver=${_kdever}
-pkgrel=2
+pkgrel=1
 pkgdesc='Extends the functionality of kdepim'
 arch=('x86_64')
 url='https://projects.kde.org/projects/kde/kdepim-runtime'
@@ -21,17 +21,12 @@ source=("$_mirror/${pkgname}-$_kdever.tar.xz"{,.sig})
 sha256sums=(`grep ${pkgname}-$_kdever.tar.xz  ../kdeapps.sums | cut -d " " -f1`
                         'SKIP')
 
-source+=("https://github.com/KDE/kdepim-runtime/commit/8ae09b6f4afa8ceb2770da67b6dc79c78b86af47.diff")
-sha256sums+=('eaa67581a14a0c84d74ca7d3dac7a585fa40355940b33351587f698b46008053')
-
 validpgpkeys=(${Avalidpgpkeys})
 
 prepare() {
   mkdir -p build
   cd ${pkgname}-${pkgver}
 
-  #Fix DATA LOSS bug in ical resource which failed to create std.ics if it didn't exist
-  patch -p1 -i ${srcdir}/8ae09b6f4afa8ceb2770da67b6dc79c78b86af47.diff
 }
 
 build() {
