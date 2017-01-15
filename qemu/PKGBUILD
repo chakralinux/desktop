@@ -7,8 +7,8 @@ pkgname=('qemu'
          'qemu-block-rbd'
          'qemu-block-gluster'
          'qemu-guest-agent')
-pkgver=2.6.0
-pkgrel=4
+pkgver=2.8.0
+pkgrel=1
 arch=('x86_64')
 license=('GPL2' 'LGPL2.1')
 url='http://wiki.qemu.org/'
@@ -21,7 +21,7 @@ source=(http://wiki.qemu.org/download/${pkgname}-${pkgver}.tar.bz2
         qemu.sysusers
         qemu-ga.service
         65-kvm.rules)
-sha1sums=('d558a11d681dd095b1d7cb03c5b723c9d3045020'
+sha1sums=('a5602f2ddb51d61b4c0e618b779fdb0dbdc9cc1f'
           '4d74c0477b2f078d6ab0e6887f54a16eeb951662'
           'ba9206e96f95330a2578f9f21884d357d6fc3a33'
           '1162065406654d1e0ff4aef7ae9d430ff7679554')
@@ -164,3 +164,4 @@ package_qemu-guest-agent() {
   install -D qemu-${pkgver}/qemu-ga "${pkgdir}"/usr/bin/qemu-ga
   install -Dm644 qemu-ga.service "${pkgdir}"/usr/lib/systemd/system/qemu-ga.service
 }
+
