@@ -3,27 +3,27 @@
 ## bcg729, belle-sip, bzrtp, mbedtls, mediastreamer, ortp, libantlr3c
 
 pkgname=linphone
-pkgver=3.9.1
-pkgrel=2
+pkgver=3.10.2
+pkgrel=1
 pkgdesc="A Voice-over-IP phone - cli version"
 arch=('x86_64')
 url="http://www.linphone.org/index.php/eng"
 license=('GPL')
-depends=('alsa-lib' 'ffmpeg' 'speex' 'libv4l' 'v4l-utils' 'libxml2'
-	 'libpulse' 'libxv' 'libvpx' 'mediastreamer' 'ortp>=0.25.0' 'bzrtp' 'bcg729'
-	 'belle-sip' 'mesa-libgl' 'glew' 'gsm' 'sqlite3' 'readline' 'libupnp')
-makedepends=('pkg-config' 'libtool' 'intltool' )
+depends=('alsa-lib' 'ffmpeg' 'gtk2' 'speex' 'libv4l' 'libglade' 'v4l-utils'
+	 'libpulse' 'libxv' 'mediastreamer' 'ortp' 'bzrtp' 'bcg729' 'libsoup'
+	 'belle-sip' 'libnotify')
+makedepends=('pkg-config' 'perl-xml-parser' 'intltool' 'sgmltools-lite' 'bcunit')
 # 'perl-xml-parser' 'sgmltools-lite'
 optdepends=('pulseaudio')
 options=('!emptydirs')
-source=("http://download-mirror.savannah.gnu.org/releases/${pkgname}/3.9.x/sources/${pkgname}-$pkgver.tar.gz")
-sha256sums=('84e6eae51336f98817643f85f962a43351dafc4f2e1611825d1a3433307f24ac')
+source=("https://www.linphone.org/releases/sources/linphone/linphone-$pkgver.tar.gz")
+sha256sums=('37cac1f4daa55fcd395b7b49925c01d1638b9d941c66d626ca36a9679332384c')
 
 build() {
   cd $pkgname-$pkgver
   export PKG_CONFIG=/usr/bin/pkg-config
   unset SGML_CATALOG_FILES
-  ./autogen.sh
+  export CFLAGS="$CFLAGS -Dbctbx_list_remove_link=bctbx_list_unlink -Dbctbx_list_delete_link=bctbx_list_erase_link"
   ./configure --prefix=/usr --disable-static --disable-gtk-ui --enable-console-ui --enable-ipv6 --enable-video \
 	--enable-alsa --enable-pulseaudio --disable-artsc --disable-strict \
 	--libexecdir=/usr/lib/$pkgname \
@@ -34,8 +34,6 @@ build() {
 }
 
 package() {
-  cd $srcdir/$pkgname-$pkgver
+  cd "$srcdir"/$pkgname-$pkgver
   make DESTDIR="$pkgdir" install
-  
-  rm -rf ${pkgdir}/usr/share/{appdata,applications,doc,icons,pixmaps}
 }
