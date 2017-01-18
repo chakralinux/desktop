@@ -1,6 +1,6 @@
 pkgname=openimageio
 pkgver=1.6.16
-pkgrel=1
+pkgrel=2
 pkgdesc="A library for reading and writing images, including classes, utilities, and applications."
 arch=('x86_64')
 url="http://www.openimageio.org/"
@@ -9,7 +9,8 @@ depends=('openexr' 'boost-libs' 'jasper' 'glew' 'libtiff' 'opencolorio' 'intel-t
          'ffmpeg' 'openssl' 'libraw' 'openjpeg' 'libwebp')
 makedepends=('cmake' 'qt' 'python2' 'boost' 'mesa')
 optdepends=('qt: iv image viewer'
-            'python2: bindings support')
+            'python2: bindings support'
+            'ttf-droid: font support')
 source=("https://github.com/OpenImageIO/oiio/archive/Release-$pkgver.tar.gz")
 sha1sums=('688e1716d9660fd8d14e48105a2a207eeddc30e3')
 
@@ -32,6 +33,9 @@ package() {
   cd oiio-Release-$pkgver/build
 
   make DESTDIR="$pkgdir" install
+
+  # remove font from package
+  rm -rf "$pkgdir/usr/share/fonts/"
 
   # license
   cd ..
