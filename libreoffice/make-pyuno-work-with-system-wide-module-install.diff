@@ -13,22 +13,21 @@ index defd7b2..ea2a809 100755
  NetBSD|OpenBSD|FreeBSD|DragonFly)
  # this is a temporary hack until we can live with the default search paths
 diff --git a/pyuno/source/module/uno.py b/pyuno/source/module/uno.py
-index f93ac5e..92a2891 100644
+index bccf22d..55a5d14 100644
 --- a/pyuno/source/module/uno.py
 +++ b/pyuno/source/module/uno.py
-@@ -26,8 +26,12 @@
- #   except in compliance with the License. You may obtain a copy of
- #   the License at http://www.apache.org/licenses/LICENSE-2.0 .
- #
-+import os
+@@ -20,6 +20,11 @@ import pyuno
  import sys
- 
+ import traceback
+ import warnings
++import os
++
 +sys.path.append('/usr/lib/libreoffice/program')
 +if getattr(os.environ, 'URE_BOOTSTRAP', None) is None:
 +     os.environ['URE_BOOTSTRAP'] = "vnd.sun.star.pathname:/usr/lib/libreoffice/program/fundamentalrc"
- import pyuno
- 
- try:
+
+ # since on Windows sal3.dll no longer calls WSAStartup
+ import socket
 diff --git a/pyuno/source/officehelper.py b/pyuno/source/officehelper.py
 index 610ac5f..df243d0 100755
 --- a/pyuno/source/officehelper.py
