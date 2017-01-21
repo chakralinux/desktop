@@ -1,7 +1,7 @@
 pkgbase=jupyter
 pkgname=('jupyter' 'ipython2-notebook')
 pkgver=4.2.1
-pkgrel=1
+pkgrel=2
 pkgdesc="A language-agnostic web-based interactive shell/notebook server."
 arch=('any')
 url="http://jupyter.org/"
@@ -62,8 +62,8 @@ prepare() {
 }
 
 package_jupyter() {
-  provides=('ipython3-notebook')
-  replaces=('ipython3-notebook')
+  provides=('ipython3-notebook' 'python3-ipykernel')
+  replaces=('ipython3-notebook' 'python3-ipykernel')
 
   # install deps
   pip3 install --target="${pkgdir}/usr/share/${pkgname}/modules/site-packages" -r $srcdir/requirements_py3.txt
@@ -125,7 +125,9 @@ package_jupyter() {
 package_ipython2-notebook() {
   pkgdesc="An enhanced Interactive Python2 shell."
   depends=('ipython2>4.0.0' 'python2-pyqt5' 'qt5-svg' 'python2-sip')
-
+  provides=('python2-ipykernel')
+  replaces=('python2-ipykernel')
+  
   # install deps
   pip2 install --target="${pkgdir}/usr/share/${pkgname}/modules/site-packages" -r $srcdir/requirements_py2.txt
   
