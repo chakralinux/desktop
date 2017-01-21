@@ -1,68 +1,78 @@
 pkgbase=jupyter
 pkgname=('jupyter' 'ipython2-notebook')
-pkgver=4.2.0
+pkgver=4.2.1
 pkgrel=1
 pkgdesc="A language-agnostic web-based interactive shell/notebook server."
 arch=('any')
 url="http://jupyter.org/"
 license=('BSD')
-depends=('ipython3>4.0.0' 'python3-ipykernel' 'python3-setuptools'
-         'python3-jinja' 'python3-pyzmq' 'python3-tornado' 'python3-jsonschema'
-         'python3-terminado' 'python3-mistune' 'python3-pygments')
-makedepends=('python3-setuptools' 'python2-setuptools' 'npm' 'git')
-optdepends=('qt5-svg: jupyter-qtconsole'
-            'python3-pyqt5: jupyter-qtconsole'
-            'python3-sip: jupyter-qtconsole')
+depends=('ipython3>4.0.0' 'python3-setuptools'
+         'python3-jinja' 'python3-pyzmq' 'python3-pygments' 'qt5-svg' 'python3-pyqt5' 'python3-sip')
+makedepends=('python3-setuptools' 'python2-setuptools' 'python3-pip' 'python2-pip' 'npm')
 
-# some of these will update rapidly, others never
-# so _vers will be phased in as new updates are released
-_notev=4.2.3  # notebook
-_jcliv=4.4.0
+# check once in a while when they update
+# jupyter doesn't have a version requirement for these btw
 _ipywv=5.2.2  # ipywidgets
-_qtcv=4.2.1   # qtconsole
-_jnbfv=4.1.0
+_ipykv=4.5.2  # ipykernel
+_jnbfv=4.1.0  # nbformat
 _jconv=5.0.0  # jupyter_console
+_jcliv=4.4.0  # jupyter_client
+_notev=4.2.3  # notebook
+_qtcv=4.2.1   # qtconsole
+_jnbcv=5.0.0  # nbconvert
+_jwnbv=2.0.0b12 # widgetsnbextension
 _pyver=3.5
 
 source=("jupyter_core-$pkgver.tgz::https://github.com/jupyter/jupyter_core/archive/$pkgver.tar.gz"
+        "ipykernel-$_ipykv.tgz::https://github.com/ipython/ipykernel/archive/$_ipykv.tar.gz"
         "ipywidgets-$_ipywv.tgz::https://github.com/ipython/ipywidgets/archive/$_ipywv.tar.gz"
         "nbformat-$_jnbfv.tar.gz::https://github.com/jupyter/nbformat/archive/$_jnbfv.tar.gz"
         "jupyter_console-$_jconv.tgz::https://github.com/jupyter/jupyter_console/archive/$_jconv.tar.gz"
         "jupyter_client-$_jcliv.tgz::https://github.com/jupyter/jupyter_client/archive/$_jcliv.tar.gz"
         "notebook-$_notev.tgz::https://github.com/jupyter/notebook/archive/$_notev.tar.gz"
-        "https://pypi.python.org/packages/source/q/qtconsole/qtconsole-$_qtcv.tar.gz")
-sha1sums=('9ad9f27c553cff61a4429f71419981e928369571'
+        "https://pypi.python.org/packages/source/q/qtconsole/qtconsole-$_qtcv.tar.gz"
+        "jupyter-nbconvert-$_jnbcv.tgz::https://github.com/jupyter/nbconvert/archive/$_jnbcv.tar.gz"
+        "https://pypi.io/packages/source/w/widgetsnbextension/widgetsnbextension-$_jwnbv.tar.gz"
+        
+        "org.jupyter.qtconsole.desktop"
+        "org.jupyter.qtconsole-py2.desktop"
+        "requirements_py3.txt"
+        "requirements_py2.txt")
+sha1sums=('843b92a4293f07a7cee6ce9240d9906e708c4ce3'
+          '2d4825ffba7d34119374cd5f606751b4ff043362'
           'a4e18ed6a91bca345ee074af8d77b2bebc4a1e96'
           '378c57a9e89fcd3e76e7a3446d41343168d77f59'
           '60cbc801c72cd42370a962a26c29c996734d7822'
           '84e097a5a1434b9ea3c4cef220c73a8cd4c284e5'
           'cd42c2013047d2722d3990db4787820cff51cbc8'
-          '4a0ea706c88721e3c6d2cfeb46fcf10c9bd1b4dc')
+          '4a0ea706c88721e3c6d2cfeb46fcf10c9bd1b4dc'
+          'fcb770547eb1963cc1d000f5a83ce83ee85bafb4'
+          'a3bace37c3915f545bab045154d4f891ff396bd1'
+          '82972c423cba5481c39c45937246a0f84e279763'
+          '1dc547fdd164d8e5023164b8408992aeee689317'
+          'SKIP'
+          'SKIP')
 
 prepare() {
   cd "$srcdir"
   cp -r jupyter_core-$pkgver python2-jupyter_core-$pkgver
   cp -r jupyter_client-$_jcliv python2-jupyter_client-$_jcliv
+  cp -r ipykernel-$_ipykv python2-ipykernel-$_ipykv
   cp -r qtconsole-$_qtcv      python2-qtconsole-$_qtcv
-}
-
-build() {
-  cd "$srcdir"
-
-  cd "$srcdir/notebook-$_notev"
-  # needs node, downloads a lot of stuff
-  python3 setup.py build
-
-  cd "$srcdir/ipywidgets-$_ipywv"
-  # needs node, downloads a lot of stuff
-  python3 setup.py build
 }
 
 package_jupyter() {
   provides=('ipython3-notebook')
   replaces=('ipython3-notebook')
 
+  # install deps
+  pip3 install --target="${pkgdir}/usr/share/${pkgname}/modules/site-packages" -r $srcdir/requirements_py3.txt
+  
+  # install jupyter
   cd "$srcdir/jupyter_core-$pkgver"
+  python3 setup.py install --prefix=/usr --root="$pkgdir" --optimize=0
+  
+  cd "$srcdir/ipykernel-$_ipykv"
   python3 setup.py install --prefix=/usr --root="$pkgdir" --optimize=0
 
   cd "$srcdir/ipywidgets-$_ipywv"
@@ -71,9 +81,6 @@ package_jupyter() {
   cd "$srcdir/notebook-$_notev"
   # needs node
   python3 setup.py install --prefix=/usr --root="$pkgdir" --optimize=0
-  # FS45999 use system mathjax
-  ln -s /usr/share/mathjax \
-  "$pkgdir/usr/lib/python$_pyver/site-packages/notebook/static/components/MathJax"
   
   cd "$srcdir/nbformat-$_jnbfv"
   python3 setup.py install --prefix=/usr --root="$pkgdir" --optimize=0
@@ -83,12 +90,31 @@ package_jupyter() {
 
   cd "$srcdir/jupyter_client-$_jcliv"
   python3 setup.py install --prefix=/usr --root="$pkgdir" --optimize=0
-
+    
   cd "$srcdir/qtconsole-$_qtcv"
   python3 setup.py install --prefix=/usr --root="$pkgdir" --optimize=0
-  install -Dm644 examples/jupyter-qtconsole.desktop "$pkgdir/usr/share/applications/org.ipython.qtconsole.desktop"
-  sed -i s!gnome-netstatus-idle!JupyterConsole! \
-  "$pkgdir/usr/share/applications/org.ipython.qtconsole.desktop"
+  
+  cd "$srcdir/nbconvert-$_jnbcv"
+  python3 setup.py install --prefix=/usr --root="$pkgdir" --optimize=0
+  
+  cd "$srcdir/widgetsnbextension-$_jwnbv"
+  python3 setup.py install --prefix=/usr --root="$pkgdir" --optimize=0
+  
+  # put wrapper on /usr/bin
+  mkdir -p ${srcdir}/${pkgname}-bin
+  for py in "$pkgdir/usr/bin/"*
+  do
+  py=${py##*/} # strip the file path and keep only the file name (e.g. /usr/bin/foo -> foo)
+  echo "#!/bin/sh
+  export PYTHONPATH=${PYTHONPATH}:/usr/share/${pkgname}/modules/site-packages
+  /usr/share/${pkgname}/$py " '"${@}"' > "${srcdir}/${pkgname}-bin/$py"
+  chmod 755 ${srcdir}/${pkgname}-bin/$py
+  done
+  mv ${pkgdir}/usr/bin/* ${pkgdir}/usr/share/${pkgname}
+  mv ${srcdir}/${pkgname}-bin/* ${pkgdir}/usr/bin
+  
+  # .desktop and icon
+  install -Dm644 $srcdir/org.jupyter.qtconsole.desktop "$pkgdir/usr/share/applications/org.jupyter.qtconsole.desktop"
   install -D $pkgdir/usr/lib/python$_pyver/site-packages/qtconsole/resources/icon/JupyterConsole.svg $pkgdir/usr/share/pixmaps/JupyterConsole.svg
   
   # LICENSE
@@ -98,26 +124,51 @@ package_jupyter() {
 
 package_ipython2-notebook() {
   pkgdesc="An enhanced Interactive Python2 shell."
-  depends=('ipython2>4.0.0' 'python2-ipykernel' 'python2-pyzmq')
-  optdepends=('python2-pyqt5: jupyter-qtconsole-py2'
-              'qt5-svg: jupyter-qtconsole-py2'
-              'python2-sip: jupyter-qtconsole-py2')
+  depends=('ipython2>4.0.0' 'python2-pyqt5' 'qt5-svg' 'python2-sip')
 
+  # install deps
+  pip2 install --target="${pkgdir}/usr/share/${pkgname}/modules/site-packages" -r $srcdir/requirements_py2.txt
+  
+  # install ipython2
   cd "$srcdir/python2-jupyter_core-$pkgver"
   python2 setup.py install --prefix=/usr --root="$pkgdir" --optimize=0
 
   cd "$srcdir/python2-jupyter_client-$_jcliv"
   python2 setup.py install --prefix=/usr --root="$pkgdir" --optimize=0
+  
+  cd "$srcdir/python2-ipykernel-$_ipykv"
+  python2 setup.py install --prefix=/usr --root="$pkgdir" --optimize=0
+
+  install -d "$pkgdir/usr/share/jupyter/kernels/python2"
+  echo '{"display_name": "Python 2", "language": "python2", "argv": ["python2", "-m", "ipykernel", "-f", "{connection_file}"],"codemirror_mode": {"version": 2, "name": "ipython2"}}' > "$pkgdir/usr/share/jupyter/kernels/python2/kernel.json"
 
   cd "$srcdir/python2-qtconsole-$_qtcv"
   python2 setup.py install --prefix=/usr --root="$pkgdir" --optimize=0
-
+  
   cd "$pkgdir/usr/bin"
   rm jupyter
   rm jupyter-kernelspec
   rm jupyter-migrate
   mv jupyter-qtconsole jupyter-qtconsole-py2
+  
+  # put wrapper on /usr/bin
+  mkdir -p ${srcdir}/${pkgname}-bin
+  for py in "$pkgdir/usr/bin/"*
+  do
+  py=${py##*/} # strip the file path and keep only the file name (e.g. /usr/bin/foo -> foo)
+  echo "#!/bin/sh
+  export PYTHONPATH=${PYTHONPATH}:/usr/share/${pkgname}/modules/site-packages
+  /usr/share/${pkgname}/$py " '"${@}"'  > "${srcdir}/${pkgname}-bin/$py"
+  chmod 755 ${srcdir}/${pkgname}-bin/$py
+  done
+  mv ${pkgdir}/usr/bin/* ${pkgdir}/usr/share/${pkgname}
+  mv ${srcdir}/${pkgname}-bin/* ${pkgdir}/usr/bin
+  
+  # .desktop and icon
+  install -Dm644 $srcdir/org.jupyter.qtconsole-py2.desktop "$pkgdir/usr/share/applications/org.jupyter.qtconsole-py2.desktop"
+  install -D $srcdir/qtconsole-$_qtcv/qtconsole/resources/icon/JupyterConsole.svg $pkgdir/usr/share/pixmaps/JupyterConsole-py2.svg
 
+  # license
   cd "$srcdir"
   install -Dm644 "jupyter_core-$pkgver/COPYING.md" "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
 }
