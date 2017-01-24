@@ -1,6 +1,6 @@
 pkgname=scribus
 pkgver=1.4.6
-pkgrel=3
+pkgrel=4
 pkgdesc="A desktop publishing program"
 arch=('x86_64')
 url="http://www.scribus.net"
@@ -41,6 +41,6 @@ package() {
 	
 	make DESTDIR=$pkgdir install
 	
-	install -Dm644 $pkgname-$pkgver/scribus.desktop \
-	   $pkgdir/usr/share/applications/scribus.desktop
+	install -Dm644 ${srcdir}/${pkgname}-${pkgver}/scribus.desktop "${pkgdir}/usr/share/applications/scribus.desktop"
+	install -Dm644 ${srcdir}/${pkgname}-${pkgver}/resources/icons/AppIcon.png "${pkgdir}/usr/share/icons/hicolor/32x32/apps/scribus.png"
 }
