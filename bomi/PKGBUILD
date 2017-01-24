@@ -1,6 +1,6 @@
 pkgname=bomi
 pkgver=0.9.11
-pkgrel=1
+pkgrel=2
 pkgdesc="Powerful and easy-to-use multimedia player"
 arch=('x86_64')
 url="http://bomi-player.github.io"
@@ -20,8 +20,17 @@ optdepends=('libaacs: AACS decryption for Blu-ray support'
 provides=('cmplayer')
 replace=('cmplayer')
 conflicts=('cmplayer' 'bomi-git')
-source=(https://github.com/xylosper/bomi/archive/v$pkgver.tar.gz)
-sha512sums=('e24f4f9e5d0f2b5aa6223a70339f24287a18ab7f2904e5efabd8bb4e1b61206c294e061e6c71f7bbeb623a22321ee7775585ff2a568d116dc9aa7701087a8de7')
+source=(https://github.com/xylosper/bomi/archive/v$pkgver.tar.gz
+            'ffmpeg2.8.patch')
+md5sums=('543c592f588c68d6f0c3cf254c288f58'
+         '7bb39aea99bb5c0f6607cda44edc11ae')
+
+
+prepare() {
+ cd "$srcdir/$pkgname-$pkgver"
+ 
+ patch -Np0 -i "$srcdir/ffmpeg2.8.patch"
+}
 
 build() {
   cd "$srcdir/$pkgname-$pkgver"
