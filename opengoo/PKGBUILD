@@ -1,31 +1,25 @@
-#
-# Games Packages for Chakra, part of chakra-project.org
-#
-# Maintainer: Adrián Chaves Fernández (Gallaecio) <adriyetichaves@gmail.com>
-
 pkgname=opengoo
 _pkgname=OpenGOO
-_developer=Mandarancio
-pkgver=20140729
+pkgver=20160917
 pkgrel=1
 pkgdesc="Clone of World of GOO™"
-arch=('i686' 'x86_64')
-url="http://qt-apps.org/content/show.php/OpenGOO?content=147716"
+arch=('x86_64')
+url="https://github.com/Mandarancio/OpenGOO"
 screenshot="http://qt-apps.org/CONTENT/content-pre1/147716-1.png"
 license=('GPL3')
-depends=('box2d' 'qt5-base')
+depends=('qt5-base')
 categories=('games')
-source=($pkgname-$pkgver.tar.gz::https://github.com/$_developer/$_pkgname/tarball/master)
-md5sums=('6a3474ebac5085174d3f4e16cc5d0c22')
+source=("git+https://github.com/Mandarancio/$_pkgname.git#commit=d9629059288e810854bd30a0a7431e24a359b6c0")
+sha1sums=('SKIP')
 
 build() {
-  cd $srcdir/$_developer-$_pkgname*
+  cd $srcdir/$_pkgname
   qmake-qt5
   make
 }
 
 package() {
-  cd $srcdir/$_developer-$_pkgname*
+  cd $srcdir/$_pkgname
 #  make DESTDIR="$pkgdir" install
 
   # Game.
@@ -36,9 +30,21 @@ package() {
   done
   
   # Execution script.
-  mkdir -p $pkgdir/usr/bin
+  install -d $pkgdir/usr/bin
   echo "#!/bin/bash"             > $pkgdir/usr/bin/$pkgname
   echo "cd /usr/share/$pkgname" >> $pkgdir/usr/bin/$pkgname
   echo "./$_pkgname"            >> $pkgdir/usr/bin/$pkgname
   chmod +x $pkgdir/usr/bin/$pkgname
+  
+  # .desktop file and image
+  install -d $pkgdir/usr/share/{applications,pixmaps}
+  install -D $pkgdir/usr/share/$pkgname/Artworks/black-goo.riscaled.png \
+  $pkgdir/usr/share/pixmaps/opengoo.png
+  echo "[Desktop Entry]" > $pkgdir/usr/share/applications/$pkgname.desktop
+  echo "Encoding=UTF-8" >> $pkgdir/usr/share/applications/$pkgname.desktop
+  echo "Name=OpenGOO" >> $pkgdir/usr/share/applications/$pkgname.desktop
+  echo "Exec=opengoo" >> $pkgdir/usr/share/applications/$pkgname.desktop
+  echo "Icon=opengoo" >> $pkgdir/usr/share/applications/$pkgname.desktop
+  echo "Type=Application" >> $pkgdir/usr/share/applications/$pkgname.desktop
+  echo "Categories=Game;" >> $pkgdir/usr/share/applications/$pkgname.desktop
 }
