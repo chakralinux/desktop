@@ -1,0 +1,33 @@
+pkgname=peruse
+pkgver=1.2
+pkgrel=1
+pkgdesc="A comic book reader. It gets out of your way and let you read your comics, comfortably"
+license=('GPL')
+arch=('x86_64')
+url="https://peruse.kde.org/"
+depends=('qt5-base' 'karchive' 'baloo' 'ki18n' 'kdeclarative' 'kconfig' 'kfilemetadata' 'kiconthemes' 'kio' 'kirigami')
+makedepends=('extra-cmake-modules')
+categories=('office')
+options=('debug')
+install=peruse.install
+source=("http://download.kde.org/stable/${pkgname}/${pkgname}-${pkgver}.tar.xz")
+sha1sums=('1f91d84086e71dcd6e2a853aac04dfd50bc7fc9a')
+
+prepare() {
+  mkdir -p build
+}
+
+build() {
+  cd build
+  cmake ../$pkgname \
+    -DCMAKE_BUILD_TYPE=Release \
+    -DCMAKE_INSTALL_PREFIX=/usr \
+    -DKDE_INSTALL_LIBDIR=lib \
+    -DKDE_INSTALL_USE_QT_SYS_PATHS=ON
+  make
+}
+
+package() {
+  cd build
+  make DESTDIR="$pkgdir" install
+}
