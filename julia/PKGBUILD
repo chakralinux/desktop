@@ -1,0 +1,109 @@
+pkgbase=julia
+pkgname=('julia' 'julia-docs')
+pkgver=0.5.0
+pkgrel=1
+arch=('x86_64')
+pkgdesc='High-level, high-performance, dynamic programming language'
+url='http://julialang.org/'
+license=('MIT')
+makedepends=('gcc-fortran' 'python2' 'git' 'zlib' 'cmake' 'openssl' 'libgit2')
+options=('!emptydirs' 'staticlibs')
+source=("git://github.com/JuliaLang/julia.git#tag=v$pkgver")
+sha256sums=('SKIP')
+
+prepare() {
+  # For /etc/ld.so.conf.d/
+  echo '/usr/lib/julia' > julia.conf
+}
+
+build() {
+  # Make sure not to set -march
+  export CFLAGS="-mtune=generic -O3 -pipe -fstack-protector-strong"
+  export CXXFLAGS="-mtune=generic -O3 -pipe -fstack-protector-strong"
+  
+  make -C "$pkgname" prefix=/usr sysconfdir=/etc \
+    MARCH="x86-64" \
+    USE_SYSTEM_LLVM=0 \
+    USE_SYSTEM_LIBUNWIND=0 \
+    USE_SYSTEM_PCRE=0 \
+    USE_SYSTEM_LIBM=0 \
+    USE_SYSTEM_OPENLIBM=0 \
+    USE_SYSTEM_OPENSPECFUN=0 \
+    USE_SYSTEM_BLAS=0 \
+    USE_SYSTEM_LAPACK=0 \
+    USE_SYSTEM_FFTW=0 \
+    USE_SYSTEM_GMP=0 \
+    USE_SYSTEM_MPFR=0 \
+    USE_SYSTEM_ARPACK=0 \
+    USE_SYSTEM_SUITESPARSE=0 \
+    USE_SYSTEM_LIBUV=0 \
+    USE_SYSTEM_UTF8PROC=0 \
+    USE_INTEL_MKL=0 \
+    USE_BLAS64=0 \
+    USE_LLVM_SHLIB=0 \
+    USE_SYSTEM_LIBGIT2=1 \
+    USE_SYSTEM_PATCHELF=0 \
+    USE_SYSTEM_DSFMT=0
+}
+
+package_julia() {
+  backup=('etc/ld.so.conf.d/julia.conf' 'etc/julia/juliarc.jl')
+  depends=('zlib' 'openssl' 'libgit2')
+  optdepends=('gnuplot: If using the Gaston Package from julia')
+  install='sysfix.install'
+
+  # Make sure not to set -march
+  export CFLAGS="-mtune=generic -O3 -pipe -fstack-protector-strong"
+  export CXXFLAGS="-mtune=generic -O3 -pipe -fstack-protector-strong"
+  export M="x86-64"
+
+  make -C "$pkgname" DESTDIR="$pkgdir" \
+    prefix=/usr sysconfdir=/etc  \
+    MARCH=$M \
+    USE_SYSTEM_LLVM=0 \
+    USE_SYSTEM_LIBUNWIND=0 \
+    USE_SYSTEM_PCRE=0 \
+    USE_SYSTEM_LIBM=0 \
+    USE_SYSTEM_OPENLIBM=0 \
+    USE_SYSTEM_OPENSPECFUN=0 \
+    USE_SYSTEM_BLAS=0 \
+    USE_SYSTEM_LAPACK=0 \
+    USE_SYSTEM_FFTW=0 \
+    USE_SYSTEM_GMP=0 \
+    USE_SYSTEM_MPFR=0 \
+    USE_SYSTEM_ARPACK=0 \
+    USE_SYSTEM_SUITESPARSE=0 \
+    USE_SYSTEM_LIBUV=0 \
+    USE_SYSTEM_UTF8PROC=0 \
+    USE_INTEL_MKL=0 \
+    USE_BLAS64=0 \
+    USE_LLVM_SHLIB=0 \
+    USE_SYSTEM_LIBGIT2=1 \
+    USE_SYSTEM_PATCHELF=0 \
+    USE_SYSTEM_DSFMT=0 \
+    install
+
+  # Remove duplicate man-page from julia/doc
+  rm -rvf "$pkgdir/usr/share/julia/doc/man"
+
+  # For /etc/ld.so.conf.d, FS#41731
+  install -Dm644 julia.conf "$pkgdir/etc/ld.so.conf.d/julia.conf"
+
+  # Documentation and examples are in the julia-docs package
+  rm -rvf "$pkgdir/usr/share/doc/"
+  rm -rvf "$pkgdir/usr/share/julia/doc/"
+  rm -rvf "$pkgdir/usr/share/julia/examples/"
+
+  cd "$pkgname"
+  install -Dm644 LICENSE.md "$pkgdir/usr/share/licenses/$pkgname/LICENSE.md"
+}
+
+package_julia-docs() {
+  pkgdesc='Documentation and examples for Julia'
+  cd "$pkgbase"
+
+  install -d "$pkgdir/usr/share/doc"
+  cp -rv doc "$pkgdir/usr/share/doc/$pkgbase"
+  cp -rv examples "$pkgdir/usr/share/doc/$pkgbase/examples"
+  install -Dm644 LICENSE.md "$pkgdir/usr/share/licenses/$pkgname/LICENSE.md"
+}
