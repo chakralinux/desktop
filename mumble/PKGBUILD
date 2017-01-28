@@ -1,25 +1,25 @@
 pkgname=mumble
-pkgver=1.2.17
+pkgver=1.2.19
 pkgrel=1
 arch=('x86_64')
 pkgdesc="A voice chat application similar to TeamSpeak."
 license=('BSD')
-depends=('qt' 'speex' 'lsb-release' 'libxi' 'avahi' 'libsndfile' 'protobuf' 
-         'libpulse' 'xdg-utils' 'opus' 'speech-dispatcher')
+depends=('qt' 'lsb-release' 'libxi' 'avahi' 'libsndfile' 'protobuf' 
+         'libpulse' 'xdg-utils' 'speech-dispatcher')
 makedepends=('boost' 'mesa')
 categories=('communication')
 install=${pkgname}.install
 url="http://www.mumble.com/"
 screenshot="http://mumble.sourceforge.net/static/Mumble%20--%201.2.3.png"
 source=("https://github.com/mumble-voip/mumble/releases/download/${pkgver}/mumble-${pkgver}.tar.gz")
-sha1sums=('f34868020884775700e4fe76e05a98f19d111418')
+sha1sums=('8ea9dafad14e6c730da72ae9b4625778e499d94f')
 
 build() {
   cd $srcdir/$pkgname-$pkgver
 
   # Building mumble
   qmake main.pro \
-    CONFIG+="bundled-celt no-bundled-opus no-bundled-speex no-g15 no-xevie no-server \
+    CONFIG+="bundled-celt bundled-speex opus no-g15 no-xevie no-server \
     no-embed-qt-translations no-update packaged" \
     DEFINES+="PLUGIN_PATH=/usr/lib/mumble" \
     INCLUDEPATH+="/usr/include/speech-dispatcher"
