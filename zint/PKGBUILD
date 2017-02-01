@@ -1,19 +1,16 @@
 pkgname=zint
-pkgver=2.4.3
+pkgver=2.5
 pkgrel=1
 pkgdesc="A barcode encoding library supporting over 50 symbologies."
 url="http://sourceforge.net/projects/zint/"
 license=('GPLv3')
 arch=('x86_64')
-depends=('qt' 'openssl' 'libxext' 'libxrender' 'zlib')
+depends=('qt' 'zlib')
 makedepends=('cmake')
 install=${pkgname}.install
-changelog=${pkgname}.changelog
-source=("http://sourceforge.net/projects/${pkgname}/files/${pkgname}/${pkgver}/${pkgname}-${pkgver}.tar.gz"
-        "${pkgname}.changelog"
+source=("http://sourceforge.net/projects/${pkgname}/files/${pkgname}/${pkgver}/${pkgname}-${pkgver}.src.tar.gz"
         "zint.png")
-sha512sums=('0874f2a6ce342cac7a83cfb36d37a8c64f1e59fa18b910f585a5a871589bd034ff01bb003b090f92ba1a59960e8c8cf0aedb8d97d22a1af3a338c2b06f0508a4'
-            'b958967f675b7cd176b717fe9a82514dc77e06652f90d7295193607625b815bb27322e14cbea836489c5c54eb88f8156b7badf9352a032f3d355ae4a8bbc36cc'
+sha512sums=('c3e4bb84de868de272ed097164f9620a83ecb9fdfcab50cbac4b705ecb9509d499613a5d865a1a0459b90d9b3feb6e836fbb72c4c932fb7f8f36f0980970d6bb'
             '6e9abd85465e41374a7ca35965a3a30447147c7f35cf0ffb7e310fad9c83564c79508612ac115fd467aab9bb9cf166c222a8c4c05f91fecfa42b6a3ced32e75a')
  
 build() {
@@ -34,10 +31,5 @@ package() {
   # Install additional files
   cd ..
   install -Dm644 zint-qt.desktop "${pkgdir}/usr/share/applications/zint-qt.desktop"
-  install -Dm644 zint.png "${pkgdir}/usr/share/icons/hicolor/48x48/apps/zint.png"
-  install -Dm644 readme "${pkgdir}/usr/share/doc/zint/README"
   install -Dm644 zint.png "${pkgdir}/usr/share/pixmaps/zint.png"
- 
-  # Install changelog
-  install -Dm644 debian/changelog "${pkgdir}/usr/share/doc/zint/${pkgname}.changelog"
 }
