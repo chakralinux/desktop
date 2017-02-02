@@ -1,24 +1,25 @@
 pkgname=boost-build
-pkgver=2016.03
-pkgrel=2
+pkgver=1.63.0
+epoch=1
+pkgrel=1
 pkgdesc="Boost build system."
 arch=('x86_64')
 url="http://www.boost.org/doc/tools/build/"
 license=('custom')
 depends=('boost-libs' 'gcc' 'python3')
-source=("https://github.com/boostorg/build/archive/${pkgver}.tar.gz"
+source=("https://github.com/boostorg/build/archive/boost-${pkgver}.tar.gz"
 	"http://www.boost.org/LICENSE_1_0.txt")
-sha1sums=('0e6936337c25fc87d2aff8ea6c63019e9c1e319a'
+sha1sums=('882086bd0869ebba0bf5bf3c2d1bdb43caa90803'
           '3cba29011be2b9d59f6204d6fa0a386b1b2dbd90')
 
 prepare() {
-  cd ${srcdir}/build-${pkgver}
+  cd ${srcdir}/build-boost-${pkgver}
 
   ./bootstrap.sh
 }          
           
 package(){
-  cd ${srcdir}/build-${pkgver}
+  cd ${srcdir}/build-boost-${pkgver}
 
   ./b2 install --prefix=${pkgdir}/usr
   
