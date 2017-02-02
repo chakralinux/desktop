@@ -1,32 +1,29 @@
 pkgname=goldendict
-pkgver=1.5.0rc
-pkgrel=6
+pkgver=1.5.0rc2
+pkgrel=7
 pkgdesc="Feature-rich dictionary lookup program"
 arch=('x86_64')
 url="http://goldendict.berlios.de/"
 license=('GPL3')
-depends=('hunspell' 'ffmpeg' 'libxtst' 'libzip' 'phonon' 'libao' 'libxslt')
+depends=('hunspell' 'libxtst' 'libzip' 'libao' 'qt5-webkit' 'qt5-svg'
+         'qt5-x11extras' 'qt5-tools' 'phonon-qt5' 'ffmpeg')
 provides=('stardict')
-source=($pkgname-$pkgver.tar.gz::https://github.com/goldendict/goldendict/archive/1.5.0-RC.tar.gz
-        $pkgname-paths.patch)
-sha256sums=('5705d5197509596221faf16a806965c799de7371a41fe2d2c4dc00b737ffe22e'
-            '6aa0961a6f64f4f41b30890793c66b9354e768dcef0bad543c9e578015d64c76')
+source=($pkgname-$pkgver.tar.gz::https://github.com/goldendict/goldendict/archive/1.5.0-RC2.tar.gz)
+sha256sums=('bccee0a3d3902f8fa31e439e220a405065fff774e5f8c581be2b0743d3f83fde')
 
 prepare(){
-  cd "${srcdir}"/${pkgname}-1.5.0-RC
-
-  patch -Np0 -i "${srcdir}"/$pkgname-paths.patch
+  cd "${srcdir}"/${pkgname}-1.5.0-RC2
 }
 
 build(){
-  cd "${srcdir}"/${pkgname}-1.5.0-RC
+  cd "${srcdir}"/${pkgname}-1.5.0-RC2
 
-  qmake PREFIX="/usr"
+  qmake-qt5 "CONFIG+=no_epwing_support" PREFIX="/usr" 
   make
 }
 
 package() {
-  cd "${srcdir}"/${pkgname}-1.5.0-RC
+  cd "${srcdir}"/${pkgname}-1.5.0-RC2
 
   make INSTALL_ROOT="${pkgdir}" install
 
