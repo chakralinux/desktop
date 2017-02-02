@@ -1,16 +1,16 @@
 pkgname=nodejs
-pkgver=7.0.0
+pkgver=7.5.0
 pkgrel=1
 pkgdesc='Evented I/O for V8 javascript'
 arch=('x86_64')
 url='http://nodejs.org/'
 license=('MIT')
-depends=('openssl' 'zlib' 'icu')
+depends=('openssl')
 makedepends=('python2' 'procps-ng')
 optdepends=('npm: nodejs package manager')
 checkdepends=('curl')
 source=("http://nodejs.org/dist/v$pkgver/node-v$pkgver.tar.gz")
-sha256sums=('95ae4a37b8cf57816f96588ebe9ce5dbbb2c5452d177edd75fcfe6caf3b12b9b')
+sha256sums=('0da8e0288b5c0f136e650b7119219968720caf88b5a67ef0591555113f0844c2')
 
 prepare() {
   cd node-v$pkgver
@@ -32,9 +32,9 @@ build() {
   export PYTHON=python2
   ./configure \
     --prefix=/usr \
-    --with-intl=system-icu \
+    --with-intl=full-icu \
+    --download=all \
     --without-npm \
-    --shared-zlib \
     --shared-openssl
 
   make
