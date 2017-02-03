@@ -1,0 +1,198 @@
+# NOTE we don't build openfx-arena beacuse it depends on libcdr and librevenge and I didn't want to import them
+# if we ended up having them in repo, we can build openfx-arena (thought it's just optional to natron)
+
+pkgbase=natron
+pkgname=('natron' 'openfx-io' 'openfx-misc')
+pkgver=2.2.3
+pkgrel=1
+arch=('x86_64')
+url="http://natron.fr/"
+license=("GPL")
+makedepends=('expat' 'boost' 'git' 'cmake' 'openimageio' 'qt' 'fontconfig' 'python2-pyside' 'python2-shiboken' 'boost-libs' 'pixman' 'glfw' 'cairo')
+source=( #natron
+        "natron::git+https://github.com/MrKepzie/Natron.git#tag=$pkgver"
+        "git+https://github.com/devernay/openfx.git"
+        "git+https://github.com/MrKepzie/google-test.git"
+        "git+https://github.com/MrKepzie/google-mock.git"
+        "git+https://github.com/MrKepzie/SequenceParsing.git"
+        "git+https://github.com/MrKepzie/tinydir"
+        "https://github.com/MrKepzie/OpenColorIO-Configs/archive/Natron-v${pkgver%.*}.tar.gz"
+        "config.pri"
+	
+        #openfx-io
+        "openfx-io::git+https://github.com/MrKepzie/openfx-io.git#tag=Natron-$pkgver"
+        'git+https://github.com/devernay/openfx-supportext.git'
+        
+        #openfx-misc
+        "openfx-misc::git://github.com/devernay/openfx-misc.git#tag=Natron-$pkgver"
+        
+        #openfx-arena
+        # "git+https://github.com/MrKepzie/openfx-io.git"
+        
+        #seexpr1
+        "https://github.com/wdas/SeExpr/archive/rel-1.0.1.tar.gz"
+        )
+sha1sums=('SKIP'
+          'SKIP'
+          'SKIP'
+          'SKIP'
+          'SKIP'
+          'SKIP'
+          '4ba2f9a2347ea6dca748758728f005fb9815ab53'
+          'ff207a39368d2b22396ae98e2ea129ff1a64411f'
+          'SKIP'
+          'SKIP'
+          'SKIP'
+          '80890cedd684a93b012b0964dc3b59910aaf5a10')
+
+prepare() {
+  #natron
+  cd "$srcdir/natron"
+  
+  rm -fdr "$srcdir/natron/OpenColorIO-Configs/OpenColorIO-Configs-Natron-v${pkgver%.*}"
+  mv "$srcdir/OpenColorIO-Configs-Natron-v${pkgver%.*}" "$srcdir/natron/OpenColorIO-Configs"
+
+  # Git submodules
+  git config submodule.libs/OpenFX.url $srcdir/openfx
+  git config submodule.Tests/google-mock.url $srcdir/google-mock
+  git config submodule.Tests/google-test.url $srcdir/google-test
+  git config submodule.libs/SequenceParsing.url $srcdir/SequenceParsing
+  git submodule update
+
+  cd libs/SequenceParsing
+  git config submodule.tinydir.url $srcdir/tinydir
+  git submodule update
+  cd ../..
+
+  mv "${srcdir}/config.pri" "${srcdir}/${pkgbase-*}/config.pri"
+  # Fix for gcc6 build issues
+  sed -i '1s/^/QMAKE_CXXFLAGS += -std=c++98\n/' Gui/Gui.pro
+  sed -i '1s/^/QMAKE_CXXFLAGS += -std=c++98\n/' Engine/Engine.pro
+  sed -i '1s/^/QMAKE_CXXFLAGS += -std=c++98\n/' Tests/Tests.pro
+  
+  
+  #openfx-io
+  cd "$srcdir/openfx-io"
+  git config submodule.openfx.url $srcdir/openfx
+  git config submodule.IOSupport/SequenceParsing.url $srcdir/SequenceParsing
+  git config submodule.SupportExt.url $srcdir/openfx-supportext
+  git submodule update
+
+  cd IOSupport/SequenceParsing
+  git config submodule.tinydir.url $srcdir/tinydir
+  git submodule update
+  
+  
+  #openfx-misc
+  cd "$srcdir/openfx-misc"
+  git config submodule.openfx.url $srcdir/openfx
+  git config submodule.SupportExt.url $srcdir/openfx-supportext
+  git submodule update
+  
+  
+  #openfx-arena
+  #cd "$srcdir/openfx-arena"
+  #git config submodule.OpenFX.url $srcdir/openfx
+  #git config submodule.SupportExt.url $srcdir/openfx-supportext
+  #git config submodule.OpenFX-IO.url $srcdir/openfx-io
+  #git submodule update
+
+  #cd OpenFX-IO
+  #git config submodule.IOSupport/SequenceParsing.url $srcdir/SequenceParsing
+  #git config submodule.SupportExt.url $srcdir/openfx-supportext
+  #git config submodule.openfx.url $srcdir/openfx
+  #git submodule update
+
+  #cd IOSupport/SequenceParsing
+  #git config submodule.tinydir.url $srcdir/tinydir
+  #git submodule update
+  
+  
+  #SeExpr
+  rm -fdr $srcdir/seexpr1
+  mkdir -p $srcdir/{fake_install,seexpr1}
+  # seexpr1 needs a clean directory to compile
+  cp -dr $srcdir/SeExpr-rel-1.0.1/* $srcdir/seexpr1
+  }
+
+build() {
+    build_seexpr1
+    build_openfx
+    build_natron
+}
+
+build_seexpr1() {
+  cd "$srcdir/seexpr1"
+  # Don't build doc, demos and tests as they are not needed
+  sed -i 's/ADD_SUBDIRECTORY (src\/doc)/ /' CMakeLists.txt
+  sed -i 's/ADD_SUBDIRECTORY (src\/demos)/ /' CMakeLists.txt
+  sed -i 's/ADD_SUBDIRECTORY (src\/tests)/ /' CMakeLists.txt
+
+  cmake -DCMAKE_INSTALL_PREFIX=/usr .
+  make
+  make DESTDIR=$srcdir/fake_install install
+  #remove shared lib since we just need static one
+  rm -f $srcdir/fake_install/usr/lib/libSeExpr.so
+}
+
+build_openfx() {
+    cd "$srcdir/openfx-io"
+    msg "building openfx-io"
+    make CONFIG=release BITS=64 SEEXPR_CXXFLAGS=-I$srcdir/fake_install/usr/include SEEXPR_LINKFLAGS=-L$srcdir/fake_install/usr/lib -lSeExpr
+    
+    cd "$srcdir/openfx-misc"
+    msg "building openfx-misc"
+    make CONFIG=release BITS=64
+    
+   # cd "$srcdir/openfx-arena"
+   # msg "building openfx-arena"
+   # make CONFIG=release
+}
+
+build_natron() {
+	cd "$srcdir/natron"
+
+	[[ -d build ]] && rm -r build; mkdir build; cd build
+        msg "building natron"
+	qmake -r "$srcdir/natron/Project.pro" PREFIX=/usr CONFIG+=release DEFINES+=QT_NO_DEBUG_OUTPUT \
+	QMAKE_CFLAGS_RELEASE="${CFLAGS}" QMAKE_CXXFLAGS_RELEASE="${CXXFLAGS}" QMAKE_LFLAGS_RELEASE="${LDFLAGS}"
+
+	make
+}
+
+package_natron() {
+        pkgdesc="Open source compositing software. Node-graph based. Similar in functionalities to Adobe After Effects and Nuke by The Foundry (community plugins included)"
+        depends=('fontconfig' 'qt' 'python2-pyside' 'python2-shiboken' 'boost-libs' 'pixman' 'glfw' 'cairo' 'openfx-io' 'openfx-misc')
+        optdepends=('openfx-arena: Extra OpenFX plugins for Natron includes text node')
+        
+	cd "$srcdir/natron/build"
+	make INSTALL_ROOT="$pkgdir" install
+}
+
+package_openfx-io() {
+        pkgdesc="A set of Readers/Writers plugins written using the OpenFX standard"
+        depends=('openimageio' 'ffmpeg') 
+
+        cd "$srcdir/openfx-io"
+        mkdir -p "$pkgdir/usr/OFX/Plugins"
+        make install PLUGINPATH=$pkgdir/usr/OFX/Plugins CONFIG=release BITS=64
+}
+
+
+package_openfx-misc() {
+        pkgdesc="Miscellaneous OpenFX plugins"
+        depends=('libgl') #'gcc-libs-multilib')
+        
+        cd "$srcdir/openfx-misc"
+        mkdir -p "$pkgdir/usr/OFX/Plugins"
+        make install PLUGINPATH=$pkgdir/usr/OFX/Plugins CONFIG=release BITS=64
+}
+
+#package_openfx-arena() {
+#        pkgdesc="Extra OpenFX plugins for Natron"
+#        depends=('imagemagick' 'libcdr' 'librsvg' 'libtool' 'libzip' 'opencolorio' 'poppler-glib' 'gcc-libs-multilib')
+        
+#        cd "$srcdir/openfx-arena"
+#        mkdir -p "$pkgdir/usr/OFX/Plugins"
+#        make install PLUGINPATH=$pkgdir/usr/OFX/Plugins CONFIG=release
+#}
