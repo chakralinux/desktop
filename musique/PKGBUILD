@@ -1,41 +1,35 @@
-#
-# Apps Packages for Chakra, part of chakra-project.org
-# Maintainer: Neophytos Kolokotronis <tetris4@gmail.com>
-# Contributor: arriagga <ramon.arriaga@gmail.com>
-# Contributor: dieghen89 <dieghen89@gmail.com>
-
 pkgname=musique
-pkgver=1.4
+pkgver=1.5
 pkgrel=1
 pkgdesc="Just another music player, only better"
 arch=('x86_64')
 url="http://flavio.tordini.org/musique"
 license=('GPL3')
-depends=('qt>=4.5' 'desktop-file-utils' 'hicolor-icon-theme' 'phonon' 'taglib' 'sqlite3')
+depends=('qt5-base' 'desktop-file-utils' 'hicolor-icon-theme' 'phonon-qt5' 'taglib' 'sqlite3')
+makedepends=('qt5-tools')
 optdepends=('gstreamer0.10-plugins: for gstreamer backend'
-            'phonon-gstreamer: gstreamer backend'
-            'phonon-mplayer-git: mplayer backend'
-            'phonon-vlc: vlc backend'
-            'phonon-xine: xine backend')
-conflicts=('$pkgname-git')
+            'phonon-qt5-backend-gstreamer: gstreamer backend'
+            'phonon-qt5-backend-vlc: vlc backend')
+conflicts=('musique-git')
 replaces=('minitunes' 'minitunes-git')
 categories=('multimedia')
-source=("http://flavio.tordini.org/files/musique/${pkgname}-${pkgver}.tar.gz")
-sha256sums=('08dfb4201aa0edc4b3fe4ef7788e618f754c3921f3a7c1cdce40ef3999760670')
+source=("$pkgname-$pkgver.tar.gz::https://github.com/flaviotordini/musique/archive/$pkgver.tar.gz")
+sha256sums=('82600f4e3d58900df1cc11acd77efbf11e8eac94f8c7382d57f953cadcd49d54')
 
 prepare() {
-  cd ${pkgname}
+  cd ${pkgname}-$pkgver
   # Disable GTK integration (will not build in Chakra otherwise).
   sed -e "/Fall back to gconf/,+3d" -i src/main.cpp
 }
 
 build() {
-  cd ${pkgname}
-  qmake PREFIX=/usr
+  cd ${pkgname}-$pkgver
+  qmake-qt5 PREFIX=/usr
 }
 
 package() {
-  cd ${pkgname}
+  cd ${pkgname}-$pkgver
   make INSTALL_ROOT="${pkgdir}" install
-  install -Dm644 "${srcdir}/${pkgname}/data/128x128/${pkgname}.png" "${pkgdir}/usr/share/pixmaps/${pkgname}.png"
+  # install icon
+  install -Dm644 "data/${pkgname}.svg" "${pkgdir}/usr/share/pixmaps/${pkgname}.svg"
 }
