@@ -1,0 +1,23 @@
+pkgname=bazel
+pkgver=0.4.4
+pkgrel=1
+pkgdesc="Correct, reproducible, fast builds for everyone."
+arch=("x86_64")
+url="https://bazel.build"
+license=('APLv2')
+depends=('openjdk')
+makedepends=('zip' 'unzip')
+source=("https://github.com/bazelbuild/${pkgname}/releases/download/${pkgver}/${pkgname}-${pkgver}-dist.zip")
+sha256sums=("d52a21dda271ae645711ce99c70cf44c5d3a809138e656bbff00998827548ebb")
+options=('!strip')
+
+build() {
+  ./compile.sh
+  output/bazel build scripts/bazel-complete.bash
+}
+
+package() {
+  install -D -m755 output/bazel "${pkgdir}"/usr/bin/bazel
+  install -D -m755 bazel-bin/scripts/bazel-complete.bash "${pkgdir}/usr/share/bash-completion/completions/bazel"
+}
+
