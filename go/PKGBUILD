@@ -1,5 +1,5 @@
 pkgname=('go' 'go-tools')
-pkgver=1.7.3
+pkgver=1.7.5
 pkgrel=1
 arch=('x86_64')
 url='http://golang.org/'
@@ -55,7 +55,7 @@ build() {
   done
 
   # Distribution tools
-  for tool in benchcmp bundle callgraph digraph eg fiximports html2article present ssadump stress stringer ; do
+  for tool in benchcmp bundle callgraph digraph eg fiximports guru html2article present ssadump stress stringer ; do
     $GOROOT/bin/go get -d golang.org/x/tools/cmd/$tool
     $GOROOT/bin/go build -v -x -o $GOPATH/pkg/tool/${GOOS}_$GOARCH/$tool golang.org/x/tools/cmd/$tool
   done
@@ -93,6 +93,7 @@ package_go() {
               'go-tools: godoc, goimports, gorename, and other tools.')
   install="$pkgname.install"
 
+
   cd "$pkgname-$pkgver"
 
   export GOROOT="$srcdir/$pkgname-$pkgver"
@@ -123,6 +124,7 @@ package_go() {
 
   # For godoc
   install -Dm644 favicon.ico "$pkgdir/usr/lib/go/favicon.ico"
+
 
   # Clean Windows specific files.
   rm -f "$pkgdir"/usr/lib/go/src/*.bat
