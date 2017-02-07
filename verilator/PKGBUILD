@@ -1,0 +1,24 @@
+pkgname=verilator
+pkgver=3.900
+pkgrel=1
+pkgdesc='The fastest free Verilog HDL simulator'
+url=http://www.veripool.org/projects/verilator/wiki/Intro
+arch=('any')
+license=('LGPL')
+depends=('gcc-libs')
+makedepends=('gcc')
+source=("http://www.veripool.org/ftp/${pkgname}-${pkgver}.tgz")
+sha1sums=('fa84518ea5347b5f0b84c53b394b10bc0af10cb9')
+
+build() {
+  cd "verilator-${pkgver}"
+
+  ./configure --prefix=/usr
+  make
+}
+
+package() {
+  cd "verilator-${pkgver}"
+
+  make install DESTDIR=$pkgdir
+}

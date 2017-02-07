@@ -1,0 +1,29 @@
+pkgname=qelectrotech
+pkgver=0.5
+pkgrel=1
+pkgdesc="An electric diagram editor"
+arch=('x86_64')
+url="http://qelectrotech.tuxfamily.org/"
+install='qelectrotech.install'
+license=('GPL2')
+depends=('qt5-svg' 'desktop-file-utils' 'hicolor-icon-theme' 'shared-mime-info' 'xdg-utils')
+source=("http://download.tuxfamily.org/qet/tags/20151127/${pkgname}-${pkgver}-src.tar.gz" 
+        'install-dir.patch')
+sha1sums=('66f753278b1037e5ac36f6894d02cfdfcaeedaa1'
+          'c70db275c75f9e6c15a1bfc7da81c4a20e32ebe8')
+
+prepare() {
+	cd ${srcdir}/${pkgname}-${pkgver}-src
+	patch -p1 < ${srcdir}/install-dir.patch
+}
+
+build() {
+  cd ${srcdir}/${pkgname}-${pkgver}-src
+  qmake-qt5
+  make
+}
+
+package() {
+  cd ${srcdir}/${pkgname}-${pkgver}-src
+  make INSTALL_ROOT=${pkgdir} install
+}

@@ -1,0 +1,48 @@
+pkgname=fritzing
+pkgver=0.9.3b
+pkgrel=1
+pkgdesc="Easy-to-use, electronic design software."
+arch=('x86_64')
+url="http://fritzing.org"
+screenshot="http://fritzing.org/media/uploads/download_screenshot_jpg_versions/small_download_screenshot.jpg"
+license=('CCPL')
+depends=('desktop-file-utils' 'java-environment' 'qt5-serialport' 'qt5-svg' 'shared-mime-info' 'python2' 'libgit2')
+makedepends=('boost')
+source=("${pkgname}-${pkgver}::https://github.com/fritzing/fritzing-app/archive/${pkgver}.tar.gz"
+        "parts-${pkgver}.tar.gz::https://github.com/fritzing/fritzing-parts/archive/${pkgver}.tar.gz"
+        "fritzing.xml"
+        "0001-Squashed-commit-of-the-following.patch")
+sha1sums=('05c5cbe9a50693e1b0dddfa8eed3528cb96a5c95'
+          '3856ddd6e3d6209d531e30b5128e46f5fa3cbc3e'
+          '4d7aed07244780cc667ae2398bdaaf3cf7767a89'
+          'a2cc9a44ff00c1f52e4e7cf03479ad97f9dc8d00')
+ 
+prepare() {
+  mkdir -p "$srcdir"/fritzing-app-${pkgver}/parts
+  cp -fr "$srcdir"/fritzing-parts-${pkgver}/* "$srcdir"/fritzing-app-${pkgver}/parts
+  
+  cd "$srcdir"/fritzing-app-${pkgver}
+  patch -p1 < "$srcdir"/0001-Squashed-commit-of-the-following.patch
+}
+
+build() {
+  cd ${srcdir}/fritzing-app-${pkgver}
+  qmake-qt5
+  make
+}
+ 
+package() {
+  cd ${srcdir}/fritzing-app-${pkgver}
+  make INSTALL_ROOT=$pkgdir install
+  
+  # install partsdb clone script
+  install -Dm755 "${srcdir}"/fritzing-app-${pkgver}/tools/user_parts_clone.sh "${pkgdir}"/usr/bin/fritzing_clone_parts
+  
+  # connect .fzz files to fritzing by default
+  install -Dm644 "${srcdir}/fritzing.xml" "${pkgdir}/usr/share/mime/packages/fritzing.xml"
+  echo "MimeType=application/x-fritzing;" >> "${pkgdir}/usr/share/applications/fritzing.desktop"
+  
+  sed -i s!Icon=icons/fritzing_icon.png!Icon=fritzing! \
+  "${pkgdir}/usr/share/applications/fritzing.desktop"
+}
+ 

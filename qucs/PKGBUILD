@@ -1,0 +1,55 @@
+# NOTE adms from github is broken
+# remember to check for updates on https://software.opensuse.org/package/adms once in a while
+
+pkgname=qucs
+pkgver=0.0.19
+pkgrel=1
+pkgdesc="An integrated circuit simulator with a graphical user interface"
+arch=('x86_64')
+url="http://qucs.sourceforge.net"
+license=('GPL')
+depends=('gcc-libs' 'qt')
+makedepends=('git' 'autoconf' 'automake' 'flex' 'bison' 'cmake' 'gperf')
+optdepends=('freehdl: to permit digital circuit simulation'
+	    'perl')
+provides=('adms')
+conflicts=('adms' 'adms-git')
+source=("https://github.com/Qucs/qucs/archive/qucs-$pkgver.tar.gz"
+        "http://download.opensuse.org/repositories/openSUSE:/Leap:/42.2/standard/src/adms-2.3.4-4.3.src.rpm")
+sha1sums=('28562fc5877e8c803fefa7be1d1ec578e4e62818'
+          'c8302d98903254c2d0c91a06830aecd72e1af582')
+
+prepare() {
+    mkdir -p {build,fake_install}
+    tar -xf adms-2.3.4.tar.gz
+}
+
+build() {
+  # now adms must be build outsite qucs source tree
+  cd adms-2.3.4 
+  cmake \
+    -DCMAKE_INSTALL_PREFIX=/usr \
+    -DCMAKE_BUILD_TYPE=RELEASE \
+    -DUSE_MAINTAINER_MODE=0
+  make DESTDIR="$srcdir/fake_install" install
+  
+  cd $srcdir/build
+  cmake ../$pkgname-$pkgname-${pkgver} \
+    -DCMAKE_INSTALL_PREFIX=/usr \
+    -DCMAKE_BUILD_TYPE=RELEASE \
+    -DUSE_MAINTAINER_MODE=0 \
+    -DADMSXML_DIR=$srcdir/fake_install/usr/bin
+  make
+}
+
+package() {
+  cd $srcdir/build/$pkgname
+  make DESTDIR="$pkgdir" install
+  
+  cd $srcdir/build/$pkgname-core
+  make DESTDIR="$pkgdir" install
+  
+  # install adms executables
+  cd $srcdir/adms-2.3.4
+  make DESTDIR="$pkgdir" install
+}
