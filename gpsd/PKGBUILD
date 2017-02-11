@@ -2,7 +2,7 @@
 
 pkgname=gpsd
 pkgver=3.16
-pkgrel=1
+pkgrel=2
 pkgdesc="GPS daemon and library to support USB/serial GPS devices"
 arch=('x86_64')
 url="http://catb.org/gpsd/"
@@ -11,28 +11,20 @@ license=('BSD')
 depends=('python2' 'libusb' 'bluez-libs' 'desktop-file-utils')
 optdepends=('php: generate a PHP status page for your GPS'
             'php-gd: image support for the PHP status page')
-makedepends=('scons' 'docbook-xsl' 'chrpath')
+makedepends=('scons' 'docbook-xsl' 'hardening-wrapper')
 backup=('etc/conf.d/gpsd')
-options=('!libtool')
 install="${pkgname}.install"
 source=("http://download.savannah.gnu.org/releases/${pkgname}/${pkgname}-${pkgver}.tar.gz"{,.sig})
-md5sums=('68691b5de4c94f82ec4062b042b5eb63'
-         'SKIP')
+sha1sums=('f211a45eb6e8d067df2d02f7d9347e3977296ed9'
+          'SKIP')
+validpgpkeys=('41876B2F579463A499843D1DECC8208F8C6C738D') # Eric S. Raymond (Also known as 'ESR'.)
 
 build() {
   cd "${srcdir}/${pkgname}-${pkgver}"
 
-  # fix python 2.7 path
-  sed -i -e "s|#![ ]*/usr/bin/python$|#!/usr/bin/python2|" \
-    -e "s|#![ ]*/usr/bin/env python$|#!/usr/bin/env python2|" \
-    $(find . -name '*.py')
-  sed -i 's|/usr/bin/env python|/usr/bin/env python2|' gegps \
-    gpscat gpsfake gpsprof xgps xgpsspeed
-
   scons prefix=/usr \
     systemd=yes \
-    libQgpsmm=no \
-    PYTHONPATH=/usr/bin/python2
+    libQgpsmm=no
   scons build
 }
 
@@ -47,16 +39,10 @@ package() {
 
   sed -i 's|/lib/udev/gpsd|/usr/lib/udev/gpsd|' gpsd.rules
 
-  install -D -m644 "gpsd.rules" "${pkgdir}/usr/lib/udev/rules.d/99-gpsd-usb.rules"
+  install -Dm644 "gpsd.rules" "${pkgdir}/usr/lib/udev/rules.d/99-gpsd-usb.rules"
 
   sed -i 's|/etc/default/gpsd|/etc/conf.d/gpsd|' gpsd.hotplug
-  install -D -m755 gpsd.hotplug "${pkgdir}/usr/lib/udev/gpsd.hotplug"
-
-  msg 'GPSD needs RPATH'
-#  chrpath -r /usr/lib/ "${pkgdir}"/usr/lib/libgps{,d}.so.20.0.0
-#  chrpath -r /usr/lib/ "${pkgdir}"/usr/bin/{gpsdecode,gpsctl,gpspipe,gpxlogger,lcdgps}
-#  chrpath -r /usr/lib/ "${pkgdir}"/usr/sbin/{gpsd,gpsdctl}
-#  chrpath -r /usr/lib/ "${pkgdir}"/usr/lib/python2.7/site-packages/gps/{clienthelpers,packet}.so
+  install -Dm755 gpsd.hotplug "${pkgdir}/usr/lib/udev/gpsd.hotplug"
 
   install -D -m644 packaging/X11/xgps.desktop \
     "${pkgdir}/usr/share/applications/xgps.desktop"
