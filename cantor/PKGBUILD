@@ -10,32 +10,43 @@ url="http://kde.org/applications/education/cantor/"
 screenshot="https://www.kde.org/images/screenshots/cantor.png"
 arch=('x86_64')
 license=('GPL' 'LGPL' 'FDL')
-depends=('analitza' 'kdelibs4support' 'knewstuff' 'kpty' 'ktexteditor' 'libqalculate' 'libspectre')
-optdepends=('luajit: LUA backend'
-            'maxima: Maxima backend'
-	    'octave: Octave backend'
-            'python3: Python 3 backend'
-            'python2: Python 2 backend'
+depends=('analitza' 'libspectre' 'kpty' 'ktexteditor' 'knewstuff' 'libqalculate' 'hicolor-icon-theme')
+optdepends=('maxima: Maxima backend'
+            'octave: Octave backend'
             'r: R backend'
-            'sage-mathematics: Sage backend')
-makedepends=('extra-cmake-modules' 'kdoctools' 'luajit' 'python3' 'python2' 'r')
+            'luajit: LUA backend'
+            'python3: Python 3 backend'
+	    'python2: Python 2 backend'
+            'sagemath: SageMath backend')
+            #'julia: Julia backend')
+makedepends=('extra-cmake-modules' 'python3' 'python2' 'kdoctools' 'luajit' 'r') # 'julia')
 replaces=('kdeedu-cantor')
 conflicts=('kdeedu-cantor')
 groups=('kde' 'kde-uninstall' 'kde-applications' 'kdeedu')
 options=('docs' 'debug')
 install=${pkgname}.install
-source=("$_mirror/${pkgname}-$_kdever.tar.xz"{,.sig})
+source=("$_mirror/${pkgname}-$_kdever.tar.xz"{,.sig}
+fno-operator-names_cantor.patch::https://cgit.kde.org/cantor.git/patch/?id=4b8ef6bed62daced90c7826985650c2a813d2996)
 sha256sums=(`grep ${pkgname}-$_kdever.tar.xz  ../kdeapps.sums | cut -d " " -f1`
-                        'SKIP')
+                        'SKIP'
+                        '775ab4f099bdab34bff88d2f2bb6de9477ef68d1f5e062659b68d6a0718d7135')
 validpgpkeys=(${Avalidpgpkeys})
 
 prepare() {
   mkdir -p build
+
+  cd ${pkgname}-${pkgver}
+  # https://cgit.kde.org/cantor.git/patch/?id=4b8ef6bed62daced90c7826985650c2a813d2996
+  patch -Np1 -i "${srcdir}/fno-operator-names_cantor.patch"
+  
+  # wait patch for julia, enable later when the operato names are fixed
 }
 
 build() {
   cd build
-  cmake_kf5 ../${pkgname}-${pkgver}
+  cmake_kf5 ../${pkgname}-${pkgver} \
+    -DPYTHON_INCLUDE_DIR=/usr/include/python2.7 \
+    -DPYTHON_LIBRARY=/usr/lib/libpython2.7.so
   make
 }
 
