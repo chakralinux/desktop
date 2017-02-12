@@ -1,6 +1,6 @@
 pkgname=calamares
-pkgver=2.4.6
-pkgrel=2
+pkgver=3.0.1.90
+pkgrel=1
 _releaseName="Goedel"
 _releaseYear="2017"
 pkgdesc='Distribution-independent installer framework'
@@ -8,22 +8,22 @@ arch=('x86_64')
 url='https://github.com/calamares/calamares'
 license=('LGPL')
 depends=('boost' 'qt5-svg' 'kconfig' 'ki18n' 'kcoreaddons' 'solid' 'yaml-cpp'
-         'parted' 'kpmcore<=2.3' 'libatasmart' 'udisks2' 'polkit-qt5' 'boost-libs'
+         'parted' 'kpmcore>=3.0' 'libatasmart' 'udisks2' 'polkit-qt5' 'boost-libs'
          'rsync' 'python3' 'keyboardctl' 'qt5-webkit' 'kparts' 'mkinitcpio-openswap')
 makedepends=('extra-cmake-modules' 'git' 'qt5-tools' 'translate-toolkit' 'qt5-tools')
-source+=("$pkgname-$pkgver.tar.gz::https://github.com/calamares/calamares/releases/download/v$pkgver/calamares-$pkgver.tar.gz"
-#_gitsha="09f650ecf586fd7dc43b8b131931a6d0e1d04f98"
-#source+=("$pkgname-$pkgver.tar.gz::https://github.com/calamares/calamares/archive/${_gitsha}.zip"
+#source+=("$pkgname-$pkgver.tar.gz::https://github.com/calamares/calamares/releases/download/v$pkgver/calamares-$pkgver.tar.gz"
+_gitsha="16f1277eb2a3c2dc77163f956060995ecb73a4d3"
+source+=("$pkgname-$pkgver.tar.gz::https://github.com/calamares/calamares/archive/${_gitsha}.zip"
          "calamares-chakra::git://git.chakralinux.org/calamares.git#branch=modules")
-md5sums=('7c0fa34198b2cfb55f86adc5e9d0a25c'
+md5sums=('4535adb3956041dd3fe51b2df0440a75'
          'SKIP')
 
 prepare() {
-    cp -a ${srcdir}/calamares-chakra/* ${srcdir}/calamares-${pkgver}
-    #cp -a ${srcdir}/calamares-chakra/* ${srcdir}/calamares-${_gitsha}
+    #cp -a ${srcdir}/calamares-chakra/* ${srcdir}/calamares-${pkgver}
+    cp -a ${srcdir}/calamares-chakra/* ${srcdir}/calamares-${_gitsha}
     rm -rf ${srcdir}/calamares-chakra
-    cd ${srcdir}/calamares-${pkgver}
-    #cd ${srcdir}/calamares-${_gitsha}
+    #cd ${srcdir}/calamares-${pkgver}
+    cd ${srcdir}/calamares-${_gitsha}
     
     # apply the current version Name and Year
     sed -i -e "s/UnknownName/${_releaseName}/" "src/branding/chakra/branding.desc"
@@ -31,8 +31,8 @@ prepare() {
 }
 
 build() {
-    cd ${srcdir}/calamares-${pkgver}
-    #cd ${srcdir}/calamares-${_gitsha}
+    #cd ${srcdir}/calamares-${pkgver}
+    cd ${srcdir}/calamares-${_gitsha}
     mkdir -p build
 
     cd build
@@ -47,20 +47,19 @@ build() {
 }
 
 package() {
-    cd ${srcdir}/calamares-${pkgver}/build
-    #cd ${srcdir}/calamares-${_gitsha}/build
+    #cd ${srcdir}/calamares-${pkgver}/build
+    cd ${srcdir}/calamares-${_gitsha}/build
     make DESTDIR="${pkgdir}" install
 
     install -Dm644 "../conf/settings.conf" "$pkgdir/usr/share/calamares/settings.conf"
+    install -Dm644 "../conf/welcome.conf" "$pkgdir/usr/share/calamares/welcome.conf"
     install -Dm644 "../conf/displaymanagers.conf" "$pkgdir/usr/share/calamares/modules/displaymanagers.conf"
     install -Dm644 "../conf/locale.conf" "$pkgdir/usr/share/calamares/modules/locale.conf"
-    #install -Dm644 "../conf/prepare.conf" "$pkgdir/usr/share/calamares/modules/prepare.conf"
     install -Dm644 "../conf/users.conf" "$pkgdir/usr/share/calamares/modules/users.conf"
     install -Dm644 "../conf/unpackfs.conf" "$pkgdir/usr/share/calamares/modules/unpackfs.conf"
     install -Dm644 "../conf/packages.conf" "$pkgdir/usr/share/calamares/modules/packages.conf"
     install -Dm644 "../conf/grubcfg.conf" "$pkgdir/usr/share/calamares/modules/grubcfg.conf"
     #install -Dm644 "../conf/partition.conf" "$pkgdir/usr/share/calamares/modules/partition.conf"
-    #install -Dm644 "../conf/_bootldr.conf" "$pkgdir/usr/share/calamares/modules/_bootldr.conf"
     install -Dm644 "../conf/services.conf" "$pkgdir/usr/share/calamares/modules/services.conf"
     install -Dm644 "../conf/umount.conf" "$pkgdir/usr/share/calamares/modules/umount.conf"
     install -Dm644 "../conf/initcpio.conf" "$pkgdir/usr/share/calamares/modules/initcpio.conf"
