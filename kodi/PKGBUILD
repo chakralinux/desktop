@@ -1,7 +1,7 @@
 pkgname=kodi
-pkgver=16.1
-_codename=Jarvis
-pkgrel=2
+pkgver=17.0
+_codename=Krypton
+pkgrel=1
 arch=('x86_64')
 url="http://kodi.tv"
 license=('GPL2')
@@ -26,7 +26,7 @@ optdepends=(
     'unzip: Archives support'
     'upower: Display battery level')
 makedepends=(
-  'autoconf' 'automake' 'libusb'
+  'autoconf' 'automake' 'libusb' 'cmake'
   'bluez-libs' 'boost' 'cmake' 'curl' 'doxygen' 'git' 'glew'
   'gperf' 'hicolor-icon-theme' 'jasper' 'java-runtime' 'libass' 'libaacs'
   'libbluray' 'libcdio' 'libcec' 'libgl' 'libmariadbclient' 'libmicrohttpd'
@@ -39,7 +39,7 @@ provides=('xbmc')
 conflicts=('xbmc')
 replaces=('xbmc')
 source=("$pkgname-$pkgver-$_codename.tar.gz::https://github.com/xbmc/xbmc/archive/$pkgver-$_codename.tar.gz")
-sha256sums=('7d82c8aff2715c83deecdf10c566e26105bec0473af530a1356d4c747ebdfd10')
+sha256sums=('4bfffa2493973ae15ab1d922632c09a2583908d6140bc4f58ec8f9314e4f6545')
 
 prepare() {
   cd "$srcdir/xbmc-$pkgver-$_codename"
@@ -48,30 +48,23 @@ prepare() {
   sed 's|^#!.*python$|#!/usr/bin/python2|' -i tools/depends/native/rpl-native/rpl
 	sed 's/python/python2/' -i tools/Linux/kodi.sh.in
   sed 's/shell python/shell python2/' -i tools/EventClients/Makefile.in
+
+  mkdir -p build
 }
 
 build() {
-  cd "$srcdir/xbmc-$pkgver-$_codename"
+  cd "$srcdir/xbmc-$pkgver-$_codename/build"
 
-  # Bootstrapping
-  MAKEFLAGS=-j1 ./bootstrap
-
-  # Configuring Kodi
-  export PYTHON_VERSION=2  # external python v2
-  ./configure --prefix=/usr --exec-prefix=/usr \
-    --disable-debug \
-    --enable-optimizations \
-    --enable-libbluray \
-    --disable-gtest \
-    --with-lirc-device=/run/lirc/lircd \
-    ac_cv_type__Bool=yes
-
-  # Now (finally) build
+  cmake -DCMAKE_INSTALL_PREFIX=/usr \
+        -DCMAKE_INSTALL_LIBDIR=/usr/lib \
+        -DLIRC_DEVICE=/run/lirc/lircd \
+        ../project/cmake
   make
+  make preinstall
 }
 
 package() {
-  cd "$srcdir/xbmc-$pkgver-$_codename"
+  cd "$srcdir/xbmc-$pkgver-$_codename"/build
   # Running make install
   make DESTDIR="$pkgdir" install
 
