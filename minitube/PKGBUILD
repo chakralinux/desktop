@@ -1,16 +1,17 @@
 pkgname=minitube
-pkgver=2.5.2
+pkgver=2.6
 pkgrel=1
 pkgdesc="A native YouTube client in QT. Watch YouTube videos without Flash Player"
 arch=('x86_64')
 url="http://flavio.tordini.org/minitube"
 license=('GPL')
-depends=('qt5-base' 'phonon-qt5' 'phonon-qt5-backend-vlc' 'qt5-script' 'qt5-tools')
+depends=('qt5-base' 'phonon-qt5' 'phonon-qt5-backend-vlc' 'qt5-script' 'qt5-declarative')
+makedepends=('qt5-tools')
 categories=('multimedia')
 install=${pkgname}.install
 screenshot="http://flavio.tordini.org/files/minitube/minitube-01.jpg"
-source=("https://github.com/flaviotordini/${pkgname}/archive/${pkgver}.tar.gz")
-sha512sums=('4001ea95e6d3b541e9a8a2555830238f6e3a0b4749566dfd67ae48fdc6102ec77a38e162e04fb2637cc5ff2b3dccdca541119531302332ffa3b90d9db8809284')
+source=("${pkgname}-${pkgver}::https://github.com/flaviotordini/${pkgname}/archive/${pkgver}.tar.gz")
+sha512sums=('9fc155c2fce04f81fd1bab08f6131cc295ffeb52ca0e6cc380990a9af9c3859020b1edb6920984e01a3cc8fbf07f4f3ce50970ecb22df0a702cca6660c3d68dc')
 
 build() {
         cd "${srcdir}/${pkgname}-${pkgver}"      
