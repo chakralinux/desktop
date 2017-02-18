@@ -1,0 +1,28 @@
+pkgname=fish
+pkgver=2.5.0
+pkgrel=1
+pkgdesc='Smart and user friendly shell intended mostly for interactive use'
+arch=('x86_64')
+url='https://www.fishshell.com/'
+license=('GPL2')
+makedepends=('gcc' 'doxygen')
+depends=('ncurses' 'gettext')
+source=("https://github.com/fish-shell/fish-shell/archive/${pkgver}.tar.gz")
+sha512sums=('1032f64987ab5632accffaf326fc56daad220d4edc66cf79b16730d9166ac61ff062f33560e5527cdd2ca0efc5299c2f736604c24ed9a3758dea30b91db70eb7')
+
+prepare() {
+	cd fish-shell-${pkgver}
+	autoreconf
+}
+
+build() {
+	cd fish-shell-${pkgver}
+	./configure --prefix=/usr --sysconfdir=/etc
+	make
+}
+
+package() {
+	cd fish-shell-${pkgver}
+	make DESTDIR="${pkgdir}" install
+}
+
