@@ -1,12 +1,13 @@
 pkgname=plasma5-applets-simplemenu
-pkgver=0.6
+pkgver=1.0.1
 pkgrel=1
 pkgdesc="Simple menu launcher, similar to the one on Chrome OS"
 arch=('x86_64')
 url="https://quickgit.kde.org/?p=scratch%2Fhein%2Fsimplemenu.git"
 license=('GPL')
 group=('plasma5-applets')
-depends=('qt5-base' 'qt5-x11extras' 'plasma-workspace' 'ki18n' 'knotifications' 'krunner' 'kdeclarative' 'solid' 'kwindowsystem' 'kdbusaddons' 'kdoctools' 'kpeople' 'kio' 'kdelibs4support')
+depends=('qt5-base' 'qt5-x11extras' 'plasma-workspace' 'ki18n' 'knotifications' 'krunner'
+         'kdeclarative' 'solid' 'kwindowsystem' 'kdbusaddons' 'kdoctools' 'kpeople' 'kio')
 makedepends=('cmake' 'git' 'extra-cmake-modules')
 source=(${pkgname}::git://anongit.kde.org/scratch/hein/simplemenu.git)
 sha1sums=('SKIP')
@@ -23,8 +24,7 @@ build() {
         cmake .. \
     -DCMAKE_INSTALL_PREFIX=/usr \
     -DCMAKE_BUILD_TYPE=Release \
-    -DLIB_INSTALL_DIR=lib \
-    -DKDE_INSTALL_USE_QT_SYS_PATHS=ON
+    -DKDE_INSTALL_LIBDIR=lib
         make
 }
 
