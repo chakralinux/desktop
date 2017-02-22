@@ -1,23 +1,25 @@
-#Contributions from Arch: https://projects.archlinux.org/svntogit/community.git/tree/trunk?h=packages/netbeans
+# NOTE you need to update pkgdate together with pkgver
+# check out pkgdate here https://netbeans.org/downloads/zip.html
 
 pkgname=netbeans
-_pkgdate=201510222201
-pkgver=8.1
+pkgver=8.2
+_pkgdate=201609300101
 pkgrel=1
 pkgdesc='Netbeans IDE development platform for Java, HTML5, PHP, Groovy, C and C++.'
 arch=('x86_64')
 url='http://www.netbeans.org'
 license=('CDDL')
-depends=('java-environment' 'libxtst' 'giflib' 'atk')
+depends=('java-environment' 'ttf-font' 'libxtst' 'giflib' 'atk')
 makedepends=('gendesk' 'setconf')
 optdepends=('php: for developing programs in php'
-            'ruby: for developing programs in ruby')
+            'ruby: for developing programs in ruby'
+            'groovy: for developing programs in groovy')
 categories=('programming')
 options=('!strip')
 backup=('usr/share/netbeans/etc/netbeans.conf')
 install="${pkgname}.install"
 source=("http://download.netbeans.org/netbeans/$pkgver/final/zip/netbeans-$pkgver-$_pkgdate.zip")
-sha256sums=('b960957edca0bb14cacadf348ef92b5ac233eec73fa25dda72ef365bc5084ea9')
+sha256sums=('ad9888334b9a6c1f1138dcb2eccc8ce4921463e871e46def4ecc617538160948')
 
 prepare() {
   gendesk -f -n --pkgname "${pkgname}" --pkgdesc "${pkgdesc}"
