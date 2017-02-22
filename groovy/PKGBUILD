@@ -1,0 +1,62 @@
+pkgbase=groovy
+pkgname=('groovy' 'groovy-docs')
+pkgver=2.4.8
+pkgrel=1
+pkgdesc='Programming language based on Java, inspired by Python, Ruby and Smalltalk'
+arch=('any')
+url='http://groovy-lang.org/'
+license=('APACHE')
+makedepends=('gendesk')
+source=("http://dl.bintray.com/groovy/maven/apache-$pkgbase-binary-$pkgver.zip"
+        "http://dl.bintray.com/groovy/maven/apache-$pkgbase-docs-$pkgver.zip"
+        "$pkgbase.png")
+sha256sums=('668a65ea17037371a1952cca5f42ebc03329e15d3619aacb4c7dd5f4b39a8dfd'
+            '6bb9148d146bae88af0afc1d7580f37cadb08c9ab01639b4a9781a10c75f6022'
+            '24e539235b5762b1220f39d7953a52e9b4a458c2be4f66a60219755363ba6dba')
+
+prepare() {
+  # Generate desktop shortcut
+  gendesk -f -n --pkgname "$pkgbase" --pkgdesc 'Groovy programming language' \
+    --exec 'groovyConsole' --name 'Groovy Console'
+
+  # Set GROOVY_HOME correctly at the top of all the scripts.
+  # There are probably better ways to do this, but this works.
+  for f in "$pkgbase-$pkgver/bin/"*; do
+    sed 's:bin/sh:bin/sh\nGROOVY_HOME=/usr/share/groovy:' -i "$f"
+  done
+
+  cd "$pkgbase-$pkgver/embeddable"
+  ln -sf "$pkgbase-all-$pkgver.jar" "$pkgbase-all.jar"
+}
+
+package_groovy() {
+  depends=('bash' 'java-environment')
+  optdepends=('groovy-docs: html and pdf documentation for Groovy')
+  cd "$pkgbase-$pkgver"
+
+  # Create the directories and package the files
+  install -d "$pkgdir/usr/share/groovy" "$pkgdir/usr/bin"
+  cp -r lib conf embeddable "$pkgdir/usr/share/groovy"
+  cp bin/* "$pkgdir/usr/bin"
+
+  # Remove all DOS/Windows batch files
+  find $pkgdir -name '*.bat' -exec rm {} \;
+
+  # Package the license file
+  install -Dm644 LICENSE \
+    "$pkgdir/usr/share/licenses/$pkgbase/LICENSE"
+
+  # Package the desktop shortcut for Groovy Console
+  install -Dm644 "$srcdir/$pkgbase.desktop" \
+    "$pkgdir/usr/share/applications/$pkgbase.desktop"
+  install -Dm644 "$srcdir/$pkgbase.png" \
+    "$pkgdir/usr/share/pixmaps/$pkgbase.png"
+}
+
+package_groovy-docs() {
+  cd "$pkgbase-$pkgver"
+
+  install -d "$pkgdir/usr/share/doc/$pkgbase-$pkgver"
+  cp -r html/* licenses "$pkgdir/usr/share/doc/$pkgbase-$pkgver"
+  find "$pkgdir" -type f -exec chmod -x {} \;
+}
