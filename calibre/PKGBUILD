@@ -1,6 +1,6 @@
 pkgname=calibre
 pkgver=2.80.0
-pkgrel=3
+pkgrel=4
 pkgdesc="Ebook management application"
 arch=('x86_64')
 url="https://calibre-ebook.com/"
@@ -19,8 +19,10 @@ optdepends=('ipython2: to use calibre-debug'
             'poppler: required for converting pdf to html')
 screenshot=('https://lh5.googleusercontent.com/_lG58t3XWd3c/TcNwiXkAx_I/AAAAAAAAAEc/M34I4uY9UUY/s800/gui.jpeg')
 install=${pkgname}.install
-source=("https://download.calibre-ebook.com/${pkgver}/calibre-${pkgver}.tar.xz")
-sha256sums=('33a6dbc578c7a2f3d1c97253769506a1afc10f688c062f027d64d7081618f2b1')
+source=("https://download.calibre-ebook.com/${pkgver}/calibre-${pkgver}.tar.xz"
+	"fix_html5_imports.patch")
+sha256sums=('33a6dbc578c7a2f3d1c97253769506a1afc10f688c062f027d64d7081618f2b1'
+	    'SKIP')
 
 prepare(){
   cd "${pkgname}-${pkgver}"
@@ -38,6 +40,9 @@ prepare(){
       -e "s/'ctc-posml'/'text' not in mt and 'pdf' not in mt and 'xhtml'/" \
       -e "s/^Name=calibre/Name=Calibre/g" \
       -i  src/calibre/linux.py
+
+  # Fix broken HTML5 imports.
+  patch -N -p0 < ../../fix_html5_imports.patch
 }
 
 build() {
