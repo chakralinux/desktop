@@ -1,11 +1,12 @@
 pkgbase=python-html5lib
 pkgname=('python2-html5lib' 'python3-html5lib')
 pkgver=0.999999999
-pkgrel=1
+pkgrel=2
 arch=('any')
 url="https://github.com/html5lib"
 license=('MIT')
-makedepends=('python2' 'python3' 'unzip' 'python2-setuptools' 'python3-setuptools')
+makedepends=('python2' 'python3' 'unzip' 'python2-setuptools' 'python3-setuptools'
+             'python2-webencodings' 'python3-webencodings' 'python2-six' 'python3-six')
 source=("https://github.com/html5lib/html5lib-python/archive/${pkgver}.tar.gz"
         'LICENSE')
 sha256sums=('05c0f1ba235776060ded5093c365483d50deacdd7cabc57b6996d6e2480a4626'
@@ -13,7 +14,7 @@ sha256sums=('05c0f1ba235776060ded5093c365483d50deacdd7cabc57b6996d6e2480a4626'
 
 package_python3-html5lib() {
 pkgdesc="A Python HTML parser/tokenizer based on the WHATWG HTML5 spec"
-depends=('python3')
+depends=('python3' 'python3-six' 'python3-webencodings')
     cd html5lib-python-${pkgver}
 
     python3 setup.py install --root="${pkgdir}"
@@ -21,7 +22,7 @@ depends=('python3')
 }
 
 package_python2-html5lib() {
-depends=('python2' 'python2-six')
+depends=('python2' 'python2-six' 'python2-webencodings')
 pkgdesc="A Python2 HTML parser/tokenizer based on the WHATWG HTML5 spec"
     cd html5lib-python-${pkgver}
 
