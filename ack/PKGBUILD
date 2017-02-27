@@ -1,6 +1,6 @@
 pkgname=ack
-pkgver=2.15.02
-ver=2.15_02
+pkgver=2.15.03
+_ver=2.15_03
 pkgrel=1
 pkgdesc="A Perl-based grep replacement, aimed at programmers with large trees of heterogeneous source code"
 arch=('x86_64')
@@ -9,16 +9,16 @@ license=('GPL' 'PerlArtistic')
 depends=('perl-file-next')
 options=('!emptydirs')
 categories=('programming')
-source=(https://github.com/petdance/ack2/archive/${ver}.tar.gz)
-sha256sums=('53c794dff33c6a6d83fc9735d9b23a9564d600e4fee28e11d84461b0b10c893b')
+source=(https://github.com/petdance/ack2/archive/${_ver}.tar.gz)
+sha256sums=('f15e3e575e630529c476dc0953fdc92c76723b51256b4b47e95d401ab16fec9f')
 
 build() {
-  cd "$srcdir/ack2-$ver"
+  cd "$srcdir/ack2-$_ver"
   PERL_MM_USE_DEFAULT=1 perl Makefile.PL INSTALLDIRS=vendor
   make
 }
 
 package() {
-  cd "$srcdir/ack2-$ver"
+  cd "$srcdir/ack2-$_ver"
   make DESTDIR="$pkgdir" install
 }
