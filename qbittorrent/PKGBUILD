@@ -1,5 +1,5 @@
 pkgname=qbittorrent
-pkgver=3.3.10
+pkgver=3.3.11
 pkgrel=1
 pkgdesc="A bittorrent client written in C++ / Qt using the good libtorrent library"
 arch=('x86_64')
@@ -10,16 +10,8 @@ makedepends=('boost' 'geoip' 'qt5-tools')
 categories=('network')
 screenshot=('http://sourceforge.net/projects/qbittorrent/screenshots/242189.jpg')
 install=qbittorrent.install
-source=("https://sourceforge.net/projects/${pkgname}/files/${pkgname}/${pkgname}-${pkgver}/${pkgname}-${pkgver}.tar.xz"
-        'qbittorrent-libtorrent-1.1.1.patch')
-sha256sums=('2c657ceacdc84033da044a0a9ecba7e0fdb35858324dc097546f989166f1a8d2'
-            'c7642755dbc72567e04326b362eb862a62fc225984934d08fd808727d3bd6578')
-
-prepare() {
-  cd $pkgbase-$pkgver
-
-  patch -Np1 -i "$srcdir/qbittorrent-libtorrent-1.1.1.patch"
-}
+source=("https://sourceforge.net/projects/${pkgname}/files/${pkgname}/${pkgname}-${pkgver}/${pkgname}-${pkgver}.tar.xz")
+sha256sums=('4892ac5ed4bde2ed325fb67456698e703bb933b9eb1d146598259f4e2154a760')
 
 build() {
     cd ${srcdir}/${pkgname}-${pkgver}
