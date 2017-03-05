@@ -3,7 +3,7 @@ source ../kdeapps.conf
 
 pkgname=kdevplatform
 pkgver=$_kdevver
-pkgrel=2
+pkgrel=1
 pkgdesc='A C/C++ development platform for KDE'
 arch=(x86_64)
 url='http://www.kdevelop.org/'
@@ -13,7 +13,7 @@ depends=(grantlee-qt5 hicolor-icon-theme kcmutils threadweaver kitemmodels ktext
 makedepends=(extra-cmake-modules boost subversion)
 optdepends=('subversion: Subversion plugin')
 install="$pkgname.install"
-source=("http://download.kde.org/stable/kdevelop/$pkgver/src/$pkgname-$pkgver.tar.xz"{,.sig})
+source=("http://download.kde.org/stable/kdevelop/$pkgver/src/$pkgname-$pkgver.tar.xz"{,.asc})
 sha256sums=("`grep ${pkgname}-${pkgver}.tar.xz  ../kdevelop.checksums | cut -d " " -f1`"
             'SKIP')
 validpgpkeys=('329FD02C5AA48FCC77A4BBF0AC44AC6DB29779E6')
