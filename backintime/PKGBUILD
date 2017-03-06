@@ -1,20 +1,20 @@
 pkgname=backintime
-pkgver=1.1.12
+pkgver=1.1.14
 pkgrel=1
 pkgdesc="A simple backup system for Linux inspired from 'flyback project' and 'TimeVault'."
 arch=('x86_64')
-url="https://launchpad.net/backintime"
+url="https://github.com/bit-team/backintime"
 license="GPL"
-depends=('rsync' 'cron' 'python3' 'xorg-utils' 'python3-pyqt4' 'python3-keyring' 'icu' 'polkit'
-	 'openssh' 'python3-dbus' 'libnotify')
+depends=('rsync' 'cron' 'openssh' 'xorg-utils' 'icu' 'polkit' 'libnotify' 'python3' 'python3-pyqt4' 'python3-dbus' 'python3-keyring')
+optdepends=('kompare: diff/patch frontend')
 categories=('utils' 'backup')
 provides=('backintime-kde')
 conflicts=('backintime-kde')
 replaces=('backintime-kde')
-source=("https://launchpad.net/backintime/1.1/${pkgver}/+download/backintime-${pkgver}.tar.gz"
+source=("${pkgname}-${pkgver}.tar.gz::https://github.com/bit-team/backintime/archive/v$pkgver.tar.gz"
 	"${pkgname}.png")
-sha512sums=('e1dc3e3d2bac8b0f390898029978e806128ffd6005471a7e8a697c44f9e271f9902b496b33b037133f9a509f4ca3f8b8f10adf681b670ec9a1a751dfc786cb62'
-            '596dc61d734877baa1fcf8af1afd910581dbe4670517a74229f850b284eb135e11b7bb09963521379c3513e736d183258fc142f246cd74a680c759f0bfa4a382')
+sha256sums=('d97e1446434afc4694677fcb278fe84f9757f1ff62dcf71c5e9922ce0202f2b7'
+            '984fd92d327d5939151cada4496e9fdff0d7b0a34e4e8653b43fa2350e9bdeea')
 
 build() {
  
