@@ -4,7 +4,7 @@ source ../kdeapps.conf
 pkgname=chakra-common
 arch=('x86_64')
 pkgver=${_kdever}
-pkgrel=1
+pkgrel=2
 pkgdesc="Common configuration files, scripts and artwork"
 url="http://www.chakraos.org"
 license=('GPL' 'BSD')
@@ -17,7 +17,7 @@ depends=("qt5-base"
          'glibc>=2.15'
          'python3'  'python3-jinja' 'python3-pyelftools' 'python3-tqdm')
 install=chakra-common.install
-source=('https://dl.opendesktop.org/api/files/download/id/1466046059/48411-rootactions_servicemenu_2.9.tar.gz'
+source=('https://dl.opendesktop.org/api/files/download/id/1485341541/rootactions_servicemenu_2.9.1.tar.gz'
         'servicemenu-copy-path.desktop'
         #'http://www.kde-apps.org/CONTENT/content-files/102825-compressattach.desktop.bz2'
         'servicemenu-rootactions.patch'
@@ -46,7 +46,7 @@ source=('https://dl.opendesktop.org/api/files/download/id/1466046059/48411-roota
         'chakra-check-links.py::https://raw.githubusercontent.com/Inkane/listMissingLibs/master/list_missing_libs.py')
         # skipping chakra-paste because gitorious has issues with wget
 #        'https://gitorious.org/chakra-paste/chakra-paste/archive/05f0a884a4de1460309ee95d678eb034c4c964b5.tar.gz'
-sha256sums=('0fd5653d11623648286e911631d6b82a45eb2db0f5a341b46289910b12c3abcc'
+sha256sums=('8c02e552d6d18246235e3141eebd02b125fad15717660dfa231b629a14837f65'
             '2bf00472d9b50bc9befcf9cdca92a1a6d31690287de330e6390ca65c17aba02e'
             'ba4b1f429bd6900f6989df6e50b69fea38110ccb4a304a903de6e291d0af8b74'
             '90626407c3e9e1ae433c0923a11a117e2f37c42b0102c2f48b91a4f5451106ea'
@@ -102,7 +102,7 @@ package() {
     install -D -m755 -o root -g root ${srcdir}/updates.conf ${pkgdir}/etc/chakra/updates.conf
 
     # Install root actions
-    cd ${srcdir}/rootactions_servicemenu_2.9/Root_Actions_2.9/
+    cd ${srcdir}/rootactions_servicemenu_2.9.1/Root_Actions_2.9.1/
     install -dm755 ${pkgdir}/usr/share/kservices5/ServiceMenus/
     install -Dm755 dolphin-KDE4/*.desktop ${pkgdir}/usr/share/kservices5/ServiceMenus/
     install -Dm644 krusader-KDE4/krusader_rootactions.xml "$pkgdir"/usr/share/apps/krusader/krusader_rootactions.xml
