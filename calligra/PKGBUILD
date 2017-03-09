@@ -1,226 +1,63 @@
 pkgbase=calligra
-pkgname=('calligra-braindump'
-         'calligra-devtools'
-         'calligra-extras'
-         'calligra-flow'
-         'calligra-gemini'
-         'calligra-handbook'
-         'calligra-karbon'
-         'calligra-kexi'
-         'calligra-libs'
+pkgname=('calligra-karbon'
          'calligra-plan'
          'calligra-sheets'
-         'calligra-stage'
-         'calligra-words')
-pkgver=2.9.11
-pkgrel=5
+         'calligra-words'
+         'calligra-common')
+pkgver=3.0.0
+pkgrel=1
 arch=('x86_64')
 url='http://www.calligra.org'
 screenshot=("http://upload.wikimedia.org/wikipedia/commons/thumb/3/3e/Calligra_Stage_2.4.png/800px-Calligra_Stage_2.4.png")
-license=('FDL1.2'
-         'GPL2'
-         'LGPL')
-makedepends=('automoc4'
-             'boost'
-             'cmake'
-             'create-resources'
-             'docbook-xsl'
-             'eigen3'
-             'fftw'
-             'freetds'
-             'glew'
-             'gsl'
-             'icu'
-             'kdelibs'
-             'lcms2'
-             'libdmtx'
-             'libetonyek'
-             'libgit2'
-             'libgsf'
-             'libkdcraw'
-             'libmarble4'
-             'libmariadbclient'
-             'libodfgen'
-             'libpqxx'
-             'libspnav'
-             'libvisio'
-             'libwpd'
-             'libwpg'
-             'libwps'
-             'openjpeg'
-             'postgresql'
-             'pstoedit'
-             'qrencode'
-             'xbase')
+license=('FDL1.2' 'GPL2' 'LGPL')
+makedepends=('extra-cmake-modules' 'kdoctools' 'python3' 'kdesignerplugin' 'khtml' 'boost' 'openjpeg'
+             'libwpg' 'okular' 'eigen3' 'marble' 'pstoedit' 'libvisio' 'libetonyek' 'libodfgen' 'libwps' 'vc'
+             'kcmutils' 'knotifyconfig' 'kross' 'ktexteditor' 'threadweaver' 'kactivities' 'kdiagram' 'kreport' 'libspnav'
+             'gsl' 'openexr' 'kcontacts' 'kcalcore' 'qca-qt5' 'poppler-qt5' 'libodfgen' 'qt5-webkit' 'cauchy')
 options=("debug")
 groups=('calligra')
-source=("http://download.kde.org/stable/${pkgbase}-${pkgver}/${pkgbase}-${pkgver}.tar.xz"
-        'libwps-0.4.patch')
-md5sums=('a1a4935debae64724cd4c0d17d61ae4e'
-         '6ea15f8b3938838d89ea0aa08921afd1')
+source=("http://download.kde.org/stable/${pkgbase}-${pkgver}/${pkgbase}-${pkgver}.tar.gz")
+md5sums=('e1380e00acb92db59d4a24ee856acaa9')
+
+prepare() {
+    mkdir -p "${srcdir}"/build
+    mkdir -p "${srcdir}"/fakeinstall
+}
 
 build() {
-    # Fix build against libwps 0.4
-    cd $pkgbase-$pkgver
-    patch -p1 -i "$srcdir"/libwps-0.4.patch
-    
-    # Fix build against libmarble4
-    sed -e 's|PATH_SUFFIXES marble|PATH_SUFFIXES marble4|g' -i CMakeLists.txt
-    sed -e 's|#include <marble/|#include <marble4/|g' -e 's|#include "marble/|#include "marble4/|g' \
-    -i plugins/reporting/maps/{*.cpp,*.h,marble/*.h} -i kexi/plugins/forms/widgets/mapbrowser/{*.cpp,*.h}
-    
-    cd "${srcdir}"
-    mkdir -p build && cd build
-    
+    cd build
     cmake "../${pkgbase}-${pkgver}" \
         -DCMAKE_BUILD_TYPE=RelWithDebInfo \
         -DCMAKE_INSTALL_PREFIX=/usr \
-        -DCMAKE_INSTALL_LIBDIR=lib \
-        -DBUILD_active=OFF \
-        -DWITH_Soprano=OFF \
-        -DBUILD_KRITA=OFF \
-        -DMARBLE_INCLUDE_DIR=/usr/include/marble4 \
-        -DMARBLE_GLOBAL_HEADER=/usr/include/marble4/MarbleGlobal.h \
-        -DMARBLE_LIBRARIES=/usr/lib/libmarblewidget.so
-    make
-}
-
-package_calligra-braindump() {
-    pkgdesc="Notetaking and mindmapping application"
-    depends=('calligra-libs'
-             'kde-runtime')
-    categories=('office')
-    install=calligra-braindump.install
-
-    cd build/braindump
-    make DESTDIR="${pkgdir}" install
-}
-
-package_calligra-devtools() {
-    pkgdesc="Developer utilities for Calligra"
-    depends=('calligra-libs')
-
-    cd build/devtools
-    make DESTDIR="${pkgdir}" install
-}
-
-package_calligra-extras() {
-    pkgdesc="User utilities for Calligra"
-    depends=('calligra-libs')
-    conflicts=('calligra-templates')
-    replaces=('calligra-templates')
-    install=calligra-extras.install
-
-    cd build/extras
-    make DESTDIR="${pkgdir}" install
-}
-
-package_calligra-flow() {
-    pkgdesc="Flowchart drawing application"
-    depends=('calligra-words'
-             'kde-runtime')
-    optdepends=('calligra-karbon: to export the charts in various formats')
-    install=calligra-flow.install
-    categories=('office')
-
-    cd build/flow
-    make DESTDIR="${pkgdir}" install
-}
-
-package_calligra-gemini() {
-  pkgdesc="QML interface for Calligra Words and Stage"
-  depends=('calligra-words' 'calligra-stage')
-  install=calligra-gemini.install
-
-  cd build/qtquick
-  make DESTDIR="${pkgdir}" install
-  cd "${srcdir}"/build/gemini
-  make DESTDIR="${pkgdir}" install
-}
-
-package_calligra-handbook() {
-    pkgdesc="Documentation for Calligra"
-    options=('docs')
-    categories=('documentation')
-
-    cd build/doc/calligra
-    make DESTDIR="${pkgdir}" install
+        -DCMAKE_INSTALL_LIBDIR=lib
+    make DESTDIR="$srcdir/fakeinstall" install
+    # fakeinstall for preparation of split packages
 }
 
 package_calligra-karbon() {
     pkgdesc="Vector graphics editor"
-    depends=('calligra-libs'
+    depends=('calligra-common'
              'hicolor-icon-theme'
              'pstoedit')
     optdepends=('calligra-extras: extra Calligra utilities')
     provides=('karbon')
     categories=('graphics')
     install=calligra-karbon.install
-
-    cd build/karbon
-    make DESTDIR="${pkgdir}" install
-}
-
-package_calligra-kexi() {
-    pkgdesc="Visual database management frontend"
-    depends=('calligra-libs'
-             'fftw'
-             'glew'
-             'icu'
-             'sqlite3')
-    optdepends=('calligra-sheets'
-                'freetds'
-                'libmarble4'
-                'libmariadbclient'
-                'libpqxx'
-                'xbase')
-    provides=('kexi')
-    categories=('office')
-    install=calligra-kexi.install
-
-    cd build/kexi
-    make DESTDIR="${pkgdir}" install
-    cd ../doc/kexi
-    make DESTDIR="${pkgdir}" install
-}
-
-package_calligra-libs() {
-    pkgdesc="Libraries for Calligra"
-    depends=('create-resources'
-             'icu'
-             'libkactivities4'
-             'libmarble4'
-             'lcms2'
-             'libspnav'
-             'libvisio'
-             'libodfgen')
-    optdepends=('libetonyek: Apple Keynote document importer'
-                'libgsf: Microsoft Word document importer'
-                'libkdcraw: support for raw images'
-                'libvisio: Microsoft Visio document importer'
-                'libwpg: Corel WordPerfect Graphics image importer'
-                'libwps: Microsoft Works document importer'
-                'pstoedit: Karbon EPS import filter')
-    conflicts=('calligra-3rdparty'
-               'calligra-data'
-               'calligra-filters'
-               'calligra-interfaces'
-               'calligra-pics'
-               'calligra-plugins'
-               'calligra-servicetypes')
-    replaces=('calligra-3rdparty'
-              'calligra-data'
-              'calligra-filters'
-              'calligra-interfaces'
-              'calligra-pics'
-              'calligra-plugins'
-              'calligra-servicetypes')
-    install=calligra-libs.install
-
-    for d in 3rdparty data filters interfaces libs pics plugins servicetypes; do
-        cd "${srcdir}"/build/${d}
-        make DESTDIR="${pkgdir}" install
-    done
+    
+    install -dm755 $pkgdir/{etc/xdg,usr/{bin,lib/qt5/plugins/calligra/parts,share/{applications,kservices5/ServiceMenus/calligra,metainfo,templates,kxmlgui5}}}
+    
+    cd $srcdir/fakeinstall
+    mv -v {,$pkgdir/}etc/xdg/karbonrc
+    mv -v {,$pkgdir/}usr/bin/karbon
+    mv -v {,$pkgdir/}usr/lib/qt5/plugins/karbon
+    mv -v {,$pkgdir/}usr/lib/qt5/plugins/calligra/parts/karbonpart.so
+    mv -v {,$pkgdir/}usr/share/applications/org.kde.karbon.desktop
+    mv -v {,$pkgdir/}usr/share/karbon
+    mv -v {,$pkgdir/}usr/share/templates/Illustration.desktop
+    mv -v {,$pkgdir/}usr/share/metainfo/org.kde.karbon.appdata.xml
+    mv -v usr/share/kservices5/karbon* $pkgdir/usr/share/kservices5
+    mv -v {,$pkgdir/}usr/share/kservices5/ServiceMenus/calligra/karbon_print.desktop
+    mv -v {,$pkgdir/}usr/share/kxmlgui5/karbon
 }
 
 package_calligra-plan() {
@@ -229,43 +66,116 @@ package_calligra-plan() {
              'hicolor-icon-theme'
              'calligra-libs')
     categories=('office')
+    provides=('plan')
     install=calligra-plan.install
-
-    cd build/plan
-    make DESTDIR="${pkgdir}" install
+    
+    install -dm755 $pkgdir/{etc/xdg,usr/{bin,lib/qt5/plugins/calligra/parts,share/{applications,kservices5/ServiceMenus/calligra,metainfo,templates,config.kcfg,kxmlgui5}}}
+    
+    cd $srcdir/fakeinstall
+    mv -v etc/xdg/calligraplan* $pkgdir/etc/xdg
+    mv -v usr/bin/calligraplan* $pkgdir/usr/bin/
+    mv -v {,$pkgdir/}usr/lib/qt5/plugins/calligraplan
+    mv -v {,$pkgdir/}usr/lib/qt5/plugins/calligra/parts/calligraplanpart.so
+    mv -v {,$pkgdir/}usr/lib/qt5/plugins/calligraplanworkpart.so
+    mv -v usr/share/applications/org.kde.calligraplan* $pkgdir/usr/share/applications/
+    mv -v usr/share/calligraplan* $pkgdir/usr/share/
+    mv -v {,$pkgdir/}usr/share/metainfo/org.kde.calligraplan.appdata.xml
+    mv -v usr/share/config.kcfg/calligraplan* $pkgdir/usr/share/config.kcfg/
+    mv -v usr/share/kxmlgui5/calligraplan* $pkgdir/usr/share/kxmlgui5/
 }
 
 package_calligra-sheets() {
     pkgdesc="Spreadsheet application"
-    depends=('calligra-libs'
+    depends=('calligra-common'
              'gsl'
-             'hicolor-icon-theme'
-             'kde-runtime')
+             'hicolor-icon-theme')
     categories=('office')
     install=calligra-sheets.install
-
-    cd build/sheets
-    make DESTDIR="${pkgdir}" install
+    
+    install -dm755 $pkgdir/{etc/xdg,usr/{bin,lib/qt5/plugins/calligra/parts,share/{applications,kservices5/ServiceMenus/calligra,metainfo,templates,config.kcfg,kxmlgui5}}}
+    
+    cd $srcdir/fakeinstall
+    mv -v {,$pkgdir/}etc/xdg/calligrasheetsrc
+    mv -v {,$pkgdir/}usr/bin/calligrasheets
+    mv -v {,$pkgdir/}usr/lib/qt5/plugins/calligrasheets
+    mv -v {,$pkgdir/}usr/lib/qt5/plugins/calligra/parts/calligrasheetspart.so
+    mv -v {,$pkgdir/}usr/share/applications/org.kde.calligrasheets.desktop
+    mv -v {,$pkgdir/}usr/share/calligrasheets
+    mv -v {,$pkgdir/}usr/share/templates/SpreadSheet.desktop
+    mv -v {,$pkgdir/}usr/share/metainfo/org.kde.calligrasheets.appdata.xml
+    mv -v usr/share/kservices5/sheets* $pkgdir/usr/share/kservices5
+    mv -v {,$pkgdir/}usr/share/kservices5/ServiceMenus/calligra/sheets_print.desktop
+    mv -v {,$pkgdir/}usr/share/config.kcfg/calligrasheets.kcfg
+    mv -v {,$pkgdir/}usr/share/kxmlgui5/calligrasheets
 }
 
 package_calligra-stage() {
     pkgdesc="Presentation application"
-    depends=('calligra-libs'
+    depends=('calligra-common'
              'hicolor-icon-theme')
     categories=('office')
     install=calligra-stage.install
-
-    cd build/stage
-    make DESTDIR="${pkgdir}" install
+    
+    install -dm755 $pkgdir/{etc/xdg,usr/{bin,lib/qt5/plugins/calligra/parts,share/{applications,kservices5/ServiceMenus/calligra,metainfo,templates,kxmlgui5}}}
+    
+    cd $srcdir/fakeinstall
+    mv -v {,$pkgdir/}etc/xdg/calligrastagerc
+    mv -v usr/bin/cst* $pkgdir/usr/bin
+    mv -v {,$pkgdir/}usr/lib/qt5/plugins/calligrastage
+    mv -v {,$pkgdir/}usr/lib/qt5/plugins/calligra/parts/calligrastagepart.so
+    mv -v {,$pkgdir/}usr/share/calligrastage
+    mv -v {,$pkgdir/}usr/share/templates/Presentation.desktop
+    mv -v {,$pkgdir/}usr/share/metainfo/org.kde.calligrawords.appdata.xml
+    mv -v usr/share/kservices5/stage* $pkgdir/usr/share/kservices5
+    mv -v {,$pkgdir/}usr/share/kxmlgui5/calligrastage
 }
 
 package_calligra-words() {
     pkgdesc="Word processor"
-    depends=('calligra-libs'
+    depends=('calligra-common'
              'hicolor-icon-theme')
     categories=('office')
     install=calligra-words.install
+    
+    install -dm755 $pkgdir/{etc/xdg,usr/{bin,lib/qt5/plugins/calligra/parts,share/{applications,kservices5/ServiceMenus/calligra,metainfo,templates,kxmlgui5}}}
+    
+    cd $srcdir/fakeinstall
+    mv -v {,$pkgdir/}etc/xdg/calligrawordsrc
+    mv -v {,$pkgdir/}usr/bin/calligrawords
+    mv -v {,$pkgdir/}usr/lib/qt5/plugins/calligra/parts/calligrawordspart.so
+    mv -v {,$pkgdir/}usr/share/applications/org.kde.calligrawords_ascii.desktop
+    mv -v {,$pkgdir/}usr/share/applications/org.kde.calligrawords.desktop
+    mv -v {,$pkgdir/}usr/share/calligrawords
+    mv -v {,$pkgdir/}usr/share/templates/TextDocument.desktop
+    mv -v {,$pkgdir/}usr/share/metainfo/org.kde.calligrawords.appdata.xml
+    mv -v usr/share/kservices5/words* $pkgdir/usr/share/kservices5
+    mv -v {,$pkgdir/}usr/share/kservices5/ServiceMenus/calligra/words_print.desktop
+    mv -v {,$pkgdir/}usr/share/kxmlgui5/calligrawords
+}
 
-    cd build/words
-    make DESTDIR="${pkgdir}" install
+package_calligra-common() {
+    pkgdesc="Common files for Calligra"
+    depends=('create-resources'
+             'icu'
+             'libkactivities4'
+             'libmarble4'
+             'lcms2'
+             'libspnav'
+             'libvisio'
+             'libodfgen')
+    replaces=($pkgbase-libs calligra-extras)
+    conflicts=($pkgbase-libs calligra-extras)
+    options=('!emptydirs')
+    optdepends=('libetonyek: Apple Keynote document importer'
+                'libgsf: Microsoft Word document importer'
+                'libkdcraw: support for raw images'
+                'libvisio: Microsoft Visio document importer'
+                'libwpg: Corel WordPerfect Graphics image importer'
+                'libwps: Microsoft Works document importer'
+                'pstoedit: Karbon EPS import filter')
+    install=calligra-libs.install
+
+    for d in etc usr ; do
+        mv $srcdir/fakeinstall/$d $pkgdir
+    done
 }
