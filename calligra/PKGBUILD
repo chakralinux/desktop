@@ -1,11 +1,12 @@
 pkgbase=calligra
 pkgname=('calligra-karbon'
          'calligra-plan'
+         'calligra-stage'
          'calligra-sheets'
          'calligra-words'
          'calligra-common')
 pkgver=3.0.0
-pkgrel=1
+pkgrel=2
 arch=('x86_64')
 url='http://www.calligra.org'
 screenshot=("http://upload.wikimedia.org/wikipedia/commons/thumb/3/3e/Calligra_Stage_2.4.png/800px-Calligra_Stage_2.4.png")
@@ -120,12 +121,11 @@ package_calligra-stage() {
     
     cd $srcdir/fakeinstall
     mv -v {,$pkgdir/}etc/xdg/calligrastagerc
-    mv -v usr/bin/cst* $pkgdir/usr/bin
+#    mv -v usr/bin/cst* $pkgdir/usr/bin
     mv -v {,$pkgdir/}usr/lib/qt5/plugins/calligrastage
     mv -v {,$pkgdir/}usr/lib/qt5/plugins/calligra/parts/calligrastagepart.so
     mv -v {,$pkgdir/}usr/share/calligrastage
     mv -v {,$pkgdir/}usr/share/templates/Presentation.desktop
-    mv -v {,$pkgdir/}usr/share/metainfo/org.kde.calligrawords.appdata.xml
     mv -v usr/share/kservices5/stage* $pkgdir/usr/share/kservices5
     mv -v {,$pkgdir/}usr/share/kxmlgui5/calligrastage
 }
@@ -155,17 +155,16 @@ package_calligra-words() {
 
 package_calligra-common() {
     pkgdesc="Common files for Calligra"
-    depends=('create-resources'
-             'icu'
-             'libkactivities4'
-             'libmarble4'
+    depends=('icu'
+             'kactivities'
+             'marble'
              'lcms2'
              'libspnav'
              'libvisio'
-             'libodfgen')
-    replaces=($pkgbase-libs calligra-extras)
-    conflicts=($pkgbase-libs calligra-extras)
-    options=('!emptydirs')
+             'libodfgen' 'poppler-qt5')
+    replaces=($pkgbase-{libs,extras,handbook,devtools,gemini})
+    conflicts=($pkgbase-{libs,extras,handbook,devtools,gemini})
+    options=('!emptydirs' 'docs')
     optdepends=('libetonyek: Apple Keynote document importer'
                 'libgsf: Microsoft Word document importer'
                 'libkdcraw: support for raw images'
@@ -173,7 +172,7 @@ package_calligra-common() {
                 'libwpg: Corel WordPerfect Graphics image importer'
                 'libwps: Microsoft Works document importer'
                 'pstoedit: Karbon EPS import filter')
-    install=calligra-libs.install
+    install=calligra.install
 
     for d in etc usr ; do
         mv $srcdir/fakeinstall/$d $pkgdir
