@@ -1,10 +1,12 @@
---- VirtualBox-5.1.2/configure.orig	2016-07-21 23:15:11.118121629 +0100
-+++ VirtualBox-5.1.2/configure	2016-07-21 23:17:07.133529084 +0100
-@@ -1691,6 +1691,7 @@
+--- VirtualBox-5.1.16/configure.orig	2017-03-09 01:15:08.000000000 +0800
++++ VirtualBox-5.1.16/configure	2017-03-09 18:07:33.075191237 +0800
+@@ -1694,8 +1694,7 @@
          if [ $? -eq 0 ]; then
            echo "(Qt5 from pkg-config)" >> $LOG
            FLGQT5=`pkg-config Qt5Core --cflags`
-+          FLGQT5="-std=gnu++11 $FLGQT5"
+-          # gcc 4.8 is able to compile with C++11 (see also VBOX_GCC_std in Config.kmk)
+-          [ $cc_maj -eq 4 -a $cc_min -eq 8 ] && FLGQT5="$FLGQT5 -std=c++11"
++          FLGQT5="$FLGQT5 -std=c++11"
            INCQT5=`strip_I "$FLGQT5"`
            LIBDIR5=`pkg-config Qt5Core --variable=libdir`
            LIBQT5=`pkg-config Qt5Core --libs`
