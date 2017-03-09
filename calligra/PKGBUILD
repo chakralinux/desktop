@@ -6,7 +6,7 @@ pkgname=('calligra-karbon'
          'calligra-words'
          'calligra-common')
 pkgver=3.0.0
-pkgrel=2
+pkgrel=3
 arch=('x86_64')
 url='http://www.calligra.org'
 screenshot=("http://upload.wikimedia.org/wikipedia/commons/thumb/3/3e/Calligra_Stage_2.4.png/800px-Calligra_Stage_2.4.png")
@@ -44,9 +44,9 @@ package_calligra-karbon() {
     provides=('karbon')
     categories=('graphics')
     install=calligra-karbon.install
-    
+
     install -dm755 $pkgdir/{etc/xdg,usr/{bin,lib/qt5/plugins/calligra/parts,share/{applications,kservices5/ServiceMenus/calligra,metainfo,templates,kxmlgui5}}}
-    
+
     cd $srcdir/fakeinstall
     mv -v {,$pkgdir/}etc/xdg/karbonrc
     mv -v {,$pkgdir/}usr/bin/karbon
@@ -63,15 +63,12 @@ package_calligra-karbon() {
 
 package_calligra-plan() {
     pkgdesc="Project management application"
-    depends=('calligra-words'
-             'hicolor-icon-theme'
-             'calligra-libs')
+    depends=('calligra-words' 'hicolor-icon-theme' 'calligra-common')
     categories=('office')
-    provides=('plan')
     install=calligra-plan.install
-    
+
     install -dm755 $pkgdir/{etc/xdg,usr/{bin,lib/qt5/plugins/calligra/parts,share/{applications,kservices5/ServiceMenus/calligra,metainfo,templates,config.kcfg,kxmlgui5}}}
-    
+
     cd $srcdir/fakeinstall
     mv -v etc/xdg/calligraplan* $pkgdir/etc/xdg
     mv -v usr/bin/calligraplan* $pkgdir/usr/bin/
@@ -92,9 +89,9 @@ package_calligra-sheets() {
              'hicolor-icon-theme')
     categories=('office')
     install=calligra-sheets.install
-    
+
     install -dm755 $pkgdir/{etc/xdg,usr/{bin,lib/qt5/plugins/calligra/parts,share/{applications,kservices5/ServiceMenus/calligra,metainfo,templates,config.kcfg,kxmlgui5}}}
-    
+
     cd $srcdir/fakeinstall
     mv -v {,$pkgdir/}etc/xdg/calligrasheetsrc
     mv -v {,$pkgdir/}usr/bin/calligrasheets
@@ -116,9 +113,9 @@ package_calligra-stage() {
              'hicolor-icon-theme')
     categories=('office')
     install=calligra-stage.install
-    
+
     install -dm755 $pkgdir/{etc/xdg,usr/{bin,lib/qt5/plugins/calligra/parts,share/{applications,kservices5/ServiceMenus/calligra,metainfo,templates,kxmlgui5}}}
-    
+
     cd $srcdir/fakeinstall
     mv -v {,$pkgdir/}etc/xdg/calligrastagerc
 #    mv -v usr/bin/cst* $pkgdir/usr/bin
@@ -136,9 +133,9 @@ package_calligra-words() {
              'hicolor-icon-theme')
     categories=('office')
     install=calligra-words.install
-    
+
     install -dm755 $pkgdir/{etc/xdg,usr/{bin,lib/qt5/plugins/calligra/parts,share/{applications,kservices5/ServiceMenus/calligra,metainfo,templates,kxmlgui5}}}
-    
+
     cd $srcdir/fakeinstall
     mv -v {,$pkgdir/}etc/xdg/calligrawordsrc
     mv -v {,$pkgdir/}usr/bin/calligrawords
@@ -162,8 +159,8 @@ package_calligra-common() {
              'libspnav'
              'libvisio'
              'libodfgen' 'poppler-qt5')
-    replaces=($pkgbase-{libs,extras,handbook,devtools,gemini})
-    conflicts=($pkgbase-{libs,extras,handbook,devtools,gemini})
+    replaces=($pkgbase-{libs,extras,handbook,devtools,gemini,braindump})
+    conflicts=($pkgbase-{libs,extras,handbook,devtools,gemini,braindump})
     options=('!emptydirs' 'docs')
     optdepends=('libetonyek: Apple Keynote document importer'
                 'libgsf: Microsoft Word document importer'
