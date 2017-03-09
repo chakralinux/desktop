@@ -1,0 +1,46 @@
+# Maintainer: AlmAck <almack@chakralinux.org>
+
+pkgname=kapudan
+pkgver=2017.03.01
+pkgrel=1
+pkgdesc="Chakra's desktop greeter, a fork of Pardus's Kaptan."
+arch=('x86_64')
+url='https://chakralinux.org/code/kapudan.git'
+screenshot='http://i.imgur.com/71aU5.png'
+license=('GPLv2')
+conflicts=('kapudan-git')
+depends=('python3'  'konsole'  'kde-runtime'
+         'python3-pyqt5'  'python3-xlib' 'xdg-user-dirs' 'ksuperkey')
+makedepends=('python3-setuptools' 'git')
+optdepends=('octopi-notifier: update notifications'
+            'clamav: for the security page')
+source=("${pkgname}-${pkgver}.tar.xz")
+md5sums=('1c3f53466438f0b5d094f84b290141b2')
+
+# create tarball: source PKGBUILD && mksource
+
+mksource() {
+    git clone -b "kf5" http://gitlab.chakralinux.org/AlmAck/${pkgname}.git ${pkgname}
+    pushd ${pkgname}
+    popd
+    #rm ${pkgname}/PKGBUILD
+    tar -cvJf ${pkgname}-${pkgver}.tar.xz ${pkgname}
+    md5sum ${pkgname}-${pkgver}.tar.xz
+}
+
+package() {
+    cd "${srcdir}/${pkgname}"
+    python2 setup.py install --root="${pkgdir}"
+    install -Dm755 kapudan-rootactions "${pkgdir}/usr/bin/kapudan-rootactions"
+    install -Dm755 kapudan.desktop "${pkgdir}/usr/share/applications/kapudan.desktop"
+    install -Dm644 data/kapudan.svgz \
+        "${pkgdir}/usr/share/icons/hicolor/scalable/apps/kapudan.svgz"
+    install -dm755 \
+        "${pkgdir}/usr/share/apps/kapudan/kapudan/kde-themes/"
+    install -Dm644 data/kde-themes/* \
+        "${pkgdir}/usr/share/apps/kapudan/kapudan/kde-themes/"
+    install -Dm755 kapudan-autostart.desktop \
+        "${pkgdir}/usr/share/apps/kapudan/kapudan/kapudan-autostart.desktop"
+    #install -Dm755 data/ksuperkey.desktop \
+    #    "${pkgdir}/usr/share/apps/kapudan/kapudan/ksuperkey.desktop"
+}
