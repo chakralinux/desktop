@@ -14,15 +14,15 @@ pkgname=('libreoffice-common'
 	'libreoffice-postgresql-connector'
 	'libreoffice-extension-wiki-publisher'
 	'libreoffice-extension-nlpsolver')
-_LOver=5.3.0.1
-pkgver=5.3.0
+_LOver=5.3.1.1
+pkgver=5.3.1
 pkgrel=1
 arch=('x86_64')
 license=('LGPL3')
 url="http://www.libreoffice.org/"
 screenshot="http://wstaw.org/m/2012/04/20/libre2.png"
 makedepends=( # makedepends
-             'sane' 'perl-archive-zip' 'zip' 'unzip' 'unixodbc' 'gtk3' 'gtk2'
+             'sane' 'perl-archive-zip' 'zip' 'unzip' 'unixodbc' 'gtk3' 'gtk2' 'gobject-introspection'
              'apache-ant' 'gperf' 'poppler' 'kdelibs' 'cppunit' 'glu' 'libodfgen'
              'beanshell'  #'vigra'
              'libldap' 'libmythes' 'junit' 'libwpg' 'imagemagick' 'mdds'
@@ -87,11 +87,11 @@ source=(${_mirror}/libreoffice{,-help,-translations}-${_LOver}.tar.xz{,.asc}
         ${_additional_source_url}/libgltf/libgltf-0.0.2.tar.bz2
         make-pyuno-work-with-system-wide-module-install.diff)
 validpgpkeys=('C2839ECAD9408FBE9531C3E9F434A1EFAFEEAEA3') # LibreOffice Build Team (CODE SIGNING KEY) <build@documentfoundation.org>
-md5sums=('7a5ce10f24b2be2a4a98024f2b9adca4'
+md5sums=('c354b6dc5a64e07797087c5c9b4364c2'
          'SKIP'
-         '845852764add9ec4a115f2ad3430b296'
+         '9b2e698a1e9f41eedbaeff94e3f1f1dc'
          'SKIP'
-         '5a8f134ebb7fc61c0ada8f75d7dd7934'
+         '2957df3cca5c089149332a7630adbfd6'
          'SKIP'
          '65a840e1a0b13a558ff19eeb2c4f0cbe'
          '86b1daaa438f5a7bea9a52d7b9799ac0'
@@ -138,7 +138,7 @@ md5sums=('7a5ce10f24b2be2a4a98024f2b9adca4'
          '4b87018f7fff1d054939d19920b751a0'
          '4ca8a6ef0afeefc864e9ef21b9f14bd6'
          'd63a9f47ab048f5009d90693d6aa6424'
-         'fc6cc31a15f1a819e4fec11baf00a482')
+         '41fa5baa6d71d69b98de1fe258a6dd65')
 noextract=(
           boost_1_60_0.tar.bz2
           86b1daaa438f5a7bea9a52d7b9799ac0-xmlsec1-1.2.23.tar.gz
@@ -204,9 +204,6 @@ prepare() {
     rm ${srcdir}/ext_sources/185d60944ea767075d27247c3162b3bc-unowinreg.dll
     cp -f ${srcdir}/185d60944ea767075d27247c3162b3bc-unowinreg.dll ${srcdir}/ext_sources
    
-    # fix not upstreamable pyuno paths - patch taken from Debian
-    patch -Np1 -i ${srcdir}/make-pyuno-work-with-system-wide-module-install.diff
-    
     #use the CFLAGS but remove the LibO overridden ones
     for i in $CFLAGS; do
             case "$i" in
