@@ -1,12 +1,11 @@
 pkgbase=calligra
 pkgname=('calligra-karbon'
-         'calligra-plan'
-         'calligra-stage'
          'calligra-sheets'
+         'calligra-stage'
          'calligra-words'
          'calligra-common')
-pkgver=3.0.0
-pkgrel=3
+pkgver=3.0.0.1
+pkgrel=1
 arch=('x86_64')
 url='http://www.calligra.org'
 screenshot=("http://upload.wikimedia.org/wikipedia/commons/thumb/3/3e/Calligra_Stage_2.4.png/800px-Calligra_Stage_2.4.png")
@@ -17,12 +16,30 @@ makedepends=('extra-cmake-modules' 'kdoctools' 'python3' 'kdesignerplugin' 'khtm
              'gsl' 'openexr' 'kcontacts' 'kcalcore' 'qca-qt5' 'poppler-qt5' 'libodfgen' 'qt5-webkit' 'cauchy')
 options=("debug")
 groups=('calligra')
-source=("http://download.kde.org/stable/${pkgbase}-${pkgver}/${pkgbase}-${pkgver}.tar.gz")
-md5sums=('e1380e00acb92db59d4a24ee856acaa9')
+source=("http://download.kde.org/stable/${pkgbase}-${pkgver}/${pkgbase}-${pkgver}.tar.xz"{,.sig})
+sha256sums=('dedc51efc42f7dda37514d450cb772d9db37a658e0abbcf0f513712a04c1f011'
+            'SKIP')
+validpgpkeys=(05D00A8B73A686789E0A156858B9596C722EA3BD) # Boudewijn Rempt <foundation@krita.org>
+
+for _lang in bs ca ca@valencia cs da de el en_GB es et fi fr gl hu it ja kk nb nl \
+             pl pt pt_BR ru sk sv uk zh_CN zh_TW; do
+    _pkgname=calligra-l10n-$_lang
+    pkgname+=($_pkgname)
+    eval "package_$_pkgname() {
+    depends=(calligra-common)
+    _package $_lang
+  }"
+done
+
+_package() {
+    install -dm755 $pkgdir/usr/share/locale/
+    mv -v $srcdir/fakeinstall/usr/share/locale/$1 $pkgdir/usr/share/locale/
+}
 
 prepare() {
     mkdir -p "${srcdir}"/build
     mkdir -p "${srcdir}"/fakeinstall
+    mkdir -p "${srcidr}"/lang
 }
 
 build() {
@@ -31,8 +48,8 @@ build() {
         -DCMAKE_BUILD_TYPE=RelWithDebInfo \
         -DCMAKE_INSTALL_PREFIX=/usr \
         -DCMAKE_INSTALL_LIBDIR=lib
-    make DESTDIR="$srcdir/fakeinstall" install
     # fakeinstall for preparation of split packages
+    make DESTDIR="$srcdir/fakeinstall" install
 }
 
 package_calligra-karbon() {
@@ -171,7 +188,9 @@ package_calligra-common() {
                 'pstoedit: Karbon EPS import filter')
     install=calligra.install
 
-    for d in etc usr ; do
-        mv $srcdir/fakeinstall/$d $pkgdir
+    mv -v $srcdir/fakeinstall/etc $pkgdir
+    install -dm755 $pkgdir/usr/share
+    for dir in applications calligra calligra_shape_music color icons kservices5 mime; do
+      mv -v $srcdir/fakeinstall/usr/share/$dir $pkgdir/usr/share/
     done
 }
