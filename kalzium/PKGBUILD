@@ -14,19 +14,15 @@ conflicts=(kdeedu-kalzium)
 replaces=(kdeedu-kalzium)
 options=(docs debug)
 groups=(kde kde-uninstall kde-applications kdeedu)
-source=("$_mirror/${pkgname}-$_kdever.tar.xz"{,.sig}
-fno-operator-names.patch::https://cgit.kde.org/kalzium.git/patch/?id=04048799910fc423a5fa100a1c46b91dbe8e7e61)
+source=("$_mirror/${pkgname}-$_kdever.tar.xz"{,.sig})
 sha256sums=(`grep ${pkgname}-$_kdever.tar.xz  ../kdeapps.sums | cut -d " " -f1`
-                        'SKIP'
-                        '5bd740d544e726343d5e9628e20d3eab02b06755e042957566e4f596c0e73bbd')
+                        'SKIP')
 validpgpkeys=(${Avalidpgpkeys})
 
 prepare() {
   mkdir -p build
   
   cd ${pkgname}-${pkgver}
-  # https://cgit.kde.org/kalzium.git/patch/?id=04048799910fc423a5fa100a1c46b91dbe8e7e61
-  patch -Np1 -i "${srcdir}/fno-operator-names.patch"
 }
 
 build() {

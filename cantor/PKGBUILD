@@ -25,19 +25,15 @@ conflicts=('kdeedu-cantor')
 groups=('kde' 'kde-uninstall' 'kde-applications' 'kdeedu')
 options=('docs' 'debug')
 install=${pkgname}.install
-source=("$_mirror/${pkgname}-$_kdever.tar.xz"{,.sig}
-fno-operator-names_cantor.patch::https://cgit.kde.org/cantor.git/patch/?id=4b8ef6bed62daced90c7826985650c2a813d2996)
+source=("$_mirror/${pkgname}-$_kdever.tar.xz"{,.sig})
 sha256sums=(`grep ${pkgname}-$_kdever.tar.xz  ../kdeapps.sums | cut -d " " -f1`
-                        'SKIP'
-                        '775ab4f099bdab34bff88d2f2bb6de9477ef68d1f5e062659b68d6a0718d7135')
+                        'SKIP')
 validpgpkeys=(${Avalidpgpkeys})
 
 prepare() {
   mkdir -p build
 
   cd ${pkgname}-${pkgver}
-  # https://cgit.kde.org/cantor.git/patch/?id=4b8ef6bed62daced90c7826985650c2a813d2996
-  patch -Np1 -i "${srcdir}/fno-operator-names_cantor.patch"
   
   # wait patch for julia, enable later when the operato names are fixed
 }
