@@ -5,7 +5,7 @@ pkgname=('calligra-karbon'
          'calligra-words'
          'calligra-common')
 pkgver=3.0.0.1
-pkgrel=1
+pkgrel=3
 arch=('x86_64')
 url='http://www.calligra.org'
 screenshot=("http://upload.wikimedia.org/wikipedia/commons/thumb/3/3e/Calligra_Stage_2.4.png/800px-Calligra_Stage_2.4.png")
@@ -22,7 +22,9 @@ sha256sums=('dedc51efc42f7dda37514d450cb772d9db37a658e0abbcf0f513712a04c1f011'
 validpgpkeys=(05D00A8B73A686789E0A156858B9596C722EA3BD) # Boudewijn Rempt <foundation@krita.org>
 
 for _lang in bs ca ca@valencia cs da de el en_GB es et fi fr gl hu it ja kk nb nl \
-             pl pt pt_BR ru sk sv uk zh_CN zh_TW; do
+             pl pt pt_BR ru sk sv uk zh_CN zh_TW af be cy fa he hr is ku mai mr ne pa sl tg ug vi \
+             ar bg eo fy hi hsb km lt mk ms nn ro sq th uz wa \
+             ast br eu ga hne ia ko lv ml nds oc se ta tr uz@cyrillic xh ; do
     _pkgname=calligra-l10n-$_lang
     pkgname+=($_pkgname)
     eval "package_$_pkgname() {
@@ -169,15 +171,10 @@ package_calligra-words() {
 
 package_calligra-common() {
     pkgdesc="Common files for Calligra"
-    depends=('icu'
-             'kactivities'
-             'marble'
-             'lcms2'
-             'libspnav'
-             'libvisio'
-             'libodfgen' 'poppler-qt5')
-    replaces=($pkgbase-{libs,extras,handbook,devtools,gemini,braindump})
-    conflicts=($pkgbase-{libs,extras,handbook,devtools,gemini,braindump})
+    depends=('kcmutils' 'knotifyconfig' 'kross' 'ktexteditor' 'threadweaver' 'kactivities' 'kdiagram' 'kreport' 'libspnav'
+             'openexr' 'kcontacts' 'kcalcore' 'qca-qt5' 'poppler-qt5' 'libodfgen' 'qt5-webkit' 'cauchy')
+    replaces=($pkgbase-{libs,extras,handbook,devtools,gemini,braindump,plan})
+    conflicts=($pkgbase-{libs,extras,handbook,devtools,gemini,braindump,plan})
     options=('!emptydirs' 'docs')
     optdepends=('libetonyek: Apple Keynote document importer'
                 'libgsf: Microsoft Word document importer'
@@ -193,4 +190,6 @@ package_calligra-common() {
     for dir in applications calligra calligra_shape_music color icons kservices5 mime; do
       mv -v $srcdir/fakeinstall/usr/share/$dir $pkgdir/usr/share/
     done
+    mv -v $srcdir/fakeinstall/usr/lib $pkgdir/usr/
+    mv -v $srcdir/fakeinstall/usr/bin $pkgdir/usr/
 }
