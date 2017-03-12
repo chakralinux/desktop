@@ -1,6 +1,6 @@
 pkgname=bomi
-pkgver=0.9.11
-pkgrel=2
+pkgver=0.9.11.r25.g90f18ff
+pkgrel=1
 pkgdesc="Powerful and easy-to-use multimedia player"
 arch=('x86_64')
 url="http://bomi-player.github.io"
@@ -20,25 +20,35 @@ optdepends=('libaacs: AACS decryption for Blu-ray support'
 provides=('cmplayer')
 replace=('cmplayer')
 conflicts=('cmplayer' 'bomi-git')
-source=(https://github.com/xylosper/bomi/archive/v$pkgver.tar.gz
-            'ffmpeg2.8.patch')
-md5sums=('543c592f588c68d6f0c3cf254c288f58'
-         '7bb39aea99bb5c0f6607cda44edc11ae')
+source=(git+https://github.com/xylosper/${pkgname}.git
+            'ffmpeg3.patch'
+            'qt5.6.patch')
+md5sums=('SKIP'
+         '2c005f32510aa504d1eb65f8c83323b3'
+         '44b2f48f40bffe6aa8070642031e5d35')
 
+pkgver() {
+    cd "$srcdir/$pkgname"
+    echo $(git describe --tags | sed -E 's/([^-]*-g)/r\1/;s/-/./g' | cut -c2-)
+}
 
 prepare() {
- cd "$srcdir/$pkgname-$pkgver"
+ cd "$srcdir/$pkgname"
  
- patch -Np0 -i "$srcdir/ffmpeg2.8.patch"
+ # https://github.com/d-s-x/bomi/commit/944c3e196229f144e97f285f69355ddfc3f7b579
+ patch -Np1 -i "$srcdir/ffmpeg3.patch" 
+ # https://github.com/d-s-x/bomi/commit/39ee4c372ffb98a4485b61a11726d39060bb2994
+ patch -Np1 -i "$srcdir/qt5.6.patch"
 }
 
 build() {
-  cd "$srcdir/$pkgname-$pkgver"
-    ./configure --prefix=/usr
+  cd "$srcdir/$pkgname"
+    ./configure --prefix=/usr \
+        --defaultskin=Breeze
   make
 }
 
 package() {
-  cd "$srcdir/$pkgname-$pkgver"
+  cd "$srcdir/$pkgname"
   make DEST_DIR=$pkgdir install
 }
