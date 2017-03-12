@@ -1,0 +1,29 @@
+pkgname=ocs-url
+pkgver=3.0.0
+pkgrel=1
+pkgdesc="An install helper program for items served on OpenCollaborationServices (OCS). Replacing xdgurl"
+arch=('x86_64')
+url="https://github.com/ocs-url/ocs-url"
+license=('GPL3')
+depends=('qt5-base>=5.3.0' 'qt5-svg>=5.3.0' 'qt5-declarative>=5.3.0' 'qt5-quickcontrols>=5.3.0')
+conflicts=('xdgurl')
+provides=('xdgurl')
+replaces=('xdgurl')
+source=("$pkgname-$pkgver::$url/archive/release-$pkgver.tar.gz")
+sha256sums=('3a858757af7989714b7bf6fb73253b1fc437ad6607c81e621767c76833647e4a')
+
+prepare() {
+    cd $pkgname-release-$pkgver
+    sh scripts/import.sh
+}
+
+build() {
+    cd "$pkgname-release-$pkgver"
+    qmake-qt5 PREFIX="/usr"
+    make
+}
+
+package() {
+    cd "$pkgname-release-$pkgver"
+    make INSTALL_ROOT="$pkgdir" install
+}
