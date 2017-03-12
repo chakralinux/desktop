@@ -1,11 +1,11 @@
 # Contributions from Arch: https://www.archlinux.org/packages/community/x86_64/blender/
 
 pkgname=blender
-pkgver=2.77a
+pkgver=2.78c
 _gittag=v${pkgver}
 #_gitcommit=c6b042be
 [[ -n ${_gitcommit} ]] && pkgver=${pkgver}.git1.${_gitcommit}
-pkgrel=2
+pkgrel=1
 epoch=2
 pkgdesc="A fully integrated 3D graphics creation suite"
 arch=('x86_64')
@@ -24,6 +24,7 @@ install=blender.install
 source=("git://git.blender.org/blender-addons.git"
         "git://git.blender.org/blender-addons-contrib.git"
         "git://git.blender.org/blender-translations.git"
+        "git://git.blender.org/blender-dev-tools.git"
         "git://git.blender.org/scons.git")
 if [[ -n $_gittag ]]; then
     source+=("${pkgname}-${pkgver}::git://git.blender.org/blender.git#tag=${_gittag}")
@@ -31,6 +32,9 @@ else
     source+=("${pkgname}-${pkgver}::git://git.blender.org/blender.git#commit=${_gitcommit}")
 fi
 sha256sums=('SKIP'
+            'SKIP'
+            'SKIP'
+            'SKIP'
             'SKIP'
             'SKIP')
 
@@ -41,6 +45,7 @@ prepare() {
   git config submodule."release/scripts/addons".url "${srcdir}/blender-addons"
   git config submodule."release/scripts/addons_contrib".url "${srcdir}/blender-addons-contrib"
   git config submodule."release/datafiles/locale".url "${srcdir}/blender-translations"
+  git config submodule."source/tools".url ${srcdir}/blender-dev-tools
   git config submodule."scons".url "${srcdir}/scons"
   git submodule update
 }
@@ -50,28 +55,20 @@ build() {
   
   mkdir -p build && cd build
   
-  cmake -C../build_files/cmake/config/blender_full.cmake .. \
+  cmake -C../build_files/cmake/config/blender_release.cmake .. \
     -DCMAKE_INSTALL_PREFIX=/usr \
     -DCMAKE_BUILD_TYPE=Release \
     -DWITH_INSTALL_PORTABLE=OFF \
     -DWITH_PYTHON_INSTALL=OFF \
-    -DWITH_SYSTEM_OPENJPEG=ON \
     -DOPENIMAGEIO_ROOT_DIR=/usr \
-    -DWITH_GAMEENGINE=ON \
-    -DWITH_JACK=ON \
-    -DWITH_PLAYER=ON \
-    -DWITH_CODEC_FFMPEG=ON \
-    -DWITH_CODEC_SNDFILE=ON \
-    -DWITH_CYCLES_OSL=ON \
-    -DWITH_CYCLES_CUDA_BINARIES=ON \
-    -DWITH_CYCLES_PTEX=ON \
-    -DWITH_OPENSUBDIV=ON \
+    -DWITH_SYSTEM_OPENJPEG=ON \
+    -DWITH_GL_PROFILE_CORE=OFF \
+    -DWITH_GL_PROFILE_ES20=OFF \
     -DWITH_LLVM=ON \
-    -DLLVM_VERSION=3.5 \
+    -DLLVM_VERSION=3.9 \
     -DLLVM_STATIC=OFF \
-    -DWITH_FFTW3=ON \
-    -DWITH_MOD_OCEANSIM=ON \
-    -DWITH_OPENCOLLADA=ON \
+    -DWITH_CYCLES_CUDA_BINARIES=ON \
+    -DWITH_CYCLES_PTEX=OFF \
     -DPYTHON_VERSION=3.5 \
     -DPYTHON_LIBPATH=/usr/lib \
     -DPYTHON_LIBRARY=python3.5m \

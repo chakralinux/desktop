@@ -4,14 +4,14 @@
 
 pkgname=k3b
 pkgver=2.0.3.a
-pkgrel=4
+pkgrel=5
 pkgdesc="Feature-rich and easy to handle CD burning application"
 arch=("x86_64")
 url="http://sourceforge.net/projects/k3b/"
 license=('GPL')
 depends=('kdebase-runtime' 'libkcddb4' 'libsamplerate' 'libmad'
          'ffmpeg' 'taglib' 'libmpcdec' 'libdvdread' 'cdrkit' 'libxft')
-makedepends=('cmake' 'automoc4' 'docbook-xml')
+makedepends=('cmake' 'automoc4' 'docbook-xml' 'docbook-xsl')
 optdepends=('dvd+rw-tools: for dvd burning support'
             'vcdimager: for vcd burning support'
             'transcode: for advanced mpeg conversion support'
@@ -20,13 +20,21 @@ optdepends=('dvd+rw-tools: for dvd burning support'
             'cdparanoia: for cd ripping support')
 categories=('multimedia')
 install=$pkgname.install
-source=("http://download.kde.org/stable/${pkgname}/${pkgname}-2.0.3a.tar.xz")
-sha256sums=('2d0bb2746802c1d3ad7ddd10e29234cf2053074f376feb200306a5570c39c081')
+source=("http://download.kde.org/stable/${pkgname}/${pkgname}-2.0.3a.tar.xz"
+             k3b-ffmpeg3.patch
+             k3b-no-webkit.patch)
+sha1sums=('f1001db3b5b32ef6bdb827742f1ca357c82b216f'
+          '8ee47b04e92499d484c49e33dd33dabdf53025c9'
+          '21a4446673ad48b326aaa010fdab539faaefcc51')
 
 prepare() {
   cd ${pkgname}-2.0.3
   # Workaround build failure with cmake 3.4
   sed -e "s|^cmake_minimum_required|#cmake_minimum_required|" -i CMakeLists.txt
+  # Fix build with ffmpeg 3.0 (Gentoo)
+  patch -p1 -i ../k3b-ffmpeg3.patch
+  # Remove qtwebkit usage (Fedora)
+  patch -p1 -i ../k3b-no-webkit.patch
 }
 
 build() {
