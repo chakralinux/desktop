@@ -1,29 +1,40 @@
 pkgname=qgis
-pkgver=2.18.0
+pkgver=2.18.4
 pkgrel=1
 pkgdesc='A Geographic Information System (GIS) that supports vector, raster and database formats'
 url='http://qgis.org/'
 license=('GPL')
 arch=('x86_64')
-depends=('bison' 'cfitsio' 'curl' 'flex' 'gdal' 'jasper' 'libmariadbclient' 'libspatialite' 'python2-pyspatialite' 'libxslt' 
-         'postgresql-libs' 'pyqt4-python2' 'python2' 'qscintilla-python2' 'python2-psycopg2'
-         'qca' 'qt' 'qwt6' 'spatialindex' 'sqlite3')
-makedepends=('cmake' 'fcgi' 'grass' 'gsl' 'netcdf' 'postgis' 'python2-sip')
+depends=('gcc-libs' 'glibc' 'gdal' 'proj' 'geos' 'expat' 'libspatialite' 'spatialindex' 'postgresql-libs' 'qca' 'qt' 'qwt6' 'sqlite3' 'python2' 'qscintilla-python2' 'pyqt4-python2' 'python2-pyspatialite')
+makedepends=('cmake' 'flex' 'bison' 'fcgi' 'grass' 'gsl' 'postgis' 'python2-sip' 'python2-pip' 'python2-setuptools')
 optdepends=('fcgi: qgis mapserver'
             'grass: grass plugin'
             'gsl: georeferencer'
             'python2-sip: python-support'
             'postgis: postgis support and SPIT plugin')
 source=("http://qgis.org/downloads/$pkgname-$pkgver.tar.bz2")
-sha1sums=('37e93d10369a0d33bcfe290a1d917b543b9b4c4c')
+sha256sums=('737827fd4c63c859a0ea7badd36ebcba970ca7c0a8feda4b10c0de0ed52546e8')
 
 prepare() {
   cd $pkgname-$pkgver
+  
+  # Fix references to "python"
+  sed -i 's/\(env \|\/usr\/bin\/\)python$/&2/' $(find . -iname "*.py")
+
+  # Remove mime types already defined by freedesktop.org
+  sed -e '/type="image\/tiff"/,/<\/mime-type>/d' \
+      -e '/type="image\/jpeg"/,/<\/mime-type>/d' \
+      -e '/type="image\/jp2"/,/<\/mime-type>/d' \
+      -e '/type="application\/x-adobe-mif"/,/<\/mime-type>/d' \
+      -i debian/qgis.xml
+  
+  
   [[ -d build ]] || mkdir build
 }
 
 build() {
-  cd $pkgname-$pkgver/build
+  cd $srcdir/$pkgname-$pkgver/build
+  
   cmake -G "Unix Makefiles" ../ \
         -DCMAKE_BUILD_TYPE=Release \
         -DCMAKE_INSTALL_PREFIX=/usr \
@@ -40,18 +51,26 @@ build() {
 package() {
     cd $pkgname-$pkgver/build
     make DESTDIR=$pkgdir install
-
+    
+    # install python2-psycopg2
+    pip2 install --target=$pkgdir/usr/share/qgis/python psycopg2
+    
+    
     # create a more user-friendly application name link
     ln -s /usr/bin/qgis "$pkgdir/usr/bin/quantum-gis"
 
+    cd "$srcdir/$pkgname-$pkgver"
+    
     # install some freedesktop.org compatibility
-    install -Dm644 ../debian/qgis.desktop "$pkgdir/usr/share/applications/qgis.desktop"
-    install -Dm644 ../debian/qbrowser.desktop "$pkgdir/usr/share/applications/qbrowser.desktop"
-    install -dm755 "$pkgdir/usr/share/pixmaps" "$pkgdir/usr/share/mimelnk/application"
-    for mime in ../debian/mime/application/*.desktop
-        do install -m644 "$mime" \
-            "$pkgdir/usr/share/mimelnk/application"
-        done
-    ln -s /usr/share/qgis/images/icons/qgis-icon.png "$pkgdir/usr/share/pixmaps/qgis-icon.png"
-    ln -s /usr/share/qgis/images/icons/qgis-mime-icon.png "$pkgdir/usr/share/pixmaps/qgis-mime-icon.png"
+    install -Dm644 debian/{qgis,qbrowser}.desktop -t "$pkgdir/usr/share/applications/"
+    for prog in qgis qbrowser; do
+    install -Dm644 images/icons/${prog}_icon.svg "$pkgdir/usr/share/icons/hicolor/scalable/apps/$prog.svg"
+    done
+    
+    # install mime information and icons
+    install -Dm644 debian/qgis.xml "$pkgdir/usr/share/mime/packages/qgis.xml"
+    install -Dm644 images/icons/qgis-mime-icon.png "$pkgdir/usr/share/icons/hicolor/128x128/mimetypes/qgis-mime.png"
+    for type in asc ddf dem dt0 dxf gml img mime mldata qgs qlr qml qpt shp sqlite; do
+    install -Dm644 images/icons/qgis_${type}_icon.svg "$pkgdir/usr/share/icons/hicolor/scalable/mimetypes/qgis-$type.svg"
+    done
 }
