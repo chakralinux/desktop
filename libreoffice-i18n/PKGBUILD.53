@@ -1,0 +1,351 @@
+pkgbase="libreoffice-i18n"
+
+_rcver=5.3.1.1
+pkgver=5.3.1
+pkgrel=1
+depends=("libreoffice-common>=$pkgver")
+
+_oodlver=${_rcver}
+#_oodlver=${_rcver}
+_dirver=${_rcver}
+
+arch=('x86_64')
+url="http://www.documentfoundation.org"
+license=('LGPL')
+makedepends=('rpmextract')
+
+# http://wiki.documentfoundation.org/Language_Teams
+_url="http://download.documentfoundation.org/libreoffice/testing"
+
+#_url+="/${pkgver}-rc2/rpm/x86"
+_url+="/${pkgver}/rpm/x86"
+#_url+="/rpm/x86"
+
+_languages=(
+  'af            "Afrikaans"'
+  'am            "Amharic"'
+  'ar            "Arabic"'
+  'as            "Assamese (India)"'
+  'ast           "Asturianu"'
+  'be            "Belarusian"'
+  'bg            "Bulgarian"'
+  'bn            "Bengali"'
+  'bn-IN         "Bengali (India)"'
+  'bo            "Tibetan"'
+  'br            "Breton"'
+  'brx           "Bodo"'
+  'bs            "Bosnian"'
+  'ca            "Catalan"'
+  'ca-valencia   "Catalan (Valencia)"'
+  'cs            "Czech"'
+  'cy            "Welsh"'
+  'da            "Danish"'
+  'de            "German"'
+  'dgo           "Dogri"'
+  'dz            "Dzongkha"'
+  'el            "Greek"'
+  'en-GB         "English (GB)"'
+  'en-ZA         "English (ZA)"'
+  'eo            "Esperanto"'
+  'es            "Spanish"'
+  'et            "Estonian"'
+  'eu            "Basque"'
+  'fa            "Persian"'
+  'fi            "Finnish"'
+  'fr            "French"'
+  'ga            "Irish"'
+  'gd            "Gaelic (Scottish)"'
+  'gl            "Galician"'
+  'gu            "Gujarati"'
+  'he            "Hebrew"'
+  'hi            "Hindi"'
+  'hr            "Croatian"'
+  'hu            "Hungarian"'
+  'id            "Indonesian"'
+  'is            "Icelandic"'
+  'it            "Italian"'
+  'ja            "Japanese"'
+  'ka            "Georgian"'
+  'kk            "Kazakh"'
+  'km            "Khmer (Cambodia)"'
+  'kmr-Latn      "Kurdish"'
+  'kn            "Kannada"'
+  'ko            "Korean"'
+  'kok           "Konkani"'
+  'ks            "Kashmiri"'
+  'lb            "Luxembourgish"'
+  'lo            "Lao"'
+  'lt            "Lithuanian"'
+  'lv            "Latvian"'
+  'mai           "Maithili"'
+  'mk            "Macedonian"'
+  'ml            "Malayalam"'
+  'mn            "Mongolian"'
+  'mni           "Manipuri"'
+  'mr            "Marathi"'
+  'my            "Burmese"'
+  'nb            "Norwegian Bokmal"'
+  'ne            "Nepali"'
+  'nl            "Dutch"'
+  'nn            "Norwegian Nynorsk"'
+  'nr            "Ndebele (South)"'
+  'nso           "Northern Sotho"'
+  'oc            "Occitan"'
+  'om            "Oromo"'
+  'or            "Oriya"'
+  'pa-IN         "Punjabi (India)"'
+  'pl            "Polish"'
+  'pt            "Portuguese"'
+  'pt-BR         "Portuguese (Brasil)"'
+  'ro            "Romanian"'
+  'ru            "Russian"'
+  'rw            "Kinyarwanda"'
+  'sa-IN         "Sanskrit (India)"'
+  'sat           "Santali"'
+  'sd            "Sindhi"'
+  'si            "Singhalese"'
+  'sid           "Sidama"'
+  'sk            "Slovak"'
+  'sl            "Slovenian"'
+  'sq            "Albanien"'
+  'sr            "Serbian"'
+  'sr-Latn       "Serbian (Latin)"'
+  'ss            "Swati"'
+  'st            "Southern Sotho"'
+  'sv            "Swedish"'
+  'sw-TZ         "Swahili (Tanzania)"'
+  'ta            "Tamil"'
+  'te            "Telugu"'
+  'tg            "Tajik"'
+  'th            "Thai"'
+  'tn            "Tswana"'
+  'tr            "Turkish"'
+  'ts            "Tsonga"'
+  'tt            "Tatar"'
+  'ug            "Uighur"'
+  'uk            "Ukrainian"'
+  'uz            "Uzbek"'
+  've            "Venda"'
+  'vi            "Vietnamese"'
+  'xh            "Xhosa"'
+  'zh-CN         "Chinese (simplified)"'
+  'zh-TW         "Chinese (traditional)"'
+  'zu            "Zulu"'
+)
+
+prepare() {
+  for i in ${pkgname[@]}; do
+    _pkglang=${i#*-}
+    echo ${_pkglang} " unpacking..."
+    cd ${srcdir}/LibreOffice_${_dirver}_Linux_x86_rpm_langpack_${_pkglang}/RPMS
+
+    # Remove dictionaries, which have duplicate files for different languages,
+    # to be shipped separately.
+    rm -vf *-dict-*.rpm || /bin/true
+
+    for j in *.rpm
+      do rpmextract.sh $j
+    done
+    
+    # the helppack rpm goes also into the langpack dir - so far we don't want to split the helppacks separate
+    rpmextract.sh ${srcdir}/LibreOffice_${_dirver}_Linux_x86_rpm_helppack_${_pkglang}/RPMS/*.rpm || /bin/true
+  done
+}
+
+_package() {
+  pkgdesc="$2 language pack for LibreOffice"
+  provides=('libreoffice-langpack')
+
+  cd "$srcdir"/LibreOffice_${_dirver}_Linux_x86_rpm_langpack_$1/RPMS
+  mkdir -p "$pkgdir"/usr/lib/libreoffice
+  cp -R opt/libreoffice*/* "$pkgdir"/usr/lib/libreoffice
+  chown root:root -R "$pkgdir"/usr/lib/libreoffice
+}
+  
+for _lang in "${_languages[@]}"; do
+  _locale=${_lang%% *}
+  _pkgname=libreoffice-$_locale
+  source+=(${_url}/LibreOffice_${_oodlver}_Linux_x86_rpm_langpack_${_locale}.tar.gz)
+
+  if curl -o /dev/null -s -I -f ${_url}/LibreOffice_${_oodlver}_Linux_x86_rpm_helppack_${_locale}.tar.gz; then
+    source+=(${_url}/LibreOffice_${_oodlver}_Linux_x86_rpm_helppack_${_locale}.tar.gz)
+  fi
+
+  pkgname+=($_pkgname)
+  eval "package_${_pkgname}() {
+    _package $_lang
+  }"
+done
+md5sums=('36c0aa3f208ff21d5de2a6012cee77de'
+         'd6ac538fe448744546d9c712935ab777'
+         '35f1f6d182245425e7e1c7b9513302eb'
+         'f8a04c66246a479049f1c3490822a973'
+         'e0672d3e7ebbea9e81e13286691f7fe2'
+         'f432d2b7a689c8d5c08319e4c4cb55d8'
+         '96601840681c37b4d636af18fa89d97a'
+         'b6aa79989af07fa9dc8f15ce3b3fd2b7'
+         '14ba86bbe36bfbed28b34803026f7ad2'
+         'f2340c43f12a6521a1f06d61738286d8'
+         '469e47923da01c1b4c220e6189ce55af'
+         'f3b4801069589539be7e17099ad34b7a'
+         '5b80fbef87afcfedb4ea9047939a218d'
+         'b8f64fcc387815f5fadf115c5320ed7a'
+         '58a1db1f1c790c9f4c9b69bb9ec228ca'
+         'c8ec12380bcb25a200c5c11fc39ce74f'
+         '05d637fb7d75ebd1f87e042f007ede4c'
+         'e0e8ccc0231bc864176cd905a1a25317'
+         '0f2e7c9214d61870251430c1a4d1a186'
+         'eda721e744ed0d4ba57ef6e6204a1688'
+         'f97190a14e1b3f2f2a0118c711911ed5'
+         'f196176eea0489f4ec9e8ceedf36d6b2'
+         '88b4d2a81ca148dd2891c6620bda4049'
+         '5e136b977f1d2d51b42347efe0585e5a'
+         'ed1ebc0904e24f6f5a941730b63e2584'
+         '7db1f6bb059fb7471f08f8059627deb9'
+         'c9148c674aef01067e381b3a5807bf88'
+         'a8aa02ed8618c43e0b8c0fa8d178940c'
+         '1ea16e9d24037bf90f7da0d75d21dc45'
+         'd2fa53ad01f9c211a991df7099c57553'
+         '7f8b144a16b7db8f48823a8acb226024'
+         'aab9c7c62dea26d29ef231099dd3fc6e'
+         'c76eda4754efae36e6375d0e164aeafb'
+         'd2f90db246b60c39fd432978a7683be1'
+         '020c6d7d2df194c880142a78cce8acdf'
+         '401ecbb47992070dc4f467f75a58bcc4'
+         'c4fb813cd1bbfe62cefcc2027f9272e1'
+         '4cc4a0155958f82929112f84c67b79e4'
+         '3f17525363bd1071d0e0b0b43d083110'
+         '2a14525c837f02a6cfedc8faf2d74eee'
+         'f36c04d0e5c155d62a5b9dbd2bad2ef9'
+         '4167adbaeddf59c24c34f73a732f98bd'
+         'c638ce51d56c44dc293f2d695ddac534'
+         '24edb0421629e6280c678d2e4268513d'
+         'a468873d261733734a8e67f65b5d377d'
+         '2edfb9e777b5600547079b3b48a06132'
+         '358647bdfb8d4cc5e6b141542555efdd'
+         '295881f320da8a3d5fd33334797b6bc4'
+         'e7217ceb91d461bdb4158dd1e2ffb634'
+         '01ce13dd0e4061a946dadd6babea1710'
+         '98813decbbf222ff30a88f454a7188bd'
+         'f7b687e057ce26995b665be6ccf6508a'
+         'eda5f5482da83e44b667d571a4316995'
+         '065d651071a2517b7e2a79c063199f49'
+         '85ae1ed35918ce5051d286a987b35c72'
+         '5784a34ec6c25986367fbc6f7781c8be'
+         'b3ec47d1a85c77d3875e9a2246687b45'
+         '5bc91a6c536cc53a3774b0ca9b487028'
+         '88b0b2741927d3332c2e7ce239cafc76'
+         'eae3cb135e4bd302871cb0f30624365c'
+         '801e2017d512c8153a44f4083b6b0265'
+         '0b302186daea49029a7dfe97672db93f'
+         '599b305953eb8d8479bb5b3fdef2e5dd'
+         'c3b9473eadea3047a79ee48487c45abc'
+         '63bc136b131d12a71320936531c9c18d'
+         '52d43d03d9e2efb20ebedd5126f8eb22'
+         '9ea5d4f2b7d64532d0abfd60d5717e86'
+         '8d279383f874a851bff964540079507e'
+         'b0b0df0ede50337d551efa433dfb9d51'
+         '9eeb609af4b07ebb64bc963cda9083f4'
+         '928543a79ed4bd62e9903f37bda0bbc4'
+         '586a930a51afb0fd2366209649b07d9d'
+         '56bb0b94a00b161b38c7e7bbc1431377'
+         '3794c81ed24aecfda5f43dd7063d8c4b'
+         '38d3b95051e449b7b133f7a6522b9e8a'
+         '63ac74bf04df618e0cb266a83940c209'
+         'ff5b764aaba7d6d49d5facdcfb62a271'
+         '248578262956b57264086b3258f3688c'
+         '83a4c21a3643eff09241d211cd0d8fc5'
+         '7f81b36d8b04682616cd0292fbbfb0c3'
+         'c9f1fcdf0e73fce335edaa39e20a61d0'
+         'c9558bd1bc03e05f04cb988ea0ca5b00'
+         '0f92c4e692f1fc587f4fa684838c94b4'
+         '191c91f0a08da0d3d168a6f372fd898a'
+         '6fdef09ebe60c43e1b81e76973605932'
+         'cc382acb5029c63402340b4dcc0d6f6d'
+         'cb1968d10cdb7561e9f96518171433a1'
+         '916a894b4c57d1d9810b9ea7087694c9'
+         '3b4193549684cbcfed67a78a6fd23460'
+         '93f50063dedda576a041d12ecd5dee0e'
+         'c99981166ffb0b599d06c36ceb8c697e'
+         '31afcbc48af7b5420fedddd769a9d2ca'
+         '292dd142d59b7af2dd510565c1fb5513'
+         '3232be3da403b16ffd8a2815e2184632'
+         'f940c838740b71af4f95e2e96a999830'
+         'fa2b72af9ec0be2badfc3c896b93aa76'
+         '7886ca4536f868d368be941c797dc9d4'
+         '267fbc0920372c137b1471e2f04dcb6b'
+         '0180045233a8eb29c1fcabe69cdbea58'
+         '5921bfb4b44dbb03595bac328b9913eb'
+         'a0243d5b90b0b65b6f82b35e677c3e54'
+         '3bb22e4f6accf59d90cb100c73719052'
+         '6a632e2f91c0b9f0f4c22f8968046823'
+         'f01ae108e6a54d94882cb6c09f267f7f'
+         'a5a668eaf13e7d2c25bb8514d6305e5a'
+         '73645d5ca75a93a3a4dcb3fd6f6ed1b6'
+         '2cf307596cde63ffa2876581ddeaa723'
+         'a5803db3e07bc2f3137120ed76993cc9'
+         'fa2812bd565d8fb27d90cd9ff0a15e21'
+         'bbde15a185ed3a0fcb3412c2ddc49776'
+         'dddc60db198cbdf0c18d11c32abaf764'
+         '34320f5a435314676fb20bf456078339'
+         'ca545e4045586fd80acf55d9cd2f96ee'
+         'd722e77133a71853e4e921f20e6bbbba'
+         '83aa09a05967dbe7a7ac24f563294a91'
+         'd22fb65cb2e0c8e6fac2d7fd3338536e'
+         'd45bfe03088dfa11e8c0a19223d4c5ce'
+         '1a5683189429c4f3a2c101c5c0deacb9'
+         'f3da50e4169ff551d23f8cc3ac67ebf9'
+         '70f0e780e6772e332eae6333b0e03b3d'
+         'c085e9e115a9623d780793dd32bef088'
+         '68221409ed022128bd884d96b2e902ac'
+         '017b1d3b9031ea51703075343ae582e4'
+         '5ba86d2515139bdc915ca706a6d88022'
+         '04744fec1f5047dde83c3a4a5c9f84e4'
+         '6a6d37c3e4f86f7c45d5b8fc4f60e3ca'
+         'ece8d6561bb50341b8bf90c8050e6093'
+         '056ab9bade8edc7acbf793f3c8e1dfa8'
+         '314c8a1795ac2246cb41e9f192871b13'
+         'b37091d2a7601441d310c01480095b80'
+         '715502190e47a3e2f681467c9cfddef3'
+         '88fc92b0a4433ea5bac3169b8ec918b8'
+         '8691a10169c48545343b90d7eb488a47'
+         'a13d5bf5b0447e15f522e0b879691e4a'
+         'a56610ecce26b61e0f91d2bb33bdd001'
+         '1bb74cf3be13322b4063ac3d3ff9ab8a'
+         '70898b96cef7ffb73f22fe83a31ecbc3'
+         'e00382801e2628d671ab1f0421e0bba7'
+         '21080c1cb33cbd4326dbd2ce8bacde50'
+         '171358875147e01663422a0394d1144f'
+         '354083112a93852c47be5f712c9a8656'
+         'dd7c776c4f8e5733d1c2fe653fe7c679'
+         'dbb0f55ab9c8d5f18db084700692ef30'
+         '083c1bb9eb45cd3df92c2d9a6e905ea6'
+         '873a8f35ac84d9d078230d9d343ec7b3'
+         '523a3494c5796de8dbadc2365c7c4983'
+         'a1ddb924d45c7095e78ed27f83e47b02'
+         '063dc023ad0a13c0cfd9256ce2b32d3b'
+         'eda9433712cb8fd27b6ff9b544d18ba4'
+         '842c73ae752ec9ece04ea5a9cb1e8170'
+         'c4902b5912135192e29b8765361e1072'
+         'd49f9148bee79b690cab653a04a5c7a2'
+         '325dfdab4623f1f5d6ba5384d47d9eca'
+         '06c7cde7cf03d7c1c41c13ce18828d1e'
+         'cc0187d6849e7237125a958c3a844bd0'
+         '87b00ce01e00f43d47d92efa47dc2b81'
+         '7b7cda5369fef3764619abeb1aa07702'
+         'f571d3f225d172bfe76f4d1c8cb27141'
+         'a3a45b75a4be00f027067b5f1f3f7304'
+         '9fd06d49d971c23914ffb3820015df0b'
+         '819d3d51d62ce9376463d2ec8ee27649'
+         'f15dfbad01617da53becd5bdf6388cc7'
+         'd1670a85df9bc6b83ac1b3f5324fc1a1'
+         'def6374827857da3cad08ae3e34fc265'
+         '918fb04c42322300c5752041ae8376cb'
+         '8d4adfda716f26f0a48df2dc228445d5'
+         '78e16568d28544bd5ab46751db735b23'
+         '453d62f2374f8118b7e6fd940829b1b2'
+         '9ab3037a84fa462772b0c6622e061707'
+         'a3225e87c638a5445def5443edbfbf9a'
+         '256a36fff949a553a3c87c52de486702'
+         '94a04ea6cbcbdcba1f09751c8c4eb06a'
+         'db5c4a1fd93d9967961c5a5675b1e0fa')
