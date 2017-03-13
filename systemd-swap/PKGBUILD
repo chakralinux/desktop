@@ -1,5 +1,5 @@
 pkgname=systemd-swap
-pkgver=3.2.0
+pkgver=3.3.0
 pkgrel=1
 pkgdesc="Script for creating hybrid swap space from zram swaps, swap files and swap partitions."
 arch=('x86_64')
@@ -11,14 +11,13 @@ replace=('zramswap')
 backup=(etc/systemd-swap.conf)
 install=$pkgname.install
 source=("https://github.com/Nefelim4ag/${pkgname}/archive/${pkgver}.tar.gz")
-md5sums=('8a514fea20b4ddce8f1b9080fcc7e13b')
-
-prepare() {
-  # Upstream approach doesn't seem to work :/
-  sed -i 's_^PREFIX="/"$_PREFIX="$1"_' ${pkgname}-${pkgver}/install.sh
-}
+md5sums=('9b7d8c57bc93e0e390517dc4b9e1898f')
 
 package() {
   cd ${srcdir}/${pkgname}-${pkgver}
-  ./install.sh "$pkgdir"
+  make PREFIX="$pkgdir" install
+
+  install -dm755 "$pkgdir"/usr/lib
+  mv "$pkgdir"/lib/systemd "$pkgdir"/usr/lib/systemd
+  rmdir "$pkgdir"/lib
 }
