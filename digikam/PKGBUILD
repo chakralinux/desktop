@@ -1,6 +1,6 @@
 pkgbase=digikam
 pkgname=('digikam' 'kipi-plugins')
-_pkgver=5.4.0
+_pkgver=5.5.0
 pkgver=${_pkgver//-/_}
 pkgrel=1
 epoch=1
@@ -12,17 +12,14 @@ makedepends=('extra-cmake-modules' 'libkipi' 'libksane' 'liblqr' 'boost'
              'libgpod' 'hugin' 'opencv' 'qt5-webkit' 'doxygen' 'lensfun' 'imagemagick' 'eigen3' 'libpgf'
              'libusb' 'kio' 'kdoctools' 'marble' 'kfilemetadata' 'akonadi-contact' 'qtav'
              'threadweaver' 'kcalcore' 'knotifyconfig' 'libkvkontakte' 'libmediawiki' 'mariadb' 'prison')
-source=("http://download.kde.org/stable/${pkgname}/${pkgname}-${_pkgver}.tar.xz"
-        digikam-find-qtav.patch)
-sha1sums=('6c58ee30cd84b40acf4427f1bb9dbb8b891eb894'
-          'b170e5eab5a8c40d1c8c8f2d2cfe5e911ad66939')
+source=("http://download.kde.org/stable/${pkgname}/${pkgname}-${_pkgver}.tar.xz")
+sha1sums=('86de0ade7ec8c891a57a0b1eaf7f389d745ba1c7')
 
 prepare() {
   mkdir -p build
 
-  # Fix QtAV location
-  cd $pkgname-$pkgver
-  patch -p1 -i ../digikam-find-qtav.patch
+  # sv docs fail to build
+  sed -e '/sv/d' -i $pkgname-$pkgver/doc-translated/CMakeLists.txt
 }
 
 build() {
