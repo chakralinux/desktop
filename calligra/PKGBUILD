@@ -1,11 +1,10 @@
 pkgbase=calligra
 pkgname=('calligra-karbon'
          'calligra-sheets'
-         'calligra-stage'
          'calligra-words'
          'calligra-common')
 pkgver=3.0.0.1
-pkgrel=3
+pkgrel=4
 arch=('x86_64')
 url='http://www.calligra.org'
 screenshot=("http://upload.wikimedia.org/wikipedia/commons/thumb/3/3e/Calligra_Stage_2.4.png/800px-Calligra_Stage_2.4.png")
@@ -14,7 +13,6 @@ makedepends=('extra-cmake-modules' 'kdoctools' 'python3' 'kdesignerplugin' 'khtm
              'libwpg' 'okular' 'eigen3' 'marble' 'pstoedit' 'libvisio' 'libetonyek' 'libodfgen' 'libwps' 'vc'
              'kcmutils' 'knotifyconfig' 'kross' 'ktexteditor' 'threadweaver' 'kactivities' 'kdiagram' 'kreport' 'libspnav'
              'gsl' 'openexr' 'kcontacts' 'kcalcore' 'qca-qt5' 'poppler-qt5' 'libodfgen' 'qt5-webkit' 'cauchy')
-options=("debug")
 groups=('calligra')
 source=("http://download.kde.org/stable/${pkgbase}-${pkgver}/${pkgbase}-${pkgver}.tar.xz"{,.sig})
 sha256sums=('dedc51efc42f7dda37514d450cb772d9db37a658e0abbcf0f513712a04c1f011'
@@ -27,13 +25,15 @@ for _lang in bs ca ca@valencia cs da de el en_GB es et fi fr gl hu it ja kk nb n
              ast br eu ga hne ia ko lv ml nds oc se ta tr uz@cyrillic xh ; do
     _pkgname=calligra-l10n-$_lang
     pkgname+=($_pkgname)
-    eval "package_$_pkgname() {
+    eval "package_${_pkgname}() {
     depends=(calligra-common)
+    groups+=('calligra-l10n')
     _package $_lang
   }"
 done
 
 _package() {
+    pkgdesc="Localization of calligra suite"
     install -dm755 $pkgdir/usr/share/locale/
     mv -v $srcdir/fakeinstall/usr/share/locale/$1 $pkgdir/usr/share/locale/
 }
@@ -80,27 +80,6 @@ package_calligra-karbon() {
     mv -v {,$pkgdir/}usr/share/kxmlgui5/karbon
 }
 
-package_calligra-plan() {
-    pkgdesc="Project management application"
-    depends=('calligra-words' 'hicolor-icon-theme' 'calligra-common')
-    categories=('office')
-    install=calligra-plan.install
-
-    install -dm755 $pkgdir/{etc/xdg,usr/{bin,lib/qt5/plugins/calligra/parts,share/{applications,kservices5/ServiceMenus/calligra,metainfo,templates,config.kcfg,kxmlgui5}}}
-
-    cd $srcdir/fakeinstall
-    mv -v etc/xdg/calligraplan* $pkgdir/etc/xdg
-    mv -v usr/bin/calligraplan* $pkgdir/usr/bin/
-    mv -v {,$pkgdir/}usr/lib/qt5/plugins/calligraplan
-    mv -v {,$pkgdir/}usr/lib/qt5/plugins/calligra/parts/calligraplanpart.so
-    mv -v {,$pkgdir/}usr/lib/qt5/plugins/calligraplanworkpart.so
-    mv -v usr/share/applications/org.kde.calligraplan* $pkgdir/usr/share/applications/
-    mv -v usr/share/calligraplan* $pkgdir/usr/share/
-    mv -v {,$pkgdir/}usr/share/metainfo/org.kde.calligraplan.appdata.xml
-    mv -v usr/share/config.kcfg/calligraplan* $pkgdir/usr/share/config.kcfg/
-    mv -v usr/share/kxmlgui5/calligraplan* $pkgdir/usr/share/kxmlgui5/
-}
-
 package_calligra-sheets() {
     pkgdesc="Spreadsheet application"
     depends=('calligra-common'
@@ -124,26 +103,6 @@ package_calligra-sheets() {
     mv -v {,$pkgdir/}usr/share/kservices5/ServiceMenus/calligra/sheets_print.desktop
     mv -v {,$pkgdir/}usr/share/config.kcfg/calligrasheets.kcfg
     mv -v {,$pkgdir/}usr/share/kxmlgui5/calligrasheets
-}
-
-package_calligra-stage() {
-    pkgdesc="Presentation application"
-    depends=('calligra-common'
-             'hicolor-icon-theme')
-    categories=('office')
-    install=calligra-stage.install
-
-    install -dm755 $pkgdir/{etc/xdg,usr/{bin,lib/qt5/plugins/calligra/parts,share/{applications,kservices5/ServiceMenus/calligra,metainfo,templates,kxmlgui5}}}
-
-    cd $srcdir/fakeinstall
-    mv -v {,$pkgdir/}etc/xdg/calligrastagerc
-#    mv -v usr/bin/cst* $pkgdir/usr/bin
-    mv -v {,$pkgdir/}usr/lib/qt5/plugins/calligrastage
-    mv -v {,$pkgdir/}usr/lib/qt5/plugins/calligra/parts/calligrastagepart.so
-    mv -v {,$pkgdir/}usr/share/calligrastage
-    mv -v {,$pkgdir/}usr/share/templates/Presentation.desktop
-    mv -v usr/share/kservices5/stage* $pkgdir/usr/share/kservices5
-    mv -v {,$pkgdir/}usr/share/kxmlgui5/calligrastage
 }
 
 package_calligra-words() {
@@ -173,8 +132,9 @@ package_calligra-common() {
     pkgdesc="Common files for Calligra"
     depends=('kcmutils' 'knotifyconfig' 'kross' 'ktexteditor' 'threadweaver' 'kactivities' 'kdiagram' 'kreport' 'libspnav'
              'openexr' 'kcontacts' 'kcalcore' 'qca-qt5' 'poppler-qt5' 'libodfgen' 'qt5-webkit' 'cauchy')
-    replaces=($pkgbase-{libs,extras,handbook,devtools,gemini,braindump,plan})
-    conflicts=($pkgbase-{libs,extras,handbook,devtools,gemini,braindump,plan})
+    replaces=($pkgbase-{libs,extras,handbook,devtools,gemini,braindump,flow})
+    conflicts=($pkgbase-{libs,extras,handbook,devtools,gemini,braindump,flow,stage})
+    provides=($pkgbase-{libs,extras,handbook,devtools,gemini,braindump})
     options=('!emptydirs' 'docs')
     optdepends=('libetonyek: Apple Keynote document importer'
                 'libgsf: Microsoft Word document importer'
@@ -192,4 +152,17 @@ package_calligra-common() {
     done
     mv -v $srcdir/fakeinstall/usr/lib $pkgdir/usr/
     mv -v $srcdir/fakeinstall/usr/bin $pkgdir/usr/
+
+    msg 'Clean up the dust'
+    cd $pkgdir/
+    # Plan part
+    rm -rfv etc/xdg/calligraplan*
+    rm -rfv usr/lib/qt5/plugins/calligraplan*
+    rm -rfv usr/lib/qt5/plugins/calligra/parts/calligraplanpart.so
+    rm -rfv usr/share/applications/org.kde.calligraplan*
+    # Stage part
+    rm -rfv etc/xdg/calligrastagerc
+    rm -rfv usr/share/kservices5/stage*
+    rm -rfv usr/lib/qt5/plugins/calligrastage
+    rm -rfv usr/lib/qt5/plugins/calligra/parts/calligrastagepart.so
 }
