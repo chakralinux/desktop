@@ -1,13 +1,13 @@
 _pkgname=QupZilla
 pkgname='qupzilla'
-pkgver=2.0.2
-pkgrel=3
+pkgver=2.1.2
+pkgrel=1
 pkgdesc="A very fast open source browser based on WebEngine core"
 url="http://www.qupzilla.com"
 arch=('x86_64')
 license=('GPL3')
+depends=('qt5-webengine' 'qt5-x11extras' 'qt5-svg' 'hicolor-icon-theme')
 makedepends=('qt5-tools' 'kwallet')
-depends=('qt5-webengine>=5.6.0' 'qt5-script')
 optdepends=('bash-completion: bash completion support'
             'kwallet: kf5 kwallet integration')
 install=${pkgname}.install
@@ -17,7 +17,7 @@ source=("https://github.com/QupZilla/qupzilla/releases/download/v${pkgver}/${_pk
         '0001-branded-speeddial.patch'
         'start-white.png'
         'qupzilla.desktop')
-sha1sums=('399e0144e367cf2895cd0ce75254be21f152b2fa'
+sha1sums=('b2ba69f12a1ddacaf487ba6396b7e25e4de1aae8'
           '7fbbd3b732e27154ab375f736c167d84a83619d7'
           '6ec67993bda3054d4210cc08177b124f873774e3'
           '30af0401f97e6465169bae2089d2a8626e08cadd')
@@ -63,4 +63,7 @@ package() {
   # override the desktop file to include the "--disable-gpu" workaround
   install -Dm644 "${srcdir}/qupzilla.desktop" "${pkgdir}/usr/share/applications/qupzilla.desktop"
   
+  # zsh completion
+  install -Dm644 linux/completion/_$pkgname \
+    "$pkgdir/usr/share/zsh/site-functions/_$pkgname"
 } 
