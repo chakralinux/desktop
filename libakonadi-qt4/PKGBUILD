@@ -3,10 +3,9 @@
 # Contributor: Andrea Scarpino <andrea@archlinux.org>
 # Contributor: Pierre Schmitz <pierre@archlinux.de>
 
-pkgbase=akonadi-qt4
-pkgname=(libakonadi-qt4 akonadi-qt4)
+pkgname=libakonadi-qt4
 pkgver=1.13.0
-pkgrel=11
+pkgrel=12
 pkgdesc="PIM layer, which provides an asynchronous API to access all kind of PIM data (Qt4 version)"
 arch=('x86_64')
 url='http://community.kde.org/KDE_PIM/Akonadi'
@@ -47,14 +46,3 @@ package_libakonadi-qt4() {
   rm -r "$pkgdir"/usr/{bin,share}
 }
 
-package_akonadi-qt4() {
-  depends=(libakonadi-qt4 boost-libs mariadb)
-  conflicts=(akonadi)
-  replaces=('akonadi<15')
-
-  cd build
-  make DESTDIR="$pkgdir" install
-
-# provided by libakonadi-qt4
-  rm -r "$pkgdir"/usr/{lib,include}
-}
