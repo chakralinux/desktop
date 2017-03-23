@@ -1,8 +1,8 @@
 pkgname=openshot
 pkgver=2.2.0
-pkgrel=1
+pkgrel=2
 pkgdesc="An open-source, non-linear, next gen video editor, based on libopenshot."
-arch=('any')
+arch=('x86_64')
 url="http://www.openshotvideo.com/"
 license=('GPL')
 depends=('qt5-webkit' 'qt5-svg' 'python3' 'python3-pyqt5' 'python3-httplib2' 'python3-pillow' 
@@ -13,6 +13,6 @@ source=(https://github.com/OpenShot/openshot-qt/archive/v$pkgver.tar.gz)
 sha1sums=('6c41ecb13a93367d30614a0f7be484699fc3fc10')
 
 package() {
-  cd "$srcdir/$pkgname-qt-$pkgver"
+  cd $pkgname-qt-$pkgver
   python3 setup.py install --root="$pkgdir/" --optimize=1
 }
