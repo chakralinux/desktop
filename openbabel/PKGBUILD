@@ -1,20 +1,15 @@
-#
-# Chakra Packages for Chakra, part of chakra-project.org
-#
-# maintainer : abveritas@chakra-project.org
-
 pkgname=openbabel
-pkgver=2.3.1
+pkgver=2.4.1
 pkgrel=1
 pkgdesc="Open, collaborative project allowing anyone to search, convert, analyze, or store data from molecular modeling, chemistry, solid-state materials, biochemistry, or related areas"
-arch=('i686' 'x86_64')
-url="http://openbabel.sourceforge.net/"
+arch=('x86_64')
+url="http://openbabel.org/wiki/Main_Page"
 license=('GPL')
-depends=('gcc-libs' 'libxml2' 'eigen')
-makedepends=('cmake')
+depends=('gcc-libs' 'libxml2' 'libsm')
+makedepends=('cmake' 'eigen3' 'boost' 'python3')
 options=('!libtool')
 source=("http://downloads.sourceforge.net/$pkgname/$pkgname-$pkgver.tar.gz")
-md5sums=('1f029b0add12a3b55582dc2c832b04f8')
+md5sums=('d9defcd7830b0592fece4fe54a137b99')
 
 build() {
  cd "${srcdir}"
@@ -22,7 +17,8 @@ build() {
   cd build
   cmake ../${pkgname}-${pkgver} \
     -DCMAKE_BUILD_TYPE=Release \
-    -DCMAKE_INSTALL_PREFIX=/usr
+    -DCMAKE_INSTALL_PREFIX=/usr \
+    -DPYTHON_BINDINGS=ON
   make
 }
 
