@@ -3,8 +3,8 @@
 # Contributor: Thomas Dziedzic < gostrc at gmail >
 
 pkgname=sunpinyin
-pkgver=2.0.3.20140804
-_commit=10ea46e8f7c3465d6e882c96b00618288c3f0532
+pkgver=3.0.0rc1
+_tag=v3.0.0-rc1
 pkgrel=1
 arch=('i686' 'x86_64')
 pkgdesc="Statistical Language Model based pinyin IME by Sun"
@@ -14,23 +14,24 @@ depends=('sqlite3' 'make' 'gcc-libs')
 optdepends=('sunpinyin-data: Statistical language model data from open-gram project for sunpinyin')
 replaces=('sunpinyin-git<=20120603')
 makedepends=('git' 'scons' 'intltool')
-source=("git://github.com/sunpinyin/sunpinyin.git#commit=$_commit")
+source=("git://github.com/sunpinyin/sunpinyin.git#tag=$_tag")
 md5sums=("SKIP")
+
+prepare() {
+  cd "$srcdir/$pkgname"
+  sed -i -e "1s|python|python2|" python/*.py python/importer/*.py
+}
 
 build() {
   cd "$srcdir/$pkgname"
-  sed -i -e "1s|python|python2|" python/*.py python/importer/*.py
-
   scons \
     --prefix=/usr
 }
 
 package() {
   cd "$srcdir/$pkgname"
-
   scons \
     --prefix=/usr \
     --install-sandbox="$pkgdir" \
     install
 }
-
