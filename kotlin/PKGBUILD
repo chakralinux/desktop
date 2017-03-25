@@ -1,0 +1,47 @@
+pkgname=kotlin
+pkgver=1.1
+pkgrel=1
+pkgdesc='The Kotlin programming language'
+arch=('any')
+url='http://kotlinlang.org/'
+license=('apache' 'custom')
+depends=('bash' 'java-environment')
+makedepends=('setconf')
+source=("https://github.com/JetBrains/kotlin/releases/download/v${pkgver}/kotlin-compiler-${pkgver}.zip")
+sha256sums=('aa44db28bf3ccdae8842b6b92bec5991eb430a80e580aafbc6a044678a2f359d')
+
+prepare() {
+  cd "${pkgname}c/bin"
+
+  setconf kotlin DIR /usr/bin
+  setconf kotlinc KOTLIN_HOME "/usr/share/$pkgname"
+  setconf kotlinc-js DIR /usr/bin
+  setconf kotlinc-jvm DIR /usr/bin
+}
+
+package() {
+  cd "${pkgname}c"
+
+  msg2 'Packaging executables...'
+  install -Dm755 bin/kotlinc "$pkgdir/usr/bin/kotlinc"
+  install -Dm755 bin/kotlin "$pkgdir/usr/bin/kotlin"
+  install -Dm755 bin/kotlinc-js "$pkgdir/usr/bin/kotlinc-js"
+  install -Dm755 bin/kotlinc-jvm "$pkgdir/usr/bin/kotlinc-jvm"
+
+  msg2 'Packaging jar files...'
+  cd "$srcdir/${pkgname}c/lib"
+  install -d "$pkgdir/usr/share/$pkgname/lib"
+  for jar in *.jar; do
+    install -Dm644 "$jar" "$pkgdir/usr/share/$pkgname/lib"
+  done
+
+  msg2 'Packaging licenses...'
+  cd "$srcdir/${pkgname}c/license"
+  install -d "$pkgdir/usr/share/licenses/$pkgname"
+  install -Dm644 LICENSE.txt "$pkgdir/usr/share/licenses/$pkgname"
+  install -Dm644 NOTICE.txt "$pkgdir/usr/share/licenses/$pkgname"
+  cd third_party
+  for txt in *.txt; do
+    install -Dm644 "$txt" "$pkgdir/usr/share/licenses/$pkgname"
+  done
+}
