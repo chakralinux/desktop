@@ -1,21 +1,20 @@
 pkgname=calibre
 pkgver=2.82.0
-pkgrel=1
+pkgrel=2
 pkgdesc="Ebook management application"
 arch=('x86_64')
 url="https://calibre-ebook.com/"
 license=('GPL3')
-depends=('python2-six' 'python2-dateutil' 'python2-cssutils' 'python2-cherrypy'
+depends=('python2-six' 'python2-dateutil' 'python2-cssutils'
          'python2-mechanize' 'podofo' 'libwmf'
          'imagemagick' 'chmlib' 'python2-lxml' 'libusbx'
          'python2-pillow' 'shared-mime-info' 'python2-dns'
          'python2-pyqt5' 'python2-psutil' 'icu' 'libmtp' 'python2-dbus'
          'python2-netifaces' 'python2-cssselect' 'python2-apsw' 'qt5-webkit'
-         'qt5-svg' 'python2-chardet' 'python2-html5lib' 'python2-pygments' 'mtdev'
-         'desktop-file-utils')
+         'qt5-svg' 'python2-pygments' 'mtdev'
+         'desktop-file-utils' 'udisks2')
 makedepends=('qt5-x11extras' 'xdg-utils')
 optdepends=('ipython2: to use calibre-debug'
-            'udisks: required for mounting certain devices'
             'poppler: required for converting pdf to html')
 screenshot=('https://lh5.googleusercontent.com/_lG58t3XWd3c/TcNwiXkAx_I/AAAAAAAAAEc/M34I4uY9UUY/s800/gui.jpeg')
 install=${pkgname}.install
@@ -27,11 +26,8 @@ sha256sums=('137995abe467fcb951c1d42583305ebec7b8ca403c44895e70f82a2d6156711c'
 prepare(){
   cd "${pkgname}-${pkgver}"
 
-  # Remove unneeded files and libs
-  rm -rf resources/${pkgname}-portable.* \
-         src/cherrypy \
-         src/html5lib \
-         src/chardet
+  # Remove unneeded files
+  rm -rf resources/${pkgname}-portable.*
 
   # Desktop integration (e.g. enforce arch defaults)
   sed -e "/self.create_uninstaller()/,/os.rmdir(config_dir)/d" \
@@ -40,9 +36,6 @@ prepare(){
       -e "s/'ctc-posml'/'text' not in mt and 'pdf' not in mt and 'xhtml'/" \
       -e "s/^Name=calibre/Name=Calibre/g" \
       -i  src/calibre/linux.py
-
-  # Fix broken HTML5 imports.
-  patch -N -p0 < ../../fix_html5_imports.patch
 }
 
 build() {
