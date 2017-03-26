@@ -1,0 +1,26 @@
+pkgname=vidcutter
+pkgver=3.0.1
+pkgrel=1
+pkgdesc="FFmpeg based video cutter & joiner with a modern PyQt5 GUI"
+arch=('any')
+license=('GPL3')
+url="http://vidcutter.ozmartians.com"
+depends=('python3-pyqt5' 'python3-sip' 'ffmpeg' 'mpv' 'mediainfo')
+makedepends=('git' 'python3-setuptools')
+source=(${pkgname}-${pkgver}.tar.gz::https://github.com/ozmartian/${pkgname}/archive/${pkgver}.tar.gz)
+sha256sums=('ac6bdbc60c1c14f41353cb05f889bc8f45061981dad30479d88145ea1a604540')
+
+prepare() {
+    cd "${srcdir}/${pkgname}-${pkgver}"
+    sed -i "s/pypi/arch/" "vidcutter/__init__.py"
+}
+
+build() {
+    cd "${srcdir}/${pkgname}-${pkgver}"
+    python3 setup.py build
+}
+
+package() {
+    cd "${srcdir}/${pkgname}-${pkgver}"
+    python3 setup.py install --root="${pkgdir}" --optimize=1 --skip-build
+}
