@@ -1,27 +1,71 @@
-# Contributor: Sergej Pupykin <pupykin.s+arch@gmail.com>
-# Contributor: hydro <hydro@freenet.de>
+# NOTE when wxwidget will be ported to Qt, we can also build mediainfo-gui
 
-pkgname=mediainfo
+pkgbase=mediainfo
+pkgname=('mediainfo' 'libmediainfo')
 pkgver=0.7.93
-pkgrel=1
-pkgdesc="Supplies technical and tag information about a video or audio file"
+pkgrel=3
 arch=('x86_64')
 url="http://mediaarea.net"
 license=('GPL')
-depends=('libmediainfo')
 makedepends=('libtool' 'automake' 'autoconf')
-source=(https://mediaarea.net/download/source/mediainfo/$pkgver/mediainfo_$pkgver.tar.bz2)
-sha256sums=('29ff5aacddd1c5ce2ad889aa895c5b6d8ba3db12fff23e64ffe130fe9a707dbf')
+_zenver=0.4.34
+source=("https://mediaarea.net/download/source/mediainfo/$pkgver/mediainfo_$pkgver.tar.bz2"
+        "https://mediaarea.net/download/source/libmediainfo/$pkgver/libmediainfo_$pkgver.tar.bz2"
+        "https://mediaarea.net/download/source/libzen/${_zenver}/libzen_${_zenver}.tar.bz2")
+sha256sums=('29ff5aacddd1c5ce2ad889aa895c5b6d8ba3db12fff23e64ffe130fe9a707dbf'
+            '9643c4624aeb6dbcf12aded240bc773272644f17bad5d7534fdda1ca62ee75b0'
+            '83774fe093bd14fb72da9c537021a8ffc3f6ff952a1401cd6f91de6628ac790a')
 
 build() {
+  # we just need to build libzen,
+  # libmediainfo will grab the static lib automatically
+  msg "building libzen"
+  cd "$srcdir"/ZenLib/Project/GNU/Library
+  ./autogen.sh
+  ./configure --prefix=/usr \
+              --disable-shared \
+              --enable-static
+  make
+
+  msg "building libmediainfo"
+  cd "$srcdir"/MediaInfoLib/Project/GNU/Library
+  ./autogen.sh
+  ./configure --prefix=/usr \
+              --enable-shared \
+              --disable-static \
+              --with-libcurl \
+              --with-libmms \
+              --enable-staticlibs
+  make
+
+  msg "building mediainfo"
   cd "$srcdir"/MediaInfo/Project/GNU/CLI
-  sh ./autogen.sh
+  ./autogen.sh
   ./configure --prefix=/usr
   make
 }
-package() {
+
+package_mediainfo() {
+  pkgdesc="supplies technical and tag information about a video or audio file"
+  depends=('libmediainfo')
+
   cd "$srcdir"/MediaInfo/Project/GNU/CLI
   make DESTDIR="$pkgdir" install
+}
+
+package_libmediainfo() {
+  pkgdesc="shared library for mediainfo"
+  depends=('gcc-libs' 'curl' 'libmms')
+
+  cd "$srcdir"/MediaInfoLib/Project/GNU/Library
+  make DESTDIR="$pkgdir" install
+  for i in MediaInfo MediaInfoDLL; do
+    install -dm 755 "$pkgdir"/usr/include/$i
+    install -m 644 "$srcdir"/MediaInfoLib/Source/$i/*.h "$pkgdir"/usr/include/$i
+  done
+  install -dm 755 "$pkgdir"/usr/lib/pkgconfig
+  install -m 644 "$srcdir"/MediaInfoLib/Project/GNU/Library/libmediainfo.pc "$pkgdir"/usr/lib/pkgconfig
+  sed -i -e 's|Version: |Version: '$pkgver'|g' "$pkgdir"/usr/lib/pkgconfig/libmediainfo.pc
 }
 
 # vim:set ts=2 sw=2 et:
