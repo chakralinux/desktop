@@ -1,7 +1,6 @@
 pkgname=('fpc' 'fpc-src')
-pkgver=3.0.0
-pkgrel=3
-_gdbver=7.10
+pkgver=3.0.2
+pkgrel=1
 pkgdesc="The Free Pascal Compiler is a Turbo Pascal 7.0 and Delphi compatible 32bit Pascal Compiler. It comes with fully TP 7.0 compatible run-time library."
 arch=('x86_64')
 url="http://www.freepascal.org/"
@@ -10,10 +9,12 @@ backup=("etc/fpc.cfg")
 depends=('ncurses' 'zlib' 'expat')
 makedepends=('fpc')
 options=('zipman' 'staticlibs' '!strip')
+
+_gdbver=7.10
 source=("ftp://ftp.freepascal.org/pub/fpc/dist/$pkgver/source/fpcbuild-$pkgver.tar.gz"
         "http://ftp.gnu.org/gnu/gdb/gdb-${_gdbver}.tar.xz")
-sha1sums=('915007eee997234c454e63f9b716b0f2fabf64b9'
-          '95338f65ae9f61ecb76592f2cbe336a7d948b905')
+sha256sums=('f261ed0a361f190169fff428d65b707df1507df317fc0ed101b0e63596541b75'
+            '7ebdaa44f9786ce0c142da4e36797d2020c55fa091905ac5af1846b5756208a8')
 
 package_fpc-src(){
   pkgdesc='Sources for the FreePascal compiler (required by the Lazarus IDE)'
@@ -45,7 +46,7 @@ package_fpc() {
 
   install -Dm0644 fpcsrc/rtl/COPYING.FPC ${pkgdir}/usr/share/licenses/${pkgname}/COPYING.FPC
 
-  [ "$CARCH" = "x86_64" ] && ln -s /usr/lib/fpc/${pkgver}/ppcx64 ${pkgdir}/usr/bin/
+  ln -s /usr/lib/fpc/${pkgver}/ppcx64 ${pkgdir}/usr/bin/
 
   mkdir -p ${pkgdir}/etc
   ${pkgdir}/usr/lib/fpc/${pkgver}/samplecfg $pkgdir/usr/lib/fpc/${pkgver} ${pkgdir}/etc
