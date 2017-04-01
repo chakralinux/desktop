@@ -1,38 +1,28 @@
-# Maintainer: Daniele Cocca <jmc@chakra-project.org>
-# Contributor: Ernesto Manríquez <alejandronova@gmail.com>
-
-#_pkgname=ZynAddSubFX
 pkgname=zynaddsubfx
-pkgver=2.5.3
-pkgrel=2
+pkgver=3.0.1
+pkgrel=1
 pkgdesc="Open source additive and substractive software synthesizer, with an integrated effect engine."
 arch=('x86_64')
 url="http://zynaddsubfx.sourceforge.net/"
 license=('GPL2')
-depends=('fftw' 'mxml' 'zlib' 'fltk' 'lash' 'dssi' 'fftw')
-makedepends=('jack' 'ladspa' 'cmake' 'gendesk' 'setconf')
-source=("https://downloads.sourceforge.net/project/${pkgname}/${pkgname}/${pkgver}/${pkgname}-${pkgver}.tar.bz2"
-        'cmakelist-dssi.diff')
+depends=('fftw' 'mxml' 'jack' 'fltk' 'lash' 'dssi' 'fftw' 'libxpm' 'gcc-libs' 'portaudio' 'liblo')
+makedepends=('mesa' 'ladspa' 'cmake' 'gendesk' 'setconf')
+source=("https://downloads.sourceforge.net/project/${pkgname}/${pkgname}/${pkgver}/${pkgname}-${pkgver}.tar.bz2")
 categories=('multimedia')
-sha1sums=('591aa5e67c02b5dffc3fbc209930010af59b262d'
-          'd20477c0468e9597d62c0a1015bbd8402bbfdbe5')
+sha256sums=('a8017f382be5af9e46e6e8771fb7d7c1fd2e480cf099bbb0c29606b217dd32e2')
 
 prepare() {
   cd "$srcdir"
-  gendesk $startdir/PKGBUILD
+  gendesk -f $startdir/PKGBUILD
   setconf "$pkgname.desktop" Icon "$pkgname.svg"
- 
-  cd "${srcdir}"
+  
+  cd "zynaddsubfx-$pkgver"
   [[ -e build ]] && rm -rf build
   mkdir -p build
-
-  # patch dssi installation directory
-  cd ${srcdir}/${pkgname}-${pkgver}
-  patch ${srcdir}/${pkgname}-${pkgver}/src/CMakeLists.txt < $srcdir/cmakelist-dssi.diff
 }
 
 build() {
-  cd "${srcdir}/build"
+  cd "$srcdir/zynaddsubfx-$pkgver/build"
   
   cmake "${srcdir}/${pkgname}-${pkgver}" \
         -DCMAKE_BUILD_TYPE=RelWithDebInfo \
@@ -49,24 +39,22 @@ build() {
 }
 
 package() {
-  cd "${srcdir}/build"
+  cd "$srcdir/zynaddsubfx-$pkgver/build"
+  
   make DESTDIR="${pkgdir}" install
 
-  # Dirty hack on libraries
-  #mv -v ${pkgdir}/usr/lib64/* ${pkgdir}/usr/lib/
-  #rm -rfv ${pkgdir}/usr/lib64/
-
-  # Also copy the data files...
-  install -dm755 "${pkgdir}/usr/share/${pkgname}"
-  cp -a "${srcdir}/${pkgname}-${pkgver}/instruments/banks" "${pkgdir}/usr/share/${pkgname}"
-  cp -a "${srcdir}/${pkgname}-${pkgver}/instruments/examples" "${pkgdir}/usr/share/${pkgname}"
-
+  
   # install external programs
-  install -Dm755 ${srcdir}/${pkgname}-${pkgver}/ExternalPrograms/Spliter/spliter "$pkgdir/usr/bin/spliter"
-  install -Dm755 ${srcdir}/${pkgname}-${pkgver}/ExternalPrograms/Controller/controller "$pkgdir/usr/bin/controller"
-  install -Dm644 ${srcdir}/${pkgname}-${pkgver}/ExternalPrograms/Spliter/readme.txt "$pkgdir/usr/share/doc/$pkgname/SPLITER.txt"
+  install -Dm755 ../ExternalPrograms/Spliter/spliter "$pkgdir/usr/bin/spliter"
+  install -Dm755 ../ExternalPrograms/Controller/controller "$pkgdir/usr/bin/controller"
+  install -Dm644 ../ExternalPrograms/Spliter/readme.txt "$pkgdir/usr/share/doc/$pkgname/SPLITER.txt"
+
+  # banks and examples
+  install -d "$pkgdir/usr/share/$pkgname"
+  cp -a ../instruments/banks "$pkgdir/usr/share/$pkgname"
+  cp -a ../instruments/examples "$pkgdir/usr/share/$pkgname"
 
   # desktop file and icon
-  install -Dm644 "${srcdir}/${pkgname}-${pkgver}/$pkgname.svg" "$pkgdir/usr/share/pixmaps/$pkgname.svg"
+  install -Dm644 "${srcdir}/${pkgname}-${pkgver}/$pkgname.svg" "$pkgdir/usr/share/icons/$pkgname.svg"
   install -Dm644 "$srcdir/$pkgname.desktop" "$pkgdir/usr/share/applications/$pkgname.desktop"
 }
