@@ -1,24 +1,21 @@
-# Maintainer: 	UtG  <utg[dot]chakra.linux[at]gmail[dot]com>
-# Contributor: 	Daniele Cocca <jmc@chakra-project.org>
-
 pkgname=mxml
-pkgver=2.9
+pkgver=2.10
 pkgrel=1
 pkgdesc="Mini-XML is a small XML parsing library: read/write XML and XML-like data files in your application without requiring large non-standard libraries."
 arch=('x86_64')
 url="http://www.minixml.org/"
 license=('LGPL')
-source=("http://www.msweet.org/files/project3/$pkgname-$pkgver.tar.gz")
-md5sums=('e21cad0f7aacd18f942aa0568a8dee19')
+source=("$pkgname-$pkgver.tar.gz::https://github.com/michaelrsweet/mxml/archive/release-$pkgver.tar.gz")
+sha256sums=('bbc8cc3ed5afb5482f531949f5de86b6d24ea5d85bce7b35c49917c300159da9')
 
 build() {
-  cd "$srcdir/$pkgname-$pkgver"
+  cd "$srcdir/$pkgname-release-$pkgver"
   ./configure --prefix=/usr --enable-shared
   make
 }
 
 package() {
-  cd "$srcdir/$pkgname-$pkgver"
+  cd "$srcdir/$pkgname-release-$pkgver"
   make DSTROOT="$pkgdir" install
   chmod -x "$pkgdir/usr/lib/libmxml.a"
 
