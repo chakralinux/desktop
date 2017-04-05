@@ -1,6 +1,6 @@
 pkgname=powertop
-pkgver=2.8
-pkgrel=2
+pkgver=2.9
+pkgrel=1
 pkgdesc="Tool that finds the software that makes your laptop use more power than necessary"
 arch=('x86_64')
 url="https://01.org/powertop"
@@ -8,13 +8,19 @@ license=('GPL2')
 depends=('gcc-libs' 'libnl' 'ncurses' 'pciutils')
 categories=('utils')
 screenshot=('https://01.org/powertop/sites/default/files/resize/users/u8/powertop20_overview-640x381.png')
-source=("https://01.org/sites/default/files/downloads/powertop/${pkgname}-${pkgver}.tar.gz")
-sha256sums=('a87b563f73106babfa3e74dcf92f252938c061e309ace20a361358bbfa579c5a')
+source=($pkgname-$pkgver.tar.gz::https://github.com/fenrus75/powertop/archive/v$pkgver.tar.gz)
+sha256sums=('5daf009271a028c55f0d5da7e5cf85ce08f832831957828f0379faf721f5bad1')
+
+prepare() {
+  cd "${srcdir}"/$pkgname-$pkgver
+  # version 2.9 info fix
+  sed -i 's:RUN-VERSION-SCRIPT-IN-GIT-REPOSITORY-ONLY:v2.9:' scripts/version
+}
 
 build() {
   cd ${srcdir}/${pkgname}-${pkgver}
   ./autogen.sh
-	./configure --prefix=/usr 
+  ./configure --prefix=/usr --sbindir=/usr/bin
   make 
 }
 
