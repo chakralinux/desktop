@@ -1,21 +1,23 @@
 source ../kdeapps.conf
 
 pkgname=labplot
-pkgver=2.3.0
-pkgrel=3
+pkgver=2.4.0
+pkgrel=1
 pkgdesc="A free software data analysis and visualization application build on top of KDE SC"
 arch=('x86_64')
 url='http://labplot.sourceforge.net/'
 license=('GPL')
 depends=('hdf5' 'netcdf' 'gsl' 'qt5-base' 'qt5-svg' 'karchive' 'ki18n' 'kwidgetsaddons' 
-         'kxmlgui' 'kio' 'kdelibs4support' 'kdoctools')
+         'kxmlgui' 'kio' 'kdelibs4support' 'kdoctools' 'kcompletion' 'kconfigwidgets'
+         'kcoreaddons' 'ktextwidgets' 'kio' 'knewstuff' 'fftw' 'cantor' 'cfitsio')
 makedepends=('cmake' 'extra-cmake-modules')
 conflicts=('labplot2-svn')
 source=("http://download.kde.org/stable/${pkgname}/${pkgver}/${pkgname}-${pkgver}-kf5.tar.xz")
-sha256sums=('a5a7d706de5f978430b359ada42f9227a2619f5fa9608d56af16c760b7626f33')
+sha256sums=('86198247ff0d274c85607cdb07a0c4ef19149e4f4bf6c9d2e6e8249134e26bb2')
  
 build() { 
   cd "${srcdir}"/${pkgname}-${pkgver}-kf5  
+  CXXFLAGS="$CXXFLAGS -fpermissive"
   cmake_kf5
   make 
 }
