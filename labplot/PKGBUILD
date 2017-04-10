@@ -12,12 +12,18 @@ depends=('hdf5' 'netcdf' 'gsl' 'qt5-base' 'qt5-svg' 'karchive' 'ki18n' 'kwidgets
          'kcoreaddons' 'ktextwidgets' 'kio' 'knewstuff' 'fftw' 'cantor' 'cfitsio')
 makedepends=('cmake' 'extra-cmake-modules')
 conflicts=('labplot2-svn')
-source=("http://download.kde.org/stable/${pkgname}/${pkgver}/${pkgname}-${pkgver}-kf5.tar.xz")
-sha256sums=('86198247ff0d274c85607cdb07a0c4ef19149e4f4bf6c9d2e6e8249134e26bb2')
+source=("http://download.kde.org/stable/${pkgname}/${pkgver}/${pkgname}-${pkgver}-kf5.tar.xz"
+        fix-build.patch)
+sha256sums=('86198247ff0d274c85607cdb07a0c4ef19149e4f4bf6c9d2e6e8249134e26bb2'
+            'e1a6e69cfde87602102b24324dcb829897bd0e7ce74dc08e04c10f5cec81121b')
+
+prepare() {
+  cd "${srcdir}"/${pkgname}-${pkgver}-kf5
+  patch -Np1 -i "$srcdir/fix-build.patch"
+}
  
 build() { 
   cd "${srcdir}"/${pkgname}-${pkgver}-kf5  
-  CXXFLAGS="$CXXFLAGS -fpermissive"
   cmake_kf5
   make 
 }
@@ -28,5 +34,5 @@ package() {
   
   #fix .desktop exec line
   sed -i s!'Exec=labplot2 -caption %c %i %f'!'Exec=labplot2'! \
-  ${pkgdir}/usr/share/applications/labplot2.desktop
+  ${pkgdir}/usr/share/applications/org.kde.labplot2.desktop
 }
