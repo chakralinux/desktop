@@ -1,8 +1,8 @@
 # contributions from ArchLinux: https://www.archlinux.org/packages/community/x86_64/handbrake-cli/
 
 pkgname=handbrake-cli
-pkgver=1.0.0
-pkgrel=2
+pkgver=1.0.7
+pkgrel=1
 pkgdesc="Multithreaded video transcoder (CLI)"
 arch=('x86_64')
 url="http://handbrake.fr/"
@@ -11,22 +11,17 @@ depends=('bzip2' 'gcc-libs' 'zlib' 'fribidi' 'libass' 'lame' 'libxml2'
          'libtheora' 'libsamplerate' 'ffmpeg' 'libx264' 'x264' 'x265' 'libvpx'
          'libdvdnav' 'jansson')
 makedepends=('intltool' 'python2' 'yasm' 'wget' 'libnotify' 'gst-plugins-base' 'dbus-glib' 'cmake')
-source=("https://handbrake.fr/mirror/HandBrake-$pkgver.tar.bz2"
-        "handbrake-fix-missing-x265-link-flag.patch")
+source=("https://handbrake.fr/mirror/HandBrake-$pkgver.tar.bz2")
 categories=('multimedia')
-sha256sums=('15fb4593c70d75621212e4499f018c3c93d7ce39f1083bf527d4616ded0044c5'
-            '05e212e76b6e0b94a04de02cbeb7bf9db607059e19297b5bd3d0d143135285c4')
+sha256sums=('ffdee112f0288f0146b965107956cd718408406b75db71c44d2188f5296e677f')
 
 prepare() {
   cd "$srcdir/HandBrake-$pkgver"
-  
-  # https://bugs.gentoo.org/show_bug.cgi?id=552792
-  patch -Np1 -i ../handbrake-fix-missing-x265-link-flag.patch
 
   # Use more system libs
   # Bundled libbluray is kept because it is patched locally
   # Our ffmpeg is a liitle old so keep using bundled version
-  for _lib in x265 libvpx libdvdnav libdvdread; do
+  for _lib in libvpx libdvdnav libdvdread; do
     sed -i "/MODULES += contrib\/$_lib/d" make/include/main.defs
   done
 }    
