@@ -1,5 +1,5 @@
 pkgname=pgadmin4
-pkgver=1.3
+pkgver=1.4
 pkgrel=1
 _name=pgAdmin4
 pkgdesc="Comprehensive design and management interface for PostgreSQL"
@@ -8,10 +8,10 @@ url="https://www.pgadmin.org/"
 license=('custom')
 depends=('qt5-webengine' 'python3' 'postgresql-libs' 'hicolor-icon-theme')
 makedepends=('python3-setuptools' 'python3-sphinx' 'python3-pip' 'imagemagick')
-source=("https://ftp.postgresql.org/pub/pgadmin3/pgadmin4/v$pkgver/source/$pkgname-$pkgver.tar.gz"
-        "pgAdmin4.desktop")
-sha256sums=('c7f8a8585851d2f70e2d054e923c092d33631d10e83a8e2d18d8493fef6c670c'
-            'c316e3dfbf433967ef023fe078c52c68ee182a49a0886253e8bbbce7526bb566')
+source=("https://ftp.postgresql.org/pub/pgadmin/pgadmin4/v$pkgver/source/$pkgname-$pkgver.tar.gz"
+        "pgadmin4.desktop")
+sha256sums=('069d1e40a86d192ec518738ed320587aed068900c584c7f11456c190ae63b00e'
+            '763ed68d27b335292c62521268e9b5791584bc32892316453fa5409cb19f1286')
 
 prepare() {
   cd $pkgname-$pkgver
@@ -19,44 +19,59 @@ prepare() {
 }
 
 build() {
+  msg2 "building runtime"
   cd $pkgname-$pkgver/runtime
   export PYTHON_CONFIG=/usr/bin/python3-config
   qmake-qt5 CONFIG+=release
   make
+  
+  msg2 "building python deps"
+  cd $srcdir/$pkgname-$pkgver
+  mkdir -p python
+  pip3 install --target="$srcdir/$pkgname-$pkgver/python" -r requirements.txt
+  
+  msg2 "building docs"
+  # using python3
+  sed -i s!"python"!"python3"! docs/en_US/Makefile.sphinx
+  PYTHONPATH="$srcdir/$pkgname-$pkgver/python:$PYTHONPATH" make docs
 }
 
 package() {
-  # installing python deps
-  cd $pkgname-$pkgver
-  pip3 install --target="${pkgdir}/usr/lib/$_name/modules/site-packages" -r requirements.txt
-
-  #install binary
+  msg2 "installing python deps"
   cd $srcdir/$pkgname-$pkgver
-  install -D runtime/pgAdmin4 ${pkgdir}/usr/lib/$_name/runtime/pgAdmin4
+  install -d ${pkgdir}/usr/lib/$pkgname/modules/site-packages
+  cp -dr python/* ${pkgdir}/usr/lib/$pkgname/modules/site-packages
+
+  msg2 "installing runtime"
+  cd $srcdir/$pkgname-$pkgver
+  install -D runtime/pgAdmin4 ${pkgdir}/usr/lib/$pkgname/runtime/$pkgname
   install -d ${pkgdir}/usr/bin
 
-  # install other stuff
-  cp -a docs web ${pkgdir}/$_rootdir/usr/lib/pgAdmin4
-
+  msg2 "installing other stuff"
+  cp -a docs web ${pkgdir}/usr/lib/$pkgname
+  
+  
+  msg2 "installing configuration stuff"
   # tell pgadmin we want use desktop mode
-  cat >>"${pkgdir}/$_rootdir/usr/lib/pgAdmin4/web/config_local.py" <<END
+  cat >>"${pkgdir}/usr/lib/$pkgname/web/config_local.py" <<END
 SERVER_MODE = False
-HELP_PATH = "/usr/lib/pgAdmin4/docs/en_US/_build/html/"
+HELP_PATH = "/usr/lib/pgadmin4/docs/en_US/_build/html/"
 END
 
-  cat >>"${pkgdir}/$_rootdir/usr/lib/pgAdmin4/web/config_distro.py" <<END
+  cat >>"${pkgdir}/usr/lib/pgadmin4/web/config_distro.py" <<END
 END
 
+  msg2 "installing executable"
   # put wrapper on /usr/bin
   echo "#!/bin/sh
-  export PYTHONPATH=${PYTHONPATH}:/usr/lib/$_name/modules/site-packages
-  /usr/lib/$_name/runtime/pgAdmin4" '"${@}"' > "${srcdir}/$pkgname-$pkgver/$_name.sh"
-  chmod 755 "${srcdir}/$pkgname-$pkgver/$_name.sh"
-  # put the wrapper on /usr/bin
-  install -D "${srcdir}/$pkgname-$pkgver/$_name.sh" ${pkgdir}/usr/bin/${_name}
+  export PYTHONPATH=/usr/lib/$pkgname/modules/site-packages
+  /usr/lib/$pkgname/runtime/pgadmin4" '"${@}"' > "${srcdir}/$pkgname-$pkgver/$pkgname.sh"
+  chmod 755 "${srcdir}/$pkgname-$pkgver/$pkgname.sh"
+  # install the wrapper on /usr/bin
+  install -D "${srcdir}/$pkgname-$pkgver/$pkgname.sh" ${pkgdir}/usr/bin/${pkgname}
 
   # .desktop
-  install -D "$srcdir/pgAdmin4.desktop" "$pkgdir/usr/share/applications/pgAdmin4.desktop"
+  install -D "$srcdir/pgadmin4.desktop" "$pkgdir/usr/share/applications/pgadmin4.desktop"
   
   # icons
   install -Dm644 runtime/pgAdmin4-0.png "$pkgdir/usr/share/icons/hicolor/256x256/apps/pgAdmin4.png"
