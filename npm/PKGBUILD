@@ -1,5 +1,5 @@
 pkgname=npm
-pkgver=4.4.4
+pkgver=4.6.1
 pkgrel=1
 pkgdesc='A package manager for javascript'
 arch=('any')
@@ -10,8 +10,8 @@ provides=('nodejs-node-gyp')
 makedepends=('procps-ng')
 optdepends=('python2: for node-gyp')
 options=('!emptydirs')
-source=("https://github.com/${pkgname}/${pkgname}/archive/v${pkgver}.tar.gz")
-sha256sums=('2d51fc4363b3a6eefac0871c09febc19ffd2c1d16018e381dcdb4a8ede40b468')
+source=("$pkgname-$pkgver::https://github.com/${pkgname}/${pkgname}/archive/v${pkgver}.tar.gz")
+sha256sums=('ba527f1314e11a021257d8b645d093b895cf852583018053d859649764f44750')
 
 build() {
   cd ${pkgname}-${pkgver}
@@ -30,7 +30,7 @@ package() {
 
   # Fix wrong symlinks
   for _dir in man1 man5 man7; do
-    rm -f "$pkgdir"/usr/share/man/$_dir/*
+    mkdir -p "$pkgdir"/usr/share/man/$_dir/*
     cd "$pkgdir"/usr/lib/node_modules/npm/man/$_dir
     for _file in *; do
       ln -s /usr/lib/node_modules/npm/man/$_dir/$_file "$pkgdir"/usr/share/man/$_dir/
