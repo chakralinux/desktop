@@ -1,7 +1,6 @@
 pkgname=rosegarden
-pkgver=16.06
-_pkgver=16.06
-pkgrel=2
+pkgver=17.04
+pkgrel=1
 pkgdesc="MIDI/audio sequencer and notation editor"
 arch=('x86_64')
 url="http://www.rosegardenmusic.com/"
@@ -16,11 +15,11 @@ optdepends=('cups: printing support'
             'wavpack')
 categories=('multimedia')
 install=$pkgname.install
-source=(http://downloads.sourceforge.net/$pkgname/$pkgname-$pkgver.tar.bz2)
-sha256sums=('1044334f2c1a2ac7560d80910e0721c8913bd924f8185a393f630c89020340db')
+source=($pkgname-$pkgver::http://downloads.sourceforge.net/$pkgname/$pkgname-$pkgver.tar.bz2)
+sha256sums=('988a6141c5b0a8e85c029f650de78bf57100c4d778c22d0194b0692584640ece')
 
 build() {
-  cd "$srcdir/$pkgname-$_pkgver"
+  cd "$srcdir/$pkgname-$pkgver"
 
   cmake ./ -DBUILD_TESTING=OFF \
   -DCMAKE_INSTALL_PREFIX=/usr
@@ -28,7 +27,7 @@ build() {
 }
 
 package() {
-  cd "$srcdir/$pkgname-$_pkgver"
+  cd "$srcdir/$pkgname-$pkgver"
 
   make DESTDIR="$pkgdir/" install
 }
