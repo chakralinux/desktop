@@ -1,6 +1,6 @@
 pkgbase=mkvtoolnix
 pkgname=('mkvtoolnix-cli' 'mkvtoolnix-gui')
-pkgver=10.0.0
+pkgver=11.0.0
 pkgrel=1
 pkgdesc="Set of tools to create, edit and inspect Matroska files."
 arch=('x86_64')
@@ -12,10 +12,11 @@ optdepends=('flac: for FLAC support (Free Lossless Audio Codec)'
             'file: for automatic content type detection'
             'curl: for online update checks')
 makedepends=('flac' 'libmatroska' 'libogg' 'libvorbis' 'qt5-base' 'xdg-utils' 'libebml' 
-             'zlib' 'boost-libs' 'expat' 'boost' 'ruby' 'libxslt' 'docbook-xsl' 'po4a')
+             'zlib' 'boost-libs' 'expat' 'boost' 'ruby' 'libxslt' 'docbook-xsl' 'po4a'
+             'qt5-multimedia')
 categories=('multimedia')
 source=("http://www.bunkus.org/videotools/${pkgbase}/sources/${pkgbase}-${pkgver}.tar.xz")
-sha256sums=('12be72c373645b5bb9b9ea79ce8447958a1b806162868bb67803baa6d0032333')
+sha256sums=('bb642e1eb2c402c4f93a962f41a1832c99ee5b782f1596dc20f996e9a4aa426d')
 
 prepare() {
   cd "${srcdir}/${pkgbase}-${pkgver}"
@@ -61,7 +62,7 @@ package_mkvtoolnix-cli() {
 
 package_mkvtoolnix-gui() {
   pkgdesc="Set of tools to create, edit and inspect Matroska files - Qt GUI"
-  depends=("mkvtoolnix-cli=${pkgver}" 'qt5-base' 'xdg-utils' 'desktop-file-utils')
+  depends=("mkvtoolnix-cli=${pkgver}" 'qt5-base' 'qt5-multimedia' 'xdg-utils' 'desktop-file-utils')
   install=mkvtoolnix.install
 
   cd "${srcdir}/${pkgbase}-${pkgver}"
