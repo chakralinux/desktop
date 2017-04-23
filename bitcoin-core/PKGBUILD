@@ -1,5 +1,5 @@
 pkgname=bitcoin-core
-pkgver=0.14.0
+pkgver=0.14.1
 pkgrel=1
 pkgdesc="Bitcoin is a peer-to-peer network based digital currency"
 arch=('x86_64')
@@ -14,14 +14,12 @@ source=("http://bitcoin.org/bin/bitcoin-core-$pkgver/bitcoin-$pkgver.tar.gz"
 	"https://raw.github.com/bitcoin/bitcoin/v$pkgver/contrib/debian/bitcoin-qt.desktop"
 	"bitcoin128.svg"
 	"https://raw.github.com/bitcoin/bitcoin/v$pkgver/contrib/debian/examples/bitcoin.conf"
-	"bitcoin.logrotate"
         "bitcoin.service"
         "bitcoin-reindex.service")
-sha256sums=('d743d4866a0d4c1457f81530c45258a8b6383d1cafc458eedcba8d01728a641e'
+sha256sums=('f21203e07f054dce3177539be89a066d4faee1e2fa432157c1444e4e6dd4f9a3'
             'b6826255de152159fff53ad8f456a8ce9c1b35ebaf79171001e4ceed42da57b7'
             '7ddc5b4f0e6a217663c4cc8bbf6dc237c8e16aff3159f0fe3e0de18810676f90'
             '948a2a270729c9385f1d103b152b12b1f9749acf92097aba1bef6888a5e6adef'
-            '8f05207b586916d489b7d25a68eaacf6e678d7cbb5bfbac551903506b32f904f'
             '5e45f2ceaeb7bfa60aeb66ca4167068191eb4358af03f95ac70fd96d9b006349'
             '10ad0b8c356559886634eaf658992004045853ec26cddee143d16125cb75e8f1')
 
@@ -80,8 +78,8 @@ package() {
   install -Dm 644 "$srcdir/bitcoin-reindex.service" \
     -t "$pkgdir/usr/lib/systemd/system"
 
-  msg2 'Installing bitcoin.logrotate...'
-  install -Dm 644 "$srcdir/bitcoin.logrotate" "$pkgdir/etc/logrotate.d/bitcoin"
+  #msg2 'Installing bitcoin.logrotate...'
+  #install -Dm 644 "$srcdir/bitcoin.logrotate" "$pkgdir/etc/logrotate.d/bitcoin"
 
   msg2 'Installing bash completion...'
   for _compl in bitcoin-cli bitcoin-tx bitcoind; do
