@@ -1,41 +1,43 @@
 pkgname=openimageio
-pkgver=1.6.16
-pkgrel=3
+pkgver=1.7.13
+pkgrel=1
 pkgdesc="A library for reading and writing images, including classes, utilities, and applications."
 arch=('x86_64')
 url="http://www.openimageio.org/"
 license=('custom')
-depends=('openexr' 'boost-libs' 'jasper' 'glew' 'libtiff' 'opencolorio' 'intel-tbb'
-         'ffmpeg' 'openssl' 'libraw' 'openjpeg' 'libwebp')
-makedepends=('cmake' 'qt' 'python2' 'boost' 'mesa')
-optdepends=('qt: iv image viewer'
+depends=('openexr' 'boost-libs' 'jasper' 'glew' 'libtiff' 'opencolorio' 'intel-tbb' 'openssl' 'libpng' 'ptex')
+makedepends=('git' 'cmake' 'qt4' 'python2' 'python3' 'boost' 'mesa' 'freetype2' 'fontconfig' 'libxrender')
+optdepends=('qt4: iv image viewer'
             'python2: bindings support'
+            'python3: bindings support'
             'ttf-droid: font support')
-source=("https://github.com/OpenImageIO/oiio/archive/Release-$pkgver.tar.gz")
-sha1sums=('688e1716d9660fd8d14e48105a2a207eeddc30e3')
+source=("git+https://github.com/OpenImageIO/oiio#tag=Release-$pkgver")
+sha1sums=('SKIP')
 
 build() {
-  cd oiio-Release-$pkgver
+  cd oiio
 
   [[ -d build ]] && rm -r build
   mkdir build && cd build
 
-  cmake \
+  cmake .. \
+      -DUSE_PYTHON=ON \
+      -DUSE_PYTHON3=ON \
       -DUSE_OPENSSL=ON \
+      -DUSE_PTEX=ON \
       -DCMAKE_INSTALL_PREFIX=/usr \
       -DPYLIB_INSTALL_DIR=lib/python2.7/site-packages \
-      -DOIIO_BUILD_TESTS=OFF \
-      ..
+      -DPYLIB3_INSTALL_DIR=lib/python3.5/site-packages \
+      -DOIIO_BUILD_TESTS=ON \
+      -DOIIO_BUILD_TOOLS=ON
+
   make
 }
 
 package() {
-  cd oiio-Release-$pkgver/build
+  cd oiio/build
 
   make DESTDIR="$pkgdir" install
-
-  # remove font from package
-  rm -rf "$pkgdir/usr/share/fonts/"
 
   # license
   cd ..
