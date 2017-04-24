@@ -1,7 +1,7 @@
 pkgbase=mkvtoolnix
 pkgname=('mkvtoolnix-cli' 'mkvtoolnix-gui')
 pkgver=11.0.0
-pkgrel=1
+pkgrel=2
 pkgdesc="Set of tools to create, edit and inspect Matroska files."
 arch=('x86_64')
 license=('GPL')
@@ -73,6 +73,9 @@ package_mkvtoolnix-gui() {
     find "${pkgdir}" -name $t* -delete
   done
   
+  # Fix file conflicts with mkvtoolnix-cli
+  rm -rf ${pkgdir}/usr/share/mkvtoolnix/sounds
+
 #  install -Dm755 src/mkvinfo "${pkgdir}"/usr/bin/mkvinfo-gui
 #  sed -ri 's/^(Exec=mkvinfo)/\1-gui/' "${pkgdir}"/usr/share/applications/mkvinfo.desktop
 }
