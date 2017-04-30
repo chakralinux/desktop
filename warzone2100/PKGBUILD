@@ -1,5 +1,5 @@
 pkgname=warzone2100
-pkgver=3.2.2
+pkgver=3.2.3
 pkgrel=1
 pkgdesc="3D real-time strategy game where you fight to rebuilt the world destroyed by nuclear war."
 arch=('x86_64')
@@ -12,15 +12,15 @@ depends=('libgl' 'openal' 'libjpeg' 'libpng' 'libvorbis' 'libtheora' 'libmad'
 makedepends=('gawk' 'bison' 'flex' 'zip' 'unzip' 'libxrandr' 'asciidoc')
 conflicts=('warzone2100-dev')
 source=("https://downloads.sourceforge.net/sourceforge/${pkgname}/${pkgname}-${pkgver}.tar.xz"
-	warzone2100.appdata.xml)
-sha256sums=('af5a8dfe9e9df3505ef2543e4e62afb1f61a4ee4cc903f8ff7785f3c79779d18'
-            'd6fd6bf40bd72d57a2872b3e439bed04f4cd78e0a7b2993de580ed765b80cfc4')
+	fix-qt-build.patch)
+sha256sums=('fcab9e860203e7dacda6ee60384da490a9d44aeafc07aa31ff25f9c548be7582'
+            '59529cb62e5985ed9934fdf3621a98ecf2b3b54d4bd7d0793b5317156934712f')
 
 build() {
   cd ${pkgname}-${pkgver}
 
-  # Add missing file from the tarball
-  cp ${srcdir}/warzone2100.appdata.xml icons/
+  # Fix build
+  patch -Np1 -i ${srcdir}/fix-qt-build.patch
 
   ./configure \
     --prefix=/usr \
