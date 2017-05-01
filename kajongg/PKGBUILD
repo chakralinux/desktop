@@ -1,16 +1,20 @@
 # Include global configuration
 source ../kdeapps.conf
 
-pkgname=libkgapi
+pkgname=kajongg
 pkgver=${_kdever}
 pkgrel=1
-pkgdesc="A KDE-based library for accessing various Google services via their public API"
-url='https://projects.kde.org/projects/extragear/libs/libkgapi'
+pkgdesc="The ancient Chinese board game for 4 players"
 arch=('x86_64')
-license=(GPL LGPL FDL)
-depends=(kcalcore kcontacts qt5-webengine)
-makedepends=(extra-cmake-modules kdoctools qt5-tools kdesignerplugin python3)
-options=('debug')
+url='http://kde.org/applications/games/kajongg/'
+license=('GPL' 'LGPL' 'FDL')
+depends=(python3-twisted python3-pyqt5 libkmahjongg hicolor-icon-theme)
+makedepends=(extra-cmake-modules kdoctools)
+groups=("kde" "kdegames" "kde-uninstall")
+conflicts=(kdegames-kajongg)
+replaces=(kdegames-kajongg)
+provides=(kdegames-kajongg)
+options=('docs' 'debug')
 source=("$_mirror/${pkgname}-$_kdever.tar.xz"{,.sig})
 sha256sums=(`grep ${pkgname}-$_kdever.tar.xz  ../kdeapps.sums | cut -d " " -f1`
                         'SKIP')

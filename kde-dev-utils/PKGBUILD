@@ -1,16 +1,17 @@
 # Include global configuration
 source ../kdeapps.conf
 
-pkgname="kde-dev-utils"
-arch=('x86_64')
+pkgname=kde-dev-utils
 pkgver=${_kdever}
 pkgrel=1
+arch=(x86_64)
 pkgdesc="KDE Standard Development Toolkit Utilities"
 url="http://www.kde.org"
 license=('GPL' 'LGPL' 'FDL')
 groups=("kde" "kdesdk" "kde-uninstall")
 options=('docs' 'debug')
-makedepends=('pkg-config' 'cmake' 'automoc4' 'kdelibs' 'kdoctools')
+depends=(kparts qt5-tools)
+makedepends=(extra-cmake-modules python3)
 provides=('kmtrace' 'kpartloader' 'kprofilemethod' 'kstartperf' 'kuiviewer')
 conflicts=('kdesdk-kmtrace' 'kdesdk-kpartloader' 'kdesdk-kprofilemethod' 'kdesdk-kstartperf' 'kdesdk-kuiviewer')
 replaces=('kdesdk-kmtrace' 'kdesdk-kpartloader' 'kdesdk-kprofilemethod' 'kdesdk-kstartperf' 'kdesdk-kuiviewer')
@@ -20,16 +21,17 @@ sha256sums=(`grep ${pkgname}-$_kdever.tar.xz  ../kdeapps.sums | cut -d " " -f1`
                         'SKIP')
 validpgpkeys=(${Avalidpgpkeys})
 
+prepare() {
+  mkdir -p build
+}
+
 build() {
-    cd ${srcdir}/${pkgname}-${pkgver}
-    cmake . \
-        -DCMAKE_BUILD_TYPE=${_build_type} \
-        -DCMAKE_INSTALL_PREFIX=${_installprefix} \
-        -DCMAKE_SKIP_RPATH=ON 
-    make 
+  cd build
+  cmake_kf5 ../${pkgname}-${pkgver}
+  make
 }
 
 package() {
-    cd ${srcdir}/${pkgname}-${pkgver}
-    make DESTDIR=${pkgdir} install 
+  cd build
+  make DESTDIR=${pkgdir} install
 }

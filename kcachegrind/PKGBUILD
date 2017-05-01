@@ -1,16 +1,21 @@
 # Include global configuration
 source ../kdeapps.conf
 
-pkgname=libkgapi
+pkgname=kcachegrind
 pkgver=${_kdever}
 pkgrel=1
-pkgdesc="A KDE-based library for accessing various Google services via their public API"
-url='https://projects.kde.org/projects/extragear/libs/libkgapi'
-arch=('x86_64')
-license=(GPL LGPL FDL)
-depends=(kcalcore kcontacts qt5-webengine)
-makedepends=(extra-cmake-modules kdoctools qt5-tools kdesignerplugin python3)
-options=('debug')
+arch=(x86_64)
+pkgdesc="KDE profiler visualization"
+screenshot="http://www.kde.org/images/screenshots/kcachegrind.png"
+groups=(kde-applications kdesdk)
+depends=(kio hicolor-icon-theme)
+makedepends=(extra-cmake-modules kdoctools python3 qt5-tools)
+install=kdesdk.install
+license=('GPL' 'LGPL' 'FDL')
+options=('docs' 'debug')
+conflicts=(kdesdk-kcachegrind)
+replaces=(kdesdk-kcachegrind)
+provides=(kdesdk-kcachegrind)
 source=("$_mirror/${pkgname}-$_kdever.tar.xz"{,.sig})
 sha256sums=(`grep ${pkgname}-$_kdever.tar.xz  ../kdeapps.sums | cut -d " " -f1`
                         'SKIP')
