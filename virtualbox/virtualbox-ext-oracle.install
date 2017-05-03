@@ -10,7 +10,7 @@ virtualbox-ext-oracle-installer() {
   wget "https://www.virtualbox.org/download/hashes/$1/SHA256SUMS" -O SHA256SUMS
   EXTPACK_FILE="Oracle_VM_VirtualBox_Extension_Pack-${1}.vbox-extpack"
 
-  if sha256sum -c SHA256SUMS > /dev/null 2>&1
+  if "$(sha256sum -c SHA256SUMS)" > /dev/null 2>&1
   then
           echo "nothing to do, you are already using the latest VirtualBox Extension provided by Oracle"
   else
@@ -23,7 +23,7 @@ virtualbox-ext-oracle-installer() {
 # arg 1:  the new package version
 post_install() {
   virtualbox-ext-oracle-installer "${1%%-*}"
-  VBoxManage extpack install "${DIR}/Oracle_VM_VirtualBox_Extension_Pack-${1%%-*}.vbox-extpack" >/dev/null
+  VBoxManage extpack install --accept-license="$(sha256sum /usr/share/licenses/virtualbox-ext-oracle/PUEL | head --bytes=64)" "/usr/share/virtualbox/extensions/Oracle_VM_VirtualBox_Extension_Pack-${1%%-*}.vbox-extpack" >/dev/null
 }
 
 # arg 1:  the new package version
