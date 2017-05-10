@@ -4,7 +4,7 @@ source ../kdeapps.conf
 pkgname="kdelibs"
 arch=('x86_64')
 pkgver=${_libsver}
-pkgrel=1
+pkgrel=2
 pkgdesc="KDE Core Libraries"
 url="http://www.kde.org"
 license=('GPL' 'LGPL' 'FDL')
@@ -37,6 +37,10 @@ sha256sums=(`grep ${pkgname}-${_libsver}.tar.xz  ../kdeapps.sums | cut -d " " -f
                         'd7d2fac1ceb1551081a5f3fa860c14d4aeb0c774d56067e931c20b8d79c4450f')
 validpgpkeys=(${Avalidpgpkeys})
 
+# https://www.kde.org/info/security/advisory-20170510-1.txt kauth < 5.34, kdelibs < 4.14.32
+source+=(CVE-2017-8422.patch::'https://cgit.kde.org/kdelibs.git/patch/?id=264e97625abe2e0334f97de17f6ffb52582888ab')
+sha256sums+=('92f725c6f120c80c993e722d0798eaa126ea922df49081efc247a613194f1306')
+
 prepare() {
     # main patches
     msg "Applying patches..."
@@ -44,6 +48,7 @@ prepare() {
     patch -Np1 -i ${srcdir}/01_chakra_tag.patch
     patch -Np1 -i ${srcdir}/02_kde_applications_menu.patch
     patch -Np1 -i ${srcdir}/03_chakra_menu.patch
+    patch -Np1 -i $srcdir/CVE-2017-8422.patch
 
     # right positioning of applications' entries in kmenu
     patch -p1 -i ${srcdir}/MergeDir.patch
