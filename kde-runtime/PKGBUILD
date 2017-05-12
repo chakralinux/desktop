@@ -9,23 +9,33 @@ arch=('x86_64')
 url='https://projects.kde.org/projects/kde/kde-runtime'
 license=('GPL' 'LGPL')
 options=('debug')
-depends=('libkactivities4' 'smbclient' 'libssh' 'libcanberra' 'oxygen-icons' 'xorg-xauth' 'libwebp' 'kdepimlibs4')
-optdepends=('gdb: needed by DrKonqi to generate backtrace'
-            'khelpcenter: to display applications documentation')
 makedepends=('pkg-config' 'cmake' 'automoc4' 'openslp' 'doxygen' 'networkmanager' 'boost')
+depends=('kdelibs' 'smbclient' 'libssh' 'libcanberra' 'oxygen-icons' 'xorg-xauth' 'libwebp' 'exiv2' 'gpgme')
+optdepends=('drkonqi: crash report tool' 'khelpcenter: to display applications documentation')
 
 groups=('kde' 'kde-minimal' 'kde-uninstall')
 install=kde-runtime.install
 replaces=('kdebase-runtime')
 provides=('kdebase-runtime')
 conflicts=('kdebase-runtime')
-source=("$_mirror/${pkgname}-$_kdever.tar.xz"{,.sig})
+source=("$_mirror/${pkgname}-$_kdever.tar.xz"{,.sig}
+            kdebase-runtime-no-html-thumbnails.patch
+            kdebase-runtime-no-kdewebkit.patch)
 sha256sums=(`grep ${pkgname}-$_kdever.tar.xz  ../kdeapps.sums | cut -d" " -f1`
-	    'SKIP')
+            'SKIP'
+            '5ce434f25759215ed2b6f71ec82a9118ee76e7428ef1af8a5495133a76c9c2df'
+            '93d5ddf78c784b3d79486813bdfb43debba271b389bfc46ca79aabdb0bca14db')
 validpgpkeys=(${Avalidpgpkeys})
 
 prepare() {
   mkdir -p build
+  
+  # Don't link to kactivities
+  sed -e '/plasmaextracomponents/d' -i kde-runtime-$pkgver/plasma/declarativeimports/CMakeLists.txt
+  # Drop HTML thumbnailer, uses insecure QtWebKit
+  cd kde-runtime-$pkgver
+  patch -p1 -i ../kdebase-runtime-no-html-thumbnails.patch
+  patch -p1 -i ../kdebase-runtime-no-kdewebkit.patch
 }
 
 build() {
@@ -41,6 +51,7 @@ build() {
     -DBUILD_khelpcenter=OFF \
     -DBUILD_kglobalaccel=OFF \
     -DBUILD_kuiserver=OFF \
+    -DBUILD_drkonqi=OFF \
     -DBUILD_doc=OFF
   make
 }

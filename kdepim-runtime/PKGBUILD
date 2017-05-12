@@ -3,7 +3,7 @@ source ../kdeapps.conf
 
 pkgname=kdepim-runtime
 pkgver=${_kdever}
-pkgrel=2
+pkgrel=1
 pkgdesc='Extends the functionality of kdepim'
 arch=('x86_64')
 url='https://projects.kde.org/projects/kde/kdepim-runtime'
@@ -19,14 +19,13 @@ conflicts=('kio-pim') # can be removed when 16.12 is released
 
 source=("$_mirror/${pkgname}-$_kdever.tar.xz"{,.sig})
 sha256sums=(`grep ${pkgname}-$_kdever.tar.xz  ../kdeapps.sums | cut -d " " -f1`
-                        'SKIP')
+            'SKIP')
 
 validpgpkeys=(${Avalidpgpkeys})
 
 prepare() {
   mkdir -p build
   cd ${pkgname}-${pkgver}
-
 }
 
 build() {

@@ -3,7 +3,7 @@ source ../kdeapps.conf
 
 pkgname=libkgapi
 pkgver=${_kdever}
-pkgrel=2
+pkgrel=1
 pkgdesc="A KDE-based library for accessing various Google services via their public API"
 url='https://projects.kde.org/projects/extragear/libs/libkgapi'
 arch=('x86_64')
@@ -11,19 +11,13 @@ license=(GPL LGPL FDL)
 depends=(kcalcore kcontacts qt5-webengine)
 makedepends=(extra-cmake-modules kdoctools qt5-tools kdesignerplugin python3)
 options=('debug')
-source=("$_mirror/${pkgname}-$_kdever.tar.xz"{,.sig}
-              libkgapi-fix-auth.patch::"https://cgit.kde.org/libkgapi.git/patch/?id=68b89bce")
+source=("$_mirror/${pkgname}-$_kdever.tar.xz"{,.sig})
 sha256sums=(`grep ${pkgname}-$_kdever.tar.xz  ../kdeapps.sums | cut -d " " -f1`
-                        'SKIP'
-                        '5903158fefff99bc11284de3653c23b32239b99e93d34b75d9fe6c61cb6a138e')
+                        'SKIP')
 validpgpkeys=(${Avalidpgpkeys})
 
 prepare() {
   mkdir -p build
- 
- # Fix authentication
-  cd $pkgname-$pkgver
-  patch -p1 -i ../libkgapi-fix-auth.patch
 }
 
 build() {

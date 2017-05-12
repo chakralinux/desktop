@@ -4,30 +4,25 @@ source ../kdeapps.conf
 pkgname="kdenetwork-kget"
 arch=('x86_64')
 pkgver=${_kdever}
-pkgrel=2
+pkgrel=1
 pkgdesc="Download manager"
 url="http://kde.org/applications/internet/kget/"
-depends=("kde-runtime" "kdepimlibs4" 'qca' 'kwebkitpart>=0.9.6' 'libktorrent>=1.0.4' 'libmms')
+depends=('kdebase-runtime' 'libmms' 'qca')
+makedepends=('cmake' 'automoc4' 'boost')
+#optdepends=('libktorrent4: torrent support')
 groups=("kde" "kdenetwork" "kde-uninstall")
-categories=('network')
 conflicts=("kdenetwork-common" "kdenetwork-doc")
 install=kdenetwork.install
 license=('GPL' 'LGPL' 'FDL')
 options=('docs' 'debug')
-makedepends=('pkg-config' 'cmake' 'automoc4' 'docbook-xsl' 'boost')
-source=("$_mirror/kget-$_kdever.tar.xz"{,.sig}
-        list_view_header_recovery.patch)
+source=("$_mirror/kget-$_kdever.tar.xz"{,.sig})
 sha256sums=(`grep kget-$_kdever.tar.xz  ../kdeapps.sums | cut -d " " -f1`
-                        'SKIP'
-                        '6c48b3111c3ed4f9a5834f69edbf7a60faa92054bdeb6c9cf7ee78da580a3e22')
+                        'SKIP')
 validpgpkeys=(${Avalidpgpkeys})
             
 
 prepare(){
   cd ${srcdir}/kget-$pkgver
-  # https://bugs.kde.org/show_bug.cgi?id=339513
-  #  Bug 339513 - kget should remember columns' widths on reopen 
-  patch -Np1 -i "${srcdir}/list_view_header_recovery.patch"
 }
 
 build() {

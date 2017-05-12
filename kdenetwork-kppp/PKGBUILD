@@ -7,14 +7,13 @@ pkgver=${_kdever}
 pkgrel=1
 pkgdesc="PPP client"
 url="http://kde.org/applications/internet/kppp/"
-depends=("kde-runtime" 'ppp')
+depends=('kdebase-runtime' 'ppp')
+makedepends=('cmake' 'automoc4')
 groups=("kde" "kdenetwork" "kde-uninstall")
-categories=('network')
 conflicts=("kdenetwork-common" "kdenetwork-doc")
 install=kdenetwork.install
 license=('GPL' 'LGPL' 'FDL')
 options=('docs' 'debug')
-makedepends=('pkg-config' 'cmake' 'automoc4' 'docbook-xsl')
 source=("$_mirror/kppp-$_kdever.tar.xz"{,.sig})
 sha256sums=(`grep kppp-$_kdever.tar.xz  ../kdeapps.sums | cut -d " " -f1`
                         'SKIP')
@@ -26,6 +25,7 @@ build() {
         -DCMAKE_BUILD_TYPE=${_build_type} \
         -DCMAKE_INSTALL_PREFIX=${_installprefix} \
         -DCMAKE_SKIP_RPATH=ON \
+        -DKDE4_BUILD_TESTS=OFF \
         -DCMAKE_{SHARED,MODULE,EXE}_LINKER_FLAGS='-Wl,--no-undefined -Wl,--as-needed'
     make
 }
