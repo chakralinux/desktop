@@ -3,7 +3,7 @@ source ../kdeapps.conf
 
 pkgname=kdepim-runtime
 pkgver=${_kdever}
-pkgrel=1
+pkgrel=2
 pkgdesc='Extends the functionality of kdepim'
 arch=('x86_64')
 url='https://projects.kde.org/projects/kde/kdepim-runtime'
@@ -21,11 +21,17 @@ source=("$_mirror/${pkgname}-$_kdever.tar.xz"{,.sig})
 sha256sums=(`grep ${pkgname}-$_kdever.tar.xz  ../kdeapps.sums | cut -d " " -f1`
             'SKIP')
 
+# KDE patch
+source+=(kdebug-379733.patch::'https://cgit.kde.org/kdepim-runtime.git/patch/?id=e8b131fe179f474af9de12f1289ea70cd99e90e4')
+sha256sums+=('1e4b78e14922a1df7d29dfc7efe7e4c8def5eee41062ca7f401c0a867ffe3901')
+
 validpgpkeys=(${Avalidpgpkeys})
 
 prepare() {
   mkdir -p build
   cd ${pkgname}-${pkgver}
+  # fix crash on account configuration
+  patch -p1 -i ../kdebug-379733.patch
 }
 
 build() {
