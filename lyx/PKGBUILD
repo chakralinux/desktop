@@ -1,6 +1,6 @@
 pkgname=lyx
-pkgver=2.2.2
-pkgrel=3
+pkgver=2.2.3
+pkgrel=1
 pkgdesc="An advanced open-source document processor"
 arch=('x86_64')
 url="http://www.lyx.org"
@@ -12,17 +12,10 @@ optdepends=('texlive-most: TeX Live goodies'
 license=('GPL')
 source=("ftp://ftp.lyx.org/pub/lyx/stable/2.2.x/$pkgname-$pkgver.tar.xz"
         'lyx.desktop'
-        'lyxrc.dist'
-        qt58.patch)
-md5sums=('c37b2926d7df211c94b7260e163e2c29'
+        'lyxrc.dist')
+md5sums=('032147bf8e05040787b0fca43fd70de3'
          '3827d343670a38d97bdc7e002ff1e4a1'
-         'b70fdeab95ba4a6c3ff72410dfa61823'
-         '9761360820f7bf292740013f2267f733')
-
-prepare() {
-  cd "${srcdir}/${pkgname}-${pkgver}"
-  patch -Np1 -i ../qt58.patch
-}
+         'b70fdeab95ba4a6c3ff72410dfa61823')
 
 build() {
   cd ${srcdir}/${pkgname}-${pkgver}
