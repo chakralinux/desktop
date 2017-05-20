@@ -1,13 +1,13 @@
 pkgname=texmacs
-pkgver=1.99.2
-pkgrel=2
+pkgver=1.99.5
+pkgrel=1
 pkgdesc="WYSIWYG Qt4 editor and graphical frontend to various CASes"
 arch=('x86_64')
 url='http://texmacs.org/'
 screenshot="http://www.texmacs.org/tmweb/images/texmacs-1.png"
 license=('GPL3')
 depends=('qt' 'texlive-core' 'guile1.8' 'cairo' 'freetype2' 'imlib2'
-         'perl' 'python2' 'libxext'
+         'perl' 'python2' 'libxext' 'sqlite3'
          'desktop-file-utils' 'shared-mime-info')
 makedepends=('ghostscript')
 optdepends=('gawk: conversion of some files'
@@ -17,7 +17,7 @@ conflicts=('texmacs-qt')
 install=${pkgname}.install
 options=('!emptydirs')
 source=("http://www.texmacs.org/Download/ftp/tmftp/source/TeXmacs-$pkgver-src.tar.gz")
-sha512sums=('e9d2dd0aab2e66470c4ae860e13b6fad2cc07913f14f7bca042c703d4d8b4a62fafafa711b81a0d8f8c125a3641b8bb5f38cd3adac74ec18895671423aa60be9')
+sha512sums=('a7d846fd8823e486cf724bfcbe04ae877dd64995d6131af59b49427a1178e36b52b9fcd9109783b9ae1e39c988ae9ed497b1540dce29645ebf2c4301ca7357a8')
 
 prepare() {
   cd "${srcdir}/TeXmacs-${pkgver}-src"
@@ -26,14 +26,18 @@ prepare() {
     TeXmacs/misc/inkscape_extension/texmacs_reedit.py
   sed -i 's/"python"/"python2"/' plugins/python/progs/init-python.scm
   sed -i '/^LDPATH/d' src/makefile.in
-  sed -i -e 's/guile /guile1.8 /g' \
-         -e 's/guile-config/guile-config1.8/g' \
-         configure
+  
+  autoreconf -vi
+  sed -i -e 's/guile18-config/guile-config1.8/g' configure
+	sed -i -e 's/guile18/guile1.8/g' configure
+  sed -i -e 's|#include <libguile18.h>|#include <guile/gh.h>|g' src/Scheme/Guile/guile_tm.hpp
 
  # Don't generate icon-cache and mime-database (namcap tells that they should not be in a package)
   sed -i '/update-mime-database/d' Makefile.in
   sed -i '/gtk-update-icon-cache/d' Makefile.in
   sed -i '\/icons\/gnome 2>\/dev\/null/d' Makefile.in
+  
+  find -name '.*.d' -o -name '.*.cpp' -exec rm {} \;
 
 }
 
@@ -48,11 +52,13 @@ build() {
   	--prefix=/usr \
 	--enable-pdf-renderer \
 	--enable-optimize \
-	--with-freetype \
 	--with-imlib2 \
 	--enable-guile2=no \
 	--with-qt
   make
+  
+#       --with-freetype
+#       --with-sqlite3=yes
 }
 
 package() {
@@ -66,6 +72,9 @@ package() {
   ${pkgdir}/usr/share/applications/texmacs.desktop
  
 
- # fix fig2ps script
- sed -i 's|${prefix}|/usr|' "${pkgdir}/usr/bin/fig2ps"
+  # fix fig2ps script
+  sed -i 's|${prefix}|/usr|' "${pkgdir}/usr/bin/fig2ps"
+ 
+  msg "set environment variables"
+  sed -i s!"@CONFIG_LIB_PATH@"!"LD_LIBRARY_PATH"!g $pkgdir/usr/bin/$pkgname
 }
