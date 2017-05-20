@@ -1,6 +1,6 @@
 pkgbase=tqdm
 pkgname=(python3-${pkgbase} python2-${pkgbase})
-pkgver=4.11.1
+pkgver=4.11.2
 pkgrel=1
 pkgdesc="Simple Python Progress Meter"
 arch=('any')
@@ -9,29 +9,32 @@ license=('MIT')
 makedepends=('python3-setuptools' 'python2-setuptools' 'python2' 'python3')
 options=('!emptydirs')
 source=(https://github.com/tqdm/tqdm/archive/v$pkgver.tar.gz)
-sha512sums=('3c0b564f552935154aef43e338c724c9d7c92b3e3c4d36f9d64ceae487986c43face53c98a6a053738536f257179c090c6c1426c82569a53657e9e7922dfcb4a')
+sha512sums=('9375e03a25dea65193c9bc1add952486625e1087e2ce6bd7adc4ddc98a1b9898595130a2c81c253d5566cd323f11ee48067a46ca3f16828ed6c000f0bc1a022a')
 
 prepare() {
-         cp -a "${srcdir}/${pkgbase}-${pkgver}"{,-py2}
+  cp -a "${srcdir}/${pkgbase}-${pkgver}"{,-py2}
 }
 
 build() {
-    cd "${srcdir}/${pkgbase}-${pkgver}"
-    python3 setup.py build
+  cd "${srcdir}/${pkgbase}-${pkgver}"
+  python3 setup.py build
 
-    cd "${srcdir}/${pkgbase}-${pkgver}-py2"
-    python2 setup.py build
+  cd "${srcdir}/${pkgbase}-${pkgver}-py2"
+  python2 setup.py build
 }
 
 package_python3-tqdm() {
-         depends=('python3')
-         cd "${srcdir}/${pkgbase}-${pkgver}"
-         python3 setup.py install --root="${pkgdir}" --optimize=1
+  depends=('python3')
+  cd "${srcdir}/${pkgbase}-${pkgver}"
+  python3 setup.py install --root="${pkgdir}" --optimize=1
+  mv "$pkgdir"/usr/bin/tqdm{,-python3}
 }
 
 package_python2-tqdm() {
-         depends=('python2')
-         cd "${srcdir}/${pkgbase}-${pkgver}-py2"
-         python2 setup.py install --root="${pkgdir}" --optimize=1
+  depends=('python2')
+  cd "${srcdir}/${pkgbase}-${pkgver}-py2"
+  python2 setup.py install --root="${pkgdir}" --optimize=1
+  mv "$pkgdir"/usr/bin/tqdm{,-python2}
+  ln -s tqdm-python2 "$pkgdir"/usr/bin/tqdm
 }
 
