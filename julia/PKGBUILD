@@ -1,12 +1,13 @@
 pkgbase=julia
 pkgname=('julia' 'julia-docs')
-pkgver=0.5.1
+pkgver=0.5.2
 pkgrel=1
 arch=('x86_64')
 pkgdesc='High-level, high-performance, dynamic programming language'
 url='http://julialang.org/'
 license=('MIT')
-makedepends=('gcc-fortran' 'python2' 'git' 'zlib' 'cmake' 'openssl' 'libgit2')
+makedepends=('gcc-fortran' 'python2' 'openblas' 'lapack' 'arpack' 'libunwind' 'fftw' 'llvm'
+             'gmp' 'mpfr' 'zlib' 'suitesparse' 'cmake' 'libgit2' 'openssl')
 options=('!emptydirs' 'staticlibs')
 source=("git://github.com/JuliaLang/julia.git#tag=v$pkgver")
 sha256sums=('SKIP')
@@ -21,26 +22,26 @@ build() {
   export CFLAGS="-mtune=generic -O3 -pipe -fstack-protector-strong"
   export CXXFLAGS="-mtune=generic -O3 -pipe -fstack-protector-strong"
   
-  make -C "$pkgname" prefix=/usr sysconfdir=/etc \
+  make -C "$pkgbase" prefix=/usr sysconfdir=/etc \
     MARCH="x86-64" \
-    USE_SYSTEM_LLVM=0 \
-    USE_SYSTEM_LIBUNWIND=0 \
+    USE_SYSTEM_LLVM=1 \
+    USE_SYSTEM_LIBUNWIND=1 \
     USE_SYSTEM_PCRE=0 \
-    USE_SYSTEM_LIBM=0 \
+    USE_SYSTEM_LIBM=1 \
     USE_SYSTEM_OPENLIBM=0 \
     USE_SYSTEM_OPENSPECFUN=0 \
-    USE_SYSTEM_BLAS=0 \
-    USE_SYSTEM_LAPACK=0 \
-    USE_SYSTEM_FFTW=0 \
-    USE_SYSTEM_GMP=0 \
-    USE_SYSTEM_MPFR=0 \
-    USE_SYSTEM_ARPACK=0 \
-    USE_SYSTEM_SUITESPARSE=0 \
+    USE_SYSTEM_BLAS=1 \
+    USE_SYSTEM_LAPACK=1 \
+    USE_SYSTEM_FFTW=1 \
+    USE_SYSTEM_GMP=1 \
+    USE_SYSTEM_MPFR=1 \
+    USE_SYSTEM_ARPACK=1 \
+    USE_SYSTEM_SUITESPARSE=1 \
     USE_SYSTEM_LIBUV=0 \
     USE_SYSTEM_UTF8PROC=0 \
     USE_INTEL_MKL=0 \
     USE_BLAS64=0 \
-    USE_LLVM_SHLIB=0 \
+    USE_LLVM_SHLIB=1 \
     USE_SYSTEM_LIBGIT2=1 \
     USE_SYSTEM_PATCHELF=0 \
     USE_SYSTEM_DSFMT=0
@@ -48,36 +49,34 @@ build() {
 
 package_julia() {
   backup=('etc/ld.so.conf.d/julia.conf' 'etc/julia/juliarc.jl')
-  depends=('zlib' 'openssl' 'libgit2')
+  depends=('arpack' 'fftw' 'libunwind' 'mpfr' 'suitesparse' 'libgit2' 'llvm-libs' 'hicolor-icon-theme')
   optdepends=('gnuplot: If using the Gaston Package from julia')
   install='sysfix.install'
 
   # Make sure not to set -march
   export CFLAGS="-mtune=generic -O3 -pipe -fstack-protector-strong"
-  export CXXFLAGS="-mtune=generic -O3 -pipe -fstack-protector-strong"
-  export M="x86-64"
 
-  make -C "$pkgname" DESTDIR="$pkgdir" \
+  make -C "$pkgbase" DESTDIR="$pkgdir" \
     prefix=/usr sysconfdir=/etc  \
-    MARCH=$M \
-    USE_SYSTEM_LLVM=0 \
-    USE_SYSTEM_LIBUNWIND=0 \
+    MARCH="x86-64" \
+    USE_SYSTEM_LLVM=1 \
+    USE_SYSTEM_LIBUNWIND=1 \
     USE_SYSTEM_PCRE=0 \
-    USE_SYSTEM_LIBM=0 \
+    USE_SYSTEM_LIBM=1 \
     USE_SYSTEM_OPENLIBM=0 \
     USE_SYSTEM_OPENSPECFUN=0 \
-    USE_SYSTEM_BLAS=0 \
-    USE_SYSTEM_LAPACK=0 \
-    USE_SYSTEM_FFTW=0 \
-    USE_SYSTEM_GMP=0 \
-    USE_SYSTEM_MPFR=0 \
-    USE_SYSTEM_ARPACK=0 \
-    USE_SYSTEM_SUITESPARSE=0 \
+    USE_SYSTEM_BLAS=1 \
+    USE_SYSTEM_LAPACK=1 \
+    USE_SYSTEM_FFTW=1 \
+    USE_SYSTEM_GMP=1 \
+    USE_SYSTEM_MPFR=1 \
+    USE_SYSTEM_ARPACK=1 \
+    USE_SYSTEM_SUITESPARSE=1 \
     USE_SYSTEM_LIBUV=0 \
     USE_SYSTEM_UTF8PROC=0 \
     USE_INTEL_MKL=0 \
     USE_BLAS64=0 \
-    USE_LLVM_SHLIB=0 \
+    USE_LLVM_SHLIB=1 \
     USE_SYSTEM_LIBGIT2=1 \
     USE_SYSTEM_PATCHELF=0 \
     USE_SYSTEM_DSFMT=0 \
