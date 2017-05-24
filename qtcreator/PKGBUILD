@@ -1,59 +1,52 @@
 pkgname=qtcreator
-pkgver=4.2.2
-_pkgver=4.2
+pkgver=4.3.0
+_pkgver=4.3
 pkgrel=1
 pkgdesc='Lightweight, cross-platform integrated development environment'
 arch=('x86_64')
 url='https://www.qt.io'
 license=('LGPL')
-depends=('qt5-tools' 'qt5-declarative' 'qt5-script' 'qt5-quickcontrols' 'qt5-webkit' 'gnutls' 'qbs')
-makedepends=('git' 'mesa' 'llvm' 'clang')
+depends=('qt5-tools' 'qt5-quickcontrols' 'qt5-quickcontrols2' 'qt5-webengine'
+         'gnutls' 'qbs' 'clang')
+makedepends=('git' 'mesa' 'llvm')
 options=('docs')
 optdepends=('qt5-doc: for the integrated Qt documentation'
             'qt5-examples: welcome page examples'
+            'qt5-translations: for other languages'
             'gdb: for the debugger'
             'cmake: for cmake project support'
             'openssh-askpass: for ssh support'
             'git: for git support'
             'mercurial: for mercurial support'
             'bzr: for bazaar support'
-            'clang: Clang code model'
             'valgrind: for analyze support')
 install=${pkgname}.install
-source=("http://download.qt.io/official_releases/${pkgname}/${_pkgver}/${pkgver}/qt-creator-opensource-src-${pkgver}.tar.gz"
-        'qtcreator.desktop')
-md5sums=('c5dad9aa00021112cc12578622c1c1c1'
-         '5aa242e0262fa22f75c3b59d3a4ec198')
+source=("http://download.qt.io/official_releases/${pkgname}/${_pkgver}/${pkgver}/qt-creator-opensource-src-${pkgver}.tar.gz")
+md5sums=('48d7b8eb3a0c391f2896d826f58b71d4')
 
 prepare() {
-  cd ${srcdir}/qt-creator-opensource-src-${pkgver}
-
   [[ -d build ]] && rm -r build
   mkdir build
 
-  rm -rfv src/shared/qbs
+  # fix hardcoded libexec path
+  sed -e 's|libexec\/qtcreator|lib\/qtcreator|g' -i qt-creator-opensource-src-${pkgver}/qtcreator.pri
+  # use system qbs
+  rm -r qt-creator-opensource-src-${pkgver}/src/shared/qbs
 }
 
 build() {
-  cd ${srcdir}/qt-creator-opensource-src-${pkgver}/build
+  cd build
 
-  LLVM_INSTALL_DIR=/usr qmake-qt5 CONFIG+=journald -r ../qtcreator.pro
+  qmake-qt5 CONFIG+=journald ../qt-creator-opensource-src-${pkgver}/qtcreator.pro
   make
-  make docs -j1
+  make docs
 }
 
 package() {
-  cd ${srcdir}/qt-creator-opensource-src-${pkgver}/build
+  cd build
 
   make INSTALL_ROOT="${pkgdir}/usr/" install
   make INSTALL_ROOT="${pkgdir}/usr/" install_docs
 
-  # Workaround for FS#40583
-  mv "${pkgdir}"/usr/bin/qtcreator "${pkgdir}"/usr/bin/qtcreator-bin
-  echo "#!/bin/sh" > "${pkgdir}"/usr/bin/qtcreator
-  echo "QT_LOGGING_TO_CONSOLE=1 qtcreator-bin \$@" >> "${pkgdir}"/usr/bin/qtcreator
-  chmod +x "${pkgdir}"/usr/bin/qtcreator
-
-  install -Dm644 ${srcdir}/qtcreator.desktop ${pkgdir}/usr/share/applications/qtcreator.desktop
   install -Dm644 ${srcdir}/qt-creator-opensource-src-${pkgver}/LICENSE.GPL3-EXCEPT ${pkgdir}/usr/share/licenses/qtcreator/LICENSE.GPL3-EXCEPT
 }
