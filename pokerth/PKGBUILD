@@ -3,7 +3,7 @@
 pkgname=pokerth
 _realname=PokerTH
 pkgver=1.1.1
-pkgrel=9
+pkgrel=10
 pkgdesc="PokerTH is a Texas Holdem poker game written in C++/Qt."
 arch=('x86_64')
 license=('AGPL3' 'custom:Variety of FOSS licenses for data files')
@@ -13,10 +13,14 @@ url="http://www.pokerth.net/"
 
 source=("http://downloads.sourceforge.net/sourceforge/pokerth/$_realname-$pkgver-src.tar.bz2"
         '0001-Qt-5.5.0-patch-for-qtsingleapplication.patch'
-        'pokerth-1.1.1-Qualify-std-ifstream-and-std-ofstream.patch')
+        'pokerth-1.1.1-Qualify-std-ifstream-and-std-ofstream.patch'
+        'pokerth-gcc6.patch'
+        'pokerth-c++11.patch')
 md5sums=('a7f76f95782099f966e5f2b6809f502a'
          'f4ecab0a6435f1b3b0654145b75d6e7c'
-         '26b02c7e5c50484485570ace9b63be5b')
+         '26b02c7e5c50484485570ace9b63be5b'
+         '39070e7d656ae654e54ec9e25f9eea83'
+         'ee027e6bd85d245f6f3ae74c68ed91cb')
 
 prepare() {
   cd "$srcdir/$_realname-$pkgver-src"
@@ -26,6 +30,10 @@ prepare() {
 
   # https://github.com/pokerth/pokerth/commit/69f820bb3
   patch -p1 -i ../pokerth-1.1.1-Qualify-std-ifstream-and-std-ofstream.patch
+  
+  # Fix build with GCC 6
+  patch -p1 -i ../pokerth-gcc6.patch
+  patch -p1 -i ../pokerth-c++11.patch
 }
 
 build() {

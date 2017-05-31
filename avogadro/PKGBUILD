@@ -1,6 +1,6 @@
 pkgname=avogadro
 pkgver=1.2.0
-pkgrel=1
+pkgrel=2
 pkgdesc="An advanced molecular editor based on Qt"
 arch=('x86_64')
 url="http://avogadro.cc/wiki/Main_Page"
@@ -9,18 +9,28 @@ depends=('eigen2' 'openbabel' 'python2-pyqt4' 'boost-libs' 'glew' 'python2-numpy
 makedepends=('cmake' 'boost' 'doxygen' 'libgl')
 categories=('education')
 screenshot=('http://avogadro.openmolecules.net/w/images/7/75/Avogadro-unitcell.png')
-source=("https://downloads.sourceforge.net/${pkgname}/${pkgname}-${pkgver}.tar.gz"
-        "boost153.patch"
-        "avogadro-fix-linking.patch")
-sha256sums=('6453e36e8ae3e61655cbe062df6d6fa6b2409122c7b5abc0a6f1d410a181640b'
-            '0aaddbac2ed6e9688d7923a303b68c229f435068372f3665d731b1b9fa1d8cfb'
-            '3f7a236ec59684762514e81f8211cee625a44af843c8ce401e1ee002786e9d31')
+source=("http://downloads.sourceforge.net/${pkgname}/${pkgname}-${pkgver}.tar.gz"
+        'boost153.patch'
+        'avogadro-glibc2.23.patch'
+        'avogadro-fix-linking.patch'
+        'avogadro-force-eigen2.patch')
+md5sums=('3206068fc27bd3b717c568ee72f1e5ec'
+         'aa2573f78d5dbd85b3cb79e08acde8ab'
+         '83990ecbb4c076fddda3eaca2c2975ed'
+         'e333f624d5649c6d3a7cfd14a778bc73'
+         'b05434bbf62570f72e0b0c7335cd44c3')
 
 prepare() {
-  mkdir -p build
-  cd "${srcdir}/${pkgname}-${pkgver}"
+  cd "${srcdir}/${pkgname}-${pkgver}"  
+
   patch -p1 -i "${srcdir}"/boost153.patch
+  # Fix build with glibc 2.23
+  patch -p1 -i "${srcdir}"/avogadro-glibc2.23.patch
+  # Fix linking (Fedora)
   patch -p1 -i "${srcdir}"/avogadro-fix-linking.patch
+  # Force Eigen 2, newer versions of Eigen 3 remove backward
+  # compatibility
+  patch -p1 -i "${srcdir}"/avogadro-force-eigen2.patch
 }
 
 build() {
