@@ -1,8 +1,6 @@
-# Maintainer: Adrián Chaves Fernández (Gallaecio) <adriyetichaves gmail.com>
-
 pkgname=pingus
 pkgver=0.7.6
-pkgrel=4
+pkgrel=5
 pkgdesc="A Lemmings clone, i.e. a level-based puzzle game."
 arch=('x86_64')
 url="http://pingus.seul.org"
@@ -10,14 +8,24 @@ license=('GPL')
 depends=('gcc-libs' 'sdl_image' 'sdl_mixer' 'boost-libs')
 makedepends=('boost' 'scons' 'glu' 'mesa')
 categories=('games')
-source=("http://pingus.googlecode.com/files/${pkgname}-${pkgver}.tar.bz2"
-        "$pkgname-$pkgver-gcc470-udl.patch::https://projects.archlinux.org/svntogit/community.git/plain/trunk/$pkgname-$pkgver-gcc470-udl.patch?h=packages/$pkgname")
-md5sums=('561798686f34d3fa4e69135d655f47ac'
-         '332b280b65f63aff03b4028057b1b7d5')
+source=("$pkgname-$pkgver.tgz::https://github.com/Pingus/pingus/archive/v$pkgver.tar.gz"
+        "$pkgname-$pkgver-gcc470-udl.patch::https://projects.archlinux.org/svntogit/community.git/plain/trunk/$pkgname-$pkgver-gcc470-udl.patch?h=packages/$pkgname"
+        missing-header.patch)
+md5sums=('8f366e7ba76c9f3525888efe8b04b1ad'
+         '332b280b65f63aff03b4028057b1b7d5'
+         '782aa332f18c589b13e5bc0954ab5d21')
 
 build() {
   cd "${srcdir}/${pkgname}-${pkgver}"
-  patch -Np0 -i ${srcdir}/$pkgname-$pkgver-gcc470-udl.patch
+  
+  # fedora patch to fix error due to new standards
+  # http://gcc.gnu.org/bugzilla/show_bug.cgi?id=51282
+  patch -Np0 -i ${srcdir}/pingus-0.7.6-gcc470-udl.patch
+  # manpage must be in man6, not man1
+  sed -i "s#/man1/#/man6/#g" Makefile
+  # missing header
+  patch -Np1 -i ../missing-header.patch
+
   scons prefix=/usr
 }
 
