@@ -1,42 +1,40 @@
-# Forked from https://aur.archlinux.org/cgit/aur.git/plain/PKGBUILD?h=fife-git
-
-# NOTE: We are using a Git revision because the latest stable version of Unknown
-# Horizons cannot work with FIFE 0.3.5. As soon as FIFE 0.3.6 is released, we
-# should switch back to stable versions.
+# Contributions from AUR: https://aur.archlinux.org/packages/fife/
 
 pkgname=fife
-_commit=9b2ca6c
-pkgver=0.3.5.2988.9b2ca6c
+pkgver=0.4.1
 pkgrel=1
+_githubname=fifengine
 pkgdesc="Flexible Isometric Free Engine is a cross platform game creation framework"
-arch=('x86_64')
+arch=(x86_64)
 url="http://fifengine.net/"
-license=('GPL')
-depends=('boost-libs' 'fifechan-git' 'libgl' 'libogg' 'libpng' 'libvorbis' 'tinyxml'
-         'openal' 'python2' 'sdl2' 'sdl2_image' 'sdl2_ttf' 'tinyxml')
-makedepends=('git' 'cmake' 'boost' 'swig' 'zlib')
-conflicts=(fife-git fife-svn)
-replaces=(fife-git)
-source=(git+https://github.com/fifengine/fifengine.git#commit=$_commit)
-md5sums=('SKIP')
+license=('LGPL')
+depends=('boost' 'boost-libs' 'fifechan>=0.1.4' 'libgl' 'libogg' 'libpng' 'libvorbis'
+         'sdl2' 'sdl2_ttf' 'sdl2_image' 'openal' 'python2' 'tinyxml' 'zlib')
+makedepends=('cmake' 'mesa' 'swig')
+source=("https://github.com/${_githubname}/${_githubname}/archive/${pkgver}.tar.gz")
+md5sums=('6ce5533102c4993b44c3ba8347f4ca93')
+sha256sums=('bae3fc591cc2891f7d1b3a656a5d8ad700ecc2e297ad453bf4f1bcbbf82e8cb2')
 
-pkgver() {
-  cd "$srcdir/fifengine"
-  printf "0.3.5.%s.%s" $(git rev-list --count HEAD) $(git rev-parse --short HEAD)
+prepare() {
+  # use python2
+  export PYTHON=python2
 }
 
 build() {
-  cd $srcdir/fifengine
-  [[ -d build ]] && rm -r build
-  mkdir build && cd build
+  cd "${_githubname}-${pkgver}"
+  [[ -d "build" ]] && rm -r "build"
+  mkdir -p "build" && cd "build"
   cmake \
-    -DCMAKE_INSTALL_PREFIX=/usr \
-    -DCMAKE_BUILD_TYPE=RelWithDebInfo \
+    -DCMAKE_INSTALL_PREFIX:PATH=/usr \
     ..
   make
+  # If compilation seems to stall at 99% for ages, do not abort!
+  # While not perfectly convenient, that is to be expected from
+  # SWIG. Eventually, you'll reach the holy triple-digit land.
 }
- 
+
 package() {
-  cd $srcdir/fifengine/build
+  cd "${_githubname}-${pkgver}"
+  cd "build"
   make DESTDIR=$pkgdir install
 }
