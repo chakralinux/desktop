@@ -1,8 +1,6 @@
-# Maintainer: ugjka <ugis.germanis@gmail.com>
-
 pkgname=freeorion
 pkgver=0.4.7
-pkgrel=1
+pkgrel=2
 pkgdesc="turn-based space empire and galactic conquest (4X) computer game"
 arch=('x86_64')
 url="https://github.com/freeorion/freeorion/"
@@ -12,22 +10,21 @@ makedepends=('boost' 'cmake' 'doxygen')
 install=freeorion.install
 conflicts=('gigi')
 replaces=('gigi')
-source=("https://github.com/freeorion/freeorion/releases/download/v0.4.7/FreeOrion_v0.4.7_2017-04-24.60d06dc_Source.tar.gz"
-        'freeorion.install')
-md5sums=('30db1505f398403df04707b6e69f79f2'
-         'bdbd69c55fa91add1f8b17ad7f23ee6d')
+source=("$pkgname-$pkgver::https://github.com/freeorion/freeorion/archive/v$pkgver.tar.gz")
+sha256sums=('e840db9d9ff837a973c0f32be41a5ad29855eeac0a1541b036d0b183d6fbbaad')
 
 prepare() {
-  cd $srcdir/src-tarball
+  cd $srcdir/$pkgname-$pkgver
 
   mkdir -p build
 }
 
 build() {
-  cd $srcdir/src-tarball/build
+  cd $srcdir/$pkgname-$pkgver/build
 
   cmake \
     -DCMAKE_INSTALL_PREFIX=/usr \
+    -DCMAKE_INSTALL_LIBDIR=lib \
     -DCMAKE_BUILD_TYPE=Release \
     ..
 
@@ -35,7 +32,7 @@ build() {
 }
 
 package() {
-  cd $srcdir/src-tarball/build
+  cd $srcdir/$pkgname-$pkgver/build
 
   make DESTDIR=$pkgdir install
 }
