@@ -1,0 +1,34 @@
+# Contributions from ArchLinux: https://git.archlinux.org/svntogit/community.git/tree/trunk?h=packages/python-prettytable
+
+pkgname=python2-prettytable
+_pkgname=prettytable
+pkgver=0.7.2
+pkgrel=1
+pkgdesc="A simple Python library for easily displaying tabular data"
+url="http://pypi.python.org/pypi/PrettyTable"
+arch=('any')
+license=('BSD')
+depends=(python2)
+makedepends=('python2-setuptools')
+source=("http://pypi.python.org/packages/source/P/PrettyTable/prettytable-${pkgver}.tar.gz"
+        '0001-Fix-column-spacing-with-xterm-reset-escape-sequence.patch')
+md5sums=('a6b80afeef286ce66733d54a0296b13b'
+         '482146c8d245a6217d27195b65ca6592')
+
+prepare() {
+  pushd $_pkgname-$pkgver
+  patch -p1 -i "$srcdir"/0001-Fix-column-spacing-with-xterm-reset-escape-sequence.patch
+  popd
+}
+
+build() {
+  cd $srcdir/$_pkgname-$pkgver
+  python2 setup.py build
+}
+
+package() {
+  cd "$srcdir/$_pkgname-$pkgver"
+  chmod 644 -R prettytable.egg-info
+
+  python2 setup.py install --root="$pkgdir/"
+}
