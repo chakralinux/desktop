@@ -1,31 +1,15 @@
-# Contributor: Sébastien "Seblu" Luttringer <seblu@archlinux.org>
+# Contributions from ArchLinux: https://git.archlinux.org/svntogit/packages.git/tree/trunk?h=packages/ceph
 
 pkgname=ceph
 pkgver=12.0.3
-pkgrel=1
+pkgrel=2
 pkgdesc='Distributed, fault-tolerant storage platform delivering object, block, and file system'
 arch=('x86_64')
 url='http://ceph.com/'
 license=('GPL')
-makedepends=('boost' 'xfsprogs' 'python2-sphinx')
-depends=('boost-libs'
-         'curl'
-         'expat'
-         'fcgi'
-         'fuse'
-         'gperftools'
-         'keyutils'
-         'leveldb'
-         'libaio'
-         'libatomic_ops'
-         'libedit'
-         'systemd'
-         'util-linux'
-         'ncurses'
-         'nss'
-         'python2'
-         'snappy'
-         'python2-cython')
+makedepends=('boost' 'xfsprogs' 'python2-sphinx' 'cmake')
+depends=('boost-libs' 'curl' 'expat' 'fcgi' 'fuse' 'gperftools' 'keyutils' 'leveldb' 'libaio' 'libatomic_ops'
+         'libedit' 'systemd' 'util-linux' 'ncurses' 'nss' 'python2' 'snappy' 'python2-cython' 'python2-prettytable' 'yasm')
 optdepends=('xfsprogs: support xfs backend')
 options=('emptydirs')
 source=("https://download.ceph.com/tarballs/$pkgname-$pkgver.tar.gz")
@@ -77,5 +61,3 @@ package() {
   find . -type f -exec \
     sed -i '1s,^#! \?/usr/bin/\(env \|\)python$,#!/usr/bin/python2,' {} \;
 }
-
-# vim:set ts=2 sw=2 et:
