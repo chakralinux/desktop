@@ -1,31 +1,27 @@
 pkgbase=qtcurve
 pkgname=('qtcurve-utils' 'qtcurve-kf5' 'qtcurve-qt4')
-pkgver=1.8.18.r247.d126bd5
+pkgver=1.9.1
 pkgrel=1
 pkgdesc='A configurable set of widget styles for KDE and Gtk'
 arch=('x86_64')
-url='https://github.com/QtCurve/qtcurve'
+url='https://github.com/KDE/qtcurve'
 license=('LGPL')
 groups=('qtcurve')
-makedepends=('qt' 'qt5-svg' 'qt5-x11extras' 'extra-cmake-modules' 'kdelibs4support' 'kdoctools')
-source=('git://anongit.kde.org/qtcurve.git#commit=d126bd5')
-sha1sums=('SKIP')
-
-pkgver() {
-  cd $srcdir/$pkgbase 
-  printf "%s" "$(git describe --long | sed 's/\([^-]*-\)g/r\1/;s/-/./g')"
-}
+makedepends=('qt' 'qt5-svg' 'qt5-x11extras' 'extra-cmake-modules' 'kdelibs4support' 'kdoctools'
+             'frameworkintegration' 'python3' 'kdesignerplugin')
+source=("$pkgbase-$pkgver.tar.gz::https://github.com/KDE/qtcurve/archive/$pkgver.tar.gz")
+sha1sums=('3158759051770e99beee7079ca948e7074feddd4')
 
 prepare() {
-  cd $srcdir/$pkgbase
+  cd $srcdir/$pkgbase-$pkgver
 
   # prepare for build
   [[ -e build ]] && rm -rf build
-  mkdir build
+  mkdir -p build
 }
 
 build() {
-  cd $srcdir/$pkgbase/build
+  cd $srcdir/$pkgbase-$pkgver/build
   cmake .. -DCMAKE_BUILD_TYPE=Release \
            -DCMAKE_INSTALL_PREFIX=/usr \
            -DENABLE_GTK2=Off \
@@ -35,14 +31,14 @@ build() {
 
 package_qtcurve-utils() {
   depends=('libx11')
-  cd ${srcdir}/${pkgbase}/build/lib/utils
+  cd ${srcdir}/$pkgbase-$pkgver/build/lib/utils
   make DESTDIR="$pkgdir" install
 }
 
 package_qtcurve-qt4() {
   depends=('qtcurve-utils' 'qt')
 
-  cd $srcdir/${pkgbase}/build
+  cd $srcdir/$pkgbase-$pkgver/build
   make -C qt4 DESTDIR="${pkgdir}" install
 }
 
@@ -50,6 +46,6 @@ package_qtcurve-kf5() {
   depends=('qtcurve-utils' 'qt5-svg' 'qt5-x11extras' 'qt5-base' 'plasma-workspace')
   replaces=('qtcurve-qt5')
   conflicts=('qtcurve-qt5')
-  cd ${srcdir}/${pkgbase}/build/qt5
+  cd ${srcdir}/$pkgbase-$pkgver/build/qt5
   make DESTDIR="${pkgdir}" install
 }
