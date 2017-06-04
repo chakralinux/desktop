@@ -1,0 +1,22 @@
+pkgname='fedmsg'
+pkgver=0.18.3
+pkgrel=1
+pkgdesc='The Federated Message Bus'
+arch=('any')
+license=('LGPL')
+makedepends=('python3-setuptools')
+depends=('python3')
+url='https://www.fedmsg.org'
+source=("https://github.com/fedora-infra/${pkgname}/archive/${pkgver}.tar.gz"
+	"fedmsg-config.py")
+sha256sums=('5fc316a29654e0d2cdf26bf22a21fcc48a036de25bbe66fd6a0a0edfa0245b6b'
+	    'SKIP')
+
+package() {
+  depends+=('python3')
+  cd "${srcdir}/${pkgname}-${pkgver}"
+  python3 setup.py install --root="${pkgdir}"
+
+  install -Dm644 ../../fedmsg-config.py "${pkgdir}/etc/fedmsg.d/fedmsg-config.py"
+}
+
