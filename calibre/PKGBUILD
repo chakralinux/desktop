@@ -1,27 +1,25 @@
 pkgname=calibre
-pkgver=2.85.1
+pkgver=3.0.0
 pkgrel=1
 pkgdesc="Ebook management application"
 arch=('x86_64')
 url="https://calibre-ebook.com/"
 license=('GPL3')
 depends=('python2-six' 'python2-dateutil' 'python2-cssutils'
-         'python2-mechanize' 'podofo' 'libwmf'
+         'python2-dukpy' 'python2-mechanize' 'podofo' 'libwmf'
          'imagemagick' 'chmlib' 'python2-lxml' 'libusbx'
          'python2-pillow' 'shared-mime-info' 'python2-dns'
          'python2-pyqt5' 'python2-psutil' 'icu' 'libmtp' 'python2-dbus'
          'python2-netifaces' 'python2-cssselect' 'python2-apsw' 'qt5-webkit'
-         'qt5-svg' 'python2-pygments' 'mtdev'
+         'qt5-svg' 'python2-regex' 'python2-pygments' 'mtdev'
          'desktop-file-utils' 'udisks2')
 makedepends=('qt5-x11extras' 'xdg-utils')
 optdepends=('ipython2: to use calibre-debug'
             'poppler: required for converting pdf to html')
 screenshot=('https://lh5.googleusercontent.com/_lG58t3XWd3c/TcNwiXkAx_I/AAAAAAAAAEc/M34I4uY9UUY/s800/gui.jpeg')
 install=${pkgname}.install
-source=("https://download.calibre-ebook.com/${pkgver}/calibre-${pkgver}.tar.xz"
-	"fix_html5_imports.patch")
-sha256sums=('8c8db280c51b26284bff1c066fb503ecef9e1f15f7e2e7b4f705c817ee041abd'
-            '2780c2072a6763a7651349fb346146371763512240340e0225c0f4b4aa5d3e59')
+source=("https://download.calibre-ebook.com/${pkgver}/calibre-${pkgver}.tar.xz")
+sha256sums=('7cdaa5c55c8c13d6b5389ee11231c64944f5272297938e426be3a4fcf63a13fe')
 
 prepare(){
   cd "${pkgname}-${pkgver}"
