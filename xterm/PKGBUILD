@@ -1,5 +1,5 @@
 pkgname=xterm
-pkgver=328
+pkgver=330
 pkgrel=1
 pkgdesc="X Terminal Emulator"
 arch=('x86_64')
@@ -10,7 +10,7 @@ groups=('xorg')
 categories=('system')
 source=("ftp://invisible-island.net/${pkgname}/${pkgname}-${pkgver}.tgz"
         LICENSE)
-md5sums=('efb6474df42fa2ae946978c3822719e7'
+md5sums=('9a6db7974aa4ccbb50eabebf72618467'
          '10ecc3f8ee91e3189863a172f68282d2')
 
 build() {
@@ -40,6 +40,8 @@ build() {
       --enable-mini-luit \
       --enable-narrowproto \
       --enable-exec-xterm \
+      --enable-sixel-graphics \
+      --enable-regis-graphics \
       --with-tty-group=tty \
       --with-utempter
   make
