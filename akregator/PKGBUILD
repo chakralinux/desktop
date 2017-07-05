@@ -3,7 +3,7 @@ source ../kdeapps.conf
 
 pkgname=akregator
 pkgver=${_kdever}
-pkgrel=1
+pkgrel=2
 pkgdesc="A Feed Reader by KDE"
 arch=(x86_64)
 url="https://community.kde.org/KDE_PIM"
@@ -16,10 +16,18 @@ groups=(kde kde-uninstall kde-applications kdepim)
 source=("$_mirror/${pkgname}-$_kdever.tar.xz"{,.sig})
 sha256sums=(`grep ${pkgname}-$_kdever.tar.xz  ../kdeapps.sums | cut -d " " -f1`
                         'SKIP')
+
+source+=("BUG_38416.patch::https://cgit.kde.org/akregator.git/patch/?id=470801bd845ce6544018c7da9258d1e66ab662fa")
+sha256sums+=('fef353bd312373a5d4aef1919dc14a276e9f3b6bd8d81999b2fc5282cf4484e4')
+
 validpgpkeys=(${Avalidpgpkeys})
 
 prepare() {
   mkdir -p build
+ 
+  cd ${pkgname}-${pkgver}
+  patch -Np1 -i "${srcdir}/BUG_38416.patch"
+
 }
 
 build() {
