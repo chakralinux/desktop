@@ -3,7 +3,7 @@ source ../kdeapps.conf
 
 pkgname=kholidays
 pkgver=${_kdever}
-pkgrel=2
+pkgrel=1
 pkgdesc="KDE library for regional holiday information"
 arch=('x86_64')
 url="https://projects.kde.org/$pkgname"
@@ -16,15 +16,10 @@ sha256sums=(`grep ${pkgname}-$_kdever.tar.xz  ../kdeapps.sums | cut -d " " -f1`
                         'SKIP')
 validpgpkeys=(${Avalidpgpkeys})
 
-source+=(kdebug-xxxxx.patch::'https://cgit.kde.org/kholidays.git/patch/?id=f0faec0f2bdbec4b742600a9643ebc11ff9df4cd')
-sha256sums+=('2a813362b95e118079af8cf3088f60d88d4fca393fbdd3a5c844dd1d30c9091e')
-
 prepare() {
   mkdir -p build
 
   cd $srcdir/$pkgname-$pkgver
-  # Revert "Update Turkish Holiday File (EN and TR)"
-  patch -p1 -i ../kdebug-xxxxx.patch
 }
 
 build() {

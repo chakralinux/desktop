@@ -3,7 +3,7 @@ source ../kdeapps.conf
 
 pkgname=akregator
 pkgver=${_kdever}
-pkgrel=3
+pkgrel=1
 pkgdesc="A Feed Reader by KDE"
 arch=(x86_64)
 url="https://community.kde.org/KDE_PIM"
@@ -17,20 +17,10 @@ source=("$_mirror/${pkgname}-$_kdever.tar.xz"{,.sig})
 sha256sums=(`grep ${pkgname}-$_kdever.tar.xz  ../kdeapps.sums | cut -d " " -f1`
                         'SKIP')
 
-source+=("BUG_38416.patch::https://cgit.kde.org/akregator.git/patch/?id=470801bd845ce6544018c7da9258d1e66ab662fa"
-	 "BUG_381241.patch::https://cgit.kde.org/akregator.git/patch/?id=763739efa2e17ab1ed93fefe7b1070a86cad4532")
-sha256sums+=('fef353bd312373a5d4aef1919dc14a276e9f3b6bd8d81999b2fc5282cf4484e4'
-	     'ca7b2f90861a1f6d0eaf763edfe69b597904072bb0c57b5d67f2cc0f3c0c695e')
-
 validpgpkeys=(${Avalidpgpkeys})
 
 prepare() {
   mkdir -p build
- 
-  cd ${pkgname}-${pkgver}
-  patch -Np1 -i "${srcdir}/BUG_38416.patch"
-  patch -Np1 -i "${srcdir}/BUG_381241.patch"
-
 }
 
 build() {
