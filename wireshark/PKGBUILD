@@ -1,17 +1,17 @@
 pkgname=wireshark
-pkgver=2.2.7
+pkgver=2.2.8
 pkgrel=1
 pkgdesc='A free network protocol analyzer for Unix/Linux and Windows'
 arch=('x86_64')
 license=('GPL2')
-depends=('libpcap' 'libcap' 'krb5' 'glib2' 'desktop-file-utils' 'hicolor-icon-theme' 
+depends=('libpcap' 'libcap' 'krb5' 'glib2' 'desktop-file-utils' 'hicolor-icon-theme' 'libssh'
          'lua52' 'libgcrypt' 'qt5-base' 'qt5-multimedia' 'harfbuzz' 'portaudio' 'bash' 'gnutls')
 makedepends=('bison' 'flex' 'qt5-tools' 'python2')
 url='http://www.wireshark.org/'
 screenshot='https://blog.wireshark.org/wp-content/uploads/2015/11/Main-window-2.0.0rc2.png'
 install=${pkgname}.install
 source=(http://www.wireshark.org/download/src/${pkgname}-${pkgver}.tar.bz2)
-sha256sums=('689ddf62221b152779d8846ab5b2063cc7fd41ec1a9f04eefab09b5d5486dbb5')
+sha256sums=('ecf02c148c9ab6e809026ad5743fe9be1739a9840ef6fece6837a7ddfbdf7edc')
 
 prepare() {
   cd ${pkgname}-${pkgver}
@@ -32,9 +32,7 @@ build() {
       --with-zlib \
       --with-lua \
       --with-krb5 \
-      --with-portaudio \
-      --with-gtk2=no \
-      --with-gtk3=no
+      --with-portaudio
   make all
 }
 
