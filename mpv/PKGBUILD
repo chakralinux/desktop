@@ -1,5 +1,5 @@
 pkgname=mpv
-pkgver=0.25.0
+pkgver=0.26.0
 pkgrel=1
 pkgdesc="A movie player and encoder for linux, based on MPlayer/mplayer2"
 arch=('x86_64')
@@ -9,13 +9,22 @@ depends=('pulseaudio' 'ffmpeg' 'lcms2' 'libdvdread' 'libgl' 'libvdpau'
          'libxinerama' 'libxv' 'libxkbcommon' 'libva'  'libass' 'uchardet' 
 	 'wayland' 'desktop-file-utils' 'hicolor-icon-theme' 'v4l-utils' 'openal'
          'xdg-utils' 'lua52' 'libdvdnav' 'libcdio-paranoia' 'libbluray' 'libxss'
-         'enca' 'libguess' 'harfbuzz' 'libxrandr' 'rubberband' 'smbclient' 'libcaca')
+         'enca' 'libguess' 'harfbuzz' 'libxrandr' 'rubberband' 'libarchive' 'libcaca')
 makedepends=('mesa' 'python3-docutils' 'ladspa' 'x264' 'jack' 'samba' 'waf')
 options=('!emptydirs')
 provides=('mplayer')
 install=${pkgname}.install
-source=("https://github.com/mpv-player/${pkgname}/archive/v${pkgver}.tar.gz")
-sha256sums=('07423ffad6921ec4da32f703cd7fbfb27012301dcb736ac8542ac8e6083b0bce')
+source=("https://github.com/mpv-player/${pkgname}/archive/v${pkgver}.tar.gz"
+        '0001-opengl-backend-support-multiple-backends.patch')
+sha256sums=('daf3ef358d5f260f2269f7caabce27f446c291457ec330077152127133b71b46'
+            '609e0530f1b0cdb910dcffb5f62bf55936540e24105ce1b2daf1bd6291a7d58a')
+
+prepare() {
+  cd ${pkgname}-${pkgver}
+
+  # --opengl-backend: support multiple backends (#4384) (FS#53962)
+  patch -Np1 < "${srcdir}"/0001-opengl-backend-support-multiple-backends.patch
+}
  
 build() {
   cd ${pkgname}-${pkgver}
@@ -26,6 +35,7 @@ build() {
     --confdir=/etc/mpv \
     --enable-libmpv-shared \
     --enable-cdda \
+    --enable-dvb \
     --enable-zsh-comp \
     --enable-alsa \
     --enable-pulse \
@@ -35,9 +45,10 @@ build() {
     --enable-egl-x11 \
     --enable-libsmbclient \
     --enable-dvdread \
-    --enable-libv4l2 \
     --enable-vdpau \
-    --enable-encoding
+    --enable-encoding \
+    --enable-dvdnav \
+    --enable-libarchive
   waf build
 }
  
