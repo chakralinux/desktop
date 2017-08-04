@@ -20,6 +20,8 @@ validpgpkeys=('329FD02C5AA48FCC77A4BBF0AC44AC6DB29779E6')
 
 prepare() {
   mkdir -p build
+
+  sed -i 's|qdbus|qdbus-qt5|g' "${pkgname}-${pkgver}/util/kdevplatform_shell_environment.sh"
 }
 
 build() {
