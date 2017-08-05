@@ -1,0 +1,25 @@
+pkgname=tcpdump
+pkgver=4.9.1
+pkgrel=1
+pkgdesc='A powerful command-line packet analyzer'
+arch=('x86_64')
+url='http://tcpdump.org'
+license=('BSD')
+depends=('libpcap' 'openssl')
+source=("http://www.tcpdump.org/release/${pkgname}-${pkgver}.tar.gz")
+sha256sums=('f9448cf4deb2049acf713655c736342662e652ef40dbe0a8f6f8d5b9ce5bd8f3')
+
+build() {
+  cd ${pkgname}-${pkgver}
+	
+  ./configure --prefix=/usr --sbindir=/usr/bin
+  make
+}
+
+package() {
+  cd ${pkgname}-${pkgver}
+  make DESTDIR="$pkgdir" install
+  install -D -m644 LICENSE "${pkgdir}/usr/share/licenses/${pkgname}/LICENSE"
+  rm "${pkgdir}/usr/bin/tcpdump.${pkgver}"
+}
+
