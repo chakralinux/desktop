@@ -16,7 +16,7 @@ pkgname=('libreoffice-common'
 	'libreoffice-extension-nlpsolver')
 _LOver=5.3.5.2
 pkgver=5.3.5
-pkgrel=1
+pkgrel=2
 arch=('x86_64')
 license=('LGPL3')
 url="http://www.libreoffice.org/"
@@ -275,6 +275,7 @@ build() {
                 --with-system-redland \
                 --with-ant-home="/usr/share/java/apache-ant"\
                 --without-system-boost \
+                --with-system-icu \
                 --with-system-cairo \
                 --with-system-libs \
                 --with-system-mythes \
@@ -290,12 +291,11 @@ build() {
         
         touch src.downloaded
         #./download
-        make build
+        make build-nocheck
 	# fake installation to create split file lists
 	mkdir $srcdir/fakeinstall
 	make DESTDIR=${srcdir}/fakeinstall distro-pack-install
 }
-
 package_libreoffice-common() {
 
  pkgdesc="common files for LibreOffice - a productivity suite that is compatible with other major office suites"
