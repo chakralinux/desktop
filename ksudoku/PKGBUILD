@@ -1,0 +1,37 @@
+# Include global configuration
+source ../kdeapps.conf
+
+pkgname=ksudoku
+pkgver=${_kdever}
+pkgrel=1
+pkgdesc="A logic-based symbol placement puzzle"
+arch=('x86_64')
+url='http://kde.org/applications/games/ksudoku/'
+screenshot='https://www.kde.org/images/screenshots/ksudoku.png'
+license=('GPL' 'LGPL' 'FDL')
+groups=('kdegames' 'kde' 'kde-applications')
+depends=(libkdegames glu hicolor-icon-theme)
+makedepends=(extra-cmake-modules kdoctools)
+conflicts=(kdegames-ksudoku)
+replaces=(kdegames-ksudoku)
+provides=(kdegames-ksudoku)
+options=('docs' 'debug')
+source=("$_mirror/${pkgname}-$_kdever.tar.xz"{,.sig})
+sha256sums=(`grep ${pkgname}-$_kdever.tar.xz  ../kdeapps.sums | cut -d " " -f1`
+                        'SKIP')
+validpgpkeys=(${Avalidpgpkeys[@]})
+
+prepare() {
+  mkdir -p build
+}
+
+build() {
+  cd build
+  cmake_kf5 ../${pkgname}-${pkgver}
+  make
+}
+
+package() {
+  cd build
+  make DESTDIR=${pkgdir} install
+}

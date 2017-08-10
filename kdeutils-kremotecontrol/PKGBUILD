@@ -20,7 +20,7 @@ install=kdeutils.install
 source=($_mirror/${_pkgname}-$_kdever.tar.xz{,.sig})
 sha256sums=(`grep ${_pkgname}-$_kdever.tar.xz  ../kdeapps.sums | cut -d " " -f1`
                         'SKIP')
-validpgpkeys=(${Avalidpgpkeys})
+validpgpkeys=(${Avalidpgpkeys[@]})
 
 build() {
     cd ${srcdir}/${_pkgname}-${pkgver}

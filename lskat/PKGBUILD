@@ -1,0 +1,37 @@
+# Include global configuration
+source ../kdeapps.conf
+
+pkgname=lskat
+pkgver=${_kdever}
+pkgrel=1
+pkgdesc="Lieutenant Skat is a fun and engaging card game for two players"
+arch=('x86_64')
+url='http://kde.org/applications/games/lskat/'
+screenshot='https://www.kde.org/images/screenshots/lskat.png'
+license=('GPL' 'LGPL' 'FDL')
+groups=('kdegames' 'kde' 'kde-applications')
+depends=(libkdegames hicolor-icon-theme)
+makedepends=(extra-cmake-modules kdoctools knotifyconfig)
+conflicts=(kdegames-lskat)
+replaces=(kdegames-lskat)
+provides=(kdegames-lskat)
+options=('docs' 'debug')
+source=("$_mirror/${pkgname}-$_kdever.tar.xz"{,.sig})
+sha256sums=(`grep ${pkgname}-$_kdever.tar.xz  ../kdeapps.sums | cut -d " " -f1`
+                        'SKIP')
+validpgpkeys=(${Avalidpgpkeys[@]})
+
+prepare() {
+  mkdir -p build
+}
+
+build() {
+  cd build
+  cmake_kf5 ../${pkgname}-${pkgver}
+  make
+}
+
+package() {
+  cd build
+  make DESTDIR=${pkgdir} install
+}

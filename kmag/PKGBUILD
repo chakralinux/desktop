@@ -1,0 +1,36 @@
+# Include global configuration
+source ../kdeapps.conf
+
+pkgname=kmag
+arch=('x86_64')
+pkgver=${_kdever}
+pkgrel=1
+pkgdesc="Screen magnifier"
+url="https://kde.org/applications/utilities/$pkgname"
+license=('GPL' 'LGPL' 'FDL')
+depends=(kio libqaccessibilityclient hicolor-icon-theme)
+makedepends=(extra-cmake-modules kdoctools python3)
+conflicts=(kdeaccessibility-kmag)
+provides=(kdeaccessibility-kmag)
+replaces=(kdeaccessibility-kmag)
+groups=("kdeaccessibility" 'kde' 'kde-applications')
+options=('docs' 'debug')
+source=("$_mirror/${pkgname}-$_kdever.tar.xz"{,.sig})
+sha256sums=(`grep ${pkgname}-$_kdever.tar.xz  ../kdeapps.sums | cut -d " " -f1`
+                        'SKIP')
+validpgpkeys=(${Avalidpgpkeys[@]})
+
+prepare() {
+  mkdir -p build
+}
+
+build() {
+  cd build
+  cmake_kf5 ../${pkgname}-${pkgver}
+  make
+}
+
+package() {
+  cd build
+  make DESTDIR=${pkgdir} install
+}

@@ -9,7 +9,7 @@ arch=('x86_64')
 url='https://projects.kde.org/projects/kde/kdepim-runtime'
 license=('GPL' 'LGPL' 'FDL')
 depends=(hicolor-icon-theme libkgapi libkolab akonadi-socialutils akonadi-calendar
-         knotifyconfig kross kalarmcal kmbox kimap qt5-speech syndication kdav)
+         knotifyconfig kross kalarmcal kmbox kimap qt5-speech syndication kdav pimcommon)
 makedepends=(extra-cmake-modules kdoctools boost)
 install=$pkgname.install
 options=('debug')
@@ -21,7 +21,7 @@ source=("$_mirror/${pkgname}-$_kdever.tar.xz"{,.sig})
 sha256sums=(`grep ${pkgname}-$_kdever.tar.xz  ../kdeapps.sums | cut -d " " -f1`
             'SKIP')
 
-validpgpkeys=(${Avalidpgpkeys})
+validpgpkeys=(${Avalidpgpkeys[@]})
 
 prepare() {
   mkdir -p build

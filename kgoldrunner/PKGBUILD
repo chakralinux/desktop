@@ -1,0 +1,37 @@
+# Include global configuration
+source ../kdeapps.conf
+
+pkgname=kgoldrunner
+pkgver=${_kdever}
+pkgrel=1
+pkgdesc="A game of action and puzzle-solving"
+arch=('x86_64')
+url='http://kde.org/applications/games/kgoldrunner/'
+screenshot="https://www.kde.org/images/screenshots/kgoldrunner.png"
+license=('GPL' 'LGPL' 'FDL')
+groups=('kdegames' 'kde' 'kde-applications')
+depends=(libkdegames hicolor-icon-theme)
+makedepends=(extra-cmake-modules kdoctools)
+conflicts=(kdegames-kgoldrunner)
+replaces=(kdegames-kgoldrunner)
+provides=(kdegames-kgoldrunner)
+options=('docs' 'debug')
+source=("$_mirror/${pkgname}-$_kdever.tar.xz"{,.sig})
+sha256sums=(`grep ${pkgname}-$_kdever.tar.xz  ../kdeapps.sums | cut -d " " -f1`
+                        'SKIP')
+validpgpkeys=(${Avalidpgpkeys[@]})
+
+prepare() {
+  mkdir -p build
+}
+
+build() {
+  cd build
+  cmake_kf5 ../${pkgname}-${pkgver}
+  make
+}
+
+package() {
+  cd build
+  make DESTDIR=${pkgdir} install
+}

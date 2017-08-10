@@ -19,7 +19,7 @@ options=('docs' 'debug')
 source=($_mirror/${pkgname}-$_kdever.tar.xz)
 sha256sums=(`grep ${pkgname}-$_kdever.tar.xz  ../kdeapps.sums | cut -d " " -f1`
                         'SKIP')
-validpgpkeys=(${Avalidpgpkeys})
+validpgpkeys=(${Avalidpgpkeys[@]})
 
 build() {
 	cd "${srcdir}"

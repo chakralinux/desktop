@@ -1,26 +1,24 @@
 # Include global configuration
 source ../kdeapps.conf
 
-pkgname="umbrello"
-arch=('x86_64')
+pkgname=umbrello
 pkgver=${_kdever}
 pkgrel=1
 pkgdesc="An UML modeling tool for KDE"
-screenshot="http://uml.sourceforge.net/screenshots/umbrello-2.0.png"
-url="http://www.kde.org"
-license=('GPL' 'LGPL' 'FDL')
-depends=(hicolor-icon-theme ktexteditor qt5-webkit)
+arch=('x86_64')
+url='https://kde.org/applications/development/umbrello'
+license=('GPL')
+depends=(hicolor-icon-theme ktexteditor qt5-webkit kdelibs4support)
 makedepends=(extra-cmake-modules kdoctools python3)
-groups=('kde' 'kde-devel' 'kde-uninstall' 'kdesdk')
+groups=('kde' 'kde-applications' 'kdesdk')
 provides=('kdesdk-umbrello')
 conflicts=('kdesdk-umbrello')
 replaces=('kdesdk-umbrello')
-install=kdesdk.install
 options=('docs' 'debug')
 source=("$_mirror/${pkgname}-$_kdever.tar.xz"{,.sig})
 sha256sums=(`grep ${pkgname}-$_kdever.tar.xz  ../kdeapps.sums | cut -d " " -f1`
                         'SKIP')
-validpgpkeys=(${Avalidpgpkeys})
+validpgpkeys=(${Avalidpgpkeys[@]})
 
 prepare() {
   mkdir -p build

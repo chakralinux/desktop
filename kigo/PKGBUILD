@@ -1,0 +1,37 @@
+# Include global configuration
+source ../kdeapps.conf
+
+pkgname=kigo
+pkgver=${_kdever}
+pkgrel=1
+pkgdesc="An open-source implementation of the popular Go game"
+arch=('x86_64')
+url='http://kde.org/applications/games/kigo/'
+screenshot='https://www.kde.org/images/screenshots/kigo.png'
+license=('GPL' 'LGPL' 'FDL')
+depends=(libkdegames gnugo hicolor-icon-theme)
+makedepends=(extra-cmake-modules kdoctools knotifyconfig)
+groups=('kdegames' 'kde' 'kde-applications')
+conflicts=(kdegames-kigo)
+replaces=(kdegames-kigo)
+provides=(kdegames-kigo)
+options=('docs' 'debug')
+source=("$_mirror/${pkgname}-$_kdever.tar.xz"{,.sig})
+sha256sums=(`grep ${pkgname}-$_kdever.tar.xz  ../kdeapps.sums | cut -d " " -f1`
+                        'SKIP')
+validpgpkeys=(${Avalidpgpkeys[@]})
+
+prepare() {
+  mkdir -p build
+}
+
+build() {
+  cd build
+  cmake_kf5 ../${pkgname}-${pkgver}
+  make
+}
+
+package() {
+  cd build
+  make DESTDIR=${pkgdir} install
+}
