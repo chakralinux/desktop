@@ -2,7 +2,7 @@
 # Maintainer: Antonio Rojas <arojas@archlinux.org>
 
 pkgname=kdb
-pkgver=3.0.1.1
+pkgver=3.0.2
 pkgrel=1
 pkgdesc="A database connectivity and creation framework for various database vendors"
 arch=(i686 x86_64)
@@ -12,7 +12,7 @@ depends=(kcoreaddons)
 makedepends=(extra-cmake-modules python2 libmariadbclient postgresql qt5-tools)
 optdepends=('mariadb: MySQL plugin' 'postgresql: PostgreSQL plugin')
 source=("http://download.kde.org/stable/$pkgname/src/$pkgname-$pkgver.tar.xz")
-sha1sums=('eb36afc210d8882e318ea2acb4ed6d02211535e3')
+sha1sums=('d8dc8c65a93408736ccc9b78dcd81a482cbf114b')
 
 prepare() {
   mkdir -p build
@@ -20,7 +20,7 @@ prepare() {
 
 build() {
   cd build
-  cmake ../$pkgname-${pkgver%.*} \
+  cmake ../$pkgname-${pkgver} \
     -DCMAKE_BUILD_TYPE=Release \
     -DCMAKE_INSTALL_PREFIX=/usr \
     -DBUILD_TESTING=OFF \
