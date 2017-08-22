@@ -70,17 +70,19 @@ replaces=('haskell-array<0.5.1.0'
          )
 
 source=("http://www.haskell.org/ghc/dist/${pkgver}/ghc-${pkgver}-src.tar.xz"
-        "http://www.haskell.org/ghc/dist/${pkgver}/ghc-${pkgver}-testsuite.tar.xz"
-        'build.mk')
+        "http://www.haskell.org/ghc/dist/${pkgver}/ghc-${pkgver}-testsuite.tar.xz")
 md5sums=('8942b6fb393984aeb8304d09bc326851'
-         '4a0d3c147d2027657f49c5a7a4a3f4fe'
-         'c367ef26300648ee9b8aca3dee5c9669')
+         '4a0d3c147d2027657f49c5a7a4a3f4fe')
 
-build() {
+prepare() {
   cd ghc-${pkgver}
 
   cp mk/build.mk{.sample,}
   sed -i '1iBuildFlavour = perf' mk/build.mk
+}
+
+build() {
+  cd ghc-${pkgver}
 
   ./configure \
     --prefix=/usr \
