@@ -7,14 +7,14 @@
 #   This implies that all libraries need to be rebuilt when ghc is rebuilt.
 
 pkgname=ghc
-pkgver=7.10.3
+pkgver=8.2.1
 pkgrel=1
 pkgdesc='The Glasgow Haskell Compiler'
 arch=('i686' 'x86_64')
 url='http://www.haskell.org/ghc/'
 license=('custom')
 depends=('perl' 'gmp>=5.0' 'gcc' 'libffi')
-makedepends=('ghc' 'perl' 'libxslt' 'docbook-xsl')
+makedepends=('ghc' 'libxslt' 'docbook-xsl' 'python3-sphinx')
 checkdepends=('python2')
 install='ghc.install'
 options=('staticlibs')
@@ -69,22 +69,24 @@ replaces=('haskell-array<0.5.1.0'
           'haskell-cabal<1.22.2.0'
          )
 
-source=("http://www.haskell.org/ghc/dist/${pkgver}/ghc-${pkgver}-src.tar.bz2"
-        "http://www.haskell.org/ghc/dist/${pkgver}/ghc-${pkgver}-testsuite.tar.bz2"
+source=("http://www.haskell.org/ghc/dist/${pkgver}/ghc-${pkgver}-src.tar.xz"
+        "http://www.haskell.org/ghc/dist/${pkgver}/ghc-${pkgver}-testsuite.tar.xz"
         'build.mk')
-md5sums=('afd94782875acc57673965fe890246b0'
-         'bc158a295231b8846463ed847ab2a5b6'
+md5sums=('8942b6fb393984aeb8304d09bc326851'
+         '4a0d3c147d2027657f49c5a7a4a3f4fe'
          'c367ef26300648ee9b8aca3dee5c9669')
 
 build() {
   cd ghc-${pkgver}
 
-  cp ${srcdir}/build.mk mk/build.mk
+  cp mk/build.mk{.sample,}
+  sed -i '1iBuildFlavour = perf' mk/build.mk
 
   ./configure \
     --prefix=/usr \
+    --docdir=/usr/share/doc/ghc \
     --with-system-libffi \
-    --with-ffi-includes=/usr/lib/libffi-3.2.1/include
+    --with-ffi-includes=$(pkg-config --variable=includedir libffi)
 
   make
 }
