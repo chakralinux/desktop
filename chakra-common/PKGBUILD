@@ -4,24 +4,18 @@ source ../kdeapps.conf
 pkgname=chakra-common
 arch=('x86_64')
 pkgver=${_kdever}
-pkgrel=1
+pkgrel=2
 pkgdesc="Common configuration files, scripts and artwork"
-url="http://www.chakralinux.org"
+url="http://chakralinux.org"
 license=('GPL' 'BSD')
-options=('!debug' 'strip')
 groups=("kde" "kde-minimal" "kde-uninstall")
 depends=("qt5-base"
          'pinentry'
          'openssh'
          'bash>=4.2'
-         'glibc>=2.15'
          'python3'  'python3-jinja' 'python3-pyelftools' 'python3-tqdm')
 install=chakra-common.install
-source=('https://dl.opendesktop.org/api/files/download/id/1485341541/rootactions_servicemenu_2.9.1.tar.gz'
-        'servicemenu-copy-path.desktop'
-        #'http://www.kde-apps.org/CONTENT/content-files/102825-compressattach.desktop.bz2'
-        'servicemenu-rootactions.patch'
-        'Chakra-Bugs.desktop'
+source=('Chakra-Bugs.desktop'
         'Chakra-ChangeLog.desktop'
         'Chakra-Code.desktop'
         'Chakra-Documentation.desktop'
@@ -42,18 +36,13 @@ source=('https://dl.opendesktop.org/api/files/download/id/1485341541/rootactions
         'chakra-helper.sh'
         'kde4.sh'
         'chakra-check-links.py::https://raw.githubusercontent.com/Inkane/listMissingLibs/master/list_missing_libs.py')
-        # skipping chakra-paste because gitorious has issues with wget
-#        'https://gitorious.org/chakra-paste/chakra-paste/archive/05f0a884a4de1460309ee95d678eb034c4c964b5.tar.gz'
-sha256sums=('8c02e552d6d18246235e3141eebd02b125fad15717660dfa231b629a14837f65'
-            '92c69474167e6f8e7bac8e95c90702ac20aa95add759a55e7bb8453d52f46e40'
-            'ba4b1f429bd6900f6989df6e50b69fea38110ccb4a304a903de6e291d0af8b74'
-            'd87b802cb60705439b0e43517837a4e71dc882a4ce9863f762fa9bf6112433cb'
+sha256sums=('d87b802cb60705439b0e43517837a4e71dc882a4ce9863f762fa9bf6112433cb'
             '8dc16af56320b0e95c105453bd625319edbdf066ab1c8435ed8eaea606d601d0'
             '15d1e26bc76535efcc9abd536f5c1b75aaacf5d92b13e035b17a0ebb96aef5ab'
             'c1574b4e9b3649db9063ccc8ed71d88c89603b4e2594934d43d726b02b477ef8'
             '23e22cbbd1d7a6630717a1e06698b0735e780189af780292de9d7d5bfa0a0faa'
-            '75c4fe63a05b1c4820072e1ac591970d0649018489e870ab9157fb29b24d1c2f'
-            '1ba63dbaf15e0becdc2ce745f0253f8422f1873467b83681356cf18d102818f0'
+            '9bdc5320ed9efdf3dbbd6c3f81058bc725e34c4eeaafba252896bcb61300e8ad'
+            'e9d138eadbf35808f0253e16c2f6d5d672d662937f70618e109f8a58b92e2f98'
             'cf6be6c5dd059021b140f97f82be4ed33e887aa8b588b5d4adb0b035d05a90a6'
             '18c53e91e5ff32754e0a71d208bff62f5f6880e68a86699e734b28d5e2387aab'
             '7e947d88d6c5464b5e11770d597af11bcfb01283bc9bed2bea15fcb3dbb90e33'
@@ -87,13 +76,6 @@ package() {
 
     # Install config file for updates
     install -D -m755 -o root -g root ${srcdir}/updates.conf ${pkgdir}/etc/chakra/updates.conf
-
-    # Install root actions
-    cd ${srcdir}/rootactions_servicemenu_2.9.1/Root_Actions_2.9.1/
-    install -dm755 ${pkgdir}/usr/share/kservices5/ServiceMenus/
-    install -Dm755 dolphin-KDE4/*.desktop ${pkgdir}/usr/share/kservices5/ServiceMenus/
-    install -Dm644 krusader-KDE4/krusader_rootactions.xml "$pkgdir"/usr/share/apps/krusader/krusader_rootactions.xml
-    install -Dm755 rootactions-servicemenu.pl "$pkgdir"/usr/bin/rootactions-servicemenu.pl
 
     # Install Chakra icons
     cd ${srcdir}/chakra-icons/
