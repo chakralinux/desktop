@@ -1,34 +1,33 @@
 pkgname=libpinyin
-pkgver=1.7.0
+pkgver=2.1.0
 pkgrel=1
 _modelver=14
 pkgdesc="Library to deal with pinyin."
 arch=('x86_64')
 url="https://github.com/libpinyin/libpinyin"
 license=('GPL')
-depends=('db' 'glib2')
-makedepends=('git' 'libtool' 'autoconf' 'automake')
-source=("https://github.com/libpinyin/libpinyin/archive/${pkgver}.tar.gz"
-        "http://downloads.sourceforge.net/libpinyin/model${_modelver}.text.tar.gz")
-noextract=("model${_modelver}.text.tar.gz")
-sha256sums=('97bdfb977b62f38122e0408710ea2029bb026a37eb9468ec30848f69b59b72a6'
+depends=('kyotocabinet' 'glib2')
+makedepends=('gnome-common')
+source=("$pkgname-$pkgver.tar.gz::https://github.com/$pkgname/$pkgname/archive/$pkgver.tar.gz"
+        "$pkgname-model$_modelver.text.tar.gz::http://downloads.sourceforge.net/libpinyin/model$_modelver.text.tar.gz")
+noextract=("$pkgname-model$_modelver.text.tar.gz")
+sha256sums=('d6ce0da926cb3485fa4b2e3805d49674a96a55e0cde9d31d57afb2626cbc32c6'
             '185f0f175a90bcfc55cf3cf6ceff8d447a6269492c0ca1a1fc0748ea2c181363')
 
+prepare() {
+  cd $pkgname-$pkgver
+
+  ln -s "$srcdir"/$pkgname-model$_modelver.text.tar.gz data/model$_modelver.text.tar.gz
+  sed -i "/wget.*model$_modelver\.text\.tar\.gz/ d" data/Makefile.am
+}
+
 build() {
-  cd ${srcdir}/${pkgname}-${pkgver}
-
-  cp ../model${_modelver}.text.tar.gz data/
-  sed -i "/wget.*model${_modelver}\.text\.tar\.gz/ d" data/Makefile.am
-
-  aclocal && libtoolize --force && autoheader && automake -a && autoconf
-
-  # :/
-  sed -i 's/AX_CXX_COMPILE_STDCXX(11)/AX_CXX_COMPILE_STDCXX_11()/' configure
-
-  ./configure --prefix=/usr && make
+  cd $pkgname-$pkgver
+  ./autogen.sh --prefix=/usr --with-dbm=KyotoCabinet --enable-libzhuyin
+  make
 }
 
 package() {
-  cd ${srcdir}/${pkgname}-${pkgver}
-  make DESTDIR="${pkgdir}" install
+  cd $pkgname-$pkgver
+  make DESTDIR="$pkgdir" install
 }
