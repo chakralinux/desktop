@@ -1,27 +1,33 @@
 pkgname=fcitx-libpinyin
-pkgver=0.5.0
+pkgver=0.5.1
+_model=model.text.20161206.tar.gz
 pkgrel=1
 pkgdesc="Fcitx Wrapper for libpinyin."
 arch=('x86_64')
 url="https://fcitx-im.org/wiki/Fcitx"
 license=('GPL')
-depends=('fcitx>=4.2.8' 'libpinyin' 'qt5-webengine' 'fcitx-qt5' 'glib2' 'dbus')
-makedepends=('cmake' 'intltool' 'wget')
-source=("https://download.fcitx-im.org/${pkgname}/${pkgname}-${pkgver}_dict.tar.xz")
-sha256sums=('97fbe01a0be618de226f483a47ed236a473713465c535b17f705f3d7112576fe')
+depends=('fcitx' 'libpinyin' 'fcitx-qt5' 'qt5-webengine')
+makedepends=('cmake')
+source=("$pkgname-$pkgver.tar.gz::https://github.com/fcitx/fcitx-libpinyin/archive/$pkgver.tar.gz"
+        "$pkgname-$_model::http://download.fcitx-im.org/data/$_model")
+sha256sums=('aff1d66760fc624bc1610fdd205d683de38430724c7ced7b83f231a881a54a16'
+            '5c7024e5735389c471f54b867eda0d98c5a40a5e5e75333a9febac107508f704')
 
-build(){
-    cd "$srcdir/${pkgname}-${pkgver}"
-    rm -rf build
-    mkdir build
-    cd build
-    
-    cmake -DCMAKE_INSTALL_PREFIX=/usr -DCMAKE_BUILD_TYPE=Release ..
-    make
+prepare() {
+  mkdir build
+  ln -s "$srcdir"/$pkgname-$_model fcitx-libpinyin-$pkgver/data/$_model
+
+  sed -i 's/pinyin_guess_candidates(m_inst, pinyinOffset());/pinyin_guess_candidates(m_inst, pinyinOffset(), SORT_BY_PHRASE_LENGTH_AND_FREQUENCY);/' fcitx-libpinyin-$pkgver/src/eim.cpp
 }
 
-package ()
-{
-    cd "$srcdir/${pkgname}-${pkgver}/build"
-    make DESTDIR=${pkgdir} install
+build() {
+  cd build
+
+  cmake -DCMAKE_INSTALL_PREFIX=/usr -DCMAKE_BUILD_TYPE=Release ../$pkgname-$pkgver
+  make
+}
+
+package() {
+  cd build
+  make DESTDIR="$pkgdir" install
 }
