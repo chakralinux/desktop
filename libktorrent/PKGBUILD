@@ -2,7 +2,7 @@
 source ../kdeapps.conf
 
 pkgname=libktorrent
-pkgver=2.0.1
+pkgver=2.1
 pkgrel=1
 pkgdesc="A BitTorrent program for KDE"
 arch=('x86_64')
@@ -10,8 +10,10 @@ url="http://ktorrent.org"
 license=('GPL2')
 depends=('qca-qt5' 'kio')
 makedepends=('extra-cmake-modules' 'kdoctools' 'python3' 'boost' 'doxygen')
-source=("http://download.kde.org/stable/ktorrent/5.0/${pkgname}-${pkgver}.tar.xz")
-sha1sums=('ebf4aedd97741ad534ee272576a4649788209574')
+source=("http://download.kde.org/stable/ktorrent/5.1/${pkgname}-${pkgver}.tar.xz"{,.sig})
+sha1sums=('e5600c1c81ccb65ad2c5589096c4b05d57577c68'
+          'SKIP')
+validpgpkeys=('1EE5A3205904BAA2B88C0A9D24FD31940095C0E1') # Andrius \xc5\xa0tikonas
 
 prepare() {
   mkdir -p build
