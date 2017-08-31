@@ -2,7 +2,7 @@
 source ../kdeapps.conf
 
 pkgname=libmediawiki
-pkgver=0.1.0
+pkgver=5.37.0
 pkgrel=1
 pkgdesc="KDE C++ interface for MediaWiki based web service as wikipedia.org"
 url="https://projects.kde.org/projects/extragear/libs/libmediawiki"
@@ -11,8 +11,8 @@ license=('GPL' 'LGPL' 'FDL')
 depends=('kcoreaddons')
 makedepends=('extra-cmake-modules' 'kdoctools' 'git')
 groups=('kde' 'kde-graphics' 'kde-uninstall')
-source=("git://anongit.kde.org/libmediawiki.git")
-md5sums=('SKIP')
+source=("https://download.kde.org/stable/${pkgname}/${pkgname}-${pkgver}.tar.xz")
+md5sums=('cb75f9b26a096fa85bf4ba1a1116119f')
 
 prepare() {
   mkdir -p build
@@ -20,7 +20,7 @@ prepare() {
 
 build() {
   cd build
-  cmake_kf5 ../${pkgname}
+  cmake_kf5 ../${pkgname}-${pkgver}
   make
 }
 
