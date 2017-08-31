@@ -2,7 +2,7 @@
 source ../kdeapps.conf
 
 pkgname=libkvkontakte
-pkgver=4.70.0
+pkgver=5.0.0
 pkgrel=1
 pkgdesc="C++ library for asynchronous interaction with VK social network via its web API"
 arch=('x86_64')
@@ -10,8 +10,8 @@ url='https://projects.kde.org/projects/extragear/libs/libkvkontakte'
 license=('GPL')
 depends=('kio' 'ki18n' 'kdewebkit' 'kcoreaddons' 'kwidgetsaddons')
 makedepends=('pkg-config' 'extra-cmake-modules' 'kdoctools' 'git')
-source=("git://anongit.kde.org/libkvkontakte.git")
-md5sums=('SKIP')
+source=("https://download.kde.org/stable/${pkgname}/${pkgver}/src/${pkgname}-${pkgver}.tar.xz")
+md5sums=('38754b63297f0248f572412dc54edb87')
 
 prepare() {
   mkdir -p build
@@ -19,7 +19,7 @@ prepare() {
 
 build() {
   cd build
-  cmake_kf5 ../${pkgname}
+  cmake_kf5 ../${pkgname}-${pkgver}
   make
 }
 
