@@ -3,16 +3,18 @@ source ../kdeapps.conf
 
 pkgname=ktorrent
 pkgver=5.1.0
-pkgrel=1
+pkgrel=2
 pkgdesc="A powerful BitTorrent client for KDE"
 arch=('x86_64')
 url='http://ktorrent.pwsp.net/'
 license=('GPL2')
 depends=('libktorrent' 'knotifyconfig' 'kcmutils' 'kross')
-makedepends=('extra-cmake-modules' 'kdoctools' 'python3' 'boost' 'taglib' 'geoip' 'plasma-workspace' 'kdnssd')
-optdepends=('plasma-workspace: shutdown plugin' 'kdnssd: zeroconf plugin' 'taglib: mediaplayer plugin')
+makedepends=('extra-cmake-modules' 'kdoctools' 'python3' 'boost' 'taglib' 'geoip' 'plasma-workspace' 'kdnssd' 'syndication')
+optdepends=('plasma-workspace: shutdown plugin'
+            'kdnssd: zeroconf plugin'
+            'taglib: mediaplayer plugin'
+            'syndication: rss/syndication plugin')
 install=${pkgname}.install
-options=('debug')
 source=("http://download.kde.org/stable/ktorrent/5.1/${pkgname}-${pkgver}.tar.xz"{,.sig})
 sha1sums=('44da78db61d86a5551a17019f95bf905ad00d918'
           'SKIP')
