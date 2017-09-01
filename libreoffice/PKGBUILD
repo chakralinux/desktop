@@ -14,8 +14,8 @@ pkgname=('libreoffice-common'
 	'libreoffice-postgresql-connector'
 	'libreoffice-extension-wiki-publisher'
 	'libreoffice-extension-nlpsolver')
-_LOver=5.3.6.1
-pkgver=5.3.6
+_LOver=5.4.1.2
+pkgver=5.4.1
 pkgrel=1
 arch=('x86_64')
 license=('LGPL3')
@@ -23,7 +23,7 @@ url="http://www.libreoffice.org/"
 screenshot="http://wstaw.org/m/2012/04/20/libre2.png"
 makedepends=( # makedepends
              'sane' 'perl-archive-zip' 'zip' 'unzip' 'unixodbc' 'gtk3' 'gtk2' 'gobject-introspection'
-             'apache-ant' 'gperf' 'poppler' 'kdelibs' 'cppunit' 'glu' 'libodfgen'
+             'apache-ant' 'gperf' 'poppler' 'kdelibs' 'cppunit>=1.14.0' 'glu' 'libodfgen'
              'beanshell'  #'vigra'
              'libldap' 'libmythes' 'junit' 'libwpg' 'imagemagick' 'mdds'
              'mesa' 'gst-plugins-base' 'java-runtime' 'postgresql-libs' 'clucene' 'doxygen' 'libvisio' 'bluez-libs' 'junit'
@@ -41,8 +41,8 @@ _additional_source_url="http://dev-www.libreoffice.org/src"
 _additional_source_url2="http://dev-www.libreoffice.org/extern"
 source=(${_mirror}/libreoffice{,-help,-translations}-${_LOver}.tar.xz
 #        {,.asc}
-        ${_additional_source_url}/boost_1_60_0.tar.bz2
-        ${_additional_source_url}/86b1daaa438f5a7bea9a52d7b9799ac0-xmlsec1-1.2.23.tar.gz
+        ${_additional_source_url}/boost_1_63_0.tar.bz2
+        ${_additional_source_url}/xmlsec1-1.2.24.tar.gz
         ${_additional_source_url}/35c94d2df8893241173de1d16b6034c0-swingExSrc.zip
         ${_additional_source_url}/798b2ffdc8bcfe7bca2cf92b62caf685-rhino1_5R5.zip
         ${_additional_source_url}/a7983f859eafb2677d7ff386a023bc40-xsltml_2.1.2.zip
@@ -81,17 +81,18 @@ source=(${_mirror}/libreoffice{,-help,-translations}-${_LOver}.tar.xz
         ${_additional_source_url}/libpagemaker-0.0.3.tar.bz2  
         ${_additional_source_url}/language-subtag-registry-2017-04-19.tar.bz2
         ${_additional_source_url}/CoinMP-1.7.6.tgz
-        ${_additional_source_url}/libstaroffice-0.0.2.tar.bz2
+        ${_additional_source_url}/libstaroffice-0.0.3.tar.xz
         ${_additional_source_url}/4b87018f7fff1d054939d19920b751a0-collada2gltf-master-cb1d97788a.tar.bz2
         ${_additional_source_url}/OpenCOLLADA-master-6509aa13af.tar.bz2
-        ${_additional_source_url}/libgltf/libgltf-0.0.2.tar.bz2
+        ${_additional_source_url}/libgltf/libgltf-0.1.0.tar.gz
+        ${_additional_source_url}/pdfium-3064.tar.bz2
         make-pyuno-work-with-system-wide-module-install.diff)
 #validpgpkeys=('C2839ECAD9408FBE9531C3E9F434A1EFAFEEAEA3') # LibreOffice Build Team (CODE SIGNING KEY) <build@documentfoundation.org>
-md5sums=('361153226d8c6b4058355cf7cffe297b'
-         'c942f959691de14af571ec88986dd5d7'
-         'e608fe5cd446835ee311fc6ac9629b33'
-         '65a840e1a0b13a558ff19eeb2c4f0cbe'
-         '86b1daaa438f5a7bea9a52d7b9799ac0'
+md5sums=('95cb3b05efd537716fcbf0674cbebc99'
+         '994c4f1aa14747109ef7e763597c757b'
+         'cfc35951a952c2a79e0deba43a00c29d'
+         '1c837ecd990bb022d07e7aab32b09847'
+         '2f4944356b69ea14c18814d9248fbbd8'
          '35c94d2df8893241173de1d16b6034c0'
          '798b2ffdc8bcfe7bca2cf92b62caf685'
          'a7983f859eafb2677d7ff386a023bc40'
@@ -130,14 +131,15 @@ md5sums=('361153226d8c6b4058355cf7cffe297b'
          '5c4985a68be0b79d3f809da5e12b143c'
          '59a3595c1052c5b51f996f44fe9994b9'
          '1cce53bf4b40ae29790d2c5c9f8b1129'
-         '4012950240c2bf768c9b29ad376123d7'
+         '1478e222b842fad9eb88ecddee39058d'
          '4b87018f7fff1d054939d19920b751a0'
          '4ca8a6ef0afeefc864e9ef21b9f14bd6'
-         'd63a9f47ab048f5009d90693d6aa6424'
+         '63ae962d0c436909979826fce0fca2fd'
+         '5e97e37a615314a77f53a08eeb8d8a42'
          '41fa5baa6d71d69b98de1fe258a6dd65')
 noextract=(
-          boost_1_60_0.tar.bz2
-          86b1daaa438f5a7bea9a52d7b9799ac0-xmlsec1-1.2.23.tar.gz
+          boost_1_63_0.tar.bz2
+          xmlsec1-1.2.24.tar.gz
           35c94d2df8893241173de1d16b6034c0-swingExSrc.zip
           798b2ffdc8bcfe7bca2cf92b62caf685-rhino1_5R5.zip
           a7983f859eafb2677d7ff386a023bc40-xsltml_2.1.2.zip
@@ -178,8 +180,9 @@ noextract=(
           language-subtag-registry-2017-04-19.tar.bz2
           4b87018f7fff1d054939d19920b751a0-collada2gltf-master-cb1d97788a.tar.bz2
           OpenCOLLADA-master-6509aa13af.tar.bz2
-          libgltf-0.0.2.tar.bz2
-          libstaroffice-0.0.2.tar.bz2)
+          libgltf-0.1.0.tar.gz
+          libstaroffice-0.0.3.tar.xz
+          pdfium-3064.tar.bz2)
 
 prepare() {
     cd ${srcdir}/libreoffice-$_LOver
@@ -225,7 +228,7 @@ build() {
                 --enable-avahi \
                 --enable-dbus \
                 --disable-evolution2 \
-                --enable-graphite\
+                --with-system-graphite\
                 --enable-gio\
                 --disable-epm \
                 --disable-gtk \
@@ -267,8 +270,6 @@ build() {
                 --with-external-thes-dir=/usr/share/mythes \
                 --with-system-beanshell \
                 --with-system-cppunit \
-                --with-system-graphite \
-                --with-system-glew \
                 --with-system-libwpg \
                 --with-system-libwps \
                 --with-system-libodfgen \
@@ -286,8 +287,9 @@ build() {
                 --without-system-libpagemaker \
                 --without-system-coinmp \
                 --without-system-libgltf \
-                --with-alloc=system\
-                --with-system-clucene
+                --with-alloc=system \
+                --with-system-clucene \
+                --without-system-xmlsec
         
         touch src.downloaded
         #./download
