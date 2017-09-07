@@ -1,18 +1,25 @@
-
 pkgname=krename
 pkgver=4.0.9
-pkgrel=4
+pkgrel=5
 pkgdesc="A very powerfull batch file renamer for KDE"
 arch=('x86_64')
 url="http://www.krename.net"
 license=('GPL')
-depends=('exiv2' 'kdelibs' 'taglib' 'xdg-utils')
+depends=('exiv2' 'kde-runtime' 'taglib' 'xdg-utils' 'strigi')
 makedepends=('cmake' 'automoc4')
 options=('libtool')
 categories=('utils')
 install=$pkgname.install
-source=("http://sourceforge.net/projects/krename/files/KDE4%20krename-stable/$pkgver/$pkgname-$pkgver.tar.bz2")
-md5sums=('21b2daeee6d81155bd3c0fa2bc1b9a63')
+source=("http://sourceforge.net/projects/krename/files/KDE4%20krename-stable/$pkgver/$pkgname-$pkgver.tar.bz2"
+        krename-gcc6.patch)
+md5sums=('21b2daeee6d81155bd3c0fa2bc1b9a63'
+         'ac1fe8bc93a7524a21d28edef168e888')
+
+prepare() {
+  cd $pkgname-$pkgver
+  # Fix build with GCC 6
+  patch -p1 -i ../krename-gcc6.patch
+}
 
 build() {
   cd $pkgname-$pkgver
