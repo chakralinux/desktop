@@ -1,6 +1,6 @@
 pkgbase=qtkeychain
 pkgname=('qtkeychain-qt4' 'qtkeychain-qt5')
-pkgver=0.7.0
+pkgver=0.8.0
 pkgrel=1
 pkgdesc="Provides support for secure credentials storage."
 arch=('x86_64')
@@ -8,7 +8,7 @@ url="https://github.com/frankosterfeld/qtkeychain"
 license=('BSD')
 makedepends=('cmake' 'icu' 'qt5-tools' 'qt')
 source=("$pkgbase-$pkgver.tar.gz::https://github.com/frankosterfeld/$pkgbase/archive/v${pkgver}.tar.gz")
-sha1sums=('d8965c7ecba5ae54787eecf75b4cebccc5defaf1')
+sha1sums=('d6ff0726245ee24e249e76ee9025b473239dd637')
 
 prepare() {
     mkdir -p build{4,5}
@@ -20,7 +20,7 @@ build() {
           -DBUILD_WITH_QT4=ON \
           -DCMAKE_INSTALL_PREFIX=/usr \
           -DCMAKE_INSTALL_LIBDIR=lib \
-          -DCMAKE_INSTALL_LIBEXECDIR=lib/${pkgname} \
+          -DCMAKE_INSTALL_LIBEXECDIR=lib/qtkeychain-qt4 \
           -DCMAKE_BUILD_TYPE=Release
     make
     
@@ -28,7 +28,7 @@ build() {
     cmake ../$pkgbase-$pkgver \
           -DCMAKE_INSTALL_PREFIX=/usr \
           -DCMAKE_INSTALL_LIBDIR=lib \
-          -DCMAKE_INSTALL_LIBEXECDIR=lib/${pkgname} \
+          -DCMAKE_INSTALL_LIBEXECDIR=lib/qtkeychain-qt5 \
           -DCMAKE_BUILD_TYPE=Release
     make
 }
