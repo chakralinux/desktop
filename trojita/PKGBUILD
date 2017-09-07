@@ -1,27 +1,34 @@
 pkgname=trojita
 pkgver=0.7
-pkgrel=1
+pkgrel=2
 pkgdesc="Trojita is a Qt IMAP e-mail client."
 arch=('x86_64')
 url="http://trojita.flaska.net"
 license=('GPL')
-depends=('qt5-webkit' 'qt5-tools' 'qt5-translations' 'qt5-svg' 'qtkeychain-qt5' 'zlib'
-	 'ragel' 'libdbus' 'gpgmepp' 'mimetic' 'boost')
-makedepends=('cmake')
+depends=('qt5-webkit' 'qt5-translations' 'qt5-svg' 'qtkeychain-qt5' 'zlib'
+	 'ragel' 'libdbus' 'gpgme' 'mimetic' 'boost')
+makedepends=('cmake' 'qt5-tools')
 categories=('network')
 screenshot=('http://trojita.flaska.net/trojita-2013-01-09--overview.png')
-source=("http://downloads.sourceforge.net/$pkgname/$pkgname-$pkgver.tar.xz")
-sha256sums=('e08da881721cafa00ecd772eaef6b99fd37d068cb703eeb532de0ed1ea0136d9')
+source=("http://downloads.sourceforge.net/$pkgname/$pkgname-$pkgver.tar.xz"
+        'support-gpgme.patch'
+        'fix-gpg-test.patch')
+sha256sums=('e08da881721cafa00ecd772eaef6b99fd37d068cb703eeb532de0ed1ea0136d9'
+            '9f99bd2d91cd3b345e2bf52c0d9929ea81147f6578b774c5d2b4f2e86aade2a8'
+            '4b949ab021633241df91576eb99091380e1f70a99e713d4322a62c6c4f231226')
 
 prepare() {
   cd "$srcdir/$pkgname-$pkgver"
+  patch -Np1 -i ../support-gpgme.patch
+  patch -Np1 -i ../fix-gpg-test.patch
   mkdir -p build
 }
 
 build() {
   cd "$srcdir/$pkgname-$pkgver/build"
   cmake -DCMAKE_BUILD_TYPE=Release \
-        -DCMAKE_INSTALL_PREFIX=/usr ..
+        -DCMAKE_INSTALL_PREFIX=/usr \
+        -DBUILD_TESTING=OFF ..
   make
 }
 
