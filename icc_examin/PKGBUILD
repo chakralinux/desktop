@@ -12,7 +12,7 @@ sha1sums=('ece3ab2f386d84f731a0e0d0eaadbc08eb3a0c84'
           '3f1175583609a20d92bdd93ec54f2e68a42281b5')
 
 build() {
-    cd $srcdir/$pkgname-$pkgver
+    cd $srcdir/icc-examin-$pkgver
     
     unset LDFLAGS
     patch -Np0 <"$srcdir"/configure_tests.patch
@@ -25,7 +25,7 @@ build() {
 }
 
 package() {
-    cd $srcdir/$pkgname-$pkgver
+    cd $srcdir/icc-examin-$pkgver
     
     make DESTDIR=$pkgdir install
 }
