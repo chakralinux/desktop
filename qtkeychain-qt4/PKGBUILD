@@ -1,0 +1,31 @@
+pkgname=qtkeychain-qt4
+pkgver=0.8.0
+pkgrel=3
+pkgdesc="Provides support for secure credentials storage. (Qt4 version)"
+arch=('x86_64')
+url="https://github.com/frankosterfeld/qtkeychain"
+license=('BSD')
+depends=('qt')
+makedepends=('cmake' 'icu')
+source=("$pkgname-$pkgver.tar.gz::https://github.com/frankosterfeld/${pkgname//\-qt4/}/archive/v${pkgver}.tar.gz")
+sha1sums=('d6ff0726245ee24e249e76ee9025b473239dd637')
+
+prepare() {
+    mkdir -p build
+}
+
+build() {
+    cd build
+    cmake ../${pkgname//\-qt4/}-$pkgver \
+          -DBUILD_WITH_QT4=ON \
+          -DCMAKE_INSTALL_PREFIX=/usr \
+          -DCMAKE_INSTALL_LIBDIR=lib \
+          -DCMAKE_BUILD_TYPE=Release
+    make
+}
+
+package() {
+    cd build
+    make DESTDIR="$pkgdir" install
+    install -Dm644 "$srcdir"/qtkeychain-$pkgver/COPYING "$pkgdir"/usr/share/licenses/$pkgname/LICENSE
+}
