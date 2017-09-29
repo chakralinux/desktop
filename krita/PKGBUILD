@@ -2,11 +2,11 @@
 # Maintainer: Antonio Rojas <arojas@archlinux,org>
 
 pkgname=krita
-pkgver=3.2.1
-pkgrel=2
+pkgver=3.3.0
+pkgrel=1
 pkgdesc="Edit and paint images"
 arch=('x86_64')
-url="http://krita.org"
+url="https://krita.org"
 license=('LGPL')
 depends=('kio' 'kitemmodels' 'gsl' 'libraw' 'opencolorio' 'exiv2' 'openexr' 'openjpeg' 'fftw' 'curl' 'boost-libs' 
          'hicolor-icon-theme' 'ffmpeg' 'qt5-multimedia')
@@ -17,7 +17,7 @@ provides=('calligra-krita')
 replaces=('calligra-krita')
 source=("https://download.kde.org/stable/${pkgname}/${pkgver}/${pkgname}-${pkgver}.tar.gz")
 install=$pkgname.install
-sha1sums=('137da41cff87ffe7a78e1ead69de6054d5bb73e3')
+sha1sums=('462bc1d289aa360c4f0726e481679c31d3f8f7b7')
 
 build() {
   cd $pkgname-$pkgver
@@ -26,9 +26,8 @@ build() {
   cmake .. \
     -DCMAKE_BUILD_TYPE=Release \
     -DCMAKE_INSTALL_PREFIX=/usr \
-    -DKDE_INSTALL_LIBDIR=lib \
-    -DBUILD_TESTING=OFF \
-    -DPACKAGERS_BUILD=ON
+    -DCMAKE_INSTALL_LIBDIR=lib \
+    -DBUILD_TESTING=OFF
   make
 }
 
