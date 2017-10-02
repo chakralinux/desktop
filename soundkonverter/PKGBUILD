@@ -1,12 +1,12 @@
 pkgname=soundkonverter
-pkgver=2.2.2
-pkgrel=2
+pkgver=3.0.1
+pkgrel=1
 pkgdesc="soundKonverter is a frontend to various audio converters"
 arch=('x86_64')
 url="https://github.com/HessiJames/soundkonverter"
 license=('GPL')
-depends=('audiocd-kio' 'libkcddb4' 'taglib' 'opusfile')
-makedepends=('cmake' 'automoc4')
+depends=('hicolor-icon-theme' 'kdelibs4support' 'libkcddb' 'taglib')
+makedepends=('cmake' 'extra-cmake-modules' 'kdesignerplugin' 'kdoctools')
 optdepends=('cdrkit: cdda2wav backend'
             'faac: faac backend'
             'faad2: faad backend'
@@ -25,23 +25,23 @@ optdepends=('cdrkit: cdda2wav backend'
             'vorbis-tools: vorbis tools backend'
             'wavpack: wavpack backend'
             'sox: sox plugin (change sample rate, various effects)')
-
 categories=('multimedia')
 screenshot=('http://kde-apps.org/CONTENT/content-pre2/29024-2.png')
 source=("$pkgname-$pkgver::https://github.com/HessiJames/soundkonverter/archive/v${pkgver}.tar.gz")
-sha256sums=('647788300fe09171cc8b1bb51902b3ddad3b8beccb378cdfcade8da2462abed7')
+sha256sums=('92117f8aff85aac3a336cc0c94f3739aaa2d07ddd741d737dfd4b1571c60a0ce')
 
 build() {
-  cd "$srcdir"/$pkgname-$pkgver/src
-  cmake . \
+  mkdir -p "$srcdir/build"
+  cd "$srcdir/build"
+
+  cmake "$srcdir/$pkgname-$pkgver/src" \
     -DCMAKE_INSTALL_PREFIX=/usr \
+    -DKDE_INSTALL_LIBDIR=lib \
     -DCMAKE_BUILD_TYPE=Release
   make
 }
 
 package() {
-    cd "$srcdir"/$pkgname-$pkgver/src
-    make DESTDIR="$pkgdir" install
-    
-    mv ${pkgdir}/usr/share/applications/kde4/$pkgname.desktop ${pkgdir}/usr/share/applications/$pkgname.desktop
+  cd "$srcdir/build"
+  make DESTDIR="$pkgdir" install
 }
