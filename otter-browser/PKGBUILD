@@ -1,23 +1,23 @@
 pkgname=otter-browser
-pkgver=0.9.12
-pkgrel=2
+pkgver=0.9.91
+pkgrel=1
 pkgdesc="Browser aiming to recreate classic Opera (12.x) UI using Qt5."
 arch=('x86_64')
 url="http://otter-browser.org"
 license=('GPL3')
-depends=('qt5-multimedia' 'qt5-webkit' 'qt5-webengine' 'qt5-script' 'hicolor-icon-theme' 'desktop-file-utils'
+depends=('qt5-multimedia' 'qt5-webkit' 'qt5-webengine' 'qt5-script' 'qt5-svg' 'hicolor-icon-theme' 'desktop-file-utils'
          'sonnet' 'libgcrypt' 'hunspell')
 makedepends=('cmake' 'qt5-tools')
 conflicts=('otter-browser-git')
 install=otter.install
 source=($pkgname-$pkgver.tar.gz::https://github.com/OtterBrowser/$pkgname/archive/v$pkgver.tar.gz)
-sha1sums=('4f65d90cd5b389cf55ee79fcef5f5dd134fd1e5e')
+sha1sums=('ee1669933ac329cb0ad5e6c821cff5643d0623a5')
 
 prepare() {
   cd $pkgname-$pkgver
   
   # Change DuckDuckGo's argument.
-  sed -i 's/canonical/chakra/g' resources/searches/duckduckgo.xml
+  sed -i 's/?q={searchTerms}&/?q={searchTerms}&t=chakra&/g' resources/searches/duckduckgo.xml
 }
 
 build() {
