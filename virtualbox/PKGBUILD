@@ -11,7 +11,7 @@ pkgname=('virtualbox'
          'virtualbox-ext-vnc'
          'virtualbox-ext-oracle')
 pkgver=5.1.28
-pkgrel=1
+pkgrel=2
 arch=('x86_64')
 url='http://virtualbox.org'
 license=('GPL')
@@ -47,7 +47,6 @@ makedepends=('alsa-lib'
              'qt5-tools'
              'sdl'
              'sdl_ttf'
-             'sed'
              'vde2'
              'xalan-c'
              'xf86driproto'
@@ -73,7 +72,8 @@ source=("http://download.virtualbox.org/virtualbox/$pkgver/VirtualBox-$pkgver.ta
         '005-gsoap-build.patch'
         '006-rdesktop-vrdp-keymap-path.patch'
         '007-python2-path.patch'
-        'cxx11.patch'
+        '008-no-vboxvideo.patch'
+        '009-glibc-2.26.patch'
         'PUEL')
 noextract=(VBoxGuestAdditions_$pkgver.iso)
 sha256sums=('ce7d4bf6535f70e3214abeb4866f7a8634aa3c7b6dedf8825e6ad80bd821398d'
@@ -94,7 +94,8 @@ sha256sums=('ce7d4bf6535f70e3214abeb4866f7a8634aa3c7b6dedf8825e6ad80bd821398d'
             '7d2da8fe10a90f76bbfc80ad1f55df4414f118cd10e10abfb76070326abebd46'
             '5d5af2de5b1f1c61ec793503350f2440661cf8fd640f11b8a86f10bce499c0dc'
             '6bdb017459532537199c399eefd3d84d8dc7f1786e79997caebd3b6eb5c75d9f'
-            '656f5b7d0d74083e0b475c9fbf4b7f05fc5cd98930d18ce8464d1751c028a447'
+            '8b7f241107863f82a5b0ae336aead0b3366a40103ff72dbebf33f54b512a0cbc'
+            '3b6ad08a80f9f8c02c0c3625b7c96150056b466b8f32740b242a55736c282ec7'
             '715c7246dc0f779ceab39446812362b2f9bf64a55ed5d3a905f053cfab36da9e')
 
 prepare() {
@@ -114,6 +115,8 @@ prepare() {
 
     msg2 'Use our CFLAGS'
     echo "VBOX_GCC_OPT=$CXXFLAGS" >> LocalConfig.kmk
+    # workaround, to be removed https://www.virtualbox.de/ticket/17036
+    echo "VBOX_WITH_EXTPACK_VBOXDTRACE=" >> LocalConfig.kmk
 
     msg2 'Remove gcc version censorship'
     sed -i 's/^check_gcc$/#check_gcc/' configure
@@ -320,7 +323,7 @@ package_virtualbox-guest-utils() {
     pkgdesc='VirtualBox Guest userspace utilities'
     depends=('glibc' 'pam' 'libx11' 'libxcomposite'
              'libxdamage' 'libxext' 'libxfixes' 'libxmu' 'libxt' 'xorg-xrandr'
-             'VIRTUALBOX-GUEST-MODULES' 'X-ABI-VIDEODRV_VERSION=19')
+             'VIRTUALBOX-GUEST-MODULES' 'X-ABI-VIDEODRV_VERSION=23')
     replaces=('virtualbox-guest-additions')
     conflicts=('virtualbox-guest-additions' 'virtualbox-guest-utils-nox')
     install=virtualbox-guest-utils.install
@@ -333,8 +336,6 @@ package_virtualbox-guest-utils() {
         "$pkgdir"/usr/bin/VBoxClient-all
     install -m644 -D "$srcdir"/VirtualBox-$pkgver/src/VBox/Additions/x11/Installer/vboxclient.desktop \
         "$pkgdir"/etc/xdg/autostart/vboxclient.desktop
-    install -D vboxvideo_drv_system.so \
-        "$pkgdir/usr/lib/xorg/modules/drivers/vboxvideo.so"
     install -d "$pkgdir/usr/lib/xorg/modules/dri"
     install -m755 VBoxOGL*.so "$pkgdir/usr/lib"
     ln -s /usr/lib/VBoxOGL.so "$pkgdir/usr/lib/xorg/modules/dri/vboxvideo_dri.so"
