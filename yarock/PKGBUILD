@@ -1,20 +1,20 @@
 pkgname=yarock
 _pkgname=Yarock
-pkgver=1.1.6
+pkgver=1.2.0
 pkgrel=1
 pkgdesc="A Modern Music Player with collection browser based on cover art."
 arch=('x86_64')
 url="https://launchpad.net/yarock"
-screenshot="http://qt-apps.org/CONTENT/content-pre2/129372-2.png"
+screenshot="https://cn.pling.com/img//hive/content-pre1/129372-1.png"
 license=('GPL3')
-depends=('qt5-x11extras' 'taglib' 'phonon' 'phonon-qt5' 'boost' 'qjson' 'htmlcxx' 'qt5-translations' 'qt5-tools' 'vlc')
+depends=('qt5-x11extras' 'taglib' 'phonon' 'phonon-qt5' 'boost' 'htmlcxx' 'qt5-translations' 'qt5-tools' 'vlc')
 makedepends=('cmake' 'mpv')
 optdepends=('mpv: alternative (working) engine')
 categories=('multimedia')
-source=("http://launchpad.net/$pkgname/1.x/$pkgver/+download/${_pkgname}_${pkgver}_source.tar.gz"
+source=("http://launchpad.net/$pkgname/1.x/$pkgver/+download/${_pkgname}_${pkgver}_Sources.tar.gz"
 	"qt-build.patch"
         "phonon.patch")
-sha256sums=('a7acaeed92b23addac922ccf5e0ce076a5ac21eeb5d78005e9cfa5ff5413b387'
+sha256sums=('64fca62f69469f5ae29c6bab8e1603a7375f68ce044f05cf0a33a6aebcb22f4f'
             'bee9ea2ca4fa4ac4227515cd4533d0b581f91e6a6297544fe3a6bcfa5dcafb7f'
             '2923d2930ba7f1fe4e73ebcbbcae18e9316eb56b1f02132ea89d9d2db3f5c473')
 
@@ -31,7 +31,7 @@ prepare() {
 }	    
 	    
 build() {
-  cd ${_pkgname}_${pkgver}_source
+  cd ${_pkgname}_${pkgver}_Sources
 
   cmake CMakeLists.txt \
     -DCMAKE_BUILD_TYPE=Release \
@@ -42,6 +42,6 @@ build() {
 }
 
 package() {
-  cd ${_pkgname}_${pkgver}_source
+  cd ${_pkgname}_${pkgver}_Sources
   make DESTDIR=$pkgdir install
 }
