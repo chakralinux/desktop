@@ -11,7 +11,7 @@ pkgname=('virtualbox'
          'virtualbox-ext-vnc'
          'virtualbox-ext-oracle')
 pkgver=5.1.30
-pkgrel=1
+pkgrel=2
 arch=('x86_64')
 url='http://virtualbox.org'
 license=('GPL')
@@ -56,6 +56,7 @@ makedepends=('alsa-lib'
              'lib32-glibc')
 source=("http://download.virtualbox.org/virtualbox/$pkgver/VirtualBox-$pkgver.tar.bz2"
         "http://download.virtualbox.org/virtualbox/$pkgver/VBoxGuestAdditions_$pkgver.iso"
+        "http://download.virtualbox.org/virtualbox/$pkgver/Oracle_VM_VirtualBox_Extension_Pack-$pkgver.vbox-extpack"
         'virtualbox-host-dkms.conf'
         'virtualbox-guest-dkms.conf'
         'virtualbox.sysusers'
@@ -74,9 +75,11 @@ source=("http://download.virtualbox.org/virtualbox/$pkgver/VirtualBox-$pkgver.ta
         '007-python2-path.patch'
         '008-no-vboxvideo.patch'
         'PUEL')
-noextract=(VBoxGuestAdditions_$pkgver.iso)
+noextract=(VBoxGuestAdditions_$pkgver.iso
+          "Oracle_VM_VirtualBox_Extension_Pack-$pkgver.vbox-extpack")
 sha256sums=('6059b0986c9cdacc533177867634a76331ceccdcd46dddd111a50d1c42846d0b'
             '631ca8e8d513acf43a75de56a71a31aaffb5624864c57d10346ba657d991ec1e'
+            '2da095e32f85fe5a1fe943158e079bd5aecb2724691c4038bd619ddee967b288'
             'deb03efa7ad0376aa55a087f2e882afe00935f10b0e7aa853ba9147090d341ec'
             '113f9b92141b85df01f1e74d22f01d1f1aa81650eb79b89ceefc3cae20afe2e2'
             '2101ebb58233bbfadf3aa74381f22f7e7e508559d2b46387114bc2d8e308554c'
@@ -118,6 +121,11 @@ prepare() {
 
     msg2 'Remove gcc version censorship'
     sed -i 's/^check_gcc$/#check_gcc/' configure
+
+    cd $srcdir
+    msg2 'Get our batch agreement hash of PUEL of Oracle Extension Pack'
+    [[ -d shrunk ]] || mkdir shrunk
+    tar xfC "Oracle_VM_VirtualBox_Extension_Pack-$pkgver.vbox-extpack" shrunk
 }
 
 build() {
@@ -400,6 +408,5 @@ package_virtualbox-ext-oracle() {
     options=('emptydirs')
     install=${pkgname}.install
     
-    install -Dm0644 ${srcdir}/PUEL "${pkgdir}/usr/share/licenses/${pkgname}/PUEL"
-    install -dm755 ${pkgdir}/usr/share/virtualbox/extensions
+    install -Dm0644 ${srcdir}/shrunk/ExtPack-license.txt "${pkgdir}/usr/share/licenses/${pkgname}/PUEL"
 }
