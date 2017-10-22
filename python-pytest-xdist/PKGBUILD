@@ -1,0 +1,54 @@
+pkgbase=python-pytest-xdist
+pkgname=('python3-pytest-xdist' 'python2-pytest-xdist')
+pkgver=1.20.1
+pkgrel=1
+pkgdesc='py.test xdist plugin for distributed testing and loop-on-failing modes'
+arch=('any')
+license=('MIT')
+url='https://bitbucket.org/pytest-dev/pytest-xdist'
+makedepends=('python3-pytest' 'python2-pytest' 'python3-setuptools-scm' 'python2-setuptools-scm'
+             'python3-execnet' 'python2-execnet' 'python3-pytest-forked' 'python2-pytest-forked')
+source=("$pkgbase-$pkgver.tar.gz::https://github.com/pytest-dev/pytest-xdist/archive/v$pkgver.tar.gz")
+sha512sums=('0be76529df57ad63e13242a6efb9a35c706c4440a63969cb9da5173bdaa849a85d41bd44abfe3b47c0107cd81ac24ca9759302257fda64bb5bb4565c727f297e')
+
+prepare() {
+  cp -a pytest-xdist-$pkgver{,-py2}
+
+  export SETUPTOOLS_SCM_PRETEND_VERSION=$pkgver
+}
+
+build() {
+  cd "$srcdir"/pytest-xdist-$pkgver
+  python3 setup.py build
+
+  cd "$srcdir"/pytest-xdist-$pkgver-py2
+  python2 setup.py build
+}
+
+check() {
+  # Hack entry points by installing it
+
+  cd "$srcdir"/pytest-xdist-$pkgver
+  python3 setup.py install --root="$PWD/tmp_install" --optimize=1
+  PYTHONPATH="$PWD/tmp_install/usr/lib/python3.6/site-packages:$PYTHONPATH" py.test
+
+  cd "$srcdir"/pytest-xdist-$pkgver-py2
+  python2 setup.py install --root="$PWD/tmp_install" --optimize=1
+  PYTHONPATH="$PWD/tmp_install/usr/lib/python2.7/site-packages:$PYTHONPATH" py.test2
+}
+
+package_python3-pytest-xdist() {
+  depends=('python3-pytest-forked' 'python3-execnet')
+
+  cd pytest-xdist-$pkgver
+  python3 setup.py install --root="$pkgdir" --optimize=1
+  install -D -m644 LICENSE "$pkgdir"/usr/share/licenses/$pkgname/LICENSE
+}
+
+package_python2-pytest-xdist() {
+  depends=('python2-pytest-forked' 'python2-execnet')
+
+  cd pytest-xdist-$pkgver-py2
+  python2 setup.py install --root="$pkgdir" --optimize=1
+  install -D -m644 LICENSE "$pkgdir"/usr/share/licenses/$pkgname/LICENSE
+}
