@@ -1,5 +1,5 @@
 pkgname=('python3-scipy' 'python2-scipy')
-pkgver=0.19.0
+pkgver=0.19.1
 pkgrel=1
 pkgdesc="SciPy is open-source software for mathematics, science, and engineering."
 arch=('x86_64')
@@ -8,7 +8,7 @@ license=('BSD')
 makedepends=('gcc-fortran' 'python3-numpy' 'python2-numpy' 'python3-setuptools' 'python2-setuptools')
 checkdepends=('python3-nose' 'python2-nose')
 source=("https://github.com/scipy/scipy/releases/download/v${pkgver}/scipy-${pkgver}.tar.xz")
-sha256sums=('ed52232afb2b321a4978e39040d94bf81af90176ba64f58c4499dc305a024437')
+sha256sums=('0dca04c4860afdcb066cab4fd520fcffa8c85e9a7b5aa37a445308e899d728b3')
 
 build() {
   export LDFLAGS="-Wall -shared"
@@ -39,7 +39,7 @@ check() {
   cd ${srcdir}/scipy-${pkgver}
   python3 setup.py config_fc --fcompiler=gnu95 install \
     --prefix=/usr --root=${srcdir}/test --optimize=1
-  export PYTHONPATH=${srcdir}/test/usr/lib/python3.5/site-packages
+  export PYTHONPATH=${srcdir}/test/usr/lib/python3.6/site-packages
   cd ${srcdir}
   python3 -c "from scipy import test; test('full')"
 
@@ -81,4 +81,3 @@ package_python2-scipy() {
     "${pkgdir}/usr/share/licenses/python2-scipy/LICENSE"
 }
 
-# vim:set ts=2 sw=2 et:
