@@ -1,11 +1,11 @@
 # Contributions from Arch: https://www.archlinux.org/packages/community/x86_64/blender/
 
 pkgname=blender
-pkgver=2.78c
+pkgver=2.79
 _gittag=v${pkgver}
 #_gitcommit=c6b042be
 [[ -n ${_gitcommit} ]] && pkgver=${pkgver}.git1.${_gitcommit}
-pkgrel=2
+pkgrel=1
 epoch=2
 pkgdesc="A fully integrated 3D graphics creation suite"
 arch=('x86_64')
@@ -65,14 +65,14 @@ build() {
     -DWITH_GL_PROFILE_CORE=OFF \
     -DWITH_GL_PROFILE_ES20=OFF \
     -DWITH_LLVM=ON \
-    -DLLVM_VERSION=3.9 \
+    -DLLVM_VERSION=4.0 \
     -DLLVM_STATIC=OFF \
     -DWITH_CYCLES_CUDA_BINARIES=ON \
     -DWITH_CYCLES_PTEX=OFF \
-    -DPYTHON_VERSION=3.5 \
+    -DPYTHON_VERSION=3.6 \
     -DPYTHON_LIBPATH=/usr/lib \
-    -DPYTHON_LIBRARY=python3.5m \
-    -DPYTHON_INCLUDE_DIRS=/usr/include/python3.5m 
+    -DPYTHON_LIBRARY=python3.6m \
+    -DPYTHON_INCLUDE_DIRS=/usr/include/python3.6m 
   make
 }
 
@@ -80,6 +80,7 @@ package() {
   cd ${pkgname}-${pkgver}/build
 
   make DESTDIR="${pkgdir}" install
+  install -Dm755 ../release/bin/blender-softwaregl "${pkgdir}/usr/bin/blender-softwaregl"
   python3 -m compileall "${pkgdir}/usr/share/blender"
   python3 -O -m compileall "${pkgdir}/usr/share/blender"
 }

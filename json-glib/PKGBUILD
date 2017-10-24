@@ -1,27 +1,34 @@
 pkgname=json-glib
-pkgver=1.2.2
+pkgver=1.4.2
 pkgrel=1
 pkgdesc="JSON library built on GLib"
 arch=('x86_64')
 url="http://live.gnome.org/JsonGlib"
 license=('GPL')
 depends=('glib2')
-makedepends=('gobject-introspection' 'python2')
+makedepends=('gobject-introspection' 'python3' 'meson' 'gtk-doc')
 source=(http://ftp.gnome.org/pub/GNOME/sources/${pkgname}/${pkgver:0:3}/${pkgname}-${pkgver}.tar.xz)
-sha256sums=('ea128ab52a824fcd06e5448fbb2bd8d9a13740d51c66d445828edba71321a621')
+sha256sums=('2d7709a44749c7318599a6829322e081915bdc73f5be5045882ed120bb686dc8')
 
-build(){
-  cd "${srcdir}/${pkgname}-${pkgver}"
-  ./configure --prefix=/usr
-  make
+prepare() {
+  mkdir build
+  cd $pkgname-$pkgver
 }
 
-package(){
-  cd "${srcdir}/${pkgname}-${pkgver}"
-  make DESTDIR=${pkgdir} install
+build() {
+  cd build
+  meson setup --prefix=/usr --buildtype=release ../$pkgname-$pkgver \
+    --libexecdir=/usr/lib -Ddocs=true
+  ninja
 }
 
-check(){
-  cd "${srcdir}/${pkgname}-${pkgver}"
-  make check
+check() {
+  cd build
+  meson test
 }
+
+package() {
+  cd build
+  DESTDIR="$pkgdir" ninja install
+}
+

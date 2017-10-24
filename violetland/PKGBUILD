@@ -1,65 +1,44 @@
-# Maintainer: Adrián Chaves Fernández (Gallaecio) <adriyetichaves@gmail.com>
-
-pkgname=violetland
-pkgver=0.5
+_pkgbase=violetland
+pkgname=$_pkgbase-git
+pkgver=0.5.r145.ga0c91d1
 pkgrel=1
-pkgdesc="Game where a girl, Violet, struggles with hordes of monsters."
+pkgdesc='Open source cross platform game where a girl, Violet, struggles with hordes of monsters (clone of "crimsonland").'
 arch=('x86_64')
-url="http://code.google.com/p/violetland/"
+url="http://violetland.github.io"
 license=('GPL3' 'CCPL:by-sa')
-depends=('boost' 'intltool' 'sdl_image' 'sdl_mixer' 'sdl_ttf' 'libgl' 'mesa')
-makedepends=('cmake' 'desktop-file-utils' 'git')
-conflicts=('violetland-dev' 'violetland-svn')
-categories=('games')
+depends=('sdl_image' 'sdl_mixer' 'sdl_ttf' 'mesa' 'boost-libs')
+makedepends=('cmake' 'boost' 'git')
+conflicts=("$_pkgbase")
+provides=("$_pkgbase")
+source=($_pkgbase::"git+https://github.com/ooxi/violetland.git")
+md5sums=('SKIP')
 
-# FIXME: use the official releases.
-_gitroot="https://github.com/ooxi/violetland.git"
-_gitname="$pkgname"
+pkgver() {
+  cd $_pkgbase
+  git describe --long --tags | sed 's/\([^-]*-g\)/r\1/;s/-/./g'
+}
+
+prepare() {
+  cd $_pkgbase
+
+  # check out submodules
+  git submodule init
+  git submodule update
+}
 
 build() {
-  cd "${srcdir}"
+  cd $_pkgbase
 
-  msg "Connecting to GIT server...."
- 
-  if [ -d $_gitname ] ; then
-    cd $_gitname && git pull origin
-    git submodule update
-    msg "The local files are updated."
-  else
-    git clone $_gitroot $_gitname --depth=1
-    cd $_gitname
-    git submodule init
-    git submodule update 
-  fi
- 
-  msg "GIT checkout done or server timeout"
-  msg "Starting make..."
- 
-  rm -rf $srcdir/$_gitname-build
-  cp -R $srcdir/$_gitname $srcdir/$_gitname-build
-  cd $srcdir/$_gitname-build
-
-  cmake \
-    -DCMAKE_INSTALL_PREFIX=/usr \
-    -DCMAKE_BUILD_TYPE=RelWithDebInfo \
-    .
+  cmake ./ -DCMAKE_INSTALL_PREFIX=/usr
   make
 }
 
 package() {
-  cd "${srcdir}/${_gitname}-build"
-  
-  # Install icon
-  install -D -m0644 "${srcdir}/${pkgname}/icon-light.png" \
-    "${pkgdir}/usr/share/pixmaps/${pkgname}.png"
-  
-  # Install desktop file
-  desktop-file-install -m 0644 --dir="${pkgdir}/usr/share/applications" \
-    "${srcdir}/${pkgname}/${pkgname}.desktop"
+  cd $_pkgbase
 
-  # Install Readme
-  install -D -m0644 "${srcdir}/${pkgname}/CHANGELOG.md" \
-    "${pkgdir}/usr/share/doc/${pkgname}/CHANGELOG.md"
-    
-  make DESTDIR="${pkgdir}" install
+  make DESTDIR="$pkgdir/" install
+
+  # .desktop entry
+  install -Dm644 $_pkgbase.desktop "$pkgdir"/usr/share/applications/$_pkgbase.desktop
+  install -Dm644 icon-light.png "$pkgdir"/usr/share/pixmaps/$_pkgbase.png
 }
