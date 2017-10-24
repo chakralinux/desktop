@@ -1,15 +1,15 @@
 pkgname=m64py
-pkgver=0.2.3
+pkgver=0.2.4
 pkgrel=1
 pkgdesc="QT5 front-end for Mupen64Plus in Python"
 arch=("any")
-url="http://m64py.sourceforge.net"
+url="https://github.com/mupen64plus"
 license=("GPL")
-depends=('mupen64plus' 'sdl2' 'python3-pyqt5' 'desktop-file-utils' 'libxkbcommon-x11')
-makedepends=(python-distribute)
+depends=('mupen64plus' 'sdl2' 'python3-pyqt5' 'python3-pysdl2' 'desktop-file-utils' 'libxkbcommon-x11')
+makedepends=('python3-setuptools' 'python2-pyqt5')
 install='m64py.install'
-source=("http://downloads.sourceforge.net/m64py/m64py-${pkgver}.tar.gz")
-sha256sums=('87dccbad9f27ab1eae3fb9957ef039e23379d264e68f8ef7470ec38a523ef020')
+source=("https://github.com/mupen64plus/mupen64plus-ui-python/releases/download/${pkgver}/m64py-${pkgver}.tar.gz")
+sha256sums=('38c175587f6bb1984586584f27faad72ac3db7fed4bbbbdf26b3c75bfd0a6ce4')
 
 package() {
   cd "$srcdir/$pkgname-$pkgver"
