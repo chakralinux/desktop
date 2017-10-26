@@ -4,20 +4,21 @@
 # Contributor: Thomas Dziedzic < gostrc at gmail >
 # Contributor: Tarmo Heiskanen <turskii@gmail.com>
 
+pkgbase=python-flask
 pkgname=('python3-flask' 'python2-flask')
-pkgver=0.10.1
+pkgver=0.12.2
 pkgrel=1
 pkgdesc='Micro webdevelopment framework for Python'
 url='http://flask.pocoo.org/'
 arch=('any')
 license=('custom:BSD')
 makedepends=('python3-setuptools' 'python2-setuptools')
-source=("http://pypi.python.org/packages/source/F/Flask/Flask-$pkgver.tar.gz")
-sha256sums=('4c83829ff83d408b5e1d4995472265411d2c414112298f2eb4b359d9e4563373')
+source=("https://github.com/pallets/flask/archive/${pkgver}.tar.gz")
+sha256sums=('7b1306b690c706b0f4054c23bda57565fc050b5736bfd034609c1f26d35bfa28')
 
 prepare() {
-  cp -r "Flask-$pkgver" "python3-flask-$pkgver"
-  cp -r "Flask-$pkgver" "python2-flask-$pkgver"
+  cp -r "flask-$pkgver" "python3-flask-$pkgver"
+  cp -r "flask-$pkgver" "python2-flask-$pkgver"
 }
 
 build_python3-flask() {
@@ -45,6 +46,7 @@ package_python3-flask() {
   cd "$pkgname-$pkgver"
 
   python3 setup.py install --prefix=/usr --root="$pkgdir" --optimize=1
+  mv "$pkgdir"/usr/bin/flask "$pkgdir"/usr/bin/flask3
   install -Dm644 LICENSE "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
 }
 
@@ -53,7 +55,7 @@ package_python2-flask() {
   cd "$pkgname-$pkgver"
 
   python2 setup.py install --root="$pkgdir" --optimize=1
+  mv "$pkgdir"/usr/bin/flask "$pkgdir"/usr/bin/flask2
   install -Dm644 LICENSE "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
 }
 
-# vim:set ts=2 sw=2 et:

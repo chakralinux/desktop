@@ -3,7 +3,7 @@
 
 pkgbase=python-cryptography
 pkgname=('python3-cryptography' 'python2-cryptography')
-pkgver=1.2.3
+pkgver=2.1.2
 pkgrel=1
 pkgdesc="A package designed to expose cryptographic recipes and primitives to Python developers"
 arch=('x86_64')
@@ -12,8 +12,8 @@ url="http://pypi.python.org/pypi/cryptography"
 makedepends=('python3-setuptools' 'python2-setuptools' 'python3-six' 'python2-six' 'python3-cffi' 'python2-cffi' 'python3-pyasn1' 'python2-pyasn1'  ) # 'python2-ipaddress' 'python2-enum34' 'python3-idna' 'python2-idna'
 #checkdepends=('python3-pytest' 'python2-pytest' 'python3-cryptography-vectors' 'python2-cryptography-vectors'
 #              'python3-iso8601' 'python2-iso8601' 'python3-pretend' 'python2-pretend' 'python3-pyasn1' 'python2-pyasn1')
-source=("http://pypi.python.org/packages/source/c/cryptography/cryptography-${pkgver}.tar.gz")
-md5sums=('5474d2b3e8c7555a60852e48d2743f85')
+source=("https://pypi.io/packages/source/c/cryptography/cryptography-$pkgver.tar.gz")
+md5sums=('f0565d3e85cea64f0f01382e525a33dd')
 
 prepare() {
    cp -a cryptography-${pkgver}{,-python2}
@@ -41,15 +41,16 @@ build() {
 #}
  
 package_python3-cryptography() {
-   depends=('python3-six' 'python3-cffi')
- 
-   cd cryptography-${pkgver}
-   python3 setup.py install --root="${pkgdir}" --optimize=1 --skip-build
+  depends=('python3-six' 'python3-cffi' 'python3-idna' 'python3-setuptools' 'python3-asn1crypto')
+
+  cd cryptography-$pkgver
+  python3 setup.py install --root="$pkgdir" --optimize=1 --skip-build
 }
- 
+
 package_python2-cryptography() {
-   depends=('python2-six' 'python2-cffi')
- 
-   cd cryptography-${pkgver}-python2
-   python2 setup.py install --root="${pkgdir}" --optimize=1 --skip-build
+  depends=('python2-six' 'python2-cffi' 'python2-enum34' 'python2-idna' 'python2-ipaddress'
+           'python2-setuptools' 'python2-asn1crypto')
+
+  cd cryptography-$pkgver-python2
+  python2 setup.py install --root="$pkgdir" --optimize=1 --skip-build
 }

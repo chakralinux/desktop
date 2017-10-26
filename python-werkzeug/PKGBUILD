@@ -1,18 +1,18 @@
-
+pkgbase=python-werkzeug
 pkgname=('python3-werkzeug' 'python2-werkzeug')
-pkgver=0.11.4
+pkgver=0.12.2
 pkgrel=1
 pkgdesc='Swiss Army knife of Python web development'
 url='http://werkzeug.pocoo.org/'
 arch=('any')
 license=('custom:BSD')
 makedepends=('python3-setuptools' 'python2-setuptools' 'python3-pytest' 'python2-pytest' 'python3-requests' 'python2-requests')
-source=("http://pypi.python.org/packages/source/W/Werkzeug/Werkzeug-$pkgver.tar.gz")
-sha256sums=('e48fb7e3f2bb5a740dd9a666624699a4d83e2e028555f9c46bcc8ecfc2cd8c32')
+source=("https://github.com/pallets/werkzeug/archive/${pkgver}.tar.gz")
+sha256sums=('58b77f7deab8a4c8508b79fe7c7648f1f952ac2cbf45cf5f67c541e8ac17d73e')
 
 prepare() {
-  cp -r "Werkzeug-$pkgver" "python3-werkzeug-$pkgver"
-  cp -r "Werkzeug-$pkgver" "python2-werkzeug-$pkgver"
+  cp -r "werkzeug-$pkgver" "python3-werkzeug-$pkgver"
+  cp -r "werkzeug-$pkgver" "python2-werkzeug-$pkgver"
 }
 
 build_python3-werkzeug() {

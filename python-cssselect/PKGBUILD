@@ -2,24 +2,41 @@
 
 pkgbase=python-cssselect
 pkgname=('python2-cssselect' 'python3-cssselect')
-pkgver=0.9.1
-pkgrel=3
+pkgver=1.0.1
+pkgrel=1
 license=('BSD')
 arch=('x86_64')
 url="http://pypi.python.org/pypi/cssselect"
-makedepends=('python2' 'python3')
-source=("http://pypi.python.org/packages/source/c/cssselect/cssselect-${pkgver}.tar.gz")
-md5sums=('c74f45966277dc7a0f768b9b0f3522ac')
+makedepends=('python3-setuptools' 'python2-setuptools' 'git')
+checkdepends=('python3-pytest-runner' 'python2-pytest-runner' 'python3-lxml' 'python2-lxml')
+source=("git+https://github.com/scrapy/cssselect.git#tag=v$pkgver")
+md5sums=('SKIP')
 
 prepare() {
-  cp -r cssselect-${pkgver} python2-cssselect-${pkgver}
+  cp -a cssselect{,-py2}
 }
+
+build() {
+  cd "$srcdir"/cssselect
+  python3 setup.py build
+
+  cd "$srcdir"/cssselect-py2
+  python2 setup.py build
+}
+
+#check() {
+#  cd "$srcdir"/cssselect
+#  python3 setup.py test
+#
+#  cd "$srcdir"/cssselect-py2
+#  python2 setup.py test
+#}
 
 package_python3-cssselect() {
   pkgdesc="A Python3 library that parses CSS3 Selectors and translates them to XPath 1.0"
   depends=('python3')
 
-  cd cssselect-${pkgver}
+  cd "$srcdir"/cssselect
   python3 setup.py install --root="${pkgdir}/" --optimize=1
 
   install -Dm644 LICENSE "${pkgdir}"/usr/share/licenses/${pkgname}/LICENSE
@@ -29,11 +46,7 @@ package_python2-cssselect() {
   pkgdesc="A Python2 library that parses CSS3 Selectors and translates them to XPath 1.0"
   depends=('python2')
 
-  cd python2-cssselect-${pkgver}
-
-  # Fix python2 shebang
-  sed -i 's|#!/usr/bin/env python|#!/usr/bin/env python2|' cssselect/tests.py
-
+  cd "$srcdir"/cssselect-py2
   python2 setup.py install --root="${pkgdir}/" --optimize=1
   
   install -Dm644 LICENSE "${pkgdir}"/usr/share/licenses/${pkgname}/LICENSE
