@@ -1,35 +1,25 @@
-#
-# Apps Packages for Chakra, part of chakra-project.org
-#
-# Maintainer: Adrián Chaves Fernández (Gallaecio) <adriyetichaves@gmail.com>
-# Contributor: Daniele Cocca <daniele.cocca@gmail.com>
 
 pkgname=upx
-pkgver=3.91
+pkgver=3.94
 pkgrel=1
 pkgdesc='Ultimate executable compressor.'
 arch=('x86_64')
-url='http://upx.sourceforge.net/'
+url='https://upx.github.io/'
 license=('GPL2')
-depends=('zlib')
-makedepends=('ucl')
-source=("http://upx.sourceforge.net/download/${pkgname}-${pkgver}-src.tar.bz2"
-        'http://downloads.sourceforge.net/sevenzip/lzma465.tar.bz2')
-md5sums=('c6d0b3ea2ecb28cb8031d59a4b087a43'
-         '29d5ffd03a5a3e51aef6a74e9eafb759')
+depends=('zlib' 'ucl')
+source=("https://github.com/$pkgname/$pkgname/releases/download/v$pkgver/$pkgname-$pkgver-src.tar.xz")
+md5sums=('19e898edc41bde3f21e997d237156731')
 
 build() {
-  cd "${pkgname}-${pkgver}-src"
+  cd $pkgname-$pkgver-src
 
-  make UPX_LZMA_VERSION=0x465 UPX_LZMADIR="${srcdir}" all
+  make UPX_LZMA_VERSION=0x465 UPX_LZMADIR="${srcdir}" CHECK_WHITESPACE=/bin/true all
 }
 
 package() {
-  cd "${pkgname}-${pkgver}-src"
+  cd $pkgname-$pkgver-src
 
-  install -D src/upx.out \
-    ${pkgdir}/usr/bin/upx
+  install -D src/upx.out $pkgdir/usr/bin/upx
 
-  install -D -m644 doc/upx.1 \
-    ${pkgdir}/usr/share/man/man1/upx.1
+  install -D -m644 doc/upx.1 $pkgdir/usr/share/man/man1/upx.1
 }
