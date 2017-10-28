@@ -1,14 +1,14 @@
 pkgbase=python-mpmath
 pkgname=('python2-mpmath' 'python3-mpmath')
-pkgver=0.19
-pkgrel=2
+pkgver=1.0.0
+pkgrel=1
 pkgdesc='Python library for arbitrary-precision floating-point arithmetic.'
 arch=('any')
 url='http://mpmath.org/'
 license=('BSD')
 makedepends=('python3-setuptools' 'python2-setuptools')
 source=("http://mpmath.org/files/mpmath-${pkgver}.tar.gz")
-sha1sums=('65da0ed4ed01d067f0f5b890ca28ad2f2fb56343')
+sha1sums=('667569ac2d71708613f66c6a094b0cb74e82b430')
 
 prepare(){
   cp -R mpmath-$pkgver mpmath2-$pkgver
@@ -26,7 +26,8 @@ package_python2-mpmath() {
   depends=('python2-gmpy2')
   cd mpmath2-${pkgver}
 
-  find -name '*.py' | xargs sed -e 's|#!/usr/bin/python|#!/usr/bin/python2|' -i
+  find -name '*.py' | xargs sed -e 's|#!/usr/bin/python|#!/usr/bin/python2|' \
+                                -e 's|#!/usr/bin/env python|#!/usr/bin/env python2|' -i
 
   python2 setup.py install --root "$pkgdir" --optimize=1
 
