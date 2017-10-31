@@ -2,7 +2,7 @@
 
 pkgbase=python-requests
 pkgname=(python2-requests python3-requests)
-pkgver=2.9.1
+pkgver=2.18.4
 pkgrel=1
 _libname=requests
 pkgdesc="Requests is an Apache2 Licensed HTTP library, written in Python, for human beings."
@@ -12,22 +12,16 @@ makedepends=('python2-setuptools' 'python3-setuptools' 'python3-chardet' 'python
 checkdepends=('python3-pytest-httpbin' 'python2-pytest-httpbin')             
 license=('Apache')
 arch=('any')
-source=(http://pypi.python.org/packages/source/${_libname:0:1}/$_libname/$_libname-$pkgver.tar.gz
+source=("$pkgbase-$pkgver.tar.gz::https://github.com/kennethreitz/requests/archive/v$pkgver.tar.gz"
         certs.patch)
-sha256sums=('c577815dd00f1394203fc44eb979724b098f88264a9ef898ee45b8e5e9cf587f'
-            'e35e779d8640f35ea2ea51112f967d927b44d59483af4cd2c0945c84e79bb7c7')
+sha256sums=('b068ccce3b739a29cbf72148b0ff4be3d80198fb7cdbd63066f7384bb56ef917'
+            '3fa0c8ef2018ef0987d2daff79765b99abd99c539f2ec1241bcf9c31b1a4fd75')
 
 prepare() {
     cd "$srcdir"/requests-$pkgver
-    
-    patch -p1 -i "$srcdir"/certs.patch
-    sed -r 's#(\W|^)requests/cacert\.pem(\W|$)##' -i MANIFEST.in
-    rm -f requests/cacert.pem
-       
-    rm -r requests/packages/{urllib3,chardet}
-    sed -e '/packages.chardet/d' \
-        -e '/packages.urllib3/d' \
+    sed -e '/certifi/d' \
         -i setup.py
+    patch -p1 -i "$srcdir"/certs.patch
         
     cd "$srcdir"
     cp -a requests-$pkgver{,-py2}

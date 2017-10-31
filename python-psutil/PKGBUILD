@@ -1,16 +1,16 @@
 pkgbase=python-psutil
 pkgname=('python3-psutil' 'python2-psutil')
-pkgver=4.1.0
+pkgver=5.4.0
 pkgrel=1
 arch=('x86_64')
 url='https://github.com/giampaolo/psutil'
 license=('custom: BSD')
 makedepends=('python3' 'python3-setuptools' 'python2' 'python2-setuptools')
-source=("https://pypi.python.org/packages/source/p/psutil/psutil-${pkgver}.tar.gz")
-sha1sums=('c1f4e1581e5b6aaee549093b624c78e3c3a1e1ce')
+source=("https://github.com/giampaolo/psutil/archive/release-$pkgver.tar.gz")
+sha1sums=('0817acb5fb9dd87e8de1d48cf1f70934e28f20a7')
 
 build() {
-  cd psutil-${pkgver}
+  cd psutil-release-$pkgver
 
   msg2 python3
   python3 setup.py build --build-lib=build/python3
@@ -25,7 +25,7 @@ package_python3-psutil() {
   pkgdesc='A cross-platform process and system utilities module for Python'
   depends=('glibc' 'python3')
 
-  cd psutil-${pkgver}
+  cd psutil-release-$pkgver
   python3 setup.py build --build-lib=build/python3 \
                   install --root="${pkgdir}" --optimize=1
   install -D -m 644 LICENSE "${pkgdir}/"usr/share/licenses/${pkgname}/LICENSE
@@ -35,7 +35,7 @@ package_python2-psutil() {
   pkgdesc='A cross-platform process and system utilities module for Python2'
   depends=('glibc' 'python2')
 
-  cd psutil-${pkgver}
+  cd psutil-release-$pkgver
   python2 setup.py build --build-lib=build/python2 \
                    install --root="${pkgdir}" --optimize=1
   install -D -m 644 LICENSE "${pkgdir}/"usr/share/licenses/${pkgname}/LICENSE
