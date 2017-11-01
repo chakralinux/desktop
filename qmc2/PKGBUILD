@@ -1,21 +1,29 @@
 pkgname=qmc2
-pkgver=0.70
+pkgver=0.187
 pkgrel=1
 pkgdesc="Qt based UNIX MAME frontend supporting SDLMAME."
 url="http://qmc2.batcom-it.net/"
 license=("GPL")
 arch=('x86_64')
-depends=('qt5-webkit' 'qt5-multimedia' 'qt5-svg' 'sdl2' 'libxslt' 'libarchive')
+depends=('qt5-webkit' 'qt5-multimedia' 'qt5-svg' 'sdl2' 'libxslt' 'minizip')
 makedepends=('rsync' 'mesa' 'qt5-tools')
 source=(http://downloads.sourceforge.net/$pkgname/$pkgname-$pkgver.tar.bz2
-        'qmamecat.desktop')
-sha1sums=('811586a559e3fe1dbb62042d0cf4eb5e83e595c5'
-          'b495666abfaca7f9d1241c14d010b6037f66f4d4')
+        'qmamecat.desktop'
+        'qmc2-qt5.9.patch')
+sha1sums=('f7880541006672a9c466744b85b398204782b7f8'
+          'b495666abfaca7f9d1241c14d010b6037f66f4d4'
+          'fd4dfb2b395a50d8dcd9eae5a5313402f44a6bd2')
+
+prepare() {
+  cd "$srcdir/$pkgname"
+  patch -p2 -i ../qmc2-qt5.9.patch # Fix build with Qt 5.9
+}
 
 build() {
   cd "$srcdir/$pkgname"
-
-  make PREFIX=/usr DATADIR=/usr/share SYSCONFDIR=/etc QTDIR=/usr QMAKE=/usr/bin/qmake-qt5 LIBARCHIVE=1
+  
+  export CTIME=0
+  make PREFIX=/usr DATADIR=/usr/share SYSCONFDIR=/etc QTDIR=/usr QMAKE=/usr/bin/qmake-qt5 SYSTEM_MINIZIP=1 SYSTEM_ZLIB=1
 }
 
 package(){
