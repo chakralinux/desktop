@@ -1,6 +1,6 @@
 pkgname=avogadro
 pkgver=1.2.0
-pkgrel=2
+pkgrel=3
 pkgdesc="An advanced molecular editor based on Qt"
 arch=('x86_64')
 url="http://avogadro.cc/wiki/Main_Page"
@@ -31,12 +31,15 @@ prepare() {
   # Force Eigen 2, newer versions of Eigen 3 remove backward
   # compatibility
   patch -p1 -i "${srcdir}"/avogadro-force-eigen2.patch
+
+  mkdir -p build 
 }
 
-build() {
-  cd ${srcdir}/build
 
-  cmake ../${pkgname}-${pkgver} \
+build() {
+  cd "${srcdir}/${pkgname}-${pkgver}/build"
+
+  cmake "${srcdir}/${pkgname}-${pkgver}" \
     -DCMAKE_BUILD_TYPE=Release \
     -DCMAKE_INSTALL_PREFIX=/usr \
     -DPYTHON_EXECUTABLE=/usr/bin/python2 \
@@ -45,6 +48,6 @@ build() {
 }
 
 package() {
-  cd ${srcdir}/build
+  cd "${srcdir}/${pkgname}-${pkgver}/build"
   make DESTDIR=${pkgdir} install
 }
