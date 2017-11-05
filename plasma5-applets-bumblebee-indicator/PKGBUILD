@@ -1,6 +1,6 @@
 pkgname=plasma5-applets-bumblebee-indicator
 _name=bumblebee-indicator
-pkgver=0.3.5
+pkgver=0.4
 pkgrel=1
 pkgdesc="Indicates the Nvidia card's on or off status on the Optimus systems, when bumblebee is used."
 arch=('x86_64')
@@ -9,16 +9,17 @@ license=('GPL')
 group=('plasma5-applets')
 depends=('plasma-workspace' 'qt5-graphicaleffects')
 makedepends=('extra-cmake-modules')
-source=("https://github.com/bxabi/bumblebee-indicator/archive/master.zip")
-sha256sums=('f3336972bd94d01ae8b48d95ee7cdb409d41fa794ca3dc2888d6383fd1ec1b9e')
+_commit="ee45911bd50115cf7c96cc36177d5f8bca823f33"
+source=("https://github.com/bxabi/bumblebee-indicator/archive/${_commit}.zip")
+sha256sums=('5cd893f0bca21f2f08c5126d6866527e4034d231f0c512384180ba58f8dc7d15')
  
 prepare() {
-  cd "${_name}-master"
+  cd $_name-${_commit}
   mkdir -p build
 }
 
 build() {
-  cd "${_name}-master/build"
+  cd "$_name-${_commit}/build"
  
   cmake .. \
     -DCMAKE_INSTALL_PREFIX=/usr \
@@ -28,7 +29,7 @@ build() {
 }
  
 package() {
-  cd "${_name}-master"/build
+  cd "$_name-${_commit}/build"
  
   make install DESTDIR="${pkgdir}"
   mv $pkgdir/usr/share/plasma/plasmoids/bumblebee-kde5-plasmoid \
