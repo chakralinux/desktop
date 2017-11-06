@@ -7,7 +7,7 @@
 pkgbase=python-flask
 pkgname=('python3-flask' 'python2-flask')
 pkgver=0.12.2
-pkgrel=1
+pkgrel=2
 pkgdesc='Micro webdevelopment framework for Python'
 url='http://flask.pocoo.org/'
 arch=('any')
@@ -42,7 +42,7 @@ check_python3-flask() {
 }
 
 package_python3-flask() {
-  depends=('python3-werkzeug' 'python3-jinja' 'python3-itsdangerous')
+  depends=('python3-werkzeug' 'python3-jinja' 'python3-itsdangerous' 'python3-click')
   cd "$pkgname-$pkgver"
 
   python3 setup.py install --prefix=/usr --root="$pkgdir" --optimize=1
@@ -51,7 +51,7 @@ package_python3-flask() {
 }
 
 package_python2-flask() {
-  depends=('python2-werkzeug' 'python2-jinja' 'python2-itsdangerous')
+  depends=('python2-werkzeug' 'python2-jinja' 'python2-itsdangerous' 'python2-click')
   cd "$pkgname-$pkgver"
 
   python2 setup.py install --root="$pkgdir" --optimize=1
