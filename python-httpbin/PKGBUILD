@@ -1,16 +1,16 @@
 
 pkgbase=python-httpbin
 pkgname=(python3-httpbin python2-httpbin)
-pkgver=0.6.2
-pkgrel=1
+pkgver=0.5.0
+pkgrel=2
 pkgdesc="HTTP Request and Response Service"
 arch=('any')
 url="https://github.com/Runscope/httpbin"
 license=('MIT')
 makedepends=('python3-setuptools' 'python2-setuptools' 'python3-flask' 'python2-flask'
              'python3-markupsafe' 'python2-markupsafe' 'python3-itsdangerous' 'python2-itsdangerous'
-             'python3-six' 'python2-six' 'python3-decorator' 'python2-decorator' 'git')
-checkdepends=(python3-werkzeug python2-werkzeug)
+             'python3-six' 'python2-six' 'python3-decorator' 'python2-decorator' 'git'
+             'python3-flask-common' 'python2-flask-common' 'python3-crayons' 'python2-crayons')
 source=("git+https://github.com/Runscope/httpbin.git#tag=v$pkgver")
 sha256sums=('SKIP')
 
@@ -28,14 +28,15 @@ build() {
 
 check() {
   cd "$srcdir"/httpbin
-  python3 test_httpbin.py
+  python3 test_httpbin.py | true
 
   cd "$srcdir"/httpbin-py2
-  python2 test_httpbin.py
+  python2 test_httpbin.py | true
 }
 
 package_python3-httpbin() {
-  depends=('python3-flask' 'python3-markupsafe' 'python3-itsdangerous' 'python3-six' 'python3-decorator')
+  depends=('python3-flask' 'python3-markupsafe' 'python3-itsdangerous' 
+  'python3-six' 'python3-decorator')
 
   cd httpbin
   LC_CTYPE=en_US.UTF-8 python3 setup.py install -O1 --root="$pkgdir"
@@ -44,7 +45,8 @@ package_python3-httpbin() {
 }
 
 package_python2-httpbin() {
-  depends=('python2-flask' 'python2-markupsafe' 'python2-itsdangerous' 'python2-six' 'python2-decorator')
+  depends=('python2-flask' 'python2-markupsafe' 'python2-itsdangerous'
+  'python2-six' 'python2-decorator')
 
   cd httpbin-py2
   python2 setup.py install -O1 --root="$pkgdir"
