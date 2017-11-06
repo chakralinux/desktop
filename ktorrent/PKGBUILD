@@ -3,15 +3,14 @@ source ../kdeapps.conf
 
 pkgname=ktorrent
 pkgver=5.1.0
-pkgrel=3
+pkgrel=4
 pkgdesc="A powerful BitTorrent client for KDE"
 arch=('x86_64')
 url='http://ktorrent.pwsp.net/'
 license=('GPL2')
-depends=('libktorrent' 'knotifyconfig' 'kcmutils' 'kross')
-makedepends=('extra-cmake-modules' 'kdoctools' 'python3' 'boost' 'taglib' 'geoip' 'plasma-workspace' 'kdnssd' 'syndication')
-optdepends=('plasma-workspace: shutdown plugin'
-            'kdnssd: zeroconf plugin'
+depends=('libktorrent' 'knotifyconfig' 'kcmutils' 'kross' 'geoip' 'kplotting')
+makedepends=('extra-cmake-modules' 'kdoctools' 'python3' 'boost' 'taglib' 'plasma-workspace' 'kdnssd' 'syndication')
+optdepends=('kdnssd: zeroconf plugin'
             'taglib: mediaplayer plugin'
             'syndication: rss/syndication plugin')
 install=${pkgname}.install
@@ -23,14 +22,11 @@ validpgpkeys=('1EE5A3205904BAA2B88C0A9D24FD31940095C0E1') # Andrius \xc5\xa0tiko
 
 prepare() {
   mkdir -p build
-  
-  cd ${pkgname}-${pkgver}
-  # Patch here
 }
 
 build() {
 	cd build
-	cmake_kf5 -DWITH_SYSTEM_GEOIP=ON ../${pkgname}-${pkgver}
+	cmake_kf5 ../${pkgname}-${pkgver}
 	make
 }
 
