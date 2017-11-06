@@ -1,6 +1,6 @@
 pkgname=hplip
-pkgver=3.16.11
-pkgrel=2
+pkgver=3.17.10
+pkgrel=1
 pkgdesc="Drivers for HP DeskJet, OfficeJet, Photosmart, Business Inkjet and some LaserJet."
 arch=('x86_64')
 url="http://hplipopensource.com"
@@ -16,11 +16,9 @@ optdepends=('sane: for scanner support'
 install=hplip.install
 source=(https://downloads.sourceforge.net/${pkgname}/$pkgname-$pkgver.tar.gz
         disable_upgrade.patch
-        fix_tabs.patch
         0022-Add-include-cups-ppd.h-in-various-places-as-CUPS-2.2.patch)
-md5sums=('7d187c3142ba323a3021767d333ad9f4'
+md5sums=('6426709159946c0f4ce48817d62cf989'
          '4ebb9377a989b4fb776e37f5968bb7b0'
-         '434fcb7583bb9dc21e64341672d219e2'
          'ceb7449b12e2ecf70f898bc50b161a3c')
 
 prepare() {
@@ -41,8 +39,6 @@ prepare() {
  # disable insecure update - https://bugs.archlinux.org/task/38083
  patch -Np0 -i ${srcdir}/disable_upgrade.patch
  
- # fix tabs breaking printing; FS#50588
- patch -Np0 -i ${srcdir}/fix_tabs.patch
  # add missing 'include <cups/ppd.h>' at various places
  patch -Np1 -i ${srcdir}/0022-Add-include-cups-ppd.h-in-various-places-as-CUPS-2.2.patch
 
@@ -84,6 +80,8 @@ package() {
   
   # remove config provided by sane and autostart of hp-daemon
   rm -rf $pkgdir/etc/{sane.d,xdg}
+  install -dm755 ${pkgdir}/etc/sane.d/dll.d
+  echo hpaio > ${pkgdir}/etc/sane.d/dll.d/hpaio
   
   # remove HAL .fdi file because HAL is no longer used
   rm -rf $pkgdir/usr/share/hal
