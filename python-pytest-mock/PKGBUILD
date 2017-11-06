@@ -1,0 +1,52 @@
+pkgbase=python-pytest-mock
+pkgname=('python3-pytest-mock' 'python2-pytest-mock')
+pkgver=1.6.3
+pkgrel=1
+pkgdesc="Thin-wrapper around the mock package for easier use with py.test"
+arch=('any')
+license=('LGPL3')
+url="https://github.com/pytest-dev/pytest-mock/"
+makedepends=('python3-pytest' 'python2-pytest' 'python2-mock' 'python3-setuptools-scm'
+             'python2-setuptools-scm')
+source=("$pkgbase-$pkgver.tar.gz::https://github.com/pytest-dev/pytest-mock/archive/v$pkgver.tar.gz")
+sha512sums=('6eaabb397b4c8fdf59164c78be127b9d55d8299d14414efacf25b082defa2cf53412456ccaa6d0b1735e027b76e7bf610670c448ad2cf1d6a11c81496f34c9f5')
+
+prepare() {
+  cp -a pytest-mock-$pkgver{,-py2}
+
+  export SETUPTOOLS_SCM_PRETEND_VERSION=$pkgver
+}
+
+build() {
+  cd "$srcdir"/pytest-mock-$pkgver
+  python3 setup.py build
+
+  cd "$srcdir"/pytest-mock-$pkgver-py2
+  python2 setup.py build
+}
+
+check() {
+  # Hack entry points by installing it
+
+  cd "$srcdir"/pytest-mock-$pkgver
+  python3 setup.py install --root="$PWD/tmp_install" --optimize=1
+  PYTHONPATH="$PWD/tmp_install/usr/lib/python3.6/site-packages:$PYTHONPATH:$PWD/tests" py.test test_pytest_mock.py
+
+  cd "$srcdir"/pytest-mock-$pkgver-py2
+  python2 setup.py install --root="$PWD/tmp_install" --optimize=1
+  PYTHONPATH="$PWD/tmp_install/usr/lib/python2.7/site-packages:$PYTHONPATH:$PWD/tests" py.test2 test_pytest_mock.py
+}
+
+package_python3-pytest-mock() {
+  depends=('python3-pytest')
+
+  cd pytest-mock-$pkgver
+  python3 setup.py install --root="$pkgdir" --optimize=1
+}
+
+package_python2-pytest-mock() {
+  depends=('python2-pytest' 'python2-mock')
+
+  cd pytest-mock-$pkgver-py2
+  python2 setup.py install --root="$pkgdir" --optimize=1
+}
