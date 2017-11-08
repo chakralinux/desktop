@@ -1,6 +1,5 @@
-_name=client
 pkgname=owncloud-client
-pkgver=2.3.3
+pkgver=2.3.4
 pkgrel=1
 pkgdesc="ownCloud client based on mirall"
 arch=('x86_64')
@@ -12,18 +11,17 @@ makedepends=('extra-cmake-modules' 'python3-sphinx' 'qt5-tools' 'doxygen' 'kio')
 groups=('network')
 backup=('etc/owncloud-client/sync-exclude.lst')
 install=${pkgname}.install
-source=("https://github.com/owncloud/client/archive/v${pkgver}.tar.gz")
-sha256sums=('ee276d3f6215764f04d19c4f793ebf009eb5915f1b550777511580bcee198e04')
+source=("https://download.owncloud.com/desktop/stable/owncloudclient-$pkgver.tar.xz")
+sha256sums=('89409e68f8290930088c5ed1da483a1c1b56d45695ac9192e81a2d71690df1ba')
 
 build() {
   mkdir -p build && cd build
 
-  cmake ../${_name}-${pkgver} \
+  cmake ../owncloudclient-${pkgver} \
         -DCMAKE_INSTALL_PREFIX=/usr \
         -DCMAKE_INSTALL_LIBDIR=lib \
         -DCMAKE_BUILD_TYPE=Release \
-        -DCMAKE_INSTALL_SYSCONFDIR=/etc/${pkgname} \
-        -DKDE_INSTALL_USE_QT_SYS_PATHS=ON 
+        -DCMAKE_INSTALL_SYSCONFDIR=/etc/${pkgname}
 
   make
   make doc-man
