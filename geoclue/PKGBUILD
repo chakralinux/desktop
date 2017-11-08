@@ -1,0 +1,48 @@
+# Fetch from Arch: https://www.archlinux.org/packages/extra/x86_64/geoclue2/
+
+pkgname=geoclue
+pkgver=2.4.7
+pkgrel=1
+pkgdesc="Modular geoinformation service built on the D-Bus messaging system"
+arch=(i686 x86_64)
+url="https://www.freedesktop.org/wiki/Software/GeoClue/"
+license=(LGPL)
+depends=(libsoup json-glib modemmanager avahi)
+makedepends=(intltool geoip python systemd gobject-introspection git)
+optdepends=('geoip: geoip-lookup server binary')
+backup=(etc/geoclue/geoclue.conf)
+source=("https://www.freedesktop.org/software/$pkgname/releases/${pkgver%.*}/${pkgname}-$pkgver.tar.xz")
+sha256sums=('d17b96bb5799a84723385ea5704235565e9c3dedd2b7afac475a06e550ae0ea6')
+
+# Google API keys (see http://www.chromium.org/developers/how-tos/api-keys)
+# Note: These are for Chakra Linux use ONLY. For your own distribution, please
+# get your own set of keys. Feel free to contact totte@chakralinux.org for
+# more information.
+_google_api_key=AIzaSyDjyg8EmaRUIsewzdjZXFZ0O8N5ARDUDGU
+
+# Mozilla API keys (see https://location.services.mozilla.com/api)
+# Note: These are for Chakra Linux use ONLY. For your own distribution, please
+# get your own set of keys. Feel free to contact totte@chakralinux.org for
+# more information.
+_mozilla_api_key=bf05f841-e0bd-4644-81f5-3c132755f2e9
+
+prepare() {
+  cd $pkgname-$pkgver
+  sed -e "s/key=geoclue/key=$_mozilla_api_key/" \
+      -e "s/key=YOUR_KEY/key=$_google_api_key/" \
+      -i data/geoclue.conf.in
+}
+
+build() {
+  cd $pkgname-$pkgver
+  ./configure --prefix=/usr --sysconfdir=/etc --localstatedir=/var \
+    --libexecdir=/usr/lib/$pkgname --disable-static --disable-gtk-doc
+  sed -i -e 's/ -shared / -Wl,-O1,--as-needed\0/g' libtool
+  make
+}
+
+package() {
+  cd $pkgname-$pkgver
+  make DESTDIR="$pkgdir" install
+}
+
