@@ -1,6 +1,6 @@
 pkgname=telegramqml
 _pkgname=TelegramQML
-pkgver=2.0.0.17.g7987725
+pkgver=2.0.0+35+g56fb7c9
 pkgrel=1
 pkgdesc="Telegram API tools for QtQml and Qml"
 arch=('x86_64')
@@ -9,12 +9,12 @@ license=('GPL')
 depends=('qt5-base' 'qt5-declarative' 'qt5-multimedia'
          'qt5-webkit' 'qt5-imageformats' 'qt5-graphicaleffects'
          'qt5-quickcontrols' 'libqtelegram-ae')
-source=("$pkgname"::"git+https://github.com/Aseman-Land/TelegramQML.git#commit=7987725b1ed2753ebe60921d7461d021cd47b88c")
+source=("$pkgname"::"git+https://github.com/Aseman-Land/TelegramQML.git#commit=56fb7c9ac10617dd3a4e554aa8f38add7e909ee8")
 sha256sums=('SKIP')
 
 pkgver() {
   cd "${srcdir}/${pkgname}"
-  git describe --long | sed 's/\([^-]*-g\)/\1/;s/-/./g' | sed 's/.stable//g' | sed 's/v//g'
+  git describe --long | sed 's/\([^-]*-g\)/\1/;s/-/+/g' | sed 's/.stable//g' | sed 's/v//g'
 }
 
 prepare() {
