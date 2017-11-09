@@ -1,5 +1,5 @@
 pkgname=anki
-pkgver=2.0.45
+pkgver=2.0.47
 pkgrel=1
 pkgdesc='Helps you remember facts (like words/phrases in a foreign language) efficiently.'
 url='https://apps.ankiweb.net/'
@@ -12,24 +12,24 @@ optdepends=('python2-matplotlib: show graphs.'
 	    'sox: audio recording.'
 	    'python2-pyaudio: audio recording.')
 source=("https://apps.ankiweb.net/downloads/current/anki-$pkgver-source.tgz")
-sha256sums=('3c54693607a206c5f70ecc51e94dfec41516026f3ef9932136aed4354a6b998a')
+sha256sums=('fbb5356d642a94a2cb2fb7f949e6db7c8acbe322f38a18c0603ff88f5bd4eb18')
 
 prepare() {
-  cd $srcdir/anki-$pkgver
+  cd $pkgname-$pkgver
   sed -i 's|#!/usr/bin/env python|#!/usr/bin/env python2|' runanki
   rm -f anki.bat
   
   # Desktop integration. KDE needs Qt in Categories
-  desktop-file-install --dir "${pkgdir}/usr/share/applications" \
+  desktop-file-install --dir $pkgdir/usr/share/applications \
                        --add-category='Qt' \
-                       ${pkgname}.desktop
+                       $pkgname.desktop
   
   sed s/TryExec=anki/TryExec=runanki/ -i anki.desktop
   sed s/Exec=anki/Exec=runanki/ -i anki.desktop
 }
 
 package() {
-  cd "${srcdir}/${pkgname}-${pkgver}"
+  cd $pkgname-$pkgver
 
   install -d $pkgdir/usr/{bin,share/{anki,pixmaps,applications,man/man1}}
   
