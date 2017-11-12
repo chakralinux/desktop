@@ -1,0 +1,45 @@
+_pkgname=python-progressbar2
+_pypiname=progressbar2
+pkgbase=python-progressbar
+pkgdesc="A progress bar for Python 2 and Python 3"
+pkgname=('python3-progressbar' 'python2-progressbar')
+pkgver=3.34.3
+pkgrel=1
+url="https://github.com/WoLpH/python-progressbar"
+license=('BSD')
+arch=("any")
+makedepends=('python3' 'python3-setuptools' 'python2' 'python2-setuptools' 'python3-utils' 'python2-utils')
+source=("${_pkgname}-${pkgver}.tar.gz::https://pypi.org/packages/source/p/${_pypiname}/${_pypiname}-${pkgver}.tar.gz"
+        "${_pkgname}-${pkgver}.tar.gz.asc::https://pypi.org/packages/source/p/${_pypiname}/${_pypiname}-${pkgver}.tar.gz.asc")
+sha512sums=('379cb7ad3a46176fd4280d735d913cd06d8e39c5532fd4d7ebf4e87a37c013b6cf863df4691d623456300b4d7437ecaccedad3fc8570105c13dc8b311c3f09b2'
+            'SKIP')
+validpgpkeys=('149325FD15904E9C4EB89E95E81444E9CE1F695D') # Rick van Hattem <wolph@wol.ph>
+
+prepare() {
+    cp -a "${srcdir}/${_pypiname}-${pkgver}"{,-py2}
+}
+
+build() {
+    cd "${srcdir}/${_pypiname}-${pkgver}"
+    python3 setup.py build
+
+    cd "${srcdir}/${_pypiname}-${pkgver}-py2"
+    python2 setup.py build
+}
+
+package_python3-progressbar() {
+    depends=('python3' 'python3-utils')
+    replaces=('python3-progressbar2')
+
+    cd "${srcdir}/${_pypiname}-${pkgver}"
+    python3 setup.py install --skip-build --root="${pkgdir}" --optimize=1
+    install -Dm644 "LICENSE" "${pkgdir}/usr/share/licenses/${pkgname}/LICENSE"
+}
+
+package_python2-progressbar() {
+    depends=('python2' 'python2-utils')
+
+    cd "${srcdir}/${_pypiname}-${pkgver}-py2"
+    python2 setup.py install --skip-build --root="${pkgdir}" --optimize=1
+    install -Dm644 "LICENSE" "${pkgdir}/usr/share/licenses/${pkgname}/LICENSE"
+}
