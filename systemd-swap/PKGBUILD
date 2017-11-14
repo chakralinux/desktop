@@ -1,5 +1,5 @@
 pkgname=systemd-swap
-pkgver=3.5.1
+pkgver=3.5.5
 pkgrel=1
 pkgdesc="Script for creating hybrid swap space from zram swaps, swap files and swap partitions."
 arch=('x86_64')
@@ -8,16 +8,14 @@ license=('GPL3')
 conflicts=('systemd-loop-swapfile' 'zramswap' 'zram')
 depends=('systemd' 'bash')
 replace=('zramswap')
-backup=(etc/systemd-swap.conf)
+backup=('etc/systemd/swap.conf')
 install=$pkgname.install
 source=("https://github.com/Nefelim4ag/${pkgname}/archive/${pkgver}.tar.gz")
-md5sums=('487d1d233c288eda6f6eb84bd7e383da')
+md5sums=('ccf69000e0b28cfce1255ad600b5278a')
 
 package() {
   cd ${srcdir}/${pkgname}-${pkgver}
   make PREFIX="$pkgdir" install
 
-  install -dm755 "$pkgdir"/usr/lib
-  mv "$pkgdir"/lib/systemd "$pkgdir"/usr/lib/systemd
-  rmdir "$pkgdir"/lib
+  mv "$pkgdir"/lib "$pkgdir"/usr/lib
 }
