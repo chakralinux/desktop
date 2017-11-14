@@ -1,5 +1,5 @@
 pkgname=aseman-qt-tools
-pkgver=1.0.0.82.gbce4cc2
+pkgver=1.0.0+93+g1836dbd
 pkgrel=1
 pkgdesc="the shared tools and functions used in the aseman's projects"
 arch=('x86_64' 'i686')
@@ -12,7 +12,7 @@ sha256sums=('SKIP')
 
 pkgver() {
   cd ${pkgname}
-  git describe --long | sed 's/\([^-]*-g\)/\1/;s/-/./g' | sed 's/.stable//g' | sed 's/v//g'
+  git describe --long | sed 's/\([^-]*-g\)/\1/;s/-/+/g' | sed 's/.stable//g' | sed 's/v//g'
 }
 
 prepare() {
