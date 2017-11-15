@@ -4,13 +4,13 @@ source ../kdeapps.conf
 
 pkgname=rocs
 pkgver=${_kdever}
-pkgrel=1
+pkgrel=2
 pkgdesc="Rocs graph theory"
 url="http://kde.org/applications/education/rocs/"
 arch=('x86_64')
 screenshot='https://www.kde.org/images/screenshots/rocs.png'
 license=('GPL' 'LGPL' 'FDL')
-depends=('grantlee-qt5' 'kdeclarative' 'ktexteditor' 'qt5-webkit')
+depends=('grantlee' 'kdeclarative' 'ktexteditor' 'qt5-webkit')
 makedepends=('extra-cmake-modules' 'kdoctools' 'python3' 'boost')
 groups=('kde' 'kde-uninstall' 'kde-applications' 'kdeedu')
 replaces=('kdeedu-rocs')
@@ -18,7 +18,7 @@ conflicts=('kdeedu-rocs')
 options=('docs' 'debug')
 source=("$_mirror/${pkgname}-$_kdever.tar.xz"{,.sig})
 sha256sums=(`grep ${pkgname}-$_kdever.tar.xz  ../kdeapps.sums | cut -d " " -f1`
-                        'SKIP')
+            'SKIP')
 validpgpkeys=(${Avalidpgpkeys[@]})
 
 prepare() {

@@ -1,11 +1,11 @@
 pkgname=skrooge
-pkgver=2.9.0
+pkgver=2.10.5
 pkgrel=1
 pkgdesc="Allows you to manage your personal finances in KDE"
 arch=('x86_64')
 url="http://skrooge.org"
 license=('GPL')
-depends=('qt5-base' 'qca-qt5' 'qt5-script' 'libofx>=0.9.10' 'grantlee-qt5' 
+depends=('qt5-base' 'qca-qt5' 'qt5-script' 'libofx>=0.9.10' 'grantlee'
          'kross' 'krunner' 'knotifyconfig' 'sqlcipher'
          'karchive' 'kconfig' 'kcoreaddons' 'ki18n' 'kitemviews' 'kwidgetsaddons'
          'kwindowsystem' 'kcompletion' 'kdoctools' 'kjobwidgets' 'kconfigwidgets'
@@ -14,8 +14,10 @@ makedepends=('cmake' 'extra-cmake-modules' 'qt5-tools' 'kdoctools' 'python3')
 options=('!emptydirs')
 categories=('office')
 install=$pkgname.install
-source=("http://download.kde.org/stable/skrooge/$pkgname-$pkgver.tar.xz")
-sha256sums=('ad02403026b649203f0381cc599a7754d36f41cc75cc03d14e63bfdb666e7bb5')
+source=("https://download.kde.org/stable/$pkgname/$pkgname-$pkgver.tar.xz"{,.sig})
+sha256sums=('56a0124dec34e6e96a5e71ff0e825a7ec79f32a69ef0ccdc5f0f9b753d8c3eb0'
+            'SKIP')
+validpgpkeys=('103DC6D087B3A4A2ED975D7EF0C8CED3382A5C4D') #Stephane MANKOWSKI (Perso) <stephane@mankowski.fr>
 
 build() {
   cd $pkgname-$pkgver
