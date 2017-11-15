@@ -3,14 +3,15 @@ source ../kdeapps.conf
 
 pkgname=kdevelop
 pkgver=$_kdevver
-pkgrel=2
+pkgrel=1
 pkgdesc='A C/C++ development environment for KDE'
 arch=(x86_64)
 url='http://www.kdevelop.org/'
 license=(GPL)
 option=('debug')
-depends=(kdevplatform clang libksysguard)
-makedepends=(extra-cmake-modules kdoctools kdevelop-pg-qt clang llvm qt5-tools plasma-framework krunner okteta)
+depends=(clang libksysguard kitemmodels knotifyconfig ktexteditor grantlee libkomparediff2 qt5-webengine)
+makedepends=(extra-cmake-modules kdoctools kdevelop-pg-qt llvm qt5-tools plasma-framework krunner okteta python3 mesa
+             boost purpose subversion)
 optdepends=('konsole: embedded terminal'
 	'git: Git support'
 	'subversion: SVN support'
@@ -29,7 +30,6 @@ validpgpkeys=('329FD02C5AA48FCC77A4BBF0AC44AC6DB29779E6')
 
 prepare() {
   mkdir -p build
-
   sed -i 's|qdbus|qdbus-qt5|g' "${pkgname}-${pkgver}/app/kdevelop!"
 }
 

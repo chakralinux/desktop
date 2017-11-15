@@ -1,14 +1,7 @@
-#
-# Chakra Packages for Chakra, part of chakra-project.org
-#
-# maintainer (i686): Phil Miller <philm[at]chakra-project[dog]org>
-# maintainer (x86_64): Manuel Tortosa <manutortosa[at]chakra-project[dot]org>
-
 source ../kdeapps.conf
 
 pkgname=kdevelop-pg-qt
-pkgver=2.0
-_pkgver=2.0.0
+pkgver=2.1.0
 pkgrel=1
 pkgdesc="KDevelop Parser Generator, a LL(1) parser generator used by KDevelop language plugins"
 arch=('i686' 'x86_64')
@@ -17,8 +10,11 @@ license=(GPL)
 option=('debug')
 depends=(qt5-base)
 makedepends=(extra-cmake-modules)
-source=("http://download.kde.org/stable/$pkgname/$_pkgver/src/$pkgname-$pkgver.tar.xz")
-sha1sums=('021cbe910468f4ae5169b8ff8933562c5e7dbe5f')
+source=("http://download.kde.org/stable/$pkgname/$pkgver/src/$pkgname-$pkgver.tar.xz"{,.sig})
+sha1sums=('074b033103e34fc15c571d26a031a394e8f1726e'
+          'SKIP')
+validpgpkeys=('329FD02C5AA48FCC77A4BBF0AC44AC6DB29779E6'  # Sven Brauch <mail@svenbrauch.de>
+              '364EFA5F639572907D392999C64CF56B13CACE5D') # Kevin Funk <kfunk@kde.org>
 
 prepare() {
   mkdir -p build
