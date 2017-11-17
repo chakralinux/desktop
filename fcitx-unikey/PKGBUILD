@@ -1,14 +1,15 @@
 pkgname=fcitx-unikey
-pkgver=0.2.6
+pkgver=0.2.7
 pkgrel=1
 pkgdesc="Fcitx Wrapper for Unikey (Vietnamese)."
 arch=('x86_64')
 url="https://github.com/fcitx/fcitx-unikey"
 license=('GPL')
-depends=('fcitx>=4.2.8' 'qt')
-makedepends=('cmake')
+depends=('fcitx')
+optdepends=('fcitx-qt5: To run the fcitx unikey macro editor')
+makedepends=('cmake' 'fcitx-qt5')
 source=(http://download.fcitx-im.org/${pkgname}/${pkgname}-${pkgver}.tar.xz)
-sha256sums=('9830910f628d455d2701ba430e6cb5b41409a2ac2f9b098e5ed6aaa54d15a3cf')
+sha256sums=('e750774b73b08e51148b963736d8207e50c3973e5456b6569cb7ad86831e0e59')
 
 build(){
     cd "$srcdir/${pkgname}-${pkgver}"
