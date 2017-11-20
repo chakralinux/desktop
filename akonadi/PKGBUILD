@@ -3,7 +3,7 @@ source ../kdeapps.conf
 
 pkgname=akonadi
 pkgver=${_kdever}
-pkgrel=2
+pkgrel=1
 pkgdesc="PIM layer, which provides an asynchronous API to access all kind of PIM data"
 arch=('x86_64')
 url='http://community.kde.org/KDE_PIM/Akonadi'
@@ -19,8 +19,8 @@ conflicts=('akonadi-client')
 provides=('akonadi-client' 'akonadi-qt4')
 replaces=('akonadi-client' 'akonadi-qt4')
 source=("$_mirror/${pkgname}-$_kdever.tar.xz"{,.sig})
-sha256sums=('85509bfb47f29e05b7985d72be633b7dab38dbaf49a3aab1eee6b9b88762a9b1'
-            'SKIP')
+sha256sums=(`grep ${pkgname}-$_kdever.tar.xz  ../kdeapps.sums | cut -d " " -f1`
+                        'SKIP')
 validpgpkeys=(${Avalidpgpkeys[@]})
 
 prepare() {
