@@ -1,32 +1,32 @@
 pkgbase=python-sympy
 pkgname=('python2-sympy' 'python3-sympy')
-pkgver=1.0
-pkgrel=2
+pkgver=1.1.1
+pkgrel=1
 arch=('any')
 pkgdesc='Symbolic manipulation package (Computer Algebra System), written in pure Python'
 url='http://sympy.org/en/index.html'
 license=('BSD')
 makedepends=('python2-mpmath' 'python3-mpmath' 'python3-setuptools' 'python2-setuptools')
 source=("https://github.com/sympy/sympy/archive/sympy-${pkgver}.tar.gz")
-sha256sums=('bf6f4c6c79d7c0c5057f59274ab9c71ae1d35f1c9f979d1c9787ad54ef7cb282')
+sha256sums=('4420a1e31939244d7ea73e164fdbb0d4a6a2e764d56e5bf632f57a988f13767f')
 
 prepare() {
-  cp -a sympy{,-py2}
+  cp -a sympy-sympy-$pkgver{,-py2}
 }
 
 build() {
-  cd "$srcdir"/sympy
+  cd "$srcdir"/sympy-sympy-$pkgver
   python2 setup.py build
 
-  cd "$srcdir"/sympy-py2
+  cd "$srcdir"/sympy-sympy-$pkgver-py2
   python3 setup.py build
 }
 
 check() {
-  cd "$srcdir"/sympy
+  cd "$srcdir"/sympy-sympy-$pkgver
   python2 setup.py test
 
-  cd "$srcdir"/sympy-py2
+  cd "$srcdir"/sympy-sympy-$pkgver-py2
   python3 setup.py test
 }
 
@@ -35,7 +35,7 @@ package_python2-sympy() {
   optdepends=('python2-pyglet: plotting'
               'ipython2: user friendly interface for isympy')
 
-  cd sympy
+  cd sympy-sympy-$pkgver-py2
 
   python2 setup.py install --root "${pkgdir}" --optimize=1
 
@@ -46,7 +46,7 @@ package_python3-sympy() {
   depends=('python3-mpmath')
   optdepends=('ipython3: user friendly interface for isympy')
 
-  cd py3-sympy
+  cd sympy-sympy-$pkgver
 
   python3 setup.py install --root "${pkgdir}" --optimize=1
 

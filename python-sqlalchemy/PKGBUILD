@@ -4,7 +4,7 @@
 
 pkgbase=python-sqlalchemy
 pkgname=('python3-sqlalchemy' 'python2-sqlalchemy')
-pkgver=1.0.12
+pkgver=1.1.15
 pkgrel=1
 pkgdesc="Python SQL toolkit and Object Relational Mapper"
 arch=('x86_64')
@@ -12,8 +12,10 @@ url="http://www.sqlalchemy.org/"
 license=('MIT')
 makedepends=('python3-setuptools' 'python2-setuptools')
 checkdepends=('python2-pytest' 'python3-pytest' 'python2-mock' 'python3-mock')
-source=("https://pypi.python.org/packages/source/S/SQLAlchemy/SQLAlchemy-$pkgver.tar.gz")
-md5sums=('6d19ef29883bbebdcac6613cf391cac4')
+source=("https://pypi.io/packages/source/S/SQLAlchemy/SQLAlchemy-$pkgver.tar.gz"{,.asc})
+validpgpkeys=('83AF7ACE251C13E6BB7DEFBD330239C1C4DAFEE1')
+md5sums=('077f9bd3339957f53068b5572a152674'
+         'SKIP')
 
 prepare() {
   cp -a SQLAlchemy-$pkgver SQLAlchemy2-$pkgver
@@ -43,6 +45,9 @@ package_python3-sqlalchemy() {
   pkgdesc='Python SQL toolkit and Object Relational Mapper'
   depends=('python3')
   optdepends=('python3-psycopg2: connect to PostgreSQL database')
+  provides=('python-sqlalchemy')
+  replaces=('python-sqlalchemy')
+  conflicts=('python-sqlalchemy')
 
   cd SQLAlchemy-${pkgver}
   python3 setup.py install --root="${pkgdir}"
@@ -54,9 +59,6 @@ package_python2-sqlalchemy() {
   pkgdesc='Python 2 SQL toolkit and Object Relational Mapper'
   depends=('python2')
   optdepends=('python2-psycopg2: connect to PostgreSQL database')
-  provides=('python-sqlalchemy')
-  replaces=('python-sqlalchemy')
-  conflicts=('python-sqlalchemy')
 
   cd SQLAlchemy2-$pkgver
   python2 setup.py install --root="$pkgdir"

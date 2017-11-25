@@ -4,33 +4,32 @@
 pkgbase=python-unidecode
 pkgname=('python2-unidecode' 'python3-unidecode')
 _pkgname=Unidecode
-pkgver=0.04.19
-pkgrel=2
+pkgver=0.04.21
+pkgrel=1
 pkgdesc='ASCII transliterations of Unicode text.'
 arch=('x86_64')
 license=('GPL')
 url="http://pypi.python.org/pypi/Unidecode/"
 makedepends=('python2-setuptools' 'python3-setuptools')
 options=('!emptydirs')
-source=(http://pypi.python.org/packages/source/U/$_pkgname/$_pkgname-$pkgver.tar.gz)
-sha256sums=('51477646a9169469e37e791b13ae65fcc75b7f7f570d0d3e514d077805c02e1e')
+source=("python-unidecode-${pkgver}.tar.gz::https://github.com/avian2/unidecode/archive/release-${pkgver}.tar.gz")
+sha256sums=('94aae5e8bed7a7646ba3a206f3fa2020464b9f88cef1853bc5cc580be15a3a3b')
 
 prepare() {
-  for d in python{,2,3}-unidecode; do
-    cp -r Unidecode-${pkgver} $d
-  done
+  cp -r {,python-}unidecode-release-${pkgver}
+   mv {,python2-}unidecode-release-${pkgver}
 }
 
 build() {
-  for d in python{,2,3}-unidecode; do
-    pushd $d
-    ${d%-*} setup.py build
+  for py in python{,2}; do
+    pushd ${py}-unidecode-release-${pkgver}
+    ${py} setup.py build
     popd
   done
 }
 
 package_python2-unidecode() {
-  cd python2-unidecode
+  cd python2-unidecode-release-${pkgver}
   python2 setup.py install --root="${pkgdir}" --optimize='1'
   cd $pkgdir/usr/bin
   mv unidecode unidecode2
@@ -38,7 +37,7 @@ package_python2-unidecode() {
 }
 
 package_python3-unidecode() {
-  cd python3-unidecode
+  cd python-unidecode-release-${pkgver}
   python3 setup.py install --root="${pkgdir}" --optimize='1'
   mv unidecode unidecode3
 }
