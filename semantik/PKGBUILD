@@ -1,24 +1,23 @@
 pkgname=semantik
-pkgver=0.9.4
+pkgver=1.0.0
 pkgrel=1
 pkgdesc="A mind-mapping tool that helps creating documents such as reports or presentions."
 arch=('x86_64')
-url="http://kde-apps.org/content/show.php/Semantik?content=55242"
+url="https://waf.io/semantik.html"
 license=('GPL')
-depends=('kde-runtime' 'python2')
-makedepends=('ocaml')
-screenshot=('http://www.freehackers.org/~tnagy/semantik.png')
-source=("http://ftp.waf.io/pub/release/${pkgname}-${pkgver}.tar.bz2")
-sha1sums=('c07820c5b456c95c7cf1113f207fe2a3b1a085db')
+depends=('kde-runtime' 'python3' 'qt5-base' 'qt5-multimedia' 'qt5-declarative' 'qt5-svg' 'qt5-webengine' 'qt5-tools' 'qt5-3d' 'kdelibs4support' 'kio' 'kiconthemes')
+# makedepends=('ocaml')
+screenshot=('https://waf.io/semantik_pics/s1.png')
+source=("https://waf.io/$pkgname-$pkgver.tar.bz2")
+sha1sums=('3fc533f1af3355babf1cb3712545c6d8f7c02d7c')
 
 build() {
-  cd "$srcdir/$pkgname-$pkgver"
-  ./waf --prefix=/usr configure
-  sudo ln -s /usr/lib/ocaml/libcamlstr.a /usr/lib/ocaml/libstr.a
-  ./waf 
+  cd $pkgname-$pkgver
+  ./waf --prefix=/usr configure clean build
+#  sudo ln -s /usr/lib/ocaml/libcamlstr.a /usr/lib/ocaml/libstr.a
 }
 
 package() {
-  cd "$srcdir/$pkgname-$pkgver"
-  ./waf --destdir="$pkgdir" install
+  cd $pkgname-$pkgver
+  ./waf --destdir=$pkgdir install
 }
