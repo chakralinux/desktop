@@ -1,12 +1,11 @@
 pkgname=semantik
 pkgver=1.0.0
-pkgrel=1
+pkgrel=2
 pkgdesc="A mind-mapping tool that helps creating documents such as reports or presentions."
 arch=('x86_64')
 url="https://waf.io/semantik.html"
 license=('GPL')
 depends=('kde-runtime' 'python3' 'qt5-base' 'qt5-multimedia' 'qt5-declarative' 'qt5-svg' 'qt5-webengine' 'qt5-tools' 'qt5-3d' 'kdelibs4support' 'kio' 'kiconthemes')
-# makedepends=('ocaml')
 screenshot=('https://waf.io/semantik_pics/s1.png')
 source=("https://waf.io/$pkgname-$pkgver.tar.bz2")
 sha1sums=('3fc533f1af3355babf1cb3712545c6d8f7c02d7c')
@@ -14,7 +13,6 @@ sha1sums=('3fc533f1af3355babf1cb3712545c6d8f7c02d7c')
 build() {
   cd $pkgname-$pkgver
   ./waf --prefix=/usr configure clean build
-#  sudo ln -s /usr/lib/ocaml/libcamlstr.a /usr/lib/ocaml/libstr.a
 }
 
 package() {
