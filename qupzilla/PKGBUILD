@@ -1,6 +1,6 @@
 _pkgname=QupZilla
 pkgname='qupzilla'
-pkgver=2.2.1
+pkgver=2.2.2
 pkgrel=1
 pkgdesc="A very fast open source browser based on WebEngine core"
 url="http://www.qupzilla.com"
@@ -17,8 +17,8 @@ source=("https://github.com/QupZilla/qupzilla/releases/download/v${pkgver}/${_pk
         '0001-branded-speeddial.patch'
         'start-white.png'
         'qupzilla.desktop')
-sha1sums=('a5aaa1d257ecd7920191f2d1fcc6ce4f19867a4f'
-          'cc736a737f401376376a86612774a6ab89dae0e3'
+sha1sums=('c432999f823177bdc2b5804c087e47926feb287b'
+          '098de53c958923ce6f565db24f432f7c2dcb5953'
           '6ec67993bda3054d4210cc08177b124f873774e3'
           '30af0401f97e6465169bae2089d2a8626e08cadd')
 
@@ -37,7 +37,7 @@ prepare() {
   
   msg 'Applying preference patch'
   cd ${srcdir}/${_pkgname}-${pkgver}/src/lib/preferences/
-  sed -e 's|"homepage", QUrl(QSL("qupzilla:start"))|"homepage", QUrl(QSL("https://chakralinux.org/?welcome"))|' \
+  sed -e 's|"homepage", QUrl(QSL("qupzilla:start"))|"homepage", QUrl(QSL("https://www.chakralinux.org/?welcome"))|' \
       -e 's|"showStatusBar", true|"showStatusBar", false|g' -i preferences.cpp
   msg 'Applying search engine patch...'
   cd ${srcdir}/${_pkgname}-${pkgver}/src/lib/opensearch/
