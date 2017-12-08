@@ -1,38 +1,23 @@
 # Contribution Arch https://aur.archlinux.org/packages/traverso/
 
 pkgname=traverso
-pkgver=0.49.4
-pkgrel=2
+pkgver=0.49.5
+pkgrel=1
 pkgdesc="Digital Audio Workstation with an innovative User Interface"
 arch=('x86_64')
 url="http://traverso-daw.org/"
 license=('GPL')
-depends=('jack' 'fftw' 'wavpack' 'lame' 'libmad' 'qt' 'shared-mime-info' 'lilv')
+depends=('jack' 'fftw' 'wavpack' 'lame' 'libmad' 'qt5-base' 'shared-mime-info' 'lilv')
 makedepends=('cmake')
 categories=('multimedia')
-# files traverso.1 01-fix_build.patch 02-fix_spelling.patch taken from:
-# http://ftp.debian.org/debian/pool/main/t/traverso/traverso_0.49.4-1.debian.tar.xz
-source=("http://ftp.debian.org/debian/pool/main/t/traverso/traverso_$pkgver.orig.tar.gz"
-		traverso.1 01-fix_build.patch 02-fix_spelling.patch )
+source=("http://traverso-daw.org/${pkgname}-${pkgver}.tar.gz")
 install=traverso.install
-sha512sums=('adbbf2f087b949313cc8e723f53aa782577e750520db9818eddc1788def63d7e31dab5b6d11faa5d8a4044468d6d80af06cc2e291b85c13a685d359de33929ae'
-	    'ccdf90965b403067eaa21502611bdc7e3f7fc06b4e341a0abe116ed2ba545ee60564c6e6c93516e01dadad3ec3d76aeda7b31fef22de8cb22ae92379cab1e76d'
-	    '52386ca1274d721fafb1a830f923e24d530bbb7c3923f5c0dfbda408c03bc36fb3e5d4aed796e813fc22f5cc1dbf2751230fc36ccd14299fafaafa0478ec23da'
-	    '36c60ff32dded5ee544e9c73e56bcec4333fe707fd8b30452a14cd34345b9f7d9af89c768d5259973e62d0e09772f5e256aac9cf89740e1aeef55a936e327f02')
-
-prepare() {
-	cd "$pkgname-$pkgver"
-	patch -p1 -i ../01-fix_build.patch
-	patch -p1 -i ../02-fix_spelling.patch
-}
+sha256sums=('75980d93e600d9cca0ee086819e2c8c07740631c4da096b78aec00e432d62d99')
 
 build() {
 	cd "$pkgname-$pkgver"
 	[[ -d bld ]] || mkdir bld && cd bld
 	cmake .. -DCMAKE_INSTALL_PREFIX="/usr" \
-        -DCMAKE_SHARED_LINKER_FLAGS+=" -Wl,--no-undefined -Wl,--as-needed" \
-        -DCMAKE_MODULE_LINKER_FLAGS+=" -Wl,--no-undefined -Wl,--as-needed" \
-        -DUSE_SYSTEM_SLV2_LIBRARY=ON \
         -DWANT_MP3_ENCODE=ON
 	make
 }
@@ -49,8 +34,7 @@ package(){
   install -dm755 "$pkgdir"/usr/share/icons/hicolor
   cp -a freedesktop/icons/* "$pkgdir"/usr/share/icons/hicolor
 
-  # mime & docs & man
+  # mime & docs
   install -Dm644 x-traverso.xml "$pkgdir"/usr/share/mime/packages/x-traverso.xml
   install -Dm644 help.text "$pkgdir"/usr/share/doc/traverso/help.txt
-  install -Dm644 "${srcdir}"/traverso.1 "$pkgdir"/usr/share/man/man1/traverso.1.gz
 }
