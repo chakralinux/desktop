@@ -1,0 +1,37 @@
+pkgname=yubico-c-client
+_pkgname=ykclient
+pkgver=2.15
+pkgrel=1
+pkgdesc='Yubico YubiKey client C library'
+arch=('x86_64')
+url='https://github.com/Yubico/yubico-c-client'
+license=('BSD')
+depends=('curl' 'yubico-c')
+makedepends=('help2man')
+provides=('ykclient')
+conflicts=('ykclient')
+source=("https://github.com/Yubico/$pkgname/archive/$_pkgname-2.15.tar.gz")
+sha256sums=('3863f4fc2f3320c59fcbf57862bba48bcb716fddb886840bb0dd8db14d5ab7f0')
+
+build() {
+	cd $pkgname-$_pkgname-$pkgver
+
+	autoreconf -fi
+	./configure --prefix=/usr
+	make
+}
+
+check() {
+	cd $pkgname-$_pkgname-$pkgver
+
+	make check
+}
+
+package() {
+	cd $pkgname-$_pkgname-$pkgver
+
+	install -D -m0644 COPYING $pkgdir/usr/share/licenses/yubico-c-client/COPYING
+	install -D -m0644 README $pkgdir/usr/share/doc/yubico-c-client/README
+	make DESTDIR=$pkgdir install
+}
+
