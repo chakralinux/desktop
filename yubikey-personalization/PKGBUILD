@@ -1,0 +1,37 @@
+pkgname=yubikey-personalization
+pkgver=1.18.0
+pkgrel=1
+pkgdesc='Yubico YubiKey Personalization library and tool'
+arch=('x86_64')
+url='https://github.com/Yubico/yubikey-personalization'
+license=('BSD')
+depends=('libusb' 'yubico-c-client')
+makedepends=('systemd' 'asciidoc')
+provides=('ykpers')
+conflicts=('ykpers')
+install='yubikey-personalization.install'
+source=("https://github.com/Yubico/$pkgname/archive/v$pkgver.tar.gz")
+sha256sums=('7cf5fa315132e4473caca509d3a0768ed490938d1068e8aa46be200fc751eff5')
+
+build() {
+	cd $pkgname-$pkgver
+
+	autoreconf -fi
+	./configure --prefix=/usr --with-udevrulesdir=/usr/lib/udev/rules.d/
+	make
+}
+
+check() {
+	cd $pkgname-$pkgver
+
+	make check
+}
+
+package() {
+	cd $pkgname-$pkgver
+
+	install -D -m0644 COPYING $pkgdir/usr/share/licenses/yubikey-personalization/COPYING
+	install -D -m0644 README $pkgdir/usr/share/doc/yubikey-personalization/README
+	make DESTDIR=$pkgdir install
+}
+
