@@ -1,0 +1,46 @@
+pkgname=keepassxc
+pkgver=2.2.2
+pkgrel=1
+pkgdesc="KeePassXC is a cross platform community driven port of the windows application Keepass Password Safe"
+arch=('x86_64')
+url="https://keepassxc.org/"
+license=('GPL2')
+screenshot="http://i1-win.softpedia-static.com/screenshots/KeePassXC_1.png"
+depends=('hicolor-icon-theme' 'libxtst' 'qt5-x11extras' 'libgcrypt' 'zlib' 'libxi' 'yubikey-personalization')
+makedepends=('cmake' 'qt5-tools')
+provides=('keepassx' 'keepassx-reboot')
+conflicts=('keepassx-reboot')
+replaces=('keepassx-reboot')
+install=($pkgname.install)
+source=("https://github.com/keepassxreboot/$pkgname/releases/download/$pkgver/$pkgname-$pkgver-src.tar.xz")
+sha256sums=('2f55784f7e6d3a840575e1768a3e5ae03986c2f6a70029dd6b9f9bb0fa443473')
+
+prepare() {
+    cd $pkgname-$pkgver
+    mkdir -p build
+}
+
+build() {
+    cd $pkgname-$pkgver/build
+    cmake -DCMAKE_INSTALL_PREFIX=/usr \
+        -DCMAKE_INSTALL_BINDIR=/usr/bin \
+        -DCMAKE_INSTALL_LIBDIR=/usr/lib \
+        -DCMAKE_VERBOSE_MAKEFILE=OFF \
+        -DWITH_GUI_TESTS=OFF \
+        -DWITH_XC_AUTOTYPE=ON \
+        -DWITH_XC_HTTP=ON \
+        -DWITH_XC_YUBIKEY=ON \
+        -DCMAKE_BUILD_TYPE=Release ..
+    make
+}
+
+#check() {
+#    cd $pkgname-$pkgver/build
+#    make test
+#}
+
+package() {
+    cd $pkgname-$pkgver/build
+    make DESTDIR=$pkgdir install
+}
+
