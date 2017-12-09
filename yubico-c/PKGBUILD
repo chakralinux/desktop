@@ -1,0 +1,37 @@
+pkgname=yubico-c
+_pkgname=libyubikey
+pkgver=1.13
+pkgrel=3
+pkgdesc='Yubico YubiKey C library'
+arch=('x86_64')
+url='https://github.com/Yubico/yubico-c'
+license=('BSD')
+depends=('curl' 'libusb')
+provides=('libyubikey')
+conflicts=('libyubikey')
+makedepends=('asciidoc')
+source=("https://github.com/Yubico/$pkgname/archive/libyubikey-$pkgver.tar.gz")
+sha256sums=('dd046c83e67560206b0b3301ee8053922b516e3975b895804582eb8d7bdd1d79')
+
+build() {
+	cd $pkgname-$_pkgname-$pkgver
+
+	autoreconf -fi
+	./configure --prefix=/usr
+	make
+}
+
+check() {
+	cd $pkgname-$_pkgname-$pkgver
+
+	make check
+}
+
+package() {
+	cd $pkgname-$_pkgname-$pkgver
+
+	install -D -m0644 COPYING $pkgdir/usr/share/licenses/yubico-c/COPYING
+	install -D -m0644 README $pkgdir/usr/share/doc/yubico-c/README
+	make DESTDIR=$pkgdir install
+}
+
