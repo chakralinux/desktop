@@ -1,12 +1,12 @@
 _pkgname=QupZilla
 pkgname='qupzilla'
 pkgver=2.2.2
-pkgrel=2
+pkgrel=3
 pkgdesc="A very fast open source browser based on WebEngine core"
 url="http://www.qupzilla.com"
 arch=('x86_64')
 license=('GPL3')
-depends=('qt5-webengine' 'qt5-x11extras' 'qt5-svg' 'hicolor-icon-theme' 'openh264')
+depends=('qt5-webengine' 'qt5-x11extras' 'qt5-svg' 'hicolor-icon-theme')
 makedepends=('qt5-tools' 'kwallet')
 optdepends=('bash-completion: bash completion support'
             'kwallet: kf5 kwallet integration')
@@ -25,7 +25,7 @@ sha1sums=('c432999f823177bdc2b5804c087e47926feb287b'
 prepare() {
   msg 'Applying browserUI patch...'
   cd ${srcdir}/${_pkgname}-${pkgver}/src/lib/app/
-  sed -e 's|"qupzilla:start"|"https://chakralinux.org/?welcome"|' \
+  sed -e 's|"qupzilla:start"|"https://www.chakralinux.org/?welcome"|' \
       -e 's|"showStatusBar", true|"showStatusBar", false|' \
       -e 's|"showMenubar", true|"showMenubar", false|g' -i browserwindow.cpp
   cd ${srcdir}/${_pkgname}-${pkgver}/src/lib/plugins/
@@ -59,9 +59,6 @@ package() {
   cd "${srcdir}/${_pkgname}-${pkgver}"
   make INSTALL_ROOT="${pkgdir}" install
   install -Dm 644 "${srcdir}/start-white.png" "${pkgdir}/usr/share/pixmaps/start-white.png"
-  
-  # override the desktop file to include the "--disable-gpu" workaround
-  install -Dm644 "${srcdir}/qupzilla.desktop" "${pkgdir}/usr/share/applications/qupzilla.desktop"
   
   # zsh completion
   install -Dm644 linux/completion/_$pkgname \
