@@ -1,5 +1,5 @@
 pkgname=tor
-pkgver=0.3.1.7
+pkgver=0.3.1.9
 pkgrel=1
 pkgdesc="Anonymizing overlay network"
 arch=('x86_64')
@@ -10,20 +10,18 @@ makedepends=('ca-certificates')
 backup=('etc/tor/torrc' 'etc/tor/torrc-dist')
 conflicts=('vidalia') # to enforce removal of unsupported software, not really conflicts
 categories=('network')
-install=${pkgname}.install
+install=$pkgname.install
 option=('!docs' '!emptydirs')
-source=("http://www.torproject.org/dist/${pkgname}-${pkgver}.tar.gz"{,.asc}
-        'torrc'
-        'tor.conf.d')
-md5sums=('ec7c9f588c9e1a42c09bcc097a1e55eb'
+source=("http://www.torproject.org/dist/"${srcdir}/${pkgname}-${pkgver}".tar.gz"{,.asc}
+        'torrc')
+md5sums=('585e62d086ae7df7cd873f735d726118'
          'SKIP'
-         '173621ad48f0052b95eb9786a1c0302c'
-         'f656f3e93f0c2ed46464d9b784876dbc')
+         '173621ad48f0052b95eb9786a1c0302c')
 validpgpkeys=('B35BF85BF19489D04E28C33C21194EBB165733EA'
               '2133BC600AB133E1D826D173FE43009C4607B1FB')
 
 build() {
-  cd "${srcdir}/${pkgname}-${pkgver}"
+  cd $pkgname-$pkgver
 
   ./configure --prefix=/usr \
               --sysconfdir=/etc \
@@ -33,25 +31,26 @@ build() {
 }
 
 check() {
-  cd "${srcdir}/${pkgname}-${pkgver}"
+  cd $pkgname-$pkgver
   make test
   make check
 }
 
 package() {
-  cd "${srcdir}/${pkgname}-${pkgver}"
+  cd $pkgname-$pkgver
   
-  make DESTDIR="${pkgdir}" install 
+  make DESTDIR=$pkgdir install 
 
-  install -dm0700 "${pkgdir}/var/lib/tor"
+  install -dm0700 $pkgdir/var/lib/tor
 
   # Install config files
-  install -Dm0644 "${srcdir}/torrc" "${pkgdir}/etc/tor/torrc"
-  install -Dm0644 "${srcdir}/tor.conf.d" "${pkgdir}/etc/conf.d/tor"
+  install -Dm0644 ../torrc $pkgdir/etc/tor/torrc
+#   install -Dm0644 ../tor.conf.d $pkgdir/etc/conf.d/tor
   
   # Install systemd service file
-  install -Dm0644 "contrib/dist/tor.service" "${pkgdir}/usr/lib/systemd/system/tor.service"
+  sed -i 's/WatchdogSec=1m/#WatchdogSec=1m/g' contrib/dist/tor.service
+  install -Dm0644 contrib/dist/tor.service $pkgdir/usr/lib/systemd/system/tor.service
 
   # Install license
-  install -Dm0644 LICENSE "${pkgdir}/usr/share/licenses/${pkgname}/LICENSE" 
+  install -Dm0644 LICENSE $pkgdir/usr/share/licenses/$pkgname/LICENSE 
 }
