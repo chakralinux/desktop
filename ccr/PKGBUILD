@@ -1,18 +1,18 @@
 pkgname=ccr
-pkgver=4.0.5
+pkgver=4.0.6
 pkgrel=1
 pkgdesc="A Bash wrapper for the CCR"
 license="GPL"
-arch=('any')
+arch=('x86_64')
 depends=('grep' 'sed' 'coreutils' 'bash' 'curl' 'pacman' 'autoconf' 'automake' 'bin86' 'bison' 'ed' 'fakeroot' 'flex' 'gcc' 'libtool' 'm4' 'make' 'patch' 'pkgconfig' 'jshon')
 optdepends=('sudo: install and update packages as non-root')
 conflicts=('ccr-tools-git' 'ccr-tools')
 categories=('system')
-source=("https://github.com/ccr-tools/ccr-tools/archive/v${pkgver}.tar.gz")
-md5sums=('d88c8b02038699c35787f9d488cf8bac')
+source=("https://github.com/ccr-tools/ccr-tools/archive/v$pkgver.tar.gz")
+md5sums=('e5ea590fb4234eb90513a3b4e507e811')
 
 package() {
-    cd ccr-tools-${pkgver}
+    cd ccr-tools-$pkgver
     install -m 755 -D ccr "$pkgdir/usr/bin/ccr"
     install -m 644 -D ccr.8 "$pkgdir/usr/share/man/man8/ccr.8"
     install -m 775 -D ccr-tools "$pkgdir/usr/bin/ccr-tools"
