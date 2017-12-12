@@ -1,11 +1,12 @@
 pkgname=qgis
-pkgver=2.18.7
+pkgver=2.18.15
 pkgrel=1
 pkgdesc='A Geographic Information System (GIS) that supports vector, raster and database formats'
 url='http://qgis.org/'
 license=('GPL')
 arch=('x86_64')
-depends=('gcc-libs' 'glibc' 'gdal' 'proj' 'geos' 'expat' 'libspatialite' 'spatialindex' 'postgresql-libs' 'qca' 'qt' 'qwt6' 'sqlite3' 'python2' 'qscintilla-python2' 'pyqt4-python2' 'python2-pyspatialite')
+depends=('gcc-libs' 'glibc' 'gdal' 'proj' 'geos' 'expat' 'libspatialite' 'spatialindex' 'postgresql-libs' 'qca' 'qt' 'qwt6' 'sqlite3' 'python2' 'qscintilla-python2' 'pyqt4-python2' 'python2-pyspatialite'
+         'python2-jinja')
 makedepends=('cmake' 'flex' 'bison' 'fcgi' 'grass' 'gsl' 'postgis' 'python2-sip' 'python2-pip' 'python2-setuptools')
 optdepends=('fcgi: qgis mapserver'
             'grass: grass plugin'
@@ -13,7 +14,7 @@ optdepends=('fcgi: qgis mapserver'
             'python2-sip: python-support'
             'postgis: postgis support and SPIT plugin')
 source=("http://qgis.org/downloads/$pkgname-$pkgver.tar.bz2")
-sha256sums=('ab05060e6b91909f61a21205ee12ddf79ebd85a7d7b81ab3b7dabfd032aa2e5b')
+sha256sums=('eb2c0475b6a844255d4aa7a92586fea258db9fd596e21841e75ce890e6ccf7ca')
 
 prepare() {
   cd $pkgname-$pkgver
@@ -33,7 +34,7 @@ prepare() {
 }
 
 build() {
-  cd $srcdir/$pkgname-$pkgver/build
+  cd $pkgname-$pkgver/build
   
   cmake -G "Unix Makefiles" ../ \
         -DCMAKE_BUILD_TYPE=Release \
@@ -59,7 +60,7 @@ package() {
     # create a more user-friendly application name link
     ln -s /usr/bin/qgis "$pkgdir/usr/bin/quantum-gis"
 
-    cd "$srcdir/$pkgname-$pkgver"
+    cd ..
     
     # install some freedesktop.org compatibility
     install -Dm644 debian/{qgis,qbrowser}.desktop -t "$pkgdir/usr/share/applications/"
