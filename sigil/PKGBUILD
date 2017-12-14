@@ -1,7 +1,7 @@
 pkgname=sigil
 _pkgname=Sigil
 pkgver=0.9.8
-pkgrel=1
+pkgrel=2
 pkgdesc="A multi-platform WYSIWYG ebook editor. It is designed to edit books in ePub format."
 arch=('x86_64')
 url="http://sigil-ebook.com/"
@@ -14,8 +14,6 @@ source=("${pkgname}-${pkgver}.zip::https://github.com/user-none/Sigil/releases/d
 sha256sums=('78f9f200c86da326984543bd86cbb8eab91308a5a4d7f8cfcc88eb9b0779749a')
 
 build() {
-  cd "${srcdir}"
-
   mkdir -p build 
   cd build
 
@@ -30,7 +28,7 @@ build() {
 }
 
 package() {
-  cd "${srcdir}/build"
+  cd build
   
   make DESTDIR=$pkgdir install
   
