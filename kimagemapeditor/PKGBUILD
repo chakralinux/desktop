@@ -9,12 +9,11 @@ pkgdesc="HTML Image Map Editor"
 url='http://www.kde.org'
 license=(GPL LGPL FDL)
 groups=(kde-applications kdewebdev)
-depends=(kdebase-runtime)
-makedepends=(cmake automoc4 libxslt docbook-xsl)
+depends=(kdelibs4support khtml hicolor-icon-theme)
+makedepends=(extra-cmake-modules kdoctools kdesignerplugin)
 replaces=(kdewebdev-kimagemapeditor)
 conflicts=(kdewebdev-kimagemapeditor)
 options=(docs debug)
-groups=(kde kde-uninstall kde-applications kdewebdev)
 source=("$_mirror/${pkgname}-$_kdever.tar.xz"{,.sig})
 sha256sums=(`grep ${pkgname}-$_kdever.tar.xz  ../kdeapps.sums | cut -d " " -f1`
                         'SKIP')

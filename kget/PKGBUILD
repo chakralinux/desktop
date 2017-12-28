@@ -1,17 +1,20 @@
 # Include global configuration
 source ../kdeapps.conf
 
-pkgname=kmix
+pkgname=kget
 pkgver=${_kdever}
 pkgrel=1
-pkgdesc="KDE volume control program"
-url='https://kde.org/applications/multimedia/kmix/'
+pkgdesc="Download manager"
+url='https://kde.org/applications/internet/kget/'
 arch=(x86_64)
 license=(GPL LGPL FDL)
-depends=(kinit libcanberra hicolor-icon-theme)
-makedepends=(extra-cmake-modules kdoctools plasma-framework)
-conflicts=(kdemultimedia-kmix)
-replaces=(kdemultimedia-kmix)
+groups=(kde-applications kdenetwork)
+depends=(kcmutils knotifyconfig qca-qt5 qgpgme kdelibs4support hicolor-icon-theme)
+makedepends=(extra-cmake-modules boost libktorrent kdoctools kdesignerplugin)
+optdepends=('libktorrent: torrent support')
+conflicts=(kdenetwork-kget)
+replaces=(kdenetwork-kget)
+provides=(kdenetwork-kget)
 options=('docs' 'debug')
 source=("$_mirror/${pkgname}-$_kdever.tar.xz"{,.sig})
 sha256sums=(`grep ${pkgname}-$_kdever.tar.xz  ../kdeapps.sums | cut -d " " -f1`

@@ -1,17 +1,19 @@
 # Include global configuration
 source ../kdeapps.conf
 
-pkgname=kmix
+pkgname=ksirk
 pkgver=${_kdever}
 pkgrel=1
-pkgdesc="KDE volume control program"
-url='https://kde.org/applications/multimedia/kmix/'
+pkgdesc="A computerized version of a well known strategy game"
+url="https://kde.org/applications/games/ksirk/"
 arch=(x86_64)
 license=(GPL LGPL FDL)
-depends=(kinit libcanberra hicolor-icon-theme)
-makedepends=(extra-cmake-modules kdoctools plasma-framework)
-conflicts=(kdemultimedia-kmix)
-replaces=(kdemultimedia-kmix)
+groups=(kde-applications kdegames)
+depends=(libkdegames qca-qt5 hicolor-icon-theme)
+makedepends=(extra-cmake-modules kdoctools)
+conflicts=(kdegames-ksirk)
+replaces=(kdegames-ksirk)
+provides=(kdegames-ksirk)
 options=('docs' 'debug')
 source=("$_mirror/${pkgname}-$_kdever.tar.xz"{,.sig})
 sha256sums=(`grep ${pkgname}-$_kdever.tar.xz  ../kdeapps.sums | cut -d " " -f1`

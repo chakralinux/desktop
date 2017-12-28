@@ -1,11 +1,12 @@
 # Include global configuration
 source ../kdeapps.conf
 
-pkgname="kdelibs"
-arch=('x86_64')
-pkgver=${_libsver}
-pkgrel=1
+pkgname=kdelibs
+pkgver=4.14.38
+_kdeappver=17.08.3
+pkgrel=2
 pkgdesc="KDE Core Libraries"
+arch=('x86_64')
 url="http://www.kde.org"
 license=('GPL' 'LGPL' 'FDL')
 options=('!docs' 'debug')
@@ -24,18 +25,16 @@ optdepends=('phonon-gstreamer: GStreamer Phonon backend (default)'
             'hspell:           Hebrew spell checking')
 groups=("kde" "kde-minimal" "kde-uninstall")
 install=${pkgname}.install
-source=("$_mirror/${pkgname}-${_libsver}.tar.xz"{,.sig}
+source=("https://download.kde.org/stable/applications/${_kdeappver}/src/$pkgname-$pkgver.tar.xz"
         01_chakra_tag.patch
         02_kde_applications_menu.patch
         03_chakra_menu.patch
         MergeDir.patch)
-sha256sums=(`grep ${pkgname}-${_libsver}.tar.xz  ../kdeapps.sums | cut -d " " -f1`
-                        'SKIP'
-                        '029e2d07c5fc8676d143b903aa181fc470e5b469d49ccf107e19031f562bf4e3'
-                        'b2d25c76081ea6bb31d90c4c6b619ce64ac36de3a6eefb2f9990d3dbf8cd9c91'
-                        '505e9e5e969be5094b3f713b865d5927cc3de1f4693915174732b20793228c4f'
-                        'd7d2fac1ceb1551081a5f3fa860c14d4aeb0c774d56067e931c20b8d79c4450f')
-validpgpkeys=(${Avalidpgpkeys[@]})
+sha256sums=('37fd43a34e8118406e03a5d0e53f4a03c8aa50b219e8484a5d42349dc0f2c3fe'
+            '029e2d07c5fc8676d143b903aa181fc470e5b469d49ccf107e19031f562bf4e3'
+            'b2d25c76081ea6bb31d90c4c6b619ce64ac36de3a6eefb2f9990d3dbf8cd9c91'
+            '505e9e5e969be5094b3f713b865d5927cc3de1f4693915174732b20793228c4f'
+            'd7d2fac1ceb1551081a5f3fa860c14d4aeb0c774d56067e931c20b8d79c4450f')
 
 prepare() {
     # main patches

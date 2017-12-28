@@ -5,32 +5,42 @@ pkgname="kde-dev-scripts"
 arch=('x86_64')
 pkgver=${_kdever}
 pkgrel=1
-pkgdesc="Extra scripts for the KDE SDK"
-depends=("kde-runtime" 'python' 'kdelibs4support')
-conflicts=("kdesdk-doc" "kdesdk-scripts")
-provides="kdesdk-scripts"
-replaces="kdesdk-scripts"
-groups=("kde" "kde-devel" "kde-uninstall" "kdesdk")
-categories=('programming')
-install=kdesdk.install
-url="http://www.kde.org"
-license=('GPL' 'LGPL' 'FDL')
+pkgdesc='Scripts and setting files useful during development of KDE software'
+url='https://www.kde.org/applications/development/'
+arch=(any)
+license=(GPL LGPL FDL)
+groups=(kde-applications kdesdk)
+makedepends=(extra-cmake-modules kdoctools kdelibs4support)
+replaces=(kdesdk-scripts)
+conflicts=(kdesdk-scripts kdesdk-doc)
 options=('docs' 'debug')
-makedepends=('pkg-config' 'cmake' 'automoc4' 'extra-cmake-modules' 'kdoctools')
 source=("$_mirror/${pkgname}-$_kdever.tar.xz"{,.sig})
 sha256sums=(`grep ${pkgname}-$_kdever.tar.xz  ../kdeapps.sums | cut -d " " -f1`
                         'SKIP')
 validpgpkeys=(${Avalidpgpkeys[@]})
 
+prepare() {
+  mkdir -p build
+}
+
 build() {
-    cd "${srcdir}/${pkgname}-${pkgver}"
-    cmake . \
-        -DCMAKE_BUILD_TYPE=${_build_type} \
-        -DCMAKE_INSTALL_PREFIX=${_installprefix} 
-    make 
+  cd build
+  cmake_kf5 ../${pkgname}-${pkgver}
+  make
 }
 
 package() {
-  cd "${srcdir}/${pkgname}-${pkgver}"
-  make DESTDIR=${pkgdir} install 
+  cd build
+  make DESTDIR=${pkgdir} install
+  
+    # Fix python 2 path
+    sed -i 's|#!/usr/bin/env python|#!/usr/bin/env python2|' \
+    "$pkgdir"/usr/bin/{zonetab2pot.py,kde-systemsettings-tree.py,reviewboard-am}
+    sed -i 's|#! /usr/bin/env python|#!/usr/bin/env python2|' \
+    "$pkgdir"/usr/bin/{kdelnk2desktop.py,kde_generate_export_header}
+
+    # Install additional files
+    cd "$srcdir"/$pkgname-$pkgver
+    mkdir -p "$pkgdir"/usr/share/kde-dev-scripts
+    cp -r kde-devel-* gdb "$pkgdir"/usr/share/kde-dev-scripts
 }

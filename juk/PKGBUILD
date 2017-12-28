@@ -1,17 +1,20 @@
 # Include global configuration
 source ../kdeapps.conf
 
-pkgname=kmix
+pkgname=juk
 pkgver=${_kdever}
 pkgrel=1
-pkgdesc="KDE volume control program"
-url='https://kde.org/applications/multimedia/kmix/'
+pkgdesc='A jukebox, tagger and music collection manager'
+url='http://kde.org/applications/multimedia/juk/'
+arch=('x86_64')
 arch=(x86_64)
 license=(GPL LGPL FDL)
-depends=(kinit libcanberra hicolor-icon-theme)
-makedepends=(extra-cmake-modules kdoctools plasma-framework)
-conflicts=(kdemultimedia-kmix)
-replaces=(kdemultimedia-kmix)
+groups=(kde-applications kdemultimedia)
+depends=(kio taglib hicolor-icon-theme)
+makedepends=(extra-cmake-modules kdoctools)
+conflicts=(kdemultimedia-juk)
+replaces=(kdemultimedia-juk)
+provides=(kdemultimedia-juk)
 options=('docs' 'debug')
 source=("$_mirror/${pkgname}-$_kdever.tar.xz"{,.sig})
 sha256sums=(`grep ${pkgname}-$_kdever.tar.xz  ../kdeapps.sums | cut -d " " -f1`

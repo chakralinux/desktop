@@ -2,36 +2,34 @@
 source ../kdeapps.conf
 
 pkgname=zeroconf-ioslave
-arch=('x86_64')
 pkgver=${_kdever}
 pkgrel=1
-pkgdesc='Monitors the network for DNS-SD services'
-depends=("kdelibs")
-replaces=("kdenetwork-kdnssd")
-provides=("kdenetwork-kdnssd")
-conflicts=("kdenetwork-common" "kdenetwork-doc" "kdenetwork-kdnssd")
-groups=("kde" "kdenetwork" "kde-uninstall" 'kdenetwork')
-categories=('network')
-url="http://www.kde.org"
-license=('GPL' 'LGPL' 'FDL')
+pkgdesc='Network Monitor for DNS-SD services (Zeroconf)'
+url='https://www.kde.org/applications/internet/'
+arch=(x86_64)
+license=(GPL LGPL FDL)
+groups=(kde-applications kdenetwork)
+depends=(kio kdnssd)
+makedepends=(extra-cmake-modules)
+conflicts=(kdenetwork-zeroconf-ioslave)
+replaces=(kdenetwork-zeroconf-ioslave)
 options=('docs' 'debug')
-makedepends=('pkg-config' 'cmake' 'automoc4' 'docbook-xsl')
-source=("$_mirror/zeroconf-ioslave-$_kdever.tar.xz"{,.sig})
-sha256sums=(`grep zeroconf-ioslave-$_kdever.tar.xz  ../kdeapps.sums | cut -d " " -f1`
+source=("$_mirror/${pkgname}-$_kdever.tar.xz"{,.sig})
+sha256sums=(`grep ${pkgname}-$_kdever.tar.xz  ../kdeapps.sums | cut -d " " -f1`
                         'SKIP')
 validpgpkeys=(${Avalidpgpkeys[@]})
 
+prepare() {
+  mkdir -p build
+}
+
 build() {
-    cd ${srcdir}/${pkgname}-$pkgver
-    cmake . \
-        -DCMAKE_BUILD_TYPE=${_build_type} \
-        -DCMAKE_INSTALL_PREFIX=${_installprefix} \
-        -DCMAKE_SKIP_RPATH=ON \
-        -DCMAKE_{SHARED,MODULE,EXE}_LINKER_FLAGS='-Wl,--no-undefined -Wl,--as-needed'
-    make
+  cd build
+  cmake_kf5 ../${pkgname}-${pkgver}
+  make
 }
 
 package() {
-    cd ${srcdir}/${pkgname}-$pkgver
-    make DESTDIR=${pkgdir} install
+  cd build
+  make DESTDIR=${pkgdir} install
 }
