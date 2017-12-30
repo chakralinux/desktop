@@ -1,5 +1,5 @@
 pkgname=dropbox
-pkgver=28.4.14
+pkgver=40.4.46
 pkgrel=1
 pkgdesc="A free service that lets you bring your photos, docs, and videos anywhere and share them easily."
 arch=('x86_64')
@@ -9,18 +9,18 @@ depends=('dbus-glib' 'libsm' 'libxmu' 'libxslt'
          'qt5-base' 'qt5-declarative' 'qt5-webkit')
 optdepends=('dolphin-plugins: for integration of dolphin under plasma 5')
 options=('!strip' '!upx')
-source=("https://dl-web.dropbox.com/u/17/${pkgname}-lnx.${arch}-${pkgver}.tar.gz"
-        "dropbox.png"
+source=("https://clientupdates.dropboxstatic.com/dbx-releng/client/dropbox-lnx.x86_64-$pkgver.tar.gz"        
+	"dropbox.png"
         "dropbox.desktop"
         "LICENSE"
         "dropbox.service"
         "dropbox@.service")
-sha1sums=('40f4f37b64394d42f4fa3d6b3d53553f854587e4'
+sha1sums=('b08e0e0a2e8d3e35e5b36955a794890d4cd96557'
           '64073af76a2bbc7dba4a6886b82af0bb3e71a2a0'
-          'd5ad720762b9052a4fd6af839038318b37d5fd39'
+          'b30c97c01be656f9d392262c3cdeb2c0560e0475'
           'b69765536f67fab1080bd623019c8d859edb75dc'
-          '9bda78faca76d55d0cf1b16af782066bab3029fe'
-          '0019b370924494390b071ed6e607e5f70c88fc12')
+          'ca22e7fcd94c45854e0b6516efa37ed30df56abf'
+          '2950fb561a83d0687f86bb1a02116815f9142f9e')
 
 install="${pkgname}.install"
 
@@ -33,27 +33,14 @@ package() {
 	chmod 755 "$pkgdir/opt/dropbox/dropbox"
  
 	install -d "$pkgdir/usr/bin"
-	ln -s "/opt/dropbox/dropboxd" "$pkgdir/usr/bin/dropboxd"
+	ln -s ../../opt/dropbox/dropbox "$pkgdir"/usr/bin/dropbox
  
 	install -D -m 644 "$srcdir/dropbox.desktop" "$pkgdir/usr/share/applications/dropbox.desktop"
 	install -D -m 644 "$srcdir/dropbox.png" "$pkgdir/usr/share/pixmaps/dropbox.png"
 	install -D -m 644 "$srcdir/LICENSE" "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
-	install -Dm644 "$srcdir"/dropbox.service "$pkgdir"/usr/lib/systemd/user/dropbox.service
+	install -Dm644 "$srcdir/dropbox.service" "$pkgdir/usr/lib/systemd/user/dropbox.service"
 	install -Dm644 "$srcdir/dropbox@.service" "$pkgdir/usr/lib/systemd/system/dropbox@.service"
 
 	rm -f "$pkgdir"/opt/dropbox/library.zip
 	ln -s dropbox "$pkgdir"/opt/dropbox/library.zip
-	
-        cd ${pkgdir}/opt/dropbox/
-        msg 'removing libQt5'
-        rm -v libQt5*
-        rm -vrf plugins/
-        rm -v qt.conf
-        msg 'removing other libraries'
-        rm -v libicu*
-        rm -v libffi*
-        rm -v libGL*
-        rm -v libpopt*
-        rm -v libX11-xcb*
-        rm -v libdrm*
 }
