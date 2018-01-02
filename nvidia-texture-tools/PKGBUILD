@@ -1,29 +1,17 @@
-#
-# Games Packages for Chakra, part of chakra-project.org
-#
-# Maintainer: Adrián Chaves Fernández (Gallaecio) <adriyetichaves@gmail.com>
-# Contributor: Yggdrasil
-
 pkgname=nvidia-texture-tools
-pkgver=2.0.8
+pkgver=2.1.1
 pkgrel=1
 pkgdesc="GPU-accelerated Texture Tools with support for DirectX 10 texture formats."
-arch=('i686' 'x86_64')
-url="http://code.google.com/p/$pkgname/"
+arch=('x86_64')
+url="https://github.com/castano/nvidia-texture-tools"
 license=('MIT')
 depends=('libjpeg' 'libpng' 'libtiff' 'openexr')
 makedepends=('cmake')
-source=(http://$pkgname.googlecode.com/files/$pkgname-$pkgver-1.tar.gz
-	$pkgname-2.0.8-add-pthread.patch)
-md5sums=('7449c95ca1583b512561c83c5a5f401c'
-	 '55d011f08ef9c924a7fd5b2c8b9e2c85')
+source=("https://github.com/castano/$pkgname/archive/$pkgver.tar.gz")
+md5sums=('6b903bde11ee6252bcb8f1efd39843de')
 
 build() {
-  cd $srcdir/$pkgname
-  
-  # Patch 2.0.8 version.
-  patch -p1 -i $srcdir/$pkgname-2.0.8-add-pthread.patch
-
+  cd $pkgname-$pkgver
   ./configure \
     --prefix=/usr \
     --release
@@ -31,6 +19,6 @@ build() {
 }
 
 package() {
-  cd $srcdir/$pkgname
+  cd $pkgname-$pkgver
   make DESTDIR=$pkgdir install
 }
