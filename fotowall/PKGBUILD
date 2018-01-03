@@ -1,30 +1,22 @@
-#
-# Apps Packages for Chakra, part of chakra-project.org
-#
-# maintainer (i686): Phil Miller <philm[at]chakra-project[dog]org>
-# maintainer (x86_64): Manuel Tortosa <manutortosa[at]chakra-project[dot]org>
-
-# include global config
-source ../_buildscripts/${current_repo}-${_arch}-cfg.conf
-
 pkgname=fotowall
-pkgver=0.9
-pkgrel=2
+pkgver=1.0
+pkgrel=1
 pkgdesc="A tool for rendering collages from photos or pictures"
-arch=('i686' 'x86_64')
+arch=('x86_64')
 url="http://www.enricoros.com/opensource/fotowall/"
 license=('GPL')
-depends=('qt>=4.4')
+depends=('qt5-svg' 'desktop-file-utils')
 categories=('graphics')
-source=(http://$pkgname.googlecode.com/files/Fotowall-$pkgver.tar.bz2)
-md5sums=('142ef697332e0777c6d22c5bc96cc438')
+source=("https://github.com/enricoros/fotowall/archive/v$pkgver.tar.gz")
+md5sums=('cc3f36d917edb1c86916332b605ce570')
 
 build() {
-  cd "$srcdir/Fotowall-$pkgver"
-  qmake && make || return 1
+  cd $pkgname-$pkgver
+  sed -i 's|Icon=fotowall|Icon=/usr/share/pixmaps/fotowall.png|' $pkgname.desktop
+  qmake-qt5 PREFIX=/usr $pkgname.pro
+  make
 }
 
 package() {
-  cd "$srcdir/Fotowall-$pkgver"
-  make INSTALL_ROOT="$pkgdir" install
+  make -C $pkgname-$pkgver INSTALL_ROOT=$pkgdir install
 }
