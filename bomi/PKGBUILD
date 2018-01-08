@@ -1,6 +1,6 @@
 pkgname=bomi
-pkgver=0.9.11.r25.g90f18ff5
-pkgrel=2
+pkgver=0.9.11.r37.g2d2a3515
+pkgrel=1
 pkgdesc="Powerful and easy-to-use multimedia player"
 arch=('x86_64')
 url="http://bomi-player.github.io"
@@ -20,31 +20,26 @@ optdepends=('libaacs: AACS decryption for Blu-ray support'
 provides=('cmplayer')
 replace=('cmplayer')
 conflicts=('cmplayer' 'bomi-git')
-source=(git+https://github.com/xylosper/${pkgname}.git
-            'ffmpeg3.patch'
-            'qt5.6.patch')
+source=(git+https://github.com/d-s-x/${pkgname}.git
+        qml_internal_types.patch)
 md5sums=('SKIP'
-         '2c005f32510aa504d1eb65f8c83323b3'
-         '44b2f48f40bffe6aa8070642031e5d35')
+         '119bfa72cf4700c16c11c2b3ec8d8865')
 
 pkgver() {
     cd "$srcdir/$pkgname"
     echo $(git describe --tags | sed -E 's/([^-]*-g)/r\1/;s/-/./g' | cut -c2-)
 }
 
-prepare() {
- cd "$srcdir/$pkgname"
- 
- # https://github.com/d-s-x/bomi/commit/944c3e196229f144e97f285f69355ddfc3f7b579
- patch -Np1 -i "$srcdir/ffmpeg3.patch" 
- # https://github.com/d-s-x/bomi/commit/39ee4c372ffb98a4485b61a11726d39060bb2994
- patch -Np1 -i "$srcdir/qt5.6.patch"
-}
-
 build() {
   cd "$srcdir/$pkgname"
     ./configure --prefix=/usr \
         --defaultskin=Breeze
+
+  # Temporary fix until the upstream is fixed.
+    if ! grep PlayInfoText ./src/bomi/imports/bomi/qmldir; then
+      patch -p1 -i "$srcdir/qml_internal_types.patch"
+    fi
+
   make
 }
 
