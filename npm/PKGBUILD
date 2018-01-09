@@ -1,17 +1,22 @@
 pkgname=npm
-pkgver=4.6.1
+pkgver=5.6.0
 pkgrel=1
 pkgdesc='A package manager for javascript'
 arch=('any')
 url='https://www.npmjs.com/'
 license=('custom:Artistic')
-depends=('nodejs')
+depends=('nodejs' 'semver')
 provides=('nodejs-node-gyp')
-makedepends=('procps-ng')
+makedepends=('procps-ng' 'marked-man')
 optdepends=('python2: for node-gyp')
 options=('!emptydirs')
 source=("$pkgname-$pkgver::https://github.com/${pkgname}/${pkgname}/archive/v${pkgver}.tar.gz")
-sha256sums=('ba527f1314e11a021257d8b645d093b895cf852583018053d859649764f44750')
+sha256sums=('b965a4a6a32acd60f0b549187057b795032ab33c5dfb366c7e9b8d89c81dbd60')
+
+prepare() {
+  cd ${pkgname}-${pkgver}
+  ln -sf /usr/bin/marked{,-man} node_modules/.bin/
+}
 
 build() {
   cd ${pkgname}-${pkgver}
@@ -22,24 +27,27 @@ package() {
   cd ${pkgname}-${pkgver}
   make NPMOPTS="--prefix=\"$pkgdir/usr\"" install
 
+  # Provide node-gyp executable
+  cp "$pkgdir"/usr/lib/node_modules/npm/bin/node-gyp-bin/node-gyp "$pkgdir"/usr/bin/node-gyp
+  sed -i 's|"`dirname "$0"`/../../|"`dirname "$0"`/../lib/node_modules/npm/|' "$pkgdir"/usr/bin/node-gyp
+
   # Why 777? :/
   chmod -R u=rwX,go=rX "$pkgdir"
   
   # Fix files owned by nobody:
   chown -R root "$pkgdir/usr/lib/node_modules" 
 
-  # Fix wrong symlinks
-  for _dir in man1 man5 man7; do
-    mkdir -p "$pkgdir"/usr/share/man/$_dir/*
-    cd "$pkgdir"/usr/lib/node_modules/npm/man/$_dir
-    for _file in *; do
-      ln -s /usr/lib/node_modules/npm/man/$_dir/$_file "$pkgdir"/usr/share/man/$_dir/
+  # Experimental dedup
+  for _d in "$pkgdir"/usr/lib/node_modules/$pkgname/node_modules \
+            "$pkgdir"/usr/lib/node_modules/$pkgname/node_modules/node-gyp/node_modules; do
+    cd "$_d"
+    for dep in semver; do
+      rm -r $dep;
     done
   done
-  
-  # Provide node-gyp executable
-  cp "$pkgdir"/usr/lib/node_modules/npm/bin/node-gyp-bin/node-gyp "$pkgdir"/usr/bin/node-gyp
-  sed -i 's|"`dirname "$0"`/../../|"`dirname "$0"`/../lib/node_modules/npm/|' "$pkgdir"/usr/bin/node-gyp
+
+  install -dm755 "$pkgdir"/usr/share/bash-completion/completions
+  node "$srcdir"/npm-$pkgver/bin/npm-cli.js completion > "$pkgdir"/usr/share/bash-completion/completions/npm
   
   install -Dm644 "$srcdir/${pkgname}-${pkgver}/LICENSE" "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
 }
