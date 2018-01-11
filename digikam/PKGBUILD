@@ -1,8 +1,8 @@
 pkgbase=digikam
 pkgname=('digikam' 'kipi-plugins')
-_pkgver=5.7.0
+_pkgver=5.8.0
 pkgver=${_pkgver//-/_}
-pkgrel=2
+pkgrel=1
 epoch=1
 url="https://www.digikam.org/"
 arch=('x86_64')
@@ -14,16 +14,10 @@ makedepends=('extra-cmake-modules' 'libkipi' 'libksane' 'liblqr' 'boost'
              'threadweaver' 'kcalcore' 'knotifyconfig' 'libkvkontakte' 'libmediawiki' 'mariadb' 'prison'
              'libavc1394' 'libiec61883' 'jack2' 'exiv2')
 source=("http://download.kde.org/stable/${pkgname}/${pkgname}-${_pkgver}.tar.xz")
-sha1sums=('d6032201880524c8d11ad9dd054bd81ce982278b')
+sha1sums=('707345f70f8e70df0b7f1de484d82223c4912f82')
 
 prepare() {
   mkdir -p build
-
-  # sv docs fail to build
-  sed -e '/sv/d' -i $pkgname-$pkgver/doc-translated/CMakeLists.txt
-
-  # fix conflicts with libkvkontakte
-  rm $pkgbase-$pkgver/po/*/libkvkontakte.po
 }
 
 build() {
