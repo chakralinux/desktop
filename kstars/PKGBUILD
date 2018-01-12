@@ -3,23 +3,24 @@
 source ../kdeapps.conf
 
 pkgname=kstars
-pkgver=${_kdever}
+pkgver=2.9.1
 pkgrel=1
+epoch=1
 pkgdesc="Desktop planetarium"
-url="http://kde.org/applications/education/kstars/"
+url="https://kde.org/applications/education/kstars/"
 arch=('x86_64')
 screenshot='https://www.kde.org/images/screenshots/kstars.png'
 license=('GPL' 'LGPL' 'FDL')
-depends=('wcslib' 'libindi' 'kplotting' 'knewstuff' 'qt5-multimedia' 'kinit' 'ktexteditor')
+depends=('wcslib' 'libraw' 'kplotting' 'knewstuff' 'qt5-datavis3d' 'libindi' 'hicolor-icon-theme' 'knotifyconfig')
 makedepends=('extra-cmake-modules' 'python3' 'kdoctools' 'eigen3' 'xplanet')
 groups=('kde' 'kde-uninstall' 'kde-applications' 'kdeedu')
 replaces=('kdeedu-kstars')
 conflicts=('kdeedu-kstars')
 options=('docs' 'debug')
-source=("$_mirror/${pkgname}-$_kdever.tar.xz"{,.sig})
-sha256sums=(`grep ${pkgname}-$_kdever.tar.xz  ../kdeapps.sums | cut -d " " -f1`
-                        'SKIP')
-validpgpkeys=(${Avalidpgpkeys[@]})
+source=("https://download.kde.org/stable/$pkgname/$pkgname-$pkgver.tar.xz"{,.sig})
+sha256sums=('c7fa17f9b367a65d6f50aa063f11f4d358473d74d55fc32c1d67358f3d5e38c4'
+            'SKIP')
+validpgpkeys=(259D9FCEE9175351965633696D9CE2AEE028C4F3) # Jasem Mutlaq <mutlaqja@ikarustech.com>
 
 prepare() {
   mkdir -p build
