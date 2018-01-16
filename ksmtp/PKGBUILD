@@ -10,21 +10,15 @@ url="https://community.kde.org/KDE_PIM"
 license=(LGPL)
 depends=(kmime kio)
 makedepends=(extra-cmake-modules python3)
-source=("https://download.kde.org/stable/applications/$pkgver/src/$pkgname-$pkgver.tar.xz"{,.sig}
-        kdebug-388068.patch::"https://cgit.kde.org/ksmtp.git/patch/?id=ec2afd27"
-        kdebug-387926.patch::"https://cgit.kde.org/ksmtp.git/patch/?id=5199ed07")
+source=("https://download.kde.org/stable/applications/$pkgver/src/$pkgname-$pkgver.tar.xz"{,.sig})
 sha256sums=(`grep ${pkgname}-$_kdever.tar.xz  ../kdeapps.sums | cut -d " " -f1`
-                        'SKIP'
-                        'c445ed8e7284be8de3117d3174be99729d1234ed624313f24ced66e99594b287'
-                        'a9fe4d38faf0447a1ee96c52bdec7d14e1017657baab94d8650e926c28685e41')
+                        'SKIP')
 validpgpkeys=(${Avalidpgpkeys[@]})
 
 prepare() {
   mkdir -p build
 
   cd $pkgname-$pkgver
-  patch -p1 -i ../kdebug-388068.patch # Fix duplicate authentication
-  patch -p1 -i ../kdebug-387926.patch # Send the correct hostname with the HELO/EHLO command
 }
 
 build() {
