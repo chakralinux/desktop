@@ -1,7 +1,7 @@
 source ../kdeapps.conf
 
 pkgname=kdeconnect
-pkgver=1.2
+pkgver=1.2.1
 pkgrel=1
 epoch=1
 pkgdesc='Adds communication between KDE and your smartphone'
@@ -13,8 +13,8 @@ makedepends=(extra-cmake-modules python3 kdoctools)
 optdepends=('sshfs: remote filesystem browser')
 install=$pkgname.install
 screenshot=('http://albertvaka.files.wordpress.com/2013/08/kcm.png')
-source=("https://download.kde.org/stable/$pkgname/$pkgver/src/$pkgname-kde-$pkgver.tar.xz")
-sha1sums=('f08563482ccce0d443aa281395d401c6472b8078')
+source=("https://download.kde.org/stable/$pkgname/$pkgver/src/$pkgname-kde-v$pkgver.tar.xz")
+sha1sums=('a0763f862324f906d89ecf5294052d6a58e14a35')
 
 prepare() {
   mkdir -p build
@@ -22,7 +22,7 @@ prepare() {
 
 build() {
   cd build
-  cmake_kf5 ../kdeconnect-kde-$pkgver
+  cmake_kf5 ../kdeconnect-kde-v$pkgver
   make
 }
 
