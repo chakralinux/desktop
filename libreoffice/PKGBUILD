@@ -86,7 +86,8 @@ source=(${_mirror}/libreoffice{,-help,-translations}-${_LOver}.tar.xz
         ${_additional_source_url}/OpenCOLLADA-master-6509aa13af.tar.bz2
         ${_additional_source_url}/libgltf/libgltf-0.1.0.tar.gz
         ${_additional_source_url}/pdfium-3064.tar.bz2
-        make-pyuno-work-with-system-wide-module-install.diff)
+        make-pyuno-work-with-system-wide-module-install.diff
+        libreoffice-5.4.4.2-gtk3-no-gtk-build.patch)
 #validpgpkeys=('C2839ECAD9408FBE9531C3E9F434A1EFAFEEAEA3') # LibreOffice Build Team (CODE SIGNING KEY) <build@documentfoundation.org>
 md5sums=('e63f512803be129431e8ab788e141b0e'
          '27d81cb9a790d790928e63e119488368'
@@ -136,7 +137,8 @@ md5sums=('e63f512803be129431e8ab788e141b0e'
          '4ca8a6ef0afeefc864e9ef21b9f14bd6'
          '63ae962d0c436909979826fce0fca2fd'
          '5e97e37a615314a77f53a08eeb8d8a42'
-         '41fa5baa6d71d69b98de1fe258a6dd65')
+         '41fa5baa6d71d69b98de1fe258a6dd65'
+         'b50ab32f6d03df195c7443e7223517fe')
 noextract=(
           boost_1_63_0.tar.bz2
           xmlsec1-1.2.24.tar.gz
@@ -185,7 +187,10 @@ noextract=(
           pdfium-3064.tar.bz2)
 
 prepare() {
-    cd ${srcdir}/libreoffice-$_LOver
+    cd libreoffice-$_LOver
+    
+    # Apply a patch to fix vcl error with gtkSalMenu
+    patch -Np1 < ../libreoffice-5.4.4.2-gtk3-no-gtk-build.patch
     
     # fix exttextcat build error
     # /usr/include/features.h:330:4: error: #warning _FORTIFY_SOURCE requires compiling with optimization (-O) [-Werror=cpp]
@@ -210,6 +215,8 @@ prepare() {
             esac
     ARCH_FLAGS="$ARCH_FLAGS $i"
     done
+    
+
 }
 
 build() {
