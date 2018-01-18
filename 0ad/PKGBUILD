@@ -1,16 +1,16 @@
 pkgname=0ad
 pkgver=0.0.22
 _pkgver=$pkgver-alpha
-pkgrel=3
+pkgrel=4
 pkgdesc="Cross-platform, 3D and historically-based real-time strategy game"
 screenshot=http://www.wildfiregames.com/0ad/images/news_images/dynamic-borders.jpg
-arch=('i686' 'x86_64')
+arch=('x86_64')
 url="http://play0ad.com/"
 license=('GPL2' 'CCPL') # source licenses.
 depends=('boost-libs' 'curl' 'enet' 'gamin' 'gloox' 'libgl' 'libogg' 'libpng' 'libvorbis' 
-         'libxcursor' 'libxml2' 'mesa' 'miniupnpc' 'nspr' 'nvidia-texture-tools' 'openal'
+         'libxcursor' 'libxml2' 'mesa' 'miniupnpc' 'nspr' 'openal'
          'sdl2' 'zip' 'zlib' 0ad-data=$pkgver)
-makedepends=('boost' 'python2')
+makedepends=('boost' 'python2' 'cmake')
 replaces=(0ad-debug) # If someone wants a debug version, they should rebuild 0ad with config=debug.
 categories=('games')
 changelog=ChangeLog
@@ -18,12 +18,12 @@ source=(http://releases.wildfiregames.com/$pkgname-$_pkgver-unix-build.tar.xz)
 md5sums=('b015db10176cdaafb6d62946b27f06ec')
 
 prepare() {
-  cd "$srcdir/$pkgname-$_pkgver/"
+  cd $pkgname-$_pkgver
   sed -i "s/env python/env python2/g" libraries/source/cxxtest-4.4/bin/cxxtestgen
 }         
 
 build() {
-  cd $srcdir/$pkgname-$_pkgver/build/workspaces
+  cd $pkgname-$_pkgver/build/workspaces
 
   # Required to build SpiderMonkey.
   unset CPPFLAGS
@@ -34,9 +34,9 @@ build() {
   export SHELL=/bin/bash
 
   # Atlas disabled because it requires GTK.
+  # --with-system-nvtt disabled, because it fails with new nvidia-texture-tools
   ./update-workspaces.sh \
     --disable-atlas \
-    --with-system-nvtt \
     --bindir=/usr/bin \
     --libdir=/usr/lib/0ad \
     --datadir=/usr/share/${pkgname}/data
@@ -47,7 +47,7 @@ build() {
 
 package() {
 
-  cd $srcdir/$pkgname-$_pkgver
+  cd $pkgname-$_pkgver
 
   # Manual installation.
   install -d ${pkgdir}/usr/{bin,lib,share/"${pkgname}"/data}
