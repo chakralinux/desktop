@@ -1,0 +1,37 @@
+pkgname=qtox
+_pkgname=qTox
+pkgver=1.13.0
+pkgrel=1
+pkgdesc='Powerful Tox client written in C++/Qt that follows the Tox design guidelines'
+arch=('x86_64')
+url='https://github.com/tux3/qTox'
+screenshot="https://camo.githubusercontent.com/22edee6a50bd284bd985ed7b219d57130e5241c8/687474703a2f2f692e696d6775722e636f6d2f363641524247432e706e67"
+license=('GPL3')
+depends=('libxss' 'desktop-file-utils' 'openal' 'ffmpeg' 'qrencode' 'qt5-svg' 'sqlcipher' 'toxcore' 'libexif')
+makedepends=('qt5-tools' 'cmake' 'check' 'pkg-config')
+provides=('qtox')
+conflicts=('qtox-git')
+replaces=('qtox-git')
+source=("https://github.com/$_pkgname/$_pkgname/archive/v$pkgver.tar.gz")
+sha512sums=('c7060c639033937091725a60b0a72ed5f7e5a36b2f4950618b78591c826ce05f4639d008930a7414ec1a92a84b842a9469f076399ff7d6b7f6f5b989cd01ac3b')
+
+build() {
+  cd $_pkgname-$pkgver
+  mkdir -p build
+  cd build
+  cmake .. -DCMAKE_INSTALL_PREFIX=/usr \
+	       -DENABLE_GTK_SYSTRAY=False
+  make
+}
+
+check() {
+  cd $_pkgname-$pkgver
+  cd build
+  make test
+}
+
+package() {
+  # executable
+  cd $_pkgname-$pkgver/build
+  make DESTDIR=$pkgdir install
+}
