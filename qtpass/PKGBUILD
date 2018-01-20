@@ -1,0 +1,34 @@
+pkgname=qtpass
+_pkgname=QtPass
+pkgver=1.2.1
+pkgrel=1
+pkgdesc='A multi-platform GUI for pass'
+url='https://qtpass.org/'
+license=('GPL3')
+arch=('x86_64')
+depends=('qt5-base' 'pass' 'pwgen' 'libxkbcommon-x11')
+makedepends=('qt5-tools')
+validpgpkeys=('DF7FEF8DFBA721E320B18F5615B63ADCA0034B9E') # Anne Jan Brouwer (JinX) <brouwer@annejan.com>
+source=("https://github.com/IJHack/$pkgname/archive/v$pkgver.tar.gz"
+        "https://github.com/IJHack/$pkgname/releases/download/v$pkgver/v$pkgver.tar.gz.asc")
+sha256sums=('f2aa1a54ed273546aab8933e560218b7b59f7f07000d93c018ec8d6ccdedcd5d'
+            'SKIP')
+
+prepare() {
+  cd $_pkgname-$pkgver
+  sed -i 's|qtpass-icon|qtpass|' $pkgname.desktop
+}
+
+build() {
+  cd $_pkgname-$pkgver
+  qmake-qt5
+  make
+}
+
+package() {
+  cd $_pkgname-$pkgver
+  install -D -m0755 main/qtpass $pkgdir/usr/bin/$pkgname
+  install -D -m0644 artwork/icon.png $pkgdir/usr/share/pixmaps/$pkgname.png
+  install -D -m0644 $pkgname.desktop $pkgdir/usr/share/applications/$pkgname.desktop
+  install -D -m0644 $pkgname.1 $pkgdir/usr/share/man/man1/$pkgname.1
+} 
