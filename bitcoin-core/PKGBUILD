@@ -1,6 +1,6 @@
 pkgname=bitcoin-core
-pkgver=0.15.0
-pkgrel=2
+pkgver=0.15.1
+pkgrel=1
 pkgdesc="Bitcoin is a peer-to-peer network based digital currency"
 arch=('x86_64')
 url="https://www.bitcoin.org/"
@@ -16,7 +16,7 @@ source=("http://bitcoin.org/bin/bitcoin-core-$pkgver/bitcoin-$pkgver.tar.gz"
 	"https://raw.github.com/bitcoin/bitcoin/v$pkgver/contrib/debian/examples/bitcoin.conf"
         "bitcoin.service"
         "bitcoin-reindex.service")
-sha256sums=('54b6f54982da97f294d21ad69c6b8624f2cf40d157be0683123b2ba6db2bf2a1'
+sha256sums=('34de2dbe058c1f8b6464494468ebe2ff0422614203d292da1c6458d6f87342b4'
             'b6826255de152159fff53ad8f456a8ce9c1b35ebaf79171001e4ceed42da57b7'
             '7ddc5b4f0e6a217663c4cc8bbf6dc237c8e16aff3159f0fe3e0de18810676f90'
             'a91104de6fc7cedce8c2d61a18105a3ea81316c2b5ce295ae18df610f00b2b39'
@@ -25,7 +25,7 @@ sha256sums=('54b6f54982da97f294d21ad69c6b8624f2cf40d157be0683123b2ba6db2bf2a1'
 
           
 build() {
-  cd "$srcdir/${pkgname%-core}-$pkgver"
+  cd ${pkgname%-core}-$pkgver
 
   msg2 'Building...'
   ./autogen.sh
@@ -43,10 +43,10 @@ build() {
 }
 
 package() {
-  cd "$srcdir/${pkgname%-core}-$pkgver"
+  cd ${pkgname%-core}-$pkgver
 
   msg2 'Installing bitcoin...'
-  make DESTDIR="$pkgdir" install
+  make DESTDIR=$pkgdir install
 
   msg "installing .desktop and icon"
   install -Dm644 "$srcdir"/bitcoin-qt.desktop \
