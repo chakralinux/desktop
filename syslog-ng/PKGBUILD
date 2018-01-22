@@ -1,56 +1,72 @@
 pkgname=syslog-ng
-pkgver=3.9.1
+pkgver=3.13.2
 pkgrel=1
 pkgdesc="Next-generation syslogd with advanced networking and filtering capabilities"
 arch=('x86_64')
-license=('GPL2')
 url="http://www.balabit.com/network-security/syslog-ng/"
-depends=('glib2' 'eventlog' 'openssl' 'libcap' 'awk' 'systemd' 'python2')
-makedepends=('flex' 'pkg-config')
-optdepends=('logrotate: for rotating log files')
-provides=('logger')
-backup=('etc/syslog-ng/modules.conf' 'etc/syslog-ng/scl.conf' \
-        'etc/syslog-ng/syslog-ng.conf' 'etc/logrotate.d/syslog-ng' 'etc/logrotate.d/syslog-ng')
-source=("https://github.com/balabit/syslog-ng/releases/download/syslog-ng-$pkgver/syslog-ng-$pkgver.tar.gz"
-        'syslog-ng.conf'
-        'syslog-ng.conf.d'
-        'syslog-ng.logrotate')
-sha1sums=('1ca437393d8895654452bef8ac0b996fe73284f8'
-          '98074e0facfc6ef036202662cc86d04b38a2c142'
-          'eb2aa25737e0cb9453c7b058f0e2dcf16abf21cd'
-          '91ed7a6acfe45b38d6539ba744c58d2d397458ad')
+license=('GPL2' 'LGPL2.1')
+depends=('awk' 'systemd' 'glib2' 'libdbi')
+makedepends=('python2' 'libxslt' 'json-c' 'python3')
+checkdepends=('python3-nose' 'python3-ply')
+optdepends=('logrotate: for rotating log files'
+            'json-c: for json-plugin'
+            'curl: for the HTTP module'
+            'python: for the Python plugin')
+conflicts=('eventlog')
+replaces=('eventlog')
+backup=('etc/syslog-ng/scl.conf'
+        'etc/syslog-ng/syslog-ng.conf'
+        'etc/logrotate.d/syslog-ng'
+        'etc/default/syslog-ng@default')
+source=(https://github.com/balabit/syslog-ng/releases/download/syslog-ng-$pkgver/$pkgname-$pkgver.tar.gz
+        syslog-ng.conf syslog-ng.logrotate
+        syslog-ng-json-c-0.13.patch::"https://github.com/balabit/syslog-ng/commit/1b824dd6.patch")
+sha256sums=('9a3d31df93698080180057ca9bd57b59d06b74fc426c602ce102a2a5437ad3e8'
+            '887e4d0e0a0e8d31b639215c36892d90cd32123465d685ae95bbeb0793363544'
+            '93c935eca56854011ea9e353b7a1da662ad40b2e8452954c5b4b5a1d5b2d5317'
+            '6c1b29e18e502ca670b8f6e519fc6f5525fc384632ea3a036167d68b7f69ccc5')
+
+prepare() {
+  cd $pkgname-$pkgver
+  sed -i -e 's,/bin/,/usr/bin/,' -e 's,/sbin/,/bin/,' contrib/systemd/syslog-ng@.service
+  sed -i -e 's|etc|etc/syslog-ng|g' -e 's|/var/run|/run|g' contrib/systemd/syslog-ng@default
+
+  patch -p1 -i ../syslog-ng-json-c-0.13.patch # Fix build with json-c 0.13
+}
 
 build() {
-  cd "$pkgname-$pkgver"
-
-  ./configure \
-    --prefix=/usr \
+  cd $pkgname-$pkgver
+  ./configure --prefix=/usr \
     --sysconfdir=/etc/syslog-ng \
     --libexecdir=/usr/lib \
+    --sbindir=/usr/bin \
     --localstatedir=/var/lib/syslog-ng \
-    --datadir=/usr/share/syslog-ng \
-    --with-pidfile-dir=/run \
-    --disable-spoof-source \
+    --datadir=/usr/share \
     --enable-ipv6 \
+    --enable-manpages \
+    --enable-sql \
     --enable-systemd \
+    --with-jsonc=system \
+    --with-librabbitmq-client=system \
+    --with-pidfile-dir=/run \
     --with-systemdsystemunitdir=/usr/lib/systemd/system \
-    --sbindir=/usr/bin
+    --disable-spoof-source
+
   make
 }
 
 check() {
-  cd "$pkgname-$pkgver"
-  
-  # 1 fail, because test_systemd_journal.c
-  # https://github.com/algernon/syslog-ng/commit/ed0976f87ddf7f9986e22a0b64dc3aef9249046a
-  make check | true
+  cd $pkgname-$pkgver
+  make check || /bin/true # python test requires pep8
 }
 
 package() {
-  make -C "$pkgname-$pkgver" DESTDIR="$pkgdir" install
-
+  make -C $pkgname-$pkgver DESTDIR="$pkgdir" install
   install -dm755 "$pkgdir/var/lib/syslog-ng" "$pkgdir/etc/syslog-ng/patterndb.d"
   install -Dm644 "$srcdir/syslog-ng.conf" "$pkgdir/etc/syslog-ng/syslog-ng.conf"
   install -Dm644 "$srcdir/syslog-ng.logrotate" "$pkgdir/etc/logrotate.d/syslog-ng"
-  install -Dm644 "$srcdir/syslog-ng.conf.d" "$pkgdir/etc/conf.d/syslog-ng"
+  install -Dm644 "$srcdir"/$pkgname-$pkgver/contrib/systemd/syslog-ng@default -t "$pkgdir"/etc/default
+
+# See http://lists.balabit.hu/pipermail/syslog-ng/2016-February/022667.html
+  rm -r "$pkgdir"/usr/share/syslog-ng/include/scl/cim
 }
