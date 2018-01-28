@@ -1,29 +1,26 @@
 pkgname=qstardict
-pkgver=1.2
+pkgver=1.3
 pkgrel=1
 pkgdesc="Qt4 clone of StarDict with full support of StarDict dictionaries."
 arch=('x86_64')
 url="http://qstardict.ylsoftware.com/index.php"
 license=('GPL2')
-depends=('qt')
-optdepends=('festival-awb-arctic: for pronouncing words, Scottish English male speaker'
-            'festival-don: for pronouncing words, British English RP male speaker'
-            'festival-kallpc16k: for pronouncing words, British English RP male speaker'
-            'festival-rablpc16k: for pronouncing words, British English RP male speaker')
+depends=('hicolor-icon-theme' 'qt5-base')
+makedepends=('qt5-tools')
 provides=('stardict')
 categories=('utils')
 screenshot=('http://qstardict.ylsoftware.com/images/screenshot1.png')
-source=(https://github.com/a-rodin/qstardict/archive/qstardict-${pkgver}.tar.gz)       
-sha256sums=('d238a46aace785f9865c9a8b4da82b0348cca17229bc27e1ef86e17620ae322a')
+source=(https://github.com/a-rodin/qstardict/archive/${pkgname}-${pkgver}.tar.gz)       
+sha256sums=('9b083a3177407d66a17403742590471a0aa89a3d31df886926b79fa21e4d41a4')
 
 build() {
   cd ${srcdir}/$pkgname-$pkgname-$pkgver
-  qmake ENABLED_PLUGINS="stardict web swac" 
+  qmake-qt5 ENABLED_PLUGINS="stardict web swac" 
   make 
 }
 
 package() {
   cd ${srcdir}/$pkgname-$pkgname-$pkgver
-  make INSTALL_ROOT=${pkgdir} install
 
+  make INSTALL_ROOT=${pkgdir} install
 }
