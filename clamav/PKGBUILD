@@ -1,6 +1,6 @@
 pkgname=clamav
-pkgver=0.99.2
-pkgrel=2
+pkgver=0.99.3
+pkgrel=1
 pkgdesc='Anti-virus toolkit for Unix'
 arch=('x86_64')
 install="${pkgname}.install"
@@ -8,22 +8,34 @@ license=('GPL')
 categories=('system')
 backup=('etc/clamav/clamd.conf' 'etc/clamav/freshclam.conf' 'etc/logrotate.d/clamav')
 url='http://www.clamav.net/'
-depends=('bzip2' 'libltdl' 'gcc-libs')
-source=("http://www.clamav.net/downloads/production//${pkgname}-${pkgver}.tar.gz"
-        'clamd.conf'
-        'clamav.logrotate'
-        'clamd.service'
-        'freshclamd.service'
-        'tmpfiles.d'
-        'freshclam.conf')
-sha256sums=('167bd6a13e05ece326b968fdb539b05c2ffcfef6018a274a10aeda85c2c0027a'
-            '03fe7fc57a72a618e0ccdc31e86050bd64f97a734ad7d47f1c8d68b2bd45fb9c'
-            'dba0c3344a284374c3692c794891e673f3ad73e231efaa607ad3d51026e256d3'
-            'a7722a9b93f1e23b5830a34e49087385551cf271f6584a47c7f8c550768c3a82'
-            'dd5ff6c79ee360da5f2221c4d9110a2a8886d86293f6c93c16bf74fdb126593c'
-            '0a61abee3b9bba94126afe3344e7d8e82da5120ca6dbd2b413b10f75da5b0b0d'
-            '127b39e13525ffb4242198cfb76f99d4d517e5f2fd9fa8dcad3f31fc9f82f952')
+depends=('bzip2' 'libltdl' 'gcc-libs' 'libxml2' 'curl' 'pcre')
+makedepends=('libmilter')
+source=("http://www.clamav.net/downloads/production/${pkgname}-${pkgver}.tar.gz"{,.sig}
+        "$pkgname."{logrotate,tmpfiles,sysusers})
+sha256sums=('00fa5292a6e00a3a4035b826267748965d5d2c4943d8ff417d740238263e8e84'
+            'SKIP'
+            'c36e3ddf790fa6ea90169038ae08521a31652a372017e6e38858e28fc63b3f74'
+            '8e216c7e4763a273a120930787dcc444ea221bb719eed180a9d15b4c1d603a84'
+            '01a896c3a1cd34b323594403fd82a9e353b5aa848b8462137b621959558199e8')
+validpgpkeys=('65ED513993F08DA06F9639A6F13F9E16BCA5BFAD') # Talos (Talos, Cisco Systems Inc.)
 
+prepare() {
+  cd ${pkgname}-${pkgver}
+  sed -E 's|^(Example)$|#\1|' -i etc/{clamd,freshclam,clamav-milter}.conf.sample
+  sed -E 's|#(User) .+|\1 clamav|' -i etc/{clamd,freshclam,clamav-milter}.conf.sample
+  sed -E 's|#(LogFile) .+|\1 /var/log/clamav/clamd.log|' -i etc/clamd.conf.sample
+  sed -E 's|#(LogTime) .+|\1 yes|' -i etc/clamd.conf.sample etc/clamav-milter.conf.sample
+  sed -E 's|#(PidFile) .+|\1 /run/clamav/clamd.pid|' -i etc/clamd.conf.sample
+  sed -E 's|#(TemporaryDirectory) .+|\1 /tmp|' -i etc/{clamd,clamav-milter}.conf.sample
+  sed -E 's|#(LocalSocket) .+|\1 /run/clamav/clamd.ctl|' -i etc/clamd.conf.sample
+  sed -E 's|#(UpdateLogFile) .+|\1 /var/log/clamav/freshclam.log|' -i etc/freshclam.conf.sample
+  sed -E 's|#(DatabaseMirror) .+|\1 database.clamav.net|' -i etc/freshclam.conf.sample
+  sed -E 's|#(NotifyClamd) .+|\1 /etc/clamav/clamd.conf|' -i etc/freshclam.conf.sample
+  sed -E 's|#(PidFile) .+|\1 /run/clamav/freshclam.pid|' -i etc/freshclam.conf.sample
+  sed -E 's|#(LogFile) .+|\1 /var/log/clamav/clamav-milter.log|' -i etc/clamav-milter.conf.sample
+  sed -E 's|#(PidFile) .+|\1 /run/clamav/clamav-milter.pid|' -i etc/clamav-milter.conf.sample
+  autoreconf -fiv
+}
 build() {
   cd ${pkgname}-${pkgver}
   
@@ -31,8 +43,16 @@ build() {
     --prefix=/usr \
     --sbindir=/usr/bin \
     --sysconfdir=/etc/clamav \
-    --with-dbdir=/var/lib/clamav \
-    --disable-clamav
+    --with-user=clamav \
+    --with-group=clamav \
+    --disable-rpath \
+    --disable-clamav \
+    --disable-llvm \
+    --enable-zlib-vcheck \
+    --enable-milter \
+    --enable-clamdtop
+
+  sed -i -e 's/ -shared / -Wl,-O1,--as-needed\0/g' libtool
   make
 }
 
@@ -41,13 +61,16 @@ package() {
   
   make DESTDIR="${pkgdir}" install
 
-  install -Dm644 ../freshclamd.service "${pkgdir}/usr/lib/systemd/system/freshclamd.service"
-  install -Dm644 ../clamd.service "${pkgdir}/usr/lib/systemd/system/clamd.service"
-  install -Dm644 ../tmpfiles.d "${pkgdir}/usr/lib/tmpfiles.d/clamav.conf"
-  install -Dm644 ../clamav.logrotate "${pkgdir}/etc/logrotate.d/clamav"
-  install -Dm644 ../clamd.conf "${pkgdir}/etc/clamav/clamd.conf"
-  install -Dm644 ../freshclam.conf "${pkgdir}/etc/clamav/freshclam.conf"
-	
+  mv "${pkgdir}"/etc/clamav/freshclam.conf{.sample,}
+  mv "${pkgdir}"/etc/clamav/clamd.conf{.sample,}
+  mv "${pkgdir}"/etc/clamav/clamav-milter.conf{.sample,}
+
+  install -Dm 644 ../clamav.sysusers "${pkgdir}"/usr/lib/sysusers.d/clamav.conf
+  install -Dm 644 ../clamav.tmpfiles "${pkgdir}"/usr/lib/tmpfiles.d/clamav.conf
+  install -Dm 644 ../clamav.logrotate "${pkgdir}"/etc/logrotate.d/clamav
+
   install -d -o 64 -g 64 "${pkgdir}"/var/log/clamav
   install -d -o 64 -g 64 "${pkgdir}"/var/lib/clamav
 }
+
+# vim: ts=2 sw=2 et:

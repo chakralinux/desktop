@@ -1,21 +1,11 @@
 post_upgrade() {
-    #systemd-tmpfiles --create clamav.conf
+  if (( $(vercmp $2 0.99.3) <= 0 )); then
+    cat << EOF
 
-    echo ">>> To run the clamav daemon, activate and install it with systemctl:"
-    echo ">>> $ sudo systemctl enable clamd && sudo systemctl start clamd"
-    echo ">>> To run the updater daemon freshclamd, run the following:"
-    echo ">>> $ sudo systemctl enable freshclamd && sudo systemctl start freshclamd"
-}
+===> WARNING: ClamAV service files have been renamed:
+  -> clamav-daemon.service
+  -> clamav-freshclam.service
 
-post_install() {
-    getent group clamav &>/dev/null || groupadd -r -g 64 clamav >/dev/null
-    getent passwd clamav &>/dev/null || useradd -r -u 64 -g clamav -d /dev/null -s /bin/false -c "Clam AntiVirus" clamav >/dev/null
-
-    post_upgrade
-}
-
-post_remove() {
-    getent passwd clamav &>/dev/null && userdel clamav >/dev/null
-    getent group clamav &>/dev/null && groupdel clamav >/dev/null
-    return 0
+EOF
+  fi
 }
