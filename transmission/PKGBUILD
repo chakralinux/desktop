@@ -1,15 +1,17 @@
 pkgbase=transmission
 pkgname=('transmission-cli' 'transmission')
-pkgver=2.92
+pkgver=2.93
 pkgrel=1
 arch=('x86_64')
 url="http://www.transmissionbt.com/"
 license=('MIT')
 makedepends=('intltool' 'curl' 'pkgconfig' 'desktop-file-utils' 'libevent' 'gettext' 'qt5-tools' 'miniupnpc')
-source=("http://download.transmissionbt.com/files/${pkgbase}-${pkgver}.tar.xz"
-        'transmission.tmpfiles')
-md5sums=('3fce404a436e3cd7fde80fb6ed61c264'
-         '23f2320361ad54373c3a4551ef634fe8')
+source=("https://github.com/transmission/transmission-releases/raw/master/transmission-${pkgver}.tar.xz"
+        'transmission-cli.sysusers'
+        'transmission-cli.tmpfiles')
+md5sums=('a1b8113ebc3402787312ecb443d9d3c1'
+         '6836ecf77e8c96738259e61b4ec0813e'
+         '73f17e39f3996768bb1d1e25a2f3fed1')
 
 build() {
   msg 'Configure source code...'
@@ -42,7 +44,8 @@ package_transmission-cli() {
   done
 
   install -D -m644 "daemon/transmission-daemon.service" "$pkgdir/usr/lib/systemd/system/transmission.service"
-  install -D -m644 "$srcdir/transmission.tmpfiles" "$pkgdir/usr/lib/tmpfiles.d/transmission.conf"
+  install -D -m644 "$srcdir/$pkgname.sysusers" "$pkgdir/usr/lib/sysusers.d/transmission.conf"
+  install -D -m644 "$srcdir/transmission-cli.tmpfiles" "$pkgdir/usr/lib/tmpfiles.d/transmission.conf"
   install -D -m644 COPYING "${pkgdir}/usr/share/licenses/transmission-cli/COPYING"
 }
 
