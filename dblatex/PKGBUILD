@@ -1,26 +1,19 @@
 pkgname=dblatex
 pkgver=0.3.10
-pkgrel=1
+pkgrel=2
 pkgdesc="DocBook (XML and SGML) to DVI, PDF, PostScript converter using latex"
 arch=('x86_64')
 url="https://pypi.python.org/pypi/dblatex"
 license=(GPL)
-depends=('docbook-xml' 'docbook-xsl' 'libxslt' 'python2' 'texlive-core' 'texlive-htmlxml' 'texlive-latexextra'
-         'texlive-pictures')
+depends=('docbook-xml' 'docbook-xsl' 'libxslt' 'python2' 'texlive-core' 'texlive-formatsextra' 'texlive-latexextra'
+         'texlive-pictures' 'texlive-science')
 source=("http://downloads.sourceforge.net/project/dblatex/dblatex/dblatex-${pkgver}/dblatex-${pkgver}.tar.bz2")
 sha512sums=('33a5ee3d23d3b9a1576be248a312ca741ea7cb629334a98fb6cb49e0f0f932334506ea934312de04ec645c86ec52699687bd2574b1802d3c23815b44c8514b7b')
 
 package() {
-  cd $pkgname-$pkgver
-  
-  python2 setup.py install \
-    --root $pkgdir \
-    --catalogs=/etc/xml/docbook
-  
-  # Python 2 fix.
-  sed -i -e "s,${pkgdir},," -e "s,#!/usr/bin/env python,#!/usr/bin/env python2," $pkgdir/usr/bin/dblatex
+  cd "${srcdir}/${pkgname}-${pkgver}"
 
-  # Texlive fix. Without it, ‘ghc’ package documentation won’t compile.
-  # NOTE: see http://www.haskell.org/pipermail/glasgow-haskell-users/2011-March/020199.html
-  sed -i -e "s#<xsl:param name=\"texlive.version\">2010</xsl:param>#<xsl:param name=\"texlive.version\">2009</xsl:param>#" $pkgdir/usr/share/$pkgname/xsl/param.xsl
+  python2 setup.py install --root "${pkgdir}" --catalogs=/etc/xml/docbook-xml
+  sed -i -e "s,${pkgdir},," -e "s,#!/usr/bin/env python,#!/usr/bin/env python2," \
+    "${pkgdir}/usr/bin/dblatex"
 }
