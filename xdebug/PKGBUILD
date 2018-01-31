@@ -1,5 +1,5 @@
 pkgname=xdebug
-pkgver=2.5.5
+pkgver=2.6.0
 pkgrel=1
 pkgdesc="PHP debugging extension"
 arch=('x86_64')
@@ -10,10 +10,8 @@ install="${pkgname}.install"
 backup=('etc/php/conf.d/xdebug.ini')
 categories=('programming')
 source=(http://www.xdebug.org/files/$pkgname-$pkgver.tgz
-	xdebug-5.2.ini
 	xdebug.ini)
-sha512sums=('9faab421bd90c03734c047d8c6dcc021c8bc665eb36781c692f194d04c7dca24fe1eb920ca8dc407e5bf4ae0912c4b917587f940f34b07171a8881d4cf8695d1'
-            '0105a26a653b7c1dfc63df73a2d3e4cb14683b079f915fc41c24d123436a546980c0d82e14040c0bc82919edf7fdda59db67873afb26209635f114c66db6b074'
+sha512sums=('e81f771478eb45cdae5814037ac1b86bcb8c5616d22dcac436482c350187c53d3cc6d54be740a49dca6d38c58c086db6e4a68eb3004a0152d6215c97512538a2'
             '3b667dd97486df407662b80dfbef2a69a4eba964161ee9831556b9fa87823fa235323a5a3663fdfb08f649a9d98a5b5cae3de514f68a340158285abb4b50a4d4')
 
 build() {
@@ -35,11 +33,7 @@ package() {
 
   cd $srcdir/$pkgname-$pkgver
   make INSTALL_ROOT=$pkgdir install
-  if [ "$PHPVER" \< "5.3.0" ] ; then
-    install -D -m 744 modules/xdebug.so $pkgdir/usr/lib/php/xdebug.so
-    install -D -m 644 $srcdir/xdebug-5.2.ini $pkgdir/etc/php/conf.d/xdebug.ini
-  else
-    install -D -m 744 modules/xdebug.so $pkgdir/usr/lib/php/modules/xdebug.so
-    install -D -m 644 $srcdir/xdebug.ini $pkgdir/etc/php/conf.d/xdebug.ini
-  fi
+
+  install -D -m 744 modules/xdebug.so $pkgdir/usr/lib/php/modules/xdebug.so
+  install -D -m 644 $srcdir/xdebug.ini $pkgdir/etc/php/conf.d/xdebug.ini
 }
