@@ -1,8 +1,8 @@
 # Contributions from Arch: https://projects.archlinux.org/svntogit/community.git/tree/trunk?h=packages/mythtv
 
 pkgname=mythtv
-pkgver=29.0
-pkgrel=3
+pkgver=29.1
+pkgrel=1
 pkgdesc="A Homebrew PVR project"
 arch=('x86_64')
 url="http://www.mythtv.org/"
@@ -20,17 +20,13 @@ optdepends=('glew: for GPU commercial flagging'
 install='mythtv.install'
 source=("$pkgname-$pkgver.tar.gz::https://github.com/MythTV/$pkgname/archive/v$pkgver.tar.gz"
 	'mythbackend.service'
-        '99-mythbackend.rules'
-        'qt510.patch')
-sha256sums=('1b4406305d91202ea6ca4e7e6fce6dd58a3d475a1bbe99d1b1b94812052745de'
+        '99-mythbackend.rules')
+sha256sums=('33710a392fb9d2ec869a3d0494f5ecc284b47b78970ceebd2eafe2579ec4ce54'
             '30a301d31e2396b08eee97188619b900a834081d9792a36ae274fb0dfa65a9dc'
-            'ecfd02bbbef5de9773f4de2c52e9b2b382ce8137735f249d7900270d304fd333'
-            'cf0e06f2c70dfd258bfa0acc4515e1cd014eeb241d8060c999d2c64eda8ee096')
+            'ecfd02bbbef5de9773f4de2c52e9b2b382ce8137735f249d7900270d304fd333')
 
 prepare() {
   cd $srcdir/$pkgname-$pkgver/$pkgname
-  
-  patch -Np2 -i ../../qt510.patch
   
   find 'bindings/python' 'contrib' -type f | xargs sed -i 's@^#!.*python$@#!/usr/bin/python2@'
 }
