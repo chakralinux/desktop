@@ -1,27 +1,48 @@
 pkgname=sweethome3d
-pkgver=5.4
+pkgver=5.7
 pkgrel=1
 pkgdesc="An interior design application"
 arch=('x86_64')
 url="http://sweethome3d.com"
 screenshot="http://sweethome3d.com/images/SweetHome3DLinux.png"
 license=('GPL')
-depends=('bash' 'java-environment')
+depends=('java-runtime>=8' 'shared-mime-info' 'desktop-file-utils' 'libxext' 'libgl' 'libxrender')
 optdepends=('sweethome3d-furniture-library: for managing additional forniture')
-source=("http://downloads.sourceforge.net/$pkgname/SweetHome3D-$pkgver.jar"
+install="${pkgname}.install"
+source=("SweetHome3D-${pkgver}-linux-x64.tgz"::"http://downloads.sourceforge.net/${pkgname}/SweetHome3D-${pkgver}-linux-x64.tgz"
         "$pkgname.sh"
         "$pkgname.desktop"
-        "$pkgname.png")
-sha1sums=('52ee883bd30820f417c0970364028fa1e7575173'
+        "$pkgname.xml")
+sha1sums=('0d6941b32c301a02d32b2161b1286a5356c890ad'
           'dca76654e520a7b1692b69e8e159ac8bc9b9559a'
           'c7066328d054a872964de830cd44436a9d69a1cd'
-          '73d088954b0e75c18daa33c246ae132ea368d0a7')
+          'c6863af07c18aa576b68a5a0ab90905933449859')
  
 package() {
-  cd "$srcdir"
- 
-  install -Dm644 SweetHome3D-$pkgver.jar "$pkgdir"/usr/share/$pkgname/$pkgname.jar
-  install -Dm644 $pkgname.png "$pkgdir"/usr/share/pixmaps/$pkgname.png
-  install -Dm644 $pkgname.desktop "$pkgdir"/usr/share/applications/$pkgname.desktop
-  install -Dm755 $pkgname.sh "$pkgdir"/usr/bin/$pkgname
+  # Desktop and launchers
+  cd "${srcdir}"
+  install -m 755 -D "${pkgname}.sh" "${pkgdir}/usr/bin/${pkgname}"
+  install -m 755 -D "${pkgname}.desktop" "${pkgdir}/usr/share/applications/${pkgname}.desktop"
+  install -m 644 -D "${pkgname}.xml" "${pkgdir}/usr/share/mime/packages/${pkgname}.xml"
+  # Install licenses
+  cd "SweetHome3D-${pkgver}"
+  install -m 755 -d "${pkgdir}/usr/share/licenses/${pkgname}"
+  install -m 755 -t "${pkgdir}/usr/share/licenses/${pkgname}" THIRDPARTY-LICENSE-*
+  # Install icon
+  install -m 644 -D "SweetHome3DIcon.png" "${pkgdir}/usr/share/pixmaps/${pkgname}.png"
+  # Install javaws.jar from jre8
+  install -m 755 -d "${pkgdir}/usr/share/java/${pkgname}"
+  install -m 644 -t "${pkgdir}/usr/share/java/${pkgname}" jre8/lib/javaws.jar
+  # Install main program and libraries
+  cd "lib"
+  install -m 644 -t "${pkgdir}/usr/share/java/${pkgname}" *.jar
+  # Java3D 1.5 libraries
+  install -m 755 -d "${pkgdir}/usr/lib/${pkgname}/java3d-1.5"
+  mv -t "${pkgdir}/usr/lib/${pkgname}/java3d-1.5" \
+    "${pkgdir}"/usr/share/java/${pkgname}/{j3dcore.jar,j3dutils.jar,vecmath.jar}
+  install -m 755 -t "${pkgdir}/usr/lib/${pkgname}/java3d-1.5" libj3dcore-ogl.so
+  # Java3D 1.6 libraries
+  install -m 755 -d "${pkgdir}/usr/lib/${pkgname}/java3d-1.6"
+  install -m 644 -t "${pkgdir}/usr/lib/${pkgname}/java3d-1.6" java3d-1.6/*.jar
+  install -m 755 -t "${pkgdir}/usr/lib/${pkgname}/java3d-1.6" java3d-1.6/*.so
 }
