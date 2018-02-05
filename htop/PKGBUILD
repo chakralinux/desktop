@@ -1,18 +1,16 @@
-#
-# Chakra Packages for Chakra, part of chakra-project.org
-#
-
 pkgname=htop
-pkgver=2.0.2
-pkgrel=2
+pkgver=2.1.0
+pkgrel=1
 pkgdesc="Interactive process viewer"
 arch=('x86_64')
 url="http://htop.sourceforge.net/"
 license=('GPL')
 depends=('ncurses')
 makedepends=('python2')
+optdepends=('lsof: show files opened by a process'
+            'strace: attach to a running process')
 source=("http://hisham.hm/$pkgname/releases/$pkgver/$pkgname-$pkgver.tar.gz")
-md5sums=('7d354d904bad591a931ad57e99fea84a')
+md5sums=('f262b66ad6c194782f4d3a80627e84c8')
 
 prepare() {
   cd ${srcdir}/${pkgname}-${pkgver}
