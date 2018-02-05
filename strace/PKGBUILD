@@ -1,23 +1,23 @@
 pkgname=strace
-pkgver=4.17
+pkgver=4.20
 pkgrel=1
 pkgdesc="A useful diagnositic, instructional, and debugging tool"
 arch=('x86_64')
 url="http://sourceforge.net/projects/strace/"
 license=('custom')
-depends=('perl')
+depends=('perl' 'libunwind')
 source=(http://downloads.sourceforge.net/${pkgname}/${pkgname}-$pkgver.tar.xz)
-sha256sums=('81f35b085fbb3cfa806eb521a8522ac3406deaccfe121ce35064bad268237419')
+sha256sums=('5bf3148dd17306a42566f7da17368fdd781afa147db05ea63a4ca2b50f58c523')
 
 build() {
   cd "${srcdir}/${pkgname}-${pkgver}"
-  ./configure --prefix=/usr
-  make || return 1
+  ./configure --prefix=/usr --with-libunwind
+  make
 }
 
 package() {
   cd "${srcdir}/${pkgname}-${pkgver}"
-  make DESTDIR="${pkgdir}/" install || return 1
+  make DESTDIR="${pkgdir}/" install
 
   install -Dm644 COPYING ${pkgdir}/usr/share/licenses/${pkgname}/LICENSE
 }
