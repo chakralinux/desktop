@@ -1,9 +1,8 @@
-# Contributions from Arch:
-# Maintainer: Antonio Rojas <arojas@archlinux.org>
+# Contributions from Arch: https://www.archlinux.org/packages/extra/x86_64/avogadrolibs/
 
 pkgname=avogadrolibs
 pkgver=1.90.0
-pkgrel=1
+pkgrel=2
 pkgdesc="An advanced molecular editor"
 arch=(x86_64)
 url="http://www.openchemistry.org/"
@@ -13,11 +12,15 @@ makedepends=(cmake eigen3 python2 boost)
 source=($pkgname-$pkgver.tar.gz::"https://github.com/OpenChemistry/avogadrolibs/archive/$pkgver.tar.gz")
 md5sums=('f2b7014f48da5b2a72d49c01dafaf225')
 
+
 prepare() {
   mkdir -p build
 
-  # Find spglib
-  sed -e 's|NAMES spglib|NAMES spglib symspg|' -i $pkgname-$pkgver/cmake/FindSpglib.cmake
+  cd $pkgname-$pkgver
+# Find spglib
+  sed -e 's|NAMES spglib|NAMES spglib symspg|' -i cmake/FindSpglib.cmake
+# Fix build with GCC>=7
+  sed -e 's|3456|3456789|' -i cmake/GenerateExportHeader.cmake
 }
 
 build() {
