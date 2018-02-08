@@ -1,16 +1,20 @@
 pkgname=kmymoney
-pkgver=4.8.1.1
+pkgver=5.0.0
 pkgrel=1
 pkgdesc="A finance manager for KDE4 with HBCI support"
 arch=('x86_64')
-url="http://kmymoney2.sourceforge.net"
+url="https://kmymoney.org/"
 license=('GPL')
-depends=('kde-runtime' 'shared-mime-info' 'aqbanking' 'libofx' 'libalkimia' 'boost-libs' 'libical')
-makedepends=('cmake' 'automoc4' 'docbook-xml' 'docbook-xsl' 'boost' 'doxygen')
+depends=('aqbanking' 'boost-libs' 'libalkimia' 'sqlcipher' 'qt5-base' 'qgpgme' 'karchive'
+         'kcoreaddons' 'kconfig' 'kwidgetsaddons' 'ki18n' 'kcompletion' 'kcmutils'
+         'kitemmodels' 'kitemviews' 'kservice' 'kwallet' 'kiconthemes' 'kxmlgui'
+         'ktextwidgets' 'knotifications' 'kio' 'kdoctools' 'kholidays' 'kcontacts'
+         'akonadiconsole' 'kross' 'kqtquickcharts' 'kdiagram' 'kdewebkit' 'shared-mime-info')
+makedepends=('boost' 'extra-cmake-modules' 'doxygen')
 categories=('office')
 install=$pkgname.install
-source=(https://download.kde.org/stable/$pkgname/$pkgver/src/$pkgname-$pkgver.7z)
-sha256sums=('7ee2f468ee0bd952cc4d55c2ec2691651afba1c46634cadc2a1161ef405c73a3')
+source=(https://download.kde.org/stable/$pkgname/$pkgver/src/$pkgname-$pkgver.tar.xz)
+sha256sums=('984f5866aa7d7bf53d2ef9bbfbb6e5de0d69972f225031ebfd86b46df131f5ba')
 
 prepare() {
   cd "${srcdir}/${pkgname}-${pkgver}"
@@ -21,7 +25,10 @@ build() {
   cd "${srcdir}/${pkgname}-${pkgver}/build"
   cmake ../ \
     -DCMAKE_INSTALL_PREFIX=/usr \
-    -DCMAKE_BUILD_TYPE=RELEASE -DCMAKE_SKIP_RPATH=YES
+    -DCMAKE_INSTALL_LIBDIR=lib \
+    -DCMAKE_BUILD_TYPE=RELEASE \
+    -DCMAKE_SKIP_RPATH=YES \
+    -Wno-dev
   make
 }
 
