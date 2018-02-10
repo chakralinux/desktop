@@ -1,6 +1,6 @@
 pkgbase=avidemux
 pkgname=('avidemux-cli' 'avidemux')
-pkgver=2.6.20
+pkgver=2.7.0
 pkgrel=1
 pkgdesc='Simple video editor for cutting, filtering and encoding tasks.'
 arch=('x86_64')
@@ -13,7 +13,7 @@ makedepends=('cmake' 'libxslt' 'qt5-base' 'qt5-tools' 'qt5-script' 'qt5-multimed
 categories=('multimedia')
 options=("!makeflags")
 source=("http://downloads.sourceforge.net/avidemux/avidemux_${pkgver}.tar.gz")
-sha256sums=('03c6cb7fc9eb74688b4fcd5eb654ed7b9c4ffc717a72cc09b08a2d10cdc7ef9f')
+sha256sums=('fe1d6b794c0d94922428ff84a931264a90c39a5ffe965e03ab7ae0ce71a2c4ad')
 
 prepare() {
   cd ${pkgbase}_${pkgver}
@@ -24,14 +24,8 @@ prepare() {
 }
          
 build() {
-  cd "${srcdir}/${pkgbase}_${pkgver}"
-
-  # Qt5 requires C++11
-  CXXFLAGS="$CXXFLAGS -std=c++11"
-
-  bash ./bootStrap.bash --with-core \
-                        --with-cli \
-                        --with-plugins
+  cd ${pkgbase}_${pkgver}
+  bash bootStrap.bash --with-core --with-cli --with-plugins
 }
 
 package_avidemux-cli() {
@@ -41,11 +35,11 @@ package_avidemux-cli() {
   'sdl' 'sqlite3' 'x264' 'x265' 'aften' 'dcaenc' 'twolame')
   optdepends=('avidemux: graphical interface')
 
-  cd "${srcdir}/${pkgbase}_${pkgver}"
-  (cd buildCli; make DESTDIR="${pkgdir}" install)
-  (cd buildCore; make DESTDIR="${pkgdir}" install)
-  (cd buildPluginsCLI; make DESTDIR="${pkgdir}" install)
-  (cd buildPluginsCommon; make DESTDIR="${pkgdir}" install)
+  cd ${pkgbase}_${pkgver}
+  make -C buildCli DESTDIR="${pkgdir}" install
+  make -C buildCore DESTDIR="${pkgdir}" install
+  make -C buildPluginsCLI DESTDIR="${pkgdir}" install
+  make -C buildPluginsCommon DESTDIR="${pkgdir}" install
   
   install -D -m644 "${srcdir}/${pkgbase}_${pkgver}/avidemux_icon.png" "${pkgdir}/usr/share/pixmaps/avidemux.png" 
   install -D -m644 "${srcdir}/${pkgbase}_${pkgver}/man/avidemux.1" "${pkgdir}/usr/share/man/man1/avidemux.1" 
@@ -55,10 +49,9 @@ package_avidemux() {
   pkgdesc="A graphical tool to edit video (filter/re-encode/split)"
   depends=("avidemux-cli=$pkgver" 'qt5-base' 'mesa')
 
-  cd "${srcdir}/${pkgbase}_${pkgver}"
-  
-  (cd buildQt5; make DESTDIR="${pkgdir}" install)
-  (cd buildPluginsQt5; make DESTDIR="${pkgdir}" install)
+  cd ${pkgbase}_${pkgver}
+  make -C buildQt5 DESTDIR="${pkgdir}" install
+  make -C buildPluginsQt5 DESTDIR="${pkgdir}" install
 
   install -D -m644 avidemux2.desktop "${pkgdir}/usr/share/applications/avidemux.desktop"
   sed -i 's|2_gtk|3_qt5|' "${pkgdir}/usr/share/applications/avidemux.desktop"
