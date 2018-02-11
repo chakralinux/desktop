@@ -1,0 +1,60 @@
+From a294295c9b5ea2e8f67537df5802874bb4d27d76 Mon Sep 17 00:00:00 2001
+From: BrLi <brli@chakralinux.org>
+Date: Sun, 4 Feb 2018 23:44:33 +0800
+Subject: [PATCH] remove qtermwidget
+
+---
+ octopi.pro | 16 ++--------------
+ 1 file changed, 2 insertions(+), 14 deletions(-)
+
+diff --git a/octopi.pro b/octopi.pro
+index 815ea21..f8ac381 100644
+--- a/octopi.pro
++++ b/octopi.pro
+@@ -5,8 +5,8 @@
+ #-------------------------------------------------
+ 
+ QT += core gui network xml dbus widgets
+-DEFINES += OCTOPI_EXTENSIONS ALPM_BACKEND QTERMWIDGET
+-CONFIG += qt warn_on debug link_pkgconfig ALPM_BACKEND QTERMWIDGET
++DEFINES += OCTOPI_EXTENSIONS ALPM_BACKEND
++CONFIG += qt warn_on debug link_pkgconfig ALPM_BACKEND
+ 
+ ALPM_BACKEND {
+   QMAKE_CXXFLAGS += -std=c++11
+@@ -16,10 +16,6 @@ ALPM_BACKEND {
+   QMAKE_CXXFLAGS += -std=c++11
+ }
+ 
+-QTERMWIDGET {
+-  LIBS += -lqtermwidget5
+-}
+-
+ TEMPLATE = app
+ DESTDIR += bin
+ OBJECTS_DIR += build
+@@ -53,10 +49,6 @@ HEADERS += src/QtSolutions/qtsingleapplication.h \
+         src/constants.h \
+         src/optionsdialog.h
+ 
+-QTERMWIDGET{
+-  HEADERS += src/termwidget.h
+-}
+-
+ ALPM_BACKEND{
+   HEADERS += src/alpmbackend.h
+ }
+@@ -94,10 +86,6 @@ SOURCES += src/QtSolutions/qtsingleapplication.cpp \
+         src/pacmanexec.cpp \
+         src/optionsdialog.cpp
+ 
+-QTERMWIDGET{
+-  SOURCES += src/termwidget.cpp
+-}
+-
+ ALPM_BACKEND{
+   SOURCES += src/alpmbackend.cpp
+ }
+-- 
+2.16.1
+
