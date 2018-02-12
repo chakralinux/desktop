@@ -1,6 +1,6 @@
 pkgname=lcov
 pkgver=1.13
-pkgrel=1
+pkgrel=2
 pkgdesc="front-end for GCC's coverage testing tool gcov"
 arch=('any')
 url="http://ltp.sourceforge.net/coverage/lcov.php"
@@ -25,5 +25,5 @@ package()
 {
  cd "$srcdir/$pkgname-$pkgver"
 
- make PREFIX="$pkgdir" install
+ make PREFIX=/usr DESTDIR="$pkgdir" install
 }
