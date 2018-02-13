@@ -16,14 +16,14 @@ pkgname=('libreoffice-common'
 	'libreoffice-extension-nlpsolver')
 _LOver=5.4.5.1
 pkgver=5.4.5
-pkgrel=1
+pkgrel=2
 arch=('x86_64')
 license=('LGPL3')
 url="http://www.libreoffice.org/"
 screenshot="http://wstaw.org/m/2012/04/20/libre2.png"
 makedepends=( # makedepends
              'sane' 'perl-archive-zip' 'zip' 'unzip' 'unixodbc' 'gtk3' 'gtk2' 'gobject-introspection'
-             'apache-ant' 'gperf' 'poppler' 'kdelibs' 'cppunit>=1.14.0' 'glu' 'libodfgen'
+             'apache-ant' 'gperf' 'kdelibs' 'cppunit>=1.14.0' 'glu' 'libodfgen'
              'beanshell'  #'vigra'
              'libldap' 'libmythes' 'junit' 'libwpg' 'imagemagick' 'mdds'
              'mesa' 'gst-plugins-base' 'java-runtime' 'postgresql-libs' 'clucene' 'doxygen' 'libvisio' 'bluez-libs' 'junit'
@@ -86,6 +86,7 @@ source=(${_mirror}/libreoffice{,-help,-translations}-${_LOver}.tar.xz
         ${_additional_source_url}/OpenCOLLADA-master-6509aa13af.tar.bz2
         ${_additional_source_url}/libgltf/libgltf-0.1.0.tar.gz
         ${_additional_source_url}/pdfium-3064.tar.bz2
+        ${_additional_source_url}/poppler-0.56.0.tar.xz
         make-pyuno-work-with-system-wide-module-install.diff
         libreoffice-5.4.4.2-gtk3-no-gtk-build.patch)
 #validpgpkeys=('C2839ECAD9408FBE9531C3E9F434A1EFAFEEAEA3') # LibreOffice Build Team (CODE SIGNING KEY) <build@documentfoundation.org>
@@ -137,6 +138,7 @@ md5sums=('416dac9a5280f6cdfb342d67b2993338'
          '4ca8a6ef0afeefc864e9ef21b9f14bd6'
          '63ae962d0c436909979826fce0fca2fd'
          '5e97e37a615314a77f53a08eeb8d8a42'
+         '31260c06e139d7270be4567cc8a4af97'
          '41fa5baa6d71d69b98de1fe258a6dd65'
          'b50ab32f6d03df195c7443e7223517fe')
 noextract=(
@@ -184,7 +186,8 @@ noextract=(
           OpenCOLLADA-master-6509aa13af.tar.bz2
           libgltf-0.1.0.tar.gz
           libstaroffice-0.0.3.tar.xz
-          pdfium-3064.tar.bz2)
+          pdfium-3064.tar.bz2
+          poppler-0.56.0.tar.xz)
 
 prepare() {
     cd libreoffice-$_LOver
@@ -296,7 +299,8 @@ build() {
                 --without-system-libgltf \
                 --with-alloc=system \
                 --with-system-clucene \
-                --without-system-xmlsec
+                --without-system-xmlsec \
+                --without-system-poppler
         
         touch src.downloaded
         #./download
@@ -310,7 +314,7 @@ package_libreoffice-common() {
  pkgdesc="common files for LibreOffice - a productivity suite that is compatible with other major office suites"
  install=${pkgbase}.install
  depends=('libreoffice-langpack' "hunspell" "python3" "neon"
-          'nspr' "icu" 'libsm' 'redland' 'hyphen' 'graphite' 'lcms2' 'poppler'
+          'nspr' "icu" 'libsm' 'redland' 'hyphen' 'graphite' 'lcms2'
           'hicolor-icon-theme' 'desktop-file-utils' 'shared-mime-info' 'xdg-utils' 'clucene' 'libodfgen' 'libmwaw' 'lpsolve' 'libmythes'
           'libvisio' 'glew' 'harfbuzz-icu')
           #'saxon'
