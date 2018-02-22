@@ -1,20 +1,20 @@
 pkgname=qftp
-pkgver=1.5.8
+pkgver=1.5.10
 pkgrel=1
-pkgdesc="A Qt client for FTP file transfers."
+pkgdesc="A Qt5 client for FTP file transfers."
 arch=('x86_64')
 url="http://hugo.pereira.free.fr/software/index.php?page=package&package_list=software_list_qt4&package=qftp&full=0"
 license=('GPLv2')
-depends=('qt5-base' 'xcb-util-keysyms')
+depends=('qt5-base' 'xcb-util-keysyms' 'qt5-x11extras')
 makedepends=('cmake')
 categories=('network')
-source=("http://hugo.pereira.free.fr/software/tgz/${pkgname}-${pkgver}.tar.gz"
-	"qftp.desktop")
-sha256sums=('360666ad73d913c43140364897c59be25d8cbeb25e3e44fb64633a00e95f3c6d'
+source=("http://hugo.pereira.free.fr/software/tgz/$pkgname-$pkgver.tar.gz"
+	"$pkgname.desktop")
+sha256sums=('c7044291e14fee5e8dec34fbed3c4e41649111e31517a208c02758146e4c300b'
             'f47e84a94e6be6361b56e581110e549cc7533ccca425f2a4ba98470dba43969b')
         
 build() {
-  cd "${srcdir}/${pkgname}-${pkgver}"
+  cd $pkgname-$pkgver
 
   # The default LDFLAGS="-Wl,--hash-style=gnu -Wl,--as-needed" specified
   # in /etc/makepkg.conf will break the linkage procedure.
@@ -25,11 +25,11 @@ build() {
 }
 
 package() {
-  cd "${srcdir}/${pkgname}-${pkgver}"
-  make install DESTDIR="${pkgdir}" 
-  install -Dm644 COPYING "$pkgdir/usr/share/licenses/$pkgname/COPYING"
+  cd $pkgname-$pkgver
+  make install DESTDIR=$pkgdir 
+  install -Dm644 COPYING $pkgdir/usr/share/licenses/$pkgname/COPYING
   
-  install -d "${pkgdir}"/usr/share/{pixmaps,applications}
-  install -m644 "${srcdir}"/qftp.desktop "${pkgdir}"/usr/share/applications
-  install -m644 "${srcdir}"/"${pkgname}-${pkgver}"/qftp.png "${pkgdir}"/usr/share/pixmaps/qftp.png
+  install -d $pkgdir/usr/share/{pixmaps,applications}
+  install -m644 ../$pkgname.desktop $pkgdir/usr/share/applications
+  install -m644 $pkgname.png $pkgdir/usr/share/pixmaps/$pkgname.png
 }
