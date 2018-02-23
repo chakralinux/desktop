@@ -1,57 +1,62 @@
 pkgbase=transmission
-pkgname=('transmission-cli' 'transmission')
+pkgname=(transmission-cli transmission)
 pkgver=2.93
-pkgrel=1
-arch=('x86_64')
+pkgrel=2
+arch=(x86_64)
 url="http://www.transmissionbt.com/"
-license=('MIT')
-makedepends=('intltool' 'curl' 'pkgconfig' 'desktop-file-utils' 'libevent' 'gettext' 'qt5-tools' 'miniupnpc')
-source=("https://github.com/transmission/transmission-releases/raw/master/transmission-${pkgver}.tar.xz"
-        'transmission-cli.sysusers'
-        'transmission-cli.tmpfiles')
-md5sums=('a1b8113ebc3402787312ecb443d9d3c1'
-         '6836ecf77e8c96738259e61b4ec0813e'
-         '73f17e39f3996768bb1d1e25a2f3fed1')
+license=(MIT)
+makedepends=(intltool curl qt5-base libevent systemd qt5-tools)
+source=(https://github.com/transmission/transmission-releases/raw/master/transmission-${pkgver}.tar.xz
+        transmission-2.90-libsystemd.patch
+        transmission-cli.sysusers
+        transmission-cli.tmpfiles)
+sha256sums=('8815920e0a4499bcdadbbe89a4115092dab42ce5199f71ff9a926cfd12b9b90b'
+            '9f8f4bb532e0e46776dbd90e75557364f495ec95896ee35900ea222d69bda411'
+            '641310fb0590d40e00bea1b5b9c843953ab78edf019109f276be9c6a7bdaf5b2'
+            '1266032bb07e47d6bcdc7dabd74df2557cc466c33bf983a5881316a4cc098451')
+
+prepare() {
+  cd $pkgbase-$pkgver
+  patch -p1 -i "$srcdir/transmission-2.90-libsystemd.patch"
+
+  rm -f m4/glib-gettext.m4
+  autoreconf -fi
+
+  sed -i '/^Icon=/ s/$/-qt/' qt/transmission-qt.desktop
+}
 
 build() {
-  msg 'Configure source code...'
-  cd "${srcdir}/${pkgbase}-${pkgver}"
-
-  ./configure --prefix=/usr \
-              --enable-nls \
-              --enable-static=no
+  cd $pkgbase-$pkgver
+  ./configure --prefix=/usr
   make
 
-  msg 'Compiling Qt5 part...'
-  cd "${srcdir}/${pkgbase}-${pkgver}/qt"
+  cd qt
   /usr/lib/qt5/bin/qmake qtr.pro
   make
-  lrelease-qt5 ${srcdir}/${pkgbase}-${pkgver}/qt/translations/*.ts
+  lrelease-qt5 translations/*.ts
 }
 
 package_transmission-cli() {
-  pkgdesc="Fast, easy, and free BitTorrent client (CLI tools, daemon and web client)"
-  depends=('curl' 'libevent' 'miniupnpc')
+  pkgdesc='Fast, easy, and free BitTorrent client (CLI tools, daemon and web client)'
+  depends=(curl libevent systemd)
   categories=('network')
-  backup=('etc/conf.d/transmissiond')
   install=transmission-cli.install
-  
-  cd "${srcdir}/${pkgbase}-${pkgver}"
 
-  for dir in daemon cli web utils
-  do
-      make -C "${dir}" DESTDIR="${pkgdir}" install
+  cd $pkgbase-$pkgver
+
+  for dir in daemon cli web utils; do
+    make -C "$dir" DESTDIR="$pkgdir" install
   done
 
-  install -D -m644 "daemon/transmission-daemon.service" "$pkgdir/usr/lib/systemd/system/transmission.service"
-  install -D -m644 "$srcdir/$pkgname.sysusers" "$pkgdir/usr/lib/sysusers.d/transmission.conf"
-  install -D -m644 "$srcdir/transmission-cli.tmpfiles" "$pkgdir/usr/lib/tmpfiles.d/transmission.conf"
-  install -D -m644 COPYING "${pkgdir}/usr/share/licenses/transmission-cli/COPYING"
+  install -Dm644 daemon/transmission-daemon.service "$pkgdir/usr/lib/systemd/system/transmission.service"
+  install -Dm644 "$srcdir/$pkgname.sysusers" "$pkgdir/usr/lib/sysusers.d/transmission.conf"
+  install -Dm644 "$srcdir/$pkgname.tmpfiles" "$pkgdir/usr/lib/tmpfiles.d/transmission.conf"
+  install -Dm644 COPYING "$pkgdir/usr/share/licenses/transmission-cli/COPYING"
 }
 
 package_transmission() {
-  pkgdesc="Fast, easy, and free BitTorrent client (Qt5 GUI)"
-  depends=('curl' 'qt5-base' 'libevent' 'miniupnpc' 'libxkbcommon')
+  pkgdesc='Fast, easy, and free BitTorrent client (Qt GUI)'
+  depends=(curl qt5-base libevent)
   optdepends=('transmission-cli: daemon and web support')
   categories=('network')
   provides=('transmission-qt' 'transmission-qt5')
@@ -60,19 +65,15 @@ package_transmission() {
   screenshot=('http://www.transmissionbt.com/images/screenshots/Qt-Large.jpg')
   install=transmission.install
 
-  cd "${srcdir}/${pkgbase}-${pkgver}"
+  cd $pkgbase-$pkgver
 
-  make -C qt INSTALL_ROOT="${pkgdir}"/usr install
+  make -C qt INSTALL_ROOT="$pkgdir"/usr install
+  install -Dm644 -t "$pkgdir/usr/share/transmission-qt/translations" \
+    qt/translations/*.qm
 
-  install -D -m644 COPYING "${pkgdir}/usr/share/licenses/transmission-qt/COPYING"
-  install -D -m644 qt/icons/transmission.png "${pkgdir}/usr/share/pixmaps/transmission-qt.png"
-  install -D -m644 qt/transmission-qt.desktop "${pkgdir}/usr/share/applications/transmission-qt.desktop"
-  
-  install -dm755 ${pkgdir}/usr/share/icons/hicolor
-  cp -r qt/icons/hicolor/* ${pkgdir}/usr/share/icons/hicolor/
-
-  install -dm755 ${pkgdir}/usr/share/transmission/i18n
-  for i in $(ls ${srcdir}/${pkgbase}-${pkgver}/qt/translations/ | grep qm); do 
-    install -Dm644 ${srcdir}/${pkgbase}-${pkgver}/qt/translations/${i} ${pkgdir}/usr/share/qt5/translations/${i}
-  done
+  install -Dm644 COPYING "$pkgdir/usr/share/licenses/transmission-qt/COPYING"
+  install -Dm644 qt/icons/transmission.png \
+    "$pkgdir/usr/share/pixmaps/transmission-qt.png"
+  install -Dm644 qt/transmission-qt.desktop \
+    "$pkgdir/usr/share/applications/transmission-qt.desktop"
 }
