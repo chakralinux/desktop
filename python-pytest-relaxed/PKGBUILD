@@ -1,0 +1,54 @@
+pkgbase=python-pytest-relaxed
+pkgname=('python3-pytest-relaxed' 'python2-pytest-relaxed')
+pkgver=1.1.0
+pkgrel=1
+pkgdesc='Relaxed test discovery for pytest'
+arch=('any')
+license=('BSD')
+url='https://github.com/bitprophet/pytest-relaxed'
+makedepends=('python3-pytest' 'python2-pytest' 'python3-decorator' 'python2-decorator'
+             'python3-six' 'python2-six')
+source=("$pkgbase-$pkgver.tar.gz::https://github.com/bitprophet/pytest-relaxed/archive/$pkgver.tar.gz")
+sha512sums=('0e83359b37de3e37b89a0dca07301a76ac3789ccae70cb67f6d2864ce9270eae527ca132649225247fe20690589f77ce3d0653fc0f379c77cb666faf36e04ef6')
+
+prepare() {
+  cp -a pytest-relaxed-$pkgver{,-py2}
+}
+
+build() {
+  cd "$srcdir"/pytest-relaxed-$pkgver
+  python3 setup.py build
+
+  cd "$srcdir"/pytest-relaxed-$pkgver-py2
+  python2 setup.py build
+}
+
+check() {
+  # Hack entry points by installing it
+
+  cd "$srcdir"/pytest-relaxed-$pkgver
+  python3 setup.py install --root="$PWD/tmp_install" --optimize=1
+  PYTHONPATH="$PWD/tmp_install/usr/lib/python3.6/site-packages:$PYTHONPATH" py.test
+
+  cd "$srcdir"/pytest-relaxed-$pkgver-py2
+  python2 setup.py install --root="$PWD/tmp_install" --optimize=1
+  PYTHONPATH="$PWD/tmp_install/usr/lib/python2.7/site-packages:$PYTHONPATH" py.test2
+}
+
+package_python3-pytest-relaxed() {
+  depends=('python3-pytest' 'python3-decorator' 'python3-six')
+
+  cd pytest-relaxed-$pkgver
+  python3 setup.py install --root="$pkgdir" --optimize=1
+  install -D -m644 LICENSE "$pkgdir"/usr/share/licenses/$pkgname/LICENSE
+}
+
+package_python2-pytest-relaxed() {
+  depends=('python2-pytest' 'python2-decorator' 'python2-six')
+
+  cd pytest-relaxed-$pkgver-py2
+  python2 setup.py install --root="$pkgdir" --optimize=1
+  install -D -m644 LICENSE "$pkgdir"/usr/share/licenses/$pkgname/LICENSE
+}
+
+# vim:set ts=2 sw=2 et:
