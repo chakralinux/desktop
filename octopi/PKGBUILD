@@ -5,17 +5,22 @@ pkgrel=3
 url="https://octopiproject.wordpress.com/"
 arch=('x86_64')
 license=('GPL2')
-depends=('pacman' 'pacmanlogviewer' 'gist' 'qt5-quickcontrols' 'chaser' 'alpm_octopi_utils')
+makedepends=('pacman' 'pacmanlogviewer' 'gist' 'qt5-quickcontrols' 'chaser' 'alpm_octopi_utils' 'knotifications')
 categories=('system') 
 screenshot=('http://octopiproject.files.wordpress.com/2014/01/octopi_in_kaos.png')
 
-gitsha=52e111f
+gitsha=3e3c6ae
 source=("$pkgname"::"git://github.com/aarnt/${pkgname}.git#commit=${gitsha}"
         '0001-remove-qtermwidget.patch')
-md5sums=('SKIP' 'SKIP')
+md5sums=('SKIP'
+         '5b56cd3d5d6e25a62c94055b2384aff3')
 
 prepare(){
     cd "${srcdir}/${pkgbase}"
+
+    # disable lxqt qtermwidget
+    patch -Np1 -i ../0001-remove-qtermwidget.patch
+    rm -rfv src/termwidget.{cpp,h}
 
     # patch .desktop files
     sed -i 's/Categories=GNOME;GTK;System;/Categories=System;Tools;/g' octopi.desktop notifier/octopi-notifier/octopi-notifier.desktop cachecleaner/octopi-cachecleaner.desktop
@@ -24,32 +29,34 @@ prepare(){
 
     # enable the kstatus switch
     sed -e "s|DEFINES += ALPM_BACKEND #KSTATUS|DEFINES += ALPM_BACKEND KSTATUS|" -i notifier/octopi-notifier/octopi-notifier.pro
-
-    # disable lxqt qtermwidget
-    patch -Np1 -i ../0001-remove-qtermwidget.patch
 }
 
 build() {
+   export QTERMWIDGET=off
    cd "${srcdir}/${pkgbase}"
    /usr/lib/qt5/bin/qmake
-   QTERMWIDGET=off make
+   make
 
    pushd "notifier/pacmanhelper"
+   msg 'building pacmanhelper'
    qmake-qt5 pacmanhelper.pro
    make
    popd
 
    pushd "notifier/octopi-notifier"
+   msg 'building octopi-notifier'
    qmake-qt5 octopi-notifier.pro
    make
    popd
 
    pushd "repoeditor"
+   msg 'building repoeditor'
    qmake-qt5 octopi-repoeditor.pro
    make
    popd
 
    pushd "cachecleaner"
+   msg 'building cachecleaner'
    qmake-qt5 octopi-cachecleaner.pro
    make
    popd
@@ -57,7 +64,7 @@ build() {
 
 package_octopi() {
    pkgdesc="Octopi, a powerful Pacman frontend using Qt libs"
-   depends+=('qt5-declarative' 'knotifications')
+   depends=('qt5-quickcontrols' 'qt5-declarative' 'pacman' 'pacmanlogviewer' 'gist' 'chaser' 'alpm_octopi_utils')
 
    # start package
    cd ${srcdir}/${pkgbase}
@@ -65,8 +72,8 @@ package_octopi() {
    install -Dm 755 bin/octopi ${pkgdir}/usr/bin/octopi
    install -Dm 755 repoeditor/bin/octopi-repoeditor ${pkgdir}/usr/bin/octopi-repoeditor
    install -Dm 644 octopi.desktop ${pkgdir}/usr/share/applications/octopi.desktop
-   install -Dm 644 resources/images/octopi_green.png ${pkgdir}/usr/share/icons/octopi.png
-   install -Dm 644 speedup/octopi.service ${pkgdir}/usr/lib/systemd/system/
+   install -Dm 644 resources/images/octopi_green.png ${pkgdir}/usr/share/pixmaps/octopi.png
+   install -Dm 644 speedup/octopi.service ${pkgdir}/usr/lib/systemd/system/octopi.service
 
    #Octopi-cachecleaner file
    install -Dm 755 cachecleaner/bin/octopi-cachecleaner ${pkgdir}/usr/bin/octopi-cachecleaner
@@ -75,13 +82,13 @@ package_octopi() {
 
 package_octopi-notifier() {
    pkgdesc="Octopi system tray notification"
-   depends+=('qt5-declarative')
+   depends=('qt5-declarative' 'knotifications')
 
    # main application
    cd "${srcdir}/${pkgbase}"
    install -Dm755 notifier/bin/octopi-notifier ${pkgdir}/usr/bin/${pkgname}
-   install -Dm644 octopi-notifier.desktop ${pkgdir}/usr/share/applications/octopi-notifier.desktop
-   install -Dm644 resources/images/octopi_red.png ${pkgdir}/usr/share/icons/${pkgname}.png
+   install -Dm644 notifier/octopi-notifier/octopi-notifier.desktop ${pkgdir}/usr/share/applications/octopi-notifier.desktop
+   install -Dm644 resources/images/octopi_red.png ${pkgdir}/usr/share/pixmaps/${pkgname}.png
    
    #Pacmanhelper service files
    install -Dm755 notifier/bin/pacmanhelper ${pkgdir}/usr/lib/octopi/pacmanhelper
