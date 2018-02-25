@@ -1,13 +1,13 @@
 pkgbase=tlp
 pkgname=('tlp' 'tlp-rdw')
-pkgver=1.0
-pkgrel=2
+pkgver=1.1
+pkgrel=1
 arch=('x86_64')
 url='http://linrunner.de/en/tlp/tlp.html'
 license=('GPL2' 'GPL3')
-source=("$pkgbase-$pkgver.tar.gz::https://github.com/linrunner/TLP/archive/${pkgver}.tar.gz"
+source=("$pkgbase-$pkgver.tar.gz::https://github.com/linrunner/TLP/archive/$pkgver.tar.gz"
 'default')
-sha256sums=('642717b27db3a70c2cdef2673fe3229bf314488aa0797515e63d933b93bc78ec'
+sha256sums=('76e1a091eed1055f7af75f49621be51ed41b1e8f872eeb9506c0749060fd1019'
             '7f86f31ee86235eac6a57e4d647d6f41489b3eaa10037cca1460eb3ff091b567')
 
 package_tlp() {
@@ -22,7 +22,7 @@ package_tlp() {
   conflicts=('laptop-mode-tools' 'pm-utils')
   backup=('etc/default/tlp')
 
-  cd TLP-${pkgver}
+  cd TLP-$pkgver
 
   export TLP_SBIN='/usr/bin'
   export TLP_ULIB='/usr/lib/udev'
@@ -31,14 +31,14 @@ package_tlp() {
   export TLP_NO_PMUTILS='1'
   export TLP_WITH_SYSTEMD='1'
 
-  make DESTDIR="${pkgdir}" install-tlp
+  make DESTDIR=$pkgdir install-tlp
 }
 
 package_tlp-rdw() {
   pkgdesc='Linux Advanced Power Management - Radio Device Wizard'
   depends=('networkmanager' 'tlp')
 
-  cd TLP-${pkgver}
+  cd TLP-$pkgver
 
-  make DESTDIR="${pkgdir}" install-rdw
+  make DESTDIR=$pkgdir install-rdw
 }
