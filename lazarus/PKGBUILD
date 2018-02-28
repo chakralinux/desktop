@@ -1,21 +1,22 @@
 pkgname=lazarus
-pkgver=1.6.4
+pkgver=1.8.0
 pkgrel=1
 _pkgsubver=0
 pkgdesc='Delphi-like IDE for FreePascal'
 url='http://www.lazarus.freepascal.org/'
 license=('GPL2' 'MPL' 'custom:modifiedLGPL')
 arch=('x86_64')
-depends=('fpc>=3.0.0' 'fpc-src>=3.0.0' 'qtwebkit' 'libxslt' 'fpc-qtbindings')
+depends=('fpc>=3.0.0' 'fpc-src>=3.0.0' 'qt5pas' 'libxslt')
+provides=(lazarus-qt5)
 options=('!emptydirs' '!makeflags')
 categories=('programming')
 install='lazarus.install'
-source=(http://downloads.sourceforge.net/project/lazarus/Lazarus%20Zip%20_%20GZip/Lazarus%20${pkgver}/lazarus-${pkgver}-${_pkgsubver}.tar.gz)
-sha512sums=('d7d498483ef9e1eebd0d8ca2325d1984cb1297837ebe2f9547e67f26fc049c2168e2feeac739b8403c08a8251040e9161c962d25951545384ffbdbb076fda2aa')
+source=("https://downloads.sourceforge.net/project/lazarus/Lazarus%20Zip%20_%20GZip/Lazarus%20${pkgver}/lazarus-$pkgver.tar.gz")
+sha512sums=('dd5e02e9c0a057cf9a6b2c15605969cf4cb743aa78fc81bfdc7c566434127893cf32bab5bd1729f79b51c611bf9ae015bea8d774e0544ead42a064f1224ffd7b')
 
 build() {
   cd $srcdir/${pkgname}
-  make FPC=/usr/bin/fpc LCL_PLATFORM=qt bigide
+  make FPC=/usr/bin/fpc LCL_PLATFORM=qt5 bigide
 }
 
 package() {
@@ -35,10 +36,13 @@ package() {
     --exclude="*.app"   --exclude="tools/install" \
     . "$pkgdir"/usr/lib/lazarus
 
-  ln -s /usr/lib/lazarus/lazbuild $pkgdir/usr/bin/lazbuild
-  cp -R install/man/man1/* $pkgdir/usr/share/man/man1/
-  mv $pkgdir/usr/lib/lazarus/docs $pkgdir/usr/share/doc/lazarus
-  rm -r $pkgdir/usr/lib/lazarus/install
+  ln -s /usr/lib/lazarus/lazbuild "$pkgdir"/usr/bin/lazbuild
+  cp -R install/man/man1/* "$pkgdir"/usr/share/man/man1/
+  mv "$pkgdir"/usr/lib/lazarus/docs "$pkgdir"/usr/share/doc/lazarus
+  mkdir -p "$pkgdir"/usr/lib/lazarus/docs
+  ln -s /usr/share/doc/lazarus/chm "$pkgdir"/usr/lib/lazarus/docs/html
+  ln -s /usr/share/doc/lazarus/lazdoc.css "$pkgdir"/usr/lib/lazarus/docs/lazdoc.css
+  rm -r "$pkgdir"/usr/lib/lazarus/install
 
   # license files: /usr/lib/lazarus/COPYING*
   install -D -m644 COPYING.modifiedLGPL.txt $pkgdir/usr/share/licenses/${pkgname}/COPYING.modifiedLGPL
