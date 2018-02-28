@@ -1,25 +1,32 @@
 pkgname=peazip
-pkgver=6.4.0
+pkgver=6.5.1
 pkgrel=1
 pkgdesc="Free, Open Source file and archive manager. Supports 7Z, ACE, ARC, CAB, ISO, PEA, RAR, TAR, ZIP and many more archive formats."
 arch=('x86_64')
 url="http://peazip.org/"
 license=('GPL')
-depends=('zip' 'unzip' 'xz' 'p7zip' 'unarj' 'fpc-qtbindings' 'libxslt')
+depends=('libxslt' 'p7zip' 'unarj' 'unzip' 'upx' 'xz' 'zip' 'fpc-qtbindings') # balz lpaq paq8o zpaq
 makedepends=('lazarus')
-optdepends=('rar: support for RAR archive compression')
+optdepends=('rar: support for RAR archive compression'
+            'unace: support for proprietary ace archive format')
 categories=('utils')
+options=('debug')
 source=("https://github.com/giorgiotani/PeaZip/releases/download/${pkgver}/${pkgname}-${pkgver}.src.zip"
-        'altconf.txt'
-        'peazip.desktop')
-sha256sums=('e54e29c703ab18beadf3cc27242a8b2f25c411c7aee5da2a51594a4beab83608'
-            '366884105c00e88f2ce2315155479bd2c38ea2181e8a7431293ced87a39a9405'
-            'f921796732bd1f13d602056c9d6d2c6d0e2f416c27d3f60808b646672f6a9f40')
+        "http://www.peazip.org/downloads/additional/peazip_optional_formats_plugin-1.LINUX.INST.tar.gz"
+        'altconf.txt')
+sha256sums=('b106811311fbaf42ad5374520df2be8b20a545b80e6f8713a1f10e2e5a79d01e'
+            '7f3fc1ea200d482500360eadda9298c4d5900ca822d21b5a0e11ff9de4d499ff'
+            '366884105c00e88f2ce2315155479bd2c38ea2181e8a7431293ced87a39a9405')
+
+prepare() {
+  msg 'Copy optional format plugins'
+  cp -Rf "$srcdir/res" "$srcdir/peazip-$pkgver.src"
+}
 
 build() {
   cd ${srcdir}/${pkgname}-${pkgver}.src
-  for i in project_pea.lpi project_peach.lpi project_gwrap.lpi ; do 
-   lazbuild -B --cpu=${arch} --verbose ${i} \
+  for project in project_pea.lpi project_peach.lpi project_gwrap.lpi ; do 
+   lazbuild -B --cpu=${arch} --verbose ${project} \
  	   --lazarusdir=/usr/lib/lazarus \
  	   --widgetset=qt
   done
@@ -29,49 +36,53 @@ package() {
   # Since the dev are lazy, we introduce several path for easier description
   _srcdir=${srcdir}/${pkgname}-${pkgver}.src
   _datadir=usr/share/${pkgname}
-  cd ${_srcdir}
-  install -dm755 ${pkgdir}/${_datadir}/res/{themes,lang}
+  _resdir=${_datadir}/res
 
-  # Move language files and utilities
-  cp -rv  ${_srcdir}/res/{themes,lang} ${pkgdir}/usr/share/peazip/res
-  install -Dm644 ${srcdir}/altconf.txt ${pkgdir}/${_datadir}/res/altconf.txt
-  
-  # Link tools
-  for i in 7z upx ; do
-    install -dm755 ${pkgdir}/${_datadir}/res/${i}
-    ln -s /usr/bin/${i} ${pkgdir}/${_datadir}/res/${i}/${i}
+  msg 'Preparing the res directory'
+  cd ${_srcdir}/res
+  install -dm755 ${pkgdir}/${_resdir}
+
+  msg 'Move language files and utilities'
+
+  for _file in arc/{arc,*.sfx}; do install -Dm755 "$_file" "$_resdir/$_file"; done
+  for _file in *.txt lang/* themes/{*-embedded/*,*.7z} arc/arc.{ini,groups}
+    do install -Dm644 "$_file" "$pkgdir/$_resdir/$_file"; done
+
+  msg 'Link tools'
+  for _file in 7z upx ; do
+    install -dm755 ${pkgdir}/${_resdir}/${_file}
+    ln -sf -T "/usr/bin/$(basename $_file)" "${pkgdir}/${_resdir}/${_file}/${_file}";
   done
 
-  # Install binary to datadir/res 
-  for i in pea pealauncher ; do
-    install -Dm755 ${i} ${pkgdir}/${_datadir}/res/${i}
-  done
-  
-  # Install peazip to datadir because at start need to read res/altconf.txt
-  install -Dm755 peazip ${pkgdir}/${_datadir}/peazip
-  install -dm755 ${pkgdir}/usr/bin
-  ln -s /${_datadir}/peazip ${pkgdir}/usr/bin/peazip
+  install -Dm644 ${srcdir}/altconf.txt ${pkgdir}/${_datadir}/altconf.txt
 
-  # Preparing for desktop installation
+  msg 'Install binary to datadir/res, and link back to $PATH'
+  install -dm755 $pkgdir/usr/bin
+  cd ${_srcdir}/
+  for _bin in pea pealauncher peazip ; do
+    install -Dm755 ${_bin} ${pkgdir}/${_datadir}/${_bin}
+    ln -sf /${_resdir}/${_bin} ${pkgdir}/usr/bin/${_bin}
+  done
+
+  msg 'Preparing for desktop installation'
   cd ${_srcdir}/FreeDesktop_integration/
- 
+
   # Move the Dolphin integration
-  for i in peazipadd.desktop \
+  for _desktop in peazipadd.desktop \
            peazipext.desktop \
            peazipextfolder.desktop \
            peazipexthere.desktop \
            peazipopen.desktop ; do 
-    install -Dm644 kde4-dolphin/usr/share/kde4/services/ServiceMenus/${i} \
-		   ${pkgdir}/usr/share/kservices5/ServiceMenus/${i}
+    install -Dm644 kde4-dolphin/usr/share/kde4/services/ServiceMenus/${_desktop} \
+		   ${pkgdir}/usr/share/kservices5/ServiceMenus/${_desktop}
   done
-  
-  #use own .desktop file to fix error name
-  install -Dm644 ${srcdir}/peazip.desktop ${pkgdir}/usr/share/applications/peazip.desktop
-  # Move icons
-  install -Dm644 peazip.png ${pkgdir}/usr/share/icons/hicolor/256x256/apps/peazip.png 
-  
+
+  msg 'Installing menu entry'
+  install -Dm644 'peazip-alt(multilingual).desktop' ${pkgdir}/usr/share/applications/peazip.desktop
+  install -Dm644 peazip.png ${pkgdir}/usr/share/icons/hicolor/256x256/apps/peazip.png
+
   # License file
-  for r in copying.txt copying_we.txt legal.txt; do
-    install -Dm644 ${_srcdir}/${r} ${pkgdir}/usr/share/licenses/${pkgname}/${r}
+  for _license in copying.txt copying_we.txt legal.txt; do
+    install -Dm644 ${_srcdir}/${_license} ${pkgdir}/usr/share/licenses/${pkgname}/${_license}
   done
 }
