@@ -1,26 +1,27 @@
 pkgname=cantata
 pkgver=2.2.0
-pkgrel=1
+pkgrel=2
 pkgdesc='Qt5 client for the music player daemon (MPD)'
 arch=('x86_64')
 url='https://github.com/CDrummond/cantata'
 license=('GPL')
 depends=('qt5-svg' 'qt5-multimedia' 'libmtp' 'libcddb' 'libmusicbrainz5' 'mpg123' 'taglib-extras' 'cdparanoia' 'media-player-info' 'udisks2')
-optdepends=('perl-uri: dynamic playlist'
-            'mpd: playback'
-            'ffmpeg: ReplayGain support')
+optdepends=('perl-uri: dynamic playlist' 'mpd: playback' 'ffmpeg: ReplayGain support')
 makedepends=('cmake' 'qt5-tools' 'ffmpeg')
 install=$pkgname.install
-source=("https://github.com/CDrummond/cantata/releases/download/v$pkgver/$pkgname-$pkgver.tar.bz2")
-sha1sums=('e4ebd1777700cb3406725d905073dd6ea1382b4d')
+source=("https://github.com/CDrummond/cantata/releases/download/v$pkgver/$pkgname-$pkgver.tar.bz2"
+        cantata-qt5.10-crash.patch::"https://github.com/CDrummond/cantata/commit/4da7a912.patch")
+sha256sums=('c84691eb17711118d3c512d70cb422267f7a137290082cdd1ff0a871b4a8e5c0'
+            '13f7fc999333b28bc5dc07d8f50c16479c87e606045ef018cf3cc7dac7460305')
 
 prepare() {
   mkdir -p build
+  cd $pkgname-$pkgver
+  patch -p1 -i ../cantata-qt5.10-crash.patch # Fix crash with Qt 5.10 https://github.com/CDrummond/cantata/issues/1130
 }
 
 build() {
   cd build
-
   PATH=/usr/lib/qt5/bin:$PATH
   cmake ../$pkgname-$pkgver \
     -DCMAKE_INSTALL_PREFIX=/usr \
