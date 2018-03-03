@@ -8,7 +8,7 @@ pkgrel=1
 arch=('x86_64')
 url="http://natron.fr/"
 license=("GPL")
-makedepends=('expat' 'boost' 'git' 'cmake' 'openimageio' 'qt' 'fontconfig' 'python2-pyside' 'python2-shiboken' 'boost-libs' 'pixman' 'glfw' 'cairo' 'ffmpeg' 
+makedepends=('expat' 'boost' 'git' 'cmake' 'openimageio' 'qt' 'fontconfig' 'python2-pyside' 'python2-shiboken' 'boost-libs' 'pixman' 'glfw' 'cairo' 'ffmpeg' 'openjpeg2' 
 'libraw')
 source=( #natron
         "natron::git+https://github.com/MrKepzie/Natron.git#tag=$pkgver"
@@ -67,9 +67,9 @@ prepare() {
 
   mv "${srcdir}/config.pri" "${srcdir}/${pkgbase-*}/config.pri"
   # Fix for gcc6 build issues
-  sed -i '1s/^/QMAKE_CXXFLAGS += -std=c++98\n/' Gui/Gui.pro
-  sed -i '1s/^/QMAKE_CXXFLAGS += -std=c++98\n/' Engine/Engine.pro
-  sed -i '1s/^/QMAKE_CXXFLAGS += -std=c++98\n/' Tests/Tests.pro
+  #sed -i '1s/^/QMAKE_CXXFLAGS += -std=c++98\n/' Gui/Gui.pro
+  #sed -i '1s/^/QMAKE_CXXFLAGS += -std=c++98\n/' Engine/Engine.pro
+  #sed -i '1s/^/QMAKE_CXXFLAGS += -std=c++98\n/' Tests/Tests.pro
   
   
   #openfx-io
@@ -114,7 +114,7 @@ prepare() {
   mkdir -p $srcdir/{fake_install,seexpr1}
   # seexpr1 needs a clean directory to compile
   cp -dr $srcdir/SeExpr-rel-1.0.1/* $srcdir/seexpr1
-  }
+}
 
 build() {
     build_seexpr1
