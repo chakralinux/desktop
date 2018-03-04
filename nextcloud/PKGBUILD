@@ -3,12 +3,12 @@
 
 pkgname=nextcloud
 pkgver=13.0.0
-pkgrel=1
+pkgrel=2
 pkgdesc="A cloud server to store your files centrally on a hardware controlled by you"
 arch=('any')
 url="https://nextcloud.com"
 license=('AGPL')
-depends=()
+depends=('php' 'php-gd')
 optdepends=('php-apache: to use the Apache web server'
             'php-sqlite: to use the SQLite database backend'
             'php-pgsql: to use the PostgreSQL database backend'
@@ -20,6 +20,8 @@ optdepends=('php-apache: to use the Apache web server'
             'ffmpeg: file preview'
             'libreoffice: file preview')
 options=('!strip')
+conflicts=('owncloud')
+replaces=('owncloud')
 install=${pkgname}.install
 backup=('etc/webapps/nextcloud/apache.example.conf')
 validpgpkeys=('28806A878AE423A28372792ED75899B9A724937A')
@@ -32,8 +34,6 @@ sha256sums=('38e6064432a2d1a044f219028d3fd46cb7a943a47e11eef346810bd289705aec'
             '3099e7f04a10d1b86e2f9252a66b0d7dca9836d19f32a128d5e35bb2e2077428')
 
 package() {
-    depends=('php' 'php-gd')
-
     # install project
     install -d "$pkgdir"/usr/share/webapps/
     cp -R "$srcdir"/${pkgname} "$pkgdir"/usr/share/webapps/.
