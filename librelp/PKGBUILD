@@ -1,16 +1,17 @@
 pkgname='librelp'
-pkgver=1.2.12
-pkgrel=2
+pkgver=1.2.14
+pkgrel=1
 pkgdesc="The Reliable Event Logging Protocol"
-url="http://www.librelp.com/"
+url="https://www.librelp.com/"
 arch=('x86_64')
 license=('GPL3')
 depends=('gnutls')
-source=("http://download.rsyslog.com/librelp/librelp-${pkgver}.tar.gz")
-sha1sums=('7582992279eb63012e44208813a672a586b5ab55')
+source=("https://github.com/rsyslog/librelp/archive/v${pkgver}.tar.gz")
+sha1sums=('ab6ecd739f33f010de57911da872a732bdfcd52a')
 
 build() {
   cd ${srcdir}/${pkgname}-${pkgver}
+  autoreconf -fvi
   ./configure --prefix=/usr
   make
 }
