@@ -1,11 +1,11 @@
 pkgname=rsyslog
-pkgver=8.27.0
+pkgver=8.33.0
 pkgrel=1
 pkgdesc="An enhanced multi-threaded syslogd with a focus on security and reliability"
 url="http://www.rsyslog.com/"
 arch=('x86_64')
 license=('GPL3')
-depends=('zlib' 'libestr' 'libee' 'json-c' 'systemd' 'liblogging' 'librelp>=1.2.12' 'libfastjson')
+depends=('zlib' 'libestr' 'libee' 'json-c' 'systemd' 'liblogging' 'librelp>=1.2.12' 'libfastjson>=0.99.8')
 makedepends=('postgresql-libs>=8.4.1' 'libmariadbclient' 'net-snmp' 'gnutls'
 	     'python3-docutils')
 optdepends=('postgresql-libs: PostgreSQL Database Support'
@@ -14,12 +14,11 @@ optdepends=('postgresql-libs: PostgreSQL Database Support'
 	    'gnutls')
 backup=('etc/rsyslog.conf'
 	'etc/logrotate.d/rsyslog')
-options=('strip' 'zipman')
-source=("http://www.rsyslog.com/files/download/rsyslog/rsyslog-$pkgver.tar.gz"
-	'rsyslog.logrotate.d'
+source=("https://github.com/rsyslog/rsyslog/archive/v$pkgver.tar.gz"
+        'rsyslog.logrotate'
 	'rsyslog.conf')
-sha256sums=('02aefbba59324a6d8b70036a67686bed5f0c7be4ced62c039af6ee694cb5b1fd'
-            'f5611ebb23b7001292d9af4e731b2933b21c47452871cfca543f4f498c125a0c'
+sha256sums=('c52694efebbc86af80e61d660735291bdc68a4605b47a639ded79915e52cfac6'
+            '0f5bea3fd4dff2c9f097bf95768b2e1f6e9cfd9a08eab98bc3b3b4d2ed44119a'
             '5fd51665ab9a81fbb24773068cb261b8dec073d74082c121633f49b9381d9a3f')
 
 prepare() {
@@ -31,6 +30,7 @@ prepare() {
 
 build() {
   cd ${srcdir}/${pkgname}-${pkgver}
+  autoreconf -fvi
   ./configure --prefix=/usr \
               --enable-mysql \
               --enable-pgsql \
@@ -50,6 +50,7 @@ build() {
 package() {
   cd ${srcdir}/${pkgname}-${pkgver}
   make install DESTDIR=${pkgdir}
-  install -D -m644 $srcdir/${pkgname}.conf ${pkgdir}/etc/${pkgname}.conf
-  install -D -m644 $srcdir/${pkgname}.logrotate.d ${pkgdir}/etc/logrotate.d/${pkgname}
+  install -Dm644 $srcdir/${pkgname}.conf ${pkgdir}/etc/${pkgname}.conf
+  install -Dm644 $srcdir/${pkgname}.logrotate ${pkgdir}/etc/logrotate.d/${pkgname}
+  install -Dm644 sample.conf $pkgdir/usr/share/rsyslog/sample.conf
 }
