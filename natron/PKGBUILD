@@ -4,7 +4,7 @@
 pkgbase=natron
 pkgname=('natron' 'openfx-io' 'openfx-misc')
 pkgver=2.3.4
-pkgrel=1
+pkgrel=2
 arch=('x86_64')
 url="http://natron.fr/"
 license=("GPL")
@@ -66,11 +66,6 @@ prepare() {
   cd ../..
 
   mv "${srcdir}/config.pri" "${srcdir}/${pkgbase-*}/config.pri"
-  # Fix for gcc6 build issues
-  #sed -i '1s/^/QMAKE_CXXFLAGS += -std=c++98\n/' Gui/Gui.pro
-  #sed -i '1s/^/QMAKE_CXXFLAGS += -std=c++98\n/' Engine/Engine.pro
-  #sed -i '1s/^/QMAKE_CXXFLAGS += -std=c++98\n/' Tests/Tests.pro
-  
   
   #openfx-io
   cd "$srcdir/openfx-io"
@@ -89,25 +84,6 @@ prepare() {
   git config submodule.openfx.url $srcdir/openfx
   git config submodule.SupportExt.url $srcdir/openfx-supportext
   git submodule update
-  
-  
-  #openfx-arena
-  #cd "$srcdir/openfx-arena"
-  #git config submodule.OpenFX.url $srcdir/openfx
-  #git config submodule.SupportExt.url $srcdir/openfx-supportext
-  #git config submodule.OpenFX-IO.url $srcdir/openfx-io
-  #git submodule update
-
-  #cd OpenFX-IO
-  #git config submodule.IOSupport/SequenceParsing.url $srcdir/SequenceParsing
-  #git config submodule.SupportExt.url $srcdir/openfx-supportext
-  #git config submodule.openfx.url $srcdir/openfx
-  #git submodule update
-
-  #cd IOSupport/SequenceParsing
-  #git config submodule.tinydir.url $srcdir/tinydir
-  #git submodule update
-  
   
   #SeExpr
   rm -fdr $srcdir/seexpr1
@@ -144,10 +120,6 @@ build_openfx() {
     cd "$srcdir/openfx-misc"
     msg "building openfx-misc"
     make CONFIG=release BITS=64
-    
-   # cd "$srcdir/openfx-arena"
-   # msg "building openfx-arena"
-   # make CONFIG=release
 }
 
 build_natron() {
@@ -182,18 +154,9 @@ package_openfx-io() {
 
 package_openfx-misc() {
         pkgdesc="Miscellaneous OpenFX plugins"
-        depends=('libgl') #'gcc-libs-multilib')
+        depends=('libgl')
         
         cd "$srcdir/openfx-misc"
         mkdir -p "$pkgdir/usr/OFX/Plugins"
         make install PLUGINPATH=$pkgdir/usr/OFX/Plugins CONFIG=release BITS=64
 }
-
-#package_openfx-arena() {
-#        pkgdesc="Extra OpenFX plugins for Natron"
-#        depends=('imagemagick' 'libcdr' 'librsvg' 'libtool' 'libzip' 'opencolorio' 'poppler-glib' 'gcc-libs-multilib')
-        
-#        cd "$srcdir/openfx-arena"
-#        mkdir -p "$pkgdir/usr/OFX/Plugins"
-#        make install PLUGINPATH=$pkgdir/usr/OFX/Plugins CONFIG=release
-#}
