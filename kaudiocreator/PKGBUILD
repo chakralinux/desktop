@@ -9,19 +9,20 @@ depends=('taglib' 'libdiscid' 'libkcddb4' 'libkcompactdisc4')
 makedepends=('cmake' 'automoc4')
 categories=('multimedia')
 install="$pkgname.install"
-source=("https://dl.opendesktop.org/api/files/download/id/1466629608/107645-kaudiocreator-$pkgver.tar.bz2")
+source=("https://dl.opendesktop.org/api/files/downloadfile/id/1466629608/s/7342e58cc1d1ea62a9e472da2eda3b34/t/1520761745/u/26190/107645-$pkgname-$pkgver.tar.bz2")
 md5sums=('6adce848d3cdc9d80a52d35144890c86')
 
 build() {
+  cd $pkgname-$pkgver
   mkdir build
   cd build
-  cmake ../$pkgname-$pkgver \
+  cmake .. \
     -DCMAKE_BUILD_TYPE=Release \
     -DCMAKE_INSTALL_PREFIX=/usr
   make
 }
 
 package() {
-  cd build
+  cd $pkgname-$pkgver/build
   make DESTDIR=$pkgdir install
 }
