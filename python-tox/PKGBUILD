@@ -1,7 +1,7 @@
 pkgbase=python-tox
 pkgname=(python3-tox python2-tox)
 pkgver=2.9.1
-pkgrel=1
+pkgrel=2
 pkgdesc='Python virtualenv management and testing tool'
 arch=('any')
 url='https://tox.readthedocs.io'
@@ -31,7 +31,7 @@ build() {
 #
 #  (
 #    cd "$srcdir"/tox-$pkgver
-#    virtualenv "$srcdir/pyvenv" --system-site-packages
+#    virtualenv3 "$srcdir/pyvenv" --system-site-packages
 #    . "$srcdir/pyvenv/bin/activate"
 #    python setup.py install
 #    python setup.py pytest
@@ -48,7 +48,7 @@ build() {
 
 
 package_python3-tox() {
-  depends=('python-py' 'python-virtualenv' 'python-setuptools' 'python-pluggy')
+  depends=('python3-py' 'python3-virtualenv' 'python3-setuptools' 'python3-pluggy')
 
   cd "$srcdir"/tox-$pkgver
   python3 setup.py install --root="$pkgdir" --optimize=1
