@@ -1,25 +1,29 @@
 pkgbase=python-pytest
 pkgname=('python2-pytest' 'python3-pytest')
-pkgver=3.2.3
+pkgver=3.4.2
 pkgrel=1
 pkgdesc="Simple powerful testing with Python"
 arch=('any')
 license=('MIT')
 url="http://pytest.org/"
-makedepends=('python3-setuptools' 'python2-setuptools' 'python3-py' 'python2-py' 'python3-pluggy'
-             'python2-pluggy')
-checkdepends=('lsof' 'python3-nose' 'python2-nose' 'python3-mock' 'python2-mock' 'python3-tox'
-              'python2-tox' 'python3-yaml' 'python2-yaml' 'python3-pytest-xdist'
-              'python2-pytest-xdist' 'python3-twisted' 'python2-twisted' 'python3-requests'
-              'python2-requests' 'python3-hypothesis' 'python2-hypothesis')
+makedepends=('python2-setuptools' 'python3-setuptools'
+             'python2-py'         'python3-py'
+             'python2-pluggy'     'python3-pluggy'
+             'python2-attrs'      'python3-attrs'
+             'python2-funcsigs')
+checkdepends=('lsof'
+              'python3-nose'         'python2-nose'
+              'python3-mock'         'python2-mock'
+              'python3-tox'          'python2-tox'
+              'python3-yaml'         'python2-yaml'
+              'python3-pytest-xdist' 'python2-pytest-xdist'
+              'python3-twisted'      'python2-twisted'
+              'python3-requests'     'python2-requests'
+              'python3-hypothesis'   'python2-hypothesis')
 source=("$pkgbase-$pkgver.tar.gz::https://github.com/pytest-dev/pytest/archive/$pkgver.tar.gz")
-sha512sums=('SKIP')
+sha512sums=('6765325353122ebfe1cc03798d64009ef05dbcaa9d8d5dfa6b9d63f8b81282e73c7e95cd17c7668f70f2cb50e222dbf93a31dc39947c1d2552a352fab7b192b3')
 
 prepare() {
-  rm -r pytest-$pkgver/_pytest/vendored_packages
-  sed -i "s/'_pytest.vendored_packages'//" pytest-$pkgver/setup.py
-  sed -i 's/assert numentries == 0/assert numentries == 26/' pytest-$pkgver/testing/python/collect.py
-
   cp -a pytest-$pkgver{,-py2}
 
   export SETUPTOOLS_SCM_PRETEND_VERSION=$pkgver
@@ -42,7 +46,7 @@ build() {
 #}
 
 package_python3-pytest() {
-  depends=('python3-py' 'python3-setuptools' 'python3-pluggy')
+  depends=('python3-py' 'python3-setuptools' 'python3-pluggy' 'python3-attrs')
 
   cd pytest-$pkgver
   python3 setup.py install --root="$pkgdir" --optimize=1
@@ -50,7 +54,7 @@ package_python3-pytest() {
 }
 
 package_python2-pytest() {
-  depends=('python2-py' 'python2-setuptools' 'python2-pluggy')
+  depends=('python2-py' 'python2-setuptools' 'python2-pluggy' 'python2-attrs' 'python2-funcsigs')
 
   cd pytest-$pkgver-py2
   python2 setup.py install --root="$pkgdir" --optimize=1
