@@ -1,0 +1,59 @@
+# Contributor: Felix Yan <felixonmars@archlinux.org>
+# Contributor: Ismael Carnales <icarnales at gmail dot com>
+# Contributor: Sergey Mastykov <smastykov[at]gmail[dot]com>
+
+pkgbase=python-pycodestyle
+pkgname=('python3-pycodestyle' 'python2-pycodestyle')
+pkgver=2.3.1
+pkgrel=1
+pkgdesc="Python style guide checker"
+arch=('any')
+url="https://github.com/PyCQA/pycodestyle"
+license=('custom:Expat')
+makedepends=('python3-setuptools' 'python2-setuptools' 'git')
+source=("git+https://github.com/PyCQA/pycodestyle.git#tag=$pkgver")
+sha256sums=('SKIP')
+
+prepare() {
+  cp -a pycodestyle{,-py2}
+
+  sed -i '1s/env python$/python2/' pycodestyle-py2/pycodestyle.py
+  sed -i '1s/env python$/python3/' pycodestyle/pycodestyle.py
+}
+
+build() {
+  cd "$srcdir"/pycodestyle
+  python3 setup.py build
+
+  cd "$srcdir"/pycodestyle-py2
+  python2 setup.py build
+}
+
+check() {
+  cd "$srcdir"/pycodestyle
+  python3 setup.py test
+
+  cd "$srcdir"/pycodestyle-py2
+  python2 setup.py test
+}
+
+package_python3-pycodestyle() {
+  depends=('python3-setuptools')
+
+  cd pycodestyle
+  python3 setup.py install -O1 --prefix=/usr --root="$pkgdir/"
+
+  install -Dm644 LICENSE "$pkgdir"/usr/share/licenses/$pkgname/LICENSE
+}
+
+package_python2-pycodestyle() {
+  depends=('python2-setuptools')
+
+  cd pycodestyle-py2
+  python2 setup.py install -O1 --prefix=/usr --root="$pkgdir/"
+  mv "$pkgdir"/usr/bin/pycodestyle{,2}
+
+  install -Dm644 LICENSE "$pkgdir"/usr/share/licenses/$pkgname/LICENSE
+}
+
+# vim:set ts=2 sw=2 et:

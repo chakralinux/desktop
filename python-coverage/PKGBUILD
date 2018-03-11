@@ -1,0 +1,71 @@
+# Contributor: Felix Yan <felixonmars@archlinux.org>
+# Contributor: Clément Démoulins <clement@archivel.fr>
+# Contributor: Fazlul Shahriar <fshahriar@gmail.com>
+
+pkgbase=python-coverage
+pkgname=(python3-coverage python2-coverage)
+pkgver=4.5.1
+pkgrel=1
+pkgdesc="A tool for measuring code coverage of Python programs"
+arch=('x86_64')
+url="http://nedbatchelder.com/code/coverage/"
+license=('Apache')
+makedepends=('python3-setuptools' 'python2-setuptools')
+checkdepends=('python3-mock' 'python2-mock' 'python3-pytest-xdist' 'python2-pytest-xdist'
+              'python3-pycontracts' 'python2-pycontracts' 'python3-greenlet' 'python2-greenlet'
+              'python3-virtualenv' 'python2-virtualenv' 'python3-pyenchant' 'python2-pyenchant'
+              'python3-pylint' 'python2-pylint' 'python3-unittest-mixins' 'python2-unittest-mixins'
+              'python3-flaky' 'python2-flaky')
+source=("$pkgbase-$pkgver.tar.gz::https://bitbucket.org/ned/coveragepy/get/coverage-$pkgver.tar.gz")
+sha512sums=('72e03b35140596d7b6cd2976d35ecfd931b8c5518ae09dddeb2e204e73cee5e4f87341458dabbf5fdc6774a89342383ccd01d98ec7a8291f9cf8d9c1e5e9d0e9')
+
+prepare() {
+  mv ned-coveragepy-* coveragepy-$pkgver
+  cp -a coveragepy-$pkgver{,-py2}
+}
+
+check() {
+  # Hack entry points by installing it
+
+  export LC_CTYPE=en_US.UTF-8
+
+  (
+    cd "$srcdir/coveragepy-$pkgver"
+    virtualenv3 "$srcdir/pyvenv" --system-site-packages
+    . "$srcdir/pyvenv/bin/activate"
+    export PYTHONPATH="$PYTHONPATH:/usr/lib/python3.6/site-packages"
+    python setup.py --quiet develop
+    python igor.py zip_mods install_egg remove_extension
+    python igor.py test_with_tracer py
+    python setup.py --quiet build_ext --inplace
+    python igor.py test_with_tracer c
+  ) || warning "Python 3 tests failed"
+
+  (
+    cd "$srcdir/coveragepy-$pkgver-py2"
+    virtualenv2 "$srcdir/pyvenv-py2" --system-site-packages
+    . "$srcdir/pyvenv-py2/bin/activate"
+    export PYTHONPATH="$PYTHONPATH:/usr/lib/python2.7/site-packages"
+    python setup.py --quiet develop
+    python igor.py zip_mods install_egg remove_extension
+    python igor.py test_with_tracer py
+    python setup.py --quiet build_ext --inplace
+    python igor.py test_with_tracer c
+  ) || warning "Python 2 tests failed"
+}
+
+package_python3-coverage() {
+  depends=('python3')
+
+  cd coveragepy-$pkgver
+  python3 setup.py install --root="$pkgdir" --optimize=1
+}
+
+package_python2-coverage() {
+  depends=('python2')
+
+  cd coveragepy-$pkgver
+  python2 setup.py install --root="$pkgdir" --optimize=1
+
+  mv "$pkgdir/usr/bin/coverage" "$pkgdir/usr/bin/coverage2"
+}

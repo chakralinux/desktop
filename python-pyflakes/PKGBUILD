@@ -1,0 +1,62 @@
+# Contributor: Felix Yan <felixonmars@archlinux.org>
+# Contributor: Karol 'Kenji Takahashi' Woźniak <kenji.sx>
+# Contributor: Tianjiao Yin <ytj000+AUR@gmail.com>
+# Contributor: Thomas Dziedzic < gostrc at gmail >
+# Contributor: TDY <tdy@gmx.com>
+# Contributor: Tiago Pierezan Camargo <tcamargo@gmail.com>
+
+pkgbase=python-pyflakes
+pkgname=(python3-pyflakes python2-pyflakes)
+pkgver=1.6.0
+pkgrel=1
+pkgdesc='A lint-like tool for Python to identify common errors quickly without executing code'
+arch=('any')
+url='http://pypi.python.org/pypi/pyflakes'
+license=('MIT')
+makedepends=('python3-setuptools' 'python2-setuptools')
+source=("https://pypi.io/packages/source/p/pyflakes/pyflakes-$pkgver.tar.gz")
+sha512sums=('7e9c2aad6ebed638a1354cef51c7e1f68b25e59f8caf4694997a9afecd7cd8baa629a9363297ac0d961430f007fd22dcae7dae1bcbd7838a3b5d4285063bc7c5')
+
+prepare() {
+  cp -a "pyflakes-$pkgver"{,-py2}
+}
+
+build() {
+  cd "$srcdir"/pyflakes-$pkgver
+  python3 setup.py build
+
+  cd "$srcdir"/pyflakes-$pkgver-py2
+  python2 setup.py build
+}
+
+check() {
+  cd "$srcdir"/pyflakes-$pkgver
+  python3 setup.py test
+
+  cd "$srcdir"/pyflakes-$pkgver-py2
+  python2 setup.py test
+}
+
+package_python3-pyflakes() {
+  depends=('python3-setuptools')
+
+  cd pyflakes-$pkgver
+  python3 setup.py install --prefix=/usr --root="$pkgdir" --optimize=1
+
+  # We have python 3 as default python, and want to keep compatibility with the old pyflakes3k naming
+  # ln -s pyflakes "$pkgdir/usr/bin/pyflakes3k"
+  mv "$pkgdir"/usr/bin/pyflakes{,-python3}
+
+  install -Dm644 LICENSE "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
+}
+
+package_python2-pyflakes() {
+  depends=('python2-setuptools')
+
+  cd pyflakes-$pkgver-py2
+  python2 setup.py install --prefix=/usr --root="$pkgdir" --optimize=1
+
+  # mv "$pkgdir"/usr/bin/pyflakes{,-python2}
+
+  install -Dm644 LICENSE "$pkgdir"/usr/share/licenses/$pkgname/LICENSE
+}
