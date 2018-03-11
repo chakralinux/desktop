@@ -1,4 +1,3 @@
-
 pkgbase=python-pluggy
 pkgname=(python3-pluggy python2-pluggy)
 pkgver=0.5.2
@@ -24,13 +23,13 @@ build() {
   python2 setup.py build
 }
 
-#check() {
-#  cd "$srcdir"/pluggy-$pkgver
-#  python3 setup.py pytest
-#
-#  cd "$srcdir"/pluggy-$pkgver-py2
-#  python2 setup.py pytest
-#}
+check() {
+  cd "$srcdir"/pluggy-$pkgver
+  python3 setup.py pytest
+
+  cd "$srcdir"/pluggy-$pkgver-py2
+  python2 setup.py pytest
+}
 
 package_python3-pluggy() {
   depends=('python3')
