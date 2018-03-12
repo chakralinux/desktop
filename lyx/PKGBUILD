@@ -1,6 +1,6 @@
 pkgname=lyx
-pkgver=2.2.3
-pkgrel=2
+pkgver=2.3.0
+pkgrel=1
 pkgdesc="An advanced open-source document processor"
 arch=('x86_64')
 url="http://www.lyx.org"
@@ -8,18 +8,17 @@ screenshot=('http://www.lyx.org/images/about/main_window.png')
 depends=('qt5-base' 'qt5-svg' 'texlive-core' 'python2' 'perl' 'imagemagick' 'enchant' 'libmythes' 'boost-libs' 'icu' 'hunspell')
 makedepends=('boost' 'bc')
 optdepends=('texlive-most: TeX Live goodies'
-            'kbibtex: BibTeX reference manager')
+            'kbibtex: BibTeX reference manager'
+            'python3: support for python scripts')
 license=('GPL')
-source=("ftp://ftp.lyx.org/pub/lyx/stable/2.2.x/$pkgname-$pkgver.tar.xz"
-        'lyx.desktop'
+source=("ftp://ftp.lyx.org/pub/lyx/stable/2.3.x/$pkgname-$pkgver.tar.xz"
         'lyxrc.dist')
-md5sums=('032147bf8e05040787b0fca43fd70de3'
-         '3827d343670a38d97bdc7e002ff1e4a1'
+md5sums=('77fbdf197aad3643745bef635c43db7a'
          'b70fdeab95ba4a6c3ff72410dfa61823')
 
 build() {
   cd ${srcdir}/${pkgname}-${pkgver}
-
+  export CXXFLAGS="$CXXFLAGS -fpermissive"
   ./configure --prefix=/usr \
               --enable-qt5 \
               --without-included-boost \
@@ -29,13 +28,8 @@ build() {
 
 package() {
   cd "${srcdir}/${pkgname}-${pkgver}"
-
   make DESTDIR="${pkgdir}" install
-
-  # install desktop entry
-  install -Dm644 "${srcdir}/lyx.desktop" "${pkgdir}/usr/share/applications/lyx.desktop"
-  install -Dm644 "lib/images/lyx.png" "${pkgdir}/usr/share/pixmaps/lyx.png"
-  
   # install default config file
-  install -Dm644 "${srcdir}/lyxrc.dist" "${pkgdir}/usr/share/lyx/lyxrc.dist"
+  install -Dm644 "${srcdir}/lyxrc.dist" "${pkgdir}/etc/lyx/lyxrc.dist"
+  ln -sf /etc/lyx/lyxrc.dist "${pkgdir}/usr/share/lyx/lyxrc.dist"
 }
