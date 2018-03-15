@@ -1,13 +1,13 @@
 pkgname=clamav
 pkgver=0.99.4
-pkgrel=2
+pkgrel=3
 pkgdesc='Anti-virus toolkit for Unix'
 arch=('x86_64')
 install="${pkgname}.install"
 license=('GPL')
 categories=('system')
 backup=('etc/clamav/clamd.conf' 'etc/clamav/freshclam.conf' 'etc/logrotate.d/clamav')
-url='http://www.clamav.net/'
+url='https://www.clamav.net/'
 depends=('bzip2' 'libltdl' 'gcc-libs' 'libxml2' 'curl' 'pcre')
 makedepends=('libmilter')
 source=("http://www.clamav.net/downloads/production/${pkgname}-${pkgver}.tar.gz"{,.sig}
@@ -69,9 +69,4 @@ package() {
   install -Dm 644 ../clamav.sysusers "${pkgdir}"/usr/lib/sysusers.d/clamav.conf
   install -Dm 644 ../clamav.tmpfiles "${pkgdir}"/usr/lib/tmpfiles.d/clamav.conf
   install -Dm 644 ../clamav.logrotate "${pkgdir}"/etc/logrotate.d/clamav
-
-  install -d -o 64 -g 64 "${pkgdir}"/var/log/clamav
-  install -d -o 64 -g 64 "${pkgdir}"/var/lib/clamav
 }
-
-# vim: ts=2 sw=2 et:
