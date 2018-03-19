@@ -1,36 +1,29 @@
 pkgname=octave
-pkgver=4.2.1
-pkgrel=2
+pkgver=4.2.2
+pkgrel=1
 pkgdesc="A high-level language, primarily intended for numerical computations."
 arch=('x86_64')
 url="http://www.octave.org"
 license=('GPL')
 depends=('readline' 'glu' 'fftw' 'curl' 'graphicsmagick' 'glpk' 'hdf5' 'qhull' 'fltk'
-         'suitesparse' 'arpack' 'pcre' 'qt5-base' 'fontconfig' 'zlib' 'portaudio' 'qrupdate' 'freetype2' 'gl2ps' 'qscintilla')
+         'suitesparse' 'arpack' 'pcre' 'qt5-base' 'fontconfig' 'zlib' 'portaudio' 'qrupdate' 'freetype2' 'gl2ps'
+         'qscintilla-qt5' 'libsndfile')
 makedepends=('texlive-core' 'gcc-fortran' 'texinfo' 'gnuplot' 'openjdk')
 optdepends=('texinfo: for help-support in octave'
 	    'gnuplot: alternative plotting'
 	    'openjdk: to call Java functions')
-source=(ftp://ftp.gnu.org/gnu/octave/octave-$pkgver.tar.lz
-        octave-qscintilla.patch)
+source=(ftp://ftp.gnu.org/gnu/octave/octave-$pkgver.tar.gz)
 install='octave.install'
-sha1sums=('057dbaa30d0ef75e84db30aeda623a2561b0d547'
-          '47dfac41ad71edbcc99c58a55d12ad147f906a39')
-
-prepare(){
-   # Fix qscintilla libraries detection
-  patch -p1 -i ../octave-qscintilla.patch
-}
+sha1sums=('d7911a9932b31c720cedc22e78e4ad0aa1d1834b')
 
 build() {
   cd $pkgname-$pkgver
-  
-  autoreconf -vfi
     
   ./configure --prefix=/usr \
     --libexecdir=/usr/lib \
     --enable-shared \
     --disable-static \
+    --with-quantum-depth=16 \
     --with-umfpack="-lumfpack -lsuitesparseconfig" 
   MOC=moc UIC=uic
   
