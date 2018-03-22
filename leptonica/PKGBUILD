@@ -1,12 +1,12 @@
 pkgname=leptonica
-pkgver=1.73
+pkgver=1.75.3
 pkgrel=1
 pkgdesc="Software that is broadly useful for image processing and image analysis applications"
 arch=('x86_64')
 url="http://www.leptonica.com/"
 license=('custom')
-depends=('glibc')
-makedepends=('giflib' 'gnuplot' 'libjpeg' 'libpng' 'libtiff' 'zlib' 'libwebp')
+depends=('glibc' 'libwebp')
+makedepends=('giflib' 'gnuplot' 'libjpeg' 'libpng' 'libtiff' 'zlib')
 categories=('graphics')
 optdepends=('giflib:  for supporting gif files'
             'gnuplot: gnuplot support'
@@ -14,9 +14,8 @@ optdepends=('giflib:  for supporting gif files'
             'libpng:  for supporting png files'
             'libtiff: for supporting tiff files'
             'zlib:    for supporting compressed files')
-            'libwebp:    for supporting webp files'
 source=(http://www.leptonica.com/source/leptonica-${pkgver}.tar.gz)
-sha512sums=('4808474d5941a91fbf542a22fed26ddc33f9c4baf2699096acf5e894b7e4e84889d165373b7d1df391a68cda8176113cf122f15203a9e38d3059e17140efc575')
+sha512sums=('ba2586e76634afb9be6699e4261e55078dd176ee2d0674aedfe49f7f0736ddedadd6961bcce23391d47dc24511cf5ab4b451544f3349c2d060da5f789dc5ab3f')
 
 build() {
   cd ${srcdir}/leptonica-${pkgver}

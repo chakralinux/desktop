@@ -1,58 +1,39 @@
-# contributor (x86_64): Giuseppe CalÃƒ  <jiveaxe@gmail.com>
+# contributor (x86_64): Giuseppe Calà  <jiveaxe@gmail.com>
 
-_langs=(afr amh ara asm aze aze_cyrl bel ben bod bos bul cat ceb ces
-chi_sim chi_tra chr cym dan dan_frak deu deu_frak dzo ell eng enm epo
-equ est eus fas fin fra frk frm gle glg grc guj hat heb hin hrv hun
-iku ind isl ita ita_old jav jpn kan kat kat_old kaz khm kir kor kur
-lao lat lav lit mal mar mkd mlt msa mya nep nld nor ori pan pol
-por pus ron rus san sin slk slk_frak slv spa spa_old sqi srp srp_latn
-swa swe syr tam tel tgk tgl tha tir tur uig ukr urd uzb uzb_cyrl vie yid)
+_langs=(afr ara aze bel ben bul cat ces chi_sim chi_tra chr dan deu ell eng enm
+    epo equ est eus fin fra frk frm glg grc heb hin hrv hun ind isl ita ita_old
+    jpn kan kor lav lit mal mkd mlt msa nld nor pol por ron rus slk slv spa
+    spa_old sqi srp swa swe tam tel tgl tha tur ukr vie)
 
-pkgbase=tesseract
-pkgname=(tesseract $(for l in ${_langs[@]}; do echo tesseract-data-${l}; done))
-pkgver=3.04.00
-pkgrel=2
-pkgdesc="An OCR programm"
+pkgname=tesseract
+pkgver=3.05.01
+pkgrel=3
+pkgdesc="An OCR program"
 arch=(x86_64)
-url="http://code.google.com/p/tesseract-ocr"
+url="https://github.com/tesseract-ocr/tesseract"
 license=("APACHE")
-depends=(libwebp libpng libtiff libjpeg zlib giflib gcc-libs leptonica)
+depends=(libpng libtiff libjpeg-turbo zlib giflib gcc-libs leptonica)
 makedepends=(icu cairo pango)
+install=tesseract.install
+optdepends=('icu' 'cairo' 'pango'
+	    $(for l in ${_langs[@]}; do echo tesseract-data-${l}; done))
 source=($pkgname-$pkgver.tar.gz::https://github.com/tesseract-ocr/tesseract/archive/$pkgver.tar.gz
-        $pkgbase-data-$pkgver.tar.gz::https://github.com/tesseract-ocr/tessdata/archive/$pkgver.tar.gz
 	https://github.com/tesseract-ocr/tessdata/raw/master/osd.traineddata)
-md5sums=('078130b9c7d28c558a0e49d432505864'
-         'b25e830d203af5c863081af3f684b53a'
-         'd7c06843a771f30fb64b4109a1b059f9')
+sha256sums=('05898f93c5d057fada49b9a116fc86ad9310ff1726a0f499c3e5211b3af47ec1'
+            'e19f2ae860792fdf372cf48d8ce70ae5da3c4052962fe22e9de1f680c374bb0e')
+
 build() {
-  cd $srcdir/$pkgname-${pkgver}
+  cd "$srcdir"/$pkgname-${pkgver}
+  [ -x configure ] || ./autogen.sh
   [ -f Makefile ] || ./configure --prefix=/usr
   make
   make training
 }
 
-package_tesseract() {
-  optdepends=('icu' 'cairo' 'pango'
-	    $(for l in ${_langs[@]}; do echo tesseract-data-${l}; done))
-
-  cd $srcdir/$pkgname-${pkgver}
-  make DESTDIR=$pkgdir install
-  make DESTDIR=$pkgdir training-install
-  mkdir -p $pkgdir/usr/share/tessdata
-  install -Dm0644 $srcdir/osd.traineddata $pkgdir/usr/share/tessdata/osd.traineddata
+package() {
+  cd "$srcdir"/$pkgname-${pkgver}
+  make DESTDIR="$pkgdir" install
+  make DESTDIR="$pkgdir" training-install
+  mkdir -p "$pkgdir"/usr/share/tessdata
+  install -Dm0644 "$srcdir"/osd.traineddata "$pkgdir"/usr/share/tessdata/osd.traineddata
 }
-
-# Declare the package functions for data
-for l in ${_langs[@]}; do
-    eval "
-package_tesseract-data-${l}(){
-    pkgdesc=\"Tesseract OCR data ($l)\"
-    depends=('tesseract')
-    groups=('tesseract-data')
-
-    mkdir -p \$pkgdir/usr/share/tessdata
-    cp \$srcdir/tessdata-$pkgver/${l}.* \$pkgdir/usr/share/tessdata/
-    find \$pkgdir/usr/share/tessdata -type f -exec chmod 0644 {} \;
-}
-    "
-done
