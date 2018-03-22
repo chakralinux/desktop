@@ -1,7 +1,7 @@
 # Contributions from Arch: https://www.archlinux.org/packages/community/x86_64/blender/
 
 pkgname=blender
-pkgver=2.79
+pkgver=2.79a
 _gittag=v${pkgver}
 #_gitcommit=c6b042be
 [[ -n ${_gitcommit} ]] && pkgver=${pkgver}.git1.${_gitcommit}
@@ -14,7 +14,7 @@ url="http://www.blender.org"
 depends=('libpng' 'libtiff' 'openexr' 'python3' 'python3-requests' 'desktop-file-utils'
          'shared-mime-info' 'hicolor-icon-theme' 'xdg-utils' 'glew' 'libspnav'
          'freetype2' 'openal' 'ffmpeg' 'fftw' 'boost-libs' 'x264' 'opencollada'
-         'openimageio' 'libsndfile' 'jack' 'opencolorio' 'openjpeg' 'jemalloc' 'ptex' 'opensubdiv')
+         'openimageio' 'libsndfile' 'jack' 'opencolorio' 'openjpeg' 'jemalloc' 'ptex' 'opensubdiv' 'openjpeg2')
 makedepends=('cmake' 'boost' 'mesa' 'git' 'llvm' 'python2') # man pages require python
 optdepends=('cuda: cycles renderer cuda support')
 screenshot=('http://www.blender.org/index.php?eID=tx_cms_showpic&file=uploads%2Fpics%2Fblender_screenshot3_03.png&width=800m&height=600m&bodyTag=%3Cbody%20style%3D%22margin%3A0%3B%20background%3A%23fff%3B%22%3E&wrap=%3Ca%20href%3D%22javascript%3Aclose%28%29%3B%22%3E%20%7C%20%3C%2Fa%3E&md5=cddc8ef0fbe1e90d0d22e78b4911860b')
@@ -65,7 +65,7 @@ build() {
     -DWITH_GL_PROFILE_CORE=OFF \
     -DWITH_GL_PROFILE_ES20=OFF \
     -DWITH_LLVM=ON \
-    -DLLVM_VERSION=4.0 \
+    -DLLVM_VERSION=5.0 \
     -DLLVM_STATIC=OFF \
     -DWITH_CYCLES_CUDA_BINARIES=ON \
     -DWITH_CYCLES_PTEX=OFF \
