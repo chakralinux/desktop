@@ -2,23 +2,24 @@
 # Maintainer: Antonio Rojas <arojas@archlinux,org>
 
 pkgname=krita
-pkgver=3.3.3
-pkgrel=2
+pkgver=4.0.0
+pkgrel=1
 pkgdesc="Edit and paint images"
 arch=('x86_64')
 url="https://krita.org"
 license=('LGPL')
 depends=('kio' 'kitemmodels' 'gsl' 'libraw' 'opencolorio' 'exiv2' 'openexr' 'openjpeg' 'fftw' 'curl' 'boost-libs' 
-         'hicolor-icon-theme' 'ffmpeg' 'qt5-multimedia')
-makedepends=('extra-cmake-modules' 'kdoctools' 'python3' 'boost' 'eigen3' 'vc' 'poppler-qt5' 'opencolorio')
+         'hicolor-icon-theme' 'ffmpeg' 'qt5-multimedia' 'giflib')
+makedepends=('extra-cmake-modules' 'kdoctools' 'python3' 'boost' 'eigen3' 'vc' 'poppler-qt5' 'opencolorio' 'python3-pyqt5')
 optdepends=('poppler-qt5: PDF filter'
-            'opencolorio: for the LUT docker')
+            'opencolorio: for the LUT docker'
+            'python-pyqt5: for the Python plugins')
 conflicts=('calligra-krita')
 provides=('calligra-krita')
 replaces=('calligra-krita')
 source=("https://download.kde.org/stable/krita/$pkgver/$pkgname-$pkgver.tar.gz")
 install=$pkgname.install
-sha1sums=('66c868ffd00d5bb86e55f8e38ceda81d8003e133')
+sha1sums=('efb0b4132fda635d21e59995b5d4829b58ff73ab')
 
 build() {
   cd $pkgname-$pkgver
