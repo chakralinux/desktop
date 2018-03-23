@@ -1,5 +1,5 @@
 pkgname=qtractor
-pkgver=0.8.6
+pkgver=0.9.0
 pkgrel=1
 pkgdesc="Audio/MIDI multitrack sequencer"
 arch=('x86_64')
@@ -10,19 +10,14 @@ depends=('qt5-base' 'qt5-x11extras' 'jack' 'libmad' 'libsamplerate' 'rubberband'
 	 'lilv' 'rubberband' 'shared-mime-info' 'desktop-file-utils' 'hicolor-icon-theme')
 makedepends=('ladspa' 'dssi' 'qt5-tools')
 categories=('multimedia')
-source=("http://downloads.sourceforge.net/$pkgname/$pkgname-$pkgver.tar.gz")
-sha256sums=('a34a4bf57d1d8cbc9a84b04744e137e0fa238099887cc59ce9f47acdd82ac761')
-
-prepare() {
-  cd $pkgname-$pkgver
-  # fix to make .configure recognize Qt>=5.1
-  export CXXFLAGS="${CXXFLAGS} -std=c++11" 
-}
+source=("https://downloads.sourceforge.net/$pkgname/$pkgname-$pkgver.tar.gz")
+sha256sums=('ca0e0167b66c3c68266018979d6e60bab18c0486cd9811f512568e794e10090d')
 
 build() {
   cd $pkgname-$pkgver
 
   ./configure --prefix=/usr \
+              --libdir=/usr/lib \
 	      --disable-lv2-ui-gtk2
   make
 }
@@ -34,4 +29,8 @@ package () {
   install -d $pkgdir/usr/share/pixmaps
   cp $pkgdir/usr/share/icons/hicolor/scalable/apps/qtractor.svg \
   $pkgdir/usr/share/pixmaps/qtractor.svg
+
+  # Install docs
+  install -t "${pkgdir}/usr/share/doc/${pkgname}" \
+    -vDm644 {AUTHORS,README,README.VST,TODO}
 }
