@@ -1,70 +1,30 @@
-# NOTE when wxwidget will be ported to Qt, we can also build mediainfo-gui
+# Contributions from Arch:
+# Maintainer: Johannes Löthberg <johannes@kyriasis.com>
+# Contributor: Sergej Pupykin <pupykin.s+arch@gmail.com>
+# Contributor: hydro <hydro@freenet.de>
 
-pkgbase=mediainfo
-pkgname=('mediainfo' 'libmediainfo')
-pkgver=0.7.97
+pkgname=mediainfo
+pkgver=18.03
 pkgrel=1
+pkgdesc="supplies technical and tag information about a video or audio file"
+url="https://mediaarea.net"
 arch=('x86_64')
-url="http://mediaarea.net"
 license=('GPL')
+depends=('libmediainfo')
 makedepends=('libtool' 'automake' 'autoconf')
-_zenver=0.4.35
-source=("https://mediaarea.net/download/source/mediainfo/$pkgver/mediainfo_$pkgver.tar.bz2"
-        "https://mediaarea.net/download/source/libmediainfo/$pkgver/libmediainfo_$pkgver.tar.bz2"
-        "https://mediaarea.net/download/source/libzen/${_zenver}/libzen_${_zenver}.tar.bz2")
-sha256sums=('91ba3b72f3fb4c18afdfaf974049228b78bc341dba53639448fb7e1a8dcfd3c2'
-            'fe454f610881733e94af400a09cc268a4e9a9c3ab03156addda2ab5d3a316de9'
-            '7e21978d425801c498fcc4d5043c75b0bc3e4721618a180728fb39c71e8b4189')
+source=(https://mediaarea.net/download/source/mediainfo/$pkgver/mediainfo_$pkgver.tar.xz)
+sha256sums=('c1fa4ef50c99081350d0efb00e6c1fb2e196872a321cd2e1f27f516371d83d9c')
 
 build() {
-  # we just need to build libzen,
-  # libmediainfo will grab the static lib automatically
-  msg "building libzen"
-  cd "$srcdir"/ZenLib/Project/GNU/Library
-  ./autogen.sh
-  ./configure --prefix=/usr \
-              --disable-shared \
-              --enable-static
-  make
+  cd MediaInfo/Project/GNU/CLI
 
-  msg "building libmediainfo"
-  cd "$srcdir"/MediaInfoLib/Project/GNU/Library
-  ./autogen.sh
-  ./configure --prefix=/usr \
-              --enable-shared \
-              --disable-static \
-              --with-libcurl \
-              --with-libmms \
-              --enable-staticlibs
-  make
-
-  msg "building mediainfo"
-  cd "$srcdir"/MediaInfo/Project/GNU/CLI
-  ./autogen.sh
+  sh ./autogen.sh
   ./configure --prefix=/usr
+
   make
 }
 
-package_mediainfo() {
-  pkgdesc="supplies technical and tag information about a video or audio file"
-  depends=('libmediainfo')
-
-  cd "$srcdir"/MediaInfo/Project/GNU/CLI
+package() {
+  cd MediaInfo/Project/GNU/CLI
   make DESTDIR="$pkgdir" install
 }
-
-package_libmediainfo() {
-  pkgdesc="shared library for mediainfo"
-  depends=('gcc-libs' 'curl' 'libmms')
-
-  cd "$srcdir"/MediaInfoLib/Project/GNU/Library
-  make DESTDIR="$pkgdir" install
-  for i in MediaInfo MediaInfoDLL; do
-    install -dm 755 "$pkgdir"/usr/include/$i
-    install -m 644 "$srcdir"/MediaInfoLib/Source/$i/*.h "$pkgdir"/usr/include/$i
-  done
-  install -dm 755 "$pkgdir"/usr/lib/pkgconfig
-  install -m 644 "$srcdir"/MediaInfoLib/Project/GNU/Library/libmediainfo.pc "$pkgdir"/usr/lib/pkgconfig
-}
-
-# vim:set ts=2 sw=2 et:
