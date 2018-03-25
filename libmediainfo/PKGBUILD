@@ -1,0 +1,42 @@
+# Contributions from Arch:
+# Maintainer: Johannes Löthberg <johannes@kyriasis.com>
+# Contributor: Sergej Pupykin <pupykin.s+arch@gmail.com>
+# Contributor:  hydro <hydro@freenet.de>
+
+pkgname=libmediainfo
+pkgver=18.03
+pkgrel=1
+pkgdesc="shared library for mediainfo"
+url="https://mediaarea.net"
+arch=('x86_64')
+license=('GPL')
+depends=('curl' 'libmms' 'libzen')
+makedepends=('libtool' 'automake' 'autoconf')
+source=(https://mediaarea.net/download/source/libmediainfo/$pkgver/libmediainfo_$pkgver.tar.xz)
+sha256sums=('fb451233bea6bdf188ef76f237e02e907ef632b85a166e44d60e559d66c49fb4')
+
+build() {
+  cd MediaInfoLib/Project/GNU/Library
+
+  sh ./autogen.sh
+  ./configure --prefix=/usr \
+              --enable-shared \
+              --disable-static \
+              --with-libcurl \
+              --with-libmms
+
+  make
+}
+
+package() {
+  cd MediaInfoLib/Project/GNU/Library
+
+  make DESTDIR="$pkgdir" install
+  for i in MediaInfo MediaInfoDLL; do
+    install -dm 755 "$pkgdir"/usr/include/$i
+    install -m 644 "$srcdir"/MediaInfoLib/Source/$i/*.h "$pkgdir"/usr/include/$i
+  done
+  install -dm 755 "$pkgdir"/usr/lib/pkgconfig
+  install -m 644 "$srcdir"/MediaInfoLib/Project/GNU/Library/libmediainfo.pc "$pkgdir"/usr/lib/pkgconfig
+  sed -i -e 's|Version: |Version: '$pkgver'|g' "$pkgdir"/usr/lib/pkgconfig/libmediainfo.pc
+}
