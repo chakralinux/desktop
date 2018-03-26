@@ -1,12 +1,12 @@
 pkgname=clamav
 pkgver=0.99.4
-pkgrel=3
+pkgrel=4
 pkgdesc='Anti-virus toolkit for Unix'
 arch=('x86_64')
 install="${pkgname}.install"
 license=('GPL')
 categories=('system')
-backup=('etc/clamav/clamd.conf' 'etc/clamav/freshclam.conf' 'etc/logrotate.d/clamav')
+backup=('etc/clamav/clamd.conf' 'etc/clamav/freshclam.conf' 'etc/logrotate.d/clamav' 'etc/clamav/clamav-milter.conf')
 url='https://www.clamav.net/'
 depends=('bzip2' 'libltdl' 'gcc-libs' 'libxml2' 'curl' 'pcre')
 makedepends=('libmilter')
@@ -34,6 +34,7 @@ prepare() {
   sed -E 's|#(PidFile) .+|\1 /run/clamav/freshclam.pid|' -i etc/freshclam.conf.sample
   sed -E 's|#(LogFile) .+|\1 /var/log/clamav/clamav-milter.log|' -i etc/clamav-milter.conf.sample
   sed -E 's|#(PidFile) .+|\1 /run/clamav/clamav-milter.pid|' -i etc/clamav-milter.conf.sample
+  sed -E 's|/sbin|/bin|' -i clamd/clamav-daemon.service.in
   autoreconf -fiv
 }
 build() {
@@ -62,9 +63,9 @@ package() {
   
   make DESTDIR="${pkgdir}" install
 
-  mv "${pkgdir}"/etc/clamav/freshclam.conf{.sample,}
-  mv "${pkgdir}"/etc/clamav/clamd.conf{.sample,}
-  mv "${pkgdir}"/etc/clamav/clamav-milter.conf{.sample,}
+  cp "${pkgdir}"/etc/clamav/freshclam.conf{.sample,}
+  cp "${pkgdir}"/etc/clamav/clamd.conf{.sample,}
+  cp "${pkgdir}"/etc/clamav/clamav-milter.conf{.sample,}
 
   install -Dm 644 ../clamav.sysusers "${pkgdir}"/usr/lib/sysusers.d/clamav.conf
   install -Dm 644 ../clamav.tmpfiles "${pkgdir}"/usr/lib/tmpfiles.d/clamav.conf
