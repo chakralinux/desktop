@@ -1,9 +1,8 @@
 # Arch contribution https://aur4.archlinux.org/packages/rstudio-desktop/
 
 pkgname=rstudio
-_pkgname=rstudio-rstudio
-pkgver=1.0.143
-pkgrel=2
+pkgver=1.1.442
+pkgrel=1
 pkgdesc="A new integrated development environment (IDE) for R - The Desktop Client"
 arch=('x86_64')
 url="http://www.rstudio.org/"
@@ -14,15 +13,12 @@ provides=('rstudio-desktop')
 categories=('programming')
 install=rstudio-desktop.install
 source=("https://github.com/$pkgname/$pkgname/tarball/v$pkgver"
-	"http://www.rstudio.com/wp-content/uploads/2014/06/RStudio-Ball.png"
-        "rroutines-style.patch")
-sha256sums=('8d597da85b007e2cdbd5c5e7e0005907c7672c2f6dd87c8481c27032f6e57705'
-            'b14d11376099fe27e3f355367aca779e985840ea36ec08235feca62c67bd53c3'
-            'b953527f46320d64425f7de257f774d7f354199b7c6a71f126ed467b6e6dd52b')
+	"http://www.rstudio.com/wp-content/uploads/2014/06/RStudio-Ball.png")
+sha256sums=('f4123a532d96a52ee351e9e79972d9aa51ef4bb55529a55b37adc9650eefa984'
+            'b14d11376099fe27e3f355367aca779e985840ea36ec08235feca62c67bd53c3')
 
 build() {
   cd "$srcdir/$pkgname-$pkgname-"*
-  patch -p 1 -i "$srcdir/rroutines-style.patch"
   
   cd dependencies/common
 
@@ -32,7 +28,7 @@ build() {
   # ln -sfT /usr/share/mathjax mathjax-23
   sh install-gwt
   sh install-libclang
-  sh install-pandoc
+  ./install-pandoc
   sh install-packages
   
   # Configure and build.
