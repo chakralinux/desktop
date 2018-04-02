@@ -1,22 +1,20 @@
 pkgname=freeciv
-pkgver=2.5.6
-pkgrel=2
+pkgver=2.5.11
+pkgrel=1
 pkgdesc="Multiplayer clone of Civilization™."
 arch=('x86_64')
 url="http://www.freeciv.org/"
 license=('GPL2')
 depends=('bzip2' 'freetype2' 'readline' 'sqlite3' 'curl' 'libltdl' 'sdl' 'sdl_mixer' 'qt5-base')
 makedepends=('qt5-tools')
-changelog=ChangeLog
 categories=('games')
 backup=('etc/freeciv/database.lua')
 source=(http://downloads.sourceforge.net/sourceforge/$pkgname/$pkgname-$pkgver.tar.bz2)
-sha256sums=('cfadc23eec11a5a8ae74a7d3719eb126026137f0700da065367fd55cbab6999b')
+sha256sums=('4c9c526952fe977cb4b302b8ccf75798fd066c6dde670f72f677fe4964259aad')
 
 build() {
   cd $srcdir/$pkgname-$pkgver
   export MOCCMD="/usr/lib/qt5/bin/moc"
-  export CXXFLAGS="$CXXFLAGS -std=c++11"
   ./configure \
     --prefix=/usr \
     --mandir=/usr/share/man \
