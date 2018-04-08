@@ -1,6 +1,6 @@
 pkgname=qtcreator
-pkgver=4.5.2
-_pkgver=4.5
+pkgver=4.6.0
+_pkgver=4.6
 pkgrel=1
 pkgdesc='Lightweight, cross-platform integrated development environment'
 arch=('x86_64')
@@ -22,7 +22,7 @@ optdepends=('qt5-doc: for the integrated Qt documentation'
             'valgrind: for analyze support')
 install=${pkgname}.install
 source=("http://download.qt.io/official_releases/${pkgname}/${_pkgver}/${pkgver}/qt-creator-opensource-src-${pkgver}.tar.gz")
-md5sums=('0f163a2a2453ee99f9f1c6e716bcc176')
+md5sums=('2ab3ed282747d0e8010ac93e967d99ab')
 
 prepare() {
   [[ -d build ]] && rm -r build
@@ -37,7 +37,8 @@ prepare() {
 build() {
   cd build
 
-  qmake-qt5 CONFIG+=journald ../qt-creator-opensource-src-${pkgver}/qtcreator.pro
+  qmake-qt5 LLVM_INSTALL_DIR=/usr QBS_INSTALL_DIR=/usr CONFIG+=journald QMAKE_CFLAGS_ISYSTEM=-I \
+    DEFINES+=QBS_ENABLE_PROJECT_FILE_UPDATES "$srcdir"/qt-creator-opensource-src-${pkgver}/qtcreator.pro
   make
   make docs
 }
