@@ -1,5 +1,5 @@
 pkgname=htop
-pkgver=2.1.0
+pkgver=2.2.0
 pkgrel=1
 pkgdesc="Interactive process viewer"
 arch=('x86_64')
@@ -9,12 +9,16 @@ depends=('ncurses')
 makedepends=('python2')
 optdepends=('lsof: show files opened by a process'
             'strace: attach to a running process')
-source=("http://hisham.hm/$pkgname/releases/$pkgver/$pkgname-$pkgver.tar.gz")
-md5sums=('f262b66ad6c194782f4d3a80627e84c8')
+source=("http://hisham.hm/$pkgname/releases/$pkgver/$pkgname-$pkgver.tar.gz"
+        '0001-fix-option-string.patch')
+md5sums=('0d816b6beed31edc75babcfbf863ffa8'
+         'fbeab356b156f00e5b9838d4f6bad37b')
 
 prepare() {
   cd ${srcdir}/${pkgname}-${pkgver}
   
+  patch -Np1 < "${srcdir}"/0001-fix-option-string.patch
+
   sed -i 's|ncursesw/curses.h|curses.h|' RichString.h RichString.c configure 
   sed -i 's|python|python2|' scripts/MakeHeader.py
 }
@@ -28,7 +32,8 @@ build() {
       --enable-unicode \
       --enable-openvz \
       --enable-vserver \
-      --enable-cgroup
+      --enable-cgroup \
+      --enable-delayacct
 
   make
 }
