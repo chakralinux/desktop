@@ -3,30 +3,23 @@
 # Contributor: Rémy Oudompheng <remy@archlinux.org>
 
 pkgname=pyalpm
-pkgver=0.7
-pkgrel=3
+pkgver=0.8.2
+pkgrel=1
 pkgdesc="Libalpm bindings for Python 3"
 arch=('x86_64')
-url="http://projects.archlinux.org/users/remy/pyalpm.git/"
+url="https://git.archlinux.org/pyalpm.git/"
 license=('GPL')
-depends=('python3>=3.6' 'pacman>=4.2')
-source=("https://sources.archlinux.org/other/pyalpm/$pkgname-$pkgver.tar.gz" 
-        "py35.patch::https://projects.archlinux.org/users/remy/pyalpm.git/patch/?id=dc61782e9bd085a8a09bc7954231eb15e6e085e5")
-sha1sums=('62fafb93d30c27b5a5a09df3e802d6e50fed9802'
-          'd019d6870f89d7b99678065d09d7919b3fa40a39')
-
-prepare() {
-  cd ${srcdir}/${pkgname}-${pkgver}
-  patch -Np1 -i ../py35.patch
-}
+depends=('python3>=3.6' 'pacman>=5.0')
+source=("https://git.archlinux.org/pyalpm.git/snapshot/$pkgname-$pkgver.tar.gz" )
+sha1sums=('6cbfc13d155a655732aa6ebbef7ba407ef7a0889')
 
 build() {
-  cd ${srcdir}/${pkgname}-${pkgver}
+  cd $pkgname-$pkgver
 
   python3 setup.py build
 }
 
 package() {
-  cd ${srcdir}/${pkgname}-${pkgver}
-  python3 setup.py install --root=${pkgdir}
+  cd $pkgname-$pkgver
+  python3 setup.py install --root=$pkgdir
 }
