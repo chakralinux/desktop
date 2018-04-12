@@ -3,7 +3,7 @@
 # Original Arch Linux Contributor: Pierre Schmitz <pierre@archlinux.de>
 
 pkgname=rkhunter
-pkgver=1.4.2
+pkgver=1.4.6
 pkgrel=1
 pkgdesc='Checks machines for the presence of rootkits and other unwanted tools.'
 arch=('x86_64')
@@ -13,32 +13,32 @@ depends=('bash' 'perl' 'wget')
 optdepends=('unhide')
 backup=('etc/rkhunter.conf')
 categories=('system')
-source=("http://downloads.sourceforge.net/sourceforge/${pkgname}/${pkgname}-${pkgver}.tar.gz")
-md5sums=('85ad366b7f3999eb2a9371e39a1a4df7')
+source=("http://downloads.sourceforge.net/sourceforge/$pkgname/$pkgname-$pkgver.tar.gz")
+md5sums=('35bf1e2850343a4768e34a3fc260b8a1')
 
 package() {
-  cd "${srcdir}/${pkgname}-${pkgver}"
+  cd $pkgname-$pkgver
 
   # fix installer for x86_64
   sed -i -e "s/lib64/lib/g" installer.sh
 
   # install to "/usr"
-  install -dm0755 "${pkgdir}/usr"
-  ./installer.sh --layout custom "${pkgdir}/usr" --striproot "${pkgdir}" --install
+  install -dm0755 $pkgdir/usr
+  ./installer.sh --layout custom "$pkgdir/usr" --striproot "$pkgdir" --install
 
   # fix paths
-  mv "${pkgdir}/usr/etc" "${pkgdir}"
-  mv "${pkgdir}/usr/var" "${pkgdir}"
+  mv $pkgdir/usr/etc $pkgdir
+  mv $pkgdir/usr/var $pkgdir
 
-  sed -i -e "s#/usr/etc/rkhunter.conf#/etc/rkhunter.conf#g" "${pkgdir}/usr/bin/${pkgname}"
-  sed -i -e "s#/usr/etc/rkhunter.conf#/etc/rkhunter.conf#g" "${pkgdir}/etc/${pkgname}.conf"
-  sed -i -e "s#/usr/var/lib/rkhunter/db#/var/lib/rkhunter/db#g" "${pkgdir}/etc/${pkgname}.conf"
-  sed -i -e "s#/usr/var/lib/rkhunter/tmp#/var/lib/rkhunter/tmp#g" "${pkgdir}/etc/${pkgname}.conf"
+  sed -i -e "s#/usr/etc/rkhunter.conf#/etc/rkhunter.conf#g" $pkgdir/usr/bin/$pkgname
+  sed -i -e "s#/usr/etc/rkhunter.conf#/etc/rkhunter.conf#g" $pkgdir/etc/$pkgname.conf
+  sed -i -e "s#/usr/var/lib/rkhunter/db#/var/lib/rkhunter/db#g" $pkgdir/etc/$pkgname.conf
+  sed -i -e "s#/usr/var/lib/rkhunter/tmp#/var/lib/rkhunter/tmp#g" $pkgdir/etc/$pkgname.conf
 
   # cleanup
-  rm -f "${pkgdir}/var/lib/${pkgname}/tmp/"{group,passwd}
+  rm -f $pkgdir/var/lib/$pkgname/tmp/{group,passwd}
 
   # we trust in udev
   sed -i 's|^#ALLOWHIDDENDIR=/dev/.udev$|ALLOWHIDDENDIR=/dev/.udev|' \
-    "${pkgdir}/etc/${pkgname}.conf"
+    $pkgdir/etc/$pkgname.conf
 }
