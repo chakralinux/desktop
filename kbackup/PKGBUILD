@@ -1,15 +1,15 @@
 source ../kdeapps.conf
 
-pkgname=kamoso
+pkgname=kbackup
 pkgver=${_kdever}
 pkgrel=1
-pkgdesc="Kamoso is an application to take pictures and videos out of your webcam."
-url="https://userbase.kde.org/Kamoso"
-arch=('x86_64')
-license=('GPL')
-depends=('qt5-gstreamer' 'purpose' 'gst-plugins-bad' 'qt5-quickcontrols')
-makedepends=('extra-cmake-modules' 'kdoctools' 'boost' 'python3')
-groups=(kde-applications kdemultimedia)
+pkgdesc="A program that lets you back up any directories or files"
+arch=(x86_64)
+url="https://www.kde.org/applications/utilities/kbackup/"
+license=(GPL)
+groups=(kde-applications kdeutils)
+depends=(kio hicolor-icon-theme)
+makedepends=(extra-cmake-modules kdoctools)
 source=("$_mirror/${pkgname}-$_kdever.tar.xz"{,.sig})
 sha256sums=(`grep ${pkgname}-$_kdever.tar.xz  ../kdeapps.sums | cut -d " " -f1`
                         'SKIP')
