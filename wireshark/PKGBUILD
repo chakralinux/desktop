@@ -58,22 +58,6 @@ package() {
     install -Dm 644 ${d}/*.h -t "${pkgdir}/usr/include/${pkgname}/${d}"
   done
 
-  install -m644 cfile.h config.h file.h register.h ws_diag_control.h ws_symbol_export.h "${pkgdir}/usr/include/${pkgname}"
-  for d in epan epan/crypt epan/dfilter epan/dissectors epan/ftypes epan/wmem wiretap wsutil; do
-    install -m644 ${d}/*.h ${pkgdir}/usr/include/${pkgname}/${d}
-  done
-  
-
-  for d in 16 32 48; do
-    install -Dm644 image/hi${d}-app-wireshark.png  \
-                   "${pkgdir}/usr/share/icons/hicolor/${d}x${d}/apps/wireshark.png"
-  done
-
-  for d in 16 24 32 48 64 128 256 ; do
-    install -Dm644 image/WiresharkDoc-${d}.png \
-                   "${pkgdir}/usr/share/icons/hicolor/${d}x${d}/mimetypes/application-vnd.tcpdump.pcap.png"
-  done
-
   install -Dm 755 .libs/wireshark "${pkgdir}/usr/bin/wireshark"
   install -Dm 644 wireshark.desktop -t "${pkgdir}/usr/share/applications"
   rm "${pkgdir}/usr/share/applications/wireshark-gtk.desktop"
