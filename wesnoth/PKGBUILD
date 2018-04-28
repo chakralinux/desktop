@@ -1,29 +1,24 @@
 pkgname=wesnoth
-pkgver=1.12.6
-pkgrel=3
+pkgver=1.14.0
+pkgrel=1
 pkgdesc="A turn-based strategy game on a fantasy world."
 arch=('x86_64')
 license=('GPL2')
 url="http://www.wesnoth.org/"
-depends=('boost-libs' 'freetype2' 'fribidi' 'gcc-libs' 'icu' 'libvorbis' 'lua' 'pango' 'sdl_image' 'sdl_mixer' 
-'sdl_net' 'sdl_ttf' 'dbus' 'python2')
+depends=('boost-libs' 'freetype2' 'fribidi' 'gcc-libs' 'icu' 'libvorbis' 'lua52' 'pango' 'sdl2_image' 'sdl2_mixer' 
+         'sdl2_net' 'sdl2_ttf' 'dbus' 'python2')
 makedepends=('boost' 'cmake')
 conflicts=('wesnoth-dev' 'wesnoth-svn')
 categories=('games')
-source=(http://downloads.sourceforge.net/sourceforge/${pkgname}/${pkgname}-${pkgver}.tar.bz2
-        "wesnoth-boost.patch"
+source=(https://downloads.sourceforge.net/sourceforge/${pkgname}/${pkgname}-${pkgver}.tar.bz2
         "wesnothd.tmpfiles.conf"
         "wesnothd.service")
-sha256sums=('a50f384cead15f68f31cfa1a311e76a12098428702cb674d3521eb169eb92e4e'
-            'ccacb1049a71935392b46f919c4045b11936b232522ed2763561fbc0fb1e40b7'
+sha256sums=('7c81ca4a4896a34789514025b999daf028d846b70aa556e18fca9de047c1d126'
             '1ae908f0608e9600088d3175c2276923e7fdccf825850d3f6e607bc197987e70'
             'd314dbefc72d09f2e3b1db15c4dc20873771f26df2360b39b55481deaeba00db')
 
 build() {
   cd ${srcdir}/${pkgname}-${pkgver}
-  
-  # Try this again in a new version when they fix their linking to boost
-  patch -Np1 < ${srcdir}/wesnoth-boost.patch
 
   mkdir -p build && cd build
   cmake \
