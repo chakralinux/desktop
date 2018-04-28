@@ -5,7 +5,6 @@ pkgdesc='Evented I/O for V8 javascript'
 arch=('x86_64')
 url='http://nodejs.org/'
 license=('MIT')
-depends=('openssl')
 makedepends=('python2' 'procps-ng')
 optdepends=('npm: nodejs package manager')
 checkdepends=('curl')
@@ -34,8 +33,7 @@ build() {
     --prefix=/usr \
     --with-intl=full-icu \
     --download=all \
-    --without-npm \
-    --shared-openssl
+    --without-npm
 
   make
 }
