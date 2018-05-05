@@ -1,26 +1,27 @@
 pkgname=mpc
-pkgver=0.28
+pkgver=0.30
 pkgrel=1
 pkgdesc="Minimalist command line interface to MPD"
 arch=('x86_64')
 url='http://www.musicpd.org/clients/mpc/'
 license=('GPL2')
 depends=('libmpdclient')
+makedepends=('meson' 'python3-sphinx')
 options=('!emptydirs')
 source=("http://www.musicpd.org/download/${pkgname}/${pkgver%.*}/${pkgname}-${pkgver}.tar.xz")
-sha512sums=('1d0c96c3c7cee2eac2d3cf25f09d74b5807b8ea56ff7dfc033b8fa690fd4d42de726a641e4f2552550d8a1c1b2840575aec5c595166ca5ae5776fcc93c8fb7cf')
+sha256sums=('65fc5b0a8430efe9acbe6e261127960682764b20ab994676371bdc797d867fce')
 
 build() {
     cd "$srcdir/$pkgname-$pkgver"
-    ./configure --prefix=/usr
-    make
+    chakra-meson . build
+    ninja -C build
 }
 
 package() {
     cd "$srcdir/$pkgname-$pkgver"
-    make DESTDIR="$pkgdir" install
-	
+    DESTDIR="${pkgdir}" ninja -C build install
+
     # Install bash completion file
-    install -Dm644 doc/mpc-completion.bash "${pkgdir}/usr/share/bash-completion/completions/mpc"
+    install -Dm644 contrib/mpc-completion.bash "${pkgdir}/usr/share/bash-completion/completions/mpc"
 }
  
