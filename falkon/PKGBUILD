@@ -1,6 +1,6 @@
 pkgname='falkon'
 pkgver=3.0.1
-pkgrel=1
+pkgrel=2
 pkgdesc="Cross-platform QtWebEngine browser"
 url="https://github.com/KDE/falkon"
 arch=('x86_64')
@@ -17,7 +17,7 @@ source=("http://download.kde.org/stable/$pkgname/$pkgver/$pkgname-$pkgver.tar.xz
         '0001-branded-speeddial.patch'
         'start-white.png')
 sha1sums=('1c3b75b8c156b4f28ebb3c30e60e72c57233d47c'
-          '0045ac3a37a6a16347acf82046b63cd772bbd377'
+          '4a8ce572682fb15839eca91842e874c17b50cb65'
           '6ec67993bda3054d4210cc08177b124f873774e3')
 
 prepare() {
@@ -31,7 +31,7 @@ prepare() {
       -e 's|"backsize", "auto"|"backsize", "contain"|' -i speeddial.cpp
   cd $srcdir/$pkgname-$pkgver
   
-  patch -Np1 -i ../0001-branded-speeddial.patch
+#  patch -Np1 -i ../0001-branded-speeddial.patch
   
   msg 'Applying preference patch'
   cd src/lib/preferences/
