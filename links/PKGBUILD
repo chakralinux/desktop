@@ -1,5 +1,5 @@
 pkgname=links
-pkgver=2.15
+pkgver=2.16
 pkgrel=1
 pkgdesc="A text WWW browser, similar to Lynx"
 arch=('x86_64')
@@ -7,17 +7,18 @@ url="http://links.twibright.com/"
 license=('GPL')
 depends=('bzip2' 'libjpeg' 'libpng' 'libtiff' 'libx11' 'librsvg' 'libevent' 'xz' 'zlib' 'openssl' 'gpm')
 screenshot='http://links.twibright.com/shots/shot5.jpg'
-source=(http://links.twibright.com/download/${pkgname}-${pkgver}.tar.gz links.desktop)
-sha1sums=('76d3a695925b9732efc4f88c0dd23edb1c3907d5'
+source=(http://links.twibright.com/download/$pkgname-$pkgver.tar.gz 
+        links.desktop)
+sha1sums=('a1a973fdaa5cf29bf4525e40defb8fa5fe7c9e4f'
           'f600e27c2a71184444f7dd07a10230aa44463a02')
 
 prepare() {
-  cd ${pkgname}-${pkgver}
+  cd $pkgname-$pkgver
   sed -i "/ac_cpp=/s/\$CPPFLAGS/\$CPPFLAGS -O2/" configure
 }
           
 build() {
-  cd "${srcdir}/${pkgname}-${pkgver}"
+  cd $pkgname-$pkgver
   (cd intl; ./gen-intl; ./synclang)
   ./configure --prefix=/usr \
               --mandir=/usr/share/man \
@@ -38,16 +39,16 @@ build() {
 }
 
 package() {
-  cd "${srcdir}/${pkgname}-${pkgver}"
-  make DESTDIR="${pkgdir}" install
+  cd $pkgname-$pkgver
+  make DESTDIR=$pkgdir install
 
-  install -m755 xlinks "${pkgdir}/usr/bin/xlinks"
-  ln -s links.1.gz "${pkgdir}/usr/share/man/man1/xlinks.1.gz"
+  install -m755 xlinks $pkgdir/usr/bin/xlinks
+  ln -s links.1.gz $pkgdir/usr/share/man/man1/xlinks.1.gz
 
-  install -D -m644 "${srcdir}/links.desktop" "${pkgdir}/usr/share/applications/links.desktop"
-  install -d "${pkgdir}/usr/share/pixmaps"
-  install -m644 links_16x16_1.xpm links_16x16_2.xpm links_32x32.xpm "${pkgdir}/usr/share/pixmaps/"
+  install -D -m644 ../links.desktop $pkgdir/usr/share/applications/links.desktop
+  install -d $pkgdir/usr/share/pixmaps
+  install -m644 links_16x16_1.xpm links_16x16_2.xpm links_32x32.xpm $pkgdir/usr/share/pixmaps/
 
-  install -d "${pkgdir}/usr/share/doc/links/calibration"
-  install -m644 doc/links_cal/* "${pkgdir}/usr/share/doc/links/calibration/"
+  install -d $pkgdir/usr/share/doc/links/calibration
+  install -m644 doc/links_cal/* $pkgdir/usr/share/doc/links/calibration/
 }
