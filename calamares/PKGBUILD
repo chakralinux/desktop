@@ -1,21 +1,22 @@
 pkgname=calamares
-pkgver=3.1.12
+pkgver=3.1.13
 pkgrel=1
-_releaseName="Goedel"
-_releaseYear="2017"
+_releaseName="Hawking"
+_releaseYear="2018"
 pkgdesc='Distribution-independent installer framework'
 arch=('x86_64')
 url='https://github.com/calamares/calamares'
 license=('LGPL')
 depends=('boost' 'qt5-svg' 'kconfig' 'ki18n' 'kcoreaddons' 'solid' 'yaml-cpp'
          'parted' 'kpmcore>=3.0' 'libatasmart' 'udisks2' 'polkit-qt5' 'boost-libs'
-         'rsync' 'python3' 'keyboardctl' 'qt5-webkit' 'kparts' 'mkinitcpio-openswap')
+         'rsync' 'python3' 'keyboardctl' 'qt5-webkit' 'kparts' 'mkinitcpio-openswap'
+         'plasma-framework')
 makedepends=('extra-cmake-modules' 'git' 'qt5-tools' 'translate-toolkit' 'qt5-tools')
 source+=("$pkgname-$pkgver.tar.gz::https://github.com/calamares/calamares/releases/download/v$pkgver/calamares-$pkgver.tar.gz"
 #_gitsha="6cb4291b4d142462f8cc0e61fc4f10880cd25546"
 #source+=("$pkgname-$pkgver.tar.gz::https://github.com/calamares/calamares/archive/${_gitsha}.zip"
-         "calamares-chakra::git+https://code.chakralinux.org/tools/calamares-chakra.git#branch=modules")
-md5sums=('670d4a7f8e5a2780ada33da88da9ed22'
+         "calamares-chakra::git+https://code.chakralinux.org/tools/calamares-chakra.git")
+md5sums=('6717fff0ac4d447ffc7a695e86ae25c6'
          'SKIP')
 
 prepare() {
@@ -42,7 +43,7 @@ build() {
     -DCMAKE_INSTALL_PREFIX=/usr \
     -DCMAKE_INSTALL_LIBDIR=lib \
     -DWITH_CRASHREPORTER=ON \
-    -DSKIP_MODULES="webview interactiveterminal netinstall"
+    -DSKIP_MODULES="webview interactiveterminal netinstall plasmalnf plymouthcfg _marble_locale"
     make
 }
 
