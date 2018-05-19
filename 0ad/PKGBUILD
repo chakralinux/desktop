@@ -1,21 +1,20 @@
 pkgname=0ad
-pkgver=0.0.22
+pkgver=0.0.23
 _pkgver=$pkgver-alpha
-pkgrel=5
+pkgrel=1
 pkgdesc="Cross-platform, 3D and historically-based real-time strategy game"
 screenshot=http://www.wildfiregames.com/0ad/images/news_images/dynamic-borders.jpg
 arch=('x86_64')
 url="http://play0ad.com/"
 license=('GPL2' 'CCPL') # source licenses.
 depends=('boost-libs' 'curl' 'enet' 'gamin' 'gloox' 'libgl' 'libogg' 'libpng' 'libvorbis' 
-         'libxcursor' 'libxml2' 'mesa' 'miniupnpc' 'nspr' 'openal'
+         'libsodium' 'libxcursor' 'libxml2' 'mesa' 'miniupnpc' 'nspr' 'openal'
          'sdl2' 'zip' 'zlib' 'gloox' 0ad-data=$pkgver)
 makedepends=('boost' 'python2' 'cmake')
 replaces=(0ad-debug) # If someone wants a debug version, they should rebuild 0ad with config=debug.
 categories=('games')
-changelog=ChangeLog
-source=(http://releases.wildfiregames.com/$pkgname-$_pkgver-unix-build.tar.xz)
-md5sums=('b015db10176cdaafb6d62946b27f06ec')
+source=(https://releases.wildfiregames.com/$pkgname-$_pkgver-unix-build.tar.xz)
+sha1sums=('4baf0025ba6455a3d955168d2363945f75fd0ec1')
 
 prepare() {
   cd $pkgname-$_pkgver
@@ -35,14 +34,16 @@ build() {
 
   # Atlas disabled because it requires GTK.
   # --with-system-nvtt disabled, because it fails with new nvidia-texture-tools
+  export SDL2_CONFIG="pkg-config sdl2"
   ./update-workspaces.sh \
-    --disable-atlas \
     --bindir=/usr/bin \
     --libdir=/usr/lib/0ad \
-    --datadir=/usr/share/${pkgname}/data
+    --datadir=/usr/share/${pkgname}/data \
+    --disable-atlas \
+    --without-pch
 
   cd gcc
-  make
+  verbose=1 make
 }
 
 package() {
