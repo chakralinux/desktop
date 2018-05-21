@@ -1,43 +1,29 @@
 #contributions from Arch: https://www.archlinux.org/packages/community/x86_64/mixxx/
 
 pkgname=mixxx
-pkgver=2.0.0
-pkgrel=3
+pkgver=2.1.0
+pkgrel=1
 pkgdesc="Digital DJ mixing software with cpu optimization enabled"
 arch=('x86_64')
 url="http://www.mixxx.org/"
 license=('GPL2')
-depends=('glu' 'fftw' 'libsndfile' 'libogg' 'taglib' 'libid3tag' 'libmad' 'libvorbis' 'portaudio' 'portmidi'  'flac' 'opus' 'scons' 'faad2' 'libmp4v2' 'chromaprint' 'rubberband'
-'qtwebkit' 'libshout' 'vamp-plugin-sdk' 'libusbx' 'protobuf')
-makedepends=('bzr' 'scons' 'pkgconfig')
+depends=('glu' 'fftw' 'libsndfile' 'libogg' 'taglib' 'libid3tag' 'libmad' 'libvorbis' 'portaudio'
+         'portmidi' 'flac' 'opus' 'faad2' 'libmp4v2' 'chromaprint' 'rubberband' 'qt' 'upower'
+         'libshout' 'vamp-plugin-sdk' 'libusbx' 'protobuf' 'opusfile' 'soundtouch')
+makedepends=('mesa' 'scons' 'pkgconfig')
 categories=('multimedia')
 screenshot=("http://www.mixxx.org/images/splash1.png")
-source=(http://downloads.mixxx.org/mixxx-${pkgver}/mixxx-${pkgver}-src.tar.gz
-        mixxx-2.0.0-gcc-6.patch
-        mixxx-2.0.0-chromaprint-1.4.0.patch
-        mixxx-2.0.0-build.patch
-        mixxx-remove-sqlite-typedef.patch)
-sha256sums=('e1b8f33bba35046608578095ed3209967034579252d84c99e6bc03ec030f676d'
-            '6a8668eca89b0827de15e4b3e5d3e37eec1f7e2f540dd0106a6ed610eea7cf4f'
-            '37f7a8897969b1d5421b02d6df5b69aff2a860eefaa0e24bef30b00d1a56021c'
-            '964e3510b0c9fd35f9d501e188c001587f1e00f2ae35ecbe935f3f5016c6bd2e'
-            'b95163b87f2e9441d9d580ff3acce978bc41034ff735e792948a2046979cd062')
-
-prepare() {
-  cd "${srcdir}/${pkgname}-${pkgver}"
-  patch -p1 -i ../mixxx-2.0.0-gcc-6.patch
-  patch -p1 -i ../mixxx-2.0.0-chromaprint-1.4.0.patch
-  patch -p1 -i ../mixxx-2.0.0-build.patch
-  patch -p1 -i ../mixxx-remove-sqlite-typedef.patch # rpmfusion
-}
+source=("https://github.com/${pkgname}dj/${pkgname}/archive/release-${pkgver}.tar.gz")
+sha256sums=('148b0ab222fa1c310e62b566d87c0a3d43fdee9435150d40d62055dbc228d396')
 
 build() {
-  cd "${srcdir}/${pkgname}-${pkgver}"
-
-  scons qtdir=/usr/lib/qt prefix=/usr install_root=$pkgdir/usr
+  cd "${srcdir}/${pkgname}-release-${pkgver}"
+  export SCONSFLAGS="-j $(nproc)"
+  scons build=release optimize=portable virtualize=0 localecompare=1 qt_sqlite_plugin=0 opus=1 \
+    qtdir=/usr/lib/qt prefix=/usr faad=1
 }
 
 package() {
-  cd "${srcdir}/${pkgname}-${pkgver}"
+  cd "${srcdir}/${pkgname}-release-${pkgver}"
   scons qtdir=/usr/lib/qt prefix=/usr install_root=$pkgdir/usr install 
 }
