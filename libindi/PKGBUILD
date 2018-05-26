@@ -1,24 +1,24 @@
 pkgname=libindi
-pkgver=1.6.2
-pkgrel=2
+pkgver=1.7.2
+pkgrel=1
 pkgdesc="A distributed control protocol designed to operate astronomical instrumentation"
 url="http://www.indilib.org/index.php?title=Main_Page"
 license=('GPL2')
 arch=('x86_64')
 depends=(libnova cfitsio libusb libjpeg gsl libtheora)
 makedepends=(cmake boost qt5-base)
-source=("https://github.com/indilib/indi/releases/download/v$pkgver/libindi_$pkgver.tar.gz")
-sha256sums=('58b4764806d53539f56c6e2c015ec4b270e9c350e2ca317c569076e3e3a0eb09')
+source=($pkgname-$pkgver.tar.gz::"https://github.com/indilib/indi/archive/v$pkgver.tar.gz")
+sha256sums=('5ec9aea9e8b1a79ea440327c25a7c7cfde6f9145b066e42eaaec3e76f8e37b93')
 
 prepare() {
   mkdir -p build
   
-  sed -e 's|GROUP="plugdev", MODE="0666"|TAG+="uaccess"|' -i libindi/drivers/*/*.rules
+  sed -e 's|GROUP="plugdev", MODE="0666"|TAG+="uaccess"|' -i indi-$pkgver/libindi/drivers/*/*.rules
 }
 
 build() {
   cd build
-  cmake ../libindi \
+  cmake ../indi-$pkgver/libindi \
     -DCMAKE_BUILD_TYPE=Release \
     -DCMAKE_INSTALL_PREFIX=/usr \
     -DCMAKE_INSTALL_LIBDIR=lib \
