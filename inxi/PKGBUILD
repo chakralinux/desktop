@@ -1,7 +1,7 @@
 #Contributions from Arch: https://projects.archlinux.org/svntogit/community.git/tree/trunk/PKGBUILD?h=packages/inxi
 
 pkgname=inxi
-pkgver=2.3.56
+pkgver=3.0.10
 pkgrel=1
 pkgdesc="a full featured CLI system information tool"
 url="https://github.com/smxi/inxi"
@@ -23,11 +23,11 @@ optdepends=(
   "xorg-xprop: inxi -S desktop data"
   "xorg-xrandr: inxi -G single screen resolution"
 )
-source=(https://sources.archlinux.org/other/community/$pkgname/$pkgname-$pkgver.tar.gz)
-md5sums=('8cde8559d31b82d478bc1a5788cc7bcd')
+source=("${pkgname}-${pkgver}.tar.gz::https://github.com/smxi/inxi/archive/${pkgver}-1.tar.gz")
+md5sums=('7e92d778e5e7eb38a42cb45c18e1962d')
 
 package() {
-  cd "$srcdir"
-  install -D -m755 inxi "$pkgdir/usr/bin/inxi"
-  install -D -m755 inxi.1.gz "$pkgdir/usr/share/man/man1/inxi.1.gz"
+  cd ${pkgname}-${pkgver}-1
+  install -D -m755 $pkgname "${pkgdir}/usr/bin/$pkgname"
+  install -D -m755 $pkgname.1 "${pkgdir}/usr/share/man/man1/$pkgname.1"
 }
