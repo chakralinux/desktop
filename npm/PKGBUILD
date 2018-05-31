@@ -1,28 +1,28 @@
 pkgname=npm
-pkgver=6.0.0
+pkgver=6.1.0
 pkgrel=1
 pkgdesc='A package manager for javascript'
-arch=('any')
+arch=('x86_64')
 url='https://www.npmjs.com/'
 license=('custom:Artistic')
 depends=('nodejs' 'node-gyp' 'semver')
 makedepends=('procps-ng' 'marked-man')
 options=('!emptydirs')
-source=("$pkgname-$pkgver::https://github.com/${pkgname}/${pkgname}/archive/v${pkgver}.tar.gz")
-sha256sums=('1ccf2d92f32afa66c2517b33eb97a8bf64022e89aa148112b8120cf4c249ca4f')
+source=("$pkgname-$pkgver::https://github.com/$pkgname/$pkgname/archive/v$pkgver.tar.gz")
+sha256sums=('9d12500a4a1e0a112505b3766d98e0372ef546e05be52ab6bd4623051bf72e64')
 
 prepare() {
-  cd ${pkgname}-${pkgver}
+  cd $pkgname-$pkgver
   ln -sf /usr/bin/marked{,-man} node_modules/.bin/
 }
 
 build() {
-  cd ${pkgname}-${pkgver}
+  cd $pkgname-$pkgver
   make
 }
 
 package() {
-  cd ${pkgname}-${pkgver}
+  cd $pkgname-$pkgver
   make NPMOPTS="--prefix=\"$pkgdir/usr\"" install
 
   # Non-deterministic race in npm gives 777 permissions to random directories.
