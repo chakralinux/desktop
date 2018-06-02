@@ -1,7 +1,7 @@
  ### Remember to check if qmmp-plugin-pack needs to update ### 
  
 pkgname=qmmp
-pkgver=1.2.1
+pkgver=1.2.2
 pkgrel=1
 pkgdesc="Qt based audio-player"
 arch=('x86_64')
@@ -10,7 +10,8 @@ license=('GPL')
 depends=('alsa-lib' 'curl' 'hicolor-icon-theme' 'libmad' 'libvorbis' 'libogg'  'qt5-base' 'qt5-tools' 
 	 'qt5-x11extras' 'qt5-multimedia' 'taglib' 'xdg-utils')
 makedepends=('cmake'  'flac' 'jack' 'libmpcdec' 'ffmpeg' 'libsamplerate' 'libmodplug' 'libsndfile' 
-             'wavpack' 'libcdio' 'mesa' 'faad2' 'libgme' 'libcddb' 'libmms' 'wildmidi')
+             'wavpack' 'libcdio' 'mesa' 'faad2' 'libgme' 'libcddb' 'libmms' 'wildmidi' 'libcdio'
+             'libcdio-paranoia' 'opusfile')
 optdepends=('flac: native FLAC support'
             'jack: JACK sound output'
             'oss: OSS sound output'
@@ -18,23 +19,25 @@ optdepends=('flac: native FLAC support'
             'libmpcdec: Musepack support'
             'libmodplug: MOD playing library'
             'libsndfile: sampled sound support'
+            'libcdio-paranoia: Compact Disc input and control support'
             'libcdio: for audio CD playback support'
             'faad2: ADTS AAC support'
             'libgme: support for chiptunes from various platforms'
             'libcddb: CDDB server support'
             'libmms: MMS stream protocol support'
+            'opusfile: Opus support'
             'ffmpeg' 'libsamplerate' 'wavpack')
 categories=('multimedia')
 screenshot=('http://qmmp.ylsoftware.com/images/qmmp-0.3.0_full_1.png')
 install=$pkgname.install
 source=("$pkgname-$pkgver::http://qmmp.ylsoftware.com/files/$pkgname-$pkgver.tar.bz2")
-sha256sums=('b9314126adf72534d3ba907246b075a45a997578e5fb86e52769e01602e4e8a9')
+sha256sums=('e9dc5723f7f2a04d36167585ce1b4223c09f36c6dad1215de877dc51d1f3d606')
 
 build() {
   cd $pkgname-$pkgver
 
   cmake . -DCMAKE_INSTALL_PREFIX=/usr \
-	  -DLIB_DIR=lib \
+	  -DCMAKE_INSTALL_LIBDIR=/usr/lib \
 	  -DUSE_HAL:BOOL=FALSE
   make
 }
