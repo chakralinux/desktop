@@ -1,21 +1,15 @@
 pkgname=qsynth
-pkgver=0.5.0
+pkgver=0.5.1
 pkgrel=1
 pkgdesc="Qt GUI for fluidsynth"
 arch=('x86_64')
 url="http://qsynth.sourceforge.net/qsynth-index.html"
 license=('GPL')
-depends=('fluidsynth' 'qt5-base' 'qt5-x11extras')
+depends=('fluidsynth' 'qt5-base' 'qt5-x11extras' 'hicolor-icon-theme')
 makedepends=('qt5-tools')
 categories=('multimedia')
 source=(http://downloads.sourceforge.net/$pkgname/$pkgname-$pkgver.tar.gz)
-sha1sums=('d24417f89851d53302658116cccb1bad79d6068e')
-
-prepare() {
-  cd $pkgname-$pkgver
-  # fix to make .configure recognize Qt>=5.1
-  export CXXFLAGS="${CXXFLAGS} -std=c++11" 
-}
+sha1sums=('a0a6ebd1d2bd2b72a11c28bd5a5e8bfa14725d62')
 
 build() {
   cd $pkgname-$pkgver
@@ -26,4 +20,6 @@ build() {
 package() {
   cd $pkgname-$pkgver
   make DESTDIR=$pkgdir install
+  install -t "${pkgdir}/usr/share/doc/${pkgname}" \
+    -vDm644 {AUTHORS,ChangeLog,README,TODO,TRANSLATORS}
 }  

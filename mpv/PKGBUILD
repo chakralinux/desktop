@@ -1,69 +1,56 @@
 pkgname=mpv
-pkgver=0.27.0
-pkgrel=2
-pkgdesc="A movie player and encoder for linux, based on MPlayer/mplayer2"
+pkgver=0.28.2
+pkgrel=1
+_waf_version=1.9.8
+pkgdesc='a free, open source, and cross-platform media player'
 arch=('x86_64')
-license=('LGPL3')
-url="http://mpv.io"
-depends=('pulseaudio' 'ffmpeg' 'lcms2' 'libdvdread' 'libgl' 'libvdpau'
-         'libxinerama' 'libxv' 'libxkbcommon' 'libva'  'libass' 'uchardet' 
-	 'wayland' 'desktop-file-utils' 'hicolor-icon-theme' 'v4l-utils' 'openal'
-         'xdg-utils' 'lua52' 'libdvdnav' 'libcdio-paranoia' 'libbluray' 'libxss'
-         'enca' 'libguess' 'harfbuzz' 'libxrandr' 'rubberband' 'libarchive' 'libcaca')
-makedepends=('mesa' 'python3-docutils' 'ladspa' 'x264' 'jack' 'samba' 'waf')
+# We link against libraries that are licensed GPLv3 explicitly, libsmbclient
+# being one of these. So our package is GPLv3 only as well.
+license=('GPL3')
+url='https://mpv.io/'
+depends=('desktop-file-utils' 'ffmpeg' 'hicolor-icon-theme' 'jack' 'lcms2'
+         'libarchive' 'libcaca' 'libcdio-paranoia' 'libdvdnav' 'libgl' 'libva'
+         'libxinerama' 'libxkbcommon' 'libxrandr' 'libxss' 'libxv' 'lua52'
+         'rubberband' 'smbclient' 'uchardet' 'vulkan-icd-loader' 'wayland'
+         'xdg-utils')
+makedepends=('mesa' 'python3-docutils' 'ladspa' 'wayland-protocols'
+             'vulkan-headers')
+optdepends=('youtube-dl: for video-sharing websites playback')
 options=('!emptydirs')
-provides=('mplayer')
-install=${pkgname}.install
-source=("https://github.com/mpv-player/${pkgname}/archive/v${pkgver}.tar.gz"
-        '0001-opengl-backend-support-multiple-backends.patch')
-sha256sums=('341d8bf18b75c1f78d5b681480b5b7f5c8b87d97a0d4f53a5648ede9c219a49c'
-            '609e0530f1b0cdb910dcffb5f62bf55936540e24105ce1b2daf1bd6291a7d58a')
+source=("$pkgname-$pkgver.tar.gz::https://github.com/mpv-player/$pkgname/archive/v$pkgver.tar.gz"
+  "https://waf.io/waf-${_waf_version}")
+sha256sums=('aada14e025317b5b3e8e58ffaf7902e8b6e4ec347a93d25a7c10d3579426d795'
+  '167dc42bab6d5bd823b798af195420319cb5c9b571e00db7d83df2a0fe1f4dbf')
 
 prepare() {
   cd ${pkgname}-${pkgver}
 
-  # --opengl-backend: support multiple backends (#4384) (FS#53962)
-  patch -Np1 < "${srcdir}"/0001-opengl-backend-support-multiple-backends.patch
+  install -m755 "${srcdir}"/waf-${_waf_version} waf
 }
- 
+
 build() {
   cd ${pkgname}-${pkgver}
- 
-  # disable SDL, since they are just legacy drivers
-  waf configure \
-    --prefix=/usr \
+
+  ./waf configure --prefix=/usr \
     --confdir=/etc/mpv \
-    --enable-libmpv-shared \
     --enable-cdda \
     --enable-dvb \
-    --enable-zsh-comp \
-    --enable-alsa \
-    --enable-pulse \
-    --enable-openal \
-    --enable-wayland \
-    --enable-gl-wayland \
-    --enable-egl-x11 \
-    --enable-libsmbclient \
-    --enable-dvdread \
-    --enable-vdpau \
-    --enable-encoding \
     --enable-dvdnav \
-    --enable-libarchive
-  waf build
+    --enable-encoding \
+    --enable-libarchive \
+    --enable-libmpv-shared \
+    --enable-libsmbclient \
+    --enable-tv \
+    --enable-zsh-comp
+
+  ./waf build
 }
- 
+
 package() {
   cd ${pkgname}-${pkgver}
- 
-  waf install --destdir="${pkgdir}" 
-  
-  install -d "${pkgdir}/usr/share/doc/mpv/examples"
- 
-  # some extra useful stuff "make install" doesn't install
-  install -m755 TOOLS/umpv \
-    "${pkgdir}"/usr/bin/umpv
-  install -m644 etc/input.conf \
-    "${pkgdir}"/usr/share/doc/mpv/examples
+
+  ./waf install --destdir="$pkgdir"
+
   install -m644 DOCS/{encoding.rst,tech-overview.txt} \
-    "${pkgdir}"/usr/share/doc/mpv
+    "$pkgdir"/usr/share/doc/mpv
 }
