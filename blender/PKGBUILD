@@ -25,7 +25,8 @@ source=("git://git.blender.org/blender-addons.git"
         "git://git.blender.org/blender-addons-contrib.git"
         "git://git.blender.org/blender-translations.git"
         "git://git.blender.org/blender-dev-tools.git"
-        "git://git.blender.org/scons.git")
+        "git://git.blender.org/scons.git"
+        ffmpeg4.0.patch)
 if [[ -n $_gittag ]]; then
     source+=("${pkgname}-${pkgver}::git://git.blender.org/blender.git#tag=${_gittag}")
 else
@@ -36,6 +37,7 @@ sha256sums=('SKIP'
             'SKIP'
             'SKIP'
             'SKIP'
+            '7e72c2f9a743d6efd69ee989f426fe439094f414df6a8af260599b5f3905d438'
             'SKIP')
 
 prepare() {
@@ -48,6 +50,10 @@ prepare() {
   git config submodule."source/tools".url ${srcdir}/blender-dev-tools
   git config submodule."scons".url "${srcdir}/scons"
   git submodule update
+
+
+  # ffmpeg 4.0 fixes
+  patch -Np1 -i "${srcdir}"/ffmpeg4.0.patch
 }
 
 build() {
