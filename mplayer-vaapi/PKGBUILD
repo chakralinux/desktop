@@ -1,6 +1,6 @@
 pkgname=mplayer-vaapi
 pkgver=36265
-pkgrel=4
+pkgrel=5
 pkgdesc="A movie player, compiled with vaapi support"
 arch=('x86_64')
 url="http://gitorious.org/vaapi/mplayer"
@@ -20,16 +20,21 @@ options=('!buildflags' '!emptydirs')
 install=${pkgname}.install
 source=("http://pkgbuild.com/~foutrelis/sources/${pkgname}/${pkgname}-${pkgver}.tar.xz"
         'tweak-desktop-file.patch'
-        'subreader-fix-srt-parsing.patch')
+        'subreader-fix-srt-parsing.patch'
+        'ffmpeg-2.8.1-libvpxenc-remove-some-unused-ctrl-id-mappings.patch')
 md5sums=('dda55251fd65c046ddeaf5927c676ec2'
          '5e9a31281933ab5fd1c0c2b094eae4a7'
-         '4f2b5b0a5801ca607c8dbbe62047feab')
+         '4f2b5b0a5801ca607c8dbbe62047feab'
+         '71be9bcd297cb9ce833bbc5d425c0470')
 
-    prepare() {
+prepare() {
   cd "$srcdir/$pkgname-$pkgver"
   patch -d etc -Np0 -i "$srcdir/tweak-desktop-file.patch"
   # http://bugzilla.mplayerhq.hu/show_bug.cgi?id=2139
   patch -Np0 -i "$srcdir/subreader-fix-srt-parsing.patch"
+
+  # https://git.videolan.org/?p=ffmpeg.git;a=commitdiff_plain;h=6540fe04a3f9a11ba7084a49b3ee5fa2fc5b32ab
+  patch -d ffmpeg -Np1 -i "$srcdir/ffmpeg-2.8.1-libvpxenc-remove-some-unused-ctrl-id-mappings.patch"
 }
 
 build() {
