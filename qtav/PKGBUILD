@@ -3,17 +3,24 @@
 
 pkgname=qtav
 pkgver=1.12.0
-pkgrel=3
+pkgrel=4
 pkgdesc="A cross-platform multimedia playback framework based on Qt and FFmpeg"
 arch=('x86_64')
 url="http://www.qtav.org/"
 license=('LGPL')
 depends=('qt5-declarative' 'qt5-svg' 'qt5-quickcontrols' 'ffmpeg' 'libxv' 'openal' 'uchardet' 'desktop-file-utils')
-source=(https://github.com/wang-bin/QtAV/archive/v${pkgver}.tar.gz)
-sha256sums=('65ab859985d73521c2d17e72117baae0f3f6242b69f59994acada76fa5364193')
+source=(https://github.com/wang-bin/QtAV/archive/v${pkgver}.tar.gz
+        qtav-ffmpeg4-1.patch::"https://github.com/wang-bin/QtAV/commit/7f6929b4.patch"
+        qtav-ffmpeg4-2.patch::"https://github.com/wang-bin/QtAV/commit/1633f296.patch")
+sha256sums=('65ab859985d73521c2d17e72117baae0f3f6242b69f59994acada76fa5364193'
+            '7f3c2cb426ee7281fab2ae9d3eef3f90d497d6a43e68adc068c0ba9bb9b1391e'
+            'b7085aa2af1f9fecbf55a8280b3d19462d9c44ea34f3914d536615738394029e')
 
 prepare() {
-  cd QtAV-${pkgver}
+  cd QtAV-$pkgver
+# Fix build with ffmpeg 4
+  patch -p1 -i ../qtav-ffmpeg4-1.patch
+  patch -p1 -i ../qtav-ffmpeg4-2.patch
 
   # fix mkspecs install dir
   sed -e 's|\$\$\[QT_INSTALL_BINS\]\/\.\.\/mkspecs|\$\$\[QT_INSTALL_ARCHDATA\]\/mkspecs|g' -i tools/install_sdk/install_sdk.pro
