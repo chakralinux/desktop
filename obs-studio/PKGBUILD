@@ -1,33 +1,35 @@
 pkgname=obs-studio
-pkgver=21.0.2
-pkgrel=2
+pkgver=21.1.2
+pkgrel=1
 pkgdesc="Free, open source software for live streaming and recording"
 arch=('x86_64')
 url="https://obsproject.com"
 license=('GPL2')
 depends=('ffmpeg' 'jansson' 'libxinerama' 'libxkbcommon-x11'
-         'qt5-x11extras' 'curl' 'hicolor-icon-theme' 'jack')
+         'qt5-x11extras' 'curl' 'jack' 'gtk-update-icon-cache')
 makedepends=('cmake' 'libfdk-aac' 'libxcomposite' 'x264' 'vlc' 'swig' 'python3' 'luajit')
 optdepends=('libfdk-aac: FDK AAC codec support'
             'libxcomposite: XComposite capture support'
-            'vlc: VLC plugin'
             'luajit: scripting support'
-            'python3: scripting support')
-install=$pkgname.install
-source=("$pkgname-$pkgver::https://github.com/jp9000/obs-studio/archive/$pkgver.tar.gz")
-sha256sums=('b8faa5f50b2139204275fe4ce8b3a3caadc2a66f1562ff3df367cb40562e9bc8')
+            'python: scripting support'
+            'vlc: VLC Media Source support')
+source=($pkgname-$pkgver.tar.gz::https://github.com/jp9000/obs-studio/archive/$pkgver.tar.gz
+        'qt-5.11.patch::https://github.com/obsproject/obs-studio/commit/4fd06b9825465ae5eb2a9b862cdb89098f655f14.patch')
+md5sums=('fc36a9e8d8c8018955c64197f18f839a'
+         'e13f53eeda3154176fa458e089510cfe')
 
 prepare() {
   cd $pkgname-$pkgver
-
-  mkdir -p build
+  patch -Np1 -i ../qt-5.11.patch
 }
 
 build() {
-  cd $pkgname-$pkgver/build
+  cd $pkgname-$pkgver
 
-  cmake -DCMAKE_INSTALL_PREFIX=/usr \
-	-DOBS_VERSION_OVERRIDE="$pkgver-$pkgrel" ..
+  mkdir -p build; cd build
+
+  cmake -DCMAKE_INSTALL_PREFIX="/usr" \
+    -DOBS_VERSION_OVERRIDE="$pkgver-$pkgrel" ..
 
   make
 }
