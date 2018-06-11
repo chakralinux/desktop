@@ -1,25 +1,21 @@
-# Include global configuration
-source ../kdeapps.conf
-
 pkgname=okteta
 arch=('x86_64')
-pkgver=${_kdever}
+pkgver=0.25.0
 pkgrel=1
-pkgdesc="A hex editor"
-url="http://kde.org/applications/utilities/okteta/"
-screenshot="http://www.kde.org/images/screenshots/okteta.png"
+pkgdesc="KDE hex editor for viewing and editing the raw data of files"
+url="https://kde.org/applications/utilities/okteta/"
+screenshot="https://www.kde.org/images/screenshots/okteta.png"
 groups=("kde" "kde-devel" "kdesdk" "kde-uninstall")
-depends=('kcmutils' 'kparts' 'knewstuff' 'qca-qt5')
+depends=('kcmutils' 'kparts' 'knewstuff' 'qca-qt5' 'hicolor-icon-theme')
 makedepends=('extra-cmake-modules' 'kdoctools' 'python3' 'qt5-tools')
 replaces=('kdesdk-okteta')
 conflicts=('kdesdk-okteta')
 provides=('kdesdk-okteta')
-install=${pkgname}.install
 license=('GPL' 'LGPL' 'FDL')
-source=("$_mirror/${pkgname}-$_kdever.tar.xz"{,.sig})
-sha256sums=(`grep ${pkgname}-$_kdever.tar.xz  ../kdeapps.sums | cut -d " " -f1`
-                        'SKIP')
-validpgpkeys=(${Avalidpgpkeys[@]})
+source=("https://download.kde.org/stable/$pkgname/$pkgver/src/$pkgname-$pkgver.tar.xz"{,.sig})
+sha256sums=('5e0399195fc2177fc39caf5c24585c9521f38b92c0780f92c329ee737e5e644d'
+            'SKIP')
+validpgpkeys=(E191FD5BE6F46870F09E82B2024E7FB43D015474)  # Friedrich W. H. Kossebau <kossebau@kde.org>
 
 prepare() {
   mkdir build
@@ -27,7 +23,10 @@ prepare() {
 
 build() {
   cd build
-  cmake_kf5 ../${pkgname}-${pkgver}
+  cmake ../$pkgname-$pkgver \
+    -DBUILD_TESTING=OFF \
+    -DCMAKE_INSTALL_PREFIX=/usr \
+    -DCMAKE_INSTALL_LIBDIR=lib
   make
 }
 
