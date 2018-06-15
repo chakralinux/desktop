@@ -23,8 +23,4 @@ build() {
 package() {
   cd $pkgname-src-$pkgver
   make INSTALL_ROOT="${pkgdir}" install
-
-  # For some reason they don't install all the headers so we'll have to do that
-  # by hand.
-  cp src/lib/corelib/tools/*.h "$pkgdir"/usr/include/qbs/tools/
 }
