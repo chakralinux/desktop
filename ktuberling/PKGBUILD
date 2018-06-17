@@ -1,8 +1,7 @@
 # Include global configuration
-source ../kdeapps.conf
 
 pkgname=ktuberling
-pkgver=${_kdever}
+pkgver=18.04.2
 pkgrel=1
 pkgdesc="A simple constructor game suitable for children and adults alike"
 url="http://kde.org/applications/games/ktuberling/"
@@ -15,10 +14,11 @@ conflicts=(kdegames-ktuberling)
 replaces=(kdegames-ktuberling)
 install=$pkgname.install
 options=('docs' 'debug')
-source=("$_mirror/${pkgname}-$_kdever.tar.xz"{,.sig})
-sha256sums=(`grep ${pkgname}-$_kdever.tar.xz  ../kdeapps.sums | cut -d " " -f1`
+source=("https://download.kde.org/stable/applications/$pkgver/src/$pkgname-$pkgver.tar.xz"{,.sig})
+sha256sums=('58d4aedf2bcd68398a3bca3a25b71d50ecef07f9196ed52a5d2d5c4da57d02b1'
                         'SKIP')
-validpgpkeys=(${Avalidpgpkeys[@]})
+validpgpkeys=(CA262C6C83DE4D2FB28A332A3A6A4DB839EAA6D7  # Albert Astals Cid <aacid@kde.org>
+              F23275E4BF10AFC1DF6914A6DBD2CE893E2D1C87) # Christoph Feck <cfeck@kde.org>
 
 prepare() {
     mkdir -p build
@@ -26,7 +26,15 @@ prepare() {
 
 build() {
     cd build
-    cmake_kf5 ../${pkgname}-${pkgver}
+    cmake ../${pkgname}-${pkgver} \
+         -DCMAKE_BUILD_TYPE=RelWithDebInfo \
+        -DCMAKE_INSTALL_PREFIX=/usr \
+        -DKDE_INSTALL_LIBDIR=lib \
+        -DKDE_INSTALL_SYSCONFDIR=/etc \
+        -DKDE_INSTALL_LIBEXECDIR=lib \
+        -DUDEV_RULES_INSTALL_DIR=/usr/lib/udev/rules.d \
+        -DBUILD_TESTING=OFF \
+        -DKDE_INSTALL_USE_QT_SYS_PATHS=ON "$@"
     make
 }
 

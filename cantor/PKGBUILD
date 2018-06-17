@@ -1,9 +1,8 @@
 # Contributions from Arch: https://www.archlinux.org/packages/extra/x86_64/kdeedu-cantor/
 # Include global configuration
-source ../kdeapps.conf
 
 pkgname=cantor
-pkgver=${_kdever}
+pkgver=18.04.2
 pkgrel=1
 pkgdesc="KDE frontend to mathematical software"
 url="http://kde.org/applications/education/cantor/"
@@ -25,10 +24,11 @@ conflicts=('kdeedu-cantor')
 groups=('kde' 'kde-uninstall' 'kde-applications' 'kdeedu')
 options=('docs' 'debug')
 install=${pkgname}.install
-source=("$_mirror/${pkgname}-$_kdever.tar.xz"{,.sig})
-sha256sums=(`grep ${pkgname}-$_kdever.tar.xz  ../kdeapps.sums | cut -d " " -f1`
+source=("https://download.kde.org/stable/applications/$pkgver/src/$pkgname-$pkgver.tar.xz"{,.sig})
+sha256sums=('aab96ae512c3ddfaaf288ca0531b685c689a40a31222326441501b9a18bc320d'
                         'SKIP')
-validpgpkeys=(${Avalidpgpkeys[@]})
+validpgpkeys=(CA262C6C83DE4D2FB28A332A3A6A4DB839EAA6D7  # Albert Astals Cid <aacid@kde.org>
+              F23275E4BF10AFC1DF6914A6DBD2CE893E2D1C87) # Christoph Feck <cfeck@kde.org>
 
 prepare() {
   mkdir -p build
@@ -40,7 +40,15 @@ prepare() {
 
 build() {
   cd build
-  cmake_kf5 ../${pkgname}-${pkgver} \
+  cmake ../${pkgname}-${pkgver} \
+         -DCMAKE_BUILD_TYPE=RelWithDebInfo \
+        -DCMAKE_INSTALL_PREFIX=/usr \
+        -DKDE_INSTALL_LIBDIR=lib \
+        -DKDE_INSTALL_SYSCONFDIR=/etc \
+        -DKDE_INSTALL_LIBEXECDIR=lib \
+        -DUDEV_RULES_INSTALL_DIR=/usr/lib/udev/rules.d \
+        -DBUILD_TESTING=OFF \
+        -DKDE_INSTALL_USE_QT_SYS_PATHS=ON "$@" \
     -DPYTHON_INCLUDE_DIR=/usr/include/python2.7 \
     -DPYTHON_LIBRARY=/usr/lib/libpython2.7.so
   make

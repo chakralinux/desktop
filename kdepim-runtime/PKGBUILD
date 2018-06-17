@@ -1,8 +1,7 @@
 # Include global configuration
-source ../kdeapps.conf
 
 pkgname=kdepim-runtime
-pkgver=${_kdever}
+pkgver=18.04.2
 pkgrel=1
 pkgdesc='Extends the functionality of kdepim'
 arch=('x86_64')
@@ -17,11 +16,12 @@ provides=('kio-pim') # the libkdepim pkg was splitted during the 16.08 release
 replaces=('kio-pim') # kio is now part of multiple packages (kmailtransport, kldap, kdepim-runtime)
 conflicts=('kio-pim') # can be removed when 16.12 is released
 
-source=("$_mirror/${pkgname}-$_kdever.tar.xz"{,.sig})
-sha256sums=(`grep ${pkgname}-$_kdever.tar.xz  ../kdeapps.sums | cut -d " " -f1`
+source=("https://download.kde.org/stable/applications/$pkgver/src/$pkgname-$pkgver.tar.xz"{,.sig})
+sha256sums=('d7a1fc6e5a62649915e9e2580d4a27e0a9a5ba0e4a570ee637c1e6266afb5da3'
             'SKIP')
 
-validpgpkeys=(${Avalidpgpkeys[@]})
+validpgpkeys=(CA262C6C83DE4D2FB28A332A3A6A4DB839EAA6D7  # Albert Astals Cid <aacid@kde.org>
+              F23275E4BF10AFC1DF6914A6DBD2CE893E2D1C87) # Christoph Feck <cfeck@kde.org>
 
 prepare() {
   mkdir -p build
@@ -29,7 +29,15 @@ prepare() {
 
 build() {
   cd build
-  cmake_kf5 ../${pkgname}-${pkgver}
+  cmake ../${pkgname}-${pkgver} \
+         -DCMAKE_BUILD_TYPE=RelWithDebInfo \
+        -DCMAKE_INSTALL_PREFIX=/usr \
+        -DKDE_INSTALL_LIBDIR=lib \
+        -DKDE_INSTALL_SYSCONFDIR=/etc \
+        -DKDE_INSTALL_LIBEXECDIR=lib \
+        -DUDEV_RULES_INSTALL_DIR=/usr/lib/udev/rules.d \
+        -DBUILD_TESTING=OFF \
+        -DKDE_INSTALL_USE_QT_SYS_PATHS=ON "$@"
   make
 }
 
