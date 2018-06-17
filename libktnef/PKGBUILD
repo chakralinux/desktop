@@ -12,7 +12,7 @@ depends=(kcalutils kcontacts)
 makedepends=(extra-cmake-modules python kdoctools)
 options=('docs' 'debug')
 source=("https://download.kde.org/stable/applications/$pkgver/src/$_pkgname-$pkgver.tar.xz"{,.sig})
-sha256sums=('7857e6ab0b935138a0868360aca754d1793ff4af9700d8d18bf22ef41f7ea70e'
+sha256sums=(`grep ${_pkgname}-$_kdever.tar.xz  ../kdeapps.sums | cut -d " " -f1`
                         'SKIP')
 validpgpkeys=(CA262C6C83DE4D2FB28A332A3A6A4DB839EAA6D7  # Albert Astals Cid <aacid@kde.org>
               F23275E4BF10AFC1DF6914A6DBD2CE893E2D1C87) # Christoph Feck <cfeck@kde.org>
