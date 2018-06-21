@@ -5,7 +5,7 @@ pkgname=('libreoffice-common'
 	'libreoffice-draw'
 	'libreoffice-impress'
         'libreoffice-gtk3'
-        'libreoffice-qt5'
+        'libreoffice-kde5'
 	'libreoffice-math'
 	'libreoffice-sdk'
 	'libreoffice-sdk-doc'
@@ -16,7 +16,7 @@ pkgname=('libreoffice-common'
 	'libreoffice-extension-nlpsolver')
 _LOver=6.0.4.2
 pkgver=6.0.4
-pkgrel=2
+pkgrel=4
 arch=('x86_64')
 license=('LGPL3')
 url="http://www.libreoffice.org/"
@@ -24,8 +24,8 @@ screenshot="http://wstaw.org/m/2012/04/20/libre2.png"
 makedepends=( # makedepends
              'sane' 'perl-archive-zip' 'zip' 'unzip' 'unixodbc' 'gtk3' 'gtk2' 'gobject-introspection'
              'apache-ant' 'gperf' 'kdelibs' 'cppunit>=1.14.0' 'glu' 'libodfgen'
-             'beanshell' 'qt5-x11extras' 'kcoreaddons' 'ki18n' 'kwindowsystem' 'kconfig' 'kio'
-             'libldap' 'libmythes' 'junit' 'libwpg' 'imagemagick' 'mdds'
+             'beanshell' 'kcoreaddons' 'ki18n' 'kwindowsystem' 'kconfig' 'kio'
+             'libldap' 'libmythes' 'junit' 'libwpg' 'imagemagick' 'mdds' 'poppler>=0.12.0'
              'mesa' 'gst-plugins-base' 'java-runtime' 'postgresql-libs' 'clucene' 'doxygen' 'libvisio' 'bluez-libs' 'junit'
              # libreoffice main pkg
              "curl>=7.20.0" "hunspell>=1.2.8" 'python3' 'libwpd>=0.9.2' 'libwps' 'libxaw' "neon>=0.28.6"
@@ -40,8 +40,8 @@ _mirror="http://download.documentfoundation.org/libreoffice/src/$pkgver"
 _additional_source_url="http://dev-www.libreoffice.org/src"
 _additional_source_url2="http://dev-www.libreoffice.org/extern"
 _gentoo_patch_url="https://dev.gentoo.org/~asturm/distfiles"
-source=(${_mirror}/libreoffice{,-help,-translations}-${_LOver}.tar.xz
-#        {,.asc}
+source=(${_mirror}/libreoffice{,-help,-translations}-${_LOver}.tar.xz{,.asc}
+        # Environment variables
         ${_additional_source_url}/boost_1_65_1.tar.bz2
         ${_additional_source_url}/xmlsec1-1.2.25.tar.gz
         ${_additional_source_url}/35c94d2df8893241173de1d16b6034c0-swingExSrc.zip
@@ -87,15 +87,17 @@ source=(${_mirror}/libreoffice{,-help,-translations}-${_LOver}.tar.xz
         ${_additional_source_url}/OpenCOLLADA-master-6509aa13af.tar.bz2
         ${_additional_source_url}/libgltf/libgltf-0.1.0.tar.gz
         ${_additional_source_url}/pdfium-3235.tar.bz2
-        ${_additional_source_url}/poppler-0.59.0.tar.xz
         ${_additional_source_url}/libepubgen-0.1.0.tar.bz2
         ${_additional_source_url}/libqxp-0.0.1.tar.xz 
         make-pyuno-work-with-system-wide-module-install.diff
         ${_gentoo_patch_url}/libreoffice-6.0.3.2-patchset-01.tar.xz)
-#validpgpkeys=('C2839ECAD9408FBE9531C3E9F434A1EFAFEEAEA3') # LibreOffice Build Team (CODE SIGNING KEY) <build@documentfoundation.org>
+validpgpkeys=('C2839ECAD9408FBE9531C3E9F434A1EFAFEEAEA3') # LibreOffice Build Team (CODE SIGNING KEY) <build@documentfoundation.org>
 md5sums=('35cf97f2a9bd8fc173fc75b05e38bf29'
+         'SKIP'
          '0dd519a43ad53d0dbfcabbbebbd9ec2a'
+         'SKIP'
          '8677d98f37ea964f9e5bdc7b83e9b9ff'
+         'SKIP'
          '41d7542ce40e171f3f7982aff008ff0d'
          'dbbef1efc69e61bc4629650205a05b41'
          '35c94d2df8893241173de1d16b6034c0'
@@ -141,7 +143,6 @@ md5sums=('35cf97f2a9bd8fc173fc75b05e38bf29'
          '4ca8a6ef0afeefc864e9ef21b9f14bd6'
          '63ae962d0c436909979826fce0fca2fd'
          'a7c08f44c6e2e1d7a71f7073cb9d5786'
-         '6e44408a3b4f4a738f8a6770d0aea8a5'
          'b2df6e241b546265257f0aee1c2a02b8'
          '778e9ee464b6db3c10f45b7c7d97b22d'
          '41fa5baa6d71d69b98de1fe258a6dd65'
@@ -192,15 +193,13 @@ noextract=(
           libgltf-0.1.0.tar.gz
           libstaroffice-0.0.5.tar.xz
           pdfium-3235.tar.bz2
-          poppler-0.59.0.tar.xz
           libepubgen-0.1.0.tar.bz2
           libqxp-0.0.1.tar.xz)
 
 prepare() {
     cd libreoffice-$_LOver
     
-    # Apply a patch to fix vcl error with gtkSalMenu
-#    patch -Np1 < ../libreoffice-5.4.4.2-gtk3-no-gtk-build.patch
+    # Apply a patch to enable more VCL plugin
     for patch in $(ls $srcdir/libreoffice-6.0.3.2-patchset-01/); do
         patch -Np1 -i $srcdir/libreoffice-6.0.3.2-patchset-01/$patch
     done
@@ -312,7 +311,6 @@ build() {
                 --with-alloc=system \
                 --with-system-clucene \
                 --without-system-xmlsec \
-                --without-system-poppler \
                 --without-system-libepubgen \
                 --without-system-libqxp
         
@@ -322,16 +320,19 @@ build() {
 	# fake installation to create split file lists
 	mkdir $srcdir/fakeinstall
 	make DESTDIR=${srcdir}/fakeinstall distro-pack-install
+
+        # chmod libs to 644
+        cd $srcdir/fakeinstall
+        find . -type f -name "*.so*" -exec chmod 644 "{}" \;
 }
 package_libreoffice-common() {
 
  pkgdesc="common files for LibreOffice - a productivity suite that is compatible with other major office suites"
  install=${pkgbase}.install
- depends=('libreoffice-langpack' "hunspell" "python3" "neon"
+ depends=("hunspell" "python3" "neon" 'poppler'
           'nspr' "icu" 'libsm' 'redland' 'hyphen' 'graphite' 'lcms2'
           'hicolor-icon-theme' 'desktop-file-utils' 'shared-mime-info' 'xdg-utils' 'clucene' 'libodfgen' 'libmwaw' 'lpsolve' 'libmythes'
           'libvisio' 'glew' 'harfbuzz-icu')
-          #'saxon'
  optdepends=('libreoffice-langpack: additional language support'
              'java-runtime:     adds java support'
              'libcups:          adds printing support'
@@ -346,13 +347,14 @@ package_libreoffice-common() {
              'unixodbc:         adds ODBC database support'
              'gst-plugins-base: + some gstr-plugins to support multimedia content, e.g. in impress'
              'libetonyek:       Apple Keynote document importer'
-             'libreoffice-gtk3: GTK3 integration')
+             'libreoffice-desktop-integration: for KDE4/Plasma/GTK3 integration')
  backup=(etc/libreoffice/sofficerc
          etc/libreoffice/bootstraprc
-         etc/libreoffice/psprint.conf)
-groups=('libreoffice')
+         etc/libreoffice/psprint.conf
+         etc/profile.d/libreoffice.sh)
+  groups=('libreoffice')
 
-provides=('libreoffice-extension-pdfimport'
+  provides=('libreoffice-extension-pdfimport'
           'libreoffice-extension-presenter-screen'
           'libreoffice-scripting-beanshell'
           'libreoffice-scripting-javascript'
@@ -412,9 +414,9 @@ provides=('libreoffice-extension-pdfimport'
 
 package_libreoffice-base() {
  pkgdesc="GUI Spreadsheet Applicationdatabase front-end for LibreOffice. Allows creation and management of databases through a GUI."
- depends=('libreoffice-common' 'libreoffice-kde4')
+ depends=('libreoffice-common')
  optdepends=('libreoffice-postgresql-connector'
-             'libreoffice-gtk3: GTK3 integration')
+             'libreoffice-desktop-integration: for KDE4/Plasma/GTK3 integration')
  backup=()
  groups=('libreoffice')
  replaces=('libreoffice')
@@ -459,8 +461,8 @@ package_libreoffice-postgresql-connector() {
 
 package_libreoffice-calc() {
  pkgdesc="Spreadsheet application for LibreOffice."
- depends=('libreoffice-common' 'libreoffice-kde4' 'lpsolve' 'libwps' )
- optdepends=('libreoffice-gtk3: GTK3 integration')
+ depends=('libreoffice-common' 'lpsolve' 'libwps' )
+ optdepends=('libreoffice-desktop-integration: for KDE4/Plasma/GTK3 integration')
  backup=()
  groups=('libreoffice')
  replaces=('libreoffice')
@@ -481,8 +483,8 @@ package_libreoffice-calc() {
 
 package_libreoffice-draw() {
  pkgdesc="Drawing Application for LibreOffice."
- depends=('libreoffice-common' 'libreoffice-kde4')
- optdepends=('libreoffice-gtk3: GTK3 integration')
+ depends=('libreoffice-common')
+ optdepends=('libreoffice-desktop-integration: better desktop environment integration')
  backup=()
  groups=('libreoffice')
  replaces=('libreoffice')
@@ -503,9 +505,9 @@ package_libreoffice-draw() {
 
 package_libreoffice-impress() {
  pkgdesc="Presentation Application for LibreOffice."
- depends=('libreoffice-common' 'libreoffice-kde4')
+ depends=('libreoffice-common')
  optdepends=('mesa: for the OGLTrans extension'
-            'libreoffice-gtk3: GTK3 integration')
+             'libreoffice-desktop-integration: better desktop environment integration')
  backup=()
  groups=('libreoffice')
  replaces=('libreoffice')
@@ -524,11 +526,10 @@ package_libreoffice-impress() {
  done
 }
 
-package_libreoffice-qt5() {
+package_libreoffice-kde5() {
  pkgdesc="Plug-in for LibreOffice that enables integration into the KDE4 desktop environment."
- depends=('libreoffice-common' 'kdelibs')
- optdepends=()
- backup=()
+ depends=('kcoreaddons' 'kio' 'kwindowsystem' 'kconf' 'ki18n')
+ provides=(libreoffice-desktop-integration)
  groups=('libreoffice')
  
  # Merge kde and kde4 filelists as we do not bother with compat anymore
@@ -551,9 +552,8 @@ package_libreoffice-qt5() {
 
 package_libreoffice-gtk3() {
   pkgdesc="Plug-in for LibreOffice that enables GTK3 engine."
-  depends=('libreoffice-common' 'gtk3')
-  optdepends=()
-  backup=()
+  depends=('gtk3')
+  provides=(libreoffice-desktop-integration)
   groups=('libreoffice')
 
   # create directories from *list.txt file
@@ -573,8 +573,8 @@ package_libreoffice-gtk3() {
 
 package_libreoffice-math() {
  pkgdesc="Equation Editor Application for LibreOffice."
- depends=('libreoffice-common' 'libreoffice-kde4')
- optdepends=('libreoffice-gtk3: GTK3 integration')
+ depends=('libreoffice-common')
+ optdepends=('libreoffice-desktop-integration: better desktop environment integration')
  backup=()
  groups=('libreoffice')
  replaces=('libreoffice')
@@ -595,8 +595,7 @@ package_libreoffice-math() {
 
 package_libreoffice-sdk() {
  pkgdesc="Software Development Kit for LibreOffice."
- depends=('libreoffice-common' 'libreoffice-kde4' 'gcc-libs' 'sh' 'make' 'zip' 'gcc' 'java-environment')
- optdepends=('libreoffice-gtk3: GTK3 integration')
+ depends=('libreoffice-common' 'gcc-libs' 'sh' 'make' 'zip' 'gcc' 'java-environment')
  backup=()
  groups=('libreoffice')
  
@@ -640,9 +639,9 @@ package_libreoffice-sdk-doc() {
 
 package_libreoffice-writer() {
  pkgdesc="Word Processor Applicationfor LibreOffice."
- depends=('libreoffice-common' 'libreoffice-base' 'libreoffice-kde4' 'libwpd' 'libwps' 'libxml2')
+ depends=('libreoffice-common' 'libwpd' 'libwps' 'libxml2')
  optdepends=('libwpg: library for importing and converting Corel WordPerfect(tm) Graphics images'
-            'libreoffice-gtk3: GTK3 integration')
+             'libreoffice-desktop-integration: better desktop environment integration')
  backup=()
  groups=('libreoffice')
  replaces=('libreoffice')
