@@ -14,8 +14,8 @@ pkgname=('libreoffice-common'
 	'libreoffice-postgresql-connector'
 	'libreoffice-extension-wiki-publisher'
 	'libreoffice-extension-nlpsolver')
-_LOver=6.0.4.2
-pkgver=6.0.4
+_LOver=6.0.5.2
+pkgver=6.0.5
 pkgrel=4
 arch=('x86_64')
 license=('LGPL3')
@@ -92,11 +92,11 @@ source=(${_mirror}/libreoffice{,-help,-translations}-${_LOver}.tar.xz{,.asc}
         make-pyuno-work-with-system-wide-module-install.diff
         ${_gentoo_patch_url}/libreoffice-6.0.3.2-patchset-01.tar.xz)
 validpgpkeys=('C2839ECAD9408FBE9531C3E9F434A1EFAFEEAEA3') # LibreOffice Build Team (CODE SIGNING KEY) <build@documentfoundation.org>
-md5sums=('35cf97f2a9bd8fc173fc75b05e38bf29'
+md5sums=('04e50cf96598790feada18cbeea7bf1f'
          'SKIP'
-         '0dd519a43ad53d0dbfcabbbebbd9ec2a'
+         '1327c6fd9f65136f905a1b26ba9076b8'
          'SKIP'
-         '8677d98f37ea964f9e5bdc7b83e9b9ff'
+         '5f77cd5eff3fc5b84b963d760d7af071'
          'SKIP'
          '41d7542ce40e171f3f7982aff008ff0d'
          'dbbef1efc69e61bc4629650205a05b41'
@@ -527,9 +527,10 @@ package_libreoffice-impress() {
 }
 
 package_libreoffice-kde5() {
- pkgdesc="Plug-in for LibreOffice that enables integration into the KDE4 desktop environment."
- depends=('kcoreaddons' 'kio' 'kwindowsystem' 'kconf' 'ki18n')
+ pkgdesc="Plug-in for LibreOffice that enables integration into Plasma desktop environment."
+ depends=('kcoreaddons' 'kio' 'kwindowsystem' 'kconfig' 'ki18n' 'gtk3')
  provides=(libreoffice-desktop-integration)
+ replaces=('libreoffice-qt5' "libreoffice-kde4<=$pkgver")
  groups=('libreoffice')
  
  # Merge kde and kde4 filelists as we do not bother with compat anymore
