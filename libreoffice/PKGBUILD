@@ -16,7 +16,7 @@ pkgname=('libreoffice-common'
 	'libreoffice-extension-nlpsolver')
 _LOver=6.0.5.2
 pkgver=6.0.5
-pkgrel=4
+pkgrel=1
 arch=('x86_64')
 license=('LGPL3')
 url="http://www.libreoffice.org/"
@@ -26,7 +26,7 @@ makedepends=( # makedepends
              'apache-ant' 'gperf' 'kdelibs' 'cppunit>=1.14.0' 'glu' 'libodfgen'
              'beanshell' 'kcoreaddons' 'ki18n' 'kwindowsystem' 'kconfig' 'kio'
              'libldap' 'libmythes' 'junit' 'libwpg' 'imagemagick' 'mdds' 'poppler>=0.12.0'
-             'mesa' 'gst-plugins-base' 'java-runtime' 'postgresql-libs' 'clucene' 'doxygen' 'libvisio' 'bluez-libs' 'junit'
+             'mesa' 'gst-plugins-base' 'java-runtime' 'postgresql-libs' 'clucene' 'doxygen' 'libvisio' 'bluez-libs' 'junit' 'hsqldb-java' 'libzmf'
              # libreoffice main pkg
              "curl>=7.20.0" "hunspell>=1.2.8" 'python3' 'libwpd>=0.9.2' 'libwps' 'libxaw' "neon>=0.28.6"
              'pango' 'nss' 'libjpeg' 'libxrandr' 'libgl' 'dbus-glib' "icu>=4.6" 'libxslt'
@@ -235,6 +235,7 @@ build() {
 
     cd libreoffice-$_LOver
 
+    export PYHTON=/usr/bin/python3
     ./autogen.sh --with-build-version="${pkgver} Chakra GNU/Linux-${pkgrel}" --with-vendor="Chakra GNU/Linux" \
                 --enable-split-app-modules \
                 --with-parallelism=${MAKEFLAGS/-j/} \
@@ -320,11 +321,8 @@ build() {
 	# fake installation to create split file lists
 	mkdir $srcdir/fakeinstall
 	make DESTDIR=${srcdir}/fakeinstall distro-pack-install
-
-        # chmod libs to 644
-        cd $srcdir/fakeinstall
-        find . -type f -name "*.so*" -exec chmod 644 "{}" \;
 }
+
 package_libreoffice-common() {
 
  pkgdesc="common files for LibreOffice - a productivity suite that is compatible with other major office suites"
