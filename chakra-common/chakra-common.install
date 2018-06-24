@@ -10,20 +10,16 @@ post_install() {
         echo "  Website:     https://chakralinux.org"
         echo "  News:        https://community.chakralinux.org/c/news"
         echo "  Forum:       https://community.chakralinux.org"
-        echo "  Bugtracker:  https://code.chakralinux.org"
+        echo "  Bugtracker:  https://code.chakralinux.org/groups/packages/-/issues"
         echo "  CCR:         https://chakralinux.org/ccr/"
         echo "  Changelogs:  https://community.chakralinux.org/tags/release"
         echo " "
 }
 
 post_upgrade() {
-    post_install $1
+    post_install
 }
 
 post_remove() {
     /bin/true
 }
-
-op=$1
-shift
-$op $*

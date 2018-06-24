@@ -3,7 +3,7 @@
 pkgname=chakra-common
 arch=('x86_64')
 pkgver=18.04.2
-pkgrel=1
+pkgrel=2
 pkgdesc="Common configuration files, scripts and artwork"
 url="http://chakralinux.org"
 license=('GPL' 'BSD')
@@ -22,12 +22,6 @@ source=('Chakra-Bugs.desktop'
         'Chakra-Forum.desktop'
         'Chakra-Homepage.desktop'
         'Chakra.directory'
-        'chakra-config-updater.sh'
-        'chakra-update-icons.sh'
-        'chakra-update-mime.sh'
-        'chakra-update-sycoca.sh'
-        'chakra-update-user-sycoca.sh'
-        'chakra-sysinfo.sh'
         #'chakra-backup.sh'
         #'Chakra-backup.desktop'
         'updates.conf'
@@ -59,22 +53,9 @@ package() {
     # Install scripts for kf5 
     install -D -m755 -o root -g root $srcdir/kde4.sh $pkgdir/etc/xdg/plasma-workspace/env/kde4.sh
 
-    # Install configuration updater scripts
-    install -D -m755 -o root -g root ${srcdir}/chakra-config-updater.sh ${pkgdir}/usr/bin/chakra-config-updater
-    install -D -m755 -o root -g root ${srcdir}/chakra-update-icons.sh ${pkgdir}/usr/bin/chakra-update-icons
-    install -D -m755 -o root -g root ${srcdir}/chakra-update-mime.sh ${pkgdir}/usr/bin/chakra-update-mime
-    install -D -m755 -o root -g root ${srcdir}/chakra-update-sycoca.sh ${pkgdir}/usr/bin/chakra-update-sycoca
-    install -D -m755 -o root -g root ${srcdir}/chakra-update-user-sycoca.sh ${pkgdir}/usr/bin/chakra-update-user-sycoca
-
-    # Install sysinfo script
-    install -D -m755 -o root -g root ${srcdir}/chakra-sysinfo.sh ${pkgdir}/usr/bin/chakra-sysinfo
-
     # Install backup script
     #install -D -m755 -o root -g root ${srcdir}/chakra-backup.sh ${pkgdir}/usr/bin/chakra-backup
     #install -D -m644 -o root -g root ${srcdir}/Chakra-backup.desktop ${pkgdir}/usr/share/applications/Chakra-backup.desktop
-
-    # Install config file for updates
-    install -D -m755 -o root -g root ${srcdir}/updates.conf ${pkgdir}/etc/chakra/updates.conf
 
     # Install Chakra icons
     cd ${srcdir}/chakra-icons/
