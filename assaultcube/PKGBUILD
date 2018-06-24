@@ -18,13 +18,21 @@ source=("http://downloads.sourceforge.net/project/actiongame/${_pkgname}%20Versi
         'assaultcube'
         'assaultcube-server'
         'assaultcube.desktop'
-        'assaultcube.png')
+        'assaultcube.png'
+        assaultcube-gcc6.patch)
 sha256sums=('77ac41bdf07f6d74367e29089c2ee34da5ef53fdf979d7dfad58c3edce5f0717'
             '949321c7ae82b740b746ee815b468fd732f633819c176334f5c62e916ed9ca03'
             '8ad5a849c14b362f7d879708d95840b5ce8dd41c39ac39770ef3cdba2ebd684f'
             '66b1a4a2d3c69218d152017ecfadfd1d4e78e691393c8896763eeee089f7f4cc'
             'bf506f63bb46c040fda94c85a2f03a7146de9c635957aaaa9891f65db5bb629c'
-            '0b6b529e3f9c7973942ef91c6bef82181631651564d3613de983a12f1083c457')
+            '0b6b529e3f9c7973942ef91c6bef82181631651564d3613de983a12f1083c457'
+            '5d2815a3426cdf46fff12de4ae6bee8b26eb367f83b842ecd2f6afa3186c3e26')
+
+prepare() {
+  cd AssaultCube_v${pkgver}.source
+  # Fix build with GCC 6
+  patch -p1 -i ../assaultcube-gcc6.patch
+}
 
 build() {
   cd ${_pkgname}_v${pkgver}.source/source/src
