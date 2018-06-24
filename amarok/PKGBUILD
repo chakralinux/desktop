@@ -28,7 +28,8 @@ build() {
     -DCMAKE_INSTALL_PREFIX=/usr \
     -DKDE4_BUILD_TESTS=OFF \
     -DWITH_NepomukCore=OFF \
-    -DWITH_Soprano=OFF
+    -DWITH_Soprano=OFF \
+    -DWITH_QTWEBKIT=OFF
   make
 }
 
@@ -36,5 +37,3 @@ package(){
   cd "${srcdir}/${pkgname}-${pkgver}/build"
   make DESTDIR="${pkgdir}" install
 }
-
-
