@@ -4,7 +4,7 @@ source ../kdeapps.conf
 pkgname=kdelibs
 pkgver=4.14.38
 _kdeappver=17.08.3
-pkgrel=8
+pkgrel=9
 pkgdesc="KDE Core Libraries"
 arch=('x86_64')
 url="http://www.kde.org"
@@ -13,7 +13,7 @@ options=('!docs' 'debug')
 depends=('qt=4.8.7' 'shared-mime-info' 'upower' 'udisks2' 'xz' 'enchant' 'jasper' 'openexr' 'giflib' 'libxtst'
          'ca-certificates' 'xdg-utils' 'qca' 'polkit-qt4' 'libxss' 'phonon' 'shared-desktop-ontologies'
          'attica>=0.4.2' 'krb5' 'libxcursor' 'libutempter' 'hicolor-icon-theme' 'libdbusmenu-qt'
-         'media-player-info' 'qtwebkit' 'systemd' 'pcre')
+         'media-player-info' 'systemd' 'pcre')
 makedepends=('pkg-config' 'cmake' 'automoc4' 'intltool' 'avahi' 'libgl' 'aspell' 'hspell' 'shared-mime-info' 
              'docbook-xsl' 'docbook-xml' 'bzip2>=1.0.6' 'libzip' 'libpulse')
 optdepends=('phonon-gstreamer: GStreamer Phonon backend (default)'
@@ -25,16 +25,18 @@ optdepends=('phonon-gstreamer: GStreamer Phonon backend (default)'
             'hspell:           Hebrew spell checking')
 groups=("kde" "kde-minimal" "kde-uninstall")
 install=${pkgname}.install
-source=("https://download.kde.org/stable/applications/${_kdeappver}/src/$pkgname-$pkgver.tar.xz"
+source=("https://download.kde.org/Attic/applications/${_kdeappver}/src/$pkgname-$pkgver.tar.xz"
         01_chakra_tag.patch
         02_kde_applications_menu.patch
         03_chakra_menu.patch
-        MergeDir.patch)
+        MergeDir.patch
+        kdelibs-no-kdewebkit.patch)
 sha256sums=('37fd43a34e8118406e03a5d0e53f4a03c8aa50b219e8484a5d42349dc0f2c3fe'
             '029e2d07c5fc8676d143b903aa181fc470e5b469d49ccf107e19031f562bf4e3'
             'b2d25c76081ea6bb31d90c4c6b619ce64ac36de3a6eefb2f9990d3dbf8cd9c91'
             '505e9e5e969be5094b3f713b865d5927cc3de1f4693915174732b20793228c4f'
-            'd7d2fac1ceb1551081a5f3fa860c14d4aeb0c774d56067e931c20b8d79c4450f')
+            'd7d2fac1ceb1551081a5f3fa860c14d4aeb0c774d56067e931c20b8d79c4450f'
+            '2df372f1bfcef1902349f9ca8820315030d39dd2bb769776b94fd3fcbf9621f5')
 
 prepare() {
     # main patches
@@ -43,6 +45,9 @@ prepare() {
     patch -Np1 -i ${srcdir}/01_chakra_tag.patch
     patch -Np1 -i ${srcdir}/02_kde_applications_menu.patch
     patch -Np1 -i ${srcdir}/03_chakra_menu.patch
+    
+    # disable kdewebkit (Fedora)
+    patch -p1 -i ../kdelibs-no-kdewebkit.patch
 
     # right positioning of applications' entries in kmenu
     patch -p1 -i ${srcdir}/MergeDir.patch
