@@ -1,20 +1,27 @@
 pkgname=musescore
 _pkgname=MuseScore
 pkgver=2.2.1
-pkgrel=1
+pkgrel=2
 pkgdesc="A music score editor written in Qt"
 arch=('x86_64')
 url="http://www.musescore.org/en/"
 license=('GPL')
-depends=('libpulse' 'portaudio' 'qt5-quickcontrols' 'qt5-svg' 'qt5-tools' 'qt5-webkit')
+depends=('libpulse' 'portaudio' 'qt5-quickcontrols' 'qt5-svg' 'qt5-tools' 'qt5-webkit' 'portmidi')
 makedepends=('cmake' 'doxygen' 'lame' 'qt5-script' 'texlive-core')
 optdepends=('lame: MP3 export')
 categories=('multimedia')
 install=musescore.install
 source=("$pkgname-$pkgver.tar.gz::https://github.com/$pkgname/$_pkgname/archive/v$pkgver.tar.gz"
-        'musescore.conf')
+        'musescore.conf'
+        'qt511.patch')
 sha256sums=('261a39e34ee314780f75259ec2971acf69b5f4a2e0b2eb190acdb7fbbd4a89d6'
-            '397b5431137d468a64b768670efdf385c27cb7298ee9295a32323a2610427928')
+            '397b5431137d468a64b768670efdf385c27cb7298ee9295a32323a2610427928'
+            '4f3eff67731af1ba05fb29c56ba70a8e244f365c2e6f71f169a6787a8e63a812')
+
+prepare() {
+ # Fix Qt 5.11 build - taken from https://github.com/musescore/MuseScore/commit/d10e70415c8e52e2ba9d45de564467e42f66c102#diff-b7ba372d02405ba296d1238b72a5b70c 
+  patch -i qt511.patch
+}
 
 build() {
   cd $_pkgname-$pkgver
