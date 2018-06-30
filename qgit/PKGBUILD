@@ -1,29 +1,24 @@
 pkgname=qgit
-pkgver=2.7
+pkgver=2.8
 pkgrel=1
 pkgdesc="A GIT GUI viewer built on Qt/C++"
-url='http://libre.tibirna.org/projects/qgit/wiki/QGit'
+url='https://github.com/tibirna/qgit'
 arch=('x86_64')
 license=('GPL')
-depends=('qt5-base' 'git')
+depends=('qt5-base' 'git' 'hicolor-icon-theme')
+makedepends=('cmake')
 categories=('programming')
-options=(!makeflags !ccache) #makepkg3 options, ccache is a no-go
-source=("${pkgname}::git://repo.or.cz/qgit4/redivivus.git#tag=${pkgname}-${pkgver}"
-        'qgit.desktop' 'qgit.svg')
-    
-sha256sums=('SKIP'
-            '9be6531c6199e80e95ec918f09e734c3d9a400836462f28588aa08e5374791c5'
-            '9001a5dd9ce4de588b64eccb65d6da5fbda6927f152781bc11b5ed77139db4d5')
+source=("${pkgname}::git+https://github.com/tibirna/qgit.git#tag=${pkgname}-${pkgver}")
+sha256sums=('SKIP')
 
 build() {
-  cd "${srcdir}/${pkgname}"
-  qmake-qt5 qgit.pro
-  make || return 1
+  cd ${srcdir}/${pkgname}
+  rm -rf build && mkdir build && cd build
+  cmake -DCMAKE_INSTALL_PREFIX="/usr" ..
+  make
 }
 
 package() {
-  cd "${srcdir}/${pkgname}"
-  install -Dm755 bin/qgit ${pkgdir}/usr/bin/qgit || return 1
-  install -Dm644 ${srcdir}/qgit.desktop ${pkgdir}/usr/share/applications/qgit.desktop || return 1
-  install -Dm644 ${srcdir}/qgit.svg ${pkgdir}/usr/share/pixmaps/qgit.svg || return 1
+  cd ${srcdir}/${pkgname}/build
+  make DESTDIR=${pkgdir} install
 }

@@ -11,7 +11,7 @@ pkgname=('virtualbox'
          'virtualbox-ext-vnc'
          'virtualbox-ext-oracle')
 pkgver=5.2.12
-pkgrel=2
+pkgrel=4
 arch=('x86_64')
 url='https://www.virtualbox.org'
 license=('GPL')
@@ -74,6 +74,7 @@ source=("http://download.virtualbox.org/virtualbox/$pkgver/VirtualBox-$pkgver.ta
         '007-python2-path.patch'
         '008-no-vboxvideo.patch'
         '009-include-path.patch'
+        '010-qt-5.11.patch'
         'PUEL')
 noextract=(VBoxGuestAdditions_$pkgver.iso
           "Oracle_VM_VirtualBox_Extension_Pack-$pkgver.vbox-extpack")
@@ -97,6 +98,7 @@ sha256sums=('da60028c56708522fd89c000e8984d2105d275a3fd105a0bc698fc49d18d3458'
             '6bdb017459532537199c399eefd3d84d8dc7f1786e79997caebd3b6eb5c75d9f'
             '8b7f241107863f82a5b0ae336aead0b3366a40103ff72dbebf33f54b512a0cbc'
             '1acc7014bcb3d9ca6da29eed813c3d6e91a688c43f9d93802fd4e3814f67ace4'
+            'c6ef35e6893d557c7c2269ff79bc299fe9058cfb2c933a7efdc7a8a7b6d9c5da'
             '715c7246dc0f779ceab39446812362b2f9bf64a55ed5d3a905f053cfab36da9e')
 
 prepare() {
@@ -335,7 +337,7 @@ package_virtualbox-guest-utils() {
     pkgdesc='VirtualBox Guest userspace utilities'
     depends=('glibc' 'pam' 'libx11' 'libxcomposite'
              'libxdamage' 'libxext' 'libxfixes' 'libxmu' 'libxt' 'xorg-xrandr'
-             'VIRTUALBOX-GUEST-MODULES' 'X-ABI-VIDEODRV_VERSION=23')
+             'VIRTUALBOX-GUEST-MODULES' 'X-ABI-VIDEODRV_VERSION=24.0')
     replaces=('virtualbox-guest-additions')
     conflicts=('virtualbox-guest-additions' 'virtualbox-guest-utils-nox')
     install=virtualbox-guest-utils.install

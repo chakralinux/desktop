@@ -1,7 +1,8 @@
 pkgname=freecad
 _pkgname=FreeCAD
 pkgver=0.17
-pkgrel=1
+_rollup=84d6128
+pkgrel=3
 pkgdesc='A general purpose 3D CAD modeler'
 arch=('x86_64')
 url='https://www.freecadweb.org/wiki'
@@ -12,20 +13,26 @@ depends=('boost-libs' 'curl' 'opencascade' 'xerces-c' 'libspnav' 'glu'
          'python2-pyside-tools' 'pyside-tools-common')
 makedepends=('boost' 'eigen3' 'gcc-fortran' 'swig' 'xerces-c'
              'desktop-file-utils' 'cmake' 'coin' 'zlib')
-install=freecad.install
 source=("$pkgname-$pkgver.tar.gz::https://github.com/FreeCAD/FreeCAD/archive/$pkgver.tar.gz"
+        "$pkgname-$_rollup-rollup.patch::https://github.com/FreeCAD/FreeCAD/compare/$pkgver...$_rollup.patch"
 	"${pkgname}.desktop"
 	"${pkgname}.xml"
-        'remove-qtwebkit.patch')
+        'gcc8.patch' 'smesh-pthread.patch' 'qt5.11.patch')
 sha256sums=('ae017393476b6dc7f1192bcaf91ceedc2f9b791f2495307ce7c45efadb5266fb'
+            'c4a4e084da448c78644e8acc1f3158cf2cb82ee4936b5b79e282497fd62d566e'
             '321ee7669ad8cce5dd6d7d352b11952c18b37e4b178c94636a3b08079a3e27cb'
             '248918de7d3c2145b5cc4fbbc9e224d22f4a6ca7ead2680e8c3a32e91772482a'
-            'de214a281d421d44b02b469ecf72e36c4d61f10c40431e511e09734aca316baf')
+            '618bb85c4f3a4eb0e329d1fc30391b777c9b0cffe97aa1e96d45f58b18424311'
+            '170c90ee6ef64cf3c8e6a35ca94bb1187d346707f7e0779022e614563c6b74f6'
+            'a639c9d51f8443e4d2270fe60d5ac3ac62c7c64c532620108514840f8e8704bc')
 
 prepare() {
   cd "${srcdir}/FreeCAD-${pkgver}"
 
-  patch -Np1 -i ../remove-qtwebkit.patch
+  patch -Np1 -i ../$pkgname-$_rollup-rollup.patch
+  patch -Np1 -i ../gcc8.patch
+  patch -Np1 -i ../smesh-pthread.patch
+  patch -Np1 -i ../qt5.11.patch
 }
 
 build() {
@@ -37,6 +44,8 @@ build() {
     -DCMAKE_INSTALL_DATADIR="/usr/share/freecad" \
     -DFREECAD_USE_OCC_VARIANT="Official Version" \
     -DPYTHON_EXECUTABLE=/usr/bin/python2 \
+    -DBUILD_QT5=ON \
+    -DBUILD_QT5_WEBKIT=OFF \
     -DBUILD_START=OFF \
     -DBUILD_WEB=OFF
   make

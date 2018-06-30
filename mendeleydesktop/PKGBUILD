@@ -1,108 +1,62 @@
+
 pkgname=mendeleydesktop
-pkgver=1.17.9
+pkgver=1.19.1
 pkgrel=1
 pkgdesc="Academic software for managing and sharing research papers (desktop client)"
 url=http://www.mendeley.com/release-notes/
-arch=('x86_64')
-depends=('python2' 'qtwebkit')
-license=('custom:mendeley_eula')
-install=mendeleydesktop.install
-categories=('education')
-screenshot=('http://www.timelordz.com/blog/wp-content/uploads/2010/08/MendeleyClient.png')
-source=("http://download.mendeley.com/linux/$pkgname-$pkgver-linux-x86_64.tar.bz2")
-sha1sums=('d351813299b126009f4ab21ae3b7dcda3c261cae')
+arch=(x86_64)
+depends=(qt5-webengine)
+license=(custom:mendeley_eula)
+source=("https://desktop-download.mendeley.com/download/linux/$pkgname-$pkgver-linux-x86_64.tar.bz2")
+sha512sums=('fd9ecc4d907c267a0416b472931e08179cfd385a37573b6601227c1760cde935280517aea617e31910dbf029ade7dd78cf5a48236df94ce52b2030a0edb7ba11')
 
 prepare() {
-    cd "${srcdir}/$pkgname-$pkgver-linux-x86_64"
+    cd "$pkgname-$pkgver-linux-$CARCH"
+    # Using shared libraries so remove the bundled ones
+    rm -rf lib/cpp lib/qt lib/ssl lib/libpng12.so.0 lib/mendeleydesktop/plugins
+    rm -rf lib/mendeleydesktop/libexec/resources
+    rm -rf lib/mendeleydesktop/libexec/translations/qtwebengine_locales
 
-    sed -i '1s@^#!/usr/bin/python$@&2@' bin/mendeleydesktop
-    
-    # remember, if you upgrade from 1.13.6 or older,
-    # remove any old versions of ".desktop" file of mendeley in ~/.local/share/applications/
-    # stop the creations of .desktop file of mendeley in ~/.local/share/applications/ 
- echo   '#!/bin/sh
+    # TODO Run install-mendeley-link-handler.sh for gconf or just remove it?
+    rm bin/install-mendeley-link-handler.sh
 
-DESKTOP_PATH=$HOME/.local/share/applications/
-DESKTOP_FILE=$DESKTOP_PATH/mendeleydesktop.desktop
-MENDELEYDESKTOP_BIN=$HOME/.local/share/mendeleydesktop
-GCONF_TOOL=`which gconftool-2`
-
-if [ $? -ne 0 ]; then
-	echo "Unable to find gconftool-2.  The mendeley:// link handler may not be installed correctly." >&2
-fi
-if [ ! -d "$DESKTOP_PATH" ]; then
-	mkdir -p "$DESKTOP_PATH"
-fi
-
-while getopts "u" flag
-do
-	case $flag in
-	u)
-		# Uninstall the link handler
-		rm -f $DESKTOP_FILE
-		$GCONF_TOOL -u /desktop/gnome/url-handlers/mendeley
-
-		exit 0
-		;;
-	\?)
-		echo "Unknown option: -$OPTARG" >&2
-		;;
-  	esac
-done
-
-shift $(($OPTIND - 1))
-if [ $# -ne 1 ]; then
-	echo "Usage: "`basename $0`" [options] <path>"
-	echo " -u : Uninstall the mendeley:// link handler"
-	echo ""
-	echo "Install the mendeley:// link handler to launch <path>"
-	echo ""
-	exit 1
-fi
-
-if [ ! -f "$1" ]; then
-	echo "Mendeley Desktop binary '$1' does not exist"
-	exit 1
-fi
-
-# install the gnome link handler
-$GCONF_TOOL -s /desktop/gnome/url-handlers/mendeley/command "$MENDELEYDESKTOP_BIN %s" --type String
-$GCONF_TOOL -s /desktop/gnome/url-handlers/mendeley/enabled --type Boolean true' > bin/install-mendeley-link-handler.sh
-
-    #Remove unneeded lines if gconf is not installed.
-    if ! which gconftool-2 &>/dev/null;then
-    sed -i '6d;74d;75d' \
-        bin/install-mendeley-link-handler.sh
-    fi
-
+    # # Remove unneeded lines if gconf is not installed.
+    # if ! which gconftool-2 &>/dev/null;then
+    # sed -i '/GCONF/d' \
+    #     "$pkgdir"/opt/"$pkgname"/bin/install-mendeley-link-handler.sh
+    # fi
 }
 
 package() {
-    cd "$pkgname-$pkgver-linux-x86_64"
-    
-    install -d ${pkgdir}/usr/{bin,lib,share}
-    
-    cp -R bin ${pkgdir}/usr
-    
-    # remove bundled Qt from package
-    rm -rf lib/qt
-    cp -R lib ${pkgdir}/usr
+    cd "$pkgname-$pkgver-linux-$CARCH"
 
-    # remove qt.conf to avoid Qt plugins fail to load
-    rm -f ${pkgdir}/usr/bin/qt.conf
-    
-    install -D share/applications/${pkgname}.desktop ${pkgdir}/usr/share/applications/${pkgname}.desktop
-    install -D share/doc/${pkgname}/License.txt ${pkgdir}/usr/share/licenses/${pkgname}/LICENSE
-    
-    install -d ${pkgdir}/usr/share/{icons,mendeleydesktop}
-    cp -R share/icons ${pkgdir}/usr/share
-    cp -R share/mendeleydesktop ${pkgdir}/usr/share
+    # Link system Qt
+    ln -s /usr/share/qt/resources \
+          lib/mendeleydesktop/libexec/
+    ln -s /usr/share/qt/translations/qtwebengine_locales \
+          lib/mendeleydesktop/libexec/translations/
 
-    #Remove bundled Qt from package
-    cat << __EOF__
-Removing bundled Qt library.
-If you used "--force-bundled-qt" to start mendeley,
-make sure you remove any old versions of ".desktop" file of mendeley in ~/.local/share/applications/,
-because mendeley will automatically create one there. This will apply only to version 1.13.6 or older.
-__EOF__
+    install -d "$pkgdir/opt/$pkgname/"
+    cp -a bin lib share "$pkgdir/opt/$pkgname/"
+
+    # Replace default python laucher with custom bash
+cat <<'EOF' > "$pkgdir/opt/$pkgname/bin/mendeleydesktop"
+#!/bin/bash
+export LD_LIBRARY_PATH=/usr/lib/:/opt/mendeleydesktop/lib/:/usr/lib/qt/
+export MENDELEY_BUNDLED_QT_PLUGIN_PATH=/lib/qt/plugins/
+/opt/mendeleydesktop/lib/mendeleydesktop/libexec/mendeleydesktop.x86_64 "$@"
+EOF
+
+    install -d "$pkgdir"/usr/bin
+    ln -s "/opt/$pkgname/bin/mendeleydesktop" \
+          "$pkgdir/usr/bin/mendeleydesktop"
+
+    install -Dm644 LICENSE "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
+    install -Dm644 share/applications/mendeleydesktop.desktop \
+                   "$pkgdir"/usr/share/applications/mendeleydesktop.desktop
+
+    cp -a "$pkgdir/opt/$pkgname/share/icons" "$pkgdir/usr/share/icons"
+
+    # Clean share from opt (don't remove mendeleydesktop)
+    rm -rf "$pkgdir/opt/$pkgname/share/"{applications,doc,icons}
 }
