@@ -1,9 +1,8 @@
 # Contributions from Arch: https://www.archlinux.org/packages/kde-unstable/x86_64/kdenlive/
 # Include global configuration
-source ../kdeapps.conf
 
 pkgname=kdenlive
-pkgver=${_kdever}
+pkgver=18.04.2
 pkgrel=1
 pkgdesc="A non-linear video editor for Linux"
 arch=('x86_64')
@@ -22,10 +21,11 @@ makedepends=('extra-cmake-modules' 'kdoctools' 'v4l-utils' 'python')
 categories=('multimedia')
 options=('debug')
 screenshot=('http://kdenlive.org/sites/default/files/kdenlive-090a_0.png')
-source=("$_mirror/${pkgname}-$_kdever.tar.xz"{,.sig})
-sha256sums=(`grep ${pkgname}-$_kdever.tar.xz  ../kdeapps.sums | cut -d " " -f1`
-                        'SKIP')
-validpgpkeys=(${Avalidpgpkeys[@]})
+source=("https://download.kde.org/stable/applications/$pkgver/src/$pkgname-$pkgver.tar.xz"{,.sig})
+sha256sums=('31bb2809c43537224eef0a7d71fd8f474eef05648adb7f9379012bc0b943be21'
+            'SKIP')
+validpgpkeys=(CA262C6C83DE4D2FB28A332A3A6A4DB839EAA6D7  # Albert Astals Cid <aacid@kde.org>
+              F23275E4BF10AFC1DF6914A6DBD2CE893E2D1C87) # Christoph Feck <cfeck@kde.org>
 
 prepare(){
   mkdir -p build
@@ -33,7 +33,15 @@ prepare(){
 
 build() {
   cd build
-  cmake_kf5 ../${pkgname}-${pkgver}
+  cmake ../${pkgname}-${pkgver} \
+         -DCMAKE_BUILD_TYPE=RelWithDebInfo \
+        -DCMAKE_INSTALL_PREFIX=/usr \
+        -DKDE_INSTALL_LIBDIR=lib \
+        -DKDE_INSTALL_SYSCONFDIR=/etc \
+        -DKDE_INSTALL_LIBEXECDIR=lib \
+        -DUDEV_RULES_INSTALL_DIR=/usr/lib/udev/rules.d \
+        -DBUILD_TESTING=OFF \
+        -DKDE_INSTALL_USE_QT_SYS_PATHS=ON "$@"
   make
 }
 

@@ -1,10 +1,9 @@
 # Include global configuration
-source ../kdeapps.conf
 
 pkgname=chakra-common
 arch=('x86_64')
-pkgver=${_kdever}
-pkgrel=1
+pkgver=18.04.2
+pkgrel=2
 pkgdesc="Common configuration files, scripts and artwork"
 url="http://chakralinux.org"
 license=('GPL' 'BSD')
@@ -23,34 +22,20 @@ source=('Chakra-Bugs.desktop'
         'Chakra-Forum.desktop'
         'Chakra-Homepage.desktop'
         'Chakra.directory'
-        'chakra-config-updater.sh'
-        'chakra-update-icons.sh'
-        'chakra-update-mime.sh'
-        'chakra-update-sycoca.sh'
-        'chakra-update-user-sycoca.sh'
-        'chakra-sysinfo.sh'
         #'chakra-backup.sh'
         #'Chakra-backup.desktop'
-        'updates.conf'
         'chakra-icons.tar.gz'
         'chakra-helper.sh'
         'kde4.sh'
         'chakra-check-links.py::https://raw.githubusercontent.com/Inkane/listMissingLibs/master/list_missing_libs.py')
-sha256sums=('d87b802cb60705439b0e43517837a4e71dc882a4ce9863f762fa9bf6112433cb'
-            '8dc16af56320b0e95c105453bd625319edbdf066ab1c8435ed8eaea606d601d0'
-            '15d1e26bc76535efcc9abd536f5c1b75aaacf5d92b13e035b17a0ebb96aef5ab'
-            'c1574b4e9b3649db9063ccc8ed71d88c89603b4e2594934d43d726b02b477ef8'
+sha256sums=('24e3e543fbeeb9bd902703e49dd682001c85c8faee85a6795d2501b65badfcda'
+            'f470c6e7a6bb09f4815e31dd369f4aee4ded0d2697f2c61c7036097b8829db63'
+            '528ac5b202f60893aed5e1949a23851afb6a14cf13aca2510fa4f1811349fb8d'
+            '32bfff6a840c1c3383dfffd73a7a52aed528084a391e7b2d7d875bfc4b0e45d0'
             '23e22cbbd1d7a6630717a1e06698b0735e780189af780292de9d7d5bfa0a0faa'
             '9bdc5320ed9efdf3dbbd6c3f81058bc725e34c4eeaafba252896bcb61300e8ad'
             'e9d138eadbf35808f0253e16c2f6d5d672d662937f70618e109f8a58b92e2f98'
             'cf6be6c5dd059021b140f97f82be4ed33e887aa8b588b5d4adb0b035d05a90a6'
-            '18c53e91e5ff32754e0a71d208bff62f5f6880e68a86699e734b28d5e2387aab'
-            '7e947d88d6c5464b5e11770d597af11bcfb01283bc9bed2bea15fcb3dbb90e33'
-            'd155420e3db5ec0d43ec4e53f568b55cd718c42fef7792f1e8bdc75b960ff1e3'
-            'a99cbf6a29700b71564baffeb8b8d7f645a4e67a9868b68609c31937beef3d15'
-            '79bd1a0dbce88e1ab12a5db3aa87b1a7bbd464df7e64facc6c33abd507706bbf'
-            '3ac5808d9da1b37e0787ee11f4154306847840697e5590c1856b5bd13727c119'
-            'da64dc6bc248703da7eb8ad38af73b87c9836b3b35cf0529e988a69ee5922e8b'
             'b20160225a990513ae58027b7e70bb958253da881be02f296e54e9ccca09b348'
             '9e0c9408c9bc12aeca2fd66a4723b57a6878307ba956df7cca43f8112dd71429'
             '7e4ae4587973d6cc253b20ff7573ac25801f148f794a9000901c5137cd4780b3'
@@ -60,22 +45,9 @@ package() {
     # Install scripts for kf5 
     install -D -m755 -o root -g root $srcdir/kde4.sh $pkgdir/etc/xdg/plasma-workspace/env/kde4.sh
 
-    # Install configuration updater scripts
-    install -D -m755 -o root -g root ${srcdir}/chakra-config-updater.sh ${pkgdir}/usr/bin/chakra-config-updater
-    install -D -m755 -o root -g root ${srcdir}/chakra-update-icons.sh ${pkgdir}/usr/bin/chakra-update-icons
-    install -D -m755 -o root -g root ${srcdir}/chakra-update-mime.sh ${pkgdir}/usr/bin/chakra-update-mime
-    install -D -m755 -o root -g root ${srcdir}/chakra-update-sycoca.sh ${pkgdir}/usr/bin/chakra-update-sycoca
-    install -D -m755 -o root -g root ${srcdir}/chakra-update-user-sycoca.sh ${pkgdir}/usr/bin/chakra-update-user-sycoca
-
-    # Install sysinfo script
-    install -D -m755 -o root -g root ${srcdir}/chakra-sysinfo.sh ${pkgdir}/usr/bin/chakra-sysinfo
-
     # Install backup script
     #install -D -m755 -o root -g root ${srcdir}/chakra-backup.sh ${pkgdir}/usr/bin/chakra-backup
     #install -D -m644 -o root -g root ${srcdir}/Chakra-backup.desktop ${pkgdir}/usr/share/applications/Chakra-backup.desktop
-
-    # Install config file for updates
-    install -D -m755 -o root -g root ${srcdir}/updates.conf ${pkgdir}/etc/chakra/updates.conf
 
     # Install Chakra icons
     cd ${srcdir}/chakra-icons/

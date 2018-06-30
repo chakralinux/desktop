@@ -1,9 +1,8 @@
 #Contributions from Arch: https://projects.archlinux.org/svntogit/packages.git/tree/trunk?h=packages/kapptemplate
-source ../kdeapps.conf
 
 pkgname="kapptemplate"
 arch=('x86_64')
-pkgver=${_kdever}
+pkgver=18.04.2
 pkgrel=1
 pkgdesc="KDE application template generator"
 screenshot="http://www.kde.org/images/screenshots/kapptemplate.png"
@@ -13,12 +12,12 @@ replaces=('kdesdk-kapptemplate')
 conflicts=('kdesdk-kapptemplate')
 provides=('kdesdk-kapptemplate')
 categories=('programming')
-install=${pkgname}.install
 license=('GPL' 'LGPL' 'FDL')
-source=("$_mirror/${pkgname}-$_kdever.tar.xz"{,.sig})
-sha256sums=(`grep ${pkgname}-$_kdever.tar.xz  ../kdeapps.sums | cut -d " " -f1`
-                        'SKIP')
-validpgpkeys=(${Avalidpgpkeys[@]})
+source=("https://download.kde.org/stable/applications/$pkgver/src/$pkgname-$pkgver.tar.xz"{,.sig})
+sha256sums=('ace6eb0285e52c1f7d14b4d25041b4b12946575e5e5f074f3c7f4ecae113bfb4'
+            'SKIP')
+validpgpkeys=(CA262C6C83DE4D2FB28A332A3A6A4DB839EAA6D7  # Albert Astals Cid <aacid@kde.org>
+              F23275E4BF10AFC1DF6914A6DBD2CE893E2D1C87) # Christoph Feck <cfeck@kde.org>
 
 prepare() {
   mkdir -p build
@@ -26,7 +25,15 @@ prepare() {
 
 build() {
   cd build
-  cmake_kf5 ../${pkgname}-${pkgver} 
+  cmake ../${pkgname}-${pkgver} \
+         -DCMAKE_BUILD_TYPE=RelWithDebInfo \
+        -DCMAKE_INSTALL_PREFIX=/usr \
+        -DKDE_INSTALL_LIBDIR=lib \
+        -DKDE_INSTALL_SYSCONFDIR=/etc \
+        -DKDE_INSTALL_LIBEXECDIR=lib \
+        -DUDEV_RULES_INSTALL_DIR=/usr/lib/udev/rules.d \
+        -DBUILD_TESTING=OFF \
+        -DKDE_INSTALL_USE_QT_SYS_PATHS=ON "$@" 
   make
 }
 

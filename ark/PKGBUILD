@@ -1,9 +1,8 @@
 # Include global configuration
-source ../kdeapps.conf
 
 pkgname=ark
 arch=('x86_64')
-pkgver=${_kdever}
+pkgver=18.04.2
 pkgrel=1
 pkgdesc="Archiver for various compression formats"
 url="http://www.kde.org"
@@ -19,12 +18,12 @@ optdepends=("p7zip: 7Z format support"
 conflicts=(kdeutils-ark)
 replaces=(kdeutils-ark)
 groups=('kde' 'kde-uninstall' 'kde-applications' 'kdeutils')
-install=kdeutils.install
 
-source=("$_mirror/${pkgname}-$_kdever.tar.xz"{,.sig})
-sha256sums=(`grep ${pkgname}-$_kdever.tar.xz  ../kdeapps.sums | cut -d " " -f1`
-                        'SKIP')
-validpgpkeys=(${Avalidpgpkeys[@]})
+source=("https://download.kde.org/stable/applications/$pkgver/src/$pkgname-$pkgver.tar.xz"{,.sig})
+sha256sums=('088b1fe8cca84bce022cc012f604280228598c4f70917ac425e95ac8131a8d22'
+            'SKIP')
+validpgpkeys=(CA262C6C83DE4D2FB28A332A3A6A4DB839EAA6D7  # Albert Astals Cid <aacid@kde.org>
+              F23275E4BF10AFC1DF6914A6DBD2CE893E2D1C87) # Christoph Feck <cfeck@kde.org>
 
 prepare() {
   mkdir -p build
@@ -32,7 +31,15 @@ prepare() {
 
 build() {
   cd build
-  cmake_kf5 ../${pkgname}-${pkgver}
+  cmake ../${pkgname}-${pkgver} \
+         -DCMAKE_BUILD_TYPE=RelWithDebInfo \
+        -DCMAKE_INSTALL_PREFIX=/usr \
+        -DKDE_INSTALL_LIBDIR=lib \
+        -DKDE_INSTALL_SYSCONFDIR=/etc \
+        -DKDE_INSTALL_LIBEXECDIR=lib \
+        -DUDEV_RULES_INSTALL_DIR=/usr/lib/udev/rules.d \
+        -DBUILD_TESTING=OFF \
+        -DKDE_INSTALL_USE_QT_SYS_PATHS=ON "$@"
   make
 }
 

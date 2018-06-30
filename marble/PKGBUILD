@@ -1,9 +1,8 @@
 # Include global configuration
-source ../kdeapps.conf
 
 pkgbase=marble
 pkgname=(marble libastro marble-data)
-pkgver=${_kdever}
+pkgver=18.04.2
 pkgrel=1
 pkgdesc="Desktop Globe"
 arch=(x86_64)
@@ -12,10 +11,11 @@ screenshot="http://www.kde.org/images/screenshots/marble.png"
 license=(GPL)
 makedepends=(extra-cmake-modules gpsd libwlocate phonon-qt5 qt5-webkit krunner kparts knewstuff qt5-tools) # quazip-qt5
 options=('docs' 'debug')
-source=("$_mirror/${pkgbase}-$_kdever.tar.xz"{,.sig})
-sha256sums=(`grep ${pkgbase}-$_kdever.tar.xz  ../kdeapps.sums | cut -d " " -f1`
-                        'SKIP')
-validpgpkeys=(${Avalidpgpkeys[@]})
+source=("https://download.kde.org/stable/applications/$pkgver/src/$pkgname-$pkgver.tar.xz"{,.sig})
+sha256sums=('0d22a68498fe3be821b38ac8df24c753b491b50df637ca3e1155ae3897449128'
+            'SKIP')
+validpgpkeys=(CA262C6C83DE4D2FB28A332A3A6A4DB839EAA6D7  # Albert Astals Cid <aacid@kde.org>
+              F23275E4BF10AFC1DF6914A6DBD2CE893E2D1C87) # Christoph Feck <cfeck@kde.org>
 
 prepare() {
   mkdir -p build
@@ -33,7 +33,15 @@ prepare() {
 
 build() {
   cd build
-  cmake_kf5 ../${pkgname}-${pkgver} \
+  cmake ../${pkgname}-${pkgver} \
+         -DCMAKE_BUILD_TYPE=RelWithDebInfo \
+        -DCMAKE_INSTALL_PREFIX=/usr \
+        -DKDE_INSTALL_LIBDIR=lib \
+        -DKDE_INSTALL_SYSCONFDIR=/etc \
+        -DKDE_INSTALL_LIBEXECDIR=lib \
+        -DUDEV_RULES_INSTALL_DIR=/usr/lib/udev/rules.d \
+        -DBUILD_TESTING=OFF \
+        -DKDE_INSTALL_USE_QT_SYS_PATHS=ON "$@" \
     -DCMAKE_INSTALL_LIBDIR=lib \
     -DBUILD_MARBLE_EXAMPLES=OFF \
     -DBUILD_MARBLE_TOOLS=ON \
@@ -61,7 +69,6 @@ package_marble() {
   conflicts=('kdeedu-marble<15.04.3-1')
   replaces=('kdeedu-marble')
   groups=(kde-applications kdeedu)
-  install=marble.install
 
   cd build
   make DESTDIR="$pkgdir" install

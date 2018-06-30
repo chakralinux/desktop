@@ -1,10 +1,9 @@
 #contributions from Arch: https://projects.archlinux.org/svntogit/packages.git/tree/trunk?h=packages/kate
-source ../kdeapps.conf
 
 pkgbase=kate
 pkgname=('kwrite'
          'kate')
-pkgver=${_kdever}
+pkgver=18.04.2
 pkgrel=1
 pkgdesc='Advanced editor component which is used in numerous KDE applications requiring a text editing component'
 arch=('x86_64')
@@ -13,10 +12,11 @@ depends=('knewstuff' 'ktexteditor' 'threadweaver' 'kded' 'kitemmodels')
 makedepends=('extra-cmake-modules' 'kdoctools' 'python3' 'plasma-framework')
 optdepends=('kio-extras: extra protocols support (sftp, fish and more)')
 options=('docs' 'debug')
-source=("$_mirror/${pkgbase}-$_kdever.tar.xz"{,.sig})
-sha256sums=("`grep ${pkgbase}-$_kdever.tar.xz  ../kdeapps.sums | cut -d " " -f1`"
-                        'SKIP')
-validpgpkeys=(${Avalidpgpkeys[@]})
+source=("https://download.kde.org/stable/applications/$pkgver/src/$pkgbase-$pkgver.tar.xz"{,.sig})
+sha256sums=('1678accdb134b02312c03556b07be6184e69db98d7669a4ccef5d4bf3f27c880'
+            'SKIP')
+validpgpkeys=(CA262C6C83DE4D2FB28A332A3A6A4DB839EAA6D7  # Albert Astals Cid <aacid@kde.org>
+              F23275E4BF10AFC1DF6914A6DBD2CE893E2D1C87) # Christoph Feck <cfeck@kde.org>
 
 prepare() {
   mkdir build
@@ -24,7 +24,15 @@ prepare() {
 
 build() {
   cd build
-  cmake_kf5 ../${pkgbase}-${pkgver} 
+  cmake ../${pkgbase}-${pkgver} \
+         -DCMAKE_BUILD_TYPE=RelWithDebInfo \
+        -DCMAKE_INSTALL_PREFIX=/usr \
+        -DKDE_INSTALL_LIBDIR=lib \
+        -DKDE_INSTALL_SYSCONFDIR=/etc \
+        -DKDE_INSTALL_LIBEXECDIR=lib \
+        -DUDEV_RULES_INSTALL_DIR=/usr/lib/udev/rules.d \
+        -DBUILD_TESTING=OFF \
+        -DKDE_INSTALL_USE_QT_SYS_PATHS=ON "$@"
   make
 }
 
@@ -33,7 +41,6 @@ package_kwrite() {
   groups=('kde')
   url="http://www.kde.org/applications/utilities/kwrite/"
   screenshot="https://www.kde.org/images/screenshots/kwrite.png"
-  install='kwrite.install'
   replaces=('kde-baseapps-kwrite')
   conflicts=('kde-baseapps-kwrite')
   provides=('kde-baseapps-kwrite')
@@ -50,7 +57,6 @@ package_kate() {
   groups=('kde')
   url="http://www.kde.org/applications/utilities/kate/"
   screenshot="https://www.kde.org/images/screenshots/kate.png"
-  install='kate.install'
   replaces=('kdesdk-kate')
   conflicts=('kdesdk-kate')
   provides=('kdesdk-kate')

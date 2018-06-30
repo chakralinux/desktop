@@ -1,8 +1,7 @@
 # Include global configuration
-source ../kdeapps.conf
 
 pkgname=kdepim-addons
-pkgver=${_kdever}
+pkgver=18.04.2
 pkgrel=1
 arch=('x86_64')
 pkgdesc="Addons for kdepim apps (as kmail addons/ kmail theme/ kaddressbook addons etc.)"
@@ -12,12 +11,12 @@ depends=(khtml mailcommon incidenceeditor libktnef libkgapi)
 makedepends=(extra-cmake-modules kdoctools clang libksieve)
 groups=('kde' 'kde-applications' 'kdepim' 'kde-uninstall')
 groups=(kde kde-applications kdepim kde-uninstall)
-install=kdepim-addons.install
 options=('docs' 'debug')
-source=("$_mirror/${pkgname}-$_kdever.tar.xz"{,.sig})
-sha256sums=(`grep " ${pkgname}-${_kdever}.tar.xz"  ../kdeapps.sums | cut -d " " -f1`
-                        'SKIP')
-validpgpkeys=(${Avalidpgpkeys[@]})
+source=("https://download.kde.org/stable/applications/$pkgver/src/$pkgname-$pkgver.tar.xz"{,.sig})
+sha256sums=('a184eede7e6fa6b5155cd8e23fe6a1193b9b0880b4e72d300eea2611105e793c'
+            'SKIP')
+validpgpkeys=(CA262C6C83DE4D2FB28A332A3A6A4DB839EAA6D7  # Albert Astals Cid <aacid@kde.org>
+              F23275E4BF10AFC1DF6914A6DBD2CE893E2D1C87) # Christoph Feck <cfeck@kde.org>
 
 prepare() {
     mkdir -p build
@@ -25,7 +24,15 @@ prepare() {
 
 build() {
     cd build
-    cmake_kf5 ../${pkgname}-${pkgver}
+    cmake ../${pkgname}-${pkgver} \
+         -DCMAKE_BUILD_TYPE=RelWithDebInfo \
+        -DCMAKE_INSTALL_PREFIX=/usr \
+        -DKDE_INSTALL_LIBDIR=lib \
+        -DKDE_INSTALL_SYSCONFDIR=/etc \
+        -DKDE_INSTALL_LIBEXECDIR=lib \
+        -DUDEV_RULES_INSTALL_DIR=/usr/lib/udev/rules.d \
+        -DBUILD_TESTING=OFF \
+        -DKDE_INSTALL_USE_QT_SYS_PATHS=ON "$@"
     make
 }
 

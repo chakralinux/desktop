@@ -1,10 +1,9 @@
 # Contributions from Arch: https://www.archlinux.org/packages/extra/x86_64/kdeutils-kcalc/
 # Include global configuration
-source ../kdeapps.conf
 
 pkgname="kcalc"
 arch=('x86_64')
-pkgver=${_kdever}
+pkgver=18.04.2
 pkgrel=1
 pkgdesc="Scientific calculator"
 url="https://www.kde.org/applications/utilities/kcalc"
@@ -15,11 +14,11 @@ makedepends=('extra-cmake-modules' 'python3' 'kdoctools')
 conflicts=('kdeutils-kcalc')
 replaces=('kdeutils-kcalc')
 groups=('kde' 'kde-uninstall' 'kde-applications' 'kdeutils')
-install=kcalc.install
-source=("$_mirror/${pkgname}-$_kdever.tar.xz"{,.sig})
-sha256sums=(`grep ${pkgname}-$_kdever.tar.xz  ../kdeapps.sums | cut -d " " -f1`
-                        'SKIP')
-validpgpkeys=(${Avalidpgpkeys[@]})
+source=("https://download.kde.org/stable/applications/$pkgver/src/$pkgname-$pkgver.tar.xz"{,.sig})
+sha256sums=('db0d350bd7e0318d8f015b9a0bc840e1b75713a8c22a738c515afb2d538c3ea7'
+            'SKIP')
+validpgpkeys=(CA262C6C83DE4D2FB28A332A3A6A4DB839EAA6D7  # Albert Astals Cid <aacid@kde.org>
+              F23275E4BF10AFC1DF6914A6DBD2CE893E2D1C87) # Christoph Feck <cfeck@kde.org>
 
 prepare() {
   mkdir -p build
@@ -28,7 +27,15 @@ prepare() {
 
 build() {
   cd build
-  cmake_kf5 ../${pkgname}-${pkgver}
+  cmake ../${pkgname}-${pkgver} \
+         -DCMAKE_BUILD_TYPE=RelWithDebInfo \
+        -DCMAKE_INSTALL_PREFIX=/usr \
+        -DKDE_INSTALL_LIBDIR=lib \
+        -DKDE_INSTALL_SYSCONFDIR=/etc \
+        -DKDE_INSTALL_LIBEXECDIR=lib \
+        -DUDEV_RULES_INSTALL_DIR=/usr/lib/udev/rules.d \
+        -DBUILD_TESTING=OFF \
+        -DKDE_INSTALL_USE_QT_SYS_PATHS=ON "$@"
   make
 }
 
