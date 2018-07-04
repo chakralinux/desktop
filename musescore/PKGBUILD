@@ -15,15 +15,22 @@ source=("$pkgname-$pkgver.tar.gz::https://github.com/$pkgname/$_pkgname/archive/
 sha256sums=('28dee6854585763fc3b89744ad69afe22f9073d8918836bfceb8be8d9bb1b7c5'
             '397b5431137d468a64b768670efdf385c27cb7298ee9295a32323a2610427928')
 
-build() {
-  cd $_pkgname-$pkgver
+prepare() {
+  mkdir build
+}
 
-  make USE_SYSTEM_FREETYPE=ON PREFIX='/usr' release
+build() {
+  cd build
+  cmake ../$_pkgname-$pkgver \
+        -DCMAKE_BUILD_TYPE=Release \
+        -DCMAKE_INSTALL_PREFIX=/usr \
+        -DUSE_SYSTEM_FREETYPE=ON
+
+  make lrelease
+  make
 }
 
 package() {
-  cd $_pkgname-$pkgver/build.release
-
+  cd build
   make DESTDIR=$pkgdir install
-  install -Dm 644 ../assets/musescore-icon-round-512.png $pkgdir/usr/share/pixmaps/mscore.png
 }
