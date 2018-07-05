@@ -1,40 +1,27 @@
 pkgname=convertall
-pkgver=0.7.2
+pkgver=0.7.5
 pkgrel=1
 pkgdesc="Unit conversion program (Qt)"
 arch=('x86_64')
-url="http://convertall.bellz.org/"
+url="https://convertall.bellz.org/"
 license=('GPL')
-depends=('python3-pyqt5')
+depends=('python3-pyqt5' 'desktop-file-utils')
 categories=('utils')
-source=(http://downloads.sourceforge.net/sourceforge/$pkgname/$pkgver/$pkgname-$pkgver.tar.gz
-        "correctpaths.patch"
-        "convertall.desktop")
-sha256sums=('9d465d12fbb45f88359b1d80619658143b203014157f65843917c1f63337c8a4'
-            '366ea0e23197b469402c2b3d6cdf4a77388813b91254d1ce3603e6cd0787fc3b'
-            '939c566d8015b6b0ab8dc82ba5161643c25c8619bd81b7d165c03eda33669ccb')
+source=(https://downloads.sourceforge.net/sourceforge/$pkgname/$pkgver/$pkgname-$pkgver.tar.gz)
+sha1sums=('eefe59873e4fc0d905ca79272796694107b08924')
 
 package() {
-# patch executable to have the correct paths
-patch -Np0 < $srcdir/correctpaths.patch
+  cd ConvertAll
 
-# create install directories
-  install -d $pkgdir/usr/{bin,share/pixmaps}
+  python3 install.py -b "${pkgdir}" -p /usr -i /usr/share/pixmaps/convertall
+  rm "${pkgdir}/usr/share/doc/${pkgname}"/{INSTALL,LICENSE}
 
-# copy files manually
-cp -rf $srcdir/ConvertAll/source $pkgdir/usr/share/$pkgname
-cp -rf $srcdir/ConvertAll/icons $pkgdir/usr/share/$pkgname
-cp -rf $srcdir/ConvertAll/doc $pkgdir/usr/share/$pkgname/help
-cp -rf $srcdir/ConvertAll/data $pkgdir/usr/share/$pkgname
-
-# create symlink in /usr/bin
-ln -s /usr/share/$pkgname/$pkgname.py $pkgdir/usr/bin/$pkgname
-
-# install desktop file
-install -Dm644 $srcdir/$pkgname.desktop \
-	$pkgdir/usr/share/applications/$pkgname.desktop
-
-# symlink icon in /usr/share/pixmaps
-ln -s /usr/share/$pkgname/icons/$pkgname.svg \
-	$pkgdir/usr/share/pixmaps/$pkgname.svg
+  install -Dm644 icons/convertall-icon.svg \
+    "${pkgdir}/usr/share/icons/hicolor/scalable/apps/convertall.svg"
+  install -Dm644 icons/convertall_lg.png \
+    "${pkgdir}/usr/share/icons/hicolor/64x64/apps/convertall.png"
+  install -Dm644 icons/convertall_med.png \
+    "${pkgdir}/usr/share/icons/hicolor/32x32/apps/convertall.png"
+  install -Dm644 icons/convertall_sm.png \
+    "${pkgdir}/usr/share/icons/hicolor/16x16/apps/convertall.png"
 }
