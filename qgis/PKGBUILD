@@ -1,26 +1,26 @@
 pkgname=qgis
-pkgver=2.18.17
+pkgver=3.2.0
 pkgrel=1
 pkgdesc='A Geographic Information System (GIS) that supports vector, raster and database formats'
 url='http://qgis.org/'
 license=('GPL')
 arch=('x86_64')
-depends=('gcc-libs' 'glibc' 'gdal' 'proj' 'geos' 'expat' 'libspatialite' 'spatialindex' 'postgresql-libs' 'qca' 'qt' 'qwt6' 'sqlite3' 'python2' 'qscintilla-python2' 'pyqt4-python2' 'python2-pyspatialite'
-         'python2-jinja')
-makedepends=('cmake' 'flex' 'bison' 'fcgi' 'grass' 'gsl' 'postgis' 'python2-sip' 'python2-pip' 'python2-setuptools')
+depends=('gcc-libs' 'glibc' 'gdal' 'libspatialite' 'spatialindex' 'qtkeychain' 'qca' 'qca-qt5' 'qt5-3d' 'qt5-webkit' 'qwt6' 'sqlite3' 'python3'
+         'libzip' 'python3-qscintilla-qt5' 'proj' 'python3-pyqt5' 'python2-pyqt5')
+makedepends=('cmake' 'fcgi' 'gsl' 'python3-six' 'qt5-tools')
 optdepends=('fcgi: qgis mapserver'
             'grass: grass plugin'
             'gsl: georeferencer'
-            'python2-sip: python-support'
-            'postgis: postgis support and SPIT plugin')
+            'postgis: postgis support and SPIT plugin'
+            'python-jinja: MetaSearch plugin')
 source=("http://qgis.org/downloads/$pkgname-$pkgver.tar.bz2")
-sha256sums=('5e20709598b01e207d4a0d4992ff08e1751f4fbf832b3c76fa71adc869a1bcdb')
+sha256sums=('0bc7cc5bdec05bac1f0f50250ce705130b5c3a7df3f0115f26743431fca2beff')
 
 prepare() {
   cd $pkgname-$pkgver
   
-  # Fix references to "python"
-  sed -i 's/\(env \|\/usr\/bin\/\)python$/&2/' $(find . -iname "*.py")
+#   # Fix references to "python"
+#   sed -i 's/\(env \|\/usr\/bin\/\)python$/&2/' $(find . -iname "*.py")
 
   # Remove mime types already defined by freedesktop.org
   sed -e '/type="image\/tiff"/,/<\/mime-type>/d' \
@@ -43,7 +43,7 @@ build() {
         -DGRASS_PREFIX=/opt/grass \
         -DGRASS_INCLUDE_DIR=/opt/grass/include/ \
         -DQGIS_MANUAL_SUBDIR=share/man \
-        -DPYTHON_EXECUTABLE=/usr/bin/python2 \
+        -DPYTHON_EXECUTABLE=/usr/bin/python3 \
         -DENABLE_TESTS=FALSE \
         -DCMAKE_SKIP_RPATH=TRUE
   make
@@ -53,17 +53,13 @@ package() {
     cd $pkgname-$pkgver/build
     make DESTDIR=$pkgdir install
     
-    # install python2-psycopg2
-    pip2 install --target=$pkgdir/usr/share/qgis/python psycopg2
-    
-    
     # create a more user-friendly application name link
     ln -s /usr/bin/qgis "$pkgdir/usr/bin/quantum-gis"
 
     cd ..
     
     # install some freedesktop.org compatibility
-    install -Dm644 debian/{qgis,qbrowser}.desktop -t "$pkgdir/usr/share/applications/"
+    install -Dm644 debian/qgis.desktop -t "$pkgdir/usr/share/applications/"
     for prog in qgis qbrowser; do
     install -Dm644 images/icons/${prog}_icon.svg "$pkgdir/usr/share/icons/hicolor/scalable/apps/$prog.svg"
     done
