@@ -13,17 +13,17 @@ source=("$pkgname-$pkgver::$url/archive/release-$pkgver.tar.gz")
 sha256sums=('096a1af51378cabb29426869db29f6efffaa4ccd4b8628046408d1084f2f415a')
 
 prepare() {
-    cd $pkgname-release-$pkgver
+    cd $pkgname
     sh scripts/prepare.sh
 }
 
 build() {
-    cd "$pkgname-release-$pkgver"
+    cd $pkgname
     qmake-qt5 PREFIX="/usr"
     make
 }
 
 package() {
-    cd "$pkgname-release-$pkgver"
+    cd $pkgname
     make INSTALL_ROOT="$pkgdir" install
 }
