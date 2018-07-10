@@ -1,36 +1,33 @@
-# Maintainer: Neophytos Kolokotronis <tetris4@gmail.com>
-
 pkgname=ccache
-pkgver=3.1.9
-pkgrel=2
+pkgver=3.4.2
+pkgrel=1
 pkgdesc="A compiler cache."
-url="http://ccache.samba.org/"
-license=('GPL2')
+url="https://ccache.samba.org/"
+license=('GPL3')
 arch=('x86_64')
 depends=('zlib')
-source=(http://samba.org/ftp/$pkgname/$pkgname-$pkgver.tar.bz2)
-md5sums=('65f48376a91d3651d6527ca568858be8')
+source=(https://samba.org/ftp/$pkgname/$pkgname-$pkgver.tar.xz)
+sha256sums=('18a8b14367d63d3d37fb6c33cba60e1b7fcd7a63d608df97c9771ae0d234fee2')
 
 build() {
   cd $srcdir/$pkgname-$pkgver
-  ./configure --prefix=/usr
+  ./configure --prefix=/usr --sysconfdir=/etc
   make
 }
 
 package() {
   cd $srcdir/$pkgname-$pkgver
-  install -Dm 755 ccache $pkgdir/usr/bin/ccache
-  install -Dm 644 ccache.1 $pkgdir/usr/share/man/man1/ccache.1
+  install -Dm 755 ccache -t "${pkgdir}/usr/bin"
+  install -Dm 644 doc/ccache.1 -t "${pkgdir}/usr/share/man/man1"
+  install -Dm 644 doc/{AUTHORS,MANUAL,NEWS}.adoc README.md -t "${pkgdir}/usr/share/doc/${pkgname}"
 
-  mkdir -p $pkgdir/usr/lib/ccache/bin
-  ln -sf /usr/bin/ccache $pkgdir/usr/lib/ccache/bin/cc 
-  ln -sf /usr/bin/ccache $pkgdir/usr/lib/ccache/bin/gcc
-  ln -sf /usr/bin/ccache $pkgdir/usr/lib/ccache/bin/g++
-  ln -sf /usr/bin/ccache $pkgdir/usr/lib/ccache/bin/cpp
-  ln -sf /usr/bin/ccache $pkgdir/usr/lib/ccache/bin/c++
-  ln -sf /usr/bin/ccache $pkgdir/usr/lib/ccache/bin/$CHOST-cc
-  ln -sf /usr/bin/ccache $pkgdir/usr/lib/ccache/bin/$CHOST-gcc
-  ln -sf /usr/bin/ccache $pkgdir/usr/lib/ccache/bin/$CHOST-g++
-  ln -sf /usr/bin/ccache $pkgdir/usr/lib/ccache/bin/$CHOST-cpp
-  ln -sf /usr/bin/ccache $pkgdir/usr/lib/ccache/bin/$CHOST-c++
+  install -d "${pkgdir}/usr/lib/ccache/bin"
+  local _prog
+  for _prog in gcc g++ c++; do
+    ln -s /usr/bin/ccache "${pkgdir}/usr/lib/ccache/bin/$_prog"
+    ln -s /usr/bin/ccache "${pkgdir}/usr/lib/ccache/bin/${CHOST}-$_prog"
+  done
+  for _prog in cc clang clang++; do
+    ln -s /usr/bin/ccache "${pkgdir}/usr/lib/ccache/bin/$_prog"
+  done
 }
