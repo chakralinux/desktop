@@ -1,28 +1,41 @@
 pkgname=fingerprint-gui
 pkgver=1.09
-pkgrel=1
+pkgrel=2
 pkgdesc="Application for fingerprint-based authentication, automatically support UPEK fingerprint readers with non-free library"
 arch=('x86_64')
 url="http://www.ullrich-online.cc/fingerprint/"
 license=('GPL')
-depends=('libfprint' 'libfakekey' 'polkit-qt4' 'qca' 'libusb')
-source=("http://ullrich-online.cc/nview/Appliance/fingerprint/download/${pkgname}-${pkgver}.tar.gz")
+depends=('libfprint' 'libfakekey' 'polkit-qt5' 'qca-qt5' 'qt5-x11extras')
+optdepends=('libusb: for libbsapi')
+source=("https://github.com/maksbotan/${pkgname}/archive/v${pkgver}-qt5.tar.gz"
+        "fingerprint-gui-udev-path.patch"
+        "fingerprint-gui-udev-0050.patch")
 install="${pkgname}.install"
 sha1sums=('02276783cb9d6a36a2aa24e4a981660acd68c0e2')
 
+prepare() {
+  cd "${srcdir}/${pkgname}-${pkgver}-qt5"
+  patch -p1 -i "${srcdir}/fingerprint-gui-udev-path.patch"
+  patch -p1 -i "${srcdir}/fingerprint-gui-udev-0050.patch"
+}
+
 build() {
-  cd "${srcdir}/${pkgname}-${pkgver}"
-  qmake PREFIX=/usr LIB=/usr/lib
+  cd "${srcdir}/${pkgname}-${pkgver}-qt5"
+  qmake PREFIX=/usr LIB=/usr/lib QMAKE_CFLAGS="${CFLAGS}" QMAKE_CXXFLAGS="${CXXFLAGS}"
   make
 }
 
 package() {
-  cd "${srcdir}/${pkgname}-${pkgver}"
+  cd "${srcdir}/${pkgname}-${pkgver}-qt5"
   make INSTALL_ROOT="${pkgdir}/" install
-  install -Dm644 "CHANGELOG" "COPYING" "${pkgdir}/usr/share/doc/${pkgname}/"
+  make INSTALL_ROOT="${pkgdir}/" upek-rules
+  make INSTALL_ROOT="${pkgdir}/" upek-cfg
 
+  # upstream build rule wanna create group/change rights as well
   install -dm770 "${pkgdir}/var/upek_data"
-  install -Dm644 "upek/upek.cfg" "${pkgdir}/etc/"
-  install -Dm644 "upek/91-fingerprint-gui-upek.rules" "${pkgdir}/etc/udev/rules.d/"
+  # we are using custom rule to define arch by using our mechanisms
+  # (e.g. crossplatform build)
   install -Dm644 upek/lib64/libbsapi.so.* "${pkgdir}/usr/lib/"
+
+  install -Dm644 "CHANGELOG" "COPYING" "${pkgdir}/usr/share/doc/${pkgname}/"
 }
