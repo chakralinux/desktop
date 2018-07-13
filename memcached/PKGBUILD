@@ -1,5 +1,5 @@
 pkgname=memcached
-pkgver=1.4.33
+pkgver=1.5.9
 pkgrel=1
 pkgdesc="A distributed memory object caching system"
 arch=('x86_64')
@@ -10,23 +10,23 @@ optdepends=('perl: for memcached-tool usage')
 install=memcached.install
 source=("http://www.memcached.org/files/$pkgname-$pkgver.tar.gz"
         "memcached.service")
-sha256sums=('83726c8d68258c56712373072abb25a449c257398075a39ec0867fd8ba69771d'
+sha256sums=('4af3577dbf71cb0a748096dc6562ccd587cddb7565c720f1fdb23e8a34241d06'
             'd0511361cec56c47bfb86590af8aa51a63ff6794513914170d5226f4e46e4386')
 
 build() {
-  cd "$srcdir/$pkgname-$pkgver"
+  cd $pkgname-$pkgver
   ./configure --prefix=/usr
   make
 }
 
 check() {
-  cd "$srcdir/$pkgname-$pkgver"
+  cd $pkgname-$pkgver
   make test
 }
 
 package() {
-  cd "$srcdir/$pkgname-$pkgver"
-  make DESTDIR="$pkgdir" install
+  cd $pkgname-$pkgver
+  make DESTDIR=$pkgdir install
   install -D -m 755 scripts/memcached-tool "$pkgdir"/usr/bin/memcached-tool
   install -D -m 644 ../memcached.service "$pkgdir"/usr/lib/systemd/system/memcached.service
 }
