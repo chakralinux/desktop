@@ -1,24 +1,40 @@
 pkgname=libmemcached
 pkgver=1.0.18
-pkgrel=3
+pkgrel=4
 pkgdesc="C and C++ client library to the memcached server"
 arch=('x86_64')
 url="http://libmemcached.org/"
 license=('GPL')
 depends=('glibc' 'libsasl' 'libevent')
-makedepends=('perl' 'memcached')
-source=(http://launchpad.net/$pkgname/1.0/$pkgver/+download/$pkgname-$pkgver.tar.gz)
-sha512sums=('2d95fea63b8b6dc7ded42c3a88a54aad74d5a1d417af1247144dae4a88c3b639a3aabc0c2b66661ff69a7609a314efaaae236e10971af9c428a4bca0a0101585')
+makedepends=('perl' 'memcached' 'python3-sphinx')
+source=(http://launchpad.net/$pkgname/1.0/$pkgver/+download/$pkgname-$pkgver.tar.gz
+        libmemcached-fix-linking-with-libpthread.patch
+        libmemcached-build.patch)
+sha512sums=('2d95fea63b8b6dc7ded42c3a88a54aad74d5a1d417af1247144dae4a88c3b639a3aabc0c2b66661ff69a7609a314efaaae236e10971af9c428a4bca0a0101585'
+            'dd021ab05e51d7b115ddb876ed0ffe01f954ad60146d91048dc20ea3b96f92cb34f60699ccd82768ce4bf87680035f24676d18fb103d3416049cb80a56098fbc'
+            'b3e8e0e5a4fcfcf583001f1923bffb36cb8de90a77f710c2ba3929d6f6364cce5d4ee9edc3f0187055faa035b7233c35797c7cf8dce840cd6a952e0044c39223')
+
+prepare() {
+  cd $pkgname-$pkgver
+
+  # Fix linking against libpthread (patch from Fedora)
+  # https://bugzilla.redhat.com/show_bug.cgi?id=1037707
+  # https://bugs.launchpad.net/libmemcached/+bug/1281907
+  patch -Np1 -i ../libmemcached-fix-linking-with-libpthread.patch
+
+  # https://bugs.launchpad.net/libmemcached/+bug/1663985
+  patch -Np1 -i ../libmemcached-build.patch
+}
 
 build() {
-  cd "$srcdir/$pkgname-$pkgver"
+  cd $pkgname-$pkgver
 
   ./configure --prefix=/usr
   make
 }
 
 package() {
-  cd "$srcdir/$pkgname-$pkgver"
+  cd $pkgname-$pkgver
 
-  make DESTDIR="$pkgdir" install
+  make DESTDIR=$pkgdir install
 }
