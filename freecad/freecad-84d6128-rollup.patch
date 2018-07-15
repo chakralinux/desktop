@@ -1,0 +1,753 @@
+From aa0f6b54d497eb810cc2774fa01ac0bb0408541a Mon Sep 17 00:00:00 2001
+From: wmayer <wmayer@users.sourceforge.net>
+Date: Tue, 10 Apr 2018 10:51:34 +0200
+Subject: [PATCH 01/13] fixes #0003424: 'basic_string::_M_construct null not
+ valid' when opening a v0.16 project with v0.17
+
+---
+ src/App/FeaturePython.cpp             | 32 ++++++++++++++++++++------------
+ src/Gui/ViewProviderPythonFeature.cpp | 16 ++++++++++------
+ 2 files changed, 30 insertions(+), 18 deletions(-)
+
+diff --git a/src/App/FeaturePython.cpp b/src/App/FeaturePython.cpp
+index 0a90b43a066..9d04fecad3c 100644
+--- a/src/App/FeaturePython.cpp
++++ b/src/App/FeaturePython.cpp
+@@ -108,17 +108,21 @@ void FeaturePythonImp::onBeforeChange(const Property* prop)
+                 if (feature.hasAttr("__object__")) {
+                     Py::Callable method(feature.getAttr(std::string("onBeforeChange")));
+                     Py::Tuple args(1);
+-                    std::string prop_name = object->getPropertyName(prop);
+-                    args.setItem(0, Py::String(prop_name));
+-                    method.apply(args);
++                    const char* prop_name = object->getPropertyName(prop);
++                    if (prop_name) {
++                        args.setItem(0, Py::String(prop_name));
++                        method.apply(args);
++                    }
+                 }
+                 else {
+                     Py::Callable method(feature.getAttr(std::string("onBeforeChange")));
+                     Py::Tuple args(2);
+                     args.setItem(0, Py::Object(object->getPyObject(), true));
+-                    std::string prop_name = object->getPropertyName(prop);
+-                    args.setItem(1, Py::String(prop_name));
+-                    method.apply(args);
++                    const char* prop_name = object->getPropertyName(prop);
++                    if (prop_name) {
++                        args.setItem(1, Py::String(prop_name));
++                        method.apply(args);
++                    }
+                 }
+             }
+         }
+@@ -141,17 +145,21 @@ void FeaturePythonImp::onChanged(const Property* prop)
+                 if (feature.hasAttr("__object__")) {
+                     Py::Callable method(feature.getAttr(std::string("onChanged")));
+                     Py::Tuple args(1);
+-                    std::string prop_name = object->getPropertyName(prop);
+-                    args.setItem(0, Py::String(prop_name));
+-                    method.apply(args);
++                    const char* prop_name = object->getPropertyName(prop);
++                    if (prop_name) {
++                        args.setItem(0, Py::String(prop_name));
++                        method.apply(args);
++                    }
+                 }
+                 else {
+                     Py::Callable method(feature.getAttr(std::string("onChanged")));
+                     Py::Tuple args(2);
+                     args.setItem(0, Py::Object(object->getPyObject(), true));
+-                    std::string prop_name = object->getPropertyName(prop);
+-                    args.setItem(1, Py::String(prop_name));
+-                    method.apply(args);
++                    const char* prop_name = object->getPropertyName(prop);
++                    if (prop_name) {
++                        args.setItem(1, Py::String(prop_name));
++                        method.apply(args);
++                    }
+                 }
+             }
+         }
+diff --git a/src/Gui/ViewProviderPythonFeature.cpp b/src/Gui/ViewProviderPythonFeature.cpp
+index 92755706852..2fe1c4fd1af 100644
+--- a/src/Gui/ViewProviderPythonFeature.cpp
++++ b/src/Gui/ViewProviderPythonFeature.cpp
+@@ -643,17 +643,21 @@ void ViewProviderPythonFeatureImp::onChanged(const App::Property* prop)
+                 if (vp.hasAttr("__object__")) {
+                     Py::Callable method(vp.getAttr(std::string("onChanged")));
+                     Py::Tuple args(1);
+-                    std::string prop_name = object->getPropertyName(prop);
+-                    args.setItem(0, Py::String(prop_name));
+-                    method.apply(args);
++                    const char* prop_name = object->getPropertyName(prop);
++                    if (prop_name) {
++                        args.setItem(0, Py::String(prop_name));
++                        method.apply(args);
++                    }
+                 }
+                 else {
+                     Py::Callable method(vp.getAttr(std::string("onChanged")));
+                     Py::Tuple args(2);
+                     args.setItem(0, Py::Object(object->getPyObject(), true));
+-                    std::string prop_name = object->getPropertyName(prop);
+-                    args.setItem(1, Py::String(prop_name));
+-                    method.apply(args);
++                    const char* prop_name = object->getPropertyName(prop);
++                    if (prop_name) {
++                        args.setItem(1, Py::String(prop_name));
++                        method.apply(args);
++                    }
+                 }
+             }
+         }
+
+From 5773170777f424c932f2088ef92d5f664b7d3c23 Mon Sep 17 00:00:00 2001
+From: WandererFan <wandererfan@gmail.com>
+Date: Mon, 5 Mar 2018 10:38:36 -0500
+Subject: [PATCH 02/13] Sync TechDraw what's this with Wiki page names
+
+---
+ src/Mod/TechDraw/Gui/Command.cpp           | 16 ++++++++--------
+ src/Mod/TechDraw/Gui/CommandCreateDims.cpp | 14 +++++++-------
+ src/Mod/TechDraw/Gui/CommandDecorate.cpp   |  8 ++++----
+ 3 files changed, 19 insertions(+), 19 deletions(-)
+
+diff --git a/src/Mod/TechDraw/Gui/Command.cpp b/src/Mod/TechDraw/Gui/Command.cpp
+index 02f0103d2f1..bec54ae8fae 100644
+--- a/src/Mod/TechDraw/Gui/Command.cpp
++++ b/src/Mod/TechDraw/Gui/Command.cpp
+@@ -92,7 +92,7 @@ CmdTechDrawNewPageDef::CmdTechDrawNewPageDef()
+     sGroup          = QT_TR_NOOP("TechDraw");
+     sMenuText       = QT_TR_NOOP("Insert new default drawing page");
+     sToolTipText    = QT_TR_NOOP("Insert new default drawing page");
+-    sWhatsThis      = "TechDraw_NewPageDef";
++    sWhatsThis      = "TechDraw_New_Default";
+     sStatusTip      = sToolTipText;
+     sPixmap         = "actions/techdraw-new-default";
+ }
+@@ -162,7 +162,7 @@ CmdTechDrawNewPage::CmdTechDrawNewPage()
+     sGroup          = QT_TR_NOOP("TechDraw");
+     sMenuText       = QT_TR_NOOP("Insert new drawing page from template");
+     sToolTipText    = QT_TR_NOOP("Insert new drawing page from template");
+-    sWhatsThis      = "TechDraw_NewPage";
++    sWhatsThis      = "TechDraw_New_Pick";
+     sStatusTip      = sToolTipText;
+     sPixmap         = "actions/techdraw-new-pick";
+ }
+@@ -302,7 +302,7 @@ CmdTechDrawNewViewSection::CmdTechDrawNewViewSection()
+     sGroup          = QT_TR_NOOP("TechDraw");
+     sMenuText       = QT_TR_NOOP("Insert section view in drawing");
+     sToolTipText    = QT_TR_NOOP("Insert a new Section View of a Part in the active drawing");
+-    sWhatsThis      = "TechDraw_NewViewSecton";
++    sWhatsThis      = "TechDraw_NewSection";
+     sStatusTip      = sToolTipText;
+     sPixmap         = "actions/techdraw-viewsection";
+ }
+@@ -371,7 +371,7 @@ CmdTechDrawNewViewDetail::CmdTechDrawNewViewDetail()
+     sGroup          = QT_TR_NOOP("TechDraw");
+     sMenuText       = QT_TR_NOOP("Insert detail view in drawing");
+     sToolTipText    = QT_TR_NOOP("Insert a new Detail View of a Part in the active drawing");
+-    sWhatsThis      = "TechDraw_NewViewDetail";
++    sWhatsThis      = "TechDraw_NewProjGroup";
+     sStatusTip      = sToolTipText;
+     sPixmap         = "actions/techdraw-viewdetail";
+ }
+@@ -562,7 +562,7 @@ CmdTechDrawAnnotation::CmdTechDrawAnnotation()
+     sGroup        = QT_TR_NOOP("TechDraw");
+     sMenuText     = QT_TR_NOOP("&Annotation");
+     sToolTipText  = QT_TR_NOOP("Inserts an Annotation in the active drawing");
+-    sWhatsThis    = "TechDraw_Annotation";
++    sWhatsThis    = "TechDraw_NewAnnotation";
+     sStatusTip    = QT_TR_NOOP("Inserts an Annotation in the active drawing");
+     sPixmap       = "actions/techdraw-annotation";
+ }
+@@ -855,7 +855,7 @@ CmdTechDrawDraftView::CmdTechDrawDraftView()
+     sGroup        = QT_TR_NOOP("TechDraw");
+     sMenuText     = QT_TR_NOOP("Insert a DraftView");
+     sToolTipText  = QT_TR_NOOP("Inserts a Draft WB object into the active drawing");
+-    sWhatsThis    = "TechDraw_DraftView";
++    sWhatsThis    = "TechDraw_NewDraft";
+     sStatusTip    = QT_TR_NOOP("Inserts a Draft WB object into the active drawing");
+     sPixmap       = "actions/techdraw-draft-view";
+ }
+@@ -908,7 +908,7 @@ CmdTechDrawArchView::CmdTechDrawArchView()
+     sGroup        = QT_TR_NOOP("TechDraw");
+     sMenuText     = QT_TR_NOOP("Insert an ArchView");
+     sToolTipText  = QT_TR_NOOP("Inserts a view of an Arch Section Plane into the active drawing");
+-    sWhatsThis    = "TechDraw_ArchView";
++    sWhatsThis    = "TechDraw_NewArch";
+     sStatusTip    = QT_TR_NOOP("Inserts a view of an Arch Section Plane into the active drawing");
+     sPixmap       = "actions/techdraw-arch-view";
+ }
+@@ -1024,7 +1024,7 @@ CmdTechDrawExportPage::CmdTechDrawExportPage()
+     sGroup        = QT_TR_NOOP("File");
+     sMenuText     = QT_TR_NOOP("&Export page...");
+     sToolTipText  = QT_TR_NOOP("Export a page to an SVG file");
+-    sWhatsThis    = "TechDraw_ExportPage";
++    sWhatsThis    = "TechDraw_SaveSVG";
+     sStatusTip    = QT_TR_NOOP("Export a page to an SVG file");
+     sPixmap       = "actions/techdraw-saveSVG";
+ }
+diff --git a/src/Mod/TechDraw/Gui/CommandCreateDims.cpp b/src/Mod/TechDraw/Gui/CommandCreateDims.cpp
+index f5324cc3bb2..5fa0b0bf94b 100644
+--- a/src/Mod/TechDraw/Gui/CommandCreateDims.cpp
++++ b/src/Mod/TechDraw/Gui/CommandCreateDims.cpp
+@@ -236,7 +236,7 @@ CmdTechDrawNewRadiusDimension::CmdTechDrawNewRadiusDimension()
+     sGroup          = QT_TR_NOOP("TechDraw");
+     sMenuText       = QT_TR_NOOP("Insert a new radius dimension into the drawing");
+     sToolTipText    = QT_TR_NOOP("Insert a new radius dimension feature for the selected view");
+-    sWhatsThis      = "TechDraw_NewRadiusDimension";
++    sWhatsThis      = "TechDraw_Dimension_Radius";
+     sStatusTip      = sToolTipText;
+     sPixmap         = "TechDraw_Dimension_Radius";
+ }
+@@ -323,7 +323,7 @@ CmdTechDrawNewDiameterDimension::CmdTechDrawNewDiameterDimension()
+     sGroup          = QT_TR_NOOP("TechDraw");
+     sMenuText       = QT_TR_NOOP("Insert a new diameter dimension into the drawing");
+     sToolTipText    = QT_TR_NOOP("Insert a new diameter dimension feature for the selected view");
+-    sWhatsThis      = "TechDraw_NewDiameterDimension";
++    sWhatsThis      = "TechDraw_Dimension_Diameter";
+     sStatusTip      = sToolTipText;
+     sPixmap         = "TechDraw_Dimension_Diameter";
+ }
+@@ -410,7 +410,7 @@ CmdTechDrawNewLengthDimension::CmdTechDrawNewLengthDimension()
+     sGroup          = QT_TR_NOOP("TechDraw");
+     sMenuText       = QT_TR_NOOP("Insert a new length dimension into the drawing");
+     sToolTipText    = QT_TR_NOOP("Insert a new length dimension");
+-    sWhatsThis      = "TechDraw_NewLengthDimension";
++    sWhatsThis      = "TechDraw_Dimension_Length";
+     sStatusTip      = sToolTipText;
+     sPixmap         = "TechDraw_Dimension_Length";
+ }
+@@ -518,7 +518,7 @@ CmdTechDrawNewDistanceXDimension::CmdTechDrawNewDistanceXDimension()
+     sGroup          = QT_TR_NOOP("TechDraw");
+     sMenuText       = QT_TR_NOOP("Insert a new horizontal dimension into the drawing");
+     sToolTipText    = QT_TR_NOOP("Insert a new horizontal-distance dimension");
+-    sWhatsThis      = "TechDraw_NewDistanceXDimension";
++    sWhatsThis      = "TechDraw_Dimension_Horizontal";
+     sStatusTip      = sToolTipText;
+     sPixmap         = "TechDraw_Dimension_Horizontal";
+ }
+@@ -626,7 +626,7 @@ CmdTechDrawNewDistanceYDimension::CmdTechDrawNewDistanceYDimension()
+     sGroup          = QT_TR_NOOP("TechDraw");
+     sMenuText       = QT_TR_NOOP("Insert a new vertical dimension into the drawing");
+     sToolTipText    = QT_TR_NOOP("Insert a new vertical distance dimension");
+-    sWhatsThis      = "TechDraw_NewDistanceYDimension";
++    sWhatsThis      = "TechDraw_Dimension_Vertical";
+     sStatusTip      = sToolTipText;
+     sPixmap         = "TechDraw_Dimension_Vertical";
+ }
+@@ -733,7 +733,7 @@ CmdTechDrawNewAngleDimension::CmdTechDrawNewAngleDimension()
+     sGroup          = QT_TR_NOOP("TechDraw");
+     sMenuText       = QT_TR_NOOP("Insert a new angle dimension into the drawing");
+     sToolTipText    = QT_TR_NOOP("Insert a new angle dimension");
+-    sWhatsThis      = "TechDraw_NewAngleDimension";
++    sWhatsThis      = "TechDraw_Dimension_Angle";
+     sStatusTip      = sToolTipText;
+     sPixmap         = "TechDraw_Dimension_Angle";
+ }
+@@ -822,7 +822,7 @@ CmdTechDrawLinkDimension::CmdTechDrawLinkDimension()
+     sGroup          = QT_TR_NOOP("TechDraw");
+     sMenuText       = QT_TR_NOOP("Link a dimension to 3D geometry");
+     sToolTipText    = QT_TR_NOOP("Link a dimension to 3D geometry");
+-    sWhatsThis      = "TechDraw_LinkDimension";
++    sWhatsThis      = "TechDraw_Dimension_Link";
+     sStatusTip      = sToolTipText;
+     sPixmap         = "TechDraw_Dimension_Link";
+ }
+diff --git a/src/Mod/TechDraw/Gui/CommandDecorate.cpp b/src/Mod/TechDraw/Gui/CommandDecorate.cpp
+index 9edf97d0058..b6cb5dab074 100644
+--- a/src/Mod/TechDraw/Gui/CommandDecorate.cpp
++++ b/src/Mod/TechDraw/Gui/CommandDecorate.cpp
+@@ -80,7 +80,7 @@ CmdTechDrawNewHatch::CmdTechDrawNewHatch()
+     sGroup          = QT_TR_NOOP("TechDraw");
+     sMenuText       = QT_TR_NOOP("Hatch a Face using image file");
+     sToolTipText    = QT_TR_NOOP("Hatch a Face using image file");
+-    sWhatsThis      = "TechDraw_NewHatch";
++    sWhatsThis      = "TechDraw_Hatch";
+     sStatusTip      = sToolTipText;
+     sPixmap         = "actions/techdraw-hatch";
+ }
+@@ -142,7 +142,7 @@ CmdTechDrawNewGeomHatch::CmdTechDrawNewGeomHatch()
+     sGroup          = QT_TR_NOOP("TechDraw");
+     sMenuText       = QT_TR_NOOP("Apply geometric hatch to a Face");
+     sToolTipText    = QT_TR_NOOP("Apply geometric hatch to a Face");
+-    sWhatsThis      = "TechDraw_NewGeomHatch";
++    sWhatsThis      = "TechDraw_GeomHatch";
+     sStatusTip      = sToolTipText;
+     sPixmap         = "actions/techdraw-geomhatch";
+ }
+@@ -264,7 +264,7 @@ CmdTechDrawToggleFrame::CmdTechDrawToggleFrame()
+     sGroup          = QT_TR_NOOP("TechDraw");
+     sMenuText       = QT_TR_NOOP("Turn View Frames on or off");
+     sToolTipText    = QT_TR_NOOP("Turn View Frames on or off");
+-    sWhatsThis      = "TechDraw_ToggleFrame";
++    sWhatsThis      = "TechDraw_Toggle";
+     sStatusTip      = sToolTipText;
+     sPixmap         = "actions/techdraw-toggleframe";
+ }
+@@ -311,7 +311,7 @@ CmdTechDrawRedrawPage::CmdTechDrawRedrawPage()
+     sGroup          = QT_TR_NOOP("TechDraw");
+     sMenuText       = QT_TR_NOOP("Redraw a page");
+     sToolTipText    = QT_TR_NOOP("Redraw a page");
+-    sWhatsThis      = "TechDraw_RedrawPage";
++    sWhatsThis      = "TechDraw_Redraw";
+     sStatusTip      = sToolTipText;
+     sPixmap         = "TechDraw_Tree_Page_Sync";
+ }
+
+From 6a25fe9ce5c88280360d71a09cda19cd93010728 Mon Sep 17 00:00:00 2001
+From: DeepSOIC <vv.titov@gmail.com>
+Date: Wed, 11 Apr 2018 18:21:23 +0300
+Subject: [PATCH 03/13] PartDesign: fix #2758 Datum Point persistence, again
+
+---
+ src/Mod/PartDesign/App/DatumPoint.cpp | 8 +++++---
+ src/Mod/PartDesign/App/DatumPoint.h   | 4 +++-
+ 2 files changed, 8 insertions(+), 4 deletions(-)
+
+diff --git a/src/Mod/PartDesign/App/DatumPoint.cpp b/src/Mod/PartDesign/App/DatumPoint.cpp
+index 297d562769d..5a65f09a645 100644
+--- a/src/Mod/PartDesign/App/DatumPoint.cpp
++++ b/src/Mod/PartDesign/App/DatumPoint.cpp
+@@ -99,12 +99,12 @@ void Point::onChanged(const App::Property* prop)
+     Superclass::onChanged(prop);
+ }
+ 
+-void Point::Restore(Base::XMLReader& r)
++void Point::onDocumentRestored()
+ {
+-    Superclass::Restore(r);
+     //fix for #0002758 Datum point moves to (0,0,0) when reopening the file.
+     //recreate shape, as the restored one has old Placement burned into it.
+     this->makeShape();
++    Superclass::onDocumentRestored();
+ }
+ 
+ void Point::makeShape()
+@@ -114,7 +114,9 @@ void Point::makeShape()
+     BRepBuilderAPI_MakeVertex builder(gp_Pnt(0,0,0));
+     if (!builder.IsDone())
+         return;
+-    Shape.setValue(builder.Shape());
++    Part::TopoShape tshape(builder.Shape());
++    tshape.setPlacement(this->Placement.getValue());
++    Shape.setValue(tshape);
+ }
+ 
+ Base::Vector3d Point::getPoint()
+diff --git a/src/Mod/PartDesign/App/DatumPoint.h b/src/Mod/PartDesign/App/DatumPoint.h
+index 19dfdbeb41c..e00cf6434e2 100644
+--- a/src/Mod/PartDesign/App/DatumPoint.h
++++ b/src/Mod/PartDesign/App/DatumPoint.h
+@@ -50,9 +50,11 @@ class PartDesignExport Point : public Part::Datum
+ 
+ protected:
+     virtual void onChanged(const App::Property* prop);
+-    virtual void Restore(Base::XMLReader& r);
++    virtual void onDocumentRestored() override;
++
+ private:
+     void makeShape();
++
+ };
+ 
+ } //namespace PartDesign
+
+From 551c504649450c77445dd62d3ae134620ca00370 Mon Sep 17 00:00:00 2001
+From: wmayer <wmayer@users.sourceforge.net>
+Date: Sat, 14 Apr 2018 18:45:37 +0200
+Subject: [PATCH 04/13] initialize member to fix possible crash
+
+---
+ src/Mod/Mesh/App/MeshPy.xml | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/src/Mod/Mesh/App/MeshPy.xml b/src/Mod/Mesh/App/MeshPy.xml
+index c71944df602..76bc4618a3f 100644
+--- a/src/Mod/Mesh/App/MeshPy.xml
++++ b/src/Mod/Mesh/App/MeshPy.xml
+@@ -520,7 +520,7 @@ for p in mesh.Facets:
+ 		</Attribute>
+ 		<ClassDeclarations>private:
+     friend class PropertyMeshKernel;
+-    class PropertyMeshKernel* parentProperty;
++    class PropertyMeshKernel* parentProperty = nullptr;
+ 		</ClassDeclarations>
+ 	</PythonExport>
+ </GenerateModel>
+
+From acdde5b2467fcc1d64fa1b713fb386abf468bbb2 Mon Sep 17 00:00:00 2001
+From: Yorik van Havre <yorik@uncreated.net>
+Date: Tue, 17 Apr 2018 11:18:23 -0300
+Subject: [PATCH 05/13] Arch: Fixed leftover encoding bug (backported to 0.17)
+
+---
+ src/Mod/Arch/ArchStructure.py | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
+
+diff --git a/src/Mod/Arch/ArchStructure.py b/src/Mod/Arch/ArchStructure.py
+index 1a442dff2a3..a0ec64d5647 100644
+--- a/src/Mod/Arch/ArchStructure.py
++++ b/src/Mod/Arch/ArchStructure.py
+@@ -152,7 +152,7 @@ def Activated(self):
+             st = Draft.getObjectsOfType(sel,"Structure")
+             ax = Draft.getObjectsOfType(sel,"Axis")
+             if ax:
+-                FreeCAD.ActiveDocument.openTransaction(str(translate("Arch","Create Structural System")))
++                FreeCAD.ActiveDocument.openTransaction(translate("Arch","Create Structural System"))
+                 FreeCADGui.addModule("Arch")
+                 if st:
+                     FreeCADGui.doCommand("obj = Arch.makeStructuralSystem(" + ArchCommands.getStringList(st) + "," + ArchCommands.getStringList(ax) + ")")
+@@ -164,7 +164,7 @@ def Activated(self):
+                 FreeCAD.ActiveDocument.recompute()
+                 return
+             elif not(ax) and not(st):
+-                FreeCAD.ActiveDocument.openTransaction(str(translate("Arch","Create Structure")))
++                FreeCAD.ActiveDocument.openTransaction(translate("Arch","Create Structure"))
+                 FreeCADGui.addModule("Arch")
+                 for obj in sel:
+                     FreeCADGui.doCommand("obj = Arch.makeStructure(FreeCAD.ActiveDocument." + obj.Name + ")")
+@@ -194,7 +194,7 @@ def getPoint(self,point=None,obj=None):
+         self.tracker.finalize()
+         if point == None:
+             return
+-        FreeCAD.ActiveDocument.openTransaction(str(translate("Arch","Create Structure")))
++        FreeCAD.ActiveDocument.openTransaction(translate("Arch","Create Structure"))
+         FreeCADGui.addModule("Arch")
+         if self.Profile is not None:
+             if "Precast" in self.Profile:
+
+From e17b340949b75a226cc7d89989b0aa238ccfc75f Mon Sep 17 00:00:00 2001
+From: Peter Lama <peterldev94@gmail.com>
+Date: Mon, 16 Apr 2018 14:55:03 -0700
+Subject: [PATCH 06/13] Fix #3426: Hierarchical step export not working with
+ occt 7.2
+
+---
+ src/Mod/Import/Gui/AppImportGuiPy.cpp | 7 ++++++-
+ 1 file changed, 6 insertions(+), 1 deletion(-)
+
+diff --git a/src/Mod/Import/Gui/AppImportGuiPy.cpp b/src/Mod/Import/Gui/AppImportGuiPy.cpp
+index b83092d9ed3..6c20eb94cc4 100644
+--- a/src/Mod/Import/Gui/AppImportGuiPy.cpp
++++ b/src/Mod/Import/Gui/AppImportGuiPy.cpp
+@@ -541,7 +541,12 @@ class Module : public Py::ExtensionModule<Module>
+             // the App Code.
+             std::vector< std::vector<App::Color> > Colors;
+             get_parts_colors(hierarchical_part,FreeLabels,part_id,Colors);
+-            ocaf.reallocateFreeShape(hierarchical_part,FreeLabels,part_id,Colors);
++            ocaf.reallocateFreeShape(hierarchical_part,FreeLabels,part_id,Colors);
++
++#if OCC_VERSION_HEX >= 0x070200
++            // Update is not performed automatically anymore: https://tracker.dev.opencascade.org/view.php?id=28055
++            XCAFDoc_DocumentTool::ShapeTool(hDoc->Main())->UpdateAssemblies();
++#endif
+ 
+             Base::FileInfo file(Utf8Name.c_str());
+             if (file.hasExtension("stp") || file.hasExtension("step")) {
+
+From f522116a7051fa20f44ada46151f87ec1c085caf Mon Sep 17 00:00:00 2001
+From: Eivind Kvedalen <eivind@kvedalen.name>
+Date: Fri, 20 Apr 2018 19:49:13 +0200
+Subject: [PATCH 07/13] Expressions: Fixed issue #3432; aggregate functions
+ sometimes ignore some of their arguments.
+
+Also updated regression tests in Spreadsheet module.
+---
+ src/App/Expression.cpp                 |  5 +----
+ src/Mod/Spreadsheet/TestSpreadsheet.py | 10 ++++++++++
+ 2 files changed, 11 insertions(+), 4 deletions(-)
+
+diff --git a/src/App/Expression.cpp b/src/App/Expression.cpp
+index 6f6fb6cbabc..471c0742878 100644
+--- a/src/App/Expression.cpp
++++ b/src/App/Expression.cpp
+@@ -897,16 +897,13 @@ Expression * FunctionExpression::evalAggregate() const
+                     throw Exception("Invalid property type for aggregate");
+             } while (range.next());
+         }
+-        else if (args[i]->isDerivedFrom(App::VariableExpression::getClassTypeId())) {
++        else {
+             std::unique_ptr<Expression> e(args[i]->eval());
+             NumberExpression * n(freecad_dynamic_cast<NumberExpression>(e.get()));
+ 
+             if (n)
+                 c->collect(n->getQuantity());
+         }
+-        else if (args[i]->isDerivedFrom(App::NumberExpression::getClassTypeId())) {
+-            c->collect(static_cast<NumberExpression*>(args[i])->getQuantity());
+-        }
+     }
+ 
+     return new NumberExpression(owner, c->getQuantity());
+diff --git a/src/Mod/Spreadsheet/TestSpreadsheet.py b/src/Mod/Spreadsheet/TestSpreadsheet.py
+index 56a0acf92e5..19ed6be8d4b 100644
+--- a/src/Mod/Spreadsheet/TestSpreadsheet.py
++++ b/src/Mod/Spreadsheet/TestSpreadsheet.py
+@@ -851,6 +851,16 @@ def testIssue3363(self):
+         self.assertEqual(sheet.getContents('B1'), '=A1 == 1 ? 11 : (A1 == 2 ? 12 : 13)')
+         self.assertEqual(sheet.getContents('C1'), '=A1 == 1 ? (A1 == 2 ? 12 : 13) : 11')
+ 
++    def testIssue3432(self):
++        """ Regression test for issue 3432; numbers with units are ignored from aggregates"""
++        sheet = self.doc.addObject('Spreadsheet::Sheet','Spreadsheet')
++        sheet.set('A1', '1mm')
++        sheet.set('B1', '2mm')
++        sheet.set('C1', '=max(A1:B1;3mm)')
++        self.doc.recompute()
++        self.assertEqual(sheet.get('C1'), Units.Quantity('3 mm'))
++
++
+     def tearDown(self):
+         #closing doc
+         FreeCAD.closeDocument(self.doc.Name)
+
+From e540e1bba3de415f0a135efda441af9ae99c4141 Mon Sep 17 00:00:00 2001
+From: Abdullah Tahiri <abdullah.tahiri.yo@gmail.com>
+Date: Sun, 22 Apr 2018 05:59:51 +0200
+Subject: [PATCH 08/13] Sketcher: fix menu periodic bspline call
+
+---
+ src/Mod/Sketcher/Gui/CommandCreateGeo.cpp | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/src/Mod/Sketcher/Gui/CommandCreateGeo.cpp b/src/Mod/Sketcher/Gui/CommandCreateGeo.cpp
+index 83c6c6007c2..3d970960342 100644
+--- a/src/Mod/Sketcher/Gui/CommandCreateGeo.cpp
++++ b/src/Mod/Sketcher/Gui/CommandCreateGeo.cpp
+@@ -4867,7 +4867,7 @@ CmdSketcherCreatePeriodicBSpline::CmdSketcherCreatePeriodicBSpline()
+ void CmdSketcherCreatePeriodicBSpline::activated(int iMsg)
+ {
+     Q_UNUSED(iMsg);
+-    ActivateHandler(getActiveGuiDocument(),new DrawSketchHandlerEllipse(1) );
++    ActivateHandler(getActiveGuiDocument(),new DrawSketchHandlerBSpline(1) );
+ }
+ 
+ bool CmdSketcherCreatePeriodicBSpline::isActive(void)
+
+From d436c4549823ce636381b1626d8b6a6f68ef0776 Mon Sep 17 00:00:00 2001
+From: wandererfan <wandererfan@gmail.com>
+Date: Fri, 20 Apr 2018 11:18:45 -0400
+Subject: [PATCH 09/13] Fix add ArchSection w/ multiple Pages
+
+---
+ src/Mod/TechDraw/Gui/Command.cpp | 36 ++++++++++++++++++++++++++++--------
+ 1 file changed, 28 insertions(+), 8 deletions(-)
+
+diff --git a/src/Mod/TechDraw/Gui/Command.cpp b/src/Mod/TechDraw/Gui/Command.cpp
+index bec54ae8fae..de4f5ff8e03 100644
+--- a/src/Mod/TechDraw/Gui/Command.cpp
++++ b/src/Mod/TechDraw/Gui/Command.cpp
+@@ -78,6 +78,16 @@
+ using namespace TechDrawGui;
+ using namespace std;
+ 
++bool isArchSection(App::DocumentObject* obj)
++{
++    bool result = true;
++    App::Property* prop1 = obj->getPropertyByName("Objects");
++    App::Property* prop2 = obj->getPropertyByName("OnlySolids");
++    if ( (!prop1) || (!prop2) ) {
++        result = false;
++    }
++    return result;
++}
+ 
+ //===========================================================================
+ // TechDraw_NewPageDef (default template)
+@@ -869,6 +879,7 @@ void CmdTechDrawDraftView::activated(int iMsg)
+     }
+ 
+ //TODO: shouldn't this be checking for a Draft object only?
++//      there is no obvious way of check for a Draft object.  Could be App::FeaturePython, Part::Part2DObject, ???
+     std::vector<App::DocumentObject*> objects = getSelection().getObjectsOfType(App::DocumentObject::getClassTypeId());
+     if (objects.empty()) {
+         QMessageBox::warning(Gui::getMainWindow(), QObject::tr("Wrong selection"),
+@@ -894,7 +905,6 @@ bool CmdTechDrawDraftView::isActive(void)
+     return DrawGuiUtil::needPage(this);
+ }
+ 
+-//TODO: shouldn't this be checking for an Arch object only?
+ //===========================================================================
+ // TechDraw_ArchView
+ //===========================================================================
+@@ -922,23 +932,33 @@ void CmdTechDrawArchView::activated(int iMsg)
+     }
+ 
+     std::vector<App::DocumentObject*> objects = getSelection().getObjectsOfType(App::DocumentObject::getClassTypeId());
+-    if (objects.size() != 1) {
++    if (objects.empty()) {
+         QMessageBox::warning(Gui::getMainWindow(), QObject::tr("Wrong selection"),
+-            QObject::tr("Select exactly one Arch Section Plane object."));
++            QObject::tr("Select at least one object."));
+         return;
+     }
+-    App::Property* prop1 = objects[0]->getPropertyByName("Objects");
+-    App::Property* prop2 = objects[0]->getPropertyByName("OnlySolids");
+-    if ( (!prop1) || (!prop2) ) {
++    int ifound = 0;
++    bool found = false;
++    for (auto& obj: objects) {
++        if (isArchSection(obj)) {
++            found = true;
++            break;
++        }
++        ifound++;
++    }
++    App::DocumentObject* archObj;
++    if (found) {
++        archObj = objects[ifound];
++    } else {
+         QMessageBox::warning(Gui::getMainWindow(), QObject::tr("Wrong selection"),
+-            QObject::tr("The selected object is not an Arch Section Plane."));
++            QObject::tr("There is no Arch Section Plane in selection."));
+         return;
+     }
+ 
+     std::string PageName = page->getNameInDocument();
+ 
+     std::string FeatName = getUniqueObjectName("ArchView");
+-    std::string SourceName = objects[0]->getNameInDocument();
++    std::string SourceName = archObj->getNameInDocument();
+     openCommand("Create ArchView");
+     doCommand(Doc,"App.activeDocument().addObject('TechDraw::DrawViewArch','%s')",FeatName.c_str());
+     doCommand(Doc,"App.activeDocument().%s.Source = App.activeDocument().%s",FeatName.c_str(),SourceName.c_str());
+
+From 1a8b868018f45ea486c0023fdbfeb06febc1fb89 Mon Sep 17 00:00:00 2001
+From: Peter Lama <peterldev94@gmail.com>
+Date: Fri, 20 Apr 2018 11:07:53 -0700
+Subject: [PATCH 10/13] Fix finding boost python >= 1.67
+
+Boost >= 1.67 requires a version suffix (on macOS at least)
+---
+ src/Mod/Path/libarea/CMakeLists.txt | 14 +++++++++-----
+ 1 file changed, 9 insertions(+), 5 deletions(-)
+
+diff --git a/src/Mod/Path/libarea/CMakeLists.txt b/src/Mod/Path/libarea/CMakeLists.txt
+index ef95c29d37d..087c911ddda 100644
+--- a/src/Mod/Path/libarea/CMakeLists.txt
++++ b/src/Mod/Path/libarea/CMakeLists.txt
+@@ -16,13 +16,17 @@ OPTION(USE_BOOST_PYTHON "use BOOST_PYTHON, otherwise use PYBIND11" ON)
+ 
+ if(USE_BOOST_PYTHON)
+     if(NOT FREECAD_LIBPACK_USE OR FREECAD_LIBPACK_CHECKFILE_CLBUNDLER)
+-        if(NOT PYTHON_VERSION_MAJOR LESS 3)
+-            find_package( Boost COMPONENTS python3)
+-            if (NOT Boost_PYTHON3_FOUND)
++        # boost-python >= 1.67 on some platforms has suffix
++        set(BOOST_PY_SUFFIX ${PYTHON_VERSION_MAJOR}${PYTHON_VERSION_MINOR})
++
++        find_package( Boost COMPONENTS python${BOOST_PY_SUFFIX} )
++        if (NOT Boost_PYTHON${BOOST_PY_SUFFIX}_FOUND)
++            # try just the major version
++            find_package( Boost COMPONENTS python${PYTHON_VERSION_MAJOR} )
++            if (NOT Boost_PYTHON${PYTHON_VERSION_MAJOR}_FOUND)
++                # unversioned
+                 find_package( Boost COMPONENTS python REQUIRED)
+             endif()
+-        else()
+-            find_package( Boost COMPONENTS python REQUIRED)  # find BOOST and boost-python
+         endif()
+ 
+         if(Boost_FOUND)
+
+From f0e4c419c20de298ad521dc9e643a3e0ba83457b Mon Sep 17 00:00:00 2001
+From: Markus Lampert <markus@bibi.ca>
+Date: Sun, 29 Apr 2018 21:26:35 -0700
+Subject: [PATCH 11/13] Changed grbl feed rate output to mm/min.
+
+---
+ src/Mod/Path/PathScripts/post/grbl_post.py | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/src/Mod/Path/PathScripts/post/grbl_post.py b/src/Mod/Path/PathScripts/post/grbl_post.py
+index 536c2cf5493..9ad09924339 100644
+--- a/src/Mod/Path/PathScripts/post/grbl_post.py
++++ b/src/Mod/Path/PathScripts/post/grbl_post.py
+@@ -261,7 +261,7 @@ def parse(pathobj):
+                 if param in c.Parameters:
+                     if param == 'F':
+                         if command not in RAPID_MOVES:
+-                            outstring.append(param + format(c.Parameters['F'], '.2f'))
++                            outstring.append(param + format(c.Parameters['F'] * 60, '.2f'))
+                     elif param == 'T':
+                         outstring.append(param + str(c.Parameters['T']))
+                     else:
+
+From 3bb5ff4e70c0c526f2d9dd69b1004155b2f527f2 Mon Sep 17 00:00:00 2001
+From: wmayer <wmayer@users.sourceforge.net>
+Date: Tue, 8 May 2018 15:25:00 +0200
+Subject: [PATCH 12/13] 0003461: FreeCAD crashes when changing language setting
+
+---
+ src/Gui/DlgGeneralImp.cpp | 18 ++++++++++--------
+ 1 file changed, 10 insertions(+), 8 deletions(-)
+
+diff --git a/src/Gui/DlgGeneralImp.cpp b/src/Gui/DlgGeneralImp.cpp
+index 0ec847af0dd..4126a8046b5 100644
+--- a/src/Gui/DlgGeneralImp.cpp
++++ b/src/Gui/DlgGeneralImp.cpp
+@@ -130,14 +130,16 @@ void DlgGeneralImp::saveSettings()
+     PythonWordWrap->onSave();
+   
+     QWidget* pc = DockWindowManager::instance()->getDockWindow("Python console");
+-    PythonConsole *pcPython = static_cast<PythonConsole*>(pc);
+-    bool pythonWordWrap = App::GetApplication().GetUserParameter().
+-        GetGroup("BaseApp")->GetGroup("Preferences")->GetGroup("General")->GetBool("PythonWordWrap", true);
+-
+-    if (pythonWordWrap) {
+-      pcPython->setWordWrapMode(QTextOption::WrapAtWordBoundaryOrAnywhere);
+-    } else {
+-      pcPython->setWordWrapMode(QTextOption::NoWrap);
++    PythonConsole *pcPython = qobject_cast<PythonConsole*>(pc);
++    if (pcPython) {
++        bool pythonWordWrap = App::GetApplication().GetUserParameter().
++            GetGroup("BaseApp")->GetGroup("Preferences")->GetGroup("General")->GetBool("PythonWordWrap", true);
++
++        if (pythonWordWrap) {
++            pcPython->setWordWrapMode(QTextOption::WrapAtWordBoundaryOrAnywhere);
++        } else {
++            pcPython->setWordWrapMode(QTextOption::NoWrap);
++        }
+     }
+ 
+     // set new user defined style
+
+From 84d61285966f0753251d62033963f33aa04e8ea9 Mon Sep 17 00:00:00 2001
+From: Yorik van Havre <yorik@uncreated.net>
+Date: Mon, 21 May 2018 12:11:46 -0300
+Subject: [PATCH 13/13] Fixed wrong encoding in App.openTransaction
+
+---
+ src/App/DocumentPyImp.cpp | 2 +-
+ src/Mod/Arch/ArchWall.py  | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/src/App/DocumentPyImp.cpp b/src/App/DocumentPyImp.cpp
+index bfcbf04b71e..cd27cd49009 100644
+--- a/src/App/DocumentPyImp.cpp
++++ b/src/App/DocumentPyImp.cpp
+@@ -341,7 +341,7 @@ PyObject*  DocumentPy::openTransaction(PyObject *args)
+     }
+ #else
+     else if (PyUnicode_Check(value)) {
+-        PyObject* unicode = PyUnicode_AsLatin1String(value);
++        PyObject* unicode = PyUnicode_AsUTF8String(value);
+         cmd = PyString_AsString(unicode);
+         Py_DECREF(unicode);
+     }
+diff --git a/src/Mod/Arch/ArchWall.py b/src/Mod/Arch/ArchWall.py
+index 9f7eefca355..82ea0226a22 100644
+--- a/src/Mod/Arch/ArchWall.py
++++ b/src/Mod/Arch/ArchWall.py
+@@ -271,7 +271,7 @@ def getPoint(self,point=None,obj=None):
+                 self.Activated()
+ 
+     def addDefault(self,l):
+-        FreeCADGui.doCommand('base=FreeCAD.ActiveDocument.addObject("Sketcher::SketchObject","'+translate('Arch','WallTrace')+'")')
++        FreeCADGui.doCommand('base=FreeCAD.ActiveDocument.addObject("Sketcher::SketchObject","WallTrace")')
+         FreeCADGui.doCommand('base.Placement = FreeCAD.DraftWorkingPlane.getPlacement()')
+         FreeCADGui.doCommand('base.addGeometry(trace)')
+         FreeCADGui.doCommand('wall = Arch.makeWall(base,width='+str(self.Width)+',height='+str(self.Height)+',align="'+str(self.Align)+'")')
