@@ -1,5 +1,6 @@
 pkgname=npm
-pkgver=6.1.0
+_pkgname=cli
+pkgver=6.2.0
 pkgrel=1
 pkgdesc='A package manager for javascript'
 arch=('x86_64')
@@ -8,21 +9,21 @@ license=('custom:Artistic')
 depends=('nodejs' 'node-gyp' 'semver')
 makedepends=('procps-ng' 'marked-man')
 options=('!emptydirs')
-source=("$pkgname-$pkgver::https://github.com/$pkgname/$pkgname/archive/v$pkgver.tar.gz")
-sha256sums=('9d12500a4a1e0a112505b3766d98e0372ef546e05be52ab6bd4623051bf72e64')
+source=("$pkgname-$pkgver::https://github.com/$pkgname/$_pkgname/archive/v$pkgver.tar.gz")
+sha256sums=('34df71d3e6b9e3d79eab8277665f2572b47773b3650f5eb5a23ddf0f98b61859')
 
 prepare() {
-  cd $pkgname-$pkgver
+  cd $_pkgname-$pkgver
   ln -sf /usr/bin/marked{,-man} node_modules/.bin/
 }
 
 build() {
-  cd $pkgname-$pkgver
+  cd $_pkgname-$pkgver
   make
 }
 
 package() {
-  cd $pkgname-$pkgver
+  cd $_pkgname-$pkgver
   make NPMOPTS="--prefix=\"$pkgdir/usr\"" install
 
   # Non-deterministic race in npm gives 777 permissions to random directories.
@@ -38,7 +39,7 @@ package() {
     "$_npmdir"/bin/node-gyp-bin/node-gyp
 
   install -dm755 "$pkgdir"/usr/share/bash-completion/completions
-  node "$srcdir"/npm-$pkgver/bin/npm-cli.js completion > "$pkgdir"/usr/share/bash-completion/completions/npm
-  
-  install -Dm644 "$srcdir/${pkgname}-${pkgver}/LICENSE" "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
+  node "$srcdir"/cli-$pkgver/bin/npm-cli.js completion > "$pkgdir"/usr/share/bash-completion/completions/npm
+
+  install -Dm644 "$srcdir"/cli-$pkgver/LICENSE "$pkgdir"/usr/share/licenses/$pkgname/LICENSE
 }
