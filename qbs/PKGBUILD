@@ -1,16 +1,30 @@
 pkgname=qbs
-pkgver=1.11.1
+pkgver=1.12.0
 pkgrel=1
 pkgdesc='Cross platform build tool'
 arch=('x86_64')
 url='https://wiki.qt.io/Qbs'
 license=('LGPL')
 depends=('qt5-script')
-source=("https://download.qt.io/official_releases/qbs/${pkgver}/qbs-src-${pkgver}.tar.gz")
-sha256sums=('8a301e8e94169e44f2ca4ad65fc4d393215bf3b81bc51daa970f50ddb6231f5b')
+makedepends=('git')
+# The source tarball may delay after qtcreator release, so we use git tag instead
+# Check qtcreator's built-in qbs version before compile qtcreator:
+# $ cd qtcreator
+# $ makepkg -oddC
+# Note the required qbs version down
+# Update qbs pkgver ->  update qbs package ->  update dependent qbs version of qtcreator's PKGBUILD -> update qtcreator
+# source=("https://download.qt.io/official_releases/qbs/${pkgver}/qbs-src-${pkgver}.tar.gz")
+source=("git+https://code.qt.io/qbs/qbs.git#tag=v${pkgver}" qbs-header.patch)
+sha256sums=('SKIP'
+            'f80fb8dd5401713e1d70012f2bbc26a1c544963753c0de3b25584b27d257d367')
+
+prepare() {
+  cd $pkgname
+  patch -Np1 -i $srcdir/qbs-header.patch # Fix missing header
+}
 
 build() {
-  cd $pkgname-src-$pkgver
+  cd $pkgname
   qmake-qt5 QBS_INSTALL_PREFIX=/usr \
     QBS_LIBEXEC_INSTALL_DIR=/usr/lib/qbs \
     QBS_LIBEXEC_DESTDIR=../../../lib/qbs \
@@ -21,6 +35,6 @@ build() {
 }
 
 package() {
-  cd $pkgname-src-$pkgver
+  cd $pkgname
   make INSTALL_ROOT="${pkgdir}" install
 }

@@ -7,7 +7,7 @@ arch=('x86_64')
 url='https://www.qt.io'
 license=('LGPL')
 depends=('qt5-tools' 'qt5-quickcontrols' 'qt5-quickcontrols2' 'qt5-webengine'
-         'gnutls' 'qbs' 'clang')
+         'gnutls' 'qbs=1.12.0' 'clang')
 makedepends=('git' 'mesa' 'llvm')
 options=('docs')
 optdepends=('qt5-doc: for the integrated Qt documentation'
@@ -27,10 +27,13 @@ prepare() {
   [[ -d build ]] && rm -r build
   mkdir build
 
+  cd $srcdir/qt-creator-opensource-src-${pkgver}
   # fix hardcoded libexec path
-  sed -e 's|libexec\/qtcreator|lib\/qtcreator|g' -i qt-creator-opensource-src-${pkgver}/qtcreator.pri
+  sed -e 's|libexec\/qtcreator|lib\/qtcreator|g' -i qtcreator.pri
   # use system qbs
-  rm -r qt-creator-opensource-src-${pkgver}/src/shared/qbs
+  msg "Required qbs version is $(cat src/shared/qbs/VERSION)"
+  msg "Removing built-in qbs"
+  rm -r src/shared/qbs
 }
 
 build() {
