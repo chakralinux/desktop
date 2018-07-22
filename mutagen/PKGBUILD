@@ -1,9 +1,8 @@
-# Maintainer: Neophytos Kolokotronis <tetris4@gmail.com>
 # Contributor from Arch: Eric Belanger <eric@archlinux.org>
 
 pkgbase=mutagen
 pkgname=('mutagen' 'python3-mutagen')
-pkgver=1.40.0
+pkgver=1.41.0
 pkgrel=1
 arch=('any')
 url="https://github.com/quodlibet/mutagen"
@@ -15,18 +14,11 @@ checkdepends=(python2-pytest      python3-pytest
 	      python2-pycodestyle python3-pycodestyle)
 source=(https://github.com/quodlibet/mutagen/releases/download/release-${pkgver}/${pkgbase}-${pkgver}.tar.gz{,.sig})
 validgpgkeys=(0EBF782C5D53F7E5FB02A66746BD761F7A49B0EC)
-sha1sums=('3473555912d01026ed9c085b01d91ee0117b45f9'
+sha1sums=('b80793da7b23742faf0616d0b301eff2e4a579d7'
           'SKIP')
 
 prepare() {
   cp -aT $pkgbase-$pkgver python3-$pkgbase-$pkgver
-}
-
-check() {
-  cd $pkgbase-$pkgver
-  LANG=en_US.UTF8 python2 setup.py test
-  cd ../python3-$pkgbase-$pkgver
-#  LANG=en_US.UTF8 python3 setup.py test
 }
 
 package_mutagen() {
