@@ -1,29 +1,26 @@
-# Maintainer:  Ram-Z <ram-z[at]chakraos[dot]org>
-# Contributor: Christian Menard <ReaperMan333@gmx.net>
-# Contributor: Ernesto Manríquez <alejandronova@gmail.com>
-
 pkgname=picard
-pkgver=1.4.2
+pkgver=2.0.1
 pkgrel=1
 pkgdesc="MusicBrainz tagging application"
 arch=('x86_64')
-url="http://musicbrainz.org"
+url="https://picard.musicbrainz.org/"
 license=('GPL')
-depends=('python2' 'python2-pyqt4' 'mutagen' 'libofa' 'ffmpeg' )
-optdepends=('python2-discid: CD-Lookup feature'
+depends=('python3-pyqt5' 'python3-mutagen')
+optdepends=('python3-discid: CD-Lookup feature'
             'chromaprint: fingerprinting')
-makedepends=('python2-discid')
-source=("http://ftp.musicbrainz.org/pub/musicbrainz/$pkgname/$pkgname-$pkgver.tar.gz")
+makedepends=('python3-discid' 'python3-setuptools')
+source=("http://ftp.musicbrainz.org/pub/musicbrainz/${pkgname}/${pkgname}-${pkgver}.tar.gz")
 replaces=('picard-plugins')
-md5sums=('f39b57aa2e5e71d09e1f664be8b21971')
+sha256sums=('28498c34700d6140e6ac05199cc32fef6e46b77fd2ec31f151dd9213fa01ea24')
 
 build() {
-    cd "$srcdir/$pkgname-release-$pkgver"
-    python2 setup.py config
-    python2 setup.py build
+	cd "${srcdir}/picard-release-${pkgver}"
+	sed "s/‘/'/g" -i setup.cfg
+	python3 setup.py config
 }
 
 package() {
-    cd "$srcdir/$pkgname-release-$pkgver"
-    python2 setup.py install --root=$pkgdir
+	cd "${srcdir}/picard-release-${pkgver}"
+	python3 setup.py install --root="${pkgdir}"
+	rm -fr "${pkgdir}"/usr/lib/python*/site-packages/picard-*.egg-info
 }
