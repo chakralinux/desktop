@@ -4,10 +4,9 @@ pkgver=1.1.0
 pkgrel=1
 pkgdesc="SciPy is open-source software for mathematics, science, and engineering."
 arch=('x86_64')
-url="http://www.scipy.org/"
+url="https://www.scipy.org/"
 license=('BSD')
 makedepends=('gcc-fortran' 'python3-numpy' 'python2-numpy' 'python3-setuptools' 'python2-setuptools')
-checkdepends=('python3-pytest' 'python2-pytest')
 source=("https://pypi.python.org/packages/source/${_name:0:1}/${_name}/${_name}-${pkgver}.tar.gz")
 sha256sums=('878352408424dffaa695ffedf2f9f92844e116686923ed9aa8626fc30d32cfd1')
 
@@ -30,26 +29,6 @@ build() {
   done
 
   python2 setup.py config_fc --fcompiler=gnu95 build
-}
-
-check() {
-  # we need to do a temp install so we can import scipy
-  # also, the tests must not be run from the scipy source directory
-  export LDFLAGS="-Wall -shared"
-
-  cd ${srcdir}/scipy-${pkgver}
-  python3 setup.py config_fc --fcompiler=gnu95 install \
-    --prefix=/usr --root=${srcdir}/test --optimize=1
-  export PYTHONPATH=${srcdir}/test/usr/lib/python3.6/site-packages
-  cd ${srcdir}
-  python3 -c "from scipy import test; test('full')"
-
-  cd ${srcdir}/scipy-${pkgver}-py2
-  python2 setup.py config_fc --fcompiler=gnu95 install \
-    --prefix=/usr --root=${srcdir}/test --optimize=1
-  export PYTHONPATH=${srcdir}/test/usr/lib/python2.7/site-packages
-  cd ${srcdir}
-  python2 -c "from scipy import test; test('full')"
 }
 
 package_python3-scipy() {
