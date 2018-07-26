@@ -1,6 +1,4 @@
 # Contributions from Arch: https://www.archlinux.org/packages/extra/x86_64/kdeedu-kstars/
-# Include global configuration
-source ../kdeapps.conf
 
 pkgname=kstars
 pkgver=2.9.7
@@ -30,8 +28,11 @@ prepare() {
 
 build() {
   cd build
-  cmake_kf5 ../${pkgname}-${pkgver}
-  make
+  cmake ../$pkgname-$pkgver \
+    -DBUILD_TESTING=OFF \
+    -DCMAKE_INSTALL_PREFIX=/usr \
+    -DCMAKE_INSTALL_LIBDIR=lib \
+    -DOpenGL_GL_PREFERENCE=GLVND
 }
 
 package() {
