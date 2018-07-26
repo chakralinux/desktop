@@ -3,7 +3,7 @@
 source ../kdeapps.conf
 
 pkgname=kstars
-pkgver=2.9.6
+pkgver=2.9.7
 pkgrel=1
 epoch=1
 pkgdesc="Desktop planetarium"
@@ -11,14 +11,16 @@ url="https://kde.org/applications/education/kstars/"
 arch=('x86_64')
 screenshot='https://www.kde.org/images/screenshots/kstars.png'
 license=('GPL' 'LGPL' 'FDL')
-depends=('wcslib' 'libraw' 'kplotting' 'knewstuff' 'qt5-datavis3d' 'libindi' 'hicolor-icon-theme' 'knotifyconfig')
+depends=('wcslib' 'libraw' 'kplotting' 'knewstuff' 'knotifyconfig' 'qt5-datavis3d' 'libindi' 'qt5-quickcontrols'
+         'qt5-websockets' 'qtkeychain' 'hicolor-icon-theme')
 makedepends=('extra-cmake-modules' 'python3' 'kdoctools' 'eigen3' 'xplanet')
+optdepends=('xplanet: XPlanet support')
 groups=('kde' 'kde-uninstall' 'kde-applications' 'kdeedu')
 replaces=('kdeedu-kstars')
 conflicts=('kdeedu-kstars')
-options=('docs' 'debug')
+options=('debug')
 source=("https://download.kde.org/stable/$pkgname/$pkgname-$pkgver.tar.xz"{,.sig})
-sha256sums=('a0c8065433ba0f4068274a388a07a3499dcfe1ff09eea314f82a4baa1048d9a6'
+sha256sums=('4d80f5b5b5f38500f259c0272ba7f85bb4d1e877060bb3a1a0469a32573d0f53'
             'SKIP')
 validpgpkeys=(259D9FCEE9175351965633696D9CE2AEE028C4F3) # Jasem Mutlaq <mutlaqja@ikarustech.com>
 
