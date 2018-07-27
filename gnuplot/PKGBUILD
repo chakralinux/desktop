@@ -1,7 +1,7 @@
 # Forked from https://git.archlinux.org/svntogit/packages.git/tree/trunk?h=packages/gnuplot&id=be5f1a375aaa550032e221adf954adfe5fea269c
 
 pkgname=gnuplot
-pkgver=5.2.3
+pkgver=5.2.4
 pkgrel=1
 pkgdesc="Plotting package which outputs to X11, PostScript, PNG, GIF, and others" 
 arch=('x86_64') 
@@ -12,7 +12,7 @@ makedepends=('texinfo' 'texlive-core' 'emacs-nox' 'texlive-latexextra')
 options=('!makeflags')
 source=("http://downloads.sourceforge.net/sourceforge/$pkgname/$pkgname-$pkgver.tar.gz"
         "lua53_compat.patch")
-sha1sums=('e2309d64fdcce347dccb90efaa229f656c592751'
+sha1sums=('e31e8d9875216f65f9ed0e57b2f62d9dfb0f0714'
           '9005fa9e4da91ceedb8ccd1d761866e7b064f8b1')
 
 prepare() {
@@ -37,13 +37,14 @@ build() {
               --with-gihdir=/usr/share/gnuplot \
               --with-readline=gnu \
               --disable-wxwidgets \
-              --with-bitmap-terminals
+              --with-bitmap-terminals \
+              --with-texdir=/usr/share/texmf/tex/latex/gnuplot
   make pkglibexecdir=/usr/bin
 }
 
 package() {
   cd $pkgname-$pkgver
-  make pkglibexecdir=/usr/bin DESTDIR="${pkgdir}" install install-info
+  make pkglibexecdir=/usr/bin DESTDIR="${pkgdir}" install
 
   install -Dm644 Copyright "${pkgdir}/usr/share/licenses/$pkgname/Copyright"
 
