@@ -1,5 +1,5 @@
 pkgname=wcslib
-pkgver=5.12
+pkgver=5.19
 pkgrel=1
 pkgdesc="A C library that implements the 'World Coordinate System' (WCS) standard in FITS"
 arch=('x86_64')
@@ -7,8 +7,8 @@ url="http://www.atnf.csiro.au/people/Mark.Calabretta/WCS/"
 license=('GPL3')
 depends=('cfitsio')
 makedepends=('gcc-fortran')
-source=("ftp://ftp.atnf.csiro.au/pub/software/${pkgname}/${pkgname}.tar.bz2")
-sha256sums=('50ff182920541bea156e7f53588cdfba1754b1bdcd0bc64a136a5d124af98de4')
+source=("ftp://ftp.atnf.csiro.au/pub/software/$pkgname/$pkgname-$pkgver.tar.bz2")
+sha256sums=('670cb0e8253100ba3e239a576f3bd7b0bf48488125eb056f60fef5e0c19ac90a')
 
 build() {
   cd $pkgname-$pkgver
@@ -17,11 +17,6 @@ build() {
     --without-pgplot
   make
 }
-
-#check() {
-#  cd $pkgname-$pkgver
-#  make -k check
-#}
 
 package() {
   # Fix install on i686
