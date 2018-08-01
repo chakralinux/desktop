@@ -1,6 +1,6 @@
 pkgbase=mkvtoolnix
 pkgname=('mkvtoolnix-cli' 'mkvtoolnix-gui')
-pkgver=24.0.0
+pkgver=25.0.0
 pkgrel=1
 pkgdesc="Set of tools to create, edit and inspect Matroska files."
 arch=('x86_64')
@@ -15,11 +15,11 @@ makedepends=('flac' 'libmatroska' 'libogg' 'libvorbis' 'qt5-base' 'xdg-utils' 'l
              'zlib' 'boost-libs' 'expat' 'boost' 'ruby' 'libxslt' 'docbook-xsl' 'po4a'
              'qt5-multimedia' 'libebml' 'cmark')
 categories=('multimedia')
-source=("http://www.bunkus.org/videotools/${pkgbase}/sources/${pkgbase}-${pkgver}.tar.xz")
-sha256sums=('7a57caa192150f428fbdf18abfcb8061ce9284c95d3615b88315e66f32321c08')
+source=("http://www.bunkus.org/videotools/${pkgbase}/sources/$pkgbase-$pkgver.tar.xz")
+sha256sums=('834cb7abdd8849da3a6864055c8207cea44d14768147830918cd1a723c40bc33')
 
 prepare() {
-  cd "${srcdir}/${pkgbase}-${pkgver}"
+  cd $pkgbase-$pkgver
 
   # Disable automagic curl dep used for online update checking
   sed -i -e '/curl/d' configure.ac
@@ -32,7 +32,7 @@ prepare() {
 }
 
 build() {
-  cd mkvtoolnix-${pkgver}
+  cd $pkgbase-$pkgver
 
   ./configure --prefix='/usr' \
               --without-curl \
@@ -52,11 +52,11 @@ package_mkvtoolnix-cli() {
   conflicts=('mkvtoolnix')
   replaces=('mkvtoolnix')
 
-  cd "${srcdir}/${pkgbase}-${pkgver}"
+  cd $pkgbase-$pkgver
   
   rake DESTDIR="${pkgdir}" install
   install -m 755 src/mkvinfo-cli "${pkgdir}"/usr/bin/mkvinfo
-  rm -rf "${pkgdir}"/usr/share/{applications,icons,mime}
+  rm -rf "${pkgdir}"/usr/share/{applications,icons,mime,mkvtoolnix}
   find "${pkgdir}" -name mkvtoolnix-gui* -delete
 }
 
@@ -64,7 +64,7 @@ package_mkvtoolnix-gui() {
   pkgdesc="Set of tools to create, edit and inspect Matroska files - Qt GUI"
   depends=("mkvtoolnix-cli=${pkgver}" 'qt5-base' 'qt5-multimedia' 'xdg-utils' 'desktop-file-utils' 'cmark')
 
-  cd "${srcdir}/${pkgbase}-${pkgver}"
+  cd $pkgbase-$pkgver
   
   rake DESTDIR="${pkgdir}" install
   rm -rf "${pkgdir}"/usr/share/locale
