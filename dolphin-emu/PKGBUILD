@@ -1,20 +1,25 @@
 pkgname=dolphin-emu
-pkgver=5.0
-pkgrel=3
+pkgver=5.0.r7309.10d230a512
+pkgrel=1
 pkgdesc='A GameCube / Wii / Triforce emulator'
 arch=('x86_64')
 url='http://www.dolphin-emu.org/'
 license=('GPL')
 depends=('bluez-libs' 'qt5-base' 'enet' 'ffmpeg' 'libao' 'libevdev' 'mbedtls' 'miniupnpc' 'openal' 'portaudio' 'soundtouch' 'xdg-utils')
-makedepends=('cmake' 'qt5-tools')
+makedepends=('cmake' 'qt5-tools' 'git')
 optdepends=('pulseaudio: PulseAudio backend')
 options=('!emptydirs')
-source=("$pkgname-$pkgver::https://github.com/dolphin-emu/dolphin/archive/$pkgver.tar.gz")
-sha256sums=('62c4602055767ab314ff50a3b94ea57f792832aa1629e6b1117ebce10518dc0b')
+_commit='10d230a512b99aee66f7343481ed13d83557de22'
+source=("dolphin-emu::git+https://github.com/dolphin-emu/dolphin.git#commit=${_commit}")
+sha256sums=('SKIP')
+
+pkgver() {
+  cd dolphin-emu
+
+  git describe | sed 's/-/.r/; s/-g/./'
+}
 
 prepare() {
-  cd dolphin-$pkgver
-
   if [[ -d build ]]; then
     rm -rf build
   fi
@@ -22,20 +27,19 @@ prepare() {
 }
 
 build() {
-  cd dolphin-$pkgver/build
+  cd build
 
-  cmake .. \
+  cmake ../dolphin-emu \
     -DCMAKE_INSTALL_PREFIX='/usr' \
-    -DCMAKE_CXX_FLAGS='-fno-pie' \
-    -DENABLE_QT2='TRUE' \
-    -DDISABLE_WX='TRUE' \
-    -DUSE_SHARED_ENET='TRUE' \
+    -DENABLE_QT2='ON' \
+    -DENABLE_WX='OFF' \
+    -DUSE_SHARED_ENET='ON' \
     -DDISTRIBUTOR='chakralinux.org'
   make
 }
 
 package() {
-  cd dolphin-$pkgver/build
+  cd build
 
   make DESTDIR="${pkgdir}" install
   mv $pkgdir/usr/bin/dolphin-emu-qt2 $pkgdir/usr/bin/dolphin-emu
