@@ -1,7 +1,7 @@
 # Include global configuration
 
 pkgname=kde-dev-utils
-pkgver=18.04.3
+pkgver=18.08.0
 pkgrel=1
 arch=(x86_64)
 pkgdesc="KDE Standard Development Toolkit Utilities"
@@ -15,19 +15,13 @@ provides=('kmtrace' 'kpartloader' 'kprofilemethod' 'kstartperf' 'kuiviewer')
 conflicts=('kdesdk-kmtrace' 'kdesdk-kpartloader' 'kdesdk-kprofilemethod' 'kdesdk-kstartperf' 'kdesdk-kuiviewer')
 replaces=('kdesdk-kmtrace' 'kdesdk-kpartloader' 'kdesdk-kprofilemethod' 'kdesdk-kstartperf' 'kdesdk-kuiviewer')
 source=("https://download.kde.org/stable/applications/$pkgver/src/$pkgname-$pkgver.tar.xz"{,.sig})
-sha256sums=('73135c105880f31feb5f0ca3a3f603db5c357b00742d8ba9a5790b74713a449c'
+sha256sums=('8ebb610a7d2909eb287750917a2944b98f157ec2bc96fc7d637e3ff9260865b6'
             'SKIP')
 validpgpkeys=(CA262C6C83DE4D2FB28A332A3A6A4DB839EAA6D7  # Albert Astals Cid <aacid@kde.org>
               F23275E4BF10AFC1DF6914A6DBD2CE893E2D1C87) # Christoph Feck <cfeck@kde.org>
 
-source+=("https://phabricator.kde.org/file/data/3kfbu26x3kozdt7imvbo/PHID-FILE-vb5iltuaxv3ztw2uzday/D14066.diff")
-sha256sums+=('d43503d6a19d96082fc51bf94028b84abde97e62db6d8db7a36318c8babb3c53')
-
 prepare() {
   mkdir -p build
-
-  cd $pkgname-$pkgver
-  patch -Np1 -i ${srcdir}/D14066.diff
 }
 
 build() {

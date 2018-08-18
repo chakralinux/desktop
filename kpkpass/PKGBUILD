@@ -1,0 +1,40 @@
+
+pkgname=kpkpass
+pkgver=18.08.0
+pkgrel=1
+pkgdesc="Apple Wallet Pass reader"
+arch=(x86_64)
+url="https://community.kde.org/KDE_PIM"
+license=(LGPL)
+depends=(karchive)
+makedepends=(extra-cmake-modules)
+groups=('kde' 'kde-applications' 'kdepim' 'kde-uninstall')
+options=('docs' 'debug')
+source=("https://download.kde.org/stable/applications/$pkgver/src/$pkgname-$pkgver.tar.xz"{,.sig})
+sha256sums=('f4f31281a7d3335cb010f5ac6af2c5227f1b1e21fad2dd175633598bba67fef1'
+            'SKIP')
+validpgpkeys=(CA262C6C83DE4D2FB28A332A3A6A4DB839EAA6D7  # Albert Astals Cid <aacid@kde.org>
+              F23275E4BF10AFC1DF6914A6DBD2CE893E2D1C87) # Christoph Feck <cfeck@kde.org>
+
+prepare() {
+  mkdir -p build
+}
+
+build() {
+    cd build
+    cmake ../${pkgname}-${pkgver} \
+         -DCMAKE_BUILD_TYPE=RelWithDebInfo \
+        -DCMAKE_INSTALL_PREFIX=/usr \
+        -DKDE_INSTALL_LIBDIR=lib \
+        -DKDE_INSTALL_SYSCONFDIR=/etc \
+        -DKDE_INSTALL_LIBEXECDIR=lib \
+        -DUDEV_RULES_INSTALL_DIR=/usr/lib/udev/rules.d \
+        -DBUILD_TESTING=OFF \
+        -DKDE_INSTALL_USE_QT_SYS_PATHS=ON "$@"
+    make
+}
+
+package() {
+  cd build
+  make DESTDIR="$pkgdir" install
+}

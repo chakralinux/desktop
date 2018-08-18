@@ -1,18 +1,17 @@
-# Include global configuration
 
-_pkgname=ktnef
-pkgname=lib$_pkgname
-pkgver=18.04.3
+pkgname=kitinerary
+pkgver=18.08.0
 pkgrel=1
-pkgdesc="API for handling TNEF data"
+pkgdesc="Data model and extraction system for travel reservation information"
 arch=(x86_64)
-url="https://projects.kde.org/$pkgname"
+url="https://community.kde.org/KDE_PIM"
 license=(LGPL)
-depends=(kcalutils kcontacts)
-makedepends=(extra-cmake-modules python kdoctools)
+depends=(qt5-declarative kmime kpkpass kcalcore kcontacts poppler)
+makedepends=(extra-cmake-modules zxing-cpp)
+groups=('kde' 'kde-applications' 'kdepim' 'kde-uninstall')
 options=('docs' 'debug')
-source=("https://download.kde.org/stable/applications/$pkgver/src/$_pkgname-$pkgver.tar.xz"{,.sig})
-sha256sums=('c46905502d72463e6baeeb3eae76d6b21b8191d0bb17105f0a66ce2750a2ed23'
+source=("https://download.kde.org/stable/applications/$pkgver/src/$pkgname-$pkgver.tar.xz"{,.sig})
+sha256sums=('14d89b35515d63a299ff054ca62d36b61c06e32b9ed12aed15d8fce4dda45c92'
             'SKIP')
 validpgpkeys=(CA262C6C83DE4D2FB28A332A3A6A4DB839EAA6D7  # Albert Astals Cid <aacid@kde.org>
               F23275E4BF10AFC1DF6914A6DBD2CE893E2D1C87) # Christoph Feck <cfeck@kde.org>
@@ -22,8 +21,8 @@ prepare() {
 }
 
 build() {
-  cd build
-  cmake ../${_pkgname}-${pkgver} \
+    cd build
+    cmake ../${pkgname}-${pkgver} \
          -DCMAKE_BUILD_TYPE=RelWithDebInfo \
         -DCMAKE_INSTALL_PREFIX=/usr \
         -DKDE_INSTALL_LIBDIR=lib \
@@ -32,10 +31,10 @@ build() {
         -DUDEV_RULES_INSTALL_DIR=/usr/lib/udev/rules.d \
         -DBUILD_TESTING=OFF \
         -DKDE_INSTALL_USE_QT_SYS_PATHS=ON "$@"
-  make
+    make
 }
 
 package() {
   cd build
-  make DESTDIR=${pkgdir} install
+  make DESTDIR="$pkgdir" install
 }
