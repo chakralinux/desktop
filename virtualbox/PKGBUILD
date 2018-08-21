@@ -11,7 +11,7 @@ pkgname=('virtualbox'
          'virtualbox-ext-vnc'
          'virtualbox-ext-oracle')
 pkgver=5.2.18
-pkgrel=1
+pkgrel=2
 arch=('x86_64')
 url='https://www.virtualbox.org'
 license=('GPL')
@@ -41,7 +41,6 @@ makedepends=('alsa-lib'
              'libxtst'
              'linux-headers'
              'mesa'
-             'python2'
              'python3'
              'qt5-base'
              'qt5-x11extras'
@@ -72,10 +71,14 @@ source=("http://download.virtualbox.org/virtualbox/$pkgver/VirtualBox-$pkgver.ta
         '002-dri-driver-path.patch'
         '005-gsoap-build.patch'
         '006-rdesktop-vrdp-keymap-path.patch'
-        '007-python2-path.patch'
         '008-no-vboxvideo.patch'
         '009-include-path.patch'
         '010-qt-5.11.patch'
+        '011-python-3-7.patch'
+        # The following patch and mount.vboxsf wrapper should be removed
+        # once support for mainline-style options string gets upstreamed
+        '012-vboxsf-automount.patch'
+        'mount.vboxsf'
         'PUEL')
 noextract=(VBoxGuestAdditions_$pkgver.iso
           "Oracle_VM_VirtualBox_Extension_Pack-$pkgver.vbox-extpack")
@@ -83,7 +86,7 @@ sha256sums=('ed0a7efd56c7f39fae79c7ec3321473da412ef0d7914457b66f42679d513efcf'
             'f98b6ad7093ee0b27d26dea565b197a5f33fdac93c4b67e73824ce889d6c964c'
             '3ecb43c71502741f4eb790576c608eb65cd424bcf3dfdb56471e4a2cac806f68'
             'deb03efa7ad0376aa55a087f2e882afe00935f10b0e7aa853ba9147090d341ec'
-            '113f9b92141b85df01f1e74d22f01d1f1aa81650eb79b89ceefc3cae20afe2e2'
+            'c328376b05183d269f98319ec660f54c55e298f77d229977606862b064651a7c'
             '2101ebb58233bbfadf3aa74381f22f7e7e508559d2b46387114bc2d8e308554c'
             'da4c49f6ca94e047e196cdbcba2c321199f4760056ea66e0fbc659353e128c9e'
             '9c5238183019f9ebc7d92a8582cad232f471eab9d3278786225abc1a1c7bf66e'
@@ -96,10 +99,12 @@ sha256sums=('ed0a7efd56c7f39fae79c7ec3321473da412ef0d7914457b66f42679d513efcf'
             'f67674931c30187f867233e3a4ae662f93c9110fbd0bfce50dd9f391f4533bc0'
             '7d2da8fe10a90f76bbfc80ad1f55df4414f118cd10e10abfb76070326abebd46'
             '5d5af2de5b1f1c61ec793503350f2440661cf8fd640f11b8a86f10bce499c0dc'
-            '6bdb017459532537199c399eefd3d84d8dc7f1786e79997caebd3b6eb5c75d9f'
             '8b7f241107863f82a5b0ae336aead0b3366a40103ff72dbebf33f54b512a0cbc'
             '1acc7014bcb3d9ca6da29eed813c3d6e91a688c43f9d93802fd4e3814f67ace4'
             'c6ef35e6893d557c7c2269ff79bc299fe9058cfb2c933a7efdc7a8a7b6d9c5da'
+            '9535774f1858c0ad92f0edee99875dcf683e41a4c7c95494c8aeb81591426e5a'
+            'a784f3cc24652a16385cc63abac6c5178932ca5f3861be7650631b7dafa753a4'
+            'f3ed6741f8977f40900c8aa372fa082df1f8723d497d4fff445153c543bc8947'
             '715c7246dc0f779ceab39446812362b2f9bf64a55ed5d3a905f053cfab36da9e')
 
 prepare() {
@@ -162,7 +167,7 @@ build() {
 
 package_virtualbox() {
     pkgdesc='Powerful x86 virtualization for enterprise as well as home use'
-    depends=('glibc' 'openssl' 'curl' 'gcc-libs' 'libpng' 'python2' 'sdl'
+    depends=('glibc' 'openssl' 'curl' 'gcc-libs' 'libpng' 'python3' 'sdl'
              'libvpx' 'libxml2' 'procps-ng' 'shared-mime-info' 'zlib'
              'libxcursor' 'libxinerama' 'libx11' 'libxext' 'libxmu' 'libxt'
              'VIRTUALBOX-HOST-MODULES')
@@ -257,7 +262,7 @@ package_virtualbox() {
 
 package_virtualbox-sdk() {
     pkgdesc='VirtualBox Software Developer Kit (SDK)'
-    depends=('python2')
+    depends=('python3')
 
     install -dm755 "$pkgdir/usr/lib/virtualbox"
 
@@ -267,7 +272,7 @@ package_virtualbox-sdk() {
     install -Dm755 vboxshell.py "$pkgdir/usr/lib/virtualbox/vboxshell.py"
     # python sdk
     pushd sdk/installer
-    VBOX_INSTALL_PATH="/usr/lib/virtualbox" python2 vboxapisetup.py install --root "$pkgdir"
+    VBOX_INSTALL_PATH="/usr/lib/virtualbox" python3 vboxapisetup.py install --root "$pkgdir"
     popd
     rm -rf sdk/installer
     cp -r sdk "$pkgdir/usr/lib/virtualbox"
