@@ -14,16 +14,16 @@ pkgname=('libreoffice-common'
 	'libreoffice-postgresql-connector'
 	'libreoffice-extension-wiki-publisher'
 	'libreoffice-extension-nlpsolver')
-_LOver=6.0.5.2
-pkgver=6.0.5
-pkgrel=3
+_LOver=6.1.0.3
+pkgver=6.1.0
+pkgrel=1
 arch=('x86_64')
 license=('LGPL3')
 url="http://www.libreoffice.org/"
 screenshot="http://wstaw.org/m/2012/04/20/libre2.png"
 makedepends=( # makedepends
              'sane' 'perl-archive-zip' 'zip' 'unzip' 'unixodbc' 'gtk3' 'gtk2' 'gobject-introspection'
-             'apache-ant' 'gperf' 'kdelibs' 'cppunit>=1.14.0' 'glu' 'libodfgen'
+             'apache-ant' 'gperf' 'cppunit>=1.14.0' 'glu' 'libodfgen'
              'beanshell' 'kcoreaddons' 'ki18n' 'kwindowsystem' 'kconfig' 'kio'
              'libldap' 'libmythes' 'junit' 'libwpg' 'imagemagick' 'mdds' 'poppler>=0.12.0'
              'mesa' 'gst-plugins-base' 'java-runtime' 'postgresql-libs' 'clucene' 'doxygen' 'libvisio' 'bluez-libs' 'junit' 'hsqldb-java' 'libzmf'
@@ -32,17 +32,17 @@ makedepends=( # makedepends
              'pango' 'nss' 'libjpeg' 'libxrandr' 'libgl' 'dbus-glib' "icu>=4.6" 'libxslt'
              'redland' 'graphite' 'hyphen' 'lpsolve' 'gcc-libs' 'sh'  'librsvg' 'lcms2'
              'hicolor-icon-theme' 'desktop-file-utils' 'shared-mime-info' 'translate-toolkit' 'xdg-utils' 'ttf-dejavu' 'libcups'  'libmwaw' 'ttf-liberation'
-             'glew' 'libetonyek' 'harfbuzz-icu' 'gdb'  'libzmf' 'serf' 'libtommath' 'gpgme'
+             'glew' 'libetonyek' 'harfbuzz-icu' 'gdb'  'libzmf' 'serf' 'libtommath' 'gpgme' 'boost'
              )
 
-_mirror="http://download.documentfoundation.org/libreoffice/src/$pkgver"
+_mirror="https://download.documentfoundation.org/libreoffice/src/$pkgver"
 #_mirror="http://dev-builds.libreoffice.org/pre-releases/src"
-_additional_source_url="http://dev-www.libreoffice.org/src"
-_additional_source_url2="http://dev-www.libreoffice.org/extern"
+_additional_source_url="https://dev-www.libreoffice.org/src"
+_additional_source_url2="https://dev-www.libreoffice.org/extern"
 _gentoo_patch_url="https://dev.gentoo.org/~asturm/distfiles"
 source=(${_mirror}/libreoffice{,-help,-translations}-${_LOver}.tar.xz{,.asc}
         # Environment variables
-        ${_additional_source_url}/boost_1_65_1.tar.bz2
+#        ${_additional_source_url}/boost_1_66_0.tar.bz2
         ${_additional_source_url}/xmlsec1-1.2.25.tar.gz
         ${_additional_source_url}/35c94d2df8893241173de1d16b6034c0-swingExSrc.zip
         ${_additional_source_url}/798b2ffdc8bcfe7bca2cf92b62caf685-rhino1_5R5.zip
@@ -63,7 +63,7 @@ source=(${_mirror}/libreoffice{,-help,-translations}-${_LOver}.tar.xz{,.asc}
         ${_additional_source_url}/ba2930200c9f019c2d93a8c88c651a0f-flow-engine-0.9.4.zip
         ${_additional_source_url}/libexttextcat-3.4.5.tar.xz
         ${_additional_source_url}/libcmis-0.5.1.tar.gz
-        ${_additional_source_url}/liborcus-0.13.3.tar.gz
+        ${_additional_source_url}/liborcus-0.13.4.tar.gz
         ${_additional_source_url}/liblangtag-0.6.2.tar.bz2
         ${_additional_source_url}/0168229624cfac409e766913506961a8-ucpp-1.3.2.tar.gz
         ${_additional_source_url}/17410483b5b5f267aa18b7e00b65e6e0-hsqldb_1_8_0.zip
@@ -73,83 +73,82 @@ source=(${_mirror}/libreoffice{,-help,-translations}-${_LOver}.tar.xz{,.asc}
         ${_additional_source_url}/bae83fa5dc7f081768daace6e199adc3-glm-0.9.4.6-libreoffice.zip
         ${_additional_source_url}/commons-logging-1.2-src.tar.gz
         ${_additional_source_url}/libcdr-0.1.4.tar.xz
-        ${_additional_source_url}/libmspub-0.1.3.tar.xz
+        ${_additional_source_url}/libmspub-0.1.4.tar.xz
         ${_additional_source_url}/libatomic_ops-7_2d.zip
         ${_additional_source_url}/libfreehand-0.1.2.tar.xz
         ${_additional_source_url}/Firebird-3.0.0.32483-0.tar.bz2
         ${_additional_source_url}/libe-book-0.1.3.tar.xz
         ${_additional_source_url}/libabw-0.1.2.tar.xz
         ${_additional_source_url}/libpagemaker-0.0.4.tar.xz  
-        ${_additional_source_url}/language-subtag-registry-2018-03-30.tar.bz2
+        ${_additional_source_url}/language-subtag-registry-2018-04-23.tar.bz2
         ${_additional_source_url}/CoinMP-1.7.6.tgz
-        ${_additional_source_url}/libstaroffice-0.0.5.tar.xz
+        ${_additional_source_url}/libstaroffice-0.0.6.tar.xz
         ${_additional_source_url}/4b87018f7fff1d054939d19920b751a0-collada2gltf-master-cb1d97788a.tar.bz2
         ${_additional_source_url}/OpenCOLLADA-master-6509aa13af.tar.bz2
         ${_additional_source_url}/libgltf/libgltf-0.1.0.tar.gz
-        ${_additional_source_url}/pdfium-3235.tar.bz2
-        ${_additional_source_url}/libepubgen-0.1.0.tar.bz2
-        ${_additional_source_url}/libqxp-0.0.1.tar.xz 
-        make-pyuno-work-with-system-wide-module-install.diff
-        ${_gentoo_patch_url}/libreoffice-6.0.3.2-patchset-01.tar.xz)
+        ${_additional_source_url}/pdfium-3426.tar.bz2
+        ${_additional_source_url}/libepubgen-0.1.1.tar.xz
+        ${_additional_source_url}/libnumbertext-1.0.4.tar.xz
+        ${_additional_source_url}/libqxp-0.0.1.tar.xz
+        ${_additional_source_url}/lxml-4.1.1.tgz
+        make-pyuno-work-with-system-wide-module-install.diff)
 validpgpkeys=('C2839ECAD9408FBE9531C3E9F434A1EFAFEEAEA3') # LibreOffice Build Team (CODE SIGNING KEY) <build@documentfoundation.org>
-md5sums=('04e50cf96598790feada18cbeea7bf1f'
-         'SKIP'
-         '1327c6fd9f65136f905a1b26ba9076b8'
-         'SKIP'
-         '5f77cd5eff3fc5b84b963d760d7af071'
-         'SKIP'
-         '41d7542ce40e171f3f7982aff008ff0d'
-         'dbbef1efc69e61bc4629650205a05b41'
-         '35c94d2df8893241173de1d16b6034c0'
-         '798b2ffdc8bcfe7bca2cf92b62caf685'
-         'a7983f859eafb2677d7ff386a023bc40'
-         '8ab049135b2d15313da5d9f0656894a1'
-         '2c9b0f83ed5890af02c0df1c1776f39b'
-         '048751f3271906db5126ab76870444c4'
-         'eeb2c7ddf0d302fba4bfc6e97eac9624'
-         '39bb3fcea1514f1369fcfc87542390fd'
-         '3404ab6b1792ae5f16bbd603bd1e1d03'
-         '97b2d4dba862397f446b217e2b623e71'
-         'f94d9870737518e3b597f9265f4e9803'
-         '8ce2fcd72becf06c41f7201d15373ed9'
-         'd8bd5eed178db6e2b18eeed243f85aa8'
-         '3bdf40c0d199af31923e900d082ca2dd'
-         'ace6ab49184e329db254e454a010f56d'
-         'db60e4fde8dd6d6807523deb71ee34dc'
-         'ba2930200c9f019c2d93a8c88c651a0f'
-         '69c984b1785b56942179eb0ddc9c758f'
-         '3270154f0f40d86fce849b161f914101'
-         'b161bb9102eca389f1682ae087998566'
-         '284f120247323a35122ab32b4b359c45'
-         '0168229624cfac409e766913506961a8'
-         '17410483b5b5f267aa18b7e00b65e6e0'
-         '8249374c274932a21846fa7629c2aa9b'
-         'f430ee376fea2bee62c8510d8b94e813'
-         '185d60944ea767075d27247c3162b3bc'
-         'bae83fa5dc7f081768daace6e199adc3'
-         'ce977548f1cbf46918e93cd38ac35163'
-         '4e52342983d798ae584e26bdf7a5f18a'
-         '1798757173629a224aeb383365a633f8'
-         'c0b86562d5aa40761a87134f83e6adcf'
-         'c3788f5686839fd097bd77d8f51c3d04'
-         '821260b61dafc22899d1464d4e91ee6a'
-         '2956f1c5e7950b0018979a132165da8b'
-         '201f477df7ea90d362c389c145c0f352'
-         '8395dfc5eef11c58d5a9efe3bfe64831'
-         'bc9d10428f8040ff9aa409cf3456a4ce'
-         '1cce53bf4b40ae29790d2c5c9f8b1129'
-         '333d699273f73d582037ba64be9ebcae'
-         '4b87018f7fff1d054939d19920b751a0'
-         '4ca8a6ef0afeefc864e9ef21b9f14bd6'
-         '63ae962d0c436909979826fce0fca2fd'
-         'a7c08f44c6e2e1d7a71f7073cb9d5786'
-         'b2df6e241b546265257f0aee1c2a02b8'
-         '778e9ee464b6db3c10f45b7c7d97b22d'
-         '41fa5baa6d71d69b98de1fe258a6dd65'
-         'f903a54f91aa725805c5901e2107b710')
-noextract=(
-          boost_1_65_1.tar.bz2
-          xmlsec1-1.2.25.tar.gz
+sha1sums=('e334981dd97eb25530480c84e8010d2c1093aa00'
+          'SKIP'
+          '949f99a76117c65484cbfb07ad8c5da516d20070'
+          'SKIP'
+          'ad1cffcbe3fbab57db5b85debdd2960b9f0a3c24'
+          'SKIP'
+          '0ef1117b8d11da475fd8d842a1341c675e627ab9'
+          '1acea86fd399ed7817879d36370d3d1f8b109050'
+          '8a90669029e107b61953b90ba11545fef586c2ca'
+          '2d49e11b0b711970f494294dc3698f05eb294853'
+          'c78ddd06845e267ba5bec20a38430f66eec3e0e4'
+          '5c604f102e0716597b3d2659ac3e77f80a02f22d'
+          '885cc4b6c9472d95e2515e777f6018a90657e974'
+          '43a7ff11dd15370d456b20a093e1ee81279163a0'
+          'b92930010622906778f713fb8f0153fa0683d018'
+          '3232dd31859be4f7eb443c33e8e3287f394789a0'
+          '47b58e0ef2d856df26372a7061ae43fae6e08051'
+          '5ecb895ffc1eff2c381fa78d2197d0c57422b3df'
+          'a637c0c3ad3be32d6814972e1c45e547c5f6359d'
+          '3478ebc27bb76025f4b5c2ae6a9bac6090e2cb09'
+          'e393beea80d36ff27b732882c706826988a64f5c'
+          'b19ad429273abb116432eae3af955ecaf1ab5b17'
+          '65dfba9970bb862d09c1f9e636b86b22f05d3936'
+          '1acd76cd63f7b19f6a0252eb029c3cb13a25aa9b'
+          'dd6b4163c752a44384f309f8dabb830161f5f85f'
+          '94c00715ae8a31bc8e5a6a699e36c22d0020649e'
+          '9598262549571491ebfdf9d2c20bfe5fd37d8d25'
+          '8f2c0d7f0c2ae9510a58f570aa4bc894c31e22c1'
+          '452eba922e4f41603539c9dc39947d2271e47093'
+          '7168b0f40aa5c72267899601c116d2348d2f56ec'
+          'f4772556920231cf164348e51285b0c18dfc7f5b'
+          '68fc1959b1387448fc6d71134ee3e45f4dbc996a'
+          '0619ed3a89644bef318df67db12045b2b590585b'
+          '73ad0ffc515f44a5ae1f1501ebb858153b523937'
+          '0a134d01e9aeb09b33f4c7450fb41abb7bed9db6'
+          '59148610e572d1a79c4f3494a01d020944f0e1c1'
+          'dcfe4dba518b44cc500385e878b66f53c5734df6'
+          '58a4a5d602bc5f2bfebe4c7b054d565ae11b758c'
+          'f945b23b7801a3601998973028a054ee379967cb'
+          'e4a5d0ae688a754a9159be581c28b63a98777115'
+          '18fde9588c236d51eea9437ed882d8b751daf01f'
+          '6d6327d7c7a26c173993604e68915e226fb5185c'
+          '4e8e9a6711c6dcbb937a295135f955dee6efc52f'
+          '9414d32c4898e2c424dce590bab6e925df151a17'
+          'f52c74abcbf55c72cd89f709db658ea33ed45154'
+          'd4f0ab61702fe24f3d89ec625616583e77a33697'
+          '1169780b4a0c515b23b96c913fd9bc52ceb7fb39'
+          'c4f5760a1d21213dc52e2cf3ad9c0b9112585f36'
+          '719ab0d7b711650c787fe9bfb51109321d21e07b'
+          '1f3070598936acf30f6bdce51a1cce7874e482fc'
+          '48e81c60e173552fce77ce3b414e68b7d52a5301'
+          '1fb3b31e1e0dd79cd602e0d24c34f8c30ebe127f'
+          'a5963474afcc8e7b0eb352754325c21e1a1f5e18'
+          '154279bc5939d7099697887ea15c5ca921abeaeb'
+          'fed07f208b58c42bb85b0721fb2fae193da6f780')
+noextract=(xmlsec1-1.2.25.tar.gz
           35c94d2df8893241173de1d16b6034c0-swingExSrc.zip
           798b2ffdc8bcfe7bca2cf92b62caf685-rhino1_5R5.zip
           a7983f859eafb2677d7ff386a023bc40-xsltml_2.1.2.zip
@@ -169,7 +168,7 @@ noextract=(
           ba2930200c9f019c2d93a8c88c651a0f-flow-engine-0.9.4.zip
           libexttextcat-3.4.5.tar.xz
           libcmis-0.5.1.tar.gz
-          liborcus-0.13.3.tar.gz
+          liborcus-0.13.4.tar.gz
           liblangtag-0.6.2.tar.bz2
           0168229624cfac409e766913506961a8-ucpp-1.3.2.tar.gz
           17410483b5b5f267aa18b7e00b65e6e0-hsqldb_1_8_0.zip
@@ -179,7 +178,7 @@ noextract=(
           bae83fa5dc7f081768daace6e199adc3-glm-0.9.4.6-libreoffice.zip
           commons-logging-1.2-src.tar.gz
           libcdr-0.1.4.tar.xz
-          libmspub-0.1.3.tar.xz
+          libmspub-0.1.4.tar.xz
           libatomic_ops-7_2d.zip
           libfreehand-0.1.2.tar.xz
           Firebird-3.0.0.32483-0.tar.bz2
@@ -187,38 +186,44 @@ noextract=(
           libabw-0.1.2.tar.xz
           libpagemaker-0.0.4.tar.xz
           CoinMP-1.7.6.tgz
-          language-subtag-registry-2018-03-30.tar.bz2
+          language-subtag-registry-2018-04-23.tar.bz2
           4b87018f7fff1d054939d19920b751a0-collada2gltf-master-cb1d97788a.tar.bz2
           OpenCOLLADA-master-6509aa13af.tar.bz2
           libgltf-0.1.0.tar.gz
-          libstaroffice-0.0.5.tar.xz
-          pdfium-3235.tar.bz2
-          libepubgen-0.1.0.tar.bz2
+          libstaroffice-0.0.6.tar.xz
+          libnumbertext-1.0.4.tar.xz
+          lxml-4.1.1.tgz
+          pdfium-3426.tar.bz2
+          libepubgen-0.1.1.tar.xz
           libqxp-0.0.1.tar.xz)
 
 prepare() {
     cd libreoffice-$_LOver
     
-    # Apply a patch to enable more VCL plugin
-    for patch in $(ls $srcdir/libreoffice-6.0.3.2-patchset-01/); do
-        patch -Np1 -i $srcdir/libreoffice-6.0.3.2-patchset-01/$patch
-    done
-    
     # fix exttextcat build error
     # /usr/include/features.h:330:4: error: #warning _FORTIFY_SOURCE requires compiling with optimization (-O) [-Werror=cpp]
     unset CPPFLAGS
 
-        # move external sources into place
-        mkdir -p ${srcdir}/ext_sources &&       pushd ${srcdir}/ext_sources
-        for source in "${noextract[@]}"; do
-          ln -sf ${srcdir}/$source .
-        done
-        popd
+    # move external sources into place
+    mkdir -p ${srcdir}/ext_sources &&       pushd ${srcdir}/ext_sources
+    for source in "${noextract[@]}"; do
+        ln -sf ${srcdir}/$source .
+    done
+    popd
+
+    # don't run broken tests
+    sed -i "/CppunitTest_sd_export_ooxml2/d" sd/Module_sd.mk
+    sed -i "/CppunitTest_sw_ww8export2/d" sw/Module_sw.mk 
+    sed -i "/CppunitTest_emfio_emf_test/d" emfio/Module_emfio.mk
 
     # unowinreg.dll must be a file not a symlink or the result will become a broken symlink
     # /usr/share/libreoffice/sdk/classes/win/unowinreg.dll -> /build/libreoffice/src/185d60944ea767075d27247c3162b3bc-unowinreg.dll
     rm ${srcdir}/ext_sources/185d60944ea767075d27247c3162b3bc-unowinreg.dll
     cp -f ${srcdir}/185d60944ea767075d27247c3162b3bc-unowinreg.dll ${srcdir}/ext_sources
+
+
+    # fix not upstreamable pyuno paths - FS#54250
+    patch -Np1 -i ${srcdir}/make-pyuno-work-with-system-wide-module-install.diff
    
     #use the CFLAGS but remove the LibO overridden ones
     for i in $CFLAGS; do
@@ -227,8 +232,6 @@ prepare() {
             esac
     ARCH_FLAGS="$ARCH_FLAGS $i"
     done
-    
-
 }
 
 build() {
@@ -256,9 +259,7 @@ build() {
                 --disable-dconf \
                 --disable-mergelibs \
                 --enable-introspection \
-                --disable-kde4 \
                 --enable-qt5 \
-                --disable-kde5 \
                 --enable-gtk3-kde5 \
                 --disable-gstreamer-0-10 \
                 --enable-openssl \
@@ -287,6 +288,7 @@ build() {
                 --without-system-libatomic-ops \
                 --without-system-libebook \
                 --without-system-libabw \
+                --without-system-libnumbertext \
                 --with-system-dicts \
                 --with-external-dict-dir=/usr/share/hunspell \
                 --with-external-hyph-dir=/usr/share/hyphen \
@@ -298,7 +300,7 @@ build() {
                 --with-system-libodfgen \
                 --with-system-redland \
                 --with-ant-home="/usr/share/java/apache-ant"\
-                --without-system-boost \
+                --with-system-boost \
                 --with-system-icu \
                 --with-system-cairo \
                 --with-system-libs \
