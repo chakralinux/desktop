@@ -1,5 +1,5 @@
 pkgname=calamares
-pkgver=3.1.13
+pkgver=3.2.1
 pkgrel=1
 _releaseName="Hawking"
 _releaseYear="2018"
@@ -16,7 +16,7 @@ source+=("$pkgname-$pkgver.tar.gz::https://github.com/calamares/calamares/releas
 #_gitsha="6cb4291b4d142462f8cc0e61fc4f10880cd25546"
 #source+=("$pkgname-$pkgver.tar.gz::https://github.com/calamares/calamares/archive/${_gitsha}.zip"
          "calamares-chakra::git+https://code.chakralinux.org/tools/calamares-chakra.git")
-md5sums=('6717fff0ac4d447ffc7a695e86ae25c6'
+md5sums=('eda496fc53f5cf1470806e8011fa5474'
          'SKIP')
 
 prepare() {
@@ -61,7 +61,7 @@ package() {
     install -Dm644 "../conf/packages.conf" "$pkgdir/usr/share/calamares/modules/packages.conf"
     install -Dm644 "../conf/grubcfg.conf" "$pkgdir/usr/share/calamares/modules/grubcfg.conf"
     #install -Dm644 "../conf/partition.conf" "$pkgdir/usr/share/calamares/modules/partition.conf"
-    install -Dm644 "../conf/services.conf" "$pkgdir/usr/share/calamares/modules/services.conf"
+    install -Dm644 "../conf/services-systemd.conf" "$pkgdir/usr/share/calamares/modules/services-systemd.conf"
     install -Dm644 "../conf/umount.conf" "$pkgdir/usr/share/calamares/modules/umount.conf"
     install -Dm644 "../conf/initcpio.conf" "$pkgdir/usr/share/calamares/modules/initcpio.conf"
 
