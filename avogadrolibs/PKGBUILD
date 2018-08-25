@@ -1,26 +1,22 @@
 # Contributions from Arch: https://www.archlinux.org/packages/extra/x86_64/avogadrolibs/
 
 pkgname=avogadrolibs
-pkgver=1.90.0
-pkgrel=2
+pkgver=1.91.0
+pkgrel=1
 pkgdesc="An advanced molecular editor"
 arch=(x86_64)
 url="http://www.openchemistry.org/"
 license=(custom)
-depends=(molequeue openbabel qt5-base glew spglib hdf5)
+depends=(molequeue glew spglib libmsym libarchive hdf5)
 makedepends=(cmake eigen3 python2 boost)
 source=($pkgname-$pkgver.tar.gz::"https://github.com/OpenChemistry/avogadrolibs/archive/$pkgver.tar.gz")
-md5sums=('f2b7014f48da5b2a72d49c01dafaf225')
+md5sums=('79af9710f4927b8991f9b590bf11fbc1')
 
 
 prepare() {
   mkdir -p build
 
   cd $pkgname-$pkgver
-# Find spglib
-  sed -e 's|NAMES spglib|NAMES spglib symspg|' -i cmake/FindSpglib.cmake
-# Fix build with GCC>=7
-  sed -e 's|3456|3456789|' -i cmake/GenerateExportHeader.cmake
 }
 
 build() {
@@ -29,6 +25,7 @@ build() {
     -DCMAKE_INSTALL_PREFIX=/usr \
     -DCMAKE_INSTALL_LIBDIR=lib \
     -DBUILD_SHARED_LIBS=ON \
+    -DOpenGL_GL_PREFERENCE=GLVND \
     -DUSE_HDF5=ON
   make
 }
@@ -36,5 +33,7 @@ build() {
 package() {
   cd build
   make DESTDIR="$pkgdir" install
-  install -Dm644 "$srcdir"/$pkgname-$pkgver/COPYING "$pkgdir"/usr/share/licenses/$pkgname/LICENSE
+  install -Dm644 "$srcdir"/$pkgname-$pkgver/LICENSE -t "$pkgdir"/usr/share/licenses/$pkgname
+
+  rm "$pkgdir"/usr/lib/libjsoncpp.a # provided by jsoncpp
 }
