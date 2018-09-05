@@ -74,7 +74,7 @@ build()
         # update sha256 sums
         local  pkgver pkgname source _pkgname _pkgbase
         _package_info "$pkg" pkgver pkgname source _pkgname _pkgbase
-git g
+
         if [ ! -z "$_pkgname" ]; then
             pkgname=$_pkgname
         fi
