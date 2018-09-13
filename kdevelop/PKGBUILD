@@ -3,13 +3,14 @@ source ../kdeapps.conf
 
 pkgname=kdevelop
 pkgver=$_kdevver
-pkgrel=3
+pkgrel=1
 pkgdesc='A C/C++ development environment for KDE'
 arch=(x86_64)
 url='http://www.kdevelop.org/'
 license=(GPL)
-option=('debug')
-depends=(clang libksysguard kitemmodels knotifyconfig ktexteditor grantlee libkomparediff2 qt5-webengine)
+options=('debug')
+depends=(clang libksysguard kitemmodels knotifyconfig ktexteditor grantlee libkomparediff2 qt5-webengine
+         kcmutils threadweaver knewstuff)
 makedepends=(extra-cmake-modules kdoctools kdevelop-pg-qt llvm qt5-tools plasma-framework krunner okteta python3 mesa
              boost purpose subversion)
 optdepends=('konsole: embedded terminal'
@@ -21,10 +22,10 @@ optdepends=('konsole: embedded terminal'
 	'cmake: cmake integration'
 	'qt5-tools: qthelp plugin'
  	'okteta: hex editor integration'
-	'plasma-framework: for the plasma addons')
-conflicts=(kdevplatform)
-replaces=(kdevplatform)
-install="$pkgname.install"
+	'plasma-framework: for the plasma addons'
+	'cppcheck: code analyzer'
+	'heaptrack: memory profiler'
+	'kdevelop-clang-tidy: clang-tidy analyzer plugin')
 source=("http://download.kde.org/stable/$pkgname/$pkgver/src/$pkgname-$pkgver.tar.xz"{,.asc})
 sha256sums=("`grep ${pkgname}-${pkgver}.tar.xz  ../kdevelop.checksums | cut -d " " -f1`"
             'SKIP')
@@ -37,7 +38,13 @@ prepare() {
 
 build() {
   cd build
-  cmake_kf5 ../${pkgname}-${pkgver}
+  cmake  ../${pkgname}-${pkgver} \
+        -DCMAKE_BUILD_TYPE=RelWithDebInfo \
+        -DCMAKE_INSTALL_PREFIX=/usr \
+        -DKDE_INSTALL_LIBDIR=lib \
+        -DKDE_INSTALL_SYSCONFDIR=/etc \
+        -DKDE_INSTALL_LIBEXECDIR=lib \
+        -DKDE_INSTALL_USE_QT_SYS_PATHS=ON
   make 
 }
 
