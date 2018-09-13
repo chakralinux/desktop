@@ -1,0 +1,33 @@
+# Maintainer: Antonio Rojas <arojas@archlinux.org>
+
+pkgname=kdevelop-clang-tidy
+pkgver=0.3.2
+pkgrel=1
+pkgdesc="Clang-tidy analyzer plugin for KDevelop"
+arch=(x86_64)
+url="http://www.kdevelop.org/"
+license=(GPL)
+depends=(kdevelop)
+makedepends=(extra-cmake-modules boost)
+source=("https://download.kde.org/stable/kdev-clang-tidy/$pkgver/src/kdev-clang-tidy-$pkgver.tar.xz"{,.sig})
+sha256sums=('e88683087cdd62fa08d780d664c25e3cf0a630562d1afe2fe143744cdfce5249'
+            'SKIP')
+validpgpkeys=('E191FD5BE6F46870F09E82B2024E7FB43D015474') # Friedrich W. H. Kossebau <kossebau@kde.org>
+
+prepare() {
+  mkdir -p build
+}
+
+build() {
+  cd build
+  cmake ../kdev-clang-tidy-$pkgver \
+    -DCMAKE_INSTALL_PREFIX=/usr \
+    -DCMAKE_INSTALL_LIBDIR=lib \
+    -DBUILD_TESTING=OFF
+  make
+}
+
+package() {
+  cd build
+  make DESTDIR="$pkgdir" install
+}
