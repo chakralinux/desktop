@@ -1,3 +1,9 @@
+# Google API keys (see http://www.chromium.org/developers/how-tos/api-keys)
+# Note: These are for Chakra Linux use ONLY. For your own distribution, please
+# get your own set of keys.
+_google_default_client_id=3502044743.apps.googleusercontent.com
+_google_default_client_secret=TPvjII_2SwZn_9Ic0kRKqjtG
+
 pkgbase="libreoffice"
 pkgname=('libreoffice-common'
 	'libreoffice-base'
@@ -14,8 +20,8 @@ pkgname=('libreoffice-common'
 	'libreoffice-postgresql-connector'
 	'libreoffice-extension-wiki-publisher'
 	'libreoffice-extension-nlpsolver')
-_LOver=6.1.0.3
-pkgver=6.1.0
+_LOver=6.1.1.2
+pkgver=6.1.1
 pkgrel=1
 arch=('x86_64')
 license=('LGPL3')
@@ -42,7 +48,6 @@ _additional_source_url2="https://dev-www.libreoffice.org/extern"
 _gentoo_patch_url="https://dev.gentoo.org/~asturm/distfiles"
 source=(${_mirror}/libreoffice{,-help,-translations}-${_LOver}.tar.xz{,.asc}
         # Environment variables
-#        ${_additional_source_url}/boost_1_66_0.tar.bz2
         ${_additional_source_url}/xmlsec1-1.2.25.tar.gz
         ${_additional_source_url}/35c94d2df8893241173de1d16b6034c0-swingExSrc.zip
         ${_additional_source_url}/798b2ffdc8bcfe7bca2cf92b62caf685-rhino1_5R5.zip
@@ -93,11 +98,11 @@ source=(${_mirror}/libreoffice{,-help,-translations}-${_LOver}.tar.xz{,.asc}
         ${_additional_source_url}/lxml-4.1.1.tgz
         make-pyuno-work-with-system-wide-module-install.diff)
 validpgpkeys=('C2839ECAD9408FBE9531C3E9F434A1EFAFEEAEA3') # LibreOffice Build Team (CODE SIGNING KEY) <build@documentfoundation.org>
-sha1sums=('e334981dd97eb25530480c84e8010d2c1093aa00'
+sha1sums=('80da3eecf56f5944db9e475ec38a756697a4392f'
           'SKIP'
-          '949f99a76117c65484cbfb07ad8c5da516d20070'
+          '8de35ee4c5259843998f7bc06f2a68bc455363f0'
           'SKIP'
-          'ad1cffcbe3fbab57db5b85debdd2960b9f0a3c24'
+          'f4695acd334795b26861c90dee8a476cad89c37a'
           'SKIP'
           '0ef1117b8d11da475fd8d842a1341c675e627ab9'
           '1acea86fd399ed7817879d36370d3d1f8b109050'
@@ -315,7 +320,10 @@ build() {
                 --with-system-clucene \
                 --without-system-xmlsec \
                 --without-system-libepubgen \
-                --without-system-libqxp
+                --without-system-libqxp \
+		--with-gdrive-client-id=${_google_default_client_id} \
+		--with-gdrive-client-secret=${_google_default_client_secret} \
+		--disable-dependency-tracking
         
         touch src.downloaded
         #./download

@@ -4,4 +4,4 @@
 #export SAL_USE_VCLPLUGIN=kde4
 #export SAL_USE_VCLPLUGIN=gtk
 #export SAL_USE_VCLPLUGIN=gtk3
-#export SAL_USE_VCLPLUGIN=gtk3-kde5
+export SAL_USE_VCLPLUGIN=gtk3-kde5
