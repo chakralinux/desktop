@@ -1,43 +1,48 @@
-#
-# Games Packages for Chakra, part of chakra-project.org
-#
-# Maintainer: Adrián Chaves Fernández (Gallaecio) <adriyetichaves gmail.com>
-# Contributor: Gene Kodadek <gkodadek@gmail.com>
-
 pkgname=tuxpaint
-pkgver=0.9.22
+pkgver=0.9.23
 pkgrel=1
 pkgdesc="Tux Paint is a free drawing program designed for young children."
 arch=('x86_64')
 url="http://www.tuxpaint.org"
 license=('GPL3')
-depends=('fribidi' 'gperf' 'libpaper' 'librsvg' 'libpng' 'python2' 'sdl_image' 'sdl_mixer' 'sdl_pango' 'sdl_ttf')
+depends=('fribidi' 'libpaper' 'librsvg' 'python2' 'sdl_image'
+         'sdl_mixer' 'sdl_pango' 'sdl_ttf')
+makedepends=('gperf' 'optipng' 'setconf')
 backup=('etc/tuxpaint/tuxpaint.conf')
 categories=('education')
-source=("http://downloads.sourceforge.net/sourceforge/$pkgname/$pkgname-$pkgver.tar.gz")
-md5sums=('bb9d7e4460ed8084be23b5dfcbf49ef3')
+source=("https://downloads.sourceforge.net/sourceforge/$pkgname/$pkgname-$pkgver.tar.gz")
+md5sums=('5dfc5a710b5550c54bbc8cb7cf06d594')
+
+prepare() {
+  cd "$pkgname-$pkgver"
+
+  # python2 fix
+  for f in docs/zh_tw/mkTuxpaintIM.py fonts/locale/zh_tw_docs/maketuxfont.py; do
+    sed -i '0,/on/s//on2/' $f
+  done
+
+  # libpng16 fix
+  find -name '*.png' -exec optipng -quiet -force -fix {} +
+
+  # desktop shortcut categories
+  setconf src/tuxpaint.desktop Categories='Game;KidsGame;Graphics;RasterGraphics;'
+
+  # fullscreen by default
+  setconf -u src/tuxpaint.conf fullscreen=true
+
+  # location of bash completion files
+  setconf Makefile COMPLETIONDIR='$(DESTDIR)/usr/share/bash-completion/completions'
+
+  # no KDE4-related requirements at installation-time
+  setconf Makefile ARCH_INSTALL=''
+}
 
 build() {
-  cd $srcdir/$pkgname-$pkgver
-
-  # Python 2 fix.
-  for file in docs/zh_tw/mkTuxpaintIM.py fonts/locale/zh_tw_docs/maketuxfont.py; do
-      sed -i 's_#!/usr/bin/env python_#!/usr/bin/env python2_' $file
-  done
-  
-  sed -i 's:$(ARCH_LINKS):$(ARCH_LINKS) -lpng:' Makefile
-  
-  # Add categories to .desktop file.
-  echo "Categories=Game;KidsGame;Graphics;RasterGraphics;" >> src/tuxpaint.desktop
-
-  # Build.
-  make PREFIX=/usr
+  make -C "$pkgname-$pkgver" PREFIX=/usr clean translations all -j1
 }
 
 package() {
-  cd $srcdir/$pkgname-$pkgver
-
-  make \
+  make -C "$pkgname-$pkgver" \
     PREFIX=/usr \
     DESTDIR=$pkgdir \
     CONFDIR=$pkgdir/etc \
@@ -45,17 +50,9 @@ package() {
     X11_ICON_PREFIX=$pkgdir/usr/share/pixmaps \
     KDE_PREFIX="" \
     KDE_ICON_PREFIX="" \
-    install
+    install -j1
 
-  # Desktop integration.
-  install -D -m 644 $srcdir/$pkgname-$pkgver/src/tuxpaint.desktop \
-		    $pkgdir/usr/share/applications/tuxpaint.desktop
-
-  # Permissions adjustments.
-  chmod -R 644 $pkgdir/usr/share/doc/tuxpaint-dev/*
-  chmod 755 $pkgdir/usr/share/doc/tuxpaint-dev/html
-
-  # Configuration stuff.
-  mkdir -p $pkgdir/etc/tuxpaint
-  mv $pkgdir/etc/tuxpaint.conf $pkgdir/etc/tuxpaint/
+  # bash completions
+  mv "$pkgdir/usr/share/bash-completion/completions/tuxpaint-completion.bash" \
+    "$pkgdir/usr/share/bash-completion/completions/tuxpaint"
 }
