@@ -1,108 +1,102 @@
 pkgbase=julia
-pkgname=('julia' 'julia-docs')
-pkgver=0.6.0
+pkgname=(julia julia-docs)
+pkgver=1.0.0
 pkgrel=1
 arch=('x86_64')
 pkgdesc='High-level, high-performance, dynamic programming language'
-url='http://julialang.org/'
+url='https://julialang.org/'
 license=('MIT')
-makedepends=('gcc-fortran' 'python2' 'openblas' 'lapack' 'arpack' 'libunwind' 'fftw' 'llvm'
-             'gmp' 'mpfr' 'zlib' 'suitesparse' 'cmake' 'libgit2' 'openssl')
-options=('!emptydirs' 'staticlibs')
-source=("git://github.com/JuliaLang/julia.git#tag=v$pkgver")
-sha256sums=('SKIP')
+depends=('fftw' 'hicolor-icon-theme' 'libgit2' 'libunwind' 'libutf8proc' 'suitesparse')
+makedepends=('cmake' 'gcc-fortran' 'gmp' 'python2')
+source=("https://github.com/JuliaLang/$pkgbase/releases/download/v$pkgver/$pkgbase-$pkgver-full.tar.gz"
+        "julia-libunwind-version.diff"
+        "julia-makefile.diff")
+sha256sums=('1a2497977b1d43bb821a5b7475b4054b29938baae8170881c6b8dd4099d133f1'
+            '22974e1a6602c250cd993cc89cf38fd24668617484f44cadd60665e9af15207b'
+            'b7374fcd5a579fc59d6988795fc0c3cf411a89205942c691a5b3003793ae6c52')
 
 prepare() {
-  # For /etc/ld.so.conf.d/
-  echo '/usr/lib/julia' > julia.conf
+  cd $pkgbase
+  # https://github.com/JuliaLang/julia/pull/29082 fix libunwind version check
+  patch -p1 -i ../julia-libunwind-version.diff
+  # make 'make install' really just install
+  patch -p0 -i ../julia-makefile.diff 
 }
 
+
 build() {
-  # Make sure not to set -march
-  export CFLAGS="-mtune=generic -O3 -pipe -fstack-protector-strong"
-  export CXXFLAGS="-mtune=generic -O3 -pipe -fstack-protector-strong"
-  
-  make -C "$pkgbase" prefix=/usr sysconfdir=/etc \
-    MARCH="x86-64" \
-    USE_SYSTEM_LLVM=1 \
-    USE_SYSTEM_LIBUNWIND=1 \
-    USE_SYSTEM_PCRE=0 \
-    USE_SYSTEM_LIBM=1 \
-    USE_SYSTEM_OPENLIBM=0 \
-    USE_SYSTEM_OPENSPECFUN=0 \
-    USE_SYSTEM_BLAS=1 \
-    USE_SYSTEM_LAPACK=1 \
-    USE_SYSTEM_FFTW=1 \
-    USE_SYSTEM_GMP=1 \
-    USE_SYSTEM_MPFR=1 \
-    USE_SYSTEM_ARPACK=1 \
-    USE_SYSTEM_SUITESPARSE=1 \
-    USE_SYSTEM_LIBUV=0 \
-    USE_SYSTEM_UTF8PROC=0 \
-    USE_INTEL_MKL=0 \
-    USE_BLAS64=0 \
-    USE_LLVM_SHLIB=1 \
-    USE_SYSTEM_LIBGIT2=1 \
-    USE_SYSTEM_PATCHELF=0 \
-    USE_SYSTEM_DSFMT=0
+  # configure the build.
+  #
+  # Setting USE_SYSTEM_*=1 for quite a few things, for now,
+  # just to make Julia 1.0.0 compile.
+  cat << '__EOF__' > $pkgbase/Make.user
+override prefix = /usr
+override sysconfdir = /etc
+override MARCH = x86-64
+override JULIA_BUILD_MODE = release
+override USE_BLAS64 = 0
+override USE_SYSTEM_BLAS = 0
+override USE_SYSTEM_DSFMT = 0
+override USE_SYSTEM_FFTW = 1
+override USE_SYSTEM_GMP = 1
+override USE_SYSTEM_LAPACK = 0
+override USE_SYSTEM_LIBGIT2 = 1
+override USE_SYSTEM_LIBM = 0
+override USE_SYSTEM_LIBUNWIND = 1
+override USE_SYSTEM_MPFR = 0
+override USE_SYSTEM_OPENLIBM = 0
+override USE_SYSTEM_OPENSPECFUN = 0
+override USE_SYSTEM_PCRE = 0
+override USE_SYSTEM_SUITESPARSE = 1
+override USE_SYSTEM_UTF8PROC = 1
+
+# FS#57387 
+override USE_SYSTEM_LLVM = 0
+override USE_LLVM_SHLIB = 0
+
+# patchelf is not even used unless $(private_libdir_rel) != $(build_private_libdir_rel)
+# but we USE_SYSTEM_PATCHELF=1 to prevent building it. This is why it is not in makedepends.
+override USE_SYSTEM_PATCHELF = 1
+__EOF__
+
+  export CFLAGS="$CFLAGS -w"
+  export CXXFLAGS="$CXXFLAGS -w"
+  make -C "$pkgbase"
+}
+
+check() {
+ cd $pkgbase/test
+ # this is the make testall target, plus the --skip option from travis/appveyor/circleci
+ # (one test fails with DNS resolution errors)
+ ../julia --check-bounds=yes --startup-file=no ./runtests.jl all --skip Sockets
+ find ../stdlib \( -name \*.cov -o -name \*.mem \) -delete
+ rm -r depot/compiled/
 }
 
 package_julia() {
-  backup=('etc/ld.so.conf.d/julia.conf' 'etc/julia/juliarc.jl')
-  depends=('arpack' 'fftw' 'libunwind' 'mpfr' 'suitesparse' 'libgit2' 'llvm-libs' 'hicolor-icon-theme')
+  backup=('etc/julia/startup.jl')
   optdepends=('gnuplot: If using the Gaston Package from julia')
-  install='sysfix.install'
 
-  # Make sure not to set -march
-  export CFLAGS="-mtune=generic -O3 -pipe -fstack-protector-strong"
-
-  make -C "$pkgbase" DESTDIR="$pkgdir" \
-    prefix=/usr sysconfdir=/etc  \
-    MARCH="x86-64" \
-    USE_SYSTEM_LLVM=1 \
-    USE_SYSTEM_LIBUNWIND=1 \
-    USE_SYSTEM_PCRE=0 \
-    USE_SYSTEM_LIBM=1 \
-    USE_SYSTEM_OPENLIBM=0 \
-    USE_SYSTEM_OPENSPECFUN=0 \
-    USE_SYSTEM_BLAS=1 \
-    USE_SYSTEM_LAPACK=1 \
-    USE_SYSTEM_FFTW=1 \
-    USE_SYSTEM_GMP=1 \
-    USE_SYSTEM_MPFR=1 \
-    USE_SYSTEM_ARPACK=1 \
-    USE_SYSTEM_SUITESPARSE=1 \
-    USE_SYSTEM_LIBUV=0 \
-    USE_SYSTEM_UTF8PROC=0 \
-    USE_INTEL_MKL=0 \
-    USE_BLAS64=0 \
-    USE_LLVM_SHLIB=1 \
-    USE_SYSTEM_LIBGIT2=1 \
-    USE_SYSTEM_PATCHELF=0 \
-    USE_SYSTEM_DSFMT=0 \
-    install
+  make -C "$pkgbase" DESTDIR="$pkgdir" install
 
   # Remove duplicate man-page from julia/doc
-  rm -rvf "$pkgdir/usr/share/julia/doc/man"
+  rm -rf "$pkgdir/usr/share/julia/doc/man"
 
-  # For /etc/ld.so.conf.d, FS#41731
-  install -Dm644 julia.conf "$pkgdir/etc/ld.so.conf.d/julia.conf"
+  # Documentation is in the julia-docs package
+  rm -rf "$pkgdir/usr/share/"{doc,julia/doc}
 
-  # Documentation and examples are in the julia-docs package
-  rm -rvf "$pkgdir/usr/share/doc/"
-  rm -rvf "$pkgdir/usr/share/julia/doc/"
-  rm -rvf "$pkgdir/usr/share/julia/examples/"
-
-  cd "$pkgname"
-  install -Dm644 LICENSE.md "$pkgdir/usr/share/licenses/$pkgname/LICENSE.md"
+  # License
+  install -Dm644 "$pkgbase/LICENSE.md" "$pkgdir/usr/share/licenses/$pkgname/LICENSE.md"
 }
 
 package_julia-docs() {
   pkgdesc='Documentation and examples for Julia'
+  depends=('julia')
+
   cd "$pkgbase"
 
   install -d "$pkgdir/usr/share/doc"
-  cp -rv doc "$pkgdir/usr/share/doc/$pkgbase"
-  cp -rv examples "$pkgdir/usr/share/doc/$pkgbase/examples"
+  cp -r doc "$pkgdir/usr/share/doc/$pkgbase"
+  rm -rf "$pkgdir"/usr/share/doc/julia/man/
   install -Dm644 LICENSE.md "$pkgdir/usr/share/licenses/$pkgname/LICENSE.md"
 }
