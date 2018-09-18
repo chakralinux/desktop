@@ -1,13 +1,17 @@
 pkgname=strace
-pkgver=4.20
+pkgver=4.24
 pkgrel=1
 pkgdesc="A useful diagnositic, instructional, and debugging tool"
 arch=('x86_64')
-url="http://sourceforge.net/projects/strace/"
-license=('custom')
+url="https://strace.io/"
+license=('custom:BSD-like')
 depends=('perl' 'libunwind')
-source=(http://downloads.sourceforge.net/${pkgname}/${pkgname}-$pkgver.tar.xz)
-sha256sums=('5bf3148dd17306a42566f7da17368fdd781afa147db05ea63a4ca2b50f58c523')
+checkdepends=('valgrind')
+source=("https://strace.io/files/$pkgver/$pkgname-$pkgver.tar.xz"{,.asc})
+# Backup source: "https://github.com/$pkgname/$pkgname/releases/download/v$pkgver/$pkgname-$pkgver.tar.xz"{,.asc}
+sha256sums=('1f4e59fc1edfa2bfb4adf2a748623dc25b105ec79713dd84404199f91b0b0634'
+            'SKIP')
+validpgpkeys=('296D6F29A020808E8717A8842DB5BD89A340AEB7') # Dmitry V. Levin <ldv@altlinux.org>
 
 build() {
   cd "${srcdir}/${pkgname}-${pkgver}"
