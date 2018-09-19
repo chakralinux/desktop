@@ -1,7 +1,7 @@
 pkgname=spring
 _pkgname=springrts
-pkgver=101.0
-pkgrel=4
+pkgver=104.0
+pkgrel=1
 pkgdesc='A 3D real-time-strategy game engine.'
 arch=('x86_64')
 url="http://springrts.com/"
@@ -11,9 +11,18 @@ depends=('openal' 'glew' 'boost-libs' 'freetype2' 'devil' 'libvorbis' 'sdl2' 'li
 makedepends=('boost' 'cmake' 'zip' 'xz' 'p7zip' 'python2' 'java-environment' 'mesa')
 optdepends=('python2: python-based bots'
             'java-runtime: java-based bots')
-install=spring.install
-source=("http://downloads.sourceforge.net/sourceforge/$_pkgname/${pkgname}_${pkgver}_src.tar.lzma")
-md5sums=('26d7558c86f0af615211f629eaccffa6')
+source=("https://downloads.sourceforge.net/sourceforge/$_pkgname/${pkgname}_${pkgver}_src.tar.lzma"
+        fix-reinterpret_cast-in-constexpr.patch)
+sha256sums=('ceb0bf59f8aac14f2d844f920e898724913326cdf1adf3f10d88ecc317a3ec16'
+            '982b8a4da8e6ccb8f4f977d7f75de0206ad4ccf488d0843ad37bab34f7e35bca')
+
+prepare() {
+  cd spring_$pkgver
+
+  # https://springrts.com/mantis/view.php?id=5781
+  # https://github.com/spring/spring/commit/6104061fe3
+  patch -Np1 -i ../fix-reinterpret_cast-in-constexpr.patch
+}
 
 build() {
   bsdtar -xf ${pkgname}_${pkgver}_src.tar.lzma
@@ -33,5 +42,5 @@ package() {
   make DESTDIR="$pkgdir" install
 
   install -d "$pkgdir/etc/spring"
-  echo '$HOME/.spring' > "$pkgdir/etc/spring/datadir"
+  echo '$HOME/.local/share/spring' > "$pkgdir/etc/spring/datadir"
 }
