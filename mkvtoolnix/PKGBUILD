@@ -1,7 +1,7 @@
 pkgbase=mkvtoolnix
 pkgname=('mkvtoolnix-cli' 'mkvtoolnix-gui')
 pkgver=26.0.0
-pkgrel=2
+pkgrel=3
 pkgdesc="Set of tools to create, edit and inspect Matroska files."
 arch=('x86_64')
 license=('GPL')
@@ -58,7 +58,7 @@ package_mkvtoolnix-cli() {
   install -m 755 src/mkvinfo-cli "${pkgdir}"/usr/bin/mkvinfo
   rm -rf "${pkgdir}"/usr/share/{applications,icons,mime,mkvtoolnix}
   find "${pkgdir}" -name mkvtoolnix-gui* -delete
-  rm /usr/share/metainfo/org.bunkus.mkvtoolnix-gui.appdata.xml
+  rm $pkgdir/usr/share/metainfo/org.bunkus.mkvtoolnix-gui.appdata.xml
 }
 
 package_mkvtoolnix-gui() {
