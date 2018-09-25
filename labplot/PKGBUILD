@@ -9,27 +9,25 @@ url='http://labplot.sourceforge.net/'
 license=('GPL')
 depends=('hdf5' 'netcdf' 'gsl' 'qt5-base' 'qt5-svg' 'karchive' 'ki18n' 'kwidgetsaddons' 
          'kxmlgui' 'kio' 'kdelibs4support' 'kdoctools' 'kcompletion' 'kconfigwidgets'
-         'kcoreaddons' 'ktextwidgets' 'kio' 'knewstuff' 'fftw' 'cantor' 'cfitsio')
+         'kcoreaddons' 'ktextwidgets' 'kio' 'knewstuff' 'fftw' 'cantor' 'cfitsio' 'qt5-serialport')
 makedepends=('cmake' 'extra-cmake-modules')
 conflicts=('labplot2-svn')
-source=("http://download.kde.org/stable/${pkgname}/${pkgver}/${pkgname}-${pkgver}.tar.xz"
-        fix-build.patch)
-sha256sums=('f1ef2d95a4d4f18902e38cd1f2f79d041d4eeed1eb7f6284ec9a6a6954792225'
-            'e1a6e69cfde87602102b24324dcb829897bd0e7ce74dc08e04c10f5cec81121b')
+source=("http://download.kde.org/stable/$pkgname/$pkgver/$pkgname-$pkgver.tar.xz")
+sha256sums=('f1ef2d95a4d4f18902e38cd1f2f79d041d4eeed1eb7f6284ec9a6a6954792225')
 
-#prepare() {
-#  cd $pkgname-$pkgver
-#  patch -Np1 -i "$srcdir/fix-build.patch"
-#}
+prepare() {
+  cd $pkgname-$pkgver
+  mkdir -p build
+}
  
 build() { 
-  cd $pkgname-$pkgver  
-  cmake
+  cd $pkgname-$pkgver/build  
+  cmake .. -DCMAKE_INSTALL_PREFIX=/usr
   make 
 }
  
 package() {
-  cd $pkgname-$pkgver
+  cd $pkgname-$pkgver/build
   make DESTDIR=$pkgdir install
   
   #fix .desktop exec line
