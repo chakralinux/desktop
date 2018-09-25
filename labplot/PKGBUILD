@@ -2,7 +2,7 @@ source ../kdeapps.conf
 
 pkgname=labplot
 pkgver=2.5.0
-pkgrel=1
+pkgrel=2
 pkgdesc="A free software data analysis and visualization application build on top of KDE SC"
 arch=('x86_64')
 url='http://labplot.sourceforge.net/'
@@ -17,20 +17,20 @@ source=("http://download.kde.org/stable/${pkgname}/${pkgver}/${pkgname}-${pkgver
 sha256sums=('f1ef2d95a4d4f18902e38cd1f2f79d041d4eeed1eb7f6284ec9a6a6954792225'
             'e1a6e69cfde87602102b24324dcb829897bd0e7ce74dc08e04c10f5cec81121b')
 
-prepare() {
-  cd "${srcdir}"/${pkgname}-${pkgver}-kf5
-  patch -Np1 -i "$srcdir/fix-build.patch"
-}
+#prepare() {
+#  cd $pkgname-$pkgver
+#  patch -Np1 -i "$srcdir/fix-build.patch"
+#}
  
 build() { 
-  cd "${srcdir}"/${pkgname}-${pkgver}-kf5  
+  cd $pkgname-$pkgver  
   cmake_kf5
   make 
 }
  
 package() {
-  cd "${srcdir}"/${pkgname}-${pkgver}-kf5
-  make DESTDIR="${pkgdir}" install
+  cd $pkgname-$pkgver
+  make DESTDIR=$pkgdir install
   
   #fix .desktop exec line
   sed -i s!'Exec=labplot2 -caption %c %i %f'!'Exec=labplot2'! \
