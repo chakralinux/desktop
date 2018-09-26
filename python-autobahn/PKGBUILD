@@ -3,7 +3,7 @@
 pkgbase=python-autobahn
 pkgname=(python3-autobahn python2-autobahn)
 pkgver=18.9.2
-pkgrel=1
+pkgrel=2
 pkgdesc='Real-time framework for Web, Mobile & Internet of Things'
 arch=('x86_64')
 url='https://github.com/crossbario/autobahn-python'
@@ -35,7 +35,7 @@ check() {
 }
 
 package_python3-autobahn() {
-  depends=(python python-twisted python-six python-txaio)
+  depends=(python3 python3-twisted python3-six python3-txaio)
 
   cd "$srcdir/autobahn-$pkgver"
   python setup.py install --root="$pkgdir" --optimize=1 --skip-build
