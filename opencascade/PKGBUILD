@@ -1,45 +1,60 @@
-# Maintainer: UtG  <utg[dot]chakra.linux[at]gmail[dot]com>
-
 pkgname=opencascade
-pkgver=6.7.1
+pkgver=7.3.0
+_pkgver=V${pkgver//./_}
 pkgrel=1
 pkgdesc="Open CASCADE Technology, 3D modeling & numerical simulation"
 arch=('x86_64')
 url="http://www.opencascade.org"
-license=('custom')
-depends=('tk' 'mesa' 'java-runtime' 'libxmu' 'ftgl')
-makedepends=('java-environment')
+license=('LGPL')
+depends=('tk' 'vtk' 'gl2ps' 'intel-tbb' 'freeimage' 'ffmpeg')
+makedepends=('cmake' 'qt5-base')
 options=(!libtool)
-source=("http://files.opencascade.com/OCCT/OCC_${pkgver}_release/$pkgname-${pkgver}.tgz" "env.sh" "opencascade.sh" "opencascade.conf")
-md5sums=('9316150af298a5608d74785c25491fd4'
-         'ccdd8d16055d77bf99bbd46ba9dcb848'
-         'd9368b8d348ced3ec4462012977552d2'
-         '2924ecf57c95d25888f51071fdc72ad0')
+source=("opencascade-${pkgver}.tgz::http://git.dev.opencascade.org/gitweb/?p=occt.git;a=snapshot;h=refs/tags/${_pkgver};sf=tgz"
+        'opencascade.sh' 'fix-install-dir-references.patch'
+        'vtk7.patch' 'ffmpeg4.patch' 'cmake-fix-variable.patch')
+sha256sums=('7298c5eadc6dd0aeb6265ff2958e8e742d6e3aa65227acce8094f96f1bf6d2ac'
+            '2064536a85d46fee368a8f1a712b2c6c77ca79c5bffcc68cba79d70d36efa2f4'
+            'afb584aa453993ae8d9e2b983594558531ede735a5892754b812be30650c9fb5'
+            'bd230962173a80a971c8da9d3dc07238f249544bb67ee834be7d6466391d0315'
+            '461c44a1b635c09f23283c0b8f583a0d38079a1e20338c009776a621d0ed6efe'
+            'c7427082400b2d1ac58c59549d4dd1ee5b27d06847b7907842e9e2f2b68980fa')
+
+prepare() {
+  cd "occt-${_pkgver}"
+  patch -Np1 -i "$srcdir/fix-install-dir-references.patch"
+  patch -Np1 -i "$srcdir/vtk7.patch"
+  patch -Np1 -i "$srcdir/ffmpeg4.patch"
+  patch -Np1 -i "$srcdir/cmake-fix-variable.patch"
+}
 
 build() {
-  cd "$srcdir/$pkgname-$pkgver"
-  if [ ! -d $JAVA_HOME/include ]; then
-    [ -e /etc/profile.d/openjdk6.sh ] && source /etc/profile.d/openjdk6.sh
-    [ -e /etc/profile.d/jdk.sh ] && source /etc/profile.d/jdk.sh
-  fi
+  cd "occt-${_pkgver}"
+  mkdir -p build && cd build
 
-  # fix for automake 1.13
-  sed -i -e 's/AM_CONFIG_HEADER/AC_CONFIG_HEADERS/' configure.ac
-  ./build_configure
-  ./configure --disable-debug --enable-production \
-    --with-java-include=${JAVA_HOME}/include --prefix="$pkgdir/opt/$pkgname"
+  cmake .. \
+    -DCMAKE_BUILD_TYPE=Release \
+    -DCMAKE_INSTALL_PREFIX=/usr \
+    -DUSE_GL2PS=ON \
+    -DUSE_FREEIMAGE=ON \
+    -DUSE_FFMPEG=ON \
+    -DUSE_VTK=ON \
+    -DUSE_TBB=ON
+
   make
 }
 
 package() {
-  cd "$srcdir/$pkgname-$pkgver"
+  cd "occt-${_pkgver}/build"
 
-  make install
-  cp -r src/UnitsAPI/ "${pkgdir}/opt/$pkgname/src"
-  install -D -m644 "${srcdir}/opencascade.conf" "${pkgdir}/etc/ld.so.conf.d/opencascade.conf"
-  install -D -m 755 "${srcdir}/opencascade.sh" "${pkgdir}/etc/profile.d/opencascade.sh"
-  install -m 755 "${srcdir}/env.sh" "${pkgdir}/opt/$pkgname"
+  make DESTDIR="$pkgdir" install
+
+  cd ..
+
+  install -Dm755 "$srcdir/opencascade.sh" "$pkgdir/etc/profile.d/opencascade.sh"
   install -dm755 "$pkgdir/usr/share/licenses/$pkgname/"
-  install -m644 LICENSE_LGPL_21.txt OCCT_LGPL_EXCEPTION.txt "$pkgdir/usr/share/licenses/$pkgname"
+  mv "$pkgdir/usr/share/doc/opencascade/"* "$pkgdir/usr/share/licenses/$pkgname"
+  rm -r "$pkgdir/usr/share/doc"
+
+  rm "$pkgdir/usr/bin/"*.sh
 }
 
