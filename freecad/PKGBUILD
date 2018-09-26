@@ -31,7 +31,7 @@ prepare() {
 
   patch -Np1 -i ../$pkgname-$_rollup-rollup.patch
   patch -Np1 -i ../gcc8.patch
-# patch -Np1 -i ../smesh-pthread.patch
+  patch -Np1 -i ../smesh-pthread.patch
   patch -Np1 -i ../qt5.11.patch
 }
 
@@ -47,8 +47,7 @@ build() {
     -DBUILD_QT5=ON \
     -DBUILD_QT5_WEBKIT=OFF \
     -DBUILD_START=OFF \
-    -DBUILD_WEB=OFF \
-    -DBUILD_FEM=OFF
+    -DBUILD_WEB=OFF 
   make
 }
 
