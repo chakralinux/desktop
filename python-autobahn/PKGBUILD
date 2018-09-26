@@ -1,0 +1,51 @@
+# Contributions from ArchLinux
+
+pkgbase=python-autobahn
+pkgname=(python3-autobahn python2-autobahn)
+pkgver=18.9.2
+pkgrel=1
+pkgdesc='Real-time framework for Web, Mobile & Internet of Things'
+arch=('x86_64')
+url='https://github.com/crossbario/autobahn-python'
+license=(MIT)
+makedepends=(python3-setuptools python2-setuptools python3-twisted python3-six python3-txaio python2-twisted python2-six python2-txaio)
+checkdepends=(python2-unittest2)
+source=(https://pypi.io/packages/source/a/autobahn/autobahn-$pkgver.tar.gz)
+sha256sums=('d98b924f06865700116ee616027e4a6d678004a7b44e0d01cb262eab333112d6')
+
+prepare() {
+  cp -a autobahn-$pkgver{,-py2}
+}
+
+build() {
+  cd "$srcdir/autobahn-$pkgver"
+  python setup.py build
+
+  cd "$srcdir/autobahn-$pkgver-py2"
+  python2 setup.py build
+}
+
+check() {
+  cd "$srcdir/autobahn-$pkgver"
+  #It requires python-unittest2 in [community]
+  #python setup.py test
+
+  cd "$srcdir/autobahn-$pkgver-py2"
+  #python2 setup.py test
+}
+
+package_python3-autobahn() {
+  depends=(python python-twisted python-six python-txaio)
+
+  cd "$srcdir/autobahn-$pkgver"
+  python setup.py install --root="$pkgdir" --optimize=1 --skip-build
+  install -Dm644 LICENSE "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
+}
+
+package_python2-autobahn() {
+  depends=(python2 python2-twisted python2-six python2-txaio)
+
+  cd "$srcdir/autobahn-$pkgver-py2"
+  python2 setup.py install --root="$pkgdir" --optimize=1 --skip-build
+  install -Dm644 LICENSE "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
+}
