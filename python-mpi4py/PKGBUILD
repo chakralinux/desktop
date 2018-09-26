@@ -2,9 +2,9 @@
 
 _pkg=mpi4py
 pkgbase=python-${_pkg}
-pkgname=(python-${_pkg} python2-${_pkg})
+pkgname=(python3-${_pkg} python2-${_pkg})
 pkgver=3.0.0
-pkgrel=1
+pkgrel=2
 pkgdesc="Python bindings for the Message Passing Interface (MPI) standard"
 arch=(x86_64)
 url="https://bitbucket.org/mpi4py/mpi4py"
@@ -20,7 +20,7 @@ prepare() {
 
 build() {
     cd ${_pkg}-${pkgver}
-    python setup.py build
+    python3 setup.py build
 
     cd ../${_pkg}-${pkgver}-py2
     python2 setup.py build
@@ -32,17 +32,17 @@ check() {
     export OMPI_MCA_rmaps_base_oversubscribe=yes
 
     cd ${_pkg}-${pkgver}
-    python setup.py test
+    python3 setup.py test
 
     cd ../${_pkg}-${pkgver}-py2
     python2 setup.py test
 }
 
-package_python-mpi4py() {
-    depends=(python openmpi)
+package_python3-mpi4py() {
+    depends=(python3 openmpi)
 
     cd ${_pkg}-${pkgver}
-    python setup.py install --root="${pkgdir}" --skip-build --optimize=1
+    python3 setup.py install --root="${pkgdir}" --skip-build --optimize=1
     install -Dm644 LICENSE.rst -t "${pkgdir}"/usr/share/licenses/${pkgname}/
 }
 
