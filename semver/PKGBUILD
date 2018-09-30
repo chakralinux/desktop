@@ -3,7 +3,7 @@
 
 pkgname=semver
 pkgver=5.5.1
-pkgrel=1
+pkgrel=2
 pkgdesc='The semantic version parser used by npm.'
 arch=('x86_64')
 url='https://github.com/npm/node-semver'
@@ -16,7 +16,6 @@ sha512sums=('3eaa40c5fac48654945a07bc770229e2d667436e4320eb61a62687348b61b231054
 
 package() {
   npm install -g --user root --prefix "$pkgdir"/usr "$srcdir"/$pkgname-$pkgver.tgz
-  rm -r "$pkgdir"/usr/etc
 
   install -d "$pkgdir"/usr/share/licenses/$pkgname
   ln -s ../../../lib/node_modules/$pkgname/LICENSE "$pkgdir"/usr/share/licenses/$pkgname/LICENSE
