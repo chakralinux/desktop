@@ -1,5 +1,5 @@
 pkgname=obs-studio
-pkgver=21.1.2
+pkgver=22.0.2
 pkgrel=1
 pkgdesc="Free, open source software for live streaming and recording"
 arch=('x86_64')
@@ -13,14 +13,13 @@ optdepends=('libfdk-aac: FDK AAC codec support'
             'luajit: scripting support'
             'python: scripting support'
             'vlc: VLC Media Source support')
-source=($pkgname-$pkgver.tar.gz::https://github.com/jp9000/obs-studio/archive/$pkgver.tar.gz
-        'qt-5.11.patch::https://github.com/obsproject/obs-studio/commit/4fd06b9825465ae5eb2a9b862cdb89098f655f14.patch')
-md5sums=('fc36a9e8d8c8018955c64197f18f839a'
-         'e13f53eeda3154176fa458e089510cfe')
+source=($pkgname-$pkgver.tar.gz::https://github.com/jp9000/obs-studio/archive/$pkgver.tar.gz)
+#        'qt-5.11.patch::https://github.com/obsproject/obs-studio/commit/4fd06b9825465ae5eb2a9b862cdb89098f655f14.patch')
+md5sums=('8c63cdc08a4510f288d174c65b252544')
 
 prepare() {
   cd $pkgname-$pkgver
-  patch -Np1 -i ../qt-5.11.patch
+#  patch -Np1 -i ../qt-5.11.patch
 }
 
 build() {
