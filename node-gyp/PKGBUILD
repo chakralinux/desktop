@@ -3,7 +3,7 @@
 
 pkgname=node-gyp
 pkgver=3.8.0
-pkgrel=1
+pkgrel=2
 pkgdesc='Node.js native addon build tool'
 arch=('x86_64')
 url='https://github.com/nodejs/node-gyp'
@@ -16,7 +16,6 @@ sha512sums=('de0f2561e7eb451cef19e4a8c1d24a00aca4b3ca14a4b11dfc3c8f57878c8559612
 
 package() {
   npm install -g --user root --prefix "$pkgdir"/usr "$srcdir"/$pkgname-$pkgver.tgz
-  rm -r "$pkgdir"/usr/etc
 
   # Why 777? :/
   chmod -R u=rwX,go=rX "$pkgdir"
