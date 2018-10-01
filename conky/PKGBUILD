@@ -1,6 +1,6 @@
 pkgname=conky
-pkgver=1.10.6
-pkgrel=2
+pkgver=1.10.8
+pkgrel=1
 pkgdesc="An advanced, highly configurable system monitor for X based on torsmo"
 arch=('x86_64')
 url="https://github.com/brndnmtthws/conky"
@@ -15,14 +15,14 @@ source=("https://github.com/brndnmtthws/conky/archive/v${pkgver}.tar.gz"
 	'curl.patch'
         'lua53.patch'
         'ipv6.patch')
-sha256sums=('4c80982960b2a72e3e33cef33347c97b9239ed110d9584da4e7f17f28faf60ca'
+sha256sums=('2ebd655a27c816bd613538b71d4ec1c096252cb522feaa05f64781dcedea8857'
             '4c91fb4925b62f53255b3777d812ff6736a8d20692066d901c49d885050b9552'
             '415460524c6e22b3ed534df9bab1c0bdfcadfd67c59282372c5c6e4f47ab2d9e'
             '50844ccdd2b1f8e1b4b110d8b9069dc35af11650163013e2b98cc2e59aeda569'
             '09e13fc56fe87cba6fafe27c1215dd2f8b1db7930ee5ebb7d076ec6ca8335012')
 
 prepare() {
-	cd "${srcdir}/${pkgname}-${pkgver}"
+	cd $pkgname-$pkgver
 #	patch -p1 -i ../ascii.patch # db2x_manxml fails on non-ascii chars
 #	patch -p1 -i ../lua53.patch # lua_gettable returns an int in lua-5.3
 #	patch -p1 -i ../ipv6.patch # https://bugs.archlinux.org/task/45626
@@ -30,7 +30,7 @@ prepare() {
 }
 
 build() {
-	cd "${srcdir}/${pkgname}-${pkgver}"
+	cd $pkgname-$pkgver
 
 	cmake \
 		-D CMAKE_BUILD_TYPE=Release \
@@ -50,8 +50,8 @@ build() {
 }
 
 package() {
-	cd "${srcdir}/${pkgname}-${pkgver}"
-	make DESTDIR="${pkgdir}" install
+	cd $pkgname-$pkgver
+	make DESTDIR=$pkgdir install
 	install -Dm644 COPYING "${pkgdir}/usr/share/licenses/${pkgname}/LICENSE"
 	install -Dm644 extras/vim/syntax/conkyrc.vim "${pkgdir}"/usr/share/vim/vimfiles/syntax/conkyrc.vim
 	install -Dm644 extras/vim/ftdetect/conkyrc.vim "${pkgdir}"/usr/share/vim/vimfiles/ftdetect/conkyrc.vim
