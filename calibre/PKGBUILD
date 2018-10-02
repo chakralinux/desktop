@@ -1,5 +1,5 @@
 pkgname=calibre
-pkgver=3.31.0
+pkgver=3.32.0
 pkgrel=1
 pkgdesc="Ebook management application"
 arch=('x86_64')
@@ -18,11 +18,16 @@ optdepends=('ipython2: to use calibre-debug'
             'poppler: required for converting pdf to html'
             'kdialog: to use native dialog')
 screenshot=('https://lh5.googleusercontent.com/_lG58t3XWd3c/TcNwiXkAx_I/AAAAAAAAAEc/M34I4uY9UUY/s800/gui.jpeg')
-source=("https://download.calibre-ebook.com/${pkgver}/calibre-${pkgver}.tar.xz")
-sha256sums=('3c2713a89a186e20d45ea42f2ed6be509fecce880ce6e233e63e6f3a415fe1f5')
+source=("https://download.calibre-ebook.com/${pkgver}/calibre-${pkgver}.tar.xz"
+        "https://github.com/kovidgoyal/calibre/commit/4d4ffcff7c247072c28d20822abed12e2539cdd2.patch")
+sha256sums=('57254b147d8f8caf16f774f090266e112281c19bf7bc4170e65d22ab9b58d8ac'
+            '60bb12d242e83ba886615472abcf91e05560f1a97a22d04c806d3acdc27fff6c')
 
 prepare(){
   cd "${pkgname}-${pkgver}"
+
+  # https://bugs.launchpad.net/bugs/1794915
+  patch -p1 -i ../4d4ffcff7c247072c28d20822abed12e2539cdd2.patch
 
   # Remove unneeded files
   rm -rf resources/${pkgname}-portable.*
