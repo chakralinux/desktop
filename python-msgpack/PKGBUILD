@@ -4,14 +4,15 @@
 
 pkgbase=python-msgpack
 pkgname=('python3-msgpack' 'python2-msgpack')
-pkgver=0.4.8
-pkgrel=2
+pkgver=0.5.6
+pkgrel=1
 url='https://github.com/msgpack/msgpack-python'
 arch=('x86_64')
 license=('Apache')
 makedepends=('python3-cython' 'python2-cython' 'python3-setuptools' 'python2-setuptools' 'python3' 'python2')
+checkdepends=('python3-pytest' 'python2-pytest')
 source=("https://pypi.io/packages/source/m/msgpack-python/msgpack-python-$pkgver.tar.gz")
-md5sums=('dcd854fb41ee7584ebbf35e049e6be98')
+md5sums=('6d644c06a87a5a111bbbf5b34b4be440')
 
 build() {
   cd msgpack-python-$pkgver
@@ -19,6 +20,14 @@ build() {
   python2 setup.py build --build-lib=build/python2
   find build/python2 -type f -exec \
     sed -i '1s,^#! \?/usr/bin/\(env \|\)python$,#!/usr/bin/python2,' {} \;
+}
+
+check() {
+  cd msgpack-python-$pkgver
+  msg2 'python3'
+  PYTHONPATH=$PWD/build/python3 py.test test
+  msg2 'python2'
+  PYTHONPATH=$PWD/build/python2 py.test2 test
 }
 
 package_python3-msgpack() {
