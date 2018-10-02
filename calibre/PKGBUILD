@@ -5,23 +5,26 @@ pkgdesc="Ebook management application"
 arch=('x86_64')
 url="https://calibre-ebook.com/"
 license=('GPL3')
-depends=('python2-six' 'python2-dateutil' 'python2-cssutils' 'python2-msgpack'
-         'python2-dukpy' 'python2-mechanize' 'podofo' 'libwmf' 'jxrlib'
-         'imagemagick' 'chmlib' 'python2-lxml' 'libusbx' 'python2-html5-parser'
-         'python2-pillow' 'shared-mime-info' 'python2-dns'
-         'python2-sip' 'python2-pyqt5' 'python2-enum34' 'python2-psutil' 'icu' 'libmtp' 'python2-dbus'
+depends=('python2-six' 'python2-dateutil' 'python2-cssutils' 'python2-dukpy'
+         'python2-mechanize' 'podofo' 'libwmf' 'jxrlib'
+         'chmlib' 'python2-lxml' 'libusb' 'python2-html5-parser'
+         'python2-pillow' 'shared-mime-info' 'python2-dnspython' 'python2-msgpack'
+         'python2-pyqt5' 'python2-psutil' 'icu' 'libmtp' 'python2-dbus'
          'python2-netifaces' 'python2-cssselect' 'python2-apsw' 'qt5-webkit'
-         'qt5-svg' 'python2-regex' 'python2-pygments' 'mtdev'
-         'desktop-file-utils' 'udisks2')
-makedepends=('qt5-x11extras' 'xdg-utils')
+         'qt5-svg' 'python2-regex' 'python2-pygments' 'mtdev' 'python2-unrardll'
+         'desktop-file-utils' 'gtk-update-icon-cache' 'optipng' 'udisks2' 'python2-enum34')
+makedepends=('qt5-x11extras' 'sip' 'xdg-utils')
+checkdepends=('xorg-server-xvfb')
 optdepends=('ipython2: to use calibre-debug'
             'poppler: required for converting pdf to html'
             'kdialog: to use native dialog')
-screenshot=('https://lh5.googleusercontent.com/_lG58t3XWd3c/TcNwiXkAx_I/AAAAAAAAAEc/M34I4uY9UUY/s800/gui.jpeg')
 source=("https://download.calibre-ebook.com/${pkgver}/calibre-${pkgver}.tar.xz"
+        "https://calibre-ebook.com/signatures/${pkgname}-${pkgver}.tar.xz.sig"
         "https://github.com/kovidgoyal/calibre/commit/4d4ffcff7c247072c28d20822abed12e2539cdd2.patch")
 sha256sums=('57254b147d8f8caf16f774f090266e112281c19bf7bc4170e65d22ab9b58d8ac'
+            'SKIP'
             '60bb12d242e83ba886615472abcf91e05560f1a97a22d04c806d3acdc27fff6c')
+validpgpkeys=('3CE1780F78DD88DF45194FD706BC317B515ACE7C') # Kovid Goyal (New longer key) <kovid@kovidgoyal.net>
 
 prepare(){
   cd "${pkgname}-${pkgver}"
@@ -48,6 +51,15 @@ build() {
   LANG='en_US.UTF-8' python2 setup.py gui
 }
 
+check() {
+  cd "${pkgname}-${pkgver}"
+
+  # without xvfb-run this fails with much "Control socket failed to recv(), resetting"
+  # ERROR: test_websocket_perf (calibre.srv.tests.web_sockets.WebSocketTest)
+
+  LANG='en_US.UTF-8' xvfb-run python2 setup.py test
+}
+
 package() {
   cd "${pkgname}-${pkgver}"
 
@@ -59,6 +71,8 @@ package() {
 
   XDG_DATA_DIRS="${pkgdir}/usr/share" LANG='en_US.UTF-8' \
     python2 setup.py install --staging-root="${pkgdir}/usr" --prefix=/usr
+
+  cp -a man-pages/ "${pkgdir}/usr/share/man"
 
   # Compiling bytecode FS#33392
   # This is kind of ugly but removes traces of the build root.
