@@ -1,15 +1,16 @@
 pkgbase=bullet
-_pkgbase=bullet3
 pkgname=('bullet' 'bullet-doc')
-pkgver=2.83.7
-pkgrel=2
+pkgver=2.87
+pkgrel=1
 pkgdesc="A 3D Collision Detection and Rigid Body Dynamics Library for games and animation"
 arch=('x86_64')
 url="http://www.bulletphysics.com/Bullet/"
-license=('ZLIB')
-makedepends=('cmake' 'doxygen' 'graphviz' 'ttf-dejavu' 'mesa' 'glu')
-source=("https://github.com/bulletphysics/$_pkgbase/archive/$pkgver.tar.gz")
-md5sums=('39fd0138fcb59047c12861f3b65c063e')
+license=('custom:zlib')
+makedepends=('cmake' 'doxygen' 'graphviz' 'ttf-dejavu' 'mesa' 'glu' 'python3' 'python3-numpy')
+source=("https://github.com/bulletphysics/bullet3/archive/${pkgver}.tar.gz"
+        bullet3_examplebrowser.sh)
+sha256sums=('438c151c48840fe3f902ec260d9496f8beb26dba4b17769a4a53212903935f95'
+            '68ca940af489f7e9718fe9199cf0c3428c8e4d2b4ae1576847fffe56c0da50f7')
 
 build() {
   cd $_pkgbase-$pkgver
@@ -20,28 +21,49 @@ build() {
        -DBUILD_SHARED_LIBS=1 \
        -DINSTALL_LIBS=1 \
        -DINSTALL_EXTRA_LIBS=1 \
-       -DCMAKE_BUILD_TYPE=RelWithDebInfo
+       -DBUILD_PYBULLET=ON \
+       -DBUILD_PYBULLET_NUMPY=ON \
+       -DBUILD_OPENGL3_DEMOS=ON \
+       -DCMAKE_BUILD_TYPE=Release
   make
+
   cd ..
   doxygen
 }
 
 package_bullet() {
-  cd $_pkgbase-$pkgver/build
-  make DESTDIR=$pkgdir install
-  install -Dm644 ../LICENSE.txt ${pkgdir}/usr/share/licenses/${pkgname}/LICENSE
+  optdepends=('glu: for the example browser'
+              'python3: python bindings'
+              'python3-numpy: python bindings'
+              'bullet-docs: documentation')
+
+  cd bullet3-${pkgver}/build
+
+  make DESTDIR=${pkgdir} install
+
+  install -Dm755 examples/pybullet/pybullet.so.${pkgver} ${pkgdir}/usr/lib/libpybullet.so.${pkgver}
+  install -Dm755 examples/ExampleBrowser/libBulletExampleBrowserLib.so.${pkgver} 
+${pkgdir}/usr/lib/libBulletExampleBrowserLib.so.${pkgver}
+  install -Dm755 examples/OpenGLWindow/libOpenGLWindow.so ${pkgdir}/usr/lib/libOpenGLWindow.so
+  install -Dm755 examples/ThirdPartyLibs/Gwen/libgwen.so ${pkgdir}/usr/lib/libgwen.so
+  install -Dm755 examples/ThirdPartyLibs/BussIK/libBussIK.so ${pkgdir}/usr/lib/libBussIK.so
+  install -Dm755 ${srcdir}/bullet3_examplebrowser.sh ${pkgdir}/usr/bin/bullet3_examplebrowser
+  install -Dm755 examples/ExampleBrowser/App_ExampleBrowser ${pkgdir}/opt/bullet/App_ExampleBrowser
+  cp -r data ${pkgdir}/opt/bullet/
+
+  # install license
+  install -Dm644 ../LICENSE.txt ${pkgdir}/usr/share/licenses/${pkgbase}/LICENSE
 }
 
 package_bullet-doc() {
-  pkgdesc="Documentation for bullet (includes examples and the example browser)"
-  depends=(glu)
+  pkgdesc="Documentation for bullet"
+  depends=()
 
-  cd $_pkgbase-$pkgver/build
-  install -Dm755 examples/ExampleBrowser/App_ExampleBrowser ${pkgdir}/usr/bin/bullet_examplebrowser
-  mkdir -p $pkgdir/usr/lib
-  find examples/ -name '*.so' -exec cp {} $pkgdir/usr/lib/ \;
-  mkdir -p $pkgdir/usr/share/doc/$pkgbase/
-  cp ../docs/*.pdf $pkgdir/usr/share/doc/$pkgbase/
-  cp -r ../html ${pkgdir}/usr/share/doc/bullet/html
-  install -Dm644 ../LICENSE.txt ${pkgdir}/usr/share/licenses/${pkgname}/LICENSE
+  cd bullet3-${pkgver}
+
+  # install docs
+  install -Dm644 docs/GPU_rigidbody_using_OpenCL.pdf ${pkgdir}/usr/share/doc/bullet/GPU_rigidbody_using_OpenCL.pdf
+  install -Dm644 docs/Bullet_User_Manual.pdf ${pkgdir}/usr/share/doc/bullet/Bullet_User_Manual.pdf
+  install -Dm644 docs/BulletQuickstart.pdf ${pkgdir}/usr/share/doc/bullet/BulletQuickstart.pdf
+  cp -r html ${pkgdir}/usr/share/doc/bullet/html
 }
