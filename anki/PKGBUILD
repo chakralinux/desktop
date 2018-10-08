@@ -1,44 +1,28 @@
 pkgname=anki
-pkgver=2.0.52
+pkgver=2.1.5
 pkgrel=1
-pkgdesc='Helps you remember facts (like words/phrases in a foreign language) efficiently.'
-url='https://apps.ankiweb.net/'
-license=('GPL3')
+pkgdesc="Helps you remember facts (like words/phrases in a foreign language) efficiently"
+url="https://ankisrs.net/"
+license=('AGPL3')
 arch=('x86_64')
 categories=('utils')
-install='anki.install'
-depends=('python2-beautifulsoup3' 'python2-pyqt4' 'python-pysqlite' 'python2-simplejson' 'python2-sqlalchemy')
-optdepends=('python2-matplotlib: show graphs.'
-	    'sox: audio recording.'
-	    'python2-pyaudio: audio recording.')
-source=("https://apps.ankiweb.net/downloads/current/anki-$pkgver-source.tgz")
-sha256sums=('d4d8c0dd473b512faa63e167d7bb89592530699d2365f1d3a737a733efeb5e7a')
+depends=('qt5-webengine' 'python3-beautifulsoup4' 'python3-pyaudio' 'python3-pyqt5' 'python3-requests'
+         'python3-send2trash' 'python3-decorator' 'python3-markdown' 'desktop-file-utils')
+optdepends=('lame: record sound'
+            'mplayer: play sound')
+source=(https://apps.ankiweb.net/downloads/current/anki-$pkgver-linux-amd64.tar.bz2
+        makefile-fix.patch)
+sha256sums=('3ba7961dd009ef4e9f8d425481592ccd0629b358bdcec78c1305431645eeb1cf'
+            '4dd1c4c93fc50cfd6d0c52c4aae24bea23554840a3fd1b46dcb47305ee618668')
 
 prepare() {
-  cd $pkgname-$pkgver
-  sed -i 's|#!/usr/bin/env python|#!/usr/bin/env python2|' runanki
-  rm -f anki.bat
-  
-  # Desktop integration. KDE needs Qt in Categories
-  desktop-file-install --dir $pkgdir/usr/share/applications \
-                       --add-category='Qt' \
-                       $pkgname.desktop
-  
-  sed s/TryExec=anki/TryExec=runanki/ -i anki.desktop
-  sed s/Exec=anki/Exec=runanki/ -i anki.desktop
+  cd anki-$pkgver-linux-amd64
+
+  patch -p1 <"$srcdir"/makefile-fix.patch
 }
 
 package() {
-  cd $pkgname-$pkgver
+  cd anki-$pkgver-linux-amd64
 
-  install -d $pkgdir/usr/{bin,share/{anki,pixmaps,applications,man/man1}}
-  
-  mv runanki $pkgdir/usr/bin/runanki
-  mv anki.xpm $pkgdir/usr/share/pixmaps/anki.xpm
-  mv anki.png $pkgdir/usr/share/pixmaps/anki.png
-  mv anki.desktop $pkgdir/usr/share/applications/anki.desktop
-  mv anki.1 $pkgdir/usr/share/man/man1/anki.1
-  
-  cp -av * $pkgdir/usr/share/anki/
-
+  make DESTDIR="$pkgdir" PREFIX=/usr install
 }
