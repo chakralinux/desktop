@@ -1,0 +1,26 @@
+# Contributions from Arch:
+# Maintainer: Maxime Gauduin <alucryd@archlinux.org>
+# Contributor: Tatsuyuki Ishi <ishitatsuyuki@gmail.com>
+
+pkgname=python3-arrow
+pkgver=0.12.1
+pkgrel=1
+pkgdesc='Better dates and times for Python'
+arch=('any')
+url="https://arrow.readthedocs.io"
+license=('Apache')
+depends=('python3' 'python3-dateutil')
+makedepends=('python3-dateutil' 'python3-setuptools')
+source=("https://files.pythonhosted.org/packages/source/a/arrow/arrow-${pkgver}.tar.gz")
+sha256sums=('a558d3b7b6ce7ffc74206a86c147052de23d3d4ef0e17c210dd478c53575c4cd')
+
+build() {
+  cd arrow-${pkgver}
+  python3 setup.py build
+}
+
+package() {
+  cd arrow-${pkgver}
+
+  python3 setup.py install --skip-build --root="${pkgdir}" --optimize='1' --skip-build
+}
