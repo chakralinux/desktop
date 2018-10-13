@@ -1,35 +1,29 @@
 # Contributions from AUR: http://aur.archlinux.org/packages.php?ID=4277
 
 pkgname=rkward
-pkgver=0.6.5
+pkgver=0.7.0b
 pkgrel=1
-pkgdesc="Easy to use transparent frontend to R for KDE4"
+pkgdesc="An easy to use and easily extensible IDE/GUI for R"
 arch=('x86_64')
-url="http://rkward.sourceforge.net/"
+url="https://rkward.kde.org/"
 license=('GPL')
-depends=('kde-baseapps-katepart' 'kde-runtime' 'r' 'docbook-xsl' 'docbook-xml')
+depends=('kdewebkit' 'ktexteditor' 'r')
+makedepends=('kdoctools' 'extra-cmake-modules')
 categories=('programming')
-screenshot="http://sourceforge.net/apps/mediawiki/rkward/nfs/project/r/rk/rkward/0/0a/RKWard_060_450.png"
-makedepends=('cmake' 'automoc4' 'icu')
-source=(http://download.kde.org/stable/${pkgname}/${pkgver}/src/${pkgname}-${pkgver}.tar.gz)
-sha256sums=('3fc5acb48ce717dee8fbbe32973ea4c61f30c335bd18a75471142b19b436a032')
+source=("https://download.kde.org/stable/${pkgname}/${pkgver//b/}/src/${pkgname}-${pkgver}.tar.gz")
+sha256sums=('556e7bc8d3b8383e60c20c630f899075a6d39a04d29e56f4278191bb6ff853f4')
 	 
 build() {
-	cd "${srcdir}/${pkgname}-${pkgver}"
-	mkdir -p build && cd build
-	cmake -DCMAKE_INSTALL_PREFIX=`kde4-config --prefix` \
-	      -DCMAKE_BUILD_TYPE=Release \
-	      -DR_LIBDIR="/usr/lib/R/library" \
-	      ..
-	make 
+  cd "${srcdir}/${pkgname}-${pkgver}"
+  cmake \
+    -DCMAKE_INSTALL_PREFIX=/usr \
+    -DCMAKE_INSTALL_LIBDIR=lib \
+    -DR_LIBDIR=/usr/lib/R/library
+  make
 }
 
 package(){
-	cd "${srcdir}/${pkgname}-${pkgver}/build"
-	make DESTDIR="$pkgdir" install
-	
-	# Some cleanup
-	rm -vf "${pkgdir}/usr/lib/R/library/R.css"
-	rm -vf "${pkgdir}/usr/share/apps/katepart/syntax/r.xml"
-	rm -vf "${pkgdir}/usr/share/doc/kde/html/en/rkward/common"	
+  cd "${srcdir}/${pkgname}-${pkgver}"
+  make DESTDIR="$pkgdir" install
+  rm $pkgdir/usr/share/org.kde.syntax-highlighting/syntax/r.xml
 }
