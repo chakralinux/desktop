@@ -1,28 +1,14 @@
 pkgname=libopenshot
-pkgver=0.2.0
-pkgrel=2
+pkgver=0.2.2
+pkgrel=1
 pkgdesc="A high quality, open-source video editing, animation, and playback library for C++, Python, and Ruby."
 arch=('x86_64')
 url="https://www.openshot.org/"
 license=('LGPL3')
 depends=('imagemagick' 'ffmpeg' 'libx264' 'libopenshot-audio' 'python3' 'qt5-base' 'qt5-multimedia' 'zeromq')
 makedepends=('cmake' 'doxygen' 'swig' 'unittestpp')
-source=("https://github.com/OpenShot/${pkgname}/archive/v${pkgver}.tar.gz"
-        ffmpeg-4.0.patch)
-sha256sums=('f6f79c18023253720698c3049a0cd4b5783354cfbc6345e736e15268be6e297d'
-            'bfc6aa2752a053774b0c46d0339b41df68f8e63765f1185f0df596ecbd3633a8')
-
-prepare() {
-	cd ${pkgname}-${pkgver}
-
-	# patches for ffmpeg 4.0
-	# TODO https://github.com/OpenShot/libopenshot/issues/87
-	patch -p1 -i "$srcdir/ffmpeg-4.0.patch"
-	sed -i \
-		-e 's#FF_INPUT_BUFFER_PADDING_SIZE#AV_INPUT_BUFFER_PADDING_SIZE#g' \
-		-e 's#CODEC_FLAG_GLOBAL_HEADER#AV_CODEC_FLAG_GLOBAL_HEADER#g' \
-		src/FFmpegWriter.cpp src/FFmpegReader.cpp
-}
+source=("https://github.com/OpenShot/${pkgname}/archive/v${pkgver}.tar.gz")
+sha256sums=('3f92d42b9fdb66e62429a076678b1feae7de06751efc4217347a78282e86f0cc')
 
 build() {
 	cd ${pkgname}-${pkgver}
