@@ -1,21 +1,20 @@
 source ../kdeapps.conf
 
 pkgname=kdeconnect
-pkgver=1.3.0
+pkgver=1.3.2
 pkgrel=1
 epoch=1
 pkgdesc='Adds communication between KDE and your smartphone'
 arch=(x86_64)
 url='https://community.kde.org/KDEConnect'
-license=(GPL2)
-depends=(kio kcmutils qca-qt5 libfakekey hicolor-icon-theme kwayland telepathy-qt5)
-makedepends=(extra-cmake-modules python3 kdoctools qt5-declarative)
+license=(GPL)
+depends=(hicolor-icon-theme kcmutils kwayland libfakekey qca-qt5)
+makedepends=(extra-cmake-modules kdoctools python3 qt5-declarative)
 optdepends=('sshfs: remote filesystem browser'
+            'kde-cli-tools: configuration UI'
             'qt5-declarative: QML bindings')
-install=$pkgname.install
-screenshot=('http://albertvaka.files.wordpress.com/2013/08/kcm.png')
 source=("https://download.kde.org/stable/$pkgname/$pkgver/src/$pkgname-kde-$pkgver.tar.xz")
-sha1sums=('7bb8fa92cebb5b53c2b5f5fedb8fb1454eb654f6')
+sha256sums=('85878e483280f86ef86aa3f6f3a3369abc2ecb6c9ce1875d0f0ad685ec99e421')
 
 prepare() {
   mkdir -p build
@@ -23,7 +22,11 @@ prepare() {
 
 build() {
   cd build
-  cmake_kf5 ../kdeconnect-kde-$pkgver
+  cmake ../$pkgname-kde-$pkgver \
+    -DCMAKE_INSTALL_PREFIX=/usr \
+    -DBUILD_TESTING=OFF \
+    -DCMAKE_INSTALL_LIBDIR=lib \
+    -DCMAKE_INSTALL_LIBEXECDIR=lib
   make
 }
 
