@@ -1,36 +1,39 @@
 pkgname=rekonq
-pkgver=2.4.2
-pkgrel=6
+pkgver=2.4.2.d8806512
+pkgrel=1
 pkgdesc='A WebKit based web browser for KDE'
 arch=('x86_64')
 url='http://rekonq.kde.org/'
 license=('GPL')
-depends=('kdelibs' 'qca-ossl')
-makedepends=('cmake' 'automoc4' 'docbook-xsl')
+depends=('kcmutils' 'kdewebkit' 'kinit')
+makedepends=('extra-cmake-modules' 'git')
 categories=('network')
 screenshot=('http://rekonq.kde.org/sites/rekonq.kde.org/files/images/Rekonq-0.6.0.png')
-install=${pkgname}.install
 options=("debug")
-source=("http://downloads.sourceforge.net/${pkgname}/${pkgname}-${pkgver}.tar.xz"
+source=("git://anongit.kde.org/rekonq.git#branch=frameworks"
        'background.png'
        'background.diff'
        'searchengine.diff')
-md5sums=('5d2a5ce7817813f68144203c14419669'
+md5sums=('SKIP'
          'cd493df91e34030a8195eaf8b6d68140'
          '71851e61d3282c6b5d1b20ccdc3ab6e3'
          '7ab9dc2e4397a66c7a64e08265171996')
 
-build(){
-  cd ${srcdir}/${pkgname}-${pkgver}  
+prepare() {
+  cd ${srcdir}/${pkgname}
   # Chakra theme:
   patch -p1 -i "${srcdir}/background.diff"
-  
+
   cd ${srcdir}
-  mkdir -p build 
+  mkdir -p build
+}
+
+build(){
   cd build
-  cmake ../${pkgname}-${pkgver} \
-    -DCMAKE_BUILD_TYPE=RelWithDebInfo \
-    -DCMAKE_INSTALL_PREFIX=/usr
+  cmake ../${pkgname} \
+    -DCMAKE_INSTALL_PREFIX=/usr \
+    -DCMAKE_BUILD_TYPE=Release \
+    -DLIB_INSTALL_DIR=lib
   make 
 }
 
@@ -38,6 +41,6 @@ package() {
   cd ${srcdir}/build
   
   make DESTDIR=${pkgdir} install
-  rm ${pkgdir}/usr/share/apps/rekonq/pics/background.png
-  #install -m 644 -p ${srcdir}/background.png ${pkgdir}/usr/share/apps/rekonq/pics/background.png
+  rm ${pkgdir}/usr/share/rekonq/pics/background.png
+  install -m 644 -p ${srcdir}/background.png ${pkgdir}/usr/share/rekonq/pics/background.png
 }
