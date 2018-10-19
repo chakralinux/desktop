@@ -1,28 +1,34 @@
 pkgname=knemo
-pkgver=0.7.7
+pkgver=0.7.7.f3afe2e
 pkgrel=1
 pkgdesc="The KDE Network Monitor"
-arch=('i686' 'x86_64')
+arch=('x86_64')
 url="http://www.kde-apps.org/content/show.php?content=12956"
 license=('GPL')
-depends=('kde-runtime' 'wireless_tools' 'iw' 'networkmanager' 'libnl' 'libksysguard4')
-makedepends=('cmake' 'automoc4' 'kde-workspace')
-install=${pkgname}.install
+depends=('kdelibs4support' 'libksysguard' 'knotifyconfig' 'wireless_tools' 'iw' 'plasma-framework' 'hicolor-icon-theme')
+makedepends=('extra-cmake-modules' 'kcmutils' 'plasma-framework' 'kdoctools' 'git' 'kdesignerplugin')
 categories=('network')
-options=('libtool')
-source=(http://kde-apps.org/CONTENT/content-files/12956-knemo-0.7.7.tar.xz)
-sha512sums=('4a5214c2f0146aae60bbcf4bb09230823f13c53eab13489b67fb7eab6c19cac80a036b3e920bf2d99430f98144fae935448915953de785126bc05fcd4ed93065')
+_commit=f3afe2e4b6f091f21a64905965abafd2ef46826d  # frameworks
+source=("git://git.kde.org/knemo.git#commit=$_commit" knemo-gcc6.patch)
+sha256sums=('SKIP'
+            '5da88c3c60bf7ab924c85ee2c1159a12d4c376ad726eab784972abc36295a4fc')
+
+prepare() {
+  mkdir build
+  cd knemo
+# Fix build with GCC 6
+  patch -p1 -i ../knemo-gcc6.patch
+}
 
 build() {
-  cd ${srcdir}
-  mkdir build
   cd build
-  cmake ../${pkgname}-${pkgver} \
-    -DCMAKE_BUILD_TYPE=Release \
-    -DCMAKE_SKIP_RPATH=ON \
-    -DCMAKE_INSTALL_PREFIX=/usr
-  make
 
+  cmake ../${pkgname} \
+    -DCMAKE_BUILD_TYPE=Release \
+    -DCMAKE_INSTALL_PREFIX=/usr \
+    -DCMAKE_INSTALL_LIBDIR=lib \
+    -DBUILD_TESTING=OFF
+  make
 }
 
 package() {
