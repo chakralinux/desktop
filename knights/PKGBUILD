@@ -1,35 +1,35 @@
-#
-# Games Packages for Chakra, part of chakra-project.org
-#
-# Maintainer: Adrián Chaves Fernández (Gallaecio) <adriyetichav@gmail.com>
-
 pkgname=knights
-_pkgname=Knights
-pkgver=2.5.0
-pkgrel=5
-pkgdesc="Chess board with XBoard protocol support."
-arch=('i686' 'x86_64')
-url="http://kde-apps.org/content/show.php/Knights?content=122046"
-license=('GPL2')
-depends=('kdegames-libkdegames' 'gnuchess' 'openal')
-makedepends=('automoc4' 'cmake' 'docbook-xsl')
-categories=('games')
-changelog=ChangeLog
-source=("http://dl.dropbox.com/u/2888238/$_pkgname/$pkgname-$pkgver.tar.bz2")
-md5sums=('58237998aeee8b6414f6e6f92d070395')
+pkgver=2.5.0+191+g562ff74
+pkgrel=1
+pkgdesc="Chess board by KDE with XBoard protocol support"
+arch=(x86_64)
+url="https://www.kde.org/applications/games/knights/"
+license=(GPL)
+depends=(libkdegames kplotting plasma-framework hicolor-icon-theme)
+optdepends=('gnuchess: for playing against the computer')
+makedepends=(extra-cmake-modules kdoctools git)
+source=("git://git.kde.org/knights.git")
+sha256sums=('SKIP')
 
-build()
-{
-  cd $srcdir/$pkgname-$pkgver
-  mkdir build && cd build
-  cmake \
+pkgver() {
+  cd $pkgname
+  git describe --tags | sed -e 's/-/+/g' -e 's/v//'
+}
+
+prepare() {
+  mkdir -p build
+}
+
+build() {
+  cd build
+  cmake ../$pkgname \
     -DCMAKE_INSTALL_PREFIX=/usr \
-    ..
+    -DCMAKE_BUILD_TYPE=Release \
+    -DBUILD_TESTING=OFF
   make
 }
- 
-package()
-{
-  cd $srcdir/$pkgname-$pkgver/build
-  make DESTDIR=$pkgdir install
+
+package() {
+  cd build
+  make DESTDIR="$pkgdir" install
 }
