@@ -1,34 +1,33 @@
-
-# Platform Packages for Chakra, part of chakra-project.org
-
-# Maintainer (i686): Phil Miller <philm@chakra-project[dog]org>
-# Maintainer (x86_64): Manuel Tortosa <manutortosa@chakra-project@org>
-
 pkgname=kio-gopher
-pkgver=0.1.4
-_kdever=4.10.0
+pkgver=0.1.99
 pkgrel=1
 pkgdesc="A Kioslave for the Gopher protocol"
-arch=('i686' 'x86_64')
-url="http://kgopher.berlios.de"
+arch=('x86_64')
+url="https://userbase.kde.org/Kio_gopher"
 license=('GPL')
-depends=('kdelibs')
-makedepends=('pkgconfig' 'cmake' 'automoc4')
+depends=('plasma-framework')
+makedepends=('cmake' 'extra-cmake-modules' 'kdoctools')
 options=('docs')
 replaces=('kio_gopher')
 provides=('kio_gopher')
 conflicts=('kio_gopher')
-source=("http://download.kde.org/download.php?url=stable/extragear/${pkgname}-${pkgver}.tar.bz2")
+source=("https://download.kde.org/unstable/kio-gopher/${pkgname}-${pkgver}.tar.xz")
+md5sums=('fb0afc1e3430158962c4d843bae385f5')
 
-md5sums=('401e7a22f35f9528512f36f6e2060d21')
+prepare() {
+        cd $srcdir
+        mkdir -p build
+}
 
 build() {
-	cd $srcdir
-	mkdir -p build
 	cd build
 	cmake ../${pkgname}-${pkgver} \
 	      -DCMAKE_BUILD_TYPE=Release \
 	      -DCMAKE_INSTALL_PREFIX=/usr
 	make
+}
+
+package() {
+	cd build
 	make DESTDIR=$pkgdir install
 }
