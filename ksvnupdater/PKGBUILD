@@ -1,27 +1,27 @@
 pkgname=ksvnupdater
-pkgver=1.4.2
+pkgver=2.0.0
 pkgrel=1
 pkgdesc="ksvnupdater is a utility oriented to KDE translation teams."
 url="http://www.eloihr.net/ksvnupdater"
 license=('GPL')
 arch=('x86_64')
-depends=('kde-runtime' 'pology')
-makedepends=('cmake' 'automoc4' 'docbook-xsl')
+depends=('kfilemetadata' 'kio' 'knotifications' 'kitemviews' 'kiconthemes' 'karchive' 'qt5-base')
+makedepends=('extra-cmake-modules' 'kdoctools')
+optdepends=('lokalize' 'pology' 'kdiff3' 'gettext' 'openssh' 'which')
 install=${pkgname}.install
 screenshot=('http://www.eloihr.net/ksvnupdater/img/ksvnupdater_update.png')
-source=(http://www.eloihr.net/ksvnupdater/files/ksvnupdater-$pkgver.tar.bz2)
-sha512sums=('76703c99b8061e85421a32b22c15717125674891a025b300d2b33a5eeab0f8cbb962501e7b0e60658cf508ddeeeb19f3316038ffb7037c8267ae40a3ff9acced')
+source=(http://www.eloihr.net/$pkgname/files/$pkgname-$pkgver.tar.bz2)
+sha512sums=('f13493183751c880da9640df8ba978ab00e6ac858072094482d3ce858159d8d7c44c02964f850e2418cad9b3031c2d4c7d0d9a43b80e0244ce7e64687e8fe7d0')
 
 build() {
-  cd $srcdir
-
+  cd $pkgname-$pkgver
   mkdir build && cd build
-
-  cmake -DCMAKE_INSTALL_PREFIX=/usr $srcdir/$pkgname-$pkgver
+  cmake -DCMAKE_INSTALL_PREFIX=/usr ..
+  make clean
   make
 }
 
 package() {
-  cd $srcdir/build
+  cd $pkgname-$pkgver/build
   make DESTDIR=$pkgdir install
 }
