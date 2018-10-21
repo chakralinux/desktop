@@ -1,16 +1,16 @@
 pkgname=unetbootin
-pkgver=657
+pkgver=661
 pkgrel=1
 pkgdesc="Allows the creation of bootable Live USB drives."
 url="http://unetbootin.sourceforge.net/"
 license=('GPL3')
 arch=('x86_64')
-depends=('kde-runtime' 'libpng' 'mtools' 'p7zip' 'qt' 'syslinux') 
+depends=('libpng' 'mtools' 'p7zip' 'qt' 'syslinux' 'kdesu') 
 groups=('system')
 screenshot=('http://sourceforge.net/dbimage.php?id=300347')
-# kde-runtime is added as dependency so kdesu is used to ask for password.
-source=("https://downloads.sourceforge.net/$pkgname/$pkgname-source-$pkgver.tar.gz")
-md5sums=('50ad69c1d703e635d30c3aa4305093f7')
+# kdesu is added as dependency so kdesu is used to ask for password.
+source=("https://github.com/$pkgname/$pkgname/releases/download/$pkgver/$pkgname-source-$pkgver.tar.gz")
+md5sums=('eafb57095669add5d3eef49193bcb5a9')
 
 build() {
   lupdate $pkgname.pro
