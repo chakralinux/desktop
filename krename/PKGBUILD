@@ -1,37 +1,33 @@
+# Contributions from ArchLinux https://git.archlinux.org/svntogit/community.git/plain/trunk/PKGBUILD?h=packages/krename
+
 pkgname=krename
-pkgver=4.0.9
-pkgrel=7
-pkgdesc="A very powerfull batch file renamer for KDE"
-arch=('x86_64')
+pkgver=5.0.0
+pkgrel=1
+pkgdesc="A very powerful batch file renamer"
+arch=(x86_64)
 url="http://www.krename.net"
-license=('GPL')
-depends=('exiv2' 'kde-runtime' 'taglib' 'xdg-utils')
-makedepends=('cmake' 'automoc4')
-options=('libtool')
-categories=('utils')
-install=$pkgname.install
-source=("http://sourceforge.net/projects/krename/files/KDE4%20krename-stable/$pkgver/$pkgname-$pkgver.tar.bz2"
-        krename-gcc6.patch)
-md5sums=('21b2daeee6d81155bd3c0fa2bc1b9a63'
-         'ac1fe8bc93a7524a21d28edef168e888')
+license=(GPL)
+depends=('kio' 'kjs' 'exiv2' 'podofo' 'taglib' 'hicolor-icon-theme')
+makedepends=('extra-cmake-modules')
+source=(https://download.kde.org/stable/$pkgname/$pkgver/src/$pkgname-$pkgver.tar.xz{,.sig})
+sha256sums=('0a61761853787fd46b35f3a733cf87cde00de5df631728332a64c38c670bd28c'
+            'SKIP')
+validpgpkeys=(D81C0CB38EB725EF6691C385BB463350D6EF31EF) # Heiko Becker <heirecka@exherbo.org>
 
 prepare() {
-  cd $pkgname-$pkgver
-  # Fix build with GCC 6
-  patch -p1 -i ../krename-gcc6.patch
+  mkdir -p build
 }
 
 build() {
-  cd $pkgname-$pkgver
-  mkdir build
   cd build
-  cmake .. -DCMAKE_INSTALL_PREFIX=/usr \
-    -DCMAKE_BUILD_TYPE=Release -DCMAKE_CXX_FLAGS="-I/usr/include/freetype2"
-  sed -i 's|/share/locale|/share/locale/kde4|' po/cmake_install.cmake
+  cmake ../$pkgname-$pkgver \
+    -DCMAKE_INSTALL_PREFIX=/usr \
+    -DCMAKE_BUILD_TYPE=Release \
+    -DBUILD_TESTING=OFF
   make
 }
 
 package() {
-  cd $pkgname-$pkgver/build
-  make DESTDIR=$pkgdir install
+  cd build
+  make DESTDIR="$pkgdir" install
 }
