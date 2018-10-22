@@ -1,25 +1,21 @@
-#
-# Games Packages for Chakra, part of chakra-project.org
-#
-# Maintainer: Adrián Chaves Fernández (Gallaecio) <adriyetichaves@gmail.com>
 
 pkgname=openscenegraph
 _pkgname=OpenSceneGraph
-pkgver=3.4.0
+pkgver=3.6.3
 pkgrel=1
 pkgdesc="FOSS high performance real-time graphics toolkit."
 arch=('x86_64')
 license=('custom:OSGPL')
 url="http://www.openscenegraph.org"
 depends=('curl' 'giflib' 'jasper' 'librsvg' 'pth' 'xine-lib')
-makedepends=('cmake' 'libvncserver' 'qt' 'ffmpeg' 'mesa' 'gdal')
-optdepends=('libvncserver' 'gdal' 'openexr' 'poppler-glib' 'qt')
+makedepends=('cmake' 'libvncserver' 'qt5-base' 'ffmpeg' 'mesa' 'gdal')
+optdepends=('libvncserver' 'gdal' 'openexr' 'poppler-glib' 'qt5-base')
 categories=('games')
-source=(http://trac.openscenegraph.org/downloads/developer_releases/${_pkgname}-${pkgver}.zip)
-md5sums=('a5e762c64373a46932e444f6f7332496')
+source=("https://github.com/$pkgname/$_pkgname/archive/$_pkgname-$pkgver.tar.gz")
+md5sums=('3bc355c7dcd3f9eef84d4dc82dd0b19d')
 
 build() {
-  cd $srcdir/$_pkgname-$pkgver
+  cd $_pkgname-$_pkgname-$pkgver
 
   mkdir -p build && cd build
  
@@ -33,7 +29,7 @@ build() {
 }
 
 package() {
-  cd $srcdir/$_pkgname-$pkgver/build
+  cd $_pkgname-$_pkgname-$pkgver/build
   make DESTDIR=$pkgdir install
 
   # Fix installation directory.
