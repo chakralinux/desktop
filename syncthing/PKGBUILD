@@ -22,6 +22,7 @@ sha256sums=('10bf5de6f5f01dc605667185ac0b485548ae9088abaa8401fc0f3a2528b2f09e'
 prepare() {
   mkdir -p "src/github.com/syncthing"
   mv "${pkgbase}" "src/github.com/syncthing/${pkgbase}"
+  sed '/timeout/ s/120s/5m/' -i "src/github.com/syncthing/${pkgbase}/build.go"
 }
 
 build() {
