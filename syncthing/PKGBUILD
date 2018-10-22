@@ -1,56 +1,86 @@
-pkgname=syncthing
-pkgver=0.14.28
+pkgname=('syncthing' 'syncthing-relaysrv')
+pkgver=0.14.51
 pkgrel=1
-pkgdesc="Open Source Continuous Replication / Cluster Synchronization Thing"
 url="http://syncthing.net/"
 license=('MPLv2')
 arch=('x86_64')
 screenshot='http://syncthing.net/screenshot.jpg'
 depends=('glibc')
-makedepends=('go' 'inetutils' 'sed')
-source=("$pkgname-$pkgver::https://github.com/syncthing/syncthing/releases/download/v${pkgver}/syncthing-source-v${pkgver}.tar.gz"
-        "syncthing.1"
-        "syncthing.desktop"
-        "syncthing.svg")
-sha256sums=('dcf4bfcee979a2f5a0b2f971e26c9ba142ab125a1bdfaa68ddc7eb42cd23222d'
-            '47913f9d2df6d1e240cbc7ecf04be7fb597ec6382052960a237d1230436b5932'
-            'd240ae741cf30f4e6559d16a50c62da928557a0c8567600875a770d15e53daf4'
-            '483bbf0b23732b3b0dfb946be386e900ee7b6bfc14faede1fe4b74df6f2df0c6')
+makedepends=('git' 'go' 'inetutils')
+source=(https://github.com/syncthing/syncthing/releases/download/v${pkgver}/syncthing-source-v${pkgver}.tar.gz{,.asc}
+        syncthing-relaysrv.sysusers
+        syncthing-relaysrv.tmpfiles
+        syncthing-relaysrv.service)
+validpgpkeys=('37C84554E7E0A261E4F76E1ED26E6ED000654A3E') # Syncthing Release Management
+sha256sums=('10bf5de6f5f01dc605667185ac0b485548ae9088abaa8401fc0f3a2528b2f09e'
+            'SKIP'
+            '6ab96a5949e223d315d49663734ad27b70c72469c691a61ac198cb7794cb5eaa'
+            'f899998985f2d374af57f17ef6362c37a305467858195b74d1c1def71d97273f'
+            '7c2fbc9608d81f8080f8a9102b867a52a050b61f426a0c182ccc1cb5815e4981')
 
-          
-install=${pkgname}.install
 
 prepare() {
-    cd "${srcdir}"
-    mkdir -p "src/github.com/syncthing"
-    mv "${pkgname}" "src/github.com/syncthing/${pkgname}"
+  mkdir -p "src/github.com/syncthing"
+  mv "${pkgbase}" "src/github.com/syncthing/${pkgbase}"
 }
 
 build() {
-    export GOPATH="${srcdir}"
-    cd "${srcdir}/src/github.com/syncthing/${pkgname}"
-    go run build.go -no-upgrade build
+  export GOPATH="${srcdir}" GOROOT_FINAL="/usr/bin"
+  cd "${srcdir}/src/github.com/syncthing/${pkgbase}"
+  go run build.go -no-upgrade -version v${pkgver} build
+  go run build.go -no-upgrade -version v${pkgver} build strelaysrv
 }
 
 check() {
-  export GOPATH="${srcdir}"
-  cd "${srcdir}/src/github.com/syncthing/${pkgname}"
-  #go run build.go -no-upgrade test
+  export GOPATH="${srcdir}" GOROOT_FINAL="/usr/bin"
+  cd "${srcdir}/src/github.com/syncthing/${pkgbase}"
+  go run build.go -no-upgrade test
 }
 
-package() {
-    cd "${srcdir}/src/github.com/syncthing/${pkgname}"
-    install -D -m 755 ${pkgname} "${pkgdir}/usr/bin/${pkgname}"
-    install -D -m 644 README.md "${pkgdir}/usr/share/doc/${pkgname}/README.md"
-    install -D -m 644 "etc/linux-systemd/system/${pkgname}@.service" "${pkgdir}/usr/lib/systemd/system/${pkgname}@.service"
-    install -D -m 644 "etc/linux-systemd/user/${pkgname}.service" "${pkgdir}/usr/lib/systemd/user/${pkgname}.service"
-    install -D -m 644 "${srcdir}/${pkgname}.1" "${pkgdir}/usr/share/man/man1/${pkgname}.1"
-    
-    # license
-    install -Dm644 LICENSE "${pkgdir}"/usr/share/licenses/${pkgname}/LICENSE
-    
-    # Desktop icon
-    install -Dm644 "${srcdir}/${pkgname}.desktop" "$pkgdir/usr/share/applications/${pkgname}.desktop"
-    install -Dm644 "../../../../syncthing.svg" "$pkgdir/usr/share/pixmaps/${pkgname}.svg"
+package_syncthing() {
+  pkgdesc="Open Source Continuous Replication / Cluster Synchronization Thing"
+  install=$pkgname.install
+
+  cd "${srcdir}/src/github.com/syncthing/${pkgbase}"
+  install -Dm755 ${pkgname} "${pkgdir}/usr/bin/${pkgname}"
+  install -Dm644 README.md "${pkgdir}/usr/share/doc/${pkgname}/README.md"
+  install -Dm644 "etc/linux-systemd/system/${pkgname}-resume.service" \
+    "${pkgdir}/usr/lib/systemd/system/${pkgname}-resume.service"
+  install -Dm644 "etc/linux-systemd/system/${pkgname}@.service" \
+    "${pkgdir}/usr/lib/systemd/system/${pkgname}@.service"
+  install -Dm644 "etc/linux-systemd/user/${pkgname}.service" \
+    "${pkgdir}/usr/lib/systemd/user/${pkgname}.service"
+
+  # license
+  install -Dm644 LICENSE "${pkgdir}"/usr/share/licenses/${pkgname}/LICENSE
+
+  # ufw preset
+  install -Dm644 etc/firewall-ufw/syncthing \
+    "$pkgdir/etc/ufw/applications.d/ufw-syncthing"
+
+  # man pages
+  cd "${srcdir}/src/github.com/syncthing/${pkgname}/man"
+  for file in $(find . -name '*.1' -print); do
+    install -Dm644 $file "${pkgdir}"/usr/share/man/man1/$file
+  done
+  for file in $(find . -name '*.5' -print); do
+    install -Dm644 $file "${pkgdir}"/usr/share/man/man5/$file
+  done
+  for file in $(find . -name '*.7' -print); do
+    install -Dm644 $file "${pkgdir}"/usr/share/man/man7/$file
+  done
 }
 
+package_syncthing-relaysrv() {
+  pkgdesc='Relay server for Syncthing'
+
+  cd "${srcdir}/src/github.com/syncthing/${pkgbase}"
+  install -Dm755 strelaysrv "${pkgdir}"/usr/bin/${pkgname}
+
+  install -Dm644 "${srcdir}"/${pkgname}.service \
+    "${pkgdir}"/usr/lib/systemd/system/${pkgname}.service
+  install -Dm644 "${srcdir}/${pkgname}.tmpfiles" \
+    "$pkgdir/usr/lib/tmpfiles.d/${pkgname}.conf"
+  install -Dm644 "${srcdir}/${pkgname}.sysusers" \
+    "${pkgdir}/usr/lib/sysusers.d/${pkgname}.conf"
+}
