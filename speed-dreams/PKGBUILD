@@ -1,8 +1,8 @@
 pkgbase=speed-dreams
 pkgname=('speed-dreams' 'speed-dreams-data')
-pkgver=2.2.1
-_pkgver=2.2.1-r6404
-pkgrel=1
+pkgver=2.2.2
+_pkgver=$pkgver-rc2-r6527
+pkgrel=2
 pkgdesc="A racing simulator with rich graphics and physics"
 arch=('x86_64')
 url="http://speed-dreams.sourceforge.net/"
@@ -21,13 +21,15 @@ source=("http://downloads.sourceforge.net/sourceforge/${pkgname}/${pkgname}-src-
         "http://downloads.sourceforge.net/sourceforge/${pkgname}/${pkgname}-src-wip-cars-and-tracks-${_pkgver}.tar.xz"
         "http://downloads.sourceforge.net/sourceforge/${pkgname}/${pkgname}-src-hq-cars-and-tracks-${_pkgver}.tar.xz"
         "http://downloads.sourceforge.net/sourceforge/${pkgname}/${pkgname}-src-more-hq-cars-and-tracks-${_pkgver}.tar.xz"
-        "${pkgname}.desktop")
-md5sums=('a1a296ab737d5144f1f570f4cabc7937'
-         '0a9b1572d0660c60fa0553195578a36a'
-         '3413d9d5e2111cd9e87628df5818d2b4'
-         'e4efd3b16e53a54c23e606947739abe5'
-         'b6079ca11202595ac312a28262e793ee'
-         '634f8cb8f4f96686c8049c8a025e72d0')
+        "${pkgname}.desktop"
+        "osgvolume.patch")
+md5sums=('956bda0acbcb89eaa2ca742dbedc8941'
+         '5d55831ca9371f8a55cc5616f9612164'
+         'bc183b3e80c742bc249f630cb029920c'
+         'ed11647ad2d479dc4012ffd79375b995'
+         'd615eda2c443a2e5ce74cf45d5374062'
+         '634f8cb8f4f96686c8049c8a025e72d0'
+         'd8a34db622604400bb247acd8b68b837')
 
 prepare() {
   # extract these manually as bsdtar can't handle these
@@ -36,6 +38,7 @@ prepare() {
   tar xf "${pkgname}-src-wip-cars-and-tracks-${_pkgver}.tar.xz"
   tar xf "${pkgname}-src-hq-cars-and-tracks-${_pkgver}.tar.xz"
   tar xf "${pkgname}-src-more-hq-cars-and-tracks-${_pkgver}.tar.xz"
+  patch -Np1 <osgvolume.patch
 }
 
 build() {  

@@ -1,0 +1,30 @@
+--- src/src/modules/graphic/osggraph/Render/OsgRender.cpp	2018-02-24 03:43:40.000000000 +0100
++++ src/src/modules/graphic/osggraph/Render/OsgRender_patched.cpp	2018-10-23 14:33:11.711890849 +0200
+@@ -30,7 +30,6 @@
+ #include <osgViewer/Viewer>
+ #include <osgParticle/PrecipitationEffect>
+ #include <osgShadow/ShadowedScene>
+-#include <osgShadow/ShadowVolume>
+ #include <osgShadow/ShadowTexture>
+ #include <osgShadow/ShadowMap>
+ #include <osgShadow/SoftShadowMap>
+@@ -546,9 +545,6 @@
+     {
+         osg::DisplaySettings::instance()->setMinimumNumStencilBits(8);
+ 
+-        osg::ref_ptr<osgShadow::ShadowVolume> sv = new osgShadow::ShadowVolume;
+-        sv->setDynamicShadowVolumes(1);
+-        sv->setDrawMode(osgShadow::ShadowVolumeGeometry::GEOMETRY);
+ 
+         shadowRoot = new osgShadow::ShadowedScene;
+         shadowRoot->setReceivesShadowTraversalMask(rcvShadowMask);
+--- src/src/modules/graphic/osggraph/Render/OsgRender.cpp	2018-10-23 14:35:51.460381457 +0200
++++ src/src/modules/graphic/osggraph/Render/OsgRender_patched.cpp	2018-10-23 14:50:45.569855326 +0200
+@@ -549,7 +549,6 @@
+         shadowRoot = new osgShadow::ShadowedScene;
+         shadowRoot->setReceivesShadowTraversalMask(rcvShadowMask);
+         shadowRoot->setCastsShadowTraversalMask(castShadowMask);
+-        shadowRoot->setShadowTechnique((sv.get()));
+     }
+     else if (ShadowIndex == 6)
+     {
