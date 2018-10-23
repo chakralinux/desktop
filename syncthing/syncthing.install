@@ -1,9 +1,9 @@
-post_install() {
-cat << EOF
-  To start and/or enable syncthing execute the following,
-  replacing 'user' with your username.
+post_upgrade() {
+  if (( "$(vercmp $2 0.14.14-1)" < 0 )); then
+    cat << EOF
+  Syncing symlinks between v0.14.14 and previous versions will not work.
+  See https://github.com/syncthing/syncthing/releases/tag/v0.14.14 for details.
 
-    systemctl start syncthing@user
-    systemctl enable syncthing@user
 EOF
+  fi
 }
