@@ -6,17 +6,17 @@ _pkgver=${pkgver%.*}
 pkgdesc="An open-source, multi-platform flight simulator."
 url="https://home.flightgear.org/"
 arch=('x86_64')
-depends=('fltk' 'libxmu' 'libxi' 'openal' 'openscenegraph' 'zlib' 'subversion' 'libxrandr' 'glu')
-makedepends=('boost' 'cmake' 'mesa' 'sharutils' 'qt5-base' 'plib' 'freeglut' 'freealut' 'glew' 'qt5-declarative')
+depends=('libxmu' 'libxi' 'zlib' 'openscenegraph' 'subversion' 'libxrandr' 'glu' 'openal')
+makedepends=('boost' 'cmake' 'mesa' 'sharutils' 'plib' 'freeglut' 'freealut' 'glew' 'qt5-base' 'qt5-declarative')
 license=('GPL')
 screenshot="http://www.flightgear.org/wp-content/gallery/gallery-v2-6/737-300_egkk_hom.jpg"
 categories=('games')
-options=('!makeflags' '!strip')
-source=( #flightgear
+options=('makeflags' 'staticlibs' '!strip')
+source=( # flightgear
         "https://downloads.sourceforge.net/project/flightgear/release-$_pkgver/flightgear-$pkgver.tar.bz2"
-        # flightgear-data
+         # flightgear-data
         "https://downloads.sourceforge.net/project/flightgear/release-$_pkgver/FlightGear-$pkgver-data.tar.bz2"
-        #simgear
+         # simgear
         "https://downloads.sourceforge.net/project/flightgear/release-$_pkgver/simgear-$pkgver.tar.bz2")
 sha1sums=('7bf06d3ad218ce4e99eede7aa250fbdf938eb7a3'
           '4244106a93841e8fe27422134ec7cdcd91c03658'
@@ -27,9 +27,9 @@ prepare() {
 }
 
 build() {
-  #build simgear
+  # build simgear
   cd simgear-$pkgver
-  cmake -DCMAKE_INSTALL_PREFIX=/usr -DCMAKE_INSTALL_LIBDIR=lib .
+  cmake -DCMAKE_INSTALL_PREFIX=/usr -DCMAKE_INSTALL_LIBDIR=lib -DCMAKE_BUILD_TYPE=Release .
   make
   make DESTDIR=../fake_install install
 
