@@ -8,7 +8,7 @@
 pkgbase=python-fuse
 pkgname=(python3-fuse python2-fuse)
 pkgver=0.3.1
-pkgrel=2
+pkgrel=3
 arch=('x86_64')
 pkgdesc="Python bindings for FUSE"
 url="https://github.com/libfuse/python-fuse"
@@ -25,9 +25,6 @@ build() {
 
 package_python3-fuse() {
   depends=('fuse2' 'python3')
-  provides=('python-fuse')
-  conflicts=('python-fuse')
-  replaces=('python-fuse')
  
   cd $pkgbase-$pkgver
   python3 setup.py install --prefix=/usr --root="$pkgdir" --optimize=1
