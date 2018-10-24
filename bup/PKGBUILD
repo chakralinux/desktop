@@ -1,11 +1,11 @@
 pkgname=bup
-pkgver=0.29.1
+pkgver=0.29.2
 pkgrel=1
 pkgdesc="Highly efficient file backup system based on the git packfile format."
 arch=('x86_64')
-url="http://github.com/bup/bup"
+url='https://bup.github.io/'
 license=('GPL')
-depends=('python-fuse' 'par2cmdline' 'python2-pylibacl' 'python2-pyxattr')
+depends=('python2-fuse' 'par2cmdline' 'python2-pylibacl' 'python2-pyxattr')
 conflicts=('bup-git')
 source=("git+https://github.com/bup/bup.git#tag=${pkgver}")
 sha256sums=('SKIP')
@@ -15,11 +15,6 @@ build() {
 	## add -Wno-format in CFLAGS
 	CFLAGS="$CFLAGS -Wno-format"
 	make
-}
- 
-test() {
-	cd $srcdir/$pkgname
-	make test
 }
  
 package() {
