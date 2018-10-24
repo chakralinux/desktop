@@ -1,5 +1,5 @@
 pkgname=qtcreator
-pkgver=4.7.1
+pkgver=4.7.2
 _pkgver=4.7
 pkgrel=1
 pkgdesc='Lightweight, cross-platform integrated development environment'
@@ -8,7 +8,7 @@ url='https://www.qt.io'
 license=('LGPL')
 depends=('qt5-tools' 'qt5-quickcontrols' 'qt5-quickcontrols2' 'qt5-webengine'
          'gnutls' 'qbs=1.12.1' 'clang')
-makedepends=('git' 'mesa' 'llvm')
+makedepends=('git' 'mesa' 'llvm' 'python2')
 options=('docs')
 optdepends=('qt5-doc: for the integrated Qt documentation'
             'qt5-examples: welcome page examples'
@@ -20,8 +20,10 @@ optdepends=('qt5-doc: for the integrated Qt documentation'
             'mercurial: for mercurial support'
             'bzr: for bazaar support'
             'valgrind: for analyze support')
-source=("https://download.qt.io/official_releases/${pkgname}/${_pkgver}/${pkgver}/qt-creator-opensource-src-${pkgver}.tar.gz")
-md5sums=('d3bd6c9293a3369776f98c8816ecd7e2')
+source=("https://download.qt.io/official_releases/${pkgname}/${_pkgver}/${pkgver}/qt-creator-opensource-src-${pkgver}.tar.gz"
+        qtcreator-clang-plugins.patch)
+md5sums=('7c071e29df9aa454ed45807e149fc753'
+         '96d0947e5aa7230167aedf2a38a95f24')
 
 prepare() {
   [[ -d build ]] && rm -r build
@@ -34,6 +36,10 @@ prepare() {
   msg "Required qbs version is $(cat src/shared/qbs/VERSION)"
   msg "Removing built-in qbs"
   rm -r src/shared/qbs
+  # Load analyzer plugins on demand, since upstream clang doesn't link to all plugins
+  # see http://code.qt.io/cgit/clang/clang.git/commit/?id=7f349701d3ea0c47be3a43e265699dddd3fd55cf
+  # and https://bugs.archlinux.org/task/59492
+  patch -p1 -i ../qtcreator-clang-plugins.patch
 }
 
 build() {
