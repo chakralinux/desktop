@@ -1,10 +1,10 @@
 pkgbase=flightgear
 pkgname=('flightgear' 'flightgear-data')
 pkgver=2018.2.2
-pkgrel=2
+pkgrel=1
 _pkgver=${pkgver%.*}
 pkgdesc="An open-source, multi-platform flight simulator."
-url="http://www.flightgear.org/"
+url="https://home.flightgear.org/"
 arch=('x86_64')
 depends=('fltk' 'libxmu' 'libxi' 'openal' 'openscenegraph' 'zlib' 'subversion' 'libxrandr' 'glu')
 makedepends=('boost' 'cmake' 'mesa' 'sharutils' 'qt5-base' 'plib' 'freeglut' 'freealut' 'glew' 'qt5-declarative')
@@ -13,14 +13,11 @@ screenshot="http://www.flightgear.org/wp-content/gallery/gallery-v2-6/737-300_eg
 categories=('games')
 options=('!makeflags' '!strip')
 source=( #flightgear
-        "http://downloads.sourceforge.net/project/flightgear/release-$_pkgver/flightgear-$pkgver.tar.bz2"
+        "https://downloads.sourceforge.net/project/flightgear/release-$_pkgver/flightgear-$pkgver.tar.bz2"
         # flightgear-data
-        "http://downloads.sourceforge.net/project/flightgear/release-$_pkgver/FlightGear-$pkgver-data.tar.bz2"
-        # addons - global object and sharedmodels (from latest version)
-#        "http://downloads.sourceforge.net/project/flightgear/scenery/GlobalObjects.tgz"
-#        "http://downloads.sourceforge.net/project/flightgear/scenery/SharedModels.tgz"
+        "https://downloads.sourceforge.net/project/flightgear/release-$_pkgver/FlightGear-$pkgver-data.tar.bz2"
         #simgear
-        "http://downloads.sourceforge.net/project/flightgear/release-$_pkgver/simgear-$pkgver.tar.bz2")
+        "https://downloads.sourceforge.net/project/flightgear/release-$_pkgver/simgear-$pkgver.tar.bz2")
 sha1sums=('7bf06d3ad218ce4e99eede7aa250fbdf938eb7a3'
           '4244106a93841e8fe27422134ec7cdcd91c03658'
           'ba24275236aa461c4b0fee3e37e4fb6877734a1c')
@@ -44,14 +41,15 @@ build() {
 	-DCMAKE_INSTALL_PREFIX=/usr \
 	-DCMAKE_INSTALL_LIBDIR=lib \
 	-DFG_DATA_DIR:STRING="/usr/share/flightgear/data" \
-	-DSimGear_DIR=../fake_install/usr/lib/cmake/SimGear 
-#  uudecode -o package/flightgear.png package/flightgear.png.uue
+	-DSimGear_DIR=../fake_install/usr/lib/cmake/SimGear \
+	-DCMAKE_BUILD_TYPE=Release \
+	-DFG_BUILD_TYPE=Release
   make
   sed -i 's|Exec=.*|Exec=fgfs --fg-root=/usr/share/flightgear/data|' package/org.flightgear.FlightGear.desktop  
 }
 
 package_flightgear() {
-  depends+=('flightgear-data' 'qt5-base')
+  depends+=('flightgear-data' 'qt5-base' 'qt5-declarative')
 
   cd $pkgbase-$pkgver
   
@@ -60,8 +58,8 @@ package_flightgear() {
   # Desktop Integration
   install -Dm0644 package/org.flightgear.FlightGear.desktop $pkgdir/usr/share/applications/org.flightgear.FlightGear.desktop
   install -Dm0644 package/flightgear.ico $pkgdir/usr/share/icons/flightgear.ico
-#  install -Dm0644 package/flightgear.png $pkgdir/usr/share/icons/flightgear.png
   install -Dm0644 scripts/completion/fg-completion.bash $pkgdir/usr/share/bash-completion/completions/fgfs
+  install -Dm0644 scripts/completion/fg-completion.zsh "$pkgdir"/usr/share/zsh/site-functions/_fgfs
   ln -sf flightgear $pkgdir/usr/share/FlightGear
 }
 
@@ -71,9 +69,5 @@ package_flightgear-data(){
 
   install -d $pkgdir/usr/share/flightgear
   mv fgdata/ $pkgdir/usr/share/flightgear/data
-  # use aircraft addon
-#  cp -r Models/* $pkgdir/usr/share/flightgear/data/Models
-  # use world map addon
-#  cp -r Objects/* $pkgdir/usr/share/flightgear/data/Scenery/Objects
   chown root:root $pkgdir/usr/share/flightgear/data
 }
