@@ -1,15 +1,15 @@
 pkgname=check
-pkgver=0.11.0
+pkgver=0.12.0
 pkgrel=1
 pkgdesc="A unit testing framework for C"
 arch=('x86_64')
 url="https://libcheck.github.io/check/"
 license=('LGPL')
-options=('!libtool')
+depends=('awk')
 categories=('programming')
 install=$pkgname.install
 source=(https://github.com/libcheck/check/archive/$pkgver.tar.gz)
-sha512sums=('829adee2a5793dda6ac88162e355268019dd82e7a8ad95f1287bd262c3a7764425fba6a8347f1aeebdad642a972043b70aa59d54c87b3c46e1b5b569290dc359')
+sha256sums=('7816b4c38f6e23ff873786f18d966e552837677bfae144041e0587e7c39e04e8')
 
 prepare() {
   cd $pkgname-$pkgver
@@ -27,8 +27,8 @@ package() {
 
   make DESTDIR=${pkgdir} install
 
-  #get rid of the package's info directory
-  rm ${pkgdir}/usr/share/info/dir || return 1
+  # get rid of the package's info directory
+  rm ${pkgdir}/usr/share/info/dir
   
   # svn log file is too big
   rm "$pkgdir"/usr/share/doc/check/*ChangeLog*
