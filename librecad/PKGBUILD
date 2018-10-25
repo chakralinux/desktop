@@ -9,14 +9,19 @@ depends=('qt5-base' 'qt5-svg' 'libxcb' 'muparser')
 makedepends=('qt5-tools' 'boost' 'imagemagick' 'librsvg')
 conflicts=('librecad-git')
 replaces=('librecad-svn' 'caduntu' 'caduntu-svn')
-source=("${pkgname}-${pkgver}.tar.gz::https://github.com/LibreCAD/LibreCAD/archive/${pkgver}.tar.gz")
-sha256sums=('74c4ede409b13d0365c65c0cd52dba04f1049530f6df706dc905443d5e60db06')
+source=("${pkgname}-${pkgver}.tar.gz::https://github.com/LibreCAD/LibreCAD/archive/${pkgver}.tar.gz"
+        librecad-qt-5.11.patch)
+sha256sums=('74c4ede409b13d0365c65c0cd52dba04f1049530f6df706dc905443d5e60db06'
+            '85f246a1f44f1d6bf9c1b8625a9b6a1949faee0eaedee2c90661d153ef9a0f77')
 
 prepare() {
 	cd "${srcdir}/LibreCAD-${pkgver}"
 	
 	# fix version string
 	sed -i "/^SCMREVISION/c SCMREVISION=\"${pkgver}\"" librecad/src/src.pro
+
+	# Qt 5.11 build fix
+	patch -p1 ../librecad-qt-5.11.patch
 }
 
 build() {
