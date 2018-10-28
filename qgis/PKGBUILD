@@ -1,20 +1,20 @@
 pkgname=qgis
-pkgver=3.2.0
+pkgver=3.4.0
 pkgrel=1
 pkgdesc='A Geographic Information System (GIS) that supports vector, raster and database formats'
 url='http://qgis.org/'
 license=('GPL')
 arch=('x86_64')
-depends=('gcc-libs' 'glibc' 'gdal' 'libspatialite' 'spatialindex' 'qtkeychain' 'qca' 'qca-qt5' 'qt5-3d' 'qt5-webkit' 'qwt6' 'sqlite3' 'python3'
-         'libzip' 'python3-qscintilla-qt5' 'proj' 'python3-pyqt5' 'python2-pyqt5')
-makedepends=('cmake' 'fcgi' 'gsl' 'python3-six' 'qt5-tools')
+depends=('gdal' 'libspatialite' 'spatialindex' 'qtkeychain' 'qca-qt5' 'qt5-3d' 'qt5-webkit' 'qwt6' 'sqlite' 'python3'
+         'libzip' 'python3-qscintilla-qt5' 'proj' 'python3-pyqt5')
+makedepends=('cmake' 'fcgi' 'gsl' 'python3-six' 'qt5-tools' 'sip' 'txt2tags')
 optdepends=('fcgi: qgis mapserver'
             'grass: grass plugin'
             'gsl: georeferencer'
             'postgis: postgis support and SPIT plugin'
             'python-jinja: MetaSearch plugin')
-source=("http://qgis.org/downloads/$pkgname-$pkgver.tar.bz2")
-sha256sums=('0bc7cc5bdec05bac1f0f50250ce705130b5c3a7df3f0115f26743431fca2beff')
+source=("https://qgis.org/downloads/$pkgname-$pkgver.tar.bz2")
+sha256sums=('b63a6ebbd4e4afb2820887b18b0aa41e3c7862f7fbdc8a121d6fcd75f0321e98')
 
 prepare() {
   cd $pkgname-$pkgver
