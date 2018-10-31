@@ -1,16 +1,16 @@
 # Contributions from Arch: https://www.archlinux.org/packages/extra/x86_64/avogadrolibs/
 
 pkgname=avogadrolibs
-pkgver=1.91.0
-pkgrel=4
+pkgver=1.92.0
+pkgrel=1
 pkgdesc="An advanced molecular editor"
 arch=(x86_64)
-url="http://www.openchemistry.org/"
+url="https://www.openchemistry.org/"
 license=(custom)
 depends=(molequeue glew spglib libmsym libarchive hdf5)
 makedepends=(cmake eigen3 python2 boost)
 source=($pkgname-$pkgver.tar.gz::"https://github.com/OpenChemistry/avogadrolibs/archive/$pkgver.tar.gz")
-md5sums=('79af9710f4927b8991f9b590bf11fbc1')
+md5sums=('2044d06420baff2fb393e136b505b415')
 
 
 prepare() {
@@ -26,7 +26,8 @@ build() {
     -DCMAKE_INSTALL_LIBDIR=lib \
     -DBUILD_SHARED_LIBS=ON \
     -DOpenGL_GL_PREFERENCE=GLVND \
-    -DUSE_HDF5=ON
+    -DUSE_HDF5=ON \
+    -DUSE_MMTF=OFF
   make
 }
 
@@ -34,6 +35,4 @@ package() {
   cd build
   make DESTDIR="$pkgdir" install
   install -Dm644 "$srcdir"/$pkgname-$pkgver/LICENSE -t "$pkgdir"/usr/share/licenses/$pkgname
-
-  rm "$pkgdir"/usr/lib/libjsoncpp.a # provided by jsoncpp
 }
