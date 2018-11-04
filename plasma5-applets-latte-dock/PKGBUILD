@@ -5,7 +5,7 @@
 pkgname=plasma5-applets-latte-dock
 _pkgname=latte-dock
 pkgver=0.8.2
-pkgrel=1
+pkgrel=2
 pkgdesc='A dock based on Plasma Frameworks'
 arch=(x86_64)
 url='https://store.kde.org/p/1169519/'
@@ -14,8 +14,10 @@ depends=(kcrash kglobalaccel knewstuff kwayland plasma-framework hicolor-icon-th
 makedepends=(extra-cmake-modules python3)
 conflicts=(plasma5-applets-nowdock)
 replaces=(plasma5-applets-nowdock)
-source=("https://download.kde.org/stable/$_pkgname/$_pkgname-$pkgver.tar.xz")
-sha256sums=('bdb98e9bad1762ec98b10bd671f713f0001bbd8f4095b752fcaa729d5e7f9ca9')
+source=("https://download.kde.org/stable/$_pkgname/$_pkgname-$pkgver.tar.xz"
+              "chakra.layout.latte")
+sha256sums=('bdb98e9bad1762ec98b10bd671f713f0001bbd8f4095b752fcaa729d5e7f9ca9'
+            'b6b234cebc911b6a617de2f5496e5297ddf9bd492ddd54023e4d01d10ee729b1')
 
 prepare() {
   mkdir -p build
@@ -34,4 +36,7 @@ package() {
   cd build
 
   make DESTDIR="$pkgdir" install
+
+  # copy Chakra custom layout
+  install -Dm755 chakra.layout.latte "${pkgdir}/usr/share/plasma/shells/org.kde.latte.shell/contents/presets/chakra.layout.latte"
 }
