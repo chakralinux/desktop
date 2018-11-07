@@ -3,7 +3,7 @@
 pkgname=calligra
 pkgdesc="A set of applications for productivity and creative usage"
 pkgver=3.1.0
-pkgrel=1
+pkgrel=2
 arch=('x86_64')
 url='http://www.calligra.org'
 license=('FDL1.2' 'GPL2' 'LGPL')
@@ -62,7 +62,8 @@ for _lang in bs ca ca@valencia cs da de el en_GB es et fi fr gl hu it ja kk nb n
   replaces+=(calligra-l10n-$_lang)
 done
 
-source=("http://download.kde.org/stable/$pkgname/$pkgver/$pkgname-$pkgver.tar.xz"{,.sig})
+source=("http://download.kde.org/stable/$pkgname/$pkgver/$pkgname-$pkgver.tar.xz"{,.sig}
+        calligra-qt5.11.patch)
 sha256sums=('6818cd6e64136321be217eb57cc7d6ac7c7035191fdb1ee336ebe60bc114e870'
             'SKIP')
 validpgpkeys=(05D00A8B73A686789E0A156858B9596C722EA3BD
@@ -70,6 +71,10 @@ validpgpkeys=(05D00A8B73A686789E0A156858B9596C722EA3BD
 
 prepare() {
   mkdir -p build
+
+  cd $pkgname-$pkgver
+  # Fix build with Qt 5.11
+  patch -p1 -i ../calligra-qt5.11.patch
 }
 
 build() {
