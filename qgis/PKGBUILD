@@ -1,26 +1,36 @@
 pkgname=qgis
 pkgver=3.4.0
 pkgrel=1
-pkgdesc='A Geographic Information System (GIS) that supports vector, raster and database formats'
-url='http://qgis.org/'
-license=('GPL')
-arch=('x86_64')
-depends=('gdal' 'libspatialite' 'spatialindex' 'qtkeychain' 'qca-qt5' 'qt5-3d' 'qt5-webkit' 'qwt6' 'sqlite' 'python3'
-         'libzip' 'python3-qscintilla-qt5' 'proj' 'python3-pyqt5')
-makedepends=('cmake' 'fcgi' 'gsl' 'python3-six' 'qt5-tools' 'sip' 'txt2tags')
-optdepends=('fcgi: qgis mapserver'
-            'grass: grass plugin'
-            'gsl: georeferencer'
-            'postgis: postgis support and SPIT plugin'
-            'python-jinja: MetaSearch plugin')
+pkgdesc='Geographic Information System (GIS) that supports vector, raster & database formats'
+url='https://qgis.org/'
+license=(GPL)
+arch=(x86_64)
+depends=(gdal hicolor-icon-theme libzip python3-qscintilla-qt5 qca
+         qt5-3d qt5-webkit qtkeychain qt5-serialport
+         spatialindex python3-sip qt5-svg qwt proj)
+makedepends=(cmake fcgi gsl python3-six qt5-tools sip grass opencl-headers)
+optdepends=('fcgi: Map server'
+            'gpsbabel: GPS Tools plugin'
+            'gsl: Georeferencer plugin'
+            'python3-gdal: DB Manager plugin; Processing plugin'
+            'python3-jinja: MetaSearch plugin'
+            'python3-owslib: MetaSearch plugin'
+            'python3-psycopg2: DB Manager plugin; Processing plugin'
+            'python3-pygments: MetaSearch plugin'
+            'python3-numpy: Processing plugin'
+            'python3-yaml: Processing plugin')
 source=("https://qgis.org/downloads/$pkgname-$pkgver.tar.bz2")
 sha256sums=('b63a6ebbd4e4afb2820887b18b0aa41e3c7862f7fbdc8a121d6fcd75f0321e98')
 
 prepare() {
   cd $pkgname-$pkgver
-  
-#   # Fix references to "python"
-#   sed -i 's/\(env \|\/usr\/bin\/\)python$/&2/' $(find . -iname "*.py")
+
+  # Find osgQt
+  sed -e 's/osgQt5 osgQt/osgQt/' \
+      -e 's/osgQt5d osgQtd/osgQt/' \
+      -i src/plugins/globe/CMakeModules/FindOSG.cmake
+
+  sed -e 's,qca-qt5,qca,' -i cmake/FindQCA.cmake
 
   # Remove mime types already defined by freedesktop.org
   sed -e '/type="image\/tiff"/,/<\/mime-type>/d' \
@@ -28,46 +38,33 @@ prepare() {
       -e '/type="image\/jp2"/,/<\/mime-type>/d' \
       -e '/type="application\/x-adobe-mif"/,/<\/mime-type>/d' \
       -i debian/qgis.xml
-  
-  
+
   [[ -d build ]] || mkdir build
 }
 
 build() {
   cd $pkgname-$pkgver/build
-  
+
   cmake -G "Unix Makefiles" ../ \
         -DCMAKE_BUILD_TYPE=Release \
         -DCMAKE_INSTALL_PREFIX=/usr \
-        -DWITH_GRASS=OFF \
         -DGRASS_PREFIX=/opt/grass \
-        -DGRASS_INCLUDE_DIR=/opt/grass/include/ \
-        -DQGIS_MANUAL_SUBDIR=share/man \
+        -DWITH_3D=TRUE \
+        -DWITH_SERVER=TRUE \
+        -DWITH_CUSTOM_WIDGETS=TRUE \
+        -DBINDINGS_GLOBAL_INSTALL=TRUE \
         -DPYTHON_EXECUTABLE=/usr/bin/python3 \
-        -DENABLE_TESTS=FALSE \
-        -DCMAKE_SKIP_RPATH=TRUE
+        -DQGIS_MANUAL_SUBDIR=share/man \
+        -DWITH_QWTPOLAR=TRUE
+
   make
+
+  # Rebuild srs database, QGIS distributes an old, buggy one
+  LD_LIBRARY_PATH="$PWD/output/lib/" make synccrsdb
+  mv /tmp/srs.db ../resources/
 }
 
 package() {
-    cd $pkgname-$pkgver/build
-    make DESTDIR=$pkgdir install
-    
-    # create a more user-friendly application name link
-    ln -s /usr/bin/qgis "$pkgdir/usr/bin/quantum-gis"
-
-    cd ..
-    
-    # install some freedesktop.org compatibility
-    install -Dm644 debian/qgis.desktop -t "$pkgdir/usr/share/applications/"
-    for prog in qgis qbrowser; do
-    install -Dm644 images/icons/${prog}_icon.svg "$pkgdir/usr/share/icons/hicolor/scalable/apps/$prog.svg"
-    done
-    
-    # install mime information and icons
-    install -Dm644 debian/qgis.xml "$pkgdir/usr/share/mime/packages/qgis.xml"
-    install -Dm644 images/icons/qgis-mime-icon.png "$pkgdir/usr/share/icons/hicolor/128x128/mimetypes/qgis-mime.png"
-    for type in asc ddf dem dt0 dxf gml img mime mldata qgs qlr qml qpt shp sqlite; do
-    install -Dm644 images/icons/qgis_${type}_icon.svg "$pkgdir/usr/share/icons/hicolor/scalable/mimetypes/qgis-$type.svg"
-    done
+  cd $pkgname-$pkgver/build
+  make DESTDIR="$pkgdir" install
 }
