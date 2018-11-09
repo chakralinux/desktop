@@ -1,6 +1,6 @@
 pkgname=qgis
 pkgver=3.4.0
-pkgrel=1
+pkgrel=2
 pkgdesc='Geographic Information System (GIS) that supports vector, raster & database formats'
 url='https://qgis.org/'
 license=(GPL)
@@ -30,14 +30,14 @@ prepare() {
       -e 's/osgQt5d osgQtd/osgQt/' \
       -i src/plugins/globe/CMakeModules/FindOSG.cmake
 
-  sed -e 's,qca-qt5,qca,' -i cmake/FindQCA.cmake
-
   # Remove mime types already defined by freedesktop.org
   sed -e '/type="image\/tiff"/,/<\/mime-type>/d' \
       -e '/type="image\/jpeg"/,/<\/mime-type>/d' \
       -e '/type="image\/jp2"/,/<\/mime-type>/d' \
       -e '/type="application\/x-adobe-mif"/,/<\/mime-type>/d' \
       -i debian/qgis.xml
+
+  sed 's,QCA REQUIRED,Qca-qt5 REQUIRED,' -i CMakeLists.txt
 
   [[ -d build ]] || mkdir build
 }
@@ -48,6 +48,9 @@ build() {
   cmake -G "Unix Makefiles" ../ \
         -DCMAKE_BUILD_TYPE=Release \
         -DCMAKE_INSTALL_PREFIX=/usr \
+        -DQCA_LIBRARY=/usr/lib/libqca-qt5.so.2 \
+        -DQCA_INCLUDE_DIR=/usr/include/qt5/Qca-qt5 \
+        -DQCA_VERSION_STR=2.1.3 \
         -DGRASS_PREFIX=/opt/grass \
         -DWITH_3D=TRUE \
         -DWITH_SERVER=TRUE \
