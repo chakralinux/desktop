@@ -1,0 +1,52 @@
+pkgname=firewalld
+pkgver=0.6.3
+pkgrel=1
+pkgdesc='Firewall daemon with D-Bus interface'
+arch=('x86_64')
+url='https://firewalld.org/'
+license=('GPL2')
+depends=( 'dconf' 'glib2' 'hicolor-icon-theme' 'nftables' 'python3-decorator' 'python3-gobject' 'python3-slip')
+makedepends=('docbook-xsl' 'ebtables' 'intltool' 'ipset' 'iptables')
+optdepends=(
+  'bash-completion: bash completion'
+  'ebtables: old backend'
+  'gtk3: firewall-config'
+  'ipset: old backend'
+  'iptables: old backend'
+  'libnm-glib: firewall-config and firewall-applet'
+  'libnotify: firewall-applet'
+  'python-pyqt5: firewall-applet'
+)
+backup=('etc/conf.d/firewalld'
+        'etc/firewalld/firewalld.conf')
+source=("$pkgname-$pkgver.tar.gz::https://github.com/firewalld/firewalld/archive/v$pkgver.tar.gz"
+        'firewalld-sysconfigdir.patch')
+sha256sums=('SKIP'
+            'cf7d655230c43acf10a0f97dffdbcba136729967c8b9a25a930871d54a589834')
+
+prepare() {
+  cd $pkgname-$pkgver
+
+  patch -Np1 -i ../firewalld-sysconfigdir.patch
+
+  NOCONFIGURE='true' ./autogen.sh
+}
+
+build() {
+  cd $pkgname-$pkgver
+
+  ./configure \
+    --prefix='/usr' \
+    --localstatedir='/var' \
+    --sbindir='/usr/bin' \
+    --sysconfdir='/etc' \
+    --disable-schemas-compile \
+    --disable-sysconfig
+  make
+}
+
+package() {
+  cd $pkgname-$pkgver
+
+  make DESTDIR=$pkgdir install
+}
