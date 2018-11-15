@@ -1,0 +1,26 @@
+
+pkgname=python3-slip
+pkgver=0.6.5
+pkgrel=2
+pkgdesc='Convenience, extension and workaround code for Python and some Python modules'
+arch=('x86_64')
+url='https://github.com/nphilipp/python-slip'
+license=('GPL2')
+depends=('polkit' 'python3-dbus' 'python3-decorator' 'python3-gobject'
+         'python3-six')
+makedepends=('python3-setuptools')
+source=("https://github.com/nphilipp/python-slip/releases/download/python-slip-$pkgver/python-slip-$pkgver.tar.bz2")
+sha256sums=('c726c086f0dd93a0ac7a0176f383a12af91b6657b78a301e3f5b25d9f8d4d10b')
+
+build() {
+  cd python-slip-$pkgver
+
+  make
+}
+
+package() {
+  cd python-slip-$pkgver
+
+  python3 setup.py install --root=$pkgdir --optimize='1'
+}
+
