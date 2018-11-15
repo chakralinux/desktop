@@ -1,0 +1,25 @@
+
+pkgname=libmnl
+pkgver=1.0.4
+pkgrel=1
+pkgdesc="Library for minimalistic netlink - part of the build cycle for PeerGuardian Linux."
+arch=('x86_64')
+url="http://www.netfilter.org/projects/libmnl/"
+license=('GPL')
+provides=('libmnl')
+makedepends=('pkgconfig')
+source=(http://www.netfilter.org/projects/$pkgname/files/$pkgname-$pkgver.tar.bz2)
+md5sums=('be9b4b5328c6da1bda565ac5dffadb2d')
+
+build() {
+  cd $pkgname-$pkgver
+  ./configure --prefix=/usr
+  make || return 1
+}
+
+package() {
+  cd $pkgname-$pkgver
+  make DESTDIR=$pkgdir install
+}
+
+
