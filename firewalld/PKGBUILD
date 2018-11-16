@@ -1,6 +1,6 @@
 pkgname=firewalld
 pkgver=0.6.3
-pkgrel=2
+pkgrel=3
 pkgdesc='Firewall daemon with D-Bus interface'
 arch=('x86_64')
 url='https://firewalld.org/'
@@ -33,7 +33,7 @@ prepare() {
 
 build() {
   cd $pkgname-$pkgver
-  export PYTHON=python3
+  export PYTHON=/usr/bin/python3
   ./configure \
     --prefix='/usr' \
     --localstatedir='/var' \
