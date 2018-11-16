@@ -1,6 +1,6 @@
 pkgname=firewalld
 pkgver=0.6.3
-pkgrel=1
+pkgrel=2
 pkgdesc='Firewall daemon with D-Bus interface'
 arch=('x86_64')
 url='https://firewalld.org/'
@@ -15,7 +15,7 @@ optdepends=(
   'iptables: old backend'
   'libnm-glib: firewall-config and firewall-applet'
   'libnotify: firewall-applet'
-  'python-pyqt5: firewall-applet'
+  'python3-pyqt5: firewall-applet'
 )
 backup=('etc/conf.d/firewalld'
         'etc/firewalld/firewalld.conf')
@@ -28,20 +28,19 @@ prepare() {
   cd $pkgname-$pkgver
 
   patch -Np1 -i ../firewalld-sysconfigdir.patch
-
   NOCONFIGURE='true' ./autogen.sh
 }
 
 build() {
   cd $pkgname-$pkgver
-
+  export PYTHON=python3
   ./configure \
     --prefix='/usr' \
     --localstatedir='/var' \
     --sbindir='/usr/bin' \
     --sysconfdir='/etc' \
     --disable-schemas-compile \
-    --disable-sysconfig
+    --disable-sysconfig 
   make
 }
 
