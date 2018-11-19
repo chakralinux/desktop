@@ -1,20 +1,20 @@
 pkgname=libtorrent-rasterbar
-pkgver=1.1.9
+pkgver=1.1.11
 _pkgver=${pkgver//./_}
 pkgrel=1
 pkgdesc="A C++ library that aims to be a good alternative to all the other bittorrent implementations around"
-url="http://www.rasterbar.com/products/libtorrent/"
+url="https://libtorrent.org/"
 arch=('x86_64')
 license=('BSD')
 depends=('boost-libs' 'python2' 'python3' 'geoip' 'websocketpp')
 makedepends=('boost' 'cmake')
 options=('!emptydirs')
-source=(https://github.com/arvidn/libtorrent/archive/libtorrent-${_pkgver}/$pkgname-$pkgver.tar.gz)
-sha256sums=('29ac52c04412702cb99e38113e37ef9663e18045925f26388628204fcabbc9de')
+source=(https://github.com/arvidn/libtorrent/archive/libtorrent_${_pkgver}/$pkgname-$pkgver.tar.gz)
+sha256sums=('d98ea107513537771ce661d17ccc16148cda1294c2d42ff4efe314482e0de441')
 
 prepare() {
   mkdir py2 py3
-  cd libtorrent-libtorrent-${_pkgver}
+  cd libtorrent-libtorrent_${_pkgver}
 
   # Avoid depending on newer processors
   sed -i 's/-msse4.2//' configure.ac
@@ -32,7 +32,7 @@ _build() (
   # https://github.com/qbittorrent/qBittorrent/issues/5265#issuecomment-220007436
   CXXFLAGS="$CXXFLAGS -std=c++11" \
   PYTHON=/usr/bin/python$1 \
-  ../libtorrent-libtorrent-${_pkgver}/configure \
+  ../libtorrent-libtorrent_${_pkgver}/configure \
     --prefix=/usr \
     --enable-python-binding \
     --enable-examples \
@@ -49,7 +49,7 @@ build() {
 package() {
   make -C py2 DESTDIR="$pkgdir" install
   make -C py3 DESTDIR="$pkgdir" install
-  install -Dm644 libtorrent-libtorrent-${_pkgver}/COPYING \
+  install -Dm644 libtorrent-libtorrent_${_pkgver}/COPYING \
     "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
 
   # Remove most example binaries
