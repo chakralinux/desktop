@@ -1,26 +1,16 @@
 pkgname=android-file-transfer-linux
-pkgver=3.3
-pkgrel=2
+pkgver=3.7
+pkgrel=1
 pkgdesc="An interactive MTP client implemented in C++ using Qt toolkit"
 arch=('x86_64')
 url="https://github.com/whoozle/android-file-transfer-linux"
 license=('LGPL')
-depends=('qt5-base' 'fuse' 'hicolor-icon-theme' 'libxkbcommon-x11' 'file')
+depends=('qt5-base' 'fuse2' 'hicolor-icon-theme' 'libxkbcommon-x11' 'file')
 makedepends=('cmake')
 source=("https://github.com/whoozle/android-file-transfer-linux/archive/v$pkgver.tar.gz"
-        "solid_aftl.desktop"
-        fix_build1.patch::https://github.com/whoozle/android-file-transfer-linux/commit/8980ff8171961134334d388b5a0ed54e0186b31f.patch
-        fix_build2.patch::https://github.com/whoozle/android-file-transfer-linux/commit/53230d606e44b7901e931a347b7f59ed3a963e2a.patch)
-sha256sums=('fa33ddf79cb5e6e62248868534c7b54096e67613ae1788a243617348a6d839a0'
-            '743a0099e38fd82443b51434b65e65f0a64b2791bd2af89392f4f4d991c3bfc9'
-            '601a84f891a5722ea845e9683765afdcbcf59550a422fa801d940a72de8c5489'
-            '893eca553853383f29e641f2524e9577633990409706728029162832064a0787')
-
-prepare() {
-  cd "$pkgname-$pkgver"
-  patch -p1 < ../fix_build1.patch
-  patch -p1 < ../fix_build2.patch
-}
+        'solid_aftl.desktop')
+sha256sums=('fe736cb24a8785ff0236728dc0c3446ba006ae72f7e65ce17dd20dadcaf7f851'
+            '743a0099e38fd82443b51434b65e65f0a64b2791bd2af89392f4f4d991c3bfc9')
 
 build() {
   cd "$pkgname-$pkgver"
