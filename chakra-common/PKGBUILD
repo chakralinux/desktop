@@ -3,7 +3,7 @@
 pkgname=chakra-common
 arch=('x86_64')
 pkgver=18.08.3
-pkgrel=1
+pkgrel=2
 pkgdesc="Common configuration files, scripts and artwork"
 url="http://chakralinux.org"
 license=('GPL' 'BSD')
@@ -27,6 +27,7 @@ source=('Chakra-Bugs.desktop'
         'chakra-icons.tar.gz'
         'chakra-helper.sh'
         'kde4.sh'
+        'inputmethod.profile'
         'chakra-check-links.py::https://raw.githubusercontent.com/Inkane/listMissingLibs/master/list_missing_libs.py')
 sha256sums=('24e3e543fbeeb9bd902703e49dd682001c85c8faee85a6795d2501b65badfcda'
             'f470c6e7a6bb09f4815e31dd369f4aee4ded0d2697f2c61c7036097b8829db63'
@@ -39,6 +40,7 @@ sha256sums=('24e3e543fbeeb9bd902703e49dd682001c85c8faee85a6795d2501b65badfcda'
             'b20160225a990513ae58027b7e70bb958253da881be02f296e54e9ccca09b348'
             '9e0c9408c9bc12aeca2fd66a4723b57a6878307ba956df7cca43f8112dd71429'
             '7e4ae4587973d6cc253b20ff7573ac25801f148f794a9000901c5137cd4780b3'
+            '2e24a7256a37ae475c4b301537edeaffede34cf428fb69c97d43f051d8c59e90'
             'cad07d94408ba5c385b483316098dbffc35ab7220990c4c607634eb2f4a2399f')
 
 package() {
@@ -76,4 +78,7 @@ package() {
 
     # chakra-check-links
     install -Dm755 chakra-check-links.py "${pkgdir}/usr/bin/chakra-check-links"
+
+    # inputmethod support
+    install -Dm644 inputmethod.profile $pkgdir/etc/profile.d/inputmethod.sh
 }
