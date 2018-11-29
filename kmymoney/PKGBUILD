@@ -1,6 +1,6 @@
 pkgname=kmymoney
 pkgver=5.0.2
-pkgrel=1
+pkgrel=2
 pkgdesc="Personal finance manager for KDE which operates similarly to MS-Money or Quicken"
 arch=('x86_64')
 url="https://kmymoney.org/"
@@ -16,12 +16,12 @@ source=(https://download.kde.org/stable/$pkgname/$pkgver/src/$pkgname-$pkgver.ta
 sha256sums=('57f321ebdb1e8bc04e41531a7d0ce947c65101d7768c2aa45c65370b5d67a593')
 
 prepare() {
-  cd "${srcdir}/${pkgname}-${pkgver}"
+  cd $pkgname-$pkgver
   mkdir -p build
 }
 
 build() {
-  cd "${srcdir}/${pkgname}-${pkgver}/build"
+  cd $pkgname-$pkgver/build
   cmake ../ \
     -DCMAKE_INSTALL_PREFIX=/usr \
     -DCMAKE_INSTALL_LIBDIR=lib \
@@ -32,7 +32,7 @@ build() {
 }
 
 package() {
-  cd "${srcdir}/${pkgname}-${pkgver}/build"
+  cd $pkgname-$pkgver/build
 
-  make DESTDIR="${pkgdir}" install
+  make DESTDIR=$pkgdir install
 }
