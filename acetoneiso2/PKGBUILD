@@ -1,21 +1,12 @@
-#
-# Chakra Packages for Chakra, part of chakra-project.org
-#
-# maintainer (i686): Phil Miller <philm[at]chakra-project[dog]org>
-# maintainer (x86_64): Manuel Tortosa <manutortosa[at]chakra-project[dot]org>
-# (c) 2010 Drake Justice
-
-# include global config
-source ../_buildscripts/${current_repo}-${_arch}-cfg.conf
 
 pkgname=acetoneiso2
 pkgver=2.3
-pkgrel=2
+pkgrel=3
 pkgdesc="An all in one ISO tool (bin mdf nrg img daa dmg cdi b5i bwi pdi iso)"
-arch=('i686' 'x86_64')
-url="http://www.acetoneteam.org"
+arch=('x86_64')
+url="http://chakra.sourceforge.net"
 license=('GPL3')
-depends=('qt>=4' 'fuseiso' 'cdrdao' 'cdrkit' 'gnupg2' 'pinentry' 'mplayer' 'phonon')
+depends=('qt5-webkit' 'fuseiso' 'cdrdao' 'cdrkit' 'gnupg2' 'pinentry' 'mplayer' 'phonon-qt5')
 optdepends=("p7zip: for ISO compress/decompress support"
             "dvd+rw-tools: for dvd ISO creation")
 conflicts=('acetoneiso')
@@ -24,16 +15,32 @@ install=${pkgname}.install
 source=(http://downloads.sourceforge.net/acetoneiso/AcetoneISO/AcetoneISO%202.3/acetoneiso_${pkgver}.tar.gz)
 md5sums=('225f7af687016690ff28b9771a1ce179')
 
-build() {
-	cd ${srcdir}/acetoneiso_${pkgver}/acetoneiso
+prepare() {
+  cd acetoneiso_${pkgver}/acetoneiso
 
-	qmake
-	sed -i 's|-I/usr/include/QtCore|-I/usr/include/QtCore -I/usr/include/KDE|' Makefile
-	make || return 1
+  sed -i 's#<Phonon/#<phonon/#' sources/*
+# Port to Qt5 https://www.mail-archive.com/debian-bugs-dist@lists.debian.org/msg1563802.html
+  sed -i 's/QtGui/QtWidgets/' sources/*
+  sed -i 's/getInteger/getInt/' sources/*
+  sed -i 's/WFlags/WindowFlags/' sources/*
+  sed -i 's/webkit/webkitwidgets/' acetoneiso.pro
+  sed -i 's/TARGET = /TARGET = acetoneiso/' acetoneiso.pro
+  sed -i 's/QT += phonon/LIBS += -lphonon4qt5/' acetoneiso.pro
+  sed -i 's@INCLUDEPATH.*$@& /usr/include/phonon4qt5@' acetoneiso.pro
+
+  # Remove malware from loading in the Updates tab, due to an expired domain being captured.
+  sed -i 's#http://www.acetoneteam.org/clients.html##' ui/acetoneiso.ui
+}
+
+build() {
+  cd acetoneiso_${pkgver}/acetoneiso
+
+  qmake-qt5
+  make
 }
 
 package() {
-	cd ${srcdir}/acetoneiso_${pkgver}/acetoneiso
+  cd acetoneiso_${pkgver}/acetoneiso
 
-	make INSTALL_ROOT="${pkgdir}" install
+  make INSTALL_ROOT="${pkgdir}" install
 }
