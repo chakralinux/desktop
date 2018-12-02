@@ -8,21 +8,28 @@ pkgdesc='Media player with support for digital television (DVB-C/S/S2/T and ATSC
 license=('GPL')
 arch=('x86_64')
 url="https://kaffeine.kde.org"
-depends=('kio' 'hicolor-icon-theme' 'libxss' 'vlc')
+depends=('kio' 'libxss' 'vlc')
 makedepends=('extra-cmake-modules' 'kidletime' 'kdoctools')
 categories=('multimedia')
 options=('debug')
-source=("http://download.kde.org/stable/${pkgname}/${pkgname}-${pkgver}.tar.xz")
-sha256sums=('e61573199fe4e04377679a5cf8b32b3aa0bb4201c56371e11820d3a3ae41904d')
+source=("http://download.kde.org/stable/${pkgname}/${pkgname}-${pkgver}.tar.xz"
+        "https://github.com/KDE/kaffeine/commit/06b78c5f24891fd38d25ed64f5029106eec7c4fb.diff")
+sha256sums=('e61573199fe4e04377679a5cf8b32b3aa0bb4201c56371e11820d3a3ae41904d'
+            '27a8b4851b63fe942dfc38fb64c8049b4c35821d84175659d9d49b32f3094f25')
 
 prepare() {
   mkdir -p build
+  cd $pkgname-$pkgver
+ # Fix build with qt5.11
+  patch -p1 -i ../06b78c5f24891fd38d25ed64f5029106eec7c4fb.diff 
 }
 
 build() {
   cd build
-  cmake ../$pkgname-$pkgver
-  make
+  cmake ../$pkgname-$pkgver \
+    -DCMAKE_INSTALL_PREFIX=/usr \
+    -DBUILD_TESTING=OFF 
+   make
 }
 
 package() {
