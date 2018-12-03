@@ -3,7 +3,7 @@ source ../kdeapps.conf
 
 pkgname=konversation
 pkgver=1.7.5
-pkgrel=1
+pkgrel=2
 pkgdesc="A user friendly IRC client for KDE"
 arch=('x86_64')
 url="http://konversation.kde.org"
@@ -12,7 +12,6 @@ makedepends=('extra-cmake-modules' 'kdoctools')
 license=('GPL2' 'FDL')
 categories=('communication')
 screenshots=('http://konversation.kde.org/screenshots/konversation13_2.png')
-install=${pkgname}.install
 source=("https://download.kde.org/stable/${pkgname}/${pkgver}/src/${pkgname}-${pkgver}.tar.xz")
 sha1sums=('c4f702f7eb4e1c869488fe005ddbcb1cbf31951c')
 
@@ -23,7 +22,7 @@ prepare(){
 
 build() {
   cd build
-  cmake_kf5 ../${pkgname}-${pkgver}
+  cmake ../${pkgname}-${pkgver}
   make
 }
 
