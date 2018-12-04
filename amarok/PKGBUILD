@@ -1,6 +1,6 @@
 pkgname=amarok
 pkgver=2.9.70
-pkgrel=1
+pkgrel=2
 pkgdesc="A media player for KDE"
 arch=('x86_64')
 url="https://amarok.kde.org"
@@ -17,7 +17,7 @@ optdepends=("libgpod: support Apple iPod audio devices"
             "clamz: allow to download songs from Amazon.com"
             "loudmouth: backend needed by mp3tunes for syncing")
 categories=('multimedia')
-source=("$pkgname-$pkgver::git+https://github.com/KDE/amarok.git#commit=5d463f47d149391a2303215222105d89528a571a")
+source=("$pkgname-$pkgver::git+https://github.com/KDE/amarok.git#commit=82018b9fcf681672862bf09099cbd175808869f6")
 sha256sums=('SKIP')
 
 build() {
@@ -29,8 +29,7 @@ build() {
     -DCMAKE_BUILD_TYPE=Release \
     -DCMAKE_INSTALL_PREFIX=/usr \
     -DCMAKE_INSTALL_LIBDIR=lib \
-    -D_BUILD_TESTING=OFF \
-    -DWITH_QTWEBKIT=OFF
+    -D_BUILD_TESTING=OFF 
   make
 }
 
