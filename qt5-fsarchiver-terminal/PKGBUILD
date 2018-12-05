@@ -1,0 +1,27 @@
+pkgname=qt5-fsarchiver-terminal
+_pkgname=qt-fsarchiver-terminal
+pkgver=0.8.5.2
+_pkgver=${pkgver:0:5}-${pkgver:6}
+pkgrel=1
+pkgdesc='Terminal app for qt5-fsarchiver.'
+arch=('x86_64')
+url='http://sourceforge.net/projects/qt-fsarchiver/'
+license=('GPL')
+depends=('fsarchiver' 'qt5-base')
+makedepends=('qt5-tools')
+categories=('utils')
+provides=('qt-fsarchiver-terminal')
+source=("http://sourceforge.net/projects/qt-fsarchiver/files/source/${_pkgname}/${_pkgname}-${_pkgver}.tar.gz")
+sha256sums=('745a12b5fbbf196a7493d7b831604b7e5f0886d54ab4a51809115809a447eeb2')
+
+build() {
+    cd ${_pkgname}
+    qmake-qt5
+    make
+}
+
+package() {
+  cd ${_pkgname}
+  make INSTALL_ROOT="${pkgdir}" install
+  	
+}

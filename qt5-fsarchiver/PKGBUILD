@@ -1,49 +1,32 @@
 pkgname=qt5-fsarchiver
-pkgver=0.8.1.1
+_pkgname=qt-fsarchiver
+pkgver=0.8.5.4
 _pkgver=${pkgver:0:5}-${pkgver:6}
 pkgrel=1
 pkgdesc='GUI for fsarchiver'
 arch=('x86_64')
-url='http://sourceforge.net/projects/qt4-fsarchiver/'
+url='http://sourceforge.net/projects/qt-fsarchiver/'
 license=('GPL')
-depends=('fsarchiver' 'kdesu' 'qt5-base')
+depends=('fsarchiver' 'qt5-base' 'qt5-fsarchiver-terminal')
 makedepends=('qt5-tools')
 categories=('utils')
-replaces=('qt4-fsarchiver')
+provides=('qt-fsarchiver')
 screenshot=('http://media.cdn.ubuntu-de.org/wiki/attachments/02/04/verzeichnis.jpg')
-source=("http://sourceforge.net/projects/qt4-fsarchiver/files/${pkgname}/source/${pkgname}-${_pkgver}.tar.gz"
-	"${pkgname}.png"
-	"${pkgname}.desktop")
-install="${pkgname}.install"
-sha256sums=('e074e2bc186dd8d7f30a6de8adf5990f2acffd8d8c0a508270344d46d90128eb'
-            'bf7ba38cd47b670955334dd716be7efb4257a2beca3f3438ed63c828d4116ed1'
-            'b8bedb9a51ff8764e0efb535bbf5a0e80f264166b56662e72ab5fb9005a5e8d5')
+source=("http://sourceforge.net/projects/$_pkgname/files/source/${_pkgname}/${_pkgname}-${_pkgver}.tar.gz")
+sha256sums=('5250cef93f70283a8c02f63dbf622fbbc9c81afe83584b2081d8d4e7a10e171e')
 
 build() {
-    cd "${srcdir}/${pkgname}"
+    cd ${_pkgname}
     qmake-qt5
     make
 }
 
 package() {
-  cd "${srcdir}/${pkgname}"
+  cd ${_pkgname}
   make INSTALL_ROOT="${pkgdir}" install
   
-#  install -d ${pkgdir}/usr/share/pixmaps
-#  install -d ${pkgdir}/usr/share/qt/translations
-#  rm -R ${pkgdir}/usr/share/qt4
-#  rm -R ${pkgdir}/usr/share/app-install
-#  install -D -m644 ${srcdir}/${pkgname}/translations/*.qm ${pkgdir}/usr/share/qt/translations
-  
-  # install icon
-  install -D ${srcdir}/${pkgname}.png ${pkgdir}/usr/share/pixmaps/${pkgname}.png
-  # .desktop file
-  install -D ${srcdir}/${pkgname}.desktop ${pkgdir}/usr/share/applications/${pkgname}.desktop
-  rm ${pkgdir}/usr/share/applications/mate-qt5-fsarchiver.desktop
-  rm ${pkgdir}/usr/share/applications/gnome-qt5-fsarchiver.desktop
-  rm ${pkgdir}/usr/share/applications/kde-qt5-fsarchiver.desktop
-  
-  # remove unused files
-  rm -r ${pkgdir}/usr/share/app-install
-	
+  ln -s $pkgdir/usr/sbin/qt-fsarchiver $pkgdir/usr/sbin/qt5-fsarchiver
+
+  # Fix package name in .desktop file
+  sed -i s/qt-fsarchiver/qt5-fsarchiver/g $pkgdir/usr/share/applications/$_pkgname.desktop
 }
