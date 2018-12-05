@@ -2,7 +2,7 @@ pkgname=qt5-fsarchiver
 _pkgname=qt-fsarchiver
 pkgver=0.8.5.4
 _pkgver=${pkgver:0:5}-${pkgver:6}
-pkgrel=2
+pkgrel=3
 pkgdesc='GUI for fsarchiver'
 arch=('x86_64')
 url='http://sourceforge.net/projects/qt-fsarchiver/'
@@ -25,7 +25,7 @@ package() {
   cd ${_pkgname}
   make INSTALL_ROOT="${pkgdir}" install
   
-  ln -s $pkgdir/usr/sbin/qt-fsarchiver $pkgdir/usr/sbin/qt5-fsarchiver
+  mv $pkgdir/usr/sbin/qt-fsarchiver $pkgdir/usr/sbin/qt5-fsarchiver
 
   # Fix package name in .desktop file
   sed -i s/qt-fsarchiver/qt5-fsarchiver/g $pkgdir/usr/share/applications/$_pkgname.desktop
