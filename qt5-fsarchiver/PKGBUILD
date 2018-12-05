@@ -2,7 +2,7 @@ pkgname=qt5-fsarchiver
 _pkgname=qt-fsarchiver
 pkgver=0.8.5.4
 _pkgver=${pkgver:0:5}-${pkgver:6}
-pkgrel=1
+pkgrel=2
 pkgdesc='GUI for fsarchiver'
 arch=('x86_64')
 url='http://sourceforge.net/projects/qt-fsarchiver/'
@@ -29,4 +29,7 @@ package() {
 
   # Fix package name in .desktop file
   sed -i s/qt-fsarchiver/qt5-fsarchiver/g $pkgdir/usr/share/applications/$_pkgname.desktop
+
+  # Remove conflicting file provided by qt5-fsarchiver-terminal
+  rm $pkgdir/usr/sbin/qt-fsarchiver-terminal
 }
