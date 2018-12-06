@@ -1,31 +1,29 @@
+# Maintainer: Francesco Marinucci <franzmari [at] chakralinux [dot] org>
+
 pkgname=vokoscreen
-pkgver=2.5.0
+pkgver=2.5.8
+_pkgver=2.5.8-beta
 pkgrel=2
-pkgdesc='An easy to use screencast creator to record educational videos, live recordings of browser, installation, videoconferences, etc'
+pkgdesc="An easy to use screencast creator to record educational videos, live recordings of browser, installation, videoconferences, etc."
 arch=('x86_64')
-url='http://linuxecke.volkoh.de/vokoscreen/vokoscreen.html'
+url="http://linuxecke.volkoh.de/vokoscreen/vokoscreen.html"
+screenshot="http://linuxecke.volkoh.de/vokoscreen/vokoscreen-picture-screen.png"
 license=('GPL2')
-depends=('qt5-x11extras' 'ffmpeg' 'lame' 'desktop-file-utils' 'xdg-utils' 'lsof')
-optdepends=('pulseaudio-alsa: for PulseAudio support')
+categories=('multimedia')
+depends=('qt5-x11extras' 'ffmpeg' 'lame' 'mkvtoolnix' 'opencv')
 makedepends=('qt5-tools')
-install=${pkgname}.install
-source=("${pkgname}-${pkgver}.tar.gz::https://github.com/vkohaupt/vokoscreen/archive/${pkgver}.tar.gz"
+optdepends=('pulseaudio' 'alsa-utils')
+source=("https://github.com/vkohaupt/$pkgname/archive/$_pkgver.tar.gz"
         'fix_lrelease.patch')
-sha1sums=('d435c5687144dfea1025e23ce6e50f822da6ca61'
-          'fa76417491ba68119395b82381d290b9c1155f9a')
+sha512sums=('dd9e25ec9ab7eeddb99aeeac3865f4306d741c78cb81b6a62fcc9d366270446683eadc483bc65637e30b639764ea978ae290baabfcb9ae298ad63fb040a805f6'
+            'efcb0853f383769210e985a45c96179512f7f080f65f3c532a597acd3fd08bd58f3ef86571abfb9af5a270c8ae87a677fe8c9b3064229940027125ff24af18c9')
 
 prepare() {
-	cd "${srcdir}"/${pkgname}-${pkgver}
+	cd $pkgname-$_pkgver
 
-	# Fix lrelease path
-	patch -Np1 < ../fix_lrelease.patch
-
-	# Create build directory
-	mkdir -p "${srcdir}"/build
-	
-	#fix .desktop file
-	sed -i s!"Comment=screencast"!"Comment=An easy to use screencast creator"! \
-	applications/vokoscreen.desktop
+	# lrelease fix
+	patch -Np1 < ../fix_lrelease.patch	
+    
 }
 
 build() {
@@ -37,16 +35,21 @@ build() {
 	fi
 
 	# Building package
-	cd "${srcdir}"/build
-	qmake-qt5 ../${pkgname}-${pkgver} \
+	mkdir -p build/
+	cd build/
+	qmake-qt5 ../$pkgname-$_pkgver \
 		CONFIG+=release \
-		CONFIG+=c++14
+		CONFIG+=c++14 \
+		-spec linux-g++
 
 	make -j${njobs}
 }
 
+
+
+
 package() {
 	# Installing package
-	cd "${srcdir}"/build
-	make INSTALL_ROOT="${pkgdir}" install
+	cd build/
+	make INSTALL_ROOT=$pkgdir install
 }
