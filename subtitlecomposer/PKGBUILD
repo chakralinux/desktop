@@ -2,7 +2,7 @@
 source ../kdeapps.conf
 
 pkgname=subtitlecomposer
-pkgver=0.6.5
+pkgver=0.6.6
 pkgrel=1
 pkgdesc="A text-based subtitles editor for KDE"
 arch=('x86_64')
@@ -15,13 +15,13 @@ categories=('multimedia')
 screenshot="http://kde-apps.org/CONTENT/content-pre1/162048-1.png"
 source=(https://github.com/maxrd2/$pkgname/archive/v$pkgver.tar.gz)
 install="${pkgname}.install"
-sha256sums=('26503c5f7ede37f482bd2da6b4acc8df83c0e5c18f38df011ce0f567a1422563')
+sha256sums=('6cd1d74f7934cdaa5d492f47da4143bd096a6196f2afcb2827cada9a3cdb2ea4')
 
 build() {
     cd ${srcdir}/${pkgname}-${pkgver}
     mkdir -p build
     cd build
-    cmake_kf5 .. -DCMAKE_INSTALL_PREFIX=/usr -DWITH_GStreamer=OFF
+    cmake .. -DCMAKE_INSTALL_PREFIX=/usr -DWITH_GStreamer=OFF
     make
 }
 
