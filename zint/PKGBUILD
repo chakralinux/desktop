@@ -1,20 +1,19 @@
 pkgname=zint
-pkgver=2.5.1
+pkgver=2.6.3
 pkgrel=1
 pkgdesc="A barcode encoding library supporting over 50 symbologies."
 url="http://sourceforge.net/projects/zint/"
 license=('GPLv3')
 arch=('x86_64')
-depends=('qt' 'zlib')
-makedepends=('cmake')
-install=${pkgname}.install
+depends=('qt5-base')
+makedepends=('cmake' 'qt5-tools')
 source=("http://sourceforge.net/projects/${pkgname}/files/${pkgname}/${pkgver}/${pkgname}-${pkgver}.src.tar.gz"
         "zint.png")
-sha512sums=('e58b4236e053ee1f304f7a8c0f647d59ecbed1c6b566685f3348bf09e172ceb3e4b43a445c7151915a2e0d70626be4961c45faa737228f22e505c90f591ec999'
+sha512sums=('fb94204d7ef0b832f06cc5f4767b06fa4f026bee4a9ea67da2b69ec85b82412fe45ca9040a861a82083223cecc12337d37992f91d30d2dbc6de5ad2e6be2ff83'
             '6e9abd85465e41374a7ca35965a3a30447147c7f35cf0ffb7e310fad9c83564c79508612ac115fd467aab9bb9cf166c222a8c4c05f91fecfa42b6a3ced32e75a')
  
 build() {
-  cd "${pkgname}-${pkgver}"
+  cd ${pkgname}-${pkgver}.src
  
   if [[ -e build ]]; then rm -rf build; fi
   mkdir build && cd build
@@ -24,7 +23,7 @@ build() {
 }
  
 package() {
-  cd "${pkgname}-${pkgver}/build"
+  cd ${pkgname}-${pkgver}.src/build
  
   make DESTDIR="${pkgdir}" install
  
