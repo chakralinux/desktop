@@ -1,6 +1,6 @@
 pkgname=xine-ui
-pkgver=0.99.9
-pkgrel=2
+pkgver=0.99.10
+pkgrel=1
 pkgdesc="A free video player for Unix"
 arch=('x86_64')
 license=('GPL')
@@ -12,11 +12,11 @@ makedepends=('libxt')
 categories=('multimedia')
 options=('!emptydirs' '!strip')
 install=${pkgname}.install
-source=(http://downloads.sourceforge.net/xine/${pkgname}-${pkgver}.tar.xz)
-sha1sums=('d4f4c17e93d984faa14e363db1320bf9cea7ebaf')
+source=(http://sourceforge.net/projects/xine/files/$pkgname/$pkgver/${pkgname}-${pkgver}.tar.xz)
+sha1sums=('4d61653d9bd88ba446c7c0772d03fc68ddfac46b')
 
 build() {
-  cd "${srcdir}/${pkgname}-${pkgver}"
+  cd ${pkgname}-${pkgver}
   ./configure --prefix=/usr \
     --mandir=/usr/share/man \
     --with-x \
@@ -27,6 +27,6 @@ build() {
 }
 
 package() {
-  cd "${srcdir}/${pkgname}-${pkgver}"
+  cd ${pkgname}-${pkgver}
   make DESTDIR="${pkgdir}" install 
 }
