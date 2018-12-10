@@ -3,7 +3,7 @@
 #
 pkgname=akabeiclient
 pkgver=alpha2.r71.gdd3868a
-pkgrel=1
+pkgrel=3
 pkgdesc='The backend library of akabei'
 arch=('x86_64')
 url='https://code.chakralinux.org/chakra/tools/akabei/akabeiclient'
@@ -22,7 +22,7 @@ build() {
     cd $pkgname
     mkdir -p build/
     cd build/
-    cmake -DCMAKE_INSTALL_PREFIX=/usr ..
+    cmake -DCMAKE_INSTALL_PREFIX=/usr -DCMAKE_INSTALL_LIBDIR=lib ..
     make
 }
 
