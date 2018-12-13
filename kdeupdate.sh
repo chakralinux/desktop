@@ -73,7 +73,7 @@ build()
 
         # update sha256 sums
         local  pkgver pkgname source _pkgname _pkgbase
-        _package_info "$pkg" pkgver pkgname source _pkgname _pkgbase
+        _package_info "$pkg" pkgver pkgname source sha256sum _pkgname _pkgbase
 
         if [ ! -z "$_pkgname" ]; then
             pkgname=$_pkgname
@@ -82,17 +82,36 @@ build()
             pkgname=$_pkgbase
         fi
 
-        # check if the external file reference is set
-        if [ ! -z "$REVISIONS_AND_HASHES" ]; then
-            _sha256sum=$(curl "$REVISIONS_AND_HASHES" | grep "sources/$pkgname-$pkgver" | cut -c-64)
-        else
-            _url=$source
+        _url=$source
+        echo $_url
+        if [ -z ${SumsFile} ]; then
+            # variable is unset
             _sha256sum=$(curl "$_url.sha256" | cut -c-64)
+        else
+            _sha256sum=$(cat "../${2}.sums" |grep $pkgname  | cut -c-64 | tail -1)
         fi
-        sed -r "s|sha256sums=.*|sha256sums=('$_sha256sum'|g" -i PKGBUILD
+        #sed -r "s|sha256sums=.*|sha256sums=('$_sha256sum'|g" -i PKGBUILD
         echo $_sha256sum
-        unset pkgver pkgname source _pkgname _pkgbase
-        #updpkgsums
+        
+
+        if [ -z "$_sha256sum" ] || [[ $_sha256sum == *"Not Found"* ]]; then
+            missing_sums+=($pkgname)
+            # try with an updpkgsums
+            updpkgsums            
+        else
+            # A little bit triky, but in order to replace only the first sha256sum
+            # and keep the correct parentesis we need to know if the array
+            # contains 1 element or not
+            if [ ${#sha256sum[@]} -eq "1" ]; then
+                # contains ()
+                sed -r "s|sha256sum=.*|sha256sum=('$_sha256sum')|g" -i PKGBUILD
+            else
+                # contains only (
+                sed -r "s|sha256sum=.*|sha256sum=('$_sha256sum'|g" -i PKGBUILD
+            fi
+        fi
+        
+        unset pkgver pkgname source sha256sum _pkgname _pkgbase
 
         git add PKGBUILD
 
