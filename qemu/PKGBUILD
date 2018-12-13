@@ -8,7 +8,7 @@ pkgname=('qemu'
          'qemu-block-gluster'
          'qemu-guest-agent')
 pkgver=3.0.0
-pkgrel=1
+pkgrel=2
 arch=('x86_64')
 license=('GPL2' 'LGPL2.1')
 url='http://wiki.qemu.org/'
@@ -88,6 +88,9 @@ package_qemu() {
   rm usr/share/qemu/vgabios-qxl.bin
   rm usr/share/qemu/vgabios-stdvga.bin
   rm usr/share/qemu/vgabios-vmware.bin
+  rm usr/share/qemu/vgabios-virtio.bin
+  rm usr/share/qemu/vgabios-bochs-display.bin
+  rm usr/share/qemu/vgabios-ramfb.bin
 
   # remove conflicting /var/run directory
   rm -r var
