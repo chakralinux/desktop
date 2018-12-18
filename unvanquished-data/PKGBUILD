@@ -9,16 +9,16 @@ arch=('any')
 url='http://www.unvanquished.net'
 license=('GPL3')
 makedepends=('aria2')
-source=("https://github.com/Unvanquished/Unvanquished/raw/${_gitver}/download-pk3-torrent.sh")
-sha1sums=('d694e72211c4e7101811c0f9fc61efc8461f1bc6')
+source=("https://github.com/Unvanquished/Unvanquished/raw/${_gitver}/download-dpk-torrent.sh")
+sha1sums=('7d42f634892422260bd006a3723eab76b4db8ac0')
 
 build() {
 	cd "${srcdir}"
 	
 	#aria2/GnuTLS bug workaround
-	sed -i 's,https,http,' download-pk3-torrent.sh
+	sed -i 's,https,http,' download-dpk-torrent.sh
 
-	chmod +x download-pk3-torrent.sh
+	chmod +x download-dpk-torrent.sh
 }
 
 package() {
@@ -33,11 +33,11 @@ package() {
 	# attempt to copy existing assets from the system, so they aren't redownloaded
 	if [ -d /var/lib/unvanquished/pkg ]; then
 		echo "Copying existing assets from the system (old location)..."
-		cp -r /var/lib/unvanquished/pkg/*.pk3 "${pkgdir}/usr/share/unvanquished/pkg/" || true
+		cp -r /var/lib/unvanquished/pkg/*.dpk "${pkgdir}/usr/share/unvanquished/pkg/" || true
 	fi
 	if [ -d /usr/share/unvanquished/pkg ]; then
 		echo "Copying existing assets from the system..."
-		cp -r /usr/share/unvanquished/pkg/*.pk3 "${pkgdir}/usr/share/unvanquished/pkg/" || true
+		cp -r /usr/share/unvanquished/pkg/*.dpk "${pkgdir}/usr/share/unvanquished/pkg/" || true
 	fi
 
 	# make the download script aware of copied assets, so it will remove unneeded ones
@@ -47,5 +47,5 @@ package() {
 	rm -f "${srcdir}/cache/"*".aria2"
 
 	# download new or modified assets
-	./download-pk3-torrent.sh "${pkgdir}/usr/share/unvanquished/pkg/" "${srcdir}/cache" "${pkgver}"
+	./download-dpk-torrent.sh "${pkgdir}/usr/share/unvanquished/pkg/" "${srcdir}/cache" "${pkgver}"
 }
