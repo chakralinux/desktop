@@ -1,0 +1,25 @@
+# Contributions from Arch:
+# Maintainer: Jan Alexander Steffens (heftig) <jan.steffens@gmail.com>
+# Contributor: AndyRTR <andyrtr@archlinux.org>
+
+pkgname=libmspack
+pkgver=0.9.1alpha
+pkgrel=1
+pkgdesc="A library for Microsoft compression formats"
+url="https://www.cabextract.org.uk/libmspack/"
+arch=(x86_64)
+license=(GPL)
+depends=(glibc)
+source=(https://www.cabextract.org.uk/${pkgname}/${pkgname}-${pkgver}.tar.gz)
+md5sums=('9602ae4a6b0468d9aaef6359c1e90657')
+
+build() {
+  cd $srcdir/$pkgname-$pkgver
+  ./configure --prefix=/usr --disable-static
+  make
+}
+
+package() {
+  cd $srcdir/$pkgname-$pkgver
+  make DESTDIR="$pkgdir" install
+}
