@@ -1,18 +1,18 @@
 pkgname=clamav
-pkgver=0.100.2
+pkgver=0.101.0
 pkgrel=1
 pkgdesc='Anti-virus toolkit for Unix'
 arch=('x86_64')
-install="${pkgname}.install"
 license=('GPL')
 categories=('system')
 backup=('etc/clamav/clamd.conf' 'etc/clamav/freshclam.conf' 'etc/logrotate.d/clamav' 'etc/clamav/clamav-milter.conf')
 url='https://www.clamav.net/'
-depends=('bzip2' 'libltdl' 'gcc-libs' 'libxml2' 'curl' 'pcre' 'json-c')
-makedepends=('libmilter')
-source=("http://www.clamav.net/downloads/production/${pkgname}-${pkgver}.tar.gz"{,.sig}
+depends=('bzip2' 'libltdl' 'gcc-libs' 'libxml2' 'curl' 'pcre' 'json-c' 'libmspack')
+makedepends=('libmilter' 'systemd')
+provides=(libclamav.so libclamunrar.so libclamunrar_iface.so)
+source=("https://www.clamav.net/downloads/production/${pkgname}-${pkgver}.tar.gz"{,.sig}
         "$pkgname."{logrotate,tmpfiles,sysusers})
-sha256sums=('4a2e4f0cd41e62adb5a713b4a1857c49145cd09a69957e6d946ecad575206dd6'
+sha256sums=('f12a5ad86bc4e0bde6cad2d30c49c7daab184cba7ce631909434b5d9533a5ad2'
             'SKIP'
             'c36e3ddf790fa6ea90169038ae08521a31652a372017e6e38858e28fc63b3f74'
             '8e216c7e4763a273a120930787dcc444ea221bb719eed180a9d15b4c1d603a84'
@@ -37,6 +37,7 @@ prepare() {
   sed -E 's|/sbin|/bin|' -i clamd/clamav-daemon.service.in
   autoreconf -fiv
 }
+
 build() {
   cd ${pkgname}-${pkgver}
   
