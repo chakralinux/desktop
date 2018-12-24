@@ -1,22 +1,22 @@
 pkgname=supertux
-pkgver=0.5.1
+pkgver=0.6.0
 pkgrel=1
 pkgdesc="A classic 2D jump'n run sidescroller game in a style similar to the original SuperMario games"
 arch=('x86_64')
-url="http://super-tux.sourceforge.net/"
+url="https://github.com/supertux/supertux"
 license=('GPL')
-depends=('sdl2_image' 'curl' 'openal' 'libvorbis' 'glew')
-makedepends=('cmake' 'boost' 'mesa' 'optipng' 'git')
+depends=('sdl2_image' 'curl' 'physfs' 'openal' 'libvorbis' 'glew' 'freetype2')
+makedepends=('cmake' 'boost' 'mesa' 'optipng')
 source=(https://github.com/SuperTux/$pkgname/releases/download/v${pkgver}/SuperTux-v${pkgver}-Source.tar.gz)
-sha1sums=('f2a40ed73ca81951e17e23edc914e2ed480f9ca1')
+sha1sums=('5f575e2a12c057b90eb5f45d49605bd921a0c422')
 
 build() {
   cd "SuperTux-v${pkgver}-Source"
 
-  cmake \
-  -DCMAKE_INSTALL_PREFIX=/usr \
-  -DINSTALL_SUBDIR_BIN=bin \
-  -DUSE_SYSTEM_PHYSFS=0
+  cmake . \
+      -DCMAKE_INSTALL_PREFIX=/usr \
+      -DINSTALL_SUBDIR_BIN=bin \
+      -DCMAKE_BUILD_TYPE=Release
   make
 }
 
