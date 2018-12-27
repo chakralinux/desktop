@@ -8,7 +8,7 @@ url="https://musescore.org/en/"
 license=('GPL')
 depends=('alsa-lib' 'libpulse' 'libsndfile' 'libvorbis' 'portaudio' 'portmidi' 'qt5-base'
          'qt5-declarative' 'qt5-svg' 'qt5-tools' 'qt5-webengine' 'qt5-xmlpatterns' 'zlib')
-makedepends=('cmake' 'doxygen' 'lame' 'qt5-script' 'texlive-core' 'ccache')
+makedepends=('cmake' 'doxygen' 'lame' 'qt5-script' 'texlive-core')
 optdepends=('lame: MP3 export')
 categories=('multimedia')
 source=("$pkgname-$pkgver.tar.gz::https://github.com/$pkgname/$_pkgname/archive/v$pkgver.tar.gz"
@@ -21,17 +21,11 @@ prepare() {
 }
 
 build() {
-  cd build
-  cmake ../$_pkgname-$pkgver \
-        -DCMAKE_BUILD_TYPE=Release \
-        -DCMAKE_INSTALL_PREFIX=/usr \
-        -DUSE_SYSTEM_FREETYPE=ON
-
-  make lrelease
-  make
+  cd $_pkgname-$pkgver
+  make PREFIX='/usr' release
 }
 
 package() {
-  cd build
-  make DESTDIR=$pkgdir install
+  cd $_pkgname-$pkgver
+  make DESTDIR=$pkgdir -C build.release install
 }
