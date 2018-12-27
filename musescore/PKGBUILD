@@ -16,7 +16,8 @@ md5sums=('43dfb80574ad6984fe1802c8cf2e2a87')
 
 build() {
   cd $_pkgname-$pkgver
-  make PREFIX='/usr' release
+  export CI=False
+  make PREFIX='/usr' USE_SYSTEM_FREETYPE="ON" UPDATE_CACHE="OFF" release
 }
 
 package() {
