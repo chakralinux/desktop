@@ -1,5 +1,5 @@
 pkgname=icedtea-web
-pkgver=1.7
+pkgver=1.7.1
 pkgrel=1
 arch=('x86_64')
 pkgdesc="Provides a Free Software web browser plugin running applets written in the Java programming language and an implementation of Java Web Start, originally based on the NetX project."
@@ -13,11 +13,10 @@ depends=("java-environment=${_javaver}" 'qt' 'desktop-file-utils')
 makedepends=('zip' 'npapi-sdk' 'rhino' 'junit' 'cups' 'autoconf')
 optdepends=('rhino: for using proxy auto config files')
 categories=('network')
-install="${pkgname}.install"
 source=("http://icedtea.classpath.org/download/source/${pkgname}-${pkgver}.tar.gz")
 # due to broken path names in the tarball that fails with LANG=C in our chroot
-noextract="${pkgname}-$pkgver.tar.gz"
-md5sums=('63bcda2c106e1a7e79afc7e9c9cb0a47')
+noextract=("${pkgname}-$pkgver.tar.gz")
+md5sums=('f55d3b47c657a3603b05c637ca8a4572')
 
 prepare() {
   cd "${srcdir}"
