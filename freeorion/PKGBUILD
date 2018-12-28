@@ -1,5 +1,5 @@
 pkgname=freeorion
-pkgver=0.4.7.1
+pkgver=0.4.8
 pkgrel=1
 pkgdesc="turn-based space empire and galactic conquest (4X) computer game"
 arch=('x86_64')
@@ -7,18 +7,15 @@ url="https://github.com/freeorion/freeorion/"
 license=('GPL2')
 depends=('boost-libs' 'python2' 'sdl2' 'libvorbis' 'glew' 'libtiff' 'libjpeg-turbo' 'openal' 'hicolor-icon-theme' 'freetype2')
 makedepends=('boost' 'cmake' 'doxygen')
-install=freeorion.install
 conflicts=('gigi')
 replaces=('gigi')
-source=("$pkgname-$pkgver::https://github.com/freeorion/freeorion/archive/v$pkgver.tar.gz"
-            boost1.37.patch)
-sha256sums=('924a88464e92c14aa8f6722b57f702e07d43c7257cf272150c98bc3c1124a87e'
-            '9e028baf4faff7670a23167a2021686354cbf9d6f78898fc7be1dedf61a7658a')
+source=("$pkgname-$pkgver::https://github.com/freeorion/freeorion/archive/v$pkgver.tar.gz")
+sha256sums=('1dac72c40bb9b881699423c98b14a9cd71b3f88cd2ec3433d5456cdd8dfa9621')
 
 prepare() {
   cd $srcdir/$pkgname-$pkgver
 
-  patch -Np1 -i ../boost1.37.patch
+#  patch -Np1 -i ../boost1.37.patch
 
   mkdir -p build
 }
