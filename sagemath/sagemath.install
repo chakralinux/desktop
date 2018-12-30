@@ -1,6 +1,5 @@
 post_install() {
   cd /usr/lib/sage
-  update-desktop-database -q
 
   # add sagemath user for the daemon
   useradd -r -c 'Sage daemon' -d /usr/lib/sage -s /bin/false sagemath
@@ -43,7 +42,6 @@ post_upgrade() {
 
 post_remove() {
   # Update LaTeX db to remove SageTeX entries
-  update-desktop-database -q
   if [ -f /usr/bin/texhash ]; then
     /usr/bin/texhash /usr/share/texmf
   fi
