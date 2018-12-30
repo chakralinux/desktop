@@ -1,6 +1,6 @@
 pkgname=yagf
 pkgver=0.9.5
-pkgrel=2
+pkgrel=3
 pkgdesc="Qt4-based GUI for Cuneiform OCR"
 arch=('x86_64')
 url="http://sourceforge.net/projects/yagf-ocr/"
@@ -16,19 +16,19 @@ source=("http://downloads.sourceforge.net/project/yagf-ocr/yagf-$pkgver.tar.gz")
 sha512sums=('a0b77e49c11be0ed043d3f44b1c48122cdabf0ae4ae69d84bc01eee0a8b084dae8201234e08816065d449e4d47bd704f282b1cd3b31c3539d201e9f32dfef05c')
 
 prepare() {
-  cd `find ${srcdir}/ -type d -name "${pkgname}*"`
+  cd $pkgname-$pkgver
   cp src/images/{A,a}lign.png
   sed -i '1,1i#include <unistd.h>' src/mainform.cpp
 }
 
 build() {
-  cd `find ${srcdir}/ -type d -name "${pkgname}*"`
+  cd $pkgname-$pkgver
   cmake -D CMAKE_INSTALL_PREFIX=/usr -D CMAKE_BUILD_TYPE=Release .
   make
 }
 
 package() {
-  cd `find ${srcdir}/ -type d -name "${pkgname}*"`
+  cd $pkgname-$pkgver
   make DESTDIR=${pkgdir} install
   [ -d $pkgdir/usr/lib64 ] && mv $pkgdir/usr/lib64 $pkgdir/usr/lib || true
 }
