@@ -1,0 +1,38 @@
+# Contributions from ArchLinux https://git.archlinux.org/svntogit/community.git/plain/trunk/PKGBUILD?h=packages/range-v3
+
+pkgname=range-v3
+pkgver=0.4.0
+pkgrel=1
+pkgdesc="Experimental range library for C++11/14/17"
+arch=('x86_64')
+url='https://github.com/ericniebler/range-v3'
+license=('custom')
+makedepends=('cmake')
+source=("https://github.com/ericniebler/range-v3/archive/${pkgver}.tar.gz")
+sha512sums=('8ada76e44daebe05ab59c353f8858ecacea7a4bd7618d4e75a443c02cefcc7dfa20542546eb58b5d89f043a4e86142fba963c1ce4d12ca12ef8a4cb852225aee')
+
+prepare() {
+    cd "${srcdir}/range-v3-${pkgver}"
+    rm -rf build && mkdir build
+}
+
+build() {
+    cd "${srcdir}/range-v3-${pkgver}"
+
+    cd build
+    cmake .. \
+        -DCMAKE_INSTALL_PREFIX=/usr \
+        -DRANGE_V3_TESTS=OFF \
+        -DRANGE_V3_HEADER_CHECKS=OFF \
+        -DRANGE_V3_EXAMPLES=OFF \
+        -DRANGE_V3_PERF=OFF
+    make
+}
+
+package() {
+    cd "${srcdir}/range-v3-${pkgver}"
+    install -Dm644 "LICENSE.txt" "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
+
+    cd build
+    make DESTDIR="${pkgdir}/" install
+}
