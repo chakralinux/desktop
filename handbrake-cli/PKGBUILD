@@ -1,19 +1,19 @@
 # contributions from ArchLinux: https://www.archlinux.org/packages/community/x86_64/handbrake-cli/
 
 pkgname=handbrake-cli
-pkgver=1.1.2
+pkgver=1.2.0
 pkgrel=1
 pkgdesc="Multithreaded video transcoder (CLI)"
 arch=('x86_64')
 url="https://handbrake.fr/"
 license=('GPL')
-depends=('bzip2' 'gcc-libs' 'zlib' 'fribidi' 'libass' 'lame' 'libxml2'
+depends=('bzip2' 'gcc-libs' 'zlib' 'xz' 'fribidi' 'libass' 'lame' 'libxml2'
          'libtheora' 'libsamplerate' 'ffmpeg' 'libx264' 'x264' 'x265' 'libvpx'
-         'libdvdnav' 'jansson')
-makedepends=('intltool' 'python2' 'yasm' 'wget' 'libnotify' 'gst-plugins-base' 'dbus-glib' 'cmake')
+         'libdvdnav' 'jansson' 'speex')
+makedepends=('intltool' 'python2' 'nasm' 'wget' 'libnotify' 'gst-plugins-base' 'dbus-glib' 'cmake')
 source=("https://download2.handbrake.fr/$pkgver/HandBrake-$pkgver-source.tar.bz2")
 categories=('multimedia')
-sha256sums=('ba9a4a90a7657720f04e4ba0a2880ed055be3bd855e99c0c13af944c3904de2e')
+sha256sums=('113b398a50147d48c8777e6ff2c4de6825af5f1079b3822e41bf0eacec9c940d')
 
 prepare() {
   cd HandBrake-$pkgver
@@ -24,7 +24,8 @@ prepare() {
   for _lib in libvpx libdvdnav libdvdread; do
     sed -i "/MODULES += contrib\/$_lib/d" make/include/main.defs
   done
-}    
+}
+
 build() {
   cd HandBrake-$pkgver
   
