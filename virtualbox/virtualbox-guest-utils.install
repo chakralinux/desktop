@@ -13,10 +13,6 @@ post_upgrade() {
   if [[ $(vercmp "$2" 4.1.18-3) < 0 ]]; then
     echo "==> rc.d vbox-service script was renamed to vboxservice."
   fi
-  # fix gid of vboxsf
-  if [[ $(vercmp "$2" 4.1.18-4) < 0 ]]; then
-    groupmod -g 109 vboxsf
-  fi
   return 0
 }
 
