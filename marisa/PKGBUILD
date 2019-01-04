@@ -1,38 +1,91 @@
-# Maintainer: Weng Xuetian <wengxt AT gmail com>
+# Contributions from Arch:
+# Maintainer: Felix Yan <felixonmars@archlinux.org>
+# Contributor: ponsfoot <cabezon dot hashimoto at gmail dot com>
 
 pkgname=marisa
-pkgver=0.2.4
-pkgrel=2
-pkgdesc="Matching Algorithm with Recursively Implemented StorAge"
-arch=('i686' 'x86_64')
-url="http://code.google.com/p/marisa-trie"
-license=('LGPL')
-depends=('python2' 'swig')
-makedepends=()
-source=("http://marisa-trie.googlecode.com/files/${pkgname}-${pkgver}.tar.gz")
+pkgver=0.2.5
+pkgrel=1
+arch=('x86_64')
+url="https://github.com/s-yata/marisa-trie"
+pkgdesc="Static and space-efficient trie data structure library"
+license=('BSD' 'LGPL')
+depends=('gcc-libs' 'python2' 'ruby' 'perl')
+source=("marisa-trie::https://github.com/s-yata/marisa-trie/archive/v$pkgver.tar.gz")
+sha256sums=('61d222d335db3e8138a22542b95788f307366986c464a68791d361787f3b9c01')
 
-build(){
-  cd "$srcdir"/${pkgname}-${pkgver}
+prepare() {
+  cd marisa-trie-$pkgver
+  autoreconf -i
+}
 
-  ./configure --prefix=/usr --disable-static
+build() {
+  cd marisa-trie-$pkgver
+  # sse2 is part of amd64
+  ./configure --prefix=/usr --disable-static --enable-sse2
   make
 
-  # build Python bindings
-  pushd bindings/python
-  python2 setup.py build_ext --include-dirs="$srcdir/${pkgname}-${pkgver}/lib" --library-dirs="$srcdir/${pkgname}-${pkgver}/lib/.libs"
-  python2 setup.py build
-  popd
+  # Perl bindings
+  cd "$srcdir"/marisa-trie-$pkgver/bindings/perl
+  perl Makefile.PL \
+    INC=-I"$srcdir"/marisa-trie-$pkgver/include \
+    LIBS=-L"$srcdir"/marisa-trie-$pkgver/lib/marisa/.libs
+  make
 
+  # Python bindings
+  cd "$srcdir"/marisa-trie-$pkgver/bindings/python
+  python2 setup.py build_ext \
+    --include-dirs="$srcdir"/marisa-trie-$pkgver/include \
+    --library-dirs="$srcdir"/marisa-trie-$pkgver/lib/marisa/.libs
+  python2 setup.py build
+
+  # Ruby bindings
+  cd "$srcdir"/marisa-trie-$pkgver/bindings/ruby
+  ruby extconf.rb \
+    --with-opt-include="$srcdir"/marisa-trie-$pkgver/include \
+    --with-opt-lib="$srcdir"/marisa-trie-$pkgver/lib/marisa/.libs \
+    --vendor
+  make
 }
 
 package() {
-  cd "$srcdir"/${pkgname}-${pkgver}
-  make DESTDIR=${pkgdir} install
+  cd $srcdir/marisa-trie-$pkgver
+  make DESTDIR="$pkgdir" install
 
-  # install Python bindings
-  pushd bindings/python
-  python2 setup.py install --root="${pkgdir}"
-  popd
+  install -d "$pkgdir"/usr/share/doc/$pkgbase-$pkgver
+  install -m 644 docs/* "$pkgdir"/usr/share/doc/$pkgbase-$pkgver/
 
+  install -d "$pkgdir"/usr/share/licenses/$pkgname
+  install -m 644 AUTHORS COPYING.md "$pkgdir"/usr/share/licenses/$pkgname/
+
+  # Install Perl bindings
+  cd $srcdir/marisa-trie-$pkgver/bindings/perl
+  make DESTDIR="$pkgdir" install
+
+  cd ../..
+  install -d "$pkgdir"/usr/share/licenses/$pkgname
+  install -m 644 AUTHORS COPYING.md "$pkgdir"/usr/share/licenses/$pkgname/
+
+  # Install Python bindings
+  cd $srcdir/marisa-trie-$pkgver/bindings/python
+  python2 setup.py install -O1 --root="$pkgdir"
+
+  cd ../..
+  install -d "$pkgdir"/usr/share/licenses/$pkgname
+  install -m 644 AUTHORS COPYING.md "$pkgdir"/usr/share/licenses/$pkgname/
+
+  # Install Ruby bindings
+  # ruby version without the patch number, e.g. 2.4
+  local _rubyver=$(ruby -e"puts Gem.ruby_version.to_s.split('.')[0..1].join('.')")
+
+  cd $srcdir/marisa-trie-$pkgver/bindings/ruby
+    _hdrdir=$(pkg-config --variable=rubyhdrdir ruby-$_rubyver)
+    _arch=$(pkg-config --variable=arch ruby-$_rubyver)
+  make DESTDIR="$pkgdir" install \
+    hdrdir="$_hdrdir" \
+    arch_hdrdir="${_hdrdir}/${_arch}" \
+    rubyhdrdir="$_hdrdir"
+
+  cd ../..
+  install -d "$pkgdir"/usr/share/licenses/$pkgname
+  install -m 644 AUTHORS COPYING.md "$pkgdir"/usr/share/licenses/$pkgname/
 }
-md5sums=('55192e66f6f9e3d04924a6ebb8eec02a')
