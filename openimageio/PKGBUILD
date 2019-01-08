@@ -1,16 +1,15 @@
 pkgname=openimageio
-pkgver=1.8.15
+pkgver=1.8.17
 pkgrel=1
 pkgdesc="A library for reading and writing images, including classes, utilities, and applications."
 arch=('x86_64')
 url="http://www.openimageio.org/"
 license=('custom')
-depends=('openexr' 'boost-libs' 'jasper' 'glew' 'libtiff' 'opencolorio' 'intel-tbb' 'openssl' 'libpng' 'ptex')
-makedepends=('git' 'cmake' 'qt4' 'python2' 'python3' 'boost' 'mesa' 'freetype2' 'fontconfig' 'libxrender')
-optdepends=('qt4: iv image viewer'
+depends=('openexr' 'boost-libs' 'jasper' 'glew' 'libtiff' 'opencolorio' 'intel-tbb' 'openssl' 'libpng')
+makedepends=('cmake' 'qt5-base' 'python2' 'python3' 'boost' 'mesa' 'git' 'freetype2' 'fontconfig' 'libxrender')
+optdepends=('qt5-base: iv image viewer'
             'python2: bindings support'
-            'python3: bindings support'
-            'ttf-droid: font support')
+            'python3: bindings support')
 source=("git+https://github.com/OpenImageIO/oiio#tag=Release-$pkgver")
 sha1sums=('SKIP')
 
@@ -24,7 +23,6 @@ build() {
       -DUSE_PYTHON=ON \
       -DUSE_PYTHON3=ON \
       -DUSE_OPENSSL=ON \
-      -DUSE_PTEX=ON \
       -DCMAKE_INSTALL_PREFIX=/usr \
       -DCMAKE_INSTALL_LIBDIR=lib \
       -DPYLIB_INSTALL_DIR=lib/python2.7/site-packages \
