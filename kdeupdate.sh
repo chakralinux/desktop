@@ -46,20 +46,7 @@ build()
     local comment_re="^[:blank:]*#"
     [[ $pkg =~ $comment_re ]] && continue
 
-    local pkgrel_re="^[:blank:]*\+"
-    if [[ $pkg =~ $pkgrel_re ]]; then
-        echo "Pkgrel ++ '${pkg//+}'"
-        pushd "${pkg//+}" &>/dev/null
-            git reset HEAD PKGBUILD
-            git checkout PKGBUILD
-            _rel=$(cat PKGBUILD | grep pkgrel= | cut -d= -f2)
-            sed -i -e "s/pkgrel=$_rel/pkgrel=$(($_rel+1))/" PKGBUILD
-            git add PKGBUILD
-        popd &>/dev/null
-        continue
-    fi
-
-    echo "Processing: '$pkg'"
+    msg "Processing: '$pkg'"
     pushd "$pkg" &>/dev/null
 
         # update version
@@ -70,10 +57,9 @@ build()
         # update source link
         sed -r "s|https://download.kde.org/.*stable/|https://download.kde.org/${Branch}/|g" -i PKGBUILD
 
-
         # update sha256 sums
         local  pkgver pkgname source _pkgname _pkgbase
-        _package_info "$pkg" pkgver pkgname source sha256sum _pkgname _pkgbase
+        _package_info "$pkg" pkgver pkgname source _pkgname _pkgbase
 
         if [ ! -z "$_pkgname" ]; then
             pkgname=$_pkgname
@@ -83,36 +69,16 @@ build()
         fi
 
         _url=$source
-        echo $_url
         if [ -z ${SumsFile} ]; then
             # variable is unset
             _sha256sum=$(curl "$_url.sha256" | cut -c-64)
         else
             _sha256sum=$(cat "../${2}.sums" |grep $pkgname  | cut -c-64 | tail -1)
         fi
-        #sed -r "s|sha256sums=.*|sha256sums=('$_sha256sum'|g" -i PKGBUILD
+        sed -r "s|sha256sums=.*|sha256sums=('$_sha256sum'|g" -i PKGBUILD
         echo $_sha256sum
+        unset pkgver pkgname source _pkgname _pkgbase
         
-
-        if [ -z "$_sha256sum" ] || [[ $_sha256sum == *"Not Found"* ]]; then
-            missing_sums+=($pkgname)
-            # try with an updpkgsums
-            updpkgsums            
-        else
-            # A little bit triky, but in order to replace only the first sha256sum
-            # and keep the correct parentesis we need to know if the array
-            # contains 1 element or not
-            if [ ${#sha256sum[@]} -eq "1" ]; then
-                # contains ()
-                sed -r "s|sha256sum=.*|sha256sum=('$_sha256sum')|g" -i PKGBUILD
-            else
-                # contains only (
-                sed -r "s|sha256sum=.*|sha256sum=('$_sha256sum'|g" -i PKGBUILD
-            fi
-        fi
-        
-        unset pkgver pkgname source sha256sum _pkgname _pkgbase
-
         git add PKGBUILD
 
     popd &>/dev/null
@@ -129,5 +95,5 @@ fi
 # load the configurations
 source $1.conf
 
-time build "$1.order"
+time build "$1.order" $1
 
