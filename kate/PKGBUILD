@@ -1,17 +1,15 @@
 #contributions from Arch: https://projects.archlinux.org/svntogit/packages.git/tree/trunk?h=packages/kate
 
 pkgbase=kate
-pkgname=('kwrite'
-         'kate')
+pkgname=('kwrite' 'kate')
 pkgver=18.12.0
-pkgrel=1
+pkgrel=2
 pkgdesc='Advanced editor component which is used in numerous KDE applications requiring a text editing component'
 arch=('x86_64')
 license=('GPL' 'LGPL' 'FDL')
-depends=('knewstuff' 'ktexteditor' 'threadweaver' 'kded' 'kitemmodels')
-makedepends=('extra-cmake-modules' 'kdoctools' 'python3' 'plasma-framework')
-optdepends=('kio-extras: extra protocols support (sftp, fish and more)')
-options=('docs' 'debug')
+makedepends=(extra-cmake-modules kdoctools plasma-framework knewstuff ktexteditor
+             threadweaver kitemmodels kactivities python3)
+options=('debug')
 source=("https://download.kde.org/stable/applications/$pkgver/src/$pkgbase-$pkgver.tar.xz"{,.sig})
 sha256sums=('14991164207cededb14c778837969a391d117eb484a871666598867ae3366696'
             'SKIP')
@@ -25,7 +23,7 @@ prepare() {
 build() {
   cd build
   cmake ../${pkgbase}-${pkgver} \
-         -DCMAKE_BUILD_TYPE=RelWithDebInfo \
+        -DCMAKE_BUILD_TYPE=RelWithDebInfo \
         -DCMAKE_INSTALL_PREFIX=/usr \
         -DKDE_INSTALL_LIBDIR=lib \
         -DKDE_INSTALL_SYSCONFDIR=/etc \
@@ -40,34 +38,37 @@ package_kwrite() {
   pkgdesc="Text Editor"
   groups=('kde')
   url="http://www.kde.org/applications/utilities/kwrite/"
+  depends=(ktexteditor kactivities hicolor-icon-theme)
   screenshot="https://www.kde.org/images/screenshots/kwrite.png"
   replaces=('kde-baseapps-kwrite')
   conflicts=('kde-baseapps-kwrite')
   provides=('kde-baseapps-kwrite')
 
-  cd build/kwrite
-  make DESTDIR="${pkgdir}" install
+  cd build
+  make DESTDIR="$pkgdir" install
 
-  cd ../../build/doc/kwrite
-  make DESTDIR="${pkgdir}" install
+  find "$pkgdir" -type f -name '*kate*' -exec rm {} \;
+  rm -r "$pkgdir"/usr/lib/qt5/plugins/ktexteditor \
+        "$pkgdir"/usr/share/doc/HTML/*/{kate,katepart} \
+        "$pkgdir"/usr/share/katexmltools \
+        "$pkgdir"/usr/share/locale/*/LC_MESSAGES/{kterustcompletion,tabswitcherplugin,ktexteditorpreviewplugin}.mo \
+        "$pkgdir"/usr/share/plasma/plasmoids
 }
 
 package_kate() {
   pkgdesc="Advanced Text Editor"
   groups=('kde')
   url="http://www.kde.org/applications/utilities/kate/"
+  depends=(knewstuff ktexteditor threadweaver kitemmodels kactivities hicolor-icon-theme)
   screenshot="https://www.kde.org/images/screenshots/kate.png"
   replaces=('kdesdk-kate')
   conflicts=('kdesdk-kate')
   provides=('kdesdk-kate')
   optdepends=('konsole: open a terminal in Kate')
 
-  cd build/kate
-  make DESTDIR="${pkgdir}" install
+  cd build
+  make DESTDIR="$pkgdir" install
 
-  cd ../../build/doc/kate
-  make DESTDIR="${pkgdir}" install
-
-  cd ../../../build/addons
-  make DESTDIR="${pkgdir}" install
+  find "$pkgdir" -type f -name '*kwrite*' -exec rm {} \;
+  rm -r "$pkgdir"/usr/share/doc/HTML/*/kwrite
 }
