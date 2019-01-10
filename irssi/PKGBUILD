@@ -1,33 +1,31 @@
 pkgname=irssi
-pkgver=1.1.1
+pkgver=1.1.2
 pkgrel=1
 pkgdesc="Modular text mode IRC client with Perl scripting"
 arch=('x86_64')
-url="http://irssi.org/"
+url="https://irssi.org/"
 license=('GPL')
 depends=('glib2' 'openssl' 'perl')
-makedepends=('elinks' 'git')
+makedepends=('elinks')
 categories=('communication')
 optdepends=('perl-libwww: for the scriptassist script')
 backup=(etc/irssi.conf)
-screenshot=('http://irssi.org/themefiles/dma147.png')
-source=(git+https://github.com/irssi/irssi.git#tag=${pkgver})
-options=('!libtool')
-sha1sums=('SKIP')
+source=(https://github.com/irssi/irssi/releases/download/${pkgver}/${pkgname}-${pkgver}.tar.xz)
+md5sums=('271d2fd875cddd34526234d8a766d82c')
 
 build() {
-  cd "$srcdir/$pkgname"
+  cd ${pkgname}-${pkgver}
 
-  ./autogen.sh --prefix=/usr \
-              --enable-ipv6 \
-	      --with-proxy \
-	      --with-bot \
-	      --sysconfdir=/etc \
-	      --with-perl-lib=vendor
+  ./configure --prefix=/usr \
+               --enable-ipv6 \
+	       --with-proxy \
+	       --with-bot \
+	       --sysconfdir=/etc \
+	       --with-perl-lib=vendor
   make
 }
 
 package() {
-  cd "$srcdir/$pkgname"
+  cd ${pkgname}-${pkgver}
   make DESTDIR="$pkgdir" install
 }
