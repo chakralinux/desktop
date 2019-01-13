@@ -1,0 +1,39 @@
+pkgname=('python2-netifaces' 'python3-netifaces')
+pkgbase=netifaces
+pkgver=0.10.9
+pkgrel=1
+pkgdesc='Portable module to access network interface information in Python'
+arch=('x86_64')
+url='http://alastairs-place.net/netifaces/'
+license=('MIT')
+makedepends=('python2' 'python2-setuptools' 'python3' 'python3-setuptools')
+provides=('netifaces' 'python-netifaces')
+source=("https://pypi.python.org/packages/source/n/netifaces/netifaces-${pkgver}.tar.gz")
+md5sums=('de92cc322b4f56047c073f802ad77860')
+
+prepare() {
+        cp -R $pkgbase-$pkgver $pkgbase-$pkgver-py3
+}
+
+package_python2-netifaces() {
+        depends=('python2')
+
+	cd $pkgbase-$pkgver
+
+	python2 setup.py install --root $pkgdir
+ 
+	# Install license, that is inside the readme file
+	install -m755 -d $pkgdir/usr/share/licenses/$pkgname
+ 	install -m644 README.rst $pkgdir/usr/share/licenses/$pkgname/README
+}
+
+package_python3-netifaces() {
+        depends=('python3')
+
+        cd $pkgbase-$pkgver-py3
+        python3 setup.py install --root $pkgdir
+      
+	# Install license, that is inside the readme file
+	install -m755 -d $pkgdir/usr/share/licenses/$pkgname
+	install -m755 -d $pkgdir/usr/share/licenses/$pkgname
+}
