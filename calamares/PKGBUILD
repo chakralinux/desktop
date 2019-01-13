@@ -1,6 +1,6 @@
 pkgname=calamares
-pkgver=3.2.2
-pkgrel=6
+pkgver=3.2.3
+pkgrel=1
 _releaseName="Hawking"
 _releaseYear="2019"
 pkgdesc='Distribution-independent installer framework'
@@ -16,7 +16,7 @@ source+=("$pkgname-$pkgver.tar.gz::https://github.com/calamares/calamares/releas
 #_gitsha="6cb4291b4d142462f8cc0e61fc4f10880cd25546"
 #source+=("$pkgname-$pkgver.tar.gz::https://github.com/calamares/calamares/archive/${_gitsha}.zip"
          "calamares-chakra::git+https://code.chakralinux.org/tools/calamares-chakra.git")
-md5sums=('b66e693c690b5b474c46061d363c668a'
+md5sums=('12bb2459be2aab5a1af08d3d84ebbbb8'
          'SKIP')
 
 prepare() {
@@ -65,6 +65,7 @@ package() {
     install -Dm644 "../conf/services-systemd.conf" "$pkgdir/usr/share/calamares/modules/services-systemd.conf"
     install -Dm644 "../conf/umount.conf" "$pkgdir/usr/share/calamares/modules/umount.conf"
     install -Dm644 "../conf/initcpio.conf" "$pkgdir/usr/share/calamares/modules/initcpio.conf"
+    install -Dm644 "../conf/shellprocess.conf" "$pkgdir/usr/share/calamares/modules/shellprocess.conf"
 
     install -Dm755 "../data/launch-calamares.sh" "${pkgdir}/usr/bin/launch-calamares.sh"
     install -Dm644 "../data/calamares.desktop" "$pkgdir/usr/share/applications/calamares.desktop"
