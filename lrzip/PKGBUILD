@@ -1,21 +1,22 @@
-
 pkgname=lrzip
-pkgver=0.621
+pkgver=0.631
 pkgrel=1
-pkgdesc='Multi-threaded compression using the rzip/lzma, lzo, and zpaq algorithms'
-url='http://lrzip.kolivas.org/'
+pkgdesc='Multi-threaded compression with rzip/lzma, lzo, and zpaq'
+url='https://github.com/ckolivas/lrzip'
 license=('GPL')
 arch=('x86_64')
-depends=('lzo2' 'zlib')
+depends=('lzo' 'zlib')
 source=("http://ck.kolivas.org/apps/$pkgname/$pkgname-$pkgver.tar.bz2")
-sha256sums=('31c26fbee8b9b0bd413ca214862dbc0d9e6d3477f23e9839774936bf140ceb6b')
+sha256sums=('0d11e268d0d72310d6d73a8ce6bb3d85e26de3f34d8a713055f3f25a77226455')
 
 build() {
   cd "$pkgname-$pkgver"
-  
-  ./autogen.sh --prefix=/usr
 
-  make -j `nproc` # maxes out all cores
+  CFLAGS="$CFLAGS -fomit-frame-pointer"
+  CXXFLAGS="$CXXFLAGS -fomit-frame-pointer"
+  
+  ./autogen.sh --prefix=/usr "$flags"
+  make
 }
 
 check() {
@@ -25,4 +26,3 @@ check() {
 package() {
   make -C "$pkgname-$pkgver" DESTDIR="$pkgdir" install-strip
 }
-
