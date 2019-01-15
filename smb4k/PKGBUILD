@@ -1,20 +1,17 @@
 pkgname=smb4k
-pkgver=2.0.1
+pkgver=2.1.1
 pkgrel=1
 pkgdesc="A KDE program that browses samba shares"
 arch=('x86_64')
-url="http://sourceforge.net/projects/smb4k/"
+url="https://smb4k.sourceforge.net/"
 license=('GPL')
 depends=('kparts' 'hicolor-icon-theme')
-makedepends=('extra-cmake-modules' 'kdoctools' 'python3' 'plasma-framework')
-source=("https://sourceforge.net/projects/smb4k/files/$pkgver/$pkgname-$pkgver.tar.xz")
-sha256sums=('0418ca9ae9a62cde6cfdc4ffad7525868048827366166578936e988ce7a6009e')
+makedepends=('extra-cmake-modules' 'kdoctools' 'plasma-framework' 'python3')
+source=("https://downloads.sourceforge.net/project/$pkgname/$pkgver/$pkgname-$pkgver.tar.xz")
+sha256sums=('36f68f75ec3b9ada0f263acbee24a4e9b3f7aa0136e23b12f2af8f06f6c606bc')
 
 prepare() {
   mkdir -p build
-
-  # Fix doc cmake conflicts
-  sed -e '/kdoctools_install/d' -i $pkgname-$pkgver/CMakeLists.txt
 }
 
 build() {
@@ -26,7 +23,7 @@ build() {
         -DKDE_INSTALL_LIBDIR=lib \
         -DBUILD_TESTING=OFF
 
-  make VERBOSE=1 
+  make 
 }
 package() {
   cd build
