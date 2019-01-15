@@ -1,10 +1,7 @@
-# Source global configuration
-source ../kdeapps.conf
-
 pkgname=kaffeine
-pkgver=2.0.15
-pkgrel=3
-pkgdesc='Media player with support for digital television (DVB-C/S/S2/T and ATSC, decryption with CI/CAM)'
+pkgver=2.0.16
+pkgrel=1
+pkgdesc='KDE media player'
 license=('GPL')
 arch=('x86_64')
 url="https://kaffeine.kde.org"
@@ -12,21 +9,16 @@ depends=('kio' 'libxss' 'vlc')
 makedepends=('extra-cmake-modules' 'kidletime' 'kdoctools')
 categories=('multimedia')
 options=('debug')
-source=("http://download.kde.org/stable/${pkgname}/${pkgname}-${pkgver}.tar.xz"
-        "https://github.com/KDE/kaffeine/commit/06b78c5f24891fd38d25ed64f5029106eec7c4fb.diff")
-sha256sums=('e61573199fe4e04377679a5cf8b32b3aa0bb4201c56371e11820d3a3ae41904d'
-            '27a8b4851b63fe942dfc38fb64c8049b4c35821d84175659d9d49b32f3094f25')
+source=("https://download.kde.org/stable/${pkgname}/${pkgname}-${pkgver}-2.tar.xz")
+sha256sums=('8659189d907c2512321dd2c0d0c47176229c344970d633e33f29ce82432deee5')
 
 prepare() {
   mkdir -p build
-  cd $pkgname-$pkgver
- # Fix build with qt5.11
-  patch -p1 -i ../06b78c5f24891fd38d25ed64f5029106eec7c4fb.diff 
 }
 
 build() {
   cd build
-  cmake ../$pkgname-$pkgver \
+  cmake ../${pkgname}-${pkgver}-2 \
     -DCMAKE_INSTALL_PREFIX=/usr \
     -DBUILD_TESTING=OFF 
    make
