@@ -10,8 +10,8 @@ pkgname=('virtualbox'
          'virtualbox-guest-iso'
          'virtualbox-ext-vnc'
          'virtualbox-ext-oracle')
-pkgver=6.0.0
-pkgrel=3
+pkgver=6.0.2
+pkgrel=1
 _vboxsf_commit='9451f61e6787e95aa51e42b6381db6b059bc49da'
 arch=('x86_64')
 url='https://virtualbox.org'
@@ -79,7 +79,6 @@ source=("http://download.virtualbox.org/virtualbox/$pkgver/VirtualBox-$pkgver.ta
         '006-rdesktop-vrdp-keymap-path.patch'
         '008-no-vboxvideo.patch'
         '009-include-path.patch'
-        '010-qt-5.11.patch'
         '011-python-3-7.patch'
         # The following patch and mount.vboxsf wrapper should be removed
         # once support for mainline-style options string gets upstreamed
@@ -88,9 +87,9 @@ source=("http://download.virtualbox.org/virtualbox/$pkgver/VirtualBox-$pkgver.ta
         'PUEL')
 noextract=(VBoxGuestAdditions_$pkgver.iso
           "Oracle_VM_VirtualBox_Extension_Pack-$pkgver.vbox-extpack")
-sha256sums=('de47ce3ba599e0c5ef24eb44728fcf4abdecb0f0bb60e8560d03cfbf41283bfb'
-            '169efc28d82cbf2d0b0156454cc290e2fae49534b6d4adf3bac06e0fefba8fa5'
-            'b99ef88b0ac1abebc7a6d7168dd5eec58c426f05acf69c4055defff175038f57'
+sha256sums=('fa31b4c6cf94ac908cf89d290cab5795c86d6307cd3857b31ae85faa1eaf0c81'
+            'da6de0d897e58817b0fffd336e7b66faad45e564f4bf6368330437b785981b87'
+            'ebfa750ddcb10dea7337d2c50f9434bbfe24bdf82132e23d5df47607cdb53229'
             'SKIP'
             'deb03efa7ad0376aa55a087f2e882afe00935f10b0e7aa853ba9147090d341ec'
             'c328376b05183d269f98319ec660f54c55e298f77d229977606862b064651a7c'
@@ -106,10 +105,9 @@ sha256sums=('de47ce3ba599e0c5ef24eb44728fcf4abdecb0f0bb60e8560d03cfbf41283bfb'
             '2a9d7748dc58f9d091f791da06b733a696943114f7c0d580fa00a0752eb1d2ac'
             'f67674931c30187f867233e3a4ae662f93c9110fbd0bfce50dd9f391f4533bc0'
             '7d2da8fe10a90f76bbfc80ad1f55df4414f118cd10e10abfb76070326abebd46'
-            '5d5af2de5b1f1c61ec793503350f2440661cf8fd640f11b8a86f10bce499c0dc'
+            '13c6ca9be0f91582445fd2a14a8c58a0625a15d9cb98cb6e8c2736d77ea976ab'
             '8b7f241107863f82a5b0ae336aead0b3366a40103ff72dbebf33f54b512a0cbc'
             '1acc7014bcb3d9ca6da29eed813c3d6e91a688c43f9d93802fd4e3814f67ace4'
-            'c6ef35e6893d557c7c2269ff79bc299fe9058cfb2c933a7efdc7a8a7b6d9c5da'
             '55224cb74b54b331d691f171efc0d4c058a14f738551f1d8f559146c2908635d'
             'a784f3cc24652a16385cc63abac6c5178932ca5f3861be7650631b7dafa753a4'
             'f3ed6741f8977f40900c8aa372fa082df1f8723d497d4fff445153c543bc8947'
@@ -162,7 +160,7 @@ build() {
     kmk
 
     msg2 'Build rdesktop-vrdp'
-    kmk -C src/VBox/RDP/client-1.8.3
+    kmk -C src/VBox/RDP/client-1.8.4
 
     msg2 'Build VNC extension pack'
     kmk -C src/VBox/ExtPacks/VNC packing
