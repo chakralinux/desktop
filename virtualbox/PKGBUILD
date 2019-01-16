@@ -98,7 +98,7 @@ sha256sums=('fa31b4c6cf94ac908cf89d290cab5795c86d6307cd3857b31ae85faa1eaf0c81'
             'da4c49f6ca94e047e196cdbcba2c321199f4760056ea66e0fbc659353e128c9e'
             '9c5238183019f9ebc7d92a8582cad232f471eab9d3278786225abc1a1c7bf66e'
             '033c597e0f5285d2ddb0490868e5b6f945f45c7b1b1152a02a9e6fea438b2c95'
-            'b760b2039228d0b3f19525495b38d15796434a1003ade4f10293e9131f84cd42'
+            '2cb3b67883a4c747492e474e22ad568781823ef18deebb96152f9883e0c2cc1c'
             'bd80a7dd625d370d5ffbfe76af343f520515ef5a71c5a70d74d8f86090035101'
             '01dbb921bd57a852919cc78be5b73580a564f28ebab2fe8d6c9b8301265cbfce'
             'e6e875ef186578b53106d7f6af48e426cdaf1b4e86834f01696b8ef1c685787f'
@@ -130,12 +130,6 @@ prepare() {
 
     msg2 'Use our CFLAGS'
     echo "VBOX_GCC_OPT=$CXXFLAGS" >> LocalConfig.kmk
-
-    msg2 'Use system GL headers'
-    echo 'VBOX_USE_SYSTEM_GL_HEADERS=true' >> LocalConfig.kmk
-
-    msg2 'Remove gcc version censorship'
-    sed -i 's/^check_gcc$/#check_gcc/' configure
 
     cd $srcdir
     msg2 'Get our batch agreement hash of PUEL of Oracle Extension Pack'
