@@ -1,18 +1,18 @@
 # Arch contributor: https://projects.archlinux.org/svntogit/community.git/plain/trunk/PKGBUILD?h=packages/gsoap
 
 pkgname=gsoap
-pkgver=2.8.34
+pkgver=2.8.75
 pkgrel=1
 pkgdesc="Offers an XML language binding to ease the development of SOAP/XML Web services in C and C/C++"
-url="http://www.cs.fsu.edu/~engelen/soap.html"
+url="https://www.genivia.com/dev.html"
 arch=('i686' 'x86_64')
 license=('GPL' 'custom')
 depends=('openssl' 'zlib' 'gcc-libs')
 makedepends=('autoconf' 'automake')
 options=('staticlibs')
-source=(http://prdownloads.sourceforge.net/gsoap2/${pkgname}_${pkgver}.zip
+source=("https://sourceforge.net/projects/gsoap2/files/${pkgname}-${pkgver%.*}/${pkgname}_${pkgver}.zip"
 	LICENSE)
-md5sums=('abc4cd7a3b3c042cf2eeb7c0d791bad5'
+md5sums=('7f616f6b35404dfd3929a45300292236'
          '27aaa3f5166db94d44044c11a7b2c37b')
 
 build() {
@@ -21,7 +21,8 @@ build() {
   # https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=353724
   export CFLAGS+=" -fPIC"
   export CXXFLAGS+=" -fPIC"
-  ./configure --prefix=/usr --enable-openssl
+  ./configure --prefix=/usr \
+              --enable-ipv6
   make -j1
 }
 
