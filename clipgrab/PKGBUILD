@@ -1,29 +1,26 @@
 pkgname=clipgrab
-pkgver=3.7.1
+pkgver=3.8.0
 pkgrel=1
 pkgdesc='A video downloader and converter for YouTube, Vimeo, DailyMotion, MyVideo and many other'
 arch=('x86_64')
 url='https://clipgrab.org/'
 screenshot='http://download.clipgrab.de/img/screenshot_videosearch_x11.png'
 license=('GPL3')
-depends=('qt5-webkit')
+depends=('qt5-webengine')
 makedepends=('ffmpeg')
 optdepends=('ffmpeg: for the conversion functionality')
 source=("https://download.clipgrab.org/${pkgname}-${pkgver}.tar.gz"
-        "${pkgname}.desktop"
-        https://gitlab.com/kikadf/clipgrab-qt5/raw/patches/patches/clipgrab-qt5-${pkgver}.patch)
-sha256sums=('addf58c027f8f0e01acb0d1d6cdb9fd17c356d4fe5e2d768b94e531b599d1f2e'
-            'a12c0501d2f46b4a2a7103a0cce8a35d9b44245dee6cc12eb7d3e5c083cc5809'
-            '2efa3a821c352f4093315439365d600b9c93cc64562e2d2f8da9f67882b61cde')
-
-prepare() {
-  cd clipgrab-$pkgver
-  patch -p1 -i ../clipgrab-qt5-${pkgver}.patch
-} 
+        "${pkgname}.desktop")
+sha256sums=('e67485514e12ed4c4c7a1e70d1f9d51b093677088617ae44c2f68f729d4490d6'
+            'a12c0501d2f46b4a2a7103a0cce8a35d9b44245dee6cc12eb7d3e5c083cc5809')
 
 build() {
   cd ${pkgname}-${pkgver}
-  qmake-qt5 clipgrab.pro
+  qmake-qt5 \
+    QMAKE_CFLAGS_RELEASE="$CPPFLAGS $CFLAGS" \
+    QMAKE_CXXFLAGS_RELEASE="$CPPFLAGS $CXXFLAGS" \
+    QMAKE_LFLAGS_RELEASE="$LDFLAGS" \
+    clipgrab.pro
   make
 }
 
