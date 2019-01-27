@@ -2,7 +2,7 @@
 
 pkgname=docker
 pkgver=18.09.1
-pkgrel=2
+pkgrel=3
 pkgdesc='Pack, ship and run any application as a lightweight container'
 arch=('x86_64')
 url='https://www.docker.com/'
@@ -137,12 +137,12 @@ build() {
 
 package() {
   ### runc
-  install -Dm755 runc/runc "$pkgdir/usr/bin/docker-runc"
+  install -Dm755 runc/runc "$pkgdir/usr/bin/runc"
   ### containerd
-  install -Dm755 containerd/bin/containerd "$pkgdir/usr/bin/docker-containerd"
+  install -Dm755 containerd/bin/containerd "$pkgdir/usr/bin/containerd"
   install -Dm755 containerd/bin/containerd-shim \
-    "$pkgdir/usr/bin/docker-containerd-shim"
-  install -Dm755 containerd/bin/ctr "$pkgdir/usr/bin/docker-containerd-ctr"
+    "$pkgdir/usr/bin/containerd-shim"
+  install -Dm755 containerd/bin/ctr "$pkgdir/usr/bin/ctr"
   ### proxy
   install -Dm755 libnetwork/proxy "$pkgdir/usr/bin/docker-proxy"
   ### init
