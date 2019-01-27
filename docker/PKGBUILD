@@ -1,7 +1,7 @@
 # Arch Maintainer: Sébastien "Seblu" Luttringer
 
 pkgname=docker
-pkgver=18.05.0
+pkgver=18.09.1
 pkgrel=1
 pkgdesc='Pack, ship and run any application as a lightweight container'
 arch=('x86_64')
@@ -13,6 +13,9 @@ makedepends=('git' 'go' 'btrfs-progs' 'cmake' 'systemd')
 optdepends=('btrfs-progs: btrfs backend support'
             'lxc: lxc backend support'
             'pigz: parallel gzip compressor support')
+provides=('containerd' 'runc')
+conflicts=('containerd' 'runc')
+replaces=('containerd' 'runc')
 # don't strip binaries! A sha1 is used to check binary consistency.
 options=('!strip' '!buildflags')
 # Use exact commit version from Dockerfile, see them in:
