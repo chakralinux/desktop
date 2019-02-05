@@ -1,7 +1,7 @@
 pkgname=npm
 _pkgname=cli
 pkgver=6.7.0
-pkgrel=1
+pkgrel=2
 pkgdesc='A package manager for javascript'
 arch=('x86_64')
 url='https://www.npmjs.com/'
@@ -14,6 +14,7 @@ sha256sums=('426180de79195dc867233f0f3071c9fc935a230f90910100b2e89f00624e3521')
 
 prepare() {
   cd $_pkgname-$pkgver
+  mkdir -p node_modules/.bin
   ln -sf /usr/bin/marked{,-man} node_modules/.bin/
 }
 
