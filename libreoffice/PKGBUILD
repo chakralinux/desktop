@@ -20,8 +20,8 @@ pkgname=('libreoffice-common'
 	'libreoffice-postgresql-connector'
 	'libreoffice-extension-wiki-publisher'
 	'libreoffice-extension-nlpsolver')
-_LOver=6.1.4.2
-pkgver=6.1.4
+_LOver=6.2.0.3
+pkgver=6.2.0
 pkgrel=1
 arch=('x86_64')
 license=('LGPL3')
@@ -38,7 +38,7 @@ makedepends=( # makedepends
              'pango' 'nss' 'libjpeg' 'libxrandr' 'libgl' 'dbus-glib' "icu>=4.6" 'libxslt'
              'redland' 'graphite' 'hyphen' 'lpsolve' 'gcc-libs' 'sh'  'librsvg' 'lcms2'
              'hicolor-icon-theme' 'desktop-file-utils' 'shared-mime-info' 'translate-toolkit' 'xdg-utils' 'ttf-dejavu' 'libcups'  'libmwaw' 'ttf-liberation'
-             'glew' 'libetonyek' 'harfbuzz-icu' 'gdb'  'libzmf' 'serf' 'libtommath' 'gpgme' 'boost'
+             'glew' 'libetonyek' 'harfbuzz-icu' 'gdb'  'libzmf' 'serf' 'libtommath' 'gpgme' 'boost' 'libmariadbclient'
              )
 
 _mirror="https://download.documentfoundation.org/libreoffice/src/$pkgver"
@@ -48,7 +48,7 @@ _additional_source_url2="https://dev-www.libreoffice.org/extern"
 _gentoo_patch_url="https://dev.gentoo.org/~asturm/distfiles"
 source=(${_mirror}/libreoffice{,-help,-translations}-${_LOver}.tar.xz{,.asc}
         # Environment variables
-        ${_additional_source_url}/xmlsec1-1.2.25.tar.gz
+        ${_additional_source_url}/xmlsec1-1.2.27.tar.gz
         ${_additional_source_url}/35c94d2df8893241173de1d16b6034c0-swingExSrc.zip
         ${_additional_source_url}/798b2ffdc8bcfe7bca2cf92b62caf685-rhino1_5R5.zip
         ${_additional_source_url}/a7983f859eafb2677d7ff386a023bc40-xsltml_2.1.2.zip
@@ -67,17 +67,17 @@ source=(${_mirror}/libreoffice{,-help,-translations}-${_LOver}.tar.xz{,.asc}
         ${_additional_source_url}/db60e4fde8dd6d6807523deb71ee34dc-liblayout-0.2.10.zip
         ${_additional_source_url}/ba2930200c9f019c2d93a8c88c651a0f-flow-engine-0.9.4.zip
         ${_additional_source_url}/libexttextcat-3.4.5.tar.xz
-        ${_additional_source_url}/libcmis-0.5.1.tar.gz
-        ${_additional_source_url}/liborcus-0.13.4.tar.gz
+        ${_additional_source_url}/libcmis-0.5.2.tar.xz
+        ${_additional_source_url}/liborcus-0.14.1.tar.gz
         ${_additional_source_url}/liblangtag-0.6.2.tar.bz2
         ${_additional_source_url}/0168229624cfac409e766913506961a8-ucpp-1.3.2.tar.gz
         ${_additional_source_url}/17410483b5b5f267aa18b7e00b65e6e0-hsqldb_1_8_0.zip
         ${_additional_source_url2}/8249374c274932a21846fa7629c2aa9b-officeotron-0.7.4-master.jar
-        ${_additional_source_url2}/odfvalidator-1.2.0-incubating-SNAPSHOT-jar-with-dependencies+ODFTOOLKIT-460+ODFTOOLKIT-461.jar
+        ${_additional_source_url2}/odfvalidator-1.2.0-incubating-SNAPSHOT-jar-with-dependencies-971c54fd38a968f5860014b44301872706f9e540.jar
         ${_additional_source_url2}/185d60944ea767075d27247c3162b3bc-unowinreg.dll
         ${_additional_source_url}/bae83fa5dc7f081768daace6e199adc3-glm-0.9.4.6-libreoffice.zip
         ${_additional_source_url}/commons-logging-1.2-src.tar.gz
-        ${_additional_source_url}/libcdr-0.1.4.tar.xz
+        ${_additional_source_url}/libcdr-0.1.5.tar.xz
         ${_additional_source_url}/libmspub-0.1.4.tar.xz
         ${_additional_source_url}/libatomic_ops-7_2d.zip
         ${_additional_source_url}/libfreehand-0.1.2.tar.xz
@@ -91,20 +91,21 @@ source=(${_mirror}/libreoffice{,-help,-translations}-${_LOver}.tar.xz{,.asc}
         ${_additional_source_url}/4b87018f7fff1d054939d19920b751a0-collada2gltf-master-cb1d97788a.tar.bz2
         ${_additional_source_url}/OpenCOLLADA-master-6509aa13af.tar.bz2
         ${_additional_source_url}/libgltf/libgltf-0.1.0.tar.gz
-        ${_additional_source_url}/pdfium-3426.tar.bz2
+        ${_additional_source_url}/pdfium-3550.tar.bz2
         ${_additional_source_url}/libepubgen-0.1.1.tar.xz
-        ${_additional_source_url}/libnumbertext-1.0.4.tar.xz
-        ${_additional_source_url}/libqxp-0.0.1.tar.xz
+        ${_additional_source_url}/libnumbertext-1.0.5.tar.xz
+        ${_additional_source_url}/libqxp-0.0.2.tar.xz
         ${_additional_source_url}/lxml-4.1.1.tgz
+        ${_additional_source_url2}/49a64f3bcf20a7909ba2751349231d6652ded9cd2840e961b5164d09de3ffa63-opens___.ttf
         make-pyuno-work-with-system-wide-module-install.diff)
 validpgpkeys=('C2839ECAD9408FBE9531C3E9F434A1EFAFEEAEA3') # LibreOffice Build Team (CODE SIGNING KEY) <build@documentfoundation.org>
-sha1sums=('1bc6176b461fb59961057053f3c5df86edd0bd1d'
+sha1sums=('860fa65972c83c03c26f3bbd64491bb0bd4e163a'
           'SKIP'
-          '038dae96766650c87867e6d3de30ce74fb5984d5'
+          '1be20ede10758b9046832d3df1a677fdc990c382'
           'SKIP'
-          'f228cfc59a54e5257152c8bc7131814c7a313fd8'
+          '5502b6cda6c5b28cadd6f1fe3870c32040709f2d'
           'SKIP'
-          '0ef1117b8d11da475fd8d842a1341c675e627ab9'
+          '11a3329bd6b0b910c5d60d4562e3a152588942f8'
           '1acea86fd399ed7817879d36370d3d1f8b109050'
           '8a90669029e107b61953b90ba11545fef586c2ca'
           '2d49e11b0b711970f494294dc3698f05eb294853'
@@ -123,17 +124,17 @@ sha1sums=('1bc6176b461fb59961057053f3c5df86edd0bd1d'
           '65dfba9970bb862d09c1f9e636b86b22f05d3936'
           '1acd76cd63f7b19f6a0252eb029c3cb13a25aa9b'
           'dd6b4163c752a44384f309f8dabb830161f5f85f'
-          '94c00715ae8a31bc8e5a6a699e36c22d0020649e'
-          '9598262549571491ebfdf9d2c20bfe5fd37d8d25'
+          'feca71d94d2c6e6d5565ff2a3210ba61fb2451d9'
+          '97e14d618652e6b57447b73a8cfc89b54f2845ec'
           '8f2c0d7f0c2ae9510a58f570aa4bc894c31e22c1'
           '452eba922e4f41603539c9dc39947d2271e47093'
           '7168b0f40aa5c72267899601c116d2348d2f56ec'
           'f4772556920231cf164348e51285b0c18dfc7f5b'
-          '68fc1959b1387448fc6d71134ee3e45f4dbc996a'
+          'a2aaff3c6e19d7442295ca8a1c39e8c3a8b4081a'
           '0619ed3a89644bef318df67db12045b2b590585b'
           '73ad0ffc515f44a5ae1f1501ebb858153b523937'
           '0a134d01e9aeb09b33f4c7450fb41abb7bed9db6'
-          '59148610e572d1a79c4f3494a01d020944f0e1c1'
+          'bfdba4ccab25354fed0fb77d3bd5353e252be3c5'
           'dcfe4dba518b44cc500385e878b66f53c5734df6'
           '58a4a5d602bc5f2bfebe4c7b054d565ae11b758c'
           'f945b23b7801a3601998973028a054ee379967cb'
@@ -147,13 +148,14 @@ sha1sums=('1bc6176b461fb59961057053f3c5df86edd0bd1d'
           '1169780b4a0c515b23b96c913fd9bc52ceb7fb39'
           'c4f5760a1d21213dc52e2cf3ad9c0b9112585f36'
           '719ab0d7b711650c787fe9bfb51109321d21e07b'
-          '1f3070598936acf30f6bdce51a1cce7874e482fc'
+          '04b0116d3fa5eaabea94fed75fc30ae75916c071'
           '48e81c60e173552fce77ce3b414e68b7d52a5301'
-          '1fb3b31e1e0dd79cd602e0d24c34f8c30ebe127f'
-          'a5963474afcc8e7b0eb352754325c21e1a1f5e18'
+          '2b599daeeb07ecd14ea0f7633accd67ab3fedea9'
+          'f0e1b3d7996f2340a95309b61d9b27b596aca3da'
           '154279bc5939d7099697887ea15c5ca921abeaeb'
+          'ad0f4351a484ac9b5422beae749719299bdfcfb8'
           'fed07f208b58c42bb85b0721fb2fae193da6f780')
-noextract=(xmlsec1-1.2.25.tar.gz
+noextract=(xmlsec1-1.2.27.tar.gz
           35c94d2df8893241173de1d16b6034c0-swingExSrc.zip
           798b2ffdc8bcfe7bca2cf92b62caf685-rhino1_5R5.zip
           a7983f859eafb2677d7ff386a023bc40-xsltml_2.1.2.zip
@@ -172,17 +174,17 @@ noextract=(xmlsec1-1.2.25.tar.gz
           db60e4fde8dd6d6807523deb71ee34dc-liblayout-0.2.10.zip
           ba2930200c9f019c2d93a8c88c651a0f-flow-engine-0.9.4.zip
           libexttextcat-3.4.5.tar.xz
-          libcmis-0.5.1.tar.gz
-          liborcus-0.13.4.tar.gz
+          libcmis-0.5.2.tar.xz
+          liborcus-0.14.1.tar.gz
           liblangtag-0.6.2.tar.bz2
           0168229624cfac409e766913506961a8-ucpp-1.3.2.tar.gz
           17410483b5b5f267aa18b7e00b65e6e0-hsqldb_1_8_0.zip
           8249374c274932a21846fa7629c2aa9b-officeotron-0.7.4-master.jar
-          odfvalidator-1.2.0-incubating-SNAPSHOT-jar-with-dependencies+ODFTOOLKIT-460+ODFTOOLKIT-461.jar
+          odfvalidator-1.2.0-incubating-SNAPSHOT-jar-with-dependencies-971c54fd38a968f5860014b44301872706f9e540.jar
           185d60944ea767075d27247c3162b3bc-unowinreg.dll
           bae83fa5dc7f081768daace6e199adc3-glm-0.9.4.6-libreoffice.zip
           commons-logging-1.2-src.tar.gz
-          libcdr-0.1.4.tar.xz
+          libcdr-0.1.5.tar.xz
           libmspub-0.1.4.tar.xz
           libatomic_ops-7_2d.zip
           libfreehand-0.1.2.tar.xz
@@ -196,11 +198,12 @@ noextract=(xmlsec1-1.2.25.tar.gz
           OpenCOLLADA-master-6509aa13af.tar.bz2
           libgltf-0.1.0.tar.gz
           libstaroffice-0.0.6.tar.xz
-          libnumbertext-1.0.4.tar.xz
+          libnumbertext-1.0.5.tar.xz
           lxml-4.1.1.tgz
-          pdfium-3426.tar.bz2
+          pdfium-3550.tar.bz2
           libepubgen-0.1.1.tar.xz
-          libqxp-0.0.1.tar.xz)
+          libqxp-0.0.2.tar.xz
+          49a64f3bcf20a7909ba2751349231d6652ded9cd2840e961b5164d09de3ffa63-opens___.ttf)
 
 prepare() {
     cd libreoffice-$_LOver
@@ -316,7 +319,6 @@ build() {
                 --without-system-hsqldb \
                 --without-system-libpagemaker \
                 --without-system-coinmp \
-                --with-alloc=system \
                 --with-system-clucene \
                 --without-system-xmlsec \
                 --without-system-libepubgen \
