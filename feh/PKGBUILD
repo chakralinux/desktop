@@ -1,5 +1,5 @@
 pkgname=feh
-pkgver=2.28.1
+pkgver=3.1.2
 pkgrel=1
 pkgdesc='Fast and light imlib2-based image viewer'
 arch=('x86_64')
@@ -10,7 +10,7 @@ optdepends=('imagemagick: support more file formats')
 makedepends=('libxt')
 categories=('graphics')
 source=("${url}${pkgname}-${pkgver}.tar.bz2")
-sha256sums=('97066765c61d7413ed40b20f3f62b5d934e94ec91cadd491ebce836e1fb02a72')
+sha256sums=('6a36d0503507661b8855b6f7e5b01ca6d7119a8f3771936062cf00935fa65062')
 
 build() {
 	cd "${srcdir}/${pkgname}-${pkgver}"
@@ -20,8 +20,5 @@ build() {
 package() {
 	cd "${srcdir}/${pkgname}-${pkgver}"
 	make PREFIX=/usr DESTDIR="${pkgdir}" install
-	
-	# .desktop isn't needed since feh is a terminal app
-	rm ${pkgdir}/usr/share/applications/${pkgname}.desktop
 	install -Dm644 COPYING "${pkgdir}/usr/share/licenses/${pkgname}/LICENSE"
 }
