@@ -1,11 +1,11 @@
 pkgname=peazip
-pkgver=6.6.0
+pkgver=6.7.0
 pkgrel=1
 pkgdesc="Free, Open Source file and archive manager. Supports 7Z, ACE, ARC, CAB, ISO, PEA, RAR, TAR, ZIP and many more archive formats."
 arch=('x86_64')
 url="http://peazip.org/"
 license=('GPL')
-depends=('libxslt' 'p7zip' 'unarj' 'unzip' 'upx' 'xz' 'zip' 'fpc-qtbindings') # balz lpaq paq8o zpaq
+depends=('libxslt' 'p7zip' 'unarj' 'unzip' 'upx' 'xz' 'zip' 'fpc' 'qt4pas') # balz lpaq paq8o zpaq
 makedepends=('lazarus')
 optdepends=('rar: support for RAR archive compression'
             'unace: support for proprietary ace archive format')
@@ -14,18 +14,18 @@ options=('debug')
 source=("https://github.com/giorgiotani/PeaZip/releases/download/${pkgver}/${pkgname}-${pkgver}.src.zip"
         "http://www.peazip.org/downloads/additional/peazip_optional_formats_plugin-1.LINUX.INST.tar.gz"
         'altconf.txt')
-sha256sums=('79598b55fbf7a20467b0674cc7cfd5ca3fb57367881e7df89d9be9ae78ff188e'
+sha256sums=('6efdef81081843bc6e6b6dc5a21184cde8666bed2e44b01f183c5735d3fa1267'
             '7f3fc1ea200d482500360eadda9298c4d5900ca822d21b5a0e11ff9de4d499ff'
             '366884105c00e88f2ce2315155479bd2c38ea2181e8a7431293ced87a39a9405')
 
 prepare() {
   msg 'Copy optional format plugins'
-  cp -Rf "$srcdir/res" "$srcdir/peazip-$pkgver.src"
+  cp -Rf res $pkgname-$pkgver.src
 }
 
 build() {
-  cd ${srcdir}/${pkgname}-${pkgver}.src
-  for project in project_pea.lpi project_peach.lpi project_gwrap.lpi ; do 
+  cd $pkgname-$pkgver.src
+  for project in project_pea.lpi project_peach.lpi ; do 
    lazbuild -B --cpu=${arch} --verbose ${project} \
  	   --lazarusdir=/usr/lib/lazarus \
  	   --widgetset=qt
@@ -34,19 +34,23 @@ build() {
 
 package() {
   # Since the dev are lazy, we introduce several path for easier description
-  _srcdir=${srcdir}/${pkgname}-${pkgver}.src
+  _srcdir=$pkgname-$pkgver.src
   _datadir=usr/share/${pkgname}
   _resdir=${_datadir}/res
 
   msg 'Preparing the res directory'
-  cd ${_srcdir}/res
+  cd res
   install -dm755 ${pkgdir}/${_resdir}
 
   msg 'Move language files and utilities'
 
   for _file in arc/{arc,*.sfx}; do install -Dm755 "$_file" "$_resdir/$_file"; done
+  
+  cd $srcdir/${_srcdir}/res/
   for _file in *.txt lang/* themes/{*-embedded/*,*.7z} arc/arc.{ini,groups}
     do install -Dm644 "$_file" "$pkgdir/$_resdir/$_file"; done
+    
+  cd -
 
   msg 'Link tools'
   for _file in 7z upx ; do
@@ -58,14 +62,14 @@ package() {
 
   msg 'Install binary to datadir/res, and link back to $PATH'
   install -dm755 $pkgdir/usr/bin
-  cd ${_srcdir}/
-  for _bin in pea pealauncher peazip ; do
+  cd $srcdir/${_srcdir}/
+  for _bin in pea peazip ; do
     install -Dm755 ${_bin} ${pkgdir}/${_datadir}/${_bin}
     ln -sf /${_resdir}/${_bin} ${pkgdir}/usr/bin/${_bin}
   done
 
   msg 'Preparing for desktop installation'
-  cd ${_srcdir}/FreeDesktop_integration/
+  cd $srcdir/${_srcdir}/FreeDesktop_integration/
 
   # Move the Dolphin integration
   for _desktop in peazipadd.desktop \
@@ -82,7 +86,8 @@ package() {
   install -Dm644 peazip.png ${pkgdir}/usr/share/icons/hicolor/256x256/apps/peazip.png
 
   # License file
+  cd ..
   for _license in copying.txt copying_we.txt legal.txt; do
-    install -Dm644 ${_srcdir}/${_license} ${pkgdir}/usr/share/licenses/${pkgname}/${_license}
+    install -Dm644 $srcdir/${_srcdir}/${_license} ${pkgdir}/usr/share/licenses/${pkgname}/${_license}
   done
 }
