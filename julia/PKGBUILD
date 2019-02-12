@@ -52,16 +52,6 @@ build() {
   env CFLAGS="$CFLAGS -w" CXXFLAGS="$CXXFLAGS -w" make -C $pkgbase-$pkgver
 }
 
-check() {
- cd $pkgbase-$pkgver/test
-
- # this is the make testall target, plus the --skip option from
- # travis/appveyor/circleci (one test fails with DNS resolution errors)
- ../julia --check-bounds=yes --startup-file=no ./runtests.jl all --skip Sockets
- find ../stdlib \( -name \*.cov -o -name \*.mem \) -delete
- rm -r depot/compiled
-}
-
 package_julia() {
   backup=(etc/julia/startup.jl)
   optdepends=('gnuplot: If using the Gaston Package from julia')
