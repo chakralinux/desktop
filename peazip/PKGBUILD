@@ -1,6 +1,6 @@
 pkgname=peazip
 pkgver=6.7.0
-pkgrel=1
+pkgrel=2
 pkgdesc="Free, Open Source file and archive manager. Supports 7Z, ACE, ARC, CAB, ISO, PEA, RAR, TAR, ZIP and many more archive formats."
 arch=('x86_64')
 url="http://peazip.org/"
@@ -64,7 +64,7 @@ package() {
   install -dm755 $pkgdir/usr/bin
   cd $srcdir/${_srcdir}/
   for _bin in pea peazip ; do
-    install -Dm755 ${_bin} ${pkgdir}/${_datadir}/${_bin}
+    install -Dm755 ${_bin} ${pkgdir}/${_resdir}/${_bin}
     ln -sf /${_resdir}/${_bin} ${pkgdir}/usr/bin/${_bin}
   done
 
