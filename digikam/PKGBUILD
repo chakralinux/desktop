@@ -1,20 +1,26 @@
-pkgbase=digikam
-pkgname=('digikam' 'kipi-plugins')
-_pkgver=5.9.0
+pkgname=digikam
+_pkgver=6.0.0
 pkgver=${_pkgver//-/_}
-pkgrel=4
+pkgrel=1
 epoch=1
+pkgdesc="Digital photo management application for KDE"
 url="https://www.digikam.org/"
 arch=('x86_64')
 license=('GPL')
 options=("debug")
-makedepends=('extra-cmake-modules' 'libkipi' 'libksane' 'liblqr' 'boost'
+depends=('liblqr' 'libkipi' 'lensfun' 'libpgf' 'opencv' 'akonadi-contact'
+	   'knotifyconfig' 'libksane' 'kfilemetadata' 'qtav' 'marble' 'mariadb' 'kcalcore' 'exiv2')
+makedepends=('extra-cmake-modules' 'libksane' 'liblqr' 'boost'
              'libgpod' 'opencv' 'qt5-webkit' 'doxygen' 'lensfun' 'imagemagick' 'eigen3' 'libpgf'
              'libusb' 'kio' 'kdoctools' 'marble' 'kfilemetadata' 'akonadi-contact' 'qtav'
              'threadweaver' 'kcalcore' 'knotifyconfig' 'libkvkontakte' 'libmediawiki' 'mariadb' 'prison'
              'libavc1394' 'libiec61883' 'jack2' 'exiv2' 'glu')
-source=("https://download.kde.org/stable/${pkgname}/${pkgname}-${_pkgver}.tar.xz")
-sha1sums=('f98f9311cc52173192db6ebba101231cf24af633')
+optdepends=('qt5-imageformats: support for additional image formats (WEBP, TIFF)'
+	      'hugin: panorama tool')
+source=("https://download.kde.org/stable/${pkgname}/${_pkgver}/${pkgname}-${_pkgver}.tar.xz"{,.sig})
+sha1sums=('ccc8f5a793b3ebeb6b0a9756de9dbd2e5c267334'
+          'SKIP')
+validpgpkeys=(D1CF2444A7858C5F2FB095B74A77747BC2386E50) # digiKam.org (digiKam project) <digikamdeveloper@gmail.com>
 
 prepare() {
   mkdir -p build
@@ -33,50 +39,18 @@ build() {
     -DENABLE_KFILEMETADATASUPPORT=ON \
     -DENABLE_MEDIAPLAYER=ON \
     -DENABLE_AKONADICONTACTSUPPORT=ON \
-    -DENABLE_OPENCV3=ON \
     -DENABLE_MYSQLSUPPORT=ON \
     -DENABLE_INTERNALMYSQL=ON \
     -DENABLE_APPSTYLES=ON
   make
 }
 
-package_digikam() {
-  pkgdesc="Digital photo management application for KDE"
-  depends=('liblqr' 'libkipi' 'lensfun' 'libpgf' 'opencv' 'akonadi-contact'
-	   'knotifyconfig' 'libksane' 'kfilemetadata' 'qtav' 'marble' 'mariadb' 'kcalcore' 'exiv2')
-  optdepends=('kipi-plugins: more tools and plugins'
-	      'qt5-imageformats: support for additional image formats (WEBP, TIFF)'
-	      'hugin: panorama tool')
+package() {
+  
+
 
   cd build/core
   make DESTDIR="$pkgdir" install
-  cd $srcdir/build/doc/digikam
-  make DESTDIR="$pkgdir" install
   cd $srcdir/build/po
   make DESTDIR="$pkgdir" install
-
-  # Provided by kipi-plugins
-  rm "$pkgdir"/usr/share/locale/*/LC_MESSAGES/kipiplugin*.mo
-}
-
-package_kipi-plugins() {
-  pkgdesc="A collection of plugins extending the KDE graphics and image applications as digiKam"
-  depends=('kio' 'libkipi')
-  optdepends=('kcalcore: Calendar plugin'
-              'libmediawiki: MediaWiki Export plugin'
-              'libkvkontakte: VKontakte.ru Exporter plugin'
-              'libgpod: iPodExport plugin'
-              'opencv: Remove Red Eyes plugin'
-              'imagemagick: Video SlideShow plugin'
-              'qt5-gstreamer: Video SlideShow plugin'
-              'threadweaver: panorama plugin'
-	      'hugin: panorama plugin')
-
-  cd build/extra
-  make DESTDIR="$pkgdir" install
-  cd $srcdir/build/po
-  make DESTDIR="$pkgdir" install
-
-  # Provided by digikam
-  rm "${pkgdir}"/usr/share/locale/*/LC_MESSAGES/digikam.mo
 }
