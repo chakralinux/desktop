@@ -1,3 +1,44 @@
+--- a/Telegram/gyp/qt.gypi	2019-02-13 18:51:38.000000000 +0100
++++ b/Telegram/gyp/qt.gypi	2019-02-13 18:58:01.481532583 +0100
+@@ -14,7 +14,7 @@
+               [ 'build_macold', {
+                 'qt_version%': '5.3.2',
+               }, {
+-                'qt_version%': '<!(echo /usr/include/qt/QtCore/*/ | grep -Po "\d+\.\d+\.\d+")',
++                'qt_version%': '<!(echo /usr/include/qt5/QtCore/*/ | grep -Po "\d+\.\d+\.\d+")',
+               }]
+             ],
+           },
+@@ -28,7 +28,7 @@
+             [ 'build_macold', {
+               'linux_path_qt%': '/usr/local/macold/Qt-<(qt_version)',
+             }, {
+-              'linux_path_qt%': '/usr/lib/qt',
++              'linux_path_qt%': '/usr/lib/qt5',
+             }]
+           ]
+         },
+@@ -153,13 +153,13 @@
+ 
+   'include_dirs': [
+     '/usr/include/qt',
+-    '/usr/include/qt/QtCore',
+-    '/usr/include/qt/QtGui',
+-    '/usr/include/qt/QtDBus',
+-    '/usr/include/qt/QtCore/<(qt_version)',
+-    '/usr/include/qt/QtGui/<(qt_version)',
+-    '/usr/include/qt/QtCore/<(qt_version)/QtCore',
+-    '/usr/include/qt/QtGui/<(qt_version)/QtGui',
++    '/usr/include/qt5/QtCore',
++    '/usr/include/qt5/QtGui',
++    '/usr/include/qt5/QtDBus',
++    '/usr/include/qt5/QtCore/<(qt_version)',
++    '/usr/include/qt5/QtGui/<(qt_version)',
++    '/usr/include/qt5/QtCore/<(qt_version)/QtCore',
++    '/usr/include/qt5/QtGui/<(qt_version)/QtGui',
+   ],
+   'library_dirs': [
+     '<(qt_loc)/lib',
 --- a/Telegram/SourceFiles/base/base_pch.h	2018-12-31 10:53:16.232898792 +0100
 +++ b/Telegram/SourceFiles/base/base_pch.h	2018-12-31 11:02:13.163096099 +0100
 @@ -6,13 +6,13 @@
@@ -71,3 +112,4 @@
  
  #include <crl/crl.h>
  #include <rpl/rpl.h>
+
